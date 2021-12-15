@@ -4,6 +4,7 @@ title=GlassFish Server Deployment Descriptor Files
 next=dd-elements.html
 prev=asadmin-deployment-subcommands.html
 ~~~~~~
+
 GlassFish Server Deployment Descriptor Files
 ============================================
 
@@ -53,12 +54,10 @@ information about DTD files and XML, see the XML specification at
 
 
 [NOTE]
-=======================================================================
-
+====
 Do not edit the DTD files; their contents change only with new versions
 of GlassFish Server.
-
-=======================================================================
+====
 
 
 The following table lists the GlassFish Server deployment descriptors
@@ -70,7 +69,7 @@ and their DTD files.
 Table B-1 GlassFish Server Deployment Descriptors and DTDs
 
 [width="100%",cols="30%,39%,31%",options="header",]
-|=======================================================================
+|===
 |Deployment Descriptor |DTD File |Description
 |`glassfish-application.xml` |`glassfish-application_6_0-1.dtd`
 |Configures an entire Java EE application (EAR file).
@@ -96,18 +95,16 @@ optional.
 
 |`glassfish-resources.xml` |`glassfish-resources_1_5.dtd` |Configures
 application-scoped resources.
-|=======================================================================
+|===
 
 
 
 [NOTE]
-=======================================================================
-
+====
 The `sun-application.xml`, `sun-web.xml`, `sun-ejb-jar.xml`,
 `sun-application-client.xml`, and `sun-resources.xml` deployment
 descriptors are supported for backward compatibility.
-
-=======================================================================
+====
 
 
 [[beaqk]][[GSDPG00077]][[the-glassfish-application.xml-file]]
@@ -118,7 +115,7 @@ The glassfish-application.xml File
 The `glassfish-application.xml` file configures an entire Java EE
 application (EAR file). The element hierarchy is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 glassfish-application
 .  web
@@ -188,10 +185,10 @@ glassfish-application
 
 Here is a sample `glassfish-application.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD 
-GlassFish Application Server 3.1 Java EE Application 6.0//EN" 
+<!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Java EE Application 6.0//EN"
 "http://glassfish.org/dtds/glassfish-application_6_0-1.dtd">
 <glassfish-application>
    <unique-id>67488732739338240</unique-id>
@@ -206,7 +203,7 @@ The glassfish-web.xml File
 The `glassfish-web.xml` file configures a web application (WAR file).
 The element hierarchy is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 glassfish-web-app
 .  context-root
@@ -343,10 +340,10 @@ glassfish-web-app
 
 Here is a sample `glassfish-web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD 
-GlassFish Application Server 3.1 Servlet 3.0//EN" 
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Servlet 3.0//EN"
 "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
 <glassfish-web-app>
    <session-config>
@@ -368,7 +365,7 @@ The glassfish-ejb-jar.xml File
 The `glassfish-ejb-jar.xml` file configures an enterprise bean (EJB JAR
 file). The element hierarchy is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 glassfish-ejb-jar
 .  security-role-mapping
@@ -569,21 +566,19 @@ glassfish-ejb-jar
 
 
 [NOTE]
-=======================================================================
-
+====
 If any configuration information for an enterprise bean is not specified
 in the `glassfish-ejb-jar.xml` file, it defaults to a corresponding
 setting in the EJB container if an equivalency exists.
-
-=======================================================================
+====
 
 
 Here is a sample `glassfish-ejb-jar.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//
-DTD GlassFish Application Server 3.1 EJB 3.1//EN" 
+DTD GlassFish Application Server 3.1 EJB 3.1//EN"
 "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd">
 <glassfish-ejb-jar>
 <display-name>First Module</display-name>
@@ -622,7 +617,7 @@ The sun-cmp-mappings.xml File
 The `sun-cmp-mappings.xml` file configures container-managed persistence
 for an EJB 2.0 or 2.1 entity bean. The element hierarchy is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 sun-cmp-mappings
 .  sun-cmp-mapping
@@ -664,7 +659,7 @@ sun-cmp-mappings
 
 Here is a sample database schema definition:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 create table TEAMEJB (
    TEAMID varchar2(256) not null,
@@ -705,7 +700,7 @@ alter table PLAYEREJBTEAMEJB
 
 Here is a corresponding sample `sun-cmp-mappings.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <sun-cmp-mappings>
@@ -824,7 +819,7 @@ The `glassfish-application-client.xml` file configures an Application
 Client Container (ACC) client (JAR file). The element hierarchy is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 glassfish-application-client
 .  ejb-ref
@@ -886,11 +881,11 @@ glassfish-application-client
 
 Here is a sample `glassfish-application-client.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE glassfish-application-client PUBLIC ""-//GlassFish.org//DTD 
-GlassFish Application Server 3.1 Application Client 6.0//EN"" 
+<!DOCTYPE glassfish-application-client PUBLIC ""-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Application Client 6.0//EN""
 "http://glassfish.org/dtds/glassfish-application-client_6_0-1.dtd">
 <glassfish-application-client>
   <message-destination-ref>
@@ -911,7 +906,7 @@ Server provides a default file in the domain-dir`/config` directory.
 Specifying a different file is optional. The element hierarchy is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 client-container
 .  target-server
@@ -930,7 +925,7 @@ client-container
 .  .  .  request-policy
 .  .  .  response-policy
 .  .  .  property (with attributes)
-.  property (with attributes) 
+.  property (with attributes)
 ----
 
 [[giyhh]][[GSDPG00083]][[the-glassfish-resources.xml-file]]
@@ -941,7 +936,7 @@ The glassfish-resources.xml File
 The `glassfish-resources.xml` file configures application-scoped
 resources. The element hierarchy is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 resources
 .  custom-resource
@@ -1011,86 +1006,95 @@ explained in the following table.
 Table B-2 `weblogic.xml` Support in GlassFish Server
 
 [width="100%",cols="43%,57%",options="header",]
-|=======================================================================
+|===
 |`weblogic.xml` Element Name |GlassFish Server Support
-|`role-name` under `security-role-assignment` |`role-name` under
-`security-role-mapping` `glassfish-web.xml` equivalent
+|`role-name` under `security-role-assignment`
+|`role-name` under `security-role-mapping` `glassfish-web.xml` equivalent
 
-|`principal-name` under `security-role-assignment` |`principal-name`
-under `security-role-mapping` `glassfish-web.xml` equivalent
+|`principal-name` under `security-role-assignment`
+|`principal-name` under `security-role-mapping` `glassfish-web.xml` equivalent
 
-|`resource-description` |`resource-ref` `glassfish-web.xml` equivalent,
-but `resource-link` not supported
+|`resource-description`
+|`resource-ref` `glassfish-web.xml` equivalent, but `resource-link` not supported
 
-|`resource-env-description` |`resource-env-ref` `glassfish-web.xml`
-equivalent, but `resource-link` not supported
+|`resource-env-description`
+|`resource-env-ref` `glassfish-web.xml` equivalent, but `resource-link` not supported
 
-|`ejb-reference-description` |`ejb-ref` `glassfish-web.xml` equivalent
+|`ejb-reference-description`
+|`ejb-ref` `glassfish-web.xml` equivalent
 
-|`service-reference-description` |`service-ref` `glassfish-web.xml`
-equivalent
+|`service-reference-description`
+|`service-ref` `glassfish-web.xml` equivalent
 
-|`timeout-secs` under `session-descriptor` |`timeoutSeconds` property of
-`session-properties` `glassfish-web.xml` equivalent
+|`timeout-secs` under `session-descriptor`
+|`timeoutSeconds` property of `session-properties` `glassfish-web.xml` equivalent
 
 |`invalidation-interval-secs` under `session-descriptor`
-|`reapIntervalSeconds` property of `manager-properties`
-`glassfish-web.xml` equivalent
+|`reapIntervalSeconds` property of `manager-properties` `glassfish-web.xml` equivalent
 
-|`max-in-memory-sessions` under `session-descriptor` |`maxSessions`
-property of `manager-properties` `glassfish-web.xml` equivalent
+|`max-in-memory-sessions` under `session-descriptor`
+|`maxSessions` property of `manager-properties` `glassfish-web.xml` equivalent
 
-|`persistent-store-dir` under `session-descriptor` |`directory` property
-of `store-properties` `glassfish-web.xml` equivalent
+|`persistent-store-dir` under `session-descriptor`
+|`directory` property of `store-properties` `glassfish-web.xml` equivalent
 
-|`prefer-web-inf-classes` under `container-descriptor` |`delegate`
-attribute of `class-loader` `glassfish-web.xml` equivalent
+|`prefer-web-inf-classes` under `container-descriptor`
+|`delegate` attribute of `class-loader` `glassfish-web.xml` equivalent
 
-|`context-root` |`context-root` `glassfish-web.xml` equivalent
+|`context-root`
+|`context-root` `glassfish-web.xml` equivalent
 
-|`cookies-enabled` under `session-descriptor` |Servlet 3.0
+|`cookies-enabled` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-name` under `session-descriptor` |Servlet 3.0
+|`cookie-name` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-path` under `session-descriptor` |Servlet 3.0
+|`cookie-path` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-domain` under `session-descriptor` |Servlet 3.0
+|`cookie-domain` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-comment` under `session-descriptor` |Servlet 3.0
+|`cookie-comment` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-secure` under `session-descriptor` |Servlet 3.0
+|`cookie-secure` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-max-age-secs` under `session-descriptor` |Servlet 3.0
+|`cookie-max-age-secs` under `session-descriptor`
+|Servlet 3.0
 
-|`cookie-http-only` under `session-descriptor` |Servlet 3.0
+|`cookie-http-only` under `session-descriptor`
+|Servlet 3.0
 
-|`url-rewriting-enabled` under `session-descriptor` |Servlet 3.0
+|`url-rewriting-enabled` under `session-descriptor`
+|Servlet 3.0
 
-|`persistent-store-cookie-name` under `session-descriptor` |Cookie-based
-persistence is supported
+|`persistent-store-cookie-name` under `session-descriptor`
+|Cookie-based persistence is supported
 
-|`keepgenerated` under `jsp-descriptor` |keepgenerated init parameter of
-`JspServlet`
+|`keepgenerated` under `jsp-descriptor`
+|keepgenerated init parameter of `JspServlet`
 
-|`working-dir` under `jsp-descriptor` |scratchdir init parameter of
-`JspServlet`
+|`working-dir` under `jsp-descriptor`
+|scratchdir init parameter of `JspServlet`
 
-|`compress-html-template` under `jsp-descriptor` |trimSpaces init
-parameter of `JspServlet`
+|`compress-html-template` under `jsp-descriptor`
+|trimSpaces init parameter of `JspServlet`
 
-|`index-directory-enabled` under `container-descriptor` |listings init
-parameter of `DefaultServlet`
+|`index-directory-enabled` under `container-descriptor`
+|listings init parameter of `DefaultServlet`
 
-|`index-directory-sort-by` under `container-descriptor` |sortedBy init
-parameter of `DefaultServlet`
+|`index-directory-sort-by` under `container-descriptor`
+|sortedBy init parameter of `DefaultServlet`
 
-|`save-sessions-enabled` under `container-descriptor` |Same as
-`asadmin redeploy` `--keepstate=true` or `keep-state` in
-`glassfish-web.xml`
+|`save-sessions-enabled` under `container-descriptor`
+|Same as `asadmin redeploy` `--keepstate=true` or `keep-state` in `glassfish-web.xml`
 
-|`run-as-principal-name` under `servlet-descriptor` |`principal-name`
-under `servlet` `glassfish-web.xml` equivalent
-|=======================================================================
+|`run-as-principal-name` under `servlet-descriptor`
+|`principal-name` under `servlet` `glassfish-web.xml` equivalent
+|===
 
 
 The elements of `weblogic-webservices.xml` that GlassFish Server
@@ -1102,68 +1106,70 @@ supports are explained in the following table.
 Table B-3 `weblogic-webservices.xml` Support in GlassFish Server
 
 [width="100%",cols="34%,66%",options="header",]
-|=======================================================================
-|`weblogic-webservices.xml` Element Name |GlassFish Server Support
-|`webservice-type` |Possible values are `JAXRPC` or `JAXWS`. GlassFish
-Server does not support JAX-RPC web services with JSR 181 annotations.
+|===
+|`weblogic-webservices.xml` Element Name
+|GlassFish Server Support
+
+|`webservice-type`
+|Possible values are `JAXRPC` or `JAXWS`.
+GlassFish Server does not support JAX-RPC web services with JSR 181 annotations.
 The use of this element is limited, because the container can find out
-if the type is JAX-WS or JAX-RPC based on presence of JSR 181
-annotations.
+if the type is JAX-WS or JAX-RPC based on presence of JSR 181 annotations.
 
-|`wsdl-publish-file` |Same as `wsdl-publish-location` in
-`glassfish-web.xml`
+|`wsdl-publish-file`
+|Same as `wsdl-publish-location` in `glassfish-web.xml`
 
-|`service-endpoint-address` |Similar to `endpoint-address-uri` in
-`glassfish-web.xml`, except that `webservice-contextpath` and
-`webservice-serviceuri` are specified separately
+|`service-endpoint-address`
+|Similar to `endpoint-address-uri` in `glassfish-web.xml`,
+except that `webservice-contextpath` and `webservice-serviceuri` are specified separately
 
-|`j2ee:login-config` |Same as `login-config` in `glassfish-web.xml`
+|`j2ee:login-config`
+|Same as `login-config` in `glassfish-web.xml`
 
-|`j2ee:transport-guarantee` |Same as `transport-guarantee` in
-`glassfish-web.xml`
+|`j2ee:transport-guarantee`
+|Same as `transport-guarantee` in `glassfish-web.xml`
 
-|`exposed` under `wsdl` |Accepts `true` or `false`, defaults to `true`.
-Controls the publishing of WSDL to clients.
+|`exposed` under `wsdl`
+|Accepts `true` or `false`, defaults to `true`. Controls the publishing of WSDL to clients.
 
-|`stream-attachments` |Accepts `true` or `false`, defaults to `true`.
+|`stream-attachments`
+|Accepts `true` or `false`, defaults to `true`.
 Only for JAX-WS web services. Configures the JAX-WS runtime to send
 attachments in streaming fashion.
 
-|`validate-request` |Accepts `true` or `false`, defaults to `false`.
+|`validate-request`
+|Accepts `true` or `false`, defaults to `false`.
 Only for JAX-WS web services. Configures the JAX-WS runtime to validate
 that request messages are as the WSDL definitions specify.
 
-|`http-response-buffersize` |Property of `ReliabilityMessagingFeature`
-configuration, similar to
+|`http-response-buffersize`
+|Property of `ReliabilityMessagingFeature` configuration, similar to
 `ReliableMessagingFeature.setDestinationBufferQuota()`
 
-|`reliability-config` |Partially supported. Subelements map to Metro's
-`ReliabilityMessagingFeature`.
+|`reliability-config`
+|Partially supported. Subelements map to Metro's `ReliabilityMessagingFeature`.
 
-|`inactivity-timeout` under `reliability-config` |Maps to
-`ReliableMessagingFeature.getSequenceInactivityTimeout()`
+|`inactivity-timeout` under `reliability-config`
+|Maps to `ReliableMessagingFeature.getSequenceInactivityTimeout()`
 
-|`base-retransmission-interval` under `reliability-config` |Maps to
-`ReliableMessagingFeature.``getMessageRetransmissionInterval()`
+|`base-retransmission-interval` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getMessageRetransmissionInterval()`
 
-|`retransmission-exponential-``backoff` under `reliability-config` |Maps
-to `ReliableMessagingFeature.``getRetransmissionBackoffAlgorithm()`.
+|`retransmission-exponential-``backoff` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getRetransmissionBackoffAlgorithm()`.
 Returns enum values, one of them is `exponential`.
 
-|`acknowledgement-interval` under `reliability-config` |Maps to
-`ReliableMessagingFeature.``getAcknowledgementTransmissionInterval()`
+|`acknowledgement-interval` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getAcknowledgementTransmissionInterval()`
 
-|`sequence-expiration` under `reliability-config` |Maps to
-`ReliableMessagingFeature.``getSequenceInactivityTimeout()`. In WebLogic
-Server this value applies regardless of activity. In Metro it applies
-only to inactive sequences.
+|`sequence-expiration` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getSequenceInactivityTimeout()`.
+In WebLogic Server this value applies regardless of activity.
+In Metro it applies only to inactive sequences.
 
-|`buffer-retry-count` under `reliability-config` |Maps to
-`ReliableMessagingFeature.``getMaxMessageRetransmissionCount()`
+|`buffer-retry-count` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getMaxMessageRetransmissionCount()`
 
-|`buffer-retry-delay` under `reliability-config` |Maps to
-`ReliableMessagingFeature.``getMessageRetransmissionInterval()`
-|=======================================================================
-
-
-
+|`buffer-retry-delay` under `reliability-config`
+|Maps to `ReliableMessagingFeature.``getMessageRetransmissionInterval()`
+|===

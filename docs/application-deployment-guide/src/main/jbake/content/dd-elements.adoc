@@ -3,6 +3,7 @@ status=published
 title=Elements of the GlassFish Server Deployment Descriptors
 prev=dd-files.html
 ~~~~~~
+
 Elements of the GlassFish Server Deployment Descriptors
 =======================================================
 
@@ -48,7 +49,7 @@ element.
 Table C-1 `activation-config` subelements
 
 [width="100%",cols="32%,12%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -62,7 +63,7 @@ link:#beaqt[`activation-config-property`]
 
 
  |one or more |Specifies an activation configuration property.
-|=======================================================================
+|===
 
 
 [[beaqt]][[GSDPG00086]][[activation-config-property]]
@@ -93,7 +94,7 @@ The following table describes subelements for the
 Table C-2 `activation-config-property` subelements
 
 [width="100%",cols="39%,10%,51%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaqu[`activation-config-property-name`]
@@ -105,7 +106,7 @@ link:#beaqv[`activation-config-property-value`]
 
 
  |only one |Specifies the value of an activation configuration property.
-|=======================================================================
+|===
 
 
 [[beaqu]][[GSDPG00087]][[activation-config-property-name]]
@@ -182,19 +183,16 @@ The following table describes subelements for the
 Table C-3 `admin-object-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
-a|
-link:#beaso[`description`]
+a|link:#beaso[`description`]
+|zero or one
+|Contains a text description of this element.
 
-
- |zero or one |Contains a text description of this element.
-a|
-link:#beavx[`property` (with attributes)]
-
-
- |zero or more |Specifies a property or a variable.
-|==========================================================
+a|link:#beavx[`property`] (with attributes)
+|zero or more
+|Specifies a property or a variable.
+|===
 
 
 [[GSDPG843]][[sthref15]]
@@ -213,7 +211,7 @@ element.
 Table C-4 `admin-object-resource` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -234,7 +232,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[GSDPG845]][[sthref18]]
@@ -276,7 +274,7 @@ The following table describes subelements for the `as-context` element.
 Table C-5 `as-context` Subelements
 
 [width="100%",cols="14%,10%,76%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaqx[`auth-method`]
@@ -297,7 +295,7 @@ link:#beawq[`required`]
 
  |only one |Specifies whether the authentication method specified in the
 `auth-method` element must be used for client authentication.
-|=======================================================================
+|===
 
 
 [[gjizj]][[GSDPG00091]][[archive-name]]
@@ -388,14 +386,14 @@ The following table describes subelements for the `auth-realm` element.
 Table C-6 `auth-realm` subelement
 
 [width="100%",cols="36%,14%,50%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyoy]][[GSDPG00351]][[attributes-1]]
@@ -411,11 +409,11 @@ The following table describes attributes for the `auth-realm` element.
 Table C-7 `auth-realm` attributes
 
 [width="100%",cols="18%,13%,69%",options="header",]
-|======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Defines the name of this realm.
 |`classname` |none |Defines the Java class which implements this realm.
-|======================================================================
+|===
 
 
 [[fvyox]][[GSDPG00352]][[example]]
@@ -425,7 +423,7 @@ Example
 
 Here is an example of the default file realm:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <auth-realm name="file"
    classname="com.sun.enterprise.security.auth.realm.file.FileRealm">
@@ -482,13 +480,13 @@ element.
 Table C-8 `backend-principal` Attributes
 
 [width="100%",cols="26%,17%,57%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`user-name` |none |Specifies the user name required by the EIS.
 
 |`password` |none |(optional) Specifies the password required by the
 EIS, if any.
-|=======================================================================
+|===
 
 
 [[beara]][[GSDPG00095]][[bean-cache]]
@@ -519,7 +517,7 @@ The following table describes subelements for the `bean-cache` element.
 Table C-9 `bean-cache` Subelements
 
 [width="100%",cols="35%,11%,54%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beauo[`max-cache-size`]
@@ -563,7 +561,7 @@ link:#beayp[`victim-selection-policy`]
 
  |zero or one |Specifies the algorithm that must be used by the
 container to pick victims. Applies only to stateful session beans.
-|=======================================================================
+|===
 
 
 [[fvyoo]][[GSDPG00355]][[example-1]]
@@ -571,7 +569,7 @@ container to pick victims. Applies only to stateful session beans.
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <bean-cache>
    <max-cache-size>100</max-cache-size>
@@ -611,7 +609,7 @@ The following table describes subelements for the `bean-pool` element.
 Table C-10 `bean-pool` Subelements
 
 [width="100%",cols="34%,11%,55%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxt[`steady-pool-size`]
@@ -648,7 +646,7 @@ link:#beavr[`pool-idle-timeout-in-seconds`]
  |zero or one |Specifies the maximum time that a bean is allowed to be
 idle in the pool. After this time, the bean is removed. This is a hint
 to the server. Default time is 600 seconds (10 minutes).
-|=======================================================================
+|===
 
 
 [[fvypf]][[GSDPG00358]][[example-2]]
@@ -656,7 +654,7 @@ to the server. Default time is 600 seconds (10 minutes).
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <bean-pool>
    <steady-pool-size>10</steady-pool-size>
@@ -693,7 +691,7 @@ The following table describes subelements for the `cache` element.
 Table C-11 `cache` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beare[`cache-helper`]
@@ -722,7 +720,7 @@ link:#bearh[`cache-mapping`]
 
  |zero or more |Maps a URL pattern or a servlet name to its cacheability
 constraints.
-|=======================================================================
+|===
 
 
 [[fvypj]][[GSDPG00361]][[attributes-3]]
@@ -738,7 +736,7 @@ The following table describes attributes for the `cache` element.
 Table C-12 `cache` Attributes
 
 [width="172%",cols="14%,46%,40%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`max-entries` |`4096` |(optional) Specifies the maximum number of
 entries the cache can contain. Must be a positive integer.
@@ -750,7 +748,7 @@ element.
 
 |`enabled` |`true` |(optional) Determines whether servlet and JSP
 caching is enabled.
-|=======================================================================
+|===
 
 
 [[fvypx]][[GSDPG00362]][[properties-1]]
@@ -766,7 +764,7 @@ The following table describes properties for the `cache` element.
 Table C-13 `cache` Properties
 
 [width="100%",cols="24%,23%,53%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`cacheClassName` |`com.sun.appserv.web.cache.LruCache` |Specifies the
 fully qualified name of the class that implements the cache
@@ -781,7 +779,7 @@ used) list. Applicable only if `cacheClassName` is set to
 cache memory size in bytes (KB or MB units). Example values are `32 KB`
 or `2 MB`. Applicable only if `cacheClassName` is set to
 `com.sun.appserv.web.cache.BoundedMultiLruCache`.
-|=======================================================================
+|===
 
 
 [[fvyrn]][[GSDPG00363]][[cache-class-names]]
@@ -798,7 +796,7 @@ property.
 Table C-14 `cacheClassName` Values
 
 [width="100%",cols="31%,69%",options="header",]
-|=======================================================================
+|===
 |Value |Description
 |`com.sun.appserv.web.cache.LruCache` |A bounded cache with an LRU
 (least recently used) cache replacement policy.
@@ -812,7 +810,7 @@ number of entries (>4096). Uses the `MultiLRUSegmentSize` property.
 |`com.sun.appserv.web.cache.BoundedMultiLruCache` |A cache suitable for
 limiting the cache size by memory rather than number of entries. Uses
 the `MaxSize` property.
-|=======================================================================
+|===
 
 
 [[beare]][[GSDPG00098]][[cache-helper]]
@@ -844,14 +842,14 @@ element.
 Table C-15 `cache-helper` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyqu]][[GSDPG00366]][[attributes-4]]
@@ -867,7 +865,7 @@ The following table describes attributes for the `cache-helper` element.
 Table C-16 `cache-helper` Attributes
 
 [width="181%",cols="8%,49%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |`default` |Specifies a unique name for the helper class, which
 is referenced in the link:#bearh[`cache-mapping`] element.
@@ -875,7 +873,7 @@ is referenced in the link:#bearh[`cache-mapping`] element.
 |`class-name` |none |Specifies the fully qualified class name of the
 cache helper, which must implement the com.sun.appserv.web.CacheHelper
 interface.
-|=======================================================================
+|===
 
 
 [[bearf]][[GSDPG00099]][[cache-helper-ref]]
@@ -954,7 +952,7 @@ element.
 Table C-17 `cache-mapping` Subelements
 
 [width="100%",cols="20%,30%,50%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxo[`servlet-name`]
@@ -1023,7 +1021,7 @@ link:#bease[`constraint-field`]
 
  |zero or more if `cache-helper-ref` is not used |Specifies a
 cacheability constraint for the given `url-pattern` or `servlet-name`.
-|=======================================================================
+|===
 
 
 [[beari]][[GSDPG00102]][[call-property]]
@@ -1059,7 +1057,7 @@ element.
 Table C-18 `call-property` subelements
 
 [width="100%",cols="24%,12%,64%",options="header",]
-|=============================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
@@ -1071,7 +1069,7 @@ link:#beayo[`value`]
 
 
  |only one |Specifies the value of the entity.
-|=============================================
+|===
 
 
 [[bearj]][[GSDPG00103]][[caller-propagation]]
@@ -1131,13 +1129,13 @@ The following table describes attributes for the `cert-db` element.
 Table C-19 `cert-db` attributes
 
 [width="100%",cols="14%,11%,75%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`path` |none |Specifies the absolute path of the certificate database.
 
 |`password` |none |Specifies the password to access the certificate
 database.
-|=======================================================================
+|===
 
 
 [[bearl]][[GSDPG00105]][[check-all-at-commit]]
@@ -1213,14 +1211,14 @@ The following table describes subelements for the
 Table C-20 `check-version-of-accessed-instances` Subelements
 
 [width="100%",cols="33%,11%,56%",options="header",]
-|====================================================
+|===
 |Element |Required |Description
 a|
 link:#bearz[`column-name`]
 
 
  |only one |Specifies the name of the version column.
-|====================================================
+|===
 
 
 [[bearo]][[GSDPG00108]][[checkpoint-at-end-of-method]]
@@ -1254,14 +1252,14 @@ The following table describes subelements for the
 Table C-21 `checkpoint-at-end-of-method` Subelements
 
 [width="100%",cols="25%,13%,62%",options="header",]
-|======================================
+|===
 |Element |Required |Description
 a|
 link:#beauz[`method`]
 
 
  |one or more |Specifies a bean method.
-|======================================
+|===
 
 
 [[bearp]][[GSDPG00109]][[checkpointed-methods]]
@@ -1307,14 +1305,14 @@ element.
 Table C-22 `class-loader` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyrl]][[GSDPG00390]][[attributes-6]]
@@ -1330,14 +1328,14 @@ The following table describes attributes for the `class-loader` element.
 Table C-23 `class-loader` Attributes
 
 [width="172%",cols="17%,46%,37%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`extra-class-path` |null a|
 (optional) Specifies a colon or semicolon separated list of additional
 classpaths for this web module. Paths can be absolute or relative to the
 web module's root, for example:
 
-[source,oac_no_warn]
+[source]
 ----
 extra-class-path="WEB-INF/lib/extra/extra.jar"
 ----
@@ -1360,15 +1358,14 @@ the delegate setting. This prevents applications from overriding core
 Java runtime classes or changing the API versions of specifications that
 are part of the Java EE platform.
 
-|`dynamic-reload-``interval` | + |(optional) Not implemented. Included
+|`dynamic-reload-interval` | |(optional) Not implemented. Included
 for backward compatibility with previous Oracle Web Server versions.
-|=======================================================================
+|===
 
 
 
 [NOTE]
-=======================================================================
-
+====
 If the `delegate` attribute is set to `false`, the class loader
 delegation behavior complies with the Servlet 2.4 specification, section
 9.7.2. If set to its default value of `true`, classes and resources
@@ -1379,8 +1376,7 @@ Portable programs that use this element should not be packaged with any
 classes or interfaces that are a part of the Java EE specification. The
 behavior of a program that includes such classes or interfaces in its
 WAR file is undefined.
-
-=======================================================================
+====
 
 
 [[gcfko]][[GSDPG00391]][[properties-2]]
@@ -1396,12 +1392,12 @@ The following table describes properties for the `class-loader` element.
 Table C-24 `class-loader` Properties
 
 [width="181%",cols="15%,49%,36%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`ignoreHiddenJarFiles` |`false` |If `true`, specifies that all JAR and
 ZIP files in the `WEB-INF/lib` directory that start with a period (`.`)
 are ignored by the class loader.
-|=======================================================================
+|===
 
 
 [[bearr]][[GSDPG00111]][[client-container]]
@@ -1435,7 +1431,7 @@ element.
 Table C-25 `client-container` Subelements
 
 [width="100%",cols="28%,12%,60%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaye[`target-server`]
@@ -1485,7 +1481,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|=======================================================================
+|===
 
 
 [[fvyqq]][[GSDPG00394]][[attributes-7]]
@@ -1502,13 +1498,13 @@ element.
 Table C-26 `client-container` Attributes
 
 [width="172%",cols="11%,46%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`send-password` |`true` |If `true`, specifies that client
 authentication credentials must be sent to the server. Without
 authentication credentials, all access to protected EJB components
 results in exceptions.
-|=======================================================================
+|===
 
 
 [[fvyrm]][[GSDPG00395]][[properties-3]]
@@ -1525,14 +1521,14 @@ element.
 Table C-27 `client-container` Properties
 
 [width="172%",cols="22%,46%,32%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`com.sun.appserv.iiop.endpoints` |none |Specifies a comma-separated
 list of one or more IIOP endpoints used for load balancing. An IIOP
 endpoint is in the form host`:`port, where the host is an IP address or
 host name, and the port specifies the port number. Deprecated. Use
 link:#beaye[`target-server`] elements instead.
-|=======================================================================
+|===
 
 
 [[bears]][[GSDPG00112]][[client-credential]]
@@ -1566,14 +1562,14 @@ element.
 Table C-28 `client-credential` subelement
 
 [width="100%",cols="37%,14%,49%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyqv]][[GSDPG00398]][[attributes-8]]
@@ -1590,7 +1586,7 @@ element.
 Table C-29 `client-credential` attributes
 
 [width="100%",cols="12%,14%,74%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`user-name` |none |The user name used to authenticate the Application
 client container.
@@ -1600,7 +1596,7 @@ client container.
 
 |`realm` |default realm for the domain |(optional) The realm (specified
 by name) where credentials are to be resolved.
-|=======================================================================
+|===
 
 
 [[beart]][[GSDPG00113]][[cmp]]
@@ -1631,7 +1627,7 @@ The following table describes subelements for the `cmp` element.
 Table C-30 `cmp` Subelements
 
 [width="100%",cols="22%,11%,67%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaun[`mapping-properties`]
@@ -1657,7 +1653,7 @@ link:#beavu[`prefetch-disabled`]
 
  |zero or one |Disables prefetching of entity bean states for the
 specified query methods.
-|=======================================================================
+|===
 
 
 [[bearu]][[GSDPG00114]][[cmp-field-mapping]]
@@ -1694,7 +1690,7 @@ element.
 Table C-31 `cmp-field-mapping` Subelements
 
 [width="100%",cols="15%,12%,73%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beatd[`field-name`]
@@ -1723,7 +1719,7 @@ link:#beatc[`fetched-with`]
 
 
  |zero or one |Specifies the fetch group for this CMP field's mapping.
-|=======================================================================
+|===
 
 
 [[bearv]][[GSDPG00115]][[cmp-resource]]
@@ -1757,7 +1753,7 @@ element.
 Table C-32 `cmp-resource` Subelements
 
 [width="100%",cols="33%,12%,55%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beatw[`jndi-name`]
@@ -1807,7 +1803,7 @@ link:#beaxd[`schema-generator-properties`]
 
  |zero or one |Specifies field-specific type mappings and allows you to
 set the `use-unique-table-names` property.
-|=======================================================================
+|===
 
 
 [[bearw]][[GSDPG00116]][[cmr-field-mapping]]
@@ -1841,7 +1837,7 @@ element.
 Table C-33 `cmr-field-mapping` Subelements
 
 [width="100%",cols="18%,12%,70%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#bearx[`cmr-field-name`]
@@ -1864,7 +1860,7 @@ link:#beatc[`fetched-with`]
 
  |zero or one |Specifies the fetch group for this CMR field's
 relationship.
-|=======================================================================
+|===
 
 
 [[bearx]][[GSDPG00117]][[cmr-field-name]]
@@ -1971,7 +1967,7 @@ The following table describes subelements for the `column-pair` element.
 Table C-34 `column-pair` Subelements
 
 [width="100%",cols="14%,10%,76%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#bearz[`column-name`]
@@ -1980,7 +1976,7 @@ link:#bearz[`column-name`]
  |two |Specifies the name of a column from the primary table, or the
 qualified table name (TABLE.COLUMN) of a column from a secondary or
 related table.
-|=======================================================================
+|===
 
 
 [[beasb]][[GSDPG00121]][[commit-option]]
@@ -1994,11 +1990,9 @@ entity beans.
 
 
 [NOTE]
-==================================================================
-
+====
 Commit option A is not supported for this GlassFish Server release.
-
-==================================================================
+====
 
 
 [[fvyrz]][[GSDPG00415]][[superelements-36]]
@@ -2098,7 +2092,7 @@ The following table describes subelements for the
 Table C-35 `connector-connection-pool` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -2118,7 +2112,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|=======================================================================
+|===
 
 
 [[GSDPG882]][[sthref57]]
@@ -2142,34 +2136,34 @@ re-enabling of applications that refer to the resource:
 Table C-36 `connector-connection-pool` Attributes
 
 [width="172%",cols="25%,46%,29%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the connection pool. A
 link:#giyhv[`connector-resource`] element's `pool-name` attribute refers
 to this `name`.
 
-|`resource``-adapter``-name` |none |Specifies the name of the deployed
+|`resource-adapter-name` |none |Specifies the name of the deployed
 connector module or application. If no name is specified during
 deployment, the name of the `.rar` file is used. If the resource adapter
-is embedded in an application, then it is app_name`#`rar_name.
+is embedded in an application, then it is app_name``#``rar_name.
 
-|`connection``-definition``-name` |none |Specifies a unique name,
+|`connection-definition-name` |none |Specifies a unique name,
 identifying a resource adapter's `connection-definition` element in the
 `ra.xml` file. This is usually the `connectionfactory-interface` of the
 `connection-definition` element.
 
-|`steady-pool``-size` |`8` |(optional) Specifies the initial and minimum
+|`steady-pool-size` |`8` |(optional) Specifies the initial and minimum
 number of connections maintained in the pool.
 
 |`max-pool-size` |`32` |(optional) Specifies the maximum number of
 connections that can be created to satisfy client requests.
 
-|`max-wait-time-in``-millis` |`60000` |(optional) Specifies the amount
+|`max-wait-time-in-millis` |`60000` |(optional) Specifies the amount
 of time, in milliseconds, that the caller is willing to wait for a
 connection. If `0`, the caller is blocked indefinitely until a resource
 is available or an error occurs.
 
-|`pool-resize``-quantity` |`2` a|
+|`pool-resize-quantity` |`2` a|
 (optional) Specifies the number of idle connections to be destroyed if
 the existing number of connections is above the `steady-pool-size`
 (subject to the `max-pool-size` limit).
@@ -2179,14 +2173,14 @@ An idle connection is one that has not been used for a period of
 `idle-timeout-in-seconds`. When the pool size reaches
 `steady-pool-size`, connection removal stops.
 
-|`idle-timeout``-in-seconds` |`300` |(optional) Specifies the maximum
+|`idle-timeout-in-seconds` |`300` |(optional) Specifies the maximum
 time that a connection can remain idle in the pool. After this amount of
 time, the pool can close this connection.
 
-|`fail-all-``connections` |`false` |(optional) If `true`, closes all
+|`fail-all-connections` |`false` |(optional) If `true`, closes all
 connections in the pool if a single validation check fails.
 
-|`transaction``-support` |none a|
+|``transaction``-support` |none a|
 (optional) Specifies the transaction support for this connection pool.
 Overrides the transaction support defined in the resource adapter in a
 downward compatible way: supports a transaction level lower than or
@@ -2197,38 +2191,38 @@ descending order are:
 * `LocalTransaction` - Supports local transactions only.
 * `NoTransaction` - No transaction support.
 
-|`is-connection-``validation-``required` |`false` |(optional) Specifies
+|`is-connection-validation-required` |`false` |(optional) Specifies
 whether connections have to be validated before being given to the
 application. If a resource's validation fails, it is destroyed, and a
 new resource is created and returned.
 
-|`validate-atmost-once-``period-in-seconds` |`0` |Specifies the time
+|`validate-atmost-once-period-in-seconds` |`0` |Specifies the time
 interval within which a connection is validated at most once. Minimizes
 the number of validation calls. A value of zero allows unlimited
 validation calls.
 
-|`connection-``leak-timeout-``in-seconds` |`0` |Detects potential
+|`connection-leak-timeout-in-seconds` |`0` |Detects potential
 connection leaks by the application. A connection that is not returned
 back to the pool by the application within the specified period is
 assumed to be potentially leaking, and a stack trace of the caller is
 logged. A zero value disables leak detection. A nonzero value enables
 leak tracing.
 
-|`connection-leak-``reclaim` |`false` |If `true`, the pool will reclaim
+|`connection-leak-reclaim` |`false` |If `true`, the pool will reclaim
 a connection after `connection-leak-timeout-in-seconds` occurs.
 
-|`connection-creation-``retry-attempts` |`0` |Specifies the number of
+|`connection-creation-retry-attempts` |`0` |Specifies the number of
 attempts to create a new connection.
 
-|`connection-creation-``retry-interval-``in-seconds` |`10` |Specifies
+|`connection-creation-retry-interval-in-seconds` |`10` |Specifies
 the time interval between attempts to create a connection when
 `connection-creation-retry-attempts` is greater than `0`.
 
-|`lazy-connection-``enlistment` |`false` |If `true`, a connection is not
+|`lazy-connection-enlistment` |`false` |If `true`, a connection is not
 enlisted in a transaction until it is used. If `false`, any connection
 object available to a transaction is enlisted in the transaction.
 
-|`lazy-connection-``association` |`false` |If `true`, a physical
+|`lazy-connection-association` |`false` |If `true`, a physical
 connection is not associated with a logical connection until it is used.
 If `false`, a physical connection is associated with a logical
 connection even before it is used.
@@ -2257,7 +2251,7 @@ should reuse connections to avoid this overhead.
 |`match-connections` |`true` |If `true`, enables connection matching.
 You can set to `false` if connections are homogeneous.
 
-|`max-connection-``usage-count` |`0` |Specifies the number of times a
+|`max-connection-usage-count` |`0` |Specifies the number of times a
 connections is reused by the pool, after which it is closed. A zero
 value disables this feature.
 
@@ -2266,7 +2260,7 @@ pool creation or reconfiguration to identify and warn of any erroneous
 attribute values.
 
 |`pooling` |`true` |(optional) If `false`, disables connection pooling.
-|=======================================================================
+|===
 
 
 [[GSDPG884]][[sthref60]]
@@ -2297,7 +2291,7 @@ restart.
 Table C-37 `connector-connection-pool` Properties
 
 [width="100%",cols="26%,11%,63%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`AddressList` |none |Specifies a list of host/port combinations of the
 Message Queue software. For JMS resources of the Type
@@ -2354,17 +2348,15 @@ order to prevent them from all being connected to the same address.
 runtime iterates through the `imqAddressList` in an effort to establish
 (or reestablish) a connection. A value of `-1` indicates that the number
 of attempts is unlimited.
-|=======================================================================
+|===
 
 
 
 [NOTE]
-=======================================================================
-
+====
 All JMS administered object resource properties that worked with version
 7 of the GlassFish Server are supported for backward compatibility.
-
-=======================================================================
+====
 
 
 [[giyhv]][[GSDPG00125]][[connector-resource]]
@@ -2400,7 +2392,7 @@ element.
 Table C-38 `connector-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -2412,7 +2404,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG889]][[sthref67]]
@@ -2431,7 +2423,7 @@ element.
 Table C-39 `connector-resource` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -2450,7 +2442,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[beasd]][[GSDPG00126]][[consistency]]
@@ -2481,7 +2473,7 @@ The following table describes subelements for the `consistency` element.
 Table C-40 `consistency` Subelements
 
 [width="100%",cols="31%,21%,48%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavi[`none`]
@@ -2521,7 +2513,7 @@ link:#bearn[`check-version-of-accessed-instances`]
 
  |exactly one subelement is required |Checks the version column of the
 modified beans.
-|=======================================================================
+|===
 
 
 [[bease]][[GSDPG00127]][[constraint-field]]
@@ -2557,7 +2549,7 @@ element.
 Table C-41 `constraint-field` Subelements
 
 [width="100%",cols="30%,13%,57%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasf[`constraint-field-value`]
@@ -2565,7 +2557,7 @@ link:#beasf[`constraint-field-value`]
 
  |zero or more |Contains a value to be matched to the input parameter
 value.
-|=======================================================================
+|===
 
 
 [[fvysq]][[GSDPG00425]][[attributes-11]]
@@ -2582,7 +2574,7 @@ element.
 Table C-42 `constraint-field` Attributes
 
 [width="100%",cols="18%,21%,61%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the input parameter name.
 
@@ -2595,10 +2587,10 @@ the input parameter is retrieved. Allowed values are
 matching succeeds. Overrides the same attribute in a
 link:#beasf[`constraint-field-value`] subelement.
 
-|`cache-on-match``-failure` |`false` |(optional) If `true`, caches the
+|`cache-on-match-failure` |`false` |(optional) If `true`, caches the
 response if matching fails. Overrides the same attribute in a
 link:#beasf[`constraint-field-value`] subelement.
-|=======================================================================
+|===
 
 
 [[beasf]][[GSDPG00128]][[constraint-field-value]]
@@ -2609,7 +2601,7 @@ link:#beasf[`constraint-field-value`] subelement.
 Specifies a value to be matched to the input parameter value. The
 matching is case sensitive. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <value match-expr="in-range">1-60</value>
 ----
@@ -2642,7 +2634,7 @@ The following table describes attributes for the
 Table C-43 `constraint-field-value` Attributes
 
 [width="172%",cols="11%,46%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`match-expr` |`equals` a|
 (optional) Specifies the type of comparison performed with the value.
@@ -2656,9 +2648,9 @@ n1 and n2 are numbers.
 |`cache-on-match` |`true` |(optional) If `true`, caches the response if
 matching succeeds.
 
-|`cache-on-match``-failure` |`false` |(optional) If `true`, caches the
+|`cache-on-match-failure` |`false` |(optional) If `true`, caches the
 response if matching fails.
-|=======================================================================
+|===
 
 
 [[beasg]][[GSDPG00129]][[context-root]]
@@ -2706,15 +2698,13 @@ Specifies session cookie properties.
 
 
 [NOTE]
-=======================================================================
-
+====
 If cookie settings are defined declaratively in the `web.xml` file, the
 cookie properties defined here take precedence. If cookie settings are
 defined programmatically using `javax.servlet.SessionCookieConfig`
 methods, those cookie settings take precedence over the cookie
 properties defined here.
-
-=======================================================================
+====
 
 
 [[fvysy]][[GSDPG00431]][[superelements-45]]
@@ -2738,14 +2728,14 @@ element.
 Table C-44 `cookie-properties` Subelements
 
 [width="100%",cols="36%,14%,50%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyta]][[GSDPG00433]][[properties-5]]
@@ -2762,7 +2752,7 @@ element.
 Table C-45 `cookie-properties` Properties
 
 [width="100%",cols="24%,13%,63%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`cookieName` |none |Specifies the cookie name.
 
@@ -2798,7 +2788,7 @@ link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-s
 
 |`cookieHttpOnly` |none |Specifies that the cookie is marked HTTP only.
 Allowed values are `true` or `false`.
-|=======================================================================
+|===
 
 
 [[beasi]][[GSDPG00131]][[create-tables-at-deploy]]
@@ -2863,7 +2853,7 @@ element.
 Table C-46 `custom-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -2875,7 +2865,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG900]][[sthref80]]
@@ -2894,7 +2884,7 @@ element.
 Table C-47 `custom-resource` Attributes
 
 [width="172%",cols="11%,46%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -2916,7 +2906,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[beask]][[GSDPG00133]][[database-vendor-name]]
@@ -3029,14 +3019,14 @@ element.
 Table C-48 `default-helper` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvytp]][[GSDPG00444]][[properties-6]]
@@ -3053,7 +3043,7 @@ element.
 Table C-49 `default-helper` Properties
 
 [width="100%",cols="30%,21%,49%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`cacheKeyGeneratorAttrName` |Uses the built-in `default`
 link:#beare[`cache-helper`] key generation, which concatenates the
@@ -3064,7 +3054,7 @@ customized CacheKeyGenerator implementation is used. An application can
 provide a customized key generator rather than using the `default`
 helper. See "link:../application-development-guide/webapps.html#GSDVG00254[The CacheKeyGenerator Interface]" in
 GlassFish Server Open Source Edition Application Development Guide.
-|=======================================================================
+|===
 
 
 [[beasn]][[GSDPG00137]][[default-resource-principal]]
@@ -3104,7 +3094,7 @@ The following table describes subelements for the
 Table C-50 `default-resource-principal` Subelements
 
 [width="100%",cols="11%,10%,79%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
@@ -3118,7 +3108,7 @@ link:#beavp[`password`]
 
 
  |only one |Specifies password of the default resource principal.
-|=======================================================================
+|===
 
 
 [[beaso]][[GSDPG00138]][[description]]
@@ -3274,7 +3264,7 @@ The following table describes subelements for the `ejb` element.
 Table C-51 `ejb` Subelements
 
 [width="100%",cols="35%,12%,53%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beast[`ejb-name`]
@@ -3466,7 +3456,7 @@ link:#gkkia[`per-request-load-balancing`]
 
  |zero or one |Specifies the per-request load balancing behavior of EJB
 2.x and 3.x remote client invocations on a stateless session bean.
-|=======================================================================
+|===
 
 
 [[fvyuf]][[GSDPG00457]][[attributes-14]]
@@ -3482,12 +3472,12 @@ The following table describes attributes for the `ejb` element.
 Table C-52 `ejb` Attributes
 
 [width="181%",cols="16%,49%,35%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`availability-enabled` |`false` |(optional) If set to `true`, and if
 availability is enabled in the EJB container, high-availability features
 apply to this bean if it is a stateful session bean.
-|=======================================================================
+|===
 
 
 [[fvytz]][[GSDPG00458]][[example-3]]
@@ -3495,7 +3485,7 @@ apply to this bean if it is a stateful session bean.
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <ejb>
    <ejb-name>CustomerEJB</ejb-name>
@@ -3588,7 +3578,7 @@ The following table describes subelements for the `ejb-ref` element.
 Table C-53 `ejb-ref` Subelements
 
 [width="100%",cols="26%,11%,63%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasv[`ejb-ref-name`]
@@ -3602,7 +3592,7 @@ link:#beatw[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a resource.
-|=======================================================================
+|===
 
 
 [[beasv]][[GSDPG00145]][[ejb-ref-name]]
@@ -3696,14 +3686,14 @@ Example
 If the web server is listening at `http://localhost:8080`, the following
 `endpoint-address-uri`:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <endpoint-address-uri>StockQuoteService/StockQuotePort</endpoint-address-uri>
 ----
 
 results in the following target endpoint address:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/StockQuoteService/StockQuotePort
 ----
@@ -3737,7 +3727,7 @@ element.
 Table C-54 `enterprise-beans` Subelements
 
 [width="100%",cols="27%,12%,61%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
@@ -3791,7 +3781,7 @@ link:#beavy[`property` (with subelements)]
 
 
  |zero or more |Specifies a property or a variable.
-|=======================================================================
+|===
 
 
 [[fvyux]][[GSDPG00472]][[example-5]]
@@ -3799,7 +3789,7 @@ link:#beavy[`property` (with subelements)]
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <enterprise-beans>
  <ejb>
@@ -3855,7 +3845,7 @@ element.
 Table C-55 `entity-mapping` Subelements
 
 [width="100%",cols="21%,12%,67%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beast[`ejb-name`]
@@ -3898,7 +3888,7 @@ link:#beasd[`consistency`]
 
  |zero or one |Specifies container behavior in guaranteeing
 transactional consistency of the data in the bean.
-|=======================================================================
+|===
 
 
 [[beasz]][[GSDPG00150]][[establish-trust-in-client]]
@@ -3980,7 +3970,7 @@ The following table describes subelements for the
 Table C-56 `external-jndi-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -3992,7 +3982,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG913]][[sthref95]]
@@ -4011,7 +4001,7 @@ The following table describes attributes for the
 Table C-57 `external-jndi-resource` Attributes
 
 [width="172%",cols="13%,46%,41%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -4039,7 +4029,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[beatc]][[GSDPG00153]][[fetched-with]]
@@ -4054,23 +4044,26 @@ based on its parent element and the data types of the fields.
 * If there is no `fetched-with` subelement of a
 link:#bearu[`cmp-field-mapping`], and the data type is not BLOB, CLOB,
 VARBINARY, LONGVARBINARY, or OTHER, `fetched-with` can have any valid
-subelement. The default subelement is as follows: +
-[source,oac_no_warn]
+subelement. The default subelement is as follows:
++
+[source,xml]
 ----
 <fetched-with><default/></fetched-with>
 ----
 * If there is no `fetched-with` subelement of a
 link:#bearu[`cmp-field-mapping`], and the data type is BLOB, CLOB,
 VARBINARY, LONGVARBINARY, or OTHER, `fetched-with` can have any valid
-subelement except `<default/>`. The default subelement is as follows: +
-[source,oac_no_warn]
+subelement except `<default/>`. The default subelement is as follows:
++
+[source,xml]
 ----
 <fetched-with><none/></fetched-with>
 ----
 * If there is no `fetched-with` subelement of a
 link:#bearw[`cmr-field-mapping`], `fetched-with` can have any valid
-subelement. The default subelement is as follows: +
-[source,oac_no_warn]
+subelement. The default subelement is as follows:
++
+[source,xml]
 ----
 <fetched-with><none/></fetched-with>
 ----
@@ -4103,7 +4096,7 @@ element.
 Table C-58 `fetched-with` Subelements
 
 [width="100%",cols="14%,21%,65%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasl[`default`]
@@ -4136,7 +4129,7 @@ link:#beavi[`none`]
 relationship is placed into its own individual fetch group, which means
 it is loaded from a database the first time it is accessed in this
 transaction.
-|=======================================================================
+|===
 
 
 [[beatd]][[GSDPG00154]][[field-name]]
@@ -4189,7 +4182,7 @@ The following table describes subelements for the `finder` element.
 Table C-59 `finder` Subelements
 
 [width="100%",cols="31%,13%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavb[`method-name`]
@@ -4221,7 +4214,7 @@ link:#beawd[`query-ordering`]
 
 
  |zero or one |Specifies the query ordering for the CMP 1.1 finder.
-|=======================================================================
+|===
 
 
 [[beatf]][[GSDPG00156]][[flush-at-end-of-method]]
@@ -4253,14 +4246,14 @@ The following table describes subelements for the
 Table C-60 `flush-at-end-of-method` Subelements
 
 [width="100%",cols="26%,18%,56%",options="header",]
-|======================================
+|===
 |Element |Required |Description
 a|
 link:#beauz[`method`]
 
 
  |one or more |Specifies a bean method.
-|======================================
+|===
 
 
 [[beath]][[GSDPG00157]][[gen-classes]]
@@ -4272,12 +4265,10 @@ Specifies all the generated class names for a bean.
 
 
 [NOTE]
-=======================================================================
-
+====
 This value is automatically generated by the server at deployment or
 redeployment time. Do not specify it or change it after deployment.
-
-=======================================================================
+====
 
 
 [[fvyyh]][[GSDPG00487]][[superelements-72]]
@@ -4300,7 +4291,7 @@ The following table describes subelements for the `gen-classes` element.
 Table C-61 `gen-classes` Subelements
 
 [width="100%",cols="20%,11%,69%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beawn[`remote-impl`]
@@ -4329,7 +4320,7 @@ link:#beauc[`local-home-impl`]
 
  |zero or one |Specifies the fully-qualified class name of the generated
 `EJBLocalHome` impl class.
-|=======================================================================
+|===
 
 
 [[beaxw]][[GSDPG00158]][[glassfish-application]]
@@ -4363,7 +4354,7 @@ The following table describes subelements for the
 Table C-62 `glassfish-application` Subelements
 
 [width="100%",cols="28%,12%,60%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beayr[`web`]
@@ -4462,7 +4453,7 @@ link:#gkkfd[`version-identifier`]
 
 
  |zero or one |Contains version information for an application.
-|=======================================================================
+|===
 
 
 [[beaxx]][[GSDPG00159]][[glassfish-application-client]]
@@ -4497,7 +4488,7 @@ The following table describes subelements for the
 Table C-63 `glassfish-application-client` subelements
 
 [width="100%",cols="28%,12%,60%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasu[`ejb-ref`]
@@ -4549,7 +4540,7 @@ link:#gkkfd[`version-identifier`]
 
 
  |zero or one |Contains version information for an application client.
-|=======================================================================
+|===
 
 
 [[beaya]][[GSDPG00160]][[glassfish-ejb-jar]]
@@ -4583,7 +4574,7 @@ element.
 Table C-64 `glassfish-ejb-jar` Subelements
 
 [width="100%",cols="36%,12%,52%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxg[`security-role-mapping`]
@@ -4625,7 +4616,7 @@ link:#gkkfd[`version-identifier`]
 
 
  |zero or one |Contains version information for an EJB module.
-|=======================================================================
+|===
 
 
 [[beayb]][[GSDPG00161]][[glassfish-web-app]]
@@ -4659,7 +4650,7 @@ element.
 Table C-65 `glassfish-web-app` Subelements
 
 [width="100%",cols="28%,12%,60%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasg[`context-root`]
@@ -4796,7 +4787,7 @@ link:#gkkfd[`version-identifier`]
 
 
  |zero or one |Contains version information for a web application.
-|=======================================================================
+|===
 
 
 [[fvzia]][[GSDPG00497]][[attributes-16]]
@@ -4813,14 +4804,14 @@ element.
 Table C-66 `glassfish-web-app` Attributes
 
 [width="172%",cols="17%,46%,37%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`error-url` |(blank) |(optional) Not implemented. Do not use.
 
 |`httpservlet-``security-``provider` |none |(optional) Specifies the
 `HttpServlet` message layer provider that the web container's servlet
 `auth-constraint` processing calls.
-|=======================================================================
+|===
 
 
 [[fvzgt]][[GSDPG00498]][[properties-7]]
@@ -4837,7 +4828,7 @@ element.
 Table C-67 `glassfish-web-app` Properties
 
 [width="100%",cols="35%,23%,42%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`allowLinking` |`false` a|
 If `true`, resources in this web application that are symbolic links are
@@ -4871,13 +4862,13 @@ The URI pattern of the first alternate docroot uses an exact match,
 whereas the URI patterns of the second and third alternate docroots use
 extension and longest path prefix matches, respectively.
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<property name="alternatedocroot_1" 
+<property name="alternatedocroot_1"
    value="from=/my.jpg dir=/srv/images/jpg"/>
-<property name="alternatedocroot_2" 
+<property name="alternatedocroot_2"
    value="from=*.jpg dir=/srv/images/jpg"/>
-<property name="alternatedocroot_3" 
+<property name="alternatedocroot_3"
    value="from=/jpg/* dir=/src/images"/>
 ----
 
@@ -4901,9 +4892,9 @@ or previous GlassFish Server releases, or the
 org.glassfish.web.valve.GlassFishValve interface from the current
 GlassFish Server release. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<property name="valve_1" 
+<property name="valve_1"
    value="org.glassfish.extension.Valve"/>
 ----
 
@@ -4919,9 +4910,9 @@ org.apache.catalina.ContainerListener,
 org.apache.catalina.LifecycleListener, or
 org.apache.catalina.InstanceListener interface. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<property name="listener_1" 
+<property name="listener_1"
    value="org.glassfish.extension.MyLifecycleListener"/>
 ----
 
@@ -4966,7 +4957,7 @@ context attribute. Compiled JSP files are also placed in this directory.
 
 |`useResponseCTForHeaders` |`false` |If `true`, response headers are
 encoded using the response's charset instead of the default (UTF-8).
-|=======================================================================
+|===
 
 
 [[giygy]][[GSDPG00162]][[group-map]]
@@ -5007,13 +4998,13 @@ The following table describes attributes for the `group-map` element.
 Table C-68 `group-map` Attributes
 
 [width="181%",cols="13%,49%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`eis-group` |none |Specifies an EIS group.
 
 |`mapped-group` |none |Specifies a group defined in the GlassFish Server
 domain.
-|=======================================================================
+|===
 
 
 [[beati]][[GSDPG00163]][[group-name]]
@@ -5095,16 +5086,18 @@ The following table describes attributes for the
 Table C-69 `idempotent-url-pattern` Attributes
 
 [width="181%",cols="12%,49%,39%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
-|`url-pattern` |none |Specifies a URL pattern, which can contain
-wildcards. The URL pattern must conform to the mappings specified in
-section SRV 11.2 of the Servlet 2.4 specification.
+|`url-pattern`
+|none
+|Specifies a URL pattern, which can contain wildcards.
+The URL pattern must conform to the mappings specified in section SRV 11.2 of the Servlet 2.4 specification.
 
-|`no-of-retries` |`-1` |(optional) Specifies the number of times the
-load balancer retries an idempotent request. A value of `-1` indicates
-infinite retries.
-|=======================================================================
+|`no-of-retries`
+|`-1`
+|(optional) Specifies the number of times the load balancer retries an idempotent request.
+A value of `-1` indicates infinite retries.
+|===
 
 
 [[fvyxy]][[GSDPG00506]][[example-6]]
@@ -5115,7 +5108,7 @@ Example
 The following example specifies that all requests for the URI
 `sun-java/*` are idempotent.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
@@ -5171,7 +5164,7 @@ element.
 Table C-70 `ior-security-config` Subelements
 
 [width="100%",cols="20%,11%,69%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beayh[`transport-config`]
@@ -5191,7 +5184,7 @@ link:#beaxb[`sas-context`]
 
 
  |zero or one |Describes the sas-context fields.
-|=======================================================================
+|===
 
 
 [[beatp]][[GSDPG00167]][[is-cache-overflow-allowed]]
@@ -5272,7 +5265,7 @@ The following table describes subelements for the `java-method` element.
 Table C-71 `java-method` Subelements
 
 [width="100%",cols="30%,14%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavb[`method-name`]
@@ -5286,7 +5279,7 @@ link:#beavd[`method-params`]
 
  |zero or one |Specifies fully qualified Java type names of method
 parameters.
-|=======================================================================
+|===
 
 
 [[gauax]][[GSDPG00171]][[java-web-start-access]]
@@ -5319,7 +5312,7 @@ The following table describes subelements for the
 Table C-72 `java-web-start-access` subelements
 
 [width="100%",cols="15%,11%,74%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beasg[`context-root`]
@@ -5331,14 +5324,14 @@ client module. If none is specified, a default is generated.
 
 The default for a web module is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/app-name/relative-URI-to-appclient-jar
 ----
 
 The default for a stand-alone application client module is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/module-name
 ----
@@ -5370,7 +5363,7 @@ link:#gkhun[`jnlp-doc`]
 
  |zero or one |Specifies the name of a custom JNLP file. If none is
 specified, a default JNLP file is generated.
-|=======================================================================
+|===
 
 
 [[giyil]][[GSDPG00172]][[jdbc-connection-pool]]
@@ -5406,7 +5399,7 @@ element.
 Table C-73 `jdbc-connection-pool` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -5418,7 +5411,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG935]][[sthref120]]
@@ -5440,13 +5433,13 @@ to the resource: `datasource-classname`, `associate-with-thread`,
 Table C-74 `jdbc-connection-pool` Attributes
 
 [width="181%",cols="24%,49%,27%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the connection pool. A
 link:#giyhm[`jdbc-resource`] element's `pool-name` attribute refers to
 this `name`.
 
-|`datasource-``classname` |none |(optional) Specifies the class name of
+|`datasource-classname` |none |(optional) Specifies the class name of
 the associated vendor-supplied data source. This class must implement
 javax.sql.DataSource, javax.sql.XADataSource ,
 javax.sql.ConnectionPoolDatasource , or a combination.
@@ -5462,7 +5455,7 @@ two or more of these interfaces or when a `driver-classname` is
 specified. An error occurs if this attribute has a legal value and the
 indicated interface is not implemented by the data source class.
 
-|`driver-``classname` |none |(optional) Specifies the vendor-supplied
+|`driver-classname` |none |(optional) Specifies the vendor-supplied
 JDBC driver class name. This driver must implement the java.sql.Driver
 interface.
 
@@ -5476,12 +5469,12 @@ number of connections maintained in the pool.
 |`max-pool-size` |`32` |(optional) Specifies the maximum number of
 connections that can be created to satisfy client requests.
 
-|`max-wait-time-``in-millis` |`60000` |(optional) Specifies the amount
+|`max-wait-time-in-millis` |`60000` |(optional) Specifies the amount
 of time, in milliseconds, that the caller is willing to wait for a
 connection. If `0`, the caller is blocked indefinitely until a resource
 is available or an error occurs.
 
-|`pool-resize-``quantity` |`2` a|
+|`pool-resize-quantity` |`2` a|
 (optional) Specifies the number of idle connections to be destroyed if
 the existing number of connections is above the `steady-pool-size`
 (subject to the `max-pool-size` limit).
@@ -5491,7 +5484,7 @@ An idle connection is one that has not been used for a period of
 `idle-timeout-in-seconds`. When the pool size reaches
 `steady-pool-size`, connection removal stops.
 
-|`idle-timeout-``in-seconds` |`300` a|
+|`idle-timeout-in-seconds` |`300` a|
 (optional) Specifies the maximum time that a connection can remain idle
 in the pool. After this amount of time, the pool can close this
 connection.
@@ -5500,16 +5493,16 @@ This timeout value must be kept shorter than the server side (database)
 timeout value to prevent the accumulation of unusable connections in the
 application.
 
-|`transaction-``isolation-level` |default JDBC driver isolation level a|
+|`transaction-isolation-level` |default JDBC driver isolation level a|
 (optional) Specifies the transaction isolation level on the pooled
 database connections. Allowed values are `read-uncommitted`,
 `read-committed` , `repeatable-read`, or `serializable`.
 
 Applications that change the isolation level on a pooled connection
 programmatically risk polluting the pool, which can lead to errors. See
-`is-isolation-``level-``guaranteed` for more details.
+`is-isolation-level-guaranteed` for more details.
 
-|`is-isolation-``level-guaranteed` |`true` |(optional) Applicable only
+|`is-isolation-level-guaranteed` |`true` |(optional) Applicable only
 when `transaction-``isolation-``level` is explicitly set. If `true`,
 every connection obtained from the pool is guaranteed to have the
 desired isolation level. This might impact performance on some JDBC
@@ -5517,12 +5510,12 @@ drivers. Only set this attribute to `false` if you are certain that the
 hosted applications do not return connections with altered isolation
 levels.
 
-|`is-connection-``validation-``required` |`false` |(optional) Specifies
+|`is-connection-validation-required` |`false` |(optional) Specifies
 whether connections have to be validated before being given to the
 application. If a resource's validation fails, it is destroyed, and a
 new resource is created and returned.
 
-|`connection-``validation-``method` |`table` a|
+|`connection-validation-method` |`table` a|
 (optional) Legal values are as follows:
 
 * `auto-commit`, which uses
@@ -5542,12 +5535,12 @@ The `table` must exist and be accessible, but it doesn't require any
 rows. Do not use an existing table that has a large number of rows or a
 table that is already frequently accessed.
 
-|`validation-``table-``name` |none |(optional) Specifies the table name
+|`validation-table-name` |none |(optional) Specifies the table name
 to be used to perform a query to validate a connection. This parameter
 is mandatory if and only if `connection-``validation-``method` is set to
 `table`.
 
-|`validation-``classname` |none a|
+|`validation-classname` |none a|
 (optional) Specifies the custom validation implementation class name.
 This parameter is mandatory if `connection-validation-method` is set to
 `custom-validation`. The classname provided must be accessible to the
@@ -5566,17 +5559,17 @@ the org.glassfish.api.jdbc.ConnectionValidation interface.
 whenever a connection is created (not reused) in the pool. This
 initializes the state of the connection.
 
-|`fail-all-``connections` |`false` |(optional) If `true`, closes all
+|`fail-all-connections` |`false` |(optional) If `true`, closes all
 connections in the pool if a single validation check fails. This
 parameter is mandatory if and only if
-`is-connection-``validation-``required` is set to `true`.
+`is-connection-validation-required` is set to `true`.
 
-|`non-transactional-``connections` |`false` |(optional) If `true`,
+|`non-transactional-connections` |`false` |(optional) If `true`,
 non-transactional connections can be made to the JDBC connection pool.
 These connections are not automatically enlisted with the transaction
 manager.
 
-|`allow-non-``component-``callers` |`false` |(optional) If `true`,
+|`allow-non-component-callers` |`false` |(optional) If `true`,
 non-Java-EE components, such as servlet filters, lifecycle modules, and
 third party persistence managers, can use this JDBC connection pool. The
 returned connection is automatically enlisted with the transaction
@@ -5586,7 +5579,7 @@ non-component callers are not automatically closed at the end of a
 transaction by the container. They must be explicitly closed by the
 caller.
 
-|`validate-atmost-``once-period-``in-``seconds` |`0` a|
+|`validate-atmost-once-period-in-seconds` |`0` a|
 (optional) Specifies the time interval within which a connection is
 validated at most once. Minimizes the number of validation calls.
 
@@ -5595,7 +5588,7 @@ minimize the number of validation requests by a connection. That is, a
 value of zero disables this attribute. As a result, the same connection
 is validated every time the application acquires the connection.
 
-|`connection-``leak-timeout-``in-seconds` |`0` a|
+|`connection-leak-timeout-in-seconds` |`0` a|
 (optional) Detects potential connection leaks by the application. A
 connection that is not returned back to the pool by the application
 within the specified period is assumed to be potentially leaking, and a
@@ -5605,18 +5598,18 @@ detection. A nonzero value enables leak tracing.
 Use this attribute along with `connection-leak-reclaim` to avoid
 potential connection leaks from the application.
 
-|`connection-leak-``reclaim` |`false` |(optional) If `true`, the pool
+|`connection-leak-reclaim` |`false` |(optional) If `true`, the pool
 will reclaim a connection after `connection-leak-timeout-in-seconds`
 occurs.
 
-|`connection-creation-``retry-attempts` |`0` |(optional) Specifies the
+|`connection-creation-retry-attempts` |`0` |(optional) Specifies the
 number of attempts to create a new connection in case of a failure.
 
-|`connection-creation-``retry-interval-``in-seconds` |`10` |(optional)
+|`connection-creation-retry-interval-``in-seconds` |`10` |(optional)
 Specifies the time interval between attempts to create a connection when
 `connection-creation-retry-attempts` is greater than `0`.
 
-|`statement-leak-``timeout-``in-seconds` |`0` a|
+|`statement-leak-timeout-in-seconds` |`0` a|
 (optional) Detects potential statement leaks by the application. A
 statement that is not closed by the application within the specified
 period is assumed to be potentially leaking, and a stack trace of the
@@ -5626,10 +5619,10 @@ enables leak tracing.
 Use this attribute along with `statement-leak-reclaim` to avoid
 potential statement leaks from the application.
 
-|`statement-leak-``reclaim` |`false` |(optional) If `true`, the reclaim
+|`statement-leak-reclaim` |`false` |(optional) If `true`, the reclaim
 of a statement after `statement-leak-timeout-in-seconds` occurs.
 
-|`statement-timeout-``in-seconds` |`-1` a|
+|`statement-timeout-in-seconds` |`-1` a|
 (optional) Sets the query timeout property of a statement to enable
 termination of abnormally long running queries. The default value of
 `-1` disables this feature.
@@ -5643,17 +5636,17 @@ this attribute. This works only when the underlying JDBC driver supports
 `queryTimeout` for `Statement`, `PreparedStatement`,
 `CallableStatement`, and `ResultSet`.
 
-|`lazy-connection-``enlistment` |`false` |(optional) If `true`, a
+|`lazy-connection-enlistment` |`false` |(optional) If `true`, a
 connection is not enlisted in a transaction until it is used. If
 `false`, any connection object available to a transaction is enlisted in
 the transaction.
 
-|`lazy-connection-``association` |`false` |(optional) If `true`, a
+|`lazy-connection-association` |`false` |(optional) If `true`, a
 physical connection is not associated with a logical connection until it
 is used. If `false`, a physical connection is associated with a logical
 connection even before it is used.
 
-|`associate-with-``thread` |`false` a|
+|`associate-with-thread` |`false` a|
 (optional) Specifies whether connections are associated with the thread
 to enable the thread to reuse the connections. If `true`, allows
 connections to be saved as `ThreadLocal` in the calling thread.
@@ -5691,20 +5684,20 @@ provide new connections to satisfy the new requests. This attribute need
 not be `true` if it is known that there is only one credential used by
 the applications and therefore the pool has homogeneous connections.
 
-|`max-connection-``usage-count` |`0` |(optional) Specifies the number of
+|`max-connection-usage-count` |`0` |(optional) Specifies the number of
 times a connections is reused by the pool, after which it is closed. A
 zero value disables this feature. By limiting the maximum number of
 times a connection can be reused, you can avoid statement leaks if the
 application does not close statements.
 
-|`sql-trace-``listeners` |none |(optional) Specifies that SQL statements
+|`sql-trace-listeners` |none |(optional) Specifies that SQL statements
 executed by applications need to be traced. Helps administrators analyze
 the statements. Expects as a value a comma-separated list of listener
 implementation class names. Enables easy filtering of log messages for
 the SQL statements. SQL trace listeners must implement the
 org.glassfish.api.jdbc.SQLTraceListener interface.
 
-|`statement-``cache-size` |`0` |(optional) Specifies the number of
+|`statement-cache-size` |`0` |(optional) Specifies the number of
 statements to be cached using the `lru` (Least Recently Used) caching
 mechanism. The default value of `0` disables statement caching.
 
@@ -5721,7 +5714,7 @@ when both `Statement.getConnection()` and `DataSource.getConnection()`
 are done. The default is `false` to avoid breaking existing
 applications.
 
-|=======================================================================
+|===
 
 
 [[GSDPG937]][[sthref123]]
@@ -5740,7 +5733,7 @@ element that are specific to GlassFish Server.
 Table C-75 `jdbc-connection-pool` Database Properties
 
 [width="172%",cols="18%,46%,36%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`dynamic-reconfiguration-wait-timeout-in-seconds` |none a|
 Specifies the timeout for dynamic reconfiguration of the pool.
@@ -5767,7 +5760,7 @@ This property is disabled when `jdbc-connection-pool` monitoring is set
 to `LOW` or `OFF`. It is enabled when `jdbc-connection-pool` monitoring
 is set to `HIGH` and the `sql-trace-listeners` attribute is set.
 
-|=======================================================================
+|===
 
 
 [[GSDPG939]][[sthref126]]
@@ -5803,7 +5796,7 @@ Changing JDBC driver properties requires a server restart.
 Table C-76 `jdbc-connection-pool` Database Properties
 
 [width="100%",cols="19%,81%",options="header",]
-|=======================================================================
+|===
 |Property |Description
 |`user` |Specifies the user name for connecting to the database.
 
@@ -5827,7 +5820,7 @@ ConnectionPoolDataSource if connection pooling is done.
 
 |`url` |Specifies the URL for this connection pool. Although this is not
 a standard property, it is commonly used.
-|=======================================================================
+|===
 
 
 [[giyhm]][[GSDPG00173]][[jdbc-resource]]
@@ -5862,7 +5855,7 @@ element.
 Table C-77 `jdbc-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -5874,7 +5867,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG944]][[sthref133]]
@@ -5893,7 +5886,7 @@ element.
 Table C-78 `jdbc-resource` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -5915,7 +5908,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[beatu]][[GSDPG00174]][[jms-durable-subscription-name]]
@@ -6014,7 +6007,7 @@ specified, a default JNLP file is generated.
 
 The value of this element is a relative path with the following format:
 
-[source,oac_no_warn]
+[source]
 ----
 [path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
 ----
@@ -6023,7 +6016,7 @@ The default path-to-JAR-in-EAR is the current application client JAR
 file. For example, if the JNLP file is in the application client JAR
 file at `custom/myInfo.jnlp`, the element value would look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <java-web-start-access>
    <jnlp-doc>custom/myInfo.jnlp</jnlp-doc>
@@ -6036,7 +6029,7 @@ JNLP file is in a JAR file at `other/myLib.jar`, the element value would
 look like this, with an exclamation point (`!`) separating the path to
 the JAR from the path in the JAR:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <java-web-start-access>
    <jnlp-doc>other/myLib.jar!custom/myInfo.jnlp</jnlp-doc>
@@ -6089,14 +6082,14 @@ The following table describes subelements for the `jsp-config` element.
 Table C-79 `jsp-config` Subelements
 
 [width="100%",cols="37%,14%,49%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyzf]][[GSDPG00529]][[properties-8]]
@@ -6124,7 +6117,7 @@ The following table describes properties for the `jsp-config` element.
 Table C-80 `jsp-config` Properties
 
 [width="100%",cols="29%,11%,60%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`checkInterval` |`0` |If `development` is set to `false` and
 `checkInterval` is greater than zero, background compilations are
@@ -6258,7 +6251,7 @@ corresponding servlet classes have been bundled in the web application's
 
 |`xpoweredBy` |`true` |If set to `true`, the X-Powered-By response
 header is added by the generated servlet.
-|=======================================================================
+|===
 
 
 [[gkhtr]][[GSDPG00179]][[keep-state]]
@@ -6350,7 +6343,7 @@ The following table describes attributes for the `key-field` element.
 Table C-81 `key-field` Attributes
 
 [width="181%",cols="51%,11%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the input parameter name.
 
@@ -6358,7 +6351,7 @@ Table C-81 `key-field` Attributes
 the input parameter is retrieved. Allowed values are
 `context.attribute`, `request.header`, `request.parameter`,
 `request.cookie`, `session.id`, and `session.attribute`.
-|=======================================================================
+|===
 
 
 [[beaub]][[GSDPG00181]][[level]]
@@ -6395,12 +6388,10 @@ Specifies the fully-qualified class name of the generated `EJBLocalHome`
 
 
 [NOTE]
-=======================================================================
-
+====
 This value is automatically generated by the server at deployment or
 redeployment time. Do not specify it or change it after deployment.
-
-=======================================================================
+====
 
 
 [[fvyzo]][[GSDPG00537]][[superelements-98]]
@@ -6427,12 +6418,10 @@ Specifies the fully-qualified class name of the generated
 
 
 [NOTE]
-=======================================================================
-
+====
 This value is automatically generated by the server at deployment or
 redeployment time. Do not specify it or change it after deployment.
-
-=======================================================================
+====
 
 
 [[fvzcr]][[GSDPG00539]][[superelements-99]]
@@ -6480,7 +6469,7 @@ element.
 Table C-82 `locale-charset-info` Subelements
 
 [width="100%",cols="22%,12%,66%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beauf[`locale-charset-map`]
@@ -6497,7 +6486,7 @@ link:#beavn[`parameter-encoding`]
  |zero or one |Determines the default request character encoding and how
 the web container decodes parameters from forms according to a hidden
 field value.
-|=======================================================================
+|===
 
 
 [[fvywh]][[GSDPG00543]][[attributes-22]]
@@ -6514,12 +6503,12 @@ element.
 Table C-83 `locale-charset-info` Attributes
 
 [width="181%",cols="13%,49%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`default-locale` |none |Although a value is required, the value is
 ignored. Use the `default-charset` attribute of the
 link:#beavn[`parameter-encoding`] element.
-|=======================================================================
+|===
 
 
 [[beauf]][[GSDPG00185]][[locale-charset-map]]
@@ -6555,14 +6544,14 @@ element.
 Table C-84 `locale-charset-map` Subelements
 
 [width="100%",cols="25%,14%,61%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
 
 
  |zero or one |Specifies an optional text description of a mapping.
-|==================================================================
+|===
 
 
 [[fvyzn]][[GSDPG00546]][[attributes-23]]
@@ -6579,7 +6568,7 @@ element.
 Table C-85 `locale-charset-map` Attributes
 
 [width="100%",cols="10%,10%,80%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`locale` |none |Specifies the locale name.
 
@@ -6591,7 +6580,7 @@ sent by the client. See link:#fvzbb[Table C-86] for more information.
 
 |`charset` |none |Specifies the character encoding to which the locale
 maps.
-|=======================================================================
+|===
 
 
 [[fvzct]][[GSDPG00547]][[example-agents]]
@@ -6607,7 +6596,7 @@ The following table specifies example `agent` attribute values.
 Table C-86 Example `agent` Attribute Values
 
 [width="100%",cols="38%,62%",options="header",]
-|=======================================================================
+|===
 |Agent |`user-agent` Header and `agent` Attribute Value
 |Internet Explorer 5.00 for Windows 2000
 |`Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)`
@@ -6616,7 +6605,7 @@ Table C-86 Example `agent` Attribute Values
 |`Mozilla/4.77 [en] (Windows NT 5.0; U)`
 
 |Netscape 4.7 for Solaris |`Mozilla/4.7 [en] (X11; u; Sun OS 5.6 sun4u)`
-|=======================================================================
+|===
 
 
 [[beaug]][[GSDPG00186]][[localpart]]
@@ -6708,14 +6697,14 @@ The following table describes subelements for the `log-service` element.
 Table C-87 `log-service` subelement
 
 [width="100%",cols="37%,15%,48%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvyzl]][[GSDPG00555]][[attributes-24]]
@@ -6731,7 +6720,7 @@ The following table describes attributes for the `log-service` element.
 Table C-88 `log-service` attributes
 
 [width="100%",cols="12%,32%,56%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`log-file` |your-ACC-dir`/logs/client.log` |(optional) Specifies the
 file where the application client container logging information is
@@ -6739,7 +6728,7 @@ stored.
 
 |`level` |`SEVERE` |(optional) Sets the base level of severity. Messages
 at or above this setting get logged to the log file.
-|=======================================================================
+|===
 
 
 [[beauk]][[GSDPG00190]][[login-config]]
@@ -6773,7 +6762,7 @@ element.
 Table C-89 `login-config` subelements
 
 [width="100%",cols="30%,15%,55%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaqx[`auth-method`]
@@ -6787,7 +6776,7 @@ link:#beawi[`realm`]
 
  |zero or one |Specifies the name of the realm used to process all
 authentication requests.
-|=======================================================================
+|===
 
 
 [[giyik]][[GSDPG00191]][[mail-resource]]
@@ -6822,7 +6811,7 @@ element.
 Table C-90 `mail-resource` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==========================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -6834,7 +6823,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==========================================================
+|===
 
 
 [[GSDPG960]][[sthref151]]
@@ -6853,7 +6842,7 @@ element.
 Table C-91 `mail-resource` Attributes
 
 [width="100%",cols="23%,21%,56%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
@@ -6862,7 +6851,7 @@ service, which connects to a mail server, retrieves messages, and saves
 messages in folder(s). Allowed values are `imap`, `pop3`, `imaps`, and
 `pop3s` .
 
-|`store-protocol-` `class` |`com.sun.mail.imap.IMAPStore` a|
+|`store-protocol-class` |`com.sun.mail.imap.IMAPStore` a|
 (optional) Specifies the service provider implementation class for
 storage. Allowed values are:
 
@@ -6874,11 +6863,11 @@ storage. Allowed values are:
 
 `com.sun.mail.pop3.POP3SSLStore`
 
-|`transport-``protocol` |`smtp` |(optional) Specifies the transport
+|`transport-protocol` |`smtp` |(optional) Specifies the transport
 protocol service, which sends messages. Allowed values are `smtp` and
 `smtps`.
 
-|`transport-``protocol-``class` |`com.sun.mail.smtp.SMTPTransport` a|
+|`transport-protocol-class` |`com.sun.mail.smtp.SMTPTransport` a|
 (optional) Specifies the service provider implementation class for
 transport. Allowed values are:
 
@@ -6908,7 +6897,7 @@ server.
 
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
-|=======================================================================
+|===
 
 
 [[GSDPG962]][[sthref154]]
@@ -6929,7 +6918,7 @@ property is ignored.
 For example, to define the property `mail.password` in a Jakarta Mail
 Session object, first edit `glassfish-resources.xml` as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 ...
  <mail-resource jndi-name="mail/Session" ...>
@@ -6941,7 +6930,7 @@ Session object, first edit `glassfish-resources.xml` as follows:
 After getting the Jakarta Mail `Session` object, get the `mail.password`
 property to retrieve the value `adminadmin`, as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 String password = session.getProperty("mail.password");
 ----
@@ -6978,14 +6967,14 @@ element.
 Table C-92 `manager-properties` Subelements
 
 [width="100%",cols="37%,14%,49%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvzdg]][[GSDPG00560]][[properties-10]]
@@ -7002,7 +6991,7 @@ element.
 Table C-93 `manager-properties` Properties
 
 [width="100%",cols="25%,13%,62%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`reapIntervalSeconds` |`60` a|
 Specifies the number of seconds between checks for expired sessions.
@@ -7064,7 +7053,7 @@ stored after each request.
 Applicable only if the `persistence-type` attribute of the parent
 link:#beaxq[`session-manager`] element is `replicated`.
 
-|=======================================================================
+|===
 
 
 [[beaun]][[GSDPG00193]][[mapping-properties]]
@@ -7176,7 +7165,7 @@ The following table describes subelements for the
 Table C-94 `mdb-connection-factory` Subelements
 
 [width="100%",cols="38%,14%,48%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beatw[`jndi-name`]
@@ -7190,7 +7179,7 @@ link:#beasn[`default-resource-principal`]
 
  |zero or one |Specifies the default sign-on (name/password) to the
 resource manager.
-|=======================================================================
+|===
 
 
 [[beaus]][[GSDPG00198]][[mdb-resource-adapter]]
@@ -7221,7 +7210,7 @@ element.
 Table C-95 `mdb-resource-adapter` subelements
 
 [width="100%",cols="35%,14%,51%",options="header",]
-|=====================================================
+|===
 |Element |Required |Description
 a|
 link:#beawt[`resource-adapter-mid`]
@@ -7233,7 +7222,7 @@ link:#beaqs[`activation-config`]
 
 
  |one or more |Specifies an activation configuration.
-|=====================================================
+|===
 
 
 [[beaut]][[GSDPG00199]][[message]]
@@ -7265,7 +7254,7 @@ The following table describes subelements for the `message` element.
 Table C-96 `message` Subelements
 
 [width="100%",cols="30%,16%,54%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beatt[`java-method`]
@@ -7279,7 +7268,7 @@ link:#beavl[`operation-name`]
 
 
  |zero or one |Specifies the WSDL name of an operation of a web service.
-|=======================================================================
+|===
 
 
 [[beauu]][[GSDPG00200]][[message-destination]]
@@ -7318,7 +7307,7 @@ element.
 Table C-97 `message-destination` subelements
 
 [width="100%",cols="29%,10%,61%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beauv[`message-destination-name`]
@@ -7332,7 +7321,7 @@ link:#beatw[`jndi-name`]
 
 
  |only one |Specifies the `jndi-name` of the associated entity.
-|=======================================================================
+|===
 
 
 [[beauv]][[GSDPG00201]][[message-destination-name]]
@@ -7393,7 +7382,7 @@ The following table describes subelements for the
 Table C-98 `message-destination-ref` subelements
 
 [width="100%",cols="34%,10%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#gauat[`message-destination-ref-name`]
@@ -7407,7 +7396,7 @@ link:#beatw[`jndi-name`]
 
 
  |only one |Specifies the `jndi-name` of the associated entity.
-|=======================================================================
+|===
 
 
 [[gauat]][[GSDPG00203]][[message-destination-ref-name]]
@@ -7468,7 +7457,7 @@ element.
 Table C-99 `message-security` Subelements
 
 [width="100%",cols="24%,12%,64%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaut[`message`]
@@ -7490,7 +7479,7 @@ link:#beawy[`response-protection`]
 
  |zero or one |Defines the authentication policy requirements of the
 application's response processing.
-|=======================================================================
+|===
 
 
 [[beaux]][[GSDPG00205]][[message-security-binding]]
@@ -7529,14 +7518,14 @@ The following table describes subelements for the
 Table C-100 `message-security-binding` Subelements
 
 [width="100%",cols="34%,15%,51%",options="header",]
-|=======================================================
+|===
 |Element |Required |Description
 a|
 link:#beauw[`message-security`]
 
 
  |zero or more |Specifies message security requirements.
-|=======================================================
+|===
 
 
 [[fvzbj]][[GSDPG00585]][[attributes-26]]
@@ -7553,7 +7542,7 @@ The following table describes attributes for the
 Table C-101 `message-security-binding` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-layer` |none |Specifies the message layer at which authentication
 is performed. The value must be `SOAP`.
@@ -7568,7 +7557,7 @@ defined for the message layer.
 if no default provider is defined, authentication requirements defined
 in the `message-security-binding` are not enforced.
 
-|=======================================================================
+|===
 
 
 [[beauy]][[GSDPG00206]][[message-security-config]]
@@ -7599,7 +7588,7 @@ The following table describes subelements for the
 Table C-102 `message-security-config` Subelements
 
 [width="100%",cols="31%,15%,54%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavz[`provider-config`]
@@ -7607,7 +7596,7 @@ link:#beavz[`provider-config`]
 
  |one or more |Specifies a configuration for one message security
 provider.
-|=======================================================================
+|===
 
 
 [[fvyvw]][[GSDPG00588]][[attributes-27]]
@@ -7624,7 +7613,7 @@ The following table describes attributes for the
 Table C-103 `message-security-config` Attributes
 
 [width="172%",cols="17%,46%,37%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-layer` |none |Specifies the message layer at which authentication
 is performed. The value must be `SOAP`.
@@ -7632,10 +7621,10 @@ is performed. The value must be `SOAP`.
 |`default-provider` |none |(optional) Specifies the server provider that
 is invoked for any application not bound to a specific server provider.
 
-|`default-client-``provider` |none |(optional) Specifies the client
+|`default-client-provider` |none |(optional) Specifies the client
 provider that is invoked for any application not bound to a specific
 client provider.
-|=======================================================================
+|===
 
 
 [[beauz]][[GSDPG00207]][[method]]
@@ -7666,7 +7655,7 @@ The following table describes subelements for the `method` element.
 Table C-104 `method` Subelements
 
 [width="100%",cols="17%,11%,72%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -7700,7 +7689,7 @@ link:#beavd[`method-params`]
 
  |zero or one |Specifies fully qualified Java type names of method
 parameters.
-|=======================================================================
+|===
 
 
 [[beava]][[GSDPG00208]][[method-intf]]
@@ -7813,7 +7802,7 @@ element.
 Table C-105 `method-params` Subelements
 
 [width="100%",cols="18%,14%,68%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavc[`method-param`]
@@ -7821,7 +7810,7 @@ link:#beavc[`method-param`]
 
  |zero or more |Specifies the fully qualified Java type name of a method
 parameter.
-|=======================================================================
+|===
 
 
 [[beavf]][[GSDPG00212]][[name]]
@@ -7947,7 +7936,7 @@ element.
 Table C-106 `one-one-finders` Subelements
 
 [width="100%",cols="23%,15%,62%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beate[`finder`]
@@ -7955,7 +7944,7 @@ link:#beate[`finder`]
 
  |one or more |Describes the finders for CMP 1.1 with a method name and
 query.
-|=======================================================================
+|===
 
 
 [[beavl]][[GSDPG00217]][[operation-name]]
@@ -8024,7 +8013,7 @@ element.
 Table C-107 `parameter-encoding` Attributes
 
 [width="100%",cols="19%,13%,68%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`form-hint-field` |none |(optional) The name of the hidden field in the
 form. This field specifies the character encoding the web container uses
@@ -8033,7 +8022,7 @@ charset is not set in the request's `content-type` header.
 
 |`default-charset` |`ISO-8859-1` |(optional) The default request
 character encoding.
-|=======================================================================
+|===
 
 
 [[beavo]][[GSDPG00219]][[pass-by-reference]]
@@ -8051,8 +8040,7 @@ application uses pass-by-value semantics.
 
 
 [NOTE]
-=======================================================================
-
+====
 The `pass-by-reference` element only applies to remote calls. As defined
 in the EJB 2.1 specification, section 5.4, calls to local interfaces use
 pass-by-reference semantics.
@@ -8070,8 +8058,7 @@ are visible to both caller and callee. When this element is set to
 `true`, parameters and return values should be considered read-only. The
 behavior of a program that modifies such parameters or return values is
 undefined.
-
-=======================================================================
+====
 
 
 When a servlet or enterprise bean calls a remote interface method in
@@ -8182,12 +8169,10 @@ beans.
 
 
 [NOTE]
-=======================================================================
-
+====
 For a stateless session bean or a message-driven bean, the bean is
 removed (garbage collected) when the timeout expires.
-
-=======================================================================
+====
 
 
 [[fvzbm]][[GSDPG00622]][[superelements-139]]
@@ -8265,7 +8250,7 @@ The following table describes subelements for the `port-info` element.
 Table C-108 `port-info` subelements
 
 [width="100%",cols="32%,12%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxh[`service-endpoint-interface`]
@@ -8301,7 +8286,7 @@ link:#beaux[`message-security-binding`]
 
 
  |zero or one |Specifies a custom authentication provider binding.
-|=======================================================================
+|===
 
 
 [[beavu]][[GSDPG00226]][[prefetch-disabled]]
@@ -8334,14 +8319,14 @@ element.
 Table C-109 `prefetch-disabled` Subelements
 
 [width="100%",cols="30%,14%,56%",options="header",]
-|=======================================
+|===
 |Element |Required |Description
 a|
 link:#beawc[`query-method`]
 
 
  |one or more |Specifies a query method.
-|=======================================
+|===
 
 
 [[beavv]][[GSDPG00227]][[principal]]
@@ -8372,14 +8357,14 @@ The following table describes subelements for the `principal` element.
 Table C-110 `principal` Subelements
 
 [width="100%",cols="29%,15%,56%",options="header",]
-|==========================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
 
 
  |only one |Specifies the name of the user.
-|==========================================
+|===
 
 
 [[giyif]][[GSDPG00228]][[principal-map]]
@@ -8422,13 +8407,13 @@ element.
 Table C-111 `principal-map` Attributes
 
 [width="181%",cols="13%,49%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`eis-principal` |none |Specifies an EIS principal.
 
 |`mapped-principal` |none |Specifies a principal defined in the
 GlassFish Server domain.
-|=======================================================================
+|===
 
 
 [[beavw]][[GSDPG00229]][[principal-name]]
@@ -8471,12 +8456,12 @@ element.
 Table C-112 `principal-name` Attributes
 
 [width="100%",cols="13%,36%,51%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`class-name` |`com.sun.enterprise.deployment.PrincipalImpl` |(optional)
 Specifies the custom principal implementation class corresponding to the
 named principal.
-|=======================================================================
+|===
 
 
 [[beavx]][[GSDPG00230]][[property-with-attributes]]
@@ -8527,23 +8512,21 @@ The following table describes subelements for the `property` element.
 Table C-113 `property` Subelements
 
 [width="100%",cols="27%,17%,56%",options="header",]
-|===================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
 
 
  |zero or one |Specifies an optional text description of a property.
-|===================================================================
+|===
 
 
 
 [NOTE]
-===================================================================
-
+====
 The `property` element in the `sun-acc.xml` file has no subelements.
-
-===================================================================
+====
 
 
 [[fvyvi]][[GSDPG00638]][[attributes-31]]
@@ -8559,11 +8542,11 @@ The following table describes attributes for the `property` element.
 Table C-114 `property` Attributes
 
 [width="100%",cols="14%,10%,76%",options="header",]
-|===================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the property.
 |`value` |none |Specifies the value of the property.
-|===================================================
+|===
 
 
 [[fvzab]][[GSDPG00639]][[example-7]]
@@ -8571,7 +8554,7 @@ Table C-114 `property` Attributes
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <property name="reapIntervalSeconds" value="20" />
 ----
@@ -8611,7 +8594,7 @@ The following table describes subelements for the `property` element.
 Table C-115 `property` subelements
 
 [width="100%",cols="22%,16%,62%",options="header",]
-|===============================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
@@ -8623,7 +8606,7 @@ link:#beayo[`value`]
 
 
  |only one |Specifies the value of the property.
-|===============================================
+|===
 
 
 [[fvyxz]][[GSDPG00642]][[example-8]]
@@ -8631,7 +8614,7 @@ link:#beayo[`value`]
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <property>
    <name>use-unique-table-names</name>
@@ -8675,7 +8658,7 @@ element.
 Table C-116 `provider-config` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beawo[`request-policy`]
@@ -8696,7 +8679,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|=======================================================================
+|===
 
 
 [[fvywu]][[GSDPG00645]][[attributes-32]]
@@ -8713,7 +8696,7 @@ element.
 Table C-117 `provider-config` Attributes
 
 [width="172%",cols="11%,46%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`provider-id` |none |Specifies the provider ID.
 
@@ -8726,7 +8709,7 @@ com.sun.enterprise.security.jauth.ClientAuthModule interface. Server
 authentication providers must implement the
 com.sun.enterprise.security.jauth.ServerAuthModule interface.
 Client-server providers must implement both interfaces.
-|=======================================================================
+|===
 
 
 [[beawb]][[GSDPG00233]][[query-filter]]
@@ -8778,7 +8761,7 @@ element.
 Table C-118 `query-method` Subelements
 
 [width="100%",cols="17%,10%,73%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavb[`method-name`]
@@ -8792,7 +8775,7 @@ link:#beavd[`method-params`]
 
  |only one |Specifies the fully qualified Java type names of method
 parameters.
-|=======================================================================
+|===
 
 
 [[beawd]][[GSDPG00235]][[query-ordering]]
@@ -8944,7 +8927,7 @@ element.
 Table C-119 `refresh-field` Attributes
 
 [width="181%",cols="51%,11%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the input parameter name.
 
@@ -8952,7 +8935,7 @@ Table C-119 `refresh-field` Attributes
 the input parameter is retrieved. Allowed values are
 `context.attribute`, `request.header`, `request.parameter`,
 `request.cookie`, `session.id`, and `session.attribute`.
-|=======================================================================
+|===
 
 
 [[beawk]][[GSDPG00241]][[refresh-period-in-seconds]]
@@ -9023,12 +9006,10 @@ Specifies the fully-qualified class name of the generated `EJBHome`
 
 
 [NOTE]
-=======================================================================
-
+====
 This value is automatically generated by the server at deployment or
 redeployment time. Do not specify it or change it after deployment.
-
-=======================================================================
+====
 
 
 [[fvywr]][[GSDPG00667]][[superelements-159]]
@@ -9055,12 +9036,10 @@ Specifies the fully-qualified class name of the generated `EJBObject`
 
 
 [NOTE]
-=======================================================================
-
+====
 This value is automatically generated by the server at deployment or
 redeployment time. Do not specify it or change it after deployment.
-
-=======================================================================
+====
 
 
 [[fvyzi]][[GSDPG00669]][[superelements-160]]
@@ -9113,7 +9092,7 @@ element.
 Table C-120 `request-policy` Attributes
 
 [width="172%",cols="11%,46%,43%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-source` |none |Specifies the type of required authentication,
 either `sender` (user name and password) or `content` (digital
@@ -9122,7 +9101,7 @@ signature).
 |`auth-recipient` |none |Specifies whether recipient authentication
 occurs before or after content authentication. Allowed values are
 `before-content` and `after-content`.
-|=======================================================================
+|===
 
 
 [[beawp]][[GSDPG00246]][[request-protection]]
@@ -9162,7 +9141,7 @@ element.
 Table C-121 `request-protection` Attributes
 
 [width="172%",cols="13%,46%,41%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-source` |none |Specifies the type of required authentication,
 either `sender` (user name and password) or `content` (digital
@@ -9171,7 +9150,7 @@ signature).
 |`auth-recipient` |none |Specifies whether recipient authentication
 occurs before or after content authentication. Allowed values are
 `before-content` and `after-content`.
-|=======================================================================
+|===
 
 
 [[beawq]][[GSDPG00247]][[required]]
@@ -9256,9 +9235,7 @@ Applies to stateless session beans, entity beans, and message-driven
 beans.
 
 For EJB pools, the value can be defined in the EJB container. Default is
-16.
-
-For EJB caches, the value can be defined in the EJB container. Default
+16. For EJB caches, the value can be defined in the EJB container. Default
 is 32.
 
 For message-driven beans, the value can be defined in the EJB container.
@@ -9313,14 +9290,14 @@ The following table describes subelements for the
 Table C-122 `resource-adapter-config` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
-|==================================================
+|===
 
 
 [[GSDPG998]][[sthref192]]
@@ -9339,7 +9316,7 @@ The following table describes attributes for the
 Table C-123 `resource-adapter-config` Attributes
 
 [width="172%",cols="16%,46%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |(optional) Not used. See `resource-adapter-name`.
 
@@ -9356,10 +9333,10 @@ server.
 * `system-instance` - A system resource for all server instances only.
 * `user` - A user resource.
 
-|`resource-``adapter-name` |none |Specifies the name of a deployed
+|`resource-adapter-name` |none |Specifies the name of a deployed
 connector module or application. If the resource adapter is embedded in
 an application, then it is app_name`#`rar_name.
-|=======================================================================
+|===
 
 
 [[GSDPG1000]][[sthref195]]
@@ -9429,7 +9406,7 @@ element.
 Table C-124 `resource-env-ref` Subelements
 
 [width="100%",cols="26%,10%,64%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beawv[`resource-env-ref-name`]
@@ -9443,7 +9420,7 @@ link:#beatw[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a resource.
-|=======================================================================
+|===
 
 
 [[fvzdf]][[GSDPG00687]][[example-9]]
@@ -9451,7 +9428,7 @@ link:#beatw[`jndi-name`]
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <resource-env-ref>
    <resource-env-ref-name>jms/StockQueueName</resource-env-ref-name>
@@ -9493,8 +9470,7 @@ resource.
 
 
 [NOTE]
-=======================================================================
-
+====
 Connections acquired from JMS connection factories are not shareable in
 the current release of GlassFish Server. The `res-sharing-scope` element
 in the `ejb-jar.xml` file `resource-ref` element is ignored for JMS
@@ -9506,8 +9482,7 @@ exist in the Message Queue user repository. Refer to the Security
 Management chapter in the olink:GMADG[Open Message Queue Administration
 Guide] for information on how to manage the Message Queue user
 repository.
-
-=======================================================================
+====
 
 
 [[fvywf]][[GSDPG00690]][[superelements-170]]
@@ -9534,7 +9509,7 @@ element.
 Table C-125 `resource-ref` Subelements
 
 [width="100%",cols="33%,11%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beawr[`res-ref-name`]
@@ -9554,7 +9529,7 @@ link:#beasn[`default-resource-principal`]
 
 
  |zero or one |Specifies the default principal (user) for the resource.
-|=======================================================================
+|===
 
 
 [[fvyzk]][[GSDPG00692]][[example-10]]
@@ -9562,7 +9537,7 @@ link:#beasn[`default-resource-principal`]
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <resource-ref>
    <res-ref-name>jdbc/EmployeeDBName</res-ref-name>
@@ -9583,14 +9558,12 @@ glassfish-resources.xml File].
 
 
 [NOTE]
-=======================================================================
-
+====
 You must specify a Java Naming and Directory Interface (JNDI) name for
 each resource. To avoid collisions with names of other enterprise
 resources in JNDI, and to avoid portability problems, all names in a
 GlassFish Server application should begin with the string `java:app/`.
-
-=======================================================================
+====
 
 
 [[GSDPG1003]][[sthref198]]
@@ -9617,7 +9590,7 @@ The following table describes subelements for the `resources` element.
 Table C-126 `resources` Subelements
 
 [width="100%",cols="31%,12%,57%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#giyhr[`custom-resource`]
@@ -9682,16 +9655,14 @@ link:#giyht[`work-security-map`]
 
 
  |zero or more |Defines a work security map.
-|=======================================================================
+|===
 
 
 
 [NOTE]
-===========================================================
-
+====
 Subelements of a `resources` element can occur in any order.
-
-===========================================================
+====
 
 
 [[beawx]][[GSDPG00256]][[response-policy]]
@@ -9730,7 +9701,7 @@ element.
 Table C-127 `response-policy` Attributes
 
 [width="172%",cols="13%,46%,41%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-source` |none |Specifies the type of required authentication,
 either `sender` (user name and password) or `content` (digital
@@ -9739,7 +9710,7 @@ signature).
 |`auth-recipient` |none |Specifies whether recipient authentication
 occurs before or after content authentication. Allowed values are
 `before-content` and `after-content`.
-|=======================================================================
+|===
 
 
 [[beawy]][[GSDPG00257]][[response-protection]]
@@ -9779,7 +9750,7 @@ element.
 Table C-128 `response-protection` Attributes
 
 [width="172%",cols="13%,46%,41%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`auth-source` |none |Specifies the type of required authentication,
 either `sender` (user name and password) or `content` (digital
@@ -9788,7 +9759,7 @@ signature).
 |`auth-recipient` |none |Specifies whether recipient authentication
 occurs before or after content authentication. Allowed values are
 `before-content` and `after-content`.
-|=======================================================================
+|===
 
 
 [[beawz]][[GSDPG00258]][[role-name]]
@@ -9841,7 +9812,7 @@ The following table describes subelements for the `sas-context` element.
 Table C-129 `sas-context` Subelements
 
 [width="100%",cols="30%,11%,59%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#bearj[`caller-propagation`]
@@ -9849,7 +9820,7 @@ link:#bearj[`caller-propagation`]
 
  |only one |Specifies whether the target accepts propagated caller
 identities. The values are NONE, SUPPORTED, or REQUIRED.
-|=======================================================================
+|===
 
 
 [[beaxc]][[GSDPG00260]][[schema]]
@@ -9885,7 +9856,7 @@ none - contains data
 Examples
 ^^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <schema/> <!-- use automatic schema generation -->
 
@@ -9920,14 +9891,14 @@ The following table describes subelements for the
 Table C-130 `schema-generator-properties` Subelements
 
 [width="100%",cols="40%,14%,46%",options="header",]
-|===================================================
+|===
 |Element |Required |Description
 a|
 link:#beavy[`property` (with subelements)]
 
 
  |zero or more |Specifies a property name and value.
-|===================================================
+|===
 
 
 [[fvzew]][[GSDPG00708]][[properties-12]]
@@ -9944,7 +9915,7 @@ The following table describes properties for the
 Table C-131 `schema-generator-properties` Properties
 
 [width="172%",cols="17%,46%,37%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`use-unique-table-names` |`false` |Specifies that generated table names
 are unique within each GlassFish Server domain. This property can be
@@ -9954,7 +9925,7 @@ Development Guide.
 
 |bean-name`.`field-name`.`attribute |none |Defines a column attribute.
 For attribute descriptions, see link:#fvymm[Table C-132].
-|=======================================================================
+|===
 
 
 The following table lists the column attributes for properties defined
@@ -9966,13 +9937,13 @@ in the `schema-generator-properties` element.
 Table C-132 `schema-generator-properties` Column Attributes
 
 [width="100%",cols="24%,76%",options="header",]
-|=======================================================================
+|===
 |Attribute |Description
 |`jdbc-type` |Specifies the JDBC type of the column created for the CMP
 field. The actual SQL type generated is based on this JDBC type but is
 database vendor specific.
 
-|`jdbc-maximum-``length` a|
+|`jdbc-maximum-length` a|
 Specifies the maximum number of characters stored in the column
 corresponding to the CMP field. Applies only when the actual SQL that is
 generated for the column requires a length.
@@ -9991,7 +9962,7 @@ decimal point in a column that represents a floating point number.
 
 |`jdbc-nullable` |Specifies whether the column generated for the CMP
 field allows null values.
-|=======================================================================
+|===
 
 
 [[fvzem]][[GSDPG00709]][[example-11]]
@@ -9999,7 +9970,7 @@ field allows null values.
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <schema-generator-properties>
    <property>
@@ -10045,7 +10016,7 @@ element.
 Table C-133 `secondary table` Subelements
 
 [width="100%",cols="28%,15%,57%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beayd[`table-name`]
@@ -10059,7 +10030,7 @@ link:#beasa[`column-pair`]
 
  |one or more |Specifies the pair of columns that determine the
 relationship between two database tables.
-|=======================================================================
+|===
 
 
 [[beaxf]][[GSDPG00263]][[security]]
@@ -10090,7 +10061,7 @@ The following table describes subelements for the `security` element.
 Table C-134 `security` Subelements
 
 [width="100%",cols="20%,12%,68%",options="header",]
-|=====================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxs[`ssl`]
@@ -10102,7 +10073,7 @@ link:#beark[`cert-db`]
 
 
  |only one |Not implemented. Included for backward compatibility only.
-|=====================================================================
+|===
 
 
 [[giyhy]][[GSDPG00264]][[security-map]]
@@ -10144,7 +10115,7 @@ element.
 Table C-135 `security-map` Subelements
 
 [width="100%",cols="21%,12%,67%",options="header",]
-|====================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavv[`principal`]
@@ -10161,7 +10132,7 @@ link:#giyjv[`backend-principal`]
 
 
  |only one |Specifies the user name and password required by the EIS.
-|====================================================================
+|===
 
 
 [[GSDPG1017]][[sthref214]]
@@ -10179,10 +10150,10 @@ The following table describes attributes for the `security-map` element.
 Table C-136 `security-map` Attributes
 
 [width="100%",cols="23%,20%,57%",options="header",]
-|========================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a name for the security mapping.
-|========================================================
+|===
 
 
 [[beaxg]][[GSDPG00265]][[security-role-mapping]]
@@ -10225,7 +10196,7 @@ The following table describes subelements for the
 Table C-137 `security-role-mapping` Subelements
 
 [width="100%",cols="18%,33%,49%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beawz[`role-name`]
@@ -10248,7 +10219,7 @@ link:#beati[`group-name`]
 
  |one or more if no `principal-name`, otherwise zero or more |Contains a
 group name in the current realm.
-|=======================================================================
+|===
 
 
 [[beaxh]][[GSDPG00266]][[service-endpoint-interface]]
@@ -10326,7 +10297,7 @@ element.
 Table C-138 `service-qname` subelements
 
 [width="100%",cols="30%,15%,55%",options="header",]
-|===============================================
+|===
 |Element |Required |Description
 a|
 link:#beavh[`namespaceURI`]
@@ -10338,7 +10309,7 @@ link:#beaug[`localpart`]
 
 
  |only one |Specifies the local part of a QNAME.
-|===============================================
+|===
 
 
 [[beaxk]][[GSDPG00269]][[service-ref]]
@@ -10378,7 +10349,7 @@ The following table describes subelements for the `service-ref` element.
 Table C-139 `service-ref` subelements
 
 [width="100%",cols="23%,12%,65%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxl[`service-ref-name`]
@@ -10421,7 +10392,7 @@ link:#beaxj[`service-qname`]
 
  |zero or one |Specifies the WSDL service element that is being
 referenced.
-|=======================================================================
+|===
 
 
 [[beaxl]][[GSDPG00270]][[service-ref-name]]
@@ -10474,7 +10445,7 @@ The following table describes subelements for the `servlet` element.
 Table C-140 `servlet` Subelements
 
 [width="100%",cols="24%,12%,64%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxo[`servlet-name`]
@@ -10494,7 +10465,7 @@ link:#beayv[`webservice-endpoint`]
 
 
  |zero or more |Specifies information about a web service endpoint.
-|=======================================================================
+|===
 
 
 [[beaxn]][[GSDPG00272]][[servlet-impl-class]]
@@ -10572,7 +10543,7 @@ element.
 Table C-141 `session-config` Subelements
 
 [width="100%",cols="31%,16%,53%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxq[`session-manager`]
@@ -10589,7 +10560,7 @@ link:#beash[`cookie-properties`]
 
 
  |zero or one |Specifies session cookie properties.
-|==================================================================
+|===
 
 
 [[beaxq]][[GSDPG00275]][[session-manager]]
@@ -10620,7 +10591,7 @@ element.
 Table C-142 `session-manager` Subelements
 
 [width="100%",cols="32%,15%,53%",options="header",]
-|=================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaum[`manager-properties`]
@@ -10632,7 +10603,7 @@ link:#beaxu[`store-properties`]
 
 
  |zero or one |Specifies session persistence (storage) properties.
-|=================================================================
+|===
 
 
 [[fvzgm]][[GSDPG00736]][[attributes-40]]
@@ -10649,7 +10620,7 @@ element.
 Table C-143 `session-manager` Attributes
 
 [width="172%",cols="13%,46%,41%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`persistence-type` |`memory` a|
 (optional) Specifies the session persistence mechanism. Allowed values
@@ -10660,7 +10631,7 @@ persistence type is also available. For more information, see Using
 Coherence*Web with GlassFish Server
 (`http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html`).
 
-|=======================================================================
+|===
 
 
 [[beaxr]][[GSDPG00276]][[session-properties]]
@@ -10691,14 +10662,14 @@ element.
 Table C-144 `session-properties` Subelements
 
 [width="100%",cols="36%,14%,50%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvzht]][[GSDPG00739]][[properties-13]]
@@ -10715,7 +10686,7 @@ element.
 Table C-145 `session-properties` Properties
 
 [width="172%",cols="14%,46%,40%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`timeoutSeconds` |`1800` a|
 Specifies the default maximum inactive interval (in seconds) for all
@@ -10737,7 +10708,7 @@ minutes, not seconds.
 session tracking via URL rewriting when the browser does not accept
 cookies. You must also use an `encodeURL` or `encodeRedirectURL` call in
 the servlet or JSP.
-|=======================================================================
+|===
 
 
 [[beaxs]][[GSDPG00277]][[ssl]]
@@ -10774,7 +10745,7 @@ The following table describes attributes for the `SSL` element.
 Table C-146 `ssl attributes`
 
 [width="172%",cols="16%,46%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`cert-nickname` |`s1as` |(optional) The nickname of the server
 certificate in the certificate database or the PKCS#11 token. In the
@@ -10792,7 +10763,7 @@ are assumed to be enabled. Allowed values are `rc4`, `rc4export`, `rc2`,
 
 |`ssl3-enabled` |`true` |(optional) Determines whether SSL3 is enabled.
 
-|`ssl3-tls-``ciphers` |none |(optional) A comma-separated list of the
+|`ssl3-tls-ciphers` |none |(optional) A comma-separated list of the
 SSL3 and/or TLS ciphers to be used. Ciphers not explicitly listed will
 be disabled for the target, even if those ciphers are available in the
 particular cipher suite you are using. If this option is not used, all
@@ -10805,10 +10776,10 @@ supported for backward compatibility.
 
 |`tls-enabled` |`true` |(optional) Determines whether TLS is enabled.
 
-|`tls-rollback-``enabled` |`true` |(optional) Determines whether TLS
+|`tls-rollback-enabled` |`true` |(optional) Determines whether TLS
 rollback is enabled. Enable TLS rollback for Microsoft Internet Explorer
 5.0 and 5.5.
-|=======================================================================
+|===
 
 
 [[beaxt]][[GSDPG00278]][[steady-pool-size]]
@@ -10862,14 +10833,14 @@ element.
 Table C-147 `store-properties` Subelements
 
 [width="100%",cols="37%,14%,49%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[fvzho]][[GSDPG00747]][[properties-14]]
@@ -10886,9 +10857,9 @@ element.
 Table C-148 `store-properties` Properties
 
 [width="100%",cols="21%,23%,56%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
-|`directory` |domain-dir`/generated/jsp/`app-name`/`module-name`_war` a|
+|`directory` |domain-dir``/generated/jsp/``app-name``/``module-name``_war`` a|
 Specifies the absolute or relative pathname of the directory into which
 individual session files are written. A relative path is relative to the
 temporary work directory for this web module.
@@ -10916,7 +10887,7 @@ are explained immediately following this table.
 Applicable only if the `persistence-type` attribute of the parent
 link:#beaxq[`session-manager`] element is `replicated`.
 
-|=======================================================================
+|===
 
 
 If the `persistenceScope` store property is set to `modified-attribute`,
@@ -10963,7 +10934,7 @@ element.
 Table C-149 `stub-property` subelements
 
 [width="100%",cols="23%,13%,64%",options="header",]
-|=============================================
+|===
 |Element |Required |Description
 a|
 link:#beavf[`name`]
@@ -10975,7 +10946,7 @@ link:#beayo[`value`]
 
 
  |only one |Specifies the value of the entity.
-|=============================================
+|===
 
 
 [[gawoa]][[GSDPG00750]][[properties-15]]
@@ -10992,11 +10963,11 @@ element.
 Table C-150 `stub-property` properties
 
 [width="181%",cols="10%,49%,41%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`jbi-enabled` |`true` |Determines whether the visibility of this
 endpoint as a Java Business Integration service is enabled or disabled.
-|=======================================================================
+|===
 
 
 [[fvzji]][[GSDPG00751]][[example-12]]
@@ -11004,7 +10975,7 @@ endpoint as a Java Business Integration service is enabled or disabled.
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <service-ref>
 <service-ref-name>service/FooProxy</service-ref-name>
@@ -11031,12 +11002,10 @@ Specifies beans mapped to a particular database schema.
 
 
 [NOTE]
-=======================================================================
-
+====
 A bean cannot be related to a bean that maps to a different database
 schema, even if the beans are deployed in the same EJB JAR file.
-
-=======================================================================
+====
 
 
 [[fvzhh]][[GSDPG00752]][[superelements-197]]
@@ -11060,7 +11029,7 @@ element.
 Table C-151 `sun-cmp-mapping` Subelements
 
 [width="100%",cols="20%,13%,67%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxc[`schema`]
@@ -11074,7 +11043,7 @@ link:#beasy[`entity-mapping`]
 
 
  |one or more |Specifies the mapping of a bean to database columns.
-|=======================================================================
+|===
 
 
 [[beaxz]][[GSDPG00282]][[sun-cmp-mappings]]
@@ -11108,14 +11077,14 @@ element.
 Table C-152 `sun-cmp-mappings` Subelements
 
 [width="100%",cols="32%,16%,52%",options="header",]
-|=====================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaxy[`sun-cmp-mapping`]
 
 
  |one or more |Specifies beans mapped to a particular database schema.
-|=====================================================================
+|===
 
 
 [[beayd]][[GSDPG00283]][[table-name]]
@@ -11183,7 +11152,7 @@ element.
 Table C-153 `target-server` subelements
 
 [width="100%",cols="23%,14%,63%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -11197,7 +11166,7 @@ link:#beaxf[`security`]
 
  |zero or one |Specifies the security configuration for the IIOP/SSL
 communication with the target server.
-|=======================================================================
+|===
 
 
 [[fvzfp]][[GSDPG00760]][[attributes-42]]
@@ -11214,7 +11183,7 @@ element.
 Table C-154 `target-server` attributes
 
 [width="181%",cols="7%,49%,44%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the server instance accessed by the
 client container.
@@ -11230,7 +11199,7 @@ For a new server instance, assign a port number other than 3700. You can
 change the port number in the Administration Console. Click the Help
 button in the Administration Console for more information.
 
-|=======================================================================
+|===
 
 
 [[beayf]][[GSDPG00285]][[tie-class]]
@@ -11293,7 +11262,7 @@ The following table describes attributes for the `timeout` element.
 Table C-155 `timeout` Attributes
 
 [width="181%",cols="51%,11%,38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies the timeout input parameter, whose value is
 interpreted in seconds. The field's type must be `java.lang.Long` or
@@ -11303,7 +11272,7 @@ interpreted in seconds. The field's type must be `java.lang.Long` or
 the input parameter is retrieved. Allowed values are
 `context.attribute`, `request.header`, `request.parameter`,
 `request.cookie`, `request.attribute`, and `session.attribute`.
-|=======================================================================
+|===
 
 
 [[beayh]][[GSDPG00287]][[transport-config]]
@@ -11334,7 +11303,7 @@ element.
 Table C-156 `transport-config` Subelements
 
 [width="100%",cols="30%,10%,60%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beatn[`integrity`]
@@ -11363,7 +11332,7 @@ link:#beasz[`establish-trust-in-client`]
 
  |only one |Specifies if the target is capable of authenticating a
 client. The values are NONE, SUPPORTED, or REQUIRED.
-|=======================================================================
+|===
 
 
 [[beayi]][[GSDPG00288]][[transport-guarantee]]
@@ -11547,7 +11516,7 @@ The following table describes subelements for the `valve` element.
 Table C-157 `valve` Subelements
 
 [width="100%",cols="25%,12%,63%",options="header",]
-|==================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -11559,7 +11528,7 @@ link:#beavx[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
-|==================================================================
+|===
 
 
 [[gikuo]][[GSDPG00780]][[attributes-44]]
@@ -11575,7 +11544,7 @@ The following table describes attributes for the `valve` element.
 Table C-158 `valve` Attributes
 
 [width="172%",cols="9%,46%,45%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the valve.
 
@@ -11584,7 +11553,7 @@ valve. The valve class must implement the org.apache.catalina.Valve
 interface from Tomcat or previous GlassFish Server releases, or the
 org.glassfish.web.valve.GlassFishValve interface from the current
 GlassFish Server release.
-|=======================================================================
+|===
 
 
 [[giksd]][[GSDPG00781]][[example-13]]
@@ -11592,12 +11561,12 @@ GlassFish Server release.
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
-><valve name="MyValve" classname="org.glassfish.extension.Valve">
+<valve name="MyValve" classname="org.glassfish.extension.Valve">
    <property name="MyProperty1" value="MyValue1" />
    <property name="MyProperty2" value="MyValue2" />
-</valve> 
+</valve>
 ----
 
 [[gbgdw]][[GSDPG00295]][[vendor]]
@@ -11609,7 +11578,7 @@ Specifies a vendor-specific icon, splash screen, text string, or a
 combination of these for Java Web Start download and launch screens. The
 complete format of this element's data is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>icon-image-URI::splash-screen-image-URI::vendor-text</vendor>
 ----
@@ -11617,14 +11586,14 @@ complete format of this element's data is as follows:
 The following example vendor element contains an icon, a splash screen,
 and a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>images/icon.jpg::otherDir/splash.jpg::MyCorp, Inc.</vendor>
 ----
 
 The following example vendor element contains an icon and a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>images/icon.jpg::MyCorp, Inc.</vendor>
 ----
@@ -11632,14 +11601,14 @@ The following example vendor element contains an icon and a text string:
 The following example vendor element contains a splash screen and a text
 string; note the initial double colon:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>::otherDir/splash.jpg::MyCorp, Inc.</vendor>
 ----
 
 The following example vendor element contains only a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>MyCorp, Inc.</vendor>
 ----
@@ -11704,11 +11673,9 @@ actually pseudo-LRU.
 
 
 [NOTE]
-======================================================
-
+====
 You cannot plug in your own victim selection algorithm.
-
-======================================================
+====
 
 
 The victims are generally passivated into a backup store (typically a
@@ -11738,7 +11705,7 @@ none - contains data
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <victim-selection-policy>LRU</victim-selection-policy>
 ----
@@ -11775,7 +11742,7 @@ The following table describes subelements for the `web` element.
 Table C-159 `web` Subelements
 
 [width="100%",cols="24%,11%,65%",options="header",]
-|============================================================
+|===
 |Element |Required |Description
 a|
 link:#beays[`web-uri`]
@@ -11787,7 +11754,7 @@ link:#beasg[`context-root`]
 
 
  |only one |Contains the web context root for the web module.
-|============================================================
+|===
 
 
 [[beays]][[GSDPG00299]][[web-uri]]
@@ -11841,7 +11808,7 @@ The following table describes subelements for the
 Table C-160 `webservice-description` subelements
 
 [width="100%",cols="33%,11%,56%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beayu[`webservice-description-name`]
@@ -11856,7 +11823,7 @@ link:#beayy[`wsdl-publish-location`]
 
  |zero or one |Specifies the URL of a directory to which a web service's
 WSDL is published during deployment.
-|=======================================================================
+|===
 
 
 [[beayu]][[GSDPG00301]][[webservice-description-name]]
@@ -11910,7 +11877,7 @@ element.
 Table C-161 `webservice-endpoint` subelements
 
 [width="100%",cols="29%,12%,59%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beavs[`port-component-name`]
@@ -11980,7 +11947,7 @@ link:#beavx[`property` (with attributes)] (`glassfish-web.xml`)
 link:#beavy[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
 
  |zero or more |Specifies a property, which has a name and a value.
-|=======================================================================
+|===
 
 
 [[giyht]][[GSDPG00303]][[work-security-map]]
@@ -12020,7 +11987,7 @@ element.
 Table C-162 `work-security-map` Subelements
 
 [width="100%",cols="17%,12%,71%",options="header",]
-|=======================================================================
+|===
 |Element |Required |Description
 a|
 link:#beaso[`description`]
@@ -12041,7 +12008,7 @@ link:#giygy[`group-map`]
 
  |zero or more |Maps an EIS group to a group defined in the GlassFish
 Server domain.
-|=======================================================================
+|===
 
 
 [[GSDPG1050]][[sthref249]]
@@ -12060,11 +12027,11 @@ element.
 Table C-163 `work-security-map` Attributes
 
 [width="181%",cols="13%,49%,38%",options="header",]
-|===================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the work security map.
 |`description` |none |Specifies a text description for this element.
-|===================================================================
+|===
 
 
 [[beayw]][[GSDPG00304]][[wsdl-override]]
@@ -12096,7 +12063,7 @@ none - contains data
 Example
 ^^^^^^^
 
-[source,oac_no_warn]
+[source,xml]
 ----
 // available via HTTP
 <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
@@ -12133,7 +12100,7 @@ The following table describes subelements for the `wsdl-port` element.
 Table C-164 `wsdl-port` subelements
 
 [width="100%",cols="30%,11%,59%",options="header",]
-|===============================================
+|===
 |Element |Required |Description
 a|
 link:#beavh[`namespaceURI`]
@@ -12145,7 +12112,7 @@ link:#beaug[`localpart`]
 
 
  |only one |Specifies the local part of a QNAME.
-|===============================================
+|===
 
 
 [[beayy]][[GSDPG00306]][[wsdl-publish-location]]
@@ -12181,14 +12148,14 @@ Example
 Suppose you have an `ejb.jar` file whose `webservices.xml` file's
 `wsdl-file` element contains the following reference:
 
-[source,oac_no_warn]
+[source]
 ----
 META-INF/wsdl/a/Foo.wsdl
 ----
 
 Suppose your `glassfish-ejb.jar` file contains the following element:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <wsdl-publish-location>file:/home/user1/publish</wsdl-publish-location>
 ----

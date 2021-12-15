@@ -4,6 +4,7 @@ title=Overview of GlassFish Server Open Source Edition 5.0 Application Deploymen
 next=deploying-applications.html
 prev=preface.html
 ~~~~~~
+
 Overview of GlassFish Server Open Source Edition 5.0 Application Deployment
 ===========================================================================
 
@@ -148,7 +149,8 @@ are described in the Java EE 8 specification. You can find the
 specification at `http://www.oracle.com/technetwork/java/javaee/tech/`.
 Information about the XML schemas that define Java EE standard
 deployment descriptors is available at
-`http://xmlns.jcp.org/xml/ns/javaee/`. +
+`http://xmlns.jcp.org/xml/ns/javaee/`.
++
 The Java EE 8 specification permits the use of alternate top-level
 standard deployment descriptors that reside outside of the application
 archive using the `alt-dd` mechanism (alternate module-level deployment
@@ -171,7 +173,8 @@ you can also create a `.dbschema` file and a `sun-cmp-mapping.xml` file.
 For complete descriptions of these files and their elements, see
 link:dd-files.html#giida[GlassFish Server Deployment Descriptor Files]
 and link:dd-elements.html#beaqi[Elements of the GlassFish Server
-Deployment Descriptors]. +
+Deployment Descriptors].
++
 GlassFish Server also permits the use of alternate top-level GlassFish
 Server runtime deployment descriptors that reside outside of an
 application archive. Alternate GlassFish Server deployment descriptors
@@ -182,7 +185,8 @@ modules, an alternate GlassFish Server deployment descriptor overrides
 the top-level module descriptor, such as `glassfish-web.xml`. The name
 of the GlassFish Server alternate deployment descriptor file must begin
 with `glassfish-`. Alternate deployment descriptors do not apply to
-`sun-*.xml` deployment descriptors. +
+`sun-*.xml` deployment descriptors.
++
 Unless otherwise stated, settings in the GlassFish Server deployment
 descriptors override corresponding settings in the Java EE standard
 descriptors and in the GlassFish Server configuration.
@@ -269,7 +273,8 @@ data. A connector module consists of all Java interfaces, classes, and
 native libraries for implementing a resource module, plus a resource
 deployment descriptor. A resource adapter archive (RAR) is the standard
 format for assembling connector modules. Each GlassFish Server connector
-has annotations or a deployment descriptor file (`ra.xml`). +
+has annotations or a deployment descriptor file (`ra.xml`).
++
 After deploying a J2EE connector module, you must configure it as
 described in link:../application-development-guide/connectors.html#GSDVG00013[Developing Connectors] in GlassFish Server
 Open Source Edition Application Development Guide.
@@ -357,14 +362,12 @@ Guide.
 
 
 [NOTE]
-=======================================================================
-
+====
 According to the Java EE specification, section 8.1.1.2, "Dependencies,"
 you cannot package utility classes within an individually-deployed EJB
 module. Instead, you must package the EJB module and utility JAR within
 an application using the JAR Extension Mechanism Architecture.
-
-=======================================================================
+====
 
 
 [[gihzk]][[GSDPG00323]][[naming-standards]]
@@ -402,7 +405,7 @@ Starting in Java EE 6, the Java EE specification defines the portable
 `application-name`, which allows you to specify an application name in
 the `application.xml` file. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <application-name>xyz</application-name>
 ----
@@ -413,12 +416,12 @@ element in the module standard deployment descriptors.
 GlassFish Server determines the application registration name according
 to the following order of precedence:
 
-1.  The name specified at deployment time in the Administration Console
+1. The name specified at deployment time in the Administration Console
 or in the `--name` option of the `asadmin deploy` command is used.
-2.  If no name is specified at deployment time, the portable
+2. If no name is specified at deployment time, the portable
 `application-name` or `module-name` in the Java EE deployment descriptor
 is used.
-3.  If no name is specified at deployment time or in the deployment
+3. If no name is specified at deployment time or in the deployment
 descriptors, the archive name, minus the file type suffix, is used.
 
 [[giidg]][[GSDPG00311]][[jndi-naming]]
@@ -482,7 +485,7 @@ or number. It can contain alphanumeric characters plus underscore (`_`),
 dash (`-`), and period (`.`) characters. The following examples show
 valid version identifiers for the `foo` application:
 
-[source,oac_no_warn]
+[source]
 ----
 foo:1
 foo:BETA-2e
@@ -502,13 +505,13 @@ untagged version. The following table shows example version expressions
 and the versions they select.
 
 [width="100%",cols="33%,67%",options="header",]
-|==============================================================
+|===
 |Version Expression |Selected Versions
 |`foo:*` |All versions of `foo`, including the untagged version
 |`foo:BETA*` |All `BETA` versions of `foo`
 |`foo:3.*` |All `3.`x versions of `foo`
 |`foo:patch*` |All `patch` versions of `foo`
-|==============================================================
+|===
 
 
 The following table summarizes which `asadmin` subcommands are
@@ -516,13 +519,13 @@ identifier-aware or expression-aware. All expression-aware subcommands
 are also identifier-aware.
 
 [width="100%",cols="50%,50%",options="header",]
-|======================================================================
+|===
 |Identifier-Aware Subcommands |Expression-Aware Subcommands
 |`deploy`, `deploydir`, `redeploy` |`undeploy`
 |`enable` |`disable`
 |`list-sub-components` |`show-component-status`
 |`get-client-stubs` |`create-application-ref`, `delete-application-ref`
-|======================================================================
+|===
 
 
 The `create-application-ref` subcommand is expression-aware only if the
@@ -604,36 +607,38 @@ application deployment requires planning and care. Only the developer
 knows exactly what is required by an application, so the developer is
 responsible for initial assembly and deployment.
 
-1.  Deployment Descriptor or Annotation Creation. The developer creates
+1. Deployment Descriptor or Annotation Creation. The developer creates
 the deployment descriptors or equivalent annotations using Java
-standards and tools. +
+standards and tools.
++
 Details of the GlassFish Server deployment descriptors are contained in
 link:dd-files.html#giida[GlassFish Server Deployment Descriptor Files]
 and link:dd-elements.html#beaqi[Elements of the GlassFish Server
 Deployment Descriptors]. The GlassFish Server sample applications
 contain deployment descriptors that can be used as templates for
 developing deployment descriptors.
-2.  Assembly. The developer assembles the archive file(s) using Java
+2. Assembly. The developer assembles the archive file(s) using Java
 standards and tools, such as the `jar` command. The application or
 module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on
-naming, see link:#gihzk[Naming Standards]. +
+naming, see link:#gihzk[Naming Standards].
++
 There are no GlassFish Server issues to consider.
-3.  Test Deployment. The developer performs a test deployment of the
+3. Test Deployment. The developer performs a test deployment of the
 archive. For instructions, see link:deploying-applications.html#gijmq[To
 Deploy an Application or Module].
-4.  Archive Submission. The developer submits the verified archive to
+4. Archive Submission. The developer submits the verified archive to
 the administrator for deployment into a production environment. The
 developer includes instructions for any additional deployment tasks that
 the administrator must perform. For an example of such additional
 instructions, see link:#gijla[Access to Shared Framework Classes].
-5.  Configuration. The administrator applies additional deployment
+5. Configuration. The administrator applies additional deployment
 specifics. Sometimes the developer has indicated additional deployment
 needs, such as specifying the production database. In this case, the
 administrator edits and reassembles the archive.
-6.  Production Deployment. The administrator deploys the archive to
+6. Production Deployment. The administrator deploys the archive to
 production. See link:deploying-applications.html#gijmq[To Deploy an
 Application or Module].
-7.  Troubleshooting. If deployment fails, the administrator returns the
+7. Troubleshooting. If deployment fails, the administrator returns the
 archive to the developer. The developer fixes the problem and resubmits
 the archive to the administrator. Sometimes the administrator resolves
 the problem, depending on what the problem is.
@@ -664,7 +669,7 @@ that features a graphical interface that includes extensive online help
 for the administrative tasks. The format for starting the Administration
 Console in a web browser is `http://`hostname`:`port. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:4848
 ----
@@ -688,7 +693,7 @@ or from a script. The format for starting the `asadmin` utility on the
 command line is as-install`/bin/asadmin` subcommand --option. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin list-applications --type web
 ----
@@ -707,7 +712,7 @@ command-line help pages, which are similar to man pages. You can display
 the help material for a command by typing help followed by the
 subcommand. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin help list-applications
 ----
@@ -745,14 +750,14 @@ JSR 88 Client
 The syntax of the URI entry for the `getDeploymentManager` method is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 deployer:Sun:AppServer::admin-host:admin-port[:https]
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 deployer:Sun:AppServer::localhost:4848:https
 ----
@@ -765,17 +770,23 @@ Additional Information on Application Deployment
 As specified from Java EE 8 specifications, the relevant specifications
 are the following:
 
-* Java Platform, Enterprise Edition 8 Specification +
+* Java Platform, Enterprise Edition 8 Specification
++
 `https://jcp.org/en/jsr/detail?id=366`
-* Java EE Application Deployment JSR 88 Specification +
+* Java EE Application Deployment JSR 88 Specification
++
 `http://jcp.org/en/jsr/detail?id=88`
-* Common Annotations for the Java Platform 1.6 Specification +
+* Common Annotations for the Java Platform 1.6 Specification
++
 `http://jcp.org/en/jsr/detail?id=250`
-* Java Servlet 3.0 Specification +
+* Java Servlet 3.0 Specification
++
 `http://jcp.org/en/jsr/detail?id=315`
-* Enterprise JavaBeans 3.1 Specification +
+* Enterprise JavaBeans 3.1 Specification
++
 `http://jcp.org/en/jsr/detail?id=318`
-* Java EE Connector Architecture 1.6 Specification +
+* Java EE Connector Architecture 1.6 Specification
++
 `http://jcp.org/en/jsr/detail?id=322`
 
 The following product documentation might be relevant to some aspects of

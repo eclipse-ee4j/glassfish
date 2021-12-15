@@ -4,6 +4,7 @@ title=Deploying Applications
 next=asadmin-deployment-subcommands.html
 prev=overview.html
 ~~~~~~
+
 Deploying Applications
 ======================
 
@@ -121,24 +122,24 @@ deployment order of 100 is assigned. If two applications have the same
 deployment order, the application that was deployed first is loaded
 first at server startup.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  List deployed applications by using the
+2. List deployed applications by using the
 link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand.
-3.  Deploy the application or module by using the
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`] subcommand. +
+3. Deploy the application or module by using the
+link:../reference-manual/deploy.html#GSRFM00114[`deploy`] subcommand.
++
 Information about the options and properties of the subcommand is
 included in this help page.
-4.  If needed, fix issues and rerun the `deploy` subcommand.
+4. If needed, fix issues and rerun the `deploy` subcommand.
 
 [[GSDPG00008]][[gijlo]]
-
-
 Example 2-1 Deploying an Enterprise Application
 
 This example deploys `newApp.ear` to the default server, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy Cart.ear
 Application deployed successfully with name Cart.
@@ -146,13 +147,11 @@ Command deploy executed successfully
 ----
 
 [[GSDPG00009]][[gilcq]]
-
-
 Example 2-2 Deploying a Connector Module
 
 This example deploys a connector module that is packaged in an RAR file.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy jdbcra.rar
 Application deployed successfully with name jdbcra.
@@ -160,8 +159,6 @@ Command deploy executed successfully
 ----
 
 [[GSDPG809]][[CHDFHDGD]]
-
-
 Example 2-3 Using an Alternate Java EE Standard Deployment Descriptor
 
 This example deploys an application using an alternate Java EE standard
@@ -169,7 +166,7 @@ deployment descriptor file that resides outside of an application
 archive. Specify an absolute path or a relative path to the alternate
 deployment descriptor file.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy --altdd path_to_alternate_descriptor cart.ear
 Application deployed successfully with name cart.
@@ -177,8 +174,6 @@ Command deploy executed successfully
 ----
 
 [[GSDPG810]][[CHDJFAIJ]]
-
-
 Example 2-4 Specifying the Deployment Order of an Application
 
 This example specifies the deployment order of two applications. The
@@ -187,7 +182,7 @@ startup.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy --deploymentorder 102 --name cart cart.war
 ...
@@ -216,9 +211,10 @@ component. Because the application or module itself is stored in the
 central repository, adding or deleting targets adds or deletes the same
 version of the component on different targets.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Add and remove targets by using the
+2. Add and remove targets by using the
 link:../reference-manual/create-application-ref.html#GSRFM00013[`create-application-ref`] and
 link:../reference-manual/delete-application-ref.html#GSRFM00064[`delete-application-ref`] subcommands.
 
@@ -227,7 +223,7 @@ link:../reference-manual/delete-application-ref.html#GSRFM00064[`delete-applicat
 See Also
 
 You can also view the full syntax and options of the subcommand by
-typing`asadmin help create-application-ref` or
+typing `asadmin help create-application-ref` or
 `asadmin help delete-application-ref` at the command line.
 
 [[giulr]][[GSDPG00035]][[to-list-deployed-applications-or-modules]]
@@ -239,25 +235,25 @@ There are a number of commands that can be used to list deployed
 applications or modules and their subcomponents. Use the commands in
 this section in remote mode.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  List the desired applications by using the
+2. List the desired applications by using the
 link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand or the
-link:../reference-manual/list-sub-components.html#GSRFM00201[`list-sub-components`] subcommand. +
+link:../reference-manual/list-sub-components.html#GSRFM00201[`list-sub-components`] subcommand.
++
 Information about these commands is included in these help pages.
-3.  Show the status of a deployed component by using the
+3. Show the status of a deployed component by using the
 link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
 
 [[GSDPG00010]][[giumj]]
-
-
 Example 2-5 Listing Applications
 
 The `list-applications` subcommand lists all deployed Java EE
 applications or modules. If the `--type` option is not specified, all
 components are listed. This example lists deployed applications.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-applications --type web
 hellojsp <web>
@@ -265,8 +261,6 @@ Command list-applications executed successfully
 ----
 
 [[GSDPG00011]][[giuot]]
-
-
 Example 2-6 Listing Subcomponents
 
 The `list-sub-components` subcommand lists EJBs or servlets in a
@@ -277,7 +271,7 @@ specific module in an application, you must specify the module name and
 the `--appname` option. This example gets the subcomponents of module
 `mejb.jar` within application `MEjbApp`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-sub-components --appname MEjbApp mejb.jar
 MEJBBean <StatelessSessionBean>
@@ -285,15 +279,13 @@ Command list-sub-components executed successfully
 ----
 
 [[GSDPG00012]][[giunl]]
-
-
 Example 2-7 Showing Status of a Deployed Component
 
 The `show-component-status` subcommand gets the status (enabled or
 disabled) of the deployed component. This example gets the status of the
 `MEjbApp` component.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin show-component-status MEjbApp
 Status of MEjbApp is enabled
@@ -318,17 +310,17 @@ Before You Begin
 
 You must remove a preconfigured resource before it can be updated.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Redeploy an application or module by using the
+2. Redeploy an application or module by using the
 link:../reference-manual/redeploy.html#GSRFM00217[`redeploy`] subcommand or the
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`] subcommand with the `--force` option. +
+link:../reference-manual/deploy.html#GSRFM00114[`deploy`] subcommand with the `--force` option.
++
 Information about the options and properties of these commands is
 included in these help pages.
 
 [[GSDPG00013]][[gijzm]]
-
-
 Example 2-8 Retaining HTTP Session State During Redeployment
 
 This example redeploys the `hello` web application. In a production
@@ -336,7 +328,7 @@ environment, you usually want to retain sessions. If you use the
 `--keepstate` option, active sessions of the application are retained
 and restored when redeployment is complete.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> redeploy --name hello --keepstate=true hello.war
 Application deployed successfully with name hello.
@@ -348,15 +340,13 @@ Administration Console. For instructions, see the Administration Console
 online help.
 
 [[GSDPG00014]][[gijkr]]
-
-
 Example 2-9 Redeploying a Web Application That Was Deployed From a
 Directory
 
 This example redeploys the `hello` web application, which was originally
 deployed from the `hellodir` directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin>redeploy --name hellodir
 Application deployed successfully with name hellodir.
@@ -364,15 +354,13 @@ Command redeploy executed successfully.
 ----
 
 [[GSDPG00015]][[gikiw]]
-
-
 Example 2-10 Redeploying an Application by Using `asadmin deploy`
 `--force`
 
 The `--force` option is set to `false` by default. This example
 redeploys `newApp.ear` even if has been deployed or already exists.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy --force=true newApp.ear
 Application deployed successfully with name newApp.
@@ -399,30 +387,32 @@ enabled by using the `asadmin enable` subcommand.
 
 An application or module is enabled by default.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Obtain the exact name of the application or module that you are
-disabling. +
+2. Obtain the exact name of the application or module that you are
+disabling.
++
 To list deployed applications or modules, use the
 link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand. If you do not specify
 a type, all deployed applications and modules are listed. For example,
 valid types can be `web`, `ejb`, `connector`, `application`, and
-`webservice`. +
+`webservice`.
++
 To see the status of deployed components, use the
 link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
-3.  Deactivate the application or module by using the
-link:../reference-manual/disable.html#GSRFM00116[`disable`] subcommand. +
+3. Deactivate the application or module by using the
+link:../reference-manual/disable.html#GSRFM00116[`disable`] subcommand.
++
 Information about the options and properties of the subcommand is
 included in this help page.
 
 [[GSDPG00016]][[gijkp]]
-
-
 Example 2-11 Listing Deployed Web Applications
 
 This example lists all deployed web applications.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-applications --type web
 hellojsp <web>
@@ -430,13 +420,11 @@ Command list-applications executed successfully.
 ----
 
 [[GSDPG00017]][[gikvy]]
-
-
 Example 2-12 Disabling a Web Application
 
 This example disables the `hellojsp` application.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable hellojsp
 Command disable executed successfully.
@@ -465,25 +453,26 @@ enabled on one target and disabled on another. If a component is
 referenced by a target, it is not available to users unless it is
 enabled on that target.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Enable the application or module by using the
-link:../reference-manual/enable.html#GSRFM00124[`enable`] subcommand. +
+2. Enable the application or module by using the
+link:../reference-manual/enable.html#GSRFM00124[`enable`] subcommand.
++
 If the component has not been deployed, an error message is displayed.
 If the component is already enabled, it is re-enabled. To see the status
 of deployed components, use the
-link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand. +
+link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
++
 Information about the options and properties of the subcommand is
 included in this help page.
 
 [[GSDPG00018]][[gijxl]]
-
-
 Example 2-13 Enabling an Application
 
 This example enables the `sampleApp` application.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable sampleApp
 Command enable executed successfully.
@@ -506,30 +495,32 @@ application or module and remove it from the repository. To reinstate
 the component, you must deploy the component again using the `deploy`
 subcommand.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Obtain the exact name of the application or module you are
-undeploying. +
+2. Obtain the exact name of the application or module you are
+undeploying.
++
 To list deployed applications or modules, use the
 link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand. If you do not specify
 a type, all deployed applications and modules are listed. For example,
 valid types can be `web`, `ejb`, `connector`, `application`, and
-`webservice`. +
+`webservice`.
++
 To see the status of deployed components, use the
 link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
-3.  Undeploy the application or module by using the
-link:../reference-manual/undeploy.html#GSRFM00244[`undeploy`] subcommand. +
+3. Undeploy the application or module by using the
+link:../reference-manual/undeploy.html#GSRFM00244[`undeploy`] subcommand.
++
 Information about the options and properties of the subcommand is
 included in this help page.
 
 [[GSDPG00019]][[gikag]]
-
-
 Example 2-14 Listing Deployed Applications or Modules
 
 This example lists all applications of type `web`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-applications --type web
 hellojsp <web>
@@ -537,13 +528,11 @@ Command list-applications executed successfully.
 ----
 
 [[GSDPG00020]][[gikun]]
-
-
 Example 2-15 Undeploying an Application
 
 This example uninstalls the `hellojsp` application.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> undeploy hellojsp
 hellojsp <web>
@@ -573,30 +562,31 @@ for the application or module has changed.
 Dynamic reloading is enabled by default, and is available only on the
 default server instance.
 
-1.  Go to the root directory of the deployed application or module. +
-For an application: +
-[source,oac_no_warn]
+1. Go to the root directory of the deployed application or module.
++
+For an application:
++
+[source]
 ----
 domain-dir/applications/app-name
 ----
-For an individually deployed module: +
-[source,oac_no_warn]
+For an individually deployed module:
++
+[source]
 ----
 domain-dir/applications/module-name
 ----
-::
-
++
 [NOTE]
-=====================================================================
-
+====
 Deployment directories might change between GlassFish Server releases.
+====
 
-=====================================================================
-
-2.  Create or update the timestamp of the `.reload` file to load the
-changes. +
-For UNIX: `touch .reload` +
-For Windows: `echo> .reload` +
+2. Create or update the timestamp of the `.reload` file to load the changes.
++
+* For UNIX: `touch .reload`
+* For Windows: `echo> .reload`
++
 If the `.reload` file doesn't exist, the `touch` or `echo` command
 creates it.
 
@@ -605,14 +595,10 @@ creates it.
 To Deploy an Application or Module Automatically
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
 [NOTE]
-=============================================================
-
+====
 This task is best suited for use in a development environment.
-
-=============================================================
-
+====
 
 Automatic deployment involves copying an archive file into a special
 autodeploy directory where the archive is automatically deployed by
@@ -621,50 +607,46 @@ development environment because it allows new code to be tested quickly.
 Automatic deployment is enabled by default, and is available only on the
 default server instance.
 
-1.  Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to adjust the
-autodeployment interval. +
+1. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to adjust the
+autodeployment interval.
++
 This sets the interval at which applications and modules are checked for
 code changes and dynamically reloaded. The default is `2`.
-2.  Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to enable JSP
+2. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to enable JSP
 precompilation.
-3.  Copy your archive file to the autodeploy directory. +
+3. Copy your archive file to the autodeploy directory.
++
 The default location is domain-dir`/autodeploy`. The application will be
-deployed at the next interval. +
+deployed at the next interval.
++
 To undeploy an automatically deployed application or module, remove its
-archive file from the autodeploy directory. +
-
+archive file from the autodeploy directory.
++
 [NOTE]
-=====================================================================
-
+====
 Deployment directories might change between GlassFish Server releases.
-
-=====================================================================
-
+====
 
 [[GSDPG00021]][[giqrk]]
-
-
 Example 2-16 Setting the Autodeployment Interval
 
 This example sets the autodeployment inverval to 3 seconds (default is
 2).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.admin-service.das-config.autodeploy-polling-interval-in-seconds=3
 Command set executed successfully.
 ----
 
 [[GSDPG00022]][[giqtm]]
-
-
 Example 2-17 Setting JSP Precompilation
 
 This example enables JSP precompilation (default is false).
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> 
+asadmin>
 set server.admin-service.das-config.autodeploy-jsp-precompilation-enabled=true
 Command set executed successfully.
 ----
@@ -689,29 +671,27 @@ contains a CMP mappings file, the file is named
 `MyModule.sun-cmp-mappings.xml`. A `.dbschema` file is stored at the
 root level. Each `/` (forward slash) is replaced by a `#` (pound sign).
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Deploy the application or module by using the
+2. Deploy the application or module by using the
 link:../reference-manual/deploy.html#GSRFM00114[`deploy`] subcommand with the `--deploymentplan`
-option. +
+option.
++
 
 [NOTE]
-=====================================================================
-
+====
 Deployment directories might change between GlassFish Server releases.
-
-=====================================================================
+====
 
 
 [[GSDPG00023]][[gijvy]]
-
-
 Example 2-18 Deploying by Using a Deployment Plan
 
 This example deploys the application in the `myrostapp.ear` file
 according to the plan specified by the `mydeployplan.jar` file.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin>deploy --deploymentplan mydeployplan.jar myrostapp.ear
 Application deployed successfully with name myrostapp.
@@ -719,14 +699,12 @@ Command deploy executed successfully.
 ----
 
 [[GSDPG00024]][[gijyn]]
-
-
 Example 2-19 Deployment Plan Structure for an Enterprise Application
 
 This listing shows the structure of the deployment plan JAR file for an
 EAR file.
 
-[source,oac_no_warn]
+[source]
 ----
 $ jar -tvf mydeployplan.jar
 420 Thu Mar 13 15:37:48 PST 2003 glassfish-application.xml
@@ -739,8 +717,6 @@ $ jar -tvf mydeployplan.jar
 ----
 
 [[GSDPG00025]][[gijwk]]
-
-
 Example 2-20 Deployment Plan Structure for an EJB Module
 
 In the deployment plan for an EJB module, the deployment descriptor that
@@ -749,7 +725,7 @@ EJB module contains a CMP bean, the deployment plan includes the
 `sun-cmp-mappings.xml` and `.dbschema` files at the root level. In the
 following listing, the deployment plan describes a CMP bean:
 
-[source,oac_no_warn]
+[source]
 ----
 $ jar r -tvf myotherplan.jar
 3603 Thu Mar 13 15:24:20 PST 2003 glassfish-ejb-jar.xml
@@ -772,11 +748,9 @@ To Deploy an Application or Module in a Directory Format
 
 
 [NOTE]
-=============================================================
-
+====
 This task is best suited for use in a development environment.
-
-=============================================================
+====
 
 
 An expanded directory, also known as an exploded directory, contains an
@@ -822,31 +796,30 @@ On Windows, if you are deploying a directory on a mapped drive, you must
 be running GlassFish Server as the same user to which the mapped drive
 is assigned. This enables GlassFish Server to access the directory.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Verify that the expanded directory contents match the archive file. +
+2. Verify that the expanded directory contents match the archive file.
++
 For information about the required directory contents, see the
 appropriate specifications.
-3.  Deploy the directory by using the link:../reference-manual/deploy.html#GSRFM00114[`deploy`]
-subcommand and specifying the path to the expanded directory. +
+3. Deploy the directory by using the link:../reference-manual/deploy.html#GSRFM00114[`deploy`]
+subcommand and specifying the path to the expanded directory.
++
 
 [NOTE]
-=====================================================================
-
+====
 Deployment directories might change between GlassFish Server releases.
-
-=====================================================================
+====
 
 
 [[GSDPG00026]][[gilaz]]
-
-
 Example 2-21 Deploying an Application From a Directory
 
 This example deploys the expanded directory `/apps/MyApp` for the
 `hello` application.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy --name hello /apps/MyApp
 Application deployed successfully with name hello.
@@ -915,16 +888,16 @@ Before You Begin
 
 The application must already be deployed. Otherwise, an error occurs.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Set a servlet context-initialization parameter by using the
-link:../reference-manual/set-web-context-param.html#GSRFM00230[`set-web-context-param`] subcommand. +
+2. Set a servlet context-initialization parameter by using the
+link:../reference-manual/set-web-context-param.html#GSRFM00230[`set-web-context-param`] subcommand.
++
 Information about the options for the subcommand is included in this
 help page.
 
 [[GSDPG00027]][[gjivx]]
-
-
 Example 2-22 Setting a Servlet Context-Initialization Parameter for a
 Web Application
 
@@ -932,7 +905,7 @@ This example sets the servlet context-initialization parameter
 javax.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp` to
 client.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-web-context-param --name=javax.faces.STATE_SAVING_METHOD
 --description="The location where the application?s state is preserved"
@@ -979,23 +952,23 @@ The application must already be deployed, and the entry must have
 previously been set by using the `set-web-env-entry` subcommand.
 Otherwise, an error occurs.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Unset an environment entry by using the
-link:../reference-manual/unset-web-context-param.html#GSRFM00248[`unset-web-context-param`] subcommand. +
+2. Unset an environment entry by using the
+link:../reference-manual/unset-web-context-param.html#GSRFM00248[`unset-web-context-param`] subcommand.
++
 Information about the options for the subcommand is included in this
 help page.
 
 [[GSDPG00028]][[gjivv]]
-
-
 Example 2-23 Unsetting a Servlet Context-Initialization Parameter for a
 Web Application
 
 This example unsets the servlet context-initialization parameter
 javax.faces.STATE_SAVING_METHOD of the web application `basic-ezcomp`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> unset-web-context-param
 --name=javax.faces.STATE_SAVING_METHOD basic-ezcomp
@@ -1029,14 +1002,13 @@ was set
 * The description of the parameter or `null` if no description was
 specified when the parameter was set
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  List servlet context-initialization parameters by using the
+2. List servlet context-initialization parameters by using the
 link:../reference-manual/list-web-context-param.html#GSRFM00208[`list-web-context-param`] subcommand.
 
 [[GSDPG00029]][[gjixd]]
-
-
 Example 2-24 Listing Servlet Context-Initialization Parameters for a Web
 Application
 
@@ -1046,7 +1018,7 @@ web application `basic-ezcomp` that have been set by using the
 when the javax.faces.PROJECT_STAGE parameter was set, null is displayed
 instead of a description for this parameter.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-web-context-param basic-ezcomp
 javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false
@@ -1095,23 +1067,23 @@ Before You Begin
 
 The application must already be deployed. Otherwise, an error occurs.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Set an environment entry for a deployed web application or module by
-using the link:../reference-manual/set-web-env-entry.html#GSRFM00231[`set-web-env-entry`] subcommand. +
+2. Set an environment entry for a deployed web application or module by
+using the link:../reference-manual/set-web-env-entry.html#GSRFM00231[`set-web-env-entry`] subcommand.
++
 Information about the options for the subcommand is included in this
 help page.
 
 [[GSDPG00030]][[gjiwe]]
-
-
 Example 2-25 Setting an Environment Entry for a Web Application
 
 This example sets the environment entry `Hello User` of the application
 hello to `techscribe`. The Java type of this entry is
 `java.lang.String`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-web-env-entry --name="Hello User"
 --type=java.lang.String --value=techscribe
@@ -1134,22 +1106,22 @@ To Unset a Web Environment Entry
 Use the `unset-web-env-entry` subcommand in remote mode to unset an
 environment entry for a deployed web application or module.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  Unset a web environment entry by using the
-link:../reference-manual/unset-web-env-entry.html#GSRFM00249[`unset-web-env-entry`] subcommand. +
+2. Unset a web environment entry by using the
+link:../reference-manual/unset-web-env-entry.html#GSRFM00249[`unset-web-env-entry`] subcommand.
++
 Information about the options for the subcommand is included in this
 help page.
 
 [[GSDPG00031]][[gjivj]]
-
-
 Example 2-26 Unsetting an Environment Entry for a Web Application
 
 This example unsets the environment entry `Hello User` of the web
 application `hello`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> unset-web-env-entry --name="Hello User" hello
 Command unset-web-env-entry executed successfully.
@@ -1179,20 +1151,19 @@ when the entry was set
 * The value of the `--ignoreDescriptorItem` option of the
 `set-web-env-entry` subcommand that was specified when the entry was set
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Remote commands require a running server.
-2.  List the environment entries by using
+2. List the environment entries by using
 theolink:GSRFM00209[`list-web-env-entry`] subcommand.
 
 [[GSDPG00032]][[gjiws]]
-
-
 Example 2-27 Listing Environment Entries for a Web Application
 
 This example lists all environment entries that have been set for the
 web application `hello` by using the `set-web-env-entry` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-web-env-entry hello
 Hello User (java.lang.String) = techscribe ignoreDescriptorItem=false
@@ -1219,7 +1190,8 @@ Server:
 * Context Root. When you deploy a web module, if you do not specify a
 context root, the default is the name of the WAR file without the `.war`
 extension. The web module context root must be unique within the server
-instance. +
+instance.
++
 The domain administration server (DAS) in GlassFish Server versions
 2.1.1 and later supports the deployment of multiple web applications
 using the same web context root as long as those applications are
@@ -1242,7 +1214,8 @@ applications.
 sessions will be invalidated and removed, unless the application is
 being undeployed as part of a redeployment and the `--keepstate`
 deployment option was set to true. This option is not supported and
-ignored in a clustered environment. See link:#gijzm[Example 2-8]. +
+ignored in a clustered environment. See link:#gijzm[Example 2-8].
++
 For information about HTTP session persistence, see the
 link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High Availability
 Administration Guide].
@@ -1251,11 +1224,13 @@ Edition High Availability Administration Guide] for information about
 load balancing.
 * JSP Precompilation. You can precompile JSP files during deployment by
 checking the appropriate box in the Administration Console, or by using
-the `--precompilejsp` option of the `deploy` subcommand. +
+the `--precompilejsp` option of the `deploy` subcommand.
++
 You can keep the generated source for JSP files by adding the
 `keepgenerated` flag to the `jsp-config` element in `glassfish-web.xml`.
-For example: +
-[source,oac_no_warn]
+For example:
++
+[source,xml]
 ----
 <glassfish-web-app>
    ...
@@ -1267,7 +1242,8 @@ For example: +
 If you include this property when you deploy the WAR file, the generated
 source is kept in domain-dir`/generated/jsp/`app-name`/`module-name for
 an application, or domain-dir`/generated/jsp/`module-name for an
-individually-deployed web module. +
+individually-deployed web module.
++
 For more information about JSP precompilation, see
 link:dd-elements.html#beatx[`jsp-config`].
 * Web Context Parameters. You can set web context parameters after
@@ -1294,15 +1270,13 @@ EJB Module Deployment Guidelines
 
 
 [NOTE]
-=======================================================================
-
+====
 The GlassFish Server Web Profile supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The GlassFish Server Full Platform Profile
 supports the entire EJB 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
-
-=======================================================================
+====
 
 
 The following guidelines apply to deploying an EJB module in GlassFish
@@ -1312,7 +1286,8 @@ Server:
 the `jndi-name` element immediately under the `ejb` element in
 `glassfish-ejb-jar.xml`, or there is no `glassfish-ejb-jar.xml` file, a
 default, non-clashing JNDI name is derived. A warning message is logged,
-recording the JNDI name used to look up the EJB JAR module. +
+recording the JNDI name used to look up the EJB JAR module.
++
 Because the EJB 3.1 specification defines portable EJB JNDI names, there
 is less need for GlassFish Server specific JNDI names. By default,
 GlassFish Server specific default JNDI names are applied automatically
@@ -1326,7 +1301,8 @@ element in the `glassfish-ejb-jar.xml` file to retain stateful session
 bean instances and persistently created EJB timers across redeployments.
 The `--keepstate` option of the `redeploy` subcommand takes precedence.
 The default for both is `false`. This option is not supported and
-ignored in a clustered environment. +
+ignored in a clustered environment.
++
 Some changes to an application between redeployments can prevent this
 feature from working properly. For example, do not change the set of
 instance variables in the SFSB bean class. Other examples would be
@@ -1372,31 +1348,39 @@ you can define application-scoped resources in the
 `glassfish-resources.xml` deployment descriptor. For more information,
 see link:#giydj[Application-Scoped Resources].
 
-1.  Ensure that the server is running. +
-Remote commands require a running server.
-2.  Deploy the connector module by using the link:../reference-manual/deploy.html#GSRFM00114[`deploy`]
+1. Ensure that the server is running. Remote commands require a running server.
+
+2. Deploy the connector module by using the link:../reference-manual/deploy.html#GSRFM00114[`deploy`]
 subcommand.
-3.  [[gkojp]] +
-Configure connector connection pools for the deployed connector module. +
+
+3. [[gkojp]]
+Configure connector connection pools for the deployed connector module.
++
 Use the `create-connector-connection-pool` subcommand. For procedures,
 see "link:../administration-guide/connectors.html#GSADG00431[To Create a Connector Connection Pool]" in
 GlassFish Server Open Source Edition Administration Guide.
-4.  Configure connector resources for the connector connection pools. +
-Use the `create-resource-adapter-config` subcommand. For procedures, see
-"link:../administration-guide/connectors.html#GSADG00440[To Create Configuration Information for a Resource
-Adapter]" in GlassFish Server Open Source Edition Administration Guide.
-If needed, you can override the default configuration properties of a
-resource adapter. +
-This step associates a connector resource with a JNDI name.
-5.  Configure a resource adapter. +
+
+4. Configure connector resources for the connector connection pools.
++
 Use the `create-resource-adapter-config` subcommand. For procedures, see
 "link:../administration-guide/connectors.html#GSADG00440[To Create Configuration Information for a Resource
 Adapter]" in GlassFish Server Open Source Edition Administration Guide.
 If needed, you can override the default configuration properties of a
 resource adapter.
-6.  [[gkohy]] +
-If needed, create an administered object for an inbound resource
-adapter. +
++
+This step associates a connector resource with a JNDI name.
+
+5. Configure a resource adapter.
++
+Use the `create-resource-adapter-config` subcommand. For procedures, see
+"link:../administration-guide/connectors.html#GSADG00440[To Create Configuration Information for a Resource
+Adapter]" in GlassFish Server Open Source Edition Administration Guide.
+If needed, you can override the default configuration properties of a
+resource adapter.
+
+6. [[gkohy]]
+If needed, create an administered object for an inbound resource adapter.
++
 Use the `create-admin-object` subcommand. For procedures, see
 "link:../administration-guide/connectors.html#GSADG00452[To Create an Administered Object]" in GlassFish Server
 Open Source Edition Administration Guide.
@@ -1469,12 +1453,10 @@ application clients and in GlassFish Server.
 
 
 [NOTE]
-=======================================================================
-
+====
 The Application Client Container is supported only in the GlassFish
 Server Full Platform Profile, not in the Web Profile.
-
-=======================================================================
+====
 
 
 The following topics are addressed here:
@@ -1489,17 +1471,22 @@ Client]
 To Assemble and Deploy an Application Client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Assemble the necessary client components. +
+1. Assemble the necessary client components.
++
 The client JAR file is created.
-2.  Assemble the EJB components that are to be accessed by the client. +
+2. Assemble the EJB components that are to be accessed by the client.
++
 The EJB JAR file is created.
-3.  Assemble the client and EJB JAR files together in an EAR. +
+3. Assemble the client and EJB JAR files together in an EAR.
++
 An EAR file contains all the components of the application.
-4.  Deploy the application. +
+4. Deploy the application.
++
 Instructions are contained in link:#gijmq[To Deploy an Application or
 Module].
-5.  If you are using the `appclient` script to run the application
-client, retrieve the client files. +
+5. If you are using the `appclient` script to run the application
+client, retrieve the client files.
++
 The client artifacts contain the ties and necessary classes for the
 application client. In this release of GlassFish Server, the client
 artifacts include multiple files. You can use either the
@@ -1510,15 +1497,18 @@ option to retrieve the client files as part of deploying the
 application.
 * Use the link:../reference-manual/get-client-stubs.html#GSRFM00140[`get-client-stubs`] subcommand to retrieve
 client files for a previously-deployed application.
-6.  Test the client on the GlassFish Server machine in one of the
+6. Test the client on the GlassFish Server machine in one of the
 following ways:
 * If Java Web Start is enabled for the application client, use the
 Launch link on the Application Client Modules.
-* Run an application client by using the `appclient` script. +
-The `appclient` script is located in the as-install`/bin` directory. +
+* Run an application client by using the `appclient` script.
++
+The `appclient` script is located in the as-install`/bin` directory.
++
 If you are using the default server instance, the only required option
-is `-client`, which points to the client JAR file. For example: +
-[source,oac_no_warn]
+is `-client`, which points to the client JAR file. For example:
++
+[source]
 ----
 appclient -client converterClient.jar
 ----
@@ -1551,7 +1541,7 @@ To Prepare Another Machine for Running an Application Client
 If Java Web Start is enabled, the default URL format for an application
 is `http://`host:port`/`context-root. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:80/myapp
 ----
@@ -1559,7 +1549,7 @@ http://localhost:80/myapp
 The default URL format for a standalone application client module is
 `http://`host:port`/`module-id. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:80/myclient
 ----
@@ -1584,19 +1574,24 @@ Before You Begin
 This task applies if you want to use the `appclient` script to run the
 application client on a system other than where the server runs.
 
-1.  Create the application client package JAR file. +
+1. Create the application client package JAR file.
++
 Use the `package-appclient` script in the as-install`/bin` directory.
 This JAR file is created in the as-install`/lib/appclient` directory.
-2.  Copy the application client package JAR file to the client machine.
-3.  Extract the contents of the JAR file. +
+2. Copy the application client package JAR file to the client machine.
+3. Extract the contents of the JAR file.
++
 For example: `jar xf` filename`.jar`
-4.  Configure the `sun-acc.xml` file. +
+4. Configure the `sun-acc.xml` file.
++
 If you used the `package-appclient` script, this file is located in the
 `appclient/appserv/lib/appclient` directory by default.
-5.  Configure the `asenv.conf` (`asenv.bat` on Windows) file. +
+5. Configure the `asenv.conf` (`asenv.bat` on Windows) file.
++
 This file is located in `appclient/appserv/bin` by default if you used
 the `package-appclient` script.
-6.  Copy the client JAR file to the client machine. +
+6. Copy the client JAR file to the client machine.
++
 You are now ready to run the client.
 
 [[GSDPG834]]
@@ -1663,13 +1658,11 @@ it as a lifecycle event listener.
 
 
 [NOTE]
-=======================================================================
-
+====
 If the `--failurefatal` option of `create-lifecycle-module` is set to
 `true` (the default is `false`), lifecycle module failure prevents
 server initialization or startup, but not shutdown or termination.
-
-=======================================================================
+====
 
 
 [[gbiye]][[GSDPG00072]][[web-service-deployment-guidelines]]
@@ -1679,15 +1672,13 @@ Web Service Deployment Guidelines
 
 
 [NOTE]
-=======================================================================
-
+====
 If you installed the Web Profile, web services are not supported unless
 the optional Metro Web Services Stack add-on component is downloaded.
 Without the Metro add-on component, a servlet or EJB component cannot be
 a web service endpoint, and the `glassfish-web.xml` and
 `glassfish-ejb-jar.xml` elements related to web services are ignored.
-
-=======================================================================
+====
 
 
 The following guidelines apply when deploying a web service in GlassFish
@@ -1721,7 +1712,7 @@ from the Type drop-down list and check the OSGI Type checkbox.
 To deploy an OSGi bundle using the `asadmin deploy` command, set the
 `--type` option to the value `osgi`. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploy --type=osgi MyBundle.jar
 ----
@@ -1731,8 +1722,7 @@ domain-dir`/autodeploy/bundles` directory.
 
 
 [NOTE]
-=======================================================================
-
+====
 For components packaged as OSGi bundles (`--type=osgi`), the `deploy`
 subcommand accepts properties arguments to wrap a WAR file as a WAB (Web
 Application Bundle) at the time of deployment. The subcommand looks for
@@ -1741,8 +1731,7 @@ handler to decorate the input stream. Other properties are used in the
 decoration process. For example, the GlassFish Server OSGi web container
 registers a URL stream handler named `webbundle`, which is used to wrap
 a plain WAR file as a WAB.
-
-=======================================================================
+====
 
 
 [[gkoif]][[GSDPG00074]][[transparent-jdbc-connection-pool-reconfiguration]]
@@ -1772,7 +1761,7 @@ For JDBC connection pools that are not application-scoped, use the `set`
 subcommand to set this property. For example, to configure `mypool` on
 `myserver`, type the following all on one line:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set myserver.resources.jdbc-connection-pool.mypool.property.
 dynamic-reconfiguration-wait-timeout-in-seconds=30
@@ -1843,7 +1832,7 @@ preserve old resource definitions during redeployment, use the
 `preserveAppScopedResources` property of the `redeploy` (or `deploy`
 `--force=true`) subcommand. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> redeploy --property preserveAppScopedResources=true MyApp.ear
 

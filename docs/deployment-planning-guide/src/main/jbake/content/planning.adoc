@@ -4,6 +4,7 @@ title=Planning your Deployment
 next=checklist.html
 prev=concepts.html
 ~~~~~~
+
 Planning your Deployment
 ========================
 
@@ -184,13 +185,12 @@ where
 
 * n is the number of concurrent users
 * r is the number requests per second the server receives
-* T~think~ is the average think time (in seconds) +
+* T~think~ is the average think time (in seconds)
++
 To obtain an accurate response time result, always include think time in
 the equation.
 
 [[GSPLG00007]][[fygam]]
-
-
 Example 2-1 Calculation of Response Time
 
 If the following conditions exist:
@@ -248,8 +248,6 @@ Solving for r in the equation in the previous section gives:
 r = n/(T~response~ + T~think~)
 
 [[GSPLG00008]][[fygaj]]
-
-
 Example 2-2 Calculation of Requests Per Second
 
 For the values:
@@ -260,7 +258,7 @@ For the values:
 
 The calculation for the number of requests per second is:
 
-[source,oac_no_warn]
+[source]
 ----
 r = 2800 / (1+3) = 700
 ----
@@ -355,8 +353,6 @@ second at your site and the maximum peak load. Calculate these figures
 using a web site analysis and monitoring tool.
 
 [[GSPLG00009]][[fygad]]
-
-
 Example 2-3 Calculation of Bandwidth Required
 
 A single T-1 line can handle 1.544 Mbps. Therefore, a network of four
@@ -385,8 +381,6 @@ need to determine when the peak load occurs, how long it lasts, and what
 percentage of the total load is the peak load.
 
 [[GSPLG00010]][[fygai]]
-
-
 Example 2-4 Calculation of Peak Load
 
 If the peak load lasts for two hours and takes up 30 percent of the
@@ -662,8 +656,7 @@ number of file descriptors and memory.
 Having multiple brokers in a cluster rather than a single broker enables
 you to:
 
-* Provide messaging services despite hardware failures on a single
-machine.
+* Provide messaging services despite hardware failures on a single machine.
 * Minimize downtime while performing system maintenance.
 * Accommodate workgroups having different user repositories.
 * Deal with firewall restrictions.
@@ -697,8 +690,7 @@ is replicated on all of the brokers in a cluster. Each broker knows
 about message consumers that are registered for destinations on all
 other brokers. Each broker can therefore route messages from its own
 directly-connected message producers to remote message consumers, and
-deliver messages from remote producers to its own directly-connected
-consumers.
+deliver messages from remote producers to its own directly-connected consumers.
 
 In a cluster configuration, the broker to which each message producer is
 directly connected performs the routing for messages sent to it by that
@@ -750,8 +742,7 @@ Java Message Service Type
 
 There are three types of integration between GlassFish Server and
 Message Queue brokers: embedded, local, and remote. You can set this
-type attribute on the Administration Console's Java Message Service
-page.
+type attribute on the Administration Console's Java Message Service page.
 
 [[gktcw]][[GSPLG00004]][[embedded-java-message-service]]
 
@@ -769,8 +760,7 @@ With the EMBEDDED type, use the Start Arguments attribute to specify
 Message Queue broker startup parameters.
 
 With the EMBEDDED type, make sure the Java heap size is large enough to
-allow GlassFish Server and Message Queue to run in the same virtual
-machine.
+allow GlassFish Server and Message Queue to run in the same virtual machine.
 
 [[abfdu]][[GSPLG00005]][[local-java-message-service]]
 
@@ -801,8 +791,7 @@ machines or for higher availability), or for using a different number of
 brokers and server instances.
 
 With the REMOTE type, you must specify Message Queue broker startup
-parameters using Message Queue tools. The Start Arguments attribute is
-ignored.
+parameters using Message Queue tools. The Start Arguments attribute is ignored.
 
 [[abfdr]][[GSPLG00033]][[managing-jms-with-the-administration-console]]
 
@@ -840,23 +829,20 @@ command-line utility to manage the Java Message Service and JMS hosts.
 Use the following `asadmin` commands:
 
 * Configuring Java Message Service attributes: `asadmin set`
+
 * Managing JMS hosts:
-
 ** `asadmin create-jms-host`
-
 ** `asadmin delete-jms-host`
-
 ** `asadmin list-jms-hosts`
+
 * Managing JMS resources:
-
 ** `asadmin create-jms-resource`
-
 ** `asadmin delete-jms-resource`
+** `asadmin list-jms-resources`
 
-** `asadmin list-jms-resources` +
++
 For more information on these commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish
-Server Open Source Edition Reference Manual] or the corresponding man
-pages.
+Server Open Source Edition Reference Manual] or the corresponding man pages.
 
 [[abfdw]][[GSPLG00035]][[default-jms-host]]
 
@@ -879,8 +865,7 @@ hosts. When the GlassFish Server uses a Message Queue cluster, the
 default JMS host executes Message Queue-specific commands. For example,
 when a physical destination is created for a Message Queue broker
 cluster, the default JMS host executes the command to create the
-physical destinations, but all brokers in the cluster use the physical
-destination.
+physical destinations, but all brokers in the cluster use the physical destination.
 
 [[abfdx]][[GSPLG00069]][[example-deployment-scenarios]]
 
@@ -888,8 +873,8 @@ Example Deployment Scenarios
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To accommodate your messaging needs, modify the Java Message Service and
-JMS host list to suit your deployment, performance, and availability
-needs. The following sections describe some typical scenarios.
+JMS host list to suit your deployment, performance, and availability needs.
+The following sections describe some typical scenarios.
 
 For best availability, deploy Message Queue brokers and GlassFish
 Servers on different machines, if messaging needs are not just with
@@ -924,8 +909,7 @@ Server instance associated with a Message Queue broker instance.
 In REMOTE mode, to configure a GlassFish Server cluster to use a Message
 Queue broker cluster, add all the Message Queue brokers as JMS hosts in
 the GlassFish Server's Java Message Service. Any JMS connection
-factories created and MDBs deployed then uses the JMS configuration
-specified.
+factories created and MDBs deployed then uses the JMS configuration specified.
 
 [[abfeb]][[GSPLG00038]][[specifying-an-application-specific-message-queue-broker-cluster]]
 
@@ -953,5 +937,4 @@ Application Clients
 When an application client or standalone application accesses a JMS
 administered object for the first time, the client JVM retrieves the
 Java Message Service configuration from the server. Further changes to
-the JMS service will not be available to the client JVM until it is
-restarted.
+the JMS service will not be available to the client JVM until it is restarted.

@@ -4,6 +4,7 @@ title=Product Concepts
 next=planning.html
 prev=preface.html
 ~~~~~~
+
 Product Concepts
 ================
 
@@ -233,15 +234,11 @@ configurations of other domains. Likewise, deploying an application on
 one domain does not deploy it or make it visible to any other domain.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 All hosts in a domain on which the DAS and GlassFish Server instances
 are running must have the same operating system.
-
-|=======================================================================
+====
 
 
 [[abfbb]][[GSPLG00024]][[domain-administration-server-das]]
@@ -307,15 +304,11 @@ applications and resources are on all instances in the cluster, an
 instance can failover to any other instance in the cluster.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 All hosts in a cluster on which the DAS and GlassFish Server instances
 are running must have the same operating system.
-
-|=======================================================================
+====
 
 
 Clusters, domains, and instances are related as follows:
@@ -427,7 +420,8 @@ GlassFish Server supports the following session persistence types:
 * Memory
 * Replicated
 * File
-* Coherence*Web
+* Coherence
+* Web
 
 With memory persistence, the state is always kept in memory and does not
 survive failure. With replicated persistence, GlassFish Server uses
@@ -529,7 +523,7 @@ For basic JMS administration tasks, use the GlassFish Server
 Administration Console and `asadmin` command-line utility.
 
 For advanced tasks, including administering a Message Queue cluster, use
-the tools provided in the as-install`/mq/bin` directory. For details
+the tools provided in the as-install``/mq/bin`` directory. For details
 about administering Message Queue, see the link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message
 Queue Administration Guide].
 
@@ -551,26 +545,29 @@ cross-references to detailed instructions for performing each task.
 To Configure GlassFish Server for High Availability
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Determine your requirements and goals for performance and QoS. +
+1. Determine your requirements and goals for performance and QoS. +
 For more information, see the following documentation:
 * link:planning.html#abfcc[Establishing Performance Goals]
 * link:planning.html#abfcp[Planning the Network Configuration]
 * link:planning.html#abfcy[Planning for Availability]
-2.  Size your system. +
+
+2. Size your system. +
 For more information, see link:planning.html#abfdg[Design Decisions].
-3.  Install GlassFish Server and related subcomponents such as a web
-server. +
+
+3. Install GlassFish Server and related subcomponents such as a web server. +
 For more information, see the following documentation:
 * link:../installation-guide/toc.html#GSING[GlassFish Server Open Source Edition Installation Guide]
 * Installation guides for related subcomponents, for example, Oracle
 iPlanet Web Server 7.0.9 Installation and Migration Guide
 (`http://docs.oracle.com/cd/E19146-01/821-1832/index.html`)
-4.  If you plan to administer your clusters centrally, set up secure
+
+4. If you plan to administer your clusters centrally, set up secure
 shell (SSH) for centralized administration. +
-For more information, see "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[Setting Up SSH for
-Centralized Administration]" in GlassFish Server Open Source Edition
+For more information, see "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
+Setting Up SSH for Centralized Administration]" in GlassFish Server Open Source Edition
 High Availability Administration Guide.
-5.  Configure domains, nodes, clusters, GlassFish Server instances, and
+
+5. Configure domains, nodes, clusters, GlassFish Server instances, and
 virtual servers as required. +
 For more information, see the following documentation:
 * "link:../administration-guide/domains.html#GSADG00006[Administering Domains]" in GlassFish Server Open
@@ -578,22 +575,22 @@ Source Edition Administration Guide
 * "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering GlassFish Server Nodes]" in GlassFish
 Server Open Source Edition High Availability Administration Guide
 * "link:../ha-administration-guide/clusters.html#GSHAG00005[Administering GlassFish Server Clusters]" in
-GlassFish Server Open Source Edition High Availability Administration
-Guide
+GlassFish Server Open Source Edition High Availability Administration Guide
 * "link:../ha-administration-guide/instances.html#GSHAG00006[Administering GlassFish Server Instances]" in
-GlassFish Server Open Source Edition High Availability Administration
-Guide
+GlassFish Server Open Source Edition High Availability Administration Guide
 * "link:../administration-guide/http_https.html#GSADG00589[Administering Virtual Servers]" in GlassFish Server
 Open Source Edition Administration Guide
-6.  Configure your load balancer. +
+
+6. Configure your load balancer. +
 For more information, see "link:../administration-guide/webapps.html#GSADG00552[Administering mod_jk]" in
 GlassFish Server Open Source Edition Administration Guide.
-7.  Configure the web container and EJB container for replicated session
-persistence. +
+
+7. Configure the web container and EJB container for replicated session persistence. +
 For more information, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
 Availability Session Persistence and Failover]" in GlassFish Server Open
 Source Edition High Availability Administration Guide.
-8.  If you are using messaging extensively, configure Java Message
+
+8. If you are using messaging extensively, configure Java Message
 Service (JMS) clusters for failover . +
 For more information, see the following documentation:
 * link:planning.html#abfdn[Planning Message Queue Broker Deployment]
@@ -601,7 +598,7 @@ For more information, see the following documentation:
 in GlassFish Server Open Source Edition High Availability Administration
 Guide
 * link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message Queue Administration Guide]
-9.  Deploy applications and configure them for high availability and
-session failover. +
+
+9. Deploy applications and configure them for high availability and session failover. +
 For more information, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
 Edition Application Deployment Guide].

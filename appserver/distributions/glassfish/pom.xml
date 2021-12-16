@@ -105,16 +105,6 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                            
-                                <jarupdate 
-                                    basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-osgi.jar"
-                                />
-
-                                <jarupdate 
-                                    basedir="${patches}/webservices-api-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-api-osgi.jar"
-                                />
                                 
                                 <jarupdate 
                                     basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"

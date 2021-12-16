@@ -277,7 +277,9 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
                 .txLogLocation(txlogLocationProvider)
                 .done();
 
-        final WSATRuntimeConfig.RecoveryEventListener metroListener = WSATRuntimeConfig.getInstance().new WSATRecoveryEventListener();
+        WSATRuntimeConfig.getInstance();
+
+        final WSATRuntimeConfig.RecoveryEventListener metroListener = new WSATRuntimeConfig.WSATRecoveryEventListener();
         recoveryRegistry.addEventListener(new RecoveryEventListener() {
 
             @Override

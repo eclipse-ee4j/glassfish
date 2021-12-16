@@ -94,14 +94,14 @@
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <webservices.version>3.0.3</webservices.version>
+        <webservices.version>4.0.0-M1</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
 
-        <!-- Jakarta XML Binding -->
-        <jakarta.jaxb-api.version>4.0.0-RC2</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>4.0.0-M1</jakarta.jaxb-impl.version>
+        <!-- Jakarta XML Binding --> 
+        <jakarta.xml.bind-api.version>4.0.0-RC3</jakarta.xml.bind-api.version>
+        <jakarta.jaxb-impl.version>4.0.0-M2</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
@@ -324,7 +324,7 @@
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
                 <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${jakarta.jaxb-api.version}</version>
+                <version>${jakarta.xml.bind-api.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>*</groupId>

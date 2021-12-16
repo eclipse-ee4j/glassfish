@@ -258,6 +258,7 @@
         </dependency>
 
         <!-- Jakarta MVC -->
+        <!-- TMP disable until EE 10 versions
         <dependency>
             <groupId>jakarta.mvc</groupId>
             <artifactId>jakarta.mvc-api</artifactId>
@@ -288,6 +289,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
 
         <!-- glassfish-grizzly-full -->
         <dependency>
@@ -599,6 +601,7 @@
         </dependency>
 
          <!-- Jakarta Security -->
+         <!-- TMP disable until EE 10 versions 
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
@@ -629,6 +632,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
+        
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -54,6 +55,12 @@ import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.http.HttpUpgradeHandler;
+
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.Globals.FACES_INITIALIZER;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
@@ -5644,16 +5651,22 @@ public class StandardContext
     protected void callServletContainerInitializers()
             throws LifecycleException {
 
+        Iterator<ServletContainerInitializer> initIterator = servletContainerInitializers.iterator();
+
+        List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
+        while (initIterator.hasNext()) {
+            try {
+                loadedServletContainerInitializers.add(initIterator.next());
+            } catch (ServiceConfigurationError e) {
+                log.log(SEVERE, "", e);
+            }
+        }
+
         // Get the list of ServletContainerInitializers and the classes
         // they are interested in
-        Map<Class<?>, List<Class<? extends ServletContainerInitializer>>> interestList =
-            ServletContainerInitializerUtil.getInterestList(
-                servletContainerInitializers);
-        Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList =
-            ServletContainerInitializerUtil.getInitializerList(
-                servletContainerInitializers, interestList,
-                getTypes(),
-                getClassLoader());
+        var interestList = getInterestList(loadedServletContainerInitializers);
+        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader());
+
         if (initializerList == null) {
             return;
         }
@@ -5666,12 +5679,10 @@ public class StandardContext
         // the condition. Time to call the initializers
         ServletContext ctxt = this.getServletContext();
         try {
-            for (Map.Entry<Class<? extends ServletContainerInitializer>, Set<Class<?>>> e :
-                    initializerList.entrySet()) {
+            for (var e : initializerList.entrySet()) {
                 Class<? extends ServletContainerInitializer> initializer = e.getKey();
                 // See IT 11333
-                if (isUseMyFaces() &&
-                        Globals.FACES_INITIALIZER.equals(initializer.getName())) {
+                if (isUseMyFaces() && FACES_INITIALIZER.equals(initializer.getName())) {
                     continue;
                 }
                 try {
@@ -5691,7 +5702,8 @@ public class StandardContext
                     String msg = MessageFormat.format(rb.getString(LogFacade.INVOKING_SERVLET_CONTAINER_INIT_EXCEPTION),
                                                       initializer.getCanonicalName());
                     log.log(Level.SEVERE, msg, t);
-                    throw new LifecycleException(t);
+                    // TMP until EE 10 support is ready
+                    // throw new LifecycleException(t);
                 }
             }
         } finally {

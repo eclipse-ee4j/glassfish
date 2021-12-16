@@ -3,11 +3,11 @@ status=published
 title=RMI-IIOP Load Balancing and Failover
 prev=jms.html
 ~~~~~~
+
 RMI-IIOP Load Balancing and Failover
 ====================================
 
 [[GSHAG00013]][[fxxqs]]
-
 
 [[rmi-iiop-load-balancing-and-failover]]
 11 RMI-IIOP Load Balancing and Failover
@@ -55,15 +55,11 @@ in the Application Client Container (ACC). See link:#abdbd[Enabling
 RMI-IIOP Hardware Load Balancing and Failover].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 GlassFish Server does not support RMI-IIOP load balancing and failover
 over secure sockets layer (SSL).
-
-|=======================================================================
+====
 
 
 [[gknpk]][[GSHAG00314]][[load-balancing-models]]
@@ -193,86 +189,99 @@ environment. For example, a developer who wants to experiment with a
 cluster and load balancing might create two instances on the same system
 on which the DAS is running. In such cases, these steps are unnecessary.
 
-1.  Go to the install_dir `/bin` directory.
-2.  Run `package-appclient`. +
+1. Go to the install_dir `/bin` directory.
+
+2. Run `package-appclient`. +
 This utility produces an `appclient.jar` file. For more information on
 `package-appclient`, see link:../reference-manual/package-appclient.html#GSRFM00264[`package-appclient`(1M)].
-3.  Copy the `appclient.jar` file to the machine where you want your
+
+3. Copy the `appclient.jar` file to the machine where you want your
 client and extract it.
-4.  Edit the `asenv.conf` or `asenv.bat` path variables to refer to the
-correct directory values on that machine. +
-The file is at appclient-install-dir `/config/`. +
+
+4. Edit the `asenv.conf` or `asenv.bat` path variables to refer to the
+correct directory values on that machine.
++
+The file is at appclient-install-dir `/config/`.
++
 For a list of the path variables to update, see
 link:../reference-manual/package-appclient.html#GSRFM00264[`package-appclient`(1M)].
-5.  If required, make the `appclient` script executable. +
-For example, on UNIX use `chmod 700`.
-6.  [[gevjb]]
-Find the IIOP listener port number for at least two instances in the
-cluster.
 
+5. If required, make the `appclient` script executable.
++
+For example, on UNIX use `chmod 700`.
+
+6. [[gevjb]]
+Find the IIOP listener port number for at least two instances in the cluster.
++
 You specify the IIOP listeners as endpoints in link:#gevkc[Add at least
 two `target-server` elements in the `sun-acc.xml` file.].
-
++
 For each instance, obtain the IIOP listener ports as follows:
-
-1.  Verify that the instances for which you want to determine the IIOP
-listener port numbers are running. +
-[source,oac_no_warn]
+[arabic]
+.. Verify that the instances for which you want to determine the IIOP
+listener port numbers are running.
++
+[source]
 ----
 asadmin> list-instances
 ----
-A list of instances and their status (running, not running) is
-displayed. +
-The instances for which you want to display the IIOP listener ports must
-be running.
-2.  For each instance, enter the following command to list the various
-port numbers used by the instance. +
-[source,oac_no_warn]
+A list of instances and their status (running, not running) is displayed.
++
+The instances for which you want to display the IIOP listener ports must be running.
+
+.. For each instance, enter the following command to list the various
+port numbers used by the instance.
++
+[source]
 ----
 asadmin> get servers.server.instance-name.system-property.*.value
 ----
 For example, for an instance name `in1`, you would enter the following
-command: +
-[source,oac_no_warn]
+command:
++
+[source]
 ----
 asadmin> get servers.server.in1.system-property.*.value
 ----
-7.  [[gevkc]]
-Add at least two `target-server` elements in the `sun-acc.xml` file.
 
+7. [[gevkc]]
+Add at least two `target-server` elements in the `sun-acc.xml` file.
++
 Use the endpoints that you obtained in link:#gevjb[Find the IIOP
 listener port number for at least two instances in the cluster.].
-
++
 If the GlassFish Server instance on which the application client is
 deployed participates in a cluster, the ACC finds all currently active
 IIOP endpoints in the cluster automatically. However, a client should
 have at least two endpoints specified for bootstrapping purposes, in
 case one of the endpoints has failed.
-
++
 The `target-server` element specifies one or more IIOP endpoints used
 for load balancing. The `address` attribute is an IPv4 address or host
 name, and the `port` attribute specifies the port number. See
 "link:../application-deployment-guide/dd-elements.html#GSDPG00111[client-container]" in GlassFish Server Open Source
 Edition Application Deployment Guide.
-
++
 As an alternative to using `target-server` elements, you can use the
 `endpoints` property as follows:
-
-[source,oac_no_warn]
++
+[source]
 ----
 jvmarg value = "-Dcom.sun.appserv.iiop.endpoints=host1:port1,host2:port2,..."
 ----
-8.  If you require weighted round-robin load balancing, perform the
-following steps:
-1.  Set the load-balancing weight of each server instance. +
-[source,oac_no_warn]
+
+8. If you require weighted round-robin load balancing, perform the following steps:
+[arabic]
+.. Set the load-balancing weight of each server instance.
++
+[source]
 ----
 asadmin set instance-name.lb-weight=weight
 ----
-2.  In the `sun-acc.xml`, set the
-`com.sun.appserv.iiop.loadbalancingpolicy` property of the ACC to
-`ic-based-weighted`. +
-[source,oac_no_warn]
+.. In the `sun-acc.xml`, set the
+`com.sun.appserv.iiop.loadbalancingpolicy` property of the ACC to `ic-based-weighted`.
++
+[source,xml]
 ----
 …
 <client-container send-password="true">
@@ -280,24 +289,26 @@ asadmin set instance-name.lb-weight=weight
      value="ic-based-weighed"/>
 …
 ----
-9.  Deploy your client application with the `--retrieve` option to get
-the client jar file. +
-Keep the client jar file on the client machine. +
-For example: +
-[source,oac_no_warn]
+
+9. Deploy your client application with the `--retrieve` option to get the client jar file.
++
+Keep the client jar file on the client machine.
++
+For example:
++
+[source]
 ----
 asadmin  --user admin --passwordfile pw.txt deploy --target cluster1 \
 --retrieve my_dir myapp.ear
 ----
-10. Run the application client as follows: +
-[source,oac_no_warn]
+10. Run the application client as follows:
++
+[source]
 ----
 appclient --client my_dir/myapp.jar
 ----
 
 [[GSHAG00070]][[gfohj]]
-
-
 Example 11-1 Setting Load-Balancing Weights for RMI-IIOP Weighted
 Round-Robin Load Balancing
 
@@ -305,18 +316,18 @@ In this example, the load-balancing weights in a cluster of three
 instances are to be set as shown in the following table.
 
 [width="100%",cols="<44%,<56%",options="header",]
-|====================================
+|===
 |Instance Name |Load-Balancing Weight
 |`i1` |100
 |`i2` |200
 |`i3` |300
-|====================================
+|===
 
 
 The sequence of commands to set these load balancing weights is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set i1.lb-weight=100
 asadmin set i2.lb-weight=200
@@ -371,15 +382,11 @@ the EJB. If this property is not set, the original load balancing
 behavior is preserved.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 PRLB is only supported for stateless session beans. Using PRLB with any
 other bean types will result in a deployment error.
-
-|=======================================================================
+====
 
 
 [[gksgy]][[GSHAG00319]][[enabling-per-request-load-balancing]]
@@ -403,26 +410,32 @@ deployed to clustered GlassFish Server instances. This procedure also
 provides an client-side example for accessing a stateless EJB that uses
 PRLB.
 
-1.  Choose or assemble the EJB that you want to deploy. +
-In this example, an EJB named `TheGreeter` is used. +
+1. Choose or assemble the EJB that you want to deploy.
++
+In this example, an EJB named `TheGreeter` is used.
++
 For instructions on developing and assembling an EJB for deployment to
 GlassFish Server, refer to the following documentation:
+
 * "link:../application-development-guide/ejb.html#GSDVG00010[Using Enterprise JavaBeans Technology]" in GlassFish
 Server Open Source Edition Application Development Guide
 * "link:../application-deployment-guide/deploying-applications.html#GSDPG00068[EJB Module Deployment Guidelines]" in GlassFish
 Server Open Source Edition Application Deployment Guide
 * "link:../application-deployment-guide/deploying-applications.html#GSDPG00070[Assembling and Deploying an Application Client
-Module]" in GlassFish Server Open Source Edition Application Deployment
-Guide
-2.  Set the `per-request-load-balancing` property to `true` in the
-`glassfish-ejb-jar.xml` deployment descriptor file for the EJB. +
+Module]" in GlassFish Server Open Source Edition Application Deployment Guide
+
+2. Set the `per-request-load-balancing` property to `true` in the
+`glassfish-ejb-jar.xml` deployment descriptor file for the EJB.
++
 For more information about the `glassfish-ejb-jar.xml` deployment
-descriptor file, refer to "link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml
-File]" in GlassFish Server Open Source Edition Application Deployment
-Guide +
+descriptor file, refer to
+"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]"
+in GlassFish Server Open Source Edition Application Deployment Guide
++
 For example, the `glassfish-ejb-jar.xml` file for a sample EJB named
-`TheGreeter` is listed below. +
-[source,oac_no_warn]
+`TheGreeter` is listed below.
++
+[source,xml]
 ----
 <glassfish-ejb-jar>
   <enterprise-beans>
@@ -435,48 +448,47 @@ For example, the `glassfish-ejb-jar.xml` file for a sample EJB named
   </enterprise-beans>
 </glassfish-ejb-jar>
 ----
-3.  Deploy the EJB. +
-If the EJB was previously deployed, it must be redployed. +
-For instructions on deploying EJBs, refer to the following
-documentation:
+3. Deploy the EJB.
++
+If the EJB was previously deployed, it must be redployed.
++
+For instructions on deploying EJBs, refer to the following documentation:
+
 * "link:../application-deployment-guide/deploying-applications.html#GSDPG00033[To Deploy an Application or Module]" in GlassFish
 Server Open Source Edition Application Deployment Guide
 * "link:../application-deployment-guide/deploying-applications.html#GSDPG00036[To Redeploy an Application or Module]" in GlassFish
 Server Open Source Edition Application Deployment Guide
-4.  Verify the PRLB configuration by looking for the following `FINE`
-message in the CORBA log file: +
-[source,oac_no_warn]
+
+4. Verify the PRLB configuration by looking for the following `FINE`
+message in the CORBA log file:
++
+[source]
 ----
 Setting per-request-load-balancing policyfor EJB EJB-name
 ----
-5.  Configure a client application to access the PRLB-enabled EJB. +
-For example: +
-[source,oac_no_warn]
+5. Configure a client application to access the PRLB-enabled EJB.
++
+For example:
++
+[source,java]
 ----
 public class EJBClient {
-    public static void main(String args[]) {
-    :
-    :
-    :
-    try {
+  public static void main(String args[]) {
+  // ...
+  try {
     // only one lookup
+    Object objref = initContext.lookup("test.cluster.loadbalancing.ejb.TestSessionBeanRemote");
+    myGreeterRemote = (TestSessionBeanRemote)PortableRemoteObject.narrow(objref, TestSessionBeanRemote.class);
+  } catch (Exception e) {
+    // ...
+  }
 
-    Object objref = initContext.lookup("test.cluster.loadbalancing.ejb.\
-      TestSessionBeanRemote");
-        myGreeterRemote = (TestSessionBeanRemote)PortableRemoteObject.narrow\
-          (objref,
-                                            TestSessionBeanRemote.class);
-
-    } catch (Exception e) {
-    :
-    }
-
-    for (int i=0; i < 10; i++ ) {
+  for (int i=0; i < 10; i++ ) {
     // method calls in a loop.
-        String theMessage = myGreeterRemote.sayHello(Integer.toString(i));
-        System.out.println("got"+": " + theMessage);
-        }
-    }
+    String theMessage = myGreeterRemote.sayHello(Integer.toString(i));
+    System.out.println("got"+": " + theMessage);
+  }
+  }
 }
 ----
 

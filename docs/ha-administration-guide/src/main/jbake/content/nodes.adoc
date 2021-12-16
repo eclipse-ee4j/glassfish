@@ -4,6 +4,7 @@ title=Administering GlassFish Server Nodes
 next=clusters.html
 prev=ssh-setup.html
 ~~~~~~
+
 Administering GlassFish Server Nodes
 ====================================
 
@@ -90,8 +91,7 @@ The following topics are addressed here:
 To Create a `DCOM` Node
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `create-node-dcom` subcommand in remote mode to create a `DCOM`
-node.
+Use the `create-node-dcom` subcommand in remote mode to create a `DCOM` node.
 
 [[GSHAG465]]
 
@@ -99,43 +99,34 @@ Before You Begin
 
 Ensure that the Windows user can use DCOM to connect to the host that
 the node will represent. By default, the `create-node-dcom` subcommand
-validates the node's parameters and the DCOM connection to the host. If
-the Windows user cannot use DCOM to connect to the host, the validation
-fails.
+validates the node's parameters and the DCOM connection to the host.
+If the Windows user cannot use DCOM to connect to the host, the validation fails.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 For information about how to determine whether the Windows user can use
 DCOM to connect to the host, see link:ssh-setup.html#CEGJFADH[To Test the
 Connection Over DCOM to a Remote Host].
+====
 
-|=======================================================================
 
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `create-node-dcom` subcommand. +
+2. Run the `create-node-dcom` subcommand. +
 Specify the file that contains the alias for the Windows user's password
 through the `--passwordfile` option of the `asadmin` utility. For more
 information about this file, see link:ssh-setup.html#CEGCDCEF[To Set Up
-Password Authentication for the Windows User]. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+Password Authentication for the Windows User].
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
 node, see the link:../reference-manual/create-node-dcom.html#GSRFM510[`create-node-dcom`(1)] help page.
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 C:\> asadmin --passwordfile filename create-node-dcom
 --nodehost node-host [--installdir install-dir ]
@@ -156,15 +147,13 @@ node-name::
   Your choice of name for the node that you are creating.
 
 [[GSHAG466]][[sthref13]]
-
-
 Example 3-1 Creating a `DCOM` Node
 
 This example creates the `DCOM` node `wpmdl1` to represent the host
 `wpmdl1.example.com`. The GlassFish Server software is installed in the
 same directory on the DAS host and on the host `wpmdl1.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 C:\> asadmin --passwordfile aspwalias.txt create-node-dcom
 --nodehost wpmdl1.example.com wpmdl1
@@ -200,34 +189,29 @@ Use the `list-nodes-dcom` subcommand in remote mode to obtain
 information about existing `DCOM` nodes in a domain.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 To obtain information about all existing nodes in a domain, use the
 link:../reference-manual/list-nodes.html#GSRFM00187[`list-nodes`] subcommand.
+====
 
-|=======================================================================
 
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the link:../reference-manual/list-nodes-dcom.html#GSRFM693[`list-nodes-dcom`] subcommand. +
-[source,oac_no_warn]
+2. Run the link:../reference-manual/list-nodes-dcom.html#GSRFM693[`list-nodes-dcom`] subcommand.
++
+[source]
 ----
 asadmin> list-nodes-dcom
 ----
 
 [[GSHAG470]][[sthref14]]
-
-
 Example 3-2 Listing Basic Information About All `DCOM` Nodes in a Domain
 
 This example lists the name, type, and host of all `DCOM` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom
 xkyd  DCOM  xkyd.example.com
@@ -237,15 +221,13 @@ Command list-nodes-dcom executed successfully.
 ----
 
 [[GSHAG471]][[sthref15]]
-
-
 Example 3-3 Listing Detailed Information About All `DCOM` Nodes in a
 Domain
 
 This example lists detailed information about all `DCOM` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
@@ -283,22 +265,18 @@ Before You Begin
 Ensure that DCOM is configured on the host where the DAS is running and
 on the host that the node represents.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `ping-node-dcom` subcommand. +
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+2. Run the `ping-node-dcom` subcommand.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for testing the node,
 see the link:../reference-manual/ping-node-dcom.html#GSRFM728[`ping-node-dcom`(1)] help page.
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 asadmin> ping-node-dcom node-name
 ----
@@ -306,13 +284,11 @@ node-name::
   The name of the node to test.
 
 [[GSHAG475]][[sthref16]]
-
-
 Example 3-4 Testing if a `DCOM` Node Is Reachable
 
 This example tests if the `DCOM` node `wpmdl2` is reachable.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> ping-node-dcom wpmdl2
 Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
@@ -333,8 +309,7 @@ typing `asadmin help ping-node-dcom` at the command line.
 To Delete a `DCOM` Node
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM`
-node.
+Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM` node.
 
 Deleting a node removes the node from the configuration of the DAS. The
 node's directories and files are deleted when the last GlassFish Server
@@ -351,15 +326,17 @@ following sections.
 * link:instances.html#gkqcw[To Delete an Instance Centrally]
 * link:instances.html#gkqed[To Delete an Instance Locally]
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Confirm that no instances reside on the node that you are deleting. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Confirm that no instances reside on the node that you are deleting.
++
+[source]
 ----
 asadmin> list-nodes-dcom --long=true
 ----
-3.  Run the olink:GSRFM00100[`delete-node-dcom`] subcommand. +
-[source,oac_no_warn]
+3. Run the olink:GSRFM00100[`delete-node-dcom`] subcommand.
++
+[source]
 ----
 asadmin> delete-node-dcom node-name
 ----
@@ -367,14 +344,12 @@ node-name::
   The name of the node that you are deleting.
 
 [[GSHAG479]][[sthref17]]
-
-
 Example 3-5 Deleting a `DCOM` Node
 
 This example confirms that no instances reside on the `DCOM` node `xkyd`
 and deletes the node `xkyd`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
@@ -413,15 +388,10 @@ SSH, see link:ssh-setup.html#gkshg[Enabling Centralized Administration of
 GlassFish Server Instances].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Windows systems also support communications over DCOM as an alternative
-to SSH.
-
-|=======================================================================
+[NOTE]
+====
+Windows systems also support communications over DCOM as an alternative to SSH.
+====
 
 
 GlassFish Server enables you to create `SSH` nodes for use by instances,
@@ -452,15 +422,11 @@ will represent. By default, the `create-node-ssh` subcommand validates
 the node's parameters and the SSH connection to the host. If the SSH
 user cannot use SSH to log in to the host, the validation fails.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `create-node-ssh` subcommand. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the `create-node-ssh` subcommand.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
 node, see the link:../reference-manual/create-node-ssh.html#GSRFM00048[`create-node-ssh`(1)] help page.
@@ -470,10 +436,9 @@ specify a password file through the `--passwordfile` option of the
 link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility. For more information about SSH user
 authentication, see link:ssh-setup.html#gkshh[Setting Up SSH User
 Authentication].
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 asadmin> create-node-ssh --nodehost node-host [--installdir install-dir ]
 node-name
@@ -491,15 +456,13 @@ node-name::
   Your choice of name for the node that you are creating.
 
 [[GSHAG00020]][[gksih]]
-
-
 Example 3-6 Creating an `SSH` Node
 
 This example creates the `SSH` node `sj01` to represent the host
 `sj01.example.com`. The GlassFish Server software is installed in the
 same directory on the DAS host and on the host `sj01.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-node-ssh --nodehost sj01.example.com sj01
 Command create-node-ssh executed successfully.
@@ -548,34 +511,29 @@ Use the `list-nodes-ssh` subcommand in remote mode to obtain information
 about existing `SSH` nodes in a domain.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 To obtain information about all existing nodes in a domain, use the
 link:../reference-manual/list-nodes.html#GSRFM00187[`list-nodes`] subcommand.
+====
 
-|=======================================================================
 
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the link:../reference-manual/list-nodes-ssh.html#GSRFM00189[`list-nodes-ssh`] subcommand. +
-[source,oac_no_warn]
+2. Run the link:../reference-manual/list-nodes-ssh.html#GSRFM00189[`list-nodes-ssh`] subcommand.
++
+[source]
 ----
 asadmin> list-nodes-ssh
 ----
 
 [[GSHAG00021]][[gkskt]]
-
-
 Example 3-7 Listing Basic Information About All `SSH` Nodes in a Domain
 
 This example lists the name, type, and host of all `SSH` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh
 sj01  SSH  sj01.example.com
@@ -584,15 +542,13 @@ Command list-nodes-ssh executed successfully.
 ----
 
 [[GSHAG00022]][[gkske]]
-
-
 Example 3-8 Listing Detailed Information About All `SSH` Nodes in a
 Domain
 
 This example lists detailed information about all `SSH` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
@@ -629,22 +585,18 @@ Before You Begin
 Ensure that SSH is configured on the host where the DAS is running and
 on the host that the node represents.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `ping-node-ssh` subcommand. +
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+2. Run the `ping-node-ssh` subcommand.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for testing the node,
 see the link:../reference-manual/ping-node-ssh.html#GSRFM00215[`ping-node-ssh`(1)] help page.
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 asadmin> ping-node-ssh node-name
 ----
@@ -652,13 +604,11 @@ node-name::
   The name of the node to test.
 
 [[GSHAG00023]][[gkshk]]
-
-
 Example 3-9 Testing if an `SSH` Node Is Reachable
 
 This example tests if the `SSH` node `sj01` is reachable.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> ping-node-ssh sj01
 Successfully made SSH connection to node sj01 (sj01.example.com)
@@ -697,15 +647,17 @@ following sections.
 * link:instances.html#gkqcw[To Delete an Instance Centrally]
 * link:instances.html#gkqed[To Delete an Instance Locally]
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Confirm that no instances reside on the node that you are deleting. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Confirm that no instances reside on the node that you are deleting.
++
+[source]
 ----
 asadmin> list-nodes-ssh --long=true
 ----
-3.  Run the olink:GSRFM00100[`delete-node-ssh`] subcommand. +
-[source,oac_no_warn]
+3. Run the olink:GSRFM00100[`delete-node-ssh`] subcommand.
++
+[source]
 ----
 asadmin> delete-node-ssh node-name
 ----
@@ -713,14 +665,12 @@ node-name::
   The name of the node that you are deleting.
 
 [[GSHAG00024]][[gksjg]]
-
-
 Example 3-10 Deleting an `SSH` Node
 
 This example confirms that no instances reside on the `SSH` node `sj01`
 and deletes the node `sj01`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh --long=true
 NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
@@ -771,41 +721,29 @@ The following topics are addressed here:
 To Create a `CONFIG` Node
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `create-node-config` command in remote mode to create a `CONFIG`
-node.
+Use the `create-node-config` command in remote mode to create a `CONFIG` node.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you create an instance locally on a host for which no nodes are
 defined, you can create the instance without creating a node beforehand.
 In this situation, GlassFish Server creates a `CONFIG` node for you. The
 name of the node is the unqualified name of the host. For more
-information, see link:instances.html#gkqbl[To Create an Instance
-Locally].
+information, see link:instances.html#gkqbl[To Create an Instance Locally].
+====
 
-|=======================================================================
+1. Ensure that the DAS is running. Remote subcommands require a running server.
 
-
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `create-node-config` subcommand. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+2. Run the `create-node-config` subcommand.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
 node, see the link:../reference-manual/create-node-config.html#GSRFM00047[`create-node-config`(1)] help page.
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 asadmin> create-node-config [--nodehost node-host] [--installdir install-dir ]
 node-name
@@ -824,8 +762,6 @@ node-name::
   Your choice of name for the node that you are creating.
 
 [[GSHAG00025]][[gkshu]]
-
-
 Example 3-11 Creating a `CONFIG` Node
 
 This example creates the `CONFIG` node `cfg01`. The host that the node
@@ -833,7 +769,7 @@ represents and the installation directory of the GlassFish Server
 software on the host are to be determined when instances are added to
 the node.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-node-config cfg01
 Command create-node-config executed successfully.
@@ -864,35 +800,31 @@ Use the `list-nodes-config` subcommand in remote mode to obtain
 information about existing `CONFIG` nodes in a domain.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 To obtain information about all existing nodes in a domain, use the
 link:../reference-manual/list-nodes.html#GSRFM00187[`list-nodes`] subcommand.
+====
 
-|=======================================================================
 
-
-1.  Ensure that the DAS is running. +
+1. Ensure that the DAS is running.
++
 Remote subcommands require a running server.
-2.  Run the link:../reference-manual/list-nodes-config.html#GSRFM00188[`list-nodes-config`] subcommand. +
-[source,oac_no_warn]
+2. Run the link:../reference-manual/list-nodes-config.html#GSRFM00188[`list-nodes-config`] subcommand.
++
+[source]
 ----
 asadmin> list-nodes-config
 ----
 
 [[GSHAG00026]][[gkskp]]
-
-
 Example 3-12 Listing Basic Information About All `CONFIG` Nodes in a
 Domain
 
 This example lists the name, type, and host of all `CONFIG` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config
 localhost-domain1  CONFIG  localhost
@@ -902,15 +834,13 @@ Command list-nodes-config executed successfully.
 ----
 
 [[GSHAG00027]][[gksjs]]
-
-
 Example 3-13 Listing Detailed Information About All `CONFIG` Nodes in a
 Domain
 
 This example lists detailed information about all `CONFIG` nodes in the
 current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST            INSTALL DIRECTORY    REFERENCED BY
@@ -954,15 +884,17 @@ are deleting. For information about how to delete an instance that
 resides on a `CONFIG` node, see link:instances.html#gkqed[To Delete an
 Instance Locally].
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Confirm that no instances reside on the node that you are deleting. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Confirm that no instances reside on the node that you are deleting.
++
+[source]
 ----
 asadmin> list-nodes-config --long=true
 ----
-3.  Run the olink:GSRFM00099[`delete-node-config`] subcommand. +
-[source,oac_no_warn]
+3. Run the olink:GSRFM00099[`delete-node-config`] subcommand.
++
+[source]
 ----
 asadmin> delete-node-config node-name
 ----
@@ -970,14 +902,12 @@ node-name::
   The name of the node that you are deleting.
 
 [[GSHAG00028]][[gksla]]
-
-
 Example 3-14 Deleting a `CONFIG` Node
 
 This example confirms that no instances reside on the `CONFIG` node
 `cfg01` and deletes the node `cfg01`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config --long=true
 NODE NAME           TYPE     NODE HOST           INSTALL DIRECTORY    REFERENCED BY
@@ -1023,12 +953,10 @@ The following topics are addressed here:
 To Update a `DCOM` Node
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `update-node-dcom` subcommand in remote mode to update a `DCOM`
-node.
+Use the `update-node-dcom` subcommand in remote mode to update a `DCOM` node.
 
-Options of this subcommand specify the new values of the node's
-configuration data. If you omit an option, the existing value is
-unchanged.
+Options of this subcommand specify the new values of the node's configuration data.
+If you omit an option, the existing value is unchanged.
 
 [[GSHAG482]]
 
@@ -1040,10 +968,10 @@ Ensure that the following prerequisites are met:
 host that the node represents.
 * The node that you are updating exists.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `update-node-dcom` subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the `update-node-dcom` subcommand.
++
+[source]
 ----
 asadmin> update-node-dcom options node-name
 ----
@@ -1055,14 +983,11 @@ node-name::
   The name of the `DCOM` node to update.
 
 [[GSHAG483]][[sthref18]]
-
-
 Example 3-15 Updating a `DCOM` Node
 
-This example updates the host that the node `wpmdl1` represents to
-`wj01`.
+This example updates the host that the node `wpmdl1` represents to `wj01`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-node-dcom --nodehost wj01 wpmdl1
 Command update-node-dcom executed successfully.
@@ -1082,12 +1007,10 @@ typing `asadmin help update-node-dcom` at the command line.
 To Update an `SSH` Node
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `update-node-ssh` subcommand in remote mode to update an `SSH`
-node.
+Use the `update-node-ssh` subcommand in remote mode to update an `SSH` node.
 
 Options of this subcommand specify the new values of the node's
-configuration data. If you omit an option, the existing value is
-unchanged.
+configuration data. If you omit an option, the existing value is unchanged.
 
 [[GSHAG361]]
 
@@ -1099,10 +1022,11 @@ Ensure that the following prerequisites are met:
 that the node represents.
 * The node that you are updating exists.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `update-node-ssh` subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Run the `update-node-ssh` subcommand.
++
+[source]
 ----
 asadmin> update-node-ssh options node-name
 ----
@@ -1114,14 +1038,12 @@ node-name::
   The name of the `SSH` node to update.
 
 [[GSHAG00029]][[gkslc]]
-
-
 Example 3-16 Updating an `SSH` Node
 
 This example updates the host that the node `sj01` represents to
 `adc01.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-node-ssh --nodehost adc01.example.com sj01
 Command update-node-ssh executed successfully.
@@ -1154,10 +1076,11 @@ Before You Begin
 
 Ensure that the node that you are updating exists.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `update-node-config` subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Run the `update-node-config` subcommand.
++
+[source]
 ----
 asadmin> uupdate-node-config options node-name
 ----
@@ -1169,14 +1092,12 @@ node-name::
   The name of the `CONFIG` node to update.
 
 [[GSHAG00030]][[gkskc]]
-
-
 Example 3-17 Updating a `CONFIG` Node
 
 This example updates the host that the node `cfg02` represents to
 `adc02.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-node-config --nodehost adc02.example.com cfg02
 Command update-node-config executed successfully.
@@ -1218,27 +1139,20 @@ the following situations:
 omitted:
 
 ** `--windowsuser`
-
 ** `--windowsdomain`
-* Any of the following options of the `update-node-ssh` subcommand is
-omitted:
+
+* Any of the following options of the `update-node-ssh` subcommand is omitted:
 
 ** `--sshport`
-
 ** `--sshuser`
-
 ** `--sshkeyfile`
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 Changing a `DCOM` node or an `SSH` node to a `CONFIG` node disables
 remote communication for the node.
-
-|=======================================================================
+====
 
 
 [[GSHAG365]]
@@ -1251,13 +1165,15 @@ Ensure that the following prerequisites are met:
 the host that the node represents.
 * The node the type of which you are changing exists.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the appropriate subcommand for updating a node, depending on the
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Run the appropriate subcommand for updating a node, depending on the
 type of the node after the change.
-* To change the type of a node to `DCOM`, run the `update-node-dcom`
-subcommand on the node. +
-[source,oac_no_warn]
+
+** To change the type of a node to `DCOM`, run the `update-node-dcom`
+subcommand on the node.
++
+[source]
 ----
 asadmin> update-node-dcom [options] config-or-ssh-node-name
 ----
@@ -1267,9 +1183,11 @@ options::
   link:../reference-manual/update-node-ssh.html#GSRFM789[`update-node-dcom`(1)] help page.
 config-or-ssh-node-name::
   The name of the `CONFIG` node or the `SSH` node to change.
-* To change the type of a node to `SSH`, run the `update-node-ssh`
-subcommand on the node. +
-[source,oac_no_warn]
+
+** To change the type of a node to `SSH`, run the `update-node-ssh`
+subcommand on the node.
++
+[source]
 ----
 asadmin> update-node-ssh [options] config-or-dcom-node-name
 ----
@@ -1279,9 +1197,11 @@ options::
   link:../reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)] help page.
 config-or-dcom-node-name::
   The name of the `CONFIG` node or the `DCOM` node to change.
-* To change the type of a node to `CONFIG`, run the `update-node-config`
-subcommand on the node. +
-[source,oac_no_warn]
+
+** To change the type of a node to `CONFIG`, run the `update-node-config`
+subcommand on the node.
++
+[source]
 ----
 asadmin> update-node-config [options] dcom-or-ssh-node-name
 ----
@@ -1293,13 +1213,11 @@ dcom-or-ssh-node-name::
   The name of the `DCOM` node or the `SSH` node to change.
 
 [[GSHAG00031]][[gkshw]]
-
-
 Example 3-18 Changing a `CONFIG` Node to an `SSH` Node
 
 This example changes the `CONFIG` node `cfg02` to an `SSH` node.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-node-ssh cfg02
 Command update-node-ssh executed successfully.

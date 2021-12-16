@@ -4,6 +4,7 @@ title=Upgrading Applications Without Loss of Availability
 next=session-persistence-and-failover.html
 prev=http-load-balancing.html
 ~~~~~~
+
 Upgrading Applications Without Loss of Availability
 ===================================================
 
@@ -40,17 +41,13 @@ procedure requires about 10-15 minutes for each GlassFish Server
 instance.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 To prevent the risk of version mismatch when a session fails over,
 upgrade all instances in a cluster at the same time. Otherwise a session
 might fail over to an instance where different versions of components
 are running.
-
-|=======================================================================
+====
 
 
 Perform this task on each cluster separately. A cluster acts as a safe
@@ -110,43 +107,41 @@ other cluster.
 To Upgrade an Application in a Single Cluster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Deploy the upgraded application to the cluster in a disabled state
-and with a new version identifier. +
-For example: +
-[source,oac_no_warn]
+1. Deploy the upgraded application to the cluster in a disabled state
+and with a new version identifier. For example:
++
+[source]
 ----
 asadmin> asadmin deploy --enabled=false --target myCluster myApp:1.1
 ----
-2.  Perform the following steps for each server instance in the cluster.
-1.  Quiesce one server instance in the cluster from the load balancer. +
-Follow these steps:
-1.  Disable the server instance using `asadmin disable-http-lb-server.`
-2.  Export the load balancer configuration file using
-`asadmin export-http-lb-config`.
-3.  Copy the exported configuration file to the web server instance's
-configuration directory. +
-For example, for Sun Java System Web Server, the location is
-web-server-install-dir`/``https-`host-name`/config/loadbalancer.xml`.
-4.  Wait until the timeout has expired. +
-Monitor the load balancer's log file.
-2.  Enable the upgraded application version on the quiesced server
-instance. +
-For example: +
-[source,oac_no_warn]
+
+2. Perform the following steps for each server instance in the cluster.
+[arabic]
+.. Quiesce one server instance in the cluster from the load balancer.
+   Follow these steps:
+... Disable the server instance using `asadmin disable-http-lb-server.`
+... Export the load balancer configuration file using
+    `asadmin export-http-lb-config`.
+... Copy the exported configuration file to the web server instance's
+    configuration directory. +
+    For example, for Sun Java System Web Server, the location is
+    web-server-install-dir``/https-``host-name``/config/loadbalancer.xml``.
+... Wait until the timeout has expired. +
+    Monitor the load balancer's log file.
+.. Enable the upgraded application version on the quiesced server instance. +
+   For example:
++
+[source]
 ----
 asadmin> asadmin enable --target instance01 myApp:1.1
 ----
-Enabling the upgraded application version automatically disables the
-previous version.
-3.  Test the upgraded application on the server instance to make sure it
-runs correctly.
-4.  Re-enable the server instance in load balancer. +
-Follow these steps:
-1.  Enable the server instance using `asadmin enable-http-lb-server.`
-2.  Export the load balancer configuration file using
-`asadmin export-http-lb-config`.
-3.  Copy the configuration file to the web server's configuration
-directory.
+Enabling the upgraded application version automatically disables the previous version.
+.. Test the upgraded application on the server instance to make sure it runs correctly.
+.. Re-enable the server instance in load balancer. Follow these steps:
+... Enable the server instance using `asadmin enable-http-lb-server.`
+... Export the load balancer configuration file using
+    `asadmin export-http-lb-config`.
+... Copy the configuration file to the web server's configuration directory.
 
 [[abdin]][[GSHAG00207]][[upgrading-in-multiple-clusters]]
 
@@ -160,40 +155,42 @@ To Upgrade a Compatible Application in Two or More Clusters
 
 Repeat the following procedure for each cluster.
 
-1.  Deploy the upgraded application to one cluster in a disabled state
-and with a new version identifier. +
-For example: +
-[source,oac_no_warn]
+1. Deploy the upgraded application to one cluster in a disabled state
+and with a new version identifier. For example:
++
+[source]
 ----
 asadmin> asadmin deploy --enabled=false --target myCluster myApp:1.1
 ----
-2.  Quiesce the cluster with the upgraded application from the load
-balancer.
-1.  Disable the cluster using `asadmin disable-http-lb-server`.
-2.  Export the load balancer configuration file using
+
+2. Quiesce the cluster with the upgraded application from the load balancer.
+[arabic]
+.. Disable the cluster using `asadmin disable-http-lb-server`.
+.. Export the load balancer configuration file using
 `asadmin export-http-lb-config`.
-3.  Copy the exported configuration file to the web server instance's
-configuration directory. +
-For example, for Sun Java System Web Server, the location is
-web-server-install-dir/`https-`host-name`/config/loadbalancer.xml`.
-4.  Wait until the timeout has expired. +
-Monitor the load balancer's log file.
-3.  Enable the upgraded application version on the quiesced cluster. +
-For example: +
-[source,oac_no_warn]
+.. Copy the exported configuration file to the web server instance's configuration directory. +
+   For example, for Sun Java System Web Server, the location is
+   web-server-install-dir``/https-``host-name``/config/loadbalancer.xml``.
+.. Wait until the timeout has expired. +
+   Monitor the load balancer's log file.
+
+3. Enable the upgraded application version on the quiesced cluster. For example:
++
+[source]
 ----
 asadmin> asadmin enable --target myCluster myApp:1.1
 ----
 Enabling the upgraded application version automatically disables the
 previous version.
-4.  Test the upgraded application on the cluster to make sure it runs
-correctly.
-5.  Enable the cluster in the load balancer:
-1.  Enable the cluster using `asadmin enable-http-lb-server.`
-2.  Export the load balancer configuration file using
-`asadmin export-http-lb-config`.
-3.  Copy the configuration file to the web server's configuration
-directory.
+
+4. Test the upgraded application on the cluster to make sure it runs correctly.
+
+5. Enable the cluster in the load balancer:
+[arabic]
+.. Enable the cluster using `asadmin enable-http-lb-server.`
+.. Export the load balancer configuration file using
+   `asadmin export-http-lb-config`.
+.. Copy the configuration file to the web server's configuration directory.
 
 [[abdio]][[GSHAG00208]][[upgrading-incompatible-applications]]
 
@@ -226,43 +223,52 @@ simply fail.
 To Upgrade an Incompatible Application by Creating a Second Cluster
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Create a "shadow cluster" on the same or a different set of machines
+1. Create a "shadow cluster" on the same or a different set of machines
 as the existing cluster. If you already have a second cluster, skip this
 step.
-1.  Use the Administration Console to create the new cluster and
-reference the existing cluster's named configuration. +
-Customize the ports for the new instances on each machine to avoid
-conflict with existing active ports.
-2.  For all resources associated with the cluster, add a resource
-reference to the newly created cluster using
-`asadmin create-resource-ref`.
-3.  Create a reference to all other applications deployed to the cluster
-(except the current upgraded application) from the newly created cluster
-using `asadmin create-application-ref`.
-4.  Configure the cluster to be highly available using
-`asadmin configure-ha-cluster`.
-5.  Create reference to the newly-created cluster in the load balancer
-configuration file using `asadmin create-http-lb-ref.`
-2.  Give the new version of the application a different version
+[arabic]
+.. Use the Administration Console to create the new cluster and
+   reference the existing cluster's named configuration. +
+   Customize the ports for the new instances on each machine to avoid
+   conflict with existing active ports.
+.. For all resources associated with the cluster, add a resource
+   reference to the newly created cluster using
+   `asadmin create-resource-ref`.
+.. Create a reference to all other applications deployed to the cluster
+   (except the current upgraded application) from the newly created cluster
+   using `asadmin create-application-ref`.
+.. Configure the cluster to be highly available using
+   `asadmin configure-ha-cluster`.
+.. Create reference to the newly-created cluster in the load balancer
+   configuration file using `asadmin create-http-lb-ref.`
+
+2. Give the new version of the application a different version
 identifier from the old version.
-3.  Deploy the new application version with the new cluster as the
+
+3. Deploy the new application version with the new cluster as the
 target. Use a different context root or roots.
-4.  Start the new cluster while the other cluster is still running. +
+
+4. Start the new cluster while the other cluster is still running. +
 The start causes the cluster to synchronize with the domain and be
 updated with the new application.
-5.  Test the application on the new cluster to make sure it runs
-correctly.
-6.  Disable the old cluster from the load balancer using
+
+5. Test the application on the new cluster to make sure it runs correctly.
+
+6. Disable the old cluster from the load balancer using
 `asadmin disable-http-lb-server`.
-7.  Set a timeout for how long lingering sessions survive.
-8.  Enable the new cluster from the load balancer using
+
+7. Set a timeout for how long lingering sessions survive.
+
+8. Enable the new cluster from the load balancer using
 `asadmin enable-http-lb-server`.
-9.  Export the load balancer configuration file using
+
+9. Export the load balancer configuration file using
 `asadmin export-http-lb-config`.
-10. Copy the exported configuration file to the web server instance's
-configuration directory. +
+
+10. Copy the exported configuration file to the web server instance's configuration directory. +
 For example, for Sun Java System Web Server, the location is
-web-server-install-dir/`https-`host-name`/config/loadbalancer.xml`.
+web-server-install-dir``/https-``host-name``/config/loadbalancer.xml``.
+
 11. After the timeout period expires or after all users of the old
 application have exited, stop the old cluster and undeploy the old
 application version.

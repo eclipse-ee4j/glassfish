@@ -4,11 +4,11 @@ title=Configuring High Availability Session Persistence and Failover
 next=jms.html
 prev=rolling-upgrade.html
 ~~~~~~
+
 Configuring High Availability Session Persistence and Failover
 ==============================================================
 
 [[GSHAG00011]][[abdkz]]
-
 
 [[configuring-high-availability-session-persistence-and-failover]]
 9 Configuring High Availability Session Persistence and Failover
@@ -18,8 +18,7 @@ This chapter explains how to enable and configure high availability
 session persistence.
 
 * link:#abdla[Overview of Session Persistence and Failover]
-* link:#abdle[Enabling the High Availability Session Persistence
-Service]
+* link:#abdle[Enabling the High Availability Session Persistence Service]
 * link:#abdlp[Stateful Session Bean Failover]
 
 [[abdla]][[GSHAG00209]][[overview-of-session-persistence-and-failover]]
@@ -30,8 +29,7 @@ Overview of Session Persistence and Failover
 GlassFish Server provides high availability session persistence through
 failover of HTTP session data and stateful session bean (SFSB) session
 data. Failover means that in the event of an server instance or hardware
-failure, another server instance in a cluster takes over a distributed
-session.
+failure, another server instance in a cluster takes over a distributed session.
 
 For example, Java EE applications typically have significant amounts of
 session state data. A web shopping cart is the classic example of
@@ -39,21 +37,15 @@ session state. Also, an application can cache frequently-needed data in
 the session object. In fact, almost all applications with significant
 user interactions need to maintain session state.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 When using high availability session persistence together with a load
 balancer, use a load balancer that includes session-based stickiness as
 part of its load-balancing algorithm. Otherwise, session data can be
 misdirected or lost. An example of a load balancer that includes
 session-based stickiness is the Loadbalancer Plug-In available in Oracle
 GlassFish Server.
-
-|=======================================================================
-
+====
 
 The following topics are addressed here:
 
@@ -73,11 +65,12 @@ instances, if:
 GlassFish Server supports in-memory session replication on other servers
 in the cluster for maintaining HTTP session and stateful session bean
 data. In-memory session replication is enabled by default for GlassFish
-Server clustered environments if the Group Management Service is
-enabled. +
+Server clustered environments if the Group Management Service is enabled.
++
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
-link:clusters.html#gjfnl[Group Management Service]. +
+link:clusters.html#gjfnl[Group Management Service].
++
 If server instances in a cluster are located on different hosts, ensure
 that the following prerequisites are met:
 
@@ -86,25 +79,23 @@ hosts must be on the same subnet.
 
 ** To ensure that in-memory replication functions correctly, the system
 clocks on all hosts in the cluster must be synchronized as closely as
-possible. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+possible.
++
+[NOTE]
+====
 GlassFish Server 4.0 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
 link:overview.html#gaynn[High Availability Session Persistence].
-
-|=======================================================================
+====
 
 * Each server instance has the same distributable web application
 deployed to it. The `web-app` element of the `web.xml` deployment
 descriptor file must contain the `distributable` element.
+
 * The web application uses high-availability session persistence. If a
 non-distributable web application is configured to use high-availability
 session persistence, the server writes an error to the log file.
+
 * The web application must be deployed using the `deploy` or `deploydir`
 subcommand with the `--availabilityenabled` option set to `true`. For
 more information on these subcommands, see link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)]
@@ -115,60 +106,50 @@ and link:../reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
 Restrictions
 ^^^^^^^^^^^^
 
-When configuring session persistence and failover, note the following
-restrictions:
+When configuring session persistence and failover, note the following restrictions:
 
 * When a session fails over, any references to open files or network
-connections are lost. Applications must be coded with this restriction
-in mind.
+connections are lost. Applications must be coded with this restriction in mind.
+
 * EJB Singletons are created for each server instance in a cluster, and
 not once per cluster.
+
 * The high availability session persistence service is not compatible
 with dynamic deployment, dynamic reloading, and autodeployment. These
 features are for development, not production environments, so you must
-disable them before enabling the session persistence service. For
-information about how to disable these features, see the
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
-Guide].
+disable them before enabling the session persistence service.
+For information about how to disable these features, see the
+link:../application-deployment-guide/toc.html#GSDPG[
+GlassFish Server Open Source Edition Application Deployment Guide].
+
 * GlassFish Server 4.0 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
 in link:overview.html#gaynn[High Availability Session Persistence].
+
 * You can only bind certain objects to distributed sessions that support
 failover. Contrary to the Servlet 2.4 specification, GlassFish Server
 4.0 does not throw an `IllegalArgumentException` if an object type not
-supported for failover is bound into a distributed session. +
+supported for failover is bound into a distributed session.
++
 You can bind the following objects into a distributed session that
 supports failover:
 
 ** Local home and object references for all EJB components.
-
-** Colocated stateless session, stateful session, or entity bean
-reference .
-
-** Distributed stateless session, stateful session, or entity bean
-reference.
-
+** Colocated stateless session, stateful session, or entity bean reference .
+** Distributed stateless session, stateful session, or entity bean reference.
 ** JNDI Context for `InitialContext` and `java:comp/env`.
-
 ** `UserTransaction` objects. However, if the instance that fails is
 never restarted, any prepared global transactions are lost and might not
 be correctly rolled back or committed.
-
 ** Serializable Java types.
-* You cannot bind the following object types into sessions that support
-failover:
+
+* You cannot bind the following object types into sessions that support failover:
 
 ** JDBC DataSource
-
-** Java Message Service (JMS) `ConnectionFactory` and `Destination`
-objects
-
+** Java Message Service (JMS) `ConnectionFactory` and `Destination` objects
 ** JavaMail Session
-
 ** Connection Factory
-
 ** Administered Objects
-
 ** Web service reference +
 In general, for these objects, failover will not work. However, failover
 might work in some cases, if for example the object is serializable.
@@ -214,11 +195,9 @@ Enabling the High Availability Session Persistence Service
 This section explains how to configure and enable the high availability
 session persistence service.
 
-* link:#abdlf[To Enable Availability for a Cluster, Standalone Instance
-or Container]
+* link:#abdlf[To Enable Availability for a Cluster, Standalone Instance or Container]
 * link:#abdll[Configuring Availability for Individual Web Applications]
-* link:#gkwqu[Configuring Replication and Multi-Threaded Concurrent
-Access to `HttpSessions`]
+* link:#gkwqu[Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`]
 * link:#abdln[Using Single Sign-on with Session Failover]
 * link:#gkyyl[Using Coherence*Web for HTTP Session Persistence]
 
@@ -231,90 +210,108 @@ This procedure explains how to enable high availability for a cluster as
 a whole, or for Web, EJB, or JMS containers that run in a cluster, or
 for a standalone server instance that is not part of a cluster.
 
-1.  Create a GlassFish Server cluster. +
+1. Create a GlassFish Server cluster.
++
 For more information, see link:clusters.html#gkqdm[To Create a Cluster].
-2.  Set up load balancing for the cluster. +
-For instructions, see link:http-load-balancing.html#abdgx[Setting Up HTTP
-Load Balancing].
-3.  Verify that the cluster and all instances within the cluster for
-which you want to enable availability is running. +
+
+2. Set up load balancing for the cluster.
++
+For instructions, see link:http-load-balancing.html#abdgx[Setting Up HTTP Load Balancing].
+
+3. Verify that the cluster and all instances within the cluster for
+which you want to enable availability is running.
++
 These steps are also necessary when enabling availability for a Web,
 EJB, or JMS container running in a cluster. The cluster and all
-instances in the cluster for which you want to enable availability must
-be running.
-1.  Verify that the cluster is running. +
-[source,oac_no_warn]
+instances in the cluster for which you want to enable availability must be running.
+[arabic]
+.. Verify that the cluster is running.
++
+[source]
 ----
 asadmin> list-clusters
 ----
 A list of clusters and their status (running, not running) is displayed.
 If the cluster for which you want to enable availability is not running,
-you can start it with the following command: +
-[source,oac_no_warn]
+you can start it with the following command:
++
+[source]
 ----
 asadmin> start-cluster cluster-name
 ----
-2.  Verify that all instances in the cluster are running. +
-[source,oac_no_warn]
+.. Verify that all instances in the cluster are running.
++
+[source]
 ----
 asadmin> list-instances
 ----
 A list of instances and their status is displayed. If the instances for
 which you want to enable availability are not running, you can start
-them by using the following command for each instance: +
-[source,oac_no_warn]
+them by using the following command for each instance:
++
+[source]
 ----
 asadmin> start-instance instance-name
 ----
-4.  Use one of the following `asadmin` olink:GSRFM00226[`set`]
+
+4. Use one of the following `asadmin` olink:GSRFM00226[`set`]
 subcommands to enable availability for a specific cluster, or for a
 specific Web, EJB, or JMS container.
-* For a cluster as a whole +
-[source,oac_no_warn]
+* For a cluster as a whole
++
+[source]
 ----
 asadmin> set cluster-name-config.availability-service.availability-enabled=true
 ----
-For example, for a cluster named `c1`: +
-[source,oac_no_warn]
+For example, for a cluster named `c1`:
++
+[source]
 ----
 asadmin> set c1-config.availability-service.availability-enabled=true
 ----
-* For the Web container in a cluster +
-[source,oac_no_warn]
+* For the Web container in a cluster
++
+[source]
 ----
 asadmin> set cluster-name-config.availability-service \
 .web-container-availability.availability-enabled=true
 ----
-* For the EJB container in a cluster +
-[source,oac_no_warn]
+* For the EJB container in a cluster
++
+[source]
 ----
 asadmin> set cluster-name-config.availability-service \
 .ejb-container-availability.availability-enabled=true
 ----
-* For the JMS container in a cluster +
-[source,oac_no_warn]
+* For the JMS container in a cluster
++
+[source]
 ----
 asadmin> set cluster-name-config.availability-service \
 .jms-availability.availability-enabled=true
 ----
-* For a standalone server instance (not part of a cluster) +
-[source,oac_no_warn]
+* For a standalone server instance (not part of a cluster)
++
+[source]
 ----
 asadmin> set instance-name-config.availability-service.availability-enabled=true
 ----
-5.  Restart the standalone server instance or each server instance in
-the cluster.
-6.  Enable availability for any SFSB that requires it. +
+
+5. Restart the standalone server instance or each server instance in the cluster.
+
+6. Enable availability for any SFSB that requires it.
++
 Select methods for which checkpointing the session state is necessary.
-For more information, see link:#abdlu[Configuring Availability for an
-Individual Bean].
-7.  Make each web module distributable if you want it to be highly
-available. +
+For more information, see link:#abdlu[Configuring Availability for an Individual Bean].
+
+7. Make each web module distributable if you want it to be highly available.
++
 For more information, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00067[Web Module Deployment
-Guidelines]" in GlassFish Server Open Source Edition Application
-Deployment Guide.
-8.  Enable availability for individual applications, web modules, or EJB
-modules during deployment. +
+Guidelines]" in GlassFish Server Open Source Edition Application Deployment Guide.
+
+8. Enable availability for individual applications, web modules, or EJB
+modules during deployment.
++
 See the links below for instructions.
 
 [[GSHAG430]]
@@ -343,7 +340,7 @@ the type of session persistence an application uses. It must be set to
 Example
 +++++++
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app> ...
   <session-config>
@@ -397,7 +394,7 @@ Example
 The following is an example snippet from a `glassfish-web.xml` file that
 illustrates where to add the `relaxVersionSemantics` property.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app>
   <session-config>
@@ -436,7 +433,7 @@ property to true.
 For example, use the `set` command as follows, where `config1` is the
 configuration name:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set config1.availability-service.web-container-availability. \
 sso-failover-enabled="true"
@@ -477,11 +474,8 @@ connecting to the application from the same browser window in which you
 were running the session.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 This behavior applies only to cases where the session times out. If
 single sign-on is enabled and you invalidate one of the sessions using
 `HttpSession.invalidate()`, the sessions for all applications belonging
@@ -489,8 +483,7 @@ to the single sign-on group are invalidated. If you try to access any
 application belonging to the single sign-on group, you are required to
 authenticate again, and a new session is created for the client
 accessing the application.
-
-|=======================================================================
+====
 
 
 [[gkyyl]][[GSHAG00306]][[using-coherenceweb-for-http-session-persistence]]
@@ -570,7 +563,7 @@ command to set the following three properties for the configuration:
 For example, if `config1` is the configuration name, use the following
 commands:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set --user admin --passwordfile password.txt
 --host localhost
@@ -628,12 +621,10 @@ To enable high availability session persistence, set
 `availability-enabled="true"` in the `ejb` element.
 
 [[GSHAG00068]][[fxjqx]]
-
-
 Example 9-1 Example of an EJB Deployment Descriptor With Availability
 Enabled
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-ejb-jar>
     ...
@@ -669,17 +660,15 @@ creation
 remote interface of the bean marked with the transaction attribute
 `TX_NOT_SUPPORTED` or `TX_NEVER`
 * For SFSBs using bean managed transactions only, methods in which a
-bean managed transaction is neither started nor committed +
+bean managed transaction is neither started nor committed
++
 Any other methods mentioned in this list are ignored. At the end of
 invocation of each of these methods, the EJB container saves the state
 of the SFSB to persistent store.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If an SFSB does not participate in any transaction, and if none of its
 methods are explicitly specified in the `checkpoint-at-end-of-method`
 element, the bean's state is not checkpointed at all even if
@@ -688,17 +677,14 @@ element, the bean's state is not checkpointed at all even if
 For better performance, specify a small subset of methods. The methods
 should accomplish a significant amount of work or result in important
 modification to the bean's state.
-
-|=======================================================================
+====
 
 
 [[GSHAG00069]][[fxjqg]]
-
-
 Example 9-2 Example of EJB Deployment Descriptor Specifying Methods
 Checkpointing
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-ejb-jar>
     ...

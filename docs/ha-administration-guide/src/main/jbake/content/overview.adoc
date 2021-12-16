@@ -4,6 +4,7 @@ title=High Availability in GlassFish Server
 next=ssh-setup.html
 prev=preface.html
 ~~~~~~
+
 High Availability in GlassFish Server
 =====================================
 
@@ -41,8 +42,7 @@ minimum application downtime and enhanced transactional security.
 
 GlassFish Server provides the following high availability features:
 
-* link:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp`
-Module]
+* link:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
 * link:#gaynn[High Availability Session Persistence]
 * link:#gayna[High Availability Java Message Service]
 * link:#gaymz[RMI-IIOP Load Balancing and Failover]
@@ -212,18 +212,14 @@ A highly available cluster integrates a state replication service with
 clusters and load balancer.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 When implementing a highly available cluster, use a load balancer that
 includes session-based stickiness as part of its load-balancing
-algorithm. Otherwise, session data can be misdirected or lost. An
-example of a load balancer that includes session-based stickiness is the
+algorithm. Otherwise, session data can be misdirected or lost.
+An example of a load balancer that includes session-based stickiness is the
 Loadbalancer Plug-In available in Oracle GlassFish Server.
-
-|=======================================================================
+====
 
 
 [[abday]][[GSHAG00218]][[clusters-instances-sessions-and-load-balancing]]
@@ -279,16 +275,12 @@ confidentiality and security for data that is exchanged between the DAS
 and remote hosts.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The use of DCOM or SSH to enable centralized administration of remote
 instances is optional. If the use of DCOM SSH is not feasible in your
 environment, you can administer remote instances locally.
-
-|=======================================================================
+====
 
 
 For more information, see link:ssh-setup.html#gkshg[Enabling Centralized
@@ -353,15 +345,11 @@ identity. If the new host has a different IP address, update the DNS
 server or the routers.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 This assumes that the web server is either reinstalled or restored from
 an image first.
-
-|=======================================================================
+====
 
 
 The Load Balancer Plug-In (`plugins` directory) and configurations are

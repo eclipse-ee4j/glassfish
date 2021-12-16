@@ -4,11 +4,11 @@ title=Administering GlassFish Server Instances
 next=named-configurations.html
 prev=clusters.html
 ~~~~~~
+
 Administering GlassFish Server Instances
 ========================================
 
 [[GSHAG00006]][[gkrbv]]
-
 
 [[administering-glassfish-server-instances]]
 5 Administering GlassFish Server Instances
@@ -46,11 +46,13 @@ instance:
 Standalone instance::
   A standalone instance does not share its configuration with any other
   instances or clusters. A standalone instance is created if either of
-  the following conditions is met: +
-  * No configuration or cluster is specified in the command to create
-  the instance.
+  the following conditions is met:
++
+--
+  * No configuration or cluster is specified in the command to create   the instance.
   * A configuration that is not referenced by any other instances or
-  clusters is specified in the command to create the instance. +
+    clusters is specified in the command to create the instance.
+--
   When no configuration or cluster is specified, a copy of the
   `default-config` configuration is created for the instance. The name
   of this configuration is instance-name`-config`, where instance-name
@@ -125,8 +127,8 @@ information about how to create a node that is enabled for remote
 communication, see the following sections:
 
 ** link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-
 ** link:nodes.html#gkrnf[To Create an `SSH` Node]
+
 * The user of the DAS can use DCOM or SSH to log in to the host for the
 node where the instance is to reside.
 
@@ -146,25 +148,21 @@ resides on a node that represents a multihome host. In this situation,
 ensure that you have the Internet Protocol (IP) address of the network
 interface to which GMS binds.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `create-instance` subcommand. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the `create-instance` subcommand.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
 instance, see the link:../reference-manual/create-instance.html#GSRFM00033[`create-instance`(1)] help page.
-
-|=======================================================================
-
-* If you are creating a standalone instance, do not specify a cluster. +
+====
+* If you are creating a standalone instance, do not specify a cluster.
++
 If the instance is to reference an existing configuration, specify a
-configuration that no other cluster or instance references. +
-[source,oac_no_warn]
+configuration that no other cluster or instance references.
++
+[source]
 ----
 asadmin> create-instance --node node-name
 [--config configuration-name]instance-name
@@ -172,19 +170,19 @@ asadmin> create-instance --node node-name
 node-name::
   The node on which the instance is to reside.
 configuration-name::
-  The name of the existing named configuration that the instance will
-  reference. +
+  The name of the existing named configuration that the instance will reference. +
   If you do not require the instance to reference an existing
   configuration, omit this option. A copy of the `default-config`
   configuration is created for the instance. The name of this
   configuration is instance-name`-config`, where instance-name is the
   name of the server instance.
 instance-name::
-  Your choice of name for the instance that you are creating.
-* If you are creating a shared instance, specify the configuration that
-the instance will share with other clusters or instances. +
-Do not specify a cluster. +
-[source,oac_no_warn]
+  Your choice of name for the instance that you are creating. +
+  If you are creating a shared instance, specify the configuration that
+  the instance will share with other clusters or instances. +
+  Do not specify a cluster.
++
+[source]
 ----
 asadmin> create-instance --node node-name
 --config configuration-name instance-name
@@ -197,11 +195,12 @@ configuration-name::
 instance-name::
   Your choice of name for the instance that you are creating.
 * If you are creating a clustered instance, specify the cluster to which
-the instance will belong. +
-If the instance is managed by GMS and resides on a node that represents
-a multihome host, specify the `GMS-BIND-INTERFACE-ADDRESS-`cluster-name
-system property. +
-[source,oac_no_warn]
+  the instance will belong. +
+  If the instance is managed by GMS and resides on a node that represents
+  a multihome host, specify the `GMS-BIND-INTERFACE-ADDRESS-`cluster-name
+  system property.
++
+[source]
 ----
 asadmin> create-instance --cluster cluster-name --node node-name
 [--systemproperties GMS-BIND-INTERFACE-ADDRESS-cluster-name=bind-address]instance-name
@@ -218,15 +217,13 @@ instance-name::
   Your choice of name for the instance that you are creating.
 
 [[GSHAG00039]][[gkqmv]]
-
-
 Example 5-1 Creating a Clustered Instance Centrally
 
 This example adds the instance `pmd-i1` to the cluster `pmdclust` in the
 domain `domain1`. The instance resides on the node `sj01`, which
 represents the host `sj01.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-instance --cluster pmdclust --node sj01 pmd-i1
 Port Assignments for server instance pmd-i1:
@@ -272,24 +269,24 @@ To List All Instances in a Domain
 Use the `list-instances` subcommand in remote mode to obtain information
 about existing instances in a domain.
 
-1.  Ensure that the DAS is running. +
+1. Ensure that the DAS is running.
++
 Remote subcommands require a running server.
-2.  Run the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand. +
-[source,oac_no_warn]
+2. Run the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand.
++
+[source]
 ----
 asadmin> list-instances
 ----
 
 [[GSHAG00040]][[gksfe]]
-
-
 Example 5-2 Listing Basic Information About All GlassFish Server
 Instances in a Domain
 
 This example lists the name and status of all GlassFish Server instances
 in the current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-instances
 pmd-i2 running
@@ -301,15 +298,13 @@ Command list-instances executed successfully.
 ----
 
 [[GSHAG00041]][[gkabz]]
-
-
 Example 5-3 Listing Detailed Information About All GlassFish Server
 Instances in a Domain
 
 This example lists detailed information about all GlassFish Server
 instances in the current domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-instances --long=true
 NAME    HOST              PORT   PID    CLUSTER     STATE
@@ -340,18 +335,14 @@ Use the `delete-instance` subcommand in remote mode to delete a
 GlassFish Server instance centrally.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
 link:../reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
-
-|=======================================================================
+====
 
 
 Deleting an instance involves the following:
@@ -369,17 +360,20 @@ information about how to stop an instance, see the following sections:
 * link:#gkqaj[To Stop an Individual Instance Centrally]
 * link:#gkqci[To Stop an Individual Instance Locally]
 
-1.  Ensure that the DAS is running. +
+1. Ensure that the DAS is running.
++
 Remote subcommands require a running server.
-2.  Confirm that the instance is not running. +
-[source,oac_no_warn]
+2. Confirm that the instance is not running.
++
+[source]
 ----
 asadmin> list-instances instance-name
 ----
 instance-name::
   The name of the instance that you are deleting.
-3.  Run the link:../reference-manual/delete-instance.html#GSRFM00085[`delete-instance`] subcommand. +
-[source,oac_no_warn]
+3. Run the link:../reference-manual/delete-instance.html#GSRFM00085[`delete-instance`] subcommand.
++
+[source]
 ----
 asadmin> delete-instance instance-name
 ----
@@ -387,14 +381,12 @@ instance-name::
   The name of the instance that you are deleting.
 
 [[GSHAG00042]][[gkqms]]
-
-
 Example 5-4 Deleting an Instance Centrally
 
 This example confirms that the instance `pmd-i1` is not running and
 deletes the instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-instances pmd-i1
 pmd-i1   not running
@@ -447,10 +439,10 @@ If any of these prerequisites is not met, start the cluster by starting
 each instance locally as explained in link:#gkqak[To Start an Individual
 Instance Locally].
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the link:../reference-manual/start-cluster.html#GSRFM00233[`start-cluster`] subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the link:../reference-manual/start-cluster.html#GSRFM00233[`start-cluster`] subcommand.
++
+[source]
 ----
 asadmin> start-cluster cluster-name
 ----
@@ -458,13 +450,11 @@ cluster-name::
   The name of the cluster that you are starting.
 
 [[GSHAG00043]][[gkqml]]
-
-
 Example 5-5 Starting a Cluster
 
 This example starts the cluster `pmdcluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-cluster pmdcluster
 Command start-cluster executed successfully.
@@ -497,10 +487,10 @@ Use the `stop-cluster` subcommand in remote mode to stop a cluster.
 
 Stopping a cluster stops all running instances in the cluster.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the link:../reference-manual/stop-cluster.html#GSRFM00238[`stop-cluster`] subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the link:../reference-manual/stop-cluster.html#GSRFM00238[`stop-cluster`] subcommand.
++
+[source]
 ----
 asadmin> stop-cluster cluster-name
 ----
@@ -508,13 +498,11 @@ cluster-name::
   The name of the cluster that you are stopping.
 
 [[GSHAG00044]][[gkqmn]]
-
-
 Example 5-6 Stopping a Cluster
 
 This example stops the cluster `pmdcluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-cluster pmdcluster
 Command stop-cluster executed successfully.
@@ -561,33 +549,26 @@ node where the instance resides.
 If any of these prerequisites is not met, start the instance locally as
 explained in link:#gkqak[To Start an Individual Instance Locally].
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the `start-instance` subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the `start-instance` subcommand.
++
+[source]
 ----
 asadmin> start-instance instance-name
 ----
-::
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the link:../reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
 help page.
-
-|=======================================================================
+====
 
 instance-name::
   The name of the instance that you are starting.
 
 [[GSHAG00045]][[gkqoa]]
-
-
 Example 5-7 Starting an Individual Instance Centrally
 
 This example starts the instance `pmd-i2`, which resides on the node
@@ -595,7 +576,7 @@ This example starts the instance `pmd-i2`, which resides on the node
 configuration of the instance on this node already matched the
 configuration of the instance in the DAS when the instance was started.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-instance pmd-i2
 CLI801 Instance is already synchronized
@@ -637,18 +618,17 @@ instance centrally.
 When an instance is stopped, the instance stops accepting new requests
 and waits for all outstanding requests to be completed.
 
-1.  Ensure that the DAS is running. +
+1. Ensure that the DAS is running.
++
 Remote subcommands require a running server.
-2.  Run the link:../reference-manual/stop-instance.html#GSRFM00241[`stop-instance`] subcommand.
+2. Run the link:../reference-manual/stop-instance.html#GSRFM00241[`stop-instance`] subcommand.
 
 [[GSHAG00046]][[gkqpy]]
-
-
 Example 5-8 Stopping an Individual Instance Centrally
 
 This example stops the instance `pmd-i2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-instance pmd-i2
 The instance, pmd-i2, is stopped.
@@ -689,10 +669,10 @@ If you require different synchronization behavior, stop and start the
 instance as explained in link:#gksak[To Resynchronize an Instance and
 the DAS Online].
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Run the link:../reference-manual/restart-instance.html#GSRFM00219[`restart-instance`] subcommand. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Run the link:../reference-manual/restart-instance.html#GSRFM00219[`restart-instance`] subcommand.
++
+[source]
 ----
 asadmin> restart-instance instance-name
 ----
@@ -700,13 +680,11 @@ instance-name::
   The name of the instance that you are restarting.
 
 [[GSHAG00047]][[gkqqt]]
-
-
 Example 5-9 Restarting an Individual Instance Centrally
 
 This example restarts the instance `pmd-i2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> restart-instance pmd-i2
 pmd-i2 was restarted.
@@ -752,17 +730,13 @@ tasks:
 * link:#gkqef[To Restart an Individual Instance Locally]
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Even if neither DCOM nor SSH is set up, you can obtain information about
 instances in a domain without logging in to each host where remote
 instances reside. For instructions, see link:#gkrcb[To List All
 Instances in a Domain].
-
-|=======================================================================
+====
 
 
 [[gkqbl]][[GSHAG00114]][[to-create-an-instance-locally]]
@@ -792,17 +766,13 @@ If you plan to specify the node on which the instance is to reside,
 ensure that the node exists.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you create the instance on a host for which no nodes are defined, you
 can create the instance without creating a node beforehand. In this
 situation, GlassFish Server creates a `CONFIG` node for you. The name of
 the node is the unqualified name of the host.
-
-|=======================================================================
+====
 
 
 For information about how to create a node, see the following sections:
@@ -824,28 +794,25 @@ resides on a node that represents a multihome host. In this situation,
 ensure that you have the Internet Protocol (IP) address of the network
 interface to which GMS binds.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Log in to the host that is represented by the node where the
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Log in to the host that is represented by the node where the
 instance is to reside.
-3.  Run the `create-local-instance` subcommand. +
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Only the options that are required to complete this task are provided in
-this step. For information about all the options for configuring the
-instance, see the link:../reference-manual/create-local-instance.html#GSRFM00044[`create-local-instance`(1)] help
-page.
-
-|=======================================================================
-
-* If you are creating a standalone instance, do not specify a cluster. +
+3. Run the `create-local-instance` subcommand.
++
+[NOTE]
+====
+Only the options that are required to complete this task are provided in this step.
+For information about all the options for configuring the instance, see the
+link:../reference-manual/create-local-instance.html#GSRFM00044[`create-local-instance`(1)] help page.
+====
+* If you are creating a standalone instance, do not specify a cluster.
++
 If the instance is to reference an existing configuration, specify a
-configuration that no other cluster or instance references. +
-[source,oac_no_warn]
+configuration that no other cluster or instance references.
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 create-local-instance [--node node-name] [--config configuration-name]instance-name
@@ -861,13 +828,10 @@ node-name::
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
   If no nodes are defined for the host, GlassFish Server creates a
-  CONFIG node for you. The name of the node is the unqualified name of
-  the host. +
-  If one node is defined for the host, the instance is created on that
-  node.
+  CONFIG node for you. The name of the node is the unqualified name of the host. +
+  If one node is defined for the host, the instance is created on that node.
 configuration-name::
-  The name of the existing named configuration that the instance will
-  reference. +
+  The name of the existing named configuration that the instance will reference. +
   If you do not require the instance to reference an existing
   configuration, omit this option. A copy of the `default-config`
   configuration is created for the instance. The name of this
@@ -875,10 +839,12 @@ configuration-name::
   name of the server instance.
 instance-name::
   Your choice of name for the instance that you are creating.
+
 * If you are creating a shared instance, specify the configuration that
 the instance will share with other clusters or instances. +
-Do not specify a cluster. +
-[source,oac_no_warn]
+Do not specify a cluster.
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 create-local-instance [--node node-name] --config configuration-name instance-name
@@ -894,21 +860,21 @@ node-name::
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
   If no nodes are defined for the host, GlassFish Server creates a
-  `CONFIG` node for you. The name of the node is the unqualified name of
-  the host. +
-  If one node is defined for the host, the instance is created on that
-  node.
+  `CONFIG` node for you. The name of the node is the unqualified name of the host. +
+  If one node is defined for the host, the instance is created on that node.
 configuration-name::
   The name of the existing named configuration that the instance will
   reference.
 instance-name::
   Your choice of name for the instance that you are creating.
+
 * If you are creating a clustered instance, specify the cluster to which
 the instance will belong. +
 If the instance is managed by GMS and resides on a node that represents
 a multihome host, specify the `GMS-BIND-INTERFACE-ADDRESS-`cluster-name
-system property. +
-[source,oac_no_warn]
+system property.
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 create-local-instance --cluster cluster-name [--node node-name]
@@ -927,10 +893,8 @@ node-name::
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
   If no nodes are defined for the host, GlassFish Server creates a
-  `CONFIG` node for you. The name of the node is the unqualified name of
-  the host. +
-  If one node is defined for the host, the instance is created on that
-  node.
+  `CONFIG` node for you. The name of the node is the unqualified name of the host. +
+  If one node is defined for the host, the instance is created on that node.
 bind-address::
   The IP address of the network interface to which GMS binds. Specify
   this option only if the instance is managed by GMS and resides on a
@@ -939,10 +903,7 @@ instance-name::
   Your choice of name for the instance that you are creating.
 
 [[GSHAG00048]][[gktfa]]
-
-
-Example 5-10 Creating a Clustered Instance Locally Without Specifying a
-Node
+Example 5-10 Creating a Clustered Instance Locally Without Specifying a Node
 
 This example adds the instance `kui-i1` to the cluster `kuicluster`
 locally. The `CONFIG` node `xk01` is created automatically to represent
@@ -951,10 +912,10 @@ running on the host `dashost.example.com` and listens for administration
 requests on the default port.
 
 The commands to list the nodes in the domain are included in this
-example only to demonstrate the creation of the node `xk01`. These
-commands are not required to create the instance.
+example only to demonstrate the creation of the node `xk01`.
+These commands are not required to create the instance.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin --host dashost.example.com list-nodes --long
 NODE NAME          TYPE    NODE HOST         INSTALL DIRECTORY   REFERENCED BY
@@ -983,8 +944,6 @@ Command list-nodes executed successfully.
 ----
 
 [[GSHAG00049]][[gkqps]]
-
-
 Example 5-11 Creating a Clustered Instance Locally
 
 This example adds the instance `yml-i1` to the cluster `ymlcluster`
@@ -992,7 +951,7 @@ locally. The instance resides on the node `sj01`. The DAS is running on
 the host `das1.example.com` and listens for administration requests on
 the default port.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin --host das1.example.com
 create-local-instance --cluster ymlcluster --node sj01 yml-i1
@@ -1041,20 +1000,14 @@ To Delete an Instance Locally
 Use the `delete-local-instance` subcommand in remote mode to delete a
 GlassFish Server instance locally.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
 link:../reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
-
-|=======================================================================
-
+====
 
 Deleting an instance involves the following:
 
@@ -1071,12 +1024,11 @@ information about how to stop an instance, see the following sections:
 * link:#gkqaj[To Stop an Individual Instance Centrally]
 * link:#gkqci[To Stop an Individual Instance Locally]
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  Log in to the host that is represented by the node where the
-instance resides.
-3.  Confirm that the instance is not running. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. Log in to the host that is represented by the node where the instance resides.
+3. Confirm that the instance is not running.
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 list-instances instance-name
@@ -1089,8 +1041,9 @@ admin-port::
   requests, you may omit this option.
 instance-name::
   The name of the instance that you are deleting.
-4.  Run the link:../reference-manual/delete-local-instance.html#GSRFM00096[`delete-local-instance`] subcommand. +
-[source,oac_no_warn]
+4. Run the link:../reference-manual/delete-local-instance.html#GSRFM00096[`delete-local-instance`] subcommand.
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 delete-local-instance [--node node-name]instance-name
@@ -1109,14 +1062,12 @@ instance-name::
   The name of the instance that you are deleting.
 
 [[GSHAG00050]][[gkqqu]]
-
-
 Example 5-12 Deleting an Instance Locally
 
 This example confirms that the instance `yml-i1` is not running and
 deletes the instance.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin --host das1.example.com list-instances yml-i1
 yml-i1   not running
@@ -1149,26 +1100,21 @@ To Start an Individual Instance Locally
 Use the `start-local-instance` subcommand in local mode to start an
 individual instance locally.
 
-1.  Log in to the host that is represented by the node where the
-instance resides.
-2.  Run the `start-local-instance` subcommand. +
-[source,oac_no_warn]
+1. Log in to the host that is represented by the node where the instance resides.
+2. Run the `start-local-instance` subcommand.
++
+[source]
 ----
 $ asadmin start-local-instance [--node node-name]instance-name
 ----
-::
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
 link:../reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)] help page.
-
-|=======================================================================
+====
 
 node-name::
   The node on which the instance resides. If only one node is defined
@@ -1178,14 +1124,12 @@ instance-name::
   The name of the instance that you are starting.
 
 [[GSHAG00051]][[gkqpu]]
-
-
 Example 5-13 Starting an Individual Instance Locally
 
 This example starts the instance `yml-i1` locally. The instance resides
 on the node `sj01`.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin start-local-instance --node sj01 yml-i1
 Waiting for yml-i1 to start ...............
@@ -1224,10 +1168,11 @@ individual instance locally.
 When an instance is stopped, the instance stops accepting new requests
 and waits for all outstanding requests to be completed.
 
-1.  Log in to the host that is represented by the node where the
+1. Log in to the host that is represented by the node where the
 instance resides.
-2.  Run the link:../reference-manual/stop-local-instance.html#GSRFM00242[`stop-local-instance`] subcommand. +
-[source,oac_no_warn]
+2. Run the link:../reference-manual/stop-local-instance.html#GSRFM00242[`stop-local-instance`] subcommand.
++
+[source]
 ----
 $ asadmin stop-local-instance [--node node-name]instance-name
 ----
@@ -1239,14 +1184,12 @@ instance-name::
   The name of the instance that you are stopping.
 
 [[GSHAG00052]][[gkqoo]]
-
-
 Example 5-14 Stopping an Individual Instance Locally
 
 This example stops the instance `yml-i1` locally. The instance resides
 on the node `sj01`.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin stop-local-instance --node sj01 yml-i1
 Waiting for the instance to stop ....
@@ -1287,10 +1230,10 @@ If you require different synchronization behavior, stop and start the
 instance as explained in link:#gksak[To Resynchronize an Instance and
 the DAS Online].
 
-1.  Log in to the host that is represented by the node where the
-instance resides.
-2.  Run the `restart-local-instance` subcommand. +
-[source,oac_no_warn]
+1. Log in to the host that is represented by the node where the instance resides.
+2. Run the `restart-local-instance` subcommand.
++
+[source]
 ----
 $ asadmin restart-local-instance [--node node-name]instance-name
 ----
@@ -1302,14 +1245,12 @@ instance-name::
   The name of the instance that you are restarting.
 
 [[GSHAG00053]][[gkqnt]]
-
-
 Example 5-15 Restarting an Individual Instance Locally
 
 This example restarts the instance `yml-i1` locally. The instance
 resides on the node `sj01`.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin restart-local-instance --node sj01 yml-i1
 Command restart-local-instance executed successfully.
@@ -1349,8 +1290,7 @@ cache is synchronized in the following circumstances:
 * Whenever an `asadmin` subcommand is run. For more information, see
 "link:../administration-guide/overview.html#GSADG00697[Impact of Configuration Changes]" in GlassFish Server
 Open Source Edition Administration Guide.
-* When a user uses the administration tools to start or restart an
-instance.
+* When a user uses the administration tools to start or restart an instance.
 
 [[gksbo]][[GSHAG00267]][[default-synchronization-for-files-and-directories]]
 
@@ -1376,8 +1316,7 @@ for the files and directories of an instance is as follows:
   within the application directory causes the DAS to synchronize that
   application's directory. When the DAS resynchronizes the
   `applications` directory, all the application's files and all
-  generated content that is related to the application are copied to the
-  instance. +
+  generated content that is related to the application are copied to the instance. +
   If a file below a top-level subdirectory is changed without a change
   to a file in the top-level subdirectory, full synchronization is
   required. In normal operation, files below the top-level
@@ -1389,31 +1328,25 @@ for the files and directories of an instance is as follows:
   This directory contains configuration files for the entire domain. +
   By default, the DAS resynchronizes files that have been modified since
   the last resynchronization only if the `domain.xml` file in this
-  directory has been modified. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+  directory has been modified.
++
+[NOTE]
+====
 If you add a file to the `config` directory of an instance, the file
 is deleted when the instance is resynchronized with the DAS. However,
 any file that you add to the `config` directory of the DAS is not
-deleted when instances and the DAS are resynchronized. By default, any
-file that you add to the `config` directory of the DAS is not
-resynchronized. If you require any additional configuration files to
-be resynchronized, you must specify the files explicitly. For more
-information, see link:#gksaz[To Resynchronize Additional Configuration
-Files].
+deleted when instances and the DAS are resynchronized.
+By default, any file that you add to the `config` directory of the DAS
+is not resynchronized.
+If you require any additional configuration files to be resynchronized,
+you must specify the files explicitly.
+For more information, see link:#gksaz[To Resynchronize Additional Configuration Files].
+====
 
-|=======================================================================
-
-`config`::
-`config/`config-name::
+``config/``config-name::
   This directory contains files that are to be shared by all instances
   that reference the named configuration config-name. A config-name
-  directory exists for each named configuration in the configuration of
-  the DAS. +
+  directory exists for each named configuration in the configuration of the DAS. +
   Because the config-name directory contains the subdirectories `lib`
   and `docroot`, this directory might be very large. Therefore, by
   default, only a change to a file or a top-level subdirectory of
@@ -1422,28 +1355,24 @@ Files].
   This file contains the DAS configuration for the domain to which the
   instance belongs. +
   By default, the DAS resynchronizes this file if it has been modified
-  since the last resynchronization. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+  since the last resynchronization.
++
+[NOTE]
+====
 A change to the `config/domain.xml` file is required to cause the DAS
 to resynchronize an instance's files. If the `config/domain.xml` file
 has not changed since the last resynchronization, none of the
 instance's files is resynchronized, even if some of these files are
 out of date in the cache.
-
-|=======================================================================
+====
 
 `docroot`::
   This directory is the HTTP document root directory. By default, all
   instances in a domain use the same document root directory. To enable
   instances to use a different document root directory, a virtual server
   must be created in which the `docroot` property is set. For more
-  information, see the link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)] help
-  page. +
+  information, see the link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)]
+  help page. +
   The `docroot` directory might be very large. Therefore, by default,
   only a change to a file or a subdirectory in the top level of the
   `docroot` directory causes the DAS to resynchronize the `docroot`
@@ -1453,8 +1382,7 @@ out of date in the cache.
   When the DAS resynchronizes the `docroot` directory, all modified
   files and subdirectories at any level are copied to the instance. +
   If a file below a top-level subdirectory is changed without a change
-  to a file in the top-level subdirectory, full synchronization is
-  required.
+  to a file in the top-level subdirectory, full synchronization is required.
 `generated`::
   This directory contains generated files for Java EE applications and
   modules, for example, EJB stubs, compiled JSP classes, and security
@@ -1470,17 +1398,21 @@ out of date in the cache.
   These directories contain common Java class files or JAR archives and
   ZIP archives for use by applications that are deployed to the entire
   domain. Typically, these directories contain common JDBC drivers and
-  other utility libraries that are shared by all applications in the
-  domain. +
+  other utility libraries that are shared by all applications in the domain. +
   The contents of these directories are loaded by the common class
-  loader. For more information, see "link:../application-development-guide/class-loaders.html#GSDVG00342[Using the Common
-  Class Loader]" in GlassFish Server Open Source Edition Application
-  Development Guide. The class loader loads the contents of these
-  directories in the following order: +
-  1.  `lib/classes`
-  2.  `lib/*.jar`
-  3.  `lib/*.zip` +
-  The `lib` directory also contains the following subdirectories: +
+  loader. For more information, see "link:../application-development-guide/class-loaders.html#GSDVG00342[
+  Using the Common Class Loader]" in GlassFish Server Open Source Edition Application
+  Development Guide.
+  The class loader loads the contents of these directories in the following order:
++
+--
+  1. `lib/classes`
+  2. `lib/*.jar`
+  3. `lib/*.zip`
+--
+  The `lib` directory also contains the following subdirectories:
++
+--
   `applibs`;;
     This directory contains application-specific Java class files or JAR
     archives and ZIP archives for use by applications that are deployed
@@ -1492,18 +1424,13 @@ out of date in the cache.
     mechanism. For more information, see
     http://download.oracle.com/javase/6/docs/technotes/guides/extensions/extensions.html[Optional
     Packages - An Overview]
-    (`http://docs.oracle.com/javase/7/docs/technotes/guides/extensions/extensions.html`). +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Optional packages were formerly known as standard extensions or
-extensions.
-
-|=======================================================================
-
+    (`http://docs.oracle.com/javase/7/docs/technotes/guides/extensions/extensions.html`).
++
+[NOTE]
+====
+Optional packages were formerly known as standard extensions or extensions.
+====
+--
   The `lib` directory and its subdirectories typically contain only a
   small number of files. Therefore, by default, a change to any file in
   these directories causes the DAS to resynchronize the file that
@@ -1518,21 +1445,17 @@ Resynchronizing an instance and the DAS updates the instance with
 changes to the instance's configuration files on the DAS. An instance is
 resynchronized with the DAS when the instance is started or restarted.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Resynchronization of an instance is only required if the instance is
 stopped. A running instance does not require resynchronization.
+====
 
-|=======================================================================
+1. Ensure that the DAS is running.
 
-
-1.  Ensure that the DAS is running.
-2.  Determine whether the instance is stopped. +
-[source,oac_no_warn]
+2. Determine whether the instance is stopped.
++
+[source]
 ----
 asadmin> list-instances instance-name
 ----
@@ -1540,54 +1463,49 @@ instance-name::
   The name of the instance that you are resynchronizing with the DAS. +
 If the instance is stopped, the `list-instances` subcommand indicates
 that the instance is not running.
-3.  If the instance is stopped, start the instance. +
+
+3. If the instance is stopped, start the instance. +
 If the instance is running, no further action is required.
-* If DCOM or SSH is set up, start the instance centrally. +
+* If DCOM or SSH is set up, start the instance centrally.
++
 If you require full synchronization, set the `--sync` option of the
 `start-instance` subcommand to `full`. If default synchronization is
-sufficient, omit this option. +
-[source,oac_no_warn]
+sufficient, omit this option.
++
+[source]
 ----
 asadmin> start-instance [--sync full] instance-name
 ----
-::
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the link:../reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
 help page.
-
-|=======================================================================
+====
 
 instance-name::
   The name of the instance that you are starting.
 * If neither DCOM nor SSH is set up, start the instance locally from the
-host where the instance resides. +
+host where the instance resides.
++
 If you require full synchronization, set the `--sync` option of the
 `start-local-instance` subcommand to `full`. If default synchronization
-is sufficient, omit this option. +
-[source,oac_no_warn]
+is sufficient, omit this option.
++
+[source]
 ----
 $ asadmin start-local-instance [--node node-name] [--sync full] instance-name
 ----
-::
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
 link:../reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)] help page.
-
-|=======================================================================
+====
 
 node-name::
   The node on which the instance resides. If only one node is defined
@@ -1597,8 +1515,6 @@ instance-name::
   The name of the instance that you are starting.
 
 [[GSHAG00054]][[gksfu]]
-
-
 Example 5-16 Resynchronizing an Instance and the DAS Online
 
 This example determines that the instance `yml-i1` is stopped and fully
@@ -1610,7 +1526,7 @@ GlassFish Server installation that is running on the node's host.
 To determine whether the instance is stopped, the following command is
 run in multimode on the DAS host:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-instances yml-i1
 yml-i1   not running
@@ -1620,7 +1536,7 @@ Command list-instances executed successfully.
 To start the instance, the following command is run in single mode on
 the host where the instance resides:
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin start-local-instance --node sj01 --sync full yml-i1
 Removing all cached state for instance yml-i1.
@@ -1644,9 +1560,7 @@ You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
 
 `asadmin help list-instances`
-
 `asadmin help start-instance`
-
 `asadmin help start-local-instance`
 
 [[gksav]][[GSHAG00120]][[to-resynchronize-library-files]]
@@ -1658,43 +1572,44 @@ To ensure that library files are resynchronized correctly, you must
 ensure that each library file is placed in the correct directory for the
 type of file.
 
-1.  Place each library file in the correct location for the type of
-library file as shown in the following table. +
+1. Place each library file in the correct location for the type of
+library file as shown in the following table.
++
 [width="100%",cols="<53%,<47%",options="header",]
-|=======================================================================
+|===
 |Type of Library Files |Location
 |Common JAR archives and ZIP archives for all applications in a domain.
-|domain-dir`/lib`
+|domain-dir``/lib``
 
 |Common Java class files for a domain for all applications in a domain.
-|domain-dir`/lib/classes`
+|domain-dir``/lib/classes``
 
-|Application-specific libraries. |domain-dir`/lib/applibs`
+|Application-specific libraries. |domain-dir``/lib/applibs``
 
 |Optional packages for all applications in a domain.
-|domain-dir`/lib/ext`
+|domain-dir``/lib/ext``
 
 |Library files for all applications that are deployed to a specific
-cluster or standalone instance. |domain-dir`/config/`config-name`/lib`
+cluster or standalone instance. |domain-dir``/config/``config-name``/lib``
 
 |Optional packages for all applications that are deployed to a specific
 cluster or standalone instance.
-|domain-dir`/config/`config-name`/lib/ext`
-|=======================================================================
+|domain-dir``/config/``config-name``/lib/ext``
+|===
 
 domain-dir::
   The directory in which the domain's configuration is stored.
 config-name::
-  For a standalone instance: the named configuration that the instance
-  references. +
+  For a standalone instance: the named configuration that the instance references. +
   For a clustered instance: the named configuration that the cluster to
   which the instance belongs references.
-2.  When you deploy an application that depends on these library files,
-use the `--libraries` option of the deploy subcommand to specify these
-dependencies. +
+
+2. When you deploy an application that depends on these library files,
+use the `--libraries` option of the deploy subcommand to specify these dependencies. +
 For library files in the domain-dir`/lib/applib` directory, only the JAR
-file name is required, for example: +
-[source,oac_no_warn]
+file name is required, for example:
++
+[source]
 ----
 asadmin> deploy --libraries commons-coll.jar,X1.jar app.ear
 ----
@@ -1719,16 +1634,18 @@ resynchronized are resynchronized for the entire domain. If you create a
 custom configuration file for an instance or a cluster, the custom file
 is resynchronized only for the instance or cluster.
 
-1.  Place the custom configuration file in the
-domain-dir`/config/`config-name directory.::
+1. Place the custom configuration file in the
+domain-dir``/config/``config-name directory.::
 domain-dir::
   The directory in which the domain's configuration is stored.
 config-name::
   The named configuration that the instance references.
-2.  If the instance locates the file through an option of the Java
+2. If the instance locates the file through an option of the Java
 application launcher, update the option.
-1.  Delete the option. +
-[source,oac_no_warn]
+[arabic]
+.. Delete the option.
++
+[source]
 ----
 asadmin> delete-jvm-options --target instance-name
 option-name=current-value
@@ -1740,8 +1657,10 @@ option-name::
   The name of the option for locating the file.
 current-value::
   The current value of the option for locating the file.
-2.  Re-create the option that you deleted in the previous step. +
-[source,oac_no_warn]
+
+.. Re-create the option that you deleted in the previous step.
++
+[source]
 ----
 asadmin> create-jvm-options --target instance-name
 option-name=new-value
@@ -1755,14 +1674,12 @@ new-value::
   The new value of the option for locating the file.
 
 [[GSHAG00055]][[gksfr]]
-
-
 Example 5-17 Updating the Option for Locating a Configuration File
 
 This example updates the option for locating the `server.policy` file to
 specify a custom file for the instance `pmd`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jvm-options --target pmd
 -Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
@@ -1804,14 +1721,13 @@ without a change to the `config/domain.xml` file:
 * Adding files to the `lib` directory
 * Adding certificates to the key store by using the `keytool` command
 
-1.  Change the last modified time of the `config/domain.xml` file. +
+1. Change the last modified time of the `config/domain.xml` file. +
 Exactly how to change the last modified time depends on the operating
 system. For example, on UNIX and Linux systems, you can use the
-http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)]
-command.
-2.  Resynchronize each instance in the domain with the DAS. +
-For instructions, see link:#gksak[To Resynchronize an Instance and the
-DAS Online].
+http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)] command.
+
+2. Resynchronize each instance in the domain with the DAS. +
+For instructions, see link:#gksak[To Resynchronize an Instance and the DAS Online].
 
 [[GSHAG413]]
 
@@ -1845,19 +1761,14 @@ additional configuration files for the domain, you can specify a list of
 files to resynchronize.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 If you specify a list of files to resynchronize, you must specify all
 the files that the instances require, including the files that GlassFish
 Server resynchronizes by default. Any file in the instance's cache that
 is not in the list is deleted when the instance is resynchronized with
 the DAS.
-
-|=======================================================================
-
+====
 
 In the `config` directory of the domain, create a plain text file that
 is named `config-files` that lists the files to resynchronize.
@@ -1865,15 +1776,13 @@ is named `config-files` that lists the files to resynchronize.
 In the `config-files` file, list each file name on a separate line.
 
 [[GSHAG00056]][[gksgl]]
-
-
 Example 5-18 `config-files` File
 
 This example shows the content of a `config-files` file. This file
 specifies that the `some-other-info` file is to be resynchronized in
 addition to the files that GlassFish Server resynchronizes by default:
 
-[source,oac_no_warn]
+[source]
 ----
 admin-keyfile
 cacerts.jks
@@ -1915,47 +1824,45 @@ the DAS. Offline resynchronization is typically required for the
 following reasons:
 
 * To reestablish the instance after an upgrade
-* To synchronize the instance manually with the DAS when the instance
-cannot contact the DAS
+* To synchronize the instance manually with the DAS when the instance cannot contact the DAS
 
-1.  Ensure that the DAS is running.
-2.  [[gktio]]
-Export the configuration data that you are resynchronizing to an archive
-file.
+1. Ensure that the DAS is running.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+2. [[gktio]]
+Export the configuration data that you are resynchronizing to an archive file.
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for exporting the
-configuration data, see the link:../reference-manual/export-sync-bundle.html#GSRFM00134[`export-sync-bundle`(1)]
+configuration data, see the
+link:../reference-manual/export-sync-bundle.html#GSRFM00134[`export-sync-bundle`(1)]
 help page.
-
-|=======================================================================
-
-
+====
++
 How to export the data depends on the host from where you run the
 `export-sync-bundle` subcommand.
-
-* From the DAS host, run the `export-sync-bundle` subcommand as follows: +
-[source,oac_no_warn]
++
+--
+* From the DAS host, run the `export-sync-bundle` subcommand as follows:
++
+[source]
 ----
 asadmin> export-sync-bundle --target target
 ----
 target::
-  The cluster or standalone instance for which to export configuration
-  data. +
+  The cluster or standalone instance for which to export configuration data. +
   Do not specify a clustered instance. If you specify a clustered
   instance, an error occurs. To export configuration data for a
   clustered instance, specify the name of the cluster of which the
-  instance is a member, not the instance. +
+  instance is a member, not the instance.
++
 The file is created on the DAS host.
+
 * From the host where the instance resides, run the `export-sync-bundle`
-subcommand as follows: +
-[source,oac_no_warn]
+subcommand as follows:
++
+[source]
 ----
 $ asadmin --host das-host [--port admin-port]
 export-sync-bundle [--retrieve=true] --target target
@@ -1967,44 +1874,35 @@ admin-port::
   requests. If the DAS listens on the default port for administration
   requests, you may omit this option.
 target::
-  The cluster or standalone instance for which to export configuration
-  data. +
+  The cluster or standalone instance for which to export configuration data. +
   Do not specify a clustered instance. If you specify a clustered
   instance, an error occurs. To export configuration data for a
   clustered instance, specify the name of the cluster of which the
-  instance is a member, not the instance. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+  instance is a member, not the instance.
++
+[NOTE]
+====
 To create the archive file on the host where the instance resides, set
 the `--retrieve` option to `true`. If you omit this option, the archive
 file is created on the DAS host.
+====
+--
+3. If necessary, copy the archive file that you created in
+Step link:#gktio[2] from the DAS host to the host where the instance resides.
 
-|=======================================================================
-
-3.  If necessary, copy the archive file that you created in
-Step link:#gktio[2] from the DAS host to the host where the instance
-resides.
-4.  From the host where the instance resides, import the instance's
+4. From the host where the instance resides, import the instance's
 configuration data from the archive file that you created in
-Step link:#gktio[2]. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+Step link:#gktio[2].
++
+[NOTE]
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for importing the
 configuration data, see the link:../reference-manual/import-sync-bundle.html#GSRFM00142[`import-sync-bundle`(1)]
 help page.
-
-|=======================================================================
-
-[source,oac_no_warn]
+====
++
+[source]
 ----
 $ asadmin import-sync-bundle [--node node-name] --instance instance-name archive-file
 ----
@@ -2019,8 +1917,6 @@ archive-file::
   file to import.
 
 [[GSHAG00057]][[gksgg]]
-
-
 Example 5-19 Resynchronizing an Instance and the DAS Offline
 
 This example resynchronizes the clustered instance `yml-i1` and the DAS
@@ -2028,7 +1924,7 @@ offline. The instance is a member of the cluster `ymlcluster`. The
 archive file that contains the instance's configuration data is created
 on the host where the instance resides.
 
-[source,oac_no_warn]
+[source]
 ----
 $ asadmin --host dashost.example.com
 export-sync-bundle --retrieve=true --target ymlcluster
@@ -2066,8 +1962,7 @@ instances that are stopped normally. Automatic timer migration can also
 be enabled to handle clustered server instance crashes. In addition,
 timers can be migrated manually for stopped or crashed server instances.
 
-* link:#gkvwo[To Enable Automatic EJB Timer Migration for Failed
-Clustered Instances]
+* link:#gkvwo[To Enable Automatic EJB Timer Migration for Failed Clustered Instances]
 * link:#abdji[To Migrate EJB Timers Manually]
 
 [[gkvwo]][[GSHAG00126]][[to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances]]
@@ -2084,17 +1979,13 @@ automatic timer migration for clustered server instances that have
 stopped abnormally.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If the GMS is enabled, the default automatic timer migration cannot be
 disabled. To disable automatic timer migration, you must first disable
 the GMS. For information about the GMS, see
 link:clusters.html#gjfnl[Group Management Service].
-
-|=======================================================================
+====
 
 
 [[GSHAG415]]
@@ -2143,52 +2034,48 @@ Before You Begin
 The server instance from which the EJB timers are to be migrated should
 not be active during the migration process.
 
-1.  Verify that the source clustered server instance from which the EJB
-timers are to be migrated is not currently running. +
-[source,oac_no_warn]
+1. Verify that the source clustered server instance from which the EJB
+timers are to be migrated is not currently running.
++
+[source]
 ----
 asadmin> list-instances source-instance
 ----
-2.  Stop the instance from which the timers are to be migrated, if that
-instance is still running. +
-[source,oac_no_warn]
+
+2. Stop the instance from which the timers are to be migrated, if that
+instance is still running.
++
+[source]
 ----
 asadmin> stop-instance source-instance
 ----
-::
++
+[NOTE]
+====
+The target instance to which the timers will be migrated should be running.
+====
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-The target instance to which the timers will be migrated should be
-running.
-
-|=======================================================================
-
-3.  List the currently defined EJB timers on the source instance, if
-desired. +
-[source,oac_no_warn]
+3. List the currently defined EJB timers on the source instance, if desired.
++
+[source]
 ----
 asadmin> list-timers source-cluster
 ----
-4.  Migrate the timers from the stopped source instance to the target
-instance. +
-[source,oac_no_warn]
+
+4. Migrate the timers from the stopped source instance to the target instance.
++
+[source]
 ----
 asadmin> migrate-timers --target target-instance source-instance
 ----
 
 [[GSHAG00058]][[gkmgw]]
-
-
 Example 5-20 Migrating an EJB Timer
 
 The following example show how to migrate timers from a clustered source
 instance named `football` to a clustered target instance named `soccer`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> migrate-timers --target soccer football
 ----

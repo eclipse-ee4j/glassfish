@@ -4,6 +4,7 @@ title=Configuring HTTP Load Balancing
 next=rolling-upgrade.html
 prev=named-configurations.html
 ~~~~~~
+
 Configuring HTTP Load Balancing
 ===============================
 
@@ -36,10 +37,8 @@ Server.
 The following topics are addressed here:
 
 * link:#abdgy[Prerequisites for Setting Up HTTP Load Balancing]
-* link:#gksdt[Configuring GlassFish Server with Apache HTTP Server and
-`mod_jk`]
-* link:#CHDCCGDC[Configuring GlassFish Server with Apache HTTP Server
-and `mod_proxy_ajp`]
+* link:#gksdt[Configuring GlassFish Server with Apache HTTP Server and `mod_jk`]
+* link:#CHDCCGDC[Configuring GlassFish Server with Apache HTTP Server and `mod_proxy_ajp`]
 * link:#abdgz[HTTP Load Balancer Deployments]
 
 [[abdgy]][[GSHAG00281]][[prerequisites-for-setting-up-http-load-balancing]]
@@ -50,15 +49,16 @@ Prerequisites for Setting Up HTTP Load Balancing
 Before configuring your load balancer, you must:
 
 * Install a supported web server and configure it. If using the `mod_jk`
-or `mod_proxy_ajp` modules, the only supported web server is Apache HTTP
-Server 2.2.x.
+or `mod_proxy_ajp` modules, the only supported web server is Apache HTTP Server 2.2.x.
+
 * Configure the `mod_jk` connector module, as described in
-link:#gksdt[Configuring GlassFish Server with Apache HTTP Server and
-`mod_jk`], or configure the `mod_proxy_ajp` connector module, as
+link:#gksdt[Configuring GlassFish Server with Apache HTTP Server and `mod_jk`],
+or configure the `mod_proxy_ajp` connector module, as
 described in link:#CHDCCGDC[Configuring GlassFish Server with Apache
 HTTP Server and `mod_proxy_ajp`].
-* Create GlassFish Server clusters or server instances to participate in
-load balancing.
+
+* Create GlassFish Server clusters or server instances to participate in load balancing.
+
 * Deploy applications to these clusters or instances.
 
 [[gksdt]][[GSHAG00282]][[configuring-glassfish-server-with-apache-http-server-and-mod_jk]]
@@ -78,14 +78,16 @@ create `jk-connectors` under different virtual-servers using the
 To Configure the `mod_jk` Connector Module
 ++++++++++++++++++++++++++++++++++++++++++
 
-1.  Install http://httpd.apache.org/docs/2.2/install.html[Apache HTTP
-Server] (`http://httpd.apache.org/docs/2.2/install.html`) and
+1. Install http://httpd.apache.org/docs/2.2/install.html[Apache HTTP Server]
+(`http://httpd.apache.org/docs/2.2/install.html`) and
 http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html[mod_jk]
 (`http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html`).
-2.  Configure `workers.properties` and `httpd.conf`. +
-For example:
-* `apache2/config/workers.properties` +
-[source,oac_no_warn]
+
+2. Configure `workers.properties` and `httpd.conf`. For example:
+
+* `apache2/config/workers.properties`
++
+[source]
 ----
 # Define 1 real worker using ajp13
 worker.list=worker1
@@ -94,8 +96,10 @@ worker.worker1.type=ajp13
 worker.worker1.host=localhost
 worker.worker1.port=8009
 ----
-* `apache2/conf/httpd.conf` +
-[source,oac_no_warn]
+
+* `apache2/conf/httpd.conf`
++
+[source]
 ----
 LoadModule jk_module /Users/Amy/apache2/modules/mod_jk-1.2.25-httpd-2.2.4.so
 JkWorkersFile /Users/Amy/apache2/conf/worker.properties
@@ -112,39 +116,44 @@ JkRequestLogFormat "%w %V %T"
 # Send everything for context /examples to worker named worker1 (ajp13)
 JkMount /examples/* worker1
 ----
-3.  Start Apache HTTP Server.
-4.  Create a jk-enabled network listener by using the
-link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand. +
-[source,oac_no_warn]
+3. Start Apache HTTP Server.
+
+4. Create a jk-enabled network listener by using the
+link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
++
+[source]
 ----
 asadmin> create-network-listener --protocol http-listener-1 \
 --listenerport 8009 --jkenabled true jk-connector
 ----
-5.  If you are using the `glassfish-jk.properties` file, set the
+
+5. If you are using the `glassfish-jk.properties` file, set the
 `jk-configuration-file` property of the network listener to the
-fully-qualified file name of the `glassfish-jk.properties` file. +
-[source,oac_no_warn]
+fully-qualified file name of the `glassfish-jk.properties` file.
++
+[source]
 ----
 asadmin> set server-config.network-config.network-listeners.network-listener.\
 jk-connector.jk-configuration-file=domain-dir/config/glassfish-jk.properties
 ----
-6.  If you expect to need more than five threads for the listener,
-increase the maximum threads in the `http-thread-pool` pool: +
-[source,oac_no_warn]
+
+6. If you expect to need more than five threads for the listener,
+increase the maximum threads in the `http-thread-pool` pool:
++
+[source]
 ----
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-7.  Restart GlassFish Server.
+
+7. Restart GlassFish Server.
 
 [[GSHAG00065]][[gktpu]]
-
-
 Example 7-1 `httpd.conf` File for Load Balancing
 
 This example shows an `httpd.conf` file that is set for load balancing.
 
-[source,oac_no_warn]
+[source]
 ----
 LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
 JkWorkersFile /etc/httpd/conf/worker.properties
@@ -165,15 +174,13 @@ JkMount /glassfish-test/* loadbalancer
 ----
 
 [[GSHAG00066]][[gktpe]]
-
-
 Example 7-2 `workers.properties` File for Load Balancing
 
 This example shows a `workers.properties` or `glassfish-jk.properties`
 file that is set for load balancing. The `worker.worker*.port` should
 match with JK ports you created.
 
-[source,oac_no_warn]
+[source]
 ----
 worker.list=worker1,worker2,loadbalancer
 worker.worker1.type=ajp13
@@ -211,11 +218,12 @@ virtual-servers using the `jk-enabled` `network-listener` attribute.
 To Configure the `mod_proxy_ajp` Connector Module
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
-1.  Install http://httpd.apache.org/docs/2.2/install.html[Apache HTTP
-Server] (`http://httpd.apache.org/docs/2.2/install.html`).
-2.  Configure `httpd.conf`. +
-For example: +
-[source,oac_no_warn]
+1. Install http://httpd.apache.org/docs/2.2/install.html[Apache HTTP Server]
+(`http://httpd.apache.org/docs/2.2/install.html`).
+
+2. Configure `httpd.conf`. For example:
++
+[source]
 ----
 LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
 LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
@@ -237,22 +245,27 @@ NameVirtualHost *:1979
    ProxyPassReverse / ajp://localhost:8009/
 </VirtualHost>
 ----
-3.  Start Apache HTTP Server.
-4.  Create a jk-enabled network listener by using the
-`create-network-listener` subcommand. +
-[source,oac_no_warn]
+
+3. Start Apache HTTP Server.
+
+4. Create a jk-enabled network listener by using the `create-network-listener` subcommand.
++
+[source]
 ----
 asadmin> create-network-listener --protocol http-listener-1 \
 --listenerport 8009 --jkenabled true jk-connector
 ----
-5.  If you expect to need more than five threads for the listener,
-increase the maximum threads in the `http-thread-pool` pool: +
-[source,oac_no_warn]
+
+5. If you expect to need more than five threads for the listener,
+increase the maximum threads in the `http-thread-pool` pool:
++
+[source]
 ----
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-6.  Restart GlassFish Server.
+
+6. Restart GlassFish Server.
 
 [[abdgz]][[GSHAG00284]][[http-load-balancer-deployments]]
 
@@ -282,19 +295,13 @@ If you have multiple clusters, requests can be load balanced across
 clusters but are only failed over between the instances in a single
 cluster. Use multiple clusters in a load balancer to easily enable
 rolling upgrades of applications. For more information, see
-link:rolling-upgrade.html#abdik[Upgrading Applications Without Loss of
-Availability].
+link:rolling-upgrade.html#abdik[Upgrading Applications Without Loss of Availability].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Requests cannot be load balanced across clusters and standalone
-instances.
-
-|=======================================================================
+[NOTE]
+====
+Requests cannot be load balanced across clusters and standalone instances.
+====
 
 
 [[abdhc]][[GSHAG00233]][[using-multiple-standalone-instances]]
@@ -311,15 +318,11 @@ homogenous environment, for most situations it is better and easier to
 use clusters.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Tip:
-
+[TIP]
+====
 Load balancing across multiple standalone instances only provides
 failover for requests, and any associated HTTP session data will not be
 failed over. This is another reason why using a cluster, which can
 provide session failover, is a more desirable load balancing
 configuration.
-
-|=======================================================================
+====

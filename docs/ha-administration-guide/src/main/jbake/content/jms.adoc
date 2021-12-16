@@ -4,6 +4,7 @@ title=Configuring Java Message Service High Availability
 next=rmi-iiop.html
 prev=session-persistence-and-failover.html
 ~~~~~~
+
 Configuring Java Message Service High Availability
 ==================================================
 
@@ -70,7 +71,8 @@ failed broker reconnect to another broker in the cluster. However,
 messages and state information stored in the failed broker cannot be
 recovered until the failed broker is brought back online. The broker
 failure can therefore result in a significant delay and in JMS message
-order semantics not being preserved. +
+order semantics not being preserved.
++
 Message Queue supports two types of conventional cluster, based on where
 the cluster configuration change record is stored:
 
@@ -95,27 +97,25 @@ information. Clients connected to the failed broker reconnect to the
 failover broker. In an enhanced cluster, as compared to a conventional
 cluster, messages owned by the failed broker are delivered by the
 failover broker as soon as it takes over, and JMS message order
-semantics are preserved. +
+semantics are preserved.
++
 By its very nature, an enhanced broker cluster is a cluster of peer
 brokers.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Despite the message service availability offered by both conventional
 and enhanced broker clusters, they do not provide a guarantee against
 failure and the possibility that certain failures, for example in the
 middle of a transaction, could require that some operations be repeated.
 It is the responsibility of the messaging application (both producers
-and consumers) to respond to JMS exceptions appropriately. For
-information about the kinds of exceptions that can occur and how to
-respond to them, see "link:../../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover
-Occurs]" in Open Message Queue Developer's Guide for Java Clients.
-
-|=======================================================================
+and consumers) to respond to JMS exceptions appropriately.
+For information about the kinds of exceptions that can occur and how to
+respond to them,
+see "link:../../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover Occurs]"
+in Open Message Queue Developer's Guide for Java Clients.
+====
 
 
 [[gktft]][[GSHAG00312]][[configuring-glassfish-clusters-to-use-message-queue-broker-clusters]]
@@ -171,8 +171,7 @@ clusters in all these contexts.
 
 [[gktge]][[GSHAG00155]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker]]
 
-To Configure a GlassFish Cluster to Use an Embedded or Local
-Conventional Broker Cluster With Master Broker
+To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster With Master Broker
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use the `configure-jms-cluster` subcommand in remote `asadmin` mode to
@@ -191,11 +190,8 @@ cluster, but before you have added instances to the cluster or started
 the cluster.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate to another type of broker
 cluster, as described in link:#gktgj[To Migrate Between Types of
@@ -203,16 +199,17 @@ Embedded or Local Conventional Broker Clusters]. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
 the existing cluster.
+====
 
-|=======================================================================
-
-
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 Remote `asadmin` subcommands require a running server.
-2.  Configure the GlassFish Server cluster to use a Message Queue
+
+2. Configure the GlassFish Server cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`] subcommand: +
-[source,oac_no_warn]
+link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+subcommand:
++
+[source]
 ----
 > asadmin configure-jms-cluster --clustertype=conventional
 --configstoretype=masterbroker glassfish-cluster-name
@@ -227,8 +224,7 @@ typing `asadmin help configure-jms-cluster` at the command line.
 
 [[gktfr]][[GSHAG00156]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers]]
 
-To Configure a GlassFish Cluster to Use an Embedded or Local
-Conventional Broker Cluster of Peer Brokers
+To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster of Peer Brokers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use the `configure-jms-cluster` subcommand in remote `asadmin` mode to
@@ -244,11 +240,8 @@ cluster, but before you have added instances to the cluster or started
 the cluster.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate to another type of broker
 cluster, as described in link:#gktgj[To Migrate Between Types of
@@ -256,25 +249,29 @@ Embedded or Local Conventional Broker Clusters]. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
 the existing cluster.
+====
 
-|=======================================================================
 
-
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 Remote `asadmin` subcommands require a running server.
-2.  Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
+
+2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
 link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
-3.  Place a copy of, or a link to, the database's JDBC driver `.jar`
+
+3. Place a copy of, or a link to, the database's JDBC driver `.jar`
 file in the appropriate directory, depending on the JMS host type, on
 each host where a GlassFish Server cluster instance is to run:
-* Embedded: as-install-parent`/glassfish/lib/install/applications/jmsra`
-* Local: as-install-parent`/mq/lib/ext`
-4.  Configure the GlassFish Server cluster to use a Message Queue
+* Embedded: as-install-parent``/glassfish/lib/install/applications/jmsra``
+* Local: as-install-parent``/mq/lib/ext``
+
+4. Configure the GlassFish Server cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`] subcommand: +
-[source,oac_no_warn]
+link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+subcommand:
++
+[source]
 ----
 > asadmin --passwordfile password-file configure-jms-cluster --clustertype=conventional
 --configstoretype=shareddb --dbvendor database-vendor-name --dbuser database-user-name
@@ -311,11 +308,14 @@ using the `change-master-broker` command in order to avoid later
 internal configuration synchronization of any unavailable instance or
 broker.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 Remote `asadmin` subcommands require a running server.
-2.  Change the master broker by using the
-link:../reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`] subcommand: +
-[source,oac_no_warn]
+
+2. Change the master broker by using the
+link:../reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`]
+subcommand:
++
+[source]
 ----
 > asadmin change-master-broker glassfish-clustered-instance-name
 ----
@@ -329,8 +329,7 @@ typing `asadmin help change-master-broker` at the command line.
 
 [[gktgj]][[GSHAG00158]][[to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters]]
 
-To Migrate Between Types of Embedded or Local Conventional Broker
-Clusters
+To Migrate Between Types of Embedded or Local Conventional Broker Clusters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If the need arises to convert from a conventional broker cluster with
@@ -355,12 +354,8 @@ Perform the following steps after you have created the GlassFish Server
 cluster, but before you have added instances to the cluster or started
 the cluster.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Caution:
-
+[CAUTION]
+====
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate from a conventional broker
 cluster to an enhanced broker cluster, as described in
@@ -369,23 +364,26 @@ Cluster]" in Open Message Queue Administration Guide. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
 the existing cluster.
+====
 
-|=======================================================================
-
-
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 Remote `asadmin` subcommands require a running server.
-2.  Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
+
+2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
 link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
-3.  Place a copy of, or a link to, the database's JDBC driver `.jar`
-file in the as-install-parent`/mq/lib/ext` directory on each host where
+
+3. Place a copy of, or a link to, the database's JDBC driver `.jar`
+file in the as-install-parent``/mq/lib/ext`` directory on each host where
 a GlassFish Server cluster instance is to run.
-4.  Configure the GlassFish Server cluster to use a Message Queue
+
+4. Configure the GlassFish Server cluster to use a Message Queue
 enhanced broker cluster by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`] subcommand: +
-[source,oac_no_warn]
+link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+subcommand:
++
+[source]
 ----
 > asadmin --passwordfile password-file configure-jms-cluster --clustertype=enhanced
 --configstoretype=shareddb --messagestoretype=jdbc
@@ -415,27 +413,34 @@ Perform the following steps after you have:
 * Created the GlassFish Server cluster, but not yet created instances
 for the cluster.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 The remote subcommands used in this procedure require a running server.
-2.  Delete the `default_JMS_host` JMS host by using the
-link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcommand: +
-[source,oac_no_warn]
+
+2. Delete the `default_JMS_host` JMS host by using the
+link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcommand:
++
+[source]
 ----
 > asadmin delete-jms-host --target glassfish-cluster-name default_JMS_host
 ----
-3.  Create a JMS host for each broker in the broker cluster by using the
+
+3. Create a JMS host for each broker in the broker cluster by using the
 link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`] subcommand. +
-For each broker, use an `asadmin create-jms-host` of the form: +
-[source,oac_no_warn]
+For each broker, use an `asadmin create-jms-host` of the form:
++
+[source]
 ----
 > asadmin create-jms-host --target glassfish-cluster-name --mqhost broker-host
 --mqport broker-port --mquser mq-user --mqpassword mq-user-password
 jms-host-name-for-broker
 ----
-4.  Start the brokers in the cluster by using the Message Queue
-`imqbrokerd` command, as described in "link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00254[Managing Broker
-Clusters]" in Open Message Queue Administration Guide.
-5.  Create instances in the GlassFish Server cluster, as described in
+
+4. Start the brokers in the cluster by using the Message Queue
+`imqbrokerd` command, as described in
+"link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00254[Managing Broker Clusters]"
+in Open Message Queue Administration Guide.
+
+5. Create instances in the GlassFish Server cluster, as described in
 link:instances.html#gkqch[To Create an Instance Centrally] and
 link:instances.html#gkqbl[To Create an Instance Locally].
 
@@ -542,6 +547,7 @@ If the MDB is configured to receive messages from a durable or
 non-durable subscription on a topic, then only one MDB instance across
 the whole GlassFish cluster will receive each message.
 
-For more information about these features, see "link:../../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300[About
-Shared Topic Subscriptions for Clustered Containers]" in Open Message
-Queue Administration Guide.
+For more information about these features, see
+"link:../../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300[
+About Shared Topic Subscriptions for Clustered Containers]"
+in Open Message Queue Administration Guide.

@@ -4,6 +4,7 @@ title=Tuning Your Application
 next=tuning-glassfish.html
 prev=overview.html
 ~~~~~~
+
 Tuning Your Application
 =======================
 
@@ -71,7 +72,7 @@ To improve performance, instead of using string concatenation, use
 String objects are immutable - that is, they never change after
 creation. For example, consider the following code:
 
-[source,oac_no_warn]
+[source,java]
 ----
 String str = "testing";
 str = str + "abc";
@@ -80,7 +81,7 @@ str = str + "def";
 
 The compiler translates this code as:
 
-[source,oac_no_warn]
+[source,java]
 ----
 String str = "testing";
 StringBuilder tmp = new StringBuilder(str);
@@ -94,9 +95,10 @@ str = tmp.toString();
 This copying is inherently expensive and overusing it can reduce
 performance significantly. You are far better off writing:
 
-[source,oac_no_warn]
+[source,java]
 ----
-StringBuilder tmp = new StringBuilder("testing");
+StringBuilder tmp = new StringBuilder(16);
+tmp.append("testing");
 tmp.append("abc");
 tmp.append("def");
 String str = tmp.toString();
@@ -173,7 +175,7 @@ Do not synchronize code blocks or methods unless synchronization is
 required. Keep synchronized blocks or methods as short as possible to
 avoid scalability bottlenecks. Use the Java Collections Framework for
 unsynchronized data structures instead of more expensive alternatives
-such as`java.util.HashTable`.
+such as `java.util.HashTable`.
 
 [[abebo]][[GSPTG00169]][[use-datahandlers-for-soap-attachments]]
 
@@ -258,8 +260,7 @@ servlet is created for each application server instance. All requests
 for a servlet on that application instance share the same servlet
 instance. This can lead to thread contention if there are
 synchronization blocks in the servlet code. Therefore, avoid using
-shared modified class variables because they create the need for
-synchronization.
+shared modified class variables because they create the need for synchronization.
 
 [[abebt]][[GSPTG00084]][[http-session-handling]]
 
@@ -286,8 +287,7 @@ transactional data, which is better kept in the database and accessed
 using entity beans. Transactions will rollback upon failures to their
 original state. However, stale and inaccurate data may remain in
 `HttpSession` objects. GlassFish Server provides "read-only"
-bean-managed persistence entity beans for cached access to read-only
-data.
+bean-managed persistence entity beans for cached access to read-only data.
 
 [[abebu]][[GSPTG00085]][[configuration-and-deployment-tips]]
 
@@ -320,13 +320,13 @@ environment variable to specify the correct library file. For more
 information, refer to the following table.
 
 [width="100%",cols="<23%,<23%,<54%",options="header",]
-|=======================================================================
+|===
 |Solaris OS Version |Library |Setting of `LD_PRELOAD` Environment
 Variable
 |10 |`libumem3LIB` |`/usr/lib/libumem.so`
 
 |9 |`libmtmalloc3LIB` |`/usr/lib/libmtmalloc.so`
-|=======================================================================
+|===
 
 
 To set the `LD_PRELOAD` environment variable, edit the entry for this
@@ -415,7 +415,7 @@ settings.
 For example, the monitoring command below returns the Bean Cache
 statistics for a stateful session bean.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --user admin --host e4800-241-a --port 4848
 -m specjcmp.application.SPECjAppServer.ejb-module.
@@ -424,7 +424,7 @@ asadmin get --user admin --host e4800-241-a --port 4848
 
 The following is a sample of the monitoring output:
 
-[source,oac_no_warn]
+[source]
 ----
 resize-quantity = -1
  cache-misses = 0
@@ -441,7 +441,7 @@ resize-quantity = -1
 The monitoring command below gives the bean pool statistics for an
 entity bean:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --user admin --host e4800-241-a --port 4848
 -m specjcmp.application.SPECjAppServer.ejb-module.
@@ -459,7 +459,7 @@ total-beans-created = 255
 The monitoring command below gives the bean pool statistics for a
 stateless bean.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --user admin --host e4800-241-a --port 4848
 -m test.application.testEjbMon.ejb-module.slsb.stateless-session-bean.slsb.bean-pool.*
@@ -483,17 +483,13 @@ the pool size is growing, but the cache hit rate is small, then the
 `pool-idle-timeout-in-seconds` can be reduced to destroy the instances.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Specifying a `max-pool-size` of zero (0) means that the pool is
 unbounded. The pooled beans remain in memory unless they are removed by
 specifying a small interval for `pool-idle-timeout-in-seconds`. For
 production systems, specifying the pool as unbounded is NOT recommended.
-
-|=======================================================================
+====
 
 
 [[abebz]][[GSPTG00086]][[monitoring-individual-ejb-components]]
@@ -504,7 +500,7 @@ Monitoring Individual EJB Components
 To gather method invocation statistics for all methods in a bean, use
 the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get -m monitorableObject.*
 ----
@@ -512,7 +508,7 @@ asadmin get -m monitorableObject.*
 where monitorableObject is a fully-qualified identifier from the
 hierarchy of objects that can be monitored, shown below.
 
-[source,oac_no_warn]
+[source]
 ----
 serverInstance.application.applicationName.ejb-module.moduleName
 ----
@@ -526,7 +522,7 @@ where moduleName is `x_jar` for module `x.jar`.
 
 For standalone beans, use this pattern:
 
-[source,oac_no_warn]
+[source]
 ----
 serverInstance.application.applicationName.standalone-ejb-module.moduleName
 ----
@@ -536,7 +532,7 @@ The possible identifiers are the same as for `ejb-module`.
 For example, to get statistics for a method in an entity bean, use this
 command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 .entity-bean.beanName.bean-method.methodName.*
@@ -561,7 +557,7 @@ subcommand. For more information, see link:../reference-manual/list.html#GSRFM00
 
 For statistics on stateful session bean passivations, use this command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 .stateful-session-bean.beanName.bean-cache.*
@@ -594,13 +590,13 @@ link:#abecv[Tuning Tips for Specific Types of EJB Components].
 The types of EJB components are listed below, from the highest
 performance to the lowest:
 
-1.  Stateless Session Beans and Message Driven Beans
-2.  Stateful Session Beans
-3.  Container Managed Persistence (CMP) entity beans configured as
+1. Stateless Session Beans and Message Driven Beans
+2. Stateful Session Beans
+3. Container Managed Persistence (CMP) entity beans configured as
 read-only
-4.  Bean Managed Persistence (BMP) entity beans configured as read-only
-5.  CMP beans
-6.  BMP beans
+4. Bean Managed Persistence (BMP) entity beans configured as read-only
+5. CMP beans
+6. BMP beans
 
 For more information about configuring high availability session
 persistence, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
@@ -756,7 +752,7 @@ details about the pass-by-reference flag.
 To specify that an EJB component will use pass by reference semantics,
 use the following tag in the `sun-ejb-jar.xml` deployment descriptor:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <pass-by-reference>true</pass-by-reference>
 ----
@@ -873,12 +869,12 @@ descriptor file (`ejb-jar.xml`). Options are listed from best
 performance to worst. To improve performance, choose the least expensive
 attribute that will provide the functionality your application needs:
 
-1.  `NEVER`
-2.  `TX_NOTSUPPORTED`
-3.  `TX_MANDATORY`
-4.  `TX_SUPPORTS`
-5.  `TX_REQUIRED`
-6.  `TX_REQUIRESNEW`
+1. `NEVER`
+2. `TX_NOTSUPPORTED`
+3. `TX_MANDATORY`
+4. `TX_SUPPORTS`
+5. `TX_REQUIRED`
+6. `TX_REQUIRESNEW`
 
 [[abecs]][[GSPTG00176]][[using-special-techniques]]
 
@@ -897,15 +893,11 @@ Version Consistency
 +++++++++++++++++++
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The technique in section applies only to the EJB 2.1 architecture. In
 the EJB 3.0 architecture, use the Java Persistence API (JPA).
-
-|=======================================================================
+====
 
 
 Use version consistency to improve performance while protecting the
@@ -933,7 +925,8 @@ versus its value when the EJB component was loaded.
 simultaneous access to the EJB component and `ejbStore()` throws a
 `ConcurrentModificationException`.
 
-** Otherwise, `ejbStore()` stores the data and completes as normal. +
+** Otherwise, `ejbStore()` stores the data and completes as normal.
++
 The `ejbStore()` method performs this validation at the end of the
 transaction regardless of whether any data in the bean was modified.
 
@@ -959,7 +952,7 @@ must include a column where the version can be stored. You then specify
 that table in the `sun-cmp-mapping.xml` deployment descriptor for a
 particular bean:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <entity-mapping>
     <cmp-field-mapping>
@@ -983,7 +976,7 @@ transactions in progress.
 For example, the following DDL illustrates how to create a trigger for
 the `Order` table:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 CREATE TRIGGER OrderTrigger
   BEFORE UPDATE ON OrderTable
@@ -1022,30 +1015,38 @@ To Enable Request Partitioning
 
 Follow this procedure.
 
-1.  Configure additional threadpools for EJB execution. +
+1. Configure additional threadpools for EJB execution.
++
 Using the GlassFish Server Administration Console, navigate to the
-Configurations>configuration-name>Thread Pools node. Refer to the
-Administration Console online help for more information. Alternatively,
-you can follow the instructions in "link:../administration-guide/threadpools.html#GSADG00008[Administering
-Thread Pools]" in GlassFish Server Open Source Edition Administration
-Guide. +
+Configurations>configuration-name>Thread Pools node.
+Refer to the Administration Console online help for more information.
+Alternatively, you can follow the instructions in
+"link:../administration-guide/threadpools.html#GSADG00008[
+Administering Thread Pools]" in GlassFish Server Open Source Edition Administration Guide.
++
 Configure the threadpools as follows:
-1.  Add the additional threadpool IDs to the GlassFish Server's ORB. +
+[arabic]
+.. Add the additional threadpool IDs to the GlassFish Server's ORB.
++
 This can be done on the Configurations>configuration-name>ORB node in
-the Administration Console. +
+the Administration Console.
++
 For example, enable threadpools named `priority-1` and `priority-2` to
-the `<orb>` element as follows: +
-[source,oac_no_warn]
+the `<orb>` element as follows:
++
+[source,xml]
 ----
 <orb max-connections="1024" message-fragment-size="1024"
     use-thread-pool-ids="thread-pool-1,priority-1,priority-2">
 ----
-2.  Include the threadpool ID in the `use-thread-pool-id` element of the
-EJB component's `sun-ejb-jar.xml` deployment descriptor. +
+
+.. Include the threadpool ID in the `use-thread-pool-id` element of the
+EJB component's `sun-ejb-jar.xml` deployment descriptor.
++
 For example, the following `sun-ejb-jar.xml` deployment descriptor for
-an EJB component named "`TheGreeter`" is assigned to a thread pool named
-`priority-2`: +
-[source,oac_no_warn]
+an EJB component named "`TheGreeter`" is assigned to a thread pool named `priority-2`:
++
+[source,xml]
 ----
 <sun-ejb-jar>
   <enterprise-beans>
@@ -1058,15 +1059,15 @@ an EJB component named "`TheGreeter`" is assigned to a thread pool named
   </enterprise-beans>
 </sun-ejb-jar>
 ----
-2.  Restart the GlassFish Server.
+
+2. Restart the GlassFish Server.
 
 [[abecv]][[GSPTG00177]][[tuning-tips-for-specific-types-of-ejb-components]]
 
 Tuning Tips for Specific Types of EJB Components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This section provides tips for tuning various specific types of EJB
-components:
+This section provides tips for tuning various specific types of EJB components:
 
 * link:#abecw[Entity Beans]
 * link:#abecx[Stateful Session Beans]
@@ -1077,9 +1078,9 @@ components:
 These components can all be configured in the GlassFish Server
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
-following the instructions in "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing
-and Failover]" in GlassFish Server Open Source Edition High Availability
-Administration Guide.
+following the instructions in "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[
+RMI-IIOP Load Balancing and Failover]"
+in GlassFish Server Open Source Edition High Availability Administration Guide.
 
 [[abecw]][[GSPTG00104]][[entity-beans]]
 
@@ -1187,7 +1188,7 @@ still make a number of calls to the database.
 To create a read-only bean, add the following to the EJB deployment
 descriptor `sun-ejb-jar.xml`:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <is-read-only-bean>true</is-read-only-bean>
 <refresh-period-in-seconds>600</refresh-period-in-seconds>
@@ -1233,7 +1234,7 @@ database access.
 For example, you have this relationship defined in the `ejb-jar.xml`
 file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <relationships>
     <ejb-relation>
@@ -1260,7 +1261,7 @@ When a particular `Order` is loaded, you can load its related
 `OrderLines` by adding this to the `sun-cmp-mapping.xml` file for the
 application:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <entity-mapping>
     <ejb-name>Order</ejb-name>
@@ -1283,7 +1284,7 @@ Now when an `Order` is retrieved, the CMP engine issues SQL to retrieve
 all related `OrderLines` with a `SELECT` statement that has the
 following `WHERE` clause:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 OrderTable.OrderID = OrderLineTable.OrderLine_OrderID
 ----
@@ -1306,7 +1307,7 @@ the `Orderlines`. However, you can prevent pre-fetching for the
 `findByCustomerId` method by including this information in the
 `sun-ejb-jar.xml` descriptor:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <ejb>
     <ejb-name>OrderBean</ejb-name>
@@ -1420,7 +1421,7 @@ node and then select the MDB Settings tab. Refer to the Administration
 Console online help for more information. Alternatively, you can set the
 MDB pool size by using the following `asadmin set` subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server.mdb-container.max-pool-size = value
 ----

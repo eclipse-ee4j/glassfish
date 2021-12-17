@@ -3,6 +3,7 @@ status=published
 title=Tuning the Operating System and Platform
 prev=tuning-java.html
 ~~~~~~
+
 Tuning the Operating System and Platform
 ========================================
 
@@ -145,41 +146,44 @@ on each host, determine whether the UDP buffer is large enough by
 testing for the loss of UDP packets.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 On Linux systems, the default UDP buffer size might be insufficient even
 if only one instance is running on each host. In this situation, set the
 UDP buffer size as explained in link:#glglz[To Set the UDP Buffer Size
 on Linux Systems].
-
-|=======================================================================
+====
 
 
 [[glgiw]]
 
-1.  Ensure that no GlassFish Server clusters are running. +
+1. Ensure that no GlassFish Server clusters are running.
++
 If necessary, stop any running clusters as explained in
-"link:../ha-administration-guide/instances.html#GSHAG00110[To Stop a Cluster]" in GlassFish Server Open Source
-Edition High Availability Administration Guide.
-2.  Determine the absolute number of lost UDP packets when no clusters
-are running. +
+"link:../ha-administration-guide/instances.html#GSHAG00110[To Stop a Cluster]"
+in GlassFish Server Open Source Edition High Availability Administration Guide.
+
+2. Determine the absolute number of lost UDP packets when no clusters
+are running.
++
 How you determine the number of lost packets depends on the operating
 system. For example:
+
 * On Linux systems, use the `netstat -su` command and look for the
 `packet receive errors` count in the `Udp` section.
 * On AIX systems, use the `netstat -s` command and look for the
 `fragments dropped (dup or out of space)` count in the `ip` section.
-3.  Start all the clusters that are configured for your installation of
-GlassFish Server. +
+
+3. Start all the clusters that are configured for your installation of
+GlassFish Server.
++
 Start each cluster as explained in "link:../ha-administration-guide/instances.html#GSHAG00109[To Start a
 Cluster]" in GlassFish Server Open Source Edition High Availability
 Administration Guide.
-4.  Determine the absolute number of lost UDP packets after the clusters
-are started.
-5.  If the difference in the number of lost packets is significant,
+
+4. Determine the absolute number of lost UDP packets after the clusters are started.
+
+5. If the difference in the number of lost packets is significant,
 increase the size of the UDP buffer.
 
 [[glglz]][[GSPTG00040]][[to-set-the-udp-buffer-size-on-linux-systems]]
@@ -204,16 +208,18 @@ are preserved when the system is rebooted. If you set the parameters at
 runtime, the settings are not preserved when the system is rebooted.
 
 * To set the parameters in the `/etc/sysctl.conf` file, add or edit the
-following lines in the file: +
-[source,oac_no_warn]
+following lines in the file:
++
+[source]
 ----
 net.core.rmem_max=rmem-max
 net.core.wmem_max=wmem-max
 net.core.rmem_default=rmem-default
 net.core.wmem_default=wmem-default
 ----
-* To set the parameters at runtime, use the sysctl command. +
-[source,oac_no_warn]
+* To set the parameters at runtime, use the sysctl command.
++
+[source]
 ----
 $ /sbin/sysctl -w net.core.rmem_max=rmem-max \
 net.core.wmem_max=wmem-max \
@@ -228,7 +234,7 @@ Example 5-1 Setting the UDP Buffer Size in the `/etc/sysctl.conf` File
 This example shows the lines in the `/etc/sysctl.conf` file for setting
 the kernel parameters for controlling the UDP buffer size to 524288.
 
-[source,oac_no_warn]
+[source]
 ----
 net.core.rmem_max=524288
 net.core.wmem_max=524288
@@ -237,14 +243,12 @@ net.core.wmem_default=524288
 ----
 
 [[GSPTG00034]][[glgjp]]
-
-
 Example 5-2 Setting the UDP Buffer Size at Runtime
 
 This example sets the kernel parameters for controlling the UDP buffer
 size to 524288 at runtime.
 
-[source,oac_no_warn]
+[source]
 ----
 $ /sbin/sysctl -w net.core.rmem_max=524288 \
 net.core.wmem_max=52428 \
@@ -294,56 +298,118 @@ how to tune your system for best performance.
 
 Table 5-1 Tuning Parameters for Solaris
 
-[width="235%",cols="<14%,<6%,<34%,<29%,<17%",options="header",]
-|=======================================================================
-|Parameter |Scope |Default |Tuned Value |Comments
-|`rlim_fd_max` |`/etc/system` |65536 |65536 |Limit of process open file
-descriptors. Set to account for expected load (for associated sockets,
-files, and pipes if any).
+[width="100%",cols="<25%,<16%,<10%,<10%,<30%",options="header",]
+|===
+|Parameter |Scope |Default |Tuned |Comments
+|`rlim_fd_max`
+|`/etc/system`
+|65536
+|65536
+|Limit of process open file descriptors.
+Set to account for expected load (for associated sockets, files, and pipes if any).
 
-|`rlim_fd_cur` |`/etc/system` |1024 |8192 | +
+|`rlim_fd_cur`
+|`/etc/system`
+|1024
+|8192
+|
 
-|`sq_max_size` |`/etc/system` |2 |0 |Controls streams driver queue size;
+
+|
+`sq_max_size`
+|`/etc/system`
+|2
+|0
+|Controls streams driver queue size;
 setting to 0 makes it infinite so the performance runs won't be hit by
 lack of buffer space. Set on clients too. Note that setting
 `sq_max_size` to 0 might not be optimal for production systems with high
 network traffic.
 
-|`tcp_close_wait_interval` |`ndd /dev/tcp` |240000 |60000 |Set on
-clients too.
+|`tcp_close_wait_interval`
+|`ndd /dev/tcp`
+|240000
+|60000
+|Set on clients too.
 
-|`tcp_time_wait_interval` |`ndd /dev/tcp` |240000 |60000 |Set on clients
-too.
+|`tcp_time_wait_interval`
+|`ndd /dev/tcp`
+|240000
+|60000
+|Set on clients too.
 
-|`tcp_conn_req_max_q` |`ndd /dev/tcp` |128 |1024 | +
+|`tcp_conn_req_max_q`
+|`ndd /dev/tcp`
+|128
+|1024
+|
 
-|`tcp_conn_req_max_q0` |`ndd /dev/tcp` |1024 |4096 | +
+|`tcp_conn_req_max_q0`
+|`ndd /dev/tcp`
+|1024
+|4096
+|
 
-|`tcp_ip_abort_interval` |`ndd /dev/tcp` |480000 |60000 | +
+|`tcp_ip_abort_interval`
+|`ndd /dev/tcp`
+|480000
+|60000
+|
 
-|`tcp_keepalive_interval` |`ndd /dev/tcp` |7200000 |900000 |For high
-traffic web sites, lower this value.
+|`tcp_keepalive_interval`
+|`ndd /dev/tcp`
+|7200000
+|900000
+|For high traffic web sites, lower this value.
 
-|`tcp_rexmit_interval_initial` |`ndd /dev/tcp` |3000 |3000 |If
-retransmission is greater than 30-40%, you should increase this value.
+|`tcp_rexmit_interval_initial`
+|`ndd /dev/tcp`
+|3000
+|3000
+|If retransmission is greater than 30-40%, you should increase this value.
 
-|`tcp_rexmit_interval_max` |`ndd /dev/tcp` |240000 |10000 | +
+|`tcp_rexmit_interval_max`
+|`ndd /dev/tcp`
+|240000
+|10000
+|
 
-|`tcp_rexmit_interval_min` |`ndd /dev/tcp` |200 |3000 | +
+|`tcp_rexmit_interval_min`
+|`ndd /dev/tcp`
+|200
+|3000
+|
 
-|`tcp_smallest_anon_port` |`ndd /dev/tcp` |32768 |1024 |Set on clients
-too.
+|`tcp_smallest_anon_port`
+|`ndd /dev/tcp`
+|32768
+|1024
+|Set on clients too.
 
-|`tcp_slow_start_initial` |`ndd /dev/tcp` |1 |2 |Slightly faster
-transmission of small amounts of data.
+|`tcp_slow_start_initial`
+|`ndd /dev/tcp`
+|1
+|2
+|Slightly faster transmission of small amounts of data.
 
-|`tcp_xmit_hiwat` |`ndd /dev/tcp` |8129 |32768 |Size of transmit buffer.
+|`tcp_xmit_hiwat`
+|`ndd /dev/tcp`
+|8129
+|32768
+|Size of transmit buffer.
 
-|`tcp_recv_hiwat` |`ndd /dev/tcp` |8129 |32768 |Size of receive buffer.
+|`tcp_recv_hiwat`
+|`ndd /dev/tcp`
+|8129
+|32768
+|Size of receive buffer.
 
-|`tcp_conn_hash_size` |`ndd /dev/tcp` |512 |8192 |Size of connection
-hash table. See link:#abeiz[Sizing the Connection Hash Table].
-|=======================================================================
+|`tcp_conn_hash_size`
+|`ndd /dev/tcp`
+|512
+|8192
+|Size of connection hash table. See link:#abeiz[Sizing the Connection Hash Table].
+|===
 
 
 [[abeiz]][[GSPTG00153]][[sizing-the-connection-hash-table]]
@@ -355,7 +421,7 @@ The connection hash table keeps all the information for active TCP
 connections. Use the following command to get the size of the connection
 hash table:
 
-[source,oac_no_warn]
+[source]
 ----
 ndd -get /dev/tcp tcp_conn_hash
 ----
@@ -369,7 +435,7 @@ this value only in `/etc/system`, and it becomes effective at boot time.
 
 Use the following command to get the current number of TCP connections.
 
-[source,oac_no_warn]
+[source]
 ----
 netstat -nP tcp|wc -l
 ----
@@ -386,14 +452,14 @@ number of RMI/IIOP clients.
 To increase the hard limit, add the following command to `/etc/system`
 and reboot it once:
 
-[source,oac_no_warn]
+[source]
 ----
 set rlim_fd_max = 8192
 ----
 
 Verify this hard limit by using the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 ulimit -a -H
 ----
@@ -401,14 +467,14 @@ ulimit -a -H
 Once the above hard limit is set, increase the value of this property
 explicitly (up to this limit) using the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 ulimit -n 8192
 ----
 
 Verify this limit by using the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 ulimit -a
 ----
@@ -442,7 +508,7 @@ File Descriptors
 
 Add (or edit) the following lines in the `/etc/system` file:
 
-[source,oac_no_warn]
+[source]
 ----
 set rlim_fd_max=65536
 set rlim_fd_cur=65536
@@ -461,7 +527,7 @@ IP Stack Settings
 
 Add (or edit) the following lines in the `/etc/system` file:
 
-[source,oac_no_warn]
+[source]
 ----
 set ip:tcp_squeue_wput=1
 set ip:tcp_squeue_close=1
@@ -476,7 +542,7 @@ To preserve the changes to the file between system reboots, place the
 following changes to the default TCP variables in a startup script that
 gets executed when the system reboots:
 
-[source,oac_no_warn]
+[source]
 ----
 ndd -set /dev/tcp tcp_time_wait_interval 60000
 ndd -set /dev/tcp tcp_conn_req_max_q 16384
@@ -515,7 +581,7 @@ Startup Files
 The following parameters must be added to the `/etc/rc.d/rc.local` file
 that gets executed during system startup.
 
-[source,oac_no_warn]
+[source]
 ----
 <-- begin
 #max file count updated ~256 descriptors per 4Mb.
@@ -547,10 +613,10 @@ sysctl -p /etc/sysctl.conf
 Additionally, create an `/etc/sysctl.conf` file and append it with the
 following values:
 
-[source,oac_no_warn]
+[source]
 ----
 <-- begin
- #Disables packet forwarding
+#Disables packet forwarding
 net.ipv4.ip_forward = 0
 #Enables source route verification
 net.ipv4.conf.default.rp_filter = 1
@@ -580,7 +646,7 @@ from clients.
 
 Start by checking system limits for file descriptors with this command:
 
-[source,oac_no_warn]
+[source]
 ----
 cat /proc/sys/fs/file-max
 8192
@@ -589,7 +655,7 @@ cat /proc/sys/fs/file-max
 The current limit shown is 8192. To increase it to 65535, use the
 following command (as root):
 
-[source,oac_no_warn]
+[source]
 ----
 echo "65535"> /proc/sys/fs/file-max
 ----
@@ -598,7 +664,7 @@ To make this value to survive a system reboot, add it to
 `/etc/sysctl.conf` and specify the maximum number of open files
 permitted:
 
-[source,oac_no_warn]
+[source]
 ----
 fs.file-max = 65535
 ----
@@ -608,28 +674,28 @@ expect.
 
 To list the available parameters that can be modified using `sysctl`:
 
-[source,oac_no_warn]
+[source]
 ----
 sysctl -a
 ----
 
 To load new values from the `sysctl.conf` file:
 
-[source,oac_no_warn]
+[source]
 ----
 sysctl -p /etc/sysctl.conf
 ----
 
 To check and modify limits per shell, use the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 limit
 ----
 
 The output will look something like this:
 
-[source,oac_no_warn]
+[source]
 ----
 cputime         unlimited
 filesize        unlimited
@@ -647,7 +713,7 @@ The `openfiles` and `descriptors` show a limit of 1024. To increase the
 limit to 65535 for all users, edit `/etc/security/limits.conf` as root,
 and modify or add the `nofile` setting (number of file) entries:
 
-[source,oac_no_warn]
+[source]
 ----
 *         soft    nofile                     65535
 *         hard    nofile                     65535
@@ -658,7 +724,7 @@ also specify a user ID instead.
 
 Then edit `/etc/pam.d/login` and add the line:
 
-[source,oac_no_warn]
+[source]
 ----
 session required /lib/security/pam_limits.so
 ----
@@ -666,7 +732,7 @@ session required /lib/security/pam_limits.so
 On Red Hat, you also need to edit `/etc/pam.d/sshd` and add the
 following line:
 
-[source,oac_no_warn]
+[source]
 ----
 session required /lib/security/pam_limits.so
 ----
@@ -683,7 +749,7 @@ Virtual Memory
 
 To change virtual memory settings, add the following to `/etc/rc.local`:
 
-[source,oac_no_warn]
+[source]
 ----
 echo 100 1200 128 512 15 5000 500 1884 2> /proc/sys/vm/bdflush
 ----
@@ -698,7 +764,7 @@ Network Interface
 To ensure that the network interface is operating in full duplex mode,
 add the following entry into `/etc/rc.local`:
 
-[source,oac_no_warn]
+[source]
 ----
 mii-tool -F 100baseTx-FD eth0
 ----
@@ -717,23 +783,31 @@ Disk I/O Settings
 To tune disk I/O performance for non SCSI disks
 +++++++++++++++++++++++++++++++++++++++++++++++
 
-1.  Test the disk speed. +
-Use this command: +
-[source,oac_no_warn]
+1. Test the disk speed.
++
+Use this command:
++
+[source]
 ----
 /sbin/hdparm -t /dev/hdX
 ----
-2.  Enable direct memory access (DMA). +
-Use this command: +
-[source,oac_no_warn]
+
+2. Enable direct memory access (DMA).
++
+Use this command:
++
+[source]
 ----
 /sbin/hdparm -d1 /dev/hdX
 ----
-3.  Check the speed again using the `hdparm` command. +
+
+3. Check the speed again using the `hdparm` command.
++
 Given that DMA is not enabled by default, the transfer rate might have
 improved considerably. In order to do this at every reboot, add the
 `/sbin/hdparm -d1 /dev/hdX` line to `/etc/conf.d/local.start`,
-`/etc/init.d/rc.local`, or whatever the startup script is called. +
+`/etc/init.d/rc.local`, or whatever the startup script is called.
++
 For information on SCSI disks, see:
 http://people.redhat.com/alikins/system_tuning.html#scsi[System Tuning
 for Linux Servers — SCSI]
@@ -751,16 +825,19 @@ TCP/IP Settings
 To tune the TCP/IP settings
 +++++++++++++++++++++++++++
 
-1.  Add the following entry to `/etc/rc.local` +
-[source,oac_no_warn]
+1. Add the following entry to `/etc/rc.local`
++
+[source]
 ----
 echo 30> /proc/sys/net/ipv4/tcp_fin_timeout
 echo 60000> /proc/sys/net/ipv4/tcp_keepalive_time
 echo 15000> /proc/sys/net/ipv4/tcp_keepalive_intvl
 echo 0> /proc/sys/net/ipv4/tcp_window_scaling
 ----
-2.  Add the following to `/etc/sysctl.conf` +
-[source,oac_no_warn]
+
+2. Add the following to `/etc/sysctl.conf`
++
+[source]
 ----
 # Disables packet forwarding
 net.ipv4.ip_forward = 0
@@ -780,14 +857,18 @@ net.ipv4.tcp_keepalive_time = 60000
 net.ipv4.tcp_keepalive_intvl = 15000
 net.ipv4.tcp_fin_timeout = 30
 ----
-3.  Add the following as the last entry in `/etc/rc.local` +
-[source,oac_no_warn]
+
+3. Add the following as the last entry in `/etc/rc.local`
++
+[source]
 ----
 sysctl -p /etc/sysctl.conf
 ----
-4.  Reboot the system.
-5.  Use this command to increase the size of the transmit buffer: +
-[source,oac_no_warn]
+
+4. Reboot the system.
+5. Use this command to increase the size of the transmit buffer:
++
+[source]
 ----
 tcp_recv_hiwat ndd /dev/tcp 8129 32768
 ----
@@ -814,51 +895,118 @@ CMT-based systems (64-bit systems).
 
 Table 5-2 Tuning 64-bit Systems for Performance Benchmarking
 
-[width="244%",cols="<14%,<6%,<32%,<32%,<16%",options="header",]
-|=======================================================================
-|Parameter |Scope |Default Value |Tuned Value |Comments
-|`rlim_fd_max` |`/etc/system` |65536 |260000 |Process open file
-descriptors limit; should account for the expected load (for the
-associated sockets, files, pipes if any).
+[width="100%",cols="<25%,<20%,<10%,<10%,<30%",options="header",]
+|===
+|Parameter |Scope |Default |Tuned |Comments
 
-|`hires_tick` |`/etc/system` | + |1 | +
+|`rlim_fd_max`
+|`/etc/system`
+|65536
+|260000
+|Process open file descriptors limit;
+should account for the expected load
+(for the associated sockets, files, pipes if any).
 
-|`sq_max_size` |`/etc/system` |2 |0 |Controls streams driver queue size;
+|`hires_tick`
+|`/etc/system`
+|
+|1
+|
+
+|`sq_max_size`
+|`/etc/system`
+|2
+|0
+|Controls streams driver queue size;
 setting to 0 makes it infinite so the performance runs won't be hit by
 lack of buffer space. Set on clients too. Note that setting
 `sq_max_size` to 0 might not be optimal for production systems with high
 network traffic.
 
-|`ip:ip_squeue_bind` | + | + |0 | +
+|`ip:ip_squeue_bind`
+|
+|
+|0
+|
 
-|`ip:ip_squeue_fanout` | + | + |1 | +
+|`ip:ip_squeue_fanout`
+|
+|
+|1
+|
 
-|`ipge:ipge_taskq_disable` |`/etc/system` | + |0 | +
+|`ipge:ipge_taskq_disable`
+|`/etc/system`
+|
+|0
+|
 
-|`ipge:ipge_tx_ring_size` |`/etc/system` | + |2048 | +
+|`ipge:ipge_tx_ring_size`
+|`/etc/system`
+|
+|2048
+|
 
-|`ipge:ipge_srv_fifo_depth` |`/etc/system` | + |2048 | +
+|`ipge:ipge_srv_fifo_depth`
+|`/etc/system`
+|
+|2048
+|
 
-|`ipge:ipge_bcopy_thresh` |`/etc/system` | + |384 | +
+|`ipge:ipge_bcopy_thresh`
+|`/etc/system`
+|
+|384
+|
 
-|`ipge:ipge_dvma_thresh` |`/etc/system` | + |384 | +
+|`ipge:ipge_dvma_thresh`
+|`/etc/system`
+|
+|384
+|
 
-|`ipge:ipge_tx_syncq` |`/etc/system` | + |1 | +
+|`ipge:ipge_tx_syncq`
+|`/etc/system`
+|
+|1
+|
 
-|`tcp_conn_req_max_q` |`ndd /dev/tcp` |128 |3000 | +
+|`tcp_conn_req_max_q`
+|`ndd /dev/tcp`
+|128
+|3000
+|
 
-|`tcp_conn_req_max_q0` |`ndd /dev/tcp` |1024 |3000 | +
+|`tcp_conn_req_max_q0`
+|`ndd /dev/tcp`
+|1024
+|3000
+|
 
-|`tcp_max_buf` |`ndd /dev/tcp` | + |4194304 | +
+|`tcp_max_buf`
+|`ndd /dev/tcp`
+|
+|4194304
+|
 
-|`tcp_cwnd_max` |`ndd/dev/tcp` | + |2097152 | +
+|`tcp_cwnd_max`
+|`ndd/dev/tcp`
+|
+|2097152
+|
 
-|`tcp_xmit_hiwat` |`ndd /dev/tcp` |8129 |400000 |To increase the
-transmit buffer.
+|`tcp_xmit_hiwat`
+|`ndd /dev/tcp`
+|8129
+|400000
+|To increase the transmit buffer.
 
-|`tcp_recv_hiwat` |`ndd /dev/tcp` |8129 |400000 |To increase the receive
-buffer.
-|=======================================================================
+|`tcp_recv_hiwat`
+|`ndd /dev/tcp`
+|8129
+|400000
+|To increase the receive buffer.
+|===
 
 
 Note that the IPGE driver version is 1.25.25.
@@ -887,7 +1035,7 @@ If more than one network interface card is used, make sure the network
 interrupts are not all going to the same core. Run the following script
 to disable interrupts:
 
-[source,oac_no_warn]
+[source]
 ----
 allpsr=`/usr/sbin/psrinfo | grep -v off-line | awk '{ print $1 }'`
    set $allpsr
@@ -909,7 +1057,7 @@ allpsr=`/usr/sbin/psrinfo | grep -v off-line | awk '{ print $1 }'`
 
 Put all network interfaces into a single group. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 $ifconfig ipge0 group webserver
 $ifconfig ipge1 group webserver

@@ -4,6 +4,7 @@ title=Tuning the GlassFish Server
 next=tuning-java.html
 prev=tuning-apps.html
 ~~~~~~
+
 Tuning the GlassFish Server
 ===========================
 
@@ -248,7 +249,7 @@ dynamic JSP reloading. To do so, edit the `default-web.xml` file in the
 `config` directory for each instance. Change the servlet definition for
 a JSP file to look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <servlet>
   <servlet-name>jsp</servlet-name>
@@ -329,12 +330,12 @@ beans can be cached to improve performance.
 Table 3-1 Bean Type Pooling or Caching
 
 [width="100%",cols="<34%,<33%,<33%",options="header",]
-|==========================
+|===
 |Bean Type |Pooled |Cached
 |Stateless Session |Yes |No
 |Stateful Session |No |Yes
 |Entity |Yes |Yes
-|==========================
+|===
 
 
 The difference between a pooled bean and a cached bean is that pooled
@@ -349,17 +350,13 @@ called by the container when the cache grows beyond its configured
 limits.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you develop and deploy your EJB components using Oracle Java Studio,
 then you need to edit the individual bean descriptor settings for bean
 pool and bean cache. These settings might not be suitable for
 production-level deployment.
-
-|=======================================================================
+====
 
 
 [[abeee]][[GSPTG00118]][[tuning-the-ejb-pool]]
@@ -391,7 +388,8 @@ The EJB pool settings are:
 * Initial and Minimum Pool Size: the initial and minimum number of beans
 maintained in the pool. Valid values are from 0 to `MAX_INTEGER,` and
 the default value is 8. The corresponding EJB deployment descriptor
-attribute is `steady-pool-size.` +
+attribute is `steady-pool-size.`
++
 Set this property to a number greater than zero for a moderately loaded
 system. Having a value greater than zero ensures that there is always a
 pooled instance to process an incoming request.
@@ -400,14 +398,16 @@ created to satisfy client requests. Valid values are from zero to
 `MAX_INTEGER`., and the default is 32. A value of zero means that the
 size of the pool is unbounded. The potential implication is that the JVM
 heap will be filled with objects in the pool. The corresponding EJB
-deployment descriptor attribute is `max-pool-size`. +
+deployment descriptor attribute is `max-pool-size`.
++
 Set this property to be representative of the anticipated high load of
 the system. An very large pool wastes memory and can slow down the
 system. A very small pool is also inefficient due to contention.
 * Pool Resize Quantity: the number of beans to be created or deleted
 when the cache is being serviced by the server. Valid values are from
 zero to `MAX_INTEGER` and default is 16. The corresponding EJB
-deployment descriptor attribute is `resize-quantity`. +
+deployment descriptor attribute is `resize-quantity`.
++
 Be sure to re-calibrate the pool resize quantity when you change the
 maximum pool size, to maintain an equilibrium. Generally, a larger
 maximum pool size should have a larger pool resize quantity.
@@ -416,7 +416,8 @@ entity bean, or message-driven bean is allowed to be idle in the pool.
 After this time, the bean is destroyed if the bean in case is a
 stateless session bean or a message driver bean. This is a hint to
 server. The default value is 600 seconds. The corresponding EJB
-deployment descriptor attribute is `pool-idle-timeout-in-seconds`. +
+deployment descriptor attribute is `pool-idle-timeout-in-seconds`.
++
 If there are more beans in the pool than the maximum pool size, the pool
 drains back to initial and minimum pool size, in steps of pool resize
 quantity at an interval specified by the pool idle timeout. If the
@@ -514,29 +515,29 @@ deployment descriptor override those of the EJB container. The following
 table lists the cache and pool settings for each type of EJB component.
 
 [width="100%",cols="<35%,<13%,<13%,<13%,<13%,<13%",options="header",]
-|=======================================================================
+|===
 |Cache or Pool Setting |Stateful Session Bean |Stateless Session Bean
 |Entity Bean |Entity Read-Only Bean |Message Driven Bean
-|`cache-resize-quantity` |X | + |X |X | +
+|`cache-resize-quantity` |X |+ |X |X |+
 
-|`max-cache-size` |X | + |X |X | +
+|`max-cache-size` |X |+ |X |X |+
 
-|`cache-idle-timeout-in-seconds` |X | + |X |X | +
+|`cache-idle-timeout-in-seconds` |X |+ |X |X |+
 
-|`removal-timeout-in-seconds` |X | + |X |X | +
+|`removal-timeout-in-seconds` |X |+ |X |X |+
 
-|`victim-selection-policy` |X | + |X |X | +
+|`victim-selection-policy` |X |+ |X |X |+
 
-|`refresh-period-in-seconds` | + | + | + |X | +
+|`refresh-period-in-seconds` |+ |+ |+ |X |+
 
-|`steady-pool-size` | + |X |X |X | +
+|`steady-pool-size` |+ |X |X |X |+
 
-|`pool-resize-quantity` | + |X |X |X |X
+|`pool-resize-quantity` |+ |X |X |X |X
 
-|`max-pool-size` | + |X |X |X |X
+|`max-pool-size` |+ |X |X |X |X
 
-|`pool-idle-timeout-in-seconds` | + |X |X |X |X
-|=======================================================================
+|`pool-idle-timeout-in-seconds` |+ |X |X |X |X
+|===
 
 
 [[abeej]][[GSPTG00121]][[commit-option]]
@@ -553,8 +554,8 @@ The following are the possible values for the commit option:
 * Commit option B: When a transaction completes, the bean is kept in the
 cache and retains its identity. The next invocation for the same primary
 key can use the cached instance. The EJB container will call the bean's
-`ejbLoad()` method before the method invocation to synchronize with the
-database.
+`ejbLoad()` method before the method invocation to synchronize with the database.
+
 * Commit option C: When a transaction completes, the EJB container calls
 the bean's `ejbPassivate()` method, the bean is disassociated from its
 primary key and returned to the free pool. The next invocation for the
@@ -637,7 +638,7 @@ Administration Console for complete instructions.
 
 You can also enable monitoring with these commands:
 
-[source,oac_no_warn]
+[source]
 ----
 set serverInstance.transaction-service.monitoringEnabled=true
 reconfig serverInstance
@@ -685,7 +686,7 @@ Disable Distributed Transaction Logging
 You can disable transaction logging through the Administration Console
 or by using the following `asadmin set` subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set
 server1.transaction-service.disable-distributed-transaction-logging=true
@@ -707,7 +708,7 @@ Recover On Restart (Automatic Recovery)
 You can set the Recover on Restart attribute through the Administration
 Console or by entering the following `asadmin set` subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server1.transaction-service.automatic-recovery=false
 ----
@@ -721,7 +722,8 @@ If Recover on Restart is false, then:
 * If Disable Distributed Transaction Logging is false (the default),
 then the server will write transaction logs.
 * If Disable Distributed Transaction Logging is true, then the server
-will not write transaction logs. +
+will not write transaction logs.
++
 Not writing transaction logs will give approximately twenty percent
 improvement in performance, but at the cost of not being able to recover
 from any interrupted transactions. The performance benefit applies to
@@ -846,16 +848,12 @@ lookups.
 This setting is not tunable.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you turn off DNS lookups on your server, host name restrictions will
 not work and IP addresses will appear instead of host names in log
 files.
-
-|=======================================================================
+====
 
 
 [[abefa]][[GSPTG00019]][[caching-dns-entries]]
@@ -1353,7 +1351,7 @@ Monitoring the ORB
 ORB statistics are disabled by default. To gather ORB statistics, enable
 monitoring with the following `asadmin` command:
 
-[source,oac_no_warn]
+[source]
 ----
 set serverInstance.iiop-service.orb.system.monitoringEnabled=true
 reconfig serverInstance
@@ -1382,7 +1380,7 @@ The following statistics are gathered on ORB connections:
 
 Use the following command to get ORB connection statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --monitor
     serverInstance.iiop-service.orb.system.orb-connection.*
@@ -1396,12 +1394,11 @@ Thread Pools
 The following statistics are gathered on ORB thread pools:
 
 * `thread-pool-size`: Number of threads in ORB thread pool.
-* `waiting-thread-count`: Number of thread pool threads waiting for work
-to arrive.
+* `waiting-thread-count`: Number of thread pool threads waiting for work to arrive.
 
 Use the following command to display ORB thread pool statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --monitor
     serverInstance.iiop-service.orb.system.orb-thread-pool.*
@@ -1445,7 +1442,7 @@ The following table summarizes the tunable ORB parameters.
 Table 3-2 Tunable ORB Parameters
 
 [width="100%",cols="<33%,<27%,<40%",options="header",]
-|=======================================================================
+|===
 |Path |ORB Modules |Server Settings
 |RMI/ IIOP from application client to application server |communication
 infrastructure, thread pool |steady-thread-pool-size,
@@ -1461,7 +1458,7 @@ idle-thread-timeout-in-seconds
 
 |In-process |thread pool |steady-thread-pool-size, max-thread-pool-size,
 idle-thread-timeout-in-seconds
-|=======================================================================
+|===
 
 
 [[abehb]][[GSPTG00139]][[orb-thread-pool-parameters]]
@@ -1494,12 +1491,10 @@ selected for the ORB. Thread pools have the following attributes that
 affect performance.
 
 * Minimum Pool Size: The minimum number of threads in the ORB thread
-pool. Set to the average number of threads needed at a steady (RMI/
-IIOP) load.
-* Maximum Pool Size: The maximum number of threads in the ORB thread
-pool.
-* Idle Timeout: Number of seconds to wait before removing an idle thread
-from pool. Allows shrinking of the thread pool.
+pool. Set to the average number of threads needed at a steady (RMI/IIOP) load.
+* Maximum Pool Size: The maximum number of threads in the ORB thread pool.
+* Idle Timeout: Number of seconds to wait before removing an idle thread from pool.
+Allows shrinking of the thread pool.
 * Number of Work Queues
 
 In particular, the maximum pool size is important to performance. For
@@ -1514,7 +1509,7 @@ Specify the following properties as command-line arguments when
 launching the client program. You do this by using the following syntax
 when starting the Java VM:
 
-[source,oac_no_warn]
+[source]
 ----
 -Dproperty=value
 ----
@@ -1535,7 +1530,7 @@ an initial context is created. To pool or share these connections when
 they are opened from the same process by adding to the configuration on
 the client ORB.
 
-[source,oac_no_warn]
+[source]
 ----
 -Djava.naming.factory.initial=com.sun.enterprise.naming.SerialInitContextFactory
 ----
@@ -1559,7 +1554,7 @@ To specify the maximum number of client connections, set the
 `configs.config.``config-name.``iiop-service.orb.max-connections`
 attribute to the number that you require:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set configs.config.config-name.iiop-service.orb.max-connections=max-connections
 ----
@@ -1576,7 +1571,7 @@ For updates to this value to take effect, restart GlassFish Server.
 The following example shows how to set the maximum number of client
 connections for the ORB in the DAS to `512`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set configs.config.server-config.iiop-service.orb.max-connections=512
 configs.config.server-config.iiop-service.orb.max-connections=512
@@ -1646,7 +1641,7 @@ The following is an example of IIOP messages saved to the server log.
 Note: in the actual output, each line is preceded by the timestamp, such
 as `[29/Aug/2002:22:41:43] INFO (27179): CORE3282: stdout`.
 
-[source,oac_no_warn]
+[source]
 ----
  ++++++++++++++++++++++++++++++
  Message(Thread[ORB Client-side Reader, conn to 192.18.80.118:1050,5,main]):
@@ -1666,15 +1661,11 @@ createFromStream: message construction complete.
 ----
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The flag `-Dcom.sun.CORBA.ORBdebug=giop` generates many debug messages
 in the logs. This is used only when you suspect message fragmentation.
-
-|=======================================================================
+====
 
 
 In this sample output above, the `createFromStream` type is shown as
@@ -1752,7 +1743,7 @@ that have timed out.
 
 To get JDBC monitoring statistics, use the following commands:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin get --monitor=true
 serverInstance.resources.jdbc-connection-pool.*asadmin get
@@ -1808,7 +1799,7 @@ when sizing connection pools.
 Table 3-3 Connection Pool Sizing
 
 [width="100%",cols="<21%,<38%,<41%",options="header",]
-|================================================================
+|===
 |Connection Pool |Advantages |Disadvantages
 |Small Connection pool |Faster access on the connection table. a|
 May not have enough connections to satisfy requests.
@@ -1821,7 +1812,7 @@ More connections to fulfill requests.
 Requests will spend less (or no) time in the queue
 
  |Slower access on the connection table.
-|================================================================
+|===
 
 
 [[abehu]][[GSPTG00028]][[timeout-settings]]
@@ -1834,7 +1825,8 @@ page.
 
 * Max Wait Time: Amount of time the caller (the code requesting a
 connection) will wait before getting a connection timeout. The default
-is 60 seconds. A value of zero forces caller to wait indefinitely. +
+is 60 seconds. A value of zero forces caller to wait indefinitely.
++
 To improve performance set Max Wait Time to zero (0). This essentially
 blocks the caller thread until a connection becomes available. Also,
 this allows the server to alleviate the task of tracking the elapsed
@@ -1842,10 +1834,12 @@ wait time for each request and increases performance.
 * Idle Timeout: Maximum time in seconds that a connection can remain
 idle in the pool. After this time, the pool can close this connection.
 This property does not control connection timeouts on the database
-server. +
+server.
++
 Keep this timeout shorter than the database server timeout (if such
 timeouts are configured on the database), to prevent accumulation of
-unusable connection in GlassFish Server. +
+unusable connection in GlassFish Server.
++
 For best performance, set Idle Timeout to zero (0) seconds, so that idle
 connections will not be removed. This ensures that there is normally no
 penalty in creating new connections and disables the idle monitor
@@ -1866,7 +1860,8 @@ pool uses the default isolation level provided by the JDBC Driver.
 * Isolation Level Guaranteed: Guarantees that every connection obtained
 from the pool has the isolation specified for the Transaction Isolation
 level. Applicable only when the Transaction Isolation level is
-specified. The default value is Guaranteed. +
+specified. The default value is Guaranteed.
++
 This setting can have some performance impact on some JDBC drivers. Set
 to false when certain that the application does not change the isolation
 level before returning the connection.
@@ -1880,10 +1875,10 @@ If you must specify a Transaction Isolation level, specify the
 best-performing level possible. The isolation levels listed from best
 performance to worst are:
 
-1.  `READ_UNCOMMITTED`
-2.  `READ_COMMITTED`
-3.  `REPEATABLE_READ`
-4.  `SERIALIZABLE`
+1. `READ_UNCOMMITTED`
+2. `READ_COMMITTED`
+3. `REPEATABLE_READ`
+4. `SERIALIZABLE`
 
 Choose the isolation level that provides the best performance, yet still
 meets the concurrency and consistency needs of the application.
@@ -1898,7 +1893,8 @@ page.
 
 * Connection Validation Required: If enabled, the pool validates
 connections (checks to find out if they are usable) before providing
-them to an application. +
+them to an application.
++
 If possible, keep this option disabled. Requiring connection validation
 forces the server to apply the validation algorithm every time the pool
 returns a connection, which adds overhead to the latency of
@@ -1960,7 +1956,7 @@ Also set transaction support using `asadmin`. For example, the following
 `asadmin` command could be used to create a connector connection pool
 `TESTPOOL` with `transaction-support` set to `LOCAL`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-connector-connection-pool --raname jdbcra
 --connectiondefinition javax.sql.DataSource

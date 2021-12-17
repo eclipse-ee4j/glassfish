@@ -4,6 +4,7 @@ title=Overview of GlassFish Server Performance Tuning
 next=tuning-apps.html
 prev=preface.html
 ~~~~~~
+
 Overview of GlassFish Server Performance Tuning
 ===============================================
 
@@ -41,57 +42,55 @@ sequence.
 
 Table 1-1 Performance Tuning Roadmap
 
-[width="154%",cols="<40%,<28%,<32%",options="header",]
-|=======================================================================
+[options="header",]
+|===
 |Step |Description of Task |Location of Instructions
-|1 |Design: Decide on the high-availability topology and set up
-GlassFish Server. a|
-link:../deployment-planning-guide/toc.html#GSPLG[GlassFish Server Open Source Edition Deployment Planning
-Guide]
+|1
+|Design: Decide on the high-availability topology and set up GlassFish Server.
+a|link:../deployment-planning-guide/toc.html#GSPLG[
+GlassFish Server Open Source Edition Deployment Planning Guide]
 
+|2
+|Capacity Planning: Make sure the systems have sufficient resources to perform well.
+a|link:../deployment-planning-guide/toc.html#GSPLG[
+GlassFish Server Open Source Edition Deployment Planning Guide]
 
-|2 |Capacity Planning: Make sure the systems have sufficient resources
-to perform well. a|
-link:../deployment-planning-guide/toc.html#GSPLG[GlassFish Server Open Source Edition Deployment Planning
-Guide]
+|3
+|Installation: Configure your DAS, clusters, and clustered server instances.
+a|link:../installation-guide/toc.html#GSING[
+GlassFish Server Open Source Edition Installation Guide]
 
+|4
+|Deployment: Install and run your applications.
+Familiarize yourself with how to configure and administer the GlassFish Server.
+a|The following books:
 
-|3 |Installation: Configure your DAS, clusters, and clustered server
-instances. a|
-link:../installation-guide/toc.html#GSING[GlassFish Server Open Source Edition Installation Guide]
+* link:../application-deployment-guide/toc.html#GSDPG[
+GlassFish Server Open Source Edition Application Deployment Guide]
+* link:../administration-guide/toc.html#GSADG[
+GlassFish Server Open Source Edition Administration Guide]
 
+|5
+|High Availability Configuration: Configuring your DAS, clusters, and
+clustered server instances for high availability and failover
+a|link:../ha-administration-guide/toc.html#GSHAG[
+GlassFish Server Open Source Edition High Availability Administration Guide]
 
-|4 |Deployment: Install and run your applications. Familiarize yourself
-with how to configure and administer the GlassFish Server. a|
-The following books:
-
-* link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application
-Deployment Guide]
-* link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration Guide]
-
-|5 |High Availability Configuration: Configuring your DAS, clusters, and
-clustered server instances for high availability and failover a|
-link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High Availability
-Administration Guide]
-
-
-|6 a|
-Performance Tuning: Tune the following items:
+|6
+a|Performance Tuning: Tune the following items:
 
 * Applications
 * GlassFish Server
 * Java Runtime System
 * Operating system and platform
 
- a|
-The following chapters:
+a|The following chapters:
 
 * link:tuning-apps.html#abebe[Tuning Your Application]
 * link:tuning-glassfish.html#abedn[Tuning the GlassFish Server]
 * link:tuning-java.html#abeia[Tuning the Java Runtime System]
 * link:tuning-os.html#abeir[Tuning the Operating System and Platform]
-
-|=======================================================================
+|===
 
 
 [[abeas]][[GSPTG00035]][[performance-tuning-sequence]]
@@ -107,13 +106,13 @@ you want to improve performance as much as possible in the meantime.
 
 Ideally, follow this sequence of steps when you are tuning performance:
 
-1.  Tune your application, described in
+1. Tune your application, described in
 link:tuning-apps.html#abebe[Tuning Your Application].
-2.  Tune the server, described in link:tuning-glassfish.html#abedn[Tuning
+2. Tune the server, described in link:tuning-glassfish.html#abedn[Tuning
 the GlassFish Server].
-3.  Tune the Java runtime system, described in
+3. Tune the Java runtime system, described in
 link:tuning-java.html#abeia[Tuning the Java Runtime System].
-4.  Tune the operating system, described in
+4. Tune the operating system, described in
 link:tuning-os.html#abeir[Tuning the Operating System and Platform].
 
 [[abeat]][[GSPTG00049]][[understanding-operational-requirements]]
@@ -128,8 +127,7 @@ requirements such as:
 
 * link:#abeau[Application Architecture]
 * link:#abeav[Security Requirements]
-* link:#gkvjf[High Availability Clustering, Load Balancing, and
-Failover]
+* link:#gkvjf[High Availability Clustering, Load Balancing, and Failover]
 * link:#abeay[Hardware Resources]
 * link:#abeaz[Administration]
 
@@ -148,8 +146,7 @@ container.
 
 
 .*Figure 1-1 Java EE Application Model*
-image:img/appmodel.png[
-"Java EE Application Mode"]
+image:img/appmodel.png["Java EE Application Mode"]
 
 
 Moderately complex enterprise applications can be developed entirely
@@ -234,8 +231,7 @@ hardware encryption cards for even higher performance. Security
 considerations, particularly when using the integrated software
 encryption, will impact hardware sizing and capacity planning.
 
-Consider the following when assessing the encryption needs for a
-deployment:
+Consider the following when assessing the encryption needs for a deployment:
 
 * What is the nature of the applications with respect to security? Do
 they encrypt all or only a part of the application inputs and output?
@@ -243,7 +239,8 @@ What percentage of the information needs to be securely transmitted?
 * Are the applications going to be deployed on an application server
 that is directly connected to the Internet? Will a web server exist in a
 demilitarized zone (DMZ) separate from the application server tier and
-backend enterprise systems? +
+backend enterprise systems?
++
 A DMZ-style deployment is recommended for high security. It is also
 useful when the application has a significant amount of static text and
 image content and some business logic that executes on the GlassFish
@@ -251,11 +248,13 @@ Server, behind the most secure firewall. GlassFish Server provides
 secure reverse proxy plugins to enable integration with popular web
 servers. The GlassFish Server can also be deployed and used as a web
 server in DMZ.
+
 * Is encryption required between the web servers in the DMZ and
 application servers in the next tier? The reverse proxy plugins supplied
 with GlassFish Server support SSL encryption between the web server and
 application server tier. If SSL is enabled, hardware capacity planning
 must be take into account the encryption policy and mechanisms.
+
 * If software encryption is to be employed:
 
 ** What is the expected performance overhead for every tier in the
@@ -382,49 +381,58 @@ describes the value sources.
 Table 1-2 Factors That Affect Performance
 
 [width="100%",cols="<14%,<13%,<26%,<47%",options="header",]
-|=======================================================================
+|===
 |Concept |In practice |Measurement |Value sources
-|User Load |Concurrent sessions at peak load a|
-Transactions Per Minute (TPM)
+
+|User Load
+|Concurrent sessions at peak load
+a|Transactions Per Minute (TPM)
 
 Web Interactions Per Second (WIPS)
 
- a|
-(Max. number of concurrent users) * (expected response time) / (time
+a|(Max. number of concurrent users) * (expected response time) / (time
 between clicks)
 
 Example:
 
 (100 users * 2 sec) / 10 sec = 20
 
-|Application Scalability |Transaction rate measured on one CPU |TPM or
-WIPS |Measured from workload benchmark. Perform at each tier.
+|Application Scalability
+|Transaction rate measured on one CPU
+|TPM or WIPS
+|Measured from workload benchmark. Perform at each tier.
 
-|Vertical scalability |Increase in performance from additional CPUs
-|Percentage gain per additional CPU |Based on curve fitting from
-benchmark. Perform tests while gradually increasing the number of CPUs.
+|Vertical scalability
+|Increase in performance from additional CPUs
+|Percentage gain per additional CPU
+|Based on curve fitting from benchmark.
+Perform tests while gradually increasing the number of CPUs.
 Identify the "knee" of the curve, where additional CPUs are providing
 uneconomical gains in performance. Requires tuning as described in this
 guide. Perform at each tier and iterate if necessary. Stop here if this
 meets performance requirements.
 
-|Horizontal scalability |Increase in performance from additional servers
+|Horizontal scalability
+|Increase in performance from additional servers
 |Percentage gain per additional server process and/or hardware node.
-|Use a well-tuned single application server instance, as in previous
-step. Measure how much each additional server instance and hardware node
+|Use a well-tuned single application server instance, as in previous step.
+Measure how much each additional server instance and hardware node
 improves performance.
 
-|Safety Margins |High availability requirements |If the system must cope
-with failures, size the system to meet performance requirements assuming
-that one or more application server instances are non functional
+|Safety Margins
+|High availability requirements
+|If the system must cope with failures, size the system to meet
+performance requirements assuming that one or more application server
+instances are non functional
 |Different equations used if high availability is required.
 
-| + |Excess capacity for unexpected peaks |It is desirable to operate a
-server at less than its benchmarked peak, for some safety margin |80%
-system capacity utilization at peak loads may work for most
-installations. Measure your deployment under real and simulated peak
-loads.
-|=======================================================================
+| +
+|Excess capacity for unexpected peaks
+|It is desirable to operate a
+server at less than its benchmarked peak, for some safety margin
+|80% system capacity utilization at peak loads may work for most installations.
+Measure your deployment under real and simulated peak loads.
+|===
 
 
 [[abebb]][[GSPTG00159]][[capacity-planning]]
@@ -449,7 +457,8 @@ using an application with realistic data sets and workloads.
 To Determine Capacity
 +++++++++++++++++++++
 
-1.  Determine performance on a single CPU. +
+1. Determine performance on a single CPU.
++
 First determine the largest load that a single processor can sustain.
 You can obtain this figure by measuring the performance of the
 application on a single-processor machine. Either leverage the
@@ -457,7 +466,7 @@ performance numbers of an existing application with similar processing
 characteristics or, ideally, use the actual application and workload in
 a testing environment. Make sure that the application and data resources
 are tiered exactly as they would be in the final deployment.
-2.  [[CEGHGCGI]]
+2. [[CEGHGCGI]]
 Determine vertical scalability.
 
 Determine how much additional performance you gain when you add
@@ -472,7 +481,8 @@ incremental steps, generally provides a sense of the vertical
 scalability characteristics of the system. Be sure to properly tune the
 application, GlassFish Server, backend database resources, and operating
 system so that they do not skew the results.
-3.  Determine horizontal scalability. +
+3. Determine horizontal scalability.
++
 If sufficiently powerful hardware resources are available, a single
 hardware node may meet the performance requirements. However for better
 availability, you can cluster two or more systems. Employing external

@@ -4,6 +4,7 @@ title=Tuning the Java Runtime System
 next=tuning-os.html
 prev=tuning-glassfish.html
 ~~~~~~
+
 Tuning the Java Runtime System
 ==============================
 
@@ -171,9 +172,11 @@ To use the CMS collector
 
 Follow this procedure.
 
-1.  Make sure that the system is not using 100 percent of its CPU.
-2.  Configure the CMS collector in the server instance. +
+1. Make sure that the system is not using 100 percent of its CPU.
+2. Configure the CMS collector in the server instance.
++
 To do this, add the following JVM options:
+
 * `-XX:+UseConcMarkSweepGC`
 * `-XX:SoftRefLRUPolicyMSPerMB=1`
 
@@ -218,7 +221,7 @@ collection. If you start the server in verbose mode (use the command
 `-verbose:gc` prints information for every collection. Here is an
 example of output of the information generated with this JVM flag:
 
-[source,oac_no_warn]
+[source]
 ----
 [GC 50650K->21808K(76868K), 0.0478645 secs]
  [GC 51197K->22305K(76868K), 0.0478645 secs]
@@ -274,11 +277,8 @@ inhibits scalability on large systems. It is best to disable explicit GC
 by using the flag `-XX:+DisableExplicitGC`.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 On Windows systems, setting the `-XX:+DisableExplicitGC` option might
 prevent the renaming or removal of open application files. As a result,
 deployment, redeployment, or other operations that attempt to rename or
@@ -293,8 +293,7 @@ to garbage collect the Java object that corresponds to an open file.
 When the Java object that corresponds to an open file is garbage
 collected, the object's `finalize` method closes the open channel to the
 file. GlassFish Server can then delete or rename the file.
-
-|=======================================================================
+====
 
 
 [[glglr]][[GSPTG00150]][[setting-the-frequency-of-full-garbage-collection]]
@@ -335,7 +334,7 @@ platforms:
 Table 4-1 Maximum Address Space Per Process
 
 [width="100%",cols="<62%,<38%",options="header",]
-|===================================================
+|===
 |Operating System |Maximum Address Space Per Process
 |Oracle/Redhat/Ubuntu Linux 32-bit |4 GB
 |Oracle/Redhat/Ubuntu Linux 64-bit |Terabytes
@@ -343,7 +342,7 @@ Table 4-1 Maximum Address Space Per Process
 |Solaris x86 (32-bit) |4 GB
 |Solaris 32-bit |4 GB
 |Solaris 64-bit |Terabytes
-|===================================================
+|===
 
 
 Maximum heap space is always smaller than maximum address space per
@@ -368,13 +367,13 @@ Heap Tuning Parameters
 
 You can control the heap size with the following JVM parameters:
 
-* `-Xms`value
-* `-Xmx`value
-* `-XX:MinHeapFreeRatio=`minimum
-* `-XX:MaxHeapFreeRatio=`maximum
-* `-XX:NewRatio=`ratio
-* `-XX:NewSize=`size
-* `-XX:MaxNewSize=`size
+* ``-Xms``value
+* ``-Xmx``value
+* ``-XX:MinHeapFreeRatio=``minimum
+* ``-XX:MaxHeapFreeRatio=``maximum
+* ``-XX:NewRatio=``ratio
+* ``-XX:NewSize=``size
+* ``-XX:MaxNewSize=``size
 * `-XX:+AggressiveHeap`
 
 The `-Xms` and `-Xmx` parameters define the minimum and maximum heap
@@ -426,19 +425,17 @@ HotSpot VM Options]
 (`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`).
 
 [[GSPTG00032]][[fxxpw]]
-
-
 Example 4-1 Heap Configuration on Solaris
 
 This is an exmple heap configuration used by GlassFish Server on Solaris
 for large applications:
 
-[source,oac_no_warn]
+[source]
 ----
 -Xms3584m
- -Xmx3584m
- -verbose:gc
- -Dsun.rmi.dgc.client.gcInterval=3600000
+-Xmx3584m
+-verbose:gc
+-Dsun.rmi.dgc.client.gcInterval=3600000
 ----
 
 [[abeil]][[GSPTG00031]][[survivor-ratio-sizing]]
@@ -503,34 +500,39 @@ To perform rebasing, you need:
 * Windows 2000
 * Visual Studio and the Microsoft Framework SDK rebase utility
 
-1.  Make as-install\ `bin` the default directory. +
-[source,oac_no_warn]
+1. Make as-install\ `bin` the default directory.
++
+[source]
 ----
 cd as-install\bin
 ----
-2.  Enter this command: +
-[source,oac_no_warn]
+
+2. Enter this command:
++
+[source]
 ----
 rebase -b 0x6000000 *.dll
 ----
-3.  Use the `dependencywalker` utility to make sure the DLLs were
-rebased correctly. +
+
+3. Use the `dependencywalker` utility to make sure the DLLs were
+rebased correctly.
++
 For more information, see the http://www.dependencywalker.com[Dependency
 Walker website] (`http://www.dependencywalker.com`).
-4.  Increase the size for the Java heap, and set the JVM Option
+
+4. Increase the size for the Java heap, and set the JVM Option
 accordingly on the JVM Settings page in the Admin Console.
-5.  Restart the GlassFish Server.
+
+5. Restart the GlassFish Server.
 
 [[GSPTG00033]][[fxxpz]]
-
-
 Example 4-2 Heap Configuration on Windows
 
 This is an example heap configuration used by Oracle GlassFish Server
 for heavy server-centric applications, on Windows, as set in the
 `domain.xml` file.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <jvm-options> -Xms1400m </jvm-options>
 <jvm-options> -Xmx1400m </jvm-options>
@@ -552,20 +554,19 @@ Further Information
 
 For more information on tuning the JVM, see:
 
-* http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[Java
-HotSpot VM Options]
+* http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[
+Java HotSpot VM Options]
 (`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`)
-* http://www.oracle.com/technetwork/java/hotspotfaq-138619.html[Frequently
-Asked Questions About the Java HotSpot Virtual Machine]
+* http://www.oracle.com/technetwork/java/hotspotfaq-138619.html[
+Frequently Asked Questions About the Java HotSpot Virtual Machine]
 (`http://www.oracle.com/technetwork/java/hotspotfaq-138619.html`)
-* http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html[Performance
-Documentation for the Java HotSpot VM]
+* http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html[
+Performance Documentation for the Java HotSpot VM]
 (`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html`)
-* http://java.sun.com/javase/technologies/performance.jsp[Java
-performance web page]
+* http://java.sun.com/javase/technologies/performance.jsp[Java performance web page]
 (`http://java.sun.com/javase/technologies/performance.jsp`)
-* http://java.sun.com/developer/technicalArticles/J2SE/monitoring/[Monitoring
-and Managing Java SE 6 Platform Applications]
+* http://java.sun.com/developer/technicalArticles/J2SE/monitoring/[
+Monitoring and Managing Java SE 6 Platform Applications]
 (`http://java.sun.com/developer/technicalArticles/J2SE/monitoring/`)
-* The http://java.sun.com/performance/jvmstat/[jvmstat monitoring
-utility] (`http://java.sun.com/performance/jvmstat/`)
+* The http://java.sun.com/performance/jvmstat/[
+jvmstat monitoring utility] (`http://java.sun.com/performance/jvmstat/`)

@@ -147,6 +147,7 @@
         <wasp.version>3.1.0-M1</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
+        <xmlsec.version>2.1.7</xmlsec.version>
         <woodstox.version>6.2.7</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
@@ -440,6 +441,11 @@
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-extra-xmlsec</artifactId>
                 <version>${webservices.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.santuario</groupId>
+                <artifactId>xmlsec</artifactId>
+                <version>${xmlsec.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.woodstox</groupId>

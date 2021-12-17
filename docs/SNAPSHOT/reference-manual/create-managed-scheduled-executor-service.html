@@ -75,6 +75,8 @@
 [--threadpriority threadpriority]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
+[--hungloggerinitialdelayseconds hungloggerinitialdelayseconds]
+[--hungloggerintervalseconds hungloggerintervalseconds]
 [--corepoolsize corepoolsize]
 [--keepaliveseconds keepaliveseconds]
 [--threadlifetimeseconds threadlifetimeseconds]
@@ -144,6 +146,16 @@ not reported as stuck.</p>
 <p>Specifies the number of seconds that a task can execute before it is
 considered unresponsive. The default value is 0, which means that
 tasks are never considered unresponsive.</p>
+</dd>
+<dt class="hdlist1"><code>--hungloggerinitialdelayseconds</code></dt>
+<dd>
+<p>Specifies the number of seconds to delay logging the detection of hung
+tasks. The default value is 60.</p>
+</dd>
+<dt class="hdlist1"><code>--hungloggerintervalseconds</code></dt>
+<dd>
+<p>Specifies the number of seconds between logging the detection of hung
+tasks. The default value is 60.</p>
 </dd>
 <dt class="hdlist1"><code>--corepoolsize</code></dt>
 <dd>

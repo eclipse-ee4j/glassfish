@@ -3,6 +3,7 @@ status=published
 title=Uninstalling GlassFish Server 5.0
 prev=installing.html
 ~~~~~~
+
 Uninstalling GlassFish Server 5.0
 =================================
 
@@ -45,23 +46,22 @@ using the installation directory or its subdirectories and any
 applications using Java SE files.
 
 To stop domains, use the `asadmin stop-domain` command. For more
-information about stopping a domain, see "link:../administration-guide/domains.html#GSADG00336[To Stop a
-Domain]" in GlassFish Server Open Source Edition Administration Guide.
+information about stopping a domain, see
+"link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+in GlassFish Server Open Source Edition Administration Guide.
 
-If orphaned processes remain, identify and terminate the processes as
-follows:
+If orphaned processes remain, identify and terminate the processes as follows:
 
-* Solaris, Linux, and Mac OS X systems: +
-Use the `ps -ef` command and terminate the processes using the `kill`
-command.
-* Windows systems: +
+* Solaris, Linux, and Mac OS X systems:
++
+Use the `ps -ef` command and terminate the processes using the `kill` command.
+* Windows systems:
++
 Use the Task Manager and terminate the processes.
 
-Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]" in GlassFish Server Open
-Source Edition Release Notes for known issues related to uninstallation.
+Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+in GlassFish Server Open Source Edition Release Notes for known issues related to uninstallation.
 
-1.  Save any files in the installation directory that you may want to
-keep.
-2.  Manually delete installation directory and all its contents.
-
+1. Save any files in the installation directory that you may want to keep.
+2. Manually delete installation directory and all its contents.
 

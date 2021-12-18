@@ -40,7 +40,8 @@
         <jruby.version>9.3.2.0</jruby.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
-        <doc.pdf>${project.artifactId}.pdf</doc.pdf>
+        <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
+        <pdf.toclevels>2</pdf.toclevels>
     </properties>
 
     <build>
@@ -128,7 +129,7 @@
                     <sourceDirectory>${project.build.directory}/book</sourceDirectory>
                     <sourceDocumentName>book.adoc</sourceDocumentName>
                     <backend>pdf</backend>
-                    <outputFile>${doc.pdf}</outputFile>
+                    <outputFile>${pdf.fileName}</outputFile>
                     <attributes>
                         <!-- XXX - a kludge to allow theme to be shared -->
                         <pdf-stylesdir>${project.basedir}/../parent/src/theme</pdf-stylesdir>
@@ -140,11 +141,13 @@
                         <source-highlighter>coderay</source-highlighter>
                         <pagenums />
                         <toc />
+                        <toclevels>${pdf.toclevels}</toclevels>
                         <sectanchors>true</sectanchors>
                         <idprefix />
                         <idseparator>-</idseparator>
                         <docinfo1>true</docinfo1>
                         <embedAssets>true</embedAssets>
+                        <!-- Depends on what jbake's execution' -->
                         <imagesDir>${project.build.directory}/staging/${project.artifactId}</imagesDir>
                     </attributes>
                 </configuration>
@@ -153,7 +156,7 @@
                         <id>generate-pdf-doc</id>
                         <phase>generate-resources</phase>
                         <goals>
-                                <goal>process-asciidoc</goal>
+                            <goal>process-asciidoc</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -171,7 +174,7 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>${project.build.directory}/generated-docs/${doc.pdf}</file>
+                                    <file>${project.build.directory}/generated-docs/${pdf.fileName}</file>
                                     <type>pdf</type>
                                 </artifact>
                             </artifacts>

@@ -29,4 +29,8 @@
     <artifactId>reference-manual</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Server Reference Manual, Release 7</name>
+
+    <properties>
+      <pdf.toclevels>1</pdf.toclevels>
+    </properties>
 </project>

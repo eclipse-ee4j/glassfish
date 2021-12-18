@@ -4,6 +4,7 @@ title=list-audit-modules
 next=list-auth-realms.html
 prev=list-applications.html
 ~~~~~~
+
 list-audit-modules
 ==================
 
@@ -12,28 +13,28 @@ list-audit-modules
 list-audit-modules
 ------------------
 
-gets all audit modules and displays them
+Gets all audit modules and displays them
 
 [[sthref1316]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-audit-modules [--help] 
+asadmin [asadmin-options] list-audit-modules [--help]
 [target]
 ----
 
 [[sthref1317]]
 
-Description
+=== Description
 
 The `list-audit-modules` subcommand lists all the audit modules. This
 subcommand is supported in remote mode only.
 
 [[sthref1318]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1319]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target on which you are listing the audit modules. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the audit modules for the default server instance `server` and
     is the default value.
@@ -61,13 +63,13 @@ target::
 
 [[sthref1320]]
 
-Examples
+=== Examples
 
 [[GSRFM637]][[sthref1321]]
 
-Example 1   Listing Audit Modules
+==== Example 1   Listing Audit Modules
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-audit-modules
 sampleAuditModule1
@@ -77,7 +79,7 @@ Command list-audit-modules executed successfully
 
 [[sthref1322]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -86,7 +88,7 @@ Exit Status
 
 [[sthref1323]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

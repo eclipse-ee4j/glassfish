@@ -4,6 +4,7 @@ title=list-iiop-listeners
 next=list-instances.html
 prev=list-http-listeners.html
 ~~~~~~
+
 list-iiop-listeners
 ===================
 
@@ -12,13 +13,13 @@ list-iiop-listeners
 list-iiop-listeners
 -------------------
 
-lists the existing IIOP listeners
+Lists the existing IIOP listeners
 
 [[sthref1509]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-iiop-listeners [--help]
 [target]
@@ -26,14 +27,14 @@ asadmin [asadmin-options] list-iiop-listeners [--help]
 
 [[sthref1510]]
 
-Description
+=== Description
 
 The `list-iiop-listeners` subcommand lists the existing IIOP listeners.
 This subcommand is supported in remote mode only.
 
 [[sthref1511]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1512]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies the target for which the IIOP listeners are to
-  be listed. Valid values are: +
+  be listed. Valid values are:
+
   `server`;;
     Lists the listeners in the default server instance `server` and is
     the default value.
@@ -61,16 +63,16 @@ target::
 
 [[sthref1513]]
 
-Examples
+=== Examples
 
 [[GSRFM663]][[sthref1514]]
 
-Example 1   Using the list-iiop-listeners subcommand
+==== Example 1   Using the list-iiop-listeners subcommand
 
 The following command lists all the IIOP listeners for the server
 instance:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-iiop-listeners
 orb-listener-1
@@ -82,7 +84,7 @@ Command list-iiop-listeners executed successfully.
 
 [[sthref1515]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -91,7 +93,7 @@ Exit Status
 
 [[sthref1516]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

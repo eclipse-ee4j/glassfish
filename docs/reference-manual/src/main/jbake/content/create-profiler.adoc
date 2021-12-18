@@ -4,6 +4,7 @@ title=create-profiler
 next=create-protocol.html
 prev=create-password-alias.html
 ~~~~~~
+
 create-profiler
 ===============
 
@@ -12,23 +13,23 @@ create-profiler
 create-profiler
 ---------------
 
-creates the profiler element
+Creates the profiler element
 
 [[sthref481]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-profiler [--help] 
-[--target target_name] 
-[--classpath classpath] [--nativelibpath native_library_path] [--enabled=true] 
+asadmin [asadmin-options] create-profiler [--help]
+[--target target_name]
+[--classpath classpath] [--nativelibpath native_library_path] [--enabled=true]
 [--property(name=value)[:name=value]*] profiler_name
 ----
 
 [[sthref482]]
 
-Description
+=== Description
 
 The `create-profiler` subcommand creates the profiler element. A server
 instance is tied to the profiler by the profiler element in the Java
@@ -42,7 +43,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref483]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,7 +53,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target on which you are creating a profiler.
-  Valid values are +
+  Valid values are
+
   `server`;;
     Creates the profiler for the default server instance. This is the
     default value.
@@ -62,9 +64,9 @@ asadmin-options::
     Creates the profiler for every server instance in the cluster
   instance_name;;
     Creates the profiler for a particular server instance
+
 `--classpath`::
-  Java classpath string that specifies the classes needed by the
-  profiler.
+  Java classpath string that specifies the classes needed by the profiler.
 `--nativelibpath`::
   This path is automatically constructed to be a concatenation of the
   \{product---name} installation relative path for its native shared
@@ -78,22 +80,22 @@ asadmin-options::
 
 [[sthref484]]
 
-Operands
+=== Operands
 
 profiler_name::
   Name of the profiler.
 
 [[sthref485]]
 
-Examples
+=== Examples
 
 [[GSRFM516]][[sthref486]]
 
-Example 1   Creating a Profiler
+==== Example 1   Creating a Profiler
 
 This example creates a profiler named `sample_profiler`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-profiler --classpath /home/appserver/
 --nativelibpath /u/home/lib --enabled=false
@@ -103,7 +105,7 @@ Created Profiler with id = sample_profiler
 
 [[sthref487]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -112,7 +114,7 @@ Exit Status
 
 [[sthref488]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

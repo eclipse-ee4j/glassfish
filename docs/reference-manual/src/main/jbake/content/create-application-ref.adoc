@@ -4,6 +4,7 @@ title=create-application-ref
 next=create-audit-module.html
 prev=create-admin-object.html
 ~~~~~~
+
 create-application-ref
 ======================
 
@@ -12,15 +13,15 @@ create-application-ref
 create-application-ref
 ----------------------
 
-creates a reference to an application
+Creates a reference to an application
 
 [[sthref123]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-application-ref [--help] 
+asadmin [asadmin-options] create-application-ref [--help]
 [--target target]
 [--virtualservers virtual_servers] [--enabled=true]
 [--lbenabled=true] reference_name
@@ -28,7 +29,7 @@ asadmin [asadmin-options] create-application-ref [--help]
 
 [[sthref124]]
 
-Description
+=== Description
 
 The `create-application-ref` subcommand creates a reference from a
 cluster or an unclustered server instance to a previously deployed
@@ -46,7 +47,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref125]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,7 +57,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you are creating the application
-  reference. Valid values are +
+  reference. Valid values are
++
   * `server`- Specifies the default server instance as the target for
   creating the application reference. `server` is the name of the
   default server instance and is the default value for this option.
@@ -80,7 +82,7 @@ asadmin-options::
 
 [[sthref126]]
 
-Operands
+=== Operands
 
 reference_name::
   The name of the application or module, which can be a Java EE
@@ -93,22 +95,23 @@ reference_name::
   (`.`) characters. If the `--enabled` option is set to false, you can
   create references to multiple disabled versions by using an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
-  Versions]" in GlassFish Server Open Source Edition Application
-  Deployment Guide.
+  application versions, see
+  "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]"
+  in GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[sthref127]]
 
-Examples
+=== Examples
 
 [[GSRFM458]][[sthref128]]
 
-Example 1   Creating an Application Reference
+==== Example 1   Creating an Application Reference
 
 The following example creates a reference to the Web module `MyWebApp`
 on the unclustered server instance `NewServer`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-application-ref --target NewServer MyWebApp
 Command create-application-ref executed successfully.
@@ -116,7 +119,7 @@ Command create-application-ref executed successfully.
 
 [[sthref129]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -125,7 +128,7 @@ Exit Status
 
 [[sthref130]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

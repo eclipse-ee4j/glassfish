@@ -4,6 +4,7 @@ title=get-health
 next=import-sync-bundle.html
 prev=get-client-stubs.html
 ~~~~~~
+
 get-health
 ==========
 
@@ -12,21 +13,21 @@ get-health
 get-health
 ----------
 
-provides information on the cluster health
+Provides information on the cluster health
 
 [[sthref1235]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] get-health [--help] 
+asadmin [asadmin-options] get-health [--help]
 cluster_name
 ----
 
 [[sthref1236]]
 
-Description
+=== Description
 
 The `get-health` subcommand gets information about the health of the
 cluster. Note that if the group management service (GMS) is not enabled,
@@ -38,7 +39,7 @@ remote mode only.
 
 [[sthref1237]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,22 +50,21 @@ asadmin-options::
 
 [[sthref1238]]
 
-Operands
+=== Operands
 
 cluster_name::
   The name of the cluster for which you want the health information.
-  This subcommand prompts you for the cluster name if you don't specify
-  it.
+  This subcommand prompts you for the cluster name if you don't specify it.
 
 [[sthref1239]]
 
-Examples
+=== Examples
 
 [[GSRFM623]][[sthref1240]]
 
-Example 1   Checking the health of server instances in a cluster
+==== Example 1   Checking the health of server instances in a cluster
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get-health cluster1
 instance1 started since Wed Sep 29 16:32:46 EDT 2010
@@ -74,7 +74,7 @@ Command get-health executed successfully.
 
 [[sthref1241]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -83,7 +83,7 @@ Exit Status
 
 [[sthref1242]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

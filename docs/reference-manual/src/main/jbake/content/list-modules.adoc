@@ -4,6 +4,7 @@ title=list-modules
 next=list-network-listeners.html
 prev=list-message-security-providers.html
 ~~~~~~
+
 list-modules
 ============
 
@@ -12,20 +13,20 @@ list-modules
 list-modules
 ------------
 
-lists \{product---name} modules
+Lists \{product---name} modules
 
 [[sthref1685]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-modules [--help]
 ----
 
 [[sthref1686]]
 
-Description
+=== Description
 
 The `list-modules` subcommand displays a list of modules that are
 accessible to the \{product---name} module subsystem. The version of
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1687]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,16 +47,16 @@ asadmin-options::
 
 [[sthref1688]]
 
-Examples
+=== Examples
 
 [[GSRFM685]][[sthref1689]]
 
-Example 1   Listing \{product---name} Modules
+==== Example 1   Listing \{product---name} Modules
 
 This example provides a partial listing of modules that are accessible
 to the \{product---name} module subsystem
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-modules
 List Of Modules
@@ -86,7 +87,7 @@ Command list-modules executed successfully
 
 [[sthref1690]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -95,7 +96,7 @@ Exit Status
 
 [[sthref1691]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

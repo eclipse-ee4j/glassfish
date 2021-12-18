@@ -4,6 +4,7 @@ title=list-applications
 next=list-audit-modules.html
 prev=list-application-refs.html
 ~~~~~~
+
 list-applications
 =================
 
@@ -12,22 +13,22 @@ list-applications
 list-applications
 -----------------
 
-lists deployed applications
+Lists deployed applications
 
 [[sthref1308]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-applications [--help] 
+asadmin [asadmin-options] list-applications [--help]
 [--long={false|true}] [--resources] [--subcomponents]
 [--type type] [target]
 ----
 
 [[sthref1309]]
 
-Description
+=== Description
 
 The `list-applications` subcommand lists deployed Java EE applications
 and the type of each application that is listed.
@@ -47,7 +48,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1310]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -69,22 +70,26 @@ asadmin-options::
   JSP pages are listed. For an EJB module, EJB subcomponents are listed.
 `--type`::
   Specifies the type of the applications that are to be listed. The
-  options are as follows: +
+  options are as follows:
+
   * `application`
   * `appclient`
   * `connector`
   * `ejb`
   * `web`
-  * `webservice` +
-  If no type is specified, all applications are listed.
+  * `webservice`
+
++
+If no type is specified, all applications are listed.
 
 [[sthref1311]]
 
-Operands
+=== Operands
 
 `--target`::
   This is the name of the target upon which the subcommand operates. The
-  valid values are as follows: +
+  valid values are as follows:
++
   `server`;;
     Lists the applications for the default server instance `server` and
     is the default value.
@@ -97,13 +102,13 @@ Operands
 
 [[sthref1312]]
 
-Examples
+=== Examples
 
 [[GSRFM636]][[sthref1313]]
 
-Example 1   Listing the Web Applications
+==== Example 1   Listing the Web Applications
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-applications --type web
 hellojsp <web>
@@ -112,7 +117,7 @@ Command list-applications executed successfully
 
 [[sthref1314]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -121,7 +126,7 @@ Exit Status
 
 [[sthref1315]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

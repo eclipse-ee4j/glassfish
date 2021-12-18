@@ -4,6 +4,7 @@ title=attach
 next=backup-domain.html
 prev=apply-http-lb-changes.html
 ~~~~~~
+
 attach
 ======
 
@@ -12,22 +13,22 @@ attach
 attach
 ------
 
-attaches to subcommands that were started using `asadmin --detach` or
+Attaches to subcommands that were started using `asadmin --detach` or
 that contain progress information
 
 [[sthref32]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] attach [--help] 
+asadmin [asadmin-options] attach [--help]
 job_id
 ----
 
 [[sthref33]]
 
-Description
+=== Description
 
 The `attach` subcommand attaches to subcommands that were started using
 the `asadmin` utility option `--detach` or that contain progress
@@ -45,7 +46,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref34]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,25 +57,25 @@ asadmin-options::
 
 [[sthref35]]
 
-Operands
+=== Operands
 
 job_id::
   The ID of the job for which you want to view status and output.
 
 [[sthref36]]
 
-Examples
+=== Examples
 
 [[GSRFM826]][[CBHDFEGB]]
 
-Example 1   Attaching to a Subcommand and Checking Its Status
+==== Example 1   Attaching to a Subcommand and Checking Its Status
 
 This example attaches to the `deploy` subcommand with a job ID of `20`
 and shows that the job is finished. If a subcommand is still in
 progress, the output displays the current status, for example,
 `64%: Uploading bits`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> attach 20
 Finished execution of deploy
@@ -83,7 +84,7 @@ Command attach executed successfully.
 
 [[sthref37]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -92,7 +93,7 @@ Exit Status
 
 [[sthref38]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

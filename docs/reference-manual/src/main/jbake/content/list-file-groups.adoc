@@ -4,6 +4,7 @@ title=list-file-groups
 next=list-file-users.html
 prev=list-domains.html
 ~~~~~~
+
 list-file-groups
 ================
 
@@ -12,22 +13,22 @@ list-file-groups
 list-file-groups
 ----------------
 
-lists file groups
+Lists file groups
 
 [[sthref1469]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-file-groups [--help] 
-[--name username] [--authrealmname auth_realm_name] 
+asadmin [asadmin-options] list-file-groups [--help]
+[--name username] [--authrealmname auth_realm_name]
 [--target target]
 ----
 
 [[sthref1470]]
 
-Description
+=== Description
 
 The `list-file-groups` subcommand lists the file users and groups
 supported by the file realm authentication. This subcommand lists
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1471]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,7 +55,8 @@ asadmin-options::
   groups.
 `--target`::
   This option specifies which configurations you can list. Valid targets
-  are: +
+  are:
+
   `server`;;
     Lists the file groups in the current server. This is the default
     value.
@@ -65,15 +67,15 @@ asadmin-options::
 
 [[sthref1472]]
 
-Examples
+=== Examples
 
 [[GSRFM657]][[sthref1473]]
 
-Example 1   Listing Groups in all File Realms
+==== Example 1   Listing Groups in all File Realms
 
 This example list all file realm groups defined for the server.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-file-groups
 staff
@@ -83,7 +85,7 @@ Command list-file-groups executed successfully
 
 [[sthref1474]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -92,7 +94,7 @@ Exit Status
 
 [[sthref1475]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

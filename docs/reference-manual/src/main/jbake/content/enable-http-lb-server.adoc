@@ -4,6 +4,7 @@ title=enable-http-lb-server
 next=enable-monitoring.html
 prev=enable-http-lb-application.html
 ~~~~~~
+
 enable-http-lb-server
 =====================
 
@@ -12,40 +13,36 @@ enable-http-lb-server
 enable-http-lb-server
 ---------------------
 
-enables a previously disabled sever or cluster managed by a load
+Enables a previously disabled sever or cluster managed by a load
 balancer
 
 [[sthref1111]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] enable-http-lb-server [--help] 
+asadmin [asadmin-options] enable-http-lb-server [--help]
 target
 ----
 
 [[sthref1112]]
 
-Description
+=== Description
 
 The `enable-http-lb-server` subcommand enables a standalone server
 instance or cluster for load balancing. By default, load balancing is
 enabled for instances and clusters.
 
-
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
-
+====
 
 [[sthref1113]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,25 +53,26 @@ asadmin-options::
 
 [[sthref1114]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies which server instances and clusters to enable.
-  Valid values are: +
+  Valid values are:
+
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
 [[sthref1115]]
 
-Examples
+=== Examples
 
 [[GSRFM602]][[sthref1116]]
 
-Example 1   Enabling a Cluster for Load Balancing
+==== Example 1   Enabling a Cluster for Load Balancing
 
 This example enables load balancing for a cluster named `mycluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-http-lb-server mycluster
 
@@ -83,7 +81,7 @@ Command enable-http-lb-server executed successfully.
 
 [[sthref1117]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -92,7 +90,7 @@ Exit Status
 
 [[sthref1118]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

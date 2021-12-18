@@ -4,6 +4,7 @@ title=set-log-attributes
 next=set-log-file-format.html
 prev=set-batch-runtime-configuration.html
 ~~~~~~
+
 set-log-attributes
 ==================
 
@@ -12,22 +13,22 @@ set-log-attributes
 set-log-attributes
 ------------------
 
-sets the logging attributes for one or more loggers
+Sets the logging attributes for one or more loggers
 
 [[sthref2041]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] set-log-attributes [--help] 
-[--target=target] 
+asadmin [asadmin-options] set-log-attributes [--help]
+[--target=target]
 attribute-name=attribute-value[:attribute-name=attribute-value]*
 ----
 
 [[sthref2042]]
 
-Description
+=== Description
 
 The `set-log-attributes` subcommand sets logging attributes for one or
 more loggers. The attributes you can set correspond to the attributes
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2043]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -53,12 +54,12 @@ asadmin-options::
 
 [[sthref2044]]
 
-Operands
+=== Operands
 
 target::
-  Valid values are: +
+  Valid values are:
   * server_name - Default target is `server`. If no target is specified
-  then log attributes are set for the server.
+    then log attributes are set for the server.
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
 attribute-name::
@@ -70,7 +71,8 @@ attribute-value::
   The attribute values that can be specified include the following.
   Refer to "link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
   GlassFish Server Open Source Edition Administration Guide for complete
-  explanations of each of these values. +
+  explanations of each of these values.
+
   `com.sun.enterprise.server.logging.GFFileHandler.alarms`;;
     Default is `false`.
   `com.sun.enterprise.server.logging.GFFileHandler.excludeFields`;;
@@ -112,20 +114,20 @@ attribute-value::
 
 [[sthref2045]]
 
-Examples
+=== Examples
 
 [[GSRFM748]][[sthref2046]]
 
-Example 1   Setting the Maximum Number of Log History Files to Maintain
+==== Example 1   Setting the Maximum Number of Log History Files to Maintain
 
 This example sets to 8 the maximum number of log history files for the
 server as a whole.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target=server \
 com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=8
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles logging 
+com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles logging
 attribute set with value 8.
 These logging attributes are set for server.
 Command set-log-attributes executed successfully.
@@ -133,7 +135,7 @@ Command set-log-attributes executed successfully.
 
 [[sthref2047]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -142,7 +144,7 @@ Exit Status
 
 [[sthref2048]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

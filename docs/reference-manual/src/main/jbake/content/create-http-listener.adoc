@@ -4,6 +4,7 @@ title=create-http-listener
 next=create-http-redirect.html
 prev=create-http-lb-ref.html
 ~~~~~~
+
 create-http-listener
 ====================
 
@@ -12,62 +13,56 @@ create-http-listener
 create-http-listener
 --------------------
 
-adds a new HTTP network listener socket
+Adds a new HTTP network listener socket
 
 [[sthref270]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-http-listener [--help] 
---listeneraddress address 
---listenerport listener-port 
-{--default-virtual-server | --defaultvs} virtual-server 
-[--servername server-name] 
-[--acceptorthreads acceptor-threads] 
-[--xpowered={true|false}] 
-[--redirectport redirect-port] 
-[--securityenabled={false|true}] 
-[--enabled={true|false}] 
+asadmin [asadmin-options] create-http-listener [--help]
+--listeneraddress address
+--listenerport listener-port
+{--default-virtual-server | --defaultvs} virtual-server
+[--servername server-name]
+[--acceptorthreads acceptor-threads]
+[--xpowered={true|false}]
+[--redirectport redirect-port]
+[--securityenabled={false|true}]
+[--enabled={true|false}]
 [--target target]
 listener-id
 ----
 
 [[sthref271]]
 
-Description
+=== Description
 
 The `create-http-listener` subcommand creates an HTTP network listener.
 This subcommand is supported in remote mode only.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you edit the special HTTP network listener named `admin-listener`,
 you must restart the server for the changes to take effect. The
 Administration Console does not tell you that a restart is required in
 this case.
-
-=======================================================================
-
-
+====
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is provided for backward compatibility and as a shortcut
 for creating network listeners that use the HTTP protocol. Behind the
 scenes, this subcommand creates a network listener and its associated
 protocol, transport, and HTTP configuration.
-
-=======================================================================
+====
 
 
 [[sthref272]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -122,7 +117,8 @@ asadmin-options::
   is `true`.
 `--target`::
   Creates the HTTP listener only on the specified target. Valid values
-  are as follows: +
+  are as follows:
++
   `server`;;
     Creates the HTTP listener on the default server instance. This is
     the default value.
@@ -137,34 +133,34 @@ asadmin-options::
 
 [[sthref273]]
 
-Operands
+=== Operands
 
 listener-id::
   The listener ID of the HTTP network listener.
 
 [[sthref274]]
 
-Examples
+=== Examples
 
 [[GSRFM484]][[sthref275]]
 
-Example 1   Creating an HTTP Network Listener
+==== Example 1   Creating an HTTP Network Listener
 
 The following command creates an HTTP network listener named
 `sampleListener` that uses a nondefault number of acceptor threads and
 is not enabled at runtime:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-http-listener --listeneraddress 0.0.0.0 --listenerport 7272 
---defaultvs server --servername host1.sun.com --acceptorthreads 100 
+asadmin> create-http-listener --listeneraddress 0.0.0.0 --listenerport 7272
+--defaultvs server --servername host1.sun.com --acceptorthreads 100
 --securityenabled=false --enabled=false sampleListener
 Command create-http-listener executed successfully.
 ----
 
 [[sthref276]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -173,7 +169,7 @@ Exit Status
 
 [[sthref277]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

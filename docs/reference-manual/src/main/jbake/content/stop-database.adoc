@@ -4,6 +4,7 @@ title=stop-database
 next=stop-domain.html
 prev=stop-cluster.html
 ~~~~~~
+
 stop-database
 =============
 
@@ -12,22 +13,22 @@ stop-database
 stop-database
 -------------
 
-stops the Java DB
+Stops the Java DB
 
 [[sthref2158]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] stop-database [--help] 
+asadmin [asadmin-options] stop-database [--help]
 [--dbuser db-user]
 [--dbhost host] [--dbport port-no]
 ----
 
 [[sthref2159]]
 
-Description
+=== Description
 
 The `stop-database` subcommand stops a process of the Java DB server.
 Java DB server is available for use with \{product---name} and is based
@@ -41,7 +42,7 @@ This subcommand is supported in local mode only.
 
 [[sthref2160]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,8 +52,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--dbuser`::
   The user name of the Java DB user that is to stop the server process.
-  This option is required only when Java DB user authentication is
-  enabled. +
+  This option is required only when Java DB user authentication is enabled. +
   If this option is omitted, no user is specified. By default, Java DB
   user authentication is disabled, so no user or password is required.
 `--dbhost`::
@@ -65,15 +65,15 @@ asadmin-options::
 
 [[sthref2161]]
 
-Examples
+=== Examples
 
 [[GSRFM765]][[sthref2162]]
 
-Example 1   Stopping Java DB
+==== Example 1   Stopping Java DB
 
 This example stops Java DB on host host1 and port 5001.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-database --dbhost host1 --dbport 5001
 Connection obtained for host: host1, port number 5001.
@@ -83,7 +83,7 @@ Command stop-database executed successfully.
 
 [[sthref2163]]
 
-Exit Status
+=== Exit Status
 
 The exit status applies to errors in executing the `asadmin` utility.
 For information on database errors, see the `derby.log` file. This file
@@ -99,7 +99,7 @@ as-install`/javadb`.
 
 [[sthref2164]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

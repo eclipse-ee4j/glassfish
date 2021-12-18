@@ -4,6 +4,7 @@ title=set-log-levels
 next=setup-local-dcom.html
 prev=set-log-file-format.html
 ~~~~~~
+
 set-log-levels
 ==============
 
@@ -12,13 +13,13 @@ set-log-levels
 set-log-levels
 --------------
 
-sets the log level for one or more loggers
+Sets the log level for one or more loggers
 
 [[sthref2057]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] set-log-levels [--help]
 [--target=target]
@@ -27,7 +28,7 @@ logger-name=logger-level[:logger-name=logger-level]*
 
 [[sthref2058]]
 
-Description
+=== Description
 
 The `set-log-levels` subcommand sets the log level for one or more
 loggers. Changes take effect dynamically. Depending on the log levels
@@ -37,7 +38,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2059]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,15 +48,15 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   The server instance or cluster for which log levels will be set. Valid
-  values are: +
+  values are:
   * `server` - The default server instance. If no target is specified
-  then log levels are set for the default server instance.
+    then log levels are set for the default server instance.
   * cluster-name - The name of a cluster.
   * instance-name - The name of a standalone server instance.
 
 [[sthref2060]]
 
-Operands
+=== Operands
 
 logger-name::
   The name of the logger. The `list-log-levels` subcommand can be used
@@ -67,16 +68,16 @@ logger-level::
 
 [[sthref2061]]
 
-Examples
+=== Examples
 
 [[GSRFM749]][[sthref2062]]
 
-Example 1   Setting a Log Level for a Logger
+==== Example 1   Setting a Log Level for a Logger
 
 This example sets the log level of the web container logger to
 `WARNING`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-levels jakarta.enterprise.system.container.web=WARNING
 Command set-log-level executed successfully.
@@ -84,12 +85,12 @@ Command set-log-level executed successfully.
 
 [[GSRFM750]][[sthref2063]]
 
-Example 2   Setting the Log Level for Multiple Loggers
+==== Example 2   Setting the Log Level for Multiple Loggers
 
 This example sets the log level of the web container logger to `FINE`
 and the log level of the EJB container logger to `SEVERE`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set-log-levels jakarta.enterprise.system.container.web=FINE:
 jakarta.enterprise.system.container.ejb=SEVERE
@@ -98,7 +99,7 @@ Command set-log-level executed successfully.
 
 [[sthref2064]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -107,7 +108,7 @@ Exit Status
 
 [[sthref2065]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

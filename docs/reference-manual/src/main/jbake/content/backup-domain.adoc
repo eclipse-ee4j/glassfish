@@ -4,6 +4,7 @@ title=backup-domain
 next=change-admin-password.html
 prev=attach.html
 ~~~~~~
+
 backup-domain
 =============
 
@@ -12,13 +13,13 @@ backup-domain
 backup-domain
 -------------
 
-performs a backup on the domain
+Performs a backup on the domain
 
 [[sthref39]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] backup-domain [--help]
 [--long[={false|true}]]
@@ -31,7 +32,7 @@ asadmin [asadmin-options] backup-domain [--help]
 
 [[sthref40]]
 
-Description
+=== Description
 
 The `backup-domain` subcommand backs up files under the named domain.
 
@@ -47,7 +48,7 @@ or be suspended using the `suspend-domain`(1) subcommand.
 
 [[sthref41]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,22 +58,27 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--long`::
 `-l`::
-  Displays detailed information about the backup operation. +
+  Displays detailed information about the backup operation.
++
   The default value is `false`.
 `--description`::
   Specifies a description to store in the backup file. The description
-  is displayed as part of the information about a backup file. +
-  The default value has this form: +
-[source,oac_no_warn]
+  is displayed as part of the information about a backup file.
++
+  The default value has this form:
++
+[source]
 ----
 domain-name backup created on YYYY_MM_DD by user user-name
 ----
 `--domaindir`::
   Specifies the domain root directory, the parent directory of the
-  domain to back up. +
+  domain to back up.
++
   The default value is as-install`/domains`.
 `--backupdir`::
-  Specifies the directory under which the backup file is to be stored. +
+  Specifies the directory under which the backup file is to be stored.
++
   The default value is as-install`/domains/`domain-dir`/backups`. If the
   domain is not in the default location, the location is
   domain-dir`/backups`.
@@ -83,16 +89,17 @@ domain-name backup created on YYYY_MM_DD by user user-name
 
 [[sthref42]]
 
-Operands
+=== Operands
 
 domain-name::
-  Specifies the name of the domain to be backed up. +
+  Specifies the name of the domain to be backed up.
++
   This operand is optional if only one domain exists in the
   \{product---name} installation.
 
 [[sthref43]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -101,7 +108,7 @@ Exit Status
 
 [[sthref44]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

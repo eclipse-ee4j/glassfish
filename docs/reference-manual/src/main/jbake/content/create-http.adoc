@@ -4,6 +4,7 @@ title=create-http
 next=create-http-health-checker.html
 prev=create-file-user.html
 ~~~~~~
+
 create-http
 ===========
 
@@ -12,20 +13,20 @@ create-http
 create-http
 -----------
 
-sets HTTP parameters for a protocol
+Sets HTTP parameters for a protocol
 
 [[sthref227]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-http [--help]
---default-virtual-server virtual-server 
-[--request-timeout-seconds timeout] 
-[--timeout-seconds timeout] 
-[--max-connection max-keepalive] 
-[--dns-lookup-enabled={false|true}] 
+--default-virtual-server virtual-server
+[--request-timeout-seconds timeout]
+[--timeout-seconds timeout]
+[--max-connection max-keepalive]
+[--dns-lookup-enabled={false|true}]
 [--servername server-name]
 [--target target]
 protocol-name
@@ -33,7 +34,7 @@ protocol-name
 
 [[sthref228]]
 
-Description
+=== Description
 
 The `create-http` subcommand creates a set of HTTP parameters for a
 protocol, which in turn configures one or more network listeners. This
@@ -41,7 +42,7 @@ subcommand is supported in remote mode only.
 
 [[sthref229]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -76,7 +77,8 @@ asadmin-options::
   used in URLs that the server sends to the client.
 `--target`::
   Creates the set of HTTP parameters only on the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Creates the set of HTTP parameters on the default server instance.
     This is the default value.
@@ -91,23 +93,23 @@ asadmin-options::
 
 [[sthref230]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol to which this HTTP parameter set applies.
 
 [[sthref231]]
 
-Examples
+=== Examples
 
 [[GSRFM476]][[sthref232]]
 
-Example 1   Using the `create-http` Subcommand
+==== Example 1   Using the `create-http` Subcommand
 
 The following command creates an HTTP parameter set for the protocol
 named `http-1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http --timeout-seconds 60 --default-virtual-server server http-1
 Command create-http executed successfully.
@@ -115,7 +117,7 @@ Command create-http executed successfully.
 
 [[sthref233]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -124,7 +126,7 @@ Exit Status
 
 [[sthref234]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

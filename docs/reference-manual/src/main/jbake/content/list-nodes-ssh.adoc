@@ -4,6 +4,7 @@ title=list-nodes-ssh
 next=list-password-aliases.html
 prev=list-nodes-dcom.html
 ~~~~~~
+
 list-nodes-ssh
 ==============
 
@@ -12,35 +13,30 @@ list-nodes-ssh
 list-nodes-ssh
 --------------
 
-lists all \{product---name} nodes that support communication over SSH in
-a domain
+Lists all \{product---name} nodes that support communication over SSH in a domain
 
 [[sthref1727]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-nodes-ssh [--help] 
+asadmin [asadmin-options] list-nodes-ssh [--help]
 [--long={false|true}]
 ----
 
 [[sthref1728]]
 
-Description
+=== Description
 
 The `list-nodes-ssh` subcommand lists all \{product---name} nodes that
 support communication over secure shell (SSH) in a domain.
 
-
 [NOTE]
-=======================================================================
-
+====
 To list all nodes in a domain regardless of the type of the node, run
 the link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
-
-=======================================================================
-
+====
 
 By default, the subcommand displays the following information for each
 node that is listed:
@@ -67,7 +63,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1729]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -77,8 +73,9 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--long`::
 `-l`::
-  Specifies whether the nodes are listed in long format. +
-  Possible values are as follows: +
+  Specifies whether the nodes are listed in long format.
+  Possible values are as follows:
+
   `true`;;
     The nodes are listed in long format.
   `false`;;
@@ -86,16 +83,16 @@ asadmin-options::
 
 [[sthref1730]]
 
-Examples
+=== Examples
 
 [[GSRFM697]][[sthref1731]]
 
-Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing \{product---name} Nodes
 
 This example displays the name, type, and host for all \{product---name}
 nodes that support communication over SSH in a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh
 sj02  SSH  sj02.example.com
@@ -105,13 +102,13 @@ Command list-nodes-ssh executed successfully.
 
 [[GSRFM698]][[sthref1732]]
 
-Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of \{product---name} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
 only the names of the \{product---name} nodes that support communication
 over SSH in a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh --terse=true
 sj02
@@ -120,23 +117,23 @@ sj01
 
 [[GSRFM699]][[sthref1733]]
 
-Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing \{product---name} Nodes in Long Format
 
 This example lists the \{product---name} nodes that support
 communication over SSH in a domain in long format.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-ssh --long=true
-NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY           
-sj02        SSH    sj02.example.com   /export/glassfish3   pmd-i-sj02, yml-i-sj02  
-sj01        SSH    sj01.example.com   /export/glassfish3   pmd-i-sj01, yml-i-sj01  
+NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
+sj02        SSH    sj02.example.com   /export/glassfish3   pmd-i-sj02, yml-i-sj02
+sj01        SSH    sj01.example.com   /export/glassfish3   pmd-i-sj01, yml-i-sj01
 Command list-nodes-ssh executed successfully.
 ----
 
 [[sthref1734]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -145,7 +142,7 @@ Exit Status
 
 [[sthref1735]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

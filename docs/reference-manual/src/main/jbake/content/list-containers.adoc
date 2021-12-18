@@ -4,6 +4,7 @@ title=list-containers
 next=list-context-services.html
 prev=list-connector-work-security-maps.html
 ~~~~~~
+
 list-containers
 ===============
 
@@ -12,20 +13,20 @@ list-containers
 list-containers
 ---------------
 
-lists application containers
+Lists application containers
 
 [[sthref1438]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-containers [--help]
 ----
 
 [[sthref1439]]
 
-Description
+=== Description
 
 The `list-containers` subcommand displays a list of application
 containers.
@@ -34,7 +35,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1440]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,15 +46,15 @@ asadmin-options::
 
 [[sthref1441]]
 
-Examples
+=== Examples
 
 [[GSRFM653]][[sthref1442]]
 
-Example 1   Listing the Application Containers
+==== Example 1   Listing the Application Containers
 
 This example lists the current application containers.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-containers
 List all known application containers
@@ -74,7 +75,7 @@ Command list-containers executed successfully.
 
 [[sthref1443]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -83,7 +84,7 @@ Exit Status
 
 [[sthref1444]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

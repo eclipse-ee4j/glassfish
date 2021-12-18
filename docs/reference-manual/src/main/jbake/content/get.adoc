@@ -4,6 +4,7 @@ title=get
 next=get-active-module-config.html
 prev=generate-jvm-report.html
 ~~~~~~
+
 get
 ===
 
@@ -16,11 +17,11 @@ gets the values of configurable or monitorable attributes
 
 [[sthref1209]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] get [--help] 
+asadmin [asadmin-options] get [--help]
 [--monitor={true|false}]
 [--aggregatedataonly={true|false}]
 (dotted-attribute--name)+
@@ -28,7 +29,7 @@ asadmin [asadmin-options] get [--help]
 
 [[sthref1210]]
 
-Description
+=== Description
 
 The `get` subcommand uses dotted names to get the names and values of
 configurable or monitorable attributes for \{product---name} elements.
@@ -44,37 +45,35 @@ link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
-=======================================================================
-
+====
 Characters that have special meaning to the shell or command
-interpreter, such as * (asterisk), should be quoted or escaped as
+interpreter, such as `*` (asterisk), should be quoted or escaped as
 appropriate to the shell, for example, by enclosing the argument in
 quotes. In multimode, quotes are needed only for arguments that include
 spaces, quotes, or backslash.
+====
 
-=======================================================================
 
-
-The following list shows common usage of the `get` subcommand with the *
+The following list shows common usage of the `get` subcommand with the `*`
 (asterisk):
 
-`get *` or `get *.*`::
+`get \*` or `get *.*`::
   Gets all values on all dotted name prefixes.
-`get domain*` or `get domain*.*`::
+`get domain\*` or `get domain*.*`::
   Gets all values on the dotted names that begin with `domain`.
-`get *config*.*.*`::
-  Gets all values on the dotted names that match `*config*.*`.
-`get domain.j2ee-applications.*.ejb-module.*.*`::
+`get \*config*.\*.*`::
+  Gets all values on the dotted names that match `\*config*.\*.*`.
+`get domain.j2ee-applications.\*.ejb-module.*.*`::
   Gets all values on all EJB modules of all applications.
-`get *web-modules.*.*`::
+`get \*web-modules.*.*`::
   Gets all values on all web modules whether in an application or
   standalone.
-`get *.*.*.*`::
+`get \*.*.\*.*`::
   Gets all values on all dotted names that have four parts.
 
 [[sthref1211]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -94,7 +93,7 @@ asadmin-options::
 
 [[sthref1212]]
 
-Operands
+=== Operands
 
 dotted-attribute-name::
   Identifies the attribute name in the dotted notation. At least one
@@ -103,15 +102,15 @@ dotted-attribute-name::
 
 [[sthref1213]]
 
-Examples
+=== Examples
 
 [[GSRFM619]][[sthref1214]]
 
-Example 1   Getting the Attributes of a Configurable Element
+==== Example 1   Getting the Attributes of a Configurable Element
 
 This example gets the attributes of `listener.http-listener-1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get server.http-service.http-listener.http-listener-1.*
 server.http-service.http-listener.http-listener-1.acceptor-threads = 1
@@ -132,13 +131,13 @@ Command get executed successfully.
 
 [[GSRFM620]][[sthref1215]]
 
-Example 2   Getting Monitorable Objects
+==== Example 2   Getting Monitorable Objects
 
 This example gets the configuration attributes for setting the
 monitoring level and shows whether they are enabled (LOW or HIGH) or
 disabled (OFF). The `jvm` component is enabled for monitoring.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get server.monitoring-service.module-monitoring-levels.*
 server.monitoring-service.module-monitoring-levels.connector-connection-pool=OFF
@@ -158,12 +157,12 @@ Command get executed successfully.
 
 [[GSRFM621]][[sthref1216]]
 
-Example 3   Getting Attributes and Values for a Monitorable Object
+==== Example 3   Getting Attributes and Values for a Monitorable Object
 
 This example gets all attributes and values of the `jvm` monitorable
 object.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get --monitor server.jvm.*
 server.jvm.HeapSize_Current = 45490176
@@ -187,7 +186,7 @@ Command get executed successfully.
 
 [[sthref1217]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -196,7 +195,7 @@ Exit Status
 
 [[sthref1218]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

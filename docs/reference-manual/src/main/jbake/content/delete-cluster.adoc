@@ -4,6 +4,7 @@ title=delete-cluster
 next=delete-config.html
 prev=delete-auth-realm.html
 ~~~~~~
+
 delete-cluster
 ==============
 
@@ -12,13 +13,13 @@ delete-cluster
 delete-cluster
 --------------
 
-deletes a \{product---name} cluster
+Deletes a \{product---name} cluster
 
 [[sthref609]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-cluster [--help]
 [--autohadboverride={true|false}] [--node-agent=node-agent--name]
@@ -27,10 +28,10 @@ cluster-name
 
 [[sthref610]]
 
-Description
+=== Description
 
-The `delete-cluster` subcommand deletes a \{product---name} cluster. A
-cluster can be deleted only if the cluster contains no \{product---name}
+The `delete-cluster` subcommand deletes a \{product---name} cluster.
+A cluster can be deleted only if the cluster contains no \{product---name}
 instances. If a cluster that you are deleting contains any instances,
 stop and delete the instances before deleting the cluster.
 
@@ -44,7 +45,7 @@ This command is supported in remote mode only.
 
 [[sthref611]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -65,22 +66,22 @@ asadmin-options::
 
 [[sthref612]]
 
-Operands
+=== Operands
 
 cluster-name::
   The name of the cluster to delete.
 
 [[sthref613]]
 
-Examples
+=== Examples
 
 [[GSRFM535]][[sthref614]]
 
-Example 1   Deleting a \{product---name} Cluster
+==== Example 1   Deleting a \{product---name} Cluster
 
 This example deletes the \{product---name} cluster `adccluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-cluster adccluster
 Command delete-cluster executed successfully.
@@ -88,7 +89,7 @@ Command delete-cluster executed successfully.
 
 [[sthref615]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -97,7 +98,7 @@ Exit Status
 
 [[sthref616]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

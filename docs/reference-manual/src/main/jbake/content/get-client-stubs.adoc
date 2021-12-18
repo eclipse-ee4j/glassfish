@@ -4,6 +4,7 @@ title=get-client-stubs
 next=get-health.html
 prev=get-active-module-config.html
 ~~~~~~
+
 get-client-stubs
 ================
 
@@ -12,23 +13,23 @@ get-client-stubs
 get-client-stubs
 ----------------
 
-retrieves the application JAR files needed to launch the application
+Retrieves the application JAR files needed to launch the application
 client.
 
 [[sthref1227]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] get-client-stubs [--help] 
+asadmin [asadmin-options] get-client-stubs [--help]
 --appname application_name
 local_directory_path
 ----
 
 [[sthref1228]]
 
-Description
+=== Description
 
 The `get-client-stubs` subcommand copies the required JAR files for an
 `AppClient` standalone module or each `AppClient` module in an
@@ -42,7 +43,7 @@ client JAR file is useful for running the application using the
 
 [[sthref1229]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,12 +58,13 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
   GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[sthref1230]]
 
-Operands
+=== Operands
 
 local_directory_path::
   The path to the local directory where the client stub JAR file should
@@ -70,13 +72,13 @@ local_directory_path::
 
 [[sthref1231]]
 
-Examples
+=== Examples
 
 [[GSRFM622]][[sthref1232]]
 
-Example 1   Using get-client-stubs
+==== Example 1   Using get-client-stubs
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get-client-stubs --appname myapplication /sample/example
 Command get-client-stubs executed successfully
@@ -84,7 +86,7 @@ Command get-client-stubs executed successfully
 
 [[sthref1233]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -93,7 +95,7 @@ Exit Status
 
 [[sthref1234]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

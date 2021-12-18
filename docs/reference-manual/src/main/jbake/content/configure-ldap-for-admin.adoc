@@ -4,6 +4,7 @@ title=configure-ldap-for-admin
 next=configure-managed-jobs.html
 prev=configure-lb-weight.html
 ~~~~~~
+
 configure-ldap-for-admin
 ========================
 
@@ -12,20 +13,20 @@ configure-ldap-for-admin
 configure-ldap-for-admin
 ------------------------
 
-configures the authentication realm named admin-realm for the given LDAP
+Configures the authentication realm named admin-realm for the given LDAP
 
 [[sthref93]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] configure-ldap-for-admin [--help]
 ----
 
 [[sthref94]]
 
-Description
+=== Description
 
 The `configure-ldap-for-admin` subcommand configures the authentication
 realm named `admin-realm` for the given LDAP. The
@@ -36,7 +37,7 @@ This command is supported in remote mode only.
 
 [[sthref95]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,13 +48,13 @@ asadmin-options::
 
 [[sthref96]]
 
-Examples
+=== Examples
 
 [[GSRFM455]][[sthref97]]
 
-Example 1    Configuring the LDAP Authentication Realm
+==== Example 1    Configuring the LDAP Authentication Realm
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> configure-ldap-for-admin 
 Enter the value for the basedn option>
@@ -64,7 +65,7 @@ in admin server's configuration.
 
 [[sthref98]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -73,7 +74,7 @@ Exit Status
 
 [[sthref99]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

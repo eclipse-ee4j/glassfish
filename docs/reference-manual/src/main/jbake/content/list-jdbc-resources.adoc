@@ -4,6 +4,7 @@ title=list-jdbc-resources
 next=list-jmsdest.html
 prev=list-jdbc-connection-pools.html
 ~~~~~~
+
 list-jdbc-resources
 ===================
 
@@ -12,21 +13,21 @@ list-jdbc-resources
 list-jdbc-resources
 -------------------
 
-lists all JDBC resources
+Lists all JDBC resources
 
 [[sthref1551]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-jdbc-resources [--help] 
+asadmin [asadmin-options] list-jdbc-resources [--help]
 [target target]
 ----
 
 [[sthref1552]]
 
-Description
+=== Description
 
 The `list-jdbc-resources` subcommand displays a list of the existing
 JDBC resources.
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1553]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,11 +47,12 @@ asadmin-options::
 
 [[sthref1554]]
 
-Operands
+=== Operands
 
 `--target`::
   This operand specifies which JDBC resources you can list. Usage of
-  this operand is optional. Valid values are: +
+  this operand is optional. Valid values are:
+
   `server`;;
     Lists the JDBC resources in the current server and is the default.
   `domain`;;
@@ -62,15 +64,15 @@ Operands
 
 [[sthref1555]]
 
-Examples
+=== Examples
 
 [[GSRFM671]][[sthref1556]]
 
-Example 1   Listing the JDBC Resources
+==== Example 1   Listing the JDBC Resources
 
 This example lists the current JDBC resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jdbc-resources
 jdbc/DerbyPool
@@ -79,7 +81,7 @@ Command list-jdbc-resources executed successfully.
 
 [[sthref1557]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -88,7 +90,7 @@ Exit Status
 
 [[sthref1558]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

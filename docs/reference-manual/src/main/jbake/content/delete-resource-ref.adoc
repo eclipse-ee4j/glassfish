@@ -4,6 +4,7 @@ title=delete-resource-ref
 next=delete-ssl.html
 prev=delete-resource-adapter-config.html
 ~~~~~~
+
 delete-resource-ref
 ===================
 
@@ -12,21 +13,21 @@ delete-resource-ref
 delete-resource-ref
 -------------------
 
-removes a reference to a resource
+Removes a reference to a resource
 
 [[sthref967]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-resource-ref [--help] 
+asadmin [asadmin-options] delete-resource-ref [--help]
 [--target target] reference_name
 ----
 
 [[sthref968]]
 
-Description
+=== Description
 
 The `delete-resource-ref` subcommand removes from a cluster or an
 unclustered server instance a reference to a resource (for example, a
@@ -46,7 +47,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref969]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,7 +57,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are removing the resource
-  reference. Valid values are +
+  reference. Valid values are
+
   `server`;;
     Removes the resource reference from the default server instance
     `server` and is the default value.
@@ -69,23 +71,23 @@ asadmin-options::
 
 [[sthref970]]
 
-Operands
+=== Operands
 
 reference_name::
   The name or JNDI name of the resource.
 
 [[sthref971]]
 
-Examples
+=== Examples
 
 [[GSRFM577]][[sthref972]]
 
-Example 1   Removing a Reference to a Resource
+==== Example 1   Removing a Reference to a Resource
 
 This example removes a reference to the JMS destination resource
 `jms/Topic` on the cluster `cluster1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-resource-ref --target cluster1 jms/Topic
 resource-ref jms/Topic deleted successfully.
@@ -94,7 +96,7 @@ Command delete-resource-ref executed successfully.
 
 [[sthref973]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -103,7 +105,7 @@ Exit Status
 
 [[sthref974]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

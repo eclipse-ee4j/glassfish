@@ -4,6 +4,7 @@ title=list-commands
 next=list-components.html
 prev=list-clusters.html
 ~~~~~~
+
 list-commands
 =============
 
@@ -12,23 +13,23 @@ list-commands
 list-commands
 -------------
 
-lists available commands
+Lists available commands
 
 [[sthref1381]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-commands [--help] 
-[--localonly={false|true}] [--remoteonly={false|true}] 
+asadmin [asadmin-options] list-commands [--help]
+[--localonly={false|true}] [--remoteonly={false|true}]
 
 pattern-list
 ----
 
 [[sthref1382]]
 
-Description
+=== Description
 
 The `list-commands` subcommand lists the `asadmin` subcommands.
 
@@ -42,7 +43,7 @@ This subcommand is supported in local mode and remote mode.
 
 [[sthref1383]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -63,7 +64,7 @@ asadmin-options::
 
 [[sthref1384]]
 
-Operands
+=== Operands
 
 pattern-list::
   A space-separated list of text strings on which to filter the list of
@@ -72,15 +73,15 @@ pattern-list::
 
 [[sthref1385]]
 
-Examples
+=== Examples
 
 [[GSRFM644]][[sthref1386]]
 
-Example 1   Listing the Local Subcommands
+==== Example 1   Listing the Local Subcommands
 
 This example lists only the local subcommands.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-commands --localonly=true
 ********** Local Commands **********
@@ -109,12 +110,12 @@ Command list-commands executed successfully.
 
 [[GSRFM645]][[sthref1387]]
 
-Example 2   Filtering the Subcommands That Are Listed
+==== Example 2   Filtering the Subcommands That Are Listed
 
 This example lists only the subcomands whose names contain the text
 `configure` or `set`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-commands configure set
 ********** Local Commands **********
@@ -133,12 +134,12 @@ Command list-commands executed successfully.
 
 [[GSRFM646]][[sthref1388]]
 
-Example 3   Listing All Subcommands
+==== Example 3   Listing All Subcommands
 
 This example first displays a list of the local subcommands, followed by
 a partial list of the remote subcommands.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-commands
 ********** Local Commands **********
@@ -206,7 +207,7 @@ delete-audit-module                     list-message-security-providers
 
 [[sthref1389]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -215,7 +216,7 @@ Exit Status
 
 [[sthref1390]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

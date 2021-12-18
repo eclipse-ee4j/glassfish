@@ -4,6 +4,7 @@ title=list-protocols
 next=list-resource-adapter-configs.html
 prev=list-protocol-finders.html
 ~~~~~~
+
 list-protocols
 ==============
 
@@ -12,13 +13,13 @@ list-protocols
 list-protocols
 --------------
 
-lists the existing protocols
+Lists the existing protocols
 
 [[sthref1764]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-protocols [--help]
 [target]
@@ -26,14 +27,14 @@ asadmin [asadmin-options] list-protocols [--help]
 
 [[sthref1765]]
 
-Description
+=== Description
 
 The `list-protocols` subcommand lists the existing protocols. This
 subcommand is supported in remote mode only.
 
 [[sthref1766]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1767]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to protocols for a specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the protocols for the default server instance. This is the
     default value.
@@ -62,15 +64,15 @@ target::
 
 [[sthref1768]]
 
-Examples
+=== Examples
 
 [[GSRFM705]][[sthref1769]]
 
-Example 1   Listing Protocols
+==== Example 1   Listing Protocols
 
 The following command lists all the protocols for the server instance:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-protocols
 admin-listener
@@ -82,7 +84,7 @@ Command list-protocols executed successfully.
 
 [[sthref1770]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -91,7 +93,7 @@ Exit Status
 
 [[sthref1771]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

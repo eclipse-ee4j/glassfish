@@ -4,6 +4,7 @@ title=list-auth-realms
 next=list-backups.html
 prev=list-audit-modules.html
 ~~~~~~
+
 list-auth-realms
 ================
 
@@ -12,28 +13,28 @@ list-auth-realms
 list-auth-realms
 ----------------
 
-lists the authentication realms
+Lists the authentication realms
 
 [[sthref1324]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-auth-realms [--help] 
+asadmin [asadmin-options] list-auth-realms [--help]
 [target]
 ----
 
 [[sthref1325]]
 
-Description
+=== Description
 
 The `list-auth-realms` subcommand lists the authentication realms. This
 subcommand is supported in remote mode only.
 
 [[sthref1326]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1327]]
 
-Operands
+=== Operands
 
 target::
   The name of the target for which you want to list the authentication
-  realms. +
+  realms.
+
   `server`;;
     Lists the realms for the default server instance `server` and is the
     default value.
@@ -61,15 +63,15 @@ target::
 
 [[sthref1328]]
 
-Examples
+=== Examples
 
 [[GSRFM638]][[sthref1329]]
 
-Example 1   Listing authentication realms
+==== Example 1   Listing authentication realms
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> list-auth-realms 
+asadmin> list-auth-realms
 file
 ldap
 certificate
@@ -77,12 +79,11 @@ db
 Command list-auth-realms executed successfully
 ----
 
-Where file, ldap, certificate, and db are the available authentication
-realms.
+Where file, ldap, certificate, and db are the available authentication realms.
 
 [[sthref1330]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -91,7 +92,7 @@ Exit Status
 
 [[sthref1331]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

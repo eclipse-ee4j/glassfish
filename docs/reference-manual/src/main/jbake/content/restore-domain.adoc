@@ -4,6 +4,7 @@ title=restore-domain
 next=rollback-transaction.html
 prev=restart-local-instance.html
 ~~~~~~
+
 restore-domain
 ==============
 
@@ -12,13 +13,13 @@ restore-domain
 restore-domain
 --------------
 
-restores files from backup
+Restores files from backup
 
 [[sthref2002]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] restore-domain [--help]
 [--long[={false|true}]]
@@ -32,7 +33,7 @@ asadmin [asadmin-options] restore-domain [--help]
 
 [[sthref2003]]
 
-Description
+=== Description
 
 This command restores files under the domain from a backup directory.
 
@@ -40,7 +41,7 @@ The `restore-domain` command is supported in local mode only.
 
 [[sthref2004]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,12 +57,12 @@ asadmin-options::
   Specifies the name of the backup file to use as the source.
 `--domaindir`::
   Specifies the domain root directory, the parent directory of the
-  domain to restore. +
+  domain to restore.
   The default value is as-install`/domains`.
 `--backupdir`::
   Specifies the directory under which the backup file is stored. +
-  The default value is as-install`/domains/`domain-dir`/backups`. If the
-  domain is not in the default location, the location is
+  The default value is as-install`/domains/`domain-dir`/backups`.
+  If the domain is not in the default location, the location is
   domain-dir`/backups`.
 `--backupconfig`::
   (Supported only in Oracle GlassFish Server.) The name of the domain
@@ -75,7 +76,7 @@ asadmin-options::
 
 [[sthref2005]]
 
-Operands
+=== Operands
 
 domain-name::
   Specifies the name of the domain to restore. +
@@ -87,7 +88,7 @@ domain-name::
 
 [[sthref2006]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -96,7 +97,7 @@ Exit Status
 
 [[sthref2007]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

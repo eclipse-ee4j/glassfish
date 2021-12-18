@@ -4,6 +4,7 @@ title=add-library
 next=add-resources.html
 prev=manvol1.html
 ~~~~~~
+
 add-library
 ===========
 
@@ -12,22 +13,22 @@ add-library
 add-library
 -----------
 
-adds one or more library JAR files to \{product---name}
+Adds one or more library JAR files to \{product---name}
 
 [[sthref7]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] add-library [--help] 
+asadmin [asadmin-options] add-library [--help]
 [--type={common|ext|app}] [--upload={false|true}]
 library-file-path [library-file-path ... ]
 ----
 
 [[sthref8]]
 
-Description
+=== Description
 
 The `add-library` subcommand adds one or more library archive files to
 \{product---name}.
@@ -39,70 +40,73 @@ The library-file-path operand is the path to the JAR file that contains
 the library to be added. To specify multiple libraries, specify multiple
 paths separated by spaces.
 
-
 [NOTE]
-=======================================================================
-
+====
 The library archive file is added to the DAS. For common and extension
 libraries, you must restart the DAS so the libraries are picked up by
 the server runtime. To add the libraries to other server instances,
 synchronize the instances with the DAS by restarting them.
-
-=======================================================================
-
+====
 
 This subcommand is supported in remote mode only.
 
 [[sthref9]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
   options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+
 `--help`::
+
 `-?`::
   Displays the help text for the subcommand.
+
 `--type`::
   Specifies the library type and the \{product---name} directory to
-  which the library is added. Valid values are as follows: +
+  which the library is added. Valid values are as follows:
   `common`;;
     Adds the library files to the Common class loader directory,
-    domain-dir`/lib`. This is the default.
+    domain-dir``/lib``. This is the default.
   `ext`;;
     Adds the library files to the Java optional package directory,
-    domain-dir`/lib/ext`.
+    domain-dir``/lib/ext``.
   `app`;;
     Adds the library files to the application-specific class loader
-    directory, domain-dir`/lib/applibs`. +
-  For more information about these directories, see
-  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-  Edition Application Development Guide.
+    directory, domain-dir``/lib/applibs``.
+
++
+For more information about these directories, see
+"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]"
+in GlassFish Server Open Source Edition Application Development Guide.
+
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
-  situations, this option can be omitted. +
-  Valid values are as follows: +
+  situations, this option can be omitted.
+  Valid values are as follows:
   `false`;;
     The subcommand does not upload the file and attempts to access the
     file through the specified file name. If the DAS cannot access the
     file, the subcommand fails. +
     For example, the DAS might be running as a different user than the
     administration user and does not have read access to the file. In
-    this situation, the subcommand fails if the `--upload` option is
-    `false`.
+    this situation, the subcommand fails if the `--upload` option is `false`.
   `true`;;
-    The subcommand uploads the file to the DAS over the network
-    connection. +
-  The default value depends on whether the DAS is on the host where the
-  subcommand is run or is on a remote host. +
-  * If the DAS is on the host where the subcommand is run, the default
-  is `false`.
-  * If the DAS is on a remote host, the default is `true`. +
-  If a directory filepath is specified, this option is ignored.
+    The subcommand uploads the file to the DAS over the network connection.
+
++
+The default value depends on whether the DAS is on the host where the
+subcommand is run or is on a remote host.
+
+* If the DAS is on the host where the subcommand is run, the default is `false`.
+* If the DAS is on a remote host, the default is `true`.
++
+If a directory filepath is specified, this option is ignored.
 
 [[sthref10]]
 
-Operands
+=== Operands
 
 library-file-path::
   The paths to the archive files that contain the libraries that are to
@@ -113,17 +117,17 @@ library-file-path::
 
 [[sthref11]]
 
-Examples
+=== Examples
 
 [[GSRFM824]][[sthref12]]
 
-Example 1   Adding Libraries
+==== Example 1   Adding Libraries
 
 This example adds the library in the archive file `mylib.jar` to the
 application-specific class loader directory on the default server
 instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> add-library --type app /tmp/mylib.jar
 Command add-library executed successfully.
@@ -131,7 +135,7 @@ Command add-library executed successfully.
 
 [[sthref13]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -140,7 +144,7 @@ Exit Status
 
 [[sthref14]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

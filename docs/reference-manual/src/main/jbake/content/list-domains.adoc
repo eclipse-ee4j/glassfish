@@ -4,6 +4,7 @@ title=list-domains
 next=list-file-groups.html
 prev=list-custom-resources.html
 ~~~~~~
+
 list-domains
 ============
 
@@ -12,13 +13,13 @@ list-domains
 list-domains
 ------------
 
-lists the domains in the specified directory
+Lists the domains in the specified directory
 
 [[sthref1462]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-domains [--help]
 [--domaindir domaindir]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] list-domains [--help]
 
 [[sthref1463]]
 
-Description
+=== Description
 
 The `list-domains` subcommand lists the domains in the specified domains
 directory. If the domains directory is not specified, the domains in the
@@ -40,7 +41,7 @@ This subcommand is supported in local mode only.
 
 [[sthref1464]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -66,15 +67,15 @@ asadmin-options::
 
 [[sthref1465]]
 
-Examples
+=== Examples
 
 [[GSRFM656]][[sthref1466]]
 
-Example 1   Listing Domains
+==== Example 1   Listing Domains
 
 This example lists the domains in the default directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-domains
 Name: domain1 Status: Running
@@ -85,7 +86,7 @@ Command list-domains executed successfully
 
 [[sthref1467]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -94,7 +95,7 @@ Exit Status
 
 [[sthref1468]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

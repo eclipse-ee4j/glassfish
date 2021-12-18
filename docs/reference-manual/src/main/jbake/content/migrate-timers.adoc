@@ -4,6 +4,7 @@ title=migrate-timers
 next=monitor.html
 prev=login.html
 ~~~~~~
+
 migrate-timers
 ==============
 
@@ -12,22 +13,22 @@ migrate-timers
 migrate-timers
 --------------
 
-moves EJB timers when a clustered instance was stopped or has crashed
+Moves EJB timers when a clustered instance was stopped or has crashed
 
 [[sthref1882]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] migrate-timers [--help] 
+asadmin [asadmin-options] migrate-timers [--help]
 [--target target_server_name]
 server_name
 ----
 
 [[sthref1883]]
 
-Description
+=== Description
 
 The `migrate-timers` subcommand moves EJB timers to a specified server
 when a server instance stops or crashes, if automatic timer migration is
@@ -36,7 +37,7 @@ in remote mode only.
 
 [[sthref1884]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,7 +55,7 @@ asadmin-options::
 
 [[sthref1885]]
 
-Operands
+=== Operands
 
 server_name::
   This is the server instance on which the timers are currently located.
@@ -63,16 +64,16 @@ server_name::
 
 [[sthref1886]]
 
-Examples
+=== Examples
 
 [[GSRFM722]][[sthref1887]]
 
-Example 1   Migrating Timers
+==== Example 1   Migrating Timers
 
 This example shows how to migrate timers from the server named
 `instance1` to a server named `instance2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin>migrate-timers --target instance2 instance1
 This command was successfully executed.
@@ -80,7 +81,7 @@ This command was successfully executed.
 
 [[sthref1888]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -89,7 +90,7 @@ Exit Status
 
 [[sthref1889]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

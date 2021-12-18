@@ -4,6 +4,7 @@ title=disable
 next=disable-http-lb-application.html
 prev=deploydir.html
 ~~~~~~
+
 disable
 =======
 
@@ -12,21 +13,21 @@ disable
 disable
 -------
 
-disables the component
+Disables the component
 
 [[sthref1039]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] disable [--help] 
+asadmin [asadmin-options] disable [--help]
 [--target target_name] component_name
 ----
 
 [[sthref1040]]
 
-Description
+=== Description
 
 The `disable` subcommand immediately disables the specified deployed
 component. If the component has not been deployed, an error message is
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1041]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target on which you are disabling the
-  component. Valid values are: +
+  component. Valid values are:
+
   `server`;;
     Disables the component on the default server instance `server` and
     is the default value.
@@ -60,7 +62,7 @@ asadmin-options::
 
 [[sthref1042]]
 
-Operands
+=== Operands
 
 component_name::
   name of the component to be disabled. +
@@ -76,15 +78,15 @@ component_name::
 
 [[sthref1043]]
 
-Examples
+=== Examples
 
 [[GSRFM590]][[sthref1044]]
 
-Example 1   Disabling a Component
+==== Example 1   Disabling a Component
 
 This example disables the deployed component `sampleApp`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable sampleApp
 Command disable executed successfully
@@ -92,7 +94,7 @@ Command disable executed successfully
 
 [[sthref1045]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -101,7 +103,7 @@ Exit Status
 
 [[sthref1046]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=ping-connection-pool
 next=ping-node-dcom.html
 prev=osgi-shell.html
 ~~~~~~
+
 ping-connection-pool
 ====================
 
@@ -12,22 +13,22 @@ ping-connection-pool
 ping-connection-pool
 --------------------
 
-tests if a connection pool is usable
+Tests if a connection pool is usable
 
 [[sthref1926]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] ping-connection-pool [--help] 
-pool_name 
+asadmin [asadmin-options] ping-connection-pool [--help]
+pool_name
 [--appname application [--modulename module]
 ----
 
 [[sthref1927]]
 
-Description
+=== Description
 
 The `ping-connection-pool` subcommand tests if an existing JDBC or
 connector connection pool is usable . For example, if you create a new
@@ -54,14 +55,14 @@ lookup using the `java:module` prefix.
 
 The `jndi-name` for application-scoped-resources or
 module-scoped-resources are specified using the format
-`java:app/`jdbc/myDataSource or
-`java:module/`jdbc/myModuleLevelDataSource. This naming scope is defined
-in the Java EE 6 Specification
+``java:app/``jdbc/myDataSource or
+``java:module/``jdbc/myModuleLevelDataSource.
+This naming scope is defined in the Java EE 6 Specification
 (`http://download.oracle.com/javaee/6/api/`).
 
 [[sthref1928]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -77,23 +78,23 @@ asadmin-options::
 
 [[sthref1929]]
 
-Operands
+=== Operands
 
 pool_name::
   Name of the connection pool to be reinitialized.
 
 [[sthref1930]]
 
-Examples
+=== Examples
 
 [[GSRFM727]][[sthref1931]]
 
-Example 1   Contacting a Connection Pool
+==== Example 1   Contacting a Connection Pool
 
 This example tests to see if the connection pool named `DerbyPool` is
 usable.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> ping-connection-pool DerbyPool
 Command ping-connection-pool executed successfully
@@ -101,7 +102,7 @@ Command ping-connection-pool executed successfully
 
 [[sthref1932]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -110,7 +111,7 @@ Exit Status
 
 [[sthref1933]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

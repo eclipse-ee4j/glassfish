@@ -4,6 +4,7 @@ title=osgi-shell
 next=ping-connection-pool.html
 prev=osgi.html
 ~~~~~~
+
 osgi-shell
 ==========
 
@@ -12,14 +13,14 @@ osgi-shell
 osgi-shell
 ----------
 
-provides interactive access to the Apache Felix Gogo remote shell for
+Provides interactive access to the Apache Felix Gogo remote shell for
 the execution of OSGi shell commands
 
 [[sthref1918]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] osgi-shell [--help]
 [--file file]
@@ -29,7 +30,7 @@ asadmin [asadmin-options] osgi-shell [--help]
 
 [[sthref1919]]
 
-Description
+=== Description
 
 The `osgi-shell` subcommand provides interactive access to the Apache
 Felix Gogo remote shell for the execution of OSGi shell commands. The
@@ -52,7 +53,7 @@ server instance whose shell is being accessed must be running.
 
 [[sthref1920]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -72,17 +73,17 @@ asadmin-options::
 
 [[sthref1921]]
 
-Examples
+=== Examples
 
 [[GSRFM891]][[sthref1922]]
 
-Example 1   Listing Apache Felix Gogo Remote Shell Commands
+==== Example 1   Listing Apache Felix Gogo Remote Shell Commands
 
 This example lists Apache Felix Gogo remote shell commands.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi-shell
 Use "exit" to exit and "help" for online help.
@@ -111,14 +112,14 @@ gogo$
 
 [[GSRFM892]][[sthref1923]]
 
-Example 2   Running a Remote Shell Command
+==== Example 2   Running a Remote Shell Command
 
 This example runs the Felix Remote Shell Command `lb` without any
 arguments to list all installed OSGi bundles.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi-shell
 Use "exit" to exit and "help" for online help.
@@ -135,7 +136,7 @@ gogo$
 
 [[sthref1924]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -144,7 +145,7 @@ Exit Status
 
 [[sthref1925]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

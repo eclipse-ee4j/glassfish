@@ -4,6 +4,7 @@ title=capture-schema
 next=package-appclient.html
 prev=asadmin.html
 ~~~~~~
+
 capture-schema
 ==============
 
@@ -12,14 +13,13 @@ capture-schema
 capture-schema
 --------------
 
-stores the database metadata (schema) in a file for use in mapping and
-execution
+Stores the database metadata (schema) in a file for use in mapping and execution
 
 [[sthref2381]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 capture-schema -username name -password password
 [-dburl url] [-driver jdbc_driver_classname]
@@ -29,7 +29,7 @@ capture-schema -username name -password password
 
 [[sthref2382]]
 
-Description
+=== Description
 
 Stores the database metadata (schema) in a file.
 
@@ -43,7 +43,7 @@ grant the database user running the `capture-schema` command the
 
 [[sthref2383]]
 
-Options
+=== Options
 
 `-username`::
   user name for authenticating access to a database.
@@ -64,8 +64,7 @@ Options
   The specified schema name must be uppercase.
 `-table`::
   name of a table; multiple table names can be specified. If no table is
-  specified, all the tables in the database or named schema are
-  captured. +
+  specified, all the tables in the database or named schema are captured. +
   The specified table name or names are case sensitive. Be sure to match
   the case of the previously created table names.
 `-out`::
@@ -75,13 +74,13 @@ Options
 
 [[sthref2384]]
 
-Examples
+=== Examples
 
 [[GSRFM813]][[sthref2385]]
 
-Example 1   Using the `capture-schema` command
+==== Example 1   Using the `capture-schema` command
 
-[source,oac_no_warn]
+[source]
 ----
 capture-schema -username cantiflas -password enigma
 -dburl jdbc:oracle:thin:@sadbuttrue:1521:ora817
@@ -99,7 +98,7 @@ executed.
 
 [[sthref2386]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

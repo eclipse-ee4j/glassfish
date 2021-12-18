@@ -4,6 +4,7 @@ title=recover-transactions
 next=redeploy.html
 prev=ping-node-ssh.html
 ~~~~~~
+
 recover-transactions
 ====================
 
@@ -12,22 +13,22 @@ recover-transactions
 recover-transactions
 --------------------
 
-manually recovers pending transactions
+Manually recovers pending transactions
 
 [[sthref1952]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] recover-transactions [--help] 
+asadmin [asadmin-options] recover-transactions [--help]
 [--transactionlogdir transaction_log_dir]
 [--target target_server_name] server_name
 ----
 
 [[sthref1953]]
 
-Description
+=== Description
 
 The `recover-transactions` subcommand manually recovers pending
 transactions.
@@ -52,7 +53,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1954]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -74,13 +75,15 @@ asadmin-options::
 
 [[sthref1955]]
 
-Operands
+=== Operands
 
 server_name::
   For a stand-alone server, the value of this operand is typically
   `server`. Transactions are recovered only if a resource fails, but the
-  server is still running. +
-  For an installation of multiple server instances, the value of this
+  server is still running.
+
++
+For an installation of multiple server instances, the value of this
   operand is the name of the server for which the recovery is required.
   The in-flight transactions on this server will be recovered. If this
   server is running, recovery is performed by the same server. In this
@@ -91,13 +94,13 @@ server_name::
 
 [[sthref1956]]
 
-Examples
+=== Examples
 
 [[GSRFM733]][[sthref1957]]
 
-Example 1   Recovering transactions on a running server
+==== Example 1   Recovering transactions on a running server
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin recover-transactions server1
 Transaction recovered.
@@ -105,9 +108,9 @@ Transaction recovered.
 
 [[GSRFM734]][[sthref1958]]
 
-Example 2   Recovering transactions for a server that is not running
+==== Example 2   Recovering transactions for a server that is not running
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin recover-transactions --transactionlogdir /logs/tx --target server1 server2
 Transaction recovered.
@@ -115,7 +118,7 @@ Transaction recovered.
 
 [[sthref1959]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -124,7 +127,7 @@ Exit Status
 
 [[sthref1960]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
@@ -132,8 +135,8 @@ link:freeze-transaction-service.html#freeze-transaction-service-1[`freeze-transa
 link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)],
 link:unfreeze-transaction-service.html#unfreeze-transaction-service-1[`unfreeze-transaction-service`(1)]
 
-"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in GlassFish Server Open
-Source Edition Administration Guide
+"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]"
+in GlassFish Server Open Source Edition Administration Guide
 
 "http://docs.oracle.com/javaee/7/tutorial/doc/transactions.html[Transactions]"
 in The Java EE 8 Tutorial

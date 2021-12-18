@@ -4,6 +4,7 @@ title=uninstall-node-dcom
 next=uninstall-node-ssh.html
 prev=uninstall-node.html
 ~~~~~~
+
 uninstall-node-dcom
 ===================
 
@@ -12,13 +13,13 @@ uninstall-node-dcom
 uninstall-node-dcom
 -------------------
 
-uninstalls \{product---name} software from specified DCOM-enabled hosts
+Uninstalls \{product---name} software from specified DCOM-enabled hosts
 
 [[sthref2215]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] uninstall-node-dcom [--help]
 [--installdir as-install-parent]
@@ -29,7 +30,7 @@ host-list
 
 [[sthref2216]]
 
-Description
+=== Description
 
 The `uninstall-node-dcom` subcommand uninstalls \{product---name}
 software from the hosts that are specified as the operand of the
@@ -38,19 +39,15 @@ Model (DCOM) remote protocol to be configured on the host where the
 subcommand is run and on each host where the \{product---name} software
 is being uninstalled.
 
-
 [NOTE]
-=======================================================================
-
+====
 To uninstall \{product---name} software on hosts that use secure shell
 (SSH), use the
 link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
 subcommand.
+====
 
-=======================================================================
-
-
-By default, if any node except the predefined node `localhost-`domain
+By default, if any node except the predefined node ``localhost-``domain
 resides on any host from which \{product---name} software is being
 uninstalled, the subcommand fails. To uninstall the \{product---name}
 software from a host on which user-defined nodes reside, set the
@@ -64,8 +61,7 @@ the subcommand fails.
 If multiple hosts are specified, the configuration of the following
 items must be the same on all hosts:
 
-* Parent of the base installation directory for the \{product---name}
-software
+* Parent of the base installation directory for the \{product---name} software
 * Windows user
 * Windows domain
 
@@ -76,7 +72,7 @@ This subcommand is supported in local mode only.
 
 [[sthref2217]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -107,23 +103,25 @@ asadmin-options::
 `--force`::
   Specifies whether the subcommand uninstalls the \{product---name}
   software from a host even if a user-defined node resides on the host.
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
     If the `--force` option is `false`, the subcommand removes only the
     \{product---name} software files. Other content if the parent of the
-    base installation directory, such as configuration files, are not
-    removed.
+    base installation directory, such as configuration files, are not removed.
   `true`;;
     The subcommand uninstalls the \{product---name} software from the
-    host even if a user-defined node resides on the host. +
-    If the `--force` option is `true`, the subcommand removes the entire
+    host even if a user-defined node resides on the host.
+
++
+If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
 [[sthref2218]]
 
-Operands
+=== Operands
 
 host-list::
   A space-separated list of the names of the hosts from which the
@@ -131,17 +129,16 @@ host-list::
 
 [[sthref2219]]
 
-Examples
+=== Examples
 
 [[GSRFM776]][[sthref2220]]
 
-Example 1   Uninstalling \{product---name} Software From the Default
-Location
+==== Example 1   Uninstalling \{product---name} Software From the Default Location
 
 This example uninstalls \{product---name} software on the hosts
 `wpmdl1.example.com` and `wpmdl2.example.com` from the default location.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> uninstall-node-dcom wpmdl1 wpmdl2
 Command uninstall-node-dcom executed successfully.
@@ -149,7 +146,7 @@ Command uninstall-node-dcom executed successfully.
 
 [[GSRFM777]][[sthref2221]]
 
-Example 2   Forcibly Uninstalling \{product---name} Software
+==== Example 2   Forcibly Uninstalling \{product---name} Software
 
 This example uninstalls \{product---name} software on the host
 `xkyd.example.com`.
@@ -157,7 +154,7 @@ This example uninstalls \{product---name} software on the host
 The software is uninstalled even if a user-defined node resides on the
 host. The entire content of the `C:\glassfish3` directory is removed.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> uninstall-node-dcom --force --installdir C:\glassfish3 xkyd.example.com
 Command uninstall-node-dcom executed successfully.
@@ -165,7 +162,7 @@ Command uninstall-node-dcom executed successfully.
 
 [[sthref2222]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -174,7 +171,7 @@ Exit Status
 
 [[sthref2223]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

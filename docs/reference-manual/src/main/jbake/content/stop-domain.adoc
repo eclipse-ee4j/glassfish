@@ -4,6 +4,7 @@ title=stop-domain
 next=stop-instance.html
 prev=stop-database.html
 ~~~~~~
+
 stop-domain
 ===========
 
@@ -12,23 +13,23 @@ stop-domain
 stop-domain
 -----------
 
-stops the Domain Administration Server of the specified domain
+Stops the Domain Administration Server of the specified domain
 
 [[sthref2165]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] stop-domain [--help] 
-[--domaindir domaindir] 
-[--force={true|false}] [--kill={false|true}] 
+asadmin [asadmin-options] stop-domain [--help]
+[--domaindir domaindir]
+[--force={true|false}] [--kill={false|true}]
 [domain-name]
 ----
 
 [[sthref2166]]
 
-Description
+=== Description
 
 The `stop-domain` subcommand stops the Domain Administration Server
 (DAS) of the specified domain. If the domain directory is not specified,
@@ -40,12 +41,11 @@ This subcommand is supported in local or remote mode. If you specify a
 host name, the subcommand assumes you are operating in remote mode,
 which means you must correctly authenticate to the remote server. In
 local mode, you normally do not need to authenticate to the server as
-long as you are running the subcommand as the same user who started the
-server.
+long as you are running the subcommand as the same user who started the server.
 
 [[sthref2167]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -60,16 +60,19 @@ asadmin-options::
   stopped.
 `--force`::
   Specifies whether the domain is forcibly stopped immediately. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The domain is forcibly stopped immediately (default).
   `false`;;
     The subcommand waits until all threads that are associated with the
     domain are exited before stopping the domain.
+
 `--kill`::
   Specifies whether the domain is killed by using functionality of the
   operating system to terminate the domain process. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     The domain is not killed. The subcommand uses functionality of the
     Java platform to terminate the domain process (default).
@@ -79,7 +82,7 @@ asadmin-options::
 
 [[sthref2168]]
 
-Operands
+=== Operands
 
 domain-name::
   The name of the domain you want to stop. Default is the name specified
@@ -87,16 +90,16 @@ domain-name::
 
 [[sthref2169]]
 
-Examples
+=== Examples
 
 [[GSRFM766]][[sthref2170]]
 
-Example 1   Stopping a Domain
+==== Example 1   Stopping a Domain
 
 This example stops the domain named `sampleDomain` in the default
 domains directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-domain sampleDomain
 Waiting for the domain to stop .................
@@ -105,7 +108,7 @@ Command stop-domain executed successfully.
 
 [[sthref2171]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -114,7 +117,7 @@ Exit Status
 
 [[sthref2172]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

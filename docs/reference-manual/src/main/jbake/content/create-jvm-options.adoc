@@ -4,6 +4,7 @@ title=create-jvm-options
 next=create-lifecycle-module.html
 prev=create-jndi-resource.html
 ~~~~~~
+
 create-jvm-options
 ==================
 
@@ -12,22 +13,22 @@ create-jvm-options
 create-jvm-options
 ------------------
 
-creates options for the Java application launcher
+Creates options for the Java application launcher
 
 [[sthref369]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-jvm-options [--help] 
-[--target target] [--profiler={true|false}] 
+asadmin [asadmin-options] create-jvm-options [--help]
+[--target target] [--profiler={true|false}]
 (jvm-option-name=jvm-option-value) [:jvm-option-name=jvm-option-value*]
 ----
 
 [[sthref370]]
 
-Description
+=== Description
 
 The `create-jvm-options` subcommand creates command-line options that
 are passed to the Java application launcher when \{product---name} is
@@ -48,13 +49,19 @@ subcommand to create the profiler.
 This subcommand can be used to create the following types of options:
 
 * Java system properties. These options are set through the `-D` option
-of the Java application launcher. For example: +
-`-Djava.security.manager` +
+of the Java application launcher. For example:
++
+`-Djava.security.manager`
++
 `-Denvironment=Production`
+
 * Startup parameters for the Java application launcher. These options
-are preceded by the dash character (`-`). For example: +
-`--XX:PermSize=`size +
-`-Xmx1024m` +
+are preceded by the dash character (`-`). For example:
++
+``--XX:PermSize=``size
++
+`-Xmx1024m`
++
 `-d64`
 
 If the subcommand specifies an option that already exists, the command
@@ -62,13 +69,11 @@ does not re-create the option.
 
 
 [NOTE]
-=======================================================================
-
+====
 Ensure that any option that you create is valid. The subcommand might
 allow you to create an invalid option, but such an invalid option can
 cause startup to fail.
-
-=======================================================================
+====
 
 
 An option can be verified by examining the server log after
@@ -83,17 +88,23 @@ Whether a restart is required depends on the type of option.
 
 * Restart is not required for Java system properties whose names do not
 start with `-Djava.` or `-Djavax.` (including the trailing period). For
-example, restart is not required for the following Java system property: +
+example, restart is not required for the following Java system property:
++
 `-Denvironment=Production`
+
 * Restart is required for the following options:
 
 ** Java system properties whose names start with `-Djava.` or `-Djavax.`
-(including the trailing period). For example: +
+(including the trailing period). For example:
++
 `-Djava.security.manager`
 
-** Startup parameters for the Java application launcher. For example: +
-`-client` +
-`-Xmx1024m` +
+** Startup parameters for the Java application launcher. For example:
++
+`-client`
++
+`-Xmx1024m`
++
 `-d64`
 
 To restart the DAS, use the
@@ -103,7 +114,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref371]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -114,7 +125,8 @@ asadmin-options::
 `--target`::
   Specifies the target on which you are creating Java application
   launcher options. +
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Specifies the DAS (default).
   instance-name;;
@@ -123,6 +135,7 @@ asadmin-options::
     Specifies a cluster.
   configuration-name;;
     Specifies a named configuration.
+
 `--profiler`::
   Indicates whether the Java application launcher options are for the
   profiler. The profiler must exist for this option to be true. Default
@@ -130,56 +143,52 @@ asadmin-options::
 
 [[sthref372]]
 
-Operands
+=== Operands
 
 jvm-option-name::
   One or more options delimited by a colon (:). The format of an option
-  depends on the following: +
-  * If the option has a name and a value, the format is
-  option-name=value.
-  * If the option has only a name, the format is option-name. For
-  example, `-Xmx2048m`.
+  depends on the following:
+
+  * If the option has a name and a value, the format is option-name=value.
+  * If the option has only a name, the format is option-name.
+    For example, `-Xmx2048m`.
   * If the first option name could be misinterpreted as one or more
-  `asadmin` short options, the format is `--` option-name. For example,
-  `-server` in the following command could be misinterpreted as `-se`,
-  the `asadmin` short forms for `--secure` and `--echo`: +
-[source,oac_no_warn]
+    `asadmin` short options, the format is `--` option-name. For example,
+    `-server` in the following command could be misinterpreted as `-se`,
+    the `asadmin` short forms for `--secure` and `--echo`:
++
+[source]
 ----
 create-jvm-options -server
 ----
-::
-  To create the JVM option `-server`, instead use the command: +
-[source,oac_no_warn]
++
+To create the JVM option `-server`, instead use the command:
++
+[source]
 ----
 create-jvm-options -- -server
 ----
-:: +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 If an option name or option value contains a colon, the backslash
 (`\`) must be used to escape the colon in the name or value. Other
 characters might also require an escape character. For more
 information about escape characters in subcommand options, see the
 link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
-
-|=======================================================================
-
+====
 
 [[sthref373]]
 
-Examples
+=== Examples
 
 [[GSRFM500]][[sthref374]]
 
-Example 1   Setting Java System Properties
+==== Example 1   Setting Java System Properties
 
 This example sets multiple Java system properties.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options -Dunixlocation=/root/example:
 -Dvariable=\$HOME:-Dwindowslocation=d\:\\sun\\appserver:-Doption1=-value1
@@ -189,12 +198,12 @@ Command create-jvm-options executed successfully.
 
 [[GSRFM501]][[sthref375]]
 
-Example 2   Setting a Startup Parameter for the Java Application
+==== Example 2   Setting a Startup Parameter for the Java Application
 Launcher
 
 This example sets the maximum available heap size to 1024.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options -Xmx1024m
 created 1 option(s)
@@ -203,13 +212,13 @@ Command create-jvm-options executed successfully.
 
 [[GSRFM502]][[sthref376]]
 
-Example 3   Setting Multiple Startup Parameters for the Java Application
+==== Example 3   Setting Multiple Startup Parameters for the Java Application
 Launcher
 
 This example sets the maximum available heap size to 1024 and requests
 details about garbage collection.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options "-Xmx1024m:-XX\:+PrintGCDetails"
 created 1 option(s)
@@ -221,11 +230,11 @@ subcommand reports that only one option was set.
 
 [[GSRFM503]][[sthref377]]
 
-Example 4   Setting a JVM Startup Parameter for the Profiler
+==== Example 4   Setting a JVM Startup Parameter for the Profiler
 
 This example sets a JVM startup parameter for the profiler.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options --profiler=true -XX\:MaxPermSize=192m
 created 1 option(s)
@@ -234,7 +243,7 @@ Command create-jvm-options executed successfully.
 
 [[sthref378]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -243,7 +252,7 @@ Exit Status
 
 [[sthref379]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

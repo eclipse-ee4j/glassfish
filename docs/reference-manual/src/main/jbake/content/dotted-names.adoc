@@ -4,6 +4,7 @@ title=dotted-names
 next=instance.html
 prev=domain.html
 ~~~~~~
+
 dotted-names
 ============
 
@@ -12,11 +13,11 @@ dotted-names
 dotted-names
 ------------
 
-syntax for using periods to separate name elements
+Syntax for using periods to separate name elements
 
 [[sthref2398]]
 
-Description
+=== Description
 
 A dotted name is an identifier for a particular \{product---name}
 element, such as a configurable or a monitorable object. A dotted name
@@ -62,23 +63,21 @@ specific instance. For example, `web-container`, `log-service`,
 be escaped with a leading `\` (backslash) so that the `.` (dot) does not
 act like a delimiter. For further information on escape characters, see
 the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
-* An `*` (asterisk) character can be used anywhere in the dotted name
+* An `\*` (asterisk) character can be used anywhere in the dotted name
 and acts like the wildcard character in regular expressions.
 Additionally, an `*` can collapse all the parts of the dotted name. For
 example, a long dotted name such as `this.is.really.long.hierarchy` can
 be abbreviated to `th*.hierarchy`. The `.` (dot) always delimits the
-parts of the dotted name. +
-
+parts of the dotted name.
++
 [NOTE]
-=======================================================================
-
+====
 Characters that have special meaning to the shell or command
 interpreter, such as * (asterisk), should be quoted or escaped as
 appropriate to the shell, for example, by enclosing the argument in
 quotes. In multimode, quotes are needed only for arguments that include
 spaces, quotes, or backslash.
-
-=======================================================================
+====
 
 * The `--monitor` option of the `get` and `list` subcommands selects the
 monitoring or configuration hierarchy. If the subcommand specifies
@@ -93,13 +92,14 @@ differently:
 parent node in the abstract hierarchy. When you specify this name to the
 `list` subcommand, the names of the immediate children at that level are
 returned. For example, the following command lists all the web modules
-deployed to the domain or the default server: +
-[source,oac_no_warn]
+deployed to the domain or the default server:
++
+[source]
 ----
 asadmin> list server.applications.web-module
 ----
 
-** The`get` and `set` subcommands treat a complete dotted name as the
+** The `get` and `set` subcommands treat a complete dotted name as the
 fully qualified name of the attribute of a node (whose dotted name
 itself is the name that you get when you remove the last part of this
 dotted name). When you specify this name to the `get` or `set`
@@ -108,30 +108,31 @@ an attribute exists. You will never start with this case because in
 order to find out the names of attributes of a particular node in the
 hierarchy, you must use the * wildcard character . For example, the
 following dotted name returns the context root of the web application
-deployed to the domain or default server: +
-[source,oac_no_warn]
+deployed to the domain or default server:
++
+[source]
 ----
 server.applications.web-module.JSPWiki.context-root
 ----
 
 [[sthref2399]]
 
-Examples
+=== Examples
 
 [[GSRFM815]][[sthref2400]]
 
-Example 1   Listing All Configurable Elements
+==== Example 1   Listing All Configurable Elements
 
 This example lists all the configurable elements.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list *
 ----
 
 Output similar to the following is displayed:
 
-[source,oac_no_warn]
+[source]
 ----
 applications
 configs
@@ -186,18 +187,18 @@ Command list executed successfully.
 
 [[GSRFM816]][[sthref2401]]
 
-Example 2   Listing All the Monitorable Objects
+==== Example 2   Listing All the Monitorable Objects
 
 The following example lists all the monitorable objects.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list --monitor *
 ----
 
 Output similar to the following is displayed:
 
-[source,oac_no_warn]
+[source]
 ----
 server
 server.jvm
@@ -226,7 +227,7 @@ Command list executed successfully.
 
 [[sthref2402]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

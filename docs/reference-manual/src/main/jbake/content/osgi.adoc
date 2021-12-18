@@ -4,22 +4,21 @@ title=osgi
 next=osgi-shell.html
 prev=multimode.html
 ~~~~~~
-osgi
-====
+
+= osgi
 
 [[osgi-1]][[GSRFM877]][[osgi]]
 
-osgi
-----
+== osgi
 
-delegates the command line to the Apache Felix Gogo remote shell for the
+Delegates the command line to the Apache Felix Gogo remote shell for the
 execution of OSGi shell commands
 
 [[sthref1908]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] osgi [--help]
 [--session session]
@@ -30,7 +29,7 @@ asadmin [asadmin-options] osgi [--help]
 
 [[sthref1909]]
 
-Description
+=== Description
 
 The `osgi` subcommand delegates the command line to the Apache Felix
 Gogo remote shell for the execution of OSGi shell commands. Commands are
@@ -52,7 +51,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1910]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -61,7 +60,8 @@ asadmin-options::
 `-?`::
   Displays the help text for the `osgi` subcommand.
 `--session`::
-  Performs command-line session operations. Valid values are: +
+  Performs command-line session operations. Valid values are:
+
   `new`;;
     Creates a new session and returns a session ID.
   `stop`;;
@@ -70,6 +70,7 @@ asadmin-options::
     Lists all active sessions.
   `execute`;;
     Runs a command in the session with the specified session ID.
+
 `--session-id`::
   Specifies the session ID for command-line session operations.
 `--instance`::
@@ -79,7 +80,7 @@ asadmin-options::
 
 [[sthref1911]]
 
-Operands
+=== Operands
 
 command_line::
   The complete command-line syntax as provided for commands in the
@@ -87,18 +88,18 @@ command_line::
 
 [[sthref1912]]
 
-Examples
+=== Examples
 
 [[GSRFM888]][[sthref1913]]
 
-Example 1   Listing Apache Felix Gogo Remote Shell Commands
+==== Example 1   Listing Apache Felix Gogo Remote Shell Commands
 
 This example lists the Apache Felix Gogo remote shell commands that can
 be used with the `osgi` subcommand.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi help
 felix:bundlelevel
@@ -127,14 +128,14 @@ Command osgi executed successfully.
 
 [[GSRFM878]][[sthref1914]]
 
-Example 2   Running a Remote Shell Command
+==== Example 2   Running a Remote Shell Command
 
 This example runs the Felix Remote Shell Command `lb` without any
 arguments to list all installed OSGi bundles.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi lb
 START LEVEL 2
@@ -149,21 +150,20 @@ Command osgi executed successfully.
 
 [[GSRFM889]][[sthref1915]]
 
-Example 3   Running Commands That Create and Target a Specific
-Command-Line Session
+==== Example 3   Running Commands That Create and Target a Specific Command-Line Session
 
 This example runs commands that create and target a specific
 command-line session.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi --session new
 9537e570-0def-4f2e-9c19-bc8f51a8082f
 ...
 asadmin> osgi --session list
-9537e570-0def-4f2e-9c19-bc8f51a8082f 
+9537e570-0def-4f2e-9c19-bc8f51a8082f
 ...
 asadmin> osgi --session execute --session-id 9537e570-0def-4f2e-9c19-bc8f51a8082f lb
 START LEVEL 2
@@ -179,7 +179,7 @@ Command osgi executed successfully.
 
 [[sthref1916]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -188,7 +188,7 @@ Exit Status
 
 [[sthref1917]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

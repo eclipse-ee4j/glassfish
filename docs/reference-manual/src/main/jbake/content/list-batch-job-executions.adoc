@@ -4,6 +4,7 @@ title=list-batch-job-executions
 next=list-batch-jobs.html
 prev=list-backups.html
 ~~~~~~
+
 list-batch-job-executions
 =========================
 
@@ -12,13 +13,13 @@ list-batch-job-executions
 list-batch-job-executions
 -------------------------
 
-lists batch job executions and execution details
+Lists batch job executions and execution details
 
 [[sthref1340]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-batch-job-executions [--help]
 [--target target]
@@ -31,14 +32,14 @@ asadmin [asadmin-options] list-batch-job-executions [--help]
 
 [[sthref1341]]
 
-Description
+=== Description
 
 The `list-batch-job-executions` subcommand lists batch job executions
 and execution details.
 
 [[sthref1342]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,7 +49,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which to list batch job executions and
-  execution details. Valid values are as follows: +
+  execution details. Valid values are as follows:
+
   `server`;;
     Lists executions for the default server instance `server` and is the
     default value.
@@ -56,6 +58,7 @@ asadmin-options::
     Lists executions for every server instance in the cluster.
   instance-name;;
     Lists executions for a particular server instance.
+
 `--executionid`::
 `-x`::
   Specifies the execution ID of a specific batch job execution.
@@ -69,7 +72,8 @@ asadmin-options::
   comma-separated list to specify the details to display and their
   order. The values are case-insensitive. A subset of all possible
   headings is displayed by default. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `jobname`;;
     Displays the name of the job.
   `executionid`;;
@@ -92,6 +96,7 @@ asadmin-options::
     job execution, listed as name/value pairs.
   `stepcount`;;
     Displays the number of steps in the batch job execution.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -100,23 +105,23 @@ asadmin-options::
 
 [[sthref1343]]
 
-Operands
+=== Operands
 
 instance_id::
   The ID of the job instance for which to list execution details.
 
 [[sthref1344]]
 
-Examples
+=== Examples
 
 [[GSRFM885]][[sthref1345]]
 
-Example 1   Listing Batch Job Executions
+==== Example 1   Listing Batch Job Executions
 
 This example lists batch job executions for the default server instance
 and displays specific details.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-job-executions -o=jobname,executionid,batchstatus,exitstatus
 JOBNAME  EXECUTIONID  BATCHSTATUS  EXITSTATUS
@@ -127,7 +132,7 @@ Command list-batch-job-executions executed successfully.
 
 [[sthref1346]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -136,7 +141,7 @@ Exit Status
 
 [[sthref1347]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

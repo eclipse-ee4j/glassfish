@@ -4,6 +4,7 @@ title=list-batch-runtime-configuration
 next=list-clusters.html
 prev=list-batch-job-steps.html
 ~~~~~~
+
 list-batch-runtime-configuration
 ================================
 
@@ -12,13 +13,13 @@ list-batch-runtime-configuration
 list-batch-runtime-configuration
 --------------------------------
 
-displays the configuration of the batch runtime
+Displays the configuration of the batch runtime
 
 [[sthref1364]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-batch-runtime-configuration [--help]
 [--target target]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] list-batch-runtime-configuration [--help]
 
 [[sthref1365]]
 
-Description
+=== Description
 
 The `list-batch-runtime-configuration` subcommand displays the
 configuration of the batch runtime. Batch runtime configuration data is
@@ -36,7 +37,7 @@ stored in the `config` element in `domain.xml`.
 
 [[sthref1366]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which to list the batch runtime
-  configuration. Valid values are as follows: +
+  configuration. Valid values are as follows:
+
   `server`;;
     Lists the batch runtime configuration for the default server
     instance `server` and is the default value.
@@ -56,13 +58,15 @@ asadmin-options::
   instance-name;;
     Lists the batch runtime configuration for a particular server
     instance.
+
 `--output`::
 `-o`::
   Displays specific details about the batch runtime configuration. Use a
   comma-separated list to specify the details to display and their
   order. The values are case-insensitive. The `datasourcelookupname` and
   `executorservicelookupname` column headings are displayed by default. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `datasourcelookupname`;;
     The JNDI lookup name of the data source used to store job
     information. By default, the batch runtime uses the default data
@@ -70,8 +74,8 @@ asadmin-options::
   `executorservicelookupname`;;
     The JNDI lookup name of the managed executor service used to provide
     threads to jobs. By default, the batch runtime uses the default
-    managed executor service
-    `concurrent/__defaultManagedExecutorService`.
+    managed executor service `concurrent/__defaultManagedExecutorService`.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -80,16 +84,16 @@ asadmin-options::
 
 [[sthref1367]]
 
-Examples
+=== Examples
 
 [[GSRFM864]][[sthref1368]]
 
-Example 1   Listing Batch Runtime Configuration
+==== Example 1   Listing Batch Runtime Configuration
 
 The following example lists the configuration of the batch runtime for
 the default server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-runtime-configuration
 DATASOURCELOOKUPNAME     EXECUTORSERVICELOOKUPNAME
@@ -99,7 +103,7 @@ Command list-batch-runtime-configuration executed successfully.
 
 [[sthref1369]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -108,7 +112,7 @@ Exit Status
 
 [[sthref1370]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

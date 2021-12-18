@@ -4,6 +4,7 @@ title=delete-audit-module
 next=delete-auth-realm.html
 prev=delete-application-ref.html
 ~~~~~~
+
 delete-audit-module
 ===================
 
@@ -12,13 +13,13 @@ delete-audit-module
 delete-audit-module
 -------------------
 
-removes the named audit-module
+Removes the named audit-module
 
 [[sthref593]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-audit-module [--help]
 [--target target]
@@ -27,14 +28,14 @@ audit_module_name
 
 [[sthref594]]
 
-Description
+=== Description
 
 This subcommand removes the named audit module. This subcommand is
 supported in remote mode only.
 
 [[sthref595]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target on which you are deleting the audit module. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the audit module for the default server instance `server`
     and is the default value.
@@ -57,20 +59,20 @@ asadmin-options::
 
 [[sthref596]]
 
-Operands
+=== Operands
 
 audit_module_name::
   The name of the audit module to be deleted.
 
 [[sthref597]]
 
-Examples
+=== Examples
 
 [[GSRFM532]][[sthref598]]
 
-Example 1   Deleting an audit module
+==== Example 1   Deleting an audit module
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-audit-module sampleAuditModule
 Command delete-audit-module executed successfully
@@ -78,7 +80,7 @@ Command delete-audit-module executed successfully
 
 [[sthref599]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -87,7 +89,7 @@ Exit Status
 
 [[sthref600]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

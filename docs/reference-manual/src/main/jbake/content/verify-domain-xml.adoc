@@ -4,6 +4,7 @@ title=verify-domain-xml
 next=version.html
 prev=validate-multicast.html
 ~~~~~~
+
 verify-domain-xml
 =================
 
@@ -12,21 +13,21 @@ verify-domain-xml
 verify-domain-xml
 -----------------
 
-verifies the content of the domain.xml file
+Verifies the content of the domain.xml file
 
 [[sthref2339]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] verify-domain-xml [--help] 
+asadmin [asadmin-options] verify-domain-xml [--help]
 [--domaindir domain-dir] [domain-name]
 ----
 
 [[sthref2340]]
 
-Description
+=== Description
 
 Verifies the content of the `domain.xml` file by checking the following:
 
@@ -37,7 +38,7 @@ This subcommand is supported in local mode only.
 
 [[sthref2341]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,20 +52,20 @@ asadmin-options::
 
 [[sthref2342]]
 
-Operands
+=== Operands
 
 domain_name::
   Specifies the name of the domain. The default is `domain1`.
 
 [[sthref2343]]
 
-Examples
+=== Examples
 
 [[GSRFM799]][[sthref2344]]
 
-Example 1   Using verify-domain-xml
+==== Example 1   Using verify-domain-xml
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> verify-domain-xml
 All Tests Passed.
@@ -73,7 +74,7 @@ domain.xml is valid
 
 [[sthref2345]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -82,7 +83,7 @@ Exit Status
 
 [[sthref2346]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=create-managed-scheduled-executor-service
 next=create-managed-thread-factory.html
 prev=create-managed-executor-service.html
 ~~~~~~
+
 create-managed-scheduled-executor-service
 =========================================
 
@@ -12,13 +13,13 @@ create-managed-scheduled-executor-service
 create-managed-scheduled-executor-service
 -----------------------------------------
 
-creates a managed scheduled executor service resource
+Creates a managed scheduled executor service resource
 
 [[sthref405]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-managed-scheduled-executor-service [--help]
 [--enabled={false|true}]
@@ -40,7 +41,7 @@ jndi_name
 
 [[sthref406]]
 
-Description
+=== Description
 
 The `create-managed-scheduled-executor-service` subcommand creates a
 managed scheduled executor service resource.
@@ -49,7 +50,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref407]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -109,7 +110,8 @@ asadmin-options::
   additional properties.
 `--target`::
   Specifies the target for which you are creating the resource. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Creates the resource for the default server instance. This is the
     default value.
@@ -123,23 +125,23 @@ asadmin-options::
 
 [[sthref408]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of this resource.
 
 [[sthref409]]
 
-Examples
+=== Examples
 
 [[GSRFM461]][[sthref410]]
 
-Example 1   Creating a Managed Scheduled Executor Service Resource
+==== Example 1   Creating a Managed Scheduled Executor Service Resource
 
 This example creates a managed scheduled executor service resource named
 `concurrent/myScheduledExecutor`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-managed-scheduled-executor-service concurrent/myScheduledExecutor
 Managed scheduled executor service concurrent/myScheduledExecutor created successfully.
@@ -148,7 +150,7 @@ Command create-managed-scheduled-executor-service executed successfully.
 
 [[sthref411]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -157,7 +159,7 @@ Exit Status
 
 [[sthref412]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

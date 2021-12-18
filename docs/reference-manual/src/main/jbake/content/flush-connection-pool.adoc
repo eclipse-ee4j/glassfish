@@ -4,6 +4,7 @@ title=flush-connection-pool
 next=flush-jmsdest.html
 prev=export-sync-bundle.html
 ~~~~~~
+
 flush-connection-pool
 =====================
 
@@ -12,14 +13,14 @@ flush-connection-pool
 flush-connection-pool
 ---------------------
 
-reintializes all connections established in the specified connection
+Reintializes all connections established in the specified connection
 pool
 
 [[sthref1178]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] flush-connection-pool [--help] 
 [--appname application [--modulename module]
@@ -28,7 +29,7 @@ pool_name
 
 [[sthref1179]]
 
-Description
+=== Description
 
 The `flush-connection-pool` subcommand resets a JDBC connection pool or
 a connector connection pool to its initial state. Any existing live
@@ -59,7 +60,7 @@ in the Java EE Specification
 
 [[sthref1180]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -75,7 +76,7 @@ asadmin-options::
 
 [[sthref1181]]
 
-Operands
+=== Operands
 
 pool_name::
   Name of the connection pool to be reinitialized.
@@ -86,7 +87,7 @@ Flushing a Connection Pool
 
 This example reinitializes the JDBC connection pool named `__TimerPool`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> flush-connection-pool __TimerPool
 Command flush-connection-pool executed successfully.
@@ -94,7 +95,7 @@ Command flush-connection-pool executed successfully.
 
 [[sthref1183]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -103,7 +104,7 @@ Exit Status
 
 [[sthref1184]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

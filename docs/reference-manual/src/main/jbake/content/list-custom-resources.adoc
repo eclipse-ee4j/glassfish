@@ -4,6 +4,7 @@ title=list-custom-resources
 next=list-domains.html
 prev=list-context-services.html
 ~~~~~~
+
 list-custom-resources
 =====================
 
@@ -12,21 +13,21 @@ list-custom-resources
 list-custom-resources
 ---------------------
 
-gets all custom resources
+Gets all custom resources
 
 [[sthref1453]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-custom-resources [--help] 
+asadmin [asadmin-options] list-custom-resources [--help]
 [target]
 ----
 
 [[sthref1454]]
 
-Description
+=== Description
 
 The `list-custom-resources` subcommand lists the custom resources.
 
@@ -34,7 +35,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1455]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,11 +46,12 @@ asadmin-options::
 
 [[sthref1456]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies the location of the custom resources. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Lists the resources on the default server instance. This is the
     default value
@@ -62,15 +64,15 @@ target::
 
 [[sthref1457]]
 
-Examples
+=== Examples
 
 [[GSRFM654]][[sthref1458]]
 
-Example 1   Listing Custom Resources
+==== Example 1   Listing Custom Resources
 
 This example lists the current custom resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-custom-resources
 sample_custom_resource01
@@ -80,14 +82,14 @@ Command list-custom-resources executed successfully.
 
 [[GSRFM655]][[sthref1459]]
 
-Example 2   Using the list-custom-resources command with a target
+==== Example 2   Using the list-custom-resources command with a target
 
 The following example displays the usage of this command.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> list-custom-resources --user admin --passwordfile 
-passwords.txt --host plum --port 4848 target6 
+asadmin> list-custom-resources --user admin --passwordfile
+passwords.txt --host plum --port 4848 target6
 
 sample_custom_resource03
 sample_custom_resource04
@@ -96,7 +98,7 @@ Command list-custom-resources executed successfully.
 
 [[sthref1460]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -105,7 +107,7 @@ Exit Status
 
 [[sthref1461]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=list-log-attributes
 next=list-loggers.html
 prev=list-lifecycle-modules.html
 ~~~~~~
+
 list-log-attributes
 ===================
 
@@ -12,21 +13,21 @@ list-log-attributes
 list-log-attributes
 -------------------
 
-lists all logging attributes defined for a specified target in a domain
+Lists all logging attributes defined for a specified target in a domain
 
 [[sthref1630]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-log-attributes [--help] 
+asadmin [asadmin-options] list-log-attributes [--help]
 [target]
 ----
 
 [[sthref1631]]
 
-Description
+=== Description
 
 The `list-log-attributes` subcommand lists all logging attributes
 currently defined for the specified \{product---name} domain or target
@@ -37,7 +38,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1632]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,10 +49,10 @@ asadmin-options::
 
 [[sthref1633]]
 
-Operands
+=== Operands
 
 target::
-  Valid values are: +
+  Valid values are:
   * `server` - The default server instance. This is the default value.
   * configuration_name - The name of a specific configuration.
   * cluster_name - The name of a target cluster.
@@ -59,15 +60,15 @@ target::
 
 [[sthref1634]]
 
-Examples
+=== Examples
 
 [[GSRFM682]][[sthref1635]]
 
-Example 1   Listing the Logger Attributes for a Domain
+==== Example 1   Listing the Logger Attributes for a Domain
 
 This example lists all loggers attributes for the default domain.
 
-[source,oac_no_warn]
+[source,subs="none"]
 ----
 asadmin> list-log-attributes
 com.sun.enterprise.server.logging.GFFileHandler.alarms <false>
@@ -96,7 +97,7 @@ Command list-log-attributes executed successfully.
 
 [[sthref1636]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -105,7 +106,7 @@ Exit Status
 
 [[sthref1637]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

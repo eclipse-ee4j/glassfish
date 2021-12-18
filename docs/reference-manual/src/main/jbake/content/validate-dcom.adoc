@@ -4,6 +4,7 @@ title=validate-dcom
 next=validate-multicast.html
 prev=uptime.html
 ~~~~~~
+
 validate-dcom
 =============
 
@@ -12,13 +13,13 @@ validate-dcom
 validate-dcom
 -------------
 
-tests the connection over DCOM to a remote host
+Tests the connection over DCOM to a remote host
 
 [[sthref2323]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] validate-dcom [--help]
 [--windowsuser windows-user] [--windowsdomain windows-domain]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] validate-dcom [--help]
 
 [[sthref2324]]
 
-Description
+=== Description
 
 The `validate-dcom` subcommand tests the connection over the Distributed
 Component Object Model (DCOM) remote protocol to the remote host that is
@@ -40,11 +41,11 @@ The prerequisites for running this subcommand are as follows:
 * DCOM must be configured on the host where the domain administration
 server (DAS) is running and on the remote host that is specified as the
 operand of the subcommand.
+
 * The following ports must be open on the remote host:
-
 ** DCOM port 135 or 139
-
 ** Windows Shares port 445
+
 * The Server Windows Service is enabled on the remote host.
 
 This subcommand verifies whether the prerequisites for creating a DCOM
@@ -61,20 +62,19 @@ performing the following operations on the remote host:
 * Connecting to DCOM through port 135 or 139
 * Connecting to Windows Shares through port 445
 * Copying a script that is named `delete_me.bat` in the folder that is
-specified by the `--remotetestdir` option
+  specified by the `--remotetestdir` option
 * Running the script to obtain a listing of the folder in which the
-`delete_me.bat` was written
+  `delete_me.bat` was written
 
 By default, the subcommand displays no information about the operations
 that are performed to test the connection to the remote host. To display
-information about these operations, set the `--verbose` option to
-`true`.
+information about these operations, set the `--verbose` option to `true`.
 
 This subcommand is supported in remote mode only.
 
 [[sthref2325]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -100,51 +100,53 @@ asadmin-options::
 `--verbose`::
 `-v`::
   Specifies whether the subcommand displays information about the
-  operations that are performed to test the connection to the remote
-  host. +
-  Possible values are as follows: +
+  operations that are performed to test the connection to the remote host. +
+  Possible values are as follows:
+
   `false`;;
     No information about the operations that are performed to test the
     connection is displayed (default).
   `true`;;
     The subcommand displays information about the operations that are
-    performed to test the connection. +
-    If the `--verbose` option is true and the `AS_DEBUG` environment
+    performed to test the connection.
+
++
+If the `--verbose` option is true and the `AS_DEBUG` environment
     variable is set, the subcommand also displays the command line for
     each process that is running on the remote host.
 
 [[sthref2326]]
 
-Operands
+=== Operands
 
 host-name::
   The name of the host to which to test the connection over DCOM.
 
 [[sthref2327]]
 
-Examples
+=== Examples
 
 [[GSRFM834]][[sthref2328]]
 
-Example 1   Testing the Connection Over DCOM to a Remote Host
+==== Example 1   Testing the Connection Over DCOM to a Remote Host
 
 This example tests the connection over DCOM to the host `wpmdl2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> validate-dcom --wpmdl2
-Command validate-dcom executed successfully. 
+Command validate-dcom executed successfully.
 ----
 
 [[GSRFM797]][[sthref2329]]
 
-Example 2   Verbosely Testing the Connection Over DCOM to a Remote Host
+==== Example 2   Verbosely Testing the Connection Over DCOM to a Remote Host
 
 This example tests the connection over DCOM to the host `wpmdl2` and
 displays information about the operations that are performed to test the
 connection to the remote host.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> validate-dcom --verbose wpmdl2
 
@@ -157,26 +159,26 @@ Successfully wrote delete_me.bat to C: on wpmdl2 using DCOM.
 Successfully accessed WMI (Windows Management Interface) on wpmdl2. There are 40
 processes running on wpmdl2.
 Successfully ran the test script on wpmdl2 using DCOM.
-The script simply ran the DIR command. Here are the first few lines from the 
+The script simply ran the DIR command. Here are the first few lines from the
 output of the dir command on the remote machine:
- 
+
 C:\Windows\system32>dir C:\
  Volume in drive C has no label.
  Volume Serial Number is XXXX-XXX
- 
+
  Directory of C:\
- 
+
 12/05/2011  10:21 AM                63 .asadminpass
 02/15/2011  01:08 PM    <DIR>          aroot
 12/05/2011  04:43 PM                 8 delete_me.bat
-03/03/2011  10:36 AM    <DIR>          export 
- 
-Command validate-dcom executed successfully. 
+03/03/2011  10:36 AM    <DIR>          export
+
+Command validate-dcom executed successfully.
 ----
 
 [[sthref2330]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -185,7 +187,7 @@ Exit Status
 
 [[sthref2331]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

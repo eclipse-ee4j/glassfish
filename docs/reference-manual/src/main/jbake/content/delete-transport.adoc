@@ -4,6 +4,7 @@ title=delete-transport
 next=delete-virtual-server.html
 prev=delete-threadpool.html
 ~~~~~~
+
 delete-transport
 ================
 
@@ -12,13 +13,13 @@ delete-transport
 delete-transport
 ----------------
 
-removes a transport
+Removes a transport
 
 [[sthref999]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-transport [--help]
 [--target target]
@@ -27,14 +28,14 @@ transport-name
 
 [[sthref1000]]
 
-Description
+=== Description
 
 The `delete-transport` subcommand removes the specified transport. This
 subcommand is supported in remote mode only.
 
 [[sthref1001]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the transport only from the specified target. Valid values are
-  as follows: +
+  as follows:
+
   `server`;;
     Deletes the transport from the default server instance. This is the
     default value.
@@ -58,22 +60,22 @@ asadmin-options::
 
 [[sthref1002]]
 
-Operands
+=== Operands
 
 transport-name::
   The name of the transport to be deleted.
 
 [[sthref1003]]
 
-Examples
+=== Examples
 
 [[GSRFM582]][[sthref1004]]
 
-Example 1   Deleting a Transport
+==== Example 1   Deleting a Transport
 
 The following command deletes the transport named `http1-trans`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-transport http1-trans
 Command delete-transport executed successfully.
@@ -81,7 +83,7 @@ Command delete-transport executed successfully.
 
 [[sthref1005]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref1006]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

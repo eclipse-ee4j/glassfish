@@ -4,6 +4,7 @@ title=undeploy
 next=unfreeze-transaction-service.html
 prev=stop-local-instance.html
 ~~~~~~
+
 undeploy
 ========
 
@@ -12,22 +13,22 @@ undeploy
 undeploy
 --------
 
-removes a deployed component
+Removes a deployed component
 
 [[sthref2189]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] undeploy [--help] 
-[--target target] [--droptables={true|false}] 
+asadmin [asadmin-options] undeploy [--help]
+[--target target] [--droptables={true|false}]
 [--cascade={false|true}] name
 ----
 
 [[sthref2190]]
 
-Description
+=== Description
 
 The `undeploy` subcommand uninstalls a deployed application or module
 and removes it from the repository.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2191]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -61,7 +62,8 @@ asadmin-options::
   the `cmp-resource` element of the `glassfish-ejb-jar.xml` file
   determines whether or not tables are dropped. Default value is true.
 `--target`::
-  Specifies the target from which you are undeploying. Valid values are: +
+  Specifies the target from which you are undeploying. Valid values are:
+
   `server`;;
     Undeploys the component from the default server instance `server`
     and is the default value.
@@ -75,7 +77,7 @@ asadmin-options::
 
 [[sthref2192]]
 
-Operands
+=== Operands
 
 name::
   Name of the deployed component. +
@@ -85,21 +87,21 @@ name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
-  Versions]" in GlassFish Server Open Source Edition Application
+  application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in GlassFish Server Open Source Edition Application
   Deployment Guide.
 
 [[sthref2193]]
 
-Examples
+=== Examples
 
 [[GSRFM769]][[sthref2194]]
 
-Example 1   Undeploying an Enterprise Application
+==== Example 1   Undeploying an Enterprise Application
 
 This example undeploys an enterprise application named `Cart.ear`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> undeploy Cart
 Command undeploy executed successfully.
@@ -107,13 +109,12 @@ Command undeploy executed successfully.
 
 [[GSRFM770]][[sthref2195]]
 
-Example 2   Undeploying an Enterprise Bean With Container-Managed
-Persistence (CMP)
+==== Example 2   Undeploying an Enterprise Bean With Container-Managed Persistence (CMP)
 
 This example undeploys a CMP bean named `myejb` and drops the
 corresponding database tables.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> undeploy --droptables=true myejb
 Command undeploy executed successfully.
@@ -121,13 +122,13 @@ Command undeploy executed successfully.
 
 [[GSRFM771]][[sthref2196]]
 
-Example 3   Undeploying a Connector (Resource Adapter)
+==== Example 3   Undeploying a Connector (Resource Adapter)
 
 This example undeploys the connector module named `jdbcra` and performs
 a cascading delete to remove the associated resources and connection
 pools.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> undeploy --cascade=true jdbcra
 Command undeploy executed successfully.
@@ -135,7 +136,7 @@ Command undeploy executed successfully.
 
 [[sthref2197]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -144,7 +145,7 @@ Exit Status
 
 [[sthref2198]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

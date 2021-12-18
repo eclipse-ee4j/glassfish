@@ -4,6 +4,7 @@ title=delete-managed-scheduled-executor-service
 next=delete-managed-thread-factory.html
 prev=delete-managed-executor-service.html
 ~~~~~~
+
 delete-managed-scheduled-executor-service
 =========================================
 
@@ -12,14 +13,14 @@ delete-managed-scheduled-executor-service
 delete-managed-scheduled-executor-service
 -----------------------------------------
 
-removes a managed scheduled executor service resource with the specified
+Removes a managed scheduled executor service resource with the specified
 JNDI name
 
 [[sthref858]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-managed-scheduled-executor-service [--help]
 [--target target]
@@ -28,7 +29,7 @@ managed_scheduled_executor_service_name
 
 [[sthref859]]
 
-Description
+=== Description
 
 The `delete-managed-scheduled-executor-service` subcommand removes a
 managed scheduled executor service resource with the specified JNDI
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref860]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,7 +49,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are deleting the resource. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Deletes the resource from the default server instance. This is the
     default value.
@@ -62,23 +64,23 @@ asadmin-options::
 
 [[sthref861]]
 
-Operands
+=== Operands
 
 managed_scheduled_executor_service_name::
   The JNDI name of the resource to be deleted.
 
 [[sthref862]]
 
-Examples
+=== Examples
 
 [[GSRFM851]][[sthref863]]
 
-Example 1   Deleting a Managed Scheduled Executor Service Resource
+==== Example 1   Deleting a Managed Scheduled Executor Service Resource
 
 This example deletes the managed scheduled executor service resource
 named `concurrent/myScheduledExecutor`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-scheduled-executor-service concurrent/myScheduledExecutor
 Managed scheduled executor service concurrent/myScheduledExecutor deleted successfully.
@@ -87,7 +89,7 @@ Command delete-managed-scheduled-executor-service executed successfully.
 
 [[sthref864]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -96,7 +98,7 @@ Exit Status
 
 [[sthref865]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

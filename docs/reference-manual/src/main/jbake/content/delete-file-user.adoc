@@ -4,6 +4,7 @@ title=delete-file-user
 next=delete-http.html
 prev=delete-domain.html
 ~~~~~~
+
 delete-file-user
 ================
 
@@ -12,30 +13,30 @@ delete-file-user
 delete-file-user
 ----------------
 
-removes the named file user
+Removes the named file user
 
 [[sthref683]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-file-user [--help] 
-[--authrealmname auth_realm_name] 
-[--target target] 
+asadmin [asadmin-options] delete-file-user [--help]
+[--authrealmname auth_realm_name]
+[--target target]
 username
 ----
 
 [[sthref684]]
 
-Description
+=== Description
 
 The `delete-file-user` subcommand deletes the entry in the keyfile for
 the specified username.
 
 [[sthref685]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,7 +48,8 @@ asadmin-options::
   The name of the authentication realm with which the user was created.
 `--target`::
   This is the name of the target on which the command operates. The
-  valid targets are: +
+  valid targets are:
+
   `server`;;
     Deletes the file user on the default server instance. This is the
     default value
@@ -60,23 +62,23 @@ asadmin-options::
 
 [[sthref686]]
 
-Operands
+=== Operands
 
 username::
   This is the name of file user to be deleted.
 
 [[sthref687]]
 
-Examples
+=== Examples
 
 [[GSRFM545]][[sthref688]]
 
-Example 1   Deleting a User From a File Realm
+==== Example 1   Deleting a User From a File Realm
 
 The following example shows how to delete user named `sample_user` from
 a file realm.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-file-user
 sample_user
@@ -85,7 +87,7 @@ Command delete-file-user executed successfully
 
 [[sthref689]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref690]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=list-javamail-resources
 next=list-jdbc-connection-pools.html
 prev=list-jacc-providers.html
 ~~~~~~
+
 list-javamail-resources
 =======================
 
@@ -12,21 +13,21 @@ list-javamail-resources
 list-javamail-resources
 -----------------------
 
-lists the existing JavaMail session resources
+Lists the existing JavaMail session resources
 
 [[sthref1536]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-javamail-resources [--help] 
+asadmin [asadmin-options] list-javamail-resources [--help]
 [target]
 ----
 
 [[sthref1537]]
 
-Description
+=== Description
 
 The `list-javamail-resources` subcommand lists the existing JavaMail
 session resources.
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1538]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,11 +47,12 @@ asadmin-options::
 
 [[sthref1539]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies the target for which the JavaMail session
-  resources are to be listed. Valid values are: +
+  resources are to be listed. Valid values are:
+
   `server`;;
     Lists the resources for the default server instance. This is the
     default value.
@@ -63,16 +65,16 @@ target::
 
 [[sthref1540]]
 
-Examples
+=== Examples
 
 [[GSRFM669]][[sthref1541]]
 
-Example 1   Listing JavaMail Resources
+==== Example 1   Listing JavaMail Resources
 
 This example lists the JavaMail session resources for the server
 instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-javamail-resources
 mail/MyMailSession
@@ -81,7 +83,7 @@ Command list-javamail-resources executed successfuly.
 
 [[sthref1542]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref1543]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

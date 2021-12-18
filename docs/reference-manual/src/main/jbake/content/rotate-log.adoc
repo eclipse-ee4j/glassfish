@@ -4,6 +4,7 @@ title=rotate-log
 next=set.html
 prev=rollback-transaction.html
 ~~~~~~
+
 rotate-log
 ==========
 
@@ -12,20 +13,20 @@ rotate-log
 rotate-log
 ----------
 
-rotates the log file
+Rotates the log file
 
 [[sthref2016]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] rotate-log [--help]
 ----
 
 [[sthref2017]]
 
-Description
+=== Description
 
 The `rotate-log` subcommand rotates the server log by renaming the file
 with a timestamp name in the format `server.log_`date-and-time, and
@@ -38,14 +39,13 @@ time since the last log rotation. In some circumstances, the queue might
 fill up, especially if the log level is set to `FINEST` and there is
 heavy activity on the server. In this case, the `rotate-log` subcommand
 can be used to rotate the server log immediately. This subcommand is
-also useful in creating scripts for rotating the log at convenient
-times.
+also useful in creating scripts for rotating the log at convenient times.
 
 This subcommand is supported in remote mode only.
 
 [[sthref2018]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -60,26 +60,27 @@ asadmin-options::
 
 [[sthref2019]]
 
-Operands
+=== Operands
 
 target::
-  Valid values are: +
+  Valid values are:
+
   * server_name - Default target is `server`. If no target is specified
-  then logs are rotated for the server.
+    then logs are rotated for the server.
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
 
 [[sthref2020]]
 
-Examples
+=== Examples
 
 [[GSRFM742]][[sthref2021]]
 
-Example 1   Rotating the Server Log
+==== Example 1   Rotating the Server Log
 
 This example rotates the server log.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> rotate-log
 Command rotate-log executed successfully.
@@ -87,7 +88,7 @@ Command rotate-log executed successfully.
 
 [[sthref2022]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -96,7 +97,7 @@ Exit Status
 
 [[sthref2023]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

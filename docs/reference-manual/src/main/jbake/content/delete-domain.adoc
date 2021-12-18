@@ -4,6 +4,7 @@ title=delete-domain
 next=delete-file-user.html
 prev=delete-custom-resource.html
 ~~~~~~
+
 delete-domain
 =============
 
@@ -12,13 +13,13 @@ delete-domain
 delete-domain
 -------------
 
-deletes a domain
+Deletes a domain
 
 [[sthref674]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-domain [--help] 
 [--domaindir domaindir] domain-name
@@ -26,7 +27,7 @@ asadmin [asadmin-options] delete-domain [--help]
 
 [[sthref675]]
 
-Description
+=== Description
 
 The `delete-domain` subcommand deletes the specified domain. The domain
 must already exist and must be stopped.
@@ -35,7 +36,7 @@ This subcommand is supported in local mode only.
 
 [[sthref676]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,23 +52,23 @@ asadmin-options::
 
 [[sthref677]]
 
-Operands
+=== Operands
 
 domain-name::
   The unique name of the domain you want to delete.
 
 [[sthref678]]
 
-Examples
+=== Examples
 
 [[GSRFM543]][[sthref679]]
 
-Example 1   Deleting a Domain
+==== Example 1   Deleting a Domain
 
 This example deletes a domain named `mydomain4` from the default domains
 directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-domain mydomain4
 Domain mydomain4 deleted.
@@ -76,12 +77,12 @@ Command delete-domain executed successfully.
 
 [[GSRFM544]][[sthref680]]
 
-Example 2   deleting a Domain From an Alternate Location
+==== Example 2   deleting a Domain From an Alternate Location
 
 This example deletes a domain named `sampleDomain` from the
 `/home/someuser/domains` directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-domain --domaindir /home/someuser/domains sampleDomain
 Domain sampleDomain deleted
@@ -90,7 +91,7 @@ Command delete-domain executed successfully.
 
 [[sthref681]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -99,7 +100,7 @@ Exit Status
 
 [[sthref682]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

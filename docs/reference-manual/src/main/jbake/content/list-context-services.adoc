@@ -4,6 +4,7 @@ title=list-context-services
 next=list-custom-resources.html
 prev=list-containers.html
 ~~~~~~
+
 list-context-services
 =====================
 
@@ -12,13 +13,13 @@ list-context-services
 list-context-services
 ---------------------
 
-lists context service resources
+Lists context service resources
 
 [[sthref1445]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-context-services [--help]
 [target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-context-services [--help]
 
 [[sthref1446]]
 
-Description
+=== Description
 
 The `list-context-services` subcommand lists context service resources.
 
@@ -34,7 +35,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1447]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,11 +46,12 @@ asadmin-options::
 
 [[sthref1448]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target for which context service resources are to be
-  listed. Valid targets are: +
+  listed. Valid targets are:
+
   `server`;;
     Lists the resources on the default server instance. This is the
     default value.
@@ -63,16 +65,16 @@ target::
 
 [[sthref1449]]
 
-Examples
+=== Examples
 
 [[GSRFM866]][[sthref1450]]
 
-Example 1   Listing Context Service Resources
+==== Example 1   Listing Context Service Resources
 
 This example lists context service resources on the default server
 instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-context-services
 concurrent/__defaultContextService
@@ -83,7 +85,7 @@ Command list-context-services executed successfully.
 
 [[sthref1451]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -92,7 +94,7 @@ Exit Status
 
 [[sthref1452]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

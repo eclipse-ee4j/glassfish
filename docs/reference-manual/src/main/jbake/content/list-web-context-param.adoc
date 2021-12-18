@@ -4,6 +4,7 @@ title=list-web-context-param
 next=list-web-env-entry.html
 prev=list-virtual-servers.html
 ~~~~~~
+
 list-web-context-param
 ======================
 
@@ -12,29 +13,28 @@ list-web-context-param
 list-web-context-param
 ----------------------
 
-lists servlet context-initialization parameters of a deployed web
+Lists servlet context-initialization parameters of a deployed web
 application or module
 
 [[sthref1858]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-web-context-param [--help] 
+asadmin [asadmin-options] list-web-context-param [--help]
 [--name=context-param-name] application-name[/module]
 ----
 
 [[sthref1859]]
 
-Description
+=== Description
 
 The `list-web-context-param` subcommand lists the servlet
 context-initialization parameters of one of the following items:
 
 * A deployed web application
-* A web module in a deployed Java Platform, Enterprise Edition (Java EE)
-application
+* A web module in a deployed Java Platform, Enterprise Edition (Java EE) application
 
 The application must already be deployed. Otherwise, an error occurs.
 
@@ -49,14 +49,13 @@ For each parameter, the following information is displayed:
 * The name of the parameter
 * The value to which the parameter is set
 * The value of the `--ignoreDescriptorItem` option of the
-`set-web-context-param` subcommand that was specified when the parameter
-was set
+  `set-web-context-param` subcommand that was specified when the parameter was set
 * The description of the parameter or `null` if no description was
-specified when the parameter was set
+  specified when the parameter was set
 
 [[sthref1860]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -71,13 +70,12 @@ asadmin-options::
 
 [[sthref1861]]
 
-Operands
+=== Operands
 
 application-name::
   The name of the application. This name can be obtained from the
   Administration Console or by using the
-  link:list-applications.html#list-applications-1[`list-applications`(1)]
-  subcommand. +
+  link:list-applications.html#list-applications-1[`list-applications`(1)] subcommand. +
   The application must already be deployed. Otherwise, an error occurs.
 module::
   The relative path to the module within the application's enterprise
@@ -85,29 +83,28 @@ module::
   `module` element of the application's `application.xml` file. +
   module is required only if the servlet context-initialization
   parameter applies to a web module of a Java EE application. If
-  specified, module must follow application-name, separated by a slash
-  (/). +
+  specified, module must follow application-name, separated by a slash (`/`). +
   For example, the `application.xml` file for the `myApp` application
-  might specify the following web module: +
-[source,oac_no_warn]
+  might specify the following web module:
++
+[source,xml]
 ----
 <module>
     <web>
         <web-uri>myWebModule.war</web-uri>
     </web>
-</module> 
+</module>
 ----
-::
-  The module would be specified as the operand of this command as
-  `myApp/myWebModule.war`.
++
+The module would be specified as the operand of this command as `myApp/myWebModule.war`.
 
 [[sthref1862]]
 
-Examples
+=== Examples
 
 [[GSRFM718]][[sthref1863]]
 
-Example 1   Listing Servlet Context-Initialization Parameters for a Web
+==== Example 1   Listing Servlet Context-Initialization Parameters for a Web
 Application
 
 This example lists all servlet context-initialization parameters of the
@@ -116,10 +113,10 @@ web application `basic-ezcomp` that have been set by using the
 when the `javax.faces.PROJECT_STAGE` parameter was set, `null` is
 displayed instead of a description for this parameter.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-web-context-param basic-ezcomp
-javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false 
+javax.faces.STATE_SAVING_METHOD = client ignoreDescriptorItem=false
 //The location where the application's state is preserved
 javax.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null
 
@@ -128,7 +125,7 @@ Command list-web-context-param executed successfully.
 
 [[sthref1864]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -137,7 +134,7 @@ Exit Status
 
 [[sthref1865]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

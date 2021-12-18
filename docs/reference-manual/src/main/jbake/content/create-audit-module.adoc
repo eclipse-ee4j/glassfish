@@ -4,6 +4,7 @@ title=create-audit-module
 next=create-auth-realm.html
 prev=create-application-ref.html
 ~~~~~~
+
 create-audit-module
 ===================
 
@@ -12,24 +13,24 @@ create-audit-module
 create-audit-module
 -------------------
 
-adds an audit module
+Adds an audit module
 
 [[sthref131]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-audit-module [--help]
 --classname classname
-[--property(name=value)[:name=value]*] 
+[--property(name=value)[:name=value]*]
 [--target target]
 audit_module_name
 ----
 
 [[sthref132]]
 
-Description
+=== Description
 
 The `create-audit-module` subcommand adds the named audit module for the
 Java class that implements the audit capabilities. Audit modules collect
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref133]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,15 +57,19 @@ asadmin-options::
   Optional keyword-value pairs that specify additional properties for
   the audit module. +
   Audit module properties that are defined by \{product---name} are as
-  follows: +
+  follows:
+
   `auditOn`;;
     If `true`, specifies that the audit module is loaded and called by
-    the \{product---name} audit library at audit points. +
-  Other available properties are determined by the implementation of the
+    the \{product---name} audit library at audit points.
+
++
+Other available properties are determined by the implementation of the
   audit module.
 `--target`::
   Specifies the target on which you are creating the audit module. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Creates the audit module for the default server instance `server`
     and is the default value.
@@ -77,30 +82,30 @@ asadmin-options::
 
 [[sthref134]]
 
-Operands
+=== Operands
 
 audit_module_name::
   The name of this audit module.
 
 [[sthref135]]
 
-Examples
+=== Examples
 
 [[GSRFM459]][[sthref136]]
 
-Example 1   Creating an audit module
+==== Example 1   Creating an audit module
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-audit-module
---classname com.sun.appserv.auditmodule 
+--classname com.sun.appserv.auditmodule
 --property defaultuser=admin:Password=admin sampleAuditModule
 Command create-audit-module executed successfully
 ----
 
 [[sthref137]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -109,7 +114,7 @@ Exit Status
 
 [[sthref138]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

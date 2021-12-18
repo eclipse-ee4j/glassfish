@@ -4,6 +4,7 @@ title=list-sub-components
 next=list-supported-cipher-suites.html
 prev=list-secure-admin-principals.html
 ~~~~~~
+
 list-sub-components
 ===================
 
@@ -12,16 +13,16 @@ list-sub-components
 list-sub-components
 -------------------
 
-lists EJB or servlet components in a deployed module or module of a
+Lists EJB or servlet components in a deployed module or module of a
 deployed application
 
 [[sthref1803]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-sub-components [--help] 
+asadmin [asadmin-options] list-sub-components [--help]
 [--type type]
 [--appname appname] [--resources]
 modulename
@@ -29,7 +30,7 @@ modulename
 
 [[sthref1804]]
 
-Description
+=== Description
 
 The `list-sub-components` subcommand lists EJB or servlet components in
 a deployed module or in a module of a deployed application. If a module
@@ -42,7 +43,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1805]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -63,14 +64,15 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
   GlassFish Server Open Source Edition Application Deployment Guide.
 `--resources`::
   Lists the application-scoped resources for each subcomponent.
 
 [[sthref1806]]
 
-Operands
+=== Operands
 
 modulename::
   Specifies the name of the module containing the subcomponent. +
@@ -84,16 +86,16 @@ modulename::
 
 [[sthref1807]]
 
-Examples
+=== Examples
 
 [[GSRFM711]][[sthref1808]]
 
-Example 1   Listing Subcomponents
+==== Example 1   Listing Subcomponents
 
 This example lists the subcomponents of the `MEjbApp` application within
 the `mejb.jar` module.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-sub-components --appname MEjbApp mejb.jar
 MEJBBean <StatelessSessionBean>
@@ -102,7 +104,7 @@ Command list-sub-components executed successfully.
 
 [[sthref1809]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -111,7 +113,7 @@ Exit Status
 
 [[sthref1810]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

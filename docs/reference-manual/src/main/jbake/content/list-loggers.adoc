@@ -4,6 +4,7 @@ title=list-loggers
 next=list-log-levels.html
 prev=list-log-attributes.html
 ~~~~~~
+
 list-loggers
 ============
 
@@ -12,20 +13,20 @@ list-loggers
 list-loggers
 ------------
 
-lists existing loggers
+Lists existing loggers
 
 [[sthref1638]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-loggers [--help]
 ----
 
 [[sthref1639]]
 
-Description
+=== Description
 
 The `list-loggers` subcommand lists the existing \{product---name}
 loggers. Internal loggers are not listed. The `list-loggers` subcommand
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1640]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,17 +47,16 @@ asadmin-options::
 
 [[sthref1641]]
 
-Examples
+=== Examples
 
 [[GSRFM870]][[sthref1642]]
 
-Example 1   Listing the Loggers
+==== Example 1   Listing the Loggers
 
 This example lists the logger name, subsystem, and description for each
-logger. Some lines of output are omitted from this example for
-readability.
+logger. Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-loggers
 Logger Name                            Subsystem         Logger Description
@@ -71,7 +71,7 @@ Command list-loggers executed successfully.
 
 [[sthref1643]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -80,7 +80,7 @@ Exit Status
 
 [[sthref1644]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

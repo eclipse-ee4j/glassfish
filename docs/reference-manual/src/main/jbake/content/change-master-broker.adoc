@@ -4,6 +4,7 @@ title=change-master-broker
 next=change-master-password.html
 prev=change-admin-password.html
 ~~~~~~
+
 change-master-broker
 ====================
 
@@ -12,14 +13,14 @@ change-master-broker
 change-master-broker
 --------------------
 
-changes the master broker in a Message Queue cluster providing JMS
+Changes the master broker in a Message Queue cluster providing JMS
 services for a \{product---name} cluster.
 
 [[sthref53]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] change-master-broker [--help]
 clustered-instance-name
@@ -27,7 +28,7 @@ clustered-instance-name
 
 [[sthref54]]
 
-Description
+=== Description
 
 The `change-master-broker` subcommand changes the master broker in a
 Message Queue cluster that is the JMS provider for a \{product---name}
@@ -39,7 +40,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref55]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,7 +51,7 @@ asadmin-options::
 
 [[sthref56]]
 
-Operands
+=== Operands
 
 clustered-instance-name::
   The name of the server instance whose Message Queue broker is to
@@ -59,16 +60,16 @@ clustered-instance-name::
 
 [[sthref57]]
 
-Examples
+=== Examples
 
 [[GSRFM449]][[sthref58]]
 
-Example 1   Changing the master broker
+==== Example 1   Changing the master broker
 
 The following subcommand changes the Message Queue master broker to the
 one for the `clustinst3` clustered instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> change-master-broker clustinst3
 Command change-master-broker executed successfully.
@@ -76,7 +77,7 @@ Command change-master-broker executed successfully.
 
 [[sthref59]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -85,7 +86,7 @@ Exit Status
 
 [[sthref60]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

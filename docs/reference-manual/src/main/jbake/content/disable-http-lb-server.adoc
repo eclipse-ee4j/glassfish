@@ -4,6 +4,7 @@ title=disable-http-lb-server
 next=disable-monitoring.html
 prev=disable-http-lb-application.html
 ~~~~~~
+
 disable-http-lb-server
 ======================
 
@@ -12,22 +13,22 @@ disable-http-lb-server
 disable-http-lb-server
 ----------------------
 
-disables a sever or cluster managed by a load balancer
+Disables a sever or cluster managed by a load balancer
 
 [[sthref1055]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] disable-http-lb-server [--help] 
+asadmin [asadmin-options] disable-http-lb-server [--help]
 [--timeout 30]
 target
 ----
 
 [[sthref1056]]
 
-Description
+=== Description
 
 The `disable-http-lb-server` subcommand disables a standalone server or
 cluster of servers for load balancing. The disabled server instance or
@@ -45,17 +46,15 @@ it to the load balancer.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref1057]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -71,25 +70,26 @@ asadmin-options::
 
 [[sthref1058]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies which server instances and clusters to disable.
-  Valid values are: +
+  Valid values are:
+
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
 [[sthref1059]]
 
-Examples
+=== Examples
 
 [[GSRFM593]][[sthref1060]]
 
-Example 1   Disabling a Cluster for Load Balancing
+==== Example 1   Disabling a Cluster for Load Balancing
 
 This example disables load balancing for a cluster named `mycluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-http-lb-server mycluster
 
@@ -98,7 +98,7 @@ Command disable-http-lb-server executed successfully.
 
 [[sthref1061]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -107,7 +107,7 @@ Exit Status
 
 [[sthref1062]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

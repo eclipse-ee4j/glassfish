@@ -4,6 +4,7 @@ title=create-connector-security-map
 next=create-connector-work-security-map.html
 prev=create-connector-resource.html
 ~~~~~~
+
 create-connector-security-map
 =============================
 
@@ -12,13 +13,13 @@ create-connector-security-map
 create-connector-security-map
 -----------------------------
 
-creates a security map for the specified connector connection pool
+Creates a security map for the specified connector connection pool
 
 [[sthref175]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-connector-security-map [--help]
 --poolname connector_connection_pool_name
@@ -31,7 +32,7 @@ mapname
 
 [[sthref176]]
 
-Description
+=== Description
 
 The `create-connector-security-map` subcommand creates a security map
 for the specified connector connection pool. If the security map is not
@@ -56,7 +57,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref177]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -87,23 +88,23 @@ asadmin-options::
 
 [[sthref178]]
 
-Operands
+=== Operands
 
 mapname::
   The name of the security map to be created.
 
 [[sthref179]]
 
-Examples
+=== Examples
 
 [[GSRFM467]][[sthref180]]
 
-Example 1   Creating a Connector Security Map
+==== Example 1   Creating a Connector Security Map
 
 This example creates `securityMap1` for the existing connection pool
 named `connector-pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-connector-security-map --poolname connector-pool1
 --principals principal1,principal2 --mappedusername backend-username securityMap1
@@ -112,7 +113,7 @@ Command create-connector-security-map executed successfully
 
 [[sthref181]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -121,7 +122,7 @@ Exit Status
 
 [[sthref182]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=list-admin-objects
 next=list-application-refs.html
 prev=list.html
 ~~~~~~
+
 list-admin-objects
 ==================
 
@@ -12,21 +13,21 @@ list-admin-objects
 list-admin-objects
 ------------------
 
-gets all the administered objects
+Gets all the administered objects
 
 [[sthref1292]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-admin-objects [--help] 
+asadmin [asadmin-options] list-admin-objects [--help]
 [target]
 ----
 
 [[sthref1293]]
 
-Description
+=== Description
 
 The `list-admin-objects` subcommand lists all the administered objects.
 
@@ -34,7 +35,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1294]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,11 +46,12 @@ asadmin-options::
 
 [[sthref1295]]
 
-Operands
+=== Operands
 
 target::
   The target for which administered objects are to be listed. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the administered objects on the default server instance. This
     is the default value.
@@ -63,15 +65,15 @@ target::
 
 [[sthref1296]]
 
-Examples
+=== Examples
 
 [[GSRFM634]][[sthref1297]]
 
-Example 1   Listing Administered Objects
+==== Example 1   Listing Administered Objects
 
 This example lists all the administered objects.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-admin-objects
 jms/samplequeue
@@ -81,7 +83,7 @@ Command list-admin-objects executed successfully
 
 [[sthref1298]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref1299]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

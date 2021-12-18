@@ -4,6 +4,7 @@ title=create-node-config
 next=create-node-dcom.html
 prev=create-network-listener.html
 ~~~~~~
+
 create-node-config
 ==================
 
@@ -12,13 +13,13 @@ create-node-config
 create-node-config
 ------------------
 
-creates a node that is not enabled for remote communication
+Creates a node that is not enabled for remote communication
 
 [[sthref445]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-node-config [--help]
 [--nodehost node-host]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] create-node-config [--help]
 
 [[sthref446]]
 
-Description
+=== Description
 
 The `create-node-config` subcommand creates a node that is not enabled
 for remote communication. The `create-node-config` subcommand does not
@@ -40,13 +41,11 @@ instances reside.
 
 
 [NOTE]
-=======================================================================
-
+====
 To represent the host where the DAS is running, \{product---name}
-provides the predefined node `localhost-`domain. The predefined node
-`localhost-`domain is not enabled for remote communication.
-
-=======================================================================
+provides the predefined node ``localhost-``domain. The predefined node
+``localhost-``domain is not enabled for remote communication.
+====
 
 
 All administration of instances on a node that is not enabled for remote
@@ -68,7 +67,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref447]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -94,11 +93,12 @@ asadmin-options::
 
 [[sthref448]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node. +
-  The name must meet the following requirements: +
+  The name must meet the following requirements:
+
   * The name may contain only ASCII characters.
   * The name must start with a letter, a number, or an underscore.
   * The name may contain only the following characters:
@@ -116,16 +116,16 @@ node-name::
 
 [[sthref449]]
 
-Examples
+=== Examples
 
 [[GSRFM509]][[sthref450]]
 
-Example 1   Creating a Node That Is Not Enabled for Remote Communication
+==== Example 1   Creating a Node That Is Not Enabled for Remote Communication
 
 This example creates the node `sj03` for host `sj03.example.com`. The
 node is not enabled for remote communication.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-node-config --nodehost sj03.example.com sj03
 
@@ -134,7 +134,7 @@ Command create-node-config executed successfully.
 
 [[sthref451]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -143,7 +143,7 @@ Exit Status
 
 [[sthref452]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

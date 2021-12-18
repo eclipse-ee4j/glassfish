@@ -4,6 +4,7 @@ title=list-timers
 next=list-transports.html
 prev=list-threadpools.html
 ~~~~~~
+
 list-timers
 ===========
 
@@ -12,13 +13,13 @@ list-timers
 list-timers
 -----------
 
-lists all of the persistent timers owned by server instance(s)
+Lists all of the persistent timers owned by server instance(s)
 
 [[sthref1834]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-timers [--help] 
 [target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-timers [--help]
 
 [[sthref1835]]
 
-Description
+=== Description
 
 The `list-timers` subcommand lists the persistent timers owned by a
 specific server instance or a cluster of server instances. This command
@@ -34,7 +35,7 @@ is supported in remote mode only.
 
 [[sthref1836]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,7 +46,7 @@ asadmin-options::
 
 [[sthref1837]]
 
-Operands
+=== Operands
 
 target::
   The target is either a standalone server instance or a cluster. If the
@@ -56,16 +57,16 @@ target::
 
 [[sthref1838]]
 
-Examples
+=== Examples
 
 [[GSRFM715]][[sthref1839]]
 
-Example 1   Listing Current Timers in a Server Instance
+==== Example 1   Listing Current Timers in a Server Instance
 
 This example lists persistent timers in a particular standalone server
 instance. There is one currently active timer set.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-timers server
 1
@@ -75,7 +76,7 @@ The list-timers command was executed successfully.
 
 [[sthref1840]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -84,7 +85,7 @@ Exit Status
 
 [[sthref1841]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

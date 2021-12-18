@@ -4,6 +4,7 @@ title=logging
 next=monitoring.html
 prev=instance.html
 ~~~~~~
+
 logging
 =======
 
@@ -12,11 +13,11 @@ logging
 logging
 -------
 
-capturing information on \{product---name} runtime events
+Capturing information on \{product---name} runtime events
 
 [[sthref2404]]
 
-Description
+=== Description
 
 Logging is the process by which \{product---name} captures data about
 events that occur during \{product---name} operation. \{product---name}
@@ -39,7 +40,7 @@ Logging levels can be configured by using the Administration Console or
 the `set-log-levels` subcommand. Additional properties can be set by
 using the Administration Console or by editing the `logging.properties`
 file. The default `logging.properties` file is typically located in
-domain-dir`/config`.
+domain-dir``/config``.
 
 Although application components can use the Apache Commons Logging
 Library to record messages, the platform standard JSR 047 API is
@@ -47,7 +48,7 @@ recommended for better log configuration.
 
 [[sthref2405]]
 
-See Also
+=== See Also
 
 link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
 link:rotate-log.html#rotate-log-1[`rotate-log`(1)],

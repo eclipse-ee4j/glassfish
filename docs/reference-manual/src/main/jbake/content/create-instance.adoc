@@ -4,6 +4,7 @@ title=create-instance
 next=create-jacc-provider.html
 prev=create-iiop-listener.html
 ~~~~~~
+
 create-instance
 ===============
 
@@ -12,26 +13,26 @@ create-instance
 create-instance
 ---------------
 
-creates a \{product---name} instance
+Creates a \{product---name} instance
 
 [[sthref293]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-instance [--help] 
---node node-name 
-[--config config-name | --cluster cluster-name] 
+asadmin [asadmin-options] create-instance [--help]
+--node node-name
+[--config config-name | --cluster cluster-name]
 [--lbenabled={true|false}]
 [--portbase=port-number] [--checkports={true|false}]
-[--systemproperties (name=value)[:name=value]* ] 
+[--systemproperties (name=value)[:name=value]* ]
 instance-name
 ----
 
 [[sthref294]]
 
-Description
+=== Description
 
 The `create-instance` subcommand creates a \{product---name} instance.
 This subcommand requires the Distributed Component Object Model (DCOM)
@@ -41,13 +42,11 @@ is represented by the node where the instance is to reside.
 
 
 [NOTE]
-=======================================================================
-
+====
 DCOM or SSH is not required if the instance is to reside on a node of
 type `CONFIG` that represents the local host. A node of type `CONFIG` is
 not enabled for remote communication over DCOM or SSH.
-
-=======================================================================
+====
 
 
 You may run this command from any host that can contact the DAS.
@@ -70,21 +69,25 @@ an instance that is not joining a cluster, the subcommand creates a
 configuration for the instance. An instance that is joining a cluster
 receives its configuration from its parent cluster.
 
-Each \{product---name} instance is one of the following types of
-instance:
+Each \{product---name} instance is one of the following types of instance:
 
 Standalone instance::
   A standalone instance does not share its configuration with any other
   instances or clusters. A standalone instance is created if either of
-  the following conditions is met: +
+  the following conditions is met:
++
+--
   * No configuration or cluster is specified in the command to create
   the instance.
   * A configuration that is not referenced by any other instances or
-  clusters is specified in the command to create the instance. +
-  When no configuration or cluster is specified, a copy of the
-  `default-config` configuration is created for the instance. The name
-  of this configuration is instance-name`-config`, where instance-name
+  clusters is specified in the command to create the instance.
+--
++
+When no configuration or cluster is specified, a copy of the
+  `default-config` configuration is created for the instance.
+  The name of this configuration is instance-name``-config``, where instance-name
   represents the name of an unclustered server instance.
+
 Shared instance::
   A shared instance shares its configuration with other instances or
   clusters. A shared instance is created if a configuration that is
@@ -116,7 +119,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref295]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -128,7 +131,7 @@ asadmin-options::
   The name of the node that defines the host where the instance is to be
   created. The node must already exist. If the instance is to be created
   on the host where the domain administration server (DAS) is running,
-  use the predefined node `localhost-`domain.
+  use the predefined node ``localhost-``domain.
 `--config`::
   Specifies the named configuration that the instance references. The
   configuration must exist and must not be named `default-config` or
@@ -146,7 +149,8 @@ asadmin-options::
   created.
 `--lbenabled`::
   Specifies whether the instance is enabled for load balancing. Possible
-  values are as follows: +
+  values are as follows:
+
   `true`;;
     The instance is enabled for load balancing (default). +
     When an instance is enabled for load balancing, a load balancer
@@ -155,11 +159,13 @@ asadmin-options::
     The instance is disabled for load balancing. +
     When an instance is disabled for load balancing, a load balancer
     does not send requests to the instance.
+
 `--portbase`::
   Determines the number with which the port assignment should start. An
   instance uses a certain number of ports that are statically assigned.
-  The portbase value determines where the assignment should start. The
-  values for the ports are calculated as follows: +
+  The portbase value determines where the assignment should start.
+  The values for the ports are calculated as follows:
++
   * Administration port: portbase + 48
   * HTTP listener port: portbase + 80
   * HTTPS listener port: portbase + 81
@@ -169,8 +175,9 @@ asadmin-options::
   * Secure IIOP with mutual authentication port: portbase + 39
   * JMX port: portbase + 86
   * JPA debugger port: portbase + 9
-  * Felix shell service port for OSGi module management: portbase + 66 +
-  When the `--portbase` option is specified, the output of this
+  * Felix shell service port for OSGi module management: portbase + 66
++
+When the `--portbase` option is specified, the output of this
   subcommand includes a complete list of used ports.
 `--checkports`::
   Specifies whether to check for the availability of the administration,
@@ -182,7 +189,8 @@ asadmin-options::
   example, two clustered instances reside on the same host. In this
   situation, port settings for one instance must be overridden because
   both instances share the same configuration. +
-  The following properties are available: +
+  The following properties are available:
+
   `ASADMIN_LISTENER_PORT`;;
     This property specifies the port number of the HTTP port or HTTPS
     port through which the DAS connects to the instance to manage the
@@ -236,11 +244,12 @@ asadmin-options::
 
 [[sthref296]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the instance that is being created. +
-  The name must meet the following requirements: +
+  The name must meet the following requirements:
+
   * The name may contain only ASCII characters.
   * The name must start with a letter, a number, or an underscore.
   * The name may contain only the following characters:
@@ -258,19 +267,19 @@ instance-name::
 
 [[sthref297]]
 
-Examples
+=== Examples
 
 [[GSRFM487]][[sthref298]]
 
-Example 1   Creating a Standalone \{product---name} Instance
+==== Example 1   Creating a Standalone \{product---name} Instance
 
 This example creates the standalone \{product---name} instance
 `pmdsainst` in the domain `domain1` on the local host.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-instance --node localhost-domain1 pmdsainst
-Port Assignments for server instance pmdsainst: 
+Port Assignments for server instance pmdsainst:
 JMX_SYSTEM_CONNECTOR_PORT=28688
 JMS_PROVIDER_PORT=27678
 ASADMIN_LISTENER_PORT=24850
@@ -285,7 +294,7 @@ Command create-instance executed successfully.
 
 [[GSRFM488]][[sthref299]]
 
-Example 2   Creating a Standalone \{product---name} Instance With Custom
+==== Example 2   Creating a Standalone \{product---name} Instance With Custom
 Port Assignments
 
 This example creates the standalone \{product---name} instance
@@ -299,7 +308,7 @@ numbers are assigned to the following ports:
 * Secure IIOP connections port with mutual authentication
 * JMX connector port
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-instance --node localhost-domain1
 --systemproperties HTTP_LISTENER_PORT=58294:
@@ -308,7 +317,7 @@ IIOP_LISTENER_PORT=58300:
 IIOP_SSL_LISTENER_PORT=58303:
 IIOP_SSL_MUTUALAUTH_PORT=58306:
 JMX_SYSTEM_CONNECTOR_PORT=58309 pmdcpinst
-Port Assignments for server instance pmdcpinst: 
+Port Assignments for server instance pmdcpinst:
 JMS_PROVIDER_PORT=27679
 ASADMIN_LISTENER_PORT=24851
 
@@ -317,17 +326,17 @@ Command create-instance executed successfully.
 
 [[GSRFM489]][[sthref300]]
 
-Example 3   Creating a Shared \{product---name} Instance
+==== Example 3   Creating a Shared \{product---name} Instance
 
 This example creates the shared \{product---name} instance
 `pmdsharedinst1` in the domain `domain1` on the local host. The shared
 configuration of this instance is `pmdsharedconfig`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin create-instance --node localhost-domain1 --config pmdsharedconfig 
+asadmin create-instance --node localhost-domain1 --config pmdsharedconfig
 pmdsharedinst1
-Port Assignments for server instance pmdsharedinst1: 
+Port Assignments for server instance pmdsharedinst1:
 JMX_SYSTEM_CONNECTOR_PORT=28687
 JMS_PROVIDER_PORT=27677
 ASADMIN_LISTENER_PORT=24849
@@ -342,16 +351,16 @@ Command create-instance executed successfully.
 
 [[GSRFM490]][[sthref301]]
 
-Example 4   Creating a Clustered \{product---name} Instance
+==== Example 4   Creating a Clustered \{product---name} Instance
 
 This example creates the clustered \{product---name} instance `pmdinst1`
 in the domain `domain1` on the local host. The instance is a member of
 the cluster `pmdclust1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-instance --node localhost-domain1 --cluster pmdclust pmdinst1
-Port Assignments for server instance pmdinst1: 
+Port Assignments for server instance pmdinst1:
 JMX_SYSTEM_CONNECTOR_PORT=28686
 JMS_PROVIDER_PORT=27676
 HTTP_LISTENER_PORT=28080
@@ -366,7 +375,7 @@ Command create-instance executed successfully.
 
 [[sthref302]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -375,7 +384,7 @@ Exit Status
 
 [[sthref303]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

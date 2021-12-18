@@ -4,6 +4,7 @@ title=list-secure-admin-internal-users
 next=list-secure-admin-principals.html
 prev=list-resource-refs.html
 ~~~~~~
+
 list-secure-admin-internal-users
 ================================
 
@@ -12,16 +13,16 @@ list-secure-admin-internal-users
 list-secure-admin-internal-users
 --------------------------------
 
-lists the user names that the \{product---name} DAS and instances use to
+Lists the user names that the \{product---name} DAS and instances use to
 authenticate with each other and to authorize admin operations.
 
 [[sthref1787]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-secure-admin-internal-users [--help]  
+asadmin [asadmin-options] list-secure-admin-internal-users [--help]
 [--long={false|true}]
 [--output output]
 [--header={false|true}]
@@ -30,7 +31,7 @@ asadmin [asadmin-options] list-secure-admin-internal-users [--help]
 
 [[sthref1788]]
 
-Description
+=== Description
 
 The `list-secure-admin-internal-users` subcommand lists the user names
 that the \{product---name} DAS and instances use to authenticate with
@@ -38,7 +39,7 @@ each other and to authorize admin operations.
 
 [[sthref1789]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,12 +55,14 @@ asadmin-options::
 `-o`::
   Displays specific details about each internal user. Use a
   comma-separated list to specify the details you want to display and
-  their order. The values are case-insensitive. +
-  Possible values are as follows: +
+  their order. The values are case-insensitive.
+  Possible values are as follows:
+
   `username`;;
     Displays the user name for the internal user.
   `password-alias`;;
     Displays the password alias for the internal user.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -68,7 +71,7 @@ asadmin-options::
 
 [[sthref1790]]
 
-Operands
+=== Operands
 
 name::
   The user name for the internal user for which you want to display
@@ -76,17 +79,17 @@ name::
 
 [[sthref1791]]
 
-Examples
+=== Examples
 
 [[GSRFM709]][[sthref1792]]
 
-Example 1   Listing the User Name for Secure Admin
+==== Example 1   Listing the User Name for Secure Admin
 
 This example lists the user names that the \{product---name} DAS and
 instances use to authenticate with each other and to authorize admin
 operations.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-secure-admin-internal-users
 
@@ -95,7 +98,7 @@ Command list-secure-admin-internal-users executed successfully.
 
 [[sthref1793]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -104,7 +107,7 @@ Exit Status
 
 [[sthref1794]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

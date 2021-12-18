@@ -4,6 +4,7 @@ title=delete-network-listener
 next=delete-node-config.html
 prev=delete-module-config.html
 ~~~~~~
+
 delete-network-listener
 =======================
 
@@ -12,13 +13,13 @@ delete-network-listener
 delete-network-listener
 -----------------------
 
-removes a network listener
+Removes a network listener
 
 [[sthref890]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-network-listener [--help]
 [--target target]
@@ -27,14 +28,14 @@ listener-name
 
 [[sthref891]]
 
-Description
+=== Description
 
 The `delete-network-listener` subcommand removes the specified network
 listener. This subcommand is supported in remote mode only.
 
 [[sthref892]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the network listener only from the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the network listener from the default server instance. This
     is the default value.
@@ -59,23 +61,23 @@ asadmin-options::
 
 [[sthref893]]
 
-Operands
+=== Operands
 
 listener-name::
   The name of the network listener to be deleted.
 
 [[sthref894]]
 
-Examples
+=== Examples
 
 [[GSRFM567]][[sthref895]]
 
-Example 1   Deleting a Network Listener
+==== Example 1   Deleting a Network Listener
 
 The following command deletes the network listener named
 `sampleListener`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-network-listener sampleListener
 Command delete-network-listener executed successfully.
@@ -83,7 +85,7 @@ Command delete-network-listener executed successfully.
 
 [[sthref896]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -92,7 +94,7 @@ Exit Status
 
 [[sthref897]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

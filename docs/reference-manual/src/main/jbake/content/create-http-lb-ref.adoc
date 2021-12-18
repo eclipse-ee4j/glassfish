@@ -4,6 +4,7 @@ title=create-http-lb-ref
 next=create-http-listener.html
 prev=create-http-lb-config.html
 ~~~~~~
+
 create-http-lb-ref
 ==================
 
@@ -12,14 +13,14 @@ create-http-lb-ref
 create-http-lb-ref
 ------------------
 
-adds an existing cluster or server instance to an existing load balancer
+Adds an existing cluster or server instance to an existing load balancer
 configuration or load balancer
 
 [[sthref259]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-http-lb-ref [--help] 
 --config config_name | --lbname load_balancer_name 
@@ -32,7 +33,7 @@ target
 
 [[sthref260]]
 
-Description
+=== Description
 
 Use the `create-http-lb-ref` subcommand to:
 
@@ -51,17 +52,15 @@ use `enable-http-lb-application` to enable them individually.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref261]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -116,11 +115,12 @@ asadmin-options::
 
 [[sthref262]]
 
-Operands
+=== Operands
 
 target::
   Specifies which cluster or instance to add to the load balancer. Valid
-  values are: +
+  values are:
++
   * cluster_name- Specifies that requests for this cluster will be
   handled by the load balancer.
   * stand-alone_instance_name- Specifies that requests for this
@@ -128,16 +128,16 @@ target::
 
 [[sthref263]]
 
-Examples
+=== Examples
 
 [[GSRFM480]][[sthref264]]
 
-Example 1   Adding a Cluster Reference to a Load Balancer Configuration
+==== Example 1   Adding a Cluster Reference to a Load Balancer Configuration
 
 This example adds a reference to a cluster named `cluster2` to a load
 balancer configuration named `mylbconfig`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-lb-ref --config mylbconfig cluster2 
 
@@ -146,12 +146,12 @@ Command create-http-lb-ref executed successfully.
 
 [[GSRFM481]][[sthref265]]
 
-Example 2   Adding a Cluster Reference to a Load Balancer
+==== Example 2   Adding a Cluster Reference to a Load Balancer
 
 This example adds a reference to a cluster named `cluster2` to a load
 balancer named `mylb`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-lb-ref --lbname mylb cluster2 
 
@@ -160,12 +160,12 @@ Command create-http-lb-ref executed successfully.
 
 [[GSRFM482]][[sthref266]]
 
-Example 3   Configuring a Health Checker and Load Balancer Policy
+==== Example 3   Configuring a Health Checker and Load Balancer Policy
 
 This example configures a health checker and load balancing policy, and
 enables the load balancer for instances and applications.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-lb-ref --config mylbconfig --lbpolicy weighted-round-robin 
 --healthcheckerinterval 40 --healthcheckertimeout 20 
@@ -176,11 +176,11 @@ Command create-http-lb-ref executed successfully.
 
 [[GSRFM483]][[sthref267]]
 
-Example 4   Setting a User-Defined Load Balancing Policy
+==== Example 4   Setting a User-Defined Load Balancing Policy
 
 This example sets a user-defined load balancing policy.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-lb-ref --lbpolicy user-defined --lbpolicymodule /user/modules/module.so
 --config mylbconfig cluster2
@@ -190,7 +190,7 @@ Command create-http-lb-ref executed successfully.
 
 [[sthref268]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -199,7 +199,7 @@ Exit Status
 
 [[sthref269]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

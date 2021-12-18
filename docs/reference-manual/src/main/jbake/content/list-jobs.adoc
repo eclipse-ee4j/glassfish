@@ -4,6 +4,7 @@ title=list-jobs
 next=list-jvm-options.html
 prev=list-jndi-resources.html
 ~~~~~~
+
 list-jobs
 =========
 
@@ -12,14 +13,14 @@ list-jobs
 list-jobs
 ---------
 
-lists information about subcommands that were started using
+Lists information about subcommands that were started using
 `asadmin --detach` or that contain progress information
 
 [[sthref1600]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-jobs [--help]
 [job_id]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] list-jobs [--help]
 
 [[sthref1601]]
 
-Description
+=== Description
 
 The `list-jobs` subcommand lists information about subcommands that were
 started using the `asadmin` utility option `--detach` or that contain
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1602]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,23 +50,23 @@ asadmin-options::
 
 [[sthref1603]]
 
-Operands
+=== Operands
 
 job_id::
   The ID of the job for which you want to list information.
 
 [[sthref1604]]
 
-Examples
+=== Examples
 
 [[GSRFM868]][[sthref1605]]
 
-Example 1   Checking Job Status
+==== Example 1   Checking Job Status
 
 This example provides information about subcommands that were started
 using `asadmin --detach` or that contain progress information.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jobs
 JOB ID     COMMAND           STATE       EXIT CODE TIME OF COMPLETION
@@ -76,7 +77,7 @@ Command list-jobs executed successfully
 
 [[sthref1606]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -85,7 +86,7 @@ Exit Status
 
 [[sthref1607]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

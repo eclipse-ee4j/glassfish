@@ -4,6 +4,7 @@ title=delete-http-redirect
 next=delete-iiop-listener.html
 prev=delete-http-listener.html
 ~~~~~~
+
 delete-http-redirect
 ====================
 
@@ -12,13 +13,13 @@ delete-http-redirect
 delete-http-redirect
 --------------------
 
-removes an HTTP redirect
+Removes an HTTP redirect
 
 [[sthref739]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 delete-http-redirect [--help]
 [--target target]
@@ -27,14 +28,14 @@ protocol-name
 
 [[sthref740]]
 
-Description
+=== Description
 
 The `delete-http-redirect` subcommand removes the specified HTTP
 redirect. This subcommand is supported in remote mode only.
 
 [[sthref741]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the HTTP redirect only from the specified target. Valid values
-  are as follows: +
+  are as follows:
+
   `server`;;
     Deletes the HTTP redirect from the default server instance. This is
     the default value.
@@ -59,14 +61,14 @@ asadmin-options::
 
 [[sthref742]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the associated protocol.
 
 [[sthref743]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -75,7 +77,7 @@ Exit Status
 
 [[sthref744]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

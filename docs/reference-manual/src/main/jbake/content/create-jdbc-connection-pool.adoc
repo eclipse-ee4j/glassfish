@@ -4,6 +4,7 @@ title=create-jdbc-connection-pool
 next=create-jdbc-resource.html
 prev=create-javamail-resource.html
 ~~~~~~
+
 create-jdbc-connection-pool
 ===========================
 
@@ -12,13 +13,13 @@ create-jdbc-connection-pool
 create-jdbc-connection-pool
 ---------------------------
 
-registers a JDBC connection pool
+Registers a JDBC connection pool
 
 [[sthref320]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jdbc-connection-pool [--help]
 [--datasourceclassname=datasourceclassname]
@@ -65,7 +66,7 @@ connectionpoolid
 
 [[sthref321]]
 
-Description
+=== Description
 
 The `create-jdbc-connection-pool` subcommand registers a new Java
 Database Connectivity ("JDBC") software connection pool with the
@@ -80,7 +81,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref322]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -94,7 +95,8 @@ asadmin-options::
   `javax.sql.XADatasource` interface. Non-XA or exclusively local
   transaction datasources will implement the `javax.sql.Datasource`
   interface.
-`--restype` +
+`--restype`
++
 Required when a datasource class implements two or more interfaces
 (`javax.sql.DataSource`, `javax.sql.XADataSource`, or
 `javax.sql.ConnectionPoolDataSource`), or when a driver classname must
@@ -204,12 +206,14 @@ be provided.::
 `--leakreclaim`::
   Specifies whether leaked connections are restored to the connection
   pool after leak connection tracing is complete. Possible values are as
-  follows: +
+  follows:
+
   `false`;;
     Leaked connections are not restored to the connection pool
     (default).
   `true`;;
     Leaked connections are restored to the connection pool.
+
 `--statementleaktimeout`::
   Specifies the amount of time, in seconds, after which any statements
   that have not been closed by an application are to be detected.
@@ -221,20 +225,21 @@ be provided.::
   logged when a statement leak is detected. If statement leak tracing is
   enabled, you can use the Administration Console to enable monitoring
   of the JDBC connection pool to get statistics on the number of
-  statement leaks. The default value is 0, which disables statement leak
-  tracing. +
-  The following limitations apply to the statement leak timeout value: +
-  * The value must be less than the value set for the connection
-  `leak-timeout`.
-  * The value must be greater than the value set for
-  `statement-timeout`.
+  statement leaks. The default value is 0, which disables statement leak tracing. +
+  The following limitations apply to the statement leak timeout value:
+
+  * The value must be less than the value set for the connection `leak-timeout`.
+  * The value must be greater than the value set for `statement-timeout`.
+
 `--statementleakreclaim`::
   Specifies whether leaked statements are reclaimed after the statements
-  leak. Possible values are as follows: +
+  leak. Possible values are as follows:
+
   `false`;;
     Leaked statements are not reclaimed (default).
   `true`;;
     Leaked statements are reclaimed.
+
 `--creationretryattempts`::
   Specifies the maximum number of times that \{product---name} retries
   to create a connection if the initial attempt fails. The default value
@@ -264,19 +269,22 @@ be provided.::
   terminated.
 `--lazyconnectionenlistment`::
   Specifies whether a resource to a transaction is enlisted only when a
-  method actually uses the resource. Possible values are as follows: +
+  method actually uses the resource. Possible values are as follows:
+
   `false`;;
     Resources to a transaction are always enlisted and not only when a
     method actually uses the resource (default).
   `true`;;
     Resources to a transaction are enlisted only when a method actually
     uses the resource.
+
 `--lazyconnectionassociation`::
   Specifies whether a physical connection should be associated with the
   logical connection only when the physical connection is used, and
   disassociated when the transaction is completed. Such association and
   dissociation enable the reuse of physical connections. Possible values
-  are as follows: +
+  are as follows:
+
   `false`;;
     A physical connection is associated with the logical connection even
     before the physical connection is used, and is not disassociated
@@ -286,16 +294,19 @@ be provided.::
     when the physical connection is used, and disassociated when the
     transaction is completed. The `--lazyconnectionenlistment` option
     must also be set to `true`.
+
 `--associatewiththread`::
   Specifies whether a connection is associated with the thread to enable
   the thread to reuse the connection. If a connection is not associated
   with the thread, the thread must obtain a connection from the pool
   each time that the thread requires a connection. Possible values are
-  as follows: +
+  as follows:
+
   `false`;;
     A connection is not associated with the thread (default).
   `true`;;
     A connection is associated with the thread.
+
 `--driverclassname`::
   The name of the vendor-supplied JDBC driver class. This driver should
   implement the `java.sql.Driver` interface.
@@ -304,7 +315,8 @@ be provided.::
   be matched by the resource adaptor. If all the connections in the pool
   are homogenous, a connection picked from the pool need not be matched
   by the resource adapter, which means that this option can be set to
-  false. Possible values are as follows: +
+  false. Possible values are as follows:
++
   `false`;;
     A connection should not be matched by the resource adaptor
     (default).
@@ -345,24 +357,30 @@ be provided.::
   However, the provision of wrapped JDBC objects can impair the
   performance of applications. The default value is true. +
   The pooling infrastructure provides wrapped objects for
-  implementations of the following interfaces in the JDBC API: +
+  implementations of the following interfaces in the JDBC API:
+
   * `java.sql.CallableStatement`
   * `java.sql.DatabaseMetaData`
   * `java.sql.PreparedStatement`
   * `java.sql.ResultSet`
-  * `java.sql.Statement` +
-  Possible values of `--wrapjdbcobjects` are as follows: +
+  * `java.sql.Statement`
+
++
+Possible values of `--wrapjdbcobjects` are as follows:
+
   `false`;;
     The pooling infrastructure does not provide wrapped JDBC objects to
     applications. (default).
   `true`;;
     The pooling infrastructure provides wrapped JDBC objects to
     applications.
+
 `--description`::
   Text providing details about the specified JDBC connection pool.
 `--property`::
   Optional attribute name/value pairs for configuring the pool. The
-  following properties are available: +
+  following properties are available:
+
   `user`;;
     Specifies the user name for connecting to the database.
   `password`;;
@@ -419,20 +437,17 @@ be provided.::
     Specifies the number of queries to list when reporting the top and
     most frequently used queries. Takes effect when SQL tracing and
     monitoring are enabled for the JDBC connection pool. The default
-    value is 10 queries. +
+    value is 10 queries.
 
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
++
+[NOTE]
+====
 If an attribute name or attribute value contains a colon, the
 backslash (`\`) must be used to escape the colon in the name or value.
 Other characters might also require an escape character. For more
 information about escape characters in command options, see the
 link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
-
-|=======================================================================
+====
 
 `--target`::
   Do not specify this option. This option is retained for compatibility
@@ -442,26 +457,26 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
 
 [[sthref323]]
 
-Operands
+=== Operands
 
 connectionpoolid::
   The name of the JDBC connection pool to be created.
 
 [[sthref324]]
 
-Examples
+=== Examples
 
 [[GSRFM493]][[sthref325]]
 
-Example 1   Creating a JDBC Connection Pool
+==== Example 1   Creating a JDBC Connection Pool
 
 This example creates a JDBC connection pool named `sample_derby_pool`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jdbc-connection-pool
 --datasourceclassname org.apache.derby.jdbc.ClientDataSource
---restype javax.sql.XADataSource 
+--restype javax.sql.XADataSource
 --property portNumber=1527:password=APP:user=APP:serverName=
 localhost:databaseName=sun-appserv-samples:connectionAttributes=\;
 create\\=true sample_derby_pool
@@ -474,7 +489,7 @@ distinguish the equal sign (`=`).
 
 [[sthref326]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -483,7 +498,7 @@ Exit Status
 
 [[sthref327]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

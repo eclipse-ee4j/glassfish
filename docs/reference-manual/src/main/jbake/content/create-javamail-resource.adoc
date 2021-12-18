@@ -4,6 +4,7 @@ title=create-javamail-resource
 next=create-jdbc-connection-pool.html
 prev=create-jacc-provider.html
 ~~~~~~
+
 create-javamail-resource
 ========================
 
@@ -12,15 +13,15 @@ create-javamail-resource
 create-javamail-resource
 ------------------------
 
-creates a JavaMail session resource
+Creates a JavaMail session resource
 
 [[sthref312]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-javamail-resource [--help] 
+asadmin [asadmin-options] create-javamail-resource [--help]
 [--target target] --mailhost hostname
 --mailuser username --fromaddress address [--storeprotocol storeprotocol]
 [--storeprotocolclass storeprotocolclass] [--transprotocol transprotocol]
@@ -30,7 +31,7 @@ asadmin [asadmin-options] create-javamail-resource [--help]
 
 [[sthref313]]
 
-Description
+=== Description
 
 The `create-javamail-resource` subcommand creates a JavaMail session
 resource.
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref314]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,7 +50,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target for which you are creating the
-  JavaMail session resource. Valid values are: +
+  JavaMail session resource. Valid values are:
++
   `server`;;
     Creates the resource for the default server instance. This is the
     default value.
@@ -101,13 +103,13 @@ asadmin-options::
   Text providing some details of the JavaMail resource.
 `--property`::
   Optional attribute name/value pairs for configuring the JavaMail
-  resource. The \{product---name}-specific `mail-` prefix is converted
+  resource. The \{product---name}-specific ``mail-`` prefix is converted
   to the standard mail prefix. The JavaMail API documentation lists the
   properties you might want to set.
 
 [[sthref315]]
 
-Operands
+=== Operands
 
 jndi-name::
   The JNDI name of the JavaMail resource to be created. It is a
@@ -116,26 +118,26 @@ jndi-name::
 
 [[sthref316]]
 
-Examples
+=== Examples
 
 [[GSRFM492]][[sthref317]]
 
-Example 1   Creating a JavaMail Resource
+==== Example 1   Creating a JavaMail Resource
 
 This example creates a JavaMail resource named `mail/MyMailSession`. The
 JNDI name for a JavaMail session resource customarily includes the
 `mail/` naming subcontext.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-javamail-resource --mailhost localhost 
+asadmin> create-javamail-resource --mailhost localhost
 --mailuser sample --fromaddress sample@sun.com mail/MyMailSession
 Command create-javamail-resource executed successfully.
 ----
 
 [[sthref318]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -144,7 +146,7 @@ Exit Status
 
 [[sthref319]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

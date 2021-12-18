@@ -4,6 +4,7 @@ title=create-network-listener
 next=create-node-config.html
 prev=create-module-config.html
 ~~~~~~
+
 create-network-listener
 =======================
 
@@ -12,21 +13,21 @@ create-network-listener
 create-network-listener
 -----------------------
 
-adds a new network listener socket
+Adds a new network listener socket
 
 [[sthref437]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-network-listener [--help]
-[--address address] 
---listenerport listener-port 
-[--threadpool thread-pool] 
---protocol protocol 
-[--transport transport] 
-[--enabled={true|false}] 
+[--address address]
+--listenerport listener-port
+[--threadpool thread-pool]
+--protocol protocol
+[--transport transport]
+[--enabled={true|false}]
 [--jkenabled={false|true}]
 [--target target]
 listener-name
@@ -34,39 +35,35 @@ listener-name
 
 [[sthref438]]
 
-Description
+=== Description
 
 The `create-network-listener` subcommand creates a network listener.
 This subcommand is supported in remote mode only.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you edit the special network listener named `admin-listener`, you
 must restart the server for the changes to take effect. The
 Administration Console does not tell you that a restart is required in
 this case.
-
-=======================================================================
+====
 
 
 
 [NOTE]
-=======================================================================
-
+====
 You can use the `create-http-listener` subcommand to create a network
 listener that uses the HTTP protocol without having to first create a
 protocol, transport, or HTTP configuration. This subcommand is a
 convenient shortcut, but it gives access to only a limited number of
 options.
-
-=======================================================================
+====
 
 
 [[sthref439]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -96,7 +93,8 @@ asadmin-options::
   is false.
 `--target`::
   Creates the network listener only on the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Creates the network listener on the default server instance. This is
     the default value.
@@ -111,32 +109,32 @@ asadmin-options::
 
 [[sthref440]]
 
-Operands
+=== Operands
 
 listener-name::
   The name of the network listener.
 
 [[sthref441]]
 
-Examples
+=== Examples
 
 [[GSRFM508]][[sthref442]]
 
-Example 1   Creating a Network Listener
+==== Example 1   Creating a Network Listener
 
 The following command creates a network listener named `sampleListener`
 that is not enabled at runtime:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-network-listener --listenerport 7272 protocol http-1 
+asadmin> create-network-listener --listenerport 7272 protocol http-1
 --enabled=false sampleListener
 Command create-network-listener executed successfully.
 ----
 
 [[sthref443]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -145,7 +143,7 @@ Exit Status
 
 [[sthref444]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

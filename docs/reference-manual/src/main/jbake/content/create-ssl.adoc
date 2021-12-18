@@ -4,6 +4,7 @@ title=create-ssl
 next=create-system-properties.html
 prev=create-service.html
 ~~~~~~
+
 create-ssl
 ==========
 
@@ -12,20 +13,20 @@ create-ssl
 create-ssl
 ----------
 
-creates and configures the SSL element in the selected HTTP listener,
+Creates and configures the SSL element in the selected HTTP listener,
 IIOP listener, or IIOP service
 
 [[sthref537]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-ssl [--help]
 [--target target]
 --type listener_or_service_type
---certname cert_name 
-[--ssl2enabled={false|true}] [--ssl2ciphers ss12ciphers] 
+--certname cert_name
+[--ssl2enabled={false|true}] [--ssl2ciphers ss12ciphers]
 [--ssl3enabled={true|false}] [--tlsenabled={true|false}]
 [--ssl3tlsciphers ssl3tlsciphers]
 [--tlsrollbackenabled={true|false}]
@@ -35,7 +36,7 @@ asadmin [asadmin-options] create-ssl [--help]
 
 [[sthref538]]
 
-Description
+=== Description
 
 The `create-ssl` subcommand creates and configures the SSL element in
 the selected HTTP listener, IIOP listener, or IIOP service to enable
@@ -45,7 +46,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref539]]
 
-Options
+=== Options
 
 If an option has a short option name, then the short option precedes the
 long option name. Short options have one dash whereas long options have
@@ -59,7 +60,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target on which you are configuring the ssl element. The
-  following values are valid: +
+  following values are valid:
+
   `server`;;
     Specifies the server in which the iiop-service or HTTP/IIOP listener
     is to be configured for SSL.
@@ -74,15 +76,19 @@ asadmin-options::
   instance;;
     Specifies the instance in which the HTTP/IIOP listener or
     iiop-service is to be configured for SSL.
+
 `--type`::
   The type of service or listener for which the SSL is created. The type
-  can be: +
+  can be:
+
   * `network-listener`
   * `http-listener`
   * `iiop-listener`
   * `iiop-service`
-  * `jmx-connector` +
-  When the type is `iiop-service`, the `ssl-client-config` along with
+  * `jmx-connector`
+
++
+When the type is `iiop-service`, the `ssl-client-config` along with
   the embedded `ssl` element is created in `domain.xml`.
 `--certname`::
   The nickname of the server certificate in the certificate database or
@@ -98,7 +104,8 @@ asadmin-options::
   explicitly listed will be disabled for the target, even if those
   ciphers are available in the particular cipher suite you are using. If
   this option is not used, all supported ciphers are assumed to be
-  enabled. Allowed values are: +
+  enabled. Allowed values are:
+
   * `rc4`
   * `rc4export`
   * `rc2`
@@ -106,6 +113,7 @@ asadmin-options::
   * `idea`
   * `des`
   * `desede3`
+
 `--ssl3enabled`::
   Set this property to `false` to disable SSL3. The default value is
   `true`. If both SSL2 and SSL3 are enabled for a virtual server, the
@@ -120,7 +128,8 @@ asadmin-options::
   Ciphers not explicitly listed will be disabled for the target, even if
   those ciphers are available in the particular cipher suite you are
   using. If this option is not used, all supported ciphers are assumed
-  to be enabled. Allowed values are: +
+  to be enabled. Allowed values are:
+
   * `SSL_RSA_WITH_RC4_128_MD5`
   * `SSL_RSA_WITH_3DES_EDE_CBC_SHA`
   * `SSL_RSA_WITH_DES_CBC_SHA`
@@ -128,10 +137,11 @@ asadmin-options::
   * `SSL_RSA_WITH_NULL_MD5`
   * `SSL_RSA_WITH_RC4_128_SHA`
   * `SSL_RSA_WITH_NULL_SHA`
+
 `--tlsrollbackenabled`::
   Set to `true` (default) to enable TLS rollback. TLS rollback should be
   enabled for Microsoft Internet Explorer 5.0 and 5.5. This option is
-  only valid when `-tlsenabled`=`true`.
+  only valid when `-tlsenabled=true`.
 `--clientauthenabled`::
   Set to `true` if you want SSL3 client authentication performed on
   every request independent of ACL-based access control. Default value
@@ -139,27 +149,26 @@ asadmin-options::
 
 [[sthref540]]
 
-Operands
+=== Operands
 
 listener_id::
   The ID of the HTTP or IIOP listener for which the SSL element is to be
-  created. The listener_id is not required if the `--type` is
-  `iiop-service`.
+  created. The listener_id is not required if the `--type` is `iiop-service`.
 
 [[sthref541]]
 
-Examples
+=== Examples
 
 [[GSRFM525]][[sthref542]]
 
-Example 1   Creating an SSL element for an HTTP listener
+==== Example 1   Creating an SSL element for an HTTP listener
 
 The following example shows how to create an SSL element for an HTTP
 listener named `http-listener-1`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-ssl 
+asadmin> create-ssl
 --type http-listener
 --certname sampleCert http-listener-1
 Command create-ssl executed successfully.
@@ -167,7 +176,7 @@ Command create-ssl executed successfully.
 
 [[sthref543]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -176,7 +185,7 @@ Exit Status
 
 [[sthref544]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

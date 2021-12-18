@@ -4,6 +4,7 @@ title=list-nodes-config
 next=list-nodes-dcom.html
 prev=list-nodes.html
 ~~~~~~
+
 list-nodes-config
 =================
 
@@ -12,35 +13,31 @@ list-nodes-config
 list-nodes-config
 -----------------
 
-lists all \{product---name} nodes that do not support remote
+Lists all \{product---name} nodes that do not support remote
 communication in a domain
 
 [[sthref1709]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-nodes-config [--help] 
+asadmin [asadmin-options] list-nodes-config [--help]
 [--long={false|true}]
 ----
 
 [[sthref1710]]
 
-Description
+=== Description
 
 The `list-nodes-config` subcommand lists all \{product---name} nodes
 that do not support remote communication in a domain.
 
-
 [NOTE]
-=======================================================================
-
+====
 To list all nodes in a domain regardless of the type of the node, run
 the link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
-
-=======================================================================
-
+====
 
 By default, the subcommand displays the following information for each
 node that is listed:
@@ -67,7 +64,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1711]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -78,7 +75,8 @@ asadmin-options::
 `--long`::
 `-l`::
   Specifies whether the nodes are listed in long format. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The nodes are listed in long format.
   `false`;;
@@ -86,16 +84,16 @@ asadmin-options::
 
 [[sthref1712]]
 
-Examples
+=== Examples
 
 [[GSRFM690]][[sthref1713]]
 
-Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing \{product---name} Nodes
 
 This example displays the name, type, and host for all \{product---name}
 nodes that do not support remote communication in the domain `domain1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config
 localhost-domain1  CONFIG  localhost
@@ -105,13 +103,13 @@ Command list-nodes-config executed successfully.
 
 [[GSRFM691]][[sthref1714]]
 
-Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of \{product---name} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
 only the names of the \{product---name} nodes that do not support remote
 communication in the domain `domain1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config --terse=true
 localhost-domain1
@@ -120,23 +118,23 @@ devnode
 
 [[GSRFM692]][[sthref1715]]
 
-Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing \{product---name} Nodes in Long Format
 
 This example lists the \{product---name} nodes that do not support
-remote communication in the domain `domain1`in long format.
+remote communication in the domain `domain1` in long format.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-config --long=true
-NODE NAME           TYPE     NODE HOST   INSTALL DIRECTORY    REFERENCED BY  
-localhost-domain1   CONFIG   localhost   /export/glassfish3                  
-devnode             CONFIG   localhost   /export/glassfish3   pmdsa1         
+NODE NAME           TYPE     NODE HOST   INSTALL DIRECTORY    REFERENCED BY
+localhost-domain1   CONFIG   localhost   /export/glassfish3
+devnode             CONFIG   localhost   /export/glassfish3   pmdsa1
 Command list-nodes-config executed successfully.
 ----
 
 [[sthref1716]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -145,7 +143,7 @@ Exit Status
 
 [[sthref1717]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

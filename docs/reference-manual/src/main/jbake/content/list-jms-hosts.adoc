@@ -4,6 +4,7 @@ title=list-jms-hosts
 next=list-jms-resources.html
 prev=list-jmsdest.html
 ~~~~~~
+
 list-jms-hosts
 ==============
 
@@ -12,13 +13,13 @@ list-jms-hosts
 list-jms-hosts
 --------------
 
-lists the existing JMS hosts
+Lists the existing JMS hosts
 
 [[sthref1568]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-jms-hosts [--help]
 [--target target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-jms-hosts [--help]
 
 [[sthref1569]]
 
-Description
+=== Description
 
 The `list-jms-hosts` subcommand lists the existing Java Message Service
 (JMS) hosts for the JMS service.
@@ -36,7 +37,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref1570]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Restricts the listing to JMS hosts for a specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the JMS hosts for the default server instance. This is the
     default value.
@@ -60,15 +62,15 @@ asadmin-options::
 
 [[sthref1571]]
 
-Examples
+=== Examples
 
 [[GSRFM674]][[sthref1572]]
 
-Example 1   Listing all JMS hosts
+==== Example 1   Listing all JMS hosts
 
 The following subcommand lists the JMS hosts for the JMS service.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jms-hosts server-config
 default_JMS_host
@@ -78,7 +80,7 @@ Command list-jms-hosts executed successfully.
 
 [[sthref1573]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -87,7 +89,7 @@ Exit Status
 
 [[sthref1574]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=validate-multicast
 next=verify-domain-xml.html
 prev=validate-dcom.html
 ~~~~~~
+
 validate-multicast
 ==================
 
@@ -12,15 +13,15 @@ validate-multicast
 validate-multicast
 ------------------
 
-validates that multicast transport is available for clusters
+Validates that multicast transport is available for clusters
 
 [[sthref2332]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] validate-multicast [--help] 
+asadmin [asadmin-options] validate-multicast [--help]
 [--multicastport multicastport]
 [--multicastaddress multicastaddress]
 [--bindaddress bindaddress]
@@ -32,17 +33,15 @@ asadmin [asadmin-options] validate-multicast [--help]
 
 [[sthref2333]]
 
-Description
+=== Description
 
 The `validate-multicast` subcommand validates that multicast transport
 is available for clusters. You should run this subcommand at the same
 time on each of the hosts to be validated. This subcommand is available
 in local mode.
 
-
 [NOTE]
-=======================================================================
-
+====
 Do not run the `validate-multicast` subcommand using the DAS and
 cluster's multicast address and port values while the DAS and cluster
 are running. Doing so results in an error.
@@ -50,9 +49,7 @@ are running. Doing so results in an error.
 The `validate-multicast` subcommand must be run at the same time on two
 or more machines to validate whether multicast messages are being
 received between the machines.
-
-=======================================================================
-
+====
 
 As long as all machines see each other, multicast is validated to be
 working properly across the machines. If the machines are not seeing
@@ -65,7 +62,7 @@ between all the machines used to run the cluster.
 
 [[sthref2334]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -108,15 +105,15 @@ asadmin-options::
 
 [[sthref2335]]
 
-Examples
+=== Examples
 
 [[GSRFM798]][[sthref2336]]
 
-Example 1   Validating multicast transport
+==== Example 1   Validating multicast transport
 
 Run from host `machine1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> validate-multicast
 Will use port 2,048
@@ -134,7 +131,7 @@ Command validate-multicast executed successfully
 
 Run from host `machine2`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> validate-multicast
 Will use port 2,048
@@ -152,7 +149,7 @@ Command validate-multicast executed successfully
 
 [[sthref2337]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -161,7 +158,7 @@ Exit Status
 
 [[sthref2338]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

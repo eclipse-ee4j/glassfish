@@ -4,6 +4,7 @@ title=create-http-lb-config
 next=create-http-lb-ref.html
 prev=create-http-lb.html
 ~~~~~~
+
 create-http-lb-config
 =====================
 
@@ -12,15 +13,15 @@ create-http-lb-config
 create-http-lb-config
 ---------------------
 
-creates a configuration for the load balancer
+Creates a configuration for the load balancer
 
 [[sthref251]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-http-lb-config [--help] 
+asadmin [asadmin-options] create-http-lb-config [--help]
 [--responsetimeout 60]
 [httpsrouting=false] [--reloadinterval 60]
 [--monitor=false] [--property (name=value)[:name=value]*]
@@ -29,13 +30,12 @@ asadmin [asadmin-options] create-http-lb-config [--help]
 
 [[sthref252]]
 
-Description
+=== Description
 
 Use the `create-http-lb-config` subcommand to create a load balancer
 configuration. This configuration applies to load balancing in the HTTP
 path. After using this subcommand to create the load balancer
-configuration file, create the load balancer by running
-`create-http-lb`.
+configuration file, create the load balancer by running `create-http-lb`.
 
 You must specify either a target or a configuration name, or both. If
 you do not specify a target, the configuration is created without a
@@ -46,17 +46,15 @@ specified name, referencing the specified target.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref253]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -91,7 +89,8 @@ asadmin-options::
   If you don't specify a target, the load balancer configuration is
   created without a target. You can specify targets later using the
   subcommand `create-http-lb-ref`. +
-  Valid values are: +
+  Valid values are:
+
   * cluster_name- Specifies that requests for this cluster will be
   handled by the load balancer.
   * stand-alone_instance_name- Specifies that requests for this
@@ -99,7 +98,7 @@ asadmin-options::
 
 [[sthref254]]
 
-Operands
+=== Operands
 
 config_name::
   The name of the new load balancer configuration. This name must not
@@ -110,16 +109,16 @@ config_name::
 
 [[sthref255]]
 
-Examples
+=== Examples
 
 [[GSRFM479]][[sthref256]]
 
-Example 1   Creating a Load Balancer Configuration
+==== Example 1   Creating a Load Balancer Configuration
 
 This example creates a load balancer configuration on a target named
 `mycluster` and load balancer configuration named `mylbconfigname`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-lb-config --target mycluster mylbconfigname
 
@@ -128,7 +127,7 @@ Command create-http-lb-config executed successfully.
 
 [[sthref257]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -137,7 +136,7 @@ Exit Status
 
 [[sthref258]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

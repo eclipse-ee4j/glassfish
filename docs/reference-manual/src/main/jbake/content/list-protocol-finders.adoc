@@ -4,6 +4,7 @@ title=list-protocol-finders
 next=list-protocols.html
 prev=list-protocol-filters.html
 ~~~~~~
+
 list-protocol-finders
 =====================
 
@@ -12,13 +13,13 @@ list-protocol-finders
 list-protocol-finders
 ---------------------
 
-lists the existing protocol finders
+Lists the existing protocol finders
 
 [[sthref1758]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-protocol-finders [--help]
 [--target server]
@@ -27,14 +28,14 @@ protocol-name
 
 [[sthref1759]]
 
-Description
+=== Description
 
 The `list-protocol-finders` subcommand lists the existing protocol
 finders. This subcommand is supported in remote mode only.
 
 [[sthref1760]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 target::
   Restricts the listing to protocol finders for a specified target.
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Lists the protocol finders for the default server instance. This is
     the default value.
@@ -58,14 +60,14 @@ target::
 
 [[sthref1761]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol for which to list protocol finders.
 
 [[sthref1762]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -74,7 +76,7 @@ Exit Status
 
 [[sthref1763]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

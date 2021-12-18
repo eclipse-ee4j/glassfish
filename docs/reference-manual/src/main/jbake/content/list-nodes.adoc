@@ -4,6 +4,7 @@ title=list-nodes
 next=list-nodes-config.html
 prev=list-network-listeners.html
 ~~~~~~
+
 list-nodes
 ==========
 
@@ -12,21 +13,21 @@ list-nodes
 list-nodes
 ----------
 
-lists all \{product---name} nodes in a domain
+Lists all \{product---name} nodes in a domain
 
 [[sthref1700]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-nodes [--help] 
+asadmin [asadmin-options] list-nodes [--help]
 [--long={false|true}]
 ----
 
 [[sthref1701]]
 
-Description
+=== Description
 
 The `list-nodes` subcommand lists all \{product---name} nodes in a
 domain.
@@ -35,6 +36,7 @@ By default, the subcommand displays the following information for each
 node that is listed:
 
 * The name of the node
+
 * The type of the node, which is one of the following types:::
 `CONFIG`::
   The node does not support remote communication.
@@ -43,6 +45,7 @@ node that is listed:
   Model (DCOM) remote protocol.
 `SSH`::
   The node supports communication over secure shell (SSH).
+
 * The name of the host that the node represents
 
 The `--long` option of the subcommand specifies whether the nodes are
@@ -51,6 +54,7 @@ information about each node is displayed:
 
 * The path to the parent of the base installation directory of
 \{product---name} on the host that the node represents
+
 * A comma-separated list of the names of the \{product---name} instances
 that reside on the node
 
@@ -63,7 +67,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1702]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -74,7 +78,8 @@ asadmin-options::
 `--long`::
 `-l`::
   Specifies whether the nodes are listed in long format. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The nodes are listed in long format.
   `false`;;
@@ -82,16 +87,16 @@ asadmin-options::
 
 [[sthref1703]]
 
-Examples
+=== Examples
 
 [[GSRFM687]][[sthref1704]]
 
-Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing \{product---name} Nodes
 
 This example displays the name, type, and host for all \{product---name}
 nodes in the domain `domain1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes
 localhost-domain1  CONFIG  localhost
@@ -103,12 +108,12 @@ Command list-nodes executed successfully.
 
 [[GSRFM688]][[sthref1705]]
 
-Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of \{product---name} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
 only the names of the \{product---name} nodes in the domain `domain1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes --terse=true
 localhost-domain1
@@ -119,16 +124,16 @@ devnode
 
 [[GSRFM689]][[sthref1706]]
 
-Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing \{product---name} Nodes in Long Format
 
 This example lists the \{product---name} nodes in the domain `domain1`
 in long format.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes --long=true
 NODE NAME           TYPE     NODE HOST          INSTALL DIRECTORY     REFERENCED BY
-localhost-domain1   CONFIG   localhost          /export/glassfish3                 
+localhost-domain1   CONFIG   localhost          /export/glassfish3
 sj02                SSH      sj02.example.com   /export/glassfish3    pmd-i2, yml-i2
 sj01                SSH      sj01.example.com   /export/glassfish3    pmd-i1, yml-i1
 devnode             CONFIG   localhost          /export/glassfish3    pmdsa1
@@ -137,7 +142,7 @@ Command list-nodes executed successfully.
 
 [[sthref1707]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -146,7 +151,7 @@ Exit Status
 
 [[sthref1708]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

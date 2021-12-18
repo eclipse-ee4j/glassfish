@@ -4,6 +4,7 @@ title=login
 next=migrate-timers.html
 prev=list-web-env-entry.html
 ~~~~~~
+
 login
 =====
 
@@ -12,20 +13,20 @@ login
 login
 -----
 
-logs you into a domain
+Logs you into a domain
 
 [[sthref1874]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] login [--help]
 ----
 
 [[sthref1875]]
 
-Description
+=== Description
 
 The purpose of the `login` subcommand is to ease domain administration
 by letting you log into a particular domain. If \{product---name}
@@ -62,7 +63,7 @@ domain, run the `login` subcommand and specify new values for the
 
 [[sthref1876]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -73,16 +74,16 @@ asadmin-options::
 
 [[sthref1877]]
 
-Examples
+=== Examples
 
 [[GSRFM720]][[sthref1878]]
 
-Example 1   Logging Into a Domain on a Remote Machine
+==== Example 1   Logging Into a Domain on a Remote Machine
 
 This example logs into a domain located on another machine. Options are
 specified before the `login` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --host foo --port 8282 login 
 Please enter the admin user name>admin
@@ -98,12 +99,12 @@ file will be used by asadmin commands to manage associated domain.
 
 [[GSRFM721]][[sthref1879]]
 
-Example 2   Logging Into a Domain on the Default Port of Localhost
+==== Example 2   Logging Into a Domain on the Default Port of Localhost
 
 This example logs into a domain on `mylhost` on the default port.
 Options are specified before the `login` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --host myhost login 
 Please enter the admin user name>admin
@@ -121,7 +122,7 @@ file will be used by asadmin commands to manage associated domain.
 
 [[sthref1880]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -130,7 +131,7 @@ Exit Status
 
 [[sthref1881]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

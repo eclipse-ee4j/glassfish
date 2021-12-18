@@ -4,6 +4,7 @@ title=create-virtual-server
 next=delete-admin-object.html
 prev=create-transport.html
 ~~~~~~
+
 create-virtual-server
 =====================
 
@@ -12,20 +13,20 @@ create-virtual-server
 create-virtual-server
 ---------------------
 
-creates the named virtual server
+Creates the named virtual server
 
 [[sthref569]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-virtual-server [--help]
---hosts hosts 
+--hosts hosts
 [--httplisteners http-listeners]
 [--networklisteners network-listeners]
 [--defaultwebmodule default-web-module]
-[--state={on|off}] 
+[--state={on|off}]
 [--logfile log-file]
 [--property (name=value)[:name=value]*]
 [--target target]
@@ -34,7 +35,7 @@ virtual-server-id
 
 [[sthref570]]
 
-Description
+=== Description
 
 The `create-virtual-server` subcommand creates the named virtual server.
 Virtualization in the \{product---name} allows multiple URL domains to
@@ -46,7 +47,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref571]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -82,7 +83,8 @@ asadmin-options::
   under which the server runs.
 `--property`::
   Optional property name/value pairs for configuring the virtual server.
-  The following properties are available: +
+  The following properties are available:
+
   `sso-max-inactive-seconds`;;
     Specifies the number of seconds after which a user's single sign-on
     record becomes eligible for purging if no client activity is
@@ -104,15 +106,16 @@ asadmin-options::
     links will be served for all web applications deployed on this
     virtual server. Individual web applications may override this
     setting by using the property `allowLinking` under the `sun-web-app`
-    element in the `sun-web.xml` file: +
-[source,oac_no_warn]
+    element in the `sun-web.xml` file:
++
+[source,xml]
 ----
 <sun-web-app>
 <property name="allowLinking" value="[true|false]"/>
 </sun-web-app>
 ----
-::
-    The default value is `true`.
++
+The default value is `true`.
   `accessLogWriteInterval`;;
     Indicates the number of seconds before the log will be written to
     the disk. The access log is written when the buffer is full or when
@@ -185,26 +188,30 @@ asadmin-options::
     the web application's context root) to the alternate docroot's
     physical location (directory). If a request matches multiple URI
     patterns, the alternate docroot is determined according to the
-    following precedence order: +
+    following precedence order:
++
+--
     * Exact match
     * Longest path match
-    * Extension match +
-    For example, the following properties specify three alternate
+    * Extension match
+--
++
+For example, the following properties specify three alternate
     docroots. The URI pattern of the first alternate docroot uses an
     exact match, whereas the URI patterns of the second and third
-    alternate docroots use extension and longest path prefix matches,
-    respectively. +
-[source,oac_no_warn]
+    alternate docroots use extension and longest path prefix matches, respectively.
++
+[source,xml]
 ----
-<property name="alternatedocroot_1" 
+<property name="alternatedocroot_1"
    value="from=/my.jpg dir=/srv/images/jpg"/>
-<property name="alternatedocroot_2" 
+<property name="alternatedocroot_2"
    value="from=*.jpg dir=/srv/images/jpg"/>
-<property name="alternatedocroot_3" 
+<property name="alternatedocroot_3"
    value="from=/jpg/* dir=/src/images"/>
 ----
-::
-    The `value` of each alternate docroot has two components: The first
++
+The `value` of each alternate docroot has two components: The first
     component, `from`, specifies the alternate docroot's URI pattern,
     and the second component, `dir`, specifies the alternate docroot's
     physical location (directory). Spaces are allowed in the `dir`
@@ -218,78 +225,85 @@ asadmin-options::
     server. A web application can override these custom error page
     mappings in its `web.xml` deployment descriptor. The value of each
     `send-error_n` property has three components, which may be specified
-    in any order: +
-    The first component, `code`, specifies the three-digit HTTP response
+    in any order:
++
+--
+    * The first component, `code`, specifies the three-digit HTTP response
     status code for which the custom error page should be returned in
-    the response. +
-    The second component, `path`, specifies the absolute or relative
+    the response.
+    * The second component, `path`, specifies the absolute or relative
     file system path of the custom error page. A relative file system
     path is interpreted as relative to the domain-dir`/config`
-    directory. +
-    The third component, `reason`, is optional and specifies the text of
+    directory.
+    * The third component, `reason`, is optional and specifies the text of
     the reason string (such as `Unauthorized` or `Forbidden`) to be
-    returned. +
-    For example: +
-[source,oac_no_warn]
+    returned.
+--
+For example:
++
+[source,xml]
 ----
 <property name="send-error_1"
    value="code=401 path=/myhost/401.html reason=MY-401-REASON"/>
 ----
-::
     This example property definition causes the contents of
     `/myhost/401.html` to be returned with 401 responses, along with
-    this response line: +
-[source,oac_no_warn]
+    this response line:
++
+[source]
 ----
 HTTP/1.1 401 MY-401-REASON
 ----
-::
-  `redirect_`n;;
+
+  ``redirect_``n;;
     Specifies that a request for an old URL is treated as a request for
     a new URL. These properties are inherited by all web applications
     deployed on the virtual server. The value of each `redirect_n`
-    property has two components, which may be specified in any order: +
-    The first component, `from`, specifies the prefix of the requested
-    URI to match. +
-    The second component, `url-prefix`, specifies the new URL prefix to
-    return to the client. The from prefix is simply replaced by this URL
-    prefix. +
-    For example: +
-[source,oac_no_warn]
+    property has two components, which may be specified in any order:
++
+--
+    * The first component, `from`, specifies the prefix of the requested URI to match.
+    * The second component, `url-prefix`, specifies the new URL prefix to
+      return to the client. The from prefix is simply replaced by this URL prefix.
+--
++
+For example:
++
+[source,xml]
 ----
-<property name="redirect_1" 
-value="from=/dummy url-prefix=http://etude"/>
+<property name="redirect_1" value="from=/dummy url-prefix=http://etude"/>
 ----
-::
-  `valve_`n;;
+
+  ``valve_``n;;
     Specifies a fully qualified class name of a custom valve, where n is
-    a positive integer that allows specification of more than one. The
-    valve class must implement the `org.apache.catalina.Valve` interface
+    a positive integer that allows specification of more than one.
+    The valve class must implement the `org.apache.catalina.Valve` interface
     from Tomcat or previous \{product---name} releases, or the
     `org.glassfish.web.valve.GlassFishValve` interface from the current
-    \{product---name} release. For example: +
-[source,oac_no_warn]
+    \{product---name} release. For example:
++
+[source,xml]
 ----
-<property name="valve_1" 
-   value="org.glassfish.extension.Valve"/>
+<property name="valve_1" value="org.glassfish.extension.Valve"/>
 ----
-::
-    You can set this property for a specific web application. For
++
+You can set this property for a specific web application. For
     details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
     Server Open Source Edition Application Deployment Guide.
-  `listener_n`;;
+  ``listener_n``;;
     Specifies a fully qualified class name of a custom Catalina
     listener, where n is a positive integer that allows specification of
     more than one. The listener class must implement the
     `org.apache.catalina.ContainerListener` or
-    `org.apache.catalina.LifecycleListener` interface. For example: +
-[source,oac_no_warn]
+    `org.apache.catalina.LifecycleListener` interface. For example:
++
+[source,xml]
 ----
-<property name="listener_1" 
+<property name="listener_1"
    value="org.glassfish.extension.MyLifecycleListener"/>
 ----
-::
-    You can set this property for a specific web application. For
++
+You can set this property for a specific web application. For
     details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
     Server Open Source Edition Application Deployment Guide.
   `docroot`;;
@@ -321,24 +335,24 @@ value="from=/dummy url-prefix=http://etude"/>
     produces default error pages for applications on this virtual
     server. Specify an empty string to disable the default error page
     mechanism for this virtual server.
+
 `--target`::
   Creates the virtual server only on the specified target. Valid values
-  are as follows: +
+  are as follows:
+
   `server`;;
-    Creates the virtual server on the default server instance. This is
-    the default value.
+    Creates the virtual server on the default server instance.
+    This is the default value.
   configuration-name;;
     Creates the virtual server in the specified configuration.
   cluster-name;;
-    Creates the virtual server on all server instances in the specified
-    cluster.
+    Creates the virtual server on all server instances in the specified cluster.
   standalone-instance-name;;
-    Creates the virtual server on the specified standalone server
-    instance.
+    Creates the virtual server on the specified standalone server instance.
 
 [[sthref572]]
 
-Operands
+=== Operands
 
 virtual-server-id::
   Identifies the unique ID for the virtual server to be created. This ID
@@ -346,24 +360,24 @@ virtual-server-id::
 
 [[sthref573]]
 
-Examples
+=== Examples
 
 [[GSRFM529]][[sthref574]]
 
-Example 1   Creating a Virtual Server
+==== Example 1   Creating a Virtual Server
 
 The following command creates a virtual server named `sampleServer`:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-virtual-server --hosts pigeon,localhost 
+asadmin> create-virtual-server --hosts pigeon,localhost
 --property authRealm=ldap sampleServer
 Command create-virtual-server executed successfully.
 ----
 
 [[sthref575]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -372,7 +386,7 @@ Exit Status
 
 [[sthref576]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

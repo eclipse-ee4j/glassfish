@@ -4,6 +4,7 @@ title=create-jdbc-resource
 next=create-jmsdest.html
 prev=create-jdbc-connection-pool.html
 ~~~~~~
+
 create-jdbc-resource
 ====================
 
@@ -12,13 +13,13 @@ create-jdbc-resource
 create-jdbc-resource
 --------------------
 
-creates a JDBC resource with the specified JNDI name
+Creates a JDBC resource with the specified JNDI name
 
 [[sthref328]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jdbc-resource [--help]
 --connectionpoolid connectionpoolid
@@ -31,7 +32,7 @@ jndi_name
 
 [[sthref329]]
 
-Description
+=== Description
 
 The `create-jdbc-resource` subcommand creates a new JDBC resource.
 
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref330]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -60,7 +61,8 @@ asadmin-options::
   Optional attribute name/value pairs for configuring the resource.
 `--target`::
   This option helps specify the target to which you are deploying. Valid
-  values are: +
+  values are:
+
   `server`;;
     Deploys the component to the default server instance. This is the
     default value.
@@ -71,38 +73,35 @@ asadmin-options::
   instance_name;;
     Deploys the component to a particular server instance.
 
-
 [NOTE]
-=======================================================================
-
+====
 The resource is always created for the domain as a whole, but the
 `resource-ref` for the resource is only created for the specified
 `--target`. This means that although the resource is defined at the
 domain level, it is only available at the specified target level. Use
 the `create-resource-ref` subcommand to refer to the resource in
 multiple targets if needed.
-
-=======================================================================
+====
 
 
 [[sthref331]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of this JDBC resource.
 
 [[sthref332]]
 
-Examples
+=== Examples
 
 [[GSRFM494]][[sthref333]]
 
-Example 1   Creating a JDBC Resource
+==== Example 1   Creating a JDBC Resource
 
 This example creates a JDBC resource named `jdbc/DerbyPool`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jdbc-resource
 --connectionpoolid sample_derby_pool jdbc/DerbyPool
@@ -111,7 +110,7 @@ Command create-jdbc-resource executed successfully.
 
 [[sthref334]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -120,7 +119,7 @@ Exit Status
 
 [[sthref335]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

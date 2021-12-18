@@ -4,6 +4,7 @@ title=rollback-transaction
 next=rotate-log.html
 prev=restore-domain.html
 ~~~~~~
+
 rollback-transaction
 ====================
 
@@ -12,37 +13,39 @@ rollback-transaction
 rollback-transaction
 --------------------
 
-rolls back the named transaction
+Rolls back the named transaction
 
 [[sthref2008]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] rollback-transaction [--help] 
+asadmin [asadmin-options] rollback-transaction [--help]
 [--target target]
 transaction_id
 ----
 
 [[sthref2009]]
 
-Description
+=== Description
 
 The `rollback-transaction` subcommand rolls back the named transaction.
 
 Before you can roll back a transaction, you must do the following:
 
-1.  Enable monitoring using the `set` subcommand. For example: +
-[source,oac_no_warn]
+1. Enable monitoring using the `set` subcommand. For example:
++
+[source]
 ----
 asadmin> set clstr1-config.monitoring-service.module-monitoring-levels.transaction-service=HIGH
 ----
-2.  Use the `freeze-transaction-service` subcommand to halt in-process
+2. Use the `freeze-transaction-service` subcommand to halt in-process
 transactions.
-3.  Look up the active transactions using the `get` subcommand with the
-`--monitor` option. For example: +
-[source,oac_no_warn]
+3. Look up the active transactions using the `get` subcommand with the
+`--monitor` option. For example:
++
+[source]
 ----
 asadmin> get --monitor inst1.server.transaction-service.activeids-current
 ----
@@ -51,7 +54,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2010]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -66,20 +69,20 @@ asadmin-options::
 
 [[sthref2011]]
 
-Operands
+=== Operands
 
 transaction_id::
   Identifier for the transaction to be rolled back.
 
 [[sthref2012]]
 
-Examples
+=== Examples
 
 [[GSRFM741]][[sthref2013]]
 
-Example 1   Using rollback-transaction command
+==== Example 1   Using rollback-transaction command
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin rollback-transaction 0000000000000001_00
 Command rollback-transaction executed succeessfully
@@ -87,7 +90,7 @@ Command rollback-transaction executed succeessfully
 
 [[sthref2014]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -96,7 +99,7 @@ Exit Status
 
 [[sthref2015]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

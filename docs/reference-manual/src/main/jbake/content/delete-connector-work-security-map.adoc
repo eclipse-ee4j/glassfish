@@ -4,6 +4,7 @@ title=delete-connector-work-security-map
 next=delete-context-service.html
 prev=delete-connector-security-map.html
 ~~~~~~
+
 delete-connector-work-security-map
 ==================================
 
@@ -12,13 +13,13 @@ delete-connector-work-security-map
 delete-connector-work-security-map
 ----------------------------------
 
-deletes a work security map for the specified resource adapter
+Deletes a work security map for the specified resource adapter
 
 [[sthref650]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-connector-work-security-map [--help] 
 --raname raname
@@ -27,7 +28,7 @@ mapname
 
 [[sthref651]]
 
-Description
+=== Description
 
 The `delete-connector-work-security-map` subcommand deletes a security
 map associated with the specified resource adapter. For this subcommand
@@ -42,7 +43,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref652]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,23 +57,23 @@ asadmin-options::
 
 [[sthref653]]
 
-Operands
+=== Operands
 
 mapname::
   The name of the work security map to be deleted.
 
 [[sthref654]]
 
-Examples
+=== Examples
 
 [[GSRFM541]][[sthref655]]
 
-Example 1   Deleting a Connector Work Security Map
+==== Example 1   Deleting a Connector Work Security Map
 
 This example deletes the work security map named
 `work_security_map_name` for the resource adapter named `ra_name`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin delete-connector-work-security-map
 --raname ra_name work_security_map_name
@@ -81,7 +82,7 @@ Command delete-connector-work-security-map executed successfully.
 
 [[sthref656]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -90,7 +91,7 @@ Exit Status
 
 [[sthref657]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

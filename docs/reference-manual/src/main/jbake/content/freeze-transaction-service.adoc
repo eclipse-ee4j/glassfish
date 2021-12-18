@@ -4,6 +4,7 @@ title=freeze-transaction-service
 next=generate-jvm-report.html
 prev=flush-jmsdest.html
 ~~~~~~
+
 freeze-transaction-service
 ==========================
 
@@ -12,21 +13,21 @@ freeze-transaction-service
 freeze-transaction-service
 --------------------------
 
-freezes the transaction subsystem
+Freezes the transaction subsystem
 
 [[sthref1193]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] freeze-transaction-service [--help] 
+asadmin [asadmin-options] freeze-transaction-service [--help]
 [--target target]
 ----
 
 [[sthref1194]]
 
-Description
+=== Description
 
 The `freeze-transaction-service` subcommand freezes the transaction
 subsystem, preventing the transaction manager from starting, completing,
@@ -38,7 +39,7 @@ in remote mode only.
 
 [[sthref1195]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,7 +49,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target on which you are freezing the
-  transaction service. Valid values are: +
+  transaction service. Valid values are:
+
   `server`;;
     Freezes the transaction service for the default server instance
     `server` and is the default value.
@@ -63,13 +65,13 @@ asadmin-options::
 
 [[sthref1196]]
 
-Examples
+=== Examples
 
 [[GSRFM616]][[sthref1197]]
 
-Example 1   Using freeze-transaction-service
+==== Example 1   Using freeze-transaction-service
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin freeze-transaction-service
 Command freeze-transaction-service executed successfully
@@ -77,7 +79,7 @@ Command freeze-transaction-service executed successfully
 
 [[sthref1198]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -86,7 +88,7 @@ Exit Status
 
 [[sthref1199]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

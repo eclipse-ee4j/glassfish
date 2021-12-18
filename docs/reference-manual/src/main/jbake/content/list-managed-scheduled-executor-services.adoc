@@ -4,6 +4,7 @@ title=list-managed-scheduled-executor-services
 next=list-managed-thread-factories.html
 prev=list-managed-executor-services.html
 ~~~~~~
+
 list-managed-scheduled-executor-services
 ========================================
 
@@ -12,13 +13,13 @@ list-managed-scheduled-executor-services
 list-managed-scheduled-executor-services
 ----------------------------------------
 
-lists managed scheduled executor service resources
+Lists managed scheduled executor service resources
 
 [[sthref1661]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-managed-scheduled-executor-services [--help]
 [target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-managed-scheduled-executor-services [--help]
 
 [[sthref1662]]
 
-Description
+=== Description
 
 The `list-managed-scheduled-executor-services` subcommand lists managed
 scheduled executor service resources.
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1663]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,11 +47,12 @@ asadmin-options::
 
 [[sthref1664]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target for which managed scheduled executor service
-  resources are to be listed. Valid targets are: +
+  resources are to be listed. Valid targets are:
+
   `server`;;
     Lists the resources on the default server instance. This is the
     default value.
@@ -64,16 +66,16 @@ target::
 
 [[sthref1665]]
 
-Examples
+=== Examples
 
 [[GSRFM874]][[sthref1666]]
 
-Example 1   Listing Managed Scheduled Executor Service Resources
+==== Example 1   Listing Managed Scheduled Executor Service Resources
 
 This example lists managed scheduled executor service resources on the
 default server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-managed-scheduled-executor-services
 concurrent/__defaultManagedScheduledExecutorService
@@ -84,7 +86,7 @@ Command list-managed-scheduled-executor-services executed successfully.
 
 [[sthref1667]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -93,7 +95,7 @@ Exit Status
 
 [[sthref1668]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

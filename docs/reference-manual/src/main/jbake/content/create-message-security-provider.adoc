@@ -4,6 +4,7 @@ title=create-message-security-provider
 next=create-module-config.html
 prev=create-managed-thread-factory.html
 ~~~~~~
+
 create-message-security-provider
 ================================
 
@@ -12,14 +13,14 @@ create-message-security-provider
 create-message-security-provider
 --------------------------------
 
-enables administrators to create a message security provider, which
+Enables administrators to create a message security provider, which
 specifies how SOAP messages will be secured.
 
 [[sthref421]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-message-security-provider [--help]
 [--target target]
@@ -29,13 +30,13 @@ asadmin [asadmin-options] create-message-security-provider [--help]
 [--requestauthrecipient request_auth_recipient ]
 [--responseauthsource response_auth_source ]
 [--responseauthrecipient response_auth_recipient ]
-[--isdefaultprovider] [--property name=value[:name=value]*] 
+[--isdefaultprovider] [--property name=value[:name=value]*]
 provider_name
 ----
 
 [[sthref422]]
 
-Description
+=== Description
 
 The `create-message-security-provider` subcommand enables the
 administrator to create a message security provider for the security
@@ -45,7 +46,7 @@ This command is supported in remote mode only.
 
 [[sthref423]]
 
-Options
+=== Options
 
 If an option has a short option name, then the short option precedes the
 long option name. Short options have one dash whereas long options have
@@ -59,7 +60,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you are creating the message security
-  provider. The following values are valid: +
+  provider. The following values are valid:
+
   `server`;;
     Creates the provider for the default server instance `server` and is
     the default value.
@@ -69,6 +71,7 @@ asadmin-options::
     Creates the provider for every server instance in the cluster.
   instance_name;;
     Creates the provider for a particular sever instance.
+
 `--classname`::
   Defines the Java implementation class of the provider. Client
   authentication providers must implement the
@@ -120,7 +123,8 @@ asadmin-options::
   provider when it is initialized. Properties passed in this way might
   include key aliases to be used by the provider to get keys from
   keystores, signing, canonicalization, encryption algorithms, etc. +
-  The following properties may be set: +
+  The following properties may be set:
+
   `security.config`;;
     Specifies the location of the message security configuration file.
     To point to a configuration file in the domain-dir`/config`
@@ -146,7 +150,7 @@ asadmin-options::
 
 [[sthref424]]
 
-Operands
+=== Operands
 
 provider_name::
   The name of the provider used to reference the `provider-config`
@@ -154,25 +158,25 @@ provider_name::
 
 [[sthref425]]
 
-Examples
+=== Examples
 
 [[GSRFM507]][[sthref426]]
 
-Example 1   Creating a Message Security Provider
+==== Example 1   Creating a Message Security Provider
 
 The following example shows how to create a message security provider
 for a client.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-message-security-provider 
+asadmin> create-message-security-provider
 --classname com.sun.enterprise.security.jauth.ClientAuthModule
 --providertype client mySecurityProvider
 ----
 
 [[sthref427]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -181,7 +185,7 @@ Exit Status
 
 [[sthref428]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

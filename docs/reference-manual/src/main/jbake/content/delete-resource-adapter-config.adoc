@@ -4,6 +4,7 @@ title=delete-resource-adapter-config
 next=delete-resource-ref.html
 prev=delete-protocol-finder.html
 ~~~~~~
+
 delete-resource-adapter-config
 ==============================
 
@@ -12,13 +13,13 @@ delete-resource-adapter-config
 delete-resource-adapter-config
 ------------------------------
 
-deletes the resource adapter configuration
+Deletes the resource adapter configuration
 
 [[sthref959]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-resource-adapter-config [--help] 
 raname
@@ -26,7 +27,7 @@ raname
 
 [[sthref960]]
 
-Description
+=== Description
 
 The `delete-resource-adapter-config` subcommand deletes the
 configuration information for the connector module.
@@ -35,7 +36,7 @@ This command is supported in remote mode only.
 
 [[sthref961]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,22 +49,22 @@ asadmin-options::
 
 [[sthref962]]
 
-Operands
+=== Operands
 
 raname::
   Specifies the connector module name.
 
 [[sthref963]]
 
-Examples
+=== Examples
 
 [[GSRFM576]][[sthref964]]
 
-Example 1   Deleting a Resource Adapter Configuration
+==== Example 1   Deleting a Resource Adapter Configuration
 
 This example deletes the configuration information for `ra1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-resource-adapter-config ra1
 Command delete-resource-adapter-config executed successfully
@@ -71,7 +72,7 @@ Command delete-resource-adapter-config executed successfully
 
 [[sthref965]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -80,7 +81,7 @@ Exit Status
 
 [[sthref966]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

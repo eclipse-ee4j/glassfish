@@ -4,6 +4,7 @@ title=list-protocol-filters
 next=list-protocol-finders.html
 prev=list-persistence-types.html
 ~~~~~~
+
 list-protocol-filters
 =====================
 
@@ -12,13 +13,13 @@ list-protocol-filters
 list-protocol-filters
 ---------------------
 
-lists the existing protocol filters
+Lists the existing protocol filters
 
 [[sthref1750]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-protocol-filters [--help]
 [--target server]
@@ -27,14 +28,14 @@ protocol-name
 
 [[sthref1751]]
 
-Description
+=== Description
 
 The `list-protocol-filters` subcommand lists the existing protocol
 filters. This subcommand is supported in remote mode only.
 
 [[sthref1752]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 target::
   Restricts the listing to protocol filters for a specified target.
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Lists the protocol filters for the default server instance. This is
     the default value.
@@ -58,23 +60,23 @@ target::
 
 [[sthref1753]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol for which to list protocol filters.
 
 [[sthref1754]]
 
-Examples
+=== Examples
 
 [[GSRFM704]][[sthref1755]]
 
-Example 1   Listing Protocol Filters
+==== Example 1   Listing Protocol Filters
 
 The following command lists all the protocol filters for the server
 instance:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-protocol-filters http1
 http1-filter
@@ -84,7 +86,7 @@ Command list-protocol-filters executed successfully.
 
 [[sthref1756]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -93,7 +95,7 @@ Exit Status
 
 [[sthref1757]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

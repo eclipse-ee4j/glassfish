@@ -4,6 +4,7 @@ title=list-batch-job-steps
 next=list-batch-runtime-configuration.html
 prev=list-batch-jobs.html
 ~~~~~~
+
 list-batch-job-steps
 ====================
 
@@ -12,13 +13,13 @@ list-batch-job-steps
 list-batch-job-steps
 --------------------
 
-lists steps for a specific batch job execution
+Lists steps for a specific batch job execution
 
 [[sthref1356]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-batch-job-steps [--help]
 [--long={false|true}]
@@ -30,14 +31,14 @@ execution_id
 
 [[sthref1357]]
 
-Description
+=== Description
 
 The `list-batch-job-steps` subcommand lists steps for a specific batch
 job execution.
 
 [[sthref1358]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,7 +48,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which to list batch job steps. Valid values
-  are as follows: +
+  are as follows:
+
   `server`;;
     Lists steps for the default server instance `server` and is the
     default value.
@@ -55,6 +57,7 @@ asadmin-options::
     Lists steps for every server instance in the cluster.
   instance-name;;
     Lists steps for a particular server instance.
+
 `--long`::
 `-l`::
   Displays detailed information about batch job steps. The default value
@@ -64,8 +67,8 @@ asadmin-options::
   Displays specific details about batch job steps. Use a comma-separated
   list to specify the details to display and their order. The values are
   case-insensitive. A subset of all possible headings is displayed by
-  default. +
-  Possible values are as follows: +
+  default. Possible values are as follows:
+
   `stepname`;;
     Displays the name of the step.
   `stepid`;;
@@ -85,6 +88,7 @@ asadmin-options::
   `value`;;
     Displays a value for each step metric. The value represents the
     number of items read, written, committed, and so on.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -93,18 +97,18 @@ asadmin-options::
 
 [[sthref1359]]
 
-Operands
+=== Operands
 
 execution_id::
   The ID of the execution for which to list batch job steps and details.
 
 [[sthref1360]]
 
-Examples
+=== Examples
 
 [[GSRFM896]][[sthref1361]]
 
-Example 1   Listing Batch Job Steps
+==== Example 1   Listing Batch Job Steps
 
 This example lists batch job steps and specific step details for a job
 execution with the execution ID of `7`. The target is the default server
@@ -112,7 +116,7 @@ instance.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-job-steps o=stepname,stepid,batchstatus,stepmetrics 7
 STEPNAME   STEPID   BATCHSTATUS   STEPMETRICS
@@ -130,7 +134,7 @@ Command list-batch-job-steps executed successfully.
 
 [[sthref1362]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -139,7 +143,7 @@ Exit Status
 
 [[sthref1363]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

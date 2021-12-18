@@ -4,6 +4,7 @@ title=list-log-levels
 next=list-managed-executor-services.html
 prev=list-loggers.html
 ~~~~~~
+
 list-log-levels
 ===============
 
@@ -12,21 +13,21 @@ list-log-levels
 list-log-levels
 ---------------
 
-lists the loggers and their log levels
+Lists the loggers and their log levels
 
 [[sthref1645]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-log-levels [--help] 
+asadmin [asadmin-options] list-log-levels [--help]
 [--target target]
 ----
 
 [[sthref1646]]
 
-Description
+=== Description
 
 The `list-log-levels` subcommand lists the current \{product---name}
 loggers and their log levels. This subcommand reports on all the loggers
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1647]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,15 +48,15 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
-  The server, cluster or server instance for which log levels will be
-  listed.
+  The server, cluster or server instance for which log levels will be listed.
 
 [[sthref1648]]
 
-Operands
+=== Operands
 
 target::
-  Valid values are: +
+  Valid values are:
+
   * server_name - Default target is `server`. If no target is specified
   then log levels are listed for the server.
   * cluster_name - The name of a target cluster.
@@ -63,16 +64,16 @@ target::
 
 [[sthref1649]]
 
-Examples
+=== Examples
 
 [[GSRFM683]][[sthref1650]]
 
-Example 1   Listing the Log Levels
+==== Example 1   Listing the Log Levels
 
 This example lists the existing loggers and indicates how their log
 levels are set.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-log-levels
 java.util.logging.ConsoleHandler        <FINEST>
@@ -124,7 +125,7 @@ Command list-log-levels executed successfully.
 
 [[sthref1651]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -133,7 +134,7 @@ Exit Status
 
 [[sthref1652]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

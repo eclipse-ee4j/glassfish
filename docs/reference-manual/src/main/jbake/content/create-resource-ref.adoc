@@ -4,6 +4,7 @@ title=create-resource-ref
 next=create-service.html
 prev=create-resource-adapter-config.html
 ~~~~~~
+
 create-resource-ref
 ===================
 
@@ -12,22 +13,22 @@ create-resource-ref
 create-resource-ref
 -------------------
 
-creates a reference to a resource
+Creates a reference to a resource
 
 [[sthref519]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-resource-ref [--help] 
+asadmin [asadmin-options] create-resource-ref [--help]
 [--target target]
 [--enabled={false|true}] reference_name
 ----
 
 [[sthref520]]
 
-Description
+=== Description
 
 The `create-resource-ref` subcommand creates a reference from a cluster
 or an unclustered server instance to a previously created resource, for
@@ -42,8 +43,7 @@ time they start.
 
 
 [NOTE]
-=======================================================================
-
+====
 A `resource-ref` can only be created for bindable resources, such as a
 `jdbc-resource`, `connector-resource`, `admin-object-resource`,
 `mail-resource`, `custom-resource`, or `jndi-resource`.
@@ -51,15 +51,14 @@ A `resource-ref` can only be created for bindable resources, such as a
 A `jdbc-connection-pool` or a `connector-connection-pool` are not
 referred to directly by applications. Instead, they are referred to
 through a `jdbc-resource` or `connector-resource`, respectively.
-
-=======================================================================
+====
 
 
 This subcommand is supported in remote mode only.
 
 [[sthref521]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -69,16 +68,16 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you are creating the resource
-  reference. Valid targets are as follows: +
+  reference. Valid targets are as follows:
+
   `server`;;
-    Creates the resource reference for the default server instance. This
-    is the default target.
+    Creates the resource reference for the default server instance.
+    This is the default target.
   cluster_name;;
-    Creates the resource reference for every server instance in the
-    cluster.
+    Creates the resource reference for every server instance in the cluster.
   instance_name;;
-    Creates the resource reference for the named unclustered server
-    instance.
+    Creates the resource reference for the named unclustered server instance.
+
 `--enabled`::
   Indicates whether the resource should be enabled. This value will take
   effect only if the resource is enabled at the global level. The
@@ -86,23 +85,23 @@ asadmin-options::
 
 [[sthref522]]
 
-Operands
+=== Operands
 
 reference_name::
   The name or JNDI name of the resource.
 
 [[sthref523]]
 
-Examples
+=== Examples
 
 [[GSRFM520]][[sthref524]]
 
-Example 1   Creating a Reference to a JMS Destination Resource
+==== Example 1   Creating a Reference to a JMS Destination Resource
 
 This example creates a reference to the JMS destination resource
 `jms/Topic` on the cluster `Cluster1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-resource-ref --target Cluster1 jms/Topic
 resource-ref jms/Topic created successfully.
@@ -111,7 +110,7 @@ Command create-resource-ref executed successfully.
 
 [[sthref525]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -120,7 +119,7 @@ Exit Status
 
 [[sthref526]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

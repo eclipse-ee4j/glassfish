@@ -4,6 +4,7 @@ title=start-database
 next=start-domain.html
 prev=start-cluster.html
 ~~~~~~
+
 start-database
 ==============
 
@@ -12,15 +13,15 @@ start-database
 start-database
 --------------
 
-starts the Java DB
+Starts the Java DB
 
 [[sthref2117]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] start-database [--help] 
+asadmin [asadmin-options] start-database [--help]
 [--jvmoptions jvm-options]
 [--dbhost host] [--dbport port-no]
 [--dbhome db-file-path]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] start-database [--help]
 
 [[sthref2118]]
 
-Description
+=== Description
 
 The `start-database` subcommand starts the Java DB server that is
 available for use with \{product---name}. Java DB is based upon Apache
@@ -45,8 +46,7 @@ successfully, the following files are created:
 
 * The `derby.log` file that contains the database server process log
 along with its standard output and standard error information
-* The database files that contain your schema (for example, database
-tables)
+* The database files that contain your schema (for example, database tables)
 
 These files are created at the location that is specified by the
 `--dbhome` option. To create the database files at a particular
@@ -67,7 +67,7 @@ This subcommand is supported in local mode only.
 
 [[sthref2119]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -80,11 +80,12 @@ asadmin-options::
   Java application launcher when the database is started. By default, no
   options are passed. +
   The format of an option depends on whether the option has a name and a
-  value or only a name: +
+  value or only a name:
+
   * If the option has a name and a value, the format is
-  option-name=value.
-  * If the option has only a name, the format is option-name. For
-  example, `-Xmx512m`.
+    option-name=value.
+  * If the option has only a name, the format is option-name.
+    For example, `-Xmx512m`.
 `--dbhost`::
   The host name or IP address of the Java DB server process. The default
   is the IP address 0.0.0.0, which denotes all network interfaces on the
@@ -97,42 +98,45 @@ asadmin-options::
   The absolute path to the directory where the database files and the
   `derby.log` file are created. If the `--dbhome` option is not
   specified, the `start-database` subcommand determines where to create
-  these files as follows: +
+  these files as follows:
+
   * If the current working directory contains a file that is named
   `derby.log`, the `start-database` subcommand creates the files in the
   current working directory.
   * Otherwise, the `start-database` subcommand creates the files in the
-  as-install`/databases` directory. +
-  To create the database files at a particular location, you must set
+  as-install`/databases` directory.
+
++
+To create the database files at a particular location, you must set
   the `--dbhome` option.
 
 [[sthref2120]]
 
-Examples
+=== Examples
 
 [[GSRFM759]][[sthref2121]]
 
-Example 1   Starting Java DB
+==== Example 1   Starting Java DB
 
 This example starts Java DB on the host `host1` and port 5001.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-database --dbhost host1 --dbport 5001 --terse=true
-Starting database in the background.  Log redirected to 
+Starting database in the background.  Log redirected to
 /opt/SUNWappserver/databases/derby.log.
 ----
 
 [[GSRFM833]][[sthref2122]]
 
-Example 2   Starting Java DB With Options for the Java Application
+==== Example 2   Starting Java DB With Options for the Java Application
 Launcher
 
 This example starts Java DB with the options for setting the minimum
 heap memory size to 128 megabytes and the maximum heap memory size to
 512 megabytes.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-database --jvmoptions="-Xms128m -Xmx512m" --terse=true
 Starting database in the background.
@@ -141,14 +145,13 @@ Log redirected to /export/glassfish3/glassfish/databases/derby.log.
 
 [[sthref2123]]
 
-Exit Status
+=== Exit Status
 
 The exit status applies to errors in executing the `asadmin` utility.
 For information on database errors, see the `derby.log` file. This file
 is located in the directory you specify by using the `--dbhome` option
 when you run the `start-database` subcommand. If you did not specify
-`--dbhome`, the value of `DERBY_INSTALL` defaults to
-as-install`/javadb`.
+`--dbhome`, the value of `DERBY_INSTALL` defaults to as-install``/javadb``.
 
 0::
   subcommand executed successfully
@@ -157,7 +160,7 @@ as-install`/javadb`.
 
 [[sthref2124]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

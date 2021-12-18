@@ -4,6 +4,7 @@ title=list-http-lbs
 next=list-http-listeners.html
 prev=list-http-lb-configs.html
 ~~~~~~
+
 list-http-lbs
 =============
 
@@ -12,13 +13,13 @@ list-http-lbs
 list-http-lbs
 -------------
 
-lists load balancers
+Lists load balancers
 
 [[sthref1493]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-http-lbs [--help]
 [--long={false|true}]
@@ -29,23 +30,19 @@ asadmin [asadmin-options] list-http-lbs [--help]
 
 [[sthref1494]]
 
-Description
+=== Description
 
 Use the `list-http-lbs` subcommand to list physical load balancers.
 
-
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
-
+====
 
 [[sthref1495]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -64,7 +61,8 @@ asadmin-options::
   their order. For example,
   `list-http-lbs --output name,device-host,device-port`. The values are
   case-insensitive. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `device-host`;;
     Displays the device host or the IP address of the load balancing
     device. This host or IP is where the physical load balancer resides.
@@ -75,8 +73,8 @@ asadmin-options::
   `lb-config-name`;;
     Displays the name of the load balancer configuration.
   `device-port`;;
-    Displays the port used to communicate with the load balancing
-    device.
+    Displays the port used to communicate with the load balancing device.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -85,22 +83,22 @@ asadmin-options::
 
 [[sthref1496]]
 
-Operands
+=== Operands
 
 name::
   The name of the load balancer for which you want to display details.
 
 [[sthref1497]]
 
-Examples
+=== Examples
 
 [[GSRFM661]][[sthref1498]]
 
-Example 1   Listing Physical Load Balancers for a Domain
+==== Example 1   Listing Physical Load Balancers for a Domain
 
 This example lists all physical load balancers defined for a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-http-lbs
 
@@ -111,7 +109,7 @@ Command list-http-lbs executed successfully.
 
 [[sthref1499]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -120,7 +118,7 @@ Exit Status
 
 [[sthref1500]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

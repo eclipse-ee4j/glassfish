@@ -4,6 +4,7 @@ title=deploydir
 next=disable.html
 prev=deploy.html
 ~~~~~~
+
 deploydir
 =========
 
@@ -12,55 +13,51 @@ deploydir
 deploydir
 ---------
 
-deploys an exploded format of application archive
+Deploys an exploded format of application archive
 
 [[sthref1031]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] deploydir [--help] 
-[--force={false|true}] 
+asadmin [asadmin-options] deploydir [--help]
+[--force={false|true}]
 [--virtualservers virtual_servers]
 [--contextroot context_root]
-[--verify={false|true}] 
-[--precompilejsp={false|true}] 
-[--name component-name] 
-[--retrieve local_dirpath] 
-[--uniquetablenames={true|false}] 
-[--dbvendorname dbvendorname] 
+[--verify={false|true}]
+[--precompilejsp={false|true}]
+[--name component-name]
+[--retrieve local_dirpath]
+[--uniquetablenames={true|false}]
+[--dbvendorname dbvendorname]
 [--createtables={false|true}|--dropandcreatetables={false|true}]
 [--deploymentplan deployment_plan]
 [--altdd alternate_deploymentdescriptor]
 [--runtimealtdd runtime_alternate_deploymentdescriptor]
 [--deploymentorder deployment_order]
-[--enabled={true|false}] 
-[--generatermistubs={false|true}] 
-[--availabilityenabled={false|true}] 
+[--enabled={true|false}]
+[--generatermistubs={false|true}]
+[--availabilityenabled={false|true}]
 [--asyncreplication={true|false}]
 [--lbenabled={true|false}]
 [--keepstate={false|true}]
-[--libraries jar_file[,jar_file]*] 
-[--target target] 
-[--type pkg-type] 
+[--libraries jar_file[,jar_file]*]
+[--target target]
+[--type pkg-type]
 [--properties(name=value)[:name=value]*]
 dirpath
 ----
 
 [[sthref1032]]
 
-Description
-
+=== Description
 
 [NOTE]
-=======================================================================
-
+====
 The `deploydir` subcommand is deprecated. Use the `deploy` subcommand
 instead.
-
-=======================================================================
-
+====
 
 The `deploydir` subcommand deploys an application directly from a
 development directory. The appropriate directory hierarchy and
@@ -91,7 +88,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1033]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -124,7 +121,8 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
   GlassFish Server Open Source Edition Application Deployment Guide.
 `--retrieve`::
   Retrieves the client stub JAR file from the server machine to the
@@ -215,8 +213,8 @@ asadmin-options::
   is `true`.
 `--generatermistubs`::
   If set to `true`, static RMI-IIOP stubs are generated and put into the
-  `client.jar`. If set to `false`, the stubs are not generated. Default
-  is `false`.
+  `client.jar`. If set to `false`, the stubs are not generated.
+  Default is `false`.
 `--availabilityenabled`::
   This option controls whether high-availability is enabled for web
   sessions and for stateful session bean (SFSB) checkpointing and
@@ -239,36 +237,36 @@ asadmin-options::
   This option controls whether the deployed application is available for
   load balancing. The default is true.
 `--keepstate`::
-  This option controls whether web sessions, SFSB instances, and
+  - This option controls whether web sessions, SFSB instances, and
   persistently created EJB timers are retained between redeployments. +
   The default is false. This option is supported only on the default
   server instance, named `server`. It is not supported and ignored for
-  any other target. +
-  Some changes to an application between redeployments prevent this
+  any other target.
+  - Some changes to an application between redeployments prevent this
   feature from working properly. For example, do not change the set of
   instance variables in the SFSB bean class. +
   For web applications, this feature is applicable only if in the
   `glassfish-web-app.xml` file the `persistence-type` attribute of the
-  `session-manager` element is `file`. +
-  For stateful session bean instances, the persistence type without high
+  `session-manager` element is `file`.
+  - For stateful session bean instances, the persistence type without high
   availability is set in the server (the `sfsb-persistence-type`
   attribute) and must be set to `file`, which is the default and
-  recommended value. +
-  If any active web session, SFSB instance, or EJB timer fails to be
+  recommended value.
+  - If any active web session, SFSB instance, or EJB timer fails to be
   preserved or restored, none of these will be available when the
   redeployment is complete. However, the redeployment continues and a
-  warning is logged. +
-  To preserve active state data, \{product---name} serializes the data
+  warning is logged.
+  - To preserve active state data, \{product---name} serializes the data
   and saves it in memory. To restore the data, the class loader of the
-  newly redeployed application deserializes the data that was previously
-  saved.
+  newly redeployed application deserializes the data that was previously saved.
 `--libraries`::
   A comma-separated list of library JAR files. Specify the library JAR
   files by their relative or absolute paths. Specify relative paths
   relative to domain-dir`/lib/applibs`. The libraries are made available
   to the application in the order specified.
 `--target`::
-  Specifies the target to which you are deploying. Valid values are: +
+  Specifies the target to which you are deploying. Valid values are:
++
   `server`;;
     Deploys the component to the default server instance `server` and is
     the default value.
@@ -290,7 +288,8 @@ asadmin-options::
     Deploys the component to a particular stand-alone server instance.
 `--type`::
   The packaging archive type of the component that is being deployed.
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `car`;;
     The component is packaged as a CAR file.
   `ear`;;
@@ -303,6 +302,7 @@ asadmin-options::
     The component is packaged as a RAR file.
   `war`;;
     The component is packaged as a WAR file.
+
 `--properties` or `--property`::
   Optional keyword-value pairs that specify additional properties for
   the deployment. The available properties are determined by the
@@ -310,7 +310,8 @@ asadmin-options::
   The `--properties` option and the `--property` option are equivalent.
   You can use either option regardless of the number of properties that
   you specify. +
-  You can specify the following properties for a deployment: +
+  You can specify the following properties for a deployment:
+
   `jar-signing-alias`;;
     Specifies the alias for the security certificate with which the
     application client container JAR file is signed. Java Web Start will
@@ -364,8 +365,10 @@ asadmin-options::
       sessions that were previously saved.
   `preserveAppScopedResources`;;
     If set to `true`, preserves any application-scoped resources and
-    restores them during redeployment. Default is `false`. +
-  Other available properties are determined by the implementation of the
+    restores them during redeployment. Default is `false`.
+
++
+Other available properties are determined by the implementation of the
   component that is being redeployed. +
   For components packaged as OSGi bundles (`--type=osgi`), the `deploy`
   subcommand accepts properties arguments that can be used to wrap a WAR
@@ -379,7 +382,7 @@ asadmin-options::
 
 [[sthref1034]]
 
-Operands
+=== Operands
 
 dirpath::
   Path to the directory containing the exploded format of the deployable
@@ -387,18 +390,18 @@ dirpath::
 
 [[sthref1035]]
 
-Examples
+=== Examples
 
 [[GSRFM589]][[sthref1036]]
 
-Example 1   Deploying an Application From a Directory
+==== Example 1   Deploying an Application From a Directory
 
 In this example, the exploded application to be deployed is in the
 `/home/temp/sampleApp` directory. Because the `--force` option is set to
 true, if an application of that name already exists, the application is
 redeployed.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> deploydir --force=true --precompilejsp=true /home/temp/sampleApp
 Application deployed successfully with name sampleApp.
@@ -408,7 +411,7 @@ Command deploydir executed successfully
 
 [[sthref1037]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -417,7 +420,7 @@ Exit Status
 
 [[sthref1038]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=create-threadpool
 next=create-transport.html
 prev=create-system-properties.html
 ~~~~~~
+
 create-threadpool
 =================
 
@@ -12,25 +13,25 @@ create-threadpool
 create-threadpool
 -----------------
 
-adds a thread pool
+Adds a thread pool
 
 [[sthref553]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-threadpool [--help] 
-[--target target] 
-[--maxthreadpoolsize maxthreadpoolsize] 
-[--minthreadpoolsize minthreadpoolsize] 
+asadmin [asadmin-options] create-threadpool [--help]
+[--target target]
+[--maxthreadpoolsize maxthreadpoolsize]
+[--minthreadpoolsize minthreadpoolsize]
 [--idletimeout idletimeout] [--maxqueuesize maxqueuesize]
 [--workqueues workqueues] threadpool-id
 ----
 
 [[sthref554]]
 
-Description
+=== Description
 
 The `create-threadpool` subcommand creates a thread pool with the
 specified name. You can specify maximum and minimum number of threads in
@@ -43,7 +44,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref555]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,9 +53,9 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
-  This option specifies the target on which you are creating the thread
-  pool. +
-  Valid values are as follows: +
+  This option specifies the target on which you are creating the thread pool.
+  Valid values are as follows:
+
   `server`;;
     Creates the thread pool for the default \{product---name} instance
     `server` and is the default value
@@ -64,9 +65,9 @@ asadmin-options::
     Creates the thread pool for every instance in the cluster.
   instance-name;;
     Creates the thread pool for a particular instance.
+
 `--maxthreadpoolsize`::
-  Specifies the maximum number of threads the pool can contain. Default
-  is 5.
+  Specifies the maximum number of threads the pool can contain. Default is 5.
 `--minthreadpoolsize`::
   Specifies the minimum number of threads in the pool. These are created
   when the thread pool is instantiated. Default is 2.
@@ -85,31 +86,31 @@ asadmin-options::
 
 [[sthref556]]
 
-Operands
+=== Operands
 
 threadpool-id::
   An ID for the work queue, for example, `threadpool-1`.
 
 [[sthref557]]
 
-Examples
+=== Examples
 
 [[GSRFM527]][[sthref558]]
 
-Example 1   Creating a Thread Pool
+==== Example 1   Creating a Thread Pool
 
 This command creates a new thread pool called `threadpool-l`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-threadpool --maxthreadpoolsize 100 
+asadmin> create-threadpool --maxthreadpoolsize 100
 --minthreadpoolsize 20 --idletimeout 2 threadpool-1
 Command create-threadpool executed successfully
 ----
 
 [[sthref559]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -118,7 +119,7 @@ Exit Status
 
 [[sthref560]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

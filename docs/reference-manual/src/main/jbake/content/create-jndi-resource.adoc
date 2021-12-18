@@ -4,6 +4,7 @@ title=create-jndi-resource
 next=create-jvm-options.html
 prev=create-jms-resource.html
 ~~~~~~
+
 create-jndi-resource
 ====================
 
@@ -12,26 +13,26 @@ create-jndi-resource
 create-jndi-resource
 --------------------
 
-registers a JNDI resource
+Registers a JNDI resource
 
 [[sthref361]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-jndi-resource [--help] 
-[--target target] 
---restype restype --factoryclass factoryclass 
---jndilookupname jndilookupname [--enabled={true|false}] 
-[--description description] 
-[--property (name=value)[:name=value]*] 
+asadmin [asadmin-options] create-jndi-resource [--help]
+[--target target]
+--restype restype --factoryclass factoryclass
+--jndilookupname jndilookupname [--enabled={true|false}]
+[--description description]
+[--property (name=value)[:name=value]*]
 jndi-name
 ----
 
 [[sthref362]]
 
-Description
+=== Description
 
 The `create-jndi-resource` subcommand registers a JNDI resource.
 
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref363]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,21 +50,17 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target for which you are registering a JNDI
-  resource. Valid values for target are described below. +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+  resource. Valid values for target are described below.
++
+[NOTE]
+====
 The resource is always created for the domain as a whole, but the
 `resource-ref` for the resource is only created for the specified
 `--target`. This means that although the resource is defined at the
 domain level, it is only available at the specified target level. Use
 the `create-resource-ref` subcommand to refer to the resource in
 multiple targets if needed.
-
-|=======================================================================
+====
 
   `server`;;
     Creates the resource for the default server instance. This value is
@@ -74,6 +71,7 @@ multiple targets if needed.
     Creates the resource for every server instance in the cluster
   instance-name;;
     Creates the resource for a particular server instance
+
 `--restype`::
   The JNDI resource type. Valid values are `topic` or `queue`.
 `--factoryclass`::
@@ -95,28 +93,28 @@ multiple targets if needed.
 
 [[sthref364]]
 
-Operands
+=== Operands
 
 jndi-name::
   The unique name of the JNDI resource to be created.
 
 [[sthref365]]
 
-Examples
+=== Examples
 
 [[GSRFM499]][[sthref366]]
 
-Example 1   Creating a JNDI Resource
+==== Example 1   Creating a JNDI Resource
 
 This example creates the JNDI resource `my-jndi-resource` for the
 default server instance.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-jndi-resource 
---restype com.example.jndi.MyResourceType 
---factoryclass com.example.jndi.MyInitialContextFactoryClass 
---jndilookupname remote-jndi-name 
+asadmin> create-jndi-resource
+--restype com.example.jndi.MyResourceType
+--factoryclass com.example.jndi.MyInitialContextFactoryClass
+--jndilookupname remote-jndi-name
 --description "sample JNDI resource" my-jndi-resource
 JNDI resource my-jndi-resource created.
 Command create-jndi-resource executed successfully.
@@ -124,7 +122,7 @@ Command create-jndi-resource executed successfully.
 
 [[sthref367]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -133,7 +131,7 @@ Exit Status
 
 [[sthref368]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

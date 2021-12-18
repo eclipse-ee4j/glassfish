@@ -4,6 +4,7 @@ title=list-virtual-servers
 next=list-web-context-param.html
 prev=list-transports.html
 ~~~~~~
+
 list-virtual-servers
 ====================
 
@@ -12,13 +13,13 @@ list-virtual-servers
 list-virtual-servers
 --------------------
 
-lists the existing virtual servers
+Lists the existing virtual servers
 
 [[sthref1850]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-virtual-servers [--help]
 [target]
@@ -26,14 +27,14 @@ asadmin [asadmin-options] list-virtual-servers [--help]
 
 [[sthref1851]]
 
-Description
+=== Description
 
 The `list-virtual-servers` subcommand lists the existing virtual
 servers. This subcommand is supported in remote mode only.
 
 [[sthref1852]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1853]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to virtual servers for a specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the virtual servers for the default server instance. This is
     the default value.
@@ -62,16 +64,16 @@ target::
 
 [[sthref1854]]
 
-Examples
+=== Examples
 
 [[GSRFM717]][[sthref1855]]
 
-Example 1   Listing Virtual Servers
+==== Example 1   Listing Virtual Servers
 
 The following command lists all the virtual servers for the server
 instance:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-virtual-servers
 server
@@ -81,7 +83,7 @@ Command list-virtual-servers executed successfully.
 
 [[sthref1856]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref1857]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

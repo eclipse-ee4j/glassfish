@@ -4,6 +4,7 @@ title=delete-protocol-finder
 next=delete-resource-adapter-config.html
 prev=delete-protocol-filter.html
 ~~~~~~
+
 delete-protocol-finder
 ======================
 
@@ -12,13 +13,13 @@ delete-protocol-finder
 delete-protocol-finder
 ----------------------
 
-removes a protocol finder
+Removes a protocol finder
 
 [[sthref953]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-protocol-finder [--help]
 --protocol protocol-name
@@ -28,14 +29,14 @@ protocol-finder-name
 
 [[sthref954]]
 
-Description
+=== Description
 
 The `delete-protocol-finder` subcommand removes the specified protocol
 finder. This subcommand is supported in remote mode only.
 
 [[sthref955]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,7 +48,8 @@ asadmin-options::
   The name of the associated protocol.
 `--target`::
   Deletes the protocol finder only from the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the protocol finder from the default server instance. This
     is the default value.
@@ -62,14 +64,14 @@ asadmin-options::
 
 [[sthref956]]
 
-Operands
+=== Operands
 
 protocol-finder-name::
   The name of the protocol finder to be deleted.
 
 [[sthref957]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -78,7 +80,7 @@ Exit Status
 
 [[sthref958]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

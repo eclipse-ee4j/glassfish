@@ -4,6 +4,7 @@ title=delete-managed-thread-factory
 next=delete-message-security-provider.html
 prev=delete-managed-scheduled-executor-service.html
 ~~~~~~
+
 delete-managed-thread-factory
 =============================
 
@@ -12,13 +13,13 @@ delete-managed-thread-factory
 delete-managed-thread-factory
 -----------------------------
 
-removes a managed thread factory resource with the specified JNDI name
+Removes a managed thread factory resource with the specified JNDI name
 
 [[sthref866]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-managed-thread-factory [--help]
 [--target target]
@@ -27,7 +28,7 @@ managed_thread_factory_name
 
 [[sthref867]]
 
-Description
+=== Description
 
 The `delete-managed-thread-factory` subcommand removes a managed thread
 factory resource with the specified JNDI name.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref868]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are deleting the resource. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Deletes the resource from the default server instance. This is the
     default value.
@@ -60,23 +62,23 @@ asadmin-options::
 
 [[sthref869]]
 
-Operands
+=== Operands
 
 managed_thread_factory_name::
   The JNDI name of the resource to be deleted.
 
 [[sthref870]]
 
-Examples
+=== Examples
 
 [[GSRFM853]][[sthref871]]
 
-Example 1   Deleting a Managed Thread Factory Resource
+==== Example 1   Deleting a Managed Thread Factory Resource
 
 This example deletes the managed thread factory resource named
 `concurrent/myThreadFactory`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-thread-factory concurrent/myThreadFactory
 Managed thread factory concurrent/myThreadFactory deleted successfully.
@@ -85,7 +87,7 @@ Command delete-managed-thread-factory executed successfully.
 
 [[sthref872]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref873]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

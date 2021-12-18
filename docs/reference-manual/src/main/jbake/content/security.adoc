@@ -3,6 +3,7 @@ status=published
 title=security
 prev=resource.html
 ~~~~~~
+
 security
 ========
 
@@ -11,11 +12,11 @@ security
 security
 --------
 
-secure and administer \{product---name} applications
+Secure and administer \{product---name} applications
 
 [[sthref2412]]
 
-Description
+=== Description
 
 Security is about protecting data: how to prevent unauthorized access or
 damage to it in storage or transit. \{product---name} has a dynamic,
@@ -27,7 +28,7 @@ run safely, without potential risk to systems or users.
 
 [[sthref2413]]
 
-See Also
+=== See Also
 
 link:change-admin-password.html#change-admin-password-1[`change-admin-password`(1)],
 link:change-master-password.html#change-master-password-1[`change-master-password`(1)],

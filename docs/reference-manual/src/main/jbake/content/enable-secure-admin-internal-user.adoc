@@ -4,6 +4,7 @@ title=enable-secure-admin-internal-user
 next=enable-secure-admin-principal.html
 prev=enable-secure-admin.html
 ~~~~~~
+
 enable-secure-admin-internal-user
 =================================
 
@@ -18,9 +19,9 @@ authenticate with each other and to authorize admin operations.
 
 [[sthref1135]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] enable-secure-admin-internal-user [--help] 
 [--passwordalias pwdaliasname]
@@ -29,7 +30,7 @@ admin-username
 
 [[sthref1136]]
 
-Description
+=== Description
 
 The `enable-secure-admin-internal-user` subcommand instructs all servers
 in the domain to authenticate to each other, and to authorize admin
@@ -37,20 +38,23 @@ operations submitted to each other, using an existing admin username and
 password rather than SSL certificates. This generally means that you
 must:
 
-1.  Create a valid admin user. +
-[source,oac_no_warn]
+1. Create a valid admin user.
++
+[source]
 ----
 asadmin> create-file-user --authrealmname admin-realm --groups 
 asadmin newAdminUsername
 ----
-2.  Create a password alias for the just-created password. +
-[source,oac_no_warn]
+2. Create a password alias for the just-created password.
++
+[source]
 ----
 asadmin> create-password-alias passwordAliasName
 ----
-3.  Use that user name and password for inter-process authentication and
-admin authorization. +
-[source,oac_no_warn]
+3. Use that user name and password for inter-process authentication and
+admin authorization.
++
+[source]
 ----
 asadmin> enable-secure-admin-internal-user 
 --passwordalias passwordAliasName
@@ -77,7 +81,7 @@ make any assumptions about which user name and password pair
 
 [[sthref1137]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -92,7 +96,7 @@ asadmin-options::
 
 [[sthref1138]]
 
-Operands
+=== Operands
 
 admin-username::
   The admin user name that \{product---name} should use for internally
@@ -101,17 +105,17 @@ admin-username::
 
 [[sthref1139]]
 
-Examples
+=== Examples
 
 [[GSRFM607]][[sthref1140]]
 
-Example 1   Specifying a user name and password for secure admin
+==== Example 1   Specifying a user name and password for secure admin
 
 The following example allows secure admin to use a user name and
 password alias for authentication and authorization between the DAS and
 instances, instead of certificates.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-secure-admin-internal-user 
 --passwordalias passwordAliasName
@@ -120,7 +124,7 @@ newAdminUsername
 
 [[sthref1141]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -129,7 +133,7 @@ Exit Status
 
 [[sthref1142]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

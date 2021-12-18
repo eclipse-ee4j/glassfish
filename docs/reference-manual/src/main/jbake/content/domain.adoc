@@ -4,6 +4,7 @@ title=domain
 next=dotted-names.html
 prev=configuration.html
 ~~~~~~
+
 domain
 ======
 
@@ -16,7 +17,7 @@ Domains have their own configurations.
 
 [[sthref2396]]
 
-Description
+=== Description
 
 A domain provides a common authentication and administration point for a
 collection of zero or more server instances. The administration domain
@@ -26,7 +27,7 @@ instance, may belong to only one domain.
 
 [[sthref2397]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=create-node-ssh
 next=create-password-alias.html
 prev=create-node-dcom.html
 ~~~~~~
+
 create-node-ssh
 ===============
 
@@ -12,18 +13,18 @@ create-node-ssh
 create-node-ssh
 ---------------
 
-creates a node that is enabled for communication over SSH
+Creates a node that is enabled for communication over SSH
 
 [[sthref463]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-node-ssh [--help]
 --nodehost node-host
-[--installdir as-install-parent] [--nodedir node-dir] 
-[--sshport ssh-port] [--sshuser ssh-user] 
+[--installdir as-install-parent] [--nodedir node-dir]
+[--sshport ssh-port] [--sshuser ssh-user]
 [--sshkeyfile ssh-keyfile]
 [--force={false|true}]
 [--install={false|true}] [--archive archive]
@@ -32,7 +33,7 @@ node-name
 
 [[sthref464]]
 
-Description
+=== Description
 
 The `create-node-ssh` subcommand creates a node that is enabled for
 communication over secure shell (SSH).
@@ -56,7 +57,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref465]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -82,63 +83,65 @@ asadmin-options::
   path is specified, the path is relative to the as-install directory.
 `--sshport`::
   The port to use for SSH connections to this node's host. The default
-  is 22. If the `--nodehost` option is set to `localhost-`domain, the
+  is 22. If the `--nodehost` option is set to ``localhost-``domain, the
   `--sshport` option is ignored.
 `--sshuser`::
   The user on this node's host that is to run the process for connecting
   to the host through SSH. The default is the user that is running the
   DAS process. To ensure that the DAS can read this user's SSH private
   key file, specify the user that is running the DAS process. If the
-  `--nodehost` option is set to `localhost-`domain, the `--sshuser`
+  `--nodehost` option is set to ``localhost-``domain, the `--sshuser`
   option is ignored.
 `--sshkeyfile`::
   The absolute path to the SSH private key file for user that the
   `--sshuser` option specifies. This file is used for authentication to
-  the `sshd` daemon on the node's host. +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+  the `sshd` daemon on the node's host.
++
+[NOTE]
+====
 \{product---name} also supports password authentication through the
 `AS_ADMIN_SSHPASSWORD` entry in the password file. The password file
 is specified in the `--paswordfile` option of the
 link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility.
-
-|=======================================================================
-
-  If the SSH private key file is protected by a passphrase, the password
+====
++
+If the SSH private key file is protected by a passphrase, the password
   file must contain the `AS_ADMIN_SSHKEYPASSPHRASE` entry. +
   The path to the key file must be reachable by the DAS and the key file
   must be readable by the DAS. +
   The default is the a key file in the user's `.ssh` directory. If
   multiple key files are found, the subcommand uses the following order
-  of preference: +
+  of preference:
+
   1.  `id_rsa`
   2.  `id_dsa`
   3.  `identity`
+
 `--force`::
   Specifies whether the node is created in the DAS configuration even if
   validation of the node's parameters fails. To validate a node's
   parameters, the DAS must be able to contact the node's host through
-  SSH. Possible values are as follows: +
+  SSH. Possible values are as follows:
+
   `false`;;
     The node is not created if validation of the node's parameters fails
     (default).
   `true`;;
     The node is created even if validation of the node's parameters
     fails.
+
 `--install`::
   Specifies whether the subcommand shall install the \{product---name}
   software on the host that the node represents. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     The subcommand shall not install the \{product---name} software on
     the host (default).
   `true`;;
     The subcommand shall install the \{product---name} software on the
     host.
+
 `--archive`::
   The absolute path to the archive file of the \{product---name}
   software that is to be installed. If this option is omitted and the
@@ -149,11 +152,12 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility.
 
 [[sthref466]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node. +
-  The name must meet the following requirements: +
+  The name must meet the following requirements:
+
   * The name may contain only ASCII characters.
   * The name must start with a letter, a number, or an underscore.
   * The name may contain only the following characters:
@@ -171,20 +175,20 @@ node-name::
 
 [[sthref467]]
 
-Examples
+=== Examples
 
 [[GSRFM513]][[sthref468]]
 
-Example 1   Creating a Node
+==== Example 1   Creating a Node
 
 This example creates the node `adc` for the host `adc.example.com`. By
 default, the parent of the base installation directory of the
 \{product---name} software is `/export/glassfish3`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-node-ssh 
---nodehost adc.example.com 
+asadmin> create-node-ssh
+--nodehost adc.example.com
 --installdir /export/glassfish3 adc
 
 Command create-node-ssh executed successfully.
@@ -192,14 +196,14 @@ Command create-node-ssh executed successfully.
 
 [[GSRFM514]][[sthref469]]
 
-Example 2   Forcing the Creation of a Node
+==== Example 2   Forcing the Creation of a Node
 
 This example forces the creation of node `eg1` for the host
 `eghost.example.com`. The node is created despite the failure of the DAS
 to contact the host `eghost.example.com` to validate the node's
 parameters.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-node-ssh --force --nodehost eghost.example.com eg1
 Warning: some parameters appear to be invalid.
@@ -213,7 +217,7 @@ Command create-node-ssh executed successfully.
 
 [[sthref470]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -222,7 +226,7 @@ Exit Status
 
 [[sthref471]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

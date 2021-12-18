@@ -4,6 +4,7 @@ title=list-secure-admin-principals
 next=list-sub-components.html
 prev=list-secure-admin-internal-users.html
 ~~~~~~
+
 list-secure-admin-principals
 ============================
 
@@ -12,16 +13,16 @@ list-secure-admin-principals
 list-secure-admin-principals
 ----------------------------
 
-lists the certificates for which \{product---name} accepts admin
+Lists the certificates for which \{product---name} accepts admin
 requests from clients.
 
 [[sthref1795]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-secure-admin-principals [--help] 
+asadmin [asadmin-options] list-secure-admin-principals [--help]
 [--long={false|true}]
 [--output output]
 [--header={false|true}]
@@ -30,14 +31,14 @@ asadmin [asadmin-options] list-secure-admin-principals [--help]
 
 [[sthref1796]]
 
-Description
+=== Description
 
 The `list-secure-admin-principals` subcommand lists the certificates for
 which \{product---name} accepts admin requests from clients.
 
 [[sthref1797]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -55,10 +56,12 @@ asadmin-options::
   Displays specific details about the certificates for which
   \{product---name} accepts admin requests from clients. Use a
   comma-separated list to specify the details you want to display and
-  their order. The values are case-insensitive. +
-  Possible values are as follows: +
+  their order. The values are case-insensitive.
+  Possible values are as follows:
+
   `DN`;;
     Displays the distinguished name (DN) of each certificate.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -67,7 +70,7 @@ asadmin-options::
 
 [[sthref1798]]
 
-Operands
+=== Operands
 
 name::
   The distinguished name of the certificate, specified as a
@@ -76,18 +79,18 @@ name::
 
 [[sthref1799]]
 
-Examples
+=== Examples
 
 [[GSRFM710]][[sthref1800]]
 
-Example 1   Listing the Certificates
+==== Example 1   Listing the Certificates
 
 This example lists the certificates for which \{product---name} accepts
 admin requests from clients.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> list-secure-admin-principals 
+asadmin> list-secure-admin-principals
 CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US
 CN=localhost-instance,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US
 Command list-secure-admin-principals executed successfully.
@@ -95,7 +98,7 @@ Command list-secure-admin-principals executed successfully.
 
 [[sthref1801]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -104,7 +107,7 @@ Exit Status
 
 [[sthref1802]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

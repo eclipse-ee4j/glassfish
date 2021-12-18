@@ -4,6 +4,7 @@ title=delete-application-ref
 next=delete-audit-module.html
 prev=delete-admin-object.html
 ~~~~~~
+
 delete-application-ref
 ======================
 
@@ -12,22 +13,22 @@ delete-application-ref
 delete-application-ref
 ----------------------
 
-removes a reference to an application
+Removes a reference to an application
 
 [[sthref585]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-application-ref [--help] 
+asadmin [asadmin-options] delete-application-ref [--help]
 [--target target]
 [--cascade=false] reference_name
 ----
 
 [[sthref586]]
 
-Description
+=== Description
 
 The `delete-application-ref` subcommand removes a reference from a
 cluster or an unclustered server instance to an application. This
@@ -46,7 +47,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref587]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,12 +57,12 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are removing the application
-  reference. Valid values are +
-  * `server`- Specifies the default server instance as the target.
-  `server` is the name of the default server instance and is the default
-  value.
-  * cluster_name- Specifies a certain cluster as the target.
-  * instance_name- Specifies a certain stand-alone server instance as
+  reference. Valid values are
+
+  * `server` - Specifies the default server instance as the target. +
+  `server` is the name of the default server instance and is the default value.
+  * cluster_name - Specifies a certain cluster as the target.
+  * instance_name - Specifies a certain stand-alone server instance as
   the target.
 `--cascade`::
   For a connector module, indicates whether the resources dependent on
@@ -71,7 +72,7 @@ asadmin-options::
 
 [[sthref588]]
 
-Operands
+=== Operands
 
 reference_name::
   The name of the application or module, which can be a Java EE
@@ -89,16 +90,16 @@ reference_name::
 
 [[sthref589]]
 
-Examples
+=== Examples
 
 [[GSRFM531]][[sthref590]]
 
-Example 1   Deleting an Application Reference
+==== Example 1   Deleting an Application Reference
 
 The following example removes a reference to the Web module `MyWebApp`
 from the unclustered server instance `NewServer`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-application-ref --target NewServer MyWebApp
 Command delete-application-ref executed successfully.
@@ -106,7 +107,7 @@ Command delete-application-ref executed successfully.
 
 [[sthref591]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -115,7 +116,7 @@ Exit Status
 
 [[sthref592]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

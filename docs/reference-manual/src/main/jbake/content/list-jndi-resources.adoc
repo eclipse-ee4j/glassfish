@@ -4,6 +4,7 @@ title=list-jndi-resources
 next=list-jobs.html
 prev=list-jndi-entries.html
 ~~~~~~
+
 list-jndi-resources
 ===================
 
@@ -12,29 +13,28 @@ list-jndi-resources
 list-jndi-resources
 -------------------
 
-lists all existing JNDI resources
+Lists all existing JNDI resources
 
 [[sthref1592]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 list-jndi-resources [--help] [target]
 ----
 
 [[sthref1593]]
 
-Description
+=== Description
 
-The `list-jndi-resources` subcommand identifies all existing JNDI
-resources.
+The `list-jndi-resources` subcommand identifies all existing JNDI resources.
 
 This subcommand is supported in remote mode only.
 
 [[sthref1594]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,11 +45,12 @@ asadmin-options::
 
 [[sthref1595]]
 
-Operands
+=== Operands
 
 target::
   The target for which the JNDI resources are to be listed. Valid values
-  are as follows: +
+  are as follows:
+
   `server`;;
     Lists the JNDI resources on the default server instance. This is the
     default value.
@@ -63,15 +64,15 @@ target::
 
 [[sthref1596]]
 
-Examples
+=== Examples
 
 [[GSRFM678]][[sthref1597]]
 
-Example 1   Listing JNDI Resources
+==== Example 1   Listing JNDI Resources
 
 This example lists the JNDI resources on the default server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jndi-resources
 jndi_resource1
@@ -82,7 +83,7 @@ Command list-jndi-resources executed successfully
 
 [[sthref1598]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -91,7 +92,7 @@ Exit Status
 
 [[sthref1599]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

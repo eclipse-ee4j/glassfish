@@ -4,6 +4,7 @@ title=create-protocol-finder
 next=create-resource-adapter-config.html
 prev=create-protocol-filter.html
 ~~~~~~
+
 create-protocol-finder
 ======================
 
@@ -12,32 +13,32 @@ create-protocol-finder
 create-protocol-finder
 ----------------------
 
-adds a new protocol finder
+Adds a new protocol finder
 
 [[sthref505]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-protocol-finder [--help]
---protocol protocol-name 
---targetprotocol target-protocol-name 
---classname class-name 
+--protocol protocol-name
+--targetprotocol target-protocol-name
+--classname class-name
 [--target server]
 protocol-finder-name
 ----
 
 [[sthref506]]
 
-Description
+=== Description
 
 The `create-protocol-finder` subcommand creates a protocol finder for a
 protocol. This subcommand is supported in remote mode only.
 
 [[sthref507]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,7 +55,8 @@ asadmin-options::
   protocol finder.
 `--target`::
   Creates the protocol finder only on the specified target. Valid values
-  are as follows: +
+  are as follows:
+
   `server`;;
     Creates the protocol finder on the default server instance. This is
     the default value.
@@ -69,14 +71,14 @@ asadmin-options::
 
 [[sthref508]]
 
-Operands
+=== Operands
 
 protocol-finder-name::
   The name of the protocol finder.
 
 [[sthref509]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -85,7 +87,7 @@ Exit Status
 
 [[sthref510]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

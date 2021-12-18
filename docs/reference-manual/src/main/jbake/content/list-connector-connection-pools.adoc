@@ -4,6 +4,7 @@ title=list-connector-connection-pools
 next=list-connector-resources.html
 prev=list-configs.html
 ~~~~~~
+
 list-connector-connection-pools
 ===============================
 
@@ -12,20 +13,20 @@ list-connector-connection-pools
 list-connector-connection-pools
 -------------------------------
 
-lists the existing connector connection pools
+Lists the existing connector connection pools
 
 [[sthref1407]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-connector-connection-pools [--help]
 ----
 
 [[sthref1408]]
 
-Description
+=== Description
 
 The `list-connector-connection-pools` subcommand list connector
 connection pools that have been created.
@@ -34,7 +35,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1409]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,15 +46,15 @@ asadmin-options::
 
 [[sthref1410]]
 
-Examples
+=== Examples
 
 [[GSRFM649]][[sthref1411]]
 
-Example 1   Listing the Connector Connection Pools
+==== Example 1   Listing the Connector Connection Pools
 
 This example lists the existing connector connection pools.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-connection-pools
 jms/qConnPool
@@ -62,7 +63,7 @@ Command list-connector-connection-pools executed successfully
 
 [[sthref1412]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -71,7 +72,7 @@ Exit Status
 
 [[sthref1413]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

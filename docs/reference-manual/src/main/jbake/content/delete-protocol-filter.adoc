@@ -4,6 +4,7 @@ title=delete-protocol-filter
 next=delete-protocol-finder.html
 prev=delete-protocol.html
 ~~~~~~
+
 delete-protocol-filter
 ======================
 
@@ -12,13 +13,13 @@ delete-protocol-filter
 delete-protocol-filter
 ----------------------
 
-removes a protocol filter
+Removes a protocol filter
 
 [[sthref945]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-protocol-filter [--help]
 --protocol protocol-name
@@ -28,14 +29,14 @@ protocol-filter-name
 
 [[sthref946]]
 
-Description
+=== Description
 
 The `delete-protocol-filter` subcommand removes the specified protocol
 filter. This subcommand is supported in remote mode only.
 
 [[sthref947]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,7 +48,8 @@ asadmin-options::
   The name of the associated protocol.
 `--target`::
   Deletes the protocol filter only from the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the protocol filter from the default server instance. This
     is the default value.
@@ -62,22 +64,22 @@ asadmin-options::
 
 [[sthref948]]
 
-Operands
+=== Operands
 
 protocol-filter-name::
   The name of the protocol filter to be deleted.
 
 [[sthref949]]
 
-Examples
+=== Examples
 
 [[GSRFM575]][[sthref950]]
 
-Example 1   Deleting a Protocol Filter
+==== Example 1   Deleting a Protocol Filter
 
 The following command deletes the protocol filter named `http1-filter`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-protocol-filter --protocol http1 http1-filter
 Command delete-protocol-filter executed successfully.
@@ -85,7 +87,7 @@ Command delete-protocol-filter executed successfully.
 
 [[sthref951]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref952]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=uptime
 next=validate-dcom.html
 prev=update-password-alias.html
 ~~~~~~
+
 uptime
 ======
 
@@ -12,20 +13,20 @@ uptime
 uptime
 ------
 
-returns the length of time that the DAS has been running
+Returns the length of time that the DAS has been running
 
 [[sthref2316]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] uptime [--help]
 ----
 
 [[sthref2317]]
 
-Description
+=== Description
 
 The `uptime` subcommand returns the length of time that the domain
 administration server (DAS) has been running since it was last
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2318]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,15 +47,15 @@ asadmin-options::
 
 [[sthref2319]]
 
-Examples
+=== Examples
 
 [[GSRFM795]][[sthref2320]]
 
-Example 1   Showing How Long the DAS Has Been Running
+==== Example 1   Showing How Long the DAS Has Been Running
 
 This example shows the length of time that the DAS has been running.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> uptime
 Uptime: 2 days, 1 hours, 30 minutes, 18 seconds, Total milliseconds: 178218706
@@ -63,7 +64,7 @@ Command uptime executed successfully.
 
 [[sthref2321]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -72,7 +73,7 @@ Exit Status
 
 [[sthref2322]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

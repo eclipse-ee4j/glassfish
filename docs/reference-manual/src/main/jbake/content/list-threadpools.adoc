@@ -4,6 +4,7 @@ title=list-threadpools
 next=list-timers.html
 prev=list-system-properties.html
 ~~~~~~
+
 list-threadpools
 ================
 
@@ -12,30 +13,29 @@ list-threadpools
 list-threadpools
 ----------------
 
-lists all the thread pools
+Lists all the thread pools
 
 [[sthref1826]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-threadpools [--help] 
+asadmin [asadmin-options] list-threadpools [--help]
 target
 ----
 
 [[sthref1827]]
 
-Description
+=== Description
 
-The `list-threadpools` subcommand lists the \{product---name} thread
-pools.
+The `list-threadpools` subcommand lists the \{product---name} thread pools.
 
 This subcommand is supported in remote mode only.
 
 [[sthref1828]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,12 +46,13 @@ asadmin-options::
 
 [[sthref1829]]
 
-Operands
+=== Operands
 
 target::
   This operand specifies the target for which you are listing thread
-  pools. This operand is required. +
-  Valid values are as follows: +
+  pools. This operand is required.
+  Valid values are as follows:
+
   `server`;;
     Lists the thread pools for the default \{product---name} instance
     `server`.
@@ -64,16 +65,15 @@ target::
 
 [[sthref1830]]
 
-Examples
+=== Examples
 
 [[GSRFM714]][[sthref1831]]
 
-Example 1   Listing Thread Pools
+==== Example 1   Listing Thread Pools
 
-This example lists the current thread pools for the default instance
-`server`.
+This example lists the current thread pools for the default instance `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-threadpools server
 admin-thread-pool
@@ -84,7 +84,7 @@ Command list-threadpools executed successfully.
 
 [[sthref1832]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -93,7 +93,7 @@ Exit Status
 
 [[sthref1833]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

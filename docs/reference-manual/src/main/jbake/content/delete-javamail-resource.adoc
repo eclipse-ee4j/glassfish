@@ -4,6 +4,7 @@ title=delete-javamail-resource
 next=delete-jdbc-connection-pool.html
 prev=delete-jacc-provider.html
 ~~~~~~
+
 delete-javamail-resource
 ========================
 
@@ -12,21 +13,21 @@ delete-javamail-resource
 delete-javamail-resource
 ------------------------
 
-removes a JavaMail session resource
+Removes a JavaMail session resource
 
 [[sthref769]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-javamail-resource [--help] 
+asadmin [asadmin-options] delete-javamail-resource [--help]
 [--target target] jndi_name
 ----
 
 [[sthref770]]
 
-Description
+=== Description
 
 The `delete-javamail-resource` subcommand removes the specified JavaMail
 session resource. Ensure that you remove all references to this resource
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref771]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target from which you are deleting the
-  JavaMail session resource. Valid values are: +
+  JavaMail session resource. Valid values are:
+
   `server`;;
     Deletes the resource from the default server instance. This is the
     default value.
@@ -59,23 +61,23 @@ asadmin-options::
 
 [[sthref772]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of the JavaMail session resource to be deleted.
 
 [[sthref773]]
 
-Examples
+=== Examples
 
 [[GSRFM555]][[sthref774]]
 
-Example 1   Deleting a JavaMail Resource
+==== Example 1   Deleting a JavaMail Resource
 
 This example deletes the JavaMail session resource named
 `mail/MyMailSession`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-javamail-resource mail/MyMailSession
 Command delete-javamail-resource executed successfully.
@@ -83,7 +85,7 @@ Command delete-javamail-resource executed successfully.
 
 [[sthref775]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -92,7 +94,7 @@ Exit Status
 
 [[sthref776]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

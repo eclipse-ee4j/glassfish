@@ -4,6 +4,7 @@ title=resource
 next=security.html
 prev=passwords.html
 ~~~~~~
+
 resource
 ========
 
@@ -12,17 +13,17 @@ resource
 resource
 --------
 
-Provide connectivity to various types of EIS .
+Provide connectivity to various types of EIS.
 
 [[sthref2410]]
 
-Description
+=== Description
 
 \{product---name} provides support for JDBC, JMS, and JNDI resources.
 
 [[sthref2411]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

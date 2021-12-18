@@ -4,6 +4,7 @@ title=create-resource-adapter-config
 next=create-resource-ref.html
 prev=create-protocol-finder.html
 ~~~~~~
+
 create-resource-adapter-config
 ==============================
 
@@ -12,13 +13,13 @@ create-resource-adapter-config
 create-resource-adapter-config
 ------------------------------
 
-creates the configuration information for the connector module
+Creates the configuration information for the connector module
 
 [[sthref511]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-resource-adapter-config [--help] 
 [--threadpoolid threadpool] 
@@ -29,7 +30,7 @@ raname
 
 [[sthref512]]
 
-Description
+=== Description
 
 The `create-resource-adapter-config` subcommand creates configuration
 information for the connector module. This subcommand can be run before
@@ -45,7 +46,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref513]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -69,7 +70,7 @@ asadmin-options::
 
 [[sthref514]]
 
-Operands
+=== Operands
 
 raname::
   Indicates the connector module name. It is the value of the
@@ -77,15 +78,15 @@ raname::
 
 [[sthref515]]
 
-Examples
+=== Examples
 
 [[GSRFM519]][[sthref516]]
 
-Example 1   Creating a Resource Adapter Con figuration
+==== Example 1   Creating a Resource Adapter Con figuration
 
 This example creates a resource adapter configuration for `ra1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-resource-adapter-config --property foo=bar --threadpoolid 
 mycustomerthreadpool ra1
@@ -94,7 +95,7 @@ Command create-resource-adapter-config executed successfully
 
 [[sthref517]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -103,7 +104,7 @@ Exit Status
 
 [[sthref518]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

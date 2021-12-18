@@ -4,6 +4,7 @@ title=create-protocol
 next=create-protocol-filter.html
 prev=create-profiler.html
 ~~~~~~
+
 create-protocol
 ===============
 
@@ -12,13 +13,13 @@ create-protocol
 create-protocol
 ---------------
 
-adds a new protocol
+Adds a new protocol
 
 [[sthref489]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-protocol [--help]
 [--securityenabled={false|true}]
@@ -28,14 +29,14 @@ protocol-name
 
 [[sthref490]]
 
-Description
+=== Description
 
 The `create-protocol` subcommand creates a protocol. This subcommand is
 supported in remote mode only.
 
 [[sthref491]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,7 +51,8 @@ asadmin-options::
   the server instance. The default value is `false`.
 `--target`::
   Creates the protocol only on the specified target. Valid values are as
-  follows: +
+  follows:
+
   `server`;;
     Creates the protocol on the default server instance. This is the
     default value.
@@ -64,23 +66,23 @@ asadmin-options::
 
 [[sthref492]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol.
 
 [[sthref493]]
 
-Examples
+=== Examples
 
 [[GSRFM517]][[sthref494]]
 
-Example 1   Creating a Protocol
+==== Example 1   Creating a Protocol
 
 The following command creates a protocol named `http-1` with security
 enabled:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-protocol --securityenabled=true http-1
 Command create-protocol executed successfully.
@@ -88,7 +90,7 @@ Command create-protocol executed successfully.
 
 [[sthref495]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -97,7 +99,7 @@ Exit Status
 
 [[sthref496]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

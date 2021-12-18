@@ -4,6 +4,7 @@ title=delete-jmsdest
 next=delete-jms-host.html
 prev=delete-jdbc-resource.html
 ~~~~~~
+
 delete-jmsdest
 ==============
 
@@ -12,13 +13,13 @@ delete-jmsdest
 delete-jmsdest
 --------------
 
-removes a JMS physical destination
+Removes a JMS physical destination
 
 [[sthref793]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-jmsdest [--help]
 --desttype type
@@ -28,7 +29,7 @@ dest_name
 
 [[sthref794]]
 
-Description
+=== Description
 
 The `delete-jmsdest` subcommand removes the specified Java Message
 Service (JMS) physical destination.
@@ -38,7 +39,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref795]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -53,7 +54,8 @@ asadmin-options::
   Although the `delete-jmsdest` subcommand is related to resources, a
   physical destination is deleted using the JMS Service (JMS Broker),
   which is part of the configuration. A JMS Broker is configured in the
-  config section of `domain.xml`. Valid values are as follows: +
+  config section of `domain.xml`. Valid values are as follows:
+
   `server`;;
     Deletes the physical destination from the default server instance.
     This is the default value.
@@ -67,22 +69,22 @@ asadmin-options::
 
 [[sthref796]]
 
-Operands
+=== Operands
 
 dest_name::
   The unique identifier of the JMS destination to be deleted.
 
 [[sthref797]]
 
-Examples
+=== Examples
 
 [[GSRFM558]][[sthref798]]
 
-Example 1   Deleting a physical destination
+==== Example 1   Deleting a physical destination
 
 The following subcommand deletes the queue named `PhysicalQueue`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jmsdest --desttype queue PhysicalQueue
 Command delete-jmsdest executed successfully.
@@ -90,7 +92,7 @@ Command delete-jmsdest executed successfully.
 
 [[sthref799]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -99,7 +101,7 @@ Exit Status
 
 [[sthref800]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

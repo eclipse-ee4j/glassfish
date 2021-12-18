@@ -4,6 +4,7 @@ title=delete-threadpool
 next=delete-transport.html
 prev=delete-system-property.html
 ~~~~~~
+
 delete-threadpool
 =================
 
@@ -12,28 +13,28 @@ delete-threadpool
 delete-threadpool
 -----------------
 
-removes a thread pool
+Removes a thread pool
 
 [[sthref991]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-threadpool [--help] 
+asadmin [asadmin-options] delete-threadpool [--help]
 [--target target] threadpool-id
 ----
 
 [[sthref992]]
 
-Description
+=== Description
 
 Removes the thread pool with the specified ID. This subcommand is
 supported in remote mode only.
 
 [[sthref993]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -43,8 +44,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target from which you are removing the
-  thread pool. +
-  Valid values are as follows: +
+  thread pool. Valid values are as follows:
+
   `server`;;
     Deletes the thread pool for the default \{product---name} instance
     `server` and is the default value.
@@ -57,7 +58,7 @@ asadmin-options::
 
 [[sthref994]]
 
-Operands
+=== Operands
 
 threadpool-id::
   An ID for the work queue, for example, `thread-pool1`, `threadpool-2`,
@@ -65,15 +66,15 @@ threadpool-id::
 
 [[sthref995]]
 
-Examples
+=== Examples
 
 [[GSRFM581]][[sthref996]]
 
-Example 1   Deleting a Thread Pool
+==== Example 1   Deleting a Thread Pool
 
 This example deletes `threadpool-l`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-threadpool threadpool-1
 Command delete-threadpool executed successfully
@@ -81,7 +82,7 @@ Command delete-threadpool executed successfully
 
 [[sthref997]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -90,7 +91,7 @@ Exit Status
 
 [[sthref998]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

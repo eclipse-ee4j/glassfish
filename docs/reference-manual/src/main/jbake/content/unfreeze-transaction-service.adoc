@@ -4,6 +4,7 @@ title=unfreeze-transaction-service
 next=uninstall-node.html
 prev=undeploy.html
 ~~~~~~
+
 unfreeze-transaction-service
 ============================
 
@@ -12,21 +13,21 @@ unfreeze-transaction-service
 unfreeze-transaction-service
 ----------------------------
 
-resumes all suspended transactions
+Resumes all suspended transactions
 
 [[sthref2199]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] unfreeze-transaction-service [--help] 
+asadmin [asadmin-options] unfreeze-transaction-service [--help]
 [--target target]
 ----
 
 [[sthref2200]]
 
-Description
+=== Description
 
 The `unfreeze-transaction-service` subcommand restarts the transaction
 subsystem and resumes all in-flight transactions. Invoke this subcommand
@@ -35,7 +36,7 @@ in remote mode only.
 
 [[sthref2201]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,7 +46,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target on which you are unfreezing the
-  transaction service. Valid values are: +
+  transaction service. Valid values are:
+
   `server`;;
     Unfreezes the transaction service for the default server instance
     `server` and is the default value.
@@ -60,13 +62,13 @@ asadmin-options::
 
 [[sthref2202]]
 
-Examples
+=== Examples
 
 [[GSRFM772]][[sthref2203]]
 
-Example 1   Using unfreeze-transaction-service
+==== Example 1   Using unfreeze-transaction-service
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin unfreeze-transaction-service
 Command unfreeze-transaction-service executed successfully
@@ -74,7 +76,7 @@ Command unfreeze-transaction-service executed successfully
 
 [[sthref2204]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -83,7 +85,7 @@ Exit Status
 
 [[sthref2205]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

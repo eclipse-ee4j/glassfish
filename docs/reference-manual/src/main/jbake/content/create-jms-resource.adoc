@@ -4,6 +4,7 @@ title=create-jms-resource
 next=create-jndi-resource.html
 prev=create-jms-host.html
 ~~~~~~
+
 create-jms-resource
 ===================
 
@@ -12,13 +13,13 @@ create-jms-resource
 create-jms-resource
 -------------------
 
-creates a JMS resource
+Creates a JMS resource
 
 [[sthref352]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jms-resource [--help]
 --restype type
@@ -32,7 +33,7 @@ jndi_name
 
 [[sthref353]]
 
-Description
+=== Description
 
 The `create-jms-resource` subcommand creates a Java Message Service
 (JMS) connection factory resource or a JMS destination resource.
@@ -42,7 +43,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref354]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,19 +58,15 @@ asadmin-options::
   `jakarta.jms.QueueConnectionFactory`.
 `--target`::
   Creates the JMS resource only for the specified target. Valid values
-  are as follows: +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+  are as follows:
++
+[NOTE]
+====
 The resource is always created for the domain as a whole, but the
 `<resource-ref>` element for the resource is only created for the
 specified `--target`. This means that although the resource is defined
 at the domain level, it is only active at the specified `--target`.
-
-|=======================================================================
+====
 
   `server`;;
     Creates the JMS resource for the default server instance. This is
@@ -81,6 +78,7 @@ at the domain level, it is only active at the specified `--target`.
     cluster.
   instance-name;;
     Creates the JMS resource for the specified server instance.
+
 `--enabled`::
   If set to true (the default), the resource is enabled at runtime.
 `--description`::
@@ -88,7 +86,8 @@ at the domain level, it is only active at the specified `--target`.
 `--property`::
   Optional attribute name/value pairs for configuring the JMS resource. +
   You can specify the following properties for a connection factory
-  resource: +
+  resource:
+
   `ClientId`;;
     A client ID for a connection factory that will be used by a durable
     subscriber.
@@ -141,12 +140,15 @@ at the domain level, it is only active at the specified `--target`.
     The number of times the client runtime iterates through the
     `AddressList` in an effort to establish (or re-establish) a
     connection). A value of -1 indicates that the number of attempts is
-    unlimited. The default value is -1. +
-  Additionally, you can specify `connector-connection-pool` attributes
+    unlimited. The default value is -1.
+
++
+Additionally, you can specify `connector-connection-pool` attributes
   as connector resource properties. For a list of these attributes, see
   "link:../application-deployment-guide/dd-elements.html#GSDPG00124[connector-connection-pool]" in GlassFish Server Open
   Source Edition Application Deployment Guide. +
-  You can specify the following properties for a destination resource: +
+  You can specify the following properties for a destination resource:
+
   `Name`;;
     The name of the physical destination to which the resource will
     refer. The physical destination is created automatically when you
@@ -157,24 +159,25 @@ at the domain level, it is only active at the specified `--target`.
     (replacing any forward slash in the JNDI name with an underscore).
   `Description`;;
     A description of the physical destination.
+
 `--force`::
   Specifies whether the subcommand overwrites the existing JMS resource
   of the same name. The default value is `false`.
 
 [[sthref355]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of the JMS resource to be created.
 
 [[sthref356]]
 
-Examples
+=== Examples
 
 [[GSRFM497]][[sthref357]]
 
-Example 1   Creating a JMS connection factory resource for durable
+==== Example 1   Creating a JMS connection factory resource for durable
 subscriptions
 
 The following subcommand creates a connection factory resource of type
@@ -184,7 +187,7 @@ on the connection factory so that it can be used for durable
 subscriptions. The JNDI name for a JMS resource customarily includes the
 `jms/` naming subcontext.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jms-resource --restype jakarta.jms.ConnectionFactory
 --description "connection factory for durable subscriptions"
@@ -195,13 +198,13 @@ Command create-jms-resource executed successfully.
 
 [[GSRFM498]][[sthref358]]
 
-Example 2   Creating a JMS destination resource
+==== Example 2   Creating a JMS destination resource
 
 The following subcommand creates a destination resource whose JNDI name
 is `jms/MyQueue`. The `Name` property specifies the physical destination
 to which the resource refers.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jms-resource --restype jakarta.jms.Queue
 --property Name=PhysicalQueue jms/MyQueue
@@ -211,7 +214,7 @@ Command create-jms-resource executed successfully.
 
 [[sthref359]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -220,7 +223,7 @@ Exit Status
 
 [[sthref360]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

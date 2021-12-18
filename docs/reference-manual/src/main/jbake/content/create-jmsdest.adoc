@@ -4,6 +4,7 @@ title=create-jmsdest
 next=create-jms-host.html
 prev=create-jdbc-resource.html
 ~~~~~~
+
 create-jmsdest
 ==============
 
@@ -12,13 +13,13 @@ create-jmsdest
 create-jmsdest
 --------------
 
-creates a JMS physical destination
+Creates a JMS physical destination
 
 [[sthref336]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jmsdest [--help]
 --desttype dest_type
@@ -30,7 +31,7 @@ dest_name
 
 [[sthref337]]
 
-Description
+=== Description
 
 The `create-jmsdest` subcommand creates a Java Message Service (JMS)
 physical destination. Typically, you use the `create-jms-resource`
@@ -46,7 +47,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref338]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -59,7 +60,8 @@ asadmin-options::
 `--property`::
   Optional attribute name/value pairs for configuring the physical
   destination. You can specify the following properties for a physical
-  destination. +
+  destination.
+
   `MaxNumMsgs`;;
     The maximum number of unconsumed messages permitted for the
     destination. A value of -1 denotes an unlimited number of messages.
@@ -69,21 +71,21 @@ asadmin-options::
     possible for the specified message limit to be exceeded because the
     broker cannot react quickly enough to stop the flow of incoming
     messages. In such cases, the value specified for `maxNumMsgs` serves
-    as merely a hint for the broker rather than a strictly enforced
-    limit.
+    as merely a hint for the broker rather than a strictly enforced limit.
   `MaxBytesPerMsg`;;
     The maximum size, in bytes, of any single message. Rejection of a
     persistent message is reported to the producing client with an
     exception; no notification is sent for non-persistent messages. +
     The value may be expressed in bytes, kilobytes, or megabytes, using
-    the following suffixes:::
-    `b`::
+    the following suffixes:
+    `b`:::
       Bytes
-    `k`::
+    `k`:::
       Kilobytes (1024 bytes)
-    `m`::
-      Megabytes (1024 x 1024 = 1,048,576 bytes) +
-    A value with no suffix is expressed in bytes; a value of -1 denotes
+    `m`:::
+      Megabytes (1024 x 1024 = 1,048,576 bytes)
++
+A value with no suffix is expressed in bytes; a value of -1 denotes
     an unlimited message size. The default value is -1.
   `MaxTotalMsgBytes`;;
     The maximum total memory, in bytes, for unconsumed messages. The
@@ -91,28 +93,30 @@ asadmin-options::
     For the dead message queue, the default value is `10m`.
   `LimitBehavior`;;
     The behavior of the message queue broker when the memory-limit
-    threshold is reached. Valid values are as follows.::
-    `REJECT_NEWEST`::
+    threshold is reached. Valid values are as follows:
+    `REJECT_NEWEST`:::
       Reject newest messages and notify the producing client with an
       exception only if the message is persistent. This is the default
       value.
-    `FLOW_CONTROL`::
+    `FLOW_CONTROL`:::
       Slow the rate at which message producers send messages.
-    `REMOVE_OLDEST`::
+    `REMOVE_OLDEST`:::
       Throw out the oldest messages.
-    `REMOVE_LOW_PRIORITY`::
+    `REMOVE_LOW_PRIORITY`:::
       Throw out the lowest-priority messages according to age, with no
-      notification to the producing client. +
-    If the value is `REMOVE_OLDEST` or `REMOVE_LOW_PRIORITY` and the
+      notification to the producing client.
++
+If the value is `REMOVE_OLDEST` or `REMOVE_LOW_PRIORITY` and the
     `useDMQ` property is set to `true`, excess messages are moved to the
     dead message queue. For the dead message queue itself, the default
     limit behavior is `REMOVE_OLDEST`, and the value cannot be set to
     `FLOW_CONTROL`.
   `MaxNumProducers`;;
-    The maximum number of message producers for the destination. When
-    this limit is reached, no new producers can be created. A value of
-    -1 denotes an unlimited number of producers. The default value is
-    100. This property does not apply to the dead message queue.
+    The maximum number of message producers for the destination.
+    When this limit is reached, no new producers can be created.
+    A value of -1 denotes an unlimited number of producers.
+    The default value is 100.
+    This property does not apply to the dead message queue.
   `ConsumerFlowLimit`;;
     The maximum number of messages that can be delivered to a consumer
     in a single batch. A value of -1 denotes an unlimited number of
@@ -124,8 +128,7 @@ asadmin-options::
     begins.
   `UseDMQ`;;
     If set to `true`, dead messages go to the dead message queue. If set
-    to `false`, dead messages are discarded. The default value is
-    `true`.
+    to `false`, dead messages are discarded. The default value is `true`.
   `ValidateXMLSchemaEnabled`;;
     If set to `true`, XML schema validation is enabled for the
     destination. The default value is `false`. +
@@ -141,21 +144,24 @@ asadmin-options::
   `XMLSchemaURIList`;;
     A space-separated list of XML schema document (XSD) URI strings. The
     URIs point to the location of one or more XSDs to use for XML schema
-    validation, if `validateXMLSchemaEnabled` is set to `true`. The
-    default value is `null`. +
+    validation, if `validateXMLSchemaEnabled` is set to `true`.
+    The default value is `null`. +
     Use double quotes around this value if multiple URIs are specified,
-    as in the following example: +
-[source,oac_no_warn]
+    as in the following example:
++
+[source]
 ----
 "http://foo/flap.xsd http://test.com/test.xsd"
 ----
-::
-    If this property is not set or `null` and XML validation is enabled,
++
+If this property is not set or `null` and XML validation is enabled,
     XML validation is performed using a DTD specified in the XML
     document. If an XSD is changed as a result of changing application
     requirements, all client applications that produce XML messages
-    based on the changed XSD must reconnect to the broker. +
-  To modify the value of these properties, you can use the
+    based on the changed XSD must reconnect to the broker.
+
++
+To modify the value of these properties, you can use the
   as-install`/mq/bin/imqcmd` command. See "link:../../openmq/mq-admin-guide/physical-destination-properties.html#GMADG00049[Physical
   Destination Property Reference]" in Open Message Queue Administration
   Guide for more information.
@@ -164,7 +170,8 @@ asadmin-options::
   Although the `create-jmsdest` subcommand is related to resources, a
   physical destination is created using the JMS Service (JMS Broker),
   which is part of the configuration. A JMS Broker is configured in the
-  config section of `domain.xml`. Valid values are as follows: +
+  config section of `domain.xml`. Valid values are as follows:
+
   `server`;;
     Creates the physical destination for the default server instance.
     This is the default value.
@@ -175,29 +182,30 @@ asadmin-options::
     specified cluster.
   instance-name;;
     Creates the physical destination for the specified server instance.
+
 `--force`::
   Specifies whether the subcommand overwrites the existing JMS physical
   destination of the same name. The default value is `false`.
 
 [[sthref339]]
 
-Operands
+=== Operands
 
 dest_name::
   A unique identifier for the JMS destination to be created.
 
 [[sthref340]]
 
-Examples
+=== Examples
 
 [[GSRFM495]][[sthref341]]
 
-Example 1   Creating a JMS physical destination
+==== Example 1   Creating a JMS physical destination
 
 The following subcommand creates a JMS physical queue named
 `PhysicalQueue` with non-default property values.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jmsdest --desttype queue
 --property maxNumMsgs=1000:maxBytesPerMsg=5k PhysicalQueue
@@ -206,7 +214,7 @@ Command create-jmsdest executed successfully.
 
 [[sthref342]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -215,7 +223,7 @@ Exit Status
 
 [[sthref343]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=list-system-properties
 next=list-threadpools.html
 prev=list-supported-cipher-suites.html
 ~~~~~~
+
 list-system-properties
 ======================
 
@@ -12,22 +13,22 @@ list-system-properties
 list-system-properties
 ----------------------
 
-lists the system properties of the domain, configuration, cluster, or
+Lists the system properties of the domain, configuration, cluster, or
 server instance
 
 [[sthref1818]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-system-properties [--help] 
+asadmin [asadmin-options] list-system-properties [--help]
 [target]
 ----
 
 [[sthref1819]]
 
-Description
+=== Description
 
 Shared or clustered server instances will often need to override
 attributes defined in their referenced configuration. Any configuration
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1820]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,11 +52,12 @@ asadmin-options::
 
 [[sthref1821]]
 
-Operands
+=== Operands
 
 target::
   This restricts the listing to system properties for a specific target.
-  Valid values are: +
+  Valid values are:
+
   domain;;
     Lists the system properties defined for the domain.
   configuration_name;;
@@ -71,15 +73,15 @@ target::
 
 [[sthref1822]]
 
-Examples
+=== Examples
 
 [[GSRFM713]][[sthref1823]]
 
-Example 1   Listing System Properties
+==== Example 1   Listing System Properties
 
 This example lists the system properties on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-system-properties
 http-listener-port=1088
@@ -88,7 +90,7 @@ Command list-system-properties executed successfully.
 
 [[sthref1824]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -97,7 +99,7 @@ Exit Status
 
 [[sthref1825]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

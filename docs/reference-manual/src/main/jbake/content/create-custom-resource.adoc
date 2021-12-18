@@ -4,6 +4,7 @@ title=create-custom-resource
 next=create-domain.html
 prev=create-context-service.html
 ~~~~~~
+
 create-custom-resource
 ======================
 
@@ -12,24 +13,24 @@ create-custom-resource
 create-custom-resource
 ----------------------
 
-creates a custom resource
+Creates a custom resource
 
 [[sthref200]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-custom-resource [--help] 
---restype type --factoryclass classname 
-[--enabled={true|false}] [--description text] 
-[--property (name=value)[:name=value]*] jndi-name 
+asadmin [asadmin-options] create-custom-resource [--help]
+--restype type --factoryclass classname
+[--enabled={true|false}] [--description text]
+[--property (name=value)[:name=value]*] jndi-name
 [--target target]
 ----
 
 [[sthref201]]
 
-Description
+=== Description
 
 The `create-custom-resource` subcommand creates a custom resource. A
 custom resource specifies a custom server-wide resource object factory
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref202]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,7 +50,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   The target on which the custom resource you are creating will be
-  available. Valid values are: +
+  available. Valid values are:
++
   `server`;;
     The resource will be available on the default server instance and
     all domains hosted on the instance. This is the default value.
@@ -60,21 +62,18 @@ asadmin-options::
     cluster.
   instance_name;;
     The resource will be available on the specified server instance
-    only. +
+    only.
++
 
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The resource is always created for the domain as a whole, but the
 `resource-ref` for the resource is only created for the specified
 `--target`. This means that although the resource is defined at the
 domain level, it is only available at the specified target level. Use
 the `create-resource-ref` subcommand to refer to the resource in
 multiple targets if needed.
-
-|=======================================================================
+====
 
 `--restype`::
   The type of custom resource to be created. Specify a fully qualified
@@ -94,31 +93,31 @@ multiple targets if needed.
 
 [[sthref203]]
 
-Operands
+=== Operands
 
 jndi-name::
   The JNDI name of this resource.
 
 [[sthref204]]
 
-Examples
+=== Examples
 
 [[GSRFM470]][[sthref205]]
 
-Example 1   Creating a Custom Resource
+==== Example 1   Creating a Custom Resource
 
 This example creates a custom resource.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-custom-resource --restype topic 
+asadmin> create-custom-resource --restype topic
 --factoryclass com.imq.topic mycustomresource
 Command create-custom-resource executed successfully.
 ----
 
 [[sthref206]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -127,7 +126,7 @@ Exit Status
 
 [[sthref207]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

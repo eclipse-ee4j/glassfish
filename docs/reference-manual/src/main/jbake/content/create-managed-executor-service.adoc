@@ -4,6 +4,7 @@ title=create-managed-executor-service
 next=create-managed-scheduled-executor-service.html
 prev=create-local-instance.html
 ~~~~~~
+
 create-managed-executor-service
 ===============================
 
@@ -12,13 +13,13 @@ create-managed-executor-service
 create-managed-executor-service
 -------------------------------
 
-creates a managed executor service resource
+Creates a managed executor service resource
 
 [[sthref397]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-managed-executor-service [--help]
 [--enabled={false|true}]
@@ -42,7 +43,7 @@ jndi_name
 
 [[sthref398]]
 
-Description
+=== Description
 
 The `create-managed-executor-service` subcommand creates a managed
 executor service resource.
@@ -51,7 +52,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref399]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -104,8 +105,7 @@ asadmin-options::
   pool is essentially unbounded and can contain any number of threads.
 `--keepaliveseconds`::
   Specifies the number of seconds that threads can remain idle when the
-  number of threads is greater than `corepoolsize`. The default value is
-  60.
+  number of threads is greater than `corepoolsize`. The default value is 60.
 `--threadlifetimeseconds`::
   Specifies the number of seconds that threads can remain in a thread
   pool before being purged, regardless of whether the number of threads
@@ -125,7 +125,8 @@ asadmin-options::
   additional properties.
 `--target`::
   Specifies the target for which you are creating the resource. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Creates the resource for the default server instance. This is the
     default value.
@@ -139,23 +140,23 @@ asadmin-options::
 
 [[sthref400]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of this resource.
 
 [[sthref401]]
 
-Examples
+=== Examples
 
 [[GSRFM841]][[sthref402]]
 
-Example 1   Creating a Managed Executor Service Resource
+==== Example 1   Creating a Managed Executor Service Resource
 
 This example creates a managed executor service resource named
 `concurrent/myExecutor`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-managed-executor-service concurrent/myExecutor
 Managed executor service concurrent/myExecutor created successfully.
@@ -164,7 +165,7 @@ Command create-managed-executor-service executed successfully.
 
 [[sthref403]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -173,7 +174,7 @@ Exit Status
 
 [[sthref404]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

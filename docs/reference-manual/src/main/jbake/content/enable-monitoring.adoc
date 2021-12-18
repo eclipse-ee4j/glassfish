@@ -4,6 +4,7 @@ title=enable-monitoring
 next=enable-secure-admin.html
 prev=enable-http-lb-server.html
 ~~~~~~
+
 enable-monitoring
 =================
 
@@ -12,26 +13,26 @@ enable-monitoring
 enable-monitoring
 -----------------
 
-enables monitoring for the server or for specific monitorable modules
+Enables monitoring for the server or for specific monitorable modules
 
 [[sthref1119]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] enable-monitoring [--help] 
-[--target target] 
-[--mbean={false|true}] 
-[--dtrace={true|false}] 
-[--modules modules[=level][:module[=level]]* 
-[--pid pid] 
+asadmin [asadmin-options] enable-monitoring [--help]
+[--target target]
+[--mbean={false|true}]
+[--dtrace={true|false}]
+[--modules modules[=level][:module[=level]]*
+[--pid pid]
 [--options options]]
 ----
 
 [[sthref1120]]
 
-Description
+=== Description
 
 The `enable-monitoring` subcommand is used to turn on monitoring for
 \{product---name} or for particular modules during runtime. Changes are
@@ -57,7 +58,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1121]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -67,7 +68,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target on which to enabling monitoring. Valid values are
-  as follows: +
+  as follows:
+
   `server`;;
     Enables monitoring for the default server instance `server` and is
     the default value.
@@ -77,6 +79,7 @@ asadmin-options::
     Enables monitoring for every server instance in the cluster.
   instance-name;;
     Enables monitoring for a particular server instance.
+
 `--mbean`::
   Enables Mbean monitoring. Default value is false.
 `--dtrace`::
@@ -99,22 +102,23 @@ asadmin-options::
   system cannot determine the PID. In this situation, the subcommand
   prompts for the PID of the corresponding \{product---name}process.
 `--options`::
-  Sets the following `btrace-agent` options: +
+  Sets the following `btrace-agent` options:
+
   `debug`;;
     Enables debugging for BTrace. Default value is false.
 
 [[sthref1122]]
 
-Examples
+=== Examples
 
 [[GSRFM603]][[sthref1123]]
 
-Example 1   Enabling the Monitoring Service for \{product---name}
+==== Example 1   Enabling the Monitoring Service for \{product---name}
 
 This example enables monitoring for \{product---name} in general by
 setting the `enable-monitoring` flag to `true` (default is `true`).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-monitoring
 Command enable-monitoring executed successfully
@@ -122,12 +126,12 @@ Command enable-monitoring executed successfully
 
 [[GSRFM604]][[sthref1124]]
 
-Example 2   Enabling Monitoring for the Web and EJB Containers
+==== Example 2   Enabling Monitoring for the Web and EJB Containers
 
 This example enables monitoring for specific containers by setting their
 monitoring levels.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-monitoring --modules web-container=LOW:ejb-container=HIGH
 Command enable-monitoring executed successfully
@@ -135,11 +139,11 @@ Command enable-monitoring executed successfully
 
 [[GSRFM605]][[sthref1125]]
 
-Example 3   Turning on Debugging for Monitoring
+==== Example 3   Turning on Debugging for Monitoring
 
 This example turns on debugging.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-monitoring --options debug=true
 Command enable-monitoring executed successfully
@@ -147,7 +151,7 @@ Command enable-monitoring executed successfully
 
 [[sthref1126]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -156,7 +160,7 @@ Exit Status
 
 [[sthref1127]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

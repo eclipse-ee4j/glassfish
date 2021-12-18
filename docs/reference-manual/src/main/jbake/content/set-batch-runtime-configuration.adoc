@@ -4,6 +4,7 @@ title=set-batch-runtime-configuration
 next=set-log-attributes.html
 prev=set.html
 ~~~~~~
+
 set-batch-runtime-configuration
 ===============================
 
@@ -12,13 +13,13 @@ set-batch-runtime-configuration
 set-batch-runtime-configuration
 -------------------------------
 
-configures the batch runtime
+Configures the batch runtime
 
 [[sthref2034]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] set-batch-runtime-configuration [--help]
 [--target target]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] set-batch-runtime-configuration [--help]
 
 [[sthref2035]]
 
-Description
+=== Description
 
 The `set-batch-runtime-configuration` subcommand configures the batch
 runtime. The runtime uses a data source and a managed executor service
@@ -37,7 +38,7 @@ to execute batch jobs. Batch runtime configuration data is stored in the
 
 [[sthref2036]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -47,7 +48,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which to configure the batch runtime. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Configures the batch runtime for the default server instance
     `server` and is the default value.
@@ -56,6 +58,7 @@ asadmin-options::
     cluster.
   instance-name;;
     Configures the batch runtime for a particular server instance.
+
 `--datasourcelookupname`::
 `-d`::
   The JNDI lookup name of the data source to be used to store job
@@ -76,17 +79,17 @@ asadmin-options::
 
 [[sthref2037]]
 
-Examples
+=== Examples
 
 [[GSRFM898]][[sthref2038]]
 
-Example 1   Configuring the Batch Runtime
+==== Example 1   Configuring the Batch Runtime
 
 The following example configures the batch runtime for the default
 server instance to use an existing managed executor service named
 `concurrent/myExecutor`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-batch-runtime-configuration --executorservicelookupname concurrent/myExecutor
 Command set-batch-runtime-configuration executed successfully.
@@ -94,7 +97,7 @@ Command set-batch-runtime-configuration executed successfully.
 
 [[sthref2039]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -103,7 +106,7 @@ Exit Status
 
 [[sthref2040]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

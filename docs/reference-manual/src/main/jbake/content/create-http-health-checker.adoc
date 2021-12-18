@@ -4,6 +4,7 @@ title=create-http-health-checker
 next=create-http-lb.html
 prev=create-http.html
 ~~~~~~
+
 create-http-health-checker
 ==========================
 
@@ -12,15 +13,15 @@ create-http-health-checker
 create-http-health-checker
 --------------------------
 
-creates a health-checker for a specified load balancer configuration
+Creates a health-checker for a specified load balancer configuration
 
 [[sthref235]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-http-health-checker [--help] 
+asadmin [asadmin-options] create-http-health-checker [--help]
 [--url "/"]
 [--interval 30] [--timeout 10]
 [--config config_name] target
@@ -28,7 +29,7 @@ asadmin [asadmin-options] create-http-health-checker [--help]
 
 [[sthref236]]
 
-Description
+=== Description
 
 The `create-http-health-checker` subcommand creates a health checker for
 a specified load balancer configuration. A health checker is unique for
@@ -36,17 +37,15 @@ the combination of target and load balancer configuration.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref237]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -73,26 +72,27 @@ asadmin-options::
 
 [[sthref238]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target to which the health checker applies. +
-  Valid values are: +
+  Valid values are:
+
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
 [[sthref239]]
 
-Examples
+=== Examples
 
 [[GSRFM477]][[sthref240]]
 
-Example 1   Creating a Health Checker for a Load Balancer Configuration
+==== Example 1   Creating a Health Checker for a Load Balancer Configuration
 
 This example creates a health checker for a load balancer configuration
 named `mycluster-http-lb-config` on a cluster named `mycluster`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-http-health-checker --config mycluster-http-lb-config mycluster
 
@@ -101,7 +101,7 @@ Command create-http-health-checker executed successfully.
 
 [[sthref241]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -110,7 +110,7 @@ Exit Status
 
 [[sthref242]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

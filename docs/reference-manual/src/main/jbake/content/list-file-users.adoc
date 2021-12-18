@@ -4,6 +4,7 @@ title=list-file-users
 next=list-http-lb-configs.html
 prev=list-file-groups.html
 ~~~~~~
+
 list-file-users
 ===============
 
@@ -12,28 +13,28 @@ list-file-users
 list-file-users
 ---------------
 
-lists the file users
+Lists the file users
 
 [[sthref1476]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-file-users [--help] 
+asadmin [asadmin-options] list-file-users [--help]
 [--authrealmname auth_realm_name] [target]
 ----
 
 [[sthref1477]]
 
-Description
+=== Description
 
 The `list-file-users` subcommand displays a list of file users supported
 by file realm authentication.
 
 [[sthref1478]]
 
-Options
+=== Options
 
 `--help`::
 `-?`::
@@ -43,11 +44,12 @@ Options
 
 [[sthref1479]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target for which you want to list file users. The
-  following values are valid: +
+  following values are valid:
+
   `server`;;
     Lists the file users on the default server instance. This is the
     default value.
@@ -61,16 +63,16 @@ target::
 
 [[sthref1480]]
 
-Examples
+=== Examples
 
 [[GSRFM658]][[sthref1481]]
 
-Example 1   Listing Users in a Specific File Realm
+==== Example 1   Listing Users in a Specific File Realm
 
 The following example lists the users in the file realm named
 `sample_file_realm`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-file-users --authrealmname sample_file_realm
 sample_user05
@@ -81,7 +83,7 @@ Command list-file-users executed successfully
 
 [[sthref1482]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref1483]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=delete-http-lb
 next=delete-http-lb-config.html
 prev=delete-http-health-checker.html
 ~~~~~~
+
 delete-http-lb
 ==============
 
@@ -12,37 +13,33 @@ delete-http-lb
 delete-http-lb
 --------------
 
-deletes a load balancer
+Deletes a load balancer
 
 [[sthref707]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-http-lb [--help] 
+asadmin [asadmin-options] delete-http-lb [--help]
 load_balancer_name
 ----
 
 [[sthref708]]
 
-Description
+=== Description
 
 Use the `delete-http-lb` subcommand to delete a physical load balancer.
 
-
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
-
+====
 
 [[sthref709]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -53,22 +50,22 @@ asadmin-options::
 
 [[sthref710]]
 
-Operands
+=== Operands
 
 load_balancer_name::
   The name of the load balancer to be deleted.
 
 [[sthref711]]
 
-Examples
+=== Examples
 
 [[GSRFM548]][[sthref712]]
 
-Example 1   Deleting a Load Balancer Configuration
+==== Example 1   Deleting a Load Balancer Configuration
 
 This example deletes the load balancer configuration named `mylb`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-http-lb mylb
 
@@ -77,7 +74,7 @@ Command delete-http-lb executed successfully.
 
 [[sthref713]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -86,7 +83,7 @@ Exit Status
 
 [[sthref714]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

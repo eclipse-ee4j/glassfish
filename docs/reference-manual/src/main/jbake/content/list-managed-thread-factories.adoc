@@ -4,6 +4,7 @@ title=list-managed-thread-factories
 next=list-message-security-providers.html
 prev=list-managed-scheduled-executor-services.html
 ~~~~~~
+
 list-managed-thread-factories
 =============================
 
@@ -12,13 +13,13 @@ list-managed-thread-factories
 list-managed-thread-factories
 -----------------------------
 
-lists managed thread factory resources
+Lists managed thread factory resources
 
 [[sthref1669]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-managed-thread-factories [--help]
 [target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-managed-thread-factories [--help]
 
 [[sthref1670]]
 
-Description
+=== Description
 
 The `list-managed-thread-factories` subcommand lists managed thread
 factory resources.
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1671]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,11 +47,12 @@ asadmin-options::
 
 [[sthref1672]]
 
-Operands
+=== Operands
 
 target::
   Specifies the target for which managed thread factory resources are to
-  be listed. Valid targets are: +
+  be listed. Valid targets are:
+
   `server`;;
     Lists the resources on the default server instance. This is the
     default value.
@@ -64,16 +66,16 @@ target::
 
 [[sthref1673]]
 
-Examples
+=== Examples
 
 [[GSRFM876]][[sthref1674]]
 
-Example 1   Listing Managed Thread Factory Resources
+==== Example 1   Listing Managed Thread Factory Resources
 
 This example lists managed thread factory resources on the default
 server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-managed-thread-factories
 concurrent/__defaultManagedThreadFactory
@@ -84,7 +86,7 @@ Command list-managed-thread-factories executed successfully.
 
 [[sthref1675]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -93,7 +95,7 @@ Exit Status
 
 [[sthref1676]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

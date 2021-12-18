@@ -4,6 +4,7 @@ title=list-batch-jobs
 next=list-batch-job-steps.html
 prev=list-batch-job-executions.html
 ~~~~~~
+
 list-batch-jobs
 ===============
 
@@ -12,13 +13,13 @@ list-batch-jobs
 list-batch-jobs
 ---------------
 
-lists batch jobs
+Lists batch jobs
 
 [[sthref1348]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-batch-jobs [--help]
 [--target target]
@@ -30,13 +31,13 @@ asadmin [asadmin-options] list-batch-jobs [--help]
 
 [[sthref1349]]
 
-Description
+=== Description
 
 The `list-batch-jobs` subcommand lists batch jobs and job details.
 
 [[sthref1350]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which to list batch jobs and job details.
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Lists batch jobs for the default server instance `server` and is the
     default value.
@@ -54,17 +56,18 @@ asadmin-options::
     Lists batch jobs for every server instance in the cluster.
   instance-name;;
     Lists batch jobs for a particular server instance.
+
 `--long`::
 `-l`::
-  Displays detailed information about batch jobs. The default value is
-  `false`.
+  Displays detailed information about batch jobs. The default value is `false`.
 `--output`::
 `-o`::
   Displays specific details about batch jobs. Use a comma-separated list
   to specify the details to display and their order. The values are
   case-insensitive. The `jobname` and `instancecount` column headings
   are displayed by default. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `jobname`;;
     Displays the name of the job.
   `appname`;;
@@ -87,6 +90,7 @@ asadmin-options::
     Displays the status of the job as set by the Job XML for the job or
     by the batch application. By default, the exit status and the batch
     status are the same unless the exit status is explicitly overridden.
+
 `--header`::
 `-h`::
   Specifies whether column headings are displayed when the `--long`
@@ -95,25 +99,25 @@ asadmin-options::
 
 [[sthref1351]]
 
-Operands
+=== Operands
 
 job_name::
   The name of the job for which to list details.
 
 [[sthref1352]]
 
-Examples
+=== Examples
 
 [[GSRFM862]][[sthref1353]]
 
-Example 1   Listing Batch Jobs
+==== Example 1   Listing Batch Jobs
 
 This example lists batch jobs for the default server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-jobs
-JOBNAME  INSTANCECOUNT 
+JOBNAME  INSTANCECOUNT
 payroll  9
 bonus    6
 Command list-batch-jobs executed successfully.
@@ -121,7 +125,7 @@ Command list-batch-jobs executed successfully.
 
 [[sthref1354]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -130,7 +134,7 @@ Exit Status
 
 [[sthref1355]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

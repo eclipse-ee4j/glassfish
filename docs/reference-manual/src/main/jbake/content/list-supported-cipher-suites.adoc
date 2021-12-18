@@ -4,6 +4,7 @@ title=list-supported-cipher-suites
 next=list-system-properties.html
 prev=list-sub-components.html
 ~~~~~~
+
 list-supported-cipher-suites
 ============================
 
@@ -12,22 +13,22 @@ list-supported-cipher-suites
 list-supported-cipher-suites
 ----------------------------
 
-enables administrators to list the cipher suites that are supported and
+Enables administrators to list the cipher suites that are supported and
 available to a specified \{product---name} target
 
 [[sthref1811]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-supported-cipher-suites [--help] 
+asadmin [asadmin-options] list-supported-cipher-suites [--help]
 [--target target]
 ----
 
 [[sthref1812]]
 
-Description
+=== Description
 
 The `list-supported-cipher-suites` subcommand enables administrators to
 list the cipher suites that are supported and available to a specified
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1813]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,7 +51,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you want to list cipher suites. The
-  following values are valid: +
+  following values are valid:
+
   `server`;;
     Lists the cipher suites for the default server instance. This is the
     default value.
@@ -64,16 +66,16 @@ asadmin-options::
 
 [[sthref1814]]
 
-Examples
+=== Examples
 
 [[GSRFM712]][[sthref1815]]
 
-Example 1   Listing cipher suites
+==== Example 1   Listing cipher suites
 
 The following example shows how to list cipher suites for the default
 domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-supported-cipher-suites
 SSL_RSA_WITH_RC4_128_MD5
@@ -105,7 +107,7 @@ Command list-supported-cipher-suites executed successfully.
 
 [[sthref1816]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -114,7 +116,7 @@ Exit Status
 
 [[sthref1817]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

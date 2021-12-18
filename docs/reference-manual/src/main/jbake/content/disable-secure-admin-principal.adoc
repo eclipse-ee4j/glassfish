@@ -4,6 +4,7 @@ title=disable-secure-admin-principal
 next=enable.html
 prev=disable-secure-admin-internal-user.html
 ~~~~~~
+
 disable-secure-admin-principal
 ==============================
 
@@ -12,14 +13,14 @@ disable-secure-admin-principal
 disable-secure-admin-principal
 ------------------------------
 
-disables the certificate for authorizing access in secure
+Disables the certificate for authorizing access in secure
 administration.
 
 [[sthref1087]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] disable-secure-admin-principal [--help] 
 --alias aliasname | DN 
@@ -27,7 +28,7 @@ asadmin [asadmin-options] disable-secure-admin-principal [--help]
 
 [[sthref1088]]
 
-Description
+=== Description
 
 The `disable-secure-admin-principal` subcommand disables the certificate
 as being valid for authorizing access as part of secure administration.
@@ -36,7 +37,7 @@ You must specify either the `--alias` option, or the DN.
 
 [[sthref1089]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,7 +55,7 @@ asadmin-options::
 
 [[sthref1090]]
 
-Operands
+=== Operands
 
 DN::
   The distinguished name of the certificate, specified as a
@@ -64,16 +65,16 @@ DN::
 
 [[sthref1091]]
 
-Examples
+=== Examples
 
 [[GSRFM598]][[sthref1092]]
 
-Example 1   Disables trust of a DN for secure administration
+==== Example 1   Disables trust of a DN for secure administration
 
 The following example shows how to disable trust of a DN for authorizing
 access in secure administration.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-secure-admin-principal 
 "CN=system.amer.oracle.com,OU=GlassFish,
@@ -84,7 +85,7 @@ Command disable-secure-admin-principal executed successfully.
 
 [[sthref1093]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -93,7 +94,7 @@ Exit Status
 
 [[sthref1094]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

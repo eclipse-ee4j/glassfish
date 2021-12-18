@@ -4,6 +4,7 @@ title=flush-jmsdest
 next=freeze-transaction-service.html
 prev=flush-connection-pool.html
 ~~~~~~
+
 flush-jmsdest
 =============
 
@@ -12,13 +13,13 @@ flush-jmsdest
 flush-jmsdest
 -------------
 
-purges messages in a JMS destination.
+Purges messages in a JMS destination.
 
 [[sthref1185]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] flush-jmsdest [--help]
 --desttype {topic|queue}
@@ -28,7 +29,7 @@ destname
 
 [[sthref1186]]
 
-Description
+=== Description
 
 The `flush-jmsdest` subcommand purges the messages from a physical
 destination in the server's Java Message Service (JMS) configuration.
@@ -38,7 +39,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref1187]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,7 +53,8 @@ asadmin-options::
   and `queue`.
 `--target`::
   Purges messages from the physical destination only for the specified
-  target. Valid values are as follows: +
+  target. Valid values are as follows:
+
   `server`;;
     Purges messages from the physical destination for the default server
     instance. This is the default value.
@@ -68,23 +70,23 @@ asadmin-options::
 
 [[sthref1188]]
 
-Operands
+=== Operands
 
 dest_name::
   The unique identifier of the JMS destination to be purged.
 
 [[sthref1189]]
 
-Examples
+=== Examples
 
 [[GSRFM615]][[sthref1190]]
 
-Example 1   Purging messages from a physical destination
+==== Example 1   Purging messages from a physical destination
 
 The following subcommand purges messages from the queue named
 `PhysicalQueue`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> flush-jmsdest --desttype queue PhysicalQueue
 Command flush-jmsdest executed successfully.
@@ -92,7 +94,7 @@ Command flush-jmsdest executed successfully.
 
 [[sthref1191]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -101,7 +103,7 @@ Exit Status
 
 [[sthref1192]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

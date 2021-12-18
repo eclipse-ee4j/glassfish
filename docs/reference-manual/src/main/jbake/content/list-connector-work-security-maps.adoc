@@ -4,6 +4,7 @@ title=list-connector-work-security-maps
 next=list-containers.html
 prev=list-connector-security-maps.html
 ~~~~~~
+
 list-connector-work-security-maps
 =================================
 
@@ -12,13 +13,13 @@ list-connector-work-security-maps
 list-connector-work-security-maps
 ---------------------------------
 
-lists the work security maps belonging to the specified resource adapter
+Lists the work security maps belonging to the specified resource adapter
 
 [[sthref1430]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-connector-work-security-maps [--help] 
 [--securitymap securitymap]
@@ -27,7 +28,7 @@ resource_adapter_name
 
 [[sthref1431]]
 
-Description
+=== Description
 
 The `list-connector-work-security-maps` subcommand lists the work
 security maps belonging to the specified resource adapter.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1432]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,7 +51,7 @@ asadmin-options::
 
 [[sthref1433]]
 
-Operands
+=== Operands
 
 resource_adapter_name::
   The name of the resource adapter for which you want to list security
@@ -58,16 +59,16 @@ resource_adapter_name::
 
 [[sthref1434]]
 
-Examples
+=== Examples
 
 [[GSRFM652]][[sthref1435]]
 
-Example 1   Listing Connector Work Security Maps
+==== Example 1   Listing Connector Work Security Maps
 
 This example lists the current connector work security maps for the
 resource adapter named `my_resource_adapter`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-work-security-maps my_resource_adapter
 workSecurityMap1: EIS principal=eis-principal-2, mapped principal=server-principal-2
@@ -79,7 +80,7 @@ Command list-connector-work-security-maps executed successfully.
 
 [[sthref1436]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -88,7 +89,7 @@ Exit Status
 
 [[sthref1437]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

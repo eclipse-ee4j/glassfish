@@ -4,6 +4,7 @@ title=create-jacc-provider
 next=create-javamail-resource.html
 prev=create-instance.html
 ~~~~~~
+
 create-jacc-provider
 ====================
 
@@ -12,26 +13,26 @@ create-jacc-provider
 create-jacc-provider
 --------------------
 
-enables administrators to create a JACC provider that can be used by
+Enables administrators to create a JACC provider that can be used by
 third-party authorization modules for applications running in
 \{product---name}
 
 [[sthref304]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jacc-provider [--help]
-[--policyproviderclass pol-provider-class] 
-[--policyconfigfactoryclass pc-factory-class] 
-[--property name=value)[:name=value]*] 
+[--policyproviderclass pol-provider-class]
+[--policyconfigfactoryclass pc-factory-class]
+[--property name=value)[:name=value]*]
 [--target target] jacc-provider-name
 ----
 
 [[sthref305]]
 
-Description
+=== Description
 
 The `create-jacc-provider` subcommand creates a JSR-115—compliant Java
 Authorization Contract for Containers (JACC) provider that can be used
@@ -58,7 +59,7 @@ This command is supported in remote mode only.
 
 [[sthref306]]
 
-Options
+=== Options
 
 If an option has a short option name, then the short option precedes the
 long option name. Short options have one dash whereas long options have
@@ -81,15 +82,18 @@ asadmin-options::
   `javax.security.jacc.PolicyConfigurationFactory`.
 `--property`::
   Optional attribute name/value pairs for configuring the JACC provider.
-  The following properties are available: +
+  The following properties are available:
+
   `repository`;;
     The directory containing the JACC policy file. For the `default`
     \{product---name} JACC provider, the default directory is
     `${com.sun.aas.instanceRoot}/generated/policy`. This property is not
     defined by default for the `simple` \{product---name} JACC provider.
+
 `--target`::
   Specifies the target for which you are creating the JACC provider. The
-  following values are valid: +
+  following values are valid:
+
   `server`;;
     Creates the JACC provider on the default server instance. This is
     the default value.
@@ -103,7 +107,7 @@ asadmin-options::
 
 [[sthref307]]
 
-Operands
+=== Operands
 
 jacc-provider-name::
   The name of the provider used to reference the `jacc-provider` element
@@ -111,16 +115,16 @@ jacc-provider-name::
 
 [[sthref308]]
 
-Examples
+=== Examples
 
 [[GSRFM491]][[sthref309]]
 
-Example 1   Creating a JACC Provider
+==== Example 1   Creating a JACC Provider
 
 The following example shows how to create a JACC provider named
 `testJACC` on the default `server` target.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jacc-provider
 --policyproviderclass org.glassfish.exousia.modules.locked.SimplePolicyProvider
@@ -132,7 +136,7 @@ Command create-jacc-provider executed successfully.
 
 [[sthref310]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -141,7 +145,7 @@ Exit Status
 
 [[sthref311]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

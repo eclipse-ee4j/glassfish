@@ -4,6 +4,7 @@ title=version
 next=manvol1m.html
 prev=verify-domain-xml.html
 ~~~~~~
+
 version
 =======
 
@@ -12,22 +13,22 @@ version
 version
 -------
 
-displays version information for\{product---name}
+Displays version information for\{product---name}
 
 [[sthref2347]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] version [--help] 
-[--verbose={false|true}] 
+asadmin [asadmin-options] version [--help]
+[--verbose={false|true}]
 [--local={false|true}]
 ----
 
 [[sthref2348]]
 
-Description
+=== Description
 
 The `version` subcommand displays version information for
 \{product---name}. By default, if the subcommand cannot contact the
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode and local mode.
 
 [[sthref2349]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -62,13 +63,13 @@ asadmin-options::
 
 [[sthref2350]]
 
-Examples
+=== Examples
 
 [[GSRFM800]][[sthref2351]]
 
-Example 1   Obtaining Version Information From a Running DAS
+==== Example 1   Obtaining Version Information From a Running DAS
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> version
 Version = Oracle GlassFish Server 3.1 (build 34)
@@ -77,9 +78,9 @@ Command version executed successfully.
 
 [[GSRFM801]][[sthref2352]]
 
-Example 2   Obtaining Version Information When the DAS Cannot be Reached
+==== Example 2   Obtaining Version Information When the DAS Cannot be Reached
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> version
 Version string could not be obtained from Server [localhost:4848] for some reason.
@@ -92,9 +93,9 @@ Command version executed successfully.
 
 [[GSRFM802]][[sthref2353]]
 
-Example 3   Obtaining Version Information Locally
+==== Example 3   Obtaining Version Information Locally
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> version --local
 Using locally retrieved version string from version class.
@@ -104,7 +105,7 @@ Command version executed successfully.
 
 [[sthref2354]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -113,7 +114,7 @@ Exit Status
 
 [[sthref2355]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

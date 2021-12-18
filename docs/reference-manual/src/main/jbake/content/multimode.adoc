@@ -4,6 +4,7 @@ title=multimode
 next=osgi.html
 prev=monitor.html
 ~~~~~~
+
 multimode
 =========
 
@@ -12,14 +13,14 @@ multimode
 multimode
 ---------
 
-allows multiple subcommands to be run while preserving environment
+Allows multiple subcommands to be run while preserving environment
 settings and remaining in the asadmin utility
 
 [[sthref1900]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] multimode [--help] 
 [--file filename] 
@@ -28,7 +29,7 @@ asadmin [asadmin-options] multimode [--help]
 
 [[sthref1901]]
 
-Description
+=== Description
 
 The `multimode` subcommand processes `asadmin` subcommands sequentially
 in a single session. The command-line interface prompts for a
@@ -59,7 +60,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
 
 [[sthref1902]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -80,15 +81,15 @@ asadmin-options::
 
 [[sthref1903]]
 
-Examples
+=== Examples
 
 [[GSRFM725]][[sthref1904]]
 
-Example 1   Starting a Multimode Session
+==== Example 1   Starting a Multimode Session
 
 This example starts a multimode session where: `%` is the system prompt.
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin multimode
 asadmin> 
@@ -99,19 +100,19 @@ options or subcommands at the system prompt.
 
 [[GSRFM726]][[sthref1905]]
 
-Example 2   Running Multiple Commands From a File
+==== Example 2   Running Multiple Commands From a File
 
 This example runs a sequence of subcommands from the `commands_file.txt`
 file.
 
-[source,oac_no_warn]
+[source]
 ----
 % asadmin multimode --file commands_file.txt
 ----
 
 [[sthref1906]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -120,7 +121,7 @@ Exit Status
 
 [[sthref1907]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

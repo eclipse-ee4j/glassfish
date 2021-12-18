@@ -4,6 +4,7 @@ title=enable
 next=enable-http-lb-application.html
 prev=disable-secure-admin-principal.html
 ~~~~~~
+
 enable
 ======
 
@@ -12,21 +13,21 @@ enable
 enable
 ------
 
-enables the component
+Enables the component
 
 [[sthref1095]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] enable [--help] 
+asadmin [asadmin-options] enable [--help]
 [--target target_name] component_name
 ----
 
 [[sthref1096]]
 
-Description
+=== Description
 
 The `enable` subcommand enables the specified deployed component. If the
 component is already enabled, then it is re-enabled. If it has not been
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1097]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target on which you are enabling the
-  component. Valid values are: +
+  component. Valid values are:
+
   `server`;;
     Enables the default server instance `server` and is the default
     value.
@@ -59,7 +61,7 @@ asadmin-options::
 
 [[sthref1098]]
 
-Operands
+=== Operands
 
 component_name::
   name of the component to be enabled. +
@@ -68,7 +70,8 @@ component_name::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
   GlassFish Server Open Source Edition Application Deployment Guide. +
   At most one version of a module or application can be enabled on a
   server instance. All other versions are disabled. Enabling one version
@@ -76,15 +79,15 @@ component_name::
 
 [[sthref1099]]
 
-Examples
+=== Examples
 
 [[GSRFM599]][[sthref1100]]
 
-Example 1   Enabling a Component
+==== Example 1   Enabling a Component
 
 This example enables the disabled component, `sampleApp`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable sampleApp
 Command enable executed successfully
@@ -92,7 +95,7 @@ Command enable executed successfully
 
 [[sthref1101]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -101,7 +104,7 @@ Exit Status
 
 [[sthref1102]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=configuration
 next=domain.html
 prev=application.html
 ~~~~~~
+
 configuration
 =============
 
@@ -12,11 +13,11 @@ configuration
 configuration
 -------------
 
-the data set that determines how \{product---name} operates
+The data set that determines how \{product---name} operates
 
 [[sthref2394]]
 
-Description
+=== Description
 
 The configuration of \{product---name} is the data set that determines
 how it operates. Parts of this configuration determine the operation of
@@ -47,7 +48,7 @@ value of an attribute or property, use the `set` subcommand.
 
 [[sthref2395]]
 
-See Also
+=== See Also
 
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],
 link:set.html#set-1[`set`(1)]

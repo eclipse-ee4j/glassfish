@@ -4,6 +4,7 @@ title=disable-secure-admin-internal-user
 next=disable-secure-admin-principal.html
 prev=disable-secure-admin.html
 ~~~~~~
+
 disable-secure-admin-internal-user
 ==================================
 
@@ -18,9 +19,9 @@ admin operations.
 
 [[sthref1079]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] disable-secure-admin-internal-user [--help] 
 admin-username
@@ -28,7 +29,7 @@ admin-username
 
 [[sthref1080]]
 
-Description
+=== Description
 
 The `disable-secure-admin-internal-user` subcommand disables secure
 admin from using the username (instead of SSL certificates) to
@@ -37,7 +38,7 @@ admin operations.
 
 [[sthref1081]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,7 +49,7 @@ asadmin-options::
 
 [[sthref1082]]
 
-Operands
+=== Operands
 
 admin-username::
   The admin user name that \{product---name} should not use to
@@ -57,17 +58,17 @@ admin-username::
 
 [[sthref1083]]
 
-Examples
+=== Examples
 
 [[GSRFM597]][[sthref1084]]
 
-Example 1   Disabling a user name for secure admin
+==== Example 1   Disabling a user name for secure admin
 
 The following example disables secure admin from using username tester
 to authenticate the DAS and instances with each other and to authorize
 admin operations.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-secure-admin-internal-user tester
 
@@ -76,7 +77,7 @@ Command disable-secure-admin-internal-user executed successfully.
 
 [[sthref1085]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -85,7 +86,7 @@ Exit Status
 
 [[sthref1086]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

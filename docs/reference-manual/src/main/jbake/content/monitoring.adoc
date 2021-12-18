@@ -4,6 +4,7 @@ title=monitoring
 next=passwords.html
 prev=logging.html
 ~~~~~~
+
 monitoring
 ==========
 
@@ -12,12 +13,11 @@ monitoring
 monitoring
 ----------
 
-reviewing the runtime state of components and services deployed in
-\{product---name}
+Reviewing the runtime state of components and services deployed in \{product---name}
 
 [[sthref2406]]
 
-Description
+=== Description
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
@@ -58,7 +58,7 @@ present.
 
 [[sthref2407]]
 
-See Also
+=== See Also
 
 link:monitor.html#monitor-1[`monitor`(1)],
 link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],

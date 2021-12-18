@@ -4,6 +4,7 @@ title=add-resources
 next=apply-http-lb-changes.html
 prev=add-library.html
 ~~~~~~
+
 add-resources
 =============
 
@@ -12,22 +13,22 @@ add-resources
 add-resources
 -------------
 
-creates the resources specified in an XML file
+Creates the resources specified in an XML file
 
 [[sthref15]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] add-resources [--help] 
-[--target target] 
+asadmin [asadmin-options] add-resources [--help]
+[--target target]
 [--upload={false|true}] xml-file-name
 ----
 
 [[sthref16]]
 
-Description
+=== Description
 
 The `add-resources` subcommand creates the resources named in the
 specified XML file. The resources that can be created with this
@@ -49,7 +50,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref17]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -59,7 +60,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you are creating the resources. +
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Creates the resources for the default server instance `server` and
     is the default value.
@@ -69,10 +71,11 @@ asadmin-options::
     Creates the resources for every server instance in the cluster.
   instance-name;;
     Creates the resources for a particular \{product---name} instance.
+
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
-  situations, this option can be omitted. +
-  Valid values are as follows: +
+  situations, this option can be omitted. Valid values are as follows:
+
   `false`;;
     The subcommand does not upload the file and attempts to access the
     file through the specified file name. If the DAS cannot access the
@@ -83,67 +86,72 @@ asadmin-options::
     `false`.
   `true`;;
     The subcommand uploads the file to the DAS over the network
-    connection. +
-  The default value depends on whether the DAS is on the host where the
-  subcommand is run or is on a remote host. +
-  * If the DAS is on the host where the subcommand is run, the default
-  is `false`.
+    connection.
+
++
+The default value depends on whether the DAS is on the host where the
+  subcommand is run or is on a remote host.
+
+  * If the DAS is on the host where the subcommand is run, the default is `false`.
   * If the DAS is on a remote host, the default is `true`.
 
 [[sthref18]]
 
-Operands
+=== Operands
 
 xml-file-name::
   The path to the XML file that contains the resources that are to be
   created. You can specify an absolute path, only the file name, or a
-  relative path. +
+  relative path.
++
   * If you specify an absolute path, the XML file can be anywhere.
   * If you specify only the file name, the XML file must reside in the
   domain-dir`/config` directory on the DAS host. This requirement must
   be met even if you run the subcommand from another host.
-  * If you specify a relative path, the XML file must be in the relative
-  directory. +
-  An example XML file follows. +
-[source,oac_no_warn]
+  * If you specify a relative path, the XML file must be in the relative   directory.
+
++
+An example XML file follows.
++
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE resources PUBLIC 
-   "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions //EN" 
+<!DOCTYPE resources PUBLIC
+   "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions //EN"
    "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 <resources>
- <jdbc-connection-pool name="SPECjPool" steady-pool-size="100" 
-   max-pool-size="150" max-wait-time-in-millis="60000" 
-   pool-resize-quantity="2" idle-timeout-in-seconds="300" 
-   is-isolation-level-guaranteed="true" 
-   is-connection-validation-required="false" 
-   connection-validation-method="auto-commit" 
-   fail-all-connections="false" 
+ <jdbc-connection-pool name="SPECjPool" steady-pool-size="100"
+   max-pool-size="150" max-wait-time-in-millis="60000"
+   pool-resize-quantity="2" idle-timeout-in-seconds="300"
+   is-isolation-level-guaranteed="true"
+   is-connection-validation-required="false"
+   connection-validation-method="auto-commit"
+   fail-all-connections="false"
    datasource-classname="oracle.jdbc.pool.OracleDataSource">
-  <property name="URL" 
+  <property name="URL"
     value="jdbc:oracle:thin:@iasperfsol12:1521:specdb"/>
   <property name="User" value="spec"/>
   <property name="Password" value="spec"/>
   <property name="MaxStatements" value="200"/>
   <property name="ImplicitCachingEnabled" value="true"/>
  </jdbc-connection-pool>
- <jdbc-resource enabled="true" pool-name="SPECjPool" 
-   jndi-name="jdbc/SPECjDB"/> 
+ <jdbc-resource enabled="true" pool-name="SPECjPool"
+   jndi-name="jdbc/SPECjDB"/>
 </resources>
 ----
 
 [[sthref19]]
 
-Examples
+=== Examples
 
 [[GSRFM445]][[sthref20]]
 
-Example 1   Adding Resources
+==== Example 1   Adding Resources
 
 This example creates resources using the contents of the XML file
 `resource.xml`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> add-resources resource.xml
 Command : Connector connection pool jms/testQFactoryPool created.
@@ -157,7 +165,7 @@ Command add-resources executed successfully.
 
 [[sthref21]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -166,7 +174,7 @@ Exit Status
 
 [[sthref22]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

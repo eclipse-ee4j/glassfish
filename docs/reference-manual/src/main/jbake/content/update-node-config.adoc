@@ -1,9 +1,10 @@
 type=page
 status=published
 title=update-node-config
-next=update-node-ssh.html
+next=update-node-dcom.html
 prev=update-file-user.html
 ~~~~~~
+
 update-node-config
 ==================
 
@@ -12,26 +13,25 @@ update-node-config
 update-node-config
 ------------------
 
-updates the configuration data of a node
+Updates the configuration data of a node
 
 [[sthref2282]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] update-node-config [--help]
-[--nodehost node-host] 
-[--installdir as-install-parent] [--nodedir node-dir] 
+[--nodehost node-host]
+[--installdir as-install-parent] [--nodedir node-dir]
 node-name
 ----
 
 [[sthref2283]]
 
-Description
+=== Description
 
-The `update-node-config` subcommand updates the configuration data of a
-node.
+The `update-node-config` subcommand updates the configuration data of a node.
 
 This subcommand can update any node, regardless of whether the node is
 enabled for remote communication. If a node that is enabled for remote
@@ -44,14 +44,13 @@ existing value unchanged.
 
 This subcommand does not require the Distributed Component Object Model
 (DCOM) remote protocol or secure shell (SSH) to be configured to update
-the node. You may run this subcommand from any host that can contact the
-DAS.
+the node. You may run this subcommand from any host that can contact the DAS.
 
 This subcommand is supported in remote mode only.
 
 [[sthref2284]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -75,7 +74,7 @@ asadmin-options::
 
 [[sthref2285]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node to update. The node must exist. Otherwise, an
@@ -83,16 +82,16 @@ node-name::
 
 [[sthref2286]]
 
-Examples
+=== Examples
 
 [[GSRFM788]][[sthref2287]]
 
-Example 1   Updating the Host That a Node Represents
+==== Example 1   Updating the Host That a Node Represents
 
 This example updates the host that the node `sj04` represents to
 `hsj04`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-node-config --nodehost hsj04 sj04
 Command update-node-config executed successfully.
@@ -100,7 +99,7 @@ Command update-node-config executed successfully.
 
 [[sthref2288]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -109,7 +108,7 @@ Exit Status
 
 [[sthref2289]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

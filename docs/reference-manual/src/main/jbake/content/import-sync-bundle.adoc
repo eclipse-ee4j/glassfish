@@ -4,6 +4,7 @@ title=import-sync-bundle
 next=install-node.html
 prev=get-health.html
 ~~~~~~
+
 import-sync-bundle
 ==================
 
@@ -12,14 +13,14 @@ import-sync-bundle
 import-sync-bundle
 ------------------
 
-imports the configuration data of a clustered instance or standalone
+Imports the configuration data of a clustered instance or standalone
 instance from an archive file
 
 [[sthref1243]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] import-sync-bundle [--help]
 --instance instance-name 
@@ -29,7 +30,7 @@ file-name
 
 [[sthref1244]]
 
-Description
+=== Description
 
 The `import-sync-bundle` subcommand imports the configuration data of a
 clustered instance or standalone instance from an archive file that was
@@ -74,7 +75,7 @@ This subcommand is supported in local mode only.
 
 [[sthref1245]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -98,7 +99,7 @@ asadmin-options::
 
 [[sthref1246]]
 
-Operands
+=== Operands
 
 file-name::
   The name of the file, including the path, that contains the archive
@@ -106,11 +107,11 @@ file-name::
 
 [[sthref1247]]
 
-Examples
+=== Examples
 
 [[GSRFM624]][[sthref1248]]
 
-Example 1   Importing Configuration Data for a Clustered Instance
+==== Example 1   Importing Configuration Data for a Clustered Instance
 
 This example imports the configuration for the clustered instance
 `ymli2` on the node `sj02` from the archive file
@@ -120,7 +121,7 @@ The command is run on the host `sj02`, which is the host that the node
 `sj02` represents. The DAS is running on the host `sr04` and uses the
 default HTTP port for administration.
 
-[source,oac_no_warn]
+[source]
 ----
 sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2 
 /export/glassfish3/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
@@ -129,7 +130,7 @@ Command import-sync-bundle executed successfully.
 
 [[sthref1249]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -138,7 +139,7 @@ Exit Status
 
 [[sthref1250]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

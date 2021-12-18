@@ -4,6 +4,7 @@ title=update-connector-work-security-map
 next=update-file-user.html
 prev=update-connector-security-map.html
 ~~~~~~
+
 update-connector-work-security-map
 ==================================
 
@@ -12,13 +13,13 @@ update-connector-work-security-map
 update-connector-work-security-map
 ----------------------------------
 
-modifies a work security map for the specified resource adapter
+Modifies a work security map for the specified resource adapter
 
 [[sthref2266]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] update-connector-work-security-map [--help] 
 --raname raname
@@ -31,7 +32,7 @@ mapname
 
 [[sthref2267]]
 
-Description
+=== Description
 
 The `update-connector-work-security-map` subcommand modifies a security
 map for the specified resource adapter.
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2268]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -67,22 +68,22 @@ asadmin-options::
 
 [[sthref2269]]
 
-Operands
+=== Operands
 
 mapname::
   The name of the work security map to be updated.
 
 [[sthref2270]]
 
-Examples
+=== Examples
 
 [[GSRFM786]][[sthref2271]]
 
-Example 1   Updating a Connector Work Security Map
+==== Example 1   Updating a Connector Work Security Map
 
 This example updates `workSecurityMap2` by removing `eis-group-2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-connector-work-security-map
 --raname my-resource-adapter --removegroups eis-group-2 workSecurityMap2
@@ -91,7 +92,7 @@ Command update-connector-work-security-map executed successfully.
 
 [[sthref2272]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -100,7 +101,7 @@ Exit Status
 
 [[sthref2273]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

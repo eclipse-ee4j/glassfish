@@ -4,6 +4,7 @@ title=stop-instance
 next=stop-local-instance.html
 prev=stop-domain.html
 ~~~~~~
+
 stop-instance
 =============
 
@@ -12,37 +13,35 @@ stop-instance
 stop-instance
 -------------
 
-stops a running \{product---name} instance
+Stops a running \{product---name} instance
 
 [[sthref2173]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] stop-instance [--help] 
+asadmin [asadmin-options] stop-instance [--help]
 [--force={false|true}] [--kill={false|true}]
 instance-name
 ----
 
 [[sthref2174]]
 
-Description
+=== Description
 
-The `stop-instance` subcommand stops a running \{product---name}
-instance.
+The `stop-instance` subcommand stops a running \{product---name} instance.
 
 The subcommand can stop any \{product---name} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
-subcommand.
+link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)] subcommand.
 
 This command is supported in remote mode only.
 
 [[sthref2175]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,16 +51,19 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--force`::
   Specifies whether the instance is forcibly stopped immediately. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The instance is forcibly stopped immediately (default).
   `false`;;
     The subcommand waits until all threads that are associated with the
     instance are exited before stopping the instance.
+
 `--kill`::
   Specifies whether the instance is killed by using functionality of the
   operating system to terminate the instance process. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     The instance is not killed. The subcommand uses functionality of the
     Java platform to terminate the instance process (default).
@@ -71,22 +73,22 @@ asadmin-options::
 
 [[sthref2176]]
 
-Operands
+=== Operands
 
 instance-name::
   This is the name of the \{product---name} instance to stop.
 
 [[sthref2177]]
 
-Examples
+=== Examples
 
 This example stops the \{product---name} instance `yml-i-sj01`.
 
 [[GSRFM767]][[sthref2178]]
 
-Example 1   Stopping a \{product---name} Instance
+==== Example 1   Stopping a \{product---name} Instance
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-instance yml-i-sj01
 The instance, yml-i-sj01, was stopped.
@@ -96,7 +98,7 @@ Command stop-instance executed successfully.
 
 [[sthref2179]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -105,7 +107,7 @@ Exit Status
 
 [[sthref2180]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

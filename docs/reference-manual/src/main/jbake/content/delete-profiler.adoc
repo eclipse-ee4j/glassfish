@@ -4,6 +4,7 @@ title=delete-profiler
 next=delete-protocol.html
 prev=delete-password-alias.html
 ~~~~~~
+
 delete-profiler
 ===============
 
@@ -12,21 +13,21 @@ delete-profiler
 delete-profiler
 ---------------
 
-removes the profiler element
+Removes the profiler element
 
 [[sthref930]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-profiler [--help] 
+asadmin [asadmin-options] delete-profiler [--help]
 [--target target_name]
 ----
 
 [[sthref931]]
 
-Description
+=== Description
 
 The `delete-profiler` subcommand deletes the profiler element in the
 Java configuration. Only one profiler can exist at a time. If you
@@ -39,7 +40,7 @@ This command is supported in remote mode only.
 
 [[sthref932]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -49,7 +50,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   This option specifies the target profiler element which you are
-  deleting. Valid values are +
+  deleting. Valid values are
+
   `server`;;
     Deletes the profiler element for the default server instance
     `server` and is the default value.
@@ -63,15 +65,15 @@ asadmin-options::
 
 [[sthref933]]
 
-Examples
+=== Examples
 
 [[GSRFM573]][[sthref934]]
 
-Example 1   Deleting a Profile
+==== Example 1   Deleting a Profile
 
 This example deletes the profiler named `sample_profiler`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-profiler sample_profiler
 Command delete-profiler executed successfully
@@ -79,7 +81,7 @@ Command delete-profiler executed successfully
 
 [[sthref935]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -88,7 +90,7 @@ Exit Status
 
 [[sthref936]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

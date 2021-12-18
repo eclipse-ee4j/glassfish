@@ -4,6 +4,7 @@ title=list-jndi-entries
 next=list-jndi-resources.html
 prev=list-jms-resources.html
 ~~~~~~
+
 list-jndi-entries
 =================
 
@@ -12,13 +13,13 @@ list-jndi-entries
 list-jndi-entries
 -----------------
 
-browses and queries the JNDI tree
+Browses and queries the JNDI tree
 
 [[sthref1584]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-jndi-entries [--help]
 [--context context_name]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] list-jndi-entries [--help]
 
 [[sthref1585]]
 
-Description
+=== Description
 
 Use this subcommand to browse and query the JNDI tree.
 
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1586]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,11 +51,12 @@ asadmin-options::
 
 [[sthref1587]]
 
-Operands
+=== Operands
 
 target::
-  This operand specifies the JNDI tree to browse. +
-  Possible values are as follows: +
+  This operand specifies the JNDI tree to browse.
+  Possible values are as follows:
+
   `server`;;
     Browses the JNDI tree for the default \{product---name} instance
     (default). The default instance is the domain administration server
@@ -68,22 +70,22 @@ target::
 
 [[sthref1588]]
 
-Examples
+=== Examples
 
 [[GSRFM677]][[sthref1589]]
 
-Example 1   Browsing the JNDI Tree
+==== Example 1   Browsing the JNDI Tree
 
 This example browses the JNDI tree for the default \{product---name}
 instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jndi-entries
 java:global: com.sun.enterprise.naming.impl.TransientContext
 jdbc: com.sun.enterprise.naming.impl.TransientContext
 ejb: com.sun.enterprise.naming.impl.TransientContext
-com.sun.enterprise.container.common.spi.util.InjectionManager: 
+com.sun.enterprise.container.common.spi.util.InjectionManager:
 com.sun.enterprise.container.common.impl.util.InjectionManagerImpl
 
 Command list-jndi-entries executed successfully.
@@ -91,7 +93,7 @@ Command list-jndi-entries executed successfully.
 
 [[sthref1590]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -100,7 +102,7 @@ Exit Status
 
 [[sthref1591]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

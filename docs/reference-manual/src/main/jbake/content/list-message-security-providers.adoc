@@ -4,6 +4,7 @@ title=list-message-security-providers
 next=list-modules.html
 prev=list-managed-thread-factories.html
 ~~~~~~
+
 list-message-security-providers
 ===============================
 
@@ -12,13 +13,13 @@ list-message-security-providers
 list-message-security-providers
 -------------------------------
 
-lists all security message providers for the given message layer
+Lists all security message providers for the given message layer
 
 [[sthref1677]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-message-security-providers [--help]
 --layer message_layer
@@ -27,7 +28,7 @@ asadmin [asadmin-options] list-message-security-providers [--help]
 
 [[sthref1678]]
 
-Description
+=== Description
 
 The `list-message-security-providers` subcommand enables administrators
 to list all security message providers (`provider-config` sub-elements)
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1679]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,11 +53,12 @@ asadmin-options::
 
 [[sthref1680]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to message security providers for a specific
-  target. Valid values include: +
+  target. Valid values include:
+
   `server`;;
     Lists providers for the default server instance `server` and is the
     default value.
@@ -69,19 +71,19 @@ target::
 
 [[sthref1681]]
 
-Examples
+=== Examples
 
 [[GSRFM684]][[sthref1682]]
 
-Example 1   Listing message security providers
+==== Example 1   Listing message security providers
 
 The following example shows how to list message security providers for a
 message layer.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> list-message-security-providers 
---layer SOAP 
+asadmin> list-message-security-providers
+--layer SOAP
 XWS_ClientProvider
 ClientProvider
 XWS_ServerProvider
@@ -91,7 +93,7 @@ Command list-message-security-providers executed successfully.
 
 [[sthref1683]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -100,7 +102,7 @@ Exit Status
 
 [[sthref1684]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=create-service
 next=create-ssl.html
 prev=create-resource-ref.html
 ~~~~~~
+
 create-service
 ==============
 
@@ -12,28 +13,28 @@ create-service
 create-service
 --------------
 
-configures the starting of a DAS or a \{product---name} instance on an
+Configures the starting of a DAS or a \{product---name} instance on an
 unattended boot
 
 [[sthref527]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-service [--help] 
-[--name service-name] 
-[--serviceproperties service-properties] 
-[--dry-run={false|true}] [--force={false|true}] 
+asadmin [asadmin-options] create-service [--help]
+[--name service-name]
+[--serviceproperties service-properties]
+[--dry-run={false|true}] [--force={false|true}]
 [--serviceuser service-user]
-[--domaindir domain-dir] 
+[--domaindir domain-dir]
 [--nodedir node-dir] [--node node]
 [domain-or-instance-name]
 ----
 
 [[sthref528]]
 
-Description
+=== Description
 
 The `create-service` subcommand configures the starting of a domain
 administration server (DAS) or a \{product---name} instance on an
@@ -68,11 +69,11 @@ On Windows systems, this subcommand must be run as the OS-level
 administrator user.
 
 The subcommand creates the following Windows Services Wrapper files for
-the service in the domain-dir`\bin` directory or the instance-dir`\bin`
+the service in the domain-dir`\bin` directory or the instance-dir``\bin``
 directory:
 
-* Configuration file: service-name`Service.xml`
-* Executable file: service-name`Service.exe`
+* Configuration file: service-name``Service.xml``
+* Executable file: service-name``Service.exe``
 
 On Windows systems, this subcommand requires the
 http://www.microsoft.com/net/[Microsoft .NET Framework]
@@ -99,11 +100,10 @@ enable, disable, delete, or stop the service. For more information about
 SMF, see the following documentation for the Oracle Solaris operating
 system:
 
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[Managing
-Services (Overview)]" in System Administration Guide: Basic
-Administration
-* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[Managing
-Services (Tasks)]" in System Administration Guide: Basic Administration
+* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1hbrunlevels-25516[
+Managing Services (Overview)]" in System Administration Guide: Basic Administration
+* "http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=SYSADV1faauf[
+Managing Services (Tasks)]" in System Administration Guide: Basic Administration
 
 On Oracle Solaris systems, this subcommand must be run as the OS-level
 user with superuser privileges. The configuration file for the DAS or
@@ -115,7 +115,7 @@ the configuration of the DAS or instance resides.
 On Oracle Solaris systems, the manifest file is created in the following
 directory by default:
 
-[source,oac_no_warn]
+[source]
 ----
 /var/svc/manifest/application/GlassFish/domain-or-instance-name_domain-or-instance-root-dir
 ----
@@ -151,7 +151,7 @@ The Oracle Solaris command `svccfg` does not delete this directory.
 
 [[sthref529]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -182,11 +182,13 @@ asadmin-options::
 `--force`::
   Specifies whether the service is created even if validation of the
   service fails. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The service is created even if validation of the service fails.
   `false`;;
     The service is not created (default).
+
 `--serviceuser`::
   (Linux systems only) The user that is to run the \{product---name}
   software when the service is started. The default is the user that is
@@ -209,7 +211,7 @@ asadmin-options::
 
 [[sthref530]]
 
-Operands
+=== Operands
 
 domain-or-instance-name::
   The name of the domain or instance to configure. If no operand is
@@ -217,20 +219,20 @@ domain-or-instance-name::
 
 [[sthref531]]
 
-Examples
+=== Examples
 
 [[GSRFM522]][[sthref532]]
 
-Example 1   Creating a Service on a Windows System
+==== Example 1   Creating a Service on a Windows System
 
 This example creates a service for the default domain on a system that
 is running Windows.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-service
 Found the Windows Service and successfully uninstalled it.
-The Windows Service was created successfully.  It is ready to be started.  Here are 
+The Windows Service was created successfully.  It is ready to be started.  Here are
 the details:
 ID of the service: domain1
 Display Name of the service:domain1 GlassFish Server
@@ -246,19 +248,19 @@ uninstall
 Install Command:  C:\glassfish3\glassfish\domains\domain1\bin\domain1Service.exe
 install
 
-This message is also available in a file named PlatformServices.log in the domain's 
+This message is also available in a file named PlatformServices.log in the domain's
 root directory
 Command create-service executed successfully.
 ----
 
 [[GSRFM523]][[sthref533]]
 
-Example 2   Creating a Service on a Linux System
+==== Example 2   Creating a Service on a Linux System
 
 This example creates a service for the default domain on a system that
 is running Linux.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-service
 Found the Linux Service and successfully uninstalled it.
@@ -274,21 +276,21 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 stop
 * /etc/init.d/GlassFish_domain1 restart
 
-For your convenience this message has also been saved to this file: 
+For your convenience this message has also been saved to this file:
 /export/glassfish3/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.
 ----
 
 [[GSRFM524]][[sthref534]]
 
-Example 3   Creating a Service on an Oracle Solaris System
+==== Example 3   Creating a Service on an Oracle Solaris System
 
 This example creates a service for the default domain on a system that
 is running Oracle Solaris.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-service 
+asadmin> create-service
 The Service was created successfully. Here are the details:
 Name of the service:application/GlassFish/domain1
 Type of the service:Domain
@@ -297,7 +299,7 @@ Configuration location of the service:/home/gfuser/glassfish-installations
 Manifest file location on the system:/var/svc/manifest/application
 /GlassFish/domain1_home_gfuser_glassfish-installations_glassfish3
 _glassfish_domains/Domain-service-smf.xml.
-You have created the service but you need to start it yourself. 
+You have created the service but you need to start it yourself.
 Here are the most typical Solaris commands of interest:
 * /usr/bin/svcs -a | grep domain1 // status
 * /usr/sbin/svcadm enable domain1 // start
@@ -308,7 +310,7 @@ Command create-service executed successfully.
 
 [[sthref535]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -317,7 +319,7 @@ Exit Status
 
 [[sthref536]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

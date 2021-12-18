@@ -4,6 +4,7 @@ title=create-module-config
 next=create-network-listener.html
 prev=create-message-security-provider.html
 ~~~~~~
+
 create-module-config
 ====================
 
@@ -12,24 +13,24 @@ create-module-config
 create-module-config
 --------------------
 
-adds the default configuration of a module to `domain.xml`
+Adds the default configuration of a module to `domain.xml`
 
 [[sthref429]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-module-config [--help]
 [--dryrun={false|true}]
 [--all={false|true}]
-[--target target] 
+[--target target]
 [service_name]
 ----
 
 [[sthref430]]
 
-Description
+=== Description
 
 The `create-module-config` subcommand adds the default configuration of
 a module to `domain.xml`.
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref431]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -53,9 +54,9 @@ asadmin-options::
   Adds all default configurations of modules to `domain.xml` if they are
   not already in it. The default value is `false`.
 `--target`::
-  Specifies the target to which the default configuration is being
-  added. +
-  Possible values are as follows: +
+  Specifies the target to which the default configuration is being added.
+  Possible values are as follows:
+
   `server`;;
     Adds the default configuration to the default server instance. This
     is the default value.
@@ -69,7 +70,7 @@ asadmin-options::
 
 [[sthref432]]
 
-Operands
+=== Operands
 
 service_name::
   The name of the module for which the default configuration is to be
@@ -77,17 +78,17 @@ service_name::
 
 [[sthref433]]
 
-Examples
+=== Examples
 
 [[GSRFM845]][[sthref434]]
 
-Example 1   Adding a Default Configuration to domain.xml
+==== Example 1   Adding a Default Configuration to domain.xml
 
 This example adds the default configuration of the web container module
 to `domain1` in `server-config` (the default configuration). Use the
 `--dryrun` option to preview the configuration before it is added.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-module-config web-container
 Command create-module-config executed successfully.
@@ -95,7 +96,7 @@ Command create-module-config executed successfully.
 
 [[sthref435]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -104,7 +105,7 @@ Exit Status
 
 [[sthref436]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

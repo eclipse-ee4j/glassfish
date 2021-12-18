@@ -4,6 +4,7 @@ title=start-instance
 next=start-local-instance.html
 prev=start-domain.html
 ~~~~~~
+
 start-instance
 ==============
 
@@ -12,22 +13,22 @@ start-instance
 start-instance
 --------------
 
-starts a \{product---name} instance
+Starts a \{product---name} instance
 
 [[sthref2133]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] start-instance [--help] 
-[--debug={false|true}] [--sync={normal|full|none}] 
+asadmin [asadmin-options] start-instance [--help]
+[--debug={false|true}] [--sync={normal|full|none}]
 instance-name
 ----
 
 [[sthref2134]]
 
-Description
+=== Description
 
 The `start-instance` subcommand starts a \{product---name} instance.
 This subcommand requires the Distributed Component Object Model (DCOM)
@@ -35,16 +36,12 @@ remote protocol or secure shell (SSH) to be configured on the machine
 where the domain administration server (DAS) is running and on the
 machine where the instance resides.
 
-
 [NOTE]
-=======================================================================
-
+====
 DCOM or SSH is not required if the instance resides on a node of type
 `CONFIG` that represents the local host. A node of type `CONFIG` is not
 enabled for remote communication over DCOM or SSH.
-
-=======================================================================
-
+====
 
 You may run this subcommand from any machine that can contact the DAS.
 
@@ -58,7 +55,7 @@ This command is supported in remote mode only.
 
 [[sthref2135]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -72,29 +69,35 @@ asadmin-options::
   Platform Debugger Architecture (JPDA)]
   (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
   debugging enabled. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The instance is started with JPDA debugging enabled and the port
     number for JPDA debugging is displayed.
   `false`;;
     The instance is started with JPDA debugging disabled (default).
+
 `--sync`::
   The type of synchronization between the DAS and the instance's files
   when the instance is started. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `none`;;
     The DAS does not synchronize the instance's files with any changes.
     This type of synchronization minimizes the time that is required to
     start the instance.
   `normal`;;
     The DAS synchronizes the instance with changes since the last
-    synchronization as follows: +
-    * For the `config` directory, the DAS synchronizes the instance with
-    all changes.
+    synchronization as follows:
++
+--
+    * For the `config` directory, the DAS synchronizes the instance with all changes.
     * For the `applications` directory and `docroot` directory, only a
-    change to a top-level subdirectory causes the DAS to synchronize all
-    files under that subdirectory. +
-    If a file below a top level subdirectory is changed without a change
+      change to a top-level subdirectory causes the DAS to synchronize all
+      files under that subdirectory.
+--
++
+If a file below a top level subdirectory is changed without a change
     to a file in the top level subdirectory, full synchronization is
     required. In normal operation, files below the top level
     subdirectories of these directories are not changed. If an
@@ -110,22 +113,22 @@ asadmin-options::
 
 [[sthref2136]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the \{product---name} instance to start.
 
 [[sthref2137]]
 
-Examples
+=== Examples
 
 [[GSRFM761]][[sthref2138]]
 
-Example 1   Starting a \{product---name} Instance
+==== Example 1   Starting a \{product---name} Instance
 
 This example starts the \{product---name} instance `pmdsa1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-instance pmdsa1
 Waiting for the server to start ..............................
@@ -141,13 +144,13 @@ Command start-instance executed successfully.
 
 [[GSRFM762]][[sthref2139]]
 
-Example 2   Starting a \{product---name} Instance With JPDA Debugging
+==== Example 2   Starting a \{product---name} Instance With JPDA Debugging
 Enabled
 
 This example starts the \{product---name} instance `ymlsa1` with JPDA
 debugging enabled.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-instance --debug=true ymlsa1
 Waiting for the server to start ...............................
@@ -164,7 +167,7 @@ Command start-instance executed successfully.
 
 [[sthref2140]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -173,7 +176,7 @@ Exit Status
 
 [[sthref2141]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

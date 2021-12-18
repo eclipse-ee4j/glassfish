@@ -4,6 +4,7 @@ title=get-active-module-config
 next=get-client-stubs.html
 prev=get.html
 ~~~~~~
+
 get-active-module-config
 ========================
 
@@ -12,13 +13,13 @@ get-active-module-config
 get-active-module-config
 ------------------------
 
-displays the current active configuration of a service or instance
+Displays the current active configuration of a service or instance
 
 [[sthref1219]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] get-active-module-config [--help]
 [--target target]
@@ -28,7 +29,7 @@ asadmin [asadmin-options] get-active-module-config [--help]
 
 [[sthref1220]]
 
-Description
+=== Description
 
 The `get-active-module-config` subcommand displays the current active
 configuration of a service or instance.
@@ -37,7 +38,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1221]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,7 +49,8 @@ asadmin-options::
 `--target`::
   Specifies the target for which you want to view the current active
   configuration of a specific service or an entire instance. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `server`;;
     Displays the current active configuration for the default server
     instance. This is the default value.
@@ -66,7 +68,7 @@ asadmin-options::
 
 [[sthref1222]]
 
-Operands
+=== Operands
 
 service_name::
   The name of the module for which you want to display the current
@@ -74,16 +76,16 @@ service_name::
 
 [[sthref1223]]
 
-Examples
+=== Examples
 
 [[GSRFM860]][[sthref1224]]
 
-Example 1   Displaying the Current Active Configuration
+==== Example 1   Displaying the Current Active Configuration
 
 This example displays the current active configuration for the JMS
 service in `server-config` (the default configuration).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get-active-module-config jms-service
 At location: domain/configs/config[server-config]
@@ -95,7 +97,7 @@ Command get-active-module-config executed successfully.
 
 [[sthref1225]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -104,7 +106,7 @@ Exit Status
 
 [[sthref1226]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

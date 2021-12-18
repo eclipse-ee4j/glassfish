@@ -4,6 +4,7 @@ title=create-jms-host
 next=create-jms-resource.html
 prev=create-jmsdest.html
 ~~~~~~
+
 create-jms-host
 ===============
 
@@ -12,13 +13,13 @@ create-jms-host
 create-jms-host
 ---------------
 
-creates a JMS host
+Creates a JMS host
 
 [[sthref344]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-jms-host [--help]
 --mqhost mq-host --mqport mq-port
@@ -30,7 +31,7 @@ jms_host_name
 
 [[sthref345]]
 
-Description
+=== Description
 
 Creates a Java Message Service (JMS) host within the JMS service.
 
@@ -39,7 +40,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref346]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,7 +58,8 @@ asadmin-options::
   The password for the JMS service.
 `--target`::
   Creates the JMS host only for the specified target. Valid values are
-  as follows: +
+  as follows:
+
   `server`;;
     Creates the JMS host for the default server instance. This is the
     default value.
@@ -68,31 +70,32 @@ asadmin-options::
     cluster.
   instance-name;;
     Creates the JMS host for the specified server instance.
+
 `--force`::
   Specifies whether the subcommand overwrites the existing JMS host of
   the same name. The default value is `false`.
 
 [[sthref347]]
 
-Operands
+=== Operands
 
 jms_host_name::
   A unique identifier for the JMS host to be created.
 
 [[sthref348]]
 
-Examples
+=== Examples
 
 [[GSRFM496]][[sthref349]]
 
-Example 1   Creating a JMS host using a non-default port
+==== Example 1   Creating a JMS host using a non-default port
 
 The following command creates a JMS host named `MyNewHost` on the system
 `pigeon`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-jms-host --mqhost pigeon.example.com --mqport 7677 
+asadmin> create-jms-host --mqhost pigeon.example.com --mqport 7677
 --mquser admin --mqpassword admin MyNewHost
 Jms Host MyNewHost created.
 Command create-jms-host executed successfully.
@@ -100,7 +103,7 @@ Command create-jms-host executed successfully.
 
 [[sthref350]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -109,7 +112,7 @@ Exit Status
 
 [[sthref351]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

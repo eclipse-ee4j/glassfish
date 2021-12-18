@@ -4,6 +4,7 @@ title=update-file-user
 next=update-node-config.html
 prev=update-connector-work-security-map.html
 ~~~~~~
+
 update-file-user
 ================
 
@@ -12,24 +13,24 @@ update-file-user
 update-file-user
 ----------------
 
-updates a current file user as specified
+Updates a current file user as specified
 
 [[sthref2274]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] update-file-user [--help] 
-[--groups user_groups[:user_groups]*] 
-[--target target 
-[--authrealmname authrealm_name] 
+asadmin [asadmin-options] update-file-user [--help]
+[--groups user_groups[:user_groups]*]
+[--target target
+[--authrealmname authrealm_name]
 username
 ----
 
 [[sthref2275]]
 
-Description
+=== Description
 
 Th `update-file-user` subcommand updates an existing entry in the
 keyfile using the specified user name, password and groups. Multiple
@@ -41,7 +42,7 @@ administrative user.
 
 [[sthref2276]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -56,7 +57,8 @@ asadmin-options::
   found.
 `--target`::
   This option helps specify the target on which you are updating a file
-  user. Valid values are: +
+  user. Valid values are:
+
   `server`;;
     Updates the file user in the default server instance. This is the
     default value.
@@ -67,32 +69,32 @@ asadmin-options::
 
 [[sthref2277]]
 
-Operands
+=== Operands
 
 username::
   This is the name of the file user to be updated.
 
 [[sthref2278]]
 
-Examples
+=== Examples
 
 [[GSRFM787]][[sthref2279]]
 
-Example 1   Updating a User's Information in a File Realm
+==== Example 1   Updating a User's Information in a File Realm
 
 The following example updates information for a file realm user named
 `sample_user`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> update-file-user 
+asadmin> update-file-user
 --groups staff:manager:engineer sample_user
 Command update-file-user executed successfully
 ----
 
 [[sthref2280]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -101,7 +103,7 @@ Exit Status
 
 [[sthref2281]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=delete-context-service
 next=delete-custom-resource.html
 prev=delete-connector-work-security-map.html
 ~~~~~~
+
 delete-context-service
 ======================
 
@@ -12,13 +13,13 @@ delete-context-service
 delete-context-service
 ----------------------
 
-removes a context service resource with the specified JNDI name
+Removes a context service resource with the specified JNDI name
 
 [[sthref658]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-context-service [--help]
 [--target target]
@@ -27,7 +28,7 @@ context-service-name
 
 [[sthref659]]
 
-Description
+=== Description
 
 The `delete-context-service` subcommand removes a context service
 resource with the specified JNDI name.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref660]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,8 +46,9 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
-  Specifies the target from which you are deleting the resource. Valid
-  targets are: +
+  Specifies the target from which you are deleting the resource.
+  Valid targets are:
+
   `server`;;
     Deletes the resource from the default server instance. This is the
     default value.
@@ -60,23 +62,23 @@ asadmin-options::
 
 [[sthref661]]
 
-Operands
+=== Operands
 
 context-service-name::
   The JNDI name of the resource to be deleted.
 
 [[sthref662]]
 
-Examples
+=== Examples
 
 [[GSRFM847]][[sthref663]]
 
-Example 1   Deleting a Context Service Resource
+==== Example 1   Deleting a Context Service Resource
 
 This example deletes the context service resource named
 `concurrent/myContextService`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-context-service concurrent/myContextService
 Context service concurrent/myContextService deleted successfully.
@@ -85,7 +87,7 @@ Command delete-context-service executed successfully.
 
 [[sthref664]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref665]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

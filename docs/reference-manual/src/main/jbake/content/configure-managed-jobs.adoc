@@ -4,6 +4,7 @@ title=configure-managed-jobs
 next=copy-config.html
 prev=configure-ldap-for-admin.html
 ~~~~~~
+
 configure-managed-jobs
 ======================
 
@@ -12,14 +13,14 @@ configure-managed-jobs
 configure-managed-jobs
 ----------------------
 
-configures how long information about subcommands that were started
+Configures how long information about subcommands that were started
 using `asadmin --detach` or that contain progress information is kept
 
 [[sthref100]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] configure-managed-jobs [--help]
 [--in-memory-retention-period in-memory-retention-period]
@@ -30,7 +31,7 @@ asadmin [asadmin-options] configure-managed-jobs [--help]
 
 [[sthref101]]
 
-Description
+=== Description
 
 The `configure-managed-jobs` subcommand configures how long information
 about subcommands (jobs) that were started using the `asadmin` utility
@@ -43,7 +44,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref102]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -65,16 +66,16 @@ asadmin-options::
 
 [[sthref103]]
 
-Examples
+=== Examples
 
 [[GSRFM837]][[sthref104]]
 
-Example 1   Configuring the Job Retention Period
+==== Example 1   Configuring the Job Retention Period
 
 This example sets the job retention period to 36 hours. Time periods can
 be specified in Hh|Mm|Ss for hours, minutes, or seconds.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> configure-managed-jobs --job-retention-period=36h
 Command configure-managed-jobs executed successfully.
@@ -82,7 +83,7 @@ Command configure-managed-jobs executed successfully.
 
 [[sthref105]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -91,7 +92,7 @@ Exit Status
 
 [[sthref106]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=delete-node-ssh
 next=delete-password-alias.html
 prev=delete-node-dcom.html
 ~~~~~~
+
 delete-node-ssh
 ===============
 
@@ -12,22 +13,22 @@ delete-node-ssh
 delete-node-ssh
 ---------------
 
-deletes a node that is enabled for communication over SSH
+Deletes a node that is enabled for communication over SSH
 
 [[sthref914]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-node-ssh [--help] 
+asadmin [asadmin-options] delete-node-ssh [--help]
 [--uninstall={false|true}] [--force={false|true}]
 node-name
 ----
 
 [[sthref915]]
 
-Description
+=== Description
 
 The `delete-node-ssh` subcommand deletes a node that is enabled for
 communication over secure shell (SSH) from the domain. This subcommand
@@ -62,7 +63,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref916]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -72,31 +73,31 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--uninstall`::
   Specifies whether the \{product---name} software is uninstalled from
-  host that the node represents. +
-  Possible values are as follows: +
+  host that the node represents. Possible values are as follows:
+
   `false`;;
-    The \{product---name} software is not uninstalled from the host
-    (default).
+    The \{product---name} software is not uninstalled from the host (default).
   `true`;;
     The \{product---name} software is uninstalled from the host. By
-    default, if any node except the predefined node `localhost-`domain
+    default, if any node except the predefined node ``localhost-``domain
     resides on any host from which \{product---name} software is being
     uninstalled, the subcommand fails. To uninstall the
     \{product---name} software from a host on which user-defined nodes
     reside, set the `--force` option to `true`. If the `--force` option
     is `true`, the subcommand removes the entire content of the parent
     of the base installation directory.
+
 `--force`::
   If `--uninstall` is true, specifies whether the subcommand uninstalls
   the \{product---name} software from a host even if a user-defined node
-  resides on the host. Possible values are as follows: +
+  resides on the host. Possible values are as follows:
+
   `false`;;
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
     If the `--force` option is `false`, the subcommand removes only the
     \{product---name} software files. Other content if the parent of the
-    base installation directory, such as configuration files, are not
-    removed.
+    base installation directory, such as configuration files, are not removed.
   `true`;;
     The subcommand uninstalls the \{product---name} software from the
     host even if a user-defined node resides on the host. +
@@ -105,7 +106,7 @@ asadmin-options::
 
 [[sthref917]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node to delete. The node must enabled for
@@ -113,16 +114,16 @@ node-name::
 
 [[sthref918]]
 
-Examples
+=== Examples
 
 [[GSRFM571]][[sthref919]]
 
-Example 1   Deleting a Node That Is Enabled for Communication Over SSH
+==== Example 1   Deleting a Node That Is Enabled for Communication Over SSH
 
 This example deletes the node `eg1`, which is enabled for communication
 over SSH.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-node-ssh eg1
 Command delete-node-ssh executed successfully.
@@ -130,7 +131,7 @@ Command delete-node-ssh executed successfully.
 
 [[sthref920]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -139,7 +140,7 @@ Exit Status
 
 [[sthref921]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

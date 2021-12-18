@@ -4,6 +4,7 @@ title=delete-instance
 next=delete-jacc-provider.html
 prev=delete-iiop-listener.html
 ~~~~~~
+
 delete-instance
 ===============
 
@@ -12,21 +13,21 @@ delete-instance
 delete-instance
 ---------------
 
-deletes a \{product---name} instance
+Deletes a \{product---name} instance
 
 [[sthref753]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-instance [--help] 
-instance-name 
+asadmin [asadmin-options] delete-instance [--help]
+instance-name
 ----
 
 [[sthref754]]
 
-Description
+=== Description
 
 The `delete-instance` subcommand deletes a \{product---name} instance.
 This subcommand requires the Distributed Component Object Model (DCOM)
@@ -34,16 +35,12 @@ remote protocol or secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on the host that
 is represented by the node where the instance resides.
 
-
 [NOTE]
-=======================================================================
-
+====
 DCOM or SSH is not required if the instance resides on a node of type
 `CONFIG` that represents the local host. A node of type `CONFIG` is not
 enabled for remote communication over DCOM or SSH.
-
-=======================================================================
-
+====
 
 You may run this subcommand from any host that can contact the DAS.
 
@@ -59,7 +56,7 @@ error occurs.
 The subcommand deletes an instance by performing the following actions:
 
 * Removing the instance from the configuration of the domain
-administration server (DAS)
+  administration server (DAS)
 * Deleting the instance's files from file system
 
 If the instance that is being deleted is the only instance that is using
@@ -74,7 +71,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref755]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -85,22 +82,22 @@ asadmin-options::
 
 [[sthref756]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the instance to delete.
 
 [[sthref757]]
 
-Examples
+=== Examples
 
 [[GSRFM553]][[sthref758]]
 
-Example 1   Deleting a \{product---name} Instance
+==== Example 1   Deleting a \{product---name} Instance
 
 This example deletes the \{product---name} instance `pmdsainst`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-instance pmdsainst
 
@@ -109,7 +106,7 @@ Command delete-instance executed successfully.
 
 [[sthref759]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -118,7 +115,7 @@ Exit Status
 
 [[sthref760]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

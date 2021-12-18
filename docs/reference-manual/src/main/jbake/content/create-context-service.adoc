@@ -4,6 +4,7 @@ title=create-context-service
 next=create-custom-resource.html
 prev=create-connector-work-security-map.html
 ~~~~~~
+
 create-context-service
 ======================
 
@@ -12,13 +13,13 @@ create-context-service
 create-context-service
 ----------------------
 
-creates a context service resource
+Creates a context service resource
 
 [[sthref192]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-context-service [--help]
 [--enabled={false|true}]
@@ -32,7 +33,7 @@ jndi_name
 
 [[sthref193]]
 
-Description
+=== Description
 
 The `create-context-service` subcommand creates a context service
 resource.
@@ -41,7 +42,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref194]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -71,7 +72,7 @@ asadmin-options::
   additional properties.
 `--target`::
   Specifies the target for which you are creating the resource. Valid
-  targets are: +
+  targets are:
   `server`;;
     Creates the resource for the default server instance. This is the
     default value.
@@ -85,23 +86,23 @@ asadmin-options::
 
 [[sthref195]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of this resource.
 
 [[sthref196]]
 
-Examples
+=== Examples
 
 [[GSRFM839]][[sthref197]]
 
-Example 1   Creating a Context Service Resource
+==== Example 1   Creating a Context Service Resource
 
 This example creates a context service resource named
 `concurrent/myContextService`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-context-service concurrent/myContextService
 Context service concurrent/myContextService created successfully.
@@ -110,7 +111,7 @@ Command create-context-service executed successfully.
 
 [[sthref198]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -119,7 +120,7 @@ Exit Status
 
 [[sthref199]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

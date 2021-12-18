@@ -4,6 +4,7 @@ title=list-network-listeners
 next=list-nodes.html
 prev=list-modules.html
 ~~~~~~
+
 list-network-listeners
 ======================
 
@@ -12,13 +13,13 @@ list-network-listeners
 list-network-listeners
 ----------------------
 
-lists the existing network listeners
+Lists the existing network listeners
 
 [[sthref1692]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-network-listeners [--help]
 [target]
@@ -26,14 +27,14 @@ asadmin [asadmin-options] list-network-listeners [--help]
 
 [[sthref1693]]
 
-Description
+=== Description
 
 The `list-network-listeners` subcommand lists the existing network
 listeners. This subcommand is supported in remote mode only.
 
 [[sthref1694]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,11 +45,12 @@ asadmin-options::
 
 [[sthref1695]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to network listeners for a specified target.
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Lists the network listeners for the default server instance. This is
     the default value.
@@ -62,16 +64,15 @@ target::
 
 [[sthref1696]]
 
-Examples
+=== Examples
 
 [[GSRFM686]][[sthref1697]]
 
-Example 1   Listing Network Listeners
+==== Example 1   Listing Network Listeners
 
-The following command lists all the network listeners for the server
-instance:
+The following command lists all the network listeners for the server instance:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-network-listeners
 admin-listener
@@ -82,7 +83,7 @@ Command list-network-listeners executed successfully.
 
 [[sthref1698]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -91,7 +92,7 @@ Exit Status
 
 [[sthref1699]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

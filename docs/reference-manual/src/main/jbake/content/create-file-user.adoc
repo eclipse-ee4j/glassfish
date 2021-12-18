@@ -4,6 +4,7 @@ title=create-file-user
 next=create-http.html
 prev=create-domain.html
 ~~~~~~
+
 create-file-user
 ================
 
@@ -12,13 +13,13 @@ create-file-user
 create-file-user
 ----------------
 
-creates a new file user
+Creates a new file user
 
 [[sthref219]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-file-user [--help] 
 [--authrealmnameauth_realm_name] 
@@ -28,7 +29,7 @@ asadmin [asadmin-options] create-file-user [--help]
 
 [[sthref220]]
 
-Description
+=== Description
 
 The `create-file-user` subcommand creates an entry in the keyfile with
 the specified username, password, and groups. Multiple groups can be
@@ -50,7 +51,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref221]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -70,24 +71,24 @@ asadmin-options::
 
 [[sthref222]]
 
-Operands
+=== Operands
 
 user_name::
   This is the name of file user to be created.
 
 [[sthref223]]
 
-Examples
+=== Examples
 
 [[GSRFM475]][[sthref224]]
 
-Example 1   Creating a User in the File Realm
+==== Example 1   Creating a User in the File Realm
 
 This example creates a file realm user named `sample_user`. It is
 assumed that an authentication realm has already been created using the
 `create-auth-realm` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-file-user 
 --groups staff:manager 
@@ -97,7 +98,7 @@ Command create-file-user executed successfully
 
 [[sthref225]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -106,7 +107,7 @@ Exit Status
 
 [[sthref226]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

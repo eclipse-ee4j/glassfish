@@ -4,6 +4,7 @@ title=create-auth-realm
 next=create-cluster.html
 prev=create-audit-module.html
 ~~~~~~
+
 create-auth-realm
 =================
 
@@ -12,13 +13,13 @@ create-auth-realm
 create-auth-realm
 -----------------
 
-adds the named authentication realm
+Adds the named authentication realm
 
 [[sthref139]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-auth-realm [--help]
 --classname realm_class [--property(name=value)[:name=value]*]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] create-auth-realm [--help]
 
 [[sthref140]]
 
-Description
+=== Description
 
 The `create-auth-realm` subcommand adds the named authentication realm.
 
@@ -35,7 +36,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref141]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,8 +45,8 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
-  Specifies the target on which you are creating the realm. Valid values
-  are +
+  Specifies the target on which you are creating the realm. Valid values are
+
   `server`;;
     Creates the realm on the default server instance. This is the
     default value.
@@ -55,6 +56,7 @@ asadmin-options::
     Creates the realm on all server instances in the specified cluster.
   instance_name;;
     Creates the realm on a specified server instance.
+
 `--classname`::
   Java class which implements this realm. These include
   `com.sun.enterprise.security.auth.realm.file.FileRealm`,
@@ -70,7 +72,9 @@ asadmin-options::
   which vary based on implementation. +
   The following properties are common to all of the supported realms,
   which include `FileRealm`, `CertificateRealm`, `JDBCRealm`,
-  `LDAPRealm`, PamRealm, and `SolarisRealm`. +
+  `LDAPRealm`, PamRealm, and `SolarisRealm`.
++
+--
   `jaas-context`;;
     Specifies the Java Authentication and Authorization Service (JAAS)
     context.
@@ -78,13 +82,18 @@ asadmin-options::
     (Optional) If this property is set, its value is taken to be a
     comma-separated list of group names. All clients who present valid
     certificates are assigned membership to these groups for the
-    purposes of authorization decisions in the web and EJB containers. +
-  Specific to each realm, you can specify the following properties. +
-  * You can specify the following properties for `FileRealm`: +
+    purposes of authorization decisions in the web and EJB containers.
+--
+  Specific to each realm, you can specify the following properties.
+
+  * You can specify the following properties for `FileRealm`:
+
   `file`;;
     Specifies the file that stores user names, passwords, and group
-    names. The default is domain-dir`/config/keyfile`.
-  * You can specify the following properties for `CertificateRealm`: +
+    names. The default is domain-dir``/config/keyfile``.
+
+  * You can specify the following properties for `CertificateRealm`:
+
   `LoginModule`;;
     Specifies the name of a JAAS `LoginModule` to use for performing
     authentication. To use a JAAS `LoginModule`, you must first create
@@ -93,7 +102,9 @@ asadmin-options::
     information, see "link:../security-guide/system-security.html#GSSCG00196[Custom Authentication of Client
     Certificate in SSL Mutual Authentication]" in GlassFish Server Open
     Source Edition Security Guide.
-  * You can specify the following properties for `JDBCRealm`: +
+
+  * You can specify the following properties for `JDBCRealm`:
+
   `datasource-jndi`;;
     Specifies the `jndi-name` of the `jdbc-resource` for the database.
   `user-table`;;
@@ -128,52 +139,39 @@ asadmin-options::
     Specifies the name of the group table in the database.
   `digest-algorithm`;;
     (Optional) Specifies the digest algorithm. The default is `SHA-256`.
-    You can use any algorithm supported in the JDK, or none. +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+    You can use any algorithm supported in the JDK, or none.
++
+[NOTE]
+====
 In versions of \{product---name} prior to 5.0, the default algorithm
 was `MD5`. If you have applications that depend on the `MD5`
 algorithm, you can override the default `SHA-25` algorithm by using
 the `asadmin set` subcommand:
-
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.security-service.property.default-digest-algorithm=MD5
 ----
-
 You can use the `asadmin get` subcommand to determine what algorithm
 is currently being used:
-
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get server.security-service.property.default-digest-algorithm
 ----
-
 Also note that, to maintain backward compatibility, if an upgrade is
 performed from \{product---name} v2.x or v3.0.x to \{product---name}
 5.0, the default algorithm is automatically set to `MD5` in cases
 where the digest algorithm had not been explicitly set in the older
 \{product---name} version.
-
-|=======================================================================
-
+====
++
   `digestrealm-password-enc-algorithm`;;
     (Optional) Specifies the algorithm for encrypting passwords stored
-    in the database. +
-
-[width="100%",cols="100%",]
-|====================================================================
-a|
-Note:
-
-It is a security risk not to specify a password encryption
-algorithm.
-
-|====================================================================
+    in the database.
++
+[NOTE]
+====
+It is a security risk not to specify a password encryption algorithm.
+====
 
   `encoding`;;
     (Optional) Specifies the encoding. Allowed values are `Hex` and
@@ -182,7 +180,7 @@ algorithm.
     specified.
   `charset`;;
     (Optional) Specifies the `charset` for the digest algorithm.
-  * You can specify the following properties for `LDAPRealm`: +
+  * You can specify the following properties for `LDAPRealm`:
   `directory`;;
     Specifies the LDAP URL to your server.
   `base-dn`;;
@@ -214,7 +212,7 @@ algorithm.
 
 [[sthref142]]
 
-Operands
+=== Operands
 
 auth_realm_name::
   A short name for the realm. This name is used to refer to the realm
@@ -222,18 +220,18 @@ auth_realm_name::
 
 [[sthref143]]
 
-Examples
+=== Examples
 
 [[GSRFM460]][[sthref144]]
 
-Example 1   Creating a New Authentication Realm
+==== Example 1   Creating a New Authentication Realm
 
 This example creates a new file realm.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-auth-realm
---classname com.sun.enterprise.security.auth.realm.file.FileRealm 
+--classname com.sun.enterprise.security.auth.realm.file.FileRealm
 --property file=${com.sun.aas.instanceRoot}/config/
 admin-keyfile:jaas-context=fileRealm file
 Command create-auth-realm executed successfully
@@ -243,7 +241,7 @@ Where `file` is the authentication realm created.
 
 [[sthref145]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -252,7 +250,7 @@ Exit Status
 
 [[sthref146]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

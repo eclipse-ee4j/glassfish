@@ -4,6 +4,7 @@ title=create-http-redirect
 next=create-iiop-listener.html
 prev=create-http-listener.html
 ~~~~~~
+
 create-http-redirect
 ====================
 
@@ -12,13 +13,13 @@ create-http-redirect
 create-http-redirect
 --------------------
 
-adds a new HTTP redirect
+Adds a new HTTP redirect
 
 [[sthref278]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-http-redirect [--help]
 [--redirect-port redirect-port] 
@@ -29,14 +30,14 @@ protocol-name
 
 [[sthref279]]
 
-Description
+=== Description
 
 The `create-http-redirect` subcommand creates an HTTP redirect. This
 subcommand is supported in remote mode only.
 
 [[sthref280]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -54,7 +55,8 @@ asadmin-options::
   `false`.
 `--target`::
   Creates the HTTP redirect only on the specified target. Valid values
-  are as follows: +
+  are as follows:
++
   `server`;;
     Creates the HTTP redirect on the default server instance. This is
     the default value.
@@ -69,14 +71,14 @@ asadmin-options::
 
 [[sthref281]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol to which to apply the redirect.
 
 [[sthref282]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -85,7 +87,7 @@ Exit Status
 
 [[sthref283]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

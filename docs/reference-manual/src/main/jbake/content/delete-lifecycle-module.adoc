@@ -4,6 +4,7 @@ title=delete-lifecycle-module
 next=delete-local-instance.html
 prev=delete-jvm-options.html
 ~~~~~~
+
 delete-lifecycle-module
 =======================
 
@@ -12,21 +13,21 @@ delete-lifecycle-module
 delete-lifecycle-module
 -----------------------
 
-removes the lifecycle module
+Removes the lifecycle module
 
 [[sthref834]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-lifecycle-module [--help] 
+asadmin [asadmin-options] delete-lifecycle-module [--help]
 [--target target] module_name
 ----
 
 [[sthref835]]
 
-Description
+=== Description
 
 The `delete-lifecycle-module` subcommand removes a lifecycle module. A
 lifecycle module provides a means of running a short or long duration
@@ -35,7 +36,7 @@ subcommand is supported in remote mode only.
 
 [[sthref836]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -45,7 +46,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Indicates the location where the lifecycle module is to be deleted.
-  Valid values are +
+  Valid values are
+
   * `server`- Specifies the default server instance as the target for
   deleting the lifecycle module. `server` is the name of the default
   server instance and is the default value for this option.
@@ -56,7 +58,7 @@ asadmin-options::
 
 [[sthref837]]
 
-Operands
+=== Operands
 
 module_name::
   This operand is a unique identifier for the deployed server lifecycle
@@ -64,15 +66,15 @@ module_name::
 
 [[sthref838]]
 
-Examples
+=== Examples
 
 [[GSRFM564]][[sthref839]]
 
-Example 1   Deleting a Lifecycle Module
+==== Example 1   Deleting a Lifecycle Module
 
 The following example deletes a lifecycle module named `customSetup`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-lifecycle-module customSetup
 Command delete-lifecycle-module executed successfully
@@ -80,7 +82,7 @@ Command delete-lifecycle-module executed successfully
 
 [[sthref840]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -89,7 +91,7 @@ Exit Status
 
 [[sthref841]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

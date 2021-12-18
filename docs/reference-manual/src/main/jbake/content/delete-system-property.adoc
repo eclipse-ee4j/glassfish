@@ -4,6 +4,7 @@ title=delete-system-property
 next=delete-threadpool.html
 prev=delete-ssl.html
 ~~~~~~
+
 delete-system-property
 ======================
 
@@ -12,23 +13,23 @@ delete-system-property
 delete-system-property
 ----------------------
 
-removes a system property of the domain, configuration, cluster, or
+Removes a system property of the domain, configuration, cluster, or
 server instance, one at a time
 
 [[sthref983]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-system-property [--help] 
-[--target target_name ] 
+asadmin [asadmin-options] delete-system-property [--help]
+[--target target_name ]
 [property_name]
 ----
 
 [[sthref984]]
 
-Description
+=== Description
 
 The `delete-system-property` subcommand deletes a system property of a
 domain, configuration, cluster, or server instance. Make sure that the
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref985]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,27 +51,26 @@ asadmin-options::
 `--target`::
   This option specifies the target on which you are deleting the system
   properties. The valid targets for this subcommand are instance,
-  cluster, configuration, domain, and server. Server is the default
-  option.
+  cluster, configuration, domain, and server. Server is the default option.
 
 [[sthref986]]
 
-Operands
+=== Operands
 
 property_name::
   The name of the system property to remove.
 
 [[sthref987]]
 
-Examples
+=== Examples
 
 [[GSRFM580]][[sthref988]]
 
-Example 1   Deleting a System Property
+==== Example 1   Deleting a System Property
 
 This example deletes the system property named `http-listener-port`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-system-property http-listener-port
 Command delete-system-property executed successfully.
@@ -78,7 +78,7 @@ Command delete-system-property executed successfully.
 
 [[sthref989]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -87,7 +87,7 @@ Exit Status
 
 [[sthref990]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

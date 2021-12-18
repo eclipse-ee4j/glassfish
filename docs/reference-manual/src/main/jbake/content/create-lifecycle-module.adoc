@@ -4,6 +4,7 @@ title=create-lifecycle-module
 next=create-local-instance.html
 prev=create-jvm-options.html
 ~~~~~~
+
 create-lifecycle-module
 =======================
 
@@ -12,15 +13,15 @@ create-lifecycle-module
 create-lifecycle-module
 -----------------------
 
-creates a lifecycle module
+Creates a lifecycle module
 
 [[sthref380]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-lifecycle-module [--help] 
+asadmin [asadmin-options] create-lifecycle-module [--help]
 --classname classname
 [--enabled={true|false}] [--target target]
 [--classpath classpath] [--loadorder loadorder]
@@ -31,7 +32,7 @@ module_name
 
 [[sthref381]]
 
-Description
+=== Description
 
 The `create-lifecycle-module` subcommand creates a lifecycle module. A
 lifecycle module provides a means of running a short or long duration
@@ -40,7 +41,7 @@ subcommand is supported in remote mode only.
 
 [[sthref382]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,7 +53,8 @@ asadmin-options::
   This is the fully qualified name of the startup class.
 `--target`::
   Indicates the location where the lifecycle module is to be created.
-  Valid values are +
+  Valid values are
+
   * `server`- Specifies the default server instance as the target for
   creating the lifecycle module. `server` is the name of the default
   server instance and is the default value for this option.
@@ -60,6 +62,7 @@ asadmin-options::
   creating the lifecycle module.
   * instance_name- Specifies a particular stand-alone server instance as
   the target for creating the lifecycle module.
+
 `--classpath`::
   This option indicates where the lifecycle module is located. It is a
   classpath with the standard format: either colon-separated (Unix) or
@@ -89,7 +92,7 @@ asadmin-options::
 
 [[sthref383]]
 
-Operands
+=== Operands
 
 module_name::
   This operand is a unique identifier for the deployed server lifecycle
@@ -97,19 +100,19 @@ module_name::
 
 [[sthref384]]
 
-Examples
+=== Examples
 
 [[GSRFM504]][[sthref385]]
 
-Example 1   Creating a Lifecycle Module
+==== Example 1   Creating a Lifecycle Module
 
 The following example creates a lifecycle module named `customSetup`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-lifecycle-module --classname "com.acme.CustomSetup" 
---classpath "/export/customSetup" --loadorder 1 --failurefatal=true 
---description "this is a sample customSetup" 
+asadmin> create-lifecycle-module --classname "com.acme.CustomSetup"
+--classpath "/export/customSetup" --loadorder 1 --failurefatal=true
+--description "this is a sample customSetup"
 --property rmi="Server\=acme1\:7070":timeout=30 customSetup
 Command create-lifecycle-module executed successfully
 ----
@@ -119,7 +122,7 @@ the equal sign (=) and colon (:) are part of the `rmi` property value.
 
 [[sthref386]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -128,7 +131,7 @@ Exit Status
 
 [[sthref387]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

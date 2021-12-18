@@ -4,6 +4,7 @@ title=create-system-properties
 next=create-threadpool.html
 prev=create-ssl.html
 ~~~~~~
+
 create-system-properties
 ========================
 
@@ -12,23 +13,23 @@ create-system-properties
 create-system-properties
 ------------------------
 
-adds one or more system property elements that can be referenced
+Adds one or more system property elements that can be referenced
 elsewhere in the configuration.
 
 [[sthref545]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-system-properties [--help] 
+asadmin [asadmin-options] create-system-properties [--help]
 [--target target]
 [name=value)[:name=value]*]
 ----
 
 [[sthref546]]
 
-Description
+=== Description
 
 The `create-system-properties` subcommand adds or updates system
 properties that can be referenced elsewhere on the server.
@@ -48,7 +49,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref547]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -61,12 +62,13 @@ asadmin-options::
 
 [[sthref548]]
 
-Operands
+=== Operands
 
 target::
   The valid targets for this subcommand are instance, cluster,
   configuration, domain, and server. Server is the default option. Valid
-  values are: +
+  values are:
+
   `server`;;
     Creates the properties on the default server instance. This is the
     default value.
@@ -80,25 +82,26 @@ target::
     cluster.
   instance_name;;
     Creates the properties on a specified server instance.
+
 name=value::
   The name value pairs of the system properties to add to the specified
-  target. Multiple system properties must be separated by a : (colon).
-  If a : (colon) appears in the name or value of a system property, it
-  must be escaped with a \ (blackslash). If any system properties were
+  target. Multiple system properties must be separated by a `:` (colon).
+  If a `:` (colon) appears in the name or value of a system property, it
+  must be escaped with a `\` (blackslash). If any system properties were
   previously defined, they are updated with the new values.
 
 [[sthref549]]
 
-Examples
+=== Examples
 
 [[GSRFM526]][[sthref550]]
 
-Example 1   Creating System Properties
+==== Example 1   Creating System Properties
 
 This example creates a system property associated with an HTTP listener
 on a server instance named `myserver`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-system-properties --target myserver http-listener-port=1088
 Command create-system-properties executed successfully.
@@ -106,7 +109,7 @@ Command create-system-properties executed successfully.
 
 [[sthref551]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -115,7 +118,7 @@ Exit Status
 
 [[sthref552]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

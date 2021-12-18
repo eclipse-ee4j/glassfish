@@ -4,6 +4,7 @@ title=list-jms-resources
 next=list-jndi-entries.html
 prev=list-jms-hosts.html
 ~~~~~~
+
 list-jms-resources
 ==================
 
@@ -12,13 +13,13 @@ list-jms-resources
 list-jms-resources
 ------------------
 
-lists the JMS resources
+Lists the JMS resources
 
 [[sthref1575]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-jms-resources [--help]
 [--restype type]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] list-jms-resources [--help]
 
 [[sthref1576]]
 
-Description
+=== Description
 
 The `list-jms-resources` subcommand lists the existing Java Message
 Service (JMS) resources (destination and connection factory resources).
@@ -37,7 +38,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref1577]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,11 +53,12 @@ asadmin-options::
 
 [[sthref1578]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to resources for a specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Lists the resources for the default server instance. This is the
     default value.
@@ -70,15 +72,15 @@ target::
 
 [[sthref1579]]
 
-Examples
+=== Examples
 
 [[GSRFM675]][[sthref1580]]
 
-Example 1   Listing all JMS resources
+==== Example 1   Listing all JMS resources
 
 The following subcommand lists all JMS resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jms-resources
 jms/Queue
@@ -90,12 +92,12 @@ Command list-jms-resources executed successfully.
 
 [[GSRFM676]][[sthref1581]]
 
-Example 2   Listing JMS resources of a specified type
+==== Example 2   Listing JMS resources of a specified type
 
 The following subcommand lists all `jakarta.jms.ConnectionFactory`
 resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jms-resources --restype jakarta.jms.ConnectionFactory
 jms/ConnectionFactory
@@ -105,7 +107,7 @@ Command list-jms-resources executed successfully.
 
 [[sthref1582]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -114,7 +116,7 @@ Exit Status
 
 [[sthref1583]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

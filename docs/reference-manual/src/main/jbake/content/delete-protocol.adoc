@@ -4,6 +4,7 @@ title=delete-protocol
 next=delete-protocol-filter.html
 prev=delete-profiler.html
 ~~~~~~
+
 delete-protocol
 ===============
 
@@ -12,13 +13,13 @@ delete-protocol
 delete-protocol
 ---------------
 
-removes a protocol
+Removes a protocol
 
 [[sthref937]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-protocol [--help]
 [--target target]
@@ -27,14 +28,14 @@ protocol-name
 
 [[sthref938]]
 
-Description
+=== Description
 
 The `delete-protocol` subcommand removes the specified protocol. This
 subcommand is supported in remote mode only.
 
 [[sthref939]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the protocol only from the specified target. Valid values are
-  as follows: +
+  as follows:
+
   `server`;;
     Deletes the protocol from the default server instance. This is the
     default value.
@@ -58,22 +60,22 @@ asadmin-options::
 
 [[sthref940]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol to be deleted.
 
 [[sthref941]]
 
-Examples
+=== Examples
 
 [[GSRFM574]][[sthref942]]
 
-Example 1   Deleting a Protocol
+==== Example 1   Deleting a Protocol
 
 The following command deletes the protocol named `http-1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-protocol http-1
 Command delete-protocol executed successfully.
@@ -81,7 +83,7 @@ Command delete-protocol executed successfully.
 
 [[sthref943]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -90,7 +92,7 @@ Exit Status
 
 [[sthref944]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

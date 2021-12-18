@@ -4,6 +4,7 @@ title=create-node-dcom
 next=create-node-ssh.html
 prev=create-node-config.html
 ~~~~~~
+
 create-node-dcom
 ================
 
@@ -12,17 +13,17 @@ create-node-dcom
 create-node-dcom
 ----------------
 
-creates a node that is enabled for communication over DCOM
+Creates a node that is enabled for communication over DCOM
 
 [[sthref453]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-node-dcom [--help]
 --nodehost node-host
-[--installdir as-install-parent] [--nodedir node-dir] 
+[--installdir as-install-parent] [--nodedir node-dir]
 [--windowsuser windows-user] [--windowsdomain windows-domain]
 [--force={false|true}]
 [--install={false|true}] [--archive archive]
@@ -31,7 +32,7 @@ node-name
 
 [[sthref454]]
 
-Description
+=== Description
 
 The `create-node-dcom` subcommand creates a node that is enabled for
 communication over the Distributed Component Object Model (DCOM) remote
@@ -62,7 +63,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref455]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -90,7 +91,7 @@ asadmin-options::
 `-w`::
   The user on this node's host that is to run the process for connecting
   to the host through DCOM. The default is the user that is running the
-  DAS process. If the `--nodehost` option is set to `localhost-`domain,
+  DAS process. If the `--nodehost` option is set to ``localhost-``domain,
   the `--windowsuser` option is ignored
 `--windowsdomain`::
 `-d`::
@@ -101,23 +102,26 @@ asadmin-options::
   Specifies whether the node is created in the DAS configuration even if
   validation of the node's parameters fails. To validate a node's
   parameters, the DAS must be able to contact the node's host through
-  DCOM. Possible values are as follows: +
+  DCOM. Possible values are as follows:
+
   `false`;;
     The node is not created if validation of the node's parameters fails
     (default).
   `true`;;
     The node is created even if validation of the node's parameters
     fails.
+
 `--install`::
   Specifies whether the subcommand shall install the \{product---name}
   software on the host that the node represents. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     The subcommand shall not install the \{product---name} software on
     the host (default).
   `true`;;
-    The subcommand shall install the \{product---name} software on the
-    host.
+    The subcommand shall install the \{product---name} software on the host.
+
 `--archive`::
   The absolute path to the archive file of the \{product---name}
   software that is to be installed. If this option is omitted and the
@@ -128,11 +132,12 @@ asadmin-options::
 
 [[sthref456]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node. +
-  The name must meet the following requirements: +
+  The name must meet the following requirements:
+
   * The name may contain only ASCII characters.
   * The name must start with a letter, a number, or an underscore.
   * The name may contain only the following characters:
@@ -150,48 +155,48 @@ node-name::
 
 [[sthref457]]
 
-Examples
+=== Examples
 
 [[GSRFM511]][[sthref458]]
 
-Example 1   Creating a Node
+==== Example 1   Creating a Node
 
 This example creates the node `wpmdl1` for the host
 `wpmdl1.example.com`. By default, the parent of the base installation
 directory of the \{product---name} software is `C:\glassfish3`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-node-dcom 
+asadmin> create-node-dcom
 --nodehost wpmdl1.example.com wpmdl1
 Command create-node-dcom executed successfully.
 ----
 
 [[GSRFM829]][[sthref459]]
 
-Example 2   Creating a Node With a Specific Installation Directory
+==== Example 2   Creating a Node With a Specific Installation Directory
 
 This example creates the node `wyml1` for the host `wyml1.example.com`.
 The parent of the base installation directory of the \{product---name}
 software on this host is `C:\middleware\glassfish3`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-node-dcom --installdir C:\middleware\glassfish3 
+asadmin> create-node-dcom --installdir C:\middleware\glassfish3
 --nodehost wyml1.example.com wyml1
 Command create-node-dcom executed successfully.
 ----
 
 [[GSRFM512]][[sthref460]]
 
-Example 3   Forcing the Creation of a Node
+==== Example 3   Forcing the Creation of a Node
 
 This example forces the creation of node `xkyd` for the host
 `xkyd.example.com`. The node is created despite the failure of the DAS
 to contact the host `xkyd.example.com` to validate the node's
 parameters.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-node-dcom --force --nodehost xkyd.example.com xkyd
 Warning: some parameters appear to be invalid.
@@ -202,7 +207,7 @@ Command create-node-dcom executed successfully.
 
 [[sthref461]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -211,7 +216,7 @@ Exit Status
 
 [[sthref462]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

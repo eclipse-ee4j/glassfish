@@ -4,6 +4,7 @@ title=delete-local-instance
 next=delete-managed-executor-service.html
 prev=delete-lifecycle-module.html
 ~~~~~~
+
 delete-local-instance
 =====================
 
@@ -12,14 +13,13 @@ delete-local-instance
 delete-local-instance
 ---------------------
 
-deletes a \{product---name} instance on the machine where the subcommand
-is run
+Deletes a \{product---name} instance on the machine where the subcommand is run
 
 [[sthref842]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-local-instance [--help]
 [--nodedir node-dir] [--node node-name]
@@ -28,7 +28,7 @@ asadmin [asadmin-options] delete-local-instance [--help]
 
 [[sthref843]]
 
-Description
+=== Description
 
 The `delete-local-instance` subcommand deletes a \{product---name}
 instance on the machine where the subcommand is run. This subcommand
@@ -48,7 +48,7 @@ error occurs.
 The subcommand deletes an instance by performing the following actions:
 
 * Removing the instance from the configuration of the domain
-administration server (DAS)
+  administration server (DAS)
 * Deleting the instance's files from file system
 
 If the instance that is being deleted is the only instance that is using
@@ -73,7 +73,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref844]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -92,7 +92,7 @@ asadmin-options::
 
 [[sthref845]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the instance to delete. This operand may be omitted if
@@ -101,15 +101,15 @@ instance-name::
 
 [[sthref846]]
 
-Examples
+=== Examples
 
 [[GSRFM565]][[sthref847]]
 
-Example 1   Deleting an Instance
+==== Example 1   Deleting an Instance
 
 This example deletes the instance `pmdsainst`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-local-instance pmdsainst
 
@@ -118,7 +118,7 @@ Command delete-local-instance executed successfully.
 
 [[sthref848]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -127,7 +127,7 @@ Exit Status
 
 [[sthref849]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

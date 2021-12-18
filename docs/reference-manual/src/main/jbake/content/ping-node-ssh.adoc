@@ -4,6 +4,7 @@ title=ping-node-ssh
 next=recover-transactions.html
 prev=ping-node-dcom.html
 ~~~~~~
+
 ping-node-ssh
 =============
 
@@ -12,13 +13,13 @@ ping-node-ssh
 ping-node-ssh
 -------------
 
-tests if a node that is enabled for communication over SSH is usable
+Tests if a node that is enabled for communication over SSH is usable
 
 [[sthref1943]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] ping-node-ssh [--help]
 [--validate={false|true}] node-name
@@ -26,7 +27,7 @@ asadmin [asadmin-options] ping-node-ssh [--help]
 
 [[sthref1944]]
 
-Description
+=== Description
 
 The `ping-node-ssh` subcommand tests if a node that is enabled for
 communication over secure shell (SSH) is usable. This subcommand
@@ -52,23 +53,19 @@ communication over SSH, an error occurs. To determine whether a node is
 enabled for communication over SSH, use the
 link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
 
-
 [NOTE]
-=======================================================================
-
+====
 To test whether a node that is enabled for communication over the
 Distributed Component Object Model (DCOM) remote protocol is usable, use
 the link:ping-node-dcom.html#ping-node-dcom-1[`ping-node-dcom`(1)]
 subcommand.
-
-=======================================================================
-
+====
 
 This subcommand is supported in remote mode only.
 
 [[sthref1945]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -77,8 +74,9 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--validate`::
-  Specifies whether the subcommand validates the node. +
-  Possible values are as follows: +
+  Specifies whether the subcommand validates the node.
+  Possible values are as follows:
+
   `true`;;
     The node is validated.
   `false`;;
@@ -86,7 +84,7 @@ asadmin-options::
 
 [[sthref1946]]
 
-Operands
+=== Operands
 
 node-name::
   The name of the node to test. The node must be enabled for
@@ -94,15 +92,15 @@ node-name::
 
 [[sthref1947]]
 
-Examples
+=== Examples
 
 [[GSRFM731]][[sthref1948]]
 
-Example 1   Testing if an SSH-Enabled Node Is Usable
+==== Example 1   Testing if an SSH-Enabled Node Is Usable
 
 This example tests if the SSH-enabled node `sj03-node` is usable.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> ping-node-ssh sj03-node
 Successfully made SSH connection to node sj03-node (sj03.example.com)
@@ -111,11 +109,11 @@ Command ping-node-ssh executed successfully.
 
 [[GSRFM732]][[sthref1949]]
 
-Example 2   Validating an SSH-Enabled Node
+==== Example 2   Validating an SSH-Enabled Node
 
 This example validates the SSH-enabled node `adc-node`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> ping-node-ssh --validate=true adc-node
 Successfully made SSH connection to node adcnode (adc.example.com)
@@ -128,7 +126,7 @@ Command ping-node-ssh executed successfully.
 
 [[sthref1950]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -137,7 +135,7 @@ Exit Status
 
 [[sthref1951]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

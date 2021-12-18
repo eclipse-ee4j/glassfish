@@ -4,6 +4,7 @@ title=delete-managed-executor-service
 next=delete-managed-scheduled-executor-service.html
 prev=delete-local-instance.html
 ~~~~~~
+
 delete-managed-executor-service
 ===============================
 
@@ -12,13 +13,13 @@ delete-managed-executor-service
 delete-managed-executor-service
 -------------------------------
 
-removes a managed executor service resource with the specified JNDI name
+Removes a managed executor service resource with the specified JNDI name
 
 [[sthref850]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-managed-executor-service [--help]
 [--target target]
@@ -27,7 +28,7 @@ managed_executor_service_name
 
 [[sthref851]]
 
-Description
+=== Description
 
 The `delete-managed-executor-service` subcommand removes a managed
 executor service resource with the specified JNDI name.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref852]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are deleting the resource. Valid
-  targets are: +
+  targets are:
+
   `server`;;
     Deletes the resource from the default server instance. This is the
     default value.
@@ -60,23 +62,23 @@ asadmin-options::
 
 [[sthref853]]
 
-Operands
+=== Operands
 
 managed_executor_service_name::
   The JNDI name of the resource to be deleted.
 
 [[sthref854]]
 
-Examples
+=== Examples
 
 [[GSRFM849]][[sthref855]]
 
-Example 1   Deleting a Managed Executor Service Resource
+==== Example 1   Deleting a Managed Executor Service Resource
 
 This example deletes the managed executor service resource named
 `concurrent/myExecutor`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-executor-service concurrent/myExecutor
 Managed executor service concurrent/myExecutor deleted successfully.
@@ -85,7 +87,7 @@ Command delete-managed-executor-service executed successfully.
 
 [[sthref856]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref857]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

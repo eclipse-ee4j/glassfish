@@ -4,6 +4,7 @@ title=list-nodes-dcom
 next=list-nodes-ssh.html
 prev=list-nodes-config.html
 ~~~~~~
+
 list-nodes-dcom
 ===============
 
@@ -12,36 +13,32 @@ list-nodes-dcom
 list-nodes-dcom
 ---------------
 
-lists all \{product---name} nodes that support communication over DCOM
+Lists all \{product---name} nodes that support communication over DCOM
 in a domain
 
 [[sthref1718]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-nodes-dcom [--help] 
+asadmin [asadmin-options] list-nodes-dcom [--help]
 [--long={false|true}]
 ----
 
 [[sthref1719]]
 
-Description
+=== Description
 
 The `list-nodes-dcom` subcommand lists all \{product---name} nodes that
 support communication over the Distributed Component Object Model (DCOM)
 remote protocol. The DCOM protocol is available only on Windows systems.
 
-
 [NOTE]
-=======================================================================
-
+====
 To list all nodes in a domain regardless of the type of the node, run
 the link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
-
-=======================================================================
-
+====
 
 By default, the subcommand displays the following information for each
 node that is listed:
@@ -68,7 +65,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1720]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -79,7 +76,8 @@ asadmin-options::
 `--long`::
 `-l`::
   Specifies whether the nodes are listed in long format. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     The nodes are listed in long format.
   `false`;;
@@ -87,16 +85,16 @@ asadmin-options::
 
 [[sthref1721]]
 
-Examples
+=== Examples
 
 [[GSRFM694]][[sthref1722]]
 
-Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing \{product---name} Nodes
 
 This example displays the name, type, and host for all \{product---name}
 nodes that support communication over DCOM in a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom
 xkyd  DCOM  xkyd.example.com
@@ -107,13 +105,13 @@ Command list-nodes-dcom executed successfully.
 
 [[GSRFM695]][[sthref1723]]
 
-Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of \{product---name} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
 only the names of the \{product---name} nodes that support communication
 over DCOM in a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom --terse=true
 xkyd
@@ -123,12 +121,12 @@ wpmdl1
 
 [[GSRFM696]][[sthref1724]]
 
-Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing \{product---name} Nodes in Long Format
 
 This example lists the \{product---name} nodes that support
 communication over DCOM in a domain in long format.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-nodes-dcom --long=true
 NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
@@ -140,7 +138,7 @@ Command list-nodes-dcom executed successfully.
 
 [[sthref1725]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -149,7 +147,7 @@ Exit Status
 
 [[sthref1726]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

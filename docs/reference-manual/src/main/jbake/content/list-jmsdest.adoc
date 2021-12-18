@@ -4,6 +4,7 @@ title=list-jmsdest
 next=list-jms-hosts.html
 prev=list-jdbc-resources.html
 ~~~~~~
+
 list-jmsdest
 ============
 
@@ -12,13 +13,13 @@ list-jmsdest
 list-jmsdest
 ------------
 
-lists the existing JMS physical destinations
+Lists the existing JMS physical destinations
 
 [[sthref1559]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-jmsdest [--help]
 [--desttype type]
@@ -27,7 +28,7 @@ asadmin [asadmin-options] list-jmsdest [--help]
 
 [[sthref1560]]
 
-Description
+=== Description
 
 The `list-jmsdest` subcommand lists the Java Message Service (JMS)
 physical destinations.
@@ -37,7 +38,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref1561]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,11 +52,12 @@ asadmin-options::
 
 [[sthref1562]]
 
-Operands
+=== Operands
 
 target::
   Restricts the listing to physical destinations for a specified target.
-  Valid values are as follows: +
+  Valid values are as follows:
+
   `server`;;
     Lists the physical destinations for the default server instance.
     This is the default value.
@@ -69,15 +71,15 @@ target::
 
 [[sthref1563]]
 
-Examples
+=== Examples
 
 [[GSRFM672]][[sthref1564]]
 
-Example 1   Listing all physical destinations
+==== Example 1   Listing all physical destinations
 
 The following subcommand lists all the physical destinations.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jmsdest
 PhysicalQueue
@@ -87,11 +89,11 @@ Command list-jmsdest executed successfully.
 
 [[GSRFM673]][[sthref1565]]
 
-Example 2   Listing all physical destinations of a specified type
+==== Example 2   Listing all physical destinations of a specified type
 
 The following subcommand lists all physical topics.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jmsdest --desttype topic
 PhysicalTopic
@@ -100,7 +102,7 @@ Command list-jmsdest executed successfully.
 
 [[sthref1566]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -109,7 +111,7 @@ Exit Status
 
 [[sthref1567]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=collect-log-files
 next=configure-jms-cluster.html
 prev=change-master-password.html
 ~~~~~~
+
 collect-log-files
 =================
 
@@ -12,22 +13,22 @@ collect-log-files
 collect-log-files
 -----------------
 
-creates a ZIP archive of all available log files
+Creates a ZIP archive of all available log files
 
 [[sthref69]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] collect-log-files [--help] 
-[--target target] 
+asadmin [asadmin-options] collect-log-files [--help]
+[--target target]
 [--retrieve={false|true}] [retrievefilepath]]
 ----
 
 [[sthref70]]
 
-Description
+=== Description
 
 The `collect-log-files` subcommand collects all available log files for
 the domain administration server (DAS), the specified cluster, or the
@@ -39,7 +40,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref71]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -52,13 +53,15 @@ asadmin-options::
   the default directory. +
   By default the ZIP archive is created in the
   domain-dir`/collected-logs` directory. The ZIP file names are
-  constructed from the specified target and timestamp, as follows: +
-[source,oac_no_warn]
+  constructed from the specified target and timestamp, as follows:
++
+[source]
 ----
 log_yyyy-mm-dd_hh-min-sec.zip
 ----
-::
-  Possible values are as follows: +
++
+Possible values are as follows:
++
   `false`;;
     The ZIP archive will be created in the default directory. If
     omitted, the `--retrieve` option defaults to `false`.
@@ -68,19 +71,18 @@ log_yyyy-mm-dd_hh-min-sec.zip
     the ZIP archive will be created in the default directory.
 `--target`::
   Specifies the target for which log files will be collected. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `server`;;
     The log files will be collected for the DAS (default).
   instance-name;;
-    The log files will be collected for the specified \{product---name}
-    instance.
+    The log files will be collected for the specified \{product---name} instance.
   cluster-name;;
-    The log files will be collected for the specified cluster and the
-    DAS.
+    The log files will be collected for the specified cluster and the DAS.
 
 [[sthref72]]
 
-Operands
+=== Operands
 
 retrievefilepath::
   The name of the directory in which the ZIP archive will be created. If
@@ -90,16 +92,16 @@ retrievefilepath::
 
 [[sthref73]]
 
-Examples
+=== Examples
 
 [[GSRFM451]][[sthref74]]
 
-Example 1   Collecting Log Files for the Default Server
+==== Example 1   Collecting Log Files for the Default Server
 
 This example generates a ZIP archive from the log files for the default
 server.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> collect-log-files
 Created Zip file under /space/gfv3/v3setup/glassfish3/glassfish/domains/domain1/\
@@ -109,12 +111,12 @@ Command collect-log-files executed successfully.
 
 [[GSRFM452]][[sthref75]]
 
-Example 2   Collecting Log Files for a Cluster
+==== Example 2   Collecting Log Files for a Cluster
 
 This example generates a ZIP archive from the log files for a cluster
 named `cluster1` and the two server instances running in the cluster.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> collect-log-files --target cluster1
 Log files are downloaded for instance1.
@@ -126,14 +128,14 @@ Command collect-log-files executed successfully.
 
 [[GSRFM453]][[sthref76]]
 
-Example 3   Collecting Log Files in a Directory Other Than the Default
+==== Example 3   Collecting Log Files in a Directory Other Than the Default
 for a Cluster
 
 This example generates a ZIP archive from the log files for a cluster
 named `cluster1` and its two server instances, and saves the archive in
 a directory named `/space/output`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> collect-log-files --target cluster1 --retrieve true /space/output
 Log files are downloaded for instance1.
@@ -144,7 +146,7 @@ Command collect-log-files executed successfully.
 
 [[sthref77]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -153,7 +155,7 @@ Exit Status
 
 [[sthref78]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

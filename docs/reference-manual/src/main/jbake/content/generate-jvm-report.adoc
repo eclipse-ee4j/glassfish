@@ -4,6 +4,7 @@ title=generate-jvm-report
 next=get.html
 prev=freeze-transaction-service.html
 ~~~~~~
+
 generate-jvm-report
 ===================
 
@@ -15,20 +16,20 @@ not alter the content in any way.
 generate-jvm-report
 -------------------
 
-shows the JVM machine statistics for a given target instance
+Shows the JVM machine statistics for a given target instance
 
 [[sthref1200]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 generate-jvm-report [--help] [--type=jvm-statistic-type] [--target target]
 ----
 
 [[sthref1201]]
 
-Description
+=== Description
 
 The `generate-jvm-report` subcommand creates a report that shows the
 threads (dump of stack trace), classes, memory, or loggers for a given
@@ -59,7 +60,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1202]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -68,8 +69,9 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
-  Specifies the target for which you are showing JVM machine statistics. +
-  Valid values are as follows: +
+  Specifies the target for which you are showing JVM machine statistics.
+  Valid values are as follows:
+
   `server`;;
     Specifies the DAS (default).
   instance-name;;
@@ -79,7 +81,8 @@ asadmin-options::
   configuration-name;;
     Specifies a named configuration.
 `--type`::
-  The type of report that is to be generated. Default is `summary`. +
+  The type of report that is to be generated. Default is `summary`.
+
   `summary`;;
     Displays summary information about the threads, classes, and memory
     (default).
@@ -100,24 +103,24 @@ asadmin-options::
 
 [[sthref1204]]
 
-Examples
+=== Examples
 
 [[GSRFM617]][[sthref1205]]
 
-Example 1   Obtaining Summary Information for the JVM Machine
+==== Example 1   Obtaining Summary Information for the JVM Machine
 
 This example shows a partial listing of a report that is generated if no
 type is specified. This same report is generated if the `summary` type
 is specified.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> generate-jvm-report
 Operating System Information:
 Name of the Operating System: SunOS
 Binary Architecture name of the Operating System: sparc, Version: 5.10
 Number of processors available on the Operating System: 32
-System load on the available processors for the last minute: 7.921875. 
+System load on the available processors for the last minute: 7.921875.
 (Sum of running and queued runnable entities per minute)
 General Java Runtime Environment Information for the VM: 64097@sr1-usca-22
 ...
@@ -137,12 +140,12 @@ Command generate-jvm-report executed successfully
 
 [[GSRFM618]][[sthref1206]]
 
-Example 2   Obtaining Information for a Particular JVM Machine Type
+==== Example 2   Obtaining Information for a Particular JVM Machine Type
 
 This example generates a report that shows information on the class
 loader.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> generate-jvm-report --type=class
 Class loading and unloading in the Java Virtual Machine:
@@ -158,7 +161,7 @@ Command generate-jvm-report executed successfully.
 
 [[sthref1207]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -167,7 +170,7 @@ Exit Status
 
 [[sthref1208]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
@@ -181,6 +184,7 @@ link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)]
 Footnote Legend
 
 Footnote 1: The terms "Java Virtual Machine" and "JVM" mean a Virtual
-Machine for the Java platform. +
+Machine for the Java platform.
++
 
 

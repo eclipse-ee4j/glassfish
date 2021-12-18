@@ -4,6 +4,7 @@ title=list-web-env-entry
 next=login.html
 prev=list-web-context-param.html
 ~~~~~~
+
 list-web-env-entry
 ==================
 
@@ -12,21 +13,21 @@ list-web-env-entry
 list-web-env-entry
 ------------------
 
-lists environment entries for a deployed web application or module
+Lists environment entries for a deployed web application or module
 
 [[sthref1866]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-web-env-entry [--help] 
+asadmin [asadmin-options] list-web-env-entry [--help]
 [--name=env-entry-name] application-name[/module]
 ----
 
 [[sthref1867]]
 
-Description
+=== Description
 
 The `list-web-env-entry` subcommand lists the environment entries for
 one of the following items:
@@ -49,13 +50,13 @@ For each entry, the following information is displayed:
 * The Java type of the entry
 * The value to which the entry is set
 * The value of the `--ignoreDescriptorItem` option of the
-`set-web-env-entry` subcommand that was specified when the entry was set
+  `set-web-env-entry` subcommand that was specified when the entry was set
 * The description of the entry or `null` if no description was specified
-when the entry was set
+  when the entry was set
 
 [[sthref1868]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -72,13 +73,12 @@ asadmin-options::
 
 [[sthref1869]]
 
-Operands
+=== Operands
 
 application-name::
   The name of the application. This name can be obtained from the
   Administration Console or by using the
-  link:list-applications.html#list-applications-1[`list-applications`(1)]
-  subcommand. +
+  link:list-applications.html#list-applications-1[`list-applications`(1)] subcommand. +
   The application must already be deployed. Otherwise, an error occurs.
 module::
   The relative path to the module within the application's enterprise
@@ -86,16 +86,17 @@ module::
   `module` element of the application's `application.xml` file. +
   module is required only if the environment entry applies to a web
   module of a Java EE application. If specified, module must follow
-  application-name, separated by a slash (/). +
+  application-name, separated by a slash (`/`). +
   For example, the `application.xml` file for the `myApp` application
-  might specify the following web module: +
-[source,oac_no_warn]
+  might specify the following web module:
++
+[source,xml]
 ----
 <module>
     <web>
         <web-uri>myWebModule.war</web-uri>
     </web>
-</module> 
+</module>
 ----
 ::
   The module would be specified as the operand of this command as
@@ -103,11 +104,11 @@ module::
 
 [[sthref1870]]
 
-Examples
+=== Examples
 
 [[GSRFM719]][[sthref1871]]
 
-Example 1   Listing Environment Entries for a Web Application
+==== Example 1   Listing Environment Entries for a Web Application
 
 This example lists all environment entries that have been set for the
 web application `hello` by using the `set-web-env-entry` subcommand.
@@ -115,7 +116,7 @@ Because no description was specified when the `Hello Port` environment
 entry was set, `null` is displayed instead of a description for this
 entry.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-web-env-entry hello
 Hello User (java.lang.String) = techscribe ignoreDescriptorItem=false
@@ -127,7 +128,7 @@ Command list-web-env-entry executed successfully.
 
 [[sthref1872]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -136,7 +137,7 @@ Exit Status
 
 [[sthref1873]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

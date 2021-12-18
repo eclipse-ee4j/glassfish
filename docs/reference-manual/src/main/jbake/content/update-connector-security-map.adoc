@@ -4,6 +4,7 @@ title=update-connector-security-map
 next=update-connector-work-security-map.html
 prev=unset-web-env-entry.html
 ~~~~~~
+
 update-connector-security-map
 =============================
 
@@ -12,17 +13,17 @@ update-connector-security-map
 update-connector-security-map
 -----------------------------
 
-modifies a security map for the specified connector connection pool
+Modifies a security map for the specified connector connection pool
 
 [[sthref2258]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] update-connector-security-map [--help]
 --poolname connector_connection_pool_name
-[--addprincipals principal_name1[,principal_name2]*] 
+[--addprincipals principal_name1[,principal_name2]*]
 [--addusergroups user_group1[,user_group2]*]
 [--removeprincipals principal_name1[,principal_name2]*]
 [--removeusergroups user_group1[,user_group2]*]
@@ -32,7 +33,7 @@ mapname
 
 [[sthref2259]]
 
-Description
+=== Description
 
 The `update-connector-security-map` subcommand modifies a security map
 for the specified connector connection pool.
@@ -44,7 +45,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2260]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -73,32 +74,31 @@ asadmin-options::
 
 [[sthref2261]]
 
-Operands
+=== Operands
 
 mapname::
   The name of the security map to be updated.
 
 [[sthref2262]]
 
-Examples
+=== Examples
 
 [[GSRFM785]][[sthref2263]]
 
-Example 1   Updating a Connector Security Map
+==== Example 1   Updating a Connector Security Map
 
-This example adds principals to the existing security map named
-`securityMap1`.
+This example adds principals to the existing security map named `securityMap1`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> update-connector-security-map --poolname connector-pool1 
+asadmin> update-connector-security-map --poolname connector-pool1
 --addprincipals principal1,principal2 securityMap1
 Command update-connector-security-map executed successfully
 ----
 
 [[sthref2264]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -107,7 +107,7 @@ Exit Status
 
 [[sthref2265]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

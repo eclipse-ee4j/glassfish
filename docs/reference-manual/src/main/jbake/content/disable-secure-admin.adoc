@@ -4,6 +4,7 @@ title=disable-secure-admin
 next=disable-secure-admin-internal-user.html
 prev=disable-monitoring.html
 ~~~~~~
+
 disable-secure-admin
 ====================
 
@@ -12,39 +13,35 @@ disable-secure-admin
 disable-secure-admin
 --------------------
 
-disables secure admin if it is already enabled.
+Disables secure admin if it is already enabled.
 
 [[sthref1072]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] disable-secure-admin [--help]
 ----
 
 [[sthref1073]]
 
-Description
+=== Description
 
 The `disable-secure-admin` subcommand disables secure admin if it is
 already enabled.
 
-
 [NOTE]
-=======================================================================
-
+====
 You must restart any running servers in the domain after you enable or
 disable secure admin. It is simpler to enable or disable secure admin
 with only the DAS running, then restart the DAS, and then start any
 other instances.
-
-=======================================================================
-
+====
 
 [[sthref1074]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -55,15 +52,15 @@ asadmin-options::
 
 [[sthref1075]]
 
-Examples
+=== Examples
 
 [[GSRFM596]][[sthref1076]]
 
-Example 1   Disabling `secure admin` for a domain
+==== Example 1   Disabling `secure admin` for a domain
 
 The following example shows how to disable `secure admin` for a domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-secure-admin
 server-config
@@ -74,7 +71,7 @@ Command disable-secure-admin executed successfully.
 
 [[sthref1077]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -83,7 +80,7 @@ Exit Status
 
 [[sthref1078]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

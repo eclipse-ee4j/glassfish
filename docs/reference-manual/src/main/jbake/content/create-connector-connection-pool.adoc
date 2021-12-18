@@ -4,6 +4,7 @@ title=create-connector-connection-pool
 next=create-connector-resource.html
 prev=create-cluster.html
 ~~~~~~
+
 create-connector-connection-pool
 ================================
 
@@ -12,29 +13,29 @@ create-connector-connection-pool
 create-connector-connection-pool
 --------------------------------
 
-adds a connection pool with the specified connection pool name
+Adds a connection pool with the specified connection pool name
 
 [[sthref158]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-connector-connection-pool [--help] 
-[--target=target] 
+asadmin [asadmin-options] create-connector-connection-pool [--help]
+[--target=target]
 --raname raname
 --connectiondefinition connectiondefinitionname
 [--steadypoolsize steadypoolsize]
-[--maxpoolsize maxpoolsize] 
+[--maxpoolsize maxpoolsize]
 [--maxwait maxwait]
-[--poolresize poolresize] 
+[--poolresize poolresize]
 [--idletimeout idletimeout]
 [--isconnectvalidatereq={false|true}]
-[--failconnection={false|true}] 
+[--failconnection={false|true}]
 [--leaktimeout=timeout]
-[--leakreclaim={false|true}] 
+[--leakreclaim={false|true}]
 [--creationretryattempts=attempts]
-[--creationretryinterval=interval] 
+[--creationretryinterval=interval]
 [--lazyconnectionenlistment={false|true}]
 [--lazyconnectionassociation={false|true}]
 [--associatewiththread={false|true}]
@@ -42,16 +43,16 @@ asadmin [asadmin-options] create-connector-connection-pool [--help]
 [--maxconnectionusagecount=count]
 [--validateatmostonceperiod=interval]
 [--transactionsupport transactionsupport]
-[--descrip[tion description] 
+[--descrip[tion description]
 [--ping {false|true}]
 [--pooling {true|false}]
-[--property (name=value)[:name=value]*] 
+[--property (name=value)[:name=value]*]
 poolname
 ----
 
 [[sthref159]]
 
-Description
+=== Description
 
 The `create-connector-connection-pool` subcommand defines a pool of
 connections to an enterprise information system (EIS). The named pool
@@ -71,7 +72,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref160]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -84,7 +85,8 @@ asadmin-options::
   the thread to reuse the connection. If a connection is not associated
   with the thread, the thread must obtain a connection from the pool
   each time that the thread requires a connection. Possible values are
-  as follows: +
+  as follows:
++
   `false`;;
     A connection is not associated with the thread (default).
   `true`;;
@@ -107,12 +109,10 @@ asadmin-options::
 `--failconnection`::
   If set to true, all connections in the pool are closed if a single
   validation check fails. This parameter is mandatory if the
-  `--isconnectvalidatereq` option is set to true. Default value is
-  false.
+  `--isconnectvalidatereq` option is set to true. Default value is false.
 `--idletimeout`::
   The maximum time that a connection can remain idle in the pool. After
-  this amount of time, the pool can close this connection. Default value
-  is 300.
+  this amount of time, the pool can close this connection. Default value is 300.
 `--isconnectvalidatereq`::
   If the value is set to true, the connections will be checked to see if
   they are usable, before they are given out to the application. Default
@@ -125,7 +125,8 @@ asadmin-options::
   logical connection only when the physical connection is used, and
   disassociated when the transaction is completed. Such association and
   dissociation enable the reuse of physical connections. Possible values
-  are as follows: +
+  are as follows:
++
   `false`;;
     A physical connection is associated with the logical connection even
     before the physical connection is used, and is not disassociated
@@ -138,7 +139,8 @@ asadmin-options::
 `--leakreclaim`::
   Specifies whether leaked connections are restored to the connection
   pool after leak connection tracing is complete. Possible values are as
-  follows: +
+  follows:
++
   `false`;;
     Leaked connections are not restored to the connection pool
     (default).
@@ -155,7 +157,8 @@ asadmin-options::
   Specifies whether a connection that is selected from the pool should
   be matched with the resource adaptor. If all connections in the pool
   are identical, matching between connections and resource adapters is
-  not required. Possible values are as follows: +
+  not required. Possible values are as follows:
++
   `true`;;
     A connection should be matched with the resource adaptor (default).
   `false`;;
@@ -189,7 +192,8 @@ asadmin-options::
   specified by `--steadypoolsize` will be ensured. Possible values are
   from 0 to `MAX_INTEGER`. Default value is 2.
 `--property`::
-  Optional attribute name/value pairs for configuring the pool. +
+  Optional attribute name/value pairs for configuring the pool.
++
   `LazyConnectionEnlistment`;;
     Deprecated. Use the equivalent option. Default value is false.
   `LazyConnectionAssociation`;;
@@ -225,33 +229,33 @@ asadmin-options::
 
 [[sthref161]]
 
-Operands
+=== Operands
 
 poolname::
   The name of the connection pool to be created.
 
 [[sthref162]]
 
-Examples
+=== Examples
 
 [[GSRFM464]][[sthref163]]
 
-Example 1   Creating a Connector Connection Pool
+==== Example 1   Creating a Connector Connection Pool
 
 This example creates a new connector connection pool named
 `jms/qConnPool`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-connection-pool --raname jmsra 
---connectiondefinition jakarta.jms.QueueConnectionFactory --steadypoolsize 20 
+asadmin> create-connector-connection-pool --raname jmsra
+--connectiondefinition jakarta.jms.QueueConnectionFactory --steadypoolsize 20
 --maxpoolsize 100 --poolresize 2 --maxwait 60000 jms/qConnPool
 Command create-connector-connection-pool executed successfully
 ----
 
 [[sthref164]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -260,7 +264,7 @@ Exit Status
 
 [[sthref165]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

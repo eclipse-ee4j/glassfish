@@ -4,6 +4,7 @@ title=configure-lb-weight
 next=configure-ldap-for-admin.html
 prev=configure-jms-cluster.html
 ~~~~~~
+
 configure-lb-weight
 ===================
 
@@ -12,13 +13,13 @@ configure-lb-weight
 configure-lb-weight
 -------------------
 
-sets load balancing weights for clustered instances
+Sets load balancing weights for clustered instances
 
 [[sthref85]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] configure-lb-weight [--help] 
 --cluster cluster_name
@@ -27,7 +28,7 @@ instance-name=weight[:instance-name=weight]
 
 [[sthref86]]
 
-Description
+=== Description
 
 The `configure-lb-weight` subcommand assigns weight to the server
 instances in a cluster. Weights can be used for HTTP, RMI/IIOP and JMS
@@ -45,17 +46,15 @@ balancing.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref87]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -68,7 +67,7 @@ asadmin-options::
 
 [[sthref88]]
 
-Operands
+=== Operands
 
 instance-name=weight::
   The name of the instance and the weight you are assigning it. The
@@ -79,16 +78,16 @@ instance-name=weight::
 
 [[sthref89]]
 
-Examples
+=== Examples
 
 [[GSRFM454]][[sthref90]]
 
-Example 1   Assigning Load Balancer Weights to Cluster Instances
+==== Example 1   Assigning Load Balancer Weights to Cluster Instances
 
 The following subcommand assigns weights of `1`, `1`, and `2` to
 instances `i1`, `i2`, and `i3` in the `cluster1` cluster.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> configure-lb-weight --cluster cluster1 i1=1:i2=1:i3=2
 Command configure-lb-weight executed successfully.
@@ -96,7 +95,7 @@ Command configure-lb-weight executed successfully.
 
 [[sthref91]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -105,7 +104,7 @@ Exit Status
 
 [[sthref92]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

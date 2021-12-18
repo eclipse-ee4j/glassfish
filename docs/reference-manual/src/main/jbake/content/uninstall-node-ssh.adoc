@@ -4,6 +4,7 @@ title=uninstall-node-ssh
 next=unset.html
 prev=uninstall-node-dcom.html
 ~~~~~~
+
 uninstall-node-ssh
 ==================
 
@@ -12,13 +13,13 @@ uninstall-node-ssh
 uninstall-node-ssh
 ------------------
 
-uninstalls \{product---name} software from specified SSH-enabled hosts
+Uninstalls \{product---name} software from specified SSH-enabled hosts
 
 [[sthref2224]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] uninstall-node-ssh [--help]
 [--installdir as-install-parent]
@@ -30,7 +31,7 @@ host-list
 
 [[sthref2225]]
 
-Description
+=== Description
 
 The `uninstall-node-ssh` subcommand uninstalls \{product---name}
 software from the hosts that are specified as the operand of the
@@ -38,21 +39,17 @@ subcommand. This subcommand requires secure shell (SSH) to be configured
 on the host where the subcommand is run and on each host where the
 \{product---name} software is being uninstalled.
 
-
 [NOTE]
-=======================================================================
-
+====
 This subcommand is equivalent to the
 link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)]
 subcommand. To uninstall \{product---name} software from hosts that use
 the Distributed Component Object Model (DCOM) remote protocol, use the
 link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)]
 subcommand.
+====
 
-=======================================================================
-
-
-By default, if any node except the predefined node `localhost-`domain
+By default, if any node except the predefined node ``localhost-``domain
 resides on any host from which \{product---name} software is being
 uninstalled, the subcommand fails. To uninstall the \{product---name}
 software from a host on which user-defined nodes reside, set the
@@ -66,8 +63,7 @@ the subcommand fails.
 If multiple hosts are specified, the configuration of the following
 items must be the same on all hosts:
 
-* Parent of the base installation directory for the \{product---name}
-software
+* Parent of the base installation directory for the \{product---name} software
 * SSH port
 * SSH user
 * SSH key file
@@ -79,7 +75,7 @@ This subcommand is supported in local mode only.
 
 [[sthref2226]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -113,15 +109,15 @@ asadmin-options::
   The user that is running this subcommand must be able to reach the
   path to the key file and read the key file. +
   The default is a key file in the user's `.ssh` directory. If multiple
-  key files are found, the subcommand uses the following order of
-  preference: +
+  key files are found, the subcommand uses the following order of preference:
   1.  `id_rsa`
   2.  `id_dsa`
   3.  `identity`
 `--force`::
   Specifies whether the subcommand uninstalls the \{product---name}
   software from a host even if a user-defined node resides on the host.
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
@@ -131,13 +127,15 @@ asadmin-options::
     removed.
   `true`;;
     The subcommand uninstalls the \{product---name} software from the
-    host even if a user-defined node resides on the host. +
-    If the `--force` option is `true`, the subcommand removes the entire
+    host even if a user-defined node resides on the host.
+
++
+If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
 [[sthref2227]]
 
-Operands
+=== Operands
 
 host-list::
   A space-separated list of the names of the hosts from which the
@@ -145,17 +143,16 @@ host-list::
 
 [[sthref2228]]
 
-Examples
+=== Examples
 
 [[GSRFM779]][[sthref2229]]
 
-Example 1   Uninstalling \{product---name} Software From the Default
-Location
+==== Example 1   Uninstalling \{product---name} Software From the Default Location
 
 This example uninstalls \{product---name} software on the hosts
 `sj03.example.com` and `sj04.example.com` from the default location.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> uninstall-node-ssh sj03 sj04
 Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
@@ -167,7 +164,7 @@ Command uninstall-node-ssh executed successfully.
 
 [[GSRFM780]][[sthref2230]]
 
-Example 2   Forcibly Uninstalling \{product---name} Software
+==== Example 2   Forcibly Uninstalling \{product---name} Software
 
 This example uninstalls \{product---name} software on the host
 `sj02.example.com`.
@@ -178,7 +175,7 @@ removed.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> uninstall-node-ssh --force --installdir /export/glassfish3 sj02.example.com
 Successfully connected to gfuser@sj02.example.com using keyfile /home/gfuser
@@ -194,7 +191,7 @@ Command uninstall-node-ssh executed successfully.
 
 [[sthref2231]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -203,7 +200,7 @@ Exit Status
 
 [[sthref2232]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

@@ -4,6 +4,7 @@ title=create-connector-work-security-map
 next=create-context-service.html
 prev=create-connector-security-map.html
 ~~~~~~
+
 create-connector-work-security-map
 ==================================
 
@@ -12,13 +13,13 @@ create-connector-work-security-map
 create-connector-work-security-map
 ----------------------------------
 
-creates a work security map for the specified resource adapter
+Creates a work security map for the specified resource adapter
 
 [[sthref183]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-connector-work-security-map [--help] 
 --raname raname
@@ -30,7 +31,7 @@ mapname
 
 [[sthref184]]
 
-Description
+=== Description
 
 The `create-connector-work-security-map` subcommand maps the caller
 identity of the work submitted by the resource adapter EIS principal or
@@ -48,7 +49,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref185]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -75,23 +76,23 @@ asadmin-options::
 
 [[sthref186]]
 
-Operands
+=== Operands
 
 mapname::
   The name of the work security map to be created.
 
 [[sthref187]]
 
-Examples
+=== Examples
 
 [[GSRFM468]][[sthref188]]
 
-Example 1   Creating a Connector Work Security Map (Principal)
+==== Example 1   Creating a Connector Work Security Map (Principal)
 
 This example creates connector work security map `workSecurityMap1` that
 maps the backend EIS principal to the \{product---name} principal.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-connector-work-security-map --raname my-resource-adapter
 --principalsmap eis-principal-1=server-principal-1,eis-principal-2
@@ -102,12 +103,12 @@ Command create-connector-work-security-map executed successfully.
 
 [[GSRFM469]][[sthref189]]
 
-Example 2   Creating a Connector Work Security Map (Group)
+==== Example 2   Creating a Connector Work Security Map (Group)
 
 This example creates connector work security map `workSecurityMap2` that
 maps the backend EIS user group to the \{product---name} user group.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-connector-work-security-map --raname my-resource-adapter
 --groupsmap eis-group-1=server-group-1,eis-group-2=server-group-2,
@@ -117,7 +118,7 @@ Command create-connector-work-security-map executed successfully.
 
 [[sthref190]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -126,7 +127,7 @@ Exit Status
 
 [[sthref191]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

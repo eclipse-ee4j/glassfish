@@ -4,6 +4,7 @@ title=list-jvm-options
 next=list-libraries.html
 prev=list-jobs.html
 ~~~~~~
+
 list-jvm-options
 ================
 
@@ -12,22 +13,22 @@ list-jvm-options
 list-jvm-options
 ----------------
 
-lists options for the Java application launcher
+Lists options for the Java application launcher
 
 [[sthref1608]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-jvm-options [--help] 
-[--target target] 
-[--profiler={false|true}] 
+asadmin [asadmin-options] list-jvm-options [--help]
+[--target target]
+[--profiler={false|true}]
 ----
 
 [[sthref1609]]
 
-Description
+=== Description
 
 The `list-jvm-options` subcommand displays a list of command-line
 options that are passed to the Java application launcher when
@@ -41,7 +42,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1610]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,8 +52,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which you are listing Java application
-  launcher options. +
-  Valid values are as follows: +
+  launcher options. Valid values are as follows:
+
   `server`;;
     Specifies the DAS (default).
   instance-name;;
@@ -61,6 +62,7 @@ asadmin-options::
     Specifies a cluster.
   configuration-name;;
     Specifies a named configuration.
+
 `--profiler`::
   Specifies whether the Java application launcher options to list are
   for the profiler. Set this option to true only if a profiler has been
@@ -69,16 +71,15 @@ asadmin-options::
 
 [[sthref1611]]
 
-Examples
+=== Examples
 
 [[GSRFM679]][[sthref1612]]
 
-Example 1   Listing the Java Application Launcher Options
+==== Example 1   Listing the Java Application Launcher Options
 
-This example lists the options that are used by the Java application
-launcher.
+This example lists the options that are used by the Java application launcher.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jvm-options
 -Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf
@@ -104,7 +105,7 @@ Command list-jvm-options executed successfully.
 
 [[sthref1613]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -113,7 +114,7 @@ Exit Status
 
 [[sthref1614]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

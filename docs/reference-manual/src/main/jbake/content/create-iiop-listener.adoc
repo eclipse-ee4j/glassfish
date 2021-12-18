@@ -4,6 +4,7 @@ title=create-iiop-listener
 next=create-instance.html
 prev=create-http-redirect.html
 ~~~~~~
+
 create-iiop-listener
 ====================
 
@@ -12,13 +13,13 @@ create-iiop-listener
 create-iiop-listener
 --------------------
 
-adds an IIOP listener
+Adds an IIOP listener
 
 [[sthref284]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-iiop-listener [--help] 
 --listeneraddress address
@@ -29,14 +30,14 @@ asadmin [asadmin-options] create-iiop-listener [--help]
 
 [[sthref285]]
 
-Description
+=== Description
 
 The `create-iiop-listener` subcommand creates an IIOP listener. This
 subcommand is supported in remote mode only.
 
 [[sthref286]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -60,7 +61,8 @@ asadmin-options::
   Optional attribute name/value pairs for configuring the IIOP listener.
 `--target`::
   Specifies the target for which you are creating the IIOP listener.
-  Valid values are +
+  Valid values are
++
   `server`;;
     Creates the listener for the default server instance `server` and is
     the default value.
@@ -73,23 +75,23 @@ asadmin-options::
 
 [[sthref287]]
 
-Operands
+=== Operands
 
 listener_id::
   A unique identifier for the IIOP listener to be created.
 
 [[sthref288]]
 
-Examples
+=== Examples
 
 [[GSRFM485]][[sthref289]]
 
-Example 1   Creating an IIOP Listener
+==== Example 1   Creating an IIOP Listener
 
 The following command creates an IIOP listener named
 `sample_iiop_listener`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-iiop-listener --listeneraddress 192.168.1.100 
 --iiopport 1400 sample_iiop_listener
@@ -98,12 +100,12 @@ Command create-iiop-listener executed successfully.
 
 [[GSRFM486]][[sthref290]]
 
-Example 2   Creating an IIOP Listener with a Target Cluster
+==== Example 2   Creating an IIOP Listener with a Target Cluster
 
 The following command creates an IIOP listener named `iiop_listener_2`
 for the cluster `mycluster`. It uses the target option.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-iiop-listener --listeneraddress 0.0.0.0 --iiopport 1401 
 --target mycluster iiop_listener_2
@@ -112,7 +114,7 @@ Command create-iiop-listener executed successfully.
 
 [[sthref291]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -121,7 +123,7 @@ Exit Status
 
 [[sthref292]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

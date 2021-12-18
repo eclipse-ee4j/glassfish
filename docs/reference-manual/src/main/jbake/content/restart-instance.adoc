@@ -4,6 +4,7 @@ title=restart-instance
 next=restart-local-instance.html
 prev=restart-domain.html
 ~~~~~~
+
 restart-instance
 ================
 
@@ -12,37 +13,33 @@ restart-instance
 restart-instance
 ----------------
 
-restarts a running \{product---name} instance
+Restarts a running \{product---name} instance
 
 [[sthref1986]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] restart-instance [--help] 
+asadmin [asadmin-options] restart-instance [--help]
 [--debug={false|true}] instance-name
 ----
 
 [[sthref1987]]
 
-Description
+=== Description
 
 The `restart-instance` subcommand restarts a running \{product---name}
 instance. This subcommand requires secure shell (SSH) to be configured
 on the machine where the domain administration server (DAS) is running
 and on the machine where the instance resides.
 
-
 [NOTE]
-=======================================================================
-
+====
 SSH is not required if the instance resides on a node of type `CONFIG`
 that represents the local host. A node of type `CONFIG` is not enabled
 for communication over SSH.
-
-=======================================================================
-
+====
 
 You may run this subcommand from any machine that can contact the DAS.
 
@@ -55,11 +52,11 @@ subcommand.
 When this subcommand restarts an instance, the DAS synchronizes the
 instance with changes since the last synchronization as follows:
 
-* For the `config` directory, the DAS synchronizes the instance with all
-changes.
+* For the `config` directory, the DAS synchronizes the instance with all changes.
 * For the `applications` directory and `docroot` directory, only a
 change to a top-level subdirectory causes the DAS to synchronize all
-files under that subdirectory. +
+files under that subdirectory.
++
 If a file below a top level subdirectory is changed without a change to
 a file in the top level subdirectory, full synchronization is required.
 In normal operation, files below the top level subdirectories of these
@@ -70,14 +67,14 @@ with the change.
 If different synchronization behavior is required, the instance must be
 stopped and restarted by using following sequence of subcommands:
 
-1.  link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
-2.  link:start-instance.html#start-instance-1[`start-instance`(1)]
+1. link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
+2. link:start-instance.html#start-instance-1[`start-instance`(1)]
 
 This subcommand is supported in remote mode only.
 
 [[sthref1988]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -90,19 +87,21 @@ asadmin-options::
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture
   (JPDA)](http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
-  debugging enabled. +
-  Possible values are as follows: +
+  debugging enabled. Possible values are as follows:
+
   `true`;;
     The instance is restarted with JPDA debugging enabled and the port
     number for JPDA debugging is displayed.
   `false`;;
-    The instance is restarted with JPDA debugging disabled. +
-  The default is the current setting of this option for the instance
+    The instance is restarted with JPDA debugging disabled.
+
++
+The default is the current setting of this option for the instance
   that is being restarted.
 
 [[sthref1989]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the \{product---name} instance to restart. If the instance
@@ -111,25 +110,25 @@ instance-name::
 
 [[sthref1990]]
 
-Examples
+=== Examples
 
 [[GSRFM739]][[sthref1991]]
 
-Example 1   Restarting a \{product---name} Instance
+==== Example 1   Restarting a \{product---name} Instance
 
 This example restarts the \{product---name} instance `pmdsa1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> restart-instance pmdsa1
-Instance pmdsa1 was restarted. 
+Instance pmdsa1 was restarted.
 
 Command restart-instance executed successfully.
 ----
 
 [[sthref1992]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -138,7 +137,7 @@ Exit Status
 
 [[sthref1993]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

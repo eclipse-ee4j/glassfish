@@ -4,6 +4,7 @@ title=enable-secure-admin-principal
 next=export.html
 prev=enable-secure-admin-internal-user.html
 ~~~~~~
+
 enable-secure-admin-principal
 =============================
 
@@ -17,9 +18,9 @@ admin requests from clients identified by the specified SSL certificate.
 
 [[sthref1143]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] enable-secure-admin-principal [--help] 
 --alias aliasname | DN 
@@ -27,7 +28,7 @@ asadmin [asadmin-options] enable-secure-admin-principal [--help]
 
 [[sthref1144]]
 
-Description
+=== Description
 
 The `enable-secure-admin-principal` subcommand instructs
 \{product---name} to accept admin requests when accompanied by an SSL
@@ -54,7 +55,7 @@ with a certificate chain to a trusted authority.)
 
 [[sthref1145]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -72,7 +73,7 @@ asadmin-options::
 
 [[sthref1146]]
 
-Operands
+=== Operands
 
 DN::
   The distinguished name of the certificate, specified as a
@@ -81,16 +82,16 @@ DN::
 
 [[sthref1147]]
 
-Examples
+=== Examples
 
 [[GSRFM608]][[sthref1148]]
 
-Example 1   Trusting a DN for secure administration
+==== Example 1   Trusting a DN for secure administration
 
 The following example shows how to specify a DN for authorizing access
 in secure administration.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-secure-admin-principal
 "CN=system.amer.oracle.com,OU=GlassFish,
@@ -101,7 +102,7 @@ Command enable-secure-admin-principal executed successfully.
 
 [[sthref1149]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -110,7 +111,7 @@ Exit Status
 
 [[sthref1150]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

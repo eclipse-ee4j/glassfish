@@ -4,6 +4,7 @@ title=setup-ssh
 next=set-web-context-param.html
 prev=setup-local-dcom.html
 ~~~~~~
+
 setup-ssh
 =========
 
@@ -12,13 +13,13 @@ setup-ssh
 setup-ssh
 ---------
 
-sets up an SSH key on specified hosts
+Sets up an SSH key on specified hosts
 
 [[sthref2074]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] setup-ssh [--help]
 [--sshport ssh-port] [--sshuser ssh-user]
@@ -29,7 +30,7 @@ host-list
 
 [[sthref2075]]
 
-Description
+=== Description
 
 The `setup-ssh` subcommand sets up a secure shell (SSH) key on the hosts
 that are specified as the operand of the subcommand. This key enables
@@ -92,14 +93,15 @@ behavior of the subcommand is to prompt the user to generate an SSH key
 pair. The SSH key pair is generated without an encryption passphrase. If
 a passphrase-protected key pair is required, the key pair must be
 generated manually by using the SSH
-commandhttp://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)].
+command http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)].
 * Distributing the public key. The subcommand appends the content of the
-public key file to the user-home`/.ssh/authorized_keys` file on each
+public key file to the user-home``/.ssh/authorized_keys`` file on each
 remote host. By default, the subcommand locates the public key file in
-the user-home`/.ssh` directory on the host where the subcommand is run.
-If the user-home`/.ssh/authorized_keys` file does not exist on a host,
+the user-home``/.ssh`` directory on the host where the subcommand is run.
+If the user-home``/.ssh/authorized_keys`` file does not exist on a host,
 the subcommand creates the file. user-home is the user's home directory
-on a host. +
+on a host.
++
 To distribute the public key, authentication of the user's SSH login is
 required. If the private key is protected by a passphrase, the
 passphrase is also required. By default, the subcommand prompts the user
@@ -122,7 +124,7 @@ does not distribute the key to the host.
 
 [[sthref2076]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -146,10 +148,10 @@ asadmin-options::
   path to the key file and read the key file. +
   The default is a key file in the user's `.ssh` directory on the host
   where the subcommand is run. If multiple key files are found, the
-  subcommand uses the following order of preference: +
-  1.  `id_rsa`
-  2.  `id_dsa`
-  3.  `identity`
+  subcommand uses the following order of preference:
+  1. `id_rsa`
+  2. `id_dsa`
+  3. `identity`
 `--sshpublickeyfile`::
   The absolute path to the SSH public key file for user that the
   `--sshuser` option specifies. The content of the public key file is
@@ -160,33 +162,35 @@ asadmin-options::
   path to the key file and read the key file. +
   The default is a key file in the user's `.ssh` directory on the host
   where the subcommand is run. If multiple key files are found, the
-  subcommand uses the following order of preference: +
+  subcommand uses the following order of preference:
   1.  `id_rsa.pub`
   2.  `id_dsa.pub`
   3.  `identity.pub`
 `--generatekey`::
   Specifies whether the subcommand generates the SSH key files without
-  prompting the user. +
-  Possible values are as follows: +
+  prompting the user.
+  Possible values are as follows:
+
   `true`;;
-    The subcommand generates the SSH key files without prompting the
-    user.
+    The subcommand generates the SSH key files without prompting the user.
   `false`;;
-    The behavior of the subcommand depends on whether the SSH key files
-    exist: +
-    * If the SSH key files exist, the subcommand does not generate the
-    files.
+    The behavior of the subcommand depends on whether the SSH key files exist:
+
++
+    * If the SSH key files exist, the subcommand does not generate the files.
     * If the SSH key files do not exist, the behavior of the subcommand
-    depends on the value of the `--interactive` option of the `asadmin`
-    utility:
+    depends on the value of the `--interactive` option of the `asadmin` utility:
++
+--
     ** If the `--interactive` option is `true`, the subcommand prompts
     the user to create the files.
-    ** If the `--interactive` option is `false`, the subcommand fails. +
+    ** If the `--interactive` option is `false`, the subcommand fails.
     This value is the default.
+--
 
 [[sthref2077]]
 
-Operands
+=== Operands
 
 host-list::
   A space-separated list of the names of the hosts where an SSH key is
@@ -194,20 +198,20 @@ host-list::
 
 [[sthref2078]]
 
-Examples
+=== Examples
 
 [[GSRFM751]][[sthref2079]]
 
-Example 1   Setting Up an SSH Key
+==== Example 1   Setting Up an SSH Key
 
 This example sets up an SSH key for the user `gfuser` on the hosts
 `sj03` and `sj04`. The key file is not generated but is copied from the
 user's `.ssh` directory on the host where the subcommand is running.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> setup-ssh sj03 sj04
-Enter SSH password for gfuser@sj03> 
+Enter SSH password for gfuser@sj03>
 Copied keyfile /home/gfuser/.ssh/id_rsa.pub to gfuser@sj03
 Successfully connected to gfuser@sj03 using keyfile /home/gfuser/.ssh/id_rsa
 Copied keyfile /home/gfuser/.ssh/id_rsa.pub to gfuser@sj04
@@ -217,15 +221,15 @@ Command setup-ssh executed successfully.
 
 [[GSRFM752]][[sthref2080]]
 
-Example 2   Generating and Setting Up an SSH Key
+==== Example 2   Generating and Setting Up an SSH Key
 
 This example generates and sets up an SSH key for the user `gfuser` on
 the hosts `sua01` and `sua02`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> setup-ssh --generatekey=true sua01 sua02
-Enter SSH password for gfuser@sua01> 
+Enter SSH password for gfuser@sua01>
 Created directory /home/gfuser/.ssh
 /usr/bin/ssh-keygen successfully generated the identification /home/gfuser/.ssh/id_rsa
 Copied keyfile /home/gfuser/.ssh/id_rsa.pub to gfuser@sua01
@@ -237,7 +241,7 @@ Command setup-ssh executed successfully.
 
 [[sthref2081]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -246,7 +250,7 @@ Exit Status
 
 [[sthref2082]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

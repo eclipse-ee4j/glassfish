@@ -4,6 +4,7 @@ title=jms-ping
 next=list.html
 prev=install-node-ssh.html
 ~~~~~~
+
 jms-ping
 ========
 
@@ -12,13 +13,13 @@ jms-ping
 jms-ping
 --------
 
-checks if the JMS service is up and running
+Checks if the JMS service is up and running
 
 [[sthref1275]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] jms-ping [--help]
 [-- target target]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] jms-ping [--help]
 
 [[sthref1276]]
 
-Description
+=== Description
 
 The `jms-ping` subcommand checks if the Java Message Service (JMS)
 service (also known as the JMS provider) is up and running. When you
@@ -41,7 +42,7 @@ subcommands require a running domain administration server (DAS).
 
 [[sthref1277]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,7 +52,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target for which the operation is to be performed. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Pings the JMS service for the default server instance. This is the
     default value
@@ -65,16 +67,16 @@ asadmin-options::
 
 [[sthref1278]]
 
-Examples
+=== Examples
 
 [[GSRFM630]][[sthref1279]]
 
-Example 1   Verifying that the JMS service is running
+==== Example 1   Verifying that the JMS service is running
 
 The following subcommand checks to see if the JMS service is running on
 the default server.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> jms-ping
 JMS-ping command executed successfully
@@ -84,7 +86,7 @@ Command jms-ping executed successfully.
 
 [[sthref1280]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -93,7 +95,7 @@ Exit Status
 
 [[sthref1281]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

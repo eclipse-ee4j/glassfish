@@ -4,6 +4,7 @@ title=delete-jms-host
 next=delete-jms-resource.html
 prev=delete-jmsdest.html
 ~~~~~~
+
 delete-jms-host
 ===============
 
@@ -12,13 +13,13 @@ delete-jms-host
 delete-jms-host
 ---------------
 
-removes a JMS host
+Removes a JMS host
 
 [[sthref801]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-jms-host [--help]
 [--target target]
@@ -27,7 +28,7 @@ jms_host_name
 
 [[sthref802]]
 
-Description
+=== Description
 
 The `delete-jms-host` subcommand removes the specified Java Message
 Service (JMS) host.
@@ -35,12 +36,11 @@ Service (JMS) host.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-Deleting the default JMS host, named `default_JMS_host`, is not
-recommended.
+Deleting the default JMS host, named `default_JMS_host`, is not recommended.
 
 [[sthref803]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -50,7 +50,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the JMS host only from the specified target. Valid values are
-  as follows: +
+  as follows:
+
   `server`;;
     Deletes the JMS host from the default server instance. This is the
     default value.
@@ -64,22 +65,22 @@ asadmin-options::
 
 [[sthref804]]
 
-Operands
+=== Operands
 
 jms_host_name::
   The name of the host to be deleted.
 
 [[sthref805]]
 
-Examples
+=== Examples
 
 [[GSRFM559]][[sthref806]]
 
-Example 1   Deleting a JMS host
+==== Example 1   Deleting a JMS host
 
 The following subcommand deletes the JMS host named `MyNewHost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jms-host MyNewHost
 Command delete-jms-host executed successfully.
@@ -87,7 +88,7 @@ Command delete-jms-host executed successfully.
 
 [[sthref807]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -96,7 +97,7 @@ Exit Status
 
 [[sthref808]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

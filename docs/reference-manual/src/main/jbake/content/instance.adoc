@@ -4,6 +4,7 @@ title=instance
 next=logging.html
 prev=dotted-names.html
 ~~~~~~
+
 instance
 ========
 
@@ -12,13 +13,13 @@ instance
 instance
 --------
 
-an instance in \{product---name} has its own Java EE configuration, Java
+An instance in \{product---name} has its own Java EE configuration, Java
 EE resources, application deployment areas, and server configuration
 settings
 
 [[sthref2403]]
 
-Description
+=== Description
 
 \{product---name} creates one server instance, called `server` at the
 time of installation. You can delete the server instance and create a

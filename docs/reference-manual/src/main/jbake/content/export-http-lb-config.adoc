@@ -4,6 +4,7 @@ title=export-http-lb-config
 next=export-sync-bundle.html
 prev=export.html
 ~~~~~~
+
 export-http-lb-config
 =====================
 
@@ -12,22 +13,22 @@ export-http-lb-config
 export-http-lb-config
 ---------------------
 
-exports the load balancer configuration or load balancer to a file
+Exports the load balancer configuration or load balancer to a file
 
 [[sthref1161]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] export-http-lb-config [--help] 
---config config_name | --lbname load_balancer_name 
+asadmin [asadmin-options] export-http-lb-config [--help]
+--config config_name | --lbname load_balancer_name
 [--target target] [--retrievefile=false] [file_name]
 ----
 
 [[sthref1162]]
 
-Description
+=== Description
 
 The `export-http-lb-config` subcommand exports a load balancer
 configuration or load balancer into a file that the load balancer
@@ -46,17 +47,15 @@ subcommand, you do not need to use `export-http-lb-config`.
 
 
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
+====
 
 
 [[sthref1163]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -82,10 +81,11 @@ asadmin-options::
 
 [[sthref1164]]
 
-Operands
+=== Operands
 
 file_name::
-  Specifies the file name and location of the exported configuration. +
+  Specifies the file name and location of the exported configuration.
+
   * If you specify a directory (relative or absolute) but not a file
   name, the file named `loadbalancer.xml.`load_balancer_config_name is
   created in the specified directory. On Microsoft Windows systems the
@@ -99,23 +99,24 @@ file_name::
   domain-dir`/generated` directory.
 target::
   Specifies the target to which the configuration will be exported. +
-  Valid values are: +
+  Valid values are:
+
   * cluster_name- Specifies a cluster and its server instances.
   * stand-alone_instance_name- Specifies a specific server instance.
 
 [[sthref1165]]
 
-Examples
+=== Examples
 
 [[GSRFM612]][[sthref1166]]
 
-Example 1   Exporting a Load Balancer Configuration on UNIX
+==== Example 1   Exporting a Load Balancer Configuration on UNIX
 
 The following example exports a load balancing configuration named
 `mycluster-http-lb-config` to a file named `loadbalancer.xml` in the
 `/Sun/AppServer` directory .
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> export-http-lb-config --config mycluster-http-lb-config /Sun/AppServer/loadbalancer.xml
 Command export-http-lb-config executed successfully.
@@ -123,13 +124,13 @@ Command export-http-lb-config executed successfully.
 
 [[GSRFM613]][[sthref1167]]
 
-Example 2   Exporting a Load Balancer Configuration on Windows
+==== Example 2   Exporting a Load Balancer Configuration on Windows
 
 The following example exports a load balancing configuration named
 `mycluster-http-lb-config` to a file named `loadbalancer.xml` in the
 `C:\Sun\AppServer` directory on a Microsoft Windows system.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> export-http-lb-config --config mycluster-http-lb-config "C:\Sun\AppServer\loadbalancer.xml"
 Command export-http-lb-config executed successfully.
@@ -137,7 +138,7 @@ Command export-http-lb-config executed successfully.
 
 [[sthref1168]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -146,7 +147,7 @@ Exit Status
 
 [[sthref1169]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

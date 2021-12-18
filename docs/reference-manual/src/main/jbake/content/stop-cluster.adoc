@@ -4,6 +4,7 @@ title=stop-cluster
 next=stop-database.html
 prev=start-local-instance.html
 ~~~~~~
+
 stop-cluster
 ============
 
@@ -12,24 +13,24 @@ stop-cluster
 stop-cluster
 ------------
 
-stops a \{product---name} cluster
+Stops a \{product---name} cluster
 
 [[sthref2150]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] stop-cluster [--help]
-[--verbose={false|true}] 
-[--kill={false|true}] 
-[--autohadboverride={true|false}] 
+[--verbose={false|true}]
+[--kill={false|true}]
+[--autohadboverride={true|false}]
 cluster-name
 ----
 
 [[sthref2151]]
 
-Description
+=== Description
 
 The `stop-cluster` subcommand stops a \{product---name} cluster by
 stopping all running \{product---name} instances in the cluster.
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref2152]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -48,26 +49,29 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--verbose`::
   Specifies whether additional progress messages about the status of
-  instances in the cluster are displayed while the cluster is being
-  stopped. +
-  Possible values are as follows: +
+  instances in the cluster are displayed while the cluster is being stopped. +
+  Possible values are as follows:
+
   `true`;;
     Additional progress messages about the status of instances in the
     cluster are displayed.
   `false`;;
     No messages about the status of instances in the cluster are
     displayed.
+
 `--kill`::
   Specifies whether each instance in the cluster is killed by using
   functionality of the operating system to terminate the instance
   process. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `false`;;
     No instances are killed. The subcommand uses functionality of the
     Java platform to terminate each instance process (default).
   `true`;;
     Each instance is killed. The subcommand uses functionality of the
     operating system to terminate each instance process.
+
 `--autohadboverride`::
   Do not specify this option. This option is retained for compatibility
   with earlier releases. If you specify this option, a syntax error does
@@ -76,24 +80,24 @@ asadmin-options::
 
 [[sthref2153]]
 
-Operands
+=== Operands
 
 cluster-name::
   The name of the cluster to stop.
 
 [[sthref2154]]
 
-Examples
+=== Examples
 
 [[GSRFM764]][[sthref2155]]
 
-Example 1   Stopping a Cluster
+==== Example 1   Stopping a Cluster
 
 This example stops the cluster `pmdcluster`. Additional progress
 messages about the status of instances in the cluster are displayed
 while the cluster is being stopped.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> stop-cluster --verbose pmdcluster
 stop-instance pmd-i-sj01
@@ -106,7 +110,7 @@ Command stop-cluster executed successfully.
 
 [[sthref2156]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -115,7 +119,7 @@ Exit Status
 
 [[sthref2157]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

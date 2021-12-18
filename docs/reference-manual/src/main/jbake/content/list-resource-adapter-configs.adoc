@@ -4,6 +4,7 @@ title=list-resource-adapter-configs
 next=list-resource-refs.html
 prev=list-protocols.html
 ~~~~~~
+
 list-resource-adapter-configs
 =============================
 
@@ -12,13 +13,13 @@ list-resource-adapter-configs
 list-resource-adapter-configs
 -----------------------------
 
-lists the names of the current resource adapter configurations
+Lists the names of the current resource adapter configurations
 
 [[sthref1772]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] list-resource-adapter-configs [--help] 
 [--raname raname] [--verbose {false|true}]
@@ -26,7 +27,7 @@ asadmin [asadmin-options] list-resource-adapter-configs [--help]
 
 [[sthref1773]]
 
-Description
+=== Description
 
 This command lists the configuration information in the `domain.xml` for
 the connector module. It lists an entry called `resource-adapter-config`
@@ -38,7 +39,7 @@ This command is supported in remote mode only.
 
 [[sthref1774]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -53,15 +54,15 @@ asadmin-options::
 
 [[sthref1775]]
 
-Examples
+=== Examples
 
 [[GSRFM706]][[sthref1776]]
 
-Example 1   Listing the Resource Adapter Configurations
+==== Example 1   Listing the Resource Adapter Configurations
 
 This example lists the current resource adapter configurations.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-resource-adapter-configs
 ra1
@@ -71,7 +72,7 @@ Command list-resource-adapter-configs executed successfully
 
 [[sthref1777]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -80,7 +81,7 @@ Exit Status
 
 [[sthref1778]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

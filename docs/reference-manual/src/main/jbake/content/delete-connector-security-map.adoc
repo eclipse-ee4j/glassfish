@@ -4,6 +4,7 @@ title=delete-connector-security-map
 next=delete-connector-work-security-map.html
 prev=delete-connector-resource.html
 ~~~~~~
+
 delete-connector-security-map
 =============================
 
@@ -12,13 +13,13 @@ delete-connector-security-map
 delete-connector-security-map
 -----------------------------
 
-deletes a security map for the specified connector connection pool
+Deletes a security map for the specified connector connection pool
 
 [[sthref642]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-connector-security-map [--help]
 --poolname connector_connection_pool_name [--target target] mapname
@@ -26,7 +27,7 @@ asadmin [asadmin-options] delete-connector-security-map [--help]
 
 [[sthref643]]
 
-Description
+=== Description
 
 The `delete-connector-security-map` subcommand deletes a security map
 for the specified connector connection pool.
@@ -38,7 +39,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref644]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,23 +58,23 @@ asadmin-options::
 
 [[sthref645]]
 
-Operands
+=== Operands
 
 mapname::
   Name of the security map to be deleted.
 
 [[sthref646]]
 
-Examples
+=== Examples
 
 [[GSRFM540]][[sthref647]]
 
-Example 1   Deleting a Connector Security Map
+==== Example 1   Deleting a Connector Security Map
 
 This example deletes `securityMap1` for the existing connection pool
 named `connector-pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-connector-security-map
 --poolname connector-pool1 securityMap1
@@ -82,7 +83,7 @@ Command delete-connector-security-map executed successfully
 
 [[sthref648]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -91,7 +92,7 @@ Exit Status
 
 [[sthref649]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

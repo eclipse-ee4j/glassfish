@@ -4,6 +4,7 @@ title=redeploy
 next=remove-library.html
 prev=recover-transactions.html
 ~~~~~~
+
 redeploy
 ========
 
@@ -12,45 +13,45 @@ redeploy
 redeploy
 --------
 
-redeploys the specified component
+Redeploys the specified component
 
 [[sthref1961]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] redeploy [--help] 
---name component_name 
+asadmin [asadmin-options] redeploy [--help]
+--name component_name
 [--upload={true|false}]
-[--retrieve local_dirpath] 
+[--retrieve local_dirpath]
 [--dbvendorname dbvendorname]
 [--createtables={true|false}|--dropandcreatetables={true|false}]
-[--uniquetablenames={true|false}] 
+[--uniquetablenames={true|false}]
 [--deploymentplan deployment_plan]
 [--altdd alternate_deploymentdescriptor]
 [--runtimealtdd runtime_alternate_deploymentdescriptor]
 [--deploymentorder deployment_order]
-[--enabled={true|false}] 
-[--generatermistubs={false|true}] 
-[--contextroot context_root] 
-[--precompilejsp={true|false}] 
+[--enabled={true|false}]
+[--generatermistubs={false|true}]
+[--contextroot context_root]
+[--precompilejsp={true|false}]
 [--verify={false|true}]
-[--virtualservers virtual_servers] 
-[--availabilityenabled={false|true}] 
+[--virtualservers virtual_servers]
+[--availabilityenabled={false|true}]
 [--asyncreplication={true|false}]
 [--lbenabled={true|false}]
 [--keepstate={false|true}]
-[--libraries jar_file[,jar_file]*] 
-[--target target] 
-[--type pkg-type] 
+[--libraries jar_file[,jar_file]*]
+[--target target]
+[--type pkg-type]
 [--properties(name=value)[:name=value]*]
 [file_archive|filepath]
 ----
 
 [[sthref1962]]
 
-Description
+=== Description
 
 The `redeploy` subcommand redeploys an enterprise application, web
 application, module based on the Enterprise JavaBeans (EJB)
@@ -64,7 +65,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref1963]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -97,25 +98,32 @@ asadmin-options::
   GlassFish Server Open Source Edition Application Deployment Guide.
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
-  situations, this option can be omitted. +
-  Valid values are as follows: +
+  situations, this option can be omitted.
+  Valid values are as follows:
++
+--
   `false`;;
     The subcommand does not upload the file and attempts to access the
     file through the specified file name. If the DAS cannot access the
     file, the subcommand fails. +
     For example, the DAS might be running as a different user than the
     administration user and does not have read access to the file. In
-    this situation, the subcommand fails if the `--upload` option is
-    `false`.
+    this situation, the subcommand fails if the `--upload` option is `false`.
   `true`;;
     The subcommand uploads the file to the DAS over the network
-    connection. +
-  The default value depends on whether the DAS is on the host where the
-  subcommand is run or is on a remote host. +
+    connection.
+--
++
+The default value depends on whether the DAS is on the host where the
+  subcommand is run or is on a remote host.
++
+--
   * If the DAS is on the host where the subcommand is run, the default
-  is `false`.
-  * If the DAS is on a remote host, the default is `true`. +
-  If a directory filepath is specified, this option is ignored.
+    is `false`.
+  * If the DAS is on a remote host, the default is `true`.
++
+--
+If a directory filepath is specified, this option is ignored.
 `--retrieve`::
   Retrieves the client stub JAR file from the server machine to the
   local directory.
@@ -166,7 +174,7 @@ asadmin-options::
   `--altdd` option overrides `application.xml`. For a standalone module,
   the `--altdd` option overrides the top-level module descriptor such as
   `web.xml`.
--`-runtimealtdd`::
+`--runtimealtdd`::
   Deploys the application using a \{product---name} runtime deployment
   descriptor that resides outside of the application archive. Specify an
   absolute path or a relative path to the alternate deployment
@@ -176,7 +184,7 @@ asadmin-options::
   `glassfish-application.xml`. For a standalone module, the
   `--runtimealtdd` option overrides the top-level module descriptor such
   as `glassfish-web.xml`. Applies to \{product---name} deployment
-  descriptors only (`glassfish-*.xml`); the name of the alternate
+  descriptors only (`glassfish-\*.xml`); the name of the alternate
   deployment descriptor file must begin with `glassfish-`. Does not
   apply to `sun-*.xml` deployment descriptors, which are deprecated.
 `--deploymentorder`::
@@ -256,7 +264,8 @@ asadmin-options::
   relative to domain-dir`/lib/applibs`. The libraries are made available
   to the application in the order specified.
 `--target`::
-  Specifies the target to which you are deploying. Valid values are: +
+  Specifies the target to which you are deploying. Valid values are:
+
   `server`;;
     Deploys the component to the default server instance `server` and is
     the default value.
@@ -276,9 +285,11 @@ asadmin-options::
     Deploys the component to every server instance in the cluster.
   instance_name;;
     Deploys the component to a particular stand-alone server instance.
+
 `--type`::
   The packaging archive type of the component that is being deployed.
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `car`;;
     The component is packaged as a CAR file.
   `ear`;;
@@ -291,6 +302,7 @@ asadmin-options::
     The component is packaged as a RAR file.
   `war`;;
     The component is packaged as a WAR file.
+
 `--properties` or `--property`::
   Optional keyword-value pairs that specify additional properties for
   the deployment. The available properties are determined by the
@@ -298,7 +310,8 @@ asadmin-options::
   The `--properties` option and the `--property` option are equivalent.
   You can use either option regardless of the number of properties that
   you specify. +
-  You can specify the following properties for a deployment: +
+  You can specify the following properties for a deployment:
+
   `jar-signing-alias`;;
     Specifies the alias for the security certificate with which the
     application client container JAR file is signed. Java Web Start will
@@ -335,7 +348,9 @@ asadmin-options::
     This property can by used to specify whether active sessions of the
     application that is being redeployed are preserved and then restored
     when the redeployment is complete. Applies to HTTP sessions in a web
-    container. Default is `false`.::
+    container. Default is `false`.:
++
+--
     `false`::
       Active sessions of the application are not preserved and restored
       (default).
@@ -349,10 +364,13 @@ asadmin-options::
       sessions and saves them in memory. To restore the sessions, the
       class loader of the newly redeployed application deserializes any
       sessions that were previously saved.
+--
   `preserveAppScopedResources`;;
     If set to `true`, preserves any application-scoped resources and
-    restores them during redeployment. Default is `false`. +
-  Other available properties are determined by the implementation of the
+    restores them during redeployment. Default is `false`.
+
++
+Other available properties are determined by the implementation of the
   component that is being redeployed. +
   For components packaged as OSGi bundles (`--type=osgi`), the `deploy`
   subcommand accepts properties arguments to wrap a WAR file as a WAB
@@ -367,44 +385,44 @@ asadmin-options::
 
 [[sthref1964]]
 
-Operands
+=== Operands
 
 file_archive|filepath::
+  The operand can specify a directory or an archive file.
   The path to the archive that contains the application that is being
   redeployed. This path can be a relative path or an absolute path. +
-  The archive can be in either of the following formats: +
-  * An archive file, for example, `/export/JEE_apps/hello.war`. +
-  If the `--upload` option is set to `true`, this is the path to the
-  deployable file on the local client machine. If the `--upload` option
-  is set to `false`, this is the absolute path to the file on the server
-  machine.
+  The archive can be in either of the following formats:
+  * An archive file, for example, `/export/JEE_apps/hello.war`.
+    If the `--upload` option is set to `true`, this is the path to the
+    deployable file on the local client machine. +
+    If the `--upload` option is set to `false`, this is the absolute
+    path to the file on the server machine.
   * A directory that contains the exploded format of the deployable
-  archive. This is the absolute path to the directory on the server
-  machine. +
-  If you specify a directory, the `--upload` option is ignored. +
-  Whether this operand is required depends on how the application was
-  originally deployed: +
+    archive. This is the absolute path to the directory on the server machine. +
+    If you specify a directory, the `--upload` option is ignored.
+
++
+Whether this operand is required depends on how the application was
+  originally deployed:
   * If the application was originally deployed from a file, the
-  archive-path operand is required. The operand must specify an archive
-  file.
+    archive-path operand is required. The operand must specify an archive file.
   * If the application was originally deployed from a directory, the
-  archive-path operand is optional. +
-  The operand can specify a directory or an archive file.
+    archive-path operand is optional.
 
 [[sthref1965]]
 
-Examples
+=== Examples
 
 [[GSRFM735]][[sthref1966]]
 
-Example 1   Redeploying a Web Application From a File
+==== Example 1   Redeploying a Web Application From a File
 
 This example redeploys the web application `hello` from the `hello.war`
 file in the current working directory. The application was originally
 deployed from a file. Active sessions of the application are to be
 preserved and then restored when the redeployment is complete.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> redeploy --name hello --properties keepSessions=true hello.war
 Application deployed successfully with name hello.
@@ -413,12 +431,12 @@ Command redeploy executed successfully
 
 [[GSRFM736]][[sthref1967]]
 
-Example 2   Redeploying a Web Application From a Directory
+==== Example 2   Redeploying a Web Application From a Directory
 
 This example redeploys the web application `hellodir`. The application
 was originally deployed from a directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> redeploy --name hellodir
 Application deployed successfully with name hellodir.
@@ -427,7 +445,7 @@ Command redeploy executed successfully
 
 [[sthref1968]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -436,7 +454,7 @@ Exit Status
 
 [[sthref1969]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

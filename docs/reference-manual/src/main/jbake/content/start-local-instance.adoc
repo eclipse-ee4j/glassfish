@@ -4,6 +4,7 @@ title=start-local-instance
 next=stop-cluster.html
 prev=start-instance.html
 ~~~~~~
+
 start-local-instance
 ====================
 
@@ -12,26 +13,25 @@ start-local-instance
 start-local-instance
 --------------------
 
-starts a \{product---name} instance on the host where the subcommand is
-run
+Starts a \{product---name} instance on the host where the subcommand is run
 
 [[sthref2142]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] start-local-instance [--help] 
+asadmin [asadmin-options] start-local-instance [--help]
 [--nodedir node-dir] [--node node]
 [--debug={false|true}] [--dry-run={true|false}]
 [--sync={normal|full|none}]
-[--verbose={false|true}] [--watchdog={true|false}] 
+[--verbose={false|true}] [--watchdog={true|false}]
 [instance-name]
 ----
 
 [[sthref2143]]
 
-Description
+=== Description
 
 The `start-local-instance` subcommand starts a \{product---name}
 instance on the host where the subcommand is run. This subcommand does
@@ -57,7 +57,7 @@ instance with the DAS, this subcommand must be run in remote mode.
 
 [[sthref2144]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -79,8 +79,10 @@ asadmin-options::
   http://java.sun.com/javase/technologies/core/toolsapis/jpda/[Java
   Platform Debugger Architecture (JPDA)]
   (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)
-  debugging enabled. +
-  Possible values are as follows: +
+  debugging enabled.
++
+Possible values are as follows:
+
   `true`;;
     The instance is started with JPDA debugging enabled and the port
     number for JPDA debugging is displayed.
@@ -93,23 +95,26 @@ asadmin-options::
   start the instance, including all options. Reviewing this command can
   be useful when troubleshooting startup issues. +
   The default value is `false`.
+
 `--sync`::
   The type of synchronization between the DAS and the instance's files
   when the instance is started. +
-  Possible values are as follows: +
+  Possible values are as follows:
   `none`;;
     The DAS does not synchronize the instance's files with any changes.
     This type of synchronization minimizes the time that is required to
     start the instance.
   `normal`;;
     The DAS synchronizes the instance with changes since the last
-    synchronization as follows: +
-    * For the `config` directory, the DAS synchronizes the instance with
-    all changes.
+    synchronization as follows:
+
+    * For the `config` directory, the DAS synchronizes the instance with all changes.
     * For the `applications` directory and `docroot` directory, only a
     change to a top-level subdirectory causes the DAS to synchronize all
-    files under that subdirectory. +
-    If a file below a top level subdirectory is changed without a change
+    files under that subdirectory.
+
++
+If a file below a top level subdirectory is changed without a change
     to a file in the top level subdirectory, full synchronization is
     required. In normal operation, files below the top level
     subdirectories of these directories are not changed. If an
@@ -121,27 +126,25 @@ asadmin-options::
     regardless of whether the files have changed since the last
     synchronization. This type of synchronization might delay the
     startup of the instance while the DAS updates all files in the
-    instance's directories. +
-
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Caution:
-
+    instance's directories.
++
+[CAUTION]
+====
 If the DAS is not running or is unreachable from the host where you
 are running this subcommand, do not set the `--sync` option to
 `full`. To perform a full synchronization, the subcommand removes
 the instance's cache. If the DAS cannot be contacted to replace the
 cache, the subcommand fails and the instance cannot be restarted
 until it is resynchronized with the DAS.
-
-|=======================================================================
+====
 
 `--verbose`::
 `-v`::
   Specifies whether detailed information about the instance is displayed
-  in the console window where the subcommand is run. +
-  Possible values are as follows: +
+  in the console window where the subcommand is run.
++
+Possible values are as follows:
+
   `true`;;
     Detailed startup messages and log messages about the instance are
     displayed in the console window where the subcommand is run. If the
@@ -153,11 +156,13 @@ until it is resynchronized with the DAS.
     console window. +
     You can kill the \{product---name} process and obtain a thread dump
     for the server by typing one of the following key combinations in
-    the console window: +
+    the console window:
+
     * `CTRL-\` on UNIX systems
     * `CTRL-Break` on Windows systems
   `false`;;
     Detailed information is not displayed (default).
+
 `--watchdog`::
 `-w`::
   Specifies whether limited information about the instance is displayed
@@ -165,7 +170,8 @@ until it is resynchronized with the DAS.
   option is similar to `--verbose` but does not display the detailed
   startup messages and log messages. This option is useful when running
   the `asadmin` utility in the background or with no attached console. +
-  Possible values are as follows: +
+  Possible values are as follows:
+
   `true`;;
     Limited information is displayed in the console window.
   `false`;;
@@ -174,23 +180,23 @@ until it is resynchronized with the DAS.
 
 [[sthref2145]]
 
-Operands
+=== Operands
 
 instance-name::
   The name of the instance to start.
 
 [[sthref2146]]
 
-Examples
+=== Examples
 
 [[GSRFM763]][[sthref2147]]
 
-Example 1   Starting an Instance Locally
+==== Example 1   Starting an Instance Locally
 
 This example starts the instance `yml-i-sj01` on the host where the
 subcommand is run.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> start-local-instance --node sj01 yml-i-sj01
 Waiting for the server to start .................................
@@ -203,7 +209,7 @@ Command start-local-instance executed successfully.
 
 [[sthref2148]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -212,7 +218,7 @@ Exit Status
 
 [[sthref2149]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

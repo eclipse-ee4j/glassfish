@@ -4,6 +4,7 @@ title=create-connector-resource
 next=create-connector-security-map.html
 prev=create-connector-connection-pool.html
 ~~~~~~
+
 create-connector-resource
 =========================
 
@@ -12,18 +13,18 @@ create-connector-resource
 create-connector-resource
 -------------------------
 
-registers the connector resource with the specified JNDI name
+Registers the connector resource with the specified JNDI name
 
 [[sthref166]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] create-connector-resource [--help]
 --poolname connectorConnectionPoolName
 [--enabled={true|false}]
-[--description description] 
+[--description description]
 [--objecttype ovjecttype]
 [--property (name=value)[:name=value]*]
 [--target target]
@@ -32,7 +33,7 @@ jndi_name
 
 [[sthref167]]
 
-Description
+=== Description
 
 The `create-connector-resource` subcommand registers the connector
 resource with the specified JNDI name.
@@ -41,7 +42,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref168]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -58,7 +59,8 @@ asadmin-options::
   default value is true.
 `--objecttype`::
   Defines the type of the connector resource. Default is user. Allowed
-  values are: +
+  values are:
++
   `system-all`;;
     A system resource for all server instances and the domain
     administration server (DAS).
@@ -74,7 +76,8 @@ asadmin-options::
   Optional attribute name value pairs for configuring the resource.
 `--target`::
   This option specifies the ending location of the connector resources.
-  Valid targets are: +
+  Valid targets are:
++
   `server`;;
     Creates the connector resource in the default server instance. This
     is the default value.
@@ -84,56 +87,52 @@ asadmin-options::
     Creates the connector resource in every server instance in the
     cluster.
   instance_name;;
-    Creates the connector resource in the specified server instance. +
+    Creates the connector resource in the specified server instance.
++
 
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The resource is always created for the domain as a whole, but the
 `resource-ref` for the resource is only created for the specified
 `--target`. This means that although the resource is defined at the
 domain level, it is only available at the specified target level. Use
 the `create-resource-ref` subcommand to refer to the resource in
 multiple targets if needed.
-
-|=======================================================================
-
+====
 
 [[sthref169]]
 
-Operands
+=== Operands
 
 jndi_name::
   The JNDI name of this connector resource.
 
 [[sthref170]]
 
-Examples
+=== Examples
 
 [[GSRFM465]][[sthref171]]
 
-Example 1   Creating a Connector Resource
+==== Example 1   Creating a Connector Resource
 
 This example creates a connector resource named `jms/qConnFactory`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-resource --poolname jms/qConnPool 
+asadmin> create-connector-resource --poolname jms/qConnPool
 --description "sample connector resource" jms/qConnFactory
 Command create-connector-resource executed successfully
 ----
 
 [[GSRFM466]][[sthref172]]
 
-Example 2   Using the create-connector-resource subcommand
+==== Example 2   Using the create-connector-resource subcommand
 
 This example shows the usage of this subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-resource --target server --poolname jms/qConnPool 
+asadmin> create-connector-resource --target server --poolname jms/qConnPool
 --description "sample connector resource" jms/qConnFactory
 Command create-connector-resource executed successfully
 ----
@@ -143,7 +142,7 @@ created.
 
 [[sthref173]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -152,7 +151,7 @@ Exit Status
 
 [[sthref174]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

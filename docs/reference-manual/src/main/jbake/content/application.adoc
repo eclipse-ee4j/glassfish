@@ -4,6 +4,7 @@ title=application
 next=configuration.html
 prev=manvol5asc.html
 ~~~~~~
+
 application
 ===========
 
@@ -12,11 +13,11 @@ application
 application
 -----------
 
-server-side Java applications and web services
+Server-side Java applications and web services
 
 [[sthref2392]]
 
-Description
+=== Description
 
 The Java EE platform enables applications to access systems that are
 outside of the application server. Applications connect to these systems
@@ -29,7 +30,7 @@ and highly available Java EE applications.
 
 [[sthref2393]]
 
-See Also
+=== See Also
 
 link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
 link:deploy.html#deploy-1[`deploy`(1)],

@@ -4,6 +4,7 @@ title=delete-http-lb-config
 next=delete-http-lb-ref.html
 prev=delete-http-lb.html
 ~~~~~~
+
 delete-http-lb-config
 =====================
 
@@ -12,21 +13,21 @@ delete-http-lb-config
 delete-http-lb-config
 ---------------------
 
-deletes a load balancer configuration
+Deletes a load balancer configuration
 
 [[sthref715]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] delete-http-lb-config [--help] 
+asadmin [asadmin-options] delete-http-lb-config [--help]
 config_name
 ----
 
 [[sthref716]]
 
-Description
+=== Description
 
 Use the `delete-http-lb-config` subcommand to delete a load balancer
 configuration. The load balancer configuration must not reference any
@@ -34,19 +35,15 @@ clusters or server instances enabled for load balancing. In addition,
 the load balancer configuration must not be referenced by any physical
 load balancers.
 
-
 [NOTE]
-=======================================================================
-
+====
 This subcommand is only applicable to Oracle GlassFish Server. This
 subcommand is not applicable to GlassFish Server Open Source Edition.
-
-=======================================================================
-
+====
 
 [[sthref717]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -57,7 +54,7 @@ asadmin-options::
 
 [[sthref718]]
 
-Operands
+=== Operands
 
 config_name::
   The name of the load balancer configuration to delete. The
@@ -66,15 +63,15 @@ config_name::
 
 [[sthref719]]
 
-Examples
+=== Examples
 
 [[GSRFM549]][[sthref720]]
 
-Example 1   Deleting a Load Balancer Configuration
+==== Example 1   Deleting a Load Balancer Configuration
 
 This example deletes a load balancer configuration named `mylbconfig`
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-http-lb-config mylbconfig
 Command delete-http-lb-config executed successfully.
@@ -82,7 +79,7 @@ Command delete-http-lb-config executed successfully.
 
 [[sthref721]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -91,7 +88,7 @@ Exit Status
 
 [[sthref722]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

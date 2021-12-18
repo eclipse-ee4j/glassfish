@@ -4,6 +4,7 @@ title=delete-http-listener
 next=delete-http-redirect.html
 prev=delete-http-lb-ref.html
 ~~~~~~
+
 delete-http-listener
 ====================
 
@@ -12,13 +13,13 @@ delete-http-listener
 delete-http-listener
 --------------------
 
-removes a network listener
+Removes a network listener
 
 [[sthref731]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-http-listener [--help]
 [--target target]
@@ -27,7 +28,7 @@ listener-id
 
 [[sthref732]]
 
-Description
+=== Description
 
 The `delete-http-listener` subcommand removes the specified network
 listener.
@@ -36,7 +37,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref733]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,7 +47,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the network listener only from the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the network listener from the default server instance. This
     is the default value.
@@ -61,23 +63,23 @@ asadmin-options::
 
 [[sthref734]]
 
-Operands
+=== Operands
 
 listener-id::
   The unique identifier for the network listener to be deleted.
 
 [[sthref735]]
 
-Examples
+=== Examples
 
 [[GSRFM551]][[sthref736]]
 
-Example 1   Using the delete-http-listener subcommand
+==== Example 1   Using the delete-http-listener subcommand
 
 The following command deletes the network listener named
 `sampleListener`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-http-listener sampleListener
 Command delete-http-listener executed successfully.
@@ -85,7 +87,7 @@ Command delete-http-listener executed successfully.
 
 [[sthref737]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -94,7 +96,7 @@ Exit Status
 
 [[sthref738]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

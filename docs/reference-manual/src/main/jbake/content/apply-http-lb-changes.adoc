@@ -4,6 +4,7 @@ title=apply-http-lb-changes
 next=attach.html
 prev=add-resources.html
 ~~~~~~
+
 apply-http-lb-changes
 =====================
 
@@ -12,13 +13,13 @@ apply-http-lb-changes
 apply-http-lb-changes
 ---------------------
 
-applies load balancer configuration changes to the load balancer
+Applies load balancer configuration changes to the load balancer
 
 [[sthref23]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] apply-http-lb-changes [--help]
 lb-name
@@ -26,9 +27,9 @@ lb-name
 
 [[sthref24]]
 
-Description
+=== Description
 
-Use the `apply``http``-lb-changes` subcommand to apply the changes in
+Use the `apply-http-lb-changes` subcommand to apply the changes in
 the load balancer configuration to the physical load balancer. The load
 balancer must already exist. To create a physical load balancer, use the
 `create-http-lb` subcommand.
@@ -48,14 +49,12 @@ configure HTTP session persistence.
 
 
 [NOTE]
-=======================================================================
-
+====
 The Load Balancer Plugin is only available with Oracle GlassFish Server,
 and is not available with GlassFish Server Open Source Edition. For
 GlassFish Server Open Source Edition, it is possible to use the `mod_jk`
 module to configure load balancing on the Apache HTTP server.
-
-=======================================================================
+====
 
 
 For more information about configuring load balancing with
@@ -64,7 +63,7 @@ Administration Console.
 
 [[sthref26]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -75,7 +74,7 @@ asadmin-options::
 
 [[sthref27]]
 
-Operands
+=== Operands
 
 lb-name::
   The name of the load balancer to which changes are applied. The load
@@ -84,16 +83,16 @@ lb-name::
 
 [[sthref28]]
 
-Examples
+=== Examples
 
 [[GSRFM446]][[sthref29]]
 
-Example 1   Using the apply`-http``-lb``-changes` subcommand
+==== Example 1   Using the `apply-http-lb-changes` subcommand
 
 This example applies configuration changes to a load balancer named
 `mylb`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> apply-http-lb-changes mylb
 Command apply-http-lb-changes executed successfully.
@@ -101,7 +100,7 @@ Command apply-http-lb-changes executed successfully.
 
 [[sthref30]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -110,7 +109,7 @@ Exit Status
 
 [[sthref31]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

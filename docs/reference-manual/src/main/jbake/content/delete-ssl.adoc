@@ -4,6 +4,7 @@ title=delete-ssl
 next=delete-system-property.html
 prev=delete-resource-ref.html
 ~~~~~~
+
 delete-ssl
 ==========
 
@@ -12,14 +13,14 @@ delete-ssl
 delete-ssl
 ----------
 
-deletes the SSL element in the selected HTTP listener, IIOP listener, or
+Deletes the SSL element in the selected HTTP listener, IIOP listener, or
 IIOP service
 
 [[sthref975]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-ssl [--help]
 [--target target]
@@ -29,7 +30,7 @@ listener_id
 
 [[sthref976]]
 
-Description
+=== Description
 
 The `delete-ssl` subcommand deletes the SSL element in the selected HTTP
 listener, IIOP listener, or IIOP service.
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref977]]
 
-Options
+=== Options
 
 If an option has a short option name, then the short option precedes the
 long option name. Short options have one dash whereas long options have
@@ -54,7 +55,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target on which you are configuring the ssl element. The
-  following values are valid: +
+  following values are valid:
+
   `server`;;
     Specifies the server in which the iiop-service or HTTP/IIOP listener
     is to be unconfigured for SSL.
@@ -69,34 +71,35 @@ asadmin-options::
   instance;;
     Specifies the instance in which the HTTP/IIOP listener or
     iiop-service is to be unconfigured for SSL.
+
 `--type`::
   The type of service or listener for which the SSL is deleted. The type
-  must be one of the following types: +
+  must be one of the following types:
+
   * `http-listener`
   * `iiop-listener`
   * `iiop-service`
 
 [[sthref978]]
 
-Operands
+=== Operands
 
 listener_id::
   The ID of the listener from which the SSL element is to be deleted. +
-  The listener_id operand is not required if the `--type` is
-  `iiop-service`.
+  The listener_id operand is not required if the `--type` is `iiop-service`.
 
 [[sthref979]]
 
-Examples
+=== Examples
 
 [[GSRFM579]][[sthref980]]
 
-Example 1   Deleting an SSL element from an HTTP listener
+==== Example 1   Deleting an SSL element from an HTTP listener
 
 The following example shows how to delete an SSL element from an HTTP
 listener named `http-listener-1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-ssl
 --type http-listener http-listener-1
@@ -105,7 +108,7 @@ Command delete-ssl executed successfully.
 
 [[sthref981]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -114,7 +117,7 @@ Exit Status
 
 [[sthref982]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

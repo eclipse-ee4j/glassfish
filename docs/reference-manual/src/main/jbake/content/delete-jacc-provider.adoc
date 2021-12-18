@@ -4,6 +4,7 @@ title=delete-jacc-provider
 next=delete-javamail-resource.html
 prev=delete-instance.html
 ~~~~~~
+
 delete-jacc-provider
 ====================
 
@@ -12,13 +13,13 @@ delete-jacc-provider
 delete-jacc-provider
 --------------------
 
-enables administrators to delete JACC providers defined for a domain
+Enables administrators to delete JACC providers defined for a domain
 
 [[sthref761]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-jacc-provider [--help]
 [--target target] jacc-provider-name
@@ -26,7 +27,7 @@ asadmin [asadmin-options] delete-jacc-provider [--help]
 
 [[sthref762]]
 
-Description
+=== Description
 
 The `delete-jacc-provider` subcommand enables administrators to delete
 JACC providers defined for a domain. JACC providers are defined as
@@ -52,7 +53,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref763]]
 
-Options
+=== Options
 
 If an option has a short option name, then the short option precedes the
 long option name. Short options have one dash whereas long options have
@@ -66,7 +67,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Specifies the target from which you are deleting the JACC provider.
-  The following values are valid: +
+  The following values are valid:
+
   `server`;;
     Deletes the JACC provider on the default server instance. This is
     the default value.
@@ -80,23 +82,23 @@ asadmin-options::
 
 [[sthref764]]
 
-Operands
+=== Operands
 
 jacc-provider-name::
   The name of the JACC provider to be deleted.
 
 [[sthref765]]
 
-Examples
+=== Examples
 
 [[GSRFM554]][[sthref766]]
 
-Example 1   Deleting a JACC provider
+==== Example 1   Deleting a JACC provider
 
 The following example shows how to delete a JACC provider named
 `testJACC` from the default domain.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jacc-provider testJACC
 
@@ -105,7 +107,7 @@ Command delete-jacc-provider executed successfully.
 
 [[sthref767]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -114,7 +116,7 @@ Exit Status
 
 [[sthref768]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

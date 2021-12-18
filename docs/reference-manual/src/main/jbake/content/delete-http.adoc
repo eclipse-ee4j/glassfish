@@ -4,6 +4,7 @@ title=delete-http
 next=delete-http-health-checker.html
 prev=delete-file-user.html
 ~~~~~~
+
 delete-http
 ===========
 
@@ -12,13 +13,13 @@ delete-http
 delete-http
 -----------
 
-removes HTTP parameters from a protocol
+Removes HTTP parameters from a protocol
 
 [[sthref691]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-http [--help]
 [--target target]
@@ -27,14 +28,14 @@ protocol-name
 
 [[sthref692]]
 
-Description
+=== Description
 
 The `delete-http` subcommand removes the specified HTTP parameter set
 from a protocol. This subcommand is supported in remote mode only.
 
 [[sthref693]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -44,7 +45,8 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--target`::
   Deletes the HTTP parameter set only from the specified target. Valid
-  values are as follows: +
+  values are as follows:
+
   `server`;;
     Deletes the HTTP parameter set from the default server instance.
     This is the default value.
@@ -59,23 +61,23 @@ asadmin-options::
 
 [[sthref694]]
 
-Operands
+=== Operands
 
 protocol-name::
   The name of the protocol from which to delete the HTTP parameter set.
 
 [[sthref695]]
 
-Examples
+=== Examples
 
 [[GSRFM546]][[sthref696]]
 
-Example 1   Deleting an HTTP Parameter Set
+==== Example 1   Deleting an HTTP Parameter Set
 
 The following command deletes the HTTP parameter set from a protocol
 named `http-1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-http http-1
 Command delete-http executed successfully.
@@ -83,7 +85,7 @@ Command delete-http executed successfully.
 
 [[sthref697]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -92,7 +94,7 @@ Exit Status
 
 [[sthref698]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

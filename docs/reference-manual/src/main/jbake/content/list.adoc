@@ -4,30 +4,29 @@ title=list
 next=list-admin-objects.html
 prev=jms-ping.html
 ~~~~~~
-list
-====
+
+= list
 
 [[list-1]][[GSRFM00145]][[list]]
 
-list
-----
+== list
 
-lists configurable or monitorable elements
+Lists configurable or monitorable elements
 
 [[sthref1282]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list [--help] 
+asadmin [asadmin-options] list [--help]
 [--monitor={false|true}]
 [dotted-parent-attribute-name]
 ----
 
 [[sthref1283]]
 
-Description
+=== Description
 
 The `list` subcommand lists configurable and monitorable attributes of
 \{product---name}.
@@ -41,37 +40,35 @@ attributes.
 
 The following rules apply to dotted names in a `list` subcommand:
 
-
 [NOTE]
-=======================================================================
-
+====
 Characters that have special meaning to the shell or command
 interpreter, such as * (asterisk), should be quoted or escaped as
 appropriate to the shell, for example, by enclosing the argument in
 quotes. In multimode, quotes are needed only for arguments that include
 spaces, quotes, or backslash.
-
-=======================================================================
-
+====
 
 * Any `list` subcommand that has a dotted name that is not followed by a
 wildcard (*) lists the current node's immediate children. For example,
 the following command lists all immediate children belonging to the
-server node: +
-[source,oac_no_warn]
+server node:
++
+[source]
 ----
 asadmin> list server
 ----
 * Any `list` subcommand that has a dotted name followed by a wildcard(*)
 lists a hierarchical tree of child nodes from the current node. For
 example, the following command lists all child nodes of applications and
-their subsequent child nodes, and so on: +
-[source,oac_no_warn]
+their subsequent child nodes, and so on:
++
+[source]
 ----
 asadmin> list server.applications.*
 ----
 * Any `list` subcommand that has a dotted name preceded or followed by a
-wildcard (*) of the form *dotted name or dottedname* lists all nodes and
+wildcard (`*`) of the form dotted name or dottedname lists all nodes and
 their child nodes that match the regular expression created by the
 provided matching pattern.
 
@@ -80,7 +77,7 @@ link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
 
 [[sthref1284]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -96,22 +93,22 @@ asadmin-options::
 
 [[sthref1285]]
 
-Operands
+=== Operands
 
 dotted-parent-element-name::
   Configurable or monitorable element name
 
 [[sthref1286]]
 
-Examples
+=== Examples
 
 [[GSRFM631]][[sthref1287]]
 
-Example 1   Listing Dotted Names of Configurable Elements
+==== Example 1   Listing Dotted Names of Configurable Elements
 
 This example lists the elements that can be configured.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list *
 applications
@@ -164,11 +161,11 @@ Command list executed successfully.
 
 [[GSRFM632]][[sthref1288]]
 
-Example 2   Listing Attributes of a Configurable Element
+==== Example 2   Listing Attributes of a Configurable Element
 
 This example lists the attributes of the web container.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list configs.config.server-config.web-container
 configs.config.server-config.web-container
@@ -178,12 +175,12 @@ Command list executed successfully.
 
 [[GSRFM633]][[sthref1289]]
 
-Example 3   Listing Dotted Names of Monitorable Objects
+==== Example 3   Listing Dotted Names of Monitorable Objects
 
 This example lists the names of the monitorable objects that are enabled
 for monitoring.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list --monitor *
 server.jvm
@@ -212,7 +209,7 @@ Command list executed successfully.
 
 [[sthref1290]]
 
-Exit Status
+=== Exit Status
 
 0::
   subcommand executed successfully
@@ -221,7 +218,7 @@ Exit Status
 
 [[sthref1291]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

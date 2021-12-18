@@ -4,6 +4,7 @@ title=create-cluster
 next=create-connector-connection-pool.html
 prev=create-auth-realm.html
 ~~~~~~
+
 create-cluster
 ==============
 
@@ -12,26 +13,26 @@ create-cluster
 create-cluster
 --------------
 
-creates a \{product---name} cluster
+Creates a \{product---name} cluster
 
 [[sthref147]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] create-cluster [--help] 
+asadmin [asadmin-options] create-cluster [--help]
 [--config config-name]
 [--systemproperties (name=value)[:name=value]*]
 [--properties (name=value)[:name=value]*]
-[--gmsenabled={true|false}] 
-[--multicastport multicast-port] 
+[--gmsenabled={true|false}]
+[--multicastport multicast-port]
 [--multicastaddress multicast-address]
 [--bindaddress bind-address]
-[--hosts hadb-host-list] 
+[--hosts hadb-host-list]
 [--haagentport port-number]
-[--haadminpassword password] 
-[--haadminpasswordfile file-name] [--devicesize devicesize ] 
+[--haadminpassword password]
+[--haadminpasswordfile file-name] [--devicesize devicesize ]
 [--haproperty (name=value)[:name=value]*]
 [--autohadb=false] [--portbase port-number]
 cluster-name
@@ -39,7 +40,7 @@ cluster-name
 
 [[sthref148]]
 
-Description
+=== Description
 
 The `create-cluster` subcommand creates a \{product---name} cluster.
 Initially the cluster contains no \{product---name} instances,
@@ -87,7 +88,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref149]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -104,7 +105,8 @@ asadmin-options::
   Defines system properties for the configuration that is created for
   the cluster. These properties override the property values in the
   `default-config` configuration. The following properties are
-  available: +
+  available:
++
   `ASADMIN_LISTENER_PORT`;;
     This property specifies the port number of the HTTP port or HTTPS
     port through which the DAS connects to the instance to manage the
@@ -160,35 +162,38 @@ asadmin-options::
     sockets that listen on ports 1-1024 requires superuser privileges.
 `--properties`::
   Defines properties for the cluster. The following properties are
-  available: +
+  available:
+
   `GMS_DISCOVERY_URI_LIST`;;
     The locations of \{product---name} instances in the cluster to use
     for discovering the cluster. This property is required only if the
     Group Management Service (GMS) is not using multicast for
     broadcasting messages. +
-    Valid values for this property are as follows: +
+    Valid values for this property are as follows:
+
     * A comma-separated list of uniform resource identifiers (URIs).
     Each URI must locate a \{product---name} instance or the DAS. This
     format is required if multiple \{product---name} instances are
     running on the same host. +
     The format of each URI in the list is as follows: +
-    scheme`://`host-name-or -IP-address`:`port
+    scheme``://``host-name-or -IP-address``:``port
     ** scheme is the URI scheme, which is `tcp`.
     ** host-name-or -IP-address is the host name or IP address of the
     host on which the instance is running.
     ** port is the port number of the port on which the instance listens
     for messages from GMS. The system property
-    `GMS_LISTENER_PORT-`clustername must be set for the instance. For
+    ``GMS_LISTENER_PORT-``clustername must be set for the instance. For
     information about how to set this system property for an instance,
     see "link:../ha-administration-guide/clusters.html#GSHAG00373[Discovering a Cluster When Multicast Transport
     Is Unavailable]" in GlassFish Server Open Source Edition High
     Availability Administration Guide.
+
     * A comma-separated list of IP addresses or host names on which the
     DAS or the instances are running. The list can contain a mixture of
     IP addresses and host names. This format can be used only if one
     clustered instance is running on each host. The value of the
-    `GMS_LISTENER_PORT` property must be unique for each cluster in a
-    domain.
+    `GMS_LISTENER_PORT` property must be unique for each cluster in a domain.
+
     * The keyword `generate`. This format can be used only if one
     instance in a cluster is running on each host and the DAS is running
     on a separate host. Multiple instances on the same host cannot be
@@ -198,7 +203,7 @@ asadmin-options::
     The port number of the port on which the cluster listens for
     messages from GMS. +
     The default value is a reference to the
-    `GMS_LISTENER_PORT-`cluster-name system property. By default, this
+    ``GMS_LISTENER_PORT-``cluster-name system property. By default, this
     system property is not set. In this situation, GMS selects a free
     port from the range that is defined by the properties
     `GMS_TCPSTARTPORT` and `GMS_TCPENDPORT`. By default, this range is
@@ -209,60 +214,70 @@ asadmin-options::
     default value to meet this requirement, use a system property to set
     the port number individually for each instance. +
     For example, use the `create-system-properties` subcommand to create
-    the system property `GMS_LISTENER_PORT-`cluster-name for the DAS.
+    the system property ``GMS_LISTENER_PORT-``cluster-name for the DAS.
     Then, for each instance in the cluster, set the
-    `GMS_LISTENER_PORT-`cluster-name system property to the port number
+    ``GMS_LISTENER_PORT-``cluster-name system property to the port number
     on which the instance listens for messages from GMS. The default
     value of the `GMS_LISTENER_PORT` property for the cluster references
     this system property.
   `GMS_LOOPBACK`;;
     Specifies whether an instance may receive from itself
     application-level messages that the instance broadcasts to the
-    cluster. +
-    Possible values are as follows:::
-    `false`::
+    cluster. Possible values are as follows:
++
+--
+    * `false`
       The instance may not receive messages from itself (default).
-    `true`::
+    * `true`
       The instance may receive messages from itself. Use this setting
       for testing an instance when the instance is the only instance in
       a cluster.
+--
   `GMS_MULTICAST_TIME_TO_LIVE`;;
     The maximum number of iterations or transmissions that a multicast
     message for the following types of events can experience before the
-    message is discarded: +
+    message is discarded:
+
     * Group discovery
     * Member heartbeats
-    * Membership changes +
-    To match the configuration of the network on which the DAS and
+    * Membership changes
++
+To match the configuration of the network on which the DAS and
     clustered instances are deployed, set this value as low as possible.
     To determine the lowest possible value for your system, use the
     link:validate-multicast.html#validate-multicast-1[`validate-multicast`(1)]
-    subcommand. +
-    A value of 0 ensures that multicast messages never leave the host
-    from which they are broadcast. +
-    A value of 1 might prevent the broadcast of messages between hosts
-    on same subnet that are connected by a switch or a router. +
-    The default is 4, which ensures that messages are successfully
+    subcommand.
+
+    ** A value of 0 ensures that multicast messages never leave the host
+    from which they are broadcast.
+
+    ** A value of 1 might prevent the broadcast of messages between hosts
+    on same subnet that are connected by a switch or a router.
+
+    ** The default is 4, which ensures that messages are successfully
     broadcast to all cluster members in networks where hosts are
     connected by switches or routers.
+
   `GMS_TCPENDPORT`;;
     The highest port number in the range from which GMS selects a free
-    port if the `GMS_LISTENER_PORT-`cluster-name system property is not
+    port if the ``GMS_LISTENER_PORT-``cluster-name system property is not
     set. The default is 9200.
   `GMS_TCPSTARTPORT`;;
     The lowest port number in the range from which GMS selects a free
-    port if the `GMS_LISTENER_PORT-`cluster-name system property is not
+    port if the ``GMS_LISTENER_PORT-``cluster-name system property is not
     set. The default is 9090.
+
 `--gmsenabled`::
-  Specifies whether GMS is enabled for the cluster. +
-  Possible values are as follows: +
+  Specifies whether GMS is enabled for the cluster. Possible values are as follows:
+
   `true`;;
-    GMS is enabled for the cluster (default). +
+    GMS is enabled for the cluster (default).
     When GMS is enabled for a cluster, GMS is started in each server
     instance in the cluster and in the DAS. The DAS participates in each
     cluster for which this option is set to `true`.
   `false`;;
     GMS is disabled for the cluster.
+
 `--multicastaddress`::
   The address on which GMS listens for group events. This option must
   specify a multicast address in the range 224.0.0.0 through
@@ -284,11 +299,11 @@ asadmin-options::
   instances in the cluster, use a system property to set the address
   individually for each instance. +
   For example, use the `create-system-properties` subcommand to create
-  the system property `GMS-BIND-INTERFACE-ADDRESS-`cluster-name. Then
+  the system property ``GMS-BIND-INTERFACE-ADDRESS-``cluster-name. Then
   set the `--bindaddress` option of this subcommand to
-  `${GMS-BIND-INTERFACE-ADDRESS-`cluster-name`}` to specify the system
+  ``${GMS-BIND-INTERFACE-ADDRESS-``cluster-name`}` to specify the system
   property. Finally, for each instance in the cluster, set the
-  `GMS-BIND-INTERFACE-ADDRESS-`cluster-name system property to the
+  ``GMS-BIND-INTERFACE-ADDRESS-``cluster-name system property to the
   required network interface address on the instance's machine.
 `--hosts`::
   Do not specify this option. This option is retained for compatibility
@@ -333,11 +348,12 @@ asadmin-options::
 
 [[sthref150]]
 
-Operands
+=== Operands
 
 cluster-name::
   The name of the cluster. +
-  The name must meet the following requirements: +
+  The name must meet the following requirements:
+
   * The name may contain only ASCII characters.
   * The name must start with a letter, a number, or an underscore.
   * The name may contain only the following characters:
@@ -368,28 +384,28 @@ cluster-name::
 
 [[sthref151]]
 
-Examples
+=== Examples
 
 [[GSRFM462]][[sthref152]]
 
-Example 1   Creating a Cluster
+==== Example 1   Creating a Cluster
 
 This example creates a cluster that is named `ltscluster` for which port
 1169 is to be used for secure IIOP connections. Because the `--config`
 option is not specified, the cluster references a copy of the named
 configuration `default-config` that is named `ltscluster-config`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-cluster 
---systemproperties IIOP_SSL_LISTENER_PORT=1169 
+asadmin> create-cluster
+--systemproperties IIOP_SSL_LISTENER_PORT=1169
 ltscluster
 Command create-cluster executed successfully.
 ----
 
 [[GSRFM463]][[sthref153]]
 
-Example 2   Creating a Cluster With a List of URIs for Discovering the
+==== Example 2   Creating a Cluster With a List of URIs for Discovering the
 Cluster
 
 This example creates a cluster that is named `tcpcluster`. In this
@@ -414,7 +430,7 @@ how to set the port on which an instance listens for GMS messages, see
 Unavailable]" in GlassFish Server Open Source Edition High Availability
 Administration Guide.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=
 tcp'\\:'//10.152.23.224'\\:'9090,
@@ -425,7 +441,7 @@ Command create-cluster executed successfully.
 
 [[GSRFM827]][[sthref154]]
 
-Example 3   Creating a Cluster With a List of IP Addresses for
+==== Example 3   Creating a Cluster With a List of IP Addresses for
 Discovering the Cluster
 
 This example creates a cluster that is named `ipcluster`. In this
@@ -435,7 +451,7 @@ one clustered instance resides on each host. Therefore, the
 hosts where instances to use for discovering the cluster are running.
 The cluster listens for messages from GMS on port 9090.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-cluster --properties 'GMS_DISCOVERY_URI_LIST=
 10.152.23.225,10.152.23.226,10.152.23.227,10.152.23.228:
@@ -445,7 +461,7 @@ Command create-cluster executed successfully.
 
 [[GSRFM828]][[sthref155]]
 
-Example 4   Creating a Cluster With a Generated List of Instances for
+==== Example 4   Creating a Cluster With a Generated List of Instances for
 Discovering the Cluster
 
 This example creates a cluster that is named `gencluster`. In this
@@ -456,7 +472,7 @@ set to the keyword `generate` to generate a list of instances to use for
 discovering the cluster. The cluster listens for messages from GMS on
 port 9090.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-cluster --properties 'GMS_DISCOVERY_URI_LIST=generate:
 GMS_LISTENER_PORT=9090' gencluster
@@ -465,7 +481,7 @@ Command create-cluster executed successfully.
 
 [[sthref156]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -474,7 +490,7 @@ Exit Status
 
 [[sthref157]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

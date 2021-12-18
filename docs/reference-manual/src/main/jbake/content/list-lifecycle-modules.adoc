@@ -4,6 +4,7 @@ title=list-lifecycle-modules
 next=list-log-attributes.html
 prev=list-libraries.html
 ~~~~~~
+
 list-lifecycle-modules
 ======================
 
@@ -12,21 +13,21 @@ list-lifecycle-modules
 list-lifecycle-modules
 ----------------------
 
-lists the lifecycle modules
+Lists the lifecycle modules
 
 [[sthref1622]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin [asadmin-options] list-lifecycle-modules [--help] 
+asadmin [asadmin-options] list-lifecycle-modules [--help]
 [target]
 ----
 
 [[sthref1623]]
 
-Description
+=== Description
 
 The `list-lifecycle-modules` subcommand lists lifecycle modules. A
 lifecycle module provides a means of running a short or long duration
@@ -35,7 +36,7 @@ subcommand is supported in remote mode only.
 
 [[sthref1624]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -46,28 +47,29 @@ asadmin-options::
 
 [[sthref1625]]
 
-Operands
+=== Operands
 
 target::
   Indicates the location where lifecycle modules are to be listed. Valid
-  values are +
+  values are
+
   * `server`- Specifies the default server instance as the target for
   listing lifecycle modules. `server` is the name of the default server
   instance and is the default value for this operand.
-  * cluster_name- Specifies a particular cluster as the target for
+  * cluster_name - Specifies a particular cluster as the target for
   listing lifecycle modules.
-  * instance_name- Specifies a particular server instance as the target
+  * instance_name - Specifies a particular server instance as the target
   for listing lifecycle modules.
 
 [[sthref1626]]
 
-Examples
+=== Examples
 
 [[GSRFM681]][[sthref1627]]
 
-Example 1   Listing Lifecycle Modules
+==== Example 1   Listing Lifecycle Modules
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-lifecycle-modules
 WSTCPConnectorLCModule
@@ -79,7 +81,7 @@ default target, `server`.
 
 [[sthref1628]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -88,7 +90,7 @@ Exit Status
 
 [[sthref1629]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

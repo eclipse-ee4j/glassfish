@@ -4,6 +4,7 @@ title=delete-config
 next=delete-connector-connection-pool.html
 prev=delete-cluster.html
 ~~~~~~
+
 delete-config
 =============
 
@@ -12,13 +13,13 @@ delete-config
 delete-config
 -------------
 
-deletes an existing named configuration
+Deletes an existing named configuration
 
 [[sthref617]]
 
-Synopsis
+=== Synopsis
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-options] delete-config [--help] 
 configuration-name
@@ -26,7 +27,7 @@ configuration-name
 
 [[sthref618]]
 
-Description
+=== Description
 
 The `delete-config` subcommand deletes an existing named configuration
 from the configuration of the domain administration server (DAS). You
@@ -40,7 +41,7 @@ This subcommand is supported in remote mode only.
 
 [[sthref619]]
 
-Options
+=== Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
@@ -51,22 +52,22 @@ asadmin-options::
 
 [[sthref620]]
 
-Operands
+=== Operands
 
 configuration-name::
   The name of the configuration that you are deleting.
 
 [[sthref621]]
 
-Examples
+=== Examples
 
 [[GSRFM536]][[sthref622]]
 
-Example 1   Deleting a Named Configuration
+==== Example 1   Deleting a Named Configuration
 
 This example deletes the named configuration `pmdconfig`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-config pmdconfig
 
@@ -75,7 +76,7 @@ Command delete-config executed successfully.
 
 [[sthref623]]
 
-Exit Status
+=== Exit Status
 
 0::
   command executed successfully
@@ -84,7 +85,7 @@ Exit Status
 
 [[sthref624]]
 
-See Also
+=== See Also
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 

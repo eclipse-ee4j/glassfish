@@ -16,7 +16,7 @@ Administering Life Cycle Modules
 ----------------------------------
 
 This chapter provides procedures for administering life cycle modules in
-the GlassFish Server Open Source Edition 5.0 environment.
+the GlassFish Server Open Source Edition 7 environment.
 
 The following topics are addressed here:
 

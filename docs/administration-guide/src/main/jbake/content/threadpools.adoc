@@ -16,7 +16,7 @@ Administering Thread Pools
 ----------------------------
 
 This chapter provides procedures for administering thread pools in the
-GlassFish Server Open Source Edition 5.0 environment by using the
+GlassFish Server Open Source Edition 7 environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:

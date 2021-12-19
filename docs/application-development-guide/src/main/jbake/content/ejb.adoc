@@ -350,7 +350,7 @@ To Deploy an EJB Timer to a Cluster
 
 This procedure explains how to deploy an EJB timer to a cluster.
 
-By default, the GlassFish Server 5.0 timer service points to the
+By default, the GlassFish Server 7 timer service points to the
 preconfigured `jdbc/__TimerPool` resource, which uses an embedded Apache
 Derby database configuration that will not work in clustered
 environments.

@@ -53,7 +53,7 @@ administration values.
 
 [NOTE]
 ====
-For the zip bundle of GlassFish Server 5.0, the default administrator
+For the zip bundle of GlassFish Server 7, the default administrator
 login is `admin`, with no password, which means that no login is
 required.
 ====

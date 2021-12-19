@@ -16,7 +16,7 @@ Specific Issues
 -----------------
 
 This chapter lists problems that you might encounter when using Oracle
-GlassFish Server 4.0. The following topics are addressed:
+GlassFish Server 7. The following topics are addressed:
 
 * link:#abgca[Cannot Access Local Server (`http://localhost:8080`)]
 * link:#abgcf[Cannot Access Remote Server]
@@ -383,7 +383,7 @@ You experience JDK-related issues in a variety of circumstances.
 Solution
 ^^^^^^^^
 
-GlassFish Server 4.0 requires JDK 6, so check your system for that
+GlassFish Server 7 requires JDK 6, so check your system for that
 dependency.
 
 The minimum (and certified) version of the JDK software that is required

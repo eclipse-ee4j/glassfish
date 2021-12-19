@@ -29,7 +29,7 @@ Please see the Title page for additional license information.
 ====
 
 This document describes error messages that you might encounter when
-using Sun GlassFish Server 5.0.
+using Sun GlassFish Server 7.
 
 This preface contains information about and conventions for the entire
 GlassFish Server Open Source Edition (GlassFish Server) documentation
@@ -179,7 +179,7 @@ GlassFish Server is available as follows.
 
 * The API specification for version 8 of Java EE is located at
 `https://javaee.github.io/javaee-spec/javadocs/`.
-* The API specification for GlassFish Server 5.0, including Java EE 8
+* The API specification for GlassFish Server 7, including Java EE 8
 platform packages and non-platform packages that are specific to the
 GlassFish Server product, is located at
 `https://javaee.github.io/javaee-spec/javadocs/`.

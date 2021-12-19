@@ -16,7 +16,7 @@ Configuring HTTP Load Balancing
 ---------------------------------
 
 This chapter describes how to configure HTTP load balancing on GlassFish
-Server 4.0.
+Server 7.
 
 The following topics are addressed here:
 
@@ -66,7 +66,7 @@ HTTP Server and `mod_proxy_ajp`].
 Configuring GlassFish Server with Apache HTTP Server and `mod_jk`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server4.0 can be configured for load balancing with Apache
+GlassFish Server 7 can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache `mod_jk` connector
 module. To enable the `mod_jk` module in GlassFish Server, set the
 GlassFish Server `jk-enabled` `network-listener` attribute. You can also
@@ -204,7 +204,7 @@ worker.loadbalancer.balance_workers=worker1,worker2
 Configuring GlassFish Server with Apache HTTP Server and `mod_proxy_ajp`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server4.0 can be configured for load balancing with Apache
+GlassFish Server 7 can be configured for load balancing with Apache
 HTTP Server as a front end by enabling the Apache `mod_proxy_ajp`
 connector module. To enable the `mod_proxy_ajp` module in GlassFish
 Server, set the GlassFish Server `jk-enabled` `network-listener`

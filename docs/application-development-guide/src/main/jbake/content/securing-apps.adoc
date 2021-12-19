@@ -1060,11 +1060,11 @@ Persistence API by injecting or looking up an entity manager or entity
 manager factory, the EJB container sets this JVM option for you.
 
 You must grant additional permissions to CDI-enabled Java EE
-applications that are deployed in a GlassFish Server 5.0 domain or
+applications that are deployed in a GlassFish Server 7 domain or
 cluster for which security manager is enabled. These additional
 permissions are not required when security manager is disabled.
 
-To deploy CDI-enabled Java EE applications in a GlassFish Server 5.0
+To deploy CDI-enabled Java EE applications in a GlassFish Server 7
 domain or cluster for which security manager is enabled, add the
 following permissions to the applications:
 

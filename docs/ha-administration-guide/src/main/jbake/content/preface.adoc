@@ -35,7 +35,7 @@ session persistence and failover.
 
 [NOTE]
 ====
-The main thrust of the GlassFish Server Open Source Edition 4.0 release
+The main thrust of the GlassFish Server Open Source Edition 7 release
 is to provide an application server for developers to explore and begin
 exploiting the new and updated technologies in the Java EE 7 platform.
 Thus, the clustering, standalone instance and high availability features
@@ -49,7 +49,7 @@ This preface contains information about and conventions for the entire
 GlassFish Server Open Source Edition (GlassFish Server) documentation
 set.
 
-GlassFish Server 4.0 is developed through the GlassFish project
+GlassFish Server 7 is developed through the GlassFish project
 open-source community at `http://glassfish.java.net/`. The GlassFish
 project provides a structured process for developing the GlassFish
 Server platform that makes the new features of the Java EE platform

@@ -1,21 +1,21 @@
 type=page
 status=published
-title=Uninstalling GlassFish Server 5.0
+title=Uninstalling GlassFish Server 7
 prev=installing.html
 ~~~~~~
 
-Uninstalling GlassFish Server 5.0
+Uninstalling GlassFish Server 7
 =================================
 
 [[GSING00003]][[ghmlt]]
 
 
 [[uninstalling-glassfish-server-5.0]]
-2 Uninstalling GlassFish Server 5.0
+2 Uninstalling GlassFish Server 7
 -----------------------------------
 
 This chapter describes how to uninstall GlassFish Server Open Source
-Edition 5.0 software.
+Edition 7 software.
 
 [[gjxfv]][[GSING00028]][[removing-a-glassfish-server-installation]]
 
@@ -23,7 +23,7 @@ Removing a GlassFish Server Installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section describes how to remove GlassFish Server Open Source
-Edition 5.0 software.
+Edition 7 software.
 
 The following topics are addressed here:
 

@@ -16,7 +16,7 @@ Administering the Monitoring Service
 --------------------------------------
 
 This chapter explains how to monitor the GlassFish Server Open Source
-Edition 5.0 components and services by using the `asadmin` command-line
+Edition 7 components and services by using the `asadmin` command-line
 utility. Instructions for configuring JConsole to monitor GlassFish
 Server resources are also provided.
 

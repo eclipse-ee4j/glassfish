@@ -83,7 +83,7 @@ possible.
 +
 [NOTE]
 ====
-GlassFish Server 4.0 does not support High Availability Database (HADB)
+GlassFish Server 7 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
 link:overview.html#gaynn[High Availability Session Persistence].
 ====
@@ -122,13 +122,12 @@ For information about how to disable these features, see the
 link:../application-deployment-guide/toc.html#GSDPG[
 GlassFish Server Open Source Edition Application Deployment Guide].
 
-* GlassFish Server 4.0 does not support High Availability Database
+* GlassFish Server 7 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
 in link:overview.html#gaynn[High Availability Session Persistence].
 
 * You can only bind certain objects to distributed sessions that support
-failover. Contrary to the Servlet 2.4 specification, GlassFish Server
-4.0 does not throw an `IllegalArgumentException` if an object type not
+failover. Contrary to the Servlet 2.4 specification, GlassFish Server 7 does not throw an `IllegalArgumentException` if an object type not
 supported for failover is bound into a distributed session.
 +
 You can bind the following objects into a distributed session that
@@ -364,7 +363,7 @@ Configuring Replication and Multi-Threaded Concurrent Access to
 If you are using Memory Replication and your web application involves
 multiple client threads concurrently accessing the same session ID, then
 you may experience session loss even without any instance failure. The
-problem is that the GlassFish Server 4.0 memory replication framework
+problem is that the GlassFish Server 7 memory replication framework
 makes use of session versioning. This feature was designed with the more
 traditional HTTP request/response communication model in mind.
 
@@ -493,7 +492,7 @@ Using Coherence*Web for HTTP Session Persistence
 
 Built on top of Oracle Coherence, Coherence*Web is an HTTP session
 management module dedicated to managing session state in clustered
-environments. Starting with Coherence 3.7 and GlassFish Server 4.0,
+environments. Starting with Coherence 3.7 and GlassFish Server 7,
 there is a new feature of Coherence*Web called ActiveCache for
 GlassFish. ActiveCache for GlassFish provides Coherence*Web
 functionality in web applications deployed on GlassFish Servers. Within

@@ -15,7 +15,7 @@ A Subcommands for the `asadmin` Utility
 ---------------------------------------
 
 This appendix lists the `asadmin` subcommands that are included with
-this release of the GlassFish Server Open Source Edition 5.0 software.
+this release of the GlassFish Server Open Source Edition 7 software.
 
 * link:#ggltk[General Administration Subcommands]
 * link:#CHDJGEEG[Batch Jobs Subcommands]

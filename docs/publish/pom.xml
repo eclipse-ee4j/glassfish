@@ -43,7 +43,7 @@
         <!-- add a new property for each new release -->
         <dir.510>${site.output.dir}/docs/5.1.0</dir.510>
         <!-- the "latest" version; update when a new release is done -->
-        <docs.version>5.1.0</docs.version>
+        <docs.version>7.0.0</docs.version>
     </properties>
 
     <!--

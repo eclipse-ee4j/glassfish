@@ -10,7 +10,7 @@ Eclipse GlassFish Server 7 Embedded Server Guide
 [[GSESG00001]][[gjldt]]
 
 
-[[glassfish-server-open-source-edition-4.0-embedded-server-guide]]
+[[glassfish-server-open-source-edition-embedded-server-guide]]
 1 Eclipse GlassFish Server 7 Embedded Server Guide
 --------------------------------------------------
 

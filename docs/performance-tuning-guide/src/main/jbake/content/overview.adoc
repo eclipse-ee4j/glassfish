@@ -34,7 +34,7 @@ The following topics are addressed here:
 Process Overview
 ~~~~~~~~~~~~~~~~
 
-The following table outlines the overall GlassFish Server 4.0
+The following table outlines the overall GlassFish Server 7
 administration process, and shows where performance tuning fits in the
 sequence.
 
@@ -272,13 +272,13 @@ Security]" in GlassFish Server Open Source Edition Security Guide.
 High Availability Clustering, Load Balancing, and Failover
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server 4.0 enables multiple GlassFish Server instances to be
+GlassFish Server 7 enables multiple GlassFish Server instances to be
 clustered to provide high availability through failure protection,
 scalability, and load balancing.
 
 High availability applications and services provide their functionality
 continuously, regardless of hardware and software failures. To make such
-reliability possible, GlassFish Server 4.0 provides mechanisms for
+reliability possible, GlassFish Server 7 provides mechanisms for
 maintaining application state data between clustered GlassFish Server
 instances. Application state data, such as HTTP session data, stateful
 EJB sessions, and dynamic cache information, is replicated in real time
@@ -298,7 +298,7 @@ high availability persistence tuning recommendations.
 See the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
-features in GlassFish Server 4.0.
+features in GlassFish Server 7.
 
 [[abeay]][[GSPTG00157]][[hardware-resources]]
 

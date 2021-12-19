@@ -16,7 +16,7 @@ Administering Web Applications
 --------------------------------
 
 This chapter explains how to administer web applications in the
-GlassFish Server Open Source Edition 5.0 environment.
+GlassFish Server Open Source Edition 7 environment.
 
 The following topics are addressed here:
 
@@ -215,7 +215,7 @@ Server with Apache HTTP Server.
 
 You can also use `mod_jk` directly at the JSP/servlet engine for load
 balancing. For more information about configuring `mod_jk` and Apache
-HTTP Server for load balancing with GlassFish Server 5.0 refer to
+HTTP Server for load balancing with GlassFish Server 7 refer to
 "link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in GlassFish Server
 Open Source Edition High Availability Administration Guide.
 

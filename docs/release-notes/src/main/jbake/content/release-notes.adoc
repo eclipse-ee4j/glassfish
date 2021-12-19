@@ -1,17 +1,17 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 6.1 Release Notes
+title=Eclipse GlassFish Server 7 Release Notes
 prev=preface.html
 ~~~~~~
 
-Eclipse GlassFish Server 6.1 Release Notes
-==========================================
+Eclipse GlassFish Server 7 Release Notes
+========================================
 
 [[GSRLN00001]][[abppa]]
 
 
-[[glassfish-server-open-source-edition-6.1-release-notes]]
-1 Eclipse GlassFish Server 6.1 Release Notes
+[[glassfish-server-open-source-edition-release-notes]]
+1 Eclipse GlassFish Server 7 Release Notes
 --------------------------------------------
 
 GlassFish Server provides a lightweight, modular server for the
@@ -24,11 +24,11 @@ For any issue or information on Eclipse GlassFish Server,
 see the https://javaee.github.io/glassfish/[GlassFish Server Community]
 (`https://javaee.github.io/glassfish/`).
 
-These Release Notes provide late-breaking information about GlassFish
-Server 5.1 software and documentation. These Release Notes include
+These Release Notes provide late-breaking information about GlassFish Server 7
+software and documentation. These Release Notes include
 summaries of supported hardware, operating environments, and JDK and
 JDBC/RDBMS requirements. Also included are a summary of new product
-features in the 5.1 release, and descriptions and workarounds for known
+features in the 7 release, and descriptions and workarounds for known
 issues and limitations.
 
 Refer to this document prior to installing, configuring, or using
@@ -65,7 +65,7 @@ Table 1-1 Revision History
 |===
 
 
-[[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-5.1-release]]
+[[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-release]]
 
 What's New in the GlassFish Server 7 Release?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -103,8 +103,8 @@ Updated
 * Interceptors 1.2
 * JavaMail 1.6
 
-For a complete list of the Java EE technologies included in GlassFish
-Server 5.1, see link:#gipkz[Java EE Standards Support].
+For a complete list of the Java EE technologies included in GlassFish Server 7,
+see link:#gipkz[Java EE Standards Support].
 
 
 [NOTE]
@@ -399,10 +399,8 @@ Eclipse GlassFish Server 7 software.
 The following topics are addressed here:
 
 * link:#CHDIBHHF[JAXB and JAX-WS no longer part of Java EE platform]
-* link:#CHDIBEAJ[Resource validation property is enabled in the JVM
-option for deployment]
-* link:#CHDBJDGF[Update Tool and pkg Command no longer part of GlassFish
-Server]
+* link:#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
+* link:#CHDBJDGF[Update Tool and pkg Command no longer part of GlassFish Server]
 * link:#CHDJGJHD[Java DB has been replaced by Apache Derby]
 
 [[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
@@ -781,7 +779,7 @@ Table 1-4 Java EE Standards Implementations in GlassFish Server 7
 [width="100%",cols="48%,24%,16%,12%",options="header",]
 |===
 |Java EE Standard |Java Specification Request (JSR)
-|GlassFish Server 5.1 Full Platform |GlassFish Server 7 Web Profile
+|GlassFish Server 7 Full Platform |GlassFish Server 7 Web Profile
 
 |https://javaee.github.io/javaee-spec/javadocs/[
 Java Platform, Enterprise Edition 8] `(https://javaee.github.io/javaee-spec/javadocs/)`

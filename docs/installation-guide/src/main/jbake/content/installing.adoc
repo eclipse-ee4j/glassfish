@@ -15,14 +15,13 @@ Installing Eclipse GlassFish Server 7
 1 Installing Eclipse GlassFish Server 7
 ---------------------------------------
 
-This chapter provides instructions for installing Eclipse GlassFish Server
-5.1 software on Solaris, Linux, Mac OS X, and Windows
-systems.
+This chapter provides instructions for installing Eclipse GlassFish Server 7
+software on Solaris, Linux, Mac OS X, and Windows systems.
 
 The following topics are addressed here:
 
 * link:#gjiaz[Installation Requirements]
-* link:#ggrlg[Installation Files for GlassFish Server 5.0]
+* link:#ggrlg[Installation Files for GlassFish Server 7]
 * link:#ghmxb[Installing GlassFish Server From a ZIP File]
 
 [[gjiaz]][[GSING00022]][[installation-requirements]]

@@ -18,7 +18,7 @@ Release 7
 
 Contributed 2018, 2019
 
-This book describes how to get the best performance with GlassFish Server 5.1.
+This book describes how to get the best performance with GlassFish Server 7.
 
 [[sthref1]]
 

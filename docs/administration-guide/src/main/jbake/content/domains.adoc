@@ -1343,7 +1343,7 @@ typing `asadmin help uptime` at the command line.
 To Switch a Domain to Another Supported Java Version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server 5.0 requires Java SE 8 as the underlying virtual
+GlassFish Server 7 requires Java SE 8 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]

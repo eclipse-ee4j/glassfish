@@ -271,12 +271,12 @@ bin/jaxb-compiler.sh
 GlassFish Java EE Service Engine
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GlassFish Server 5.0 provides the GlassFish Java EE Service Engine, a
+GlassFish Server 7 provides the GlassFish Java EE Service Engine, a
 JSR 208 compliant Java Business Integration (JBI) runtime component that
 connects Java EE web services to JBI components. The Java EE Service
 Engine is installed as an add-on component using the Update Tool. Look
 for the JBI component named Java EE Service Engine. A JBI runtime is not
-installed with or integrated into GlassFish Server 5.0 and must be
+installed with or integrated into GlassFish Server 7 and must be
 obtained separately. For more information about using the Update Tool to
 obtain the Java EE Service Engine and other add-on components, see
 "link:../administration-guide/toc.html#GSADG00701[Update Tool]" in GlassFish Server Open Source Edition

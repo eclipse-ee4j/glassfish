@@ -35,7 +35,7 @@ This preface contains information about and conventions for the entire
 GlassFish Server Open Source Edition (GlassFish Server) documentation
 set.
 
-GlassFish Server 5.0 is developed through the GlassFish project
+GlassFish Server 7 is developed through the GlassFish project
 open-source community at `https://javaee.github.io/glassfish/`. The
 GlassFish project provides a structured process for developing the
 GlassFish Server platform that makes the new features of the Java EE

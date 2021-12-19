@@ -16,7 +16,7 @@ Administering Internet Connectivity
 --------------------------------------
 
 This chapter provides procedures for performing internet connectivity
-tasks in the GlassFish Server Open Source Edition 5.0 environment by
+tasks in the GlassFish Server Open Source Edition 7 environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:

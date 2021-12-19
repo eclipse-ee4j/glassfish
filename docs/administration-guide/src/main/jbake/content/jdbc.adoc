@@ -16,7 +16,7 @@ Administering Database Connectivity
 --------------------------------------
 
 This chapter provides procedures for performing database connectivity
-tasks in the GlassFish Server Open Source Edition 5.0 environment by
+tasks in the GlassFish Server Open Source Edition 7 environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -1053,7 +1053,7 @@ typing `asadmin help delete-jdbc-resource` at the command line.
 Enabling the `jdbc/__default` Resource in a Clustered Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server 5.0 includes a preconfigured JDBC resource with the
+GlassFish Server 7 includes a preconfigured JDBC resource with the
 JNDI name `jdbc/__default`. This `jdbc/__default` resource is not
 enabled by default, so you need to explicitly enable it if you want to
 use it in a cluster.

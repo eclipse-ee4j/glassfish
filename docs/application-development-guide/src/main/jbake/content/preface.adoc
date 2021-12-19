@@ -40,7 +40,7 @@ This preface contains information about and conventions for the entire
 GlassFish Server Open Source Edition (GlassFish Server) documentation
 set.
 
-GlassFish Server 5.0 is developed through the GlassFish project
+GlassFish Server 7 is developed through the GlassFish project
 open-source community at `https://javaee.github.io/glassfish/`. The
 GlassFish project provides a structured process for developing the
 GlassFish Server platform that makes the new features of the Java EE
@@ -142,7 +142,7 @@ GlassFish Server is available as follows.
 
 * The Java EE specifications and API specification for version 8 is
 located at `https://javaee.github.io/javaee-spec/`.
-* The API specification for GlassFish Server 5.0, including Java EE 8
+* The API specification for GlassFish Server 7, including Java EE 8
 platform packages and nonplatform packages that are specific to the
 GlassFish Server product, is located at
 `https://javaee.github.io/glassfish/documentation`.

@@ -16,7 +16,7 @@ Administering the Logging Service
 -----------------------------------
 
 This chapter provides instructions on how to configure logging and how
-to view log information in the GlassFish Server Open Source Edition 5.0 environment.
+to view log information in the GlassFish Server Open Source Edition 7 environment.
 
 The following topics are addressed here:
 
@@ -169,7 +169,7 @@ The following is an example of a log record formatted in the ODL format:
 
 [source]
 ----
-[2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [jakarta.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
+[2021-04-12T08:08:30.154-0700] [glassfish 7.0] [INFO] [AS-WEB-GLUE-00172] [jakarta.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
 [timeMillis: 1365779310154] [levelValue: 800] [[
   Loading application [payroll] at [/payroll]]]
 ----
@@ -205,7 +205,7 @@ The following is an example of a log record formatted in the ULF format:
 
 [source]
 ----
-[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 6.0|jakarta.enterprise.web.core|
+[#|2013-04-18T09:27:44.315-0700|INFO|glassfish 7.0|jakarta.enterprise.web.core|
 _ThreadID=15;_ThreadName=RunLevelControllerThread-1366302462682;_TimeMillis=1366302464315;_LevelValue=800;_MessageID=AS-WEB-CORE-00306;|
   Setting JAAS app name glassfish-web|#]
 ----

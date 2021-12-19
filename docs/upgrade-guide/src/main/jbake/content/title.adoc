@@ -18,8 +18,8 @@ Release 7
 
 Contributed 2018, 2019
 
-This guide explains how to upgrade to Eclipse GlassFish Server
-5.1 from previous GlassFish Server and Sun GlassFish Enterprise
+This guide explains how to upgrade to Eclipse GlassFish Server 7
+from previous GlassFish Server and Sun GlassFish Enterprise
 Server product releases. Also included in this guide are instructions
 for upgrading configuration data and Java EE applications from
 binary-compatible earlier versions of this software to work with

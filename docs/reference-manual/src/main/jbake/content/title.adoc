@@ -19,8 +19,8 @@ Release 7
 Contributed 2018, 2019
 
 This reference manual describes administration commands and utility
-commands that are available with Eclipse GlassFish Server
-5.1. This reference manual also describes concepts that are related to
+commands that are available with Eclipse GlassFish Server 7.
+This reference manual also describes concepts that are related to
 \{product---name} administration.
 
 The available options, arguments, and operands for each command are

@@ -15,7 +15,7 @@ Frequently Asked Questions
 ----------------------------
 
 This chapter lists a few of the Frequently Asked Questions (FAQs)
-related to Oracle GlassFish Server 4.0. For the latest FAQs, see the
+related to Oracle GlassFish Server 7. For the latest FAQs, see the
 GlassFish wiki at
 `http://wikis.sun.com/display/GlassFish/GlassFishFAQIndex`.
 

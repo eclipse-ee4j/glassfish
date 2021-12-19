@@ -15,8 +15,7 @@ High Availability in GlassFish Server
 1 High Availability in GlassFish Server
 ---------------------------------------
 
-This chapter describes the high availability features in Eclipse GlassFish
-Server 5.1.
+This chapter describes the high availability features in Eclipse GlassFish Server 7.
 
 The following topics are addressed here:
 
@@ -52,7 +51,7 @@ GlassFish Server provides the following high availability features:
 Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A common load balancing configuration for GlassFish Server 4.0 is to use
+A common load balancing configuration for GlassFish Server 7 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
 server and GlassFish Server. See
@@ -184,7 +183,7 @@ information. GlassFish Server supports in-memory session replication on
 other servers in the cluster for maintaining HTTP session and stateful
 session bean data.
 
-In-memory session replication is implemented in GlassFish Server 4.0 as
+In-memory session replication is implemented in GlassFish Server 7 as
 an OSGi module. Internally, the replication module uses a consistent
 hash algorithm to pick a replica server instance within a cluster of
 instances. This allows the replication module to easily locate the

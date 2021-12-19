@@ -17,7 +17,7 @@ Administering the Virtual Machine for the Java Platform
 
 This chapter provides procedures for administering the Virtual Machine
 for the Java platform (Java Virtual Machine) or JVM machine) in the
-GlassFish Server Open Source Edition 5.0 environment by using the
+GlassFish Server Open Source Edition 7 environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:

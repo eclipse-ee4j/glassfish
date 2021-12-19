@@ -1,21 +1,21 @@
 type=page
 status=published
-title=Overview of GlassFish Server Open Source Edition 5.0 Application Deployment
+title=Overview of GlassFish Server Open Source Edition 7 Application Deployment
 next=deploying-applications.html
 prev=preface.html
 ~~~~~~
 
-Overview of GlassFish Server Open Source Edition 5.0 Application Deployment
+Overview of GlassFish Server Open Source Edition 7 Application Deployment
 ===========================================================================
 
 [[GSDPG00003]][[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
-1 Overview of GlassFish Server Open Source Edition 5.0 Application Deployment
+1 Overview of GlassFish Server Open Source Edition 7 Application Deployment
 -----------------------------------------------------------------------------
 
-GlassFish Server Open Source Edition 5.0 provides an environment for
+GlassFish Server Open Source Edition 7 provides an environment for
 developing and deploying Java applications and web services. GlassFish
 Server applications include Java Platform, Enterprise Edition (Java EE
 platform) standard features as well as features specific to GlassFish

@@ -4,6 +4,7 @@ title=GlassFish Server Upgrade Compatibility Issues
 next=upgrading-legacy-installation.html
 prev=preface.html
 ~~~~~~
+
 GlassFish Server Upgrade Compatibility Issues
 =============================================
 
@@ -43,8 +44,7 @@ Binary-Compatible Releases For GlassFish Server 4.0
 GlassFish Server Open Source Edition 4.0 is binary-compatible with the
 following earlier releases of the software:
 
-* Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer
-Profiles)
+* Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer Profiles)
 * Sun GlassFish Enterprise Server v3
 * GlassFish Server Open Source Edition 3.0.1
 * GlassFish Server Open Source Edition 3.1
@@ -55,18 +55,14 @@ Server Open Source Edition 4.0 except for the compatibility issues that
 are listed in the remainder of this chapter.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The compatibility issues that are listed in the remainder of this
 chapter do not affect Java applications that run on Sun GlassFish
 Enterprise Server v3 and GlassFish Server 3.0.1. The differences between
 GlassFish Server 4.0 and the Enterprise Server v3 releases do not affect
 applications and data.
-
-|=======================================================================
+====
 
 
 [[gkric]][[GSUPG00029]][[new-default-installation-directory]]
@@ -74,16 +70,15 @@ applications and data.
 New Default Installation Directory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The default GlassFish Server 4.0 installation directories are as
-follows:
+The default GlassFish Server 4.0 installation directories are as follows:
 
 Solaris, Linux, and Mac OS X systems::
-[source,oac_no_warn]
+[source]
 ----
 user-home-directory/glassfish3
 ----
 Windows systems::
-[source,oac_no_warn]
+[source]
 ----
 SystemDrive\glassfish3
 ----
@@ -110,13 +105,13 @@ Administration Console are summarized in the following table.
 Table 1-1 GMS Administration Console Settings Changes from 2.1.1 to 4.0
 
 [width="100%",cols="<50%,<50%",options="header",]
-|=================================================
+|===
 |Old Setting Name |New Setting Name
 |Protocol Maximum Trial |Maximum Missed Heartbeats
 |Protocol Timeout |Heartbeat Frequency
 |Ping Timeout |Group Discovery Timeout
 |Verified Timeout |Failure Verification Wait Time
-|=================================================
+|===
 
 
 The Merge Protocol settings from Sun GlassFish Enterprise Server v2.1.1
@@ -147,7 +142,7 @@ Server 4.0 in order to run the client. Use the
 If you try to run the application client before retrieving the client
 stubs, you will see the following error message:
 
-[source,oac_no_warn]
+[source]
 ----
 Invalid or corrupt jarfile jar-file-name
 ----
@@ -192,22 +187,22 @@ Agent Configurations] for more information.
 HADB and `hadbm` Command Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GlassFish Server 4.0 does not support HADB or the `hadbm` management
-command.
+GlassFish Server 4.0 does not support HADB or the `hadbm` management command.
 
 Instead of HADB, GlassFish Server 4.0 supports high availability
 clustering by means of in-memory session state replication and
-ActiveCache for GlassFish. See "link:../ha-administration-guide/overview.html#GSHAG00002[High Availability in
-GlassFish Server]" in GlassFish Server Open Source Edition High
-Availability Administration Guide for more information.
+ActiveCache for GlassFish.
+See "link:../ha-administration-guide/overview.html#GSHAG00002[
+High Availability in GlassFish Server]" in
+GlassFish Server Open Source Edition High Availability Administration Guide
+for more information.
 
 [[abmbc]][[GSUPG00034]][[command-line-interface-the-asadmin-command]]
 
 Command Line Interface: The `asadmin` Command
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following sections describe changes to the command line utility
-`asadmin`:
+The following sections describe changes to the command line utility `asadmin`:
 
 * link:#abmbd[Deprecated `asadmin` Subcommands]
 * link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
@@ -249,77 +244,95 @@ Table 1-2 Deprecated, Unsupported, and Obsolete Options for `asadmin`
 and Subcommands
 
 [width="100%",cols="<33%,<67%",options="header",]
-|=======================================================================
+|===
 |Option |Affected Subcommands
-|`--acceptlang` |Unsupported for the `create-virtual-server` subcommand.
 
-|`--acls` |Unsupported for the `create-virtual-server` subcommand.
+|`--acceptlang`
+|Unsupported for the `create-virtual-server` subcommand.
 
-|`--adminpassword` |Unsupported for all relevant subcommands. Use
-`--passwordfile` instead.
+|`--acls`
+|Unsupported for the `create-virtual-server` subcommand.
 
-|`--autoapplyenabled` |Obsolete for the `create-http-lb` subcommand.
+|`--adminpassword`
+|Unsupported for all relevant subcommands. Use `--passwordfile` instead.
 
-|`--autohadb` |Obsolete for the `create-cluster` subcommand.
+|`--autoapplyenabled`
+|Obsolete for the `create-http-lb` subcommand.
 
-|`--autohadboverride` |Obsolete for the `start-cluster` subcommand and
-the `stop-cluster` subcommand
+|`--autohadb`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--blockingenabled` |Unsupported for the `create-http-listener`
-subcommand.
+|`--autohadboverride`
+|Obsolete for the `start-cluster` subcommand and the `stop-cluster` subcommand
 
-|`--configfile` |Unsupported for the `create-virtual-server` subcommand.
+|`--blockingenabled`
+|Unsupported for the `create-http-listener` subcommand.
 
-|`--defaultobj` |Unsupported for the `create-virtual-server` subcommand.
+|`--configfile`
+|Unsupported for the `create-virtual-server` subcommand.
 
-|`--defaultvs` |Deprecated for the `create-http-listener` subcommand.
-Use `--default-virtual-server` instead.
+|`--defaultobj`
+|Unsupported for the `create-virtual-server` subcommand.
 
-|`--description` |Obsolete for the `restore-domain` subcommand.
+|`--defaultvs`
+|Deprecated for the `create-http-listener` subcommand. Use `--default-virtual-server` instead.
 
-|`--devicesize` |Obsolete for the `create-cluster` subcommand.
+|`--description`
+|Obsolete for the `restore-domain` subcommand.
 
-|`--haadminpassword` |Obsolete for the `create-cluster` subcommand.
+|`--devicesize`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--haadminpasswordfile` |Obsolete for the `create-cluster` subcommand.
+|`--haadminpassword`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--haagentport` |Obsolete for the `create-cluster` subcommand.
+|`--haadminpasswordfile`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--haproperty` |Obsolete for the `create-cluster` subcommand.
+|`--haagentport`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--heartbeataddress` |Deprecated for the `create-cluster` subcommand.
-Use `--multicastaddress` instead.
+|`--haproperty`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--heartbeatport` |Deprecated for the `create-cluster` subcommand. Use
-`--multicastport` instead.
+|`--heartbeataddress`
+|Deprecated for the `create-cluster` subcommand. Use `--multicastaddress` instead.
 
-|`--hosts` |Obsolete for the `create-cluster` subcommand.
+|`--heartbeatport`
+|Deprecated for the `create-cluster` subcommand. Use `--multicastport` instead.
 
-|`--ignoreDescriptorItem` |Replaced by the all lowercase option
-`--ignoredescriptoritem` in the `set-web-context-param` subcommand and
-the `set-web-env-entry` subcommand.
+|`--hosts`
+|Obsolete for the `create-cluster` subcommand.
 
-|`--mime` |Unsupported for the `create-virtual-server` subcommand.
+|`--ignoreDescriptorItem`
+|Replaced by the all lowercase option `--ignoredescriptoritem`
+in the `set-web-context-param` subcommand and the `set-web-env-entry` subcommand.
 
-|`--password` |Unsupported for all remote subcommands. Use
-`--passwordfile` instead.
+|`--mime`
+|Unsupported for the `create-virtual-server` subcommand.
 
-|`--path` |Unsupported for the `create-domain` subcommand. Use
-`--domaindir` instead.
+|`--password`
+|Unsupported for all remote subcommands. Use `--passwordfile` instead.
 
-|`--portbase` |Obsolete only for the `create-cluster` subcommand. This
-option is still valid in other subcommands such as `create-domain`,
+|`--path`
+|Unsupported for the `create-domain` subcommand. Use `--domaindir` instead.
+
+|`--portbase`
+|Obsolete only for the `create-cluster` subcommand.
+This option is still valid in other subcommands such as `create-domain`,
 `create-instance`, and `create-local-instance`.
 
-|`--resourcetype` |Unsupported for all relevant subcommands. Use
-`--restype` instead.
+|`--resourcetype`
+|Unsupported for all relevant subcommands. Use `--restype` instead.
 
-|`--retrievefile` |Obsolete for the `export-http-lb-config` subcommand.
+|`--retrievefile`
+|Obsolete for the `export-http-lb-config` subcommand.
 
-|`--setenv` |Obsolete for the `start-instance` subcommand.
+|`--setenv`
+|Obsolete for the `start-instance` subcommand.
 
-|`--target` a|
-Obsolete only for the following subcommands:
+|`--target`
+a|Obsolete only for the following subcommands:
 
 * `create-connector-connection-pool`
 * `create-resource-adapter-config`
@@ -329,9 +342,8 @@ Obsolete only for the following subcommands:
 * `delete-resource-ref`
 
 Replaced by an operand in the `list-custom-resources` subcommand and the
-`list-jndi-entries` subcommand:
-
-|=======================================================================
+`list-jndi-entries` subcommand.
+|===
 
 
 [[gflnv]][[GSUPG00035]][[applications-that-use-java-db]]
@@ -354,14 +366,15 @@ is not running when you do this.
 
 Alternatively, you can perform these steps:
 
-1.  Use the `asadmin start-database` command with the `--dbhome` option
+1. Use the `asadmin start-database` command with the `--dbhome` option
 pointing to the `databases` directory in the older version of Java DB.
-For example: +
-[source,oac_no_warn]
+For example:
++
+[source]
 ----
 asadmin start-database --dbhome c:\glassfish\databases
 ----
-2.  After upgrade, start GlassFish Server 4.0.
+2. After upgrade, start GlassFish Server 4.0.
 
 [[gjizi]][[GSUPG00036]][[applications-that-use-persistence]]
 
@@ -378,7 +391,7 @@ will work in GlassFish Server 4.0. The container creates an
 `EntityManager` if the application uses the `@PersistenceContext`
 annotation to inject an `EntityManager`, as in the following example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @PersistenceContext
 EntityManager em;
@@ -388,7 +401,7 @@ The container creates an `EntityManagerFactory` if the application uses
 the `@PersistenceUnit` annotation to inject an `EntityManagerFactory`,
 as in the following example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @PersistenceUnit
 EntityManagerFactory emf;
@@ -409,28 +422,28 @@ Under certain circumstances, however, you may have to modify the
 file for both the `provider` element and for any `toplink.*` properties
 to use the EclipseLink equivalents. An application uses Java SE code if
 it uses the `javax.persistence.Persistence` class to create the
-`EntityManagerFactory`, as in the following example: +
-[source,oac_no_warn]
+`EntityManagerFactory`, as in the following example:
++
+[source,java]
 ----
 EntityManagerFactory emf =
     javax.persistence.Persistence.createEntityManagerFactory("Order");
 EntityManager em = emf.createEntityManager();
 ----
-In this case, change the `provider` element to specify the following: +
-[source,oac_no_warn]
+In this case, change the `provider` element to specify the following:
++
+[source,xml]
 ----
 <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 ----
 * If the application itself contains any TopLink Essentials-specific
-code and therefore contains casts to `oracle.toplink.*`, you must change
+code and therefore contains casts to `oracle.toplink.\*`, you must change
 the code to cast to `org.eclipse.persistence.*`. You can use the package
 renamer tool described on the
-http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages[Eclipse
-wiki]
-(`http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages`)
+http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages[
+Eclipse wiki]
 to do this. This tool is not provided with GlassFish Server 4.0,
-however, so you must obtain it from the EclipseLink project download
-site.
+however, so you must obtain it from the EclipseLink project download site.
 
 [[gjiqj]][[GSUPG00037]][[http-service-to-network-service-changes]]
 
@@ -460,7 +473,7 @@ supported are `request-processing`, `keep-alive`, `connection-pool`,
 upgrade process, these discontinued elements are remapped to the new
 configuration automatically and then deleted.
 
-[source,oac_no_warn]
+[source]
 ----
 config
     http-service
@@ -485,7 +498,7 @@ The dotted name hierarchy for the GlassFish Server 4.0 Network Service
 and HTTP Service configurations is shown below. The `network-config`
 element and all its children are new except for `ssl`.
 
-[source,oac_no_warn]
+[source]
 ----
 config
     network-config
@@ -519,13 +532,15 @@ for Sun GlassFish Enterprise Server v3 and GlassFish Server 4.0. Note
 that the configuration for Enterprise Server v3 also applies to all
 earlier Enterprise Server 2.x releases.
 
-* Command for Sun GlassFish Enterprise Server v3 and earlier: +
-[source,oac_no_warn]
+* Command for Sun GlassFish Enterprise Server v3 and earlier:
++
+[source]
 ----
 asadmin set server-config.http-service.http-listener.http-1.listenerport=4321
 ----
-* Command for GlassFish Server 4.0: +
-[source,oac_no_warn]
+* Command for GlassFish Server 4.0:
++
+[source]
 ----
 asadmin set server-config.network-config.network-listeners.network-\
 listener.http-1.listenerport=4321
@@ -565,14 +580,14 @@ discontinued elements are deleted.
 Table 1-3 `com.sun.grizzly` Property Remapping
 
 [width="100%",cols="<33%,<26%,<41%",options="header",]
-|==================================================================
+|===
 |`com.sun.grizzly` Property |New Owning Element |New Attribute Name
 |`selector.timeout` |`transport` |`selector-poll-timeout-millis`
 |`displayConfiguration` |`transport` |`display-configuration`
 |`enableSnoop` |`transport` |`snoop-enabled`
 |`readTimeout` |`transport` |`read-timeout-millis`
 |`writeTimeout` |`transport` |`write-timeout-millis`
-|==================================================================
+|===
 
 
 [[sthref6]][[gipfn]]
@@ -580,7 +595,7 @@ Table 1-3 `com.sun.grizzly` Property Remapping
 Table 1-4 `connection-pool` Attribute Remapping
 
 [width="100%",cols="<41%,<19%,<40%",options="header",]
-|=======================================================================
+|===
 |`connection-pool` Attribute |New Owning Element |New Attribute Name
 |`queue-size-in-bytes` |`thread-pool` |`max-queue-size`
 
@@ -590,7 +605,7 @@ Table 1-4 `connection-pool` Attribute Remapping
 `bytes`
 
 |`send-buffer-size-in-bytes` |`http` |`send-buffer-size-bytes`
-|=======================================================================
+|===
 
 
 [[sthref7]][[gipcv]]
@@ -598,7 +613,7 @@ Table 1-4 `connection-pool` Attribute Remapping
 Table 1-5 `http-file-cache` Attribute Remapping
 
 [width="100%",cols="<50%,<17%,<33%",options="header",]
-|===================================================================
+|===
 |`http-file-cache` Attribute |New Owning Element |New Attribute Name
 |`file-caching-enabled` |`file-cache` |`enabled`
 |`max-age-in-seconds` |`file-cache` |`max-age-seconds`
@@ -610,7 +625,7 @@ Table 1-5 `http-file-cache` Attribute Remapping
 |`small-file-space-in-bytes` |none |not supported
 |`file-transmission-enabled` |none |not supported
 |`hash-init-size` |none |not supported
-|===================================================================
+|===
 
 
 [[sthref8]][[gipev]]
@@ -618,7 +633,7 @@ Table 1-5 `http-file-cache` Attribute Remapping
 Table 1-6 `http-listener` Attribute Remapping
 
 [width="100%",cols="<37%,<27%,<36%",options="header",]
-|=================================================================
+|===
 |`http-listener` Attribute |New Owning Element |New Attribute Name
 |`id` |`network-listener` |`name`
 |`address` |`network-listener` |`address`
@@ -633,7 +648,7 @@ Table 1-6 `http-listener` Attribute Remapping
 |`external-port` |none |not supported
 |`family` |none |not supported
 |`blocking-enabled` |none |not supported
-|=================================================================
+|===
 
 
 [[sthref9]][[gipdo]]
@@ -641,7 +656,7 @@ Table 1-6 `http-listener` Attribute Remapping
 Table 1-7 `http-listener` Property Remapping
 
 [width="100%",cols="<43%,<15%,<42%",options="header",]
-|=======================================================================
+|===
 |`http-listener` Property |New Owning Element |New Attribute Name
 |`maxKeepAliveRequests` |`http` |`max-connections`
 
@@ -709,7 +724,7 @@ Table 1-7 `http-listener` Property Remapping
 |`ssl3-session-timeout` |none |not supported
 
 |`ssl-session-timeout` |none |not supported
-|=======================================================================
+|===
 
 
 [[sthref10]][[gipel]]
@@ -717,14 +732,14 @@ Table 1-7 `http-listener` Property Remapping
 Table 1-8 `http-protocol` Attribute Remapping
 
 [width="100%",cols="<34%,<33%,<33%",options="header",]
-|=================================================================
+|===
 |`http-protocol` Attribute |New Owning Element |New Attribute Name
 |`version` |`http` |`version`
 |`forced-response-type` |`http` |`forced-response-type`
 |`default-response-type` |`http` |`default-response-type`
 |`dns-lookup-enabled` |none |not supported
 |`ssl-enabled` |none |not supported
-|=================================================================
+|===
 
 
 [[sthref11]][[gipfa]]
@@ -732,7 +747,7 @@ Table 1-8 `http-protocol` Attribute Remapping
 Table 1-9 `http-service` Property Remapping
 
 [width="100%",cols="<34%,<33%,<33%",options="header",]
-|=======================================================================
+|===
 |`http-service` Property |New Owning Element |New Attribute or Property
 Name
 |`accessLoggingEnabled` |`http-service`, `virtual-server`
@@ -749,7 +764,7 @@ Name
 |`connectionTimeout` |`http-service` |unchanged property
 
 |all other properties |none |not supported
-|=======================================================================
+|===
 
 
 [[sthref12]][[gipea]]
@@ -757,12 +772,12 @@ Name
 Table 1-10 `keep-alive` Attribute Remapping
 
 [width="100%",cols="<34%,<33%,<33%",options="header",]
-|==============================================================
+|===
 |`keep-alive` Attribute |New Owning Element |New Attribute Name
 |`max-connections` |`http` |`max-connections`
 |`timeout-in-seconds` |`http` |`timeout-seconds`
 |`thread-count` |none |not supported
-|==============================================================
+|===
 
 
 [[sthref13]][[gipdh]]
@@ -770,14 +785,14 @@ Table 1-10 `keep-alive` Attribute Remapping
 Table 1-11 `request-processing` Attribute Remapping
 
 [width="100%",cols="<43%,<18%,<39%",options="header",]
-|======================================================================
+|===
 |`request-processing` Attribute |New Owning Element |New Attribute Name
 |`thread-count` |`thread-pool` |`max-thread-pool-size`
 |`initial-thread-count` |`thread-pool` |`min-thread-pool-size`
 |`header-buffer-length-in-bytes` |`http` |`header-buffer-length-bytes`
 |`request-timeout-in-seconds` |`http` |`request-timeout-seconds`
 |`thread-increment` |none |not supported
-|======================================================================
+|===
 
 
 [[sthref14]][[gipdv]]
@@ -785,7 +800,7 @@ Table 1-11 `request-processing` Attribute Remapping
 Table 1-12 `ssl` Attribute Changes
 
 [width="100%",cols="<34%,<22%,<44%",options="header",]
-|=======================================================================
+|===
 |Previous Attribute or Property |Previous Owning Element |New `ssl`
 Attribute
 |none |none |`key-store`
@@ -800,7 +815,7 @@ Attribute
 |`trust-max-cert-length-bytes`
 
 |all other `ssl` attributes |`ssl` |unchanged
-|=======================================================================
+|===
 
 
 [[sthref15]][[gipcj]]
@@ -808,7 +823,7 @@ Attribute
 Table 1-13 `thread-pool` Attribute Changes
 
 [width="100%",cols="<44%,<17%,<39%",options="header",]
-|=======================================================================
+|===
 |Previous Attribute |Previous Owning Element |New `thread-pool`
 Attribute
 |none |none |`classname`
@@ -823,7 +838,7 @@ Attribute
 |`num-work-queues` |`thread-pool` |not supported
 
 |all other `thread-pool` attributes |`thread-pool` |unchanged
-|=======================================================================
+|===
 
 
 [[sthref16]][[gipep]]
@@ -831,7 +846,7 @@ Attribute
 Table 1-14 `virtual-server` Attribute Changes
 
 [width="100%",cols="<39%,<24%,<37%",options="header",]
-|=======================================================================
+|===
 |Previous Attribute or Property |Previous Owning Element |New
 `virtual-server` Attribute
 |`http-listeners` attribute |`virtual-server` |`network-listeners`
@@ -847,7 +862,7 @@ Table 1-14 `virtual-server` Attribute Changes
 
 |all other `virtual-server` properties |`virtual-server` |unchanged,
 still properties
-|=======================================================================
+|===
 
 
 [[gipcg]][[GSUPG00058]][[new-network-service-elements-and-attributes]]
@@ -870,14 +885,14 @@ see link:#gipcv[Table 1-5].
 Table 1-15 New `http` Attributes
 
 [width="100%",cols="<28%,<32%,<40%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`adapter` |`com.sun.grizzly.tcp. StaticResourcesAdapter` |(Optional)
 Specifies the class name of the static resources adapter.
 
 |`max-post-size-bytes` |`2097152` |(Optional) Specifies the maximum size
 of `POST` actions.
-|=======================================================================
+|===
 
 
 For remapped `http` attributes, see link:#gipfn[Table 1-4],
@@ -889,7 +904,7 @@ link:#gipea[Table 1-10], and link:#gipdh[Table 1-11].
 Table 1-16 New `network-listener` Attributes
 
 [width="100%",cols="<18%,<11%,<71%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`protocol` |none |Specifies the `name` of the `protocol` associated
 with this `network-listener`. Although this attribute is required, a
@@ -904,7 +919,7 @@ a `network-listener`.
 with this `network-listener`. Although this attribute is required, the
 default `transport` is used when you use `asadmin create-http-listener`
 to create a `network-listener`.
-|=======================================================================
+|===
 
 
 For remapped `network-listener` attributes, see link:#gipev[Table 1-6].
@@ -914,13 +929,13 @@ For remapped `network-listener` attributes, see link:#gipev[Table 1-6].
 Table 1-17 New `port-unification` Attributes
 
 [width="100%",cols="<19%,<16%,<65%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `port-unification`.
 
 |`classname` |none |Specifies the class name of the `port-unification`
 implementation.
-|=======================================================================
+|===
 
 
 [[sthref20]][[gipdj]]
@@ -928,10 +943,10 @@ implementation.
 Table 1-18 New `protocol` Attributes
 
 [width="100%",cols="<18%,<17%,<65%",options="header",]
-|=========================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `protocol`.
-|=========================================================
+|===
 
 
 For remapped `protocol` attributes, see link:#gipev[Table 1-6].
@@ -941,7 +956,7 @@ For remapped `protocol` attributes, see link:#gipev[Table 1-6].
 Table 1-19 New `protocol-chain` Attributes
 
 [width="100%",cols="<19%,<17%,<64%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `protocol-chain`.
 
@@ -949,7 +964,7 @@ Table 1-19 New `protocol-chain` Attributes
 implementation.
 
 |`type` |`STATELESS` |Specifies the type of protocol chain.
-|=======================================================================
+|===
 
 
 [[sthref22]][[gipfq]]
@@ -957,14 +972,14 @@ implementation.
 Table 1-20 New `protocol-chain-instance-handler` Attributes
 
 [width="100%",cols="<19%,<17%,<64%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the
 `protocol-chain-instance-handler`.
 
 |`classname` |none |Specifies the class name of the
 `protocol-chain-instance-handler` implementation.
-|=======================================================================
+|===
 
 
 [[sthref23]][[gipeq]]
@@ -972,13 +987,13 @@ Table 1-20 New `protocol-chain-instance-handler` Attributes
 Table 1-21 New `protocol-filter` Attributes
 
 [width="100%",cols="<19%,<17%,<64%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `protocol-filter`.
 
 |`classname` |none |Specifies the class name of the `protocol-filter`
 implementation.
-|=======================================================================
+|===
 
 
 [[sthref24]][[gipfd]]
@@ -986,7 +1001,7 @@ implementation.
 Table 1-22 New `protocol-finder` Attributes
 
 [width="100%",cols="<19%,<17%,<64%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `protocol-finder`.
 
@@ -995,7 +1010,7 @@ implementation.
 
 |`protocol` |none |Specifies the `name` of the `protocol` associated
 with this `protocol-finder`.
-|=======================================================================
+|===
 
 
 [[sthref25]][[gipft]]
@@ -1003,13 +1018,13 @@ with this `protocol-finder`.
 Table 1-23 New `selection-key-handler` Attributes
 
 [width="100%",cols="<19%,<16%,<65%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `selection-key-handler`.
 
 |`classname` |none |Specifies the class name of the
 `selection-key-handler` implementation.
-|=======================================================================
+|===
 
 
 [[sthref26]][[gipfi]]
@@ -1017,11 +1032,11 @@ Table 1-23 New `selection-key-handler` Attributes
 Table 1-24 New `ssl` Attributes
 
 [width="100%",cols="<19%,<17%,<64%",options="header",]
-|========================================================
+|===
 |Attribute |Default |Description
 |`key-store` |none |(Optional) Specifies a key store.
 |`trust-store` |none |(Optional) Specifies a trust store.
-|========================================================
+|===
 
 
 For remapped `ssl` attributes, see link:#gipdv[Table 1-12].
@@ -1031,7 +1046,7 @@ For remapped `ssl` attributes, see link:#gipdv[Table 1-12].
 Table 1-25 New `thread-pool` Attributes
 
 [width="100%",cols="<21%,<32%,<47%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`classname` |`com.sun.grizzly.http.StatsThreadPool` |(Optional)
 Specifies the class name of the `thread-pool` implementation.
@@ -1039,7 +1054,7 @@ Specifies the class name of the `thread-pool` implementation.
 |`max-queue-size` |`-1` |(Optional) Specifies the maximum number of
 messages that can be queued until threads are available to process them.
 A value of `-1` specifies no limit.
-|=======================================================================
+|===
 
 
 For remapped `thread-pool` attributes, see link:#gipfn[Table 1-4],
@@ -1050,7 +1065,7 @@ link:#gipdh[Table 1-11], and link:#gipcj[Table 1-13].
 Table 1-26 New `transport` Attributes
 
 [width="100%",cols="<35%,<27%,<38%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`name` |none |Specifies a unique name for the `transport`.
 
@@ -1062,7 +1077,7 @@ Specifies the class name of the `transport` implementation.
 
 |`idle-key-timeout-seconds` |`30` |(Optional) Specifies the idle key
 timeout.
-|=======================================================================
+|===
 
 
 For remapped `transport` attributes, see link:#gipfy[Table 1-3],

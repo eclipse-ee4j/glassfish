@@ -89,7 +89,7 @@ provisions required by the LGPL License. If you do not delete the
 provisions above, a recipient may use your version of this file under
 either the MPL or the LGPL License."
 
-[subs=none]
+[subs="none"]
 ----
 MOZILLA PUBLIC LICENSE
 

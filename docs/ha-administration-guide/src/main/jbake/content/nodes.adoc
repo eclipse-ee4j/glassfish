@@ -60,7 +60,7 @@ Each GlassFish Server node is one of the following types of node:
   the instances can reside on `CONFIG` nodes. You cannot use `CONFIG`
   nodes for instances that you plan to administer centrally. +
   Each domain contains a predefined `CONFIG` node that is named
-  `localhost-`domain, where domain is the name of the domain. On the
+  ``localhost-``domain, where domain is the name of the domain. On the
   host where the domain administration server (DAS) is running, this
   node represents the local host.
 

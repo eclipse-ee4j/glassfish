@@ -4,6 +4,7 @@ title=Specific Issues
 next=faqs.html
 prev=overview.html
 ~~~~~~
+
 Specific Issues
 ===============
 
@@ -59,7 +60,7 @@ the default domain was started successfully.
 If the console window is already closed, check for messages in the log
 file. This is the default location:
 
-[source,oac_no_warn]
+[source]
 ----
 domain-dir/logs/server.log
 ----
@@ -68,9 +69,10 @@ If startup was successful, the expected message is similar to that on
 the console, and appears at the end of the log file.
 
 For more information about starting a domain, see
-"link:../administration-guide/domains.html#GSADG00537[Starting and Stopping a Domain]" in GlassFish Server
-Open Source Edition Administration Guide. To easily determine if a
-domain is running, use the `asadmin list-domains` command.
+"link:../administration-guide/domains.html#GSADG00537[
+Starting and Stopping a Domain]"
+in GlassFish Server Open Source Edition Administration Guide.
+To easily determine if a domain is running, use the `asadmin list-domains` command.
 
 [[abgcd]][[GSTSG00180]][[was-the-server-started-at-the-expected-port]]
 
@@ -93,27 +95,25 @@ To Determine Which Port Number the Server Is Using
 
 Follow this procedure.
 
-1.  Examine the server's configuration file: +
-[source,oac_no_warn]
+1. Examine the server's configuration file:
++
+[source]
 ----
 domain-dir/config/domain.xml
 ----
-2.  Find the `network-listener` element.
-3.  Inspect the value of the `port` attribute. +
-Be sure to enter the correct port number when invoking the server. +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+2. Find the `network-listener` element.
+3. Inspect the value of the `port` attribute.
++
+Be sure to enter the correct port number when invoking the server.
++
+[NOTE]
+====
 The server's default port number is `8080`, however, there are a number
 of ways in which the expected value can change:
 
 * A different port number was specified during installation.
 * A previous installation exists.
-
-|=======================================================================
+====
 
 
 [[gjjpn]][[GSTSG00181]][[is-a-personal-firewall-enabled]]
@@ -163,10 +163,10 @@ To Verify That the Server Is Running Locally
 
 Follow this procedure.
 
-1.  Log on to the host where the server is running.
-2.  Go to the local web page. For example, if `8080` is the default
-port, go to: +
-[source,oac_no_warn]
+1. Log on to the host where the server is running.
+2. Go to the local web page. For example, if `8080` is the default port, go to:
++
+[source]
 ----
 http://localhost:8080/
 ----
@@ -187,7 +187,7 @@ Description
 The server should be accessible directly from the host on which it is
 running (`localhost`); for example, using the default port `8080`:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/
 ----
@@ -203,9 +203,9 @@ this problem, do one of the following:
 
 * Set the browser to bypass the proxy server when accessing `localhost`.
 Refer to the browser's help system for information about how to do this.
-* Use the fully-qualified host name or IP address of your system; for
-example: +
-[source,oac_no_warn]
+* Use the fully-qualified host name or IP address of your system; for example:
++
+[source]
 ----
 http://myhost.mydomain.com:8080/
 ----
@@ -213,15 +213,10 @@ http://myhost.mydomain.com:8080/
 `127.0.0.1` to `localhost`; `127.0.0.1` is not proxied).
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-To determine the host name for the `localhost` machine, type `hostname`
-at the command prompt.
-
-|=======================================================================
+[NOTE]
+====
+To determine the host name for the `localhost` machine, type `hostname` at the command prompt.
+====
 
 
 [[abgcm]][[GSTSG00045]][[cannot-access-the-administration-console]]
@@ -339,8 +334,9 @@ Solution
 Verify that the application was successfully deployed. There are several
 ways to do this:
 
-* Check the server's log file for related entries: +
-[source,oac_no_warn]
+* Check the server's log file for related entries:
++
+[source]
 ----
 domain-dir/server.log
 ----
@@ -393,10 +389,8 @@ dependency.
 The minimum (and certified) version of the JDK software that is required
 for GlassFish Server depends on the operating system:
 
-* For supported operating systems except Mac OS, the minimum required
-version is 1.6.0_17.
-* For the Mac OS X operating system, the minimum required version is
-1.6.0_15.
+* For supported operating systems except Mac OS, the minimum required version is 1.6.0_17.
+* For the Mac OS X operating system, the minimum required version is 1.6.0_15.
 
 Ensure that the required JDK software is installed and that the
 `JAVA_HOME` environment variable points to the JDK installation
@@ -414,7 +408,7 @@ If a message similar to the following is displayed when starting
 GlassFish Server on Microsoft Windows, a server port conflict has
 occurred:
 
-[source,oac_no_warn]
+[source]
 ----
 Address already in use
 ----
@@ -426,8 +420,7 @@ GlassFish Server did not shut down cleanly.
 You might also check the following:
 
 * link:#abgdj[Is Another Application Running on the Server's Port?]
-* link:#abgdk[Has an Ungraceful Shutdown Occurred on a Previously
-Running Server?]
+* link:#abgdk[Has an Ungraceful Shutdown Occurred on a Previously Running Server?]
 
 [[abgdj]][[GSTSG00190]][[is-another-application-running-on-the-servers-port]]
 
@@ -458,7 +451,7 @@ Description
 If GlassFish Server is installed in an OpenSolaris zone, an attempt to
 start a domain might fail with the following error message:
 
-[source,oac_no_warn]
+[source]
 ----
 Waiting for DAS to start ..Error starting domain: domain.
 The server exited prematurely with exit code 6.
@@ -476,9 +469,10 @@ without language and encoding support, which GlassFish Server requires.
 Resolution: To Enable GlassFish Server to Run in an OpenSolaris Zone
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Install the package that provides language and encoding support for
-your locale. +
-[source,oac_no_warn]
+1. Install the package that provides language and encoding support for
+your locale.
++
+[source]
 ----
 $ pkg install package-name
 ----
@@ -487,7 +481,8 @@ package-name::
   for your locale. For example, the name of the package that provides
   language and encoding support for the US English locale is
   `SUNWlang-enUS`.
-2.  Set the `LANG` environment variable to the code for your locale. +
+2. Set the `LANG` environment variable to the code for your locale.
++
 For example, if your locale is US English, set the `LANG` environment
 variable to `en_US.UTF-8`.
 
@@ -509,7 +504,7 @@ The problem occurs when two or more instances of GlassFish Server are
 created using the same port number for the `instanceport` option; for
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-domain -adminport 5001 options -instanceport 6001 domain
 asadmin create-domain -adminport 5002 options -instanceport 6001 domain
@@ -551,14 +546,14 @@ thread dump.
 Solution
 ^^^^^^^^
 
-[[ghylc]][[GSTSG00027]][[to-obtain-a-server-thread-dump]]
+[[ghylc]][[GSTSG00027]][[to-obtain-a-server-thread-dump-specific-issues]]
 
 To Obtain a Server Thread Dump
 ++++++++++++++++++++++++++++++
 
 Type the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin generate-jvm-report --type=thread
 ----
@@ -576,8 +571,7 @@ Issues Related to Applications
 
 [[abgee]][[GSTSG00197]][[cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows]]
 
-Cannot Undeploy or Redeploy Application With Open Streams to `jar` Files
-(Windows)
+Cannot Undeploy or Redeploy Application With Open Streams to `jar` Files (Windows)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 [[abgef]][[GSTSG00099]][[description-12]]
@@ -701,7 +695,7 @@ Issues Related to `asadmin`
 
 The command `asadmin start-domain` fails with the following error:
 
-[source,oac_no_warn]
+[source]
 ----
 There is more than one domain...
 ----
@@ -724,14 +718,14 @@ Solution
 
 Specify the domain when issuing the `start-domain` command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin start-domain domain-name
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin start-domain mycustomdomain
 ----
@@ -753,8 +747,7 @@ You cannot stop the domain using the `asadmin` `stop-domain` command.
 Solution
 ++++++++
 
-Look for error messages that display in the console when you issue the
-command.
+Look for error messages that display in the console when you issue the command.
 
 Search the `server.log` file for error messages related to your
 inability to stop the domain.
@@ -774,8 +767,7 @@ Installation Hangs During Update Tool Configuration
 Description
 +++++++++++
 
-Installation hangs more than five minutes during Update Tool
-configuration.
+Installation hangs more than five minutes during Update Tool configuration.
 
 [[giqle]][[GSTSG00108]][[solution-13]]
 
@@ -791,18 +783,14 @@ GlassFish Serverinstallation, see the link:../installation-guide/toc.html#GSING[
 Source Edition Installation Guide].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
-GlassFish Server to the current version. For more information about
-Upgrade Tool and upgrading, see the link:../upgrade-guide/toc.html#GSUPG[GlassFish Server Open
-Source Edition Upgrade Guide].
-
-|=======================================================================
+GlassFish Server to the current version.
+For more information about Upgrade Tool and upgrading, see the
+link:../upgrade-guide/toc.html#GSUPG[GlassFish Server Open Source Edition Upgrade Guide].
+====
 
 
 [[gjjob]][[GSTSG00202]][[glassfish-server-components-not-removed-during-uninstallation]]
@@ -851,7 +839,7 @@ Description
 The following error occurs from an application client, or appears in the
 `server.log` file:
 
-[source,oac_no_warn]
+[source]
 ----
 java.security.AccessControlException: access denied
 (java.util.PropertyPermission name write...)
@@ -876,7 +864,7 @@ For example, to grant read/write permission for all files in the
 codebase directory, add or append the following to `client.policy` or
 `server.policy`:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:/.../build/sparc_SunOS/sec/-" {
    permission java.util.PropertyPermission "*", "read,write";
@@ -903,7 +891,7 @@ Solution
 
 Set the following properties on the JVM:
 
-[source,oac_no_warn]
+[source]
 ----
 javax.net.ssl.keyStore=
 <keystore-file-path>;javax.net.ssl.trustStore=<truststore-file-path>
@@ -912,7 +900,7 @@ javax.net.ssl.keyStore=
 To use the application client, set the environment variable `VMARGS` to
 the following value:
 
-[source,oac_no_warn]
+[source]
 ----
 -Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
 -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks

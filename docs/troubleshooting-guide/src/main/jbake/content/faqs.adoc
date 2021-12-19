@@ -3,6 +3,7 @@ status=published
 title=Frequently Asked Questions
 prev=specific-issues.html
 ~~~~~~
+
 Frequently Asked Questions
 ==========================
 
@@ -78,8 +79,7 @@ Eclipse FAQs
 
 [[ghvmc]][[GSTSG00256]][[where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration]]
 
-Where Can I Find More Information About Eclipse and GlassFish Server
-Integration?
+Where Can I Find More Information About Eclipse and GlassFish Server Integration?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Eclipse is a development environment that provides a framework, tools,
@@ -133,8 +133,7 @@ Java Persistence FAQs
 
 [[ghvnl]][[GSTSG00260]][[what-are-the-restrictions-and-optimizations-for-the-java-persistence-api]]
 
-What Are the Restrictions and Optimizations for the Java Persistence
-API?
+What Are the Restrictions and Optimizations for the Java Persistence API?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 See "link:../application-development-guide/jpa.html#GSDVG00139[Restrictions and Optimizations]" in GlassFish
@@ -161,17 +160,11 @@ Administration Console (using the Update Tool node). For more
 information about Update Tool, see "link:../administration-guide/toc.html#GSADG00701[Update Tool]" in
 Eclipse GlassFish Server Administration Guide.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 To update or remove installed components, you must use the standalone
 graphical Update Tool, not the Administration Console Update Tool.
-
-|=======================================================================
-
+====
 
 A command-line interface is also available for Update Tool. This
 interface uses the `pkg` command and enables you to perform most of the
@@ -180,20 +173,14 @@ about the `pkg` command, see "link:../administration-guide/toc.html#GSADG00014[E
 GlassFish Server]" in Eclipse GlassFish Server
 Administration Guide.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
 GlassFish Server to the current version. For more information about
 Upgrade Tool and upgrading, see the link:../upgrade-guide/toc.html#GSUPG[GlassFish Server Open
 Source Edition Upgrade Guide].
-
-|=======================================================================
-
+====
 
 [[gjjoq]][[GSTSG00262]][[how-do-i-turn-off-the-notifier]]
 
@@ -208,11 +195,12 @@ installation. These notifications can be turned off if desired.
 To Turn Off the Notifier
 ++++++++++++++++++++++++
 
-1.  Launch the standalone graphical tool using the `updatetool` command: +
-[source,oac_no_warn]
+1. Launch the standalone graphical tool using the `updatetool` command:
++
+[source]
 ----
 as-install-parent/bin/updatetool
 ----
-2.  Click Preferences.
-3.  Click the Updates tab.
-4.  Deselect Automatically Check for Updates and click OK.
+2. Click Preferences.
+3. Click the Updates tab.
+4. Deselect Automatically Check for Updates and click OK.

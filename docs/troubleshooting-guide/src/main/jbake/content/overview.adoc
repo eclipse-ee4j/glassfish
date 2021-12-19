@@ -4,6 +4,7 @@ title=Overview of Eclipse GlassFish Server Troubleshooting
 next=specific-issues.html
 prev=preface.html
 ~~~~~~
+
 Overview of Eclipse GlassFish Server Troubleshooting
 ====================================================
 
@@ -54,28 +55,26 @@ Verify System Requirements and Configuration
 ++++++++++++++++++++++++++++++++++++++++++++
 
 Ensure that your system meets the requirements listed in
-"link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]" in GlassFish
-Server Open Source Edition Release Notes. Problems are likely to arise
-if you attempt to install on a platform that is not supported or on a
-system that in some other way does not meet release requirements. Also
-see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]" in GlassFish Server Open Source
+"link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+in GlassFish Server Open Source Edition Release Notes.
+Problems are likely to arise if you attempt to install on a platform that
+is not supported or on a system that in some other way does not meet release requirements.
+Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+in GlassFish Server Open Source
 Edition Release Notes for known issues related to installation.
 
 Eclipse GlassFish Server requires JDK release 6. The minimum
 (and certified) version of the JDK that is required for GlassFish Server
 Open Source Edition depends on the operating system:
 
-* For supported operating systems except Mac OS, the minimum required
-version is 1.6.0_17.
-* For the Mac OS X operating system, the minimum required version is
-1.6.0_15.
+* For supported operating systems except Mac OS, the minimum required version is 1.6.0_17.
+* For the Mac OS X operating system, the minimum required version is 1.6.0_15.
 
 If necessary, download and install the required JDK software.
 
-On Solaris, Linux, and Windows systems, JDK software is available from
-the
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java
-SE downloads page]
+On Solaris, Linux, and Windows systems, JDK software is available from the
+http://www.oracle.com/technetwork/java/javase/downloads/index.html[
+Java SE downloads page]
 (`http://www.oracle.com/technetwork/java/javase/downloads/index.html`).
 
 For Mac OS X systems, Eclipse GlassFish Server uses the JDK
@@ -116,12 +115,11 @@ interface.
 
 The following books will be especially helpful for troubleshooting:
 
-* link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release Notes], which
-provides the latest information regarding known issues and possible
-workarounds.
-* link:../error-messages-reference/toc.html#GSEMR[Eclipse GlassFish Server Error Message
-Reference], which lists error messages you might encounter when using
-GlassFish Server.
+* link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release Notes],
+  which provides the latest information regarding known issues and possible workarounds.
+* link:../error-messages-reference/toc.html#GSEMR[
+  Eclipse GlassFish Server Error Message Reference],
+  which lists error messages you might encounter when using GlassFish Server.
 
 Use the product documentation to learn more about GlassFish Server Open
 Source Edition. The more you know about the product the easier it might
@@ -132,11 +130,10 @@ be to figure out why something isn't working.
 Search the GlassFish Mailing Lists and Forums
 +++++++++++++++++++++++++++++++++++++++++++++
 
-Lists and forums are extremely helpful resources, and are accessed as
-follows:
+Lists and forums are extremely helpful resources, and are accessed as follows:
 
 * GlassFish mailing lists (start with users@glassfish.java.net and
-search the archives): `http://java.net/projects/glassfish/lists/`
+  search the archives): `http://java.net/projects/glassfish/lists/`
 * GlassFish user forum: `http://www.java.net/forums/glassfish/glassfish`
 
 [[ghuvf]][[GSTSG00172]][[gathering-information]]
@@ -250,8 +247,8 @@ By default, log information for each GlassFish Server Open Source
 Edition server instance is captured in a `server.log` file. That is,
 each instance, including the domain administration server (DAS), has an
 individual log file. By default, the log file for the DAS is located in
-domain-dir`/logs`, and the log file for each instance is located in
-instance-dir`/logs`.
+domain-dir``/logs``, and the log file for each instance is located in
+instance-dir``/logs`.
 
 In addition, for domains that use clustering, GlassFish Server Open
 Source Edition captures log information for each cluster instance in a
@@ -356,7 +353,7 @@ To Obtain a Server Thread Dump
 
 Type the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin generate-jvm-report --type=thread
 ----
@@ -409,8 +406,7 @@ given process or core file or a remote debug server.
 debug server. Remote clients such as `jstack`, `jmap`, and `jinfo` can
 attach to the server using Java Remote Invocation Method (RMI).
 * `jhat`: Enables Java heap dumps to be browsed using a web browser.
-* `jstat`: Displays performance statistics for an instrumented HotSpot
-JVM.
+* `jstat`: Displays performance statistics for an instrumented HotSpot JVM.
 * `jps`: Lists the instrumented HotSpot JVMs on the target system
 
 [[ghuyv]][[GSTSG00041]][[where-to-go-for-more-information]]

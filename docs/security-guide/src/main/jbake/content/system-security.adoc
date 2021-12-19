@@ -4,6 +4,7 @@ title=Administering System Security
 next=user-security.html
 prev=preface.html
 ~~~~~~
+
 Administering System Security
 =============================
 
@@ -14,8 +15,7 @@ Administering System Security
 1 Administering System Security
 -------------------------------
 
-This chapter describes general information about administering system
-security.
+This chapter describes general information about administering system security.
 
 The following topics are addressed here:
 
@@ -30,8 +30,8 @@ Administration Console are contained in the Administration Console
 online help.
 
 Information on application security is contained in
-"link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
+in GlassFish Server Open Source Edition Application Development Guide.
 
 [[ggktf]][[GSSCG00143]][[about-system-security-in-glassfish-server]]
 
@@ -42,8 +42,7 @@ Security is about protecting data, that is, how to prevent unauthorized
 access or damage to data that is in storage or in transit. The GlassFish
 Server is built on the Java security model, which uses a sandbox where
 applications can run safely, without potential risk to systems or users.
-System security affects all the applications in the GlassFish Server
-environment.
+System security affects all the applications in the GlassFish Server environment.
 
 The Java EE Security API specification defines portable, plug-in
 interfaces for authentication and identity stores, and a new
@@ -79,8 +78,7 @@ uses the authentication mechanism configured for that resource to
 determine whether to grant access. For example, a user can enter a user
 name and password in a web browser, and if the application verifies
 those credentials, the user is authenticated. The user is associated
-with this authenticated security identity for the remainder of the
-session.
+with this authenticated security identity for the remainder of the session.
 
 [[ghsqc]][[GSSCG00184]][[authentication-types]]
 
@@ -95,8 +93,8 @@ Security API 1.0 specification]. GlassFish Server supports specifying
 the following types of authentication in deployment descriptors:
 
 BASIC::
-  Uses the standard Basic Authentication Scheme as described in RFC
-  2617. The communication protocol is HTTP (SSL optional). There is no
+  Uses the standard Basic Authentication Scheme as described in RFC 2617.
+  The communication protocol is HTTP (SSL optional). There is no
   encryption of user credentials unless using SSL. This type is not
   considered to be a secure method of user authentication unless used in
   conjunction with an encrypted communications channel, such as that
@@ -129,10 +127,10 @@ authentication mechanisms that can be provided with an application and
 deployed using CDI. Developers can write their own implementations of
 `HttpAuthenticationMechanism` to support specific authentication token
 types or protocols. There are also several built-in authentication
-mechanisms that perform BASIC, FORM, and Custom FORM authentication.The
-`HttpAuthenticationMechanism` interface defines three methods -
-`validateRequest()`, `secureResponse()`, and `cleanSubject()`. These
-methods align closely with the methods defined by the JASPIC
+mechanisms that perform BASIC, FORM, and Custom FORM authentication.
+The `HttpAuthenticationMechanism` interface defines three methods -
+`validateRequest()`, `secureResponse()`, and `cleanSubject()`.
+These methods align closely with the methods defined by the JASPIC
 `ServerAuth` interface.
 
 The `IdentityStore` interface provides an abstraction of an identity
@@ -175,8 +173,7 @@ SPI in specific contexts.
 
 [[ghltx]][[GSSCG00186]][[passwords]]
 
-Passwords
-+++++++++
+===== Passwords
 
 Passwords are your first line of defense against unauthorized access to
 the components and data of GlassFish Server. For Information about how
@@ -185,7 +182,7 @@ Passwords].
 
 [[gczen]][[GSSCG00042]][[master-password-and-keystores]]
 
-Master Password and Keystores
+====== Master Password and Keystores
 
 The master password is not tied to a user account and it is not used for
 authentication. Instead, GlassFish Server uses the master password only
@@ -211,7 +208,7 @@ password manually when required, or save it in a file.
 
 [[gktgy]][[GSSCG00043]][[understanding-master-password-synchronization]]
 
-Understanding Master Password Synchronization
+====== Understanding Master Password Synchronization
 
 The master password is used encrypt the keystore and truststore for the
 DAS and instances. The DAS needs the master password to open these
@@ -228,13 +225,13 @@ use different master passwords.
 
 Consider the following potential scenario:
 
-1.  You create a domain and instances, using the default master password
+1. You create a domain and instances, using the default master password
 (changeit). As a result, the DAS and instances have keystores and
 truststores encrypted using changeit.
-2.  You use the `change-master-password` subcommand on the DAS to change
+2. You use the `change-master-password` subcommand on the DAS to change
 the master password to ichangedit. As a result, the DAS and instance
 keystores and truststores are encrypted using ichangedit.
-3.  Access to the keystore and truststore from an instance now requires
+3. Access to the keystore and truststore from an instance now requires
 the master password ichangedit. You are responsible for changing the
 master password as needed.
 
@@ -252,7 +249,7 @@ to keep the master password file in sync.
 
 [[gktez]][[GSSCG00044]][[using-the-default-master-password]]
 
-Using the Default Master Password
+====== Using the Default Master Password
 
 GlassFish Server uses the known phrase "changeit" as the default master
 password. This master password is not stored in a file. The default
@@ -264,17 +261,17 @@ master password and there are no synchronization issues.
 
 [[gktfy]][[GSSCG00045]][[saving-the-master-password-to-a-file]]
 
-Saving the Master Password to a File
+====== Saving the Master Password to a File
 
 The `change-master-password` `--savemasterpassword` option indicates
 whether the master password should be written to the file system in the
 `master-password` file for the DAS or a node. The default is false.
 
 For a domain, the master password is kept in
-domain-dir`/master-password`.
+domain-dir``/master-password``.
 
 For a node, the master-password file is kept in
-`nodes/`node-name`/agent/master-password`. You can set a master password
+``nodes/``node-name``/agent/master-password``. You can set a master password
 at the node level and all instances created on that node will use that
 master-password file. To do this, use the `--nodedir` option and provide
 a node name.
@@ -291,7 +288,7 @@ filesystem permissions to protect the file.
 
 [[gkthb]][[GSSCG00046]][[using-the-master-password-when-creating-a-domain]]
 
-Using the Master Password When Creating a Domain
+====== Using the Master Password When Creating a Domain
 
 The `create-domain` `--usemasterpassword` option specifies whether the
 keystore is encrypted with a master password that is built into the
@@ -306,7 +303,7 @@ defined, `--usemasterpassword` prompts the user for the master password.
 
 [[ghgof]][[GSSCG00047]][[administration-password]]
 
-Administration Password
+====== Administration Password
 
 An administration password, also known as the admin password, is used to
 invoke the Administration Console and the `asadmin` utility. As with the
@@ -316,12 +313,13 @@ Change an Administration Password].
 
 [[ablnq]][[GSSCG00048]][[encoded-passwords]]
 
-Encoded Passwords
+====== Encoded Passwords
 
 Files that contain encoded passwords need to be protected using file
 system permissions. These files include the following:
 
-* domain-dir`/master-password` +
+* domain-dir``/master-password``
++
 This file contains the encoded master password and should be protected
 with file system permissions 600.
 * Any password file created to pass as an argument by using the
@@ -334,7 +332,7 @@ For instructions, see link:#ghytn[To Set a Password From a File].
 
 [[gkaol]][[GSSCG00049]][[web-browsers-and-password-storage]]
 
-Web Browsers and Password Storage
+====== Web Browsers and Password Storage
 
 Most web browsers can save login credentials entered through HTML forms.
 This function can be configured by the user and also by applications
@@ -354,8 +352,7 @@ page" when prompted by the browser during login.
 
 [[ghgoj]][[GSSCG00187]][[password-aliases]]
 
-Password Aliases
-++++++++++++++++
+===== Password Aliases
 
 To avoid storing passwords in the domain configuration file in clear
 text, you can create an alias for a password. This process is also known
@@ -364,8 +361,7 @@ link:#ghgqc[Administering Password Aliases].
 
 [[ghlus]][[GSSCG00188]][[single-sign-on]]
 
-Single Sign-on
-++++++++++++++
+===== Single Sign-on
 
 With single sign-on, a user who logs in to one application becomes
 implicitly logged in to other applications that require the same
@@ -418,10 +414,8 @@ the deployment descriptor for each application. When the application is
 being packaged and deployed, the application specifies mappings between
 users, groups, and roles, as illustrated in link:#fxjfw[Figure 1-1].
 
-
 [NOTE]
-=======================================================================
-
+====
 By default, group principal names are mapped to roles of the same name.
 Therefore, the Default Principal To Role Mapping setting is enabled by
 default on the Security page of the GlassFish Server Administration
@@ -430,12 +424,9 @@ GlassFish Server matches the role name defined in the application, there
 is no need to use the runtime deployment descriptor to provide a
 mapping. The application server will implicitly make this mapping, as
 long as the names of the groups and roles match.
-
-=======================================================================
-
+====
 
 [[GSSCG00001]][[fxjfw]]
-
 
 .*Figure 1-1 Role Mapping*
 image:img/securityrolemapping.png[
@@ -483,17 +474,13 @@ A sample server.policy file is as follows. Comments in the file describe
 why various permissions are granted. These permissions are described in
 more detail in the next section.
 
-
 [NOTE]
-=======================================================================
-
+====
 This server.policy file is presented for example purposes only and is
 subject to change.
+====
 
-=======================================================================
-
-
-[source,oac_no_warn]
+[source]
 ----
 // classes in lib get all permissions by default
 grant codeBase "file:${com.sun.aas.installRoot}/lib/-" {
@@ -518,14 +505,14 @@ grant codeBase "file:${com.sun.aas.imqLib}/-" {
 // Derby driver classes get all permissions by default
 grant codeBase "file:${com.sun.aas.derbyRoot}/lib/-" {
     permission java.security.AllPermission;
-}; 
+};
 
 
 // permission for JDK's tools.jar to enable webservice annotation processing
-// at runtime by wsgen tool: 
+// at runtime by wsgen tool:
 //       permission java.lang.RuntimePermission "createClassLoader";
 //
-// permission for JDK's tools.jar to sign JARs at runtime for 
+// permission for JDK's tools.jar to sign JARs at runtime for
 // Java Web Start support:
 //       permissions java.security.AllPermission;
 // on the advice of the JDK tools folks.  Should be refined later.
@@ -558,9 +545,9 @@ grant {
     permission java.net.SocketPermission    "*", "connect";
     permission java.io.FilePermission       "<<ALL FILES>>", "read,write";
 
-        // work-around for pointbase bug 4864405      
-        permission java.io.FilePermission 
-          "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-", 
+        // work-around for pointbase bug 4864405
+        permission java.io.FilePermission
+          "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-",
            "delete";
         permission java.io.FilePermission "${java.io.tmpdir}${/}-", "delete";
 
@@ -569,15 +556,15 @@ grant {
     permission java.lang.RuntimePermission    "modifyThreadGroup";
     permission java.lang.RuntimePermission    "getClassLoader";
     permission java.lang.RuntimePermission    "setContextClassLoader";
-        permission javax.management.MBeanPermission 
-               "[com.sun.messaging.jms.*:*]", "*"; 
+        permission javax.management.MBeanPermission
+               "[com.sun.messaging.jms.*:*]", "*";
 };
 
 
 // Following grant block is only required by Connectors. If Connectors
 // are not in use the recommendation is to remove this grant.
 grant {
-        permission javax.security.auth.PrivateCredentialPermission 
+        permission javax.security.auth.PrivateCredentialPermission
                "javax.resource.spi.security.PasswordCredential * \"*\"","read";
 };
 
@@ -595,7 +582,7 @@ grant {
 
 [[gkrmo]][[GSSCG00051]][[changing-the-default-permissions]]
 
-Changing the Default Permissions
+====== Changing the Default Permissions
 
 The GlassFish Server internal server code is granted all permissions.
 These grants are covered by the `AllPermission` grant blocks to various
@@ -615,10 +602,10 @@ these permissions might be appropriate.
 Specifically, the following permission allows all applications to read
 and write all properties and read and write all files on the filesystem.
 
-[source,oac_no_warn]
+[source]
 ----
 permission java.util.PropertyPermission "*", "read,write";
- permission java.io.FilePermission       "<<ALL FILES\>>", "read,write";
+permission java.io.FilePermission       "<<ALL FILES\>>", "read,write";
 ----
 
 While this grant provides optimum flexibility, it is inherently
@@ -630,7 +617,7 @@ and write permissions only to the application's install directory
 (context-root). (This example uses `com.sun.aas.instanceRoot`, which
 specifies the top level directory for a server instance.)
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-"
 {
@@ -677,22 +664,22 @@ hardware and software elements. The following guidelines pertain
 primarily to GlassFish Server:
 
 * In general, firewalls should be configured so that clients can access
-the necessary TCP/IP ports. +
+the necessary TCP/IP ports.
++
 For example, if the HTTP listener is operating on port 8080, configure
 the firewall to allow HTTP requests on port 8080 only. Likewise, if
 HTTPS requests are set up for port 8081, you must configure the
 firewalls to allow HTTPS requests on port 8081.
 * If direct Remote Method Invocations over Internet Inter-ORB Protocol
 (RMI-IIOP) access from the Internet to EJB modules is required, open the
-RMI-IIOP listener port as well. +
+RMI-IIOP listener port as well.
++
 
 [NOTE]
-=======================================================================
-
+====
 Opening the RMI-IIOP listener port is strongly discouraged because it
 creates security risks.
-
-=======================================================================
+====
 
 * In double firewall architecture, you must configure the outer firewall
 to allow for HTTP and HTTPS transactions. You must configure the inner
@@ -710,11 +697,9 @@ The following topics are addressed here:
 * link:#ablol[Certificate Chains]
 * link:#ablqx[Certificate Files]
 * link:#ablom[Secure Sockets Layer]
-* link:#gksdc[Custom Authentication of Client Certificate in SSL Mutual
-Authentication]
+* link:#gksdc[Custom Authentication of Client Certificate in SSL Mutual Authentication]
 
-For administration instructions, see link:#ablqz[Administering JSSE
-Certificates].
+For administration instructions, see link:#ablqz[Administering JSSE Certificates].
 
 [[ablok]][[GSSCG00192]][[certificates]]
 
@@ -839,19 +824,18 @@ sending it. Data is decrypted upon receipt.
 When a Web browser (client) wants to connect to a secure site, an SSL
 handshake happens, like this:
 
-1.  The browser sends a message over the network requesting a secure
+1. The browser sends a message over the network requesting a secure
 session (typically, by requesting a URL that begins with `https` instead
 of `http`).
-2.  The server responds by sending its certificate (including its public
-key).
-3.  The browser verifies that the server's certificate is valid and is
+2. The server responds by sending its certificate (including its public key).
+3. The browser verifies that the server's certificate is valid and is
 signed by a CA whose certificate is in the browser's database (and who
 is trusted). It also verifies that the CA certificate has not expired.
-4.  If the certificate is valid, the browser generates a one time,
+4. If the certificate is valid, the browser generates a one time,
 unique session key and encrypts it with the server's public key. The
 browser then sends the encrypted session key to the server so that they
 both have a copy.
-5.  The server decrypts the message using its private key and recovers
+5. The server decrypts the message using its private key and recovers
 the session key.
 
 After the handshake, the client has verified the identity of the Web
@@ -868,12 +852,13 @@ To use SSL, GlassFish Server must have a certificate for each external
 interface or IP address that accepts secure connections. The HTTPS
 service of most web servers will not run unless a certificate has been
 installed. For instructions on applying SSL to HTTP listeners, see
-"link:../administration-guide/http_https.html#GSADG00469[To Configure an HTTP Listener for SSL]" in GlassFish
+"link:../administration-guide/http_https.html#GSADG00469[
+To Configure an HTTP Listener for SSL]" in GlassFish
 Server Open Source Edition Administration Guide.
 
 [[ablon]][[GSSCG00052]][[ciphers]]
 
-Ciphers
+====== Ciphers
 
 A cipher is a cryptographic algorithm used for encryption or decryption.
 SSL and TLS protocols support a variety of ciphers used to authenticate
@@ -888,7 +873,7 @@ enable all ciphers.
 
 [[abloo]][[GSSCG00053]][[name-based-virtual-hosts]]
 
-Name-based Virtual Hosts
+====== Name-based Virtual Hosts
 
 Using name-based virtual hosts for a secure application can be
 problematic. This is a design limitation of the SSL protocol itself. The
@@ -958,16 +943,12 @@ convenience methods include the following:
   authentication has succeeded. If authentication failed, do not call
   this method.
 
-
 [NOTE]
-=======================================================================
-
+====
 You do not have to extend the convenience base class, you can extend the
 JAAS LoginModule `javax.security.auth.spi.LoginModule` instead if you so
 choose.
-
-=======================================================================
-
+====
 
 [[gksej]][[GSSCG00055]][[example-appservcertificateloginmodule-code]]
 
@@ -991,16 +972,10 @@ the distinguished name.
 and uses it as the group name in the `commitUserAuthentication` method.
 
 [[GSSCG00060]][[gksel]]
-
-
 Example 1-1 Sample AppservCertificateLoginModule Code
 
-[source,oac_no_warn]
+[source,java]
 ----
-/**
- *
- * @author nasradu8
- */
 public class CertificateLM extends AppservCertificateLoginModule {
 
     @Override
@@ -1014,8 +989,7 @@ public class CertificateLM extends AppservCertificateLoginModule {
             // At this point, one has the application name and the DN of
             // the certificate. A suitable login decision can be made here.
             if (next.startsWith("OU=")) {
-            commitUserAuthentication(new String[]{getAppName() 
-+ ":" + next.substring(3)});
+            commitUserAuthentication(new String[]{getAppName() + ":" + next.substring(3)});
                 return;
             }
         }
@@ -1026,7 +1000,7 @@ public class CertificateLM extends AppservCertificateLoginModule {
 
 [[gksee]][[GSSCG00056]][[setting-the-jaas-context]]
 
-Setting the JAAS Context
+====== Setting the JAAS Context
 
 After you create your LoginModule, you must plug it in to a
 jaas-context, which you then specify as a parameter to the certificate
@@ -1034,28 +1008,33 @@ realm in GlassFish Server.
 
 To do this, perform the following steps:
 
-1.  Specify a new jaas-context for the Certificate realm in the file
-domain-dir`/config/login.conf`. For example, using the `CertificateLM`
-class from link:#gksej[Example AppservCertificateLoginModule Code]: +
-[source,oac_no_warn]
+1. Specify a new jaas-context for the Certificate realm in the file
+domain-dir``/config/login.conf``. For example, using the `CertificateLM`
+class from link:#gksej[Example AppservCertificateLoginModule Code]:
++
+[source]
 ----
 certRealm {
     com.sun.blogs.certificate.login.CertificateLM required;
 };
 ----
-2.  Specify this jaas-context as a parameter to the `set` subcommand in
-the
+2. Specify this jaas-context as a parameter to the `set` subcommand in the
 `configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=`<jaas-context-name>
-property. For example: +
+property. For example:
++
 `asadmin>`
-`set configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm` +
-`configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm` +
+`set configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm`
++
+`configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm`
++
 `Command set executed successfully.`
-3.  Optionally, get the value you just set to make sure that it is
-correct. +
+3. Optionally, get the value you just set to make sure that it is correct.
++
 `asadmin>`
-`get configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context` +
-`configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm` +
+`get configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context`
++
+`configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm`
++
 `Command get executed successfully.`
 
 [[ablno]][[GSSCG00208]][[tools-for-managing-system-security]]
@@ -1071,15 +1050,16 @@ Administration Console::
   configure security for the entire server. Tasks include managing
   certificates, users, groups, and realms, and performing other
   system-wide security tasks. For a general introduction to the
-  Administration Console, see "link:../administration-guide/overview.html#GSADG00698[Administration Console]"
+  Administration Console, see
+  "link:../administration-guide/overview.html#GSADG00698[Administration Console]"
   in GlassFish Server Open Source Edition Administration Guide.
 The `asadmin` utility::
   The `asadmin` command-line utility performs many of the same tasks as
   the Administration Console. You might be able to do some things with
   the `asadmin` utility that you cannot do with the Administration
   Console. For a general introduction to `asadmin`, see
-  "link:../administration-guide/overview.html#GSADG00699[asadmin Utility]" in GlassFish Server Open Source
-  Edition Administration Guide.
+  "link:../administration-guide/overview.html#GSADG00699[asadmin Utility]"
+  in GlassFish Server Open Source Edition Administration Guide.
 The `keytool` utility::
   The `keytool` Java Platform, Standard Edition (Java SE) command-line
   utility is used for managing digital certificates and key pairs. For
@@ -1106,8 +1086,7 @@ The following topics are addressed here:
 * link:#giudi[To Change the Master Password]
 * link:#gktgr[Additional Considerations for the `start-instance` and
 `start-cluster` Subcommands]
-* link:#gktey[Using `start-instance` and `start-cluster` With a Password
-File]
+* link:#gktey[Using `start-instance` and `start-cluster` With a Password File]
 * link:#ghgpu[To Change an Administration Password]
 * link:#ghytn[To Set a Password From a File]
 * link:#ghgqc[Administering Password Aliases]
@@ -1135,20 +1114,15 @@ the node, for all instances that are on that node.
 Use the `change-master-password` subcommand in local mode to modify the
 master password.
 
-
 [NOTE]
-=======================================================================
-
+====
 If you change the master password and are not using a master password
 file, the `start-instance` and `start-cluster` subcommands are not able
 to determine the master password. In this case, you must start those
 instances locally by using start-local-instance.
+====
 
-=======================================================================
-
-
-When the master password is saved, it is saved in the `master-password`
-file.
+When the master password is saved, it is saved in the `master-password` file.
 
 [[sthref6]]
 
@@ -1156,27 +1130,27 @@ Before You Begin
 
 This subcommand will not work unless the domain is stopped.
 
-1.  Stop the domain whose password you are changing. +
-See "link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]" in GlassFish Server Open Source
-Edition Administration Guide.
-2.  Change the master password for the domain by using the
-link:../reference-manual/change-master-password.html#GSRFM00006[`change-master-password`] subcommand. +
-You are prompted for the old and new passwords. All dependent items are
-re-encrypted.
-3.  Start the domain. +
+1. Stop the domain whose password you are changing.
++
+See "link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+in GlassFish Server Open Source Edition Administration Guide.
+2. Change the master password for the domain by using the
+link:../reference-manual/change-master-password.html#GSRFM00006[`change-master-password`] subcommand.
++
+You are prompted for the old and new passwords. All dependent items are re-encrypted.
+3. Start the domain.
++
 See "link:../administration-guide/domains.html#GSADG00335[To Start a Domain]" in GlassFish Server Open
 Source Edition Administration Guide.
 
 [[GSSCG00061]][[givil]]
-
-
 Example 1-2 Changing the Master Password
 
 The `change-master-password` subcommand is interactive in that you are
 prompted for the old master password as well as the new master password.
 This example changes the master password for `domain44ps`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> change-master-password domain44ps
 ----
@@ -1185,7 +1159,7 @@ If you have already logged into the domain using the
 link:../reference-manual/login.html#GSRFM00210[`login`] subcommand, you are prompted for the new
 master password:
 
-[source,oac_no_warn]
+[source]
 ----
 Please enter the new master password>
 Please enter the new master password again>
@@ -1194,7 +1168,7 @@ Please enter the new master password again>
 If you are not logged into the domain, you are prompted for both the old
 and the new master passwords:
 
-[source,oac_no_warn]
+[source]
 ----
 Please enter the master password>
 Please enter the new master password>
@@ -1203,7 +1177,7 @@ Please enter the new master password again>
 
 Information similar to the following is displayed:
 
-[source,oac_no_warn]
+[source]
 ----
 Master password changed for domain44ps
 ----
@@ -1217,8 +1191,7 @@ typing `asadmin --help change-master-password` at the command line.
 
 [[gktgr]][[GSSCG00209]][[additional-considerations-for-the-start-instance-and-start-cluster-subcommands]]
 
-Additional Considerations for the `start-instance` and `start-cluster`
-Subcommands
+Additional Considerations for the `start-instance` and `start-cluster` Subcommands
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you change the master password for DAS, the `start-domain` and
@@ -1238,14 +1211,12 @@ password file over the network.
 
 Consider the following scenario:
 
-1.  Change the master password on the DAS and save it with
-`--savemasterpassword`.
-2.  Create an instance on another host using the subcommand
+1. Change the master password on the DAS and save it with `--savemasterpassword`.
+2. Create an instance on another host using the subcommand
 `create-instance`. GlassFish Server copies the keystore and truststore
-from the DAS to the instance, but it does not copy the master password
-file.
-3.  Try to start the instance using the `start-instance` subcommand. An
-error results.
+from the DAS to the instance, but it does not copy the master password file.
+3. Try to start the instance using the `start-instance` subcommand.
+An error results.
 
 The `start-instance` command is looking for the file master-password in
 the node directory on the instance machine, and it is not there by
@@ -1253,22 +1224,17 @@ default. Therefore, the subcommand fails.
 
 You can use the `change-master-password` subcommand to make sure the
 correct password is used in this password file, as described in
-link:#gktey[Using `start-instance` and `start-cluster` With a Password
-File].
-
+link:#gktey[Using `start-instance` and `start-cluster` With a Password File].
 
 [NOTE]
-=======================================================================
-
+====
 The `start-instance` and `start-cluster` subcommands do not include any
 other way for you to provide the password. If you change the master
 password and are not using a master password file, the `start-instance`
 and `start-cluster` subcommands are not able to determine the master
 password. In this case, you must start the instances locally by using
 `start-local-instance`.
-
-=======================================================================
-
+====
 
 [[gktey]][[GSSCG00094]][[using-start-instance-and-start-cluster-with-a-password-file]]
 
@@ -1278,44 +1244,49 @@ Using `start-instance` and `start-cluster` With a Password File
 Assume that you have changed the master password on the DAS and you want
 to make the same change for all instances.
 
-The `start-instance` and`start-cluster` subcommands automatically use
+The `start-instance` and `start-cluster` subcommands automatically use
 the master password file if it exists in the instance filesystem. You
 can use the `change-master-password` subcommand to make sure the
 password file exists and that the correct password is used.
 
-1.  From the DAS, create a domain and set the master password. +
-`asadmin>` `create-domain --savemasterpassword true` domain-name
-2.  Start the domain. +
-`asadmin>``start-domain` domain-name
-3.  Create a node that is enabled for communication over secure shell
-(SSH). +
-`asadmin>` `create-node-ssh --nodehost` host-name --installdir/some-dir
-node-name
-4.  Create an instance on the node. +
-`asadmin>` `create-instance --node` node-name instance-name
-5.  Before you start the instance, on the instance machine run
+1. From the DAS, create a domain and set the master password. +
+`asadmin> create-domain --savemasterpassword true domain-name`
+2. Start the domain. +
+`asadmin> start-domain domain-name`
+3. Create a node that is enabled for communication over secure shell (SSH). +
+`asadmin> create-node-ssh --nodehost host-name --installdir/some-dir node-name`
+4. Create an instance on the node. +
+`asadmin> create-instance --node node-name instance-name`
+5. Before you start the instance, on the instance machine run
 `change-master-password` with the `---savemasterpassword` option to
 create a file called `master-password` in the agents directory to access
 the keystores. (The `start-instance` subcommand is looking for a file
 called `master-password` in the agents directory to access the stores.) +
-`asadmin>` `change-master-password --savemasterpassword true --nodedir`
-/some-dir node-name +
-You are prompted to enter the current and new master password: +
-`Enter the current master password>` +
-`Enter the new master password>` +
-`Enter the new master password again>` +
-`Command change-master-password executed successfully.` +
+`asadmin> change-master-password --savemasterpassword true --nodedir /some-dir node-name` +
+You are prompted to enter the current and new master password:
++
+[source]
+----
+Enter the current master password>
+Enter the new master password>
+Enter the new master password again>
+Command change-master-password executed successfully.
+----
++
 Remember that when you created the domain you specified a new master
 password. This master password was then used to encrypt the keystore and
 truststore for the DAS, and these stores were copied to the instance as
-a result of the `create-instance` subcommand. +
+a result of the `create-instance` subcommand.
++
 Therefore, enter the master password you set when you created the domain
 as both the current master password and again as the new master
 password. You enter it as the new master password because you do not
 want to change the master password for the instance and make it out of
 sync with the DAS.
-6.  Run start-instance from the DAS. +
-`asadmin>` `start-instance` instance-name +
+6. Run start-instance from the DAS.
++
+`asadmin>` `start-instance` instance-name
++
 The master password file is associated with the node and not with an
 instance. After the master password file exists in the node directory on
 the instance machine, additional instances can be created, started and
@@ -1331,66 +1302,53 @@ administration password. The default administration user is `admin`. You
 are prompted for the old and new admin passwords, with confirmation. The
 passwords are not echoed to the display.
 
-
 [NOTE]
-=======================================================================
-
+====
 For the zip bundle of GlassFish Server 5.0, the default administrator
 login is `admin`, with no password, which means that no login is
 required. For Oracle GlassFish Server, you are prompted to provide a
 password for the `admin` user when you start the domain for the first
 time.
-
-=======================================================================
-
-
+====
 
 [NOTE]
-=======================================================================
-
+====
 If there is a single user called `admin` that does not have a password,
 you are not prompted for login information. Any other situation requires
 login.
-
-=======================================================================
-
-
+====
 
 [NOTE]
-=======================================================================
-
+====
 If secure administration is enabled as described in
 link:administrative-security.html#gkomz[Running Secure Admin], you cannot
 change an administration password to a blank value.
-
-=======================================================================
+====
 
 
 Encrypting the admin password is strongly encouraged.
 
-1.  Change the admin password by using the
+1. Change the admin password by using the
 link:../reference-manual/change-admin-password.html#GSRFM00004[`change-admin-password`] subcommand.
-2.  Enter the old and new admin passwords when prompted.
-3.  Restart GlassFish Server. +
+2. Enter the old and new admin passwords when prompted.
+3. Restart GlassFish Server. +
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
 Source Edition Administration Guide.
 
 [[GSSCG00062]][[ghlac]]
-
-
 Example 1-3 Changing the Admin Password
 
 This example changes the admin password for user anonymous from
 `adminadmin` to `newadmin`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> change-admin-password --username anonymous
 ----
 
 You are prompted to enter the old and the new admin passwords:
 
-[source,oac_no_warn]
+[source]
 ----
 Enter admin password>adminadmin
 Enter new admin password>newadmin
@@ -1399,7 +1357,7 @@ Enter new admin password again>newadmin
 
 Information similar to the following is displayed:
 
-[source,oac_no_warn]
+[source]
 ----
 Command change-admin-password executed successfully.
 ----
@@ -1423,48 +1381,46 @@ file that contains the passwords. The entry for a password in the file
 must have the `AS_ADMIN_` prefix followed by the password name in
 uppercase letters.
 
-
 [NOTE]
-=======================================================================
-
+====
 Any password file created to pass as an argument by using the
 `--passwordfile` argument to the `asadmin` utility should be protected
 with file system permissions. Additionally, any password file being used
 for a transient purpose, such as setting up SSH among nodes, should be
 deleted after it has served its purpose.
-
-=======================================================================
-
+====
 
 For a list of the types of passwords that can be specified, see the
 link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
-[source,oac_no_warn]
+[source]
 ----
 AS_ADMIN_MASTERPASSWORD
 AS_ADMIN_USERPASSWORD
 AS_ADMIN_ALIASPASSWORD
 ----
 
-1.  Edit the password file. +
+1. Edit the password file. +
 For example, to specify the password for the domain administration
 server (DAS), add an entry similar to the following to the password
-file, where `adminadmin` is the administrator password: +
-[source,oac_no_warn]
+file, where `adminadmin` is the administrator password:
++
+[source]
 ----
-AS_ADMIN_PASSWORD=adminadmin 
+AS_ADMIN_PASSWORD=adminadmin
 ----
-2.  Save the password file. +
+2. Save the password file. +
 You can now specify the password file in an `asadmin` subcommand. In
-this example, `passwords.txt` is the file that contains the password: +
-[source,oac_no_warn]
+this example, `passwords.txt` is the file that contains the password:
++
+[source]
 ----
 asadmin>delete-jdbc-resource --user admin --passwordfile passwords.txt jdbc/DerbyPool
 ----
 
 [[sthref9]]
 
-Troubleshooting
+===== Troubleshooting
 
 If `AS_ADMIN_PASSWORD` has been exported to the global environment,
 specifying the `--passwordfile` option will produce a warning about
@@ -1510,48 +1466,45 @@ propagated on the command line.
 You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to remove and
 replace the password in the configuration file. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set --user admin server.jms-service.jms-host.default_JMS_host.
 admin-password='${ALIAS=jms-password}'
 ----
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Go to the directory where the configuration file resides. +
-By default, the configuration file is located in domain-dir`/config`.
-3.  Create the password alias by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Go to the directory where the configuration file resides. +
+By default, the configuration file is located in domain-dir``/config``.
+3. Create the password alias by using the
 link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`] subcommand.
-4.  Type the password for the alias when prompted.
-5.  Add the alias to a password file. +
+4. Type the password for the alias when prompted.
+5. Add the alias to a password file. +
 For example, assume the use of a password file such as `passwords.txt`.
 Assume further that you want to add an alias for the
 `AS_ADMIN_USERPASSWORD` entry that is read by the
-link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand. You would add the
-following line to the password file:
-`AS_ADMIN_USERPASSWORD=${ALIAS=`user-password-alias}, where
+link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
+You would add the following line to the password file:
+`AS_ADMIN_USERPASSWORD=${ALIAS=user-password-alias}`, where
 user-password-alias is the new password alias.
-6.  To continue the example of the previous step, you would then run the
+6. To continue the example of the previous step, you would then run the
 link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand. +
-You could use this method to create several users (user1, user2, and so
-forth), all with the same password. +
+You could use this method to create several users (user1, user2, and so forth),
+all with the same password. +
 `asadmin>` `--passwordfile``passwords.txt create-file-user` user1
 
 [[GSSCG00063]][[ginvi]]
-
-
 Example 1-4 Creating a Password Alias
 
 This example creates the new `jms-password` alias for the `admin` user:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-password-alias --user admin jms-password
 ----
 
 You are prompted to type the password for the alias:
 
-[source,oac_no_warn]
+[source]
 ----
 Please enter the alias password>secret-password
 Please enter the alias password again>secret-password
@@ -1573,19 +1526,16 @@ To List Password Aliases
 Use the `list-password-aliases` subcommand in remote mode to list
 existing the password aliases.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List password aliases by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List password aliases by using the
 link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
 
 [[GSSCG00064]][[ginsk]]
-
-
 Example 1-5 Listing Password Aliases
 
 This example lists the existing password aliases:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-password aliases
 jmspassword-alias
@@ -1607,21 +1557,18 @@ To Delete a Password Alias
 Use the `delete-password-alias` subcommand in remote mode to delete an
 existing password alias.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List all aliases by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List all aliases by using the
 link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
-3.  Delete a password alias by using the
+3. Delete a password alias by using the
 link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
 
 [[GSSCG00065]][[ginul]]
-
-
 Example 1-6 Deleting a Password Alias
 
 This example deletes the password alias `jmspassword-alias`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-password-alias jmspassword-alias
 Command list-password-aliases executed successfully
@@ -1645,27 +1592,24 @@ subcommand takes both a secure interactive form, in which the user is
 prompted for all information, and a more script-friendly form, in which
 the password is propagated on the command line.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Update an alias by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Update an alias by using the
 link:../reference-manual/update-password-alias.html#GSRFM00257[`update-password-alias`] subcommand.
-3.  Type the password when prompted.
+3. Type the password when prompted.
 
 [[GSSCG00066]][[giodl]]
-
-
 Example 1-7 Updating a Password Alias
 
 This example updates the password for the `jmspassword-alias` alias:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-password-alias jsmpassword-alias
 ----
 
 You are prompted to type the new password for the alias:
 
-[source,oac_no_warn]
+[source]
 ----
 Please enter the alias password>new-secret-password
 Please enter the alias password again>new-secret-password
@@ -1699,23 +1643,21 @@ Use the `create-audit-module` subcommand in remote mode to create an
 audit module for the add-on component that implements the audit
 capabilities.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create an audit module by using the
-link:../reference-manual/create-audit-module.html#GSRFM00014[`create-audit-module`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create an audit module by using the
+link:../reference-manual/create-audit-module.html#GSRFM00014[`create-audit-module`] subcommand.
++
 Information about properties for this subcommand is included in this
 help page.
 
 [[GSSCG00067]][[ghjlw]]
-
-
 Example 1-8 Creating an Audit Module
 
 This example creates an audit module named `sampleAuditModule`:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-audit-module 
+asadmin> create-audit-module
 --classname com.sun.appserv.auditmodule --property defaultuser=
 admin:Password=admin sampleAuditModule
 Command create-audit-module executed successfully.
@@ -1740,19 +1682,16 @@ modules on one of the following targets:
 * Specified server instance
 * Specified configuration
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the audit modules by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the audit modules by using the
 link:../reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
 
 [[GSSCG00068]][[ghjmy]]
-
-
 Example 1-9 Listing Audit Modules
 
 This example lists the audit modules on `localhost`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-audit-modules
 audit-module : default
@@ -1775,21 +1714,18 @@ To Delete an Audit Module
 Use the `delete-audit-module` subcommand in remote mode to delete an
 existing audit module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the audit modules by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the audit modules by using the
 link:../reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
-3.  Delete an audit module by using the
+3. Delete an audit module by using the
 link:../reference-manual/delete-audit-module.html#GSRFM00065[`delete-audit-module`] subcommand.
 
 [[GSSCG00070]][[ghjhm]]
-
-
 Example 1-10 Deleting an Audit Module
 
 This example deletes `sampleAuditModule`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-audit-module sampleAuditModule
 Command delete-audit-module executed successfully.
@@ -1833,13 +1769,13 @@ To run the `keytool` utility, your shell environment must be configured
 so that the Java SE `/bin` directory is in the path, otherwise the full
 path to the utility must be present on the command line.
 
-1.  Change to the directory that contains the keystore and truststore
-files. +
+1. Change to the directory that contains the keystore and truststore files. +
 Always generate the certificate in the directory containing the keystore
 and truststore files. The default is domain-dir`/config`.
-2.  Generate the certificate in the keystore file, `keystore.jks`, using
-the following command format: +
-[source,oac_no_warn]
+2. Generate the certificate in the keystore file, `keystore.jks`, using
+the following command format:
++
+[source]
 ----
 keytool -genkey -alias keyAlias-keyalg RSA
  -keypass changeit
@@ -1848,22 +1784,24 @@ keystore keystore.jks
 ----
 Use any unique name as your keyAlias. If you have changed the keystore
 or private key password from the default (`changeit`), substitute the
-new password for `changeit`. The default key password alias is `s1as`. +
-A prompt appears that asks for your name, organization, and other
-information.
-3.  Export the generated certificate to the `server.cer` file (or
-`client.cer` if you prefer), using the following command format: +
-[source,oac_no_warn]
+new password for `changeit`. The default key password alias is `s1as`.
++
+A prompt appears that asks for your name, organization, and other information.
+3. Export the generated certificate to the `server.cer` file (or
+`client.cer` if you prefer), using the following command format:
++
+[source]
 ----
 keytool -export -alias keyAlias-storepass changeit
  -file server.cer
  -keystore keystore.jks
 ----
-4.  If a certificate signed by a certificate authority is required, see
+4. If a certificate signed by a certificate authority is required, see
 link:#ghlgj[To Sign a Certificate by Using `keytool`].
-5.  Create the `cacerts.jks` truststore file and add the certificate to
-the truststore, using the following command format: +
-[source,oac_no_warn]
+5. Create the `cacerts.jks` truststore file and add the certificate to
+the truststore, using the following command format:
++
+[source]
 ----
 keytool -import -v -trustcacerts
 -alias keyAlias
@@ -1872,67 +1810,62 @@ keytool -import -v -trustcacerts
  -keypass changeit
 ----
 If you have changed the keystore or private key password from the
-default (`changeit`), substitute the new password. +
+default (`changeit`), substitute the new password.
++
 Information about the certificate is displayed and a prompt appears
 asking if you want to trust the certificate.
-6.  Type `yes`, then press Enter. +
-Information similar to the following is displayed: +
-[source,oac_no_warn]
+6. Type `yes`, then press Enter.
++
+Information similar to the following is displayed:
++
+[source]
 ----
 Certificate was added to keystore
 [Saving cacerts.jks]
 ----
-7.  To apply your changes, restart GlassFish Server. See
+7. To apply your changes, restart GlassFish Server. See
 "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open Source
 Edition Administration Guide.
 
 [[GSSCG00071]][[ghlii]]
-
-
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
 Using an RSA Key Algorithm
 
 RSA is public-key encryption technology developed by RSA Data Security,
 Inc.
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias} 
--dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file} 
+keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
+-dname ${dn.name} -keypass ${key.pass} -keystore ${keystore.file}
 -storepass ${keystore.pass}
 ----
 
 [[GSSCG00072]][[ghlew]]
-
-
 Example 1-12 Creating a Self-Signed Certificate in a JKS Keystore by
 Using a Default Key Algorithm
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -genkey -noprompt -trustcacerts -alias ${cert.alias} -dname 
-${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass 
+keytool -genkey -noprompt -trustcacerts -alias ${cert.alias} -dname
+${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass
 ${keystore.pass}
 ----
 
 [[GSSCG00073]][[ghldw]]
-
-
 Example 1-13 Displaying Available Certificates From a JKS Keystore
 
-[source,oac_no_warn]
+[source]
 ----
 keytool -list -v -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
 [[GSSCG00074]][[ghlfd]]
-
-
 Example 1-14 Displaying Certificate information From a JKS Keystore
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -list -v -alias ${cert.alias} -keystore ${keystore.file} 
+keytool -list -v -alias ${cert.alias} -keystore ${keystore.file}
 -storepass ${keystore.pass}
 ----
 
@@ -1952,84 +1885,92 @@ Certificate Authority (CA).
 
 
 [NOTE]
-=======================================================================
-
+====
 If authentication is not a concern, for example if private secure
 communications are all that is required, you can save the time and
 expense involved in obtaining a CA certificate by using a self-signed
 certificate.
+====
 
-=======================================================================
 
-
-1.  Delete the default self-signed certificate: +
-[source,oac_no_warn]
+1. Delete the default self-signed certificate:
++
+[source]
 ----
 keytool -delete -alias s1as -keystore keystore.jks -storepass <store_passwd>
 ----
 where <store_passwd> is the password for the keystore. For example,
 "mypass". Note that `s1as` is the default alias of the GlassFish Server
 keystore.
-2.  Generate a new key pair for the application server: +
-[source,oac_no_warn]
+2. Generate a new key pair for the application server:
++
+[source]
 ----
-keytool -genkeypair -keyalg <key_alg> -keystore keystore.jks 
--validity <val_days> -alias s1as 
+keytool -genkeypair -keyalg <key_alg> -keystore keystore.jks
+-validity <val_days> -alias s1as
 ----
 where <key_alg> is the algorithm to be used for generating the key pair,
 for example RSA, and <val_days> is the number of days that the
-certificate should be considered valid. For example, 365. +
+certificate should be considered valid. For example, 365.
++
 In addition to generating a key pair, the command wraps the public key
 into a self-signed certificate and stores the certificate and the
-private key in a new keystore entry identified by the alias. +
+private key in a new keystore entry identified by the alias.
++
 For HTTPS hostname verification, it is important to ensure that the name
 of the certificate (CN) matches the fully-qualified hostname of your
 site (fully-qualified domain name). If the names do not match, clients
 connecting to the server will see a security alert stating that the name
 of the certificate does not match the name of the site.
-3.  Generate a Certificate Signing Request (CSR): +
-[source,oac_no_warn]
+3. Generate a Certificate Signing Request (CSR):
++
+[source]
 ----
-keytool -certreq -alias s1as -file <certreq_file> -keystore keystore.jks 
+keytool -certreq -alias s1as -file <certreq_file> -keystore keystore.jks
 -storepass <store_passwd>
 ----
 where <certreq_file> is the file in which the CSR is stored (for
 example, `s1as.csr`) and <store_passwd> is the password for the
 keystore. For example, changeit.
-4.  Submit the CSR to a Certificate Authority such as VeriSign (at
+4. Submit the CSR to a Certificate Authority such as VeriSign (at
 `http://www.verisign.com/ssl/buy-ssl-certificates/index.html`). In
 response, you should receive a signed server certificate. Make sure to
 import into your browser the CA certificate of the CA (if not already
 present) and any intermediate certificates indicated by the CA in the
 reply.
-5.  Store the signed server certificate from the CA, including the
+5. Store the signed server certificate from the CA, including the
 markers `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`,
 into a file such as `s1as.cert`. Download the CA certificate and any
 intermediate CA certificates and store them in local files.
-6.  Import the CA certificate (if not already present) and any
+6. Import the CA certificate (if not already present) and any
 intermediate CA certificates (if not already present) indicated by the
-CA into the truststore `cacerts.jks`: +
-[source,oac_no_warn]
+CA into the truststore `cacerts.jks`:
++
+[source]
 ----
-keytool -import -v -trustcacerts -alias <CA-Name> -file ca.cert 
+keytool -import -v -trustcacerts -alias <CA-Name> -file ca.cert
  -keystore cacerts.jks -storepass <store_passwd>
 ----
-7.  Replace the original self-signed certificate with the certificate
-you obtained from the CA, as stored in a file such as `s1as.cert`: +
-[source,oac_no_warn]
+7. Replace the original self-signed certificate with the certificate
+you obtained from the CA, as stored in a file such as `s1as.cert`:
++
+[source]
 ----
 keytool -import -v -trustcacerts -alias s1as -file s1as.cert
    -keystore keystore.jks -storepass <store_passwd>
 ----
-When you import the certificate using the same original alias`s1as`,
+When you import the certificate using the same original alias `s1as`,
 keytool treats it as a command to replace the original certificate with
-the certificate obtained as a reply to a CSR. +
+the certificate obtained as a reply to a CSR.
++
 After running the command, you should see that the certificate `s1as` in
 the keystore is no longer the original self-signed certificate, but is
-now the response certificate from the CA. +
+now the response certificate from the CA.
++
 Consider the following example that compares an original `s1as`
-certificate with a new `s1as` certificate obtained from VeriSign: +
-[source,oac_no_warn]
+certificate with a new `s1as` certificate obtained from VeriSign:
++
+[source]
 ----
 Original s1as (self-signed):
 
@@ -2053,13 +1994,12 @@ Serial number: 1375de18b223508c2cb0123059d5c440
 Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
 26 05:29:59 GMT+05:30 2007
 ----
-8.  To apply your changes, restart GlassFish Server. +
+8. To apply your changes, restart GlassFish Server.
++
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
 Source Edition Administration Guide.
 
 [[GSSCG00075]][[ghlhu]]
-
-
 Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS
 Keystore
 
@@ -2069,36 +2009,32 @@ of their binary encoding. This certificate format, also known as Base 64
 encoding, facilitates exporting certificates to other applications by
 email or through some other mechanism.
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -import -noprompt -trustcacerts -alias ${cert.alias} -file 
+keytool -import -noprompt -trustcacerts -alias ${cert.alias} -file
 ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
 [[GSSCG00076]][[ghlim]]
-
-
 Example 1-16 Exporting a Certificate From a JKS Keystore in PKCS7 Format
 
 The reply format defined by the Public Key Cryptography Standards #7,
 Cryptographic Message Syntax Standard, includes the supporting
 certificate chain in addition to the issued certificate.
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -export -noprompt -alias ${cert.alias} -file ${cert.file} 
+keytool -export -noprompt -alias ${cert.alias} -file ${cert.file}
 -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
 [[GSSCG00077]][[ghleb]]
-
-
 Example 1-17 Exporting a Certificate From a JKS Keystore in RFC/Text
 Format
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -export -noprompt -rfc -alias ${cert.alias} -file 
+keytool -export -noprompt -rfc -alias ${cert.alias} -file
 ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
@@ -2115,7 +2051,7 @@ Use the `keytool` `delete` command to delete an existing certificate.
 
 Delete a certificate using the following command format:
 
-[source,oac_no_warn]
+[source]
 ----
 keytool -delete
  -alias keyAlias
@@ -2124,13 +2060,11 @@ keytool -delete
 ----
 
 [[GSSCG00078]][[ghlgy]]
-
-
 Example 1-18 Deleting a Certificate From a JKS Keystore
 
-[source,oac_no_warn]
+[source]
 ----
-keytool -delete -noprompt -alias ${cert.alias} -keystore ${keystore.file} 
+keytool -delete -noprompt -alias ${cert.alias} -keystore ${keystore.file}
 -storepass ${keystore.pass}
 ----
 
@@ -2174,21 +2108,23 @@ Administering JACC Providers From the Administration Console
 To use the Administration Console to administer JACC providers, perform
 the following steps:
 
-1.  Select Configurations and expand the entry.
-2.  Select the server configuration for which you want to administer
+1. Select Configurations and expand the entry.
+2. Select the server configuration for which you want to administer
 JACC providers and expand the entry.
-3.  Select Security and expand the entry.
-4.  Select JACC Providers. The JACC Providers page is displayed. The
-existing JACC providers are shown on this page. +
+3. Select Security and expand the entry.
+4. Select JACC Providers. The JACC Providers page is displayed. The
+existing JACC providers are shown on this page.
++
 image:img/jacc-providers.png[
 "This screen shot shows the default JACC providers."]
 
-5.  To create a new provider, click New. +
+5. To create a new provider, click New.
++
 Enter the Name, Policy Configuration (the class that implements the
 policy configuration factory) and the Policy Provider (the class that
 implements the policy factory) for the new JACC provider. You can also
 enter optional properties (name/value) for the provider.
-6.  To delete an existing JACC provider, select that provider and click
+6. To delete an existing JACC provider, select that provider and click
 Delete.
 
 [[gksfx]][[GSSCG00109]][[administering-jacc-providers-from-the-command-line]]
@@ -2199,10 +2135,11 @@ Administering JACC Providers from the Command Line
 To use the command line to administer JACC providers, perform the
 following steps:
 
-1.  To create a JACC provider, use the `create-jacc-provider`
+1. To create a JACC provider, use the `create-jacc-provider`
 subcommand. The following example shows how to create a JACC provider
-named testJACC on the default server target. +
-[source,oac_no_warn]
+named testJACC on the default server target.
++
+[source]
 ----
 asadmin> create-jacc-provider
        --policyproviderclass org.glassfish.exousia.modules.locked.SimplePolicyProvider
@@ -2210,17 +2147,19 @@ asadmin> create-jacc-provider
 figurationFactoryImpl
        testJACC
 ----
-2.  To delete a JACC provider, use the `create-jacc-provider`
+2. To delete a JACC provider, use the `create-jacc-provider`
 subcommand. The following example shows how to delete a JACC provider
-named testJACC from the default domain: +
-[source,oac_no_warn]
+named testJACC from the default domain:
++
+[source]
 ----
 asadmin> delete-jacc-provider testJACC
 ----
-3.  To list the available providers, use the `list-jacc-providers`
+3. To list the available providers, use the `list-jacc-providers`
 subcommand. The following example shows how to list JACC providers for
-the default domain: +
-[source,oac_no_warn]
+the default domain:
++
+[source]
 ----
 asadmin> list-jacc-providers
 default

@@ -4,6 +4,7 @@ title=Administering Security in Cluster Mode
 next=administrative-security.html
 prev=message-security.html
 ~~~~~~
+
 Administering Security in Cluster Mode
 ======================================
 
@@ -62,16 +63,12 @@ result of replicating the commands on the DAS and the individual
 instances, the DAS and the instances make the same changes to their
 respective copies of the domain's configuration.
 
-
 [NOTE]
-=======================================================================
-
+====
 Oracle recommends that you enable secure admin as described in
 link:administrative-security.html#gknqh[Managing Administrative Security]
 so that GlassFish Server securely transfers these files on the network.
-
-=======================================================================
-
+====
 
 Dynamic reconfiguration refers to using the `--target` operand to CLI
 subcommands to make a change to a server instance (if the user-specified
@@ -79,25 +76,21 @@ target is a server instance), or all server instances that are part of
 the cluster (if the user-specified target is a cluster). For
 example:`asadmin create-jdbc-resource some-options --target some-target`.
 
-The --target operand allows the following values:
+The `--target` operand allows the following values:
 
-* `server` - Performs the command on the default server instance. This
-is the default value.
-* configuration_name - Performs the command in the specified
-configuration.
+* `server` - Performs the command on the default server instance.
+This is the default value.
+* configuration_name - Performs the command in the specified configuration.
 * cluster_name - Performs the command on all server instances in the
 specified cluster.
 * instance_name - Performs the command on a specified server instance.
 
 If a command fails for a cluster, the status shows all server instances
-where dynamic reconfiguration failed, and suggests corrective next
-steps.
+where dynamic reconfiguration failed, and suggests corrective next steps.
 
-The command status also shows when a restart is required for each server
-instance.
+The command status also shows when a restart is required for each server instance.
 
-The --target operand is supported for the following security-related CLI
-subcommands:
+The `--target` operand is supported for the following security-related CLI subcommands:
 
 * create-jacc-provider
 * delete-jacc-provider
@@ -121,51 +114,47 @@ subcommands:
 Enabling Dynamic Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Dynamic configuration is enabled by default and no additional action is
-required.
+Dynamic configuration is enabled by default and no additional action is required.
 
-Use the following command to enable dynamic configuration from the
-command line:
+Use the following command to enable dynamic configuration from the command line:
 
 `asadmin --user user --passwordfile password-file set cluster-name-config.dynamic-reconfiguration-enabled=true`.
 
 To enable dynamic configuration from the Administration Console, perform
 the following steps:
 
-1.  Expand the Configurations node.
-2.  Click the name of the cluster's configuration.
-3.  On the Configuration System Properties page, check the Dynamic
-Reconfiguration Enabled box.
-4.  Click Save.
-
+1. Expand the Configurations node.
+2. Click the name of the cluster's configuration.
+3. On the Configuration System Properties page,
+   check the Dynamic Reconfiguration Enabled box.
+4. Click Save.
 
 [NOTE]
-=======================================================================
-
+====
 The dynamic reconfiguration feature applies only to server instances,
 not the DAS. Therefore, you cannot "disable" dynamic reconfiguration on
 the DAS. There is no way to make changes to the DAS configuration using
 `asadmin` commands, the Administration Console, or the REST interface
 without having those changes take effect immediately.
-
-=======================================================================
-
+====
 
 [[gktgi]][[GSSCG00161]][[understanding-synchronization]]
 
 Understanding Synchronization
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As described in "link:../ha-administration-guide/instances.html#GSHAG00189[Resynchronizing GlassFish Server
-Instances and the DAS]" in GlassFish Server Open Source Edition High
+As described in "link:../ha-administration-guide/instances.html#GSHAG00189[
+Resynchronizing GlassFish Server Instances and the DAS]"
+in GlassFish Server Open Source Edition High
 Availability Administration Guide, configuration data for a GlassFish
 Server instance is stored in the repository of the DAS and in a cache on
 the host that is local to the instance. The configuration data in these
 locations must be synchronized. The cache is synchronized only when a
 user uses the administration tools to start or restart an instance.
 
-See "link:../ha-administration-guide/instances.html#GSHAG00189[Resynchronizing GlassFish Server Instances and the
-DAS]" in GlassFish Server Open Source Edition High Availability
+See "link:../ha-administration-guide/instances.html#GSHAG00189[
+Resynchronizing GlassFish Server Instances and the DAS]"
+in GlassFish Server Open Source Edition High Availability
 Administration Guide for information about default synchronization for
 files and directories, for the steps required to resynchronize an
 instance and the DAS, and for additional synchronization topics.

@@ -4,6 +4,7 @@ title=List of Figures
 next=lot.html
 prev=loe.html
 ~~~~~~
+
 List of Figures
 ===============
 

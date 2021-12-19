@@ -4,6 +4,7 @@ title=Administering Message Security
 next=security-in-cluster-mode.html
 prev=user-security.html
 ~~~~~~
+
 Administering Message Security
 ==============================
 
@@ -15,24 +16,18 @@ Administering Message Security
 --------------------------------
 
 This chapter provides information and procedures on configuring the
-message layer security for web services in the GlassFish Server
-environment.
-
+message layer security for web services in the GlassFish Server environment.
 
 [NOTE]
-=======================================================================
-
+====
 Message security (JSR 196) is supported only in the Full Platform
 Profile of GlassFish Server, not in the Web Profile.
-
-=======================================================================
-
+====
 
 The following topics are addressed here:
 
 * link:#ablrn[About Message Security in GlassFish Server]
-* link:#giood[Enabling Default Message Security Providers for Web
-Services]
+* link:#giood[Enabling Default Message Security Providers for Web Services]
 * link:#giouf[Configuring Message Protection Policies]
 * link:#giosl[Administering Non-default Message Security Providers]
 * link:#gdhgg[Enabling Message Security for Application Clients]
@@ -40,12 +35,10 @@ Services]
 
 Some of the material in this chapter assumes a basic understanding of
 security and web services concepts. For more information about security,
-see link:system-security.html#ggktf[About System Security in GlassFish
-Server].
+see link:system-security.html#ggktf[About System Security in GlassFish Server].
 
 Instructions for accomplishing the tasks in this chapter by using the
-Administration Console are contained in the Administration Console
-online help.
+Administration Console are contained in the Administration Console online help.
 
 [[ablrn]][[GSSCG00153]][[about-message-security-in-glassfish-server]]
 
@@ -71,8 +64,9 @@ references declared by client applications.
 
 Message-level security can be configured for the entire GlassFish Server
 or for specific applications or methods. Configuring message security at
-the application level is discussed in the link:../application-development-guide/toc.html#GSDVG[GlassFish Server
-Open Source Edition Application Development Guide].
+the application level is discussed in the
+link:../application-development-guide/toc.html#GSDVG[
+GlassFish Server Open Source Edition Application Development Guide].
 
 The following topics are addressed here:
 
@@ -106,7 +100,8 @@ and encrypt SOAP web services messages.
 messages to authenticate the message sender. The recipient of a message
 containing a username token (within embedded password) validates that
 the message sender is authorized to act as the user (identified in the
-token) by confirming that the sender knows the password of the user. +
+token) by confirming that the sender knows the password of the user.
++
 When using a username token, a valid user database must be configured on
 GlassFish Server.
 * Digital Signatures. GlassFish Server uses XML digital signatures to
@@ -114,14 +109,16 @@ bind an authentication identity to message content. Clients use digital
 signatures to establish their caller identity. Digital signatures are
 verified by the message receiver to authenticate the source of the
 message content (which might be different from the sender of the
-message.) +
+message.)
++
 When using digital signatures, valid keystore and truststore files must
 be configured on GlassFish Server.
 * Encryption. The purpose of encryption is to modify the data so that it
 can only be understood by its intended audience. This is accomplished by
 substituting an encrypted element for the original content. When based
 on public key cryptography, encryption can be used to establish the
-identity of the parties who are authorized to read a message. +
+identity of the parties who are authorized to read a message.
++
 When using encryption, a Java Cryptography Extension (JCE) provider that
 supports encryption must be installed.
 
@@ -154,7 +151,8 @@ signatures in the response to authenticate the source identity
 associated with the response. Client-side providers configured in
 GlassFish Server can be used to protect the request messages sent and
 the response messages received by server-side components (servlets and
-EJB components) acting as clients of other services. +
+EJB components) acting as clients of other services.
++
 The default client provider is used to identify the client—side provider
 to be invoked for any application for which a specific client provider
 has not been bound.
@@ -280,15 +278,16 @@ Message Security Tasks
 The general implementation tasks for message security include some or
 all of the following:
 
-1.  If you are using a version of the Java SDK prior to version 1.5.0,
-and using encryption technology, configuring a JCE provider
-2.  If you are using a username token, verifying that a user database is
-configured for an appropriate realm +
+1. If you are using a version of the Java SDK prior to version 1.5.0,
+   and using encryption technology, configuring a JCE provider
+2. If you are using a username token, verifying that a user database is
+   configured for an appropriate realm
++
 When using a username/password token, an appropriate realm must be
-configured and a user database must be configured for the realm.
-3.  Managing certificates and private keys, if necessary
-4.  Enabling the GlassFish Server default providers
-5.  Configuring new message security providers
+   configured and a user database must be configured for the realm.
+3. Managing certificates and private keys, if necessary
+4. Enabling the GlassFish Server default providers
+5. Configuring new message security providers
 
 [[ablro]][[GSSCG00200]][[message-security-roles]]
 
@@ -325,8 +324,7 @@ application-specific message protection policies if such policies have
 not already been specified by the developer/assembler.
 * Modifying GlassFish Server deployment descriptors to specify
 application-specific message protection policies information
-(message-security-binding elements) to web service endpoint and service
-references.
+(message-security-binding elements) to web service endpoint and service references.
 
 [[ablrr]][[GSSCG00059]][[application-developerassembler]]
 
@@ -336,16 +334,17 @@ The application developer/assembler is responsible for the following
 message security tasks:
 
 * Determining if an application-specific message protection policy is
-required by the application +
+required by the application
++
 If so, the developer ensures that the required policy is specified at
 application assembly time.
-* Specifying how web services should be set up for message security +
+* Specifying how web services should be set up for message security
++
 Message security can be set up by the administrator so that all web
 services are secured, or by the application deployer when the security
 provider or protection policy bound to the application must be different
 from that bound to the container.
-* Turning on message security if authorized to do so by the
-administrator
+* Turning on message security if authorized to do so by the administrator
 
 [[ablsa]][[GSSCG00223]][[sample-application-for-web-services]]
 
@@ -357,8 +356,7 @@ application features a simple web service that is implemented by both a
 Java EE EJB endpoint and a Java servlet endpoint. Both endpoints share
 the same service endpoint interface. The service endpoint interface
 defines a single operation, `sayHello`, which takes a string argument,
-and returns a `String` composed by pre-pending `Hello` to the invocation
-argument.
+and returns a `String` composed by pre-pending `Hello` to the invocation argument.
 
 The `xms` sample application is provided to demonstrate the use of
 GlassFish Server WS-Security functionality to secure an existing web
@@ -370,11 +368,12 @@ application as described in link:#ablrz[Application-Specific Web
 Services Security] application.
 
 For information about compiling, packaging, and running the `xms` sample
-application, "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in GlassFish
-Server Open Source Edition Application Development Guide.
+application, "link:../application-development-guide/securing-apps.html#GSDVG00006[
+Securing Applications]" in
+GlassFish Server Open Source Edition Application Development Guide.
 
 The `xms` sample application is installed in the following directory:
-as-install`/samples/webservices/security/ejb/apps/xms/`
+as-install``/samples/webservices/security/ejb/apps/xms/``
 
 [[giood]][[GSSCG00154]][[enabling-default-message-security-providers-for-web-services]]
 
@@ -402,17 +401,20 @@ default on the server side. If you enable a default provider for message
 security, you also need to enable providers to be used by clients of the
 web services deployed in GlassFish Server.
 
-1.  Specify the default server provider by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-Use the following syntax: +
-[source,oac_no_warn]
+1. Specify the default server provider by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
+Use the following syntax:
++
+[source]
 ----
-asadmin set --port admin-port 
+asadmin set --port admin-port
 server-config.security-service.message-security-config.SOAP.
 default_provider=ServerProvider
 ----
-2.  To apply your changes to applications that are already running,
-restart GlassFish Server. +
+2. To apply your changes to applications that are already running,
+restart GlassFish Server.
++
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
 Source Edition Administration Guide.
 
@@ -427,17 +429,20 @@ enabled a default client provider for GlassFish Server, you must ensure
 that any services invoked from endpoints deployed in GlassFish Server
 are compatibly configured for message layer security.
 
-1.  Specify the default client provider by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-Use the following syntax: +
-[source,oac_no_warn]
+1. Specify the default client provider by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
+Use the following syntax:
++
+[source]
 ----
-asadmin set --port admin-port 
+asadmin set --port admin-port
 server-config.security-service.message-security-config.SOAP.
 default_client_provider=ClientProvider
 ----
-2.  To apply your changes to applications that are already running,
-restart GlassFish Server. +
+2. To apply your changes to applications that are already running,
+restart GlassFish Server.
++
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
 Source Edition Administration Guide.
 
@@ -472,42 +477,35 @@ SOAP message security providers for that configuration.
 
 [[sthref30]][[fxjcu]]
 
-Table 3-1 Message Protection Policy Mapping to WS-Security SOAP
-Operations
+Table 3-1 Message Protection Policy Mapping to WS-Security SOAP Operations
 
 [width="100%",cols="34%,66%",options="header",]
-|=======================================================================
-|Message Protection Policy |Resulting WS-Security SOAP Message
-Protection Operations
-|auth-source="sender" |The message contains a `wsse:Security` header
-that contains a `wsse:UsernameToken` (with password).
+|===
+|Message Protection Policy |Resulting WS-Security SOAP Message Protection Operations
 
-|auth-source="content" |The content of the SOAP message Body is signed.
+|auth-source="sender"
+|The message contains a `wsse:Security` header that contains
+a `wsse:UsernameToken` (with password).
+
+|auth-source="content"
+|The content of the SOAP message Body is signed.
 The message contains a `wsse:Security` header that contains the message
 Body signature represented as a `ds`:`Signature`.
 
-a|
-auth-source="sender"
-
-auth-recipient="before-content"
-
-OR
-
+a|auth-source="sender" +
+auth-recipient="before-content" +
+OR +
 auth-recipient="after-content"
-
- |The content of the SOAP message Body is encrypted and replaced with
+|The content of the SOAP message Body is encrypted and replaced with
 the resulting `xend:EncryptedData`. The message contains
 `a wsse:Security` header that contains a
 `wsse:UsernameToken (with password)` and an `xenc:EncryptedKey`. The
 `xenc:EncryptedKey` contains the key used to encrypt the SOAP message
 body. The key is encrypted in the public key of the recipient.
 
-a|
-auth-source="content"
-
+a|auth-source="content" +
 auth-recipient="before-content"
-
- |The content of the SOAP message Body is encrypted and replaced with
+|The content of the SOAP message Body is encrypted and replaced with
 the resulting `xend:EncryptedData`. The `xenc:EncryptedData` is signed.
 The message contains `a wsse:Security` header that contains an
 `xenc:EncryptedKey` and a `ds`:`Signature`. The `xenc:EncryptedKey`
@@ -515,33 +513,25 @@ contains the key used to encrypt the SOAP message body. The key is
 encrypted in the public key of the recipient.
 
 a|
-auth-source="content"
-
+auth-source="content" +
 auth-recipient="after-content"
-
- |The content of the SOAP message Body is signed, then encrypted, and
+|The content of the SOAP message Body is signed, then encrypted, and
 then replaced with the resulting `xend:EncryptedData`. The message
 contains a `wsse:Security` header that contains an `xenc:EncryptedKey`
 and a `ds:Signature`. The `xenc:EncryptedKey` contains the key used to
 encrypt the SOAP message body. The key is encrypted in the public key of
 the recipient.
 
-a|
-auth-recipient="before-content"
-
-OR
-
+a|auth-recipient="before-content" +
+OR +
 auth-recipient="after-content"
-
- |The content of the SOAP message Body is encrypted and replaced with
+|The content of the SOAP message Body is encrypted and replaced with
 the resulting `xend:EncryptedData`. The message contains
-`a wsse:Security` header that contains an `xenc:EncryptedKey`. The
-`xenc:EncryptedKey` contains the key used to encrypt the SOAP message
+`a wsse:Security` header that contains an `xenc:EncryptedKey`.
+The `xenc:EncryptedKey` contains the key used to encrypt the SOAP message
 body. The key is encrypted in the public key of the recipient.
-
-|No policy specified. |No security operations are performed by the
-modules.
-|=======================================================================
+|No policy specified. |No security operations are performed by the modules.
+|===
 
 
 [[gioqu]][[GSSCG00125]][[to-configure-the-message-protection-policies-for-a-provider]]
@@ -559,34 +549,42 @@ Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to set th
 then replace the word `request` in the following commands with the word
 `response`.
 
-1.  Add a request policy to the client and set the authentication source
-by using the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-For example: +
-[source,oac_no_warn]
+1. Add a request policy to the client and set the authentication source
+by using the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
+For example:
++
+[source]
 ----
 asadmin> set server-config.security-service.message-security-config.SOAP.
 provider-config.ClientProvider.request-policy.auth_source=[sender | content]
 ----
-2.  Add a request policy to the server and set the authentication source
-by using the `set` subcommand. +
-For example: +
-[source,oac_no_warn]
+2. Add a request policy to the server and set the authentication source
+by using the `set` subcommand.
++
+For example:
++
+[source]
 ----
 asadmin> set server-config.security-service.message-security-config.SOAP.
 provider-config.ServerProvider.request-policy.auth_source=[sender | content]
 ----
-3.  Add a request policy to the client and set the authentication
-recipient by using the `set` subcommand: +
-For example: +
-[source,oac_no_warn]
+3. Add a request policy to the client and set the authentication
+recipient by using the `set` subcommand:
++
+For example:
++
+[source]
 ----
 asadmin> set server-config.security-service.message-security-config.SOAP.
 provider-config.ClientProvider.request-policy.auth_recipient=[before-content | after-content]
 ----
-4.  Add a request policy to the server and set the authentication
-recipient by using the `set` subcommand: +
-For example: +
-[source,oac_no_warn]
+4. Add a request policy to the server and set the authentication
+recipient by using the `set` subcommand:
++
+For example:
++
+[source]
 ----
 asadmin> set server-config.security-service.message-security-config.SOAP.
 provider-config.ServerProvider.request-policy.auth_recipient=[before-content | after-content]
@@ -594,8 +592,7 @@ provider-config.ServerProvider.request-policy.auth_recipient=[before-content | a
 
 [[ablsl]][[GSSCG00225]][[setting-the-request-and-response-policy-for-the-application-client-configuration]]
 
-Setting the Request and Response Policy for the Application Client
-Configuration
+Setting the Request and Response Policy for the Application Client Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The request and response policies define the authentication policy
@@ -617,8 +614,6 @@ client container as described in link:#gdhgg[Enabling Message Security
 for Application Clients].
 
 [[GSSCG00088]][[gipxo]]
-
-
 Example 3-1 Message Security Policy Setting for Application Clients
 
 In the application client configuration file, the `request-policy` and
@@ -627,7 +622,7 @@ in the following code snippet. (Additional code in the snippet is
 provided as illustration and might differ slightly in your installation.
 Do not change the additional code.)
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <client-container>
   <target-server name="your-host" address="your-host"
@@ -658,7 +653,7 @@ Protection Policies].
 To not specify a request or response policy, leave the element blank,
 for example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <response-policy/>
 ----
@@ -687,13 +682,14 @@ create a new message provider for the security service. If the message
 layer does not exist, the message layer is created, and the provider is
 created under it.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create the message security provider by using the
-link:../reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create the message security provider by using the
+link:../reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand.
++
 Information about properties for this subcommand is included in the help
 page.
-3.  If needed, restart the server. +
+3. If needed, restart the server.
++
 Some properties require server restart. See
 "link:../administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
 GlassFish Server Open Source Edition Administration Guide. If your
@@ -701,16 +697,14 @@ server needs to be restarted, see "link:../administration-guide/domains.html#GSA
 Domain]" in GlassFish Server Open Source Edition Administration Guide.
 
 [[GSSCG00089]][[giosd]]
-
-
 Example 3-2 Creating a Message Security Provider
 
 This example creates the new message security provider
 `mySecurityProvider`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-message-security-provider 
+asadmin> create-message-security-provider
 --classname com.sun.enterprise.security.jauth.ClientAuthModule
 --providertype client mySecurityProvider
 Command create-message-security-provider executed successfully.
@@ -732,22 +726,19 @@ To List Message Security Providers
 Use the `list-message-security-providers` subcommand in remote mode to
 list the message providers for the security layer.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the message security providers by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the message security providers by using the
 link:../reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
 
 [[GSSCG00090]][[gioui]]
-
-
 Example 3-3 Listing Message Security Providers
 
 This example lists the message security providers for a message layer.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-message-security-providers --layer SOAP
-XWS_ClientProvider 
+XWS_ClientProvider
 ClientProvider
 XWS_ServerProvider
 ServerProvider
@@ -767,12 +758,12 @@ line.
 To Update a Message Security Provider
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the message security providers by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the message security providers by using the
 link:../reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
-3.  Modify the values for the specified message security provider by
-using the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
+3. Modify the values for the specified message security provider by
+using the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
 The message security provider is identified by its dotted name.
 
 [[giorr]][[GSSCG00129]][[to-delete-a-message-security-provider]]
@@ -783,22 +774,19 @@ To Delete a Message Security Provider
 Use the `delete-message-security-provider` subcommand in remote mode to
 remove a message security provider.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the message security providers by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the message security providers by using the
 link:../reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
-3.  Delete the message security provider by using the
+3. Delete the message security provider by using the
 link:../reference-manual/delete-message-security-provider.html#GSRFM00097[`delete-message-security-provider`] subcommand.
 
 [[GSSCG00091]][[gioug]]
-
-
 Example 3-4 Deleting a Message Security Provider
 
 This example deletes the `myServerityProvider` message security
 provider.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-message-security-provider --layer SOAP myServerityProvider
 Command delete-message-security-provider executed successfully.
@@ -822,20 +810,21 @@ HttpServlet-layer message security provider, either through the
 Administration Console or with the `create-message-security-provider`
 subcommand.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create the message security provider by using the
-link:../reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand. +
-Information about properties for this subcommand is included in the help
-page.
-3.  Bind the message security provider for use with your application. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create the message security provider by using the
+link:../reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand.
++
+Information about properties for this subcommand is included in the help page.
+3. Bind the message security provider for use with your application.
++
 You do this by defining the `httpservlet-security-provider` attribute in
 the `glassfish-web.xml` file corresponding to your application. Set the
 value of the attribute to the provider name you assigned to the message
 security provider. For example, if you use MySAM when you create the
 message security provider the entry would be
 httpservlet-security-provider="MySAM".
-4.  If needed, restart the server. +
+4. If needed, restart the server.
++
 Some properties require server restart. See
 "link:../administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
 GlassFish Server Open Source Edition Administration Guide. If your
@@ -843,13 +832,11 @@ server needs to be restarted, see "link:../administration-guide/domains.html#GSA
 Domain]" in GlassFish Server Open Source Edition Administration Guide.
 
 [[GSSCG00092]][[gkxqz]]
-
-
 Example 3-5 Creating a Message Security Provider
 
 This example creates the new message security provider `mySAM`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-message-security-provider --layer=HttpServlet
 --classname com.sun.glassfish.oamsam.OAMAuthenticatorSAM
@@ -861,10 +848,10 @@ Command create-message-security-provider executed successfully.
 
 The subcommand results in the following `domain.xml` entry:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <message-security-config auth-layer="HttpServlet">
-<provider-config provider-type="server" provider-id="mysam" 
+<provider-config provider-type="server" provider-id="mysam"
 class-name="com.sun.glassfish.oamsam.OAMAuthenticatorSAM">
             <property name="oam.resource.hostid.variation" value="your-host-system.com"></property>
             <request-policy></request-policy>
@@ -876,7 +863,7 @@ class-name="com.sun.glassfish.oamsam.OAMAuthenticatorSAM">
 To list the HttpServlet message security providers, use the
 `list-message-security-providers` subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-message-security-providers --layer HttpServlet
 list-message-security-providers successful
@@ -890,8 +877,7 @@ Command list-message-security-providers executed successfully.
 See Also
 
 You can also view the full syntax and options of the subcommand by
-typing `asadmin help create-message-security-provider` at the command
-line.
+typing `asadmin help create-message-security-provider` at the command line.
 
 [[gdhgg]][[GSSCG00157]][[enabling-message-security-for-application-clients]]
 
@@ -914,8 +900,7 @@ Protection Policies].
 Additional Information About Message Security
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For additional information about message security, see the following
-documentation:
+For additional information about message security, see the following documentation:
 
 * "http://docs.oracle.com/javaee/7/tutorial/doc/security-intro.html[Introduction
 to Security in the Java EE Platform]" in The Java EE 8 Tutorial

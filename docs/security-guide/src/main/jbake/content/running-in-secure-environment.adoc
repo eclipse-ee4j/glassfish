@@ -3,6 +3,7 @@ status=published
 title=Running in a Secure Environment
 prev=administrative-security.html
 ~~~~~~
+
 Running in a Secure Environment
 ===============================
 
@@ -54,13 +55,16 @@ Understand Your Environment
 To better understand your security needs, ask yourself the following
 questions:
 
-* Which resources am I protecting? +
+* Which resources am I protecting?
++
 Many resources in the production environment can be protected, including
 information in databases accessed by GlassFish Server and the
 availability, performance, applications, and the integrity of the Web
 site. Consider the resources you want to protect when deciding the level
 of security you must provide.
-* From whom am I protecting the resources? +
+
+* From whom am I protecting the resources?
++
 For most Web sites, resources must be protected from everyone on the
 Internet. But should the Web site be protected from the employees on the
 intranet in your enterprise? Should your employees have access to all
@@ -70,14 +74,16 @@ system administrators be able to access all data? You might consider
 giving access to highly confidential data or strategic resources to only
 a few well trusted system administrators. Perhaps it would be best to
 allow no system administrators access to the data or resources.
-* What will happen if the protections on strategic resources fail? +
+
+* What will happen if the protections on strategic resources fail?
++
 In some cases, a fault in your security scheme is easily detected and
 considered nothing more than an inconvenience. In other cases, a fault
 might cause great damage to companies or individual clients that use the
 Web site. Understanding the security ramifications of each resource will
 help you protect it properly.
 
-(`http://www.oracle.com/us/products/ondemand/index.html`)[[gksce]]
+See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
 
 [[GSSCG00239]][[read-security-publications]]
 
@@ -166,12 +172,10 @@ machine and operating system for recommended security measures.
 
 
 [NOTE]
-=======================================================================
-
+====
 The domain and server configuration files should be accessible only by
 the operating system users who configure or execute GlassFish Server.
-
-=======================================================================
+====
 
 
 [[sthref39]][[gksbt]]
@@ -179,7 +183,7 @@ the operating system users who configure or execute GlassFish Server.
 Table 6-1 Securing the GlassFish Server Host
 
 [width="100%",cols="27%,73%",options="header",]
-|=======================================================================
+|===
 |Security Action |Description
 |Physically secure the hardware. |Keep your hardware in a secured area
 to prevent unauthorized operating system users from tampering with the
@@ -337,7 +341,7 @@ security-related patches.
 |Apply the latest maintenance packs and critical patch updates. |Refer
 to the vendor of your operating system for a list of maintenance packs
 and critical patch updates.
-|=======================================================================
+|===
 
 
 [[gksca]][[GSSCG00174]][[securing-glassfish-server]]
@@ -355,7 +359,7 @@ that Oracle recommends you use to secure your production environment.
 Table 6-2 Securing GlassFish Server
 
 [width="100%",cols="25%,75%",options="header",]
-|=======================================================================
+|===
 |Security Action |Description
 |Enable Secure Admin. a|
 The secure administration feature allows an administrator to secure all
@@ -435,9 +439,9 @@ GlassFish Server environment. You use audit modules to develop an audit
 trail of all authentication and authorization decisions. To enable audit
 logging, two steps are required:
 
-1.  On the Security page, select the Audit Logging Enabled checkbox to
+1. On the Security page, select the Audit Logging Enabled checkbox to
 enable audit logging.
-2.  Set the `auditOn` property for the active audit module to true.
+2. Set the `auditOn` property for the active audit module to true.
 
 Review the auditing records periodically to detect security breaches and
 attempted breaches. Noting repeated failed logon attempts or a
@@ -469,7 +473,7 @@ give them unique names that cannot be easily guessed.
 includes a single account for user "admin" and an empty password. For
 production environments this default is inherently unsecure, and you
 should set a password for admin.
-|=======================================================================
+|===
 
 
 [[gksbf]][[GSSCG00175]][[securing-applications]]
@@ -491,7 +495,7 @@ resources.
 Table 6-3 Securing Applications
 
 [width="100%",cols="22%,78%",options="header",]
-|=======================================================================
+|===
 |Security Action |Description
 |Use JSP comment tags instead of HTML comment tags. |Comments in JSP
 files that might contain sensitive data and or other comments that are
@@ -554,7 +558,7 @@ such characters, replace them with their HTML entity or character
 reference. Replacing the characters prevents the browser from executing
 the user-supplied data as HTML.
 
-|=======================================================================
+|===
 
 
 

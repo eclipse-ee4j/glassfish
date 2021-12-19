@@ -4,6 +4,7 @@ title=Managing Administrative Security
 next=running-in-secure-environment.html
 prev=security-in-cluster-mode.html
 ~~~~~~
+
 Managing Administrative Security
 ================================
 
@@ -27,13 +28,11 @@ Console online help.
 
 * link:#gkocp[Secure Administration Overview]
 * link:#gkofl[How Secure Admin Works: The Big Picture]
-* link:#gkofe[Considerations When Running GlassFish Server With Default
-Security]
+* link:#gkofe[Considerations When Running GlassFish Server With Default Security]
 * link:#gkomz[Running Secure Admin]
 * link:#gkolu[Additional Considerations When Creating Local Instances]
 * link:#gkqah[Secure Admin Use Case]
-* link:#gkodn[Upgrading an SSL-Enabled Secure GlassFish Installation to
-Secure Admin]
+* link:#gkodn[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
 
 [[gkocp]][[GSSCG00162]][[secure-administration-overview]]
 
@@ -52,41 +51,40 @@ administration-client-to-instance traffic.
 The secure administration feature, which is henceforth referred to as
 secure admin, provides a secure environment, in which you can be
 confident that rogue users or processes cannot intercept or corrupt
-administration traffic or impersonate legitimate GlassFish Server
-components.
+administration traffic or impersonate legitimate GlassFish Server components.
 
 When you install GlassFish Server or create a new domain, secure admin
 is disabled by default. When secure admin is disabled, GlassFish Server
 does not encrypt administrative communication among the system
-components and does not accept administrative connections from remote
-hosts.
+components and does not accept administrative connections from remote hosts.
 
 The following subcommands enable and disable secure admin:
 
-* enable-secure-admin-The `enable-secure-admin` subcommand turns on
+* enable-secure-admin +
+The `enable-secure-admin` subcommand turns on
 secure admin. GlassFish Server uses SSL encryption to protect subsequent
 administrative traffic and will accept remote administrative
 connections. Enabling secure admin affects the entire domain, including
 the DAS and all instances. The DAS must be running, and not any
 instances, when you run `enable-secure-admin`. You must restart the DAS
 immediately after enabling secure admin, and then start any instances
-you want to run. +
-
+you want to run.
++
 [NOTE]
-=======================================================================
-
+====
 The `enable-secure-admin` subcommand fails if any administrative user
 has a blank password.
+====
 
-=======================================================================
-
-* disable-secure-admin-The `disable-secure-admin` subcommand turns off
+* disable-secure-admin +
+The `disable-secure-admin` subcommand turns off
 secure admin. GlassFish Server no longer encrypts administrative
 messages and will no longer accept remote administration connections.
 Disabling secure admin affects the entire domain, including the DAS and
 all instances. The DAS must be running , and not any instances, when you
 run `disable-secure-admin`. You must restart the DAS immediately after
-disabling secure admin, and then start any instances you want to run. +
+disabling secure admin, and then start any instances you want to run.
++
 If secure admin is not enabled, this subcommand has no effect.
 
 This section describes how to use these commands to run secure admin,
@@ -103,12 +101,10 @@ following topics:
 
 * link:#gkqce[Functions Performed by Secure Admin]
 * link:#gkocv[Which Administration Account is Used?]
-* link:#gkodi[What Authentication Methods Are Used for Secure
-Administration?]
+* link:#gkodi[What Authentication Methods Are Used for Secure Administration?]
 * link:#gkpex[Understanding How Certificate Authentication is Performed]
 * link:#gkoey[What Certificates Are Used?]
-* link:#glgmy[An Alternate Approach: Using Distinguished Names to
-Specify Certificates]
+* link:#glgmy[An Alternate Approach: Using Distinguished Names to Specify Certificates]
 * link:#gkqjj[Guarding Against Unwanted Connections]
 
 [[gkqce]][[GSSCG00227]][[functions-performed-by-secure-admin]]
@@ -120,31 +116,30 @@ The `enable-secure-admin` subcommand performs the following functions.
 Subsequent sections describe these functions in more detail.
 
 * Enables the secure admin behavior, optionally setting which aliases
-are to be used for identifying the DAS and instance certificates.
+  are to be used for identifying the DAS and instance certificates.
+
 * Adjusts all configurations in the domain, including default-config.
+
 * Adjusts Grizzly settings:
-
 ** SSL/TLS is enabled in the DAS's admin listener and the instances'
-admin listeners.
-
-** Port unification (that is, HTTP and HTTPS are handled by the same
-port), http—to—https redirection, and client authentication
-(client-auth=want) are enabled.
-
+   admin listeners.
+** Port unification (that is, HTTP and HTTPS are handled by the same port),
+   http—to—https redirection, and client authentication
+  (client-auth=want) are enabled.
 ** Configures SSL to use the administration truststore.
-
 ** Configures SSL to use the administration keystore and the correct
-alias (for the self-signed cert) for authenticating itself. (You can use
-your own certificate instead, as described in link:#gkped[Using Your Own
-Certificates]. +
+   alias (for the self-signed cert) for authenticating itself.
+   (You can use your own certificate instead, as described in link:#gkped[
+   Using Your Own Certificates].
+
++
 The Grizzly configuration on the DAS and each instance is identical,
 with the exception that the DAS uses the `s1as` alias for SSL/TLS
 authentication and the instances use the `glassfish-instance` alias.
 (These alias names are the default, and you can change them.) +
 A server restart is required to change the Grizzly adapter behavior. +
 The restart also synchronizes the restarted instances. When you start
-the instances, the DAS delivers the updated configuration to the
-instances.
+the instances, the DAS delivers the updated configuration to the instances.
 
 [[gkocv]][[GSSCG00228]][[which-administration-account-is-used]]
 
@@ -184,7 +179,8 @@ authentication methods:
 
 * The DAS and instances authenticate to each other via mutual (two-way)
 SSL/TLS certificate authentication. The DAS authenticates to clients via
-one-way SSL/TLS certificate authentication. +
+one-way SSL/TLS certificate authentication.
++
 The domain creation process creates a default keystore and truststore,
 plus a default private key for the DAS. Secure admin uses this initial
 configuration to set up the truststore so that the DAS and instances
@@ -215,24 +211,25 @@ when secure admin is enabled or disabled.
 Table 5-1 Authentication Methods Employed
 
 [width="100%",cols="30%,30%,40%",options="header",]
-|=======================================================================
-|Access Method |When Secure Admin is Disabled |When Secure Admin is
-Enabled
-|Remote administration access to the DAS |Rejected. |Username/password
-authentication. (Client must also accept server certificate.)
+|===
+|Access Method |When Secure Admin is Disabled |When Secure Admin is Enabled
 
-|Communication between DAS and instances |Cleartext messages. No mutual
-authentication. |SSL-encrypted messages. SSL mutual authentication using
-certificates.
+|Remote administration access to the DAS
+|Rejected.
+|Username/password authentication. (Client must also accept server certificate.)
 
-|Communication between administration clients and DAS |Cleartext
-messages. No DAS authentication. |SSL-encrypted messages. DAS uses SSL
-certificate server authentication.
+|Communication between DAS and instances
+|Cleartext messages. No mutual authentication.
+|SSL-encrypted messages. SSL mutual authentication using certificates.
 
-|Local asadmin client to instance on same node |Cleartext messages.
-Locally-provisioned password mechanism is used. |SSL-encrypted messages.
-Locally-provisioned password mechanism is used.
-|=======================================================================
+|Communication between administration clients and DAS
+|Cleartext messages. No DAS authentication.
+|SSL-encrypted messages. DAS uses SSL certificate server authentication.
+
+|Local asadmin client to instance on same node
+|Cleartext messages. Locally-provisioned password mechanism is used.
+|SSL-encrypted messages. Locally-provisioned password mechanism is used.
+|===
 
 
 [[gkpex]][[GSSCG00230]][[understanding-how-certificate-authentication-is-performed]]
@@ -246,17 +243,16 @@ self-signed certificate for remote instances.
 
 Then, when you enable secure admin, the following actions are performed:
 
-* Both private keys are stored in the domain-wide DAS keystore file,
-keystore.jks.
+* Both private keys are stored in the domain-wide DAS keystore file, keystore.jks.
 * Both public certificates are stored in the domain-wide DAS truststore
-file, cacerts.jks.
+  file, cacerts.jks.
 
 When the DAS sends a message to an instance:
 
-1.  SSL on the instance asks the DAS to provide an SSL/TLS certificate.
-2.  The DAS sends the certificate with the alias you specified using the
+1. SSL on the instance asks the DAS to provide an SSL/TLS certificate.
+2. The DAS sends the certificate with the alias you specified using the
 `--adminalias` option when you ran the `enable-secure-admin` subcommand.
-3.  SSL on the instance makes sure the certificate is valid and
+3. SSL on the instance makes sure the certificate is valid and
 GlassFish Server makes sure that the security Principal associated with
 the incoming request (provided automatically by Grizzly and the SSL/TLS
 Java implementation) matches the Principal associated with the
@@ -284,23 +280,18 @@ self-signed certificates.
 You can use your tool of choice, such as keytool, to list the default
 self-signed certificates in the keystore, similar to the following:
 
-
 [NOTE]
-=======================================================================
-
+====
 You can list the contents of the keystore without supplying a password.
 However, for a request that affects the private key, such as the
 keytool.exe `--certreq` option, the keystore password is required. This
 is the master password and has a default value of changeit unless you
 change it with the `change-master-password` subcommand.
+====
 
-=======================================================================
-
-
-`keytool.exe -list -keystore keystore.jks`
-
-[source,oac_no_warn]
+[source]
 ----
+keytool.exe -list -keystore keystore.jks
 Enter keystore password:
 
 *****************  WARNING WARNING WARNING  *****************
@@ -345,8 +336,7 @@ shown in link:#gkqpv[Figure 5-1].
 
 .*Figure 5-1 Sample Browser Response to Untrusted Certificate*
 image:img/accept-certif.png[
-"This screen shot shows how a browser might respond to an untrusted
-certificate."]
+"This screen shot shows how a browser might respond to an untrusted certificate."]
 
 
 Similarly, the first time `asadmin` receives an untrusted certificate,
@@ -354,7 +344,7 @@ it displays the certificate and lets you accept it or reject it, as
 follows: (If you accept it, `asadmin` also accepts that certificate in
 the future. )
 
-[source,oac_no_warn]
+[source]
 ----
 D:\glassfish7\glassfish\bin>asadmin enable-secure-admin
 Command enable-secure-admin executed successfully.
@@ -480,21 +470,18 @@ option to check incoming requests that use SSL/TLS cert authentication.
 Conversely, instances use the alias associated with the `--adminalias`
 option to check incoming requests with certificate authentication.
 
-The link:../reference-manual/enable-secure-admin-principal.html#GSRFM00131[`enable-secure-admin-principal`] subcommand
+The link:../reference-manual/enable-secure-admin-principal.html#GSRFM00131[
+`enable-secure-admin-principal`] subcommand
 provides an alternate approach. `enable-secure-admin-principal`
 instructs GlassFish Server to accept admin requests when accompanied by
 an SSL certificate with the specified distinguished name (DN).
 
-
 [NOTE]
-=======================================================================
-
+====
 Any certificate you specify with `enable-secure-admin-principal` must
 either be issued by a trusted certificate authority or, if it is
 self-signed, must already be in the GlassFish Server truststore.
-
-=======================================================================
-
+====
 
 For example, assume that you write your own admin client that uses the
 REST interface. When your client establishes the connection, it can
@@ -509,21 +496,17 @@ the DN. You specify the DN as a comma-separated list in quotes. For
 example,
 `"CN=system.amer.oracle.com,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US"`.
 
-
 [NOTE]
-=======================================================================
-
+====
 The `enable-secure-admin-principal` subcommand accepts the string you
 enter and does not immediately validate it. However, secure admin must
 be able to match the DN you specify in order to use it.
-
-=======================================================================
-
+====
 
 If you have sufficient privileges to view the content of the keystore,
 you can use keytool to display the DN of a certificate:
 
-[source,oac_no_warn]
+[source]
 ----
 keytool.exe -v -list -keystore keystore.jks
 Enter keystore password:
@@ -538,7 +521,7 @@ Creation date: Jul 7, 2011
 Entry type: PrivateKeyEntry
 Certificate chain length: 1
 Certificate[1]:
-Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish, 
+Owner: CN=systemname.amer.oracle.com-instance, OU=GlassFish,
 O=Oracle Corporation, L=Santa Clara, ST=California, C=US
 Issuer: CN=systemname.amer.oracle.com-instance, OU=GlassFish, O=Oracle Corporation,
  L=Santa Clara, ST=California, C=US
@@ -571,7 +554,7 @@ know the alias.
 If you have sufficient privileges to view the contents of the
 truststore, you can use keytool to display the alias of a certificate:
 
-[source,oac_no_warn]
+[source]
 ----
 keytool.exe -v -list -keystore cacerts.jks
 Enter keystore password:
@@ -622,7 +605,7 @@ certificate with any of the DNs you specify.
 The following example shows how to specify a DN for authorizing access
 in secure administration:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-secure-admin-principal
 "CN=system.amer.oracle.com,OU=GlassFish,
@@ -667,7 +650,8 @@ the truststore of the other DAS.
 misconfigure the admin listener port for an instance on the same host so
 it is the same as for the DAS. Similarly, instance-to-instance traffic
 is unlikely unless you were to misconfigure listener ports for instances
-on the same host. +
+on the same host.
++
 To prevent both of these situations, both cases are handled by making
 sure that the connecting Principal (alias) is not the running Principal.
 secure admin ensures that if the client has authenticated using SSL/TLS
@@ -676,13 +660,15 @@ client is not the same as the current process. That is, the DAS makes
 sure that the Principal is not itself. Similarly, each instance ensures
 that the client is not an instance. (The instances share the same
 self-signed certificate and therefore are mapped to the same Principal.)
-* Remote client-to-instance: +
+* Remote client-to-instance:
++
 Remote `asadmin` clients are unable to connect directly to instances. If
 the user on host "test1" runs a local command but specifies a remote
 instance on host "test2," `asadmin` on test1 will read and send that
 locally-provisioned password. The instance on "test2" will have a
 different locally-provisioned password and so the authentication attempt
-will fail. +
+will fail.
++
 Therefore, a user on "test1" will not be able to run a remote command
 targeting an instance on "test2."
 
@@ -706,12 +692,10 @@ are accepted and rejected when secure admin is disabled.
 
 
 [NOTE]
-=======================================================================
-
+====
 When secure admin is disabled, GlassFish Server does allow remote
 monitoring (read-only) access via the REST interface.
-
-=======================================================================
+====
 
 
 [[sthref37]][[gkode]]
@@ -719,20 +703,23 @@ monitoring (read-only) access via the REST interface.
 Table 5-2 Accepted and Rejected Operations if Secure Admin is Disabled
 
 [width="100%",cols="30%,25%,45%",options="header",]
-|=======================================================================
+|===
 |Operation |Run From Same System as DAS |Run From Remote System
-|`start-local-instance` |Functions as expected |Cannot sync with DAS.
-The instance starts but cannot communicate with the DAS. DAS will not
-see the instance.
 
-|Any other `asadmin` subcommand |Functions as expected |Rejected. A user
-sees the username/password prompt, but even correct entries are
-rejected.
+|`start-local-instance`
+|Functions as expected
+|Cannot sync with DAS.
+The instance starts but cannot communicate with the DAS.
+DAS will not see the instance.
 
-|Commands that use SSH. For example, `create-instance`. |Functions as
-expected; requires prior SSH configuration. |Functions as expected;
-requires prior SSH configuration.
-|=======================================================================
+|Any other `asadmin` subcommand
+|Functions as expected
+|Rejected. A user sees the username/password prompt, but even correct entries are rejected.
+
+|Commands that use SSH. For example, `create-instance`.
+|Functions as expected; requires prior SSH configuration.
+|Functions as expected; requires prior SSH configuration.
+|===
 
 
 [[gkomz]][[GSSCG00165]][[running-secure-admin]]
@@ -751,31 +738,31 @@ Prerequisites for Running Secure Admin
 Before running GlassFish Server with secure admin enabled, you must make
 sure that:
 
-1.  The DAS is installed, initialized, and running.
-2.  If one or more remote instances are installed and initialized, they
-must not be running.
-3.  Any administration clients you require are installed.
-4.  The DAS communicates on the `-—adminport` you configure when you
-create the domain, and defaults to 4848. An instance communicates on the
-`ASADMIN_LISTENER_PORT` system property you specify for the instance.
-5.  The user name and password sent by remote administration clients
-(`asadmin`, administration console, browsers, and IDEs) must exist in
-the realm and be in the admin group.
-6.  The keystore and truststore for the domain exist. (They are created
-by default when you create the domain or install GlassFish Server.) +
+1. The DAS is installed, initialized, and running.
+2. If one or more remote instances are installed and initialized, they
+   must not be running.
+3. Any administration clients you require are installed.
+4. The DAS communicates on the `-—adminport` you configure when you
+   create the domain, and defaults to 4848. An instance communicates on the
+   `ASADMIN_LISTENER_PORT` system property you specify for the instance.
+5. The user name and password sent by remote administration clients
+   (`asadmin`, administration console, browsers, and IDEs) must exist in
+   the realm and be in the admin group.
+6. The keystore and truststore for the domain exist. (They are created
+   by default when you create the domain or install GlassFish Server.)
++
 If you are not using the default self-signed certificates, you must add
-your own valid certificates and CA root in the keystore and truststore,
-respectively.
-7.  If you are not using the default self-signed certificates, create
-two aliases corresponding to certificates in the keystore and
-truststore: one that the DAS will use for authenticating itself in
-administration traffic, and one that the instances will use for
-authenticating itself in administration traffic.
+   your own valid certificates and CA root in the keystore and truststore,
+   respectively.
+7. If you are not using the default self-signed certificates, create
+   two aliases corresponding to certificates in the keystore and
+   truststore: one that the DAS will use for authenticating itself in
+   administration traffic, and one that the instances will use for
+   authenticating itself in administration traffic.
 
 [[glgmh]][[GSSCG00235]][[an-alternate-approach-using-a-user-name-and-password-for-internal-authentication-and-authorization]]
 
-An Alternate Approach: Using A User Name and Password for Internal
-Authentication and Authorization
+An Alternate Approach: Using A User Name and Password for Internal Authentication and Authorization
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 By default, secure admin uses the GlassFish Server self-signed
@@ -784,55 +771,54 @@ authenticate the DAS and instances with each other and to authorize
 secure admin operations. Specifically, the DAS uses the (`s1as`) alias
 for authenticating itself and authorizing access in administration
 traffic, and instances use the (`glassfish-instance`) alias for
-authenticating themselves and authorizing access in secure admin
-traffic.
+authenticating themselves and authorizing access in secure admin traffic.
 
 As described in link:#gkped[Using Your Own Certificates], you can
 instead use your own certificates and their associated aliases for
-authenticating and authorizing the DAS and instances in administration
-traffic.
+authenticating and authorizing the DAS and instances in administration traffic.
 
 As an alternative to this certificate-based authentication and
 authorization, you can instead use the
-link:../reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[`enable-secure-admin-internal-user`] subcommand to
+link:../reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[
+`enable-secure-admin-internal-user`] subcommand to
 instruct all servers in the domain to authenticate to each other, and to
 authorize admin operations submitted to each other, using an existing
 admin user name and password rather than SSL certificates.
 
-
 [NOTE]
-=======================================================================
-
+====
 If secure admin is enabled, all GlassFish Server processes continue to
 use SSL encryption to secure the content of the admin messages,
 regardless of how they authenticate to each other.
-
-=======================================================================
-
+====
 
 You might want to use the
-link:../reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[`enable-secure-admin-internal-user`] subcommand if your
+link:../reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[
+`enable-secure-admin-internal-user`] subcommand if your
 use case favors the use of a user name and password combination over the
 use of SSL certificates and aliases.
 
 This generally means that you must:
 
-1.  Create a valid admin user. +
-[source,oac_no_warn]
+1. Create a valid admin user.
++
+[source]
 ----
-asadmin> create-file-user --authrealmname admin-realm --groups 
+asadmin> create-file-user --authrealmname admin-realm --groups
 asadmin newAdminUsername
 ----
-2.  Create a password alias for the just-created password. +
-[source,oac_no_warn]
+2. Create a password alias for the just-created password.
++
+[source]
 ----
 asadmin> create-password-alias passwordAliasName
 ----
-3.  Use that user name and password for inter-process authentication and
-admin authorization. +
-[source,oac_no_warn]
+3. Use that user name and password for inter-process authentication and
+admin authorization.
++
+[source]
 ----
-asadmin> enable-secure-admin-internal-user 
+asadmin> enable-secure-admin-internal-user
 --passwordalias passwordAliasName
 newAdminUsername
 ----
@@ -841,9 +827,9 @@ The following example allows secure admin to use a user name and
 password alias for authentication and authorization between the DAS and
 instances, instead of certificates.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> enable-secure-admin-internal-user 
+asadmin> enable-secure-admin-internal-user
 --passwordalias passwordAliasName
 newAdminUsername
 ----
@@ -885,43 +871,44 @@ The following example shows how to enable secure admin for a domain
 using the default admin alias and the default instance alias. You must
 restart the DAS immediately after enabling secure admin.
 
-
 [NOTE]
-=======================================================================
-
+====
 The only indicator that secure admin is enabled is the successful status
 from the `enable-secure-admin` subcommand. When secure admin is running,
 the DAS and instances do not report the secure admin status.
+====
 
-=======================================================================
-
-
-`asadmin>` `enable-secure-admin`
-
-`Command enable-secure-admin executed successfully.`
+[source]
+----
+asadmin> enable-secure-admin
+Command enable-secure-admin executed successfully.
+----
 
 The following example shows how to enable secure admin for a domain
 using an admin alias adtest and an instance alias intest. You can also
 use this command to modify an existing secure admin configuration to use
 different aliases.
 
-`asadmin>`
-`enable-secure-admin --adminalias adtest --instancealias intest`
+[source]
+----
+asadmin> enable-secure-admin --adminalias adtest --instancealias intest
+----
 
 The following example shows how to disable secure admin:
-
-`asadmin>` `disable-secure-admin`
-
-`Command disable-secure-admin executed successfully.`
+[source]
+----
+asadmin> disable-secure-admin
+Command disable-secure-admin executed successfully.
+----
 
 You can use the following command to see the current state of secure
 admin in a domain:
-
-`asadmin>` `get secure-admin.enabled`
-
-`secure-admin.enabled=false`
-
-`Command get executed successfully.`
+[source]
+----
+asadmin> get secure-admin.enabled
+secure-admin.enabled=false
+Command get executed successfully.
+----
 
 [[gkolu]][[GSSCG00166]][[additional-considerations-when-creating-local-instances]]
 
@@ -950,8 +937,7 @@ supplies password credentials.
 
 The important concept to note is that `asadmin` uses HTTPS because of
 the DAS redirection, even though the command sets `--secure` to false.
-`asadmin` sends the HTTP Authorization header along with the redirected
-request.
+`asadmin` sends the HTTP Authorization header along with the redirected request.
 
 In addition to the flow described here, certificate authentication is
 also performed as described in link:#gkqax[Table 5-3]. Also, the
@@ -963,19 +949,26 @@ credentials for the DAS.
 Table 5-3 asadmin --secure=false, With Username and Password
 
 [width="100%",cols="34%,33%,33%",options="header",]
-|=======================================================================
+|===
 |asadmin |Grizzly |AdminAdapter
-|Sends HTTP request, no authorization header (because the transport is
-not secure). | + | +
 
-| + |Returns 3xx status and redirects HTTP to HTTPS. | +
+|Sends HTTP request, no authorization header (because the transport is not secure).
+|
+|
 
-|Follows redirection, this time adding the Authorization header (because
-transport is now HTTPS). | + | +
+|
+|Returns 3xx status and redirects HTTP to HTTPS.
+|
 
-| + | + |Authenticates admin user and password from HTTP Authorization
+|Follows redirection, this time adding the Authorization header (because transport is now HTTPS).
+|
+|
+
+|
+|
+|Authenticates admin user and password from HTTP Authorization
 header in the realm Executes command, and responds with success status.
-|=======================================================================
+|===
 
 
 [[gkodn]][[GSSCG00168]][[upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin]]

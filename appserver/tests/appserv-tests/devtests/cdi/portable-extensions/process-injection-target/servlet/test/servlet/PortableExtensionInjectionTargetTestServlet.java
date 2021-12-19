@@ -41,16 +41,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
 
-//    @Inject
-//    BeanManager bm;
-
     String msg = "";
 
     public static volatile boolean pitCalled;
     public volatile boolean pitsInjectionTargetUsed;
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");

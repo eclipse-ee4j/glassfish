@@ -30,22 +30,28 @@ import jakarta.servlet.http.HttpServletResponse;
 import test.beans.TestManagedBean;
 import test.interceptors.TestAroundInvokeInterceptor;
 
-@WebServlet(name="mytest",
-        urlPatterns={"/myurl"},
-        initParams={ @WebInitParam(name="n1", value="v1"), @WebInitParam(name="n2", value="v2") } )
+@WebServlet(
+    name = "mytest", urlPatterns = { "/myurl" }, 
+    initParams = { 
+        @WebInitParam(name = "n1", value = "v1"),
+        @WebInitParam(name = "n2", value = "v2") 
+    }
+)
 public class TestServlet extends HttpServlet {
-    @jakarta.inject.Inject TestManagedBean tb1;
-    @jakarta.annotation.Resource TestManagedBean tb;
+    
+    @jakarta.inject.Inject
+    TestManagedBean tb1;
+    
+    @jakarta.annotation.Resource
+    TestManagedBean tb;
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0. ");
-        String msg = "n1=" + getInitParameter("n1") +
-            ", n2=" + getInitParameter("n2");
+        String msg = "n1=" + getInitParameter("n1") + ", n2=" + getInitParameter("n2");
 
-        //ManagedBean testing .. add additional messages in the "msg" string, so that the test will FAIL in the client
+        // ManagedBean testing .. add additional messages in the "msg" string, so that the test will FAIL in the client
         msg += testManagedBean(tb, " | TestManagedBean injected via @Resource");
         msg += testManagedBean(tb1, " | TestManagedBean injected via @Inject");
         msg += testInterceptors();
@@ -55,24 +61,29 @@ public class TestServlet extends HttpServlet {
 
     private String testManagedBean(TestManagedBean tb, String info) {
         String msg = "";
-        if (tb == null) msg += info + " is null!";
-        if (tb != null && !tb.testPostConstructCalled()) msg += info + " postConstruct not called";
-        if (tb != null && !tb.testInjection()) msg += info + "Bean Injection into ManagedBean failed";
+        if (tb == null)
+            msg += info + " is null!";
+        if (tb != null && !tb.testPostConstructCalled())
+            msg += info + " postConstruct not called";
+        if (tb != null && !tb.testInjection())
+            msg += info + "Bean Injection into ManagedBean failed";
+        
         return msg;
     }
 
-    private String testInterceptors(){
+    private String testInterceptors() {
         System.out.println("calling foo on an @Resource injected Managed Bean");
         tb.foo();
         System.out.println("calling foo on an @Inject Managed Bean");
-        tb1.foo(); //TestAroundInvokeInterceptor is not called in this case
+        tb1.foo(); // TestAroundInvokeInterceptor is not called in this case
 
         int count = TestAroundInvokeInterceptor.aroundInvokeCount;
         System.out.println("TestAroundInvokeInterceptor called " + count + " times");
         TestAroundInvokeInterceptor.reset();
-        if (count == 2) return "";
-            else return "Interceptor invocation count" + count + " invalid";
-   }
-
+        if (count == 2)
+            return "";
+        
+        return "Interceptor invocation count" + count + " invalid";
+    }
 
 }

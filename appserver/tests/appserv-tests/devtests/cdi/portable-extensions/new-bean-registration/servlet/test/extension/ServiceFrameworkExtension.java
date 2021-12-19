@@ -52,10 +52,10 @@ import test.fwk.SomeFwkServiceInterface;
  */
 public class ServiceFrameworkExtension implements Extension{
 
-    public static boolean beforeBeanDiscoveryCalled = false;
-    public static boolean afterBeanDiscoveryCalled = false;
-    public static boolean afterProcessBeanCalled = false;
-    public static boolean processAnnotatedTypeCalled = false;
+    public static boolean beforeBeanDiscoveryCalled;
+    public static boolean afterBeanDiscoveryCalled;
+    public static boolean afterProcessBeanCalled;
+    public static boolean processAnnotatedTypeCalled;
 
     /*
      * A map of Framework Service Types to be injected and additional metadata
@@ -259,11 +259,6 @@ public class ServiceFrameworkExtension implements Extension{
 
         @Override
         public boolean isAlternative() {
-            return false;
-        }
-
-        @Override
-        public boolean isNullable() {
             return false;
         }
     }

@@ -37,20 +37,29 @@ import test.beans.artifacts.TestDatabase;
 
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class SimpleJavaEEIntegrationTestServlet extends HttpServlet {
-    @Inject @Preferred
+    
+    @Inject
+    @Preferred
     TestBeanInterface tb;
 
-    @Inject @TestDatabase
+    @Inject
+    @TestDatabase
     DataSource ds;
 
     // Inject the built-in beans
-    @Inject UserTransaction ut;
-    @Inject Principal principal;
-    @Inject Validator validator;
-    @Inject ValidatorFactory vf;
+    @Inject
+    UserTransaction ut;
+    
+    @Inject
+    Principal principal;
+    
+    @Inject
+    Validator validator;
+    
+    @Inject
+    ValidatorFactory vf;
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
@@ -70,20 +79,16 @@ public class SimpleJavaEEIntegrationTestServlet extends HttpServlet {
         System.out.println("Default Validator: " + validator);
         System.out.println("Default ValidatorFactory: " + vf);
         if (ut == null)
-            msg += "UserTransaction not available for injection "
-                    + "with the default qualifier in Servlet";
+            msg += "UserTransaction not available for injection " + "with the default qualifier in Servlet";
 
         if (principal == null)
-            msg += "Caller Principal not available for injection "
-                    + "with the default qualifier in Servlet";
+            msg += "Caller Principal not available for injection " + "with the default qualifier in Servlet";
 
         if (validator == null)
-            msg += "Default Validator not available for injection "
-                    + "with the default qualifier in Servlet";
+            msg += "Default Validator not available for injection " + "with the default qualifier in Servlet";
 
         if (vf == null)
-            msg += "ValidationFactory not available for injection "
-                    + "with the default qualifier in Servlet";
+            msg += "ValidationFactory not available for injection " + "with the default qualifier in Servlet";
 
         writer.write(msg + "\n");
     }

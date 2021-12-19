@@ -21,68 +21,6 @@
 
     <property name="stereotypes-target" value="all"/>
 
-    <target name="run-test">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="run-test"/>
-        </antcall>
-    </target>
-
-    <target name="all">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="all"/>
-        </antcall>
-    </target>
-
-    <target name="clean">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="clean"/>
-        </antcall>
-    </target>
-
-    <target name="build">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="build"/>
-        </antcall>
-    </target>
-
-    <target name="setup">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="setup"/>
-        </antcall>
-    </target>
-
-    <target name="deploy">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="deploy"/>
-        </antcall>
-    </target>
-
-    <target name="undeploy">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="undeploy"/>
-        </antcall>
-    </target>
-
-    <target name="unsetup">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="unsetup"/>
-        </antcall>
-    </target>
-
-    <target name="run">
-        <antcall target="stereotypes">
-        <param name="stereotypes-target" value="run"/>
-        </antcall>
-    </target>
-
-    <target name="stereotypes">
-        <record name="stereotypes.output" action="start" />
-            <ant dir="alternative-stereotypes" target="${stereotypes-target}"/>
-            <ant dir="interceptor-bindings-for-stereotypes" target="${stereotypes-target}"/>
-            <ant dir="stereotype-stacking" target="${stereotypes-target}"/>
-        <record name="stereotypes.output" action="stop" />
-    </target>
-
     <target name="usage">
         <echo> Usage:
                 ant all (Executes all the stereotypes tests)
@@ -95,4 +33,71 @@
                 ant unsetup (unsets all resources for stereotypes tests)
         </echo>
     </target>
+
+    <target name="stereotypes">
+        <record name="stereotypes.output" action="start" />
+
+        <ant dir="alternative-stereotypes" target="${stereotypes-target}" />
+        <ant dir="interceptor-bindings-for-stereotypes" target="${stereotypes-target}" />
+        <ant dir="stereotype-stacking" target="${stereotypes-target}" />
+
+        <record name="stereotypes.output" action="stop" />
+    </target>
+
+    <target name="run-test">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="run-test" />
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="all" />
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="clean" />
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="build" />
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="setup" />
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="deploy" />
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="run" />
+        </antcall>
+    </target>
+
+
+    <target name="undeploy">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="undeploy" />
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="stereotypes">
+            <param name="stereotypes-target" value="unsetup" />
+        </antcall>
+    </target>
+
+
 </project>

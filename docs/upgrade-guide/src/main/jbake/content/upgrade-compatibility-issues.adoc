@@ -41,7 +41,7 @@ The following topics are addressed here:
 Binary-Compatible Releases For GlassFish Server 7
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GlassFish Server Open Source Edition 7 is binary-compatible with the
+GlassFish Server Open Source Edition 7 is NOT binary-compatible with the
 following earlier releases of the software:
 
 * Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer Profiles)

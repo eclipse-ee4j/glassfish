@@ -1441,7 +1441,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish3",
+      "installDir":"\/export\/glassfish7",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -1523,7 +1523,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish3",
+      "installDir":"\/export\/glassfish7",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -2213,7 +2213,7 @@ Line breaks and white space are added to enhance readability.
       }
     ],
     "entity":{
-      "installDir":"\/export\/glassfish3",
+      "installDir":"\/export\/glassfish7",
       "name":"sj01",
       "nodeDir":null,
       "nodeHost":
@@ -2481,7 +2481,7 @@ Line breaks and white space are added to enhance readability.
    </entry>
    <entry key="entity">
     <map>
-     <entry key="installDir" value="/export/glassfish3"/>
+     <entry key="installDir" value="/export/glassfish7"/>
      <entry key="name" value="sj01"/>
      <entry key="nodeDir" value=""/>
      <entry key="type" value="SSH"/>
@@ -3086,8 +3086,7 @@ log-level::
   The severity level of the message in the log record. For more
   information, see link:logging.html#gklml[Setting Log Levels].
 product-name::
-  The application that created the log message, for example,
-  `glassfish3.1`.
+  The application that created the log message, for example, `glassfish7`.
 logger-class-name::
   The fully qualified name of the Java class of the logger class that
   created the log message. Each component of GlassFish Server provides
@@ -3103,8 +3102,9 @@ message-id::
   Server, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from GlassFish Server contain a message
-  identifier. For more information, see the link:../error-messages-reference/toc.html#GSEMR[GlassFish Server
-  Open Source Edition Error Message Reference].
+  identifier. For more information, see the
+  link:../error-messages-reference/toc.html#GSEMR[
+  GlassFish Server Open Source Edition Error Message Reference].
 message-text::
   The text of the log message.
 
@@ -3127,7 +3127,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":475,
       "loggedDateTimeInMS":1300743782815,
       "loggedLevel":"INFO",
-      "productName":"glassfish3.1",
+      "productName":"glassfish7",
       "loggerName":"org.glassfish.admingui",
       "nameValuePairs": "_ThreadID=25;_ThreadName=Thread-1;",
       "messageID":"",
@@ -3137,7 +3137,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":474,
       "loggedDateTimeInMS":1300728893368,
       "loggedLevel":"INFO",
-      "productName":"glassfish3.1",
+      "productName":"glassfish7",
       "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"",
@@ -3147,7 +3147,7 @@ Line breaks and white space are added to enhance readability.
       "recordNumber":473,
       "loggedDateTimeInMS":1300728893367,
       "loggedLevel":"INFO",
-      "productName":"glassfish3.1",
+      "productName":"glassfish7",
       "loggerName":"jakarta.enterprise.system.core.com.sun.enterprise.v3.server",
       "nameValuePairs":"_ThreadID=238;_ThreadName=Thread-1;",
       "messageID":"CORE10010",
@@ -3217,7 +3217,7 @@ thread-name::
   The name of the thread that created the message.
 product-name::
   The application that created the log message, for example,
-  `glassfish3.1`.
+  `glassfish7`.
 record-number::
   A serial number in the form of a decimal integer that uniquely
   identifies the log record.
@@ -3239,15 +3239,15 @@ Line breaks and white space are added to enhance readability.
  <record loggedDateTimeInMS="1300743782815" loggedLevel="INFO"
  loggerName="org.glassfish.admingui" messageID=""
  nameValuePairs="_ThreadID=25;_ThreadName=Thread-1;"
- productName="glassfish3.1" recordNumber="475"/>
+ productName="glassfish7" recordNumber="475"/>
  <record loggedDateTimeInMS="1300728893368" loggedLevel="INFO"
  loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter"
   messageID="" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
-  productName="glassfish3.1" recordNumber="474"/>
+  productName="glassfish7" recordNumber="474"/>
  <record loggedDateTimeInMS="1300728893367" loggedLevel="INFO"
  loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.server"
  messageid="core10010" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
- productName="glassfish3.1" recordNumber="473"/>
+ productName="glassfish7" recordNumber="473"/>
 </records>
 ----
 

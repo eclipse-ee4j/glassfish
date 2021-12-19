@@ -125,7 +125,7 @@ Source Domain Directory::
   new version (for example, `c:\glassfish\domains\domain1`).
 Target Root Domain's Directory::
   The directory where domains are created on the server to which you are
-  upgrading (for example, `c:\glassfish3\glassfish\domains`).
+  upgrading (for example, `c:\glassfish7\glassfish\domains`).
 Master Password::
   The SSL certificate database password used in operations such as
   GlassFish Server startup. This term refers to the master password of
@@ -646,7 +646,7 @@ following command should be entered on a single line.
 [source]
 ----
 asupgrade -c -s /home/glassfish/domains/domain1 -f /root/mypassword
--t /home/glassfish3/glassfish/domains
+-t /home/glassfish7/glassfish/domains
 ----
 
 [[sthref30]]
@@ -769,7 +769,7 @@ GlassFish Server 4.0 installation to which to transfer the
 configuration, or click Browse. +
 The default is the full path name of the `domains` directory of your
 GlassFish Server 4.0 installation (for example,
-`c:\glassfish3\glassfish\domains`).
+`c:\glassfish7\glassfish\domains`).
 
 6. Provide the master password of the source application server. +
 The domain will be upgraded using these credentials. If you do not
@@ -1432,7 +1432,7 @@ The default values of the following items in a node's configuration data
 might not meet your requirements for the upgraded installation of GlassFish Server:
 
 * The parent of the base installation directory of the GlassFish Server
-software on the host, for example, `/export/glassfish3`. +
+software on the host, for example, `/export/glassfish7`. +
 The default is the parent of the default base installation directory of
 the GlassFish Server 4.0 software on the DAS host. If the GlassFish
 Server software is installed under a different directory on the node
@@ -1501,7 +1501,7 @@ node-update-subcommand::
 as-install-parent::
   The full path to the parent of the base installation directory of the
   GlassFish Server software on the host, for example,
-  `/export/glassfish3`.
+  `/export/glassfish7`.
 node-dir::
   The path to the directory that will contain GlassFish Server instances
   that are to reside on the node. If a relative path is specified, the

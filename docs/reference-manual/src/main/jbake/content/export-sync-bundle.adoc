@@ -133,7 +133,7 @@ This example exports the configuration data of the cluster `pmdcluster`.
 [source]
 ----
 asadmin> export-sync-bundle --target=pmdcluster
-Sync bundle: /export/glassfish3/glassfish/domains/domain1/sync/
+Sync bundle: /export/glassfish7/glassfish/domains/domain1/sync/
 pmdcluster-sync-bundle.zip
 
 Command export-sync-bundle executed successfully.

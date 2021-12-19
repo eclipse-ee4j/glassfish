@@ -115,7 +115,7 @@ file-name::
 
 This example imports the configuration for the clustered instance
 `ymli2` on the node `sj02` from the archive file
-`/export/glassfish3/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip`.
+`/export/glassfish7/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip`.
 
 The command is run on the host `sj02`, which is the host that the node
 `sj02` represents. The DAS is running on the host `sr04` and uses the
@@ -124,7 +124,7 @@ default HTTP port for administration.
 [source]
 ----
 sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2 
-/export/glassfish3/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
+/export/glassfish7/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
 Command import-sync-bundle executed successfully.
 ----
 

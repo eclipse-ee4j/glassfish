@@ -75,12 +75,12 @@ The default GlassFish Server 4.0 installation directories are as follows:
 Solaris, Linux, and Mac OS X systems::
 [source]
 ----
-user-home-directory/glassfish3
+user-home-directory/glassfish7
 ----
 Windows systems::
 [source]
 ----
-SystemDrive\glassfish3
+SystemDrive\glassfish7
 ----
 
 In GlassFish Server 3.0.1 and Enterprise Server v3, the default

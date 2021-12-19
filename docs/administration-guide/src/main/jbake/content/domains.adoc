@@ -882,7 +882,7 @@ Here are the most typical Linux commands of interest:
 * /etc/init.d/GlassFish_domain1 restart
 
 For your convenience this message has also been saved to this file:
-/export/glassfish3/glassfish/domains/domain1/PlatformServices.log
+/export/glassfish7/glassfish/domains/domain1/PlatformServices.log
 Command create-service executed successfully.
 ----
 
@@ -1137,7 +1137,7 @@ most recent backup stored in a specified backup directory:
 [source]
 ----
 asadmin> restore-domain --backupdir /net/backups.example.com/glassfish domain1
-Restored the domain (domain1) to /home/user1/glassfish3/glassfish/domains/domain1
+Restored the domain (domain1) to /home/user1/glassfish7/glassfish/domains/domain1
 Command restore-domain executed successfully.
 ----
 
@@ -1480,8 +1480,8 @@ Command stop-domain executed successfully.
 $ asadmin start-domain
 Waiting for domain1 to start ........................
 Successfully started the domain : domain1
-domain  Location: /export/glassfish3/glassfish/domains/domain1
-Log File: /export/glassfish3/glassfish/domains/domain1/logs/server.log
+domain  Location: /export/glassfish7/glassfish/domains/domain1
+Log File: /export/glassfish7/glassfish/domains/domain1/logs/server.log
 Admin Port: 4849
 Command start-domain executed successfully.
 ----

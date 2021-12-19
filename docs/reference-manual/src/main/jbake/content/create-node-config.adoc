@@ -81,7 +81,7 @@ asadmin-options::
 `--installdir`::
   The full path to the parent of the base installation directory of the
   \{product---name} software on the host, for example,
-  `/export/glassfish3/`. If this option is omitted, no parent of the
+  `/export/glassfish7/`. If this option is omitted, no parent of the
   base installation directory of the \{product---name} software is
   specified for the node.
 `--nodedir`::

@@ -76,7 +76,7 @@ asadmin-options::
   updated.
 `--installdir`::
   The full path to the parent of the base installation directory of the
-  \{product---name} software on the host, for example,   `/export/glassfish3/`.
+  \{product---name} software on the host, for example,   `/export/glassfish7/`.
 `--nodedir`::
   The path to the directory that is to contain \{product---name}
   instances that are created on the node. If a relative path is
@@ -158,7 +158,7 @@ communicate over DCOM.
 asadmin> update-node-dcom --force xkyd
 Warning: some parameters appear to be invalid.
 Could not find a remote Glassfish installation on host: xkyd.example.com at
-C:\glassfish3\glassfish
+C:\glassfish7\glassfish
 Continuing with node update due to use of --force.
 Command update-node-dcom executed successfully.
 ----

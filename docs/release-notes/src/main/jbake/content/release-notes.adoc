@@ -12,7 +12,7 @@ Eclipse GlassFish Server 7 Release Notes
 
 [[glassfish-server-open-source-edition-release-notes]]
 1 Eclipse GlassFish Server 7 Release Notes
---------------------------------------------
+------------------------------------------
 
 GlassFish Server provides a lightweight, modular server for the
 development of Java Platform Enterprise Edition (Java EE) 8

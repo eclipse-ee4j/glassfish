@@ -50,7 +50,7 @@ on the type of the node:
 To determine whether a node is enabled for remote communication, use the
 link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
 
-No \{product---name} instances must reside on the node that is being deleted.
+No {productName} instances must reside on the node that is being deleted.
 Otherwise, the subcommand fails. Before running this
 subcommand, delete any instances that reside on the node by using, for
 example, the link:delete-instance.html#delete-instance-1[`delete-instance`(1)]

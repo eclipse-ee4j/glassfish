@@ -35,16 +35,16 @@ The `generate-jvm-report` subcommand creates a report that shows the
 threads (dump of stack trace), classes, memory, or loggers for a given
 target instance, including the domain administration server (DAS). If a
 type is not specified, a summary report is generated. This subcommand
-only provides statistics for the \{product---name} instance processes.
+only provides statistics for the {productName} instance processes.
 This subcommand provides an alternative to sending Ctrl+Break or
-`kill -3` signals to \{product---name} processes to obtain a stack trace
+`kill -3` signals to {productName} processes to obtain a stack trace
 for processes that are hanging.
 
 The information in the report is obtained from managed beans (MBeans)
 and MXBeans that are provided in the Java Platform, Standard Edition
-(Java SE ) or JDK software with which \{product---name} is being used.
+(Java SE ) or JDK software with which {productName} is being used.
 
-If \{product---name} is running in the Java Runtime Environment (JRE)
+If {productName} is running in the Java Runtime Environment (JRE)
 software from JDK release 6 or Java SE 6, additional information is
 provided. For example:
 
@@ -75,7 +75,7 @@ asadmin-options::
   `server`;;
     Specifies the DAS (default).
   instance-name;;
-    Specifies a \{product---name} instance.
+    Specifies a {productName} instance.
   cluster-name;;
     Specifies a cluster.
   configuration-name;;

@@ -37,7 +37,7 @@ instance-name
 === Description
 
 The `monitor` subcommand displays statistics for commonly monitored
-\{product---name} components and services. The `--type` option must be
+{productName} components and services. The `--type` option must be
 used to specify the object for which statistics are to be displayed.
 Data is displayed continuously in a tabular form, or the data can be
 displayed at a particular time interval by using the `--interval` option.

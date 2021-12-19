@@ -13,7 +13,7 @@ remove-library
 remove-library
 --------------
 
-Removes one or more library JAR files from \{product---name}
+Removes one or more library JAR files from {productName}
 
 [[sthref1970]]
 
@@ -31,9 +31,9 @@ library-name [library-name ... ]
 === Description
 
 The `remove-library` subcommand removes one or more library JAR files
-from \{product---name}.
+from {productName}.
 
-The `--type` option specifies the library type and the \{product---name}
+The `--type` option specifies the library type and the {productName}
 directory from which the library is removed.
 
 The library-name operand is the name of the JAR file that contains the
@@ -64,7 +64,7 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--type`::
-  Specifies the library type and the \{product---name} directory from
+  Specifies the library type and the {productName} directory from
   which the library is removed. Valid values are as follows:
 
   `common`;;

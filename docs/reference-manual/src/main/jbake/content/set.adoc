@@ -61,7 +61,7 @@ later, you use the `set` command.
 
 Any change made by using the `asadmin` utility subcommands or the
 Administration Console are automatically applied to the associated
-\{product---name} configuration file.
+{productName} configuration file.
 
 [[sthref2026]]
 

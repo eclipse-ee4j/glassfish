@@ -46,7 +46,7 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--alias`::
-  The alias name of the certificate in the truststore. \{product---name}
+  The alias name of the certificate in the truststore. {productName}
   looks up the certificate in the truststore using that alias and, if
   found, disables the corresponding DN as being valid for secure
   administration. Because alias-name must be an alias associated with a

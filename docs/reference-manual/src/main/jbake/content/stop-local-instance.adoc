@@ -13,7 +13,7 @@ stop-local-instance
 stop-local-instance
 -------------------
 
-Stops a \{product---name} instance on the machine where the subcommand is run
+Stops a {productName} instance on the machine where the subcommand is run
 
 [[sthref2181]]
 
@@ -31,12 +31,12 @@ asadmin [asadmin-options] stop-local-instance [--help]
 
 === Description
 
-The `stop-local-instance` subcommand stops a \{product---name} instance
+The `stop-local-instance` subcommand stops a {productName} instance
 on the machine where the subcommand is run. This subcommand does not
 require secure shell (SSH) to be configured. You must run this command
 from the machine where the instance resides.
 
-The subcommand can stop any \{product---name} instance, regardless of
+The subcommand can stop any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
 link:create-instance.html#create-instance-1[`create-instance`(1)] subcommand.

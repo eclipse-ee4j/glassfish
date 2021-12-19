@@ -67,7 +67,7 @@ asadmin-options::
   Descriptive details about the resource.
 `--property`::
   Optional attribute name/value pairs for configuring the resource. +
-  \{product---name} does not define any additional properties for this
+  {productName} does not define any additional properties for this
   resource. Moreover, this resource does not currently use any
   additional properties.
 `--target`::

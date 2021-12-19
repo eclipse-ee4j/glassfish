@@ -13,7 +13,7 @@ monitoring
 monitoring
 ----------
 
-Reviewing the runtime state of components and services deployed in \{product---name}
+Reviewing the runtime state of components and services deployed in {productName}
 
 [[sthref2406]]
 
@@ -21,13 +21,13 @@ Reviewing the runtime state of components and services deployed in \{product---n
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
-various components and services deployed in \{product---name},
+various components and services deployed in {productName},
 performance bottlenecks can be identified, failures can be anticipated,
 and runtime standards can be established and observed. Data gathered by
 monitoring can also be useful in performance tuning and capacity
 planning.
 
-The \{product---name} monitoring service is enabled by default, that is,
+The {productName} monitoring service is enabled by default, that is,
 the `monitoring-enabled` attribute of the `monitoring-service` element
 is set to true. Once the monitoring service is enabled, a deployed
 module can then be enabled for monitoring by setting its monitoring
@@ -47,7 +47,7 @@ intervals.
 * The `list` and `get` subcommands display comprehensive data. Both use
 dotted names to specify monitorable objects.
 
-Alternate tools for monitoring \{product---name} components and services
+Alternate tools for monitoring {productName} components and services
 include JConsole and the REST interface.
 
 The Monitoring Scripting Client or DTrace Monitoring can be used to

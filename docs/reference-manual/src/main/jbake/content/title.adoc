@@ -21,7 +21,7 @@ Contributed 2018, 2019
 This reference manual describes administration commands and utility
 commands that are available with Eclipse GlassFish Server 7.
 This reference manual also describes concepts that are related to
-\{product---name} administration.
+{productName} administration.
 
 The available options, arguments, and operands for each command are
 provided in accordance with standard rules of command syntax, along with

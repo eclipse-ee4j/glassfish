@@ -28,7 +28,7 @@ asadmin [asadmin-options] list-loggers [--help]
 
 === Description
 
-The `list-loggers` subcommand lists the existing \{product---name}
+The `list-loggers` subcommand lists the existing {productName}
 loggers. Internal loggers are not listed. The `list-loggers` subcommand
 lists the logger name, subsystem, and description.
 

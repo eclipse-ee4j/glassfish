@@ -70,7 +70,7 @@ asadmin-options::
   cluster-name;;
     Creates the resources for every server instance in the cluster.
   instance-name;;
-    Creates the resources for a particular \{product---name} instance.
+    Creates the resources for a particular {productName} instance.
 
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most

@@ -29,7 +29,7 @@ target
 
 === Description
 
-The `list-threadpools` subcommand lists the \{product---name} thread pools.
+The `list-threadpools` subcommand lists the {productName} thread pools.
 
 This subcommand is supported in remote mode only.
 
@@ -54,7 +54,7 @@ target::
   Valid values are as follows:
 
   `server`;;
-    Lists the thread pools for the default \{product---name} instance
+    Lists the thread pools for the default {productName} instance
     `server`.
   configuration-name;;
     Lists the thread pools for the named configuration.

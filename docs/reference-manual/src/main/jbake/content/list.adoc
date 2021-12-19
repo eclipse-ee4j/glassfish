@@ -29,7 +29,7 @@ asadmin [asadmin-options] list [--help]
 === Description
 
 The `list` subcommand lists configurable and monitorable attributes of
-\{product---name}.
+{productName}.
 
 The output of the `list` subcommand is a list of the dotted names that
 represent individual server components and subsystems. For example,

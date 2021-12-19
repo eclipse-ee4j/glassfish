@@ -14,7 +14,7 @@ list-supported-cipher-suites
 ----------------------------
 
 Enables administrators to list the cipher suites that are supported and
-available to a specified \{product---name} target
+available to a specified {productName} target
 
 [[sthref1811]]
 
@@ -32,9 +32,9 @@ asadmin [asadmin-options] list-supported-cipher-suites [--help]
 
 The `list-supported-cipher-suites` subcommand enables administrators to
 list the cipher suites that are supported and available to a specified
-\{product---name} target. The cipher suites that may be available in
+{productName} target. The cipher suites that may be available in
 addition to the default SSL/TLS providers that are bundled with
-\{product---name} packages will vary depending on the third-party
+{productName} packages will vary depending on the third-party
 provider.
 
 This subcommand is supported in remote mode only.

@@ -13,7 +13,7 @@ restart-instance
 restart-instance
 ----------------
 
-Restarts a running \{product---name} instance
+Restarts a running {productName} instance
 
 [[sthref1986]]
 
@@ -29,7 +29,7 @@ asadmin [asadmin-options] restart-instance [--help]
 
 === Description
 
-The `restart-instance` subcommand restarts a running \{product---name}
+The `restart-instance` subcommand restarts a running {productName}
 instance. This subcommand requires secure shell (SSH) to be configured
 on the machine where the domain administration server (DAS) is running
 and on the machine where the instance resides.
@@ -43,7 +43,7 @@ for communication over SSH.
 
 You may run this subcommand from any machine that can contact the DAS.
 
-The subcommand can restart any \{product---name} instance, regardless of
+The subcommand can restart any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can restart
 an instance that was created by using the
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
@@ -104,7 +104,7 @@ The default is the current setting of this option for the instance
 === Operands
 
 instance-name::
-  The name of the \{product---name} instance to restart. If the instance
+  The name of the {productName} instance to restart. If the instance
   is not running, the subcommand displays a warning message and attempts
   to start the instance.
 
@@ -114,9 +114,9 @@ instance-name::
 
 [[GSRFM739]][[sthref1991]]
 
-==== Example 1   Restarting a \{product---name} Instance
+==== Example 1   Restarting a {productName} Instance
 
-This example restarts the \{product---name} instance `pmdsa1`.
+This example restarts the {productName} instance `pmdsa1`.
 
 [source]
 ----

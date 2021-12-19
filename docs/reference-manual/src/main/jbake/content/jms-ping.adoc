@@ -31,7 +31,7 @@ asadmin [asadmin-options] jms-ping [--help]
 
 The `jms-ping` subcommand checks if the Java Message Service (JMS)
 service (also known as the JMS provider) is up and running. When you
-start the \{product---name}, the JMS service starts by default.
+start the {productName}, the JMS service starts by default.
 
 The `jms-ping` subcommand pings only the default JMS host within the JMS
 service. It displays an error message when it is unable to ping a

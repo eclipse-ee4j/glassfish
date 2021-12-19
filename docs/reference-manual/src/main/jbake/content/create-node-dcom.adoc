@@ -38,13 +38,13 @@ The `create-node-dcom` subcommand creates a node that is enabled for
 communication over the Distributed Component Object Model (DCOM) remote
 protocol. The DCOM protocol is available only on Windows systems.
 
-A node represents a host on which the \{product---name} software is
-installed. A node must exist for every host on which \{product---name}
+A node represents a host on which the {productName} software is
+installed. A node must exist for every host on which {productName}
 instances reside.
 
 In a DCOM-enabled network, the domain administration server (DAS)
 contacts a node's host through the DCOM connector to manage
-\{product---name} instances that reside on the node. DCOM is used only
+{productName} instances that reside on the node. DCOM is used only
 for communications between hosts. DCOM is never used for communications
 within a single host.
 
@@ -76,16 +76,16 @@ asadmin-options::
   must be specified. Otherwise, an error occurs.
 `--installdir`::
   The full path to the parent of the base installation directory of the
-  \{product---name} software on the host, for example, `C:\glassfish7`.
+  {productName} software on the host, for example, `C:\glassfish7`.
   The default is the parent of the default base installation directory
-  of the \{product---name} software for the DAS. This default is useful
-  only if \{product---name} is installed in the same location on all
+  of the {productName} software for the DAS. This default is useful
+  only if {productName} is installed in the same location on all
   hosts.
 `--nodedir`::
-  The path to the directory that is to contain \{product---name}
+  The path to the directory that is to contain {productName}
   instances that are created on the node. The default is
   as-install`\nodes`, where as-install is the base installation
-  directory of the \{product---name} software on the host. If a relative
+  directory of the {productName} software on the host. If a relative
   path is specified, the path is relative to the as-install directory.
 `--windowsuser`::
 `-w`::
@@ -112,21 +112,21 @@ asadmin-options::
     fails.
 
 `--install`::
-  Specifies whether the subcommand shall install the \{product---name}
+  Specifies whether the subcommand shall install the {productName}
   software on the host that the node represents. +
   Possible values are as follows:
 
   `false`;;
-    The subcommand shall not install the \{product---name} software on
+    The subcommand shall not install the {productName} software on
     the host (default).
   `true`;;
-    The subcommand shall install the \{product---name} software on the host.
+    The subcommand shall install the {productName} software on the host.
 
 `--archive`::
-  The absolute path to the archive file of the \{product---name}
+  The absolute path to the archive file of the {productName}
   software that is to be installed. If this option is omitted and the
   `--install` is `true`, the subcommand creates a ZIP archive of the
-  \{product---name} software from the installation where this subcommand
+  {productName} software from the installation where this subcommand
   is run. The archive does not contain the `domains` directory or the
   `nodes` directory.
 
@@ -148,10 +148,10 @@ node-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another node, a cluster, a named configuration, or a \{product---name}
+  another node, a cluster, a named configuration, or a {productName}
   instance.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref457]]
 
@@ -163,7 +163,7 @@ node-name::
 
 This example creates the node `wpmdl1` for the host
 `wpmdl1.example.com`. By default, the parent of the base installation
-directory of the \{product---name} software is `C:\glassfish7`.
+directory of the {productName} software is `C:\glassfish7`.
 
 [source]
 ----
@@ -177,7 +177,7 @@ Command create-node-dcom executed successfully.
 ==== Example 2   Creating a Node With a Specific Installation Directory
 
 This example creates the node `wyml1` for the host `wyml1.example.com`.
-The parent of the base installation directory of the \{product---name}
+The parent of the base installation directory of the {productName}
 software on this host is `C:\middleware\glassfish7`.
 
 [source]

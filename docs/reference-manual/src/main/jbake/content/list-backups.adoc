@@ -74,7 +74,7 @@ asadmin-options::
 domain-name::
   Specifies the domain for which backups are listed. +
   This operand is optional if only one domain exists in the
-  \{product---name} installation.
+  {productName} installation.
 
 [[sthref1336]]
 

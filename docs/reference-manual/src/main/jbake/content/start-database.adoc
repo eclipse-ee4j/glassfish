@@ -32,7 +32,7 @@ asadmin [asadmin-options] start-database [--help]
 === Description
 
 The `start-database` subcommand starts the Java DB server that is
-available for use with \{product---name}. Java DB is based upon Apache
+available for use with {productName}. Java DB is based upon Apache
 Derby. Use this subcommand only for working with applications deployed
 to the server.
 

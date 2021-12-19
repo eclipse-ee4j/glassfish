@@ -57,7 +57,7 @@ asadmin-options::
   Valid values are as follows:
 
   `server`;;
-    Creates the thread pool for the default \{product---name} instance
+    Creates the thread pool for the default {productName} instance
     `server` and is the default value
   configuration-name;;
     Creates the thread pool for the named configuration.

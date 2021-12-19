@@ -13,7 +13,7 @@ version
 version
 -------
 
-Displays version information for\{product---name}
+Displays version information for{productName}
 
 [[sthref2347]]
 
@@ -31,7 +31,7 @@ asadmin [asadmin-options] version [--help]
 === Description
 
 The `version` subcommand displays version information for
-\{product---name}. By default, if the subcommand cannot contact the
+{productName}. By default, if the subcommand cannot contact the
 domain administration server (DAS), the subcommand retrieves the version
 information locally and displays a warning message.
 
@@ -54,7 +54,7 @@ asadmin-options::
   default is `false`.
 `--local`::
   If this option is set to `true`, the subcommand obtains the version
-  locally from the installation of \{product---name} on the host where
+  locally from the installation of {productName} on the host where
   the subcommand is run. +
   If this option is set to `false` (default), the subcommand attempts to
   contact the DAS to obtain the version. If the attempt to contact the

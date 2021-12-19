@@ -81,7 +81,7 @@ asadmin-options::
 domain-name::
   Specifies the name of the domain to restore. +
   This operand is optional if only one domain exists in the
-  \{product---name} installation. +
+  {productName} installation. +
   If the specified domain name does not match the domain name stored in
   the backup file, an error occurs unless the `--force` option is
   specified.

@@ -31,7 +31,7 @@ asadmin [asadmin-options] stop-database [--help]
 === Description
 
 The `stop-database` subcommand stops a process of the Java DB server.
-Java DB server is available for use with \{product---name} and is based
+Java DB server is available for use with {productName} and is based
 upon Apache Derby. The database is typically started with the
 link:start-database.html#start-database-1[`start-database`(1)]
 subcommand. A single host can have multiple database server processes

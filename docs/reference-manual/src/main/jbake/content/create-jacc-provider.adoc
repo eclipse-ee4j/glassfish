@@ -15,7 +15,7 @@ create-jacc-provider
 
 Enables administrators to create a JACC provider that can be used by
 third-party authorization modules for applications running in
-\{product---name}
+{productName}
 
 [[sthref304]]
 
@@ -36,24 +36,24 @@ asadmin [asadmin-options] create-jacc-provider [--help]
 
 The `create-jacc-provider` subcommand creates a JSR-115—compliant Java
 Authorization Contract for Containers (JACC) provider that can be used
-for authorization of applications running in \{product---name}. The JACC
+for authorization of applications running in {productName}. The JACC
 provider is created as a `jacc-provider` element within the
 `security-service` element in the domain's `domain.xml` file.
 
-The default \{product---name} installation includes two JACC providers,
+The default {productName} installation includes two JACC providers,
 named `default` and `simple`. Any JACC providers created with the
 `create-jacc-provider` subcommand are in addition to these two default
-providers. The default \{product---name} JACC providers implement a
+providers. The default {productName} JACC providers implement a
 simple, file-based authorization engine that complies with the JACC
 specification. The `create-jacc-provider` subcommand makes it possible
 to specify additional third-party JACC providers.
 
 You can create any number of JACC providers within the
-`security-service` element, but the \{product---name} runtime uses only
+`security-service` element, but the {productName} runtime uses only
 one of them at any given time. The `jacc-provider` element in the
 `security-service` element points to the name of the provider that is
-currently in use by \{product---name}. If you change this element to
-point to a different JACC provider, restart \{product---name}.
+currently in use by {productName}. If you change this element to
+point to a different JACC provider, restart {productName}.
 
 This command is supported in remote mode only.
 
@@ -86,9 +86,9 @@ asadmin-options::
 
   `repository`;;
     The directory containing the JACC policy file. For the `default`
-    \{product---name} JACC provider, the default directory is
+    {productName} JACC provider, the default directory is
     `${com.sun.aas.instanceRoot}/generated/policy`. This property is not
-    defined by default for the `simple` \{product---name} JACC provider.
+    defined by default for the `simple` {productName} JACC provider.
 
 `--target`::
   Specifies the target for which you are creating the JACC provider. The

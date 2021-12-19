@@ -34,7 +34,7 @@ asadmin [asadmin-options] osgi [--help]
 The `osgi` subcommand delegates the command line to the Apache Felix
 Gogo remote shell for the execution of OSGi shell commands. Commands are
 executed by the remote shell and results are returned by the `asadmin`
-utility. The remote shell is provided with \{product---name} and used to
+utility. The remote shell is provided with {productName} and used to
 administer and inspect the OSGi runtime.
 
 Multiple command-line sessions can be created. Use the `--session` and

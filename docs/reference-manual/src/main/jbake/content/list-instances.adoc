@@ -13,7 +13,7 @@ list-instances
 list-instances
 --------------
 
-Lists \{product---name} instances in a domain
+Lists {productName} instances in a domain
 
 [[sthref1517]]
 
@@ -31,11 +31,11 @@ asadmin [asadmin-options] list-instances [--help]
 
 === Description
 
-The `list-instances` subcommand lists \{product---name} instances in a
+The `list-instances` subcommand lists {productName} instances in a
 domain. The list can be filtered by cluster, instance, node, or
 configuration.
 
-The subcommand displays every \{product---name} instance in the
+The subcommand displays every {productName} instance in the
 specified target, regardless of how each instance was created. For
 example, this subcommand lists instances that were created by using the
 link:create-instance.html#create-instance-1[`create-instance`(1)]
@@ -124,7 +124,7 @@ When an instance is listed, some configuration changes in the domain
 === Operands
 
 target::
-  Filters the list of \{product---name} instances by specifying the
+  Filters the list of {productName} instances by specifying the
   target for which instances are listed. +
   The target operand and the `--standaloneonly` option are mutually
   exclusive. If both the target operand and the `--standaloneonly`
@@ -149,9 +149,9 @@ target::
 
 [[GSRFM664]][[sthref1522]]
 
-==== Example 1   Listing Basic Information About All \{product---name} Instances in a Domain
+==== Example 1   Listing Basic Information About All {productName} Instances in a Domain
 
-This example lists the name and status of all \{product---name}
+This example lists the name and status of all {productName}
 instances in the current domain.
 
 [source]
@@ -168,9 +168,9 @@ Command list-instances executed successfully.
 
 [[GSRFM665]][[sthref1523]]
 
-==== Example 2   Listing Detailed Information About All \{product---name} Instances in a Domain
+==== Example 2   Listing Detailed Information About All {productName} Instances in a Domain
 
-This example lists detailed information about all \{product---name}
+This example lists detailed information about all {productName}
 instances in the current domain.
 
 [source]

@@ -31,7 +31,7 @@ configuration-name
 
 The `delete-config` subcommand deletes an existing named configuration
 from the configuration of the domain administration server (DAS). You
-can delete a configuration only if no \{product---name} instances or
+can delete a configuration only if no {productName} instances or
 clusters refer to the configuration. A standalone configuration is
 automatically deleted when the instance or cluster that refers to it is
 deleted. You cannot delete the `default-config` configuration that is

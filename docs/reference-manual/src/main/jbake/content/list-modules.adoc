@@ -13,7 +13,7 @@ list-modules
 list-modules
 ------------
 
-Lists \{product---name} modules
+Lists {productName} modules
 
 [[sthref1685]]
 
@@ -29,7 +29,7 @@ asadmin [asadmin-options] list-modules [--help]
 === Description
 
 The `list-modules` subcommand displays a list of modules that are
-accessible to the \{product---name} module subsystem. The version of
+accessible to the {productName} module subsystem. The version of
 each module is shown.
 
 This subcommand is supported in remote mode only.
@@ -51,10 +51,10 @@ asadmin-options::
 
 [[GSRFM685]][[sthref1689]]
 
-==== Example 1   Listing \{product---name} Modules
+==== Example 1   Listing {productName} Modules
 
 This example provides a partial listing of modules that are accessible
-to the \{product---name} module subsystem
+to the {productName} module subsystem
 
 [source]
 ----

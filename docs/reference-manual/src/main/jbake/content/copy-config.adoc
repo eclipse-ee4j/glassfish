@@ -130,10 +130,10 @@ destination-configuration-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of a
-  another named configuration, a cluster, a \{product---name} instance ,
+  another named configuration, a cluster, a {productName} instance ,
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref111]]
 

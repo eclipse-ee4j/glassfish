@@ -19,7 +19,7 @@ Provide connectivity to various types of EIS.
 
 === Description
 
-\{product---name} provides support for JDBC, JMS, and JNDI resources.
+{productName} provides support for JDBC, JMS, and JNDI resources.
 
 [[sthref2411]]
 

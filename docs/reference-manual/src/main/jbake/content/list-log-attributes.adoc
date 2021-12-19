@@ -30,7 +30,7 @@ asadmin [asadmin-options] list-log-attributes [--help]
 === Description
 
 The `list-log-attributes` subcommand lists all logging attributes
-currently defined for the specified \{product---name} domain or target
+currently defined for the specified {productName} domain or target
 within a domain. The values listed correspond to the values in the
 `logging.properties` file for the domain.
 

@@ -29,7 +29,7 @@ asadmin [asadmin-options] login [--help]
 === Description
 
 The purpose of the `login` subcommand is to ease domain administration
-by letting you log into a particular domain. If \{product---name}
+by letting you log into a particular domain. If {productName}
 domains are created on various machines (locally), you can run the
 `asadmin` utility from any of these machines and manage domains located
 elsewhere (remotely). This is especially useful when a particular

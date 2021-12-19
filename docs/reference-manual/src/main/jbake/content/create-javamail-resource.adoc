@@ -75,21 +75,21 @@ asadmin-options::
   username`@`host`.`domain.
 `--storeprotocol`::
   The mail server store protocol. The default is `imap`. Change this
-  value only if you have reconfigured the \{product---name}'s mail
+  value only if you have reconfigured the {productName}'s mail
   provider to use a non-default store protocol.
 `--storeprotocolclass`::
   The mail server store protocol class name. The default is
   `com.sun.mail.imap.IMAPStore`. Change this value only if you have
-  reconfigured the \{product---name}'s mail provider to use a nondefault
+  reconfigured the {productName}'s mail provider to use a nondefault
   store protocol.
 `--transprotocol`::
   The mail server transport protocol. The default is `smtp`. Change this
-  value only if you have reconfigured the \{product---name}'s mail
+  value only if you have reconfigured the {productName}'s mail
   provider to use a nondefault transport protocol.
 `--transprotocolclass`::
   The mail server transport protocol class name. The default is
   `com.sun.mail.smtp.SMTPTransport`. Change this value only if you have
-  reconfigured the \{product---name}'s mail provider to use a nondefault
+  reconfigured the {productName}'s mail provider to use a nondefault
   transport protocol.
 `--debug`::
   If set to true, the server starts up in debug mode for this resource.
@@ -103,7 +103,7 @@ asadmin-options::
   Text providing some details of the JavaMail resource.
 `--property`::
   Optional attribute name/value pairs for configuring the JavaMail
-  resource. The \{product---name}-specific ``mail-`` prefix is converted
+  resource. The {productName}-specific ``mail-`` prefix is converted
   to the standard mail prefix. The JavaMail API documentation lists the
   properties you might want to set.
 

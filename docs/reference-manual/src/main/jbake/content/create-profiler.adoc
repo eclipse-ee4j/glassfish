@@ -69,7 +69,7 @@ asadmin-options::
   Java classpath string that specifies the classes needed by the profiler.
 `--nativelibpath`::
   This path is automatically constructed to be a concatenation of the
-  \{product---name} installation relative path for its native shared
+  {productName} installation relative path for its native shared
   libraries, standard JRE native library path, the shell environment
   setting (`LD_LIBRARY_PATH` on UNIX) and any path that may be specified
   in the profile element.

@@ -58,7 +58,7 @@ module to configure load balancing on the Apache HTTP server.
 
 
 For more information about configuring load balancing with
-\{product---name}, refer to the online help in the \{product---name}
+{productName}, refer to the online help in the {productName}
 Administration Console.
 
 [[sthref26]]

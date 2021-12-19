@@ -48,7 +48,7 @@ link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)] subco
 To determine whether a node is enabled for communication over DCOM, use
 the link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
 
-No \{product---name} instances must reside on the node that is being
+No {productName} instances must reside on the node that is being
 deleted. Otherwise, the subcommand fails. Before running this
 subcommand, delete any instances that reside on the node by using, for
 example, the
@@ -69,35 +69,35 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--uninstall`::
-  Specifies whether the \{product---name} software is uninstalled from
+  Specifies whether the {productName} software is uninstalled from
   host that the node represents. Possible values are as follows:
 
   `false`;;
-    The \{product---name} software is not uninstalled from the host
+    The {productName} software is not uninstalled from the host
     (default).
   `true`;;
-    The \{product---name} software is uninstalled from the host. By
+    The {productName} software is uninstalled from the host. By
     default, if any node except the predefined node ``localhost-``domain
-    resides on any host from which \{product---name} software is being
+    resides on any host from which {productName} software is being
     uninstalled, the subcommand fails. +
-    To uninstall the \{product---name} software from a host on which
+    To uninstall the {productName} software from a host on which
     user-defined nodes reside, set the `--force` option to `true`. +
     If the `--force` option is `true`, the subcommand removes
     the entire content of the parent of the base installation directory.
 
 `--force`::
   If `--uninstall` is true, specifies whether the subcommand uninstalls
-  the \{product---name} software from a host even if a user-defined node
+  the {productName} software from a host even if a user-defined node
   resides on the host. Possible values are as follows:
 
   `false`;;
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
     If the `--force` option is `false`, the subcommand removes only the
-    \{product---name} software files. Other content if the parent of the
+    {productName} software files. Other content if the parent of the
     base installation directory, such as configuration files, are not removed.
   `true`;;
-    The subcommand uninstalls the \{product---name} software from the
+    The subcommand uninstalls the {productName} software from the
     host even if a user-defined node resides on the host. +
     If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.

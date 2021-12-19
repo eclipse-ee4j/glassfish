@@ -13,7 +13,7 @@ list-secure-admin-internal-users
 list-secure-admin-internal-users
 --------------------------------
 
-Lists the user names that the \{product---name} DAS and instances use to
+Lists the user names that the {productName} DAS and instances use to
 authenticate with each other and to authorize admin operations.
 
 [[sthref1787]]
@@ -34,7 +34,7 @@ asadmin [asadmin-options] list-secure-admin-internal-users [--help]
 === Description
 
 The `list-secure-admin-internal-users` subcommand lists the user names
-that the \{product---name} DAS and instances use to authenticate with
+that the {productName} DAS and instances use to authenticate with
 each other and to authorize admin operations.
 
 [[sthref1789]]
@@ -85,7 +85,7 @@ name::
 
 ==== Example 1   Listing the User Name for Secure Admin
 
-This example lists the user names that the \{product---name} DAS and
+This example lists the user names that the {productName} DAS and
 instances use to authenticate with each other and to authorize admin
 operations.
 

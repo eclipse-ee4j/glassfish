@@ -42,6 +42,7 @@
         <status>DRAFT</status>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
         <pdf.toclevels>2</pdf.toclevels>
+        <productName>Eclipse GlassFish</productName>
     </properties>
 
     <build>
@@ -149,6 +150,7 @@
                         <embedAssets>true</embedAssets>
                         <!-- Depends on what jbake's execution' -->
                         <imagesDir>${project.build.directory}/staging/${project.artifactId}</imagesDir>
+                        <productName>${productName}</productName>
                     </attributes>
                 </configuration>
                 <executions>

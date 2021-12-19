@@ -13,7 +13,7 @@ uninstall-node-ssh
 uninstall-node-ssh
 ------------------
 
-Uninstalls \{product---name} software from specified SSH-enabled hosts
+Uninstalls {productName} software from specified SSH-enabled hosts
 
 [[sthref2224]]
 
@@ -33,25 +33,25 @@ host-list
 
 === Description
 
-The `uninstall-node-ssh` subcommand uninstalls \{product---name}
+The `uninstall-node-ssh` subcommand uninstalls {productName}
 software from the hosts that are specified as the operand of the
 subcommand. This subcommand requires secure shell (SSH) to be configured
 on the host where the subcommand is run and on each host where the
-\{product---name} software is being uninstalled.
+{productName} software is being uninstalled.
 
 [NOTE]
 ====
 This subcommand is equivalent to the
 link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)]
-subcommand. To uninstall \{product---name} software from hosts that use
+subcommand. To uninstall {productName} software from hosts that use
 the Distributed Component Object Model (DCOM) remote protocol, use the
 link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)]
 subcommand.
 ====
 
 By default, if any node except the predefined node ``localhost-``domain
-resides on any host from which \{product---name} software is being
-uninstalled, the subcommand fails. To uninstall the \{product---name}
+resides on any host from which {productName} software is being
+uninstalled, the subcommand fails. To uninstall the {productName}
 software from a host on which user-defined nodes reside, set the
 `--force` option to `true`. If the `--force` option is `true`, the
 subcommand removes the entire content of the parent of the base
@@ -63,7 +63,7 @@ the subcommand fails.
 If multiple hosts are specified, the configuration of the following
 items must be the same on all hosts:
 
-* Parent of the base installation directory for the \{product---name} software
+* Parent of the base installation directory for the {productName} software
 * SSH port
 * SSH user
 * SSH key file
@@ -85,19 +85,19 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--installdir`::
   The absolute path to the parent of the base installation directory
-  where the \{product---name} software is installed on each host, for
+  where the {productName} software is installed on each host, for
   example, `/export/glassfish7/`. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
   The specified directory must contain the installation of the
-  \{product---name} software on the host. Otherwise, an error occurs. +
+  {productName} software on the host. Otherwise, an error occurs. +
   The default is the parent of the base installation directory of the
-  \{product---name} software on the host where this subcommand is run.
+  {productName} software on the host where this subcommand is run.
 `--sshport`::
   The port to use for SSH connections to the host where the
-  \{product---name} software is to be uninstalled. The default is 22.
+  {productName} software is to be uninstalled. The default is 22.
 `--sshuser`::
-  The user on the host where the \{product---name} software is to be
+  The user on the host where the {productName} software is to be
   uninstalled that is to run the process for connecting through SSH to
   the host. The default is the user that is running this subcommand. To
   ensure that the DAS can read this user's SSH private key file, specify
@@ -114,7 +114,7 @@ asadmin-options::
   2.  `id_dsa`
   3.  `identity`
 `--force`::
-  Specifies whether the subcommand uninstalls the \{product---name}
+  Specifies whether the subcommand uninstalls the {productName}
   software from a host even if a user-defined node resides on the host.
   Possible values are as follows:
 
@@ -122,11 +122,11 @@ asadmin-options::
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
     If the `--force` option is `false`, the subcommand removes only the
-    \{product---name} software files. Other content if the parent of the
+    {productName} software files. Other content if the parent of the
     base installation directory, such as configuration files, are not
     removed.
   `true`;;
-    The subcommand uninstalls the \{product---name} software from the
+    The subcommand uninstalls the {productName} software from the
     host even if a user-defined node resides on the host.
 
 +
@@ -139,7 +139,7 @@ If the `--force` option is `true`, the subcommand removes the entire
 
 host-list::
   A space-separated list of the names of the hosts from which the
-  \{product---name} software is to be uninstalled.
+  {productName} software is to be uninstalled.
 
 [[sthref2228]]
 
@@ -147,9 +147,9 @@ host-list::
 
 [[GSRFM779]][[sthref2229]]
 
-==== Example 1   Uninstalling \{product---name} Software From the Default Location
+==== Example 1   Uninstalling {productName} Software From the Default Location
 
-This example uninstalls \{product---name} software on the hosts
+This example uninstalls {productName} software on the hosts
 `sj03.example.com` and `sj04.example.com` from the default location.
 
 [source]
@@ -164,9 +164,9 @@ Command uninstall-node-ssh executed successfully.
 
 [[GSRFM780]][[sthref2230]]
 
-==== Example 2   Forcibly Uninstalling \{product---name} Software
+==== Example 2   Forcibly Uninstalling {productName} Software
 
-This example uninstalls \{product---name} software on the host
+This example uninstalls {productName} software on the host
 `sj02.example.com`.
 
 The software is uninstalled even if a user-defined node resides on the

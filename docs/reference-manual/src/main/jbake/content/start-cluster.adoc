@@ -31,7 +31,7 @@ asadmin [asadmin-options] start-cluster [--help]
 === Description
 
 The `start-cluster` subcommand starts a cluster by starting all
-\{product---name} instances in the cluster that are not already running.
+{productName} instances in the cluster that are not already running.
 This subcommand requires the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on all hosts where

@@ -58,7 +58,7 @@ target::
   Possible values are as follows:
 
   `server`;;
-    Browses the JNDI tree for the default \{product---name} instance
+    Browses the JNDI tree for the default {productName} instance
     (default). The default instance is the domain administration server
     (DAS).
   `domain`;;
@@ -66,7 +66,7 @@ target::
   cluster-name;;
     Browses the JNDI tree for the specified cluster.
   instance-name;;
-    Browses the JNDI tree for the specified \{product---name} instance.
+    Browses the JNDI tree for the specified {productName} instance.
 
 [[sthref1588]]
 
@@ -76,7 +76,7 @@ target::
 
 ==== Example 1   Browsing the JNDI Tree
 
-This example browses the JNDI tree for the default \{product---name}
+This example browses the JNDI tree for the default {productName}
 instance.
 
 [source]

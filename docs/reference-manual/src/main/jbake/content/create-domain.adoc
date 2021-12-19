@@ -42,12 +42,12 @@ domain-name
 
 === Description
 
-The `create-domain` subcommand creates a \{product---name} domain. A
-domain in \{product---name} is an administrative namespace that complies
+The `create-domain` subcommand creates a {productName} domain. A
+domain in {productName} is an administrative namespace that complies
 with the Java Platform, Enterprise Edition (Java EE) standard. Every
 domain has a configuration, which is stored in a set of files. Any
 number of domains, each of which has a distinct administrative identity,
-can be created in a given installation of \{product---name}. A domain
+can be created in a given installation of {productName}. A domain
 can exist independently of other domains.
 
 Any user who has access to the `asadmin` utility on a given system can

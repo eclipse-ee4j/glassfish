@@ -31,7 +31,7 @@ package-appclient
 Use the `package-appclient` command to pack the application client
 container libraries and jar files into an `appclient.jar` file, which is
 created in the as-install``/lib`` directory on the machine on which
-\{product---name} is installed. The `appclient.jar` file provides an
+{productName} is installed. The `appclient.jar` file provides an
 application client container package targeted at remote hosts that do
 not contain a server installation.
 

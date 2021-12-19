@@ -13,7 +13,7 @@ install-node-ssh
 install-node-ssh
 ----------------
 
-Installs \{product---name} software on specified SSH-enabled hosts
+Installs {productName} software on specified SSH-enabled hosts
 
 [[sthref1267]]
 
@@ -35,29 +35,29 @@ host-list
 
 === Description
 
-The `install-node-ssh` subcommand installs \{product---name} software on
+The `install-node-ssh` subcommand installs {productName} software on
 the hosts that are specified as the operand of the subcommand. This
 subcommand requires secure shell (SSH) to be configured on the host
-where the subcommand is run and on each host where the \{product---name}
+where the subcommand is run and on each host where the {productName}
 software is being installed.
 
 [NOTE]
 ====
 This subcommand is equivalent to the
 link:install-node.html#install-node-1[`install-node`(1)] subcommand. To
-install \{product---name} software on hosts that use the Distributed
+install {productName} software on hosts that use the Distributed
 Component Object Model (DCOM) remote protocol, use the
 link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)]
 subcommand.
 ====
 
 If necessary, the subcommand creates a ZIP archive of the
-\{product---name} software from the installation where this subcommand
+{productName} software from the installation where this subcommand
 is run. The archive does not contain the `domains` directory or the
 `nodes` directory. These directories are synchronized from the domain
 administration server (DAS) when instances on nodes that represent the
 hosts are created and started. The subcommand does not delete the
-archive after installing the \{product---name} software from the archive
+archive after installing the {productName} software from the archive
 on the specified hosts.
 
 If multiple hosts are specified, the configuration of the following
@@ -68,7 +68,7 @@ items is the same on all hosts:
 * SSH user
 * SSH key file
 
-If the SSH key file does not exist on a host where the \{product---name}
+If the SSH key file does not exist on a host where the {productName}
 software is to be installed, the subcommand runs interactively and
 prompts for a password. To enable the subcommand to run
 noninteractively, the following conditions must be met:
@@ -94,15 +94,15 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--archive`::
-  The absolute path to the archive file of the \{product---name}
+  The absolute path to the archive file of the {productName}
   software that is to be installed. If no archive file is specified, the
   subcommand creates an archive from the installation of
-  \{product---name} software from which the subcommand is run. This
+  {productName} software from which the subcommand is run. This
   archive is created in the home directory of the user that is running
   the command.
 `--create`::
   Specifies whether the subcommand should create an archive file of the
-  \{product---name} software to install.
+  {productName} software to install.
 
   `false`;;
     No archive file is created. The subcommand installs the software
@@ -110,7 +110,7 @@ asadmin-options::
     (default).
   `true`;;
     The subcommand creates an archive file from the installation of
-    \{product---name} software from which the subcommand is run.
+    {productName} software from which the subcommand is run.
 
 `--save`::
   Specifies whether the archive file from which the software is
@@ -124,21 +124,21 @@ asadmin-options::
 
 `--installdir`::
   The absolute path to the parent of the base installation directory
-  where the \{product---name} software is to be installed on each host,
+  where the {productName} software is to be installed on each host,
   for example, `/export/glassfish7/`. If the directory does not exist,
   the subcommand creates the directory. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
-  To overwrite an existing an installation of the \{product---name}
+  To overwrite an existing an installation of the {productName}
   software, set the `--force` option to `true`. If the directory already
   contains an installation and the `--force` option is `false`, an error occurs. +
   The default is the parent of the base installation directory of the
-  \{product---name} software on the host where this subcommand is run.
+  {productName} software on the host where this subcommand is run.
 `--sshport`::
   The port to use for SSH connections to the host where the
-  \{product---name} software is to be installed. The default is 22.
+  {productName} software is to be installed. The default is 22.
 `--sshuser`::
-  The user on the host where the \{product---name} software is to be
+  The user on the host where the {productName} software is to be
   installed that is to run the process for connecting through SSH to the
   host. The default is the user that is running this subcommand. To
   ensure that the DAS can read this user's SSH private key file, specify
@@ -159,7 +159,7 @@ asadmin-options::
 
 `--force`::
   Specifies whether the subcommand overwrites an existing installation
-  of the \{product---name} software in the directory that the
+  of the {productName} software in the directory that the
   `--installdir` option specifies. Possible values are as follows:
 
   `false`;;
@@ -173,7 +173,7 @@ asadmin-options::
 
 host-list::
   A space-separated list of the names of the hosts where the
-  \{product---name} software is to be installed.
+  {productName} software is to be installed.
 
 [[sthref1271]]
 
@@ -181,10 +181,10 @@ host-list::
 
 [[GSRFM629]][[sthref1272]]
 
-==== Example 1   Installing \{product---name} Software at the Default
+==== Example 1   Installing {productName} Software at the Default
 Location
 
-This example installs \{product---name} software on the hosts
+This example installs {productName} software on the hosts
 `sj03.example.com` and `sj04.example.com` at the default location.
 
 [source]

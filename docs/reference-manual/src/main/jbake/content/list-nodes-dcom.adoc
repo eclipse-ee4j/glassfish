@@ -13,7 +13,7 @@ list-nodes-dcom
 list-nodes-dcom
 ---------------
 
-Lists all \{product---name} nodes that support communication over DCOM
+Lists all {productName} nodes that support communication over DCOM
 in a domain
 
 [[sthref1718]]
@@ -30,7 +30,7 @@ asadmin [asadmin-options] list-nodes-dcom [--help]
 
 === Description
 
-The `list-nodes-dcom` subcommand lists all \{product---name} nodes that
+The `list-nodes-dcom` subcommand lists all {productName} nodes that
 support communication over the Distributed Component Object Model (DCOM)
 remote protocol. The DCOM protocol is available only on Windows systems.
 
@@ -52,8 +52,8 @@ listed in long format. In long format, the following additional
 information about each node is displayed:
 
 * The path to the parent of the base installation directory of
-\{product---name} on the host that the node represents
-* A comma-separated list of the names of the \{product---name} instances
+{productName} on the host that the node represents
+* A comma-separated list of the names of the {productName} instances
 that reside on the node
 
 If the `--terse` option of the
@@ -89,9 +89,9 @@ asadmin-options::
 
 [[GSRFM694]][[sthref1722]]
 
-==== Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing {productName} Nodes
 
-This example displays the name, type, and host for all \{product---name}
+This example displays the name, type, and host for all {productName}
 nodes that support communication over DCOM in a domain.
 
 [source]
@@ -105,10 +105,10 @@ Command list-nodes-dcom executed successfully.
 
 [[GSRFM695]][[sthref1723]]
 
-==== Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of {productName} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
-only the names of the \{product---name} nodes that support communication
+only the names of the {productName} nodes that support communication
 over DCOM in a domain.
 
 [source]
@@ -121,9 +121,9 @@ wpmdl1
 
 [[GSRFM696]][[sthref1724]]
 
-==== Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing {productName} Nodes in Long Format
 
-This example lists the \{product---name} nodes that support
+This example lists the {productName} nodes that support
 communication over DCOM in a domain in long format.
 
 [source]

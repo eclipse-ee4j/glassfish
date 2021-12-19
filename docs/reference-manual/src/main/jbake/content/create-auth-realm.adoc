@@ -143,7 +143,7 @@ asadmin-options::
 +
 [NOTE]
 ====
-In versions of \{product---name} prior to 5.0, the default algorithm
+In versions of {productName} prior to 5.0, the default algorithm
 was `MD5`. If you have applications that depend on the `MD5`
 algorithm, you can override the default `SHA-25` algorithm by using
 the `asadmin set` subcommand:
@@ -158,10 +158,10 @@ is currently being used:
 asadmin> get server.security-service.property.default-digest-algorithm
 ----
 Also note that, to maintain backward compatibility, if an upgrade is
-performed from \{product---name} v2.x or v3.0.x to \{product---name}
+performed from {productName} v2.x or v3.0.x to {productName}
 5.0, the default algorithm is automatically set to `MD5` in cases
 where the digest algorithm had not been explicitly set in the older
-\{product---name} version.
+{productName} version.
 ====
 +
   `digestrealm-password-enc-algorithm`;;

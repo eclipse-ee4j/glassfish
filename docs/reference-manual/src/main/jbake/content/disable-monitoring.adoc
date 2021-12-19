@@ -30,7 +30,7 @@ asadmin [asadmin-options] disable-monitoring [--help]
 === Description
 
 The `disable-monitoring` subcommand is used to turn off monitoring for
-\{product---name} or for particular modules during runtime. Changes are
+{productName} or for particular modules during runtime. Changes are
 dynamic, that is, server restart is not required.
 
 Running the `disable-monitoring` subcommand without the `--module`
@@ -80,9 +80,9 @@ asadmin-options::
 
 [[GSRFM594]][[sthref1068]]
 
-==== Example 1   Disabling the Monitoring Service for \{product---name}
+==== Example 1   Disabling the Monitoring Service for {productName}
 
-This example disables monitoring for \{product---name} in general by
+This example disables monitoring for {productName} in general by
 setting the `enable-monitoring` flag to `false` (default is `true`).
 
 [source]

@@ -13,7 +13,7 @@ list-nodes
 list-nodes
 ----------
 
-Lists all \{product---name} nodes in a domain
+Lists all {productName} nodes in a domain
 
 [[sthref1700]]
 
@@ -29,7 +29,7 @@ asadmin [asadmin-options] list-nodes [--help]
 
 === Description
 
-The `list-nodes` subcommand lists all \{product---name} nodes in a
+The `list-nodes` subcommand lists all {productName} nodes in a
 domain.
 
 By default, the subcommand displays the following information for each
@@ -53,9 +53,9 @@ listed in long format. In long format, the following additional
 information about each node is displayed:
 
 * The path to the parent of the base installation directory of
-\{product---name} on the host that the node represents
+{productName} on the host that the node represents
 
-* A comma-separated list of the names of the \{product---name} instances
+* A comma-separated list of the names of the {productName} instances
 that reside on the node
 
 If the `--terse` option of the
@@ -91,9 +91,9 @@ asadmin-options::
 
 [[GSRFM687]][[sthref1704]]
 
-==== Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing {productName} Nodes
 
-This example displays the name, type, and host for all \{product---name}
+This example displays the name, type, and host for all {productName}
 nodes in the domain `domain1`.
 
 [source]
@@ -108,10 +108,10 @@ Command list-nodes executed successfully.
 
 [[GSRFM688]][[sthref1705]]
 
-==== Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of {productName} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
-only the names of the \{product---name} nodes in the domain `domain1`.
+only the names of the {productName} nodes in the domain `domain1`.
 
 [source]
 ----
@@ -124,9 +124,9 @@ devnode
 
 [[GSRFM689]][[sthref1706]]
 
-==== Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing {productName} Nodes in Long Format
 
-This example lists the \{product---name} nodes in the domain `domain1`
+This example lists the {productName} nodes in the domain `domain1`
 in long format.
 
 [source]

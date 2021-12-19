@@ -14,7 +14,7 @@ configure-jms-cluster
 ---------------------
 
 Configures the Message Queue cluster providing JMS services to a
-\{product---name} cluster
+{productName} cluster
 
 [[sthref79]]
 
@@ -38,9 +38,9 @@ cluster-name
 === Description
 
 The `configure-jms-cluster` configures the Message Queue cluster
-providing JMS services to a \{product---name} cluster.
+providing JMS services to a {productName} cluster.
 
-This subcommand should be used before the \{product---name} cluster is
+This subcommand should be used before the {productName} cluster is
 started for the first time. Otherwise, follow the instructions in
 "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message Service (JMS)]" in
 GlassFish Server Open Source Edition Administration Guide.
@@ -120,9 +120,9 @@ prop1name=prop1value:prop2name=prop2value
 === Operands
 
 cluster-name::
-  The name of the \{product---name} cluster for which the Message Queue
+  The name of the {productName} cluster for which the Message Queue
   cluster is to provide JMS services. +
-  Because \{product---name} uses the cluster name to uniquely identify
+  Because {productName} uses the cluster name to uniquely identify
   database tables the Message Queue cluster might require, the length of
   the name is restricted in the following situations:
 

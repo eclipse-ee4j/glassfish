@@ -21,7 +21,7 @@ Server-side Java applications and web services
 
 The Java EE platform enables applications to access systems that are
 outside of the application server. Applications connect to these systems
-through resources. The \{product---name} infrastructure supports the
+through resources. The {productName} infrastructure supports the
 deployment of many types of distributed applications and is an ideal
 foundation for building applications based on Service Oriented
 Architectures (SOA). SOA is a design methodology aimed at maximizing the

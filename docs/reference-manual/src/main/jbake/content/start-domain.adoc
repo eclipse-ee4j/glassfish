@@ -117,14 +117,14 @@ asadmin-options::
   Specifies whether the configuration of the domain administration
   server (DAS) is upgraded to the current release. Normally, if the
   subcommand detects that the configuration is from an older release of
-  \{product---name}, the configuration is upgraded automatically before
+  {productName}, the configuration is upgraded automatically before
   being started. You should not need to use this option explicitly. +
   Possible values are as follows:
 
   `true`;;
     When the domain is started, the configuration is modified to be
-    compatible with this release of \{product---name}, and the
-    \{product---name} process stops.
+    compatible with this release of {productName}, and the
+    {productName} process stops.
   `false`;;
     The configuration of the DAS is not updated (default).
 
@@ -141,9 +141,9 @@ asadmin-options::
     link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
     subcommand from a different console window, messages continue to be
     displayed in the original console window. +
-    You can kill the \{product---name} process by typing `CTRL-C` in the
+    You can kill the {productName} process by typing `CTRL-C` in the
     console window. +
-    You can kill the \{product---name} process and obtain a thread dump
+    You can kill the {productName} process and obtain a thread dump
     for the server by typing one of the following key combinations in
     the console window:
 
@@ -176,7 +176,7 @@ domain-name::
   The unique name of the domain you want to start.
 +
   This operand is optional if only one domain exists in the
-  \{product---name} installation.
+  {productName} installation.
 
 [[sthref2129]]
 

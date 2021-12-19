@@ -38,7 +38,7 @@ In terms of what happens when this subcommand is run, the
 `provider-config` sub-element for the given message layer
 (`message-security-config` element of `domain.xml` is deleted. The
 `domain.xml` file specifies parameters and properties to the
-\{product---name}). The options specified in the list below apply to
+{productName}). The options specified in the list below apply to
 attributes within the `message-security-config` and `provider-config`
 sub-elements of the `domain.xml` file.
 

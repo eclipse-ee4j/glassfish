@@ -13,7 +13,7 @@ create-cluster
 create-cluster
 --------------
 
-Creates a \{product---name} cluster
+Creates a {productName} cluster
 
 [[sthref147]]
 
@@ -42,8 +42,8 @@ cluster-name
 
 === Description
 
-The `create-cluster` subcommand creates a \{product---name} cluster.
-Initially the cluster contains no \{product---name} instances,
+The `create-cluster` subcommand creates a {productName} cluster.
+Initially the cluster contains no {productName} instances,
 applications, or resources.
 
 A cluster requires a reference to the named configuration that defines
@@ -165,15 +165,15 @@ asadmin-options::
   available:
 
   `GMS_DISCOVERY_URI_LIST`;;
-    The locations of \{product---name} instances in the cluster to use
+    The locations of {productName} instances in the cluster to use
     for discovering the cluster. This property is required only if the
     Group Management Service (GMS) is not using multicast for
     broadcasting messages. +
     Valid values for this property are as follows:
 
     * A comma-separated list of uniform resource identifiers (URIs).
-    Each URI must locate a \{product---name} instance or the DAS. This
-    format is required if multiple \{product---name} instances are
+    Each URI must locate a {productName} instance or the DAS. This
+    format is required if multiple {productName} instances are
     running on the same host. +
     The format of each URI in the list is as follows: +
     scheme``://``host-name-or -IP-address``:``port
@@ -210,7 +210,7 @@ asadmin-options::
     9090-9200. In most situations, the default behavior should suffice. +
     However, if GMS is not using multicast for broadcasting messages,
     the `GMS_LISTENER_PORT` property must specify a port number that is
-    valid for all \{product---name} instances in the cluster. To use the
+    valid for all {productName} instances in the cluster. To use the
     default value to meet this requirement, use a system property to set
     the port number individually for each instance. +
     For example, use the `create-system-properties` subcommand to create
@@ -295,7 +295,7 @@ To match the configuration of the network on which the DAS and
   On a multihome machine, this option configures the network interface
   that is used for the GMS. A multihome machine possesses two or more
   network interfaces. +
-  To specify an address that is valid for all \{product---name}
+  To specify an address that is valid for all {productName}
   instances in the cluster, use a system property to set the address
   individually for each instance. +
   For example, use the `create-system-properties` subcommand to create
@@ -364,15 +364,15 @@ cluster-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another cluster, a named configuration, a \{product---name} instance,
+  another cluster, a named configuration, a {productName} instance,
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}. +
+  is reserved by {productName}. +
   If the
   link:configure-jms-cluster.html#configure-jms-cluster-1[`configure-jms-cluster`(1)]
   subcommand is to be used to configure a Message Queue cluster to
-  provide JMS services to the \{product---name} cluster, the length of
-  the \{product---name} cluster name is might be restricted: +
+  provide JMS services to the {productName} cluster, the length of
+  the {productName} cluster name is might be restricted: +
   * If `clustertype` is set to `enhanced` in the
   link:configure-jms-cluster.html#configure-jms-cluster-1[`configure-jms-cluster`(1)]
   subcommand, the name can be no longer than n–21 characters, where n is
@@ -412,7 +412,7 @@ This example creates a cluster that is named `tcpcluster`. In this
 example, GMS is not using multicast for broadcasting messages and
 multiple instances reside on the same host. Therefore, the
 `GMS_DISCOVERY_URI_LIST` property is set to the locations of the
-\{product---name} instances to use for discovering the cluster. These
+{productName} instances to use for discovering the cluster. These
 instances reside on the host whose IP address is `10.152.23.224` and
 listen for GMS events on ports 9090, 9091, and 9092.
 

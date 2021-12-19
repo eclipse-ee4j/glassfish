@@ -13,7 +13,7 @@ create-instance
 create-instance
 ---------------
 
-Creates a \{product---name} instance
+Creates a {productName} instance
 
 [[sthref293]]
 
@@ -34,7 +34,7 @@ instance-name
 
 === Description
 
-The `create-instance` subcommand creates a \{product---name} instance.
+The `create-instance` subcommand creates a {productName} instance.
 This subcommand requires the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on the host that
@@ -51,13 +51,13 @@ not enabled for remote communication over DCOM or SSH.
 
 You may run this command from any host that can contact the DAS.
 
-A \{product---name} instance is a single Virtual Machine for the Java
+A {productName} instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
-\{product---name} is running. A node defines the host where the
-\{product---name} instance resides. The JVM machine must be compatible
+{productName} is running. A node defines the host where the
+{productName} instance resides. The JVM machine must be compatible
 with the Java Platform, Enterprise Edition (Java EE).
 
-A \{product---name} instance requires a reference to the following
+A {productName} instance requires a reference to the following
 items:
 
 * The node that defines the host where the instance resides. The node
@@ -69,7 +69,7 @@ an instance that is not joining a cluster, the subcommand creates a
 configuration for the instance. An instance that is joining a cluster
 receives its configuration from its parent cluster.
 
-Each \{product---name} instance is one of the following types of instance:
+Each {productName} instance is one of the following types of instance:
 
 Standalone instance::
   A standalone instance does not share its configuration with any other
@@ -260,10 +260,10 @@ instance-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another \{product---name} instance, a cluster, a named configuration,
+  another {productName} instance, a cluster, a named configuration,
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref297]]
 
@@ -271,9 +271,9 @@ instance-name::
 
 [[GSRFM487]][[sthref298]]
 
-==== Example 1   Creating a Standalone \{product---name} Instance
+==== Example 1   Creating a Standalone {productName} Instance
 
-This example creates the standalone \{product---name} instance
+This example creates the standalone {productName} instance
 `pmdsainst` in the domain `domain1` on the local host.
 
 [source]
@@ -294,10 +294,10 @@ Command create-instance executed successfully.
 
 [[GSRFM488]][[sthref299]]
 
-==== Example 2   Creating a Standalone \{product---name} Instance With Custom
+==== Example 2   Creating a Standalone {productName} Instance With Custom
 Port Assignments
 
-This example creates the standalone \{product---name} instance
+This example creates the standalone {productName} instance
 `pmdcpinst` in the domain `domain1` on the local host. Custom port
 numbers are assigned to the following ports:
 
@@ -326,9 +326,9 @@ Command create-instance executed successfully.
 
 [[GSRFM489]][[sthref300]]
 
-==== Example 3   Creating a Shared \{product---name} Instance
+==== Example 3   Creating a Shared {productName} Instance
 
-This example creates the shared \{product---name} instance
+This example creates the shared {productName} instance
 `pmdsharedinst1` in the domain `domain1` on the local host. The shared
 configuration of this instance is `pmdsharedconfig`.
 
@@ -351,9 +351,9 @@ Command create-instance executed successfully.
 
 [[GSRFM490]][[sthref301]]
 
-==== Example 4   Creating a Clustered \{product---name} Instance
+==== Example 4   Creating a Clustered {productName} Instance
 
-This example creates the clustered \{product---name} instance `pmdinst1`
+This example creates the clustered {productName} instance `pmdinst1`
 in the domain `domain1` on the local host. The instance is a member of
 the cluster `pmdclust1`.
 

@@ -34,7 +34,7 @@ asadmin [asadmin-options] osgi-shell [--help]
 
 The `osgi-shell` subcommand provides interactive access to the Apache
 Felix Gogo remote shell for the execution of OSGi shell commands. The
-remote shell is provided with \{product---name} and used to administer
+remote shell is provided with {productName} and used to administer
 and inspect the OSGi runtime.
 
 OSGi shell commands are executed on the server and results are printed

@@ -95,7 +95,7 @@ domain-name::
   Specifies the name of the domain to be backed up.
 +
   This operand is optional if only one domain exists in the
-  \{product---name} installation.
+  {productName} installation.
 
 [[sthref43]]
 

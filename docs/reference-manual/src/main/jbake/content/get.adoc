@@ -32,7 +32,7 @@ asadmin [asadmin-options] get [--help]
 === Description
 
 The `get` subcommand uses dotted names to get the names and values of
-configurable or monitorable attributes for \{product---name} elements.
+configurable or monitorable attributes for {productName} elements.
 
 You can use the link:list.html#list-1[`list`(1)] subcommand to display
 the dotted names that represent individual server components and
@@ -88,7 +88,7 @@ asadmin-options::
   values are returned.
 `--aggregatedataonly`::
 `-c`::
-  Aggregates monitoring data for all \{product---name} instances in a
+  Aggregates monitoring data for all {productName} instances in a
   cluster. The default value is `false`.
 
 [[sthref1212]]

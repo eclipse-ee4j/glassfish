@@ -13,7 +13,7 @@ stop-cluster
 stop-cluster
 ------------
 
-Stops a \{product---name} cluster
+Stops a {productName} cluster
 
 [[sthref2150]]
 
@@ -32,8 +32,8 @@ cluster-name
 
 === Description
 
-The `stop-cluster` subcommand stops a \{product---name} cluster by
-stopping all running \{product---name} instances in the cluster.
+The `stop-cluster` subcommand stops a {productName} cluster by
+stopping all running {productName} instances in the cluster.
 
 This subcommand is supported in remote mode only.
 

@@ -13,7 +13,7 @@ enable-secure-admin-principal
 enable-secure-admin-principal
 -----------------------------
 
-Instructs \{product---name}, when secure admin is enabled, to accept
+Instructs {productName}, when secure admin is enabled, to accept
 admin requests from clients identified by the specified SSL certificate.
 
 [[sthref1143]]
@@ -31,25 +31,25 @@ asadmin [asadmin-options] enable-secure-admin-principal [--help]
 === Description
 
 The `enable-secure-admin-principal` subcommand instructs
-\{product---name} to accept admin requests when accompanied by an SSL
+{productName} to accept admin requests when accompanied by an SSL
 certificate with the specified distinguished name (DN). If you use the
-"`--alias` aliasname" form, then \{product---name} looks in its
+"`--alias` aliasname" form, then {productName} looks in its
 truststore for a certificate with the specified alias and uses the DN
-associated with that certificate. Otherwise, \{product---name} records
+associated with that certificate. Otherwise, {productName} records
 the value you specify as the DN.
 
 You must specify either the `--alias` option, or the DN.
 
 You can run `enable-secure-admin-principal` multiple times so that
-\{product---name} accepts admin requests from a client sending a
+{productName} accepts admin requests from a client sending a
 certificate with any of the DNs you specify.
 
-When you run `enable-secure-admin`, \{product---name} automatically
+When you run `enable-secure-admin`, {productName} automatically
 records the DNs for the admin alias and the instance alias, whether you
 specify those values or use the defaults. You do not need to run
 `enable-secure-admin-principal` yourself for those certificates. Other
 than these certificates, you must run `enable-secure-admin-principal`
-for any other DN that \{product---name} should authorize to send admin
+for any other DN that {productName} should authorize to send admin
 requests. This includes DNs corresponding to trusted certificates (those
 with a certificate chain to a trusted authority.)
 
@@ -65,7 +65,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--alias`::
   The alias name of the certificate in the trust store.
-  \{product---name} looks up certificate in the trust store using that
+  {productName} looks up certificate in the trust store using that
   alias and, if found, stores the corresponding DN as being valid for
   secure administration. Because alias-name must be an alias associated
   with a certificate currently in the trust store, you may find it most

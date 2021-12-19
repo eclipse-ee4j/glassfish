@@ -77,7 +77,7 @@ asadmin-options::
 `--target`::
   The cluster or standalone instance for which to export configuration
   data. The `--target` option is required. +
-  This option must not specify a clustered \{product---name} instance.
+  This option must not specify a clustered {productName} instance.
   If this option specifies a clustered instance, an error occurs. To
   export configuration data for a clustered instance, specify the name
   of the cluster of which the instance is a member, not the instance.

@@ -47,7 +47,7 @@ asadmin-options::
   thread pool. Valid values are as follows:
 
   `server`;;
-    Deletes the thread pool for the default \{product---name} instance
+    Deletes the thread pool for the default {productName} instance
     `server` and is the default value.
   configuration-name;;
     Deletes the thread pool for the named configuration.

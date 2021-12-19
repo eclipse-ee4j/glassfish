@@ -13,7 +13,7 @@ start-local-instance
 start-local-instance
 --------------------
 
-Starts a \{product---name} instance on the host where the subcommand is run
+Starts a {productName} instance on the host where the subcommand is run
 
 [[sthref2142]]
 
@@ -33,13 +33,13 @@ asadmin [asadmin-options] start-local-instance [--help]
 
 === Description
 
-The `start-local-instance` subcommand starts a \{product---name}
+The `start-local-instance` subcommand starts a {productName}
 instance on the host where the subcommand is run. This subcommand does
 not require the Distributed Component Object Model (DCOM) remote
 protocol or secure shell (SSH) to be configured. You must run this
 command from the host where the instance resides.
 
-The subcommand can start any \{product---name} instance, regardless of
+The subcommand can start any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can start an
 instance that was created by using the
 link:create-instance.html#create-instance-1[`create-instance`(1)]
@@ -152,9 +152,9 @@ Possible values are as follows:
     link:restart-local-instance.html#restart-local-instance-1[`restart-local-instance`(1)]
     subcommand from a different console window, messages continue to be
     displayed in the original console window. +
-    You can kill the \{product---name} process by typing `CTRL-C` in the
+    You can kill the {productName} process by typing `CTRL-C` in the
     console window. +
-    You can kill the \{product---name} process and obtain a thread dump
+    You can kill the {productName} process and obtain a thread dump
     for the server by typing one of the following key combinations in
     the console window:
 

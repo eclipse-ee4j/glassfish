@@ -13,7 +13,7 @@ uninstall-node-dcom
 uninstall-node-dcom
 -------------------
 
-Uninstalls \{product---name} software from specified DCOM-enabled hosts
+Uninstalls {productName} software from specified DCOM-enabled hosts
 
 [[sthref2215]]
 
@@ -32,24 +32,24 @@ host-list
 
 === Description
 
-The `uninstall-node-dcom` subcommand uninstalls \{product---name}
+The `uninstall-node-dcom` subcommand uninstalls {productName}
 software from the hosts that are specified as the operand of the
 subcommand. This subcommand requires the Distributed Component Object
 Model (DCOM) remote protocol to be configured on the host where the
-subcommand is run and on each host where the \{product---name} software
+subcommand is run and on each host where the {productName} software
 is being uninstalled.
 
 [NOTE]
 ====
-To uninstall \{product---name} software on hosts that use secure shell
+To uninstall {productName} software on hosts that use secure shell
 (SSH), use the
 link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
 subcommand.
 ====
 
 By default, if any node except the predefined node ``localhost-``domain
-resides on any host from which \{product---name} software is being
-uninstalled, the subcommand fails. To uninstall the \{product---name}
+resides on any host from which {productName} software is being
+uninstalled, the subcommand fails. To uninstall the {productName}
 software from a host on which user-defined nodes reside, set the
 `--force` option to `true`. If the `--force` option is `true`, the
 subcommand removes the entire content of the parent of the base
@@ -61,7 +61,7 @@ the subcommand fails.
 If multiple hosts are specified, the configuration of the following
 items must be the same on all hosts:
 
-* Parent of the base installation directory for the \{product---name} software
+* Parent of the base installation directory for the {productName} software
 * Windows user
 * Windows domain
 
@@ -82,14 +82,14 @@ asadmin-options::
   Displays the help text for the subcommand.
 `--installdir`::
   The absolute path to the parent of the base installation directory
-  where the \{product---name} software is installed on each host, for
+  where the {productName} software is installed on each host, for
   example, `C:\glassfish7`. +
   The user that is running this subcommand must have write access to the
   specified directory. Otherwise, an error occurs. +
   The specified directory must contain the installation of the
-  \{product---name} software on the host. Otherwise, an error occurs. +
+  {productName} software on the host. Otherwise, an error occurs. +
   The default is the parent of the base installation directory of the
-  \{product---name} software on the host where this subcommand is run.
+  {productName} software on the host where this subcommand is run.
 `--windowsuser`::
 `-w`::
   The user on this node's host that is to run the process for connecting
@@ -101,7 +101,7 @@ asadmin-options::
   `--windowsuser` option specifies. The default is the name of the host
   on which the subcommand is run.
 `--force`::
-  Specifies whether the subcommand uninstalls the \{product---name}
+  Specifies whether the subcommand uninstalls the {productName}
   software from a host even if a user-defined node resides on the host.
   Possible values are as follows:
 
@@ -109,10 +109,10 @@ asadmin-options::
     If a user-defined node resides on a host, the software is not
     uninstalled and the subcommand fails (default). +
     If the `--force` option is `false`, the subcommand removes only the
-    \{product---name} software files. Other content if the parent of the
+    {productName} software files. Other content if the parent of the
     base installation directory, such as configuration files, are not removed.
   `true`;;
-    The subcommand uninstalls the \{product---name} software from the
+    The subcommand uninstalls the {productName} software from the
     host even if a user-defined node resides on the host.
 
 +
@@ -125,7 +125,7 @@ If the `--force` option is `true`, the subcommand removes the entire
 
 host-list::
   A space-separated list of the names of the hosts from which the
-  \{product---name} software is to be uninstalled.
+  {productName} software is to be uninstalled.
 
 [[sthref2219]]
 
@@ -133,9 +133,9 @@ host-list::
 
 [[GSRFM776]][[sthref2220]]
 
-==== Example 1   Uninstalling \{product---name} Software From the Default Location
+==== Example 1   Uninstalling {productName} Software From the Default Location
 
-This example uninstalls \{product---name} software on the hosts
+This example uninstalls {productName} software on the hosts
 `wpmdl1.example.com` and `wpmdl2.example.com` from the default location.
 
 [source]
@@ -146,9 +146,9 @@ Command uninstall-node-dcom executed successfully.
 
 [[GSRFM777]][[sthref2221]]
 
-==== Example 2   Forcibly Uninstalling \{product---name} Software
+==== Example 2   Forcibly Uninstalling {productName} Software
 
-This example uninstalls \{product---name} software on the host
+This example uninstalls {productName} software on the host
 `xkyd.example.com`.
 
 The software is uninstalled even if a user-defined node resides on the

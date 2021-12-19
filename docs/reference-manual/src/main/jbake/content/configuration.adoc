@@ -13,15 +13,15 @@ configuration
 configuration
 -------------
 
-The data set that determines how \{product---name} operates
+The data set that determines how {productName} operates
 
 [[sthref2394]]
 
 === Description
 
-The configuration of \{product---name} is the data set that determines
+The configuration of {productName} is the data set that determines
 how it operates. Parts of this configuration determine the operation of
-specific parts of \{product---name}, such as the following:
+specific parts of {productName}, such as the following:
 
 * Services, such as the transaction service
 * Resources, such as databases
@@ -39,7 +39,7 @@ points are name/value pairs, either hard-coded attributes or more
 flexibly defined properties.
 
 The hierarchical structure of the configuration is explained in the
-dotted names page. You can view and change most of the \{product---name}
+dotted names page. You can view and change most of the {productName}
 configuration using either the Administration Console or the `asadmin`
 utility and its subcommands. To list the structure of all or part of the
 configuration, use the `list` subcommand. To view the value of one or

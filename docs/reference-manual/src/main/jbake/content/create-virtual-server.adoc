@@ -38,7 +38,7 @@ virtual-server-id
 === Description
 
 The `create-virtual-server` subcommand creates the named virtual server.
-Virtualization in the \{product---name} allows multiple URL domains to
+Virtualization in the {productName} allows multiple URL domains to
 be served by a single HTTP server process that is listening on multiple
 host addresses. If the application is available at two virtual servers,
 they still share the same physical resource pools.
@@ -175,7 +175,7 @@ The default value is `true`.
     Application Development Guide and The Context Container
     (`http://tomcat.apache.org/tomcat-5.5-doc/config/context.html`).
     Context parameters, environment entries, and resource definitions in
-    `context.xml` are supported in the \{product---name}.
+    `context.xml` are supported in the {productName}.
   `alternatedocroot_n`;;
     Specifies an alternate document root (docroot), where n is a
     positive integer that allows specification of more than one.
@@ -278,9 +278,9 @@ For example:
     Specifies a fully qualified class name of a custom valve, where n is
     a positive integer that allows specification of more than one.
     The valve class must implement the `org.apache.catalina.Valve` interface
-    from Tomcat or previous \{product---name} releases, or the
+    from Tomcat or previous {productName} releases, or the
     `org.glassfish.web.valve.GlassFishValve` interface from the current
-    \{product---name} release. For example:
+    {productName} release. For example:
 +
 [source,xml]
 ----

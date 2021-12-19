@@ -13,7 +13,7 @@ delete-local-instance
 delete-local-instance
 ---------------------
 
-Deletes a \{product---name} instance on the machine where the subcommand is run
+Deletes a {productName} instance on the machine where the subcommand is run
 
 [[sthref842]]
 
@@ -30,13 +30,13 @@ asadmin [asadmin-options] delete-local-instance [--help]
 
 === Description
 
-The `delete-local-instance` subcommand deletes a \{product---name}
+The `delete-local-instance` subcommand deletes a {productName}
 instance on the machine where the subcommand is run. This subcommand
 does not require the Distributed Component Object Model (DCOM) remote
 protocol or secure shell (SSH) to be configured. You must run this
 command from the machine where the instance resides.
 
-The subcommand can delete any \{product---name} instance, regardless of
+The subcommand can delete any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can delete an
 instance that was created by using the
 link:create-instance.html#create-instance-1[`create-instance`(1)]

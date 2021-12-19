@@ -16,7 +16,7 @@ not alter the content in any way.
 asadmin
 -------
 
-Utility for performing administrative tasks for Oracle \{product---name}
+Utility for performing administrative tasks for Oracle {productName}
 
 [[sthref2364]]
 

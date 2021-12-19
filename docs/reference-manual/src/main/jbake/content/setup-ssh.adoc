@@ -34,16 +34,16 @@ host-list
 
 The `setup-ssh` subcommand sets up a secure shell (SSH) key on the hosts
 that are specified as the operand of the subcommand. This key enables
-\{product---name} to use public-key authentication for authentication of
+{productName} to use public-key authentication for authentication of
 the user's SSH login on remote hosts.
 
-SSH ensures that \{product---name} clusters that span multiple hosts can
+SSH ensures that {productName} clusters that span multiple hosts can
 be administered centrally. When a user runs a subcommand for cluster
 administration that acts on multiple hosts, the subcommand is propagated
 from the domain administration server (DAS) host to remote hosts. To
-propagate subcommands that act on a \{product---name} instance that is
+propagate subcommands that act on a {productName} instance that is
 not running, or on a node where no instances are running,
-\{product---name} uses SSH. SSH provides confidentiality and security
+{productName} uses SSH. SSH provides confidentiality and security
 for data that is exchanged between the DAS and remote hosts.
 
 Public-key authentication uses an SSH key pair that comprises the

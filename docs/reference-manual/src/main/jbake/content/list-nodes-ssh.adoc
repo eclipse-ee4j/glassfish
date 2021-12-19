@@ -13,7 +13,7 @@ list-nodes-ssh
 list-nodes-ssh
 --------------
 
-Lists all \{product---name} nodes that support communication over SSH in a domain
+Lists all {productName} nodes that support communication over SSH in a domain
 
 [[sthref1727]]
 
@@ -29,7 +29,7 @@ asadmin [asadmin-options] list-nodes-ssh [--help]
 
 === Description
 
-The `list-nodes-ssh` subcommand lists all \{product---name} nodes that
+The `list-nodes-ssh` subcommand lists all {productName} nodes that
 support communication over secure shell (SSH) in a domain.
 
 [NOTE]
@@ -50,8 +50,8 @@ listed in long format. In long format, the following additional
 information about each node is displayed:
 
 * The path to the parent of the base installation directory of
-\{product---name} on the host that the node represents
-* A comma-separated list of the names of the \{product---name} instances
+{productName} on the host that the node represents
+* A comma-separated list of the names of the {productName} instances
 that reside on the node
 
 If the `--terse` option of the
@@ -87,9 +87,9 @@ asadmin-options::
 
 [[GSRFM697]][[sthref1731]]
 
-==== Example 1   Listing \{product---name} Nodes
+==== Example 1   Listing {productName} Nodes
 
-This example displays the name, type, and host for all \{product---name}
+This example displays the name, type, and host for all {productName}
 nodes that support communication over SSH in a domain.
 
 [source]
@@ -102,10 +102,10 @@ Command list-nodes-ssh executed successfully.
 
 [[GSRFM698]][[sthref1732]]
 
-==== Example 2   Listing Only the Names of \{product---name} Nodes
+==== Example 2   Listing Only the Names of {productName} Nodes
 
 This example uses the `--terse` option of the `asadmin` utility to list
-only the names of the \{product---name} nodes that support communication
+only the names of the {productName} nodes that support communication
 over SSH in a domain.
 
 [source]
@@ -117,9 +117,9 @@ sj01
 
 [[GSRFM699]][[sthref1733]]
 
-==== Example 3   Listing \{product---name} Nodes in Long Format
+==== Example 3   Listing {productName} Nodes in Long Format
 
-This example lists the \{product---name} nodes that support
+This example lists the {productName} nodes that support
 communication over SSH in a domain in long format.
 
 [source]

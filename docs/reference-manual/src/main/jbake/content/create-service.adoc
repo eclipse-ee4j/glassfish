@@ -13,7 +13,7 @@ create-service
 create-service
 --------------
 
-Configures the starting of a DAS or a \{product---name} instance on an
+Configures the starting of a DAS or a {productName} instance on an
 unattended boot
 
 [[sthref527]]
@@ -37,7 +37,7 @@ asadmin [asadmin-options] create-service [--help]
 === Description
 
 The `create-service` subcommand configures the starting of a domain
-administration server (DAS) or a \{product---name} instance on an
+administration server (DAS) or a {productName} instance on an
 unattended boot on Windows, Linux, and Oracle Solaris systems.
 
 If no operand is specified and the domains directory contains only one
@@ -190,9 +190,9 @@ asadmin-options::
     The service is not created (default).
 
 `--serviceuser`::
-  (Linux systems only) The user that is to run the \{product---name}
+  (Linux systems only) The user that is to run the {productName}
   software when the service is started. The default is the user that is
-  running the subcommand. Specify this option if the \{product---name}
+  running the subcommand. Specify this option if the {productName}
   software is to be run by a user other than the root user.
 `--domaindir`::
   The absolute path of the directory on the disk that contains the

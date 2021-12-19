@@ -48,7 +48,7 @@ asadmin-options::
 `--redirect-port`::
   Port number for redirects. If the HTTP listener is supporting non-SSL
   requests, and a request is received for which a matching
-  security-constraint requires SSL transport, \{product---name}
+  security-constraint requires SSL transport, {productName}
   automatically redirects the request to this port number.
 `--secure-redirect`::
   If set to true, the HTTP redirect runs SSL. The default value is

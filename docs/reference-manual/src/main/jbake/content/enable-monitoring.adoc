@@ -35,7 +35,7 @@ asadmin [asadmin-options] enable-monitoring [--help]
 === Description
 
 The `enable-monitoring` subcommand is used to turn on monitoring for
-\{product---name} or for particular modules during runtime. Changes are
+{productName} or for particular modules during runtime. Changes are
 dynamic, that is, server restart is not required.
 
 By default, the monitoring service is enabled, that is, the
@@ -96,11 +96,11 @@ asadmin-options::
   `web-services-container`. Additional modules can be listed by using
   the `get` subcommand.
 `--pid`::
-  Specifies the \{product---name} JVM process identifier (PID). When
+  Specifies the {productName} JVM process identifier (PID). When
   monitoring is enabled, the `btrace-agent` is attached, based on the
   specified PID. Need to specify only in exceptional cases when the
   system cannot determine the PID. In this situation, the subcommand
-  prompts for the PID of the corresponding \{product---name}process.
+  prompts for the PID of the corresponding {productName}process.
 `--options`::
   Sets the following `btrace-agent` options:
 
@@ -113,9 +113,9 @@ asadmin-options::
 
 [[GSRFM603]][[sthref1123]]
 
-==== Example 1   Enabling the Monitoring Service for \{product---name}
+==== Example 1   Enabling the Monitoring Service for {productName}
 
-This example enables monitoring for \{product---name} in general by
+This example enables monitoring for {productName} in general by
 setting the `enable-monitoring` flag to `true` (default is `true`).
 
 [source]

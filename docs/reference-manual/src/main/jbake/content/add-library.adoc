@@ -13,7 +13,7 @@ add-library
 add-library
 -----------
 
-Adds one or more library JAR files to \{product---name}
+Adds one or more library JAR files to {productName}
 
 [[sthref7]]
 
@@ -31,9 +31,9 @@ library-file-path [library-file-path ... ]
 === Description
 
 The `add-library` subcommand adds one or more library archive files to
-\{product---name}.
+{productName}.
 
-The `--type` option specifies the library type and the \{product---name}
+The `--type` option specifies the library type and the {productName}
 directory to which the library is added.
 
 The library-file-path operand is the path to the JAR file that contains
@@ -64,7 +64,7 @@ asadmin-options::
   Displays the help text for the subcommand.
 
 `--type`::
-  Specifies the library type and the \{product---name} directory to
+  Specifies the library type and the {productName} directory to
   which the library is added. Valid values are as follows:
   `common`;;
     Adds the library files to the Common class loader directory,

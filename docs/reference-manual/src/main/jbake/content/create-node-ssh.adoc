@@ -38,12 +38,12 @@ node-name
 The `create-node-ssh` subcommand creates a node that is enabled for
 communication over secure shell (SSH).
 
-A node represents a host on which the \{product---name} software is
-installed. A node must exist for every host on which \{product---name}
+A node represents a host on which the {productName} software is
+installed. A node must exist for every host on which {productName}
 instances reside.
 
 The domain administration server (DAS) contacts an SSH node's host
-through the SSH connector to manage \{product---name} instances that
+through the SSH connector to manage {productName} instances that
 reside on the node. However, the DAS does not use the SSH connector to
 contact the host where the DAS is running because the DAS can run all
 `asadmin` subcommands locally.
@@ -70,16 +70,16 @@ asadmin-options::
   must be specified. Otherwise, an error occurs.
 `--installdir`::
   The full path to the parent of the base installation directory of the
-  \{product---name} software on the host, for example,
+  {productName} software on the host, for example,
   `/export/glassfish7/`. The default is the parent of the default base
-  installation directory of the \{product---name} software for the DAS.
-  This default is useful only if \{product---name} is installed in the
+  installation directory of the {productName} software for the DAS.
+  This default is useful only if {productName} is installed in the
   same location on all hosts.
 `--nodedir`::
-  The path to the directory that is to contain \{product---name}
+  The path to the directory that is to contain {productName}
   instances that are created on the node. The default is
   as-install`/nodes`, where as-install is the base installation
-  directory of the \{product---name} software on the host. If a relative
+  directory of the {productName} software on the host. If a relative
   path is specified, the path is relative to the as-install directory.
 `--sshport`::
   The port to use for SSH connections to this node's host. The default
@@ -99,7 +99,7 @@ asadmin-options::
 +
 [NOTE]
 ====
-\{product---name} also supports password authentication through the
+{productName} also supports password authentication through the
 `AS_ADMIN_SSHPASSWORD` entry in the password file. The password file
 is specified in the `--paswordfile` option of the
 link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility.
@@ -131,22 +131,22 @@ If the SSH private key file is protected by a passphrase, the password
     fails.
 
 `--install`::
-  Specifies whether the subcommand shall install the \{product---name}
+  Specifies whether the subcommand shall install the {productName}
   software on the host that the node represents. +
   Possible values are as follows:
 
   `false`;;
-    The subcommand shall not install the \{product---name} software on
+    The subcommand shall not install the {productName} software on
     the host (default).
   `true`;;
-    The subcommand shall install the \{product---name} software on the
+    The subcommand shall install the {productName} software on the
     host.
 
 `--archive`::
-  The absolute path to the archive file of the \{product---name}
+  The absolute path to the archive file of the {productName}
   software that is to be installed. If this option is omitted and the
   `--install` is `true`, the subcommand creates a ZIP archive of the
-  \{product---name} software from the installation where this subcommand
+  {productName} software from the installation where this subcommand
   is run. The archive does not contain the `domains` directory or the
   `nodes` directory.
 
@@ -168,10 +168,10 @@ node-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another node, a cluster, a named configuration, or a \{product---name}
+  another node, a cluster, a named configuration, or a {productName}
   instance.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref467]]
 
@@ -183,7 +183,7 @@ node-name::
 
 This example creates the node `adc` for the host `adc.example.com`. By
 default, the parent of the base installation directory of the
-\{product---name} software is `/export/glassfish7`.
+{productName} software is `/export/glassfish7`.
 
 [source]
 ----

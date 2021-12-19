@@ -32,7 +32,7 @@ asadmin [asadmin-options] list-jvm-options [--help]
 
 The `list-jvm-options` subcommand displays a list of command-line
 options that are passed to the Java application launcher when
-\{product---name} is started.
+{productName} is started.
 
 The options are managed by using the JVM Options page of the
 Administration Console or by using the `create-jvm-options` and
@@ -57,7 +57,7 @@ asadmin-options::
   `server`;;
     Specifies the DAS (default).
   instance-name;;
-    Specifies a \{product---name} instance.
+    Specifies a {productName} instance.
   cluster-name;;
     Specifies a cluster.
   configuration-name;;

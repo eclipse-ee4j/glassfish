@@ -56,12 +56,12 @@ asadmin-options::
 `--property`::
   Optional keyword-value pairs that specify additional properties for
   the audit module. +
-  Audit module properties that are defined by \{product---name} are as
+  Audit module properties that are defined by {productName} are as
   follows:
 
   `auditOn`;;
     If `true`, specifies that the audit module is loaded and called by
-    the \{product---name} audit library at audit points.
+    the {productName} audit library at audit points.
 
 +
 Other available properties are determined by the implementation of the

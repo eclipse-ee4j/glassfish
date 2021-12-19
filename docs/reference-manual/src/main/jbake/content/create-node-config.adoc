@@ -35,14 +35,14 @@ for remote communication. The `create-node-config` subcommand does not
 require the Distributed Component Object Model (DCOM) remote protocol or
 secure shell (SSH) to be configured to create the node.
 
-A node represents a host on which the \{product---name} software is
-installed. A node must exist for every host on which \{product---name}
+A node represents a host on which the {productName} software is
+installed. A node must exist for every host on which {productName}
 instances reside.
 
 
 [NOTE]
 ====
-To represent the host where the DAS is running, \{product---name}
+To represent the host where the DAS is running, {productName}
 provides the predefined node ``localhost-``domain. The predefined node
 ``localhost-``domain is not enabled for remote communication.
 ====
@@ -80,12 +80,12 @@ asadmin-options::
   omitted, no host is specified for the node.
 `--installdir`::
   The full path to the parent of the base installation directory of the
-  \{product---name} software on the host, for example,
+  {productName} software on the host, for example,
   `/export/glassfish7/`. If this option is omitted, no parent of the
-  base installation directory of the \{product---name} software is
+  base installation directory of the {productName} software is
   specified for the node.
 `--nodedir`::
-  The path to the directory that is to contain \{product---name}
+  The path to the directory that is to contain {productName}
   instances that are created on the node. If a relative path is
   specified, the path is relative to the as-install directory. If this
   option is omitted, no directory for instances is specified for the
@@ -109,10 +109,10 @@ node-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another node, a cluster, a named configuration, or a \{product---name}
+  another node, a cluster, a named configuration, or a {productName}
   instance.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref449]]
 

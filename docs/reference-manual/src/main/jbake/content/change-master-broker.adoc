@@ -14,7 +14,7 @@ change-master-broker
 --------------------
 
 Changes the master broker in a Message Queue cluster providing JMS
-services for a \{product---name} cluster.
+services for a {productName} cluster.
 
 [[sthref53]]
 
@@ -31,9 +31,9 @@ clustered-instance-name
 === Description
 
 The `change-master-broker` subcommand changes the master broker in a
-Message Queue cluster that is the JMS provider for a \{product---name}
+Message Queue cluster that is the JMS provider for a {productName}
 cluster. By default, the master broker is the one associated with the
-first instance configured in the \{product---name} cluster.
+first instance configured in the {productName} cluster.
 
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
@@ -56,7 +56,7 @@ asadmin-options::
 clustered-instance-name::
   The name of the server instance whose Message Queue broker is to
   become the master broker of the Message Queue cluster. This server
-  instance must be an instance in a \{product---name} cluster.
+  instance must be an instance in a {productName} cluster.
 
 [[sthref57]]
 

@@ -13,7 +13,7 @@ create-local-instance
 create-local-instance
 ---------------------
 
-Creates a \{product---name} instance on the host where the subcommand is
+Creates a {productName} instance on the host where the subcommand is
 run
 
 [[sthref388]]
@@ -37,7 +37,7 @@ instance-name
 
 === Description
 
-The `create-local-instance` subcommand creates a \{product---name}
+The `create-local-instance` subcommand creates a {productName}
 instance on the node that represents the host where the subcommand is
 run. This subcommand does not require the Distributed Component Object
 Model (DCOM) remote protocol or secure shell (SSH) to be configured.
@@ -53,13 +53,13 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility. For the second and
 later instances, this information is obtained from the DAS properties of
 the node.
 
-A \{product---name} instance is a single Virtual Machine for the Java
+A {productName} instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
-\{product---name} is running. A node defines the host where the
-\{product---name} instance resides. The JVM machine must be compatible
+{productName} is running. A node defines the host where the
+{productName} instance resides. The JVM machine must be compatible
 with the Java Platform, Enterprise Edition (Java EE).
 
-A \{product---name} instance requires a reference to the following items:
+A {productName} instance requires a reference to the following items:
 
 * The node that defines the host where the instance resides. The node
 can be specified in the command to create the instance, but is required
@@ -81,7 +81,7 @@ an instance that is not joining a cluster, the subcommand creates a
 configuration for the instance. An instance that is joining a cluster
 receives its configuration from its parent cluster.
 
-Each \{product---name} instance is one of the following types of
+Each {productName} instance is one of the following types of
 instance:
 
 Standalone instance::
@@ -314,10 +314,10 @@ instance-name::
   ** Period
   ** Underscore
   * The name must be unique in the domain and must not be the name of
-  another \{product---name} instance, a cluster, a named configuration,
+  another {productName} instance, a cluster, a named configuration,
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
-  is reserved by \{product---name}.
+  is reserved by {productName}.
 
 [[sthref392]]
 
@@ -325,7 +325,7 @@ instance-name::
 
 [[GSRFM505]][[sthref393]]
 
-==== Example 1   Creating a Standalone \{product---name} Instance
+==== Example 1   Creating a Standalone {productName} Instance
 
 This example creates the standalone instance `il3` on the host where the
 command is run. The DAS is running on the same host. The instance
@@ -351,7 +351,7 @@ Command create-local-instance executed successfully.
 
 [[GSRFM506]][[sthref394]]
 
-==== Example 2   Creating a Clustered \{product---name} Instance on a Specific Node
+==== Example 2   Creating a Clustered {productName} Instance on a Specific Node
 
 This example creates the clustered instance `ymli2` on node `sj02`. The
 instance is a member of the cluster `ymlclust`.

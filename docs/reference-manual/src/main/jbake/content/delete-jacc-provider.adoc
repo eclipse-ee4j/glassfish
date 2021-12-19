@@ -33,21 +33,21 @@ The `delete-jacc-provider` subcommand enables administrators to delete
 JACC providers defined for a domain. JACC providers are defined as
 `jacc-provider` elements in the `security-service` element in the
 domain's `domain.xml` file. JACC providers can be created using the
-\{product---name} Admin Console or the `create-jacc-provider`
+{productName} Admin Console or the `create-jacc-provider`
 subcommand.
 
-The default \{product---name} installation includes two JACC providers,
+The default {productName} installation includes two JACC providers,
 named `default` and `simple`. These default providers should not be
 deleted.
 
-The JACC provider used by\{product---name} for authorization is
+The JACC provider used by{productName} for authorization is
 identified by the `jacc-provider` element of `security-service` in
 `domain.xml`. Therefore, if you delete the `jacc-provider` provider,
 make sure you change `jacc-provider` to the name of some other JACC
 provider that exists under `security-service`.
 
 If you change the `jacc-provider` element to point to a different JACC
-provider, you must restart \{product---name}.
+provider, you must restart {productName}.
 
 This subcommand is supported in remote mode only.
 

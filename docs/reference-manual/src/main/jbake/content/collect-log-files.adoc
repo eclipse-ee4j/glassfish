@@ -32,7 +32,7 @@ asadmin [asadmin-options] collect-log-files [--help]
 
 The `collect-log-files` subcommand collects all available log files for
 the domain administration server (DAS), the specified cluster, or the
-specified \{product---name} instance and creates a single ZIP archive of
+specified {productName} instance and creates a single ZIP archive of
 the log files. If a cluster is specified, the ZIP archive also contains
 the log file for the DAS.
 
@@ -76,7 +76,7 @@ Possible values are as follows:
   `server`;;
     The log files will be collected for the DAS (default).
   instance-name;;
-    The log files will be collected for the specified \{product---name} instance.
+    The log files will be collected for the specified {productName} instance.
   cluster-name;;
     The log files will be collected for the specified cluster and the DAS.
 

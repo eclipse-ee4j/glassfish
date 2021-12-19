@@ -13,7 +13,7 @@ delete-cluster
 delete-cluster
 --------------
 
-Deletes a \{product---name} cluster
+Deletes a {productName} cluster
 
 [[sthref609]]
 
@@ -30,8 +30,8 @@ cluster-name
 
 === Description
 
-The `delete-cluster` subcommand deletes a \{product---name} cluster.
-A cluster can be deleted only if the cluster contains no \{product---name}
+The `delete-cluster` subcommand deletes a {productName} cluster.
+A cluster can be deleted only if the cluster contains no {productName}
 instances. If a cluster that you are deleting contains any instances,
 stop and delete the instances before deleting the cluster.
 
@@ -77,9 +77,9 @@ cluster-name::
 
 [[GSRFM535]][[sthref614]]
 
-==== Example 1   Deleting a \{product---name} Cluster
+==== Example 1   Deleting a {productName} Cluster
 
-This example deletes the \{product---name} cluster `adccluster`.
+This example deletes the {productName} cluster `adccluster`.
 
 [source]
 ----

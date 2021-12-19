@@ -13,7 +13,7 @@ delete-instance
 delete-instance
 ---------------
 
-Deletes a \{product---name} instance
+Deletes a {productName} instance
 
 [[sthref753]]
 
@@ -29,7 +29,7 @@ instance-name
 
 === Description
 
-The `delete-instance` subcommand deletes a \{product---name} instance.
+The `delete-instance` subcommand deletes a {productName} instance.
 This subcommand requires the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to be configured on the host where
 the domain administration server (DAS) is running and on the host that
@@ -44,7 +44,7 @@ enabled for remote communication over DCOM or SSH.
 
 You may run this subcommand from any host that can contact the DAS.
 
-The subcommand can delete any \{product---name} instance, regardless of
+The subcommand can delete any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can delete an
 instance that was created by using the
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
@@ -93,9 +93,9 @@ instance-name::
 
 [[GSRFM553]][[sthref758]]
 
-==== Example 1   Deleting a \{product---name} Instance
+==== Example 1   Deleting a {productName} Instance
 
-This example deletes the \{product---name} instance `pmdsainst`.
+This example deletes the {productName} instance `pmdsainst`.
 
 [source]
 ----

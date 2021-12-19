@@ -34,8 +34,8 @@ asadmin [asadmin-options] create-system-properties [--help]
 The `create-system-properties` subcommand adds or updates system
 properties that can be referenced elsewhere on the server.
 
-\{product---name} provides hooks where tokens (system properties) can be
-specified. Because \{product---name} does not have multiple server
+{productName} provides hooks where tokens (system properties) can be
+specified. Because {productName} does not have multiple server
 elements, you can specify a particular token at any level. When a domain
 supports multiple servers, the override potential can be exploited. When
 a domain is started or restarted, all `<system-property>` elements are

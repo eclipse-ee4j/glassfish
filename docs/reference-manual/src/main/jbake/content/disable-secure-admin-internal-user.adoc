@@ -13,7 +13,7 @@ disable-secure-admin-internal-user
 disable-secure-admin-internal-user
 ----------------------------------
 
-Instructs the \{product---name} DAS and instances to not use the
+Instructs the {productName} DAS and instances to not use the
 specified admin user to authenticate with each other and to authorize
 admin operations.
 
@@ -52,7 +52,7 @@ asadmin-options::
 === Operands
 
 admin-username::
-  The admin user name that \{product---name} should not use to
+  The admin user name that {productName} should not use to
   authenticate the DAS and instances with each other and to authorize
   admin operations.
 

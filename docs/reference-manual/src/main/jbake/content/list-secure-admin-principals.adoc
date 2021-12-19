@@ -13,7 +13,7 @@ list-secure-admin-principals
 list-secure-admin-principals
 ----------------------------
 
-Lists the certificates for which \{product---name} accepts admin
+Lists the certificates for which {productName} accepts admin
 requests from clients.
 
 [[sthref1795]]
@@ -34,7 +34,7 @@ asadmin [asadmin-options] list-secure-admin-principals [--help]
 === Description
 
 The `list-secure-admin-principals` subcommand lists the certificates for
-which \{product---name} accepts admin requests from clients.
+which {productName} accepts admin requests from clients.
 
 [[sthref1797]]
 
@@ -49,12 +49,12 @@ asadmin-options::
 `--long`::
 `-l`::
   Displays detailed information about the certificates for which
-  \{product---name} accepts admin requests from clients. The default
+  {productName} accepts admin requests from clients. The default
   value is `false`.
 `--output`::
 `-o`::
   Displays specific details about the certificates for which
-  \{product---name} accepts admin requests from clients. Use a
+  {productName} accepts admin requests from clients. Use a
   comma-separated list to specify the details you want to display and
   their order. The values are case-insensitive.
   Possible values are as follows:
@@ -85,7 +85,7 @@ name::
 
 ==== Example 1   Listing the Certificates
 
-This example lists the certificates for which \{product---name} accepts
+This example lists the certificates for which {productName} accepts
 admin requests from clients.
 
 [source]

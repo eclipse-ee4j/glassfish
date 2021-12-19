@@ -31,9 +31,9 @@ asadmin [asadmin-options] create-jvm-options [--help]
 === Description
 
 The `create-jvm-options` subcommand creates command-line options that
-are passed to the Java application launcher when \{product---name} is
+are passed to the Java application launcher when {productName} is
 started. The options that this subcommand creates are in addition to the
-options that are preset with \{product---name}. Java application
+options that are preset with {productName}. Java application
 launcher options are stored in the Java configuration `java—config`
 element or the profiler `profiler` element of the `domain.xml` file. The
 options are sent to the command line in the order they appear in the
@@ -77,9 +77,9 @@ cause startup to fail.
 
 
 An option can be verified by examining the server log after
-\{product---name} starts. Options for the Java application launcher are
+{productName} starts. Options for the Java application launcher are
 written to the `server.log` file before any other information when
-\{product---name} starts.
+{productName} starts.
 
 The addition of some options requires a server restart for changes to
 become effective. Other options are set immediately in the environment
@@ -130,7 +130,7 @@ asadmin-options::
   `server`;;
     Specifies the DAS (default).
   instance-name;;
-    Specifies a \{product---name} instance.
+    Specifies a {productName} instance.
   cluster-name;;
     Specifies a cluster.
   configuration-name;;

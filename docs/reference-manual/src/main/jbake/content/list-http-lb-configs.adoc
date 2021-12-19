@@ -69,7 +69,7 @@ target::
 ==== Example 1   Listing Load Balancer Configurations Without a Target
 
 This example lists all load balancer configurations defined for all
-\{product---name} clusters and instances.
+{productName} clusters and instances.
 
 [source]
 ----

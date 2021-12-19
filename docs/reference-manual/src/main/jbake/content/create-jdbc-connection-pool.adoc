@@ -241,9 +241,9 @@ be provided.::
     Leaked statements are reclaimed.
 
 `--creationretryattempts`::
-  Specifies the maximum number of times that \{product---name} retries
+  Specifies the maximum number of times that {productName} retries
   to create a connection if the initial attempt fails. The default value
-  is 0, which specifies that \{product---name} does not retry to create
+  is 0, which specifies that {productName} does not retry to create
   the connection.
 `--creationretryinterval`::
   Specifies the interval, in seconds, between successive attempts to
@@ -263,7 +263,7 @@ be provided.::
   the application that submitted the query to hang. To prevent this
   occurrence, use this option set a timeout for all statements that will
   be created from the connection pool that you are creating. When
-  creating a statement, \{product---name} sets the `QueryTimeout`
+  creating a statement, {productName} sets the `QueryTimeout`
   property on the statement to the length of time that is specified. The
   default value is -1, which specifies that incomplete queries are never
   terminated.
@@ -344,7 +344,7 @@ be provided.::
   The name of the class that provides custom validation when the value
   of `validationmethod` is `custom-validation`. This class must
   implement the `org.glassfish.api.jdbc.ConnectionValidation` interface,
-  and it must be accessible to \{product---name}. This option is
+  and it must be accessible to {productName}. This option is
   mandatory if the connection validation type is set to custom
   validation.
 `--wrapjdbcobjects`::

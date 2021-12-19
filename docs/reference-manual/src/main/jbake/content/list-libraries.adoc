@@ -13,7 +13,7 @@ list-libraries
 list-libraries
 --------------
 
-Lists library JAR files on \{product---name}
+Lists library JAR files on {productName}
 
 [[sthref1615]]
 
@@ -30,9 +30,9 @@ asadmin [asadmin-options] list-libraries [--help]
 === Description
 
 The `list-libraries` subcommand lists library archive files on
-\{product---name}.
+{productName}.
 
-The `--type` option specifies the library type and the \{product---name}
+The `--type` option specifies the library type and the {productName}
 directory for which libraries are to be listed.
 
 This subcommand is supported in remote mode only.
@@ -48,7 +48,7 @@ asadmin-options::
 `-?`::
   Displays the help text for the subcommand.
 `--type`::
-  Specifies the library type and the \{product---name} directory for
+  Specifies the library type and the {productName} directory for
   which libraries are listed. Valid values are as follows:
 +
 --

@@ -13,7 +13,7 @@ stop-instance
 stop-instance
 -------------
 
-Stops a running \{product---name} instance
+Stops a running {productName} instance
 
 [[sthref2173]]
 
@@ -30,9 +30,9 @@ instance-name
 
 === Description
 
-The `stop-instance` subcommand stops a running \{product---name} instance.
+The `stop-instance` subcommand stops a running {productName} instance.
 
-The subcommand can stop any \{product---name} instance, regardless of
+The subcommand can stop any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)] subcommand.
@@ -76,17 +76,17 @@ asadmin-options::
 === Operands
 
 instance-name::
-  This is the name of the \{product---name} instance to stop.
+  This is the name of the {productName} instance to stop.
 
 [[sthref2177]]
 
 === Examples
 
-This example stops the \{product---name} instance `yml-i-sj01`.
+This example stops the {productName} instance `yml-i-sj01`.
 
 [[GSRFM767]][[sthref2178]]
 
-==== Example 1   Stopping a \{product---name} Instance
+==== Example 1   Stopping a {productName} Instance
 
 [source]
 ----

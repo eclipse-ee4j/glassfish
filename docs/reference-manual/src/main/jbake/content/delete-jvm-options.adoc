@@ -86,7 +86,7 @@ asadmin-options::
   `server`;;
     Specifies the DAS (default).
   instance-name;;
-    Specifies a \{product---name} instance.
+    Specifies a {productName} instance.
   cluster-name;;
     Specifies a cluster.
   configuration-name;;

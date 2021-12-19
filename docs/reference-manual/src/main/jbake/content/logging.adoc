@@ -13,17 +13,17 @@ logging
 logging
 -------
 
-Capturing information on \{product---name} runtime events
+Capturing information on {productName} runtime events
 
 [[sthref2404]]
 
 === Description
 
-Logging is the process by which \{product---name} captures data about
-events that occur during \{product---name} operation. \{product---name}
+Logging is the process by which {productName} captures data about
+events that occur during {productName} operation. {productName}
 components and application components generate logging data, which is
 saved in the server log, typically domain-dir`/logs/server.log`. The
-server log is the first source of information if \{product---name}
+server log is the first source of information if {productName}
 problems occur.
 
 The server log is rotated when the file reaches the specified size in

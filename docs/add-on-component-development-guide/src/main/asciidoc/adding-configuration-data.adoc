@@ -122,9 +122,8 @@ How Interfaces That Are Annotated With @Configured Are Implemented
 
 You are not required to implement any interfaces that you annotate with
 the `@Configured` annotation. GlassFish Server implements these
-interfaces by using the `Dom` class. GlassFish Server creates a Java
-Platform, Standard Edition (Java SE) proxy for each `Dom` object to
-implement the interface.
+interfaces by using the `Dom` class. GlassFish Server creates a proxy
+for each `Dom` object to implement the interface.
 
 [[gjlpb]][[GSACG00123]][[defining-an-attribute-of-an-element]]
 

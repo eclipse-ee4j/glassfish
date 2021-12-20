@@ -25,45 +25,19 @@ The following topics are addressed here:
 
 === Java Virtual Machine Settings
 
-Java SE 7 provides two implementations of the HotSpot Java virtual
-machine (JVM):
+Each JDK have own set of JVM options useful for tuning.
+The easiest way is to run the following command and then consult the JDK's
+documentation to understand all consequences.
 
-* The client VM is tuned for reducing startup time and memory footprint.
-Invoke it by using the `-client` JVM command-line option.
-* The server VM is designed for maximum program execution speed. Invoke
-it by using the `-server` JVM command-line option.
-
-By default, the GlassFish Server uses the JVM setting appropriate to the
-purpose:
-
-* Developer Profile, targeted at application developers, uses the
-`-client` JVM flag to optimize startup performance and conserve memory
-resources.
-* Enterprise Profile, targeted at production deployments, uses the
-`-server` JVM flag to maximize program execution speed.
-
-You can override the default JVM options by following the instructions
-in "link:../administration-guide/jvm.html#GSADG00544[Administering JVM Options]" in GlassFish Server
-Open Source Edition Administration Guide. If using the Administration
-Console, navigate to the Configurations>configuration-name>JVM Settings
-node, and then click the JVM Options tab. Refer to the online help for
-complete information about the settings on this page.
-
-For more information on server-class machine detection in Java SE 7, see
-http://download.oracle.com/javase/6/docs/technotes/guides/vm/server-class.html[Server-Class
-Machine Detection]
-(`http://docs.oracle.com/javase/7/docs/technotes/guides/vm/server-class.html`).
-
-For more information on JVMs, see
-http://download.oracle.com/javase/6/docs/[Java Virtual Machines]
-(`http://docs.oracle.com/javase/7/docs/`).
+[source]
+----
+JAVA_HOME/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version
+----
 
 [[gfpzy]][[GSPTG00070]][[start-options]]
 
-=== Start Options
-
-In some situations, performance can be improved by using large page
-sizes. For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
+In some situations, performance can be improved by using large page sizes.
+For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
 `-XX:LargePageSizeInBytes=256m` arguments with your JVM tuning.
 
 [[glaat]][[GSPTG00071]][[tuning-high-availability-persistence]]
@@ -541,12 +515,3 @@ Java HotSpot VM Options]
 Frequently Asked Questions About the Java HotSpot Virtual Machine]
 (`http://www.oracle.com/technetwork/java/hotspotfaq-138619.html`)
 * http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html[
-Performance Documentation for the Java HotSpot VM]
-(`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html`)
-* http://java.sun.com/javase/technologies/performance.jsp[Java performance web page]
-(`http://java.sun.com/javase/technologies/performance.jsp`)
-* http://java.sun.com/developer/technicalArticles/J2SE/monitoring/[
-Monitoring and Managing Java SE 6 Platform Applications]
-(`http://java.sun.com/developer/technicalArticles/J2SE/monitoring/`)
-* The http://java.sun.com/performance/jvmstat/[
-jvmstat monitoring utility] (`http://java.sun.com/performance/jvmstat/`)

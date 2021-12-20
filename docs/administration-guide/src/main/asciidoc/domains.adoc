@@ -1313,7 +1313,7 @@ typing `asadmin help uptime` at the command line.
 
 ==== To Switch a Domain to Another Supported Java Version
 
-GlassFish Server 7 requires Java SE 8 as the underlying virtual
+GlassFish Server 7 requires Java SE 11 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]
@@ -1325,7 +1325,7 @@ machine, downgrade it only for individual domains.
 
 1. If you have not already done so, download the desired Java SDK (not the JRE) and install it on your system.
 The Java SDK can be downloaded from the
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE Downloads page] .
+https://jdk.java.net/java-se-ri/11[Java SE RI Downloads page] .
 
 2. Start the domain for which you are changing the JDK.
 Use the following format:

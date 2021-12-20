@@ -40,10 +40,10 @@ for processes that are hanging.
 
 The information in the report is obtained from managed beans (MBeans)
 and MXBeans that are provided in the Java Platform, Standard Edition
-(Java SE ) or JDK software with which {productName} is being used.
+(Java SE) or JDK software with which {productName} is being used.
 
 If {productName} is running in the Java Runtime Environment (JRE)
-software from JDK release 6 or Java SE 6, additional information is
+software from JDK release 11 or Java SE 11, additional information is
 provided. For example:
 
 * System load on the available processors

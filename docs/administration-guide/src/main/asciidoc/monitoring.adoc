@@ -2379,7 +2379,7 @@ to the work queue as of last sampling
 
 [[gitce]][[GSADG00076]][[jvm-statistics-for-java-se-thread-information]]
 
-JVM Statistics for Java SE-Thread Information
+JVM Statistics for Java SE - Thread Information
 
 The statistics available for `ThreadInfo` in the JVM in Java SE are
 shown in the following table.
@@ -2694,7 +2694,7 @@ JMX connector's client end.
 
 ==== To Connect JConsole to GlassFish Server
 
-Java SE 6 enhances management and monitoring of the virtual machine by
+Java SE 6 enhanced management and monitoring of the virtual machine by
 including a Platform MBean Server and by including managed beans
 (MBeans) to configure the virtual machine.
 
@@ -2712,7 +2712,7 @@ the loopback address) by setting `address` to `locahost`.
 1. Start the domain.
 +
 For instructions, see link:domains.html#ggoda[To Start a Domain].
-2. Start JConsole using this format: JDK_HOME`/bin/jconsole`
+2. Start JConsole using this format: JDK_HOME``/bin/jconsole``
 +
 For example:
 +

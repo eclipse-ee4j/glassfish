@@ -36,14 +36,8 @@ does not meet release requirements. Also see "link:../release-notes/release-note
 Issues]" in Eclipse GlassFish Server Release Notes for known
 issues related to installation.
 
-* On Solaris, Linux, and Windows systems, JDK software is available from the
-http://www.oracle.com/technetwork/java/javase/downloads/index.html[
-Java SE downloads page]
-(`http://www.oracle.com/technetwork/java/javase/downloads/index.html`).
-* For Mac OS X systems, GlassFish Server uses the JDK that is part of
-the Macintosh operating system. If necessary, obtain the required JDK
-version from the http://support.apple.com/downloads/[Mac OS X Updates
-site] (`http://support.apple.com/downloads/`).
+* On Solaris, Linux, macOS and Windows systems, JDK software is available from the
+http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE downloads page].
 
 [[gkxfw]][[javassist-library-license-notice]]
 

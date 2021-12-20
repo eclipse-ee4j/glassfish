@@ -190,9 +190,9 @@ in turn communicates with the server instances.
 
 ==== Server Instances
 
-A server instance is a GlassFish Server running in a single Java Virtual
-Machine (JVM) process. GlassFish Server is certified with Java platform,
-Standard Edition (Java SE) 7.
+A server instance is a GlassFish Server running in a single
+Java Virtual Machine (JVM) process.
+GlassFish Server is certified with Java platform, Standard Edition (Java SE) 11.
 
 It is usually sufficient to create a single server instance on a
 machine, since GlassFish Server and accompanying JVM are both designed

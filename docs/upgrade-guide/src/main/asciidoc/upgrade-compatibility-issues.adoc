@@ -124,7 +124,8 @@ use a `Class-Path` header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
 Jakarta EE `library-directory` mechanism. Deployed Jakarta EE 5 applications
 that are upgraded to GlassFish Server 7 will have the `compatibility`
-property set to `v2` and will run without change on GlassFish Server 7. You may, however, want to consider modifying the applications to
+property set to `v2` and will run without change on GlassFish Server 7.
+You may, however, want to consider modifying the applications to
 conform to Jakarta EE 6 requirements.
 
 If your upgrade includes a deployed application with an application

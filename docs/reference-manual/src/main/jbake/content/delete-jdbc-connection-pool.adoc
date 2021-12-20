@@ -5,13 +5,11 @@ next=delete-jdbc-resource.html
 prev=delete-javamail-resource.html
 ~~~~~~
 
-delete-jdbc-connection-pool
-===========================
+= delete-jdbc-connection-pool
 
 [[delete-jdbc-connection-pool-1]][[GSRFM00088]][[delete-jdbc-connection-pool]]
 
-delete-jdbc-connection-pool
----------------------------
+== delete-jdbc-connection-pool
 
 Removes the specified JDBC connection pool
 

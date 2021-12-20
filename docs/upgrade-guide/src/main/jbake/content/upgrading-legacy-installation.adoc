@@ -4,15 +4,13 @@ title=Upgrading an Installation of Application Server or GlassFish Server
 prev=upgrade-compatibility-issues.html
 ~~~~~~
 
-Upgrading an Installation of Application Server or GlassFish Server
-===================================================================
+= Upgrading an Installation of Application Server or GlassFish Server
 
 [[GSUPG00003]][[abmbq]]
 
 
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
-2 Upgrading an Installation of Application Server or GlassFish Server
----------------------------------------------------------------------
+== 2 Upgrading an Installation of Application Server or GlassFish Server
 
 The Upgrade Tool that is bundled with GlassFish Server 7 replicates
 the configuration of a previously installed server in the target
@@ -47,8 +45,7 @@ Tools]
 
 [[gaejc]][[GSUPG00039]][[upgrade-overview]]
 
-Upgrade Overview
-~~~~~~~~~~~~~~~~
+=== Upgrade Overview
 
 The subsections that follow provide information that you will need when
 you perform an upgrade.
@@ -64,8 +61,7 @@ The following topics are addressed here:
 
 [[gkxum]][[GSUPG00059]][[upgrade-paths]]
 
-Upgrade Paths
-^^^^^^^^^^^^^
+==== Upgrade Paths
 
 There are two general paths you can use when upgrading to GlassFish
 Server 7:
@@ -115,8 +111,7 @@ and Procedures].
 
 [[gdkiw]][[GSUPG00060]][[upgrade-terminology]]
 
-Upgrade Terminology
-^^^^^^^^^^^^^^^^^^^
+==== Upgrade Terminology
 
 The following are important terms related to the upgrade process.
 
@@ -135,8 +130,7 @@ Master Password::
 
 [[gktcb]][[GSUPG00061]][[summary-of-upgrade-tools-and-procedures]]
 
-Summary of Upgrade Tools and Procedures
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Summary of Upgrade Tools and Procedures
 
 There are several tools you can use to upgrade from an earlier GlassFish
 Server or Enterprise Server installation to GlassFish Server 7. The
@@ -153,8 +147,7 @@ The following topics are addressed here:
 
 [[gktdx]][[GSUPG00045]][[summary-of-tools-for-performing-an-upgrade]]
 
-Summary of Tools for Performing an Upgrade
-++++++++++++++++++++++++++++++++++++++++++
+===== Summary of Tools for Performing an Upgrade
 
 There are several tools you can use to perform an upgrade to GlassFish
 Server 7 are described below.
@@ -250,8 +243,7 @@ the Update Notifier, refer to the Update Tool online help.
 
 [[gktdz]][[GSUPG00046]][[summary-of-procedure-for-upgrading-with-upgrade-tool]]
 
-Summary of Procedure for Upgrading With Upgrade Tool
-++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Summary of Procedure for Upgrading With Upgrade Tool
 
 The general procedure for using Upgrade Tool to perform an upgrade to
 GlassFish Server 7 from any compatible older version of GlassFish
@@ -276,8 +268,7 @@ Side-By-Side Upgrade With Upgrade Tool].
 
 [[gktcl]][[GSUPG00047]][[summary-of-procedure-for-upgrading-with-update-tool]]
 
-Summary of Procedure for Upgrading With Update Tool
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Summary of Procedure for Upgrading With Update Tool
 
 The general procedure for using Update Tool to perform an upgrade to
 GlassFish Server 7 from GlassFish Server 3.0.1 or Enterprise Server v3
@@ -298,8 +289,7 @@ Using the Update Tool GUI].
 
 [[gkuef]][[GSUPG00048]][[summary-of-procedure-for-upgrading-with-the-software-update-notifier]]
 
-Summary of Procedure for Upgrading With the Software Update Notifier
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Summary of Procedure for Upgrading With the Software Update Notifier
 
 The general procedure for using the Software Update Notifier to perform
 an upgrade to GlassFish Server 7 from GlassFish Server3.0.1 or
@@ -321,8 +311,7 @@ Using the Software Update Notifier].
 
 [[gktnb]][[GSUPG00049]][[summary-of-procedure-for-upgrading-with-the-pkg-utility]]
 
-Summary of Procedure for Upgrading With the `pkg` Utility
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Summary of Procedure for Upgrading With the `pkg` Utility
 
 The general procedure for using the `pkg` utility to perform an upgrade
 to GlassFish Server 7 from GlassFish Server3.0.1 or Enterprise Server
@@ -342,8 +331,7 @@ From the Command Line Using the `pkg` Utility].
 
 [[gjxkx]][[GSUPG00062]][[supported-releases-for-upgrade-to-glassfish-server-7]]
 
-Supported Releases for Upgrade to GlassFish Server 7
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Supported Releases for Upgrade to GlassFish Server 7
 
 Upgrades to GlassFish Server 7 are supported from the following
 earlier GlassFish Server product releases:
@@ -356,8 +344,7 @@ earlier GlassFish Server product releases:
 
 [[gkufi]][[GSUPG00063]][[upgrading-from-version-8.x-or-older-product-releases]]
 
-Upgrading From Version 8.x or Older Product Releases
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Upgrading From Version 8.x or Older Product Releases
 
 It is not possible to upgrade to GlassFish Server 7 directly from Sun
 GlassFish Enterprise Server 8.x or older product releases.
@@ -387,8 +374,7 @@ guide to complete the upgrade to GlassFish Server 7.
 
 [[gkxrp]][[GSUPG00065]][[upgrading-glassfish-server-inside-a-closed-network]]
 
-Upgrading GlassFish Server Inside a Closed Network
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Upgrading GlassFish Server Inside a Closed Network
 
 For instructions on upgrading a GlassFish Server installation in an
 environment where Internet access is not available, see
@@ -398,8 +384,7 @@ in GlassFish Server Open Source Edition Administration Guide.
 
 [[abmbr]][[GSUPG00040]][[performing-a-side-by-side-upgrade-with-upgrade-tool]]
 
-Performing a Side-By-Side Upgrade With Upgrade Tool
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Performing a Side-By-Side Upgrade With Upgrade Tool
 
 This section explains how to use Upgrade Tool to perform a side-by-side
 upgrade to GlassFish Server 7 from any compatible older product release.
@@ -413,8 +398,7 @@ The following topics are addressed here:
 
 [[gktgx]][[GSUPG00066]][[upgrade-tool-summary]]
 
-Upgrade Tool Summary
-^^^^^^^^^^^^^^^^^^^^
+==== Upgrade Tool Summary
 
 The Upgrade Tool upgrades your domain configurations and deployed
 applications. When you use the Upgrade Tool, the source server and the
@@ -433,8 +417,7 @@ You can perform an upgrade using Upgrade Tool in the following ways:
 
 [[gdkix]][[GSUPG00067]][[upgrade-tool-functionality]]
 
-Upgrade Tool Functionality
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Upgrade Tool Functionality
 
 The Upgrade Tool migrates the configurations and deployed applications
 from an earlier version of Sun Java System Application Server or Sun
@@ -457,8 +440,7 @@ Additional Upgrade Tool functions are explained in the following sections:
 
 [[gebrv]][[GSUPG00050]][[migration-of-deployed-applications]]
 
-Migration of Deployed Applications
-++++++++++++++++++++++++++++++++++
+===== Migration of Deployed Applications
 
 Application archives (EAR files) and component archives (JAR, WAR, and
 RAR files) that are deployed in the source server do not require any
@@ -489,8 +471,7 @@ attempt to reconfigure the incorrect configurations.
 
 [[gebqm]][[GSUPG00051]][[upgrade-of-clusters]]
 
-Upgrade of Clusters
-+++++++++++++++++++
+===== Upgrade of Clusters
 
 When upgrading from a clustered configuration, the older cluster
 information is retained in a new `domain.xml` file in the GlassFish
@@ -501,8 +482,7 @@ and Node Agent Configurations].
 
 [[gebvn]][[GSUPG00052]][[upgrade-verification]]
 
-Upgrade Verification
-++++++++++++++++++++
+===== Upgrade Verification
 
 An upgrade log records the upgrade activity. The upgrade log file is
 named `upgrade.log` and is created in the working directory from which
@@ -521,8 +501,7 @@ Command version executed successfully.
 
 [[gktjn]][[GSUPG00010]][[to-upgrade-from-the-command-line-using-upgrade-tool]]
 
-To Upgrade From the Command Line Using Upgrade Tool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade From the Command Line Using Upgrade Tool
 
 This procedure explains how to use the Upgrade Tool command line to
 upgrade to GlassFish Server 7 from any supported older product
@@ -702,8 +681,7 @@ click the Help button on the Administration Console.
 
 [[gaejn]][[GSUPG00011]][[to-upgrade-using-the-upgrade-tool-wizard]]
 
-To Upgrade Using the Upgrade Tool Wizard
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade Using the Upgrade Tool Wizard
 
 This procedure explains how to use the graphical Upgrade Tool Wizard to
 upgrade to GlassFish Server 7 from any supported older product
@@ -835,8 +813,7 @@ click the Help button on the Administration Console.
 
 [[gkthu]][[GSUPG00041]][[performing-an-in-place-upgrade-with-the-update-center-tools]]
 
-Performing an In-Place Upgrade With the Update Center Tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Performing an In-Place Upgrade With the Update Center Tools
 
 This section explains how to use the three Update Center tools to
 perform an in-place upgrade to GlassFish Server 7 from GlassFish
@@ -865,8 +842,7 @@ The following topics are addressed here:
 
 [[gkthx]][[GSUPG00068]][[update-center-tool-procedures]]
 
-Update Center Tool Procedures
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Update Center Tool Procedures
 
 Unlike when using Upgrade Tool, when you use the Update Tool, the
 Software Update Notifier, or the `pkg` utility to perform a GlassFish
@@ -886,8 +862,7 @@ following ways:
 
 [[gktjf]][[GSUPG00012]][[to-upgrade-using-the-update-tool-gui]]
 
-To Upgrade Using the Update Tool GUI
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade Using the Update Tool GUI
 
 This procedure explains how to use the graphical Update Tool to perform
 an in-place upgrade to GlassFish Server 7 from GlassFish Server 3.0.1
@@ -940,8 +915,7 @@ click the Help button on the Administration Console.
 
 [[gkuhu]][[GSUPG00013]][[to-upgrade-using-the-software-update-notifier]]
 
-To Upgrade Using the Software Update Notifier
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade Using the Software Update Notifier
 
 This procedure explains how to use the Software Update Notifier to
 perform an in-place upgrade to GlassFish Server 7 from GlassFish
@@ -1004,8 +978,7 @@ click the Help button on the Administration Console.
 
 [[gktks]][[GSUPG00014]][[to-upgrade-from-the-command-line-using-the-pkg-utility]]
 
-To Upgrade From the Command Line Using the `pkg` Utility
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade From the Command Line Using the `pkg` Utility
 
 This procedure explains how to use the `pkg` utility to perform an
 in-place upgrade to GlassFish Server 7 from GlassFish Server 3.0.1 or
@@ -1058,8 +1031,7 @@ click the Help button on the Administration Console.
 
 [[gktnh]][[GSUPG00042]][[upgrading-installations-that-use-nss-cryptographic-tokens]]
 
-Upgrading Installations That Use NSS Cryptographic Tokens
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading Installations That Use NSS Cryptographic Tokens
 
 GlassFish Server v2.x EE (Enterprise Edition) uses Network Security
 Services (NSS) for cryptographic software tokens. GlassFish Server 7
@@ -1074,8 +1046,7 @@ The following topics are addressed here:
 
 [[gktnq]][[GSUPG00015]][[to-prepare-for-the-upgrade]]
 
-To Prepare for the Upgrade
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Prepare for the Upgrade
 
 This procedure explains how to prepare for modifying an NSS-based
 GlassFish Server 2.x installation when upgrading to GlassFish Server 7.
@@ -1155,8 +1126,7 @@ as-install/bin/asadmin start-domain domain1
 
 [[gktlz]][[GSUPG00016]][[to-perform-post-upgrade-configuration]]
 
-To Perform Post-Upgrade Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Perform Post-Upgrade Configuration
 
 These instructions explain the post-upgrade configuration steps that
 must be performed when upgrading from an NSS-based installation to
@@ -1307,8 +1277,7 @@ default `truststore`.
 
 [[gktlp]][[GSUPG00017]][[to-upgrade-pkcs11-hardware-tokens]]
 
-To Upgrade PKCS#11 Hardware Tokens
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade PKCS#11 Hardware Tokens
 
 If you are using GlassFish Server v2.x Enterprise Edition with Hardware
 Tokens (for example, FIPS-140 compliant Sun Cryptographic Accelerator
@@ -1357,8 +1326,7 @@ Ensure that the following two `jvm-options` are set in the `domain.xml` file:
 
 [[gfybw]][[GSUPG00043]][[upgrading-clusters-and-node-agent-configurations]]
 
-Upgrading Clusters and Node Agent Configurations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading Clusters and Node Agent Configurations
 
 This section explains additional steps you need to perform when
 upgrading cluster and node agent configurations from Application Server
@@ -1384,8 +1352,7 @@ The following topics are addressed here:
 
 [[gkyda]][[GSUPG00069]][[overview-of-cluster-and-node-agent-upgrade-procedures]]
 
-Overview of Cluster and Node Agent Upgrade Procedures
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Overview of Cluster and Node Agent Upgrade Procedures
 
 The general steps for upgrading a cluster and node agent configuration
 so it will work in GlassFish Server 7 are as follows:
@@ -1407,8 +1374,7 @@ This procedure is described in link:#gktkx[To Re-Create a Cluster].
 
 [[gktle]][[GSUPG00018]][[to-correct-the-configuration-of-a-node-after-an-upgrade]]
 
-To Correct the Configuration of a Node After an Upgrade
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Correct the Configuration of a Node After an Upgrade
 
 As part of the upgrade process, node agent elements in the DAS
 configuration are transformed into GlassFish Server node elements of
@@ -1550,8 +1516,7 @@ in GlassFish Server Open Source Edition High Availability Administration Guide
 
 [[gktkx]][[GSUPG00019]][[to-re-create-a-cluster]]
 
-To Re-Create a Cluster
-^^^^^^^^^^^^^^^^^^^^^^
+==== To Re-Create a Cluster
 
 This procedure explains how to re-create a clustered GlassFish Server or
 Enterprise Server configuration for GlassFish Server 7.
@@ -1660,8 +1625,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 
 [[gkrfh]][[GSUPG00044]][[correcting-potential-upgrade-problems]]
 
-Correcting Potential Upgrade Problems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Correcting Potential Upgrade Problems
 
 This section addresses issues that can occur during an upgrade to
 GlassFish Server 7.
@@ -1674,8 +1638,7 @@ The following topics are addressed here:
 
 [[gkrgh]][[GSUPG00070]][[cluster-profile-security-setting]]
 
-Cluster Profile Security Setting
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Cluster Profile Security Setting
 
 When upgrading a clustered domain configuration from Application Server
 9.1 or Enterprise Server v2 to GlassFish Server 7, you may encounter
@@ -1715,8 +1678,7 @@ asadmin> set configs.config.server-config.admin-service.jmx-connector.system.sec
 
 [[gkrib]][[GSUPG00071]][[cluster-profile-upgrade-on-windows]]
 
-Cluster Profile Upgrade on Windows
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Cluster Profile Upgrade on Windows
 
 On Windows, when you upgrade cluster profile domains, you could
 encounter the following error:
@@ -1731,8 +1693,7 @@ source domain's directory and re-run Upgrade Tool.
 
 [[gkyho]][[GSUPG00072]][[asupgrade-fails-without-internet-connection]]
 
-`asupgrade` Fails Without Internet Connection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== `asupgrade` Fails Without Internet Connection
 
 This problem only occurs when using GlassFish Server 3.1 Upgrade Tool to
 perform a side-by-side upgrade on a 2.x domain without an Internet

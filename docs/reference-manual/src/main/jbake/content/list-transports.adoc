@@ -5,13 +5,11 @@ next=list-virtual-servers.html
 prev=list-timers.html
 ~~~~~~
 
-list-transports
-===============
+= list-transports
 
 [[list-transports-1]][[GSRFM00206]][[list-transports]]
 
-list-transports
----------------
+== list-transports
 
 Lists the existing transports
 

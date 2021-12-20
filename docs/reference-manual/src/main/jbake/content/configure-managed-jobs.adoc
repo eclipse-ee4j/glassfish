@@ -5,13 +5,11 @@ next=copy-config.html
 prev=configure-ldap-for-admin.html
 ~~~~~~
 
-configure-managed-jobs
-======================
+= configure-managed-jobs
 
 [[configure-managed-jobs-1]][[GSRFM836]][[configure-managed-jobs]]
 
-configure-managed-jobs
-----------------------
+== configure-managed-jobs
 
 Configures how long information about subcommands that were started
 using `asadmin --detach` or that contain progress information is kept

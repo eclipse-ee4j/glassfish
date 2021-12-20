@@ -5,12 +5,10 @@ next=lot.html
 prev=loe.html
 ~~~~~~
 
-List of Figures
-===============
+= List of Figures
 
 [[list-of-figures]]
-List of Figures
----------------
+== List of Figures
 
 * link:overview.html#fwfdj[1-1 Module-Based Assembly and Deployment]
 * link:overview.html#fvyip[1-2 Application-Based Assembly and Deployment]

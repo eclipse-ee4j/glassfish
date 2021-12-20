@@ -5,15 +5,13 @@ next=uninstalling.html
 prev=preface.html
 ~~~~~~
 
-Installing Eclipse GlassFish Server 7
-=====================================
+= Installing Eclipse GlassFish Server 7
 
 [[GSING00002]][[ggssq]]
 
 
 [[installing-glassfish-server-5.0]]
-1 Installing Eclipse GlassFish Server 7
----------------------------------------
+== 1 Installing Eclipse GlassFish Server 7
 
 This chapter provides instructions for installing Eclipse GlassFish Server 7
 software on Solaris, Linux, Mac OS X, and Windows systems.
@@ -26,8 +24,7 @@ The following topics are addressed here:
 
 [[gjiaz]][[GSING00022]][[installation-requirements]]
 
-Installation Requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Installation Requirements
 
 Before installing Eclipse GlassFish Server 7, ensure that
 your system meets the requirements listed in "link:../release-notes/release-notes.html#GSRLN00131[Hardware
@@ -50,8 +47,7 @@ site] (`http://support.apple.com/downloads/`).
 
 [[gkxfw]][[javassist-library-license-notice]]
 
-Javassist Library License Notice
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Javassist Library License Notice
 
 You are receiving a copy of the Javassist (Java Programming Assistant)
 Library in source form at
@@ -573,8 +569,7 @@ either the MPL or the LGPL.
 
 [[ggrlg]][[GSING00023]][[installation-files-for-glassfish-server-5.0]]
 
-Installation Files for GlassFish Server 7
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Installation Files for GlassFish Server 7
 
 The following topics are addressed here:
 
@@ -585,8 +580,7 @@ The following topics are addressed here:
 
 [[gkbaj]][[GSING00035]][[glassfish-server-download-locations]]
 
-GlassFish Server Download Locations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server Download Locations
 
 Installation files for Eclipse GlassFish Server 7 are
 available by download from the
@@ -600,8 +594,7 @@ EE downloads page] and are not described in this document.
 
 [[gkbby]][[GSING00036]][[glassfish-server-installation-methods]]
 
-GlassFish Server Installation Methods
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server Installation Methods
 
 link:#ghtqe[Table 1-1] lists the various GlassFish Server Open Source
 Edition installation methods. The table also provides links to
@@ -636,8 +629,7 @@ These two distributions are explained in the next section.
 
 [[gkudi]][[GSING00037]][[choosing-an-installation-method]]
 
-Choosing an Installation Method
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Choosing an Installation Method
 
 There are two general sets of questions you should consider when
 deciding which GlassFish Server 7 installation method to use.
@@ -647,8 +639,7 @@ deciding which GlassFish Server 7 installation method to use.
 
 [[gkuau]][[GSING00029]][[zip-package]]
 
-ZIP Package
-+++++++++++
+===== ZIP Package
 
 The relative features and strengths of the GlassFish Server ZIP packages
 are listed below.
@@ -662,8 +653,7 @@ the installation
 
 [[gkudp]][[GSING00030]][[full-platform-or-web-profile-distribution]]
 
-Full Platform or Web Profile Distribution
-+++++++++++++++++++++++++++++++++++++++++
+===== Full Platform or Web Profile Distribution
 
 Each of the installation methods listed in link:#ghtqe[Table 1-1] also
 let you choose to install either the GlassFish Server Full Platform or
@@ -766,8 +756,7 @@ CORBA v3.0 APIs are available in the Jakarta EE Web Profile.
 
 [[gkbbb]][[GSING00038]][[glassfish-server-zip-files]]
 
-GlassFish Server ZIP Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server ZIP Files
 
 The Eclipse GlassFish Server 7 multi-platform ZIP files
 are compatible with Solaris, Linux, Mac OS, UNIX, and Windows operating
@@ -803,8 +792,7 @@ glassfish-5.0-web.zip
 
 [[ghmxb]][[GSING00024]][[installing-glassfish-server-from-a-zip-file]]
 
-Installing GlassFish Server From a ZIP File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Installing GlassFish Server From a ZIP File
 
 This section describes how to install GlassFish Server Open Source
 Edition 7 using the multi-platform ZIP file. GlassFish Server is
@@ -823,8 +811,7 @@ after installation.
 
 [[ggrks]][[GSING00006]][[to-install-glassfish-server-using-the-zip-file]]
 
-To Install GlassFish Server Using the ZIP File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Install GlassFish Server Using the ZIP File
 
 Before You Begin
 

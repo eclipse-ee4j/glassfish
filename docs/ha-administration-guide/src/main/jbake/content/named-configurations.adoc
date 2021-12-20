@@ -5,14 +5,12 @@ next=http-load-balancing.html
 prev=instances.html
 ~~~~~~
 
-Administering Named Configurations
-==================================
+= Administering Named Configurations
 
 [[GSHAG00007]][[abdjk]]
 
 [[administering-named-configurations]]
-6 Administering Named Configurations
-------------------------------------
+== 6 Administering Named Configurations
 
 A named configuration is a set of configuration information for
 GlassFish Server instances and clusters. A configuration sets port
@@ -34,8 +32,7 @@ The following topics are addressed here:
 
 [[abdjl]][[GSHAG00191]][[about-named-configurations]]
 
-About Named Configurations
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Named Configurations
 
 Configurations exist in a domain. Multiple GlassFish Server instances or
 clusters in the domain can reference the same configuration, or they can
@@ -45,8 +42,7 @@ the cluster's configuration.
 
 [[abdjm]][[GSHAG00268]][[types-of-named-configurations]]
 
-Types of Named Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Types of Named Configurations
 
 Each named configuration is one of the following types of configuration:
 
@@ -69,8 +65,7 @@ link:instances.html#gkrbn[Types of GlassFish Server Instances].
 
 [[abdjn]][[GSHAG00269]][[the-default-config-configuration]]
 
-The `default-config` Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `default-config` Configuration
 
 The `default-config` configuration is a special configuration that acts
 as a template for creating named configurations. Clusters and instances
@@ -79,8 +74,7 @@ configuration can only be copied to create configurations.
 
 [[abdjo]][[GSHAG00270]][[automatically-created-configurations]]
 
-Automatically Created Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Automatically Created Configurations
 
 When you create a cluster or an instance, you can choose whether to
 specify an existing configuration that the new cluster or instance will
@@ -108,8 +102,7 @@ administration server (DAS) when the domain is created.
 
 [[gdgca]][[GSHAG00271]][[directory-for-configuration-synchronization]]
 
-Directory for Configuration Synchronization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Directory for Configuration Synchronization
 
 When a named configuration is created, GlassFish Server creates a
 configuration directory on the domain administration server (DAS) at
@@ -125,8 +118,7 @@ inherit or reference the configuration.
 
 [[abdjq]][[GSHAG00192]][[creating-listing-and-deleting-named-configurations]]
 
-Creating, Listing, and Deleting Named Configurations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Listing, and Deleting Named Configurations
 
 GlassFish Server enables you to create configurations for use by
 clusters and instances, obtain information about configurations, and
@@ -141,8 +133,7 @@ The following topics are addressed here:
 
 [[abdjr]][[GSHAG00128]][[to-create-a-named-configuration]]
 
-To Create a Named Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Named Configuration
 
 Use the `copy-config` subcommand in remote mode to create a named
 configuration by copying an existing configuration.
@@ -220,8 +211,7 @@ typing `asadmin help copy-config` at the command line.
 
 [[gkrgg]][[GSHAG00129]][[to-list-the-named-configurations-in-a-domain]]
 
-To List the Named Configurations in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List the Named Configurations in a Domain
 
 Use the `list-configs` subcommand in remote mode to list existing named
 configurations in a domain.
@@ -260,8 +250,7 @@ typing `asadmin help list-configs` at the command line.
 
 [[abdju]][[GSHAG00130]][[to-list-the-targets-of-a-named-configuration]]
 
-To List the Targets of a Named Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List the Targets of a Named Configuration
 
 Use the `list-clusters` subcommand and the `list-instances` subcommand
 in remote mode to list the targets of a named configuration.
@@ -322,8 +311,7 @@ typing the following commands at the command line:
 
 [[abdjv]][[GSHAG00131]][[to-delete-a-named-configuration]]
 
-To Delete a Named Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Named Configuration
 
 Use the `delete-config` subcommand in remote mode to delete an existing
 named configuration from the configuration of the DAS.
@@ -421,8 +409,7 @@ typing the following commands at the command line:
 
 [[gkrgf]][[GSHAG00193]][[modifying-properties-for-named-configurations-and-instances]]
 
-Modifying Properties for Named Configurations and Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Modifying Properties for Named Configurations and Instances
 
 The properties in a named configuration define port numbers for
 unclustered instances that reference the configuration or clustered
@@ -439,8 +426,7 @@ The following topics are addressed here:
 
 [[gkrls]][[GSHAG00272]][[properties-for-port-numbers-in-a-named-configuration]]
 
-Properties for Port Numbers in a Named Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Properties for Port Numbers in a Named Configuration
 
 The default configuration `default-config` contains properties that
 define the initial values of port numbers in a configuration that is
@@ -518,8 +504,7 @@ follows:
 
 [[fxxvk]][[GSHAG00132]][[to-modify-a-named-configurations-properties]]
 
-To Modify a Named Configuration's Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Modify a Named Configuration's Properties
 
 Use the `get` subcommand and the `set` subcommand in remote mode to
 modify a named configuration's properties.
@@ -600,8 +585,7 @@ typing the following commands at the command line:
 
 [[abdjt]][[GSHAG00133]][[to-modify-port-numbers-of-an-instance]]
 
-To Modify Port Numbers of an Instance
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Modify Port Numbers of an Instance
 
 Use the `get` subcommand and the `set` subcommand in remote mode to
 modify the port numbers of an instance.

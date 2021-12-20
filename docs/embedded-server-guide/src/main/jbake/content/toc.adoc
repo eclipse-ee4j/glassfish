@@ -1,0 +1,46 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Embedded Server Guide, Release 7
+next=title.html
+~~~~~~
+= Eclipse GlassFish Server Embedded Server Guide, Release 7
+
+[[contents]]
+== Contents
+
+* link:title.html#eclipse-glassfish-server[Eclipse GlassFish Server]
+
+=== link:preface.html#preface[Preface]
+
+** link:preface.html#GSESG00027[GlassFish Server Documentation Set]
+** link:preface.html#GSESG00028[Related Documentation]
+** link:preface.html#GSESG00029[Typographic Conventions]
+** link:preface.html#GSESG00030[Symbol Conventions]
+** link:preface.html#GSESG00031[Default Paths and File Names]
+
+[[glassfish-server-open-source-edition-embedded-server-guide]]
+=== link:embedded-server-guide.html#GSESG00001[1 Eclipse GlassFish Server 7 Embedded Server Guide]
+
+** link:embedded-server-guide.html#GSESG00035[Introduction to Embedded GlassFish Server]
+** link:embedded-server-guide.html#GSESG00036[Embedded GlassFish Server File System]
+*** link:embedded-server-guide.html#GSESG00054[Installation Root Directory]
+*** link:embedded-server-guide.html#GSESG00055[Instance Root Directory]
+*** link:embedded-server-guide.html#GSESG00056[The `domain.xml` File]
+** link:embedded-server-guide.html#GSESG00037[Including the GlassFish Server Embedded Server API in Applications]
+*** link:embedded-server-guide.html#GSESG00057[Setting the Class Path]
+*** link:embedded-server-guide.html#GSESG00058[Creating, Starting, and Stopping Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00059[Deploying and Undeploying an Application in an Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00061[Sample Applications]
+** link:embedded-server-guide.html#GSESG00038[Testing Applications with the Maven Plug-in for Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00022[To Set Up Your Maven Environment]
+*** link:embedded-server-guide.html#GSESG00023[To Build and Start an Application From Maven]
+*** link:embedded-server-guide.html#GSESG00024[To Stop Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00025[To Redeploy an Application That Was Built and Started From Maven]
+*** link:embedded-server-guide.html#GSESG00062[Maven Goals for Embedded GlassFish Server]
+** link:embedded-server-guide.html#GSESG00039[Using the EJB 3.1 Embeddable API with Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00026[To Use the EJB 3.1 Embeddable API with Embedded GlassFish Server]
+*** link:embedded-server-guide.html#GSESG00063[EJB 3.1 Embeddable API Properties]
+*** link:embedded-server-guide.html#GSESG00064[Using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish Server]
+** link:embedded-server-guide.html#GSESG00040[Changing Log Levels in Embedded GlassFish Server]
+** link:embedded-server-guide.html#GSESG00041[Default Java Persistence Data Source for Embedded GlassFish Server]
+** link:embedded-server-guide.html#GSESG00042[Restrictions for Embedded GlassFish Server]

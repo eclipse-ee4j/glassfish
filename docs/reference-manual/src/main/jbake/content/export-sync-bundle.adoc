@@ -5,13 +5,11 @@ next=flush-connection-pool.html
 prev=export-http-lb-config.html
 ~~~~~~
 
-export-sync-bundle
-==================
+= export-sync-bundle
 
 [[export-sync-bundle-1]][[GSRFM00134]][[export-sync-bundle]]
 
-export-sync-bundle
-------------------
+== export-sync-bundle
 
 Exports the configuration data of a cluster or standalone instance to an
 archive file

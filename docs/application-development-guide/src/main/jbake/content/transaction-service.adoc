@@ -5,15 +5,13 @@ next=jndi.html
 prev=jdbc.html
 ~~~~~~
 
-Using the Transaction Service
-=============================
+= Using the Transaction Service
 
 [[GSDVG00018]][[beanm]]
 
 
 [[using-the-transaction-service]]
-15 Using the Transaction Service
---------------------------------
+== 15 Using the Transaction Service
 
 The Jakarta EE platform provides several abstractions that simplify
 development of dependable transaction processing for applications. This
@@ -41,8 +39,7 @@ in The Jakarta EE Tutorial.
 
 [[giybi]][[GSDVG00188]][[handling-transactions-with-databases]]
 
-Handling Transactions with Databases
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Handling Transactions with Databases
 
 The following topics are addressed here:
 
@@ -51,8 +48,7 @@ The following topics are addressed here:
 
 [[beamv]][[GSDVG00511]][[using-jdbc-transaction-isolation-levels]]
 
-Using JDBC Transaction Isolation Levels
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using JDBC Transaction Isolation Levels
 
 Not all database vendors support all transaction isolation levels
 available in the JDBC API. The GlassFish Server permits specifying any
@@ -160,8 +156,7 @@ Edition Reference Manual].
 
 [[beamu]][[GSDVG00512]][[using-non-transactional-connections]]
 
-Using Non-Transactional Connections
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Non-Transactional Connections
 
 You can specify a non-transactional database connection in any of these
 ways:
@@ -221,8 +216,7 @@ commits.
 
 [[beaje]][[GSDVG00189]][[handling-transactions-with-enterprise-beans]]
 
-Handling Transactions with Enterprise Beans
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Handling Transactions with Enterprise Beans
 
 This section describes the transaction support built into the Enterprise
 JavaBeans programming model for the GlassFish Server.
@@ -240,8 +234,7 @@ The following topics are addressed here:
 
 [[beajf]][[GSDVG00513]][[flat-transactions]]
 
-Flat Transactions
-^^^^^^^^^^^^^^^^^
+==== Flat Transactions
 
 The Enterprise JavaBeans Specification, v3.0 requires support for flat
 (as opposed to nested) transactions. In a flat transaction, each
@@ -256,8 +249,7 @@ fewer commercial database systems.
 
 [[beajg]][[GSDVG00514]][[global-and-local-transactions]]
 
-Global and Local Transactions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Global and Local Transactions
 
 Both local and global transactions are demarcated using the
 javax.transaction.UserTransaction interface, which the client must use.
@@ -267,8 +259,7 @@ Transaction Synchronization Registry, and `UserTransaction`].
 
 [[beajh]][[GSDVG00515]][[commit-options]]
 
-Commit Options
-^^^^^^^^^^^^^^
+==== Commit Options
 
 The EJB protocol is designed to give the container the flexibility to
 select the disposition of the instance state at the time a transaction
@@ -320,8 +311,7 @@ the specified commit option, the appropriate handler is instantiated.
 
 [[beaht]][[GSDVG00516]][[bean-level-container-managed-transaction-timeouts]]
 
-Bean-Level Container-Managed Transaction Timeouts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Bean-Level Container-Managed Transaction Timeouts
 
 The transaction timeout for the domain is specified using the
 Transaction Timeout setting of the Transaction Service. A transaction
@@ -339,8 +329,7 @@ if the bean joins a client transaction.
 
 [[gknrh]][[GSDVG00190]][[handling-transactions-with-the-java-message-service]]
 
-Handling Transactions with the Java Message Service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Handling Transactions with the Java Message Service
 
 The following topics are addressed here:
 
@@ -349,8 +338,7 @@ The following topics are addressed here:
 
 [[beaoq]][[GSDVG00517]][[transactions-and-non-persistent-messages]]
 
-Transactions and Non-Persistent Messages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Transactions and Non-Persistent Messages
 
 During transaction recovery, non-persistent messages might be lost. If
 the broker fails between the transaction manager's prepare and commit
@@ -360,8 +348,7 @@ is not available for transaction recovery.
 
 [[gdyya]][[GSDVG00518]][[using-the-configurabletransactionsupport-interface]]
 
-Using the ConfigurableTransactionSupport Interface
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the ConfigurableTransactionSupport Interface
 
 The Jakarta EE Connector 1.6 specification allows a resource adapter to use
 the `transaction-support` attribute to specify the level of transaction
@@ -382,8 +369,7 @@ non-transactional context.
 
 [[gaxit]][[GSDVG00191]][[the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction]]
 
-The Transaction Manager, the Transaction Synchronization Registry, and `UserTransaction`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The Transaction Manager, the Transaction Synchronization Registry, and `UserTransaction`
 
 To access a `UserTransaction` instance, you can either look it up using
 the `java:comp/``UserTransaction` JNDI name or inject it using the

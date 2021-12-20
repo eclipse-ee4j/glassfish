@@ -5,13 +5,11 @@ next=unset.html
 prev=uninstall-node-dcom.html
 ~~~~~~
 
-uninstall-node-ssh
-==================
+= uninstall-node-ssh
 
 [[uninstall-node-ssh-1]][[GSRFM778]][[uninstall-node-ssh]]
 
-uninstall-node-ssh
-------------------
+== uninstall-node-ssh
 
 Uninstalls {productName} software from specified SSH-enabled hosts
 

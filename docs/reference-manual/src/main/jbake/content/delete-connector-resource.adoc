@@ -5,13 +5,11 @@ next=delete-connector-security-map.html
 prev=delete-connector-connection-pool.html
 ~~~~~~
 
-delete-connector-resource
-=========================
+= delete-connector-resource
 
 [[delete-connector-resource-1]][[GSRFM00071]][[delete-connector-resource]]
 
-delete-connector-resource
--------------------------
+== delete-connector-resource
 
 Removes the connector resource with the specified JNDI name
 

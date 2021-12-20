@@ -5,15 +5,13 @@ next=webservices.html
 prev=part-apps-and-app-comps.html
 ~~~~~~
 
-Securing Applications
-=====================
+= Securing Applications
 
 [[GSDVG00006]][[beabg]]
 
 
 [[securing-applications]]
-4 Securing Applications
------------------------
+== 4 Securing Applications
 
 This chapter describes how to write secure Jakarta EE applications, which
 contain components that perform user authentication and access
@@ -57,8 +55,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 [[beabh]][[GSDVG00114]][[security-goals]]
 
-Security Goals
-~~~~~~~~~~~~~~
+=== Security Goals
 
 In an enterprise computing environment, there are many security risks.
 The goal of the GlassFish Server is to provide highly secure,
@@ -95,8 +92,7 @@ specification and defined by https://jcp.org/en/jsr/detail?id=375[JSR
 
 [[beabi]][[GSDVG00115]][[glassfish-server-specific-security-features]]
 
-GlassFish Server Specific Security Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Specific Security Features
 
 The GlassFish Server supports the Jakarta EE security model, as well as the
 following features which are specific to the GlassFish Server:
@@ -111,8 +107,7 @@ ProgrammaticLogin Class]
 
 [[beabj]][[GSDVG00116]][[container-security]]
 
-Container Security
-~~~~~~~~~~~~~~~~~~
+=== Container Security
 
 The component containers are responsible for providing Jakarta EE
 application security. The container provides two security forms:
@@ -129,8 +124,7 @@ module deployment descriptor.
 
 [[beabl]][[GSDVG00362]][[declarative-security]]
 
-Declarative Security
-^^^^^^^^^^^^^^^^^^^^
+==== Declarative Security
 
 Declarative security means that the security mechanism for an
 application is declared and handled externally to the application.
@@ -152,8 +146,7 @@ There are two levels of declarative security, as follows:
 
 [[beabm]][[GSDVG00239]][[application-level-security]]
 
-Application Level Security
-++++++++++++++++++++++++++
+===== Application Level Security
 
 For an application, roles used by any application must be defined in
 `@DeclareRoles` annotations in the code or `role-name` elements in the
@@ -179,8 +172,7 @@ to Role Mapping].
 
 [[beabn]][[GSDVG00240]][[component-level-security]]
 
-Component Level Security
-++++++++++++++++++++++++
+===== Component Level Security
 
 Component level security encompasses web components and EJB components.
 
@@ -194,8 +186,7 @@ descriptors (`ejb-jar.xml` and `glassfish-ejb-jar.xml` files).
 
 [[beabk]][[GSDVG00363]][[programmatic-security]]
 
-Programmatic Security
-^^^^^^^^^^^^^^^^^^^^^
+==== Programmatic Security
 
 Programmatic security involves an EJB component or servlet using method
 calls to the security API, as specified by the Jakarta EE security model,
@@ -219,8 +210,7 @@ Using Programmatic Security] in the The Jakarta EE Tutorial.
 
 [[beacr]][[GSDVG00117]][[roles-principals-and-principal-to-role-mapping]]
 
-Roles, Principals, and Principal to Role Mapping
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Roles, Principals, and Principal to Role Mapping
 
 By default, any groups that an authenticated user belongs to will be
 mapped to roles with the same names. Therefore, the Default Principal To
@@ -320,8 +310,7 @@ set the default principal to role mapping property to false.
 
 [[beabo]][[GSDVG00118]][[realm-configuration]]
 
-Realm Configuration
-~~~~~~~~~~~~~~~~~~~
+=== Realm Configuration
 
 The following topics are addressed here:
 
@@ -332,8 +321,7 @@ The following topics are addressed here:
 
 [[beabp]][[GSDVG00364]][[supported-realms]]
 
-Supported Realms
-^^^^^^^^^^^^^^^^
+==== Supported Realms
 
 The following realms are supported in the current release of the
 GlassFish Server:
@@ -359,8 +347,7 @@ Configure a Realm].
 
 [[beabq]][[GSDVG00365]][[how-to-configure-a-realm]]
 
-How to Configure a Realm
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== How to Configure a Realm
 
 You can configure a realm in one of these ways:
 
@@ -373,8 +360,7 @@ Source Edition Reference Manual].
 
 [[beabr]][[GSDVG00366]][[how-to-set-a-realm-for-an-application-or-module]]
 
-How to Set a Realm for an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== How to Set a Realm for an Application or Module
 
 The following deployment descriptor elements have optional `realm` or
 `realm-name` data subelements or attributes that override the domain's
@@ -408,8 +394,7 @@ Deployment Guide.
 
 [[beabs]][[GSDVG00367]][[creating-a-custom-realm]]
 
-Creating a Custom Realm
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Creating a Custom Realm
 
 You can create a custom realm by providing a custom Java Authentication
 and Authorization Service (JAAS) login module class and a custom realm
@@ -602,8 +587,7 @@ variables.
 
 [[BACDEIHB]][[GSDVG563]][[java-ee-security-api-support]]
 
-Jakarta EE Security API Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Jakarta EE Security API Support
 
 JSR-375 defines several authentication-related plugin SPIs, such as,
 `HttpAuthenticationMechanism` interface, the `IdentityStore` and
@@ -635,8 +619,7 @@ a caller, and authorize a caller. These methods include
 
 [[beabt]][[GSDVG00119]][[jacc-support]]
 
-JACC Support
-~~~~~~~~~~~~
+=== JACC Support
 
 JACC (Java Authorization Contract for Containers) is part of the Jakarta EE
 specification and defined by http://www.jcp.org/en/jsr/detail?id=115[JSR
@@ -660,8 +643,7 @@ Administration Console.
 
 [[beabu]][[GSDVG00120]][[pluggable-audit-module-support]]
 
-Pluggable Audit Module Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Pluggable Audit Module Support
 
 Audit modules collect and store information on incoming requests
 (servlets, EJB components) and outgoing responses. You can create a
@@ -674,8 +656,7 @@ The following topics are addressed here:
 
 [[beabv]][[GSDVG00368]][[configuring-an-audit-module]]
 
-Configuring an Audit Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring an Audit Module
 
 To configure an audit module, you can perform one of the following
 tasks:
@@ -690,8 +671,7 @@ Source Edition Reference Manual].
 
 [[beabw]][[GSDVG00369]][[the-auditmodule-class]]
 
-The `AuditModule` Class
-^^^^^^^^^^^^^^^^^^^^^^^
+==== The `AuditModule` Class
 
 You can create a custom audit module by implementing a class that
 extends `com.sun.enterprise.security.audit.AuditModule`.
@@ -769,8 +749,7 @@ whether the authorization was granted or denied.
 
 [[beabx]][[GSDVG00121]][[the-server.policy-file]]
 
-The `server.policy` File
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== The `server.policy` File
 
 Each GlassFish Server domain has its own global J2SE policy file,
 located in domain-dir`/config`. The file is named `server.policy`.
@@ -789,8 +768,7 @@ The following topics are addressed here:
 
 [[beaby]][[GSDVG00370]][[default-permissions]]
 
-Default Permissions
-^^^^^^^^^^^^^^^^^^^
+==== Default Permissions
 
 Internal server code is granted all permissions. These are covered by
 the `AllPermission` grant blocks to various parts of the server
@@ -814,8 +792,7 @@ permission, because it is not otherwise necessary.
 
 [[gilzz]][[GSDVG00371]][[system-properties]]
 
-System Properties
-^^^^^^^^^^^^^^^^^
+==== System Properties
 
 The following predefined system properties, also called variables, are
 available for use in the `server.policy` file. The system property most
@@ -866,8 +843,7 @@ to customize configuration.
 
 [[beabz]][[GSDVG00372]][[changing-permissions-for-an-application]]
 
-Changing Permissions for an Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Changing Permissions for an Application
 
 The default policy for each domain limits the permissions of Jakarta EE
 deployed applications to the minimal set of permissions required for
@@ -1009,8 +985,7 @@ The Javadoc for the `Permission` class is at
 
 [[gbyah]][[GSDVG00373]][[enabling-and-disabling-the-security-manager]]
 
-Enabling and Disabling the Security Manager
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enabling and Disabling the Security Manager
 
 The security manager is disabled by default.
 
@@ -1091,8 +1066,7 @@ link:#beabz[Changing Permissions for an Application].
 
 [[beaca]][[GSDVG00122]][[configuring-message-security-for-web-services]]
 
-Configuring Message Security for Web Services
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Message Security for Web Services
 
 In message security, security information is applied at the message
 layer and travels along with the web services message. Web Services
@@ -1152,8 +1126,7 @@ The following topics are addressed here:
 
 [[gbjxw]][[GSDVG00374]][[message-security-providers]]
 
-Message Security Providers
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Security Providers
 
 When you first install the GlassFish Server, the providers
 `XWS_ClientProvider` and `XWS_ServerProvider` are configured but
@@ -1278,8 +1251,7 @@ This property is only applicable for a `ClientAuthModule`.
 
 [[beacb]][[GSDVG00375]][[message-security-responsibilities]]
 
-Message Security Responsibilities
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Security Responsibilities
 
 In the GlassFish Server, the system administrator and application
 deployer roles are expected to take primary responsibility for
@@ -1296,8 +1268,7 @@ The following topics are addressed here:
 
 [[beacc]][[GSDVG00241]][[application-developer-responsibilities]]
 
-Application Developer Responsibilities
-++++++++++++++++++++++++++++++++++++++
+===== Application Developer Responsibilities
 
 The application developer can turn on message security, but is not
 responsible for doing so. Message security can be set up by the system
@@ -1318,8 +1289,7 @@ GlassFish Server level.
 
 [[beacd]][[GSDVG00242]][[application-deployer-responsibilities]]
 
-Application Deployer Responsibilities
-+++++++++++++++++++++++++++++++++++++
+===== Application Deployer Responsibilities
 
 The application deployer is responsible for the following:
 
@@ -1338,8 +1308,7 @@ Application].
 
 [[beace]][[GSDVG00243]][[system-administrator-responsibilities]]
 
-System Administrator Responsibilities
-+++++++++++++++++++++++++++++++++++++
+===== System Administrator Responsibilities
 
 The system administrator is responsible for the following:
 
@@ -1361,8 +1330,7 @@ Security Guide].
 
 [[beacf]][[GSDVG00376]][[application-specific-message-protection]]
 
-Application-Specific Message Protection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Application-Specific Message Protection
 
 When the GlassFish Server provided configuration is insufficient for
 your security needs, and you want to override the default protection,
@@ -1405,8 +1373,7 @@ on Digital Signatures]
 
 [[beacg]][[GSDVG00244]][[using-a-signature-to-enable-message-protection-for-all-methods]]
 
-Using a Signature to Enable Message Protection for All Methods
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Using a Signature to Enable Message Protection for All Methods
 
 To enable message protection for all methods using digital signature,
 update the `message-security-binding` element for the EJB web service
@@ -1466,8 +1433,7 @@ link:#beack[To Run the Sample Application].
 
 [[beach]][[GSDVG00245]][[configuring-message-protection-for-a-specific-method-based-on-digital-signatures]]
 
-Configuring Message Protection for a Specific Method Based on Digital Signatures
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Configuring Message Protection for a Specific Method Based on Digital Signatures
 
 To enable message protection for a specific method, or for a set of
 methods that can be identified using a wildcard value, follow these
@@ -1541,8 +1507,7 @@ link:#beack[To Run the Sample Application].
 
 [[beaci]][[GSDVG00377]][[understanding-and-running-the-sample-application]]
 
-Understanding and Running the Sample Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Understanding and Running the Sample Application
 
 This section discusses the WSS sample application. This sample
 application is installed on your system only if you installed the J2EE
@@ -1581,8 +1546,7 @@ The following topics are addressed here:
 
 [[beacj]][[GSDVG00054]][[to-set-up-the-sample-application]]
 
-To Set Up the Sample Application
-++++++++++++++++++++++++++++++++
+===== To Set Up the Sample Application
 
 [[GSDVG535]]
 
@@ -1621,8 +1585,7 @@ unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples
 
 [[beack]][[GSDVG00055]][[to-run-the-sample-application]]
 
-To Run the Sample Application
-+++++++++++++++++++++++++++++
+===== To Run the Sample Application
 
 1. Make sure that the GlassFish Server is running. +
 Message security providers are set up when the Ant targets are run, so
@@ -1681,8 +1644,7 @@ application.
 
 [[beacm]][[GSDVG00123]][[programmatic-login-using-the-programmaticlogin-class]]
 
-Programmatic Login Using the ProgrammaticLogin Class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Programmatic Login Using the ProgrammaticLogin Class
 
 Programmatic login allows a deployed Jakarta EE application or module to
 invoke a login method. If the login is successful, a `SecurityContext`
@@ -1713,8 +1675,7 @@ The following topics are addressed here:
 
 [[beacn]][[GSDVG00378]][[programmatic-login-precautions]]
 
-Programmatic Login Precautions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Programmatic Login Precautions
 
 The GlassFish Server is not involved in how the login information
 (`user`, `password`) is obtained by the deployed application.
@@ -1750,8 +1711,7 @@ repeat the request.
 
 [[beaco]][[GSDVG00379]][[granting-programmatic-login-permission]]
 
-Granting Programmatic Login Permission
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Granting Programmatic Login Permission
 
 The `ProgrammaticLoginPermission` permission is required to invoke the
 programmatic login mechanism for an application if the security manager
@@ -1775,8 +1735,7 @@ The jar-file-path is the path to the application's JAR file.
 
 [[beacp]][[GSDVG00380]][[the-programmaticlogin-class]]
 
-The `ProgrammaticLogin` Class
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `ProgrammaticLogin` Class
 
 The `com.sun.appserv.security.ProgrammaticLogin` class enables a user to
 perform login programmatically.
@@ -1862,8 +1821,7 @@ are thrown.
 
 [[beacq]][[GSDVG00124]][[user-authentication-for-single-sign-on]]
 
-User Authentication for Single Sign-on
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== User Authentication for Single Sign-on
 
 The single sign-on feature of the GlassFish Server allows multiple web
 applications deployed to the same virtual server to share the user
@@ -1936,8 +1894,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[gizel]][[GSDVG00125]][[adding-authentication-mechanisms-to-the-servlet-container]]
 
-Adding Authentication Mechanisms to the Servlet Container
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding Authentication Mechanisms to the Servlet Container
 
 You can use JSR 196 in the web tier to facilitate the injection of
 pluggable authentication modules within the servlet constraint
@@ -1960,8 +1917,7 @@ Application]
 
 [[BACCFGBF]][[GSDVG564]][[the-glassfish-server-and-jsr-375]]
 
-The GlassFish Server and JSR-375
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The GlassFish Server and JSR-375
 
 The Glassfish Server implements JSR-375 to provide built-in support for
 BASIC, FORM and Custom FORM authentication mechanisms. JSR-375 also
@@ -1987,8 +1943,7 @@ configuration.
 
 
 [[built-in-authentication-mechanisms]]
-Built-in Authentication Mechanisms
-++++++++++++++++++++++++++++++++++
+===== Built-in Authentication Mechanisms
 
 An application packages its own `HttpAuthenticationMechanism` by
 including in a bean archive that is a part of the application.
@@ -2051,8 +2006,7 @@ cannot be met any other way.
 
 
 [[custom-authentication-mechanism]]
-Custom Authentication Mechanism
-+++++++++++++++++++++++++++++++
+===== Custom Authentication Mechanism
 
 An application provider can choose to provide its own custom
 authentication mechanism, apart from built-in authentication mechanism.
@@ -2169,8 +2123,7 @@ public class MyAuthenticationMechanism implements HttpAuthenticationMechanism {
 
 [[gizfz]][[GSDVG00381]][[the-glassfish-server-and-jsr-196]]
 
-The GlassFish Server and JSR 196
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The GlassFish Server and JSR 196
 
 The GlassFish Server implements the Servlet Container Profile of JSR
 196, Java Authentication Service Provider Interface for Containers. JSR
@@ -2210,8 +2163,7 @@ module (SAM), integrated by the SPI into the container.
 
 [[gizdx]][[GSDVG00382]][[writing-a-server-authentication-module]]
 
-Writing a Server Authentication Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Writing a Server Authentication Module
 
 A key step in adding an authentication mechanism to a compatible
 server-side message processing runtime such as the GlassFish Server
@@ -2290,8 +2242,7 @@ for additional background and details.
 
 [[gizeb]][[GSDVG00383]][[sample-server-authentication-module]]
 
-Sample Server Authentication Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Sample Server Authentication Module
 
 The class `MySam.java` is a sample SAM implementation. Notice that the
 sample implements the five methods of the ServerAuthModule interface.
@@ -2509,8 +2460,7 @@ in the `WWW-Authenticate` challenge.
 
 [[gizfa]][[GSDVG00384]][[compiling-and-installing-a-server-authentication-module]]
 
-Compiling and Installing a Server Authentication Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Compiling and Installing a Server Authentication Module
 
 Before you can use the sample SAM, you need to compile, install, and
 configure it. Then you can bind it to an application.
@@ -2523,8 +2473,7 @@ compiled SAM to the as-install`/lib` directory.
 
 [[gizfe]][[GSDVG00385]][[configuring-a-server-authentication-module]]
 
-Configuring a Server Authentication Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring a Server Authentication Module
 
 You can configure a SAM in one of these ways:
 
@@ -2565,8 +2514,7 @@ Reference Manual].
 
 [[gizfm]][[GSDVG00386]][[binding-a-server-authentication-module-to-your-application]]
 
-Binding a Server Authentication Module to Your Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Binding a Server Authentication Module to Your Application
 
 After you install and configure the SAM, you can bind it for use by the
 container on behalf of one or more of your applications. You have two

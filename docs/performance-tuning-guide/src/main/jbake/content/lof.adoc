@@ -5,11 +5,9 @@ next=lot.html
 prev=loe.html
 ~~~~~~
 
-List of Figures
-===============
+= List of Figures
 
 [[list-of-figures]]
-List of Figures
----------------
+== List of Figures
 
 * link:overview.html#gacmj[1-1 Jakarta EE Application Model]

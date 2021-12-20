@@ -5,13 +5,11 @@ next=unfreeze-transaction-service.html
 prev=stop-local-instance.html
 ~~~~~~
 
-undeploy
-========
+= undeploy
 
 [[undeploy-1]][[GSRFM00244]][[undeploy]]
 
-undeploy
---------
+== undeploy
 
 Removes a deployed component
 

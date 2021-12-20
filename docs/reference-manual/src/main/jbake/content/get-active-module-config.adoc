@@ -5,13 +5,11 @@ next=get-client-stubs.html
 prev=get.html
 ~~~~~~
 
-get-active-module-config
-========================
+= get-active-module-config
 
 [[get-active-module-config-1]][[GSRFM859]][[get-active-module-config]]
 
-get-active-module-config
-------------------------
+== get-active-module-config
 
 Displays the current active configuration of a service or instance
 

@@ -5,12 +5,10 @@ next=lot.html
 prev=toc.html
 ~~~~~~
 
-List of Examples
-================
+= List of Examples
 
 [[list-of-examples]]
-List of Examples
-----------------
+== List of Examples
 
 * link:embedded-server-guide.html#gikmz[1-1 Creating an Embedded
 GlassFish Server]

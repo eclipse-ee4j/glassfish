@@ -5,13 +5,11 @@ next=deploydir.html
 prev=delete-virtual-server.html
 ~~~~~~
 
-deploy
-======
+= deploy
 
 [[deploy-1]][[GSRFM00114]][[deploy]]
 
-deploy
-------
+== deploy
 
 Deploys the specified component
 

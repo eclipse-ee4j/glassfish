@@ -5,15 +5,13 @@ next=transactions.html
 prev=jms.html
 ~~~~~~
 
-Administering the Java Naming and Directory Interface (JNDI) Service
-====================================================================
+= Administering the Java Naming and Directory Interface (JNDI) Service
 
 [[GSADG00021]][[ablky]]
 
 
 [[administering-the-java-naming-and-directory-interface-jndi-service]]
-18 Administering the Java Naming and Directory Interface (JNDI) Service
------------------------------------------------------------------------
+== 18 Administering the Java Naming and Directory Interface (JNDI) Service
 
 The Java Naming and Directory Interface (JNDI) API is used for accessing
 different kinds of naming and directory services. Jakarta EE components
@@ -30,8 +28,7 @@ online help.
 
 [[ggjue]][[GSADG00603]][[about-jndi]]
 
-About JNDI
-~~~~~~~~~~
+=== About JNDI
 
 By making calls to the JNDI API, applications locate resources and other
 program objects. A resource is a program object that provides
@@ -54,8 +51,7 @@ Together]
 
 [[abllb]][[GSADG00780]][[java-ee-naming-environment]]
 
-Jakarta EE Naming Environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Jakarta EE Naming Environment
 
 JNDI names are bound to their objects by the naming and directory
 service that is provided by a Jakarta EE server. Because Jakarta EE components
@@ -78,8 +74,7 @@ context.
 
 [[gglpg]][[GSADG00781]][[how-the-naming-environment-and-the-container-work-together]]
 
-How the Naming Environment and the Container Work Together
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== How the Naming Environment and the Container Work Together
 
 The application component's environment is used as follows:
 
@@ -107,8 +102,7 @@ not allowed to modify the environment at runtime.
 
 [[abllc]][[GSADG00782]][[naming-references-and-binding-information]]
 
-Naming References and Binding Information
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Naming References and Binding Information
 
 A resource reference is an element in a deployment descriptor that
 identifies the component's coded name for the resource. For example,
@@ -155,8 +149,7 @@ factories
 
 [[gglpq]][[GSADG00604]][[administering-jndi-resources]]
 
-Administering JNDI Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering JNDI Resources
 
 Within GlassFish Server, you can configure your environment for custom
 and external JNDI resources. A custom resource accesses a local JNDI
@@ -169,8 +162,7 @@ name attributes, and so on.
 
 [[ablle]][[GSADG00783]][[administering-custom-jndi-resources]]
 
-Administering Custom JNDI Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering Custom JNDI Resources
 
 A custom resource specifies a custom server-wide resource object factory
 that implements the `javax.naming.spi.ObjectFactory` interface.
@@ -184,8 +176,7 @@ The following topics are addressed here:
 
 [[giowe]][[GSADG00503]][[to-create-a-custom-jndi-resource]]
 
-To Create a Custom JNDI Resource
-++++++++++++++++++++++++++++++++
+===== To Create a Custom JNDI Resource
 
 Use the `create-custom-resource` subcommand in remote mode to create a
 custom resource.
@@ -221,8 +212,7 @@ typing `asadmin help create-custom-resource` at the command line.
 
 [[gioxb]][[GSADG00504]][[to-list-custom-jndi-resources]]
 
-To List Custom JNDI Resources
-+++++++++++++++++++++++++++++
+===== To List Custom JNDI Resources
 
 Use the `list-custom-resources` subcommand in remote mode to list the
 existing custom resources.
@@ -253,8 +243,7 @@ typing `asadmin help list-custom-resources` at the command line.
 
 [[giwlk]][[GSADG00505]][[to-update-a-custom-jndi-resource]]
 
-To Update a Custom JNDI Resource
-++++++++++++++++++++++++++++++++
+===== To Update a Custom JNDI Resource
 
 1. List the custom resources by using the
 link:../reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
@@ -275,8 +264,7 @@ asadmin> set server.resources.custom-resource.custom
 
 [[gioxl]][[GSADG00506]][[to-delete-a-custom-jndi-resource]]
 
-To Delete a Custom JNDI Resource
-++++++++++++++++++++++++++++++++
+===== To Delete a Custom JNDI Resource
 
 Use the `delete-custom-resource` subcommand in remote mode to delete a
 custom resource.
@@ -307,8 +295,7 @@ typing `asadmin help delete-custom-resource` at the command line.
 
 [[gitxz]][[GSADG00784]][[administering-external-jndi-resources]]
 
-Administering External JNDI Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering External JNDI Resources
 
 Applications running on GlassFish Server often require access to
 resources stored in an external JNDI repository. For example, generic
@@ -328,8 +315,7 @@ The following topics are addressed here:
 
 [[gitxn]][[GSADG00507]][[to-register-an-external-jndi-resource]]
 
-To Register an External JNDI Resource
-+++++++++++++++++++++++++++++++++++++
+===== To Register an External JNDI Resource
 
 Use the `create-jndi-resource` subcommand in remote mode to register an
 external JNDI resource.
@@ -373,8 +359,7 @@ typing `asadmin help create-jndi-resource` at the command line.
 
 [[gitvj]][[GSADG00508]][[to-list-external-jndi-resources]]
 
-To List External JNDI Resources
-+++++++++++++++++++++++++++++++
+===== To List External JNDI Resources
 
 Use the `list-jndi-resources` subcommand in remote mode to list all
 existing JNDI resources.
@@ -406,8 +391,7 @@ typing `asadmin help list-jndi-resources` at the command line.
 
 [[gitwc]][[GSADG00509]][[to-list-external-jndi-entries]]
 
-To List External JNDI Entries
-+++++++++++++++++++++++++++++
+===== To List External JNDI Entries
 
 Use the `list-jndi-entries` subcommand in remote mode to browse and list
 the entries in the JNDI tree. You can either list all entries, or you
@@ -440,8 +424,7 @@ typing `asadmin help list-jndi-entries` at the command line.
 
 [[giwnr]][[GSADG00510]][[to-update-an-external-jndi-resource]]
 
-To Update an External JNDI Resource
-+++++++++++++++++++++++++++++++++++
+===== To Update an External JNDI Resource
 
 1. List the existing JNDI resources by using
 theolink:GSRFM00179[`list-jndi-resources`] subcommand.
@@ -461,8 +444,7 @@ jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jn
 
 [[gitvt]][[GSADG00511]][[to-delete-an-external-jndi-resource]]
 
-To Delete an External JNDI Resource
-+++++++++++++++++++++++++++++++++++
+===== To Delete an External JNDI Resource
 
 Use the `delete-jndi-resource` subcommand in remote mode to remove a
 JNDI resource.
@@ -491,8 +473,7 @@ typing `asadmin help delete-jndi-resource` at the command line.
 
 [[abllk]][[GSADG00688]][[example-of-using-an-external-jndi-resource]]
 
-Example of Using an External JNDI Resource
-++++++++++++++++++++++++++++++++++++++++++
+===== Example of Using an External JNDI Resource
 
 [source,xml]
 ----
@@ -520,8 +501,7 @@ Example of Using an External JNDI Resource
 
 [[gknaf]][[GSADG00512]][[to-disable-glassfish-server-v2-vendor-specific-jndi-names]]
 
-To Disable GlassFish Server v2 Vendor-Specific JNDI Names
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Disable GlassFish Server v2 Vendor-Specific JNDI Names
 
 The EJB 3.1 specification supported by GlassFish Server 7 defines
 portable EJB JNDI names. Because of this, there is less need to continue

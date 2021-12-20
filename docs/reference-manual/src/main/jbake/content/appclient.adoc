@@ -5,13 +5,11 @@ next=asadmin.html
 prev=manvol1m.html
 ~~~~~~
 
-appclient
-=========
+= appclient
 
 [[appclient-1m]][[GSRFM00262]][[appclient]]
 
-appclient
----------
+== appclient
 
 Launches the Application Client Container and invokes the client
 application typically packaged in the application JAR file

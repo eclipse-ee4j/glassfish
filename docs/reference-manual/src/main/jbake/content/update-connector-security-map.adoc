@@ -5,13 +5,11 @@ next=update-connector-work-security-map.html
 prev=unset-web-env-entry.html
 ~~~~~~
 
-update-connector-security-map
-=============================
+= update-connector-security-map
 
 [[update-connector-security-map-1]][[GSRFM00252]][[update-connector-security-map]]
 
-update-connector-security-map
------------------------------
+== update-connector-security-map
 
 Modifies a security map for the specified connector connection pool
 

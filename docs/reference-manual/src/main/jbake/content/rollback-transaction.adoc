@@ -5,13 +5,11 @@ next=rotate-log.html
 prev=restore-domain.html
 ~~~~~~
 
-rollback-transaction
-====================
+= rollback-transaction
 
 [[rollback-transaction-1]][[GSRFM00223]][[rollback-transaction]]
 
-rollback-transaction
---------------------
+== rollback-transaction
 
 Rolls back the named transaction
 

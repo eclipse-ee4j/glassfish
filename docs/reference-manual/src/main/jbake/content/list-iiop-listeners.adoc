@@ -5,13 +5,11 @@ next=list-instances.html
 prev=list-http-listeners.html
 ~~~~~~
 
-list-iiop-listeners
-===================
+= list-iiop-listeners
 
 [[list-iiop-listeners-1]][[GSRFM00169]][[list-iiop-listeners]]
 
-list-iiop-listeners
--------------------
+== list-iiop-listeners
 
 Lists the existing IIOP listeners
 

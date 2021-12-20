@@ -1,0 +1,11 @@
+type=page
+status=published
+title=Dummy
+next=title.html
+~~~~~~
+Dummy
+=====
+
+[[contents]]
+== Contents
+

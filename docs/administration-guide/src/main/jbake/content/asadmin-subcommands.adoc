@@ -4,15 +4,13 @@ title=Subcommands for the asadmin Utility
 prev=part-appendixes.html
 ~~~~~~
 
-Subcommands for the asadmin Utility
-===================================
+= Subcommands for the asadmin Utility
 
 [[GSADG00023]][[gcode]]
 
 
 [[a-subcommands-for-the-asadmin-utility]]
-A Subcommands for the `asadmin` Utility
----------------------------------------
+== A Subcommands for the `asadmin` Utility
 
 This appendix lists the `asadmin` subcommands that are included with
 this release of the GlassFish Server Open Source Edition 7 software.
@@ -52,8 +50,7 @@ olink:GSRFM00263[`asadmin`(1M)] help page.
 
 [[ggltk]][[GSADG00610]][[general-administration-subcommands]]
 
-General Administration Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== General Administration Subcommands
 
 link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`]::
   Creates the resources named in the specified XML file. Supported in
@@ -181,8 +178,7 @@ link:../reference-manual/version.html#GSRFM00261[`version`]::
 
 [[CHDJGEEG]][[GSADG1155]][[batch-jobs-subcommands]]
 
-Batch Jobs Subcommands
-~~~~~~~~~~~~~~~~~~~~~~
+=== Batch Jobs Subcommands
 
 link:../reference-manual/list-batch-jobs.html#GSRFM861[`list-batch-jobs`]::
   Lists batch jobs and job details. For procedural information in this
@@ -205,8 +201,7 @@ link:../reference-manual/set-batch-runtime-configuration.html#GSRFM897[`set-batc
 
 [[CHDECJFC]][[GSADG1156]][[concurrent-resources-subcommands]]
 
-Concurrent Resources Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Concurrent Resources Subcommands
 
 link:../reference-manual/create-context-service.html#GSRFM838[`create-context-service`]::
   Creates a context service resource. For procedural information in this
@@ -256,8 +251,7 @@ link:../reference-manual/delete-managed-thread-factory.html#GSRFM852[`delete-man
 
 [[giowb]][[GSADG00611]][[connectivity-subcommands]]
 
-Connectivity Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Connectivity Subcommands
 
 link:../reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`]::
   Creates an administered object. For procedural information in this
@@ -377,8 +371,7 @@ link:../reference-manual/update-connector-work-security-m.html#GSRFM00253[`updat
 
 [[gitwu]][[GSADG00612]][[domain-subcommands]]
 
-Domain Subcommands
-~~~~~~~~~~~~~~~~~~
+=== Domain Subcommands
 
 link:../reference-manual/backup-domain.html#GSRFM00003[`backup-domain`]::
   Describes how to back up a domain. Supported in local mode only. For
@@ -433,8 +426,7 @@ link:../reference-manual/uptime.html#GSRFM00258[`uptime`]::
 
 [[ggltm]][[GSADG00613]][[internet-connectivity-subcommands]]
 
-Internet Connectivity Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Internet Connectivity Subcommands
 
 link:../reference-manual/create-http.html#GSRFM00025[`create-http`]::
   Creates a set of HTTP parameters for a protocol, which in turn
@@ -517,8 +509,7 @@ link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-serv
 
 [[ggltf]][[GSADG00614]][[javamail-subcommands]]
 
-JavaMail Subcommands
-~~~~~~~~~~~~~~~~~~~~
+=== JavaMail Subcommands
 
 link:../reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`]::
   Creates a JavaMail session resource. Supported in remote mode only.
@@ -535,8 +526,7 @@ link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-
 
 [[gipen]][[GSADG00615]][[jms-subcommands]]
 
-JMS Subcommands
-~~~~~~~~~~~~~~~
+=== JMS Subcommands
 
 link:../reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`]::
   Creates a JMS physical destination. Along with the physical
@@ -591,8 +581,7 @@ link:../reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`
 
 [[gitws]][[GSADG00616]][[jndi-subcommands]]
 
-JNDI Subcommands
-~~~~~~~~~~~~~~~~
+=== JNDI Subcommands
 
 link:../reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`]::
   Creates a custom JNDI resource. Supported in remote mode only. For
@@ -625,8 +614,7 @@ link:../reference-manual/list-jndi-resources.html#GSRFM00179[`list-jndi-resource
 
 [[gglsk]][[GSADG00617]][[jvm-subcommands]]
 
-JVM Subcommands
-~~~~~~~~~~~~~~~
+=== JVM Subcommands
 
 link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]::
   Creates a JVM option in the Java configuration or profiler elements of
@@ -658,8 +646,7 @@ link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]::
 
 [[giuzl]][[GSADG00618]][[life-cycle-module-subcommands]]
 
-Life Cycle Module Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Life Cycle Module Subcommands
 
 link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`]::
   Creates a new life cycle module. Supported in remote mode only. For
@@ -676,8 +663,7 @@ link:../reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecyc
 
 [[gitxd]][[GSADG00619]][[logging-and-monitoring-subcommands]]
 
-Logging and Monitoring Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Logging and Monitoring Subcommands
 
 link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`]::
   Collects all available log files and creates a ZIP archive. Supported
@@ -729,8 +715,7 @@ link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`]::
 
 [[giusq]][[GSADG00620]][[orb-subcommands]]
 
-ORB Subcommands
-~~~~~~~~~~~~~~~
+=== ORB Subcommands
 
 link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`]::
   Creates an IIOP listener. Supported in remote mode only. For
@@ -747,8 +732,7 @@ link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listener
 
 [[giuqr]][[GSADG00621]][[thread-pool-subcommands]]
 
-Thread Pool Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Thread Pool Subcommands
 
 link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`]::
   Creates a new thread pool. Supported in remote mode only. For
@@ -765,8 +749,7 @@ link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`]::
 
 [[gitxi]][[GSADG00622]][[transaction-service-subcommands]]
 
-Transaction Service Subcommands
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Transaction Service Subcommands
 
 link:../reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`]::
   Freezes the transaction subsystem during which time all the in-flight

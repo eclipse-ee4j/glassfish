@@ -5,13 +5,11 @@ next=list-secure-admin-internal-users.html
 prev=list-resource-adapter-configs.html
 ~~~~~~
 
-list-resource-refs
-==================
+= list-resource-refs
 
 [[list-resource-refs-1]][[GSRFM00197]][[list-resource-refs]]
 
-list-resource-refs
-------------------
+== list-resource-refs
 
 Lists existing resource references
 

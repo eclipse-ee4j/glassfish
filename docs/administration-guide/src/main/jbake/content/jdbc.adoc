@@ -5,15 +5,13 @@ next=connectors.html
 prev=part-res-and-svcs-admin.html
 ~~~~~~
 
-Administering Database Connectivity
-===================================
+= Administering Database Connectivity
 
 [[GSADG00015]][[ablih]]
 
 
 [[administering-database-connectivity]]
-11 Administering Database Connectivity
---------------------------------------
+== 11 Administering Database Connectivity
 
 This chapter provides procedures for performing database connectivity
 tasks in the GlassFish Server Open Source Edition 7 environment by
@@ -31,8 +29,7 @@ Console are contained in the Administration Console online help.
 
 [[gipbp]][[GSADG00576]][[about-database-connectivity]]
 
-About Database Connectivity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Database Connectivity
 
 A database management system (DBMS) provides facilities for storing,
 organizing, and retrieving data. The information in databases is often
@@ -90,8 +87,7 @@ connection pool.
 
 [[ggkon]][[GSADG00577]][[setting-up-the-database]]
 
-Setting Up the Database
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up the Database
 
 Most applications use relational databases to store, organize, and
 retrieve data. Applications access relational databases through the Java
@@ -106,8 +102,7 @@ The following topics are addressed here:
 
 [[gharl]][[GSADG00416]][[to-install-the-database-and-database-driver]]
 
-To Install the Database and Database Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Install the Database and Database Driver
 
 1. Install a supported database product.
 +
@@ -142,8 +137,7 @@ Driver].
 
 [[ggndz]][[GSADG00417]][[to-start-the-database]]
 
-To Start the Database
-^^^^^^^^^^^^^^^^^^^^^
+==== To Start the Database
 
 GlassFish Server includes an implementation of the Apache Derby
 database, however, you can use any JDBC-compliant database. The database
@@ -183,8 +177,7 @@ typing `asadmin help start-database` at the command line.
 
 [[ggnbw]][[GSADG00418]][[to-stop-the-database]]
 
-To Stop the Database
-^^^^^^^^^^^^^^^^^^^^
+==== To Stop the Database
 
 Use the local `stop-database` subcommand to stop the Apache Derby
 database on a specified port. A single host can have multiple database
@@ -232,8 +225,7 @@ typing `asadmin help stop-database` at the command line.
 
 [[ghmbq]][[GSADG00744]][[apache-derby-database-utility-scripts]]
 
-Apache Derby Database Utility Scripts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Apache Derby Database Utility Scripts
 
 The Apache Derby database configuration that is available for use with
 GlassFish Server includes scripts that can help you use the Apache Derby
@@ -256,8 +248,7 @@ as-install`/javadb/bin` directory:
 
 [[ghmbj]][[GSADG00419]][[to-configure-your-environment-to-run-the-apache-derby-database-utility-scripts]]
 
-To Configure Your Environment to Run the Apache Derby Database Utility Scripts
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Configure Your Environment to Run the Apache Derby Database Utility Scripts
 
 1. Ensure that the `JAVA_HOME` environment variable specifies the
 directory where the JDK is installed.
@@ -278,8 +269,7 @@ Administration Guide]
 
 [[ggndx]][[GSADG00578]][[configuring-access-to-the-database]]
 
-Configuring Access to the Database
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Access to the Database
 
 After establishing the database, you are ready to set up access for
 GlassFish Server applications. The high-level steps include creating a
@@ -297,8 +287,7 @@ Environment]
 
 [[gharo]][[GSADG00745]][[administering-jdbc-connection-pools]]
 
-Administering JDBC Connection Pools
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering JDBC Connection Pools
 
 A JDBC connection pool is a group of reusable connections for a
 particular database. Because creating each new physical connection is
@@ -330,8 +319,7 @@ connection pools:
 
 [[ggnfv]][[GSADG00420]][[to-create-a-jdbc-connection-pool]]
 
-To Create a JDBC Connection Pool
-++++++++++++++++++++++++++++++++
+===== To Create a JDBC Connection Pool
 
 Use the `create-jdbc-connection-pool` subcommand in remote mode to
 register a new JDBC connection pool with the specified JDBC connection
@@ -401,8 +389,7 @@ typing `asadmin help create-jdbc-connection-pool` at the command line.
 
 [[ggnby]][[GSADG00421]][[to-list-jdbc-connection-pools]]
 
-To List JDBC Connection Pools
-+++++++++++++++++++++++++++++
+===== To List JDBC Connection Pools
 
 Use the `list-jdbc-connection-pools` subcommand in remote mode to list
 all existing JDBC connection pools.
@@ -436,8 +423,7 @@ typing `asadmin help list-jdbc-connection-pools` at the command line.
 
 [[ggnwn]][[GSADG00422]][[to-contact-ping-a-connection-pool]]
 
-To Contact (Ping) a Connection Pool
-+++++++++++++++++++++++++++++++++++
+===== To Contact (Ping) a Connection Pool
 
 Use the `ping-connection-pool` subcommand in remote mode to test if a
 connection pool is usable. For example, if you create a new JDBC
@@ -482,8 +468,7 @@ Pool] or link:#giosk[To Update a JDBC Connection Pool].
 
 [[gjiqp]][[GSADG00423]][[to-reset-flush-a-connection-pool]]
 
-To Reset (Flush) a Connection Pool
-++++++++++++++++++++++++++++++++++
+===== To Reset (Flush) a Connection Pool
 
 Use the `flush-connection-pool` in remote mode to reinitialize all
 connections established in the specified connection pool without the
@@ -520,8 +505,7 @@ typing `asadmin help flush-connection-pool` at the command line.
 
 [[giosk]][[GSADG00424]][[to-update-a-jdbc-connection-pool]]
 
-To Update a JDBC Connection Pool
-++++++++++++++++++++++++++++++++
+===== To Update a JDBC Connection Pool
 
 You can change all of the settings for an existing pool except its name.
 Use the `get` and `set` subcommands to view and change the values of the
@@ -562,8 +546,7 @@ Guide].
 
 [[ggngb]][[GSADG00425]][[to-delete-a-jdbc-connection-pool]]
 
-To Delete a JDBC Connection Pool
-++++++++++++++++++++++++++++++++
+===== To Delete a JDBC Connection Pool
 
 Use the `delete-jdbc-connection-pool` subcommand in remote mode to
 delete an existing JDBC connection pool. Deleting a JDBC connection pool
@@ -604,8 +587,7 @@ typing `asadmin help delete-jdbc-connection-pool` at the command line.
 
 [[gktdi]][[GSADG00670]][[configuring-specific-jdbc-connection-pool-features]]
 
-Configuring Specific JDBC Connection Pool Features
-++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Configuring Specific JDBC Connection Pool Features
 
 In GlassFish Server, JDBC Connection Pools support a variety of features
 to simplify administration, monitoring and performance tuning. The
@@ -865,8 +847,7 @@ asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queri
 
 [[ggndp]][[GSADG00746]][[administering-jdbc-resources]]
 
-Administering JDBC Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering JDBC Resources
 
 A JDBC resource, also known as a data source, provides an application
 with a means of connecting to a database. Typically, you create a JDBC
@@ -902,8 +883,7 @@ resources:
 
 [[ggnda]][[GSADG00426]][[to-create-a-jdbc-resource]]
 
-To Create a JDBC Resource
-+++++++++++++++++++++++++
+===== To Create a JDBC Resource
 
 Use the `create-jdbc-resource` subcommand in remote mode to create a
 JDBC resource. Creating a JDBC resource is a dynamic event and does not
@@ -950,8 +930,7 @@ typing `asadmin help create-jdbc-resource` at the command line.
 
 [[ggnhl]][[GSADG00427]][[to-list-jdbc-resources]]
 
-To List JDBC Resources
-++++++++++++++++++++++
+===== To List JDBC Resources
 
 Use the `list-jdbc-resources` subcommand in remote mode to list the
 existing JDBC resources.
@@ -984,8 +963,7 @@ typing `asadmin help list-jdbc-resources` at the command line.
 
 [[giwjv]][[GSADG00428]][[to-update-a-jdbc-resource]]
 
-To Update a JDBC Resource
-+++++++++++++++++++++++++
+===== To Update a JDBC Resource
 
 You can enable or disable a JDBC resource by using the `set` subcommand.
 The JDBC resource is identified by its dotted name.
@@ -1009,8 +987,7 @@ asadmin>set resources.jdbc-resource.res1.enabled=false
 
 [[ggnhz]][[GSADG00429]][[to-delete-a-jdbc-resource]]
 
-To Delete a JDBC Resource
-+++++++++++++++++++++++++
+===== To Delete a JDBC Resource
 
 Use the `delete-jdbc-resource` subcommand in remote mode to delete an
 existing JDBC resource. Deleting a JDBC resource is a dynamic event and
@@ -1050,8 +1027,7 @@ typing `asadmin help delete-jdbc-resource` at the command line.
 
 [[gkudf]][[GSADG00747]][[enabling-the-jdbc__default-resource-in-a-clustered-environment]]
 
-Enabling the `jdbc/__default` Resource in a Clustered Environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enabling the `jdbc/__default` Resource in a Clustered Environment
 
 GlassFish Server 7 includes a preconfigured JDBC resource with the
 JNDI name `jdbc/__default`. This `jdbc/__default` resource is not
@@ -1060,8 +1036,7 @@ use it in a cluster.
 
 [[gkubj]][[GSADG00430]][[to-enable-the-jdbc__default-resource-for-a-clustered-environment]]
 
-To Enable the `jdbc/__default` Resource for a Clustered Environment
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Enable the `jdbc/__default` Resource for a Clustered Environment
 
 Instructions for creating JDBC resources in general are provided in
 link:#ggnda[To Create a JDBC Resource]. Use the following procedure to
@@ -1093,8 +1068,7 @@ asadmin start-cluster cluster-name
 
 [[ghatb]][[GSADG00748]][[integrating-the-jdbc-driver]]
 
-Integrating the JDBC Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Integrating the JDBC Driver
 
 To use JDBC features, you must choose a JDBC driver to work with the
 GlassFish Server, then you must set up the driver. This section covers
@@ -1106,8 +1080,7 @@ these topics:
 
 [[gkpdj]][[GSADG00671]][[supported-database-drivers]]
 
-Supported Database Drivers
-++++++++++++++++++++++++++
+===== Supported Database Drivers
 
 Supported JDBC drivers are those that have been fully tested by Oracle.
 For a list of the JDBC drivers currently supported by the GlassFish
@@ -1127,8 +1100,7 @@ the latest database support information.
 
 [[gkpci]][[GSADG00672]][[making-the-jdbc-driver-jar-files-accessible]]
 
-Making the JDBC Driver JAR Files Accessible
-+++++++++++++++++++++++++++++++++++++++++++
+===== Making the JDBC Driver JAR Files Accessible
 
 To integrate the JDBC driver into a GlassFish Server domain, copy the
 JAR files into the domain-dir`/lib` directory, then restart the server.
@@ -1145,8 +1117,7 @@ Development Guide.
 
 [[gkpfj]][[GSADG00673]][[automatic-detection-of-installed-drivers]]
 
-Automatic Detection of Installed Drivers
-++++++++++++++++++++++++++++++++++++++++
+===== Automatic Detection of Installed Drivers
 
 The Administration Console detects installed JDBC Drivers automatically
 when you create a JDBC connection pool. To create a JDBC connection pool
@@ -1164,8 +1135,7 @@ Properties section.
 
 [[beamw]][[GSADG00579]][[configuration-specifics-for-jdbc-drivers]]
 
-Configuration Specifics for JDBC Drivers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuration Specifics for JDBC Drivers
 
 GlassFish Server is designed to support connectivity to any database
 management system by using a corresponding JDBC driver. Configuration
@@ -1192,8 +1162,7 @@ Database]
 
 [[beanc]][[GSADG00749]][[ibm-db2-database-type-2-driver]]
 
-IBM DB2 Database Type 2 Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== IBM DB2 Database Type 2 Driver
 
 The JAR files for the DB2 driver are `db2jcc.jar`,
 `db2jcc_license_cu.jar`, and `db2java.zip`. Set your environment
@@ -1229,8 +1198,7 @@ Configure the connection pool using the following settings:
 
 [[glhim]][[GSADG00750]][[ibm-db2-database-type-4-driver]]
 
-IBM DB2 Database Type 4 Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== IBM DB2 Database Type 4 Driver
 
 The JAR file for the DB2 driver is `db2jcc.jar`. Configure the
 connection pool using the following settings:
@@ -1251,8 +1219,7 @@ connection pool using the following settings:
 
 [[beamx]][[GSADG00751]][[apache-derby-dbderby-type-4-driver]]
 
-Apache Derby DB/Derby Type 4 Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Apache Derby DB/Derby Type 4 Driver
 
 The Apache Derby DB/Derby JDBC driver is included with GlassFish Server
 by default, so you do not need to integrate this JDBC driver with
@@ -1295,8 +1262,7 @@ authentication.
 
 [[gbsor]][[GSADG00752]][[mysql-server-database-type-4-driver]]
 
-MySQL Server Database Type 4 Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== MySQL Server Database Type 4 Driver
 
 The JAR file for the MySQL driver is
 `mysql-connector-java-5.1.14-bin.jar`. Configure the connection pool
@@ -1327,8 +1293,7 @@ server.
 
 [[beani]][[GSADG00753]][[oracle-10-database-driver]]
 
-Oracle 10 Database Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Oracle 10 Database Driver
 
 The JAR file for the Oracle 10 database driver is `ojdbc14.jar`. Make
 sure that the shared library is available through `LD_LIBRARY_PATH` and
@@ -1362,8 +1327,7 @@ oracle.jdbc.xa.client.OracleXADataSource
 
 [[beanh]][[GSADG00754]][[oracle-11-database-driver]]
 
-Oracle 11 Database Driver
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Oracle 11 Database Driver
 
 The JAR file for the Oracle 11 database driver is `ojdbc6.jar`.
 
@@ -1417,8 +1381,7 @@ DBA_2PC_PENDING and DBA_2PC_NEIGHBORS.
 
 [[gjksj]][[GSADG00755]][[postgresql-type-4-driver]]
 
-PostgreSQL Type 4 Driver
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== PostgreSQL Type 4 Driver
 
 The JAR file for the PostgreSQL driver is
 `postgresql-9.0-801.jdbc4.jar`. Configure the connection pool using the
@@ -1443,8 +1406,7 @@ server.
 
 [[beamy]][[GSADG00756]][[datadirect-type-4-driver-for-ibm-db2-database]]
 
-DataDirect Type 4 Driver for IBM DB2 Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for IBM DB2 Database
 
 The JAR file for DataDirect driver is `db2.jar`. Configure the
 connection pool using the following settings:
@@ -1468,8 +1430,7 @@ server.
 
 [[beanj]][[GSADG00757]][[datadirect-type-4-driver-for-ibm-informix]]
 
-DataDirect Type 4 Driver for IBM Informix
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for IBM Informix
 
 Configure the connection pool using the following settings:
 
@@ -1502,8 +1463,7 @@ server.
 
 [[beana]][[GSADG00758]][[datadirect-type-4-driver-for-microsoft-sql-server-database]]
 
-DataDirect Type 4 Driver for Microsoft SQL Server Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for Microsoft SQL Server Database
 
 The JAR file for the DataDirect driver is `sqlserver.jar`. Configure the
 connection pool using the following settings:
@@ -1527,8 +1487,7 @@ the database server.
 
 [[gjksd]][[GSADG00759]][[datadirect-type-4-driver-for-mysql-server-database]]
 
-DataDirect Type 4 Driver for MySQL Server Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for MySQL Server Database
 
 The JAR file for the DataDirect driver is `mysql.jar`. Configure the
 connection pool using the following settings:
@@ -1552,8 +1511,7 @@ the database server.
 
 [[beamz]][[GSADG00760]][[datadirect-type-4-driver-for-oracle-11-database]]
 
-DataDirect Type 4 Driver for Oracle 11 Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for Oracle 11 Database
 
 The JAR file for the DataDirect driver is `oracle.jar`.
 
@@ -1584,8 +1542,7 @@ server.
 
 [[beanb]][[GSADG00761]][[datadirect-type-4-driver-for-sybase-database]]
 
-DataDirect Type 4 Driver for Sybase Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== DataDirect Type 4 Driver for Sybase Database
 
 The JAR file for the DataDirect driver is `sybase.jar`. Configure the
 connection pool using the following settings:
@@ -1619,8 +1576,7 @@ PreparedStatement by default. If this situation arises, add the property
 
 [[beane]][[GSADG00762]][[inet-oraxo-driver-for-oracle-database]]
 
-Inet Oraxo Driver for Oracle Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Inet Oraxo Driver for Oracle Database
 
 The JAR file for the Inet Oracle driver is `Oranxo.jar`. Configure the
 connection pool using the following settings:
@@ -1662,8 +1618,7 @@ and this driver is used for CMP, this property must be set to `true`.
 
 [[beanf]][[GSADG00763]][[inet-merlia-driver-for-microsoft-sql-server-database]]
 
-Inet Merlia Driver for Microsoft SQL Server Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Inet Merlia Driver for Microsoft SQL Server Database
 
 The JAR file for the Inet Microsoft SQL Server driver is `Merlia.jar`.
 Configure the connection pool using the following settings:
@@ -1685,8 +1640,7 @@ the database server.
 
 [[beang]][[GSADG00764]][[inet-sybelux-driver-for-sybase-database]]
 
-Inet Sybelux Driver for Sybase Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Inet Sybelux Driver for Sybase Database
 
 The JAR file for the Inet Sybase driver is `Sybelux.jar`. Configure the
 connection pool using the following settings:
@@ -1711,8 +1665,7 @@ only the database name.
 
 [[beand]][[GSADG00765]][[jconnect-type-4-driver-for-sybase-ase-12.5-database]]
 
-JConnect Type 4 Driver for Sybase ASE 12.5 Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== JConnect Type 4 Driver for Sybase ASE 12.5 Database
 
 The JAR file for the Sybase driver is `jconn4.jar`. Configure the
 connection pool using the following settings:

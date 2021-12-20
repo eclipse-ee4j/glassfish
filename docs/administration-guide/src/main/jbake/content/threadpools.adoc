@@ -5,15 +5,13 @@ next=webapps.html
 prev=jvm.html
 ~~~~~~
 
-Administering Thread Pools
-==========================
+= Administering Thread Pools
 
 [[GSADG00008]][[abluc]]
 
 
 [[administering-thread-pools]]
-5 Administering Thread Pools
-----------------------------
+== 5 Administering Thread Pools
 
 This chapter provides procedures for administering thread pools in the
 GlassFish Server Open Source Edition 7 environment by using the
@@ -29,8 +27,7 @@ Console are contained in the Administration Console online help.
 
 [[ggjyv]][[GSADG00546]][[about-thread-pools]]
 
-About Thread Pools
-~~~~~~~~~~~~~~~~~~
+=== About Thread Pools
 
 The Virtual Machine for the Java platform (Java Virtual Machine) or JVM
 machine) can support many threads of execution simultaneously. To help
@@ -48,8 +45,7 @@ resource is free before allowing the request to use that resource.
 
 [[ablud]][[GSADG00547]][[configuring-thread-pools]]
 
-Configuring Thread Pools
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Thread Pools
 
 You can specify the minimum and maximum number of threads that are
 reserved for requests from applications. The thread pool is dynamically
@@ -64,8 +60,7 @@ The following topics are addressed here:
 
 [[ggkwj]][[GSADG00366]][[to-create-a-thread-pool]]
 
-To Create a Thread Pool
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Thread Pool
 
 Use the `create-threadpool` subcommand in remote mode to create a thread
 pool.
@@ -119,8 +114,7 @@ typing `asadmin help create-threadpool` at the command line.
 
 [[giuff]][[GSADG00367]][[to-list-thread-pools]]
 
-To List Thread Pools
-^^^^^^^^^^^^^^^^^^^^
+==== To List Thread Pools
 
 Use the `list-threadpools` subcommand in remote mode to list the
 existing thread pools.
@@ -150,8 +144,7 @@ typing `asadmin help list-threadpools` at the command line.
 
 [[ggkyc]][[GSADG00368]][[to-update-a-thread-pool]]
 
-To Update a Thread Pool
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Thread Pool
 
 Use the `set` subcommand to update the values for a specified thread
 pool.
@@ -192,8 +185,7 @@ typing `asadmin help set` at the command line.
 
 [[ggkwy]][[GSADG00369]][[to-delete-a-thread-pool]]
 
-To Delete a Thread Pool
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Thread Pool
 
 Use the `delete-threadpool` subcommand in remote mode to delete an
 existing thread pool. Deleting a thread pool will fail if that pool is

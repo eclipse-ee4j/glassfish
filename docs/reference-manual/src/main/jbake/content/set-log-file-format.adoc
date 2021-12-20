@@ -5,13 +5,11 @@ next=set-log-levels.html
 prev=set-log-attributes.html
 ~~~~~~
 
-set-log-file-format
-===================
+= set-log-file-format
 
 [[set-log-file-format-1]][[GSRFM879]][[set-log-file-format]]
 
-set-log-file-format
--------------------
+== set-log-file-format
 
 Sets the formatter to be used for the server log file
 

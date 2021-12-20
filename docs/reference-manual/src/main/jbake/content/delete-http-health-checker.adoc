@@ -5,13 +5,11 @@ next=delete-http-lb.html
 prev=delete-http.html
 ~~~~~~
 
-delete-http-health-checker
-==========================
+= delete-http-health-checker
 
 [[delete-http-health-checker-1]][[GSRFM00078]][[delete-http-health-checker]]
 
-delete-http-health-checker
---------------------------
+== delete-http-health-checker
 
 Deletes the health-checker for a specified load balancer configuration
 

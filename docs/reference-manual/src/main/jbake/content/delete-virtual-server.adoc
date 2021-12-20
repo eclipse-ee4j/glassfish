@@ -5,13 +5,11 @@ next=deploy.html
 prev=delete-transport.html
 ~~~~~~
 
-delete-virtual-server
-=====================
+= delete-virtual-server
 
 [[delete-virtual-server-1]][[GSRFM00113]][[delete-virtual-server]]
 
-delete-virtual-server
----------------------
+== delete-virtual-server
 
 Removes a virtual server
 

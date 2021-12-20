@@ -5,13 +5,11 @@ next=manvol5asc.html
 prev=capture-schema.html
 ~~~~~~
 
-package-appclient
-=================
+= package-appclient
 
 [[package-appclient-1m]][[GSRFM00264]][[package-appclient]]
 
-package-appclient
------------------
+== package-appclient
 
 Packs the application client container libraries and jar files
 

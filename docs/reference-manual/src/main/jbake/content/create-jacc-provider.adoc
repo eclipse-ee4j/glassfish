@@ -5,13 +5,11 @@ next=create-javamail-resource.html
 prev=create-instance.html
 ~~~~~~
 
-create-jacc-provider
-====================
+= create-jacc-provider
 
 [[create-jacc-provider-1]][[GSRFM00034]][[create-jacc-provider]]
 
-create-jacc-provider
---------------------
+== create-jacc-provider
 
 Enables administrators to create a JACC provider that can be used by
 third-party authorization modules for applications running in

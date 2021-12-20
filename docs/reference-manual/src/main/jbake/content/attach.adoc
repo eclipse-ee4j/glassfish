@@ -5,13 +5,11 @@ next=backup-domain.html
 prev=apply-http-lb-changes.html
 ~~~~~~
 
-attach
-======
+= attach
 
 [[attach-1]][[GSRFM825]][[attach]]
 
-attach
-------
+== attach
 
 Attaches to subcommands that were started using `asadmin --detach` or
 that contain progress information

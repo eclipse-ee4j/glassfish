@@ -5,13 +5,11 @@ next=security.html
 prev=passwords.html
 ~~~~~~
 
-resource
-========
+= resource
 
 [[resource-5asc]][[GSRFM00273]][[resource]]
 
-resource
---------
+== resource
 
 Provide connectivity to various types of EIS.
 

@@ -5,13 +5,11 @@ next=create-lifecycle-module.html
 prev=create-jndi-resource.html
 ~~~~~~
 
-create-jvm-options
-==================
+= create-jvm-options
 
 [[create-jvm-options-1]][[GSRFM00042]][[create-jvm-options]]
 
-create-jvm-options
-------------------
+== create-jvm-options
 
 Creates options for the Java application launcher
 

@@ -5,13 +5,11 @@ next=create-jacc-provider.html
 prev=create-iiop-listener.html
 ~~~~~~
 
-create-instance
-===============
+= create-instance
 
 [[create-instance-1]][[GSRFM00033]][[create-instance]]
 
-create-instance
----------------
+== create-instance
 
 Creates a {productName} instance
 

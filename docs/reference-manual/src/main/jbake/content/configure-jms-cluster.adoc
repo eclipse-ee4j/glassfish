@@ -5,13 +5,11 @@ next=configure-lb-weight.html
 prev=collect-log-files.html
 ~~~~~~
 
-configure-jms-cluster
-=====================
+= configure-jms-cluster
 
 [[configure-jms-cluster-1]][[GSRFM00008]][[configure-jms-cluster]]
 
-configure-jms-cluster
----------------------
+== configure-jms-cluster
 
 Configures the Message Queue cluster providing JMS services to a
 {productName} cluster

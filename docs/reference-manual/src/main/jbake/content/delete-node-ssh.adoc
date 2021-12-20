@@ -5,13 +5,11 @@ next=delete-password-alias.html
 prev=delete-node-dcom.html
 ~~~~~~
 
-delete-node-ssh
-===============
+= delete-node-ssh
 
 [[delete-node-ssh-1]][[GSRFM00100]][[delete-node-ssh]]
 
-delete-node-ssh
----------------
+== delete-node-ssh
 
 Deletes a node that is enabled for communication over SSH
 

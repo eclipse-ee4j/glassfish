@@ -5,13 +5,11 @@ next=create-jdbc-resource.html
 prev=create-javamail-resource.html
 ~~~~~~
 
-create-jdbc-connection-pool
-===========================
+= create-jdbc-connection-pool
 
 [[create-jdbc-connection-pool-1]][[GSRFM00036]][[create-jdbc-connection-pool]]
 
-create-jdbc-connection-pool
----------------------------
+== create-jdbc-connection-pool
 
 Registers a JDBC connection pool
 

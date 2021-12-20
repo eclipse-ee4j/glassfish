@@ -5,14 +5,12 @@ next=named-configurations.html
 prev=clusters.html
 ~~~~~~
 
-Administering GlassFish Server Instances
-========================================
+= Administering GlassFish Server Instances
 
 [[GSHAG00006]][[gkrbv]]
 
 [[administering-glassfish-server-instances]]
-5 Administering GlassFish Server Instances
-------------------------------------------
+== 5 Administering GlassFish Server Instances
 
 A GlassFish Server instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
@@ -37,8 +35,7 @@ The following topics are addressed here:
 
 [[gkrbn]][[GSHAG00186]][[types-of-glassfish-server-instances]]
 
-Types of GlassFish Server Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Types of GlassFish Server Instances
 
 Each GlassFish Server instance is one of the following types of
 instance:
@@ -73,8 +70,7 @@ Clustered instance::
 
 [[gkqal]][[GSHAG00187]][[administering-glassfish-server-instances-centrally]]
 
-Administering GlassFish Server Instances Centrally
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering GlassFish Server Instances Centrally
 
 Centralized administration requires the Distributed Component Object
 Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
@@ -97,8 +93,7 @@ following tasks:
 
 [[gkqch]][[GSHAG00106]][[to-create-an-instance-centrally]]
 
-To Create an Instance Centrally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Instance Centrally
 
 Use the `create-instance` subcommand in remote mode to create a
 GlassFish Server instance centrally. Creating an instance adds the
@@ -263,8 +258,7 @@ the following sections:
 
 [[gkrcb]][[GSHAG00107]][[to-list-all-instances-in-a-domain]]
 
-To List All Instances in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List All Instances in a Domain
 
 Use the `list-instances` subcommand in remote mode to obtain information
 about existing instances in a domain.
@@ -328,8 +322,7 @@ typing `asadmin help list-instances` at the command line.
 
 [[gkqcw]][[GSHAG00108]][[to-delete-an-instance-centrally]]
 
-To Delete an Instance Centrally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an Instance Centrally
 
 Use the `delete-instance` subcommand in remote mode to delete a
 GlassFish Server instance centrally.
@@ -415,8 +408,7 @@ typing the following commands at the command line:
 
 [[gkqcj]][[GSHAG00109]][[to-start-a-cluster]]
 
-To Start a Cluster
-^^^^^^^^^^^^^^^^^^
+==== To Start a Cluster
 
 Use the `start-cluster` subcommand in remote mode to start a cluster.
 
@@ -480,8 +472,7 @@ Edition Application Deployment Guide].
 
 [[gkqcl]][[GSHAG00110]][[to-stop-a-cluster]]
 
-To Stop a Cluster
-^^^^^^^^^^^^^^^^^
+==== To Stop a Cluster
 
 Use the `stop-cluster` subcommand in remote mode to stop a cluster.
 
@@ -529,8 +520,7 @@ cluster.
 
 [[gkqaw]][[GSHAG00111]][[to-start-an-individual-instance-centrally]]
 
-To Start an Individual Instance Centrally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start an Individual Instance Centrally
 
 Use the `start-instance` subcommand in remote mode to start an
 individual instance centrally.
@@ -609,8 +599,7 @@ Edition Application Deployment Guide].
 
 [[gkqaj]][[GSHAG00112]][[to-stop-an-individual-instance-centrally]]
 
-To Stop an Individual Instance Centrally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Stop an Individual Instance Centrally
 
 Use the `stop-instance` subcommand in remote mode to stop an individual
 instance centrally.
@@ -655,8 +644,7 @@ system to kill the instance process.
 
 [[gkqcc]][[GSHAG00113]][[to-restart-an-individual-instance-centrally]]
 
-To Restart an Individual Instance Centrally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Restart an Individual Instance Centrally
 
 Use the `restart-instance` subcommand in remote mode to start an
 individual instance centrally.
@@ -713,8 +701,7 @@ system to kill the instance process before restarting the instance.
 
 [[gkqdw]][[GSHAG00188]][[administering-glassfish-server-instances-locally]]
 
-Administering GlassFish Server Instances Locally
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering GlassFish Server Instances Locally
 
 Local administration does not require DCOM or SSH to be set up. If
 neither DCOM nor SSH is set up, you must log in to each host where
@@ -741,8 +728,7 @@ Instances in a Domain].
 
 [[gkqbl]][[GSHAG00114]][[to-create-an-instance-locally]]
 
-To Create an Instance Locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Instance Locally
 
 Use the `create-local-instance` subcommand in remote mode to create a
 GlassFish Server instance locally. Creating an instance adds the
@@ -994,8 +980,7 @@ the following sections:
 
 [[gkqed]][[GSHAG00115]][[to-delete-an-instance-locally]]
 
-To Delete an Instance Locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an Instance Locally
 
 Use the `delete-local-instance` subcommand in remote mode to delete a
 GlassFish Server instance locally.
@@ -1094,8 +1079,7 @@ typing the following commands at the command line:
 
 [[gkqak]][[GSHAG00116]][[to-start-an-individual-instance-locally]]
 
-To Start an Individual Instance Locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start an Individual Instance Locally
 
 Use the `start-local-instance` subcommand in local mode to start an
 individual instance locally.
@@ -1159,8 +1143,7 @@ Edition Application Deployment Guide].
 
 [[gkqci]][[GSHAG00117]][[to-stop-an-individual-instance-locally]]
 
-To Stop an Individual Instance Locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Stop an Individual Instance Locally
 
 Use the `stop-local-instance` subcommand in local mode to stop an
 individual instance locally.
@@ -1216,8 +1199,7 @@ system to kill the instance process.
 
 [[gkqef]][[GSHAG00118]][[to-restart-an-individual-instance-locally]]
 
-To Restart an Individual Instance Locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Restart an Individual Instance Locally
 
 Use the `restart-local-instance` subcommand in local mode to restart an
 individual instance locally.
@@ -1276,8 +1258,7 @@ system to kill the instance process before restarting the instance.
 
 [[gkrdd]][[GSHAG00189]][[resynchronizing-glassfish-server-instances-and-the-das]]
 
-Resynchronizing GlassFish Server Instances and the DAS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Resynchronizing GlassFish Server Instances and the DAS
 
 Configuration data for a GlassFish Server instance is stored as follows:
 
@@ -1294,8 +1275,7 @@ Open Source Edition Administration Guide.
 
 [[gksbo]][[GSHAG00267]][[default-synchronization-for-files-and-directories]]
 
-Default Synchronization for Files and Directories
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Default Synchronization for Files and Directories
 
 The `--sync` option of the subcommands for starting an instance controls
 the type of synchronization between the DAS and the instance's files
@@ -1438,8 +1418,7 @@ Optional packages were formerly known as standard extensions or extensions.
 
 [[gksak]][[GSHAG00119]][[to-resynchronize-an-instance-and-the-das-online]]
 
-To Resynchronize an Instance and the DAS Online
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize an Instance and the DAS Online
 
 Resynchronizing an instance and the DAS updates the instance with
 changes to the instance's configuration files on the DAS. An instance is
@@ -1565,8 +1544,7 @@ typing the following commands at the command line.
 
 [[gksav]][[GSHAG00120]][[to-resynchronize-library-files]]
 
-To Resynchronize Library Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize Library Files
 
 To ensure that library files are resynchronized correctly, you must
 ensure that each library file is placed in the correct directory for the
@@ -1626,8 +1604,7 @@ typing the command `asadmin help deploy` at the command line.
 
 [[gksco]][[GSHAG00121]][[to-resynchronize-custom-configuration-files-for-an-instance]]
 
-To Resynchronize Custom Configuration Files for an Instance
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize Custom Configuration Files for an Instance
 
 Configuration files in the domain-dir`/config` directory that are
 resynchronized are resynchronized for the entire domain. If you create a
@@ -1707,8 +1684,7 @@ typing the following commands at the command line.
 
 [[gkscp]][[GSHAG00122]][[to-resynchronize-users-changes-to-files]]
 
-To Resynchronize Users' Changes to Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize Users' Changes to Files
 
 A change to the `config/domain.xml` file is required to cause the DAS to
 resynchronize instances' files. If other files in the domain directory
@@ -1738,8 +1714,7 @@ See Also
 
 [[gksaz]][[GSHAG00123]][[to-resynchronize-additional-configuration-files]]
 
-To Resynchronize Additional Configuration Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize Additional Configuration Files
 
 By default, GlassFish Server synchronizes only the following
 configuration files:
@@ -1800,8 +1775,7 @@ some-other-info
 
 [[gksdj]][[GSHAG00124]][[to-prevent-deletion-of-application-generated-files]]
 
-To Prevent Deletion of Application-Generated Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Prevent Deletion of Application-Generated Files
 
 When the DAS resynchronizes an instance's files, the DAS deletes from
 the instance's cache any files that are not listed for
@@ -1815,8 +1789,7 @@ defined by GlassFish Server, for example,
 
 [[gksdy]][[GSHAG00125]][[to-resynchronize-an-instance-and-the-das-offline]]
 
-To Resynchronize an Instance and the DAS Offline
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Resynchronize an Instance and the DAS Offline
 
 Resynchronizing an instance and the DAS offline updates the instance's
 cache without the need for the instance to be able to communicate with
@@ -1950,8 +1923,7 @@ typing the following commands at the command line.
 
 [[gkqcr]][[GSHAG00190]][[migrating-ejb-timers]]
 
-Migrating EJB Timers
-~~~~~~~~~~~~~~~~~~~~
+=== Migrating EJB Timers
 
 If a GlassFish Server server instance stops or fails abnormally, it may
 be desirable to migrate the EJB timers defined for that stopped server
@@ -1967,8 +1939,7 @@ timers can be migrated manually for stopped or crashed server instances.
 
 [[gkvwo]][[GSHAG00126]][[to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances]]
 
-To Enable Automatic EJB Timer Migration for Failed Clustered Instances
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable Automatic EJB Timer Migration for Failed Clustered Instances
 
 Automatic migration of EJB timers is enabled by default for clustered
 server instances that are stopped normally. If the Group Management
@@ -2007,8 +1978,7 @@ Source Edition Administration Guide.
 
 [[abdji]][[GSHAG00127]][[to-migrate-ejb-timers-manually]]
 
-To Migrate EJB Timers Manually
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Migrate EJB Timers Manually
 
 EJB timers can be migrated manually from a stopped source instance to a
 specified target instance in the same cluster if GMS notification is not

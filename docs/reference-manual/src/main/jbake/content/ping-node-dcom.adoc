@@ -5,13 +5,11 @@ next=ping-node-ssh.html
 prev=ping-connection-pool.html
 ~~~~~~
 
-ping-node-dcom
-==============
+= ping-node-dcom
 
 [[ping-node-dcom-1]][[GSRFM728]][[ping-node-dcom]]
 
-ping-node-dcom
---------------
+== ping-node-dcom
 
 Tests if a node that is enabled for communication over DCOM is usable
 

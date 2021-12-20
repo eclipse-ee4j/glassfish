@@ -5,13 +5,11 @@ next=delete-connector-connection-pool.html
 prev=delete-cluster.html
 ~~~~~~
 
-delete-config
-=============
+= delete-config
 
 [[delete-config-1]][[GSRFM00069]][[delete-config]]
 
-delete-config
--------------
+== delete-config
 
 Deletes an existing named configuration
 

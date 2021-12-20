@@ -5,15 +5,13 @@ next=tuning-os.html
 prev=tuning-glassfish.html
 ~~~~~~
 
-Tuning the Java Runtime System
-==============================
+= Tuning the Java Runtime System
 
 [[GSPTG00006]][[abeia]]
 
 
 [[tuning-the-java-runtime-system]]
-4 Tuning the Java Runtime System
---------------------------------
+== 4 Tuning the Java Runtime System
 
 The following topics are addressed here:
 
@@ -25,8 +23,7 @@ The following topics are addressed here:
 
 [[abeib]][[GSPTG00069]][[java-virtual-machine-settings]]
 
-Java Virtual Machine Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Java Virtual Machine Settings
 
 Java SE 7 provides two implementations of the HotSpot Java virtual
 machine (JVM):
@@ -63,8 +60,7 @@ http://download.oracle.com/javase/6/docs/[Java Virtual Machines]
 
 [[gfpzy]][[GSPTG00070]][[start-options]]
 
-Start Options
-~~~~~~~~~~~~~
+=== Start Options
 
 In some situations, performance can be improved by using large page
 sizes. For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
@@ -72,8 +68,7 @@ sizes. For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
 
 [[glaat]][[GSPTG00071]][[tuning-high-availability-persistence]]
 
-Tuning High Availability Persistence
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Tuning High Availability Persistence
 
 If session `s1` and `s2` need to be replicated to an instance (backup
 server), the replication module batches the replication messages to be
@@ -90,8 +85,7 @@ this property is set with the `-D` flag in your Java arguments.
 
 [[abeic]][[GSPTG00072]][[managing-memory-and-garbage-collection]]
 
-Managing Memory and Garbage Collection
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Managing Memory and Garbage Collection
 
 The efficiency of any application depends on how well memory and garbage
 collection are managed. The following sections provide information on
@@ -105,8 +99,7 @@ optimizing memory and allocation functions:
 
 [[abeid]][[GSPTG00205]][[tuning-the-garbage-collector]]
 
-Tuning the Garbage Collector
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning the Garbage Collector
 
 Garbage collection (GC) reclaims the heap space previously allocated to
 objects no longer needed. The process of locating and removing the dead
@@ -158,8 +151,7 @@ construction cost is high and significantly affects execution profiles.
 
 [[abeie]][[GSPTG00146]][[choosing-the-garbage-collection-algorithm]]
 
-Choosing the Garbage Collection Algorithm
-+++++++++++++++++++++++++++++++++++++++++
+===== Choosing the Garbage Collection Algorithm
 
 The default collector for Java server class machines will optimize for
 throughput but be tolerant of somewhat long pause times. If you would
@@ -182,8 +174,7 @@ To do this, add the following JVM options:
 
 [[abeif]][[GSPTG00147]][[additional-information]]
 
-Additional Information
-++++++++++++++++++++++
+===== Additional Information
 
 Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
 link:#abeiq[Further Information].)
@@ -195,8 +186,7 @@ SE 6 HotSpot Virtual Machine Garbage Collection Tuning]
 
 [[abeig]][[GSPTG00206]][[tracing-garbage-collection]]
 
-Tracing Garbage Collection
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tracing Garbage Collection
 
 The two primary measures of garbage collection performance are
 throughput and pauses. Throughput is the percentage of the total time
@@ -246,8 +236,7 @@ Other useful monitoring options include:
 
 [[abeih]][[GSPTG00207]][[other-garbage-collector-settings]]
 
-Other Garbage Collector Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Other Garbage Collector Settings
 
 To specify the attributes for the Java virtual machine, use the
 Administration Console and set the property under config-name > JVM
@@ -255,8 +244,7 @@ settings (JVM options).
 
 [[glgkm]][[GSPTG00148]][[setting-the-maximum-permanent-generation]]
 
-Setting the Maximum Permanent Generation
-++++++++++++++++++++++++++++++++++++++++
+===== Setting the Maximum Permanent Generation
 
 For applications that do not dynamically generate and load classes, the
 size of the permanent generation does not affect GC performance. For
@@ -268,8 +256,7 @@ option.
 
 [[glglk]][[GSPTG00149]][[disabling-explicit-garbage-collection]]
 
-Disabling Explicit Garbage Collection
-+++++++++++++++++++++++++++++++++++++
+===== Disabling Explicit Garbage Collection
 
 Although applications can explicitly invoke GC with the `System.gc()`
 method, doing so is a bad idea since this forces major collections, and
@@ -298,8 +285,7 @@ file. GlassFish Server can then delete or rename the file.
 
 [[glglr]][[GSPTG00150]][[setting-the-frequency-of-full-garbage-collection]]
 
-Setting the Frequency of Full Garbage Collection
-++++++++++++++++++++++++++++++++++++++++++++++++
+===== Setting the Frequency of Full Garbage Collection
 
 GlassFish Server uses RMI in the Administration module for monitoring.
 Garbage cannot be collected in RMI-based distributed applications
@@ -311,8 +297,7 @@ collection once per hour instead of the default rate of once per minute.
 
 [[abeii]][[GSPTG00208]][[tuning-the-java-heap]]
 
-Tuning the Java Heap
-^^^^^^^^^^^^^^^^^^^^
+==== Tuning the Java Heap
 
 This section discusses topics related to tuning the Java Heap for
 performance.
@@ -322,8 +307,7 @@ performance.
 
 [[abeij]][[GSPTG00151]][[guidelines-for-java-heap-sizing]]
 
-Guidelines for Java Heap Sizing
-+++++++++++++++++++++++++++++++
+===== Guidelines for Java Heap Sizing
 
 Maximum heap size depends on maximum address space per process. The
 following table shows the maximum per-process address values for various
@@ -362,8 +346,7 @@ can fit in the free memory of your machine.
 
 [[abeik]][[GSPTG00152]][[heap-tuning-parameters]]
 
-Heap Tuning Parameters
-++++++++++++++++++++++
+===== Heap Tuning Parameters
 
 You can control the heap size with the following JVM parameters:
 
@@ -458,8 +441,7 @@ observing the lifetime distribution of an application.
 
 [[abeio]][[GSPTG00209]][[rebasing-dlls-on-windows]]
 
-Rebasing DLLs on Windows
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Rebasing DLLs on Windows
 
 When the JVM initializes, it tries to allocate its heap using the `-Xms`
 setting. The base addresses of GlassFish Server DLLs can restrict the
@@ -488,8 +470,7 @@ after installing the GlassFish Server.
 
 [[gacmt]][[GSPTG00039]][[to-rebase-the-glassfish-servers-dlls]]
 
-To rebase the GlassFish Server's DLLs
-+++++++++++++++++++++++++++++++++++++
+===== To rebase the GlassFish Server's DLLs
 
 [[sthref11]]
 
@@ -549,8 +530,7 @@ documentation for rebase utility]
 
 [[abeiq]][[GSPTG00073]][[further-information]]
 
-Further Information
-~~~~~~~~~~~~~~~~~~~
+=== Further Information
 
 For more information on tuning the JVM, see:
 

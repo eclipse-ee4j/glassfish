@@ -5,13 +5,11 @@ next=create-cluster.html
 prev=create-audit-module.html
 ~~~~~~
 
-create-auth-realm
-=================
+= create-auth-realm
 
 [[create-auth-realm-1]][[GSRFM00015]][[create-auth-realm]]
 
-create-auth-realm
------------------
+== create-auth-realm
 
 Adds the named authentication realm
 

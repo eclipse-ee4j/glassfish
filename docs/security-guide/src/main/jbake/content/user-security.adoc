@@ -5,15 +5,13 @@ next=message-security.html
 prev=system-security.html
 ~~~~~~
 
-Administering User Security
-===========================
+= Administering User Security
 
 [[GSSCG00036]][[ggnqj]]
 
 
 [[administering-user-security]]
-2 Administering User Security
------------------------------
+== 2 Administering User Security
 
 This chapter provides instructions for administering user security in
 the Oracle GlassFish Server environment by using the `asadmin`
@@ -45,8 +43,7 @@ in The Jakarta EE Tutorial for more information about Identity Stores.
 
 [[ggkuk]][[GSSCG00151]][[administering-authentication-realms]]
 
-Administering Authentication Realms
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Authentication Realms
 
 The following topics are addressed here:
 
@@ -62,8 +59,7 @@ The following topics are addressed here:
 
 [[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
 
-Overview of Authentication Realms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Overview of Authentication Realms
 
 An authentication realm, also called a security policy domain or
 security domain, is a scope over which the GlassFish Server defines and
@@ -154,8 +150,7 @@ The GlassFish Server authentication service can govern users in multiple realms.
 
 [[ggnca]][[GSSCG00110]][[to-create-an-authentication-realm]]
 
-To Create an Authentication Realm
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Authentication Realm
 
 Use the `create-auth-realm` subcommand in remote mode to create an
 authentication realm.
@@ -190,8 +185,7 @@ Source Edition Application Development Guide.
 
 [[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
 
-To List Authentication Realms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Authentication Realms
 
 Use the `list-auth-realms` subcommand in remote mode to list the
 existing authentication realms.
@@ -224,8 +218,7 @@ typing `asadmin help list-auth-realms` at the command line.
 
 [[giwlt]][[GSSCG00112]][[to-update-an-authentication-realm]]
 
-To Update an Authentication Realm
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update an Authentication Realm
 
 Use the `set` subcommand to modify an existing authentication realm.
 
@@ -249,8 +242,7 @@ Source Edition Administration Guide.
 
 [[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
 
-To Delete an Authentication Realm
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an Authentication Realm
 
 Use the `delete-auth-realm` subcommand in remote mode to delete an
 existing authentication realm.
@@ -285,8 +277,7 @@ typing `asadmin help delete-auth-realm` at the command line.
 
 [[ggmww]][[GSSCG00114]][[to-configure-a-jdbc-or-digest-authentication-realm]]
 
-To Configure a JDBC or Digest Authentication Realm
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a JDBC or Digest Authentication Realm
 
 GlassFish Server enables you to specify a user's credentials (user name
 and password) in the JDBC realm instead of in the connection pool. Using
@@ -369,8 +360,7 @@ security role `Employee` to user `Calvin`
 
 [[gkbeo]][[GSSCG00115]][[to-configure-ldap-authentication-with-oid]]
 
-To Configure LDAP Authentication with OID
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure LDAP Authentication with OID
 
 This procedure explains how to configure GlassFish Server to use LDAP
 authentication with Oracle Internet Directory.
@@ -469,8 +459,7 @@ complete instructions on the `ldapmodify` command.
 
 [[gksgi]][[GSSCG00116]][[to-configure-ldap-authentication-with-ovd]]
 
-To Configure LDAP Authentication with OVD
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure LDAP Authentication with OVD
 
 This procedure explains how to configure GlassFish Server to use LDAP
 authentication with Oracle Virtual Directory.
@@ -531,8 +520,7 @@ in GlassFish Server Open Source Edition Administration Guide.
 
 [[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
 
-To Enable LDAP Authentication on the GlassFish Server DAS
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable LDAP Authentication on the GlassFish Server DAS
 
 This procedure explains how to enable LDAP authentication for logins to
 the GlassFish Server Domain Administration Server (DAS). Logging in to
@@ -587,8 +575,7 @@ about the `configure-ldap-for-admin subcommand`.
 
 [[ggnxq]][[GSSCG00152]][[administering-file-users]]
 
-Administering File Users
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering File Users
 
 A user is an individual (or application program) identity that is
 defined in GlassFish Server. A user who has been authenticated is
@@ -609,8 +596,7 @@ The following topics are addressed here:
 
 [[ggocf]][[GSSCG00118]][[to-create-a-file-user]]
 
-To Create a File User
-^^^^^^^^^^^^^^^^^^^^^
+==== To Create a File User
 
 Use the `create-file-user` subcommand in remote mode to create a new
 user by adding a new entry to the `keyfile`. The entry includes the user
@@ -661,8 +647,7 @@ typing `asadmin help create-file-user` at the command line.
 
 [[ggoab]][[GSSCG00119]][[to-list-file-users]]
 
-To List File Users
-^^^^^^^^^^^^^^^^^^
+==== To List File Users
 
 Use the `list-file-users` subcommand in remote mode to list the users
 that are in the `keyfile`.
@@ -692,8 +677,7 @@ typing `asadmin help list-file-users` at the command line.
 
 [[ghlgs]][[GSSCG00120]][[to-list-file-groups]]
 
-To List File Groups
-^^^^^^^^^^^^^^^^^^^
+==== To List File Groups
 
 A group is a category of users classified by common traits, such as job
 title or customer profile. For example, users of an e-commerce
@@ -732,8 +716,7 @@ Command list-file-groups executed successfully
 
 [[ggoaw]][[GSSCG00121]][[to-update-a-file-user]]
 
-To Update a File User
-^^^^^^^^^^^^^^^^^^^^^
+==== To Update a File User
 
 Use the `update-file-user` subcommand in remote mode to modify the
 information in the `keyfile` for a specified user.
@@ -773,8 +756,7 @@ typing `asadmin help update-file-user` at the command line.
 
 [[ggoah]][[GSSCG00122]][[to-delete-a-file-user]]
 
-To Delete a File User
-^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a File User
 
 Use the `delete-file-user` subcommand in remote mode to remove a user
 entry from the `keyfile` by specifying the user name. You cannot delete

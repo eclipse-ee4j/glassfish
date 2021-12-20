@@ -5,15 +5,13 @@ next=jvm.html
 prev=general-administration.html
 ~~~~~~
 
-Administering Domains
-=====================
+= Administering Domains
 
 [[GSADG00006]][[ggnop]]
 
 
 [[administering-domains]]
-3 Administering Domains
------------------------
+== 3 Administering Domains
 
 This chapter provides procedures for administering domains in the
 GlassFish Server Open Source Edition environment by using the `asadmin`
@@ -35,8 +33,7 @@ online help.
 
 [[ggoek]][[GSADG00535]][[about-administering-domains]]
 
-About Administering Domains
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Administering Domains
 
 A domain contains a group of GlassFish Server instances that are
 administered together. Each domain has a domain administration server
@@ -49,8 +46,7 @@ explained in more detail in the following sections:
 
 [[geolm]][[GSADG00715]][[glassfish-server-instances]]
 
-GlassFish Server Instances
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server Instances
 
 A GlassFish Server instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
@@ -85,8 +81,7 @@ link:http_https.html#ggncs[Administering Virtual Servers].
 
 [[geojp]][[GSADG00716]][[domains-for-administering-glassfish-server]]
 
-Domains for Administering GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Domains for Administering GlassFish Server
 
 A domain is an administrative boundary that contains a group of
 GlassFish Server instances that are administered together. Each instance
@@ -113,8 +108,7 @@ Server Open Source Edition Security Guide.
 
 [[geojl]][[GSADG00717]][[domain-administration-server-das]]
 
-Domain Administration Server (DAS)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Domain Administration Server (DAS)
 
 The domain administration server (DAS) is a specially designated
 GlassFish Server instance that hosts administrative applications. The
@@ -144,8 +138,7 @@ Administration Console session to manage each domain.
 
 [[gitvz]][[GSADG00536]][[creating-logging-in-to-and-deleting-a-domain]]
 
-Creating, Logging In To, and Deleting a Domain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Logging In To, and Deleting a Domain
 
 The following topics are addressed here:
 
@@ -157,8 +150,7 @@ The following topics are addressed here:
 
 [[ggoei]][[GSADG00330]][[to-create-a-domain]]
 
-To Create a Domain
-^^^^^^^^^^^^^^^^^^
+==== To Create a Domain
 
 After installing GlassFish Server and creating the default domain
 (`domain1`), you can create additional domains by using the local
@@ -229,8 +221,7 @@ typing `asadmin help create-domain` at the command line.
 
 [[gldel]][[GSADG00331]][[to-create-a-domain-from-a-custom-template]]
 
-To Create a Domain From a Custom Template
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Domain From a Custom Template
 
 A custom template enables you to customize the configuration of any
 domain that you create from the template.
@@ -372,8 +363,7 @@ typing the following commands at the command line.
 
 [[ggoco]][[GSADG00332]][[to-list-domains]]
 
-To List Domains
-^^^^^^^^^^^^^^^
+==== To List Domains
 
 Use the `list-domains` subcommand to display a list of domains and their statuses.
 If the domain directory is not specified, the contents of the
@@ -407,8 +397,7 @@ typing `asadmin help list-domain` at the command line.
 
 [[ghhjz]][[GSADG00333]][[to-log-in-to-a-domain]]
 
-To Log In to a Domain
-^^^^^^^^^^^^^^^^^^^^^
+==== To Log In to a Domain
 
 All remote subcommands require that credentials be specified in terms of
 an administration user name and its password. By default, the domain is
@@ -509,8 +498,7 @@ Passwords]" in GlassFish Server Open Source Edition Security Guide.
 
 [[ggofa]][[GSADG00334]][[to-delete-a-domain]]
 
-To Delete a Domain
-^^^^^^^^^^^^^^^^^^
+==== To Delete a Domain
 
 Use the `delete-domain` subcommand to delete an existing domain from a
 server. Only the root user or the operating system user who is
@@ -549,8 +537,7 @@ typing `asadmin help delete-domain` at the command line.
 
 [[gitwj]][[GSADG00537]][[starting-and-stopping-a-domain]]
 
-Starting and Stopping a Domain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Starting and Stopping a Domain
 
 The following topics are addressed here:
 
@@ -560,8 +547,7 @@ The following topics are addressed here:
 
 [[ggoda]][[GSADG00335]][[to-start-a-domain]]
 
-To Start a Domain
-^^^^^^^^^^^^^^^^^
+==== To Start a Domain
 
 When you start a domain or server, the domain administration server
 (DAS) is started. After startup, the DAS runs constantly, listening for
@@ -620,8 +606,7 @@ typing `asadmin help start-domain` at the command line.
 
 [[ggoch]][[GSADG00336]][[to-stop-a-domain]]
 
-To Stop a Domain
-^^^^^^^^^^^^^^^^
+==== To Stop a Domain
 
 Stopping a domain or server shuts down its domain administration server
 (DAS). When stopping a domain, the DAS stops accepting new connections
@@ -672,8 +657,7 @@ typing `asadmin help stop-domain` at the command line.
 
 [[ginqj]][[GSADG00337]][[to-restart-a-domain]]
 
-To Restart a Domain
-^^^^^^^^^^^^^^^^^^^
+==== To Restart a Domain
 
 Use the `restart-domain` subcommand in remote mode to restart the Domain
 Administration Server (DAS) of the specified host. When restarting a
@@ -724,8 +708,7 @@ typing `asadmin help restart-domain` at the command line.
 
 [[gglqp]][[GSADG00538]][[configuring-a-das-or-a-glassfish-server-instance-for-automatic-restart]]
 
-Configuring a DAS or a GlassFish Server Instance for Automatic Restart
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring a DAS or a GlassFish Server Instance for Automatic Restart
 
 Use the `create-service` subcommand in local mode to configure your
 system to automatically restart a domain administration server (DAS) or
@@ -749,8 +732,7 @@ The following topics are addressed here:
 
 [[gjzfg]][[GSADG00338]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-windows]]
 
-To Configure a DAS or an Instance for Automatic Restart on Windows
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a DAS or an Instance for Automatic Restart on Windows
 
 On Windows systems, the `create-service` subcommand creates a Windows
 service to represent the DAS or instance. The service is created in the
@@ -833,8 +815,7 @@ SERVICE_NAME: domain1
 
 [[giurs]][[GSADG00339]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-linux]]
 
-To Configure a DAS or an Instance for Automatic Restart on Linux
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a DAS or an Instance for Automatic Restart on Linux
 
 On Linux systems, the `create-service` subcommand creates a
 System-V-style initialization script
@@ -889,8 +870,7 @@ Command create-service executed successfully.
 [[giusi]][[GSADG00340]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris]]
 
 To Configure a DAS or an Instance for Automatic Restart on Oracle
-Solaris
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Solaris
 
 On Oracle Solaris systems, the `create-service` subcommand creates an
 Oracle Solaris Service Management Facility (SMF) service that restarts a
@@ -995,8 +975,7 @@ Services (Tasks)]" in System Administration Guide: Basic Administration
 
 [[giurf]][[GSADG00341]][[to-prevent-service-shutdown-when-a-user-logs-out-on-windows]]
 
-To Prevent Service Shutdown When a User Logs Out on Windows
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Prevent Service Shutdown When a User Logs Out on Windows
 
 By default, the Java Virtual Machine (VM) receives signals from Windows
 that indicate that Windows is shutting down, or that a user is logging
@@ -1036,8 +1015,7 @@ to the line that runs the `admin-cli.jar` file.
 
 [[gityo]][[GSADG00541]][[backing-up-and-restoring-a-domain]]
 
-Backing Up and Restoring a Domain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Backing Up and Restoring a Domain
 
 The following topics are addressed here:
 
@@ -1047,8 +1025,7 @@ The following topics are addressed here:
 
 [[ggocq]][[GSADG00352]][[to-back-up-a-domain]]
 
-To Back Up a Domain
-^^^^^^^^^^^^^^^^^^^
+==== To Back Up a Domain
 
 Use the `backup-domain` subcommand in local mode to make a backup of a
 specified domain.
@@ -1097,8 +1074,7 @@ typing `asadmin help backup-domain` at the command line.
 
 [[ggody]][[GSADG00353]][[to-restore-a-domain]]
 
-To Restore a Domain
-^^^^^^^^^^^^^^^^^^^
+==== To Restore a Domain
 
 Use the `restore-domain` subcommand in local mode to use a backup file
 to restore the files and subdirectories in a specified domain's
@@ -1150,8 +1126,7 @@ typing `asadmin restore-domain --help` at the command line.
 
 [[ghgod]][[GSADG00354]][[to-list-domain-backups]]
 
-To List Domain Backups
-^^^^^^^^^^^^^^^^^^^^^^
+==== To List Domain Backups
 
 Use the `list-backups` subcommand in local mode to display information
 about backups of a specified domain stored in a specified backup
@@ -1193,8 +1168,7 @@ typing `asadmin help list-backups` at the command line.
 
 [[gglri]][[GSADG00542]][[re-creating-the-domain-administration-server-das]]
 
-Re-Creating the Domain Administration Server (DAS)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Re-Creating the Domain Administration Server (DAS)
 
 For mirroring purposes, and to provide a working copy of the DAS, you
 must have:
@@ -1228,8 +1202,7 @@ link:#gglnp[To Migrate the DAS].
 
 [[gglnp]][[GSADG00355]][[to-migrate-the-das]]
 
-To Migrate the DAS
-^^^^^^^^^^^^^^^^^^
+==== To Migrate the DAS
 
 The following steps are required to migrate the DAS from the first host
 (olddashost) to the third host (newdashost).
@@ -1298,8 +1271,7 @@ asadmin> list-instances --long
 
 [[gitvn]][[GSADG00543]][[additional-domain-tasks]]
 
-Additional Domain Tasks
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Additional Domain Tasks
 
 The following topics are addressed here:
 
@@ -1309,8 +1281,7 @@ The following topics are addressed here:
 
 [[ghhnt]][[GSADG00356]][[to-display-domain-uptime]]
 
-To Display Domain Uptime
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Display Domain Uptime
 
 Use the `uptime` subcommand in remote mode to display the length of time
 that the domain administration server (DAS) has been running since it
@@ -1340,8 +1311,7 @@ typing `asadmin help uptime` at the command line.
 
 [[ghmbn]][[GSADG00357]][[to-switch-a-domain-to-another-supported-java-version]]
 
-To Switch a Domain to Another Supported Java Version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Switch a Domain to Another Supported Java Version
 
 GlassFish Server 7 requires Java SE 8 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
@@ -1383,8 +1353,7 @@ as-install/bin/asadmin set "server.java-config.java-home=path-to-java-home"
 
 [[gkvkb]][[GSADG00358]][[to-change-the-administration-port-of-a-domain]]
 
-To Change the Administration Port of a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change the Administration Port of a Domain
 
 Use the `set` subcommand in remote mode to change the administration
 port of a domain.

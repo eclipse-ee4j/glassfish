@@ -5,13 +5,11 @@ next=export-sync-bundle.html
 prev=export.html
 ~~~~~~
 
-export-http-lb-config
-=====================
+= export-http-lb-config
 
 [[export-http-lb-config-1]][[GSRFM00133]][[export-http-lb-config]]
 
-export-http-lb-config
----------------------
+== export-http-lb-config
 
 Exports the load balancer configuration or load balancer to a file
 

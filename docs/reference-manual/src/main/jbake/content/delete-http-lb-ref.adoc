@@ -5,13 +5,11 @@ next=delete-http-listener.html
 prev=delete-http-lb-config.html
 ~~~~~~
 
-delete-http-lb-ref
-==================
+= delete-http-lb-ref
 
 [[delete-http-lb-ref-1]][[GSRFM00081]][[delete-http-lb-ref]]
 
-delete-http-lb-ref
-------------------
+== delete-http-lb-ref
 
 Deletes the cluster or server instance from a load balancer
 

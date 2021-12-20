@@ -4,23 +4,20 @@ title=Checklist for Deployment
 prev=planning.html
 ~~~~~~
 
-Checklist for Deployment
-========================
+= Checklist for Deployment
 
 [[GSPLG00003]][[abfeq]]
 
 
 [[checklist-for-deployment]]
-3 Checklist for Deployment
---------------------------
+== 3 Checklist for Deployment
 
 This appendix provides a checklist to get started on evaluation and
 production with the GlassFish Server.
 
 [[sthref7]][[checklist]]
 
-Checklist
-~~~~~~~~~
+=== Checklist
 
 [[sthref8]][[sthref9]]
 

@@ -5,13 +5,11 @@ next=set-web-context-param.html
 prev=setup-local-dcom.html
 ~~~~~~
 
-setup-ssh
-=========
+= setup-ssh
 
 [[setup-ssh-1]][[GSRFM00229]][[setup-ssh]]
 
-setup-ssh
----------
+== setup-ssh
 
 Sets up an SSH key on specified hosts
 

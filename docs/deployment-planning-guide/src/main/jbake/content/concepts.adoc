@@ -5,15 +5,13 @@ next=planning.html
 prev=preface.html
 ~~~~~~
 
-Product Concepts
-================
+= Product Concepts
 
 [[GSPLG00001]][[abfaq]]
 
 
 [[product-concepts]]
-1 Product Concepts
-------------------
+== 1 Product Concepts
 
 GlassFish Server Open Source Edition provides a robust platform for the
 development, deployment, and management of Jakarta EE applications. Key
@@ -51,8 +49,7 @@ instances (or clusters of instances).
 
 [[abfat]][[GSPLG00041]][[containers]]
 
-Containers
-^^^^^^^^^^
+==== Containers
 
 Each server instance includes two containers: web and EJB. A container
 is a runtime environment that provides services such as security and
@@ -85,8 +82,7 @@ applications.
 
 [[abfav]][[GSPLG00043]][[web-services]]
 
-Web Services
-^^^^^^^^^^^^
+==== Web Services
 
 Clients can access a Jakarta EE application as a remote web service in
 addition to accessing it through HTTP, RMI/IIOP, and JMS. Web services
@@ -103,8 +99,7 @@ the Java API for XML Registries (JAXR).
 
 [[abfaw]][[GSPLG00044]][[client-access]]
 
-Client Access
-^^^^^^^^^^^^^
+==== Client Access
 
 Clients can access Jakarta EE applications in several ways. Browser clients
 access web applications using hypertext transfer protocol (HTTP). For
@@ -137,8 +132,7 @@ any of these access mechanisms.
 
 [[abfax]][[GSPLG00045]][[external-systems-and-resources]]
 
-External Systems and Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== External Systems and Resources
 
 On the Jakarta EE platform, an external system is called a resource. For
 example, a database management system is a JDBC resource. Each resource
@@ -174,8 +168,7 @@ IMAP or POP3 server to receive email.
 
 [[abfay]][[GSPLG00017]][[glassfish-server-components]]
 
-GlassFish Server Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Components
 
 This section describes the components in GlassFish Server.
 
@@ -195,8 +188,7 @@ in turn communicates with the server instances.
 
 [[abfaz]][[GSPLG00046]][[server-instances]]
 
-Server Instances
-^^^^^^^^^^^^^^^^
+==== Server Instances
 
 A server instance is a GlassFish Server running in a single Java Virtual
 Machine (JVM) process. GlassFish Server is certified with Java platform,
@@ -213,8 +205,7 @@ multiple machines.
 
 [[abfba]][[GSPLG00047]][[administrative-domains]]
 
-Administrative Domains
-^^^^^^^^^^^^^^^^^^^^^^
+==== Administrative Domains
 
 An administrative domain (or simply domain) is a group of server
 instances that are administered together. A server instance belongs to a
@@ -240,8 +231,7 @@ are running must have the same operating system.
 
 [[abfbb]][[GSPLG00024]][[domain-administration-server-das]]
 
-Domain Administration Server (DAS)
-++++++++++++++++++++++++++++++++++
+===== Domain Administration Server (DAS)
 
 A domain has one Domain Administration Server (DAS), a specially
 designated GlassFish Server instance that hosts the administrative
@@ -282,8 +272,7 @@ Source Edition Administration Guide.
 
 [[abfbc]][[GSPLG00048]][[clusters]]
 
-Clusters
-^^^^^^^^
+==== Clusters
 
 A cluster is a named collection of server instances that share the same
 applications, resources, and configuration information. You can group
@@ -316,8 +305,7 @@ Clusters, domains, and instances are related as follows:
 
 [[abfbe]][[GSPLG00049]][[named-configurations]]
 
-Named Configurations
-^^^^^^^^^^^^^^^^^^^^
+==== Named Configurations
 
 A named configuration is an abstraction that encapsulates GlassFish
 Server property settings. Clusters and stand-alone server instances
@@ -345,8 +333,7 @@ manage named configurations.
 
 [[abfbf]][[GSPLG00050]][[http-load-balancer-plug-in]]
 
-HTTP Load Balancer Plug-in
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== HTTP Load Balancer Plug-in
 
 The load balancer distributes the workload among multiple physical
 machines, thereby increasing the overall throughput of the system. The
@@ -394,8 +381,7 @@ Open Source Edition High Availability Administration Guide.
 
 [[abfbg]][[GSPLG00051]][[session-persistence]]
 
-Session Persistence
-^^^^^^^^^^^^^^^^^^^
+==== Session Persistence
 
 Jakarta EE applications typically have significant amounts of session state
 data. A web shopping cart is the classic example of a session state.
@@ -454,8 +440,7 @@ Administration Guide.
 
 [[abfbh]][[GSPLG00052]][[iiop-load-balancing-in-a-cluster]]
 
-IIOP Load Balancing in a Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== IIOP Load Balancing in a Cluster
 
 With IIOP load balancing, IIOP client requests are distributed to
 different server instances or name servers. The goal is to spread the
@@ -502,8 +487,7 @@ endpoints list on the client side.
 
 [[abfbi]][[GSPLG00053]][[message-queue-and-jms-resources]]
 
-Message Queue and JMS Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Queue and JMS Resources
 
 The Open Message Queue (Message Queue) provides reliable, asynchronous
 messaging for distributed applications. Message Queue is an enterprise
@@ -530,8 +514,7 @@ Message Queue Broker Deployment].
 
 [[abfca]][[GSPLG00018]][[configuration-roadmap-for-high-availability-of-glassfish-server]]
 
-Configuration Roadmap for High Availability of GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuration Roadmap for High Availability of GlassFish Server
 
 The following procedure lists the major tasks for configuring GlassFish
 Server for high availability. The procedure also provides
@@ -539,8 +522,7 @@ cross-references to detailed instructions for performing each task.
 
 [[sthref6]][[to-configure-glassfish-server-for-high-availability]]
 
-To Configure GlassFish Server for High Availability
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure GlassFish Server for High Availability
 
 1. Determine your requirements and goals for performance and QoS. +
 For more information, see the following documentation:

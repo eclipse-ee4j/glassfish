@@ -5,13 +5,11 @@ next=delete-ssl.html
 prev=delete-resource-adapter-config.html
 ~~~~~~
 
-delete-resource-ref
-===================
+= delete-resource-ref
 
 [[delete-resource-ref-1]][[GSRFM00107]][[delete-resource-ref]]
 
-delete-resource-ref
--------------------
+== delete-resource-ref
 
 Removes a reference to a resource
 

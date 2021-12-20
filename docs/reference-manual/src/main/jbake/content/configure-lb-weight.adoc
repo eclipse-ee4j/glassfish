@@ -5,13 +5,11 @@ next=configure-ldap-for-admin.html
 prev=configure-jms-cluster.html
 ~~~~~~
 
-configure-lb-weight
-===================
+= configure-lb-weight
 
 [[configure-lb-weight-1]][[GSRFM00009]][[configure-lb-weight]]
 
-configure-lb-weight
--------------------
+== configure-lb-weight
 
 Sets load balancing weights for clustered instances
 

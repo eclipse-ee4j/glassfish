@@ -5,13 +5,11 @@ next=list-sub-components.html
 prev=list-secure-admin-internal-users.html
 ~~~~~~
 
-list-secure-admin-principals
-============================
+= list-secure-admin-principals
 
 [[list-secure-admin-principals-1]][[GSRFM00200]][[list-secure-admin-principals]]
 
-list-secure-admin-principals
-----------------------------
+== list-secure-admin-principals
 
 Lists the certificates for which {productName} accepts admin
 requests from clients.

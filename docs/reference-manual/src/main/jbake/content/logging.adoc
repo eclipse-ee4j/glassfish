@@ -5,13 +5,11 @@ next=monitoring.html
 prev=instance.html
 ~~~~~~
 
-logging
-=======
+= logging
 
 [[logging-5asc]][[GSRFM00270]][[logging]]
 
-logging
--------
+== logging
 
 Capturing information on {productName} runtime events
 

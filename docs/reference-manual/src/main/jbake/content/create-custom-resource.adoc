@@ -5,13 +5,11 @@ next=create-domain.html
 prev=create-context-service.html
 ~~~~~~
 
-create-custom-resource
-======================
+= create-custom-resource
 
 [[create-custom-resource-1]][[GSRFM00022]][[create-custom-resource]]
 
-create-custom-resource
-----------------------
+== create-custom-resource
 
 Creates a custom resource
 

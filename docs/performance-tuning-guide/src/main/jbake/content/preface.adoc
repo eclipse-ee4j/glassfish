@@ -5,15 +5,13 @@ next=overview.html
 prev=title.html
 ~~~~~~
 
-Preface
-=======
+= Preface
 
 [[GSPTG00002]][[pref]]
 
 
 [[preface]]
-Preface
--------
+== Preface
 
 [NOTE]
 ====
@@ -48,8 +46,7 @@ between Oracle engineers and the community.
 
 
 [[oracle-glassfish-server-documentation-set]]
-Oracle GlassFish Server Documentation Set
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Oracle GlassFish Server Documentation Set
 
 [width="100%",cols="<30%,<70%",options="header",]
 |===
@@ -147,8 +144,7 @@ messages.
 
 
 [[typographic-conventions]]
-Typographic Conventions
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Typographic Conventions
 
 The following table describes the typographic changes that are used in
 this book.
@@ -189,8 +185,7 @@ Do not save the file.
 
 
 [[symbol-conventions]]
-Symbol Conventions
-~~~~~~~~~~~~~~~~~~
+=== Symbol Conventions
 
 The following table explains symbols that might be used in this book.
 
@@ -235,8 +230,7 @@ argument or the `n` argument.
 
 
 [[default-paths-and-file-names]]
-Default Paths and File Names
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Paths and File Names
 
 The following table describes the default paths and file names that are
 used in this book.

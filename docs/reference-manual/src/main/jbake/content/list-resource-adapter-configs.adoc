@@ -5,13 +5,11 @@ next=list-resource-refs.html
 prev=list-protocols.html
 ~~~~~~
 
-list-resource-adapter-configs
-=============================
+= list-resource-adapter-configs
 
 [[list-resource-adapter-configs-1]][[GSRFM00196]][[list-resource-adapter-configs]]
 
-list-resource-adapter-configs
------------------------------
+== list-resource-adapter-configs
 
 Lists the names of the current resource adapter configurations
 

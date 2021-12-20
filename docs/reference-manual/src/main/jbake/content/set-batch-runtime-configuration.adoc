@@ -5,13 +5,11 @@ next=set-log-attributes.html
 prev=set.html
 ~~~~~~
 
-set-batch-runtime-configuration
-===============================
+= set-batch-runtime-configuration
 
 [[set-batch-runtime-configuration-1]][[GSRFM897]][[set-batch-runtime-configuration]]
 
-set-batch-runtime-configuration
--------------------------------
+== set-batch-runtime-configuration
 
 Configures the batch runtime
 

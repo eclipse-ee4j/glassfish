@@ -5,13 +5,11 @@ next=redeploy.html
 prev=ping-node-ssh.html
 ~~~~~~
 
-recover-transactions
-====================
+= recover-transactions
 
 [[recover-transactions-1]][[GSRFM00216]][[recover-transactions]]
 
-recover-transactions
---------------------
+== recover-transactions
 
 Manually recovers pending transactions
 

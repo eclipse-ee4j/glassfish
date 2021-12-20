@@ -5,13 +5,11 @@ next=disable-http-lb-application.html
 prev=deploydir.html
 ~~~~~~
 
-disable
-=======
+= disable
 
 [[disable-1]][[GSRFM00116]][[disable]]
 
-disable
--------
+== disable
 
 Disables the component
 

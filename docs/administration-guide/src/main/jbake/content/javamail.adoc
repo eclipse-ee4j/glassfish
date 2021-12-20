@@ -5,15 +5,13 @@ next=jms.html
 prev=orb.html
 ~~~~~~
 
-Administering the JavaMail Service
-==================================
+= Administering the JavaMail Service
 
 [[GSADG00019]][[ablkr]]
 
 
 [[administering-the-javamail-service]]
-16 Administering the JavaMail Service
--------------------------------------
+== 16 Administering the JavaMail Service
 
 GlassFish Server includes the JavaMail API along with JavaMail service
 providers that allow an application component to send email
@@ -31,8 +29,7 @@ online help.
 
 [[ggjsf]][[GSADG00593]][[about-javamail]]
 
-About JavaMail
-~~~~~~~~~~~~~~
+=== About JavaMail
 
 The JavaMail API is a set of abstract APIs that model a mail system. The
 JavaMail API provides a platform-independent and protocol-independent
@@ -53,8 +50,7 @@ http://www.oracle.com/technetwork/java/javamail/[JavaMail web site] .
 
 [[giowr]][[GSADG00594]][[administering-javamail-resources]]
 
-Administering JavaMail Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering JavaMail Resources
 
 When you create a mail session, the server-side components and
 applications are enabled to access JavaMail services with JNDI, using
@@ -93,8 +89,7 @@ The following topics are addressed here:
 
 [[giowd]][[GSADG00482]][[to-create-a-javamail-resource]]
 
-To Create a JavaMail Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a JavaMail Resource
 
 Use the `create-javamail-resource` subcommand in remote mode to create a
 JavaMail session resource. The JNDI name for a JavaMail session resource
@@ -134,8 +129,7 @@ typing `asadmin help create-javamail-resource` at the command line.
 
 [[giowq]][[GSADG00483]][[to-list-javamail-resources]]
 
-To List JavaMail Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List JavaMail Resources
 
 Use the `list-javamail-resources` subcommand in remote mode to list the
 existing JavaMail session resources.
@@ -165,8 +159,7 @@ typing `asadmin help list-javamail-resources` at the command line.
 
 [[giwjw]][[GSADG00484]][[to-update-a-javamail-resource]]
 
-To Update a JavaMail Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a JavaMail Resource
 
 1. List the JavaMail resources by using the
 link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommand.
@@ -190,8 +183,7 @@ Command set executed successfully.
 
 [[gioxj]][[GSADG00485]][[to-delete-a-javamail-resource]]
 
-To Delete a JavaMail Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a JavaMail Resource
 
 Use the `delete-javamail-resource` subcommands in remote mode to delete
 a JavaMail session resource.

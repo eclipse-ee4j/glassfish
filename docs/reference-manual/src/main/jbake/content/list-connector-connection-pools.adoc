@@ -5,13 +5,11 @@ next=list-connector-resources.html
 prev=list-configs.html
 ~~~~~~
 
-list-connector-connection-pools
-===============================
+= list-connector-connection-pools
 
 [[list-connector-connection-pools-1]][[GSRFM00157]][[list-connector-connection-pools]]
 
-list-connector-connection-pools
--------------------------------
+== list-connector-connection-pools
 
 Lists the existing connector connection pools
 

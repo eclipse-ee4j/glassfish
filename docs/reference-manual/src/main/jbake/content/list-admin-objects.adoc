@@ -5,13 +5,11 @@ next=list-application-refs.html
 prev=list.html
 ~~~~~~
 
-list-admin-objects
-==================
+= list-admin-objects
 
 [[list-admin-objects-1]][[GSRFM00146]][[list-admin-objects]]
 
-list-admin-objects
-------------------
+== list-admin-objects
 
 Gets all the administered objects
 

@@ -5,13 +5,11 @@ next=enable-secure-admin-internal-user.html
 prev=enable-monitoring.html
 ~~~~~~
 
-enable-secure-admin
-===================
+= enable-secure-admin
 
 [[enable-secure-admin-1]][[GSRFM00129]][[enable-secure-admin]]
 
-enable-secure-admin
--------------------
+== enable-secure-admin
 
 Enables secure admin (if it is not already enabled), optionally changing
 the alias used for DAS-to-instance admin messages or the alias used for

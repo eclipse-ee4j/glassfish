@@ -5,13 +5,11 @@ next=list-jndi-entries.html
 prev=list-jms-hosts.html
 ~~~~~~
 
-list-jms-resources
-==================
+= list-jms-resources
 
 [[list-jms-resources-1]][[GSRFM00177]][[list-jms-resources]]
 
-list-jms-resources
-------------------
+== list-jms-resources
 
 Lists the JMS resources
 

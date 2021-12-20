@@ -5,13 +5,11 @@ next=osgi.html
 prev=monitor.html
 ~~~~~~
 
-multimode
-=========
+= multimode
 
 [[multimode-1]][[GSRFM00213]][[multimode]]
 
-multimode
----------
+== multimode
 
 Allows multiple subcommands to be run while preserving environment
 settings and remaining in the asadmin utility

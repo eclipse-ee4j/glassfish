@@ -5,13 +5,11 @@ next=list-timers.html
 prev=list-system-properties.html
 ~~~~~~
 
-list-threadpools
-================
+= list-threadpools
 
 [[list-threadpools-1]][[GSRFM00204]][[list-threadpools]]
 
-list-threadpools
-----------------
+== list-threadpools
 
 Lists all the thread pools
 

@@ -5,13 +5,11 @@ next=start-database.html
 prev=show-component-status.html
 ~~~~~~
 
-start-cluster
-=============
+= start-cluster
 
 [[start-cluster-1]][[GSRFM00233]][[start-cluster]]
 
-start-cluster
--------------
+== start-cluster
 
 Starts a cluster
 

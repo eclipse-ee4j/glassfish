@@ -5,13 +5,11 @@ next=list-password-aliases.html
 prev=list-nodes-dcom.html
 ~~~~~~
 
-list-nodes-ssh
-==============
+= list-nodes-ssh
 
 [[list-nodes-ssh-1]][[GSRFM00189]][[list-nodes-ssh]]
 
-list-nodes-ssh
---------------
+== list-nodes-ssh
 
 Lists all {productName} nodes that support communication over SSH in a domain
 

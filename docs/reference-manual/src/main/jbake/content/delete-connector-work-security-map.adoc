@@ -5,13 +5,11 @@ next=delete-context-service.html
 prev=delete-connector-security-map.html
 ~~~~~~
 
-delete-connector-work-security-map
-==================================
+= delete-connector-work-security-map
 
 [[delete-connector-work-security-map-1]][[GSRFM00073]][[delete-connector-work-security-map]]
 
-delete-connector-work-security-map
-----------------------------------
+== delete-connector-work-security-map
 
 Deletes a work security map for the specified resource adapter
 

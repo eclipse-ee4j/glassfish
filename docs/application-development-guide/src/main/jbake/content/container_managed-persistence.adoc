@@ -5,15 +5,13 @@ next=java-clients.html
 prev=ejb.html
 ~~~~~~
 
-Using Container-Managed Persistence
-===================================
+= Using Container-Managed Persistence
 
 [[GSDVG00011]][[beajj]]
 
 
 [[using-container-managed-persistence]]
-9 Using Container-Managed Persistence
--------------------------------------
+== 9 Using Container-Managed Persistence
 
 This chapter contains information on how EJB 2.1 container-managed
 persistence (CMP) works in Oracle GlassFish Server.
@@ -43,8 +41,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 [[beajk]][[GSDVG00150]][[glassfish-server-support-for-cmp]]
 
-GlassFish Server Support for CMP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Support for CMP
 
 GlassFish Server support for EJB 2.1 CMP beans includes:
 
@@ -76,8 +73,7 @@ For details, see link:#beaki[Performance-Related Features].
 
 [[beajl]][[GSDVG00151]][[cmp-mapping]]
 
-CMP Mapping
-~~~~~~~~~~~
+=== CMP Mapping
 
 Implementation for entity beans that use CMP is mostly a matter of
 mapping CMP fields and CMR fields (relationships) to the database.
@@ -90,8 +86,7 @@ The following topics are addressed here:
 
 [[beajm]][[GSDVG00434]][[mapping-capabilities]]
 
-Mapping Capabilities
-^^^^^^^^^^^^^^^^^^^^
+==== Mapping Capabilities
 
 Mapping refers to the ability to tie an object-based model to a
 relational model of data, usually the schema of a relational database.
@@ -115,8 +110,7 @@ The mapping capabilities provided by the GlassFish Server include:
 
 [[beajn]][[GSDVG00435]][[the-mapping-deployment-descriptor-file]]
 
-The Mapping Deployment Descriptor File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The Mapping Deployment Descriptor File
 
 Each module with CMP beans must have the following files:
 
@@ -175,8 +169,7 @@ You can manually generate the schema using the `capture-schema` utility
 
 [[beajo]][[GSDVG00436]][[mapping-considerations]]
 
-Mapping Considerations
-^^^^^^^^^^^^^^^^^^^^^^
+==== Mapping Considerations
 
 The following topics are addressed here:
 
@@ -193,8 +186,7 @@ link:#beajw[Supported Data Types for CMP].
 
 [[beajp]][[GSDVG00303]][[join-tables-and-relationships]]
 
-Join Tables and Relationships
-+++++++++++++++++++++++++++++
+===== Join Tables and Relationships
 
 Use of join tables in the database schema is supported for all types of
 relationships, not just many-to-many relationships. For general
@@ -203,8 +195,7 @@ JavaBeans Specification, v2.1.
 
 [[beajq]][[GSDVG00304]][[automatic-primary-key-generation]]
 
-Automatic Primary Key Generation
-++++++++++++++++++++++++++++++++
+===== Automatic Primary Key Generation
 
 The GlassFish Server supports automatic primary key generation for EJB
 1.1, 2.0, and 2.1 CMP beans. To specify automatic primary key
@@ -224,8 +215,7 @@ Server generates unique values for the primary key column at runtime.
 
 [[beajr]][[GSDVG00305]][[fixed-length-char-primary-keys]]
 
-Fixed Length CHAR Primary Keys
-++++++++++++++++++++++++++++++
+===== Fixed Length CHAR Primary Keys
 
 If an existing database table has a primary key column in which the
 values vary in length, but the type is `CHAR` instead of `VARCHAR`, the
@@ -236,8 +226,7 @@ cannot be changed, such as a schema inherited from a legacy application.
 
 [[beajs]][[GSDVG00306]][[managed-fields]]
 
-Managed Fields
-++++++++++++++
+===== Managed Fields
 
 A managed field is a CMP or CMR field that is mapped to the same
 database column as another CMP or CMR field. CMP fields mapped to the
@@ -257,8 +246,7 @@ Application Deployment Guide.
 
 [[beajt]][[GSDVG00307]][[blob-support]]
 
-BLOB Support
-++++++++++++
+===== BLOB Support
 
 Binary Large Object (BLOB) is a data type used to store values that do
 not correspond to other types such as numbers, strings, or dates. Java
@@ -309,8 +297,7 @@ example:
 
 [[beaju]][[GSDVG00308]][[clob-support]]
 
-CLOB Support
-++++++++++++
+===== CLOB Support
 
 Character Large Object (CLOB) is a data type used to store and retrieve
 very long text fields. CLOBs translate into long strings.
@@ -352,8 +339,7 @@ example:
 
 [[beajv]][[GSDVG00152]][[automatic-schema-generation-for-cmp]]
 
-Automatic Schema Generation for CMP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Automatic Schema Generation for CMP
 
 The automatic schema generation feature provided in the GlassFish Server
 defines database tables based on the fields in entity beans and the
@@ -386,8 +372,7 @@ application.
 
 [[beajw]][[GSDVG00437]][[supported-data-types-for-cmp]]
 
-Supported Data Types for CMP
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Supported Data Types for CMP
 
 CMP supports a set of JDBC data types that are used in mapping Java data
 fields to SQL types. Supported JDBC data types are as follows: BIGINT,
@@ -501,8 +486,7 @@ CMP
 
 [[beajx]][[GSDVG00438]][[generation-options-for-cmp]]
 
-Generation Options for CMP
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Generation Options for CMP
 
 Deployment descriptor elements or `asadmin` command line options can
 control automatic schema generation by the following:
@@ -680,8 +664,7 @@ specified, the `asadmin` options take precedence.
 
 [[beajy]][[GSDVG00153]][[schema-capture]]
 
-Schema Capture
-~~~~~~~~~~~~~~
+=== Schema Capture
 
 The following topics are addressed here:
 
@@ -690,8 +673,7 @@ The following topics are addressed here:
 
 [[beajz]][[GSDVG00439]][[automatic-database-schema-capture]]
 
-Automatic Database Schema Capture
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Automatic Database Schema Capture
 
 You can configure a CMP bean in GlassFish Server to automatically
 capture the database metadata and save it in a `.dbschema` file during
@@ -711,8 +693,7 @@ Resource].
 
 [[beaka]][[GSDVG00440]][[using-the-capture-schema-utility]]
 
-Using the `capture-schema` Utility
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the `capture-schema` Utility
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
@@ -742,8 +723,7 @@ privileges are granted to the user by the database administrator.
 
 [[beakb]][[GSDVG00154]][[configuring-the-cmp-resource]]
 
-Configuring the CMP Resource
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring the CMP Resource
 
 An EJB module that contains CMP beans requires the JNDI name of a JDBC
 resource in the `jndi-name` subelement of the `cmp-resource` element in
@@ -774,8 +754,7 @@ set the CMP resource in the `glassfish-ejb-jar.xml` file as follows:
 
 [[beaki]][[GSDVG00155]][[performance-related-features]]
 
-Performance-Related Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Performance-Related Features
 
 The GlassFish Server provides the following features to enhance
 performance or allow more fine-grained data checking. These features are
@@ -797,8 +776,7 @@ Use of any of these features results in a non-portable application.
 
 [[beakj]][[GSDVG00441]][[version-column-consistency-checking]]
 
-Version Column Consistency Checking
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Version Column Consistency Checking
 
 The version consistency feature saves the bean state at first
 transactional access and caches it between transactions. The state is
@@ -809,8 +787,7 @@ dirty instances).
 
 [[fwbei]][[GSDVG00071]][[to-use-version-consistency]]
 
-To Use Version Consistency
-++++++++++++++++++++++++++
+===== To Use Version Consistency
 
 1. Create the version column in the primary table.
 2. Give the version column a numeric data type.
@@ -830,8 +807,7 @@ administrator to create the schema and add the required triggers.
 
 [[beakk]][[GSDVG00442]][[relationship-prefetching]]
 
-Relationship Prefetching
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Relationship Prefetching
 
 In many cases when an entity bean's state is fetched from the database,
 its relationship fields are always accessed in the same transaction.
@@ -864,8 +840,7 @@ asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTIL
 
 [[beakl]][[GSDVG00443]][[read-only-beans]]
 
-Read-Only Beans
-^^^^^^^^^^^^^^^
+==== Read-Only Beans
 
 Another feature that the GlassFish Server provides is the read-only
 bean, an entity bean that is never modified by an EJB client. Read-only
@@ -907,8 +882,7 @@ usage guidelines, see link:ejb.html#beail[Using Read-Only Beans].
 
 [[gemln]][[GSDVG00156]][[default-fetch-group-flags]]
 
-Default Fetch Group Flags
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Fetch Group Flags
 
 Using the following flags can improve performance.
 
@@ -941,8 +915,7 @@ asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true
 
 [[beakc]][[GSDVG00157]][[configuring-queries-for-1.1-finders]]
 
-Configuring Queries for 1.1 Finders
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Queries for 1.1 Finders
 
 The following topics are addressed here:
 
@@ -954,8 +927,7 @@ The following topics are addressed here:
 
 [[ganjq]][[GSDVG00444]][[about-jdoql-queries]]
 
-About JDOQL Queries
-^^^^^^^^^^^^^^^^^^^
+==== About JDOQL Queries
 
 The Enterprise JavaBeans Specification, v1.1 does not specify the format
 of the finder method description. The GlassFish Server uses an extension
@@ -1000,8 +972,7 @@ used to define EJB 1.1 finders.
 
 [[gankm]][[GSDVG00445]][[query-filter-expression]]
 
-Query Filter Expression
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Query Filter Expression
 
 The filter expression is a String containing a Boolean expression
 evaluated for each instance of the candidate class. If the filter is not
@@ -1081,8 +1052,7 @@ the Java language specification.
 
 [[ganjt]][[GSDVG00446]][[query-parameters]]
 
-Query Parameters
-^^^^^^^^^^^^^^^^
+==== Query Parameters
 
 The parameter declaration is a String containing one or more parameter
 type declarations separated by commas. This follows the Java syntax for
@@ -1090,23 +1060,20 @@ method signatures.
 
 [[ganky]][[GSDVG00447]][[query-variables]]
 
-Query Variables
-^^^^^^^^^^^^^^^
+==== Query Variables
 
 The type declarations follow the Java syntax for local variable
 declarations.
 
 [[ganla]][[GSDVG00448]][[jdoql-examples]]
 
-JDOQL Examples
-^^^^^^^^^^^^^^
+==== JDOQL Examples
 
 This section provides a few query examples.
 
 [[gankk]][[GSDVG00309]][[example-1]]
 
-Example 1
-+++++++++
+===== Example 1
 
 The following query returns all players called Michael. It defines a
 filter that compares the name field with a string literal:
@@ -1129,8 +1096,7 @@ this:
 
 [[ganjz]][[GSDVG00310]][[example-2]]
 
-Example 2
-+++++++++
+===== Example 2
 
 This query returns all products in a specified price range. It defines
 two query parameters which are the lower and upper bound for the price:
@@ -1159,8 +1125,7 @@ this:
 
 [[gankz]][[GSDVG00311]][[example-3]]
 
-Example 3
-+++++++++
+===== Example 3
 
 This query returns all players having a higher salary than the player
 with the specified name. It defines a query parameter for the name
@@ -1200,8 +1165,7 @@ this:
 
 [[beakm]][[GSDVG00158]][[cmp-restrictions-and-optimizations]]
 
-CMP Restrictions and Optimizations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== CMP Restrictions and Optimizations
 
 This section discusses restrictions and performance optimizations that
 pertain to using CMP.
@@ -1221,8 +1185,7 @@ The following topics are addressed here:
 
 [[gdtfj]][[GSDVG00449]][[disabling-order-by-validation]]
 
-Disabling ORDER BY Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disabling ORDER BY Validation
 
 EJB QL as defined in the EJB 2.1 Specification defines certain
 restrictions for the SELECT clause of an ORDER BY query (see section
@@ -1247,8 +1210,7 @@ Setting it to `true` results in a non-portable module or application.
 
 [[geprt]][[GSDVG00450]][[setting-the-heap-size-on-db2]]
 
-Setting the Heap Size on DB2
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Setting the Heap Size on DB2
 
 On DB2, the database configuration parameter `APPLHEAPSZ` determines the
 heap size. If you are using the Oracle or DataDirect database driver,
@@ -1257,8 +1219,7 @@ set this parameter to at least `2048` for CMP. For more information, see
 
 [[beakn]][[GSDVG00451]][[eager-loading-of-field-state]]
 
-Eager Loading of Field State
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Eager Loading of Field State
 
 By default, the EJB container loads the state for all persistent fields
 (excluding relationship, BLOB, and CLOB fields) before invoking the
@@ -1272,8 +1233,7 @@ Server Open Source Edition Application Deployment Guide.
 
 [[beako]][[GSDVG00452]][[restrictions-on-remote-interfaces]]
 
-Restrictions on Remote Interfaces
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Restrictions on Remote Interfaces
 
 The following restrictions apply to the remote interface of an EJB 2.1
 bean that uses CMP:
@@ -1295,8 +1255,7 @@ home interface, and can be included in the client EJB JAR file.
 
 [[gcnto]][[GSDVG00453]][[postgresql-case-insensitivity]]
 
-PostgreSQL Case Insensitivity
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== PostgreSQL Case Insensitivity
 
 Case-sensitive behavior cannot be achieved for PostgreSQL databases.
 PostgreSQL databases internally convert all names to lower case, which
@@ -1310,8 +1269,7 @@ make sure table and column names are lower case in the
 
 [[beakr]][[GSDVG00454]][[no-support-for-lock-when-loaded-on-sybase]]
 
-No Support for `lock-when-loaded` on Sybase
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== No Support for `lock-when-loaded` on Sybase
 
 For EJB 2.1 beans, the `lock-when-loaded` consistency level is
 implemented by placing update locks on the data corresponding to a bean
@@ -1323,8 +1281,7 @@ Server Open Source Edition Application Deployment Guide.
 
 [[beakp]][[GSDVG00455]][[sybase-finder-limitation]]
 
-Sybase Finder Limitation
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Sybase Finder Limitation
 
 If a finder method with an input greater than 255 characters is executed
 and the primary key column is mapped to a VARCHAR column, Sybase
@@ -1342,8 +1299,7 @@ characters.
 
 [[beakq]][[GSDVG00456]][[date-and-time-fields]]
 
-Date and Time Fields
-^^^^^^^^^^^^^^^^^^^^
+==== Date and Time Fields
 
 If a field type is a Java date or time type (`java.util.Date`,
 `java.sql.Date`, `java.sql.Time`, `java.sql.Timestamp`), make sure that
@@ -1380,8 +1336,7 @@ to Oracle's `TIMESTAMP(9)` data type.
 
 [[beaks]][[GSDVG00457]][[set-recursive_triggers-to-false-on-mssql]]
 
-Set `RECURSIVE_TRIGGERS` to `false` on MSSQL
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Set `RECURSIVE_TRIGGERS` to `false` on MSSQL
 
 For version consistency triggers on MSSQL, the property
 `RECURSIVE_TRIGGERS` must be set to `false`, which is the default. If
@@ -1405,8 +1360,7 @@ go
 
 [[gbhbr]][[GSDVG00458]][[mysql-database-restrictions]]
 
-MySQL Database Restrictions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== MySQL Database Restrictions
 
 The following restrictions apply when you use a MySQL database with the
 GlassFish Server for persistence.

@@ -5,15 +5,13 @@ next=dd-elements.html
 prev=asadmin-deployment-subcommands.html
 ~~~~~~
 
-GlassFish Server Deployment Descriptor Files
-============================================
+= GlassFish Server Deployment Descriptor Files
 
 [[GSDPG00006]][[giida]]
 
 
 [[b-glassfish-server-deployment-descriptor-files]]
-B GlassFish Server Deployment Descriptor Files
-----------------------------------------------
+== B GlassFish Server Deployment Descriptor Files
 
 This appendix describes the element hierarchies in the GlassFish Server
 deployment descriptors that are included in this release of the
@@ -34,8 +32,7 @@ Server]
 
 [[giiie]][[GSDPG00076]][[about-the-glassfish-server-deployment-descriptors]]
 
-About the GlassFish Server Deployment Descriptors
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About the GlassFish Server Deployment Descriptors
 
 Each deployment descriptor XML file has a corresponding Document Type
 Definition (DTD) file, which defines the elements, data, and attributes
@@ -109,8 +106,7 @@ descriptors are supported for backward compatibility.
 
 [[beaqk]][[GSDPG00077]][[the-glassfish-application.xml-file]]
 
-The glassfish-application.xml File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The glassfish-application.xml File
 
 The `glassfish-application.xml` file configures an entire Jakarta EE
 application (EAR file). The element hierarchy is as follows:
@@ -197,8 +193,7 @@ GlassFish Application Server 3.1 Jakarta EE Application 6.0//EN"
 
 [[beaql]][[GSDPG00078]][[the-glassfish-web.xml-file]]
 
-The glassfish-web.xml File
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The glassfish-web.xml File
 
 The `glassfish-web.xml` file configures a web application (WAR file).
 The element hierarchy is as follows:
@@ -359,8 +354,7 @@ GlassFish Application Server 3.1 Servlet 3.0//EN"
 
 [[beaqm]][[GSDPG00079]][[the-glassfish-ejb-jar.xml-file]]
 
-The glassfish-ejb-jar.xml File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The glassfish-ejb-jar.xml File
 
 The `glassfish-ejb-jar.xml` file configures an enterprise bean (EJB JAR
 file). The element hierarchy is as follows:
@@ -611,8 +605,7 @@ DTD GlassFish Application Server 3.1 EJB 3.1//EN"
 
 [[beaqn]][[GSDPG00080]][[the-sun-cmp-mappings.xml-file]]
 
-The sun-cmp-mappings.xml File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The sun-cmp-mappings.xml File
 
 The `sun-cmp-mappings.xml` file configures container-managed persistence
 for an EJB 2.0 or 2.1 entity bean. The element hierarchy is as follows:
@@ -812,8 +805,7 @@ Here is a corresponding sample `sun-cmp-mappings.xml` file:
 
 [[beaqo]][[GSDPG00081]][[the-glassfish-application-client.xml-file]]
 
-The glassfish-application-client.xml file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The glassfish-application-client.xml file
 
 The `glassfish-application-client.xml` file configures an Application
 Client Container (ACC) client (JAR file). The element hierarchy is as
@@ -897,8 +889,7 @@ GlassFish Application Server 3.1 Application Client 6.0//EN""
 
 [[beaqp]][[GSDPG00082]][[the-sun-acc.xml-file]]
 
-The sun-acc.xml File
-~~~~~~~~~~~~~~~~~~~~
+=== The sun-acc.xml File
 
 The `sun-acc.xml` file configures the Application Client Container. This
 is more of a configuration file than a deployment descriptor. GlassFish
@@ -930,8 +921,7 @@ client-container
 
 [[giyhh]][[GSDPG00083]][[the-glassfish-resources.xml-file]]
 
-The glassfish-resources.xml File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The glassfish-resources.xml File
 
 The `glassfish-resources.xml` file configures application-scoped
 resources. The element hierarchy is as follows:
@@ -986,8 +976,7 @@ resources
 
 [[gkiot]][[GSDPG00084]][[weblogic-server-deployment-descriptor-support-in-glassfish-server]]
 
-WebLogic Server Deployment Descriptor Support in GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== WebLogic Server Deployment Descriptor Support in GlassFish Server
 
 GlassFish Server offers limited support for the
 `weblogic-application.xml`, `weblogic.xml`, and

@@ -5,13 +5,11 @@ next=freeze-transaction-service.html
 prev=flush-connection-pool.html
 ~~~~~~
 
-flush-jmsdest
-=============
+= flush-jmsdest
 
 [[flush-jmsdest-1]][[GSRFM00136]][[flush-jmsdest]]
 
-flush-jmsdest
--------------
+== flush-jmsdest
 
 Purges messages in a JMS destination.
 

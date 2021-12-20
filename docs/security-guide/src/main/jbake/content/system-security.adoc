@@ -5,15 +5,13 @@ next=user-security.html
 prev=preface.html
 ~~~~~~
 
-Administering System Security
-=============================
+= Administering System Security
 
 [[GSSCG00035]][[ablnk]]
 
 
 [[administering-system-security]]
-1 Administering System Security
--------------------------------
+== 1 Administering System Security
 
 This chapter describes general information about administering system security.
 
@@ -35,8 +33,7 @@ in GlassFish Server Open Source Edition Application Development Guide.
 
 [[ggktf]][[GSSCG00143]][[about-system-security-in-glassfish-server]]
 
-About System Security in GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About System Security in GlassFish Server
 
 Security is about protecting data, that is, how to prevent unauthorized
 access or damage to data that is in storage or in transit. The GlassFish
@@ -61,8 +58,7 @@ System security features include the following:
 
 [[ablnx]][[GSSCG00203]][[authentication]]
 
-Authentication
-^^^^^^^^^^^^^^
+==== Authentication
 
 Authentication is the way in which an entity (a user, an application, or
 a component) determines that another entity is who it claims to be. An
@@ -82,8 +78,7 @@ with this authenticated security identity for the remainder of the session.
 
 [[ghsqc]][[GSSCG00184]][[authentication-types]]
 
-Authentication Types
-++++++++++++++++++++
+===== Authentication Types
 
 Within its deployment descriptors, an application can specify the type
 of authentication that it uses. The Jakarta EE Security API provides an
@@ -116,8 +111,7 @@ DIGEST::
 
 [[sthref4]][[jsr-375-authentication-mechanisms-and-identity-stores]]
 
-JSR 375 Authentication Mechanisms and Identity Stores
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== JSR 375 Authentication Mechanisms and Identity Stores
 
 The Jakarta EE Security API defines the `HttpAuthenticationMechanism`
 interface, the `IdentityStore` and `IdentityStoreHandler` interfaces.
@@ -156,8 +150,7 @@ implementations of the  plug-in SPIs, or define custom implementations.
 
 [[gknah]][[GSSCG00185]][[jsr-196-server-authentication-modules]]
 
-JSR 196 Server Authentication Modules
-+++++++++++++++++++++++++++++++++++++
+===== JSR 196 Server Authentication Modules
 
 GlassFish Server implements the Servlet Container Profile of
 http://www.jcp.org/en/jsr/detail?id=196[JSR 196 Java Authentication
@@ -379,8 +372,7 @@ must authenticate separately to every application on the virtual server.
 
 [[ghlvu]][[GSSCG00204]][[authorization]]
 
-Authorization
-^^^^^^^^^^^^^
+==== Authorization
 
 Authorization, also known as access control, is the means by which users
 are granted permission to access data or perform operations. After a
@@ -436,8 +428,7 @@ assigned to roles, and how applications use groups and roles."]
 
 [[ghsqd]][[GSSCG00190]][[java-authorization-contract-for-containers]]
 
-Java Authorization Contract for Containers
-++++++++++++++++++++++++++++++++++++++++++
+===== Java Authorization Contract for Containers
 
 Java Authorization Contract for Containers (JACC) is the part of the
 Jakarta EE specification that defines an interface for pluggable
@@ -455,8 +446,7 @@ You can also specify additional third-party JACC providers.
 
 [[gkriq]][[GSSCG00191]][[working-with-the-server.policy-policy-file]]
 
-Working With the server.policy Policy File
-++++++++++++++++++++++++++++++++++++++++++
+===== Working With the server.policy Policy File
 
 Each GlassFish Server domain has its own global Java SE policy file,
 located in domain-dir`/config`. The file is named `server.policy`.
@@ -639,8 +629,7 @@ remove these permissions, because they are otherwise unnecessary.
 
 [[ghlql]][[GSSCG00205]][[auditing]]
 
-Auditing
-^^^^^^^^
+==== Auditing
 
 Auditing is the means used to capture security-related events for the
 purpose of evaluating the effectiveness of security measures. GlassFish
@@ -655,8 +644,7 @@ Modules].
 
 [[ghlti]][[GSSCG00206]][[firewalls]]
 
-Firewalls
-^^^^^^^^^
+==== Firewalls
 
 A firewall controls the flow of data between two or more networks, and
 manages the links between the networks. A firewall can consist of both
@@ -688,8 +676,7 @@ Server behind the firewall.
 
 [[abloj]][[GSSCG00207]][[certificates-and-ssl]]
 
-Certificates and SSL
-^^^^^^^^^^^^^^^^^^^^
+==== Certificates and SSL
 
 The following topics are addressed here:
 
@@ -703,8 +690,7 @@ For administration instructions, see link:#ablqz[Administering JSSE Certificates
 
 [[ablok]][[GSSCG00192]][[certificates]]
 
-Certificates
-++++++++++++
+===== Certificates
 
 Certificates, also called digital certificates, are electronic files
 that uniquely identify people and resources on the Internet.
@@ -748,8 +734,7 @@ name field of the X.509 certificate as the principal name.
 
 [[ablol]][[GSSCG00193]][[certificate-chains]]
 
-Certificate Chains
-++++++++++++++++++
+===== Certificate Chains
 
 A certificate chain is a series of certificates issued by successive CA
 certificates, eventually ending in a root CA certificate.
@@ -783,8 +768,7 @@ certificate in the chain.
 
 [[ablqx]][[GSSCG00194]][[certificate-files]]
 
-Certificate Files
-+++++++++++++++++
+===== Certificate Files
 
 During GlassFish Server installation, a certificate is generated in Java
 Secure Socket Extension (JSSE) format suitable for internal testing.
@@ -811,8 +795,7 @@ development purposes.
 
 [[ablom]][[GSSCG00195]][[secure-sockets-layer]]
 
-Secure Sockets Layer
-++++++++++++++++++++
+===== Secure Sockets Layer
 
 Secure Sockets Layer (SSL) is the most popular standard for securing
 Internet communications and transactions. Secure web applications use
@@ -895,8 +878,7 @@ environment.
 
 [[gksdc]][[GSSCG00196]][[custom-authentication-of-client-certificate-in-ssl-mutual-authentication]]
 
-Custom Authentication of Client Certificate in SSL Mutual Authentication
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Custom Authentication of Client Certificate in SSL Mutual Authentication
 
 Release 7 of GlassFish Server extends the Certificate realm to allow
 custom authentication and group assignment based on the client
@@ -1039,8 +1021,7 @@ property. For example:
 
 [[ablno]][[GSSCG00208]][[tools-for-managing-system-security]]
 
-Tools for Managing System Security
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tools for Managing System Security
 
 GlassFish Server provides the following tools for managing system
 security:
@@ -1071,8 +1052,7 @@ The `policytool` utility::
 
 [[ghgrp]][[GSSCG00144]][[administering-passwords]]
 
-Administering Passwords
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Passwords
 
 There are multiple ways to administer passwords. You can rely on
 administrators to keep passwords secret and change the passwords
@@ -1093,8 +1073,7 @@ The following topics are addressed here:
 
 [[giudi]][[GSSCG00093]][[to-change-the-master-password]]
 
-To Change the Master Password
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change the Master Password
 
 The master password gives access to the keystore used with the domain.
 This password is not tied to a UNIX user. You should treat this overall
@@ -1191,8 +1170,7 @@ typing `asadmin --help change-master-password` at the command line.
 
 [[gktgr]][[GSSCG00209]][[additional-considerations-for-the-start-instance-and-start-cluster-subcommands]]
 
-Additional Considerations for the `start-instance` and `start-cluster` Subcommands
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Additional Considerations for the `start-instance` and `start-cluster` Subcommands
 
 If you change the master password for DAS, the `start-domain` and
 `start-local-instance` subcommands allow you to provide it during domain
@@ -1238,8 +1216,7 @@ password. In this case, you must start the instances locally by using
 
 [[gktey]][[GSSCG00094]][[using-start-instance-and-start-cluster-with-a-password-file]]
 
-Using `start-instance` and `start-cluster` With a Password File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using `start-instance` and `start-cluster` With a Password File
 
 Assume that you have changed the master password on the DAS and you want
 to make the same change for all instances.
@@ -1294,8 +1271,7 @@ stopped from the DAS.
 
 [[ghgpu]][[GSSCG00095]][[to-change-an-administration-password]]
 
-To Change an Administration Password
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change an Administration Password
 
 Use the `change-admin-password` subcommand in remote mode to change an
 administration password. The default administration user is `admin`. You
@@ -1371,8 +1347,7 @@ typing `asadmin help change-admin-password` at the command line.
 
 [[ghytn]][[GSSCG00096]][[to-set-a-password-from-a-file]]
 
-To Set a Password From a File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set a Password From a File
 
 Instead of typing the password at the command line, you can access the
 password for a command from a file such as `passwords.txt`. The
@@ -1429,8 +1404,7 @@ from happening, unset `AS_ADMIN_PASSWORD`.
 
 [[ghgqc]][[GSSCG00210]][[administering-password-aliases]]
 
-Administering Password Aliases
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering Password Aliases
 
 A password alias is used to indirectly access a password so that the
 password itself does not appear in cleartext in the domain's
@@ -1452,8 +1426,7 @@ The following topics are addressed here:
 
 [[ghgrf]][[GSSCG00097]][[to-create-a-password-alias]]
 
-To Create a Password Alias
-++++++++++++++++++++++++++
+===== To Create a Password Alias
 
 Use the `create-password-alias` subcommand in remote mode to create an
 alias for a password in the domain's keystore. The password
@@ -1520,8 +1493,7 @@ typing `asadmin help create-password-alias` at the command line.
 
 [[ghgsr]][[GSSCG00098]][[to-list-password-aliases]]
 
-To List Password Aliases
-++++++++++++++++++++++++
+===== To List Password Aliases
 
 Use the `list-password-aliases` subcommand in remote mode to list
 existing the password aliases.
@@ -1551,8 +1523,7 @@ typing `asadmin help list-password-aliases` at the command line.
 
 [[ghgnv]][[GSSCG00099]][[to-delete-a-password-alias]]
 
-To Delete a Password Alias
-++++++++++++++++++++++++++
+===== To Delete a Password Alias
 
 Use the `delete-password-alias` subcommand in remote mode to delete an
 existing password alias.
@@ -1583,8 +1554,7 @@ typing `asadmin help delete-password-alias` at the command line.
 
 [[giobz]][[GSSCG00100]][[to-update-a-password-alias]]
 
-To Update a Password Alias
-++++++++++++++++++++++++++
+===== To Update a Password Alias
 
 Use the `update-password-alias` subcommand in remote mode to change the
 password for an existing password alias. The `update-password-alias`
@@ -1625,8 +1595,7 @@ typing `asadmin help update-password-alias` at the command line.
 
 [[ghgol]][[GSSCG00146]][[administering-audit-modules]]
 
-Administering Audit Modules
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Audit Modules
 
 The following topics are addressed here:
 
@@ -1636,8 +1605,7 @@ The following topics are addressed here:
 
 [[ghgra]][[GSSCG00101]][[to-create-an-audit-module]]
 
-To Create an Audit Module
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Audit Module
 
 Use the `create-audit-module` subcommand in remote mode to create an
 audit module for the add-on component that implements the audit
@@ -1672,8 +1640,7 @@ typing `asadmin help create-audit-module` at the command line.
 
 [[ghgsm]][[GSSCG00102]][[to-list-audit-modules]]
 
-To List Audit Modules
-^^^^^^^^^^^^^^^^^^^^^
+==== To List Audit Modules
 
 Use the `list-audit-modules` subcommand in remote mode to list the audit
 modules on one of the following targets:
@@ -1708,8 +1675,7 @@ typing `asadmin help list-audit-modules` at the command line.
 
 [[ghgpo]][[GSSCG00104]][[to-delete-an-audit-module]]
 
-To Delete an Audit Module
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an Audit Module
 
 Use the `delete-audit-module` subcommand in remote mode to delete an
 existing audit module.
@@ -1733,8 +1699,7 @@ Command delete-audit-module executed successfully.
 
 [[ablqz]][[GSSCG00147]][[administering-jsse-certificates]]
 
-Administering JSSE Certificates
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering JSSE Certificates
 
 In the developer profile, the GlassFish Server 7 uses the JSSE format
 on the server side to manage certificates and key stores. In all
@@ -1755,8 +1720,7 @@ The following topics are addressed here:
 
 [[ghlgv]][[GSSCG00105]][[to-generate-a-certificate-by-using-keytool]]
 
-To Generate a Certificate by Using `keytool`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Generate a Certificate by Using `keytool`
 
 By default, the `keytool` utility creates a keystore file in the
 directory where the utility is run.
@@ -1875,8 +1839,7 @@ See Also
 
 [[ghlgj]][[GSSCG00106]][[to-sign-a-certificate-by-using-keytool]]
 
-To Sign a Certificate by Using `keytool`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Sign a Certificate by Using `keytool`
 
 After creating a certificate, the owner must sign the certificate to
 prevent forgery. E-commerce sites, or those for which authentication of
@@ -2044,8 +2007,7 @@ See Also
 
 [[ghleq]][[GSSCG00107]][[to-delete-a-certificate-by-using-keytool]]
 
-To Delete a Certificate by Using `keytool`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Certificate by Using `keytool`
 
 Use the `keytool` `delete` command to delete an existing certificate.
 
@@ -2074,8 +2036,7 @@ See Also
 
 [[gkngj]][[GSSCG00148]][[administering-jacc-providers]]
 
-Administering JACC Providers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering JACC Providers
 
 The Java Authorization Contract for Containers (JACC) is part of the
 J2EE 1.4 specification that defines an interface for pluggable
@@ -2102,8 +2063,7 @@ file.
 
 [[gksgp]][[GSSCG00108]][[administering-jacc-providers-from-the-administration-console]]
 
-Administering JACC Providers From the Administration Console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering JACC Providers From the Administration Console
 
 To use the Administration Console to administer JACC providers, perform
 the following steps:
@@ -2129,8 +2089,7 @@ Delete.
 
 [[gksfx]][[GSSCG00109]][[administering-jacc-providers-from-the-command-line]]
 
-Administering JACC Providers from the Command Line
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering JACC Providers from the Command Line
 
 To use the command line to administer JACC providers, perform the
 following steps:

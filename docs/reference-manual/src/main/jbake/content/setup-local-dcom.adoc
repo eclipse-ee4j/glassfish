@@ -5,13 +5,11 @@ next=setup-ssh.html
 prev=set-log-levels.html
 ~~~~~~
 
-setup-local-dcom
-================
+= setup-local-dcom
 
 [[setup-local-dcom-1]][[GSRFM893]][[setup-local-dcom]]
 
-setup-local-dcom
-----------------
+== setup-local-dcom
 
 Sets up DCOM on a host
 

@@ -5,13 +5,11 @@ next=delete-message-security-provider.html
 prev=delete-managed-scheduled-executor-service.html
 ~~~~~~
 
-delete-managed-thread-factory
-=============================
+= delete-managed-thread-factory
 
 [[delete-managed-thread-factory-1]][[GSRFM852]][[delete-managed-thread-factory]]
 
-delete-managed-thread-factory
------------------------------
+== delete-managed-thread-factory
 
 Removes a managed thread factory resource with the specified JNDI name
 

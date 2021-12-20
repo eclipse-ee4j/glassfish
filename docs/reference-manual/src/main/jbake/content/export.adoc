@@ -5,13 +5,11 @@ next=export-http-lb-config.html
 prev=enable-secure-admin-principal.html
 ~~~~~~
 
-export
-======
+= export
 
 [[export-1]][[GSRFM00132]][[export]]
 
-export
-------
+== export
 
 Marks a variable name for automatic export to the environment of
 subsequent commands in multimode

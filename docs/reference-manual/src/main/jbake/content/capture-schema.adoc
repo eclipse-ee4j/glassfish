@@ -5,13 +5,11 @@ next=package-appclient.html
 prev=asadmin.html
 ~~~~~~
 
-capture-schema
-==============
+= capture-schema
 
 [[capture-schema-1m]][[GSRFM00821]][[capture-schema]]
 
-capture-schema
---------------
+== capture-schema
 
 Stores the database metadata (schema) in a file for use in mapping and execution
 

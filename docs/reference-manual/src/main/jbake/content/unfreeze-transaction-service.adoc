@@ -5,13 +5,11 @@ next=uninstall-node.html
 prev=undeploy.html
 ~~~~~~
 
-unfreeze-transaction-service
-============================
+= unfreeze-transaction-service
 
 [[unfreeze-transaction-service-1]][[GSRFM00245]][[unfreeze-transaction-service]]
 
-unfreeze-transaction-service
-----------------------------
+== unfreeze-transaction-service
 
 Resumes all suspended transactions
 

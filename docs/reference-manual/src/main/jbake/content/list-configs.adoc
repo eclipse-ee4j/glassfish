@@ -5,13 +5,11 @@ next=list-connector-connection-pools.html
 prev=list-components.html
 ~~~~~~
 
-list-configs
-============
+= list-configs
 
 [[list-configs-1]][[GSRFM00156]][[list-configs]]
 
-list-configs
-------------
+== list-configs
 
 Lists named configurations
 

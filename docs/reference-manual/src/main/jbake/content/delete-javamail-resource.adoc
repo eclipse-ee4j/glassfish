@@ -5,13 +5,11 @@ next=delete-jdbc-connection-pool.html
 prev=delete-jacc-provider.html
 ~~~~~~
 
-delete-javamail-resource
-========================
+= delete-javamail-resource
 
 [[delete-javamail-resource-1]][[GSRFM00087]][[delete-javamail-resource]]
 
-delete-javamail-resource
-------------------------
+== delete-javamail-resource
 
 Removes a JavaMail session resource
 

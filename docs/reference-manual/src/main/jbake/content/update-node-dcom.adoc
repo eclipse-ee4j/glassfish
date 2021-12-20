@@ -5,13 +5,11 @@ next=update-node-ssh.html
 prev=update-node-config.html
 ~~~~~~
 
-update-node-dcom
-================
+= update-node-dcom
 
 [[update-node-dcom-1]][[GSRFM789]][[update-node-dcom]]
 
-update-node-dcom
-----------------
+== update-node-dcom
 
 Updates the configuration data of a node
 

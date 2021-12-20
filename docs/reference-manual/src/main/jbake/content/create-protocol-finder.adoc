@@ -5,13 +5,11 @@ next=create-resource-adapter-config.html
 prev=create-protocol-filter.html
 ~~~~~~
 
-create-protocol-finder
-======================
+= create-protocol-finder
 
 [[create-protocol-finder-1]][[GSRFM00053]][[create-protocol-finder]]
 
-create-protocol-finder
-----------------------
+== create-protocol-finder
 
 Adds a new protocol finder
 

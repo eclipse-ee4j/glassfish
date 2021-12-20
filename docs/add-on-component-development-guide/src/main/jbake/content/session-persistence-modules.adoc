@@ -5,15 +5,13 @@ next=packaging-integrating-delivering.html
 prev=adding-container-capabilities.html
 ~~~~~~
 
-Creating a Session Persistence Module
-=====================================
+= Creating a Session Persistence Module
 
 [[GSACG00008]][[gkmhj]]
 
 
 [[creating-a-session-persistence-module]]
-Creating a Session Persistence Module
--------------------------------------
+== Creating a Session Persistence Module
 
 GlassFish Server enables you to create a session persistence module in
 the web container for high availability-related functionality by
@@ -29,8 +27,7 @@ Availability Administration Guide.
 
 [[gkmhr]][[GSACG00141]][[implementing-the-persistencestrategybuilder-interface]]
 
-Implementing the `PersistenceStrategyBuilder` Interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Implementing the `PersistenceStrategyBuilder` Interface
 
 You can implement the `PersistenceStrategyBuilder` interface by creating
 a new web session manager type.

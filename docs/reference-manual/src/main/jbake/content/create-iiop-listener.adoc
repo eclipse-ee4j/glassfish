@@ -5,13 +5,11 @@ next=create-instance.html
 prev=create-http-redirect.html
 ~~~~~~
 
-create-iiop-listener
-====================
+= create-iiop-listener
 
 [[create-iiop-listener-1]][[GSRFM00032]][[create-iiop-listener]]
 
-create-iiop-listener
---------------------
+== create-iiop-listener
 
 Adds an IIOP listener
 

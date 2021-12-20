@@ -5,13 +5,11 @@ next=list-nodes-ssh.html
 prev=list-nodes-config.html
 ~~~~~~
 
-list-nodes-dcom
-===============
+= list-nodes-dcom
 
 [[list-nodes-dcom-1]][[GSRFM693]][[list-nodes-dcom]]
 
-list-nodes-dcom
----------------
+== list-nodes-dcom
 
 Lists all {productName} nodes that support communication over DCOM
 in a domain

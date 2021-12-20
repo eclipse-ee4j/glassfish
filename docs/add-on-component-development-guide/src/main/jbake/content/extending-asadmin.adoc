@@ -5,15 +5,13 @@ next=adding-monitoring-capabilities.html
 prev=extending-the-admin-console.html
 ~~~~~~
 
-Extending the asadmin Utility
-=============================
+= Extending the asadmin Utility
 
 [[GSACG00004]][[ghmrd]]
 
 
 [[extending-the-asadmin-utility]]
-Extending the `asadmin` Utility
--------------------------------
+== Extending the `asadmin` Utility
 
 The `asadmin` utility is a command-line tool for configuring and
 administering Eclipse GlassFish Server. Extending the `asadmin` utility enables
@@ -39,8 +37,7 @@ Annotations]
 
 [[ghpuj]][[GSACG00105]][[about-the-administrative-command-infrastructure-of-glassfish-server]]
 
-About the Administrative Command Infrastructure of GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About the Administrative Command Infrastructure of GlassFish Server
 
 To enable multiple containers to be independently packaged and loaded,
 the administrative command infrastructure of GlassFish Server provides
@@ -58,8 +55,7 @@ HK2 Components].
 
 [[ghpwe]][[GSACG00107]][[adding-an-asadmin-subcommand]]
 
-Adding an `asadmin` Subcommand
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding an `asadmin` Subcommand
 
 An `asadmin` subcommand identifies the operation or task that a user is
 to perform. Adding an `asadmin` subcommand enables the user to perform
@@ -75,8 +71,7 @@ Stateless]
 
 [[ghrqj]][[GSACG00194]][[representing-an-asadmin-subcommand-as-a-java-class]]
 
-Representing an `asadmin` Subcommand as a Java Class
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Representing an `asadmin` Subcommand as a Java Class
 
 Each `asadmin` subcommand that you are adding must be represented as a
 Java class. To represent an `asadmin` subcommand as a Java class, write
@@ -99,8 +94,7 @@ link:packaging-integrating-delivering.html#ghmne[Integrating an Add-On Component
 
 [[ghrpm]][[GSACG00195]][[specifying-the-name-of-an-asadmin-subcommand]]
 
-Specifying the Name of an `asadmin` Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Name of an `asadmin` Subcommand
 
 To specify the name of the subcommand, set the `name` element of the
 `@Service` annotation to the name.
@@ -139,8 +133,7 @@ link:../reference-manual/toc.html#GSRFM[Eclipse GlassFish Reference Manual].
 
 [[ghrng]][[GSACG00196]][[ensuring-that-an-admincommand-implementation-is-stateless]]
 
-Ensuring That an `AdminCommand` Implementation Is Stateless
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Ensuring That an `AdminCommand` Implementation Is Stateless
 
 To enable multiple clients to run a subcommand simultaneously, ensure
 that the implementation of the `AdminCommand` interface for the
@@ -154,8 +147,7 @@ In the `@Scoped` annotation, set the scope as follows:
 
 [[ghrqx]][[GSACG00197]][[example-of-adding-an-asadmin-subcommand]]
 
-Example of Adding an `asadmin` Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Example of Adding an `asadmin` Subcommand
 
 [[GSACG00034]][[ghrqq]]
 Example 4-1 Adding an `asadmin` Subcommand
@@ -187,8 +179,7 @@ public Class CreateMycontainer implements AdminCommand {
 
 [[ghpwa]][[GSACG00108]][[adding-parameters-to-an-asadmin-subcommand]]
 
-Adding Parameters to an `asadmin` Subcommand
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding Parameters to an `asadmin` Subcommand
 
 The parameters of an `asadmin` subcommand are the options and operands
 of the subcommand.
@@ -213,8 +204,7 @@ Times on the Command Line]
 
 [[ghpvh]][[GSACG00198]][[representing-a-parameter-of-an-asadmin-subcommand]]
 
-Representing a Parameter of an `asadmin` Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Representing a Parameter of an `asadmin` Subcommand
 
 Represent each parameter of a subcommand in your implementation as a
 field or as the property of a JavaBeans specification setter method. Use
@@ -225,8 +215,7 @@ the property of a setter method for the following reasons:
 
 [[ghptx]][[GSACG00199]][[identifying-a-parameter-of-an-asadmin-subcommand]]
 
-Identifying a Parameter of an `asadmin` Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Identifying a Parameter of an `asadmin` Subcommand
 
 Identifying a parameter of an `asadmin` subcommand enables GlassFish
 Server to perform the following operations at runtime on the parameter:
@@ -255,8 +244,7 @@ To specify the properties of the parameter, use the elements of the
 
 [[ghpxp]][[GSACG00200]][[specifying-whether-a-parameter-is-an-option-or-an-operand]]
 
-Specifying Whether a Parameter Is an Option or an Operand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Whether a Parameter Is an Option or an Operand
 
 Whether a parameter is an option or an operand determines how a user
 must specify the parameter when running the subcommand:
@@ -274,8 +262,7 @@ This value is the default.
 
 [[ghpxj]][[GSACG00201]][[specifying-the-name-of-an-option]]
 
-Specifying the Name of an Option
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Name of an Option
 
 The name of an option is the name that a user must type on the command
 line to specify the option when running the subcommand.
@@ -305,8 +292,7 @@ Option names are case-sensitive.
 
 [[ghpvy]][[GSACG00163]][[specifying-the-long-form-of-an-option-name]]
 
-Specifying the Long Form of an Option Name
-++++++++++++++++++++++++++++++++++++++++++
+===== Specifying the Long Form of an Option Name
 
 To specify the long form of an option name, set the `name` element of
 the `@Param` annotation to a string that specifies the name. If you do
@@ -323,8 +309,7 @@ both `password`.
 
 [[sthref5]][[specifying-the-short-form-of-an-option-name]]
 
-Specifying the Short Form of an Option Name
-+++++++++++++++++++++++++++++++++++++++++++
+===== Specifying the Short Form of an Option Name
 
 [[ghpvi]]
 
@@ -336,8 +321,7 @@ you do not set this element, the option has no short form.
 
 [[ghpxl]][[GSACG00202]][[specifying-the-acceptable-values-of-a-parameter]]
 
-Specifying the Acceptable Values of a Parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Acceptable Values of a Parameter
 
 When a user runs the subcommand, the GlassFish Server validates option
 arguments and operands against the acceptable values that you specify in
@@ -350,8 +334,7 @@ this element, any string of characters is acceptable.
 
 [[ghrgt]][[GSACG00203]][[specifying-the-default-value-of-a-parameter]]
 
-Specifying the Default Value of a Parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Default Value of a Parameter
 
 The default value of a parameter is the value that is applied if a user
 omits the parameter when running the subcommand.
@@ -365,8 +348,7 @@ not set, the parameter has no default value.
 
 [[ghpuk]][[GSACG00204]][[specifying-whether-a-parameter-is-required-or-optional]]
 
-Specifying Whether a Parameter Is Required or Optional
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Whether a Parameter Is Required or Optional
 
 Whether a parameter is required or optional determines how a subcommand
 responds if a user omits the parameter when running the subcommand:
@@ -384,8 +366,7 @@ This value is the default.
 [[CDCFAJDG]][[specifying-whether-a-parameter-can-be-used-multiple-times-on-the-command-line]]
 
 Specifying Whether a Parameter Can Be Used Multiple Times on the Command
-Line
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Line
 
 By default, each parameter can be used once on the command line. To use
 the parameter multiple times, set the `multiple` element of the `@Param`
@@ -394,8 +375,7 @@ array.
 
 [[ghpxd]][[GSACG00205]][[example-of-adding-parameters-to-an-asadmin-subcommand]]
 
-Example of Adding Parameters to an `asadmin` Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Example of Adding Parameters to an `asadmin` Subcommand
 
 [[GSACG00035]][[ghpuh]]
 Example 4-2 Adding Parameters to an `asadmin` Subcommand
@@ -445,8 +425,7 @@ import org.glassfish.api.Param;
 
 [[gkygt]][[GSACG00109]][[making-asadmin-subcommands-cluster-aware]]
 
-Making `asadmin` Subcommands Cluster-Aware
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Making `asadmin` Subcommands Cluster-Aware
 
 The GlassFish Server `asadmin` command framework provides support for
 making `asadmin` subcommands work properly in a clustered environment or
@@ -478,8 +457,7 @@ The following topics are addressed here:
 
 [[gkyjk]][[GSACG00206]][[specifying-allowed-targets]]
 
-Specifying Allowed Targets
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Allowed Targets
 
 When you define a `--target` option by using the `@Param` annotation in
 the `org.glassfish.api` package, possible targets are as follows:
@@ -553,8 +531,7 @@ String target;
 
 [[gkykm]][[GSACG00207]][[the-target-utility]]
 
-The `Target` Utility
-^^^^^^^^^^^^^^^^^^^^
+==== The `Target` Utility
 
 The `Target` utility is a service, present in the `internal-api` module,
 `org.glassfish.internal.api` package, which a command implementation can
@@ -582,8 +559,7 @@ with comments.
 
 [[gkyfv]][[GSACG00208]][[specifying-asadmin-subcommand-execution]]
 
-Specifying `asadmin` Subcommand Execution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying `asadmin` Subcommand Execution
 
 By default, all `asadmin` subcommands are automatically replicated and
 run on the DAS and all GlassFish Server instances specified in the
@@ -642,8 +618,7 @@ command execution. Specify the `ifOffline` element and set it to
 
 [[gkyjs]][[GSACG00209]][[subcommand-preprocessing-and-postprocessing]]
 
-Subcommand Preprocessing and Postprocessing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Subcommand Preprocessing and Postprocessing
 
 Some `asadmin` subcommands may require preprocessing or postprocessing.
 For example, after an application is deployed to the DAS, references are
@@ -735,8 +710,7 @@ in link:#gkyfv[Specifying `asadmin` Subcommand Execution].
 
 [[gkyit]][[GSACG00210]][[running-a-command-from-another-command]]
 
-Running a Command from Another Command
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Running a Command from Another Command
 
 An `asadmin` subcommand or supplemental command might need to run
 another subcommand. For example, a subcommand running on the DAS might
@@ -762,8 +736,7 @@ This is optional.
 
 [[ghptw]][[GSACG00110]][[adding-message-text-strings-to-an-asadmin-subcommand]]
 
-Adding Message Text Strings to an `asadmin` Subcommand
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding Message Text Strings to an `asadmin` Subcommand
 
 A message text string provides useful information to the user about an
 `asadmin` subcommand or a parameter.
@@ -896,8 +869,7 @@ create-mycontainer.command.containername=The container name
 
 [[ghpvn]][[GSACG00111]][[enabling-an-asadmin-subcommand-to-run]]
 
-Enabling an `asadmin` Subcommand to Run
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Enabling an `asadmin` Subcommand to Run
 
 To enable an `asadmin` subcommand to run, implement the `execute` method
 in your implementation of the `AdminCommand` interface. The declaration
@@ -919,8 +891,7 @@ link:#ghrsi[Example 4-6] and link:#gkbdf[Example 4-7].
 
 [[ghpvq]][[GSACG00112]][[setting-the-context-of-an-asadmin-subcommand]]
 
-Setting the Context of an `asadmin` Subcommand
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting the Context of an `asadmin` Subcommand
 
 The `org.glassfish.api.admin.AdminCommandContext` class provides the
 following services to an `asadmin` subcommand:
@@ -935,8 +906,7 @@ implementation.
 
 [[ghpwn]][[GSACG00113]][[changing-the-brand-in-the-glassfish-server-cli]]
 
-Changing the Brand in the GlassFish Server CLI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Changing the Brand in the GlassFish Server CLI
 
 The brand in the GlassFish Server command-line interface (CLI) consists
 of the product name and release information that are displayed in the
@@ -1024,8 +994,7 @@ PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundati
 
 [[ghmza]][[GSACG00114]][[examples-of-extending-the-asadmin-utility]]
 
-Examples of Extending the `asadmin` Utility
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Examples of Extending the `asadmin` Utility
 
 [[GSACG00038]][[ghrnt]]
 Example 4-5 `asadmin` Subcommand With Empty `execute` Method
@@ -1260,8 +1229,7 @@ public class ConfigureGreeterContainerCommand implements AdminCommand {
 
 [[gkzlq]][[GSACG00115]][[implementing-create-delete-and-list-commands-using-annotations]]
 
-Implementing Create, Delete, and List Commands Using Annotations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Implementing Create, Delete, and List Commands Using Annotations
 
 Many `asadmin` subcommands simply create, delete, or list objects in the
 configuration. Such code is repetitive to write and error prone. To
@@ -1285,8 +1253,7 @@ The following topics are addressed here:
 
 [[gkzkc]][[GSACG00211]][[command-patterns]]
 
-Command Patterns
-^^^^^^^^^^^^^^^^
+==== Command Patterns
 
 Create command pattern. The most basic create commands are implemented
 in the following pattern:
@@ -1349,8 +1316,7 @@ configuration object instances of a given type.
 
 [[gkzle]][[GSACG00212]][[resolvers]]
 
-Resolvers
-^^^^^^^^^
+==== Resolvers
 
 A resolver retrieves a configuration object instance of a particular
 type. For a create command, it retrieves the parent of the object to be
@@ -1404,8 +1370,7 @@ object instance. This is the default resolver.
 
 [[gkzoy]][[GSACG00213]][[the-create-annotation]]
 
-The `@Create` Annotation
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `@Create` Annotation
 
 By placing the `org.glassfish.config.support.Create` annotation on a
 method, you provide the following information:
@@ -1443,8 +1408,7 @@ it. Therefore, no resolver needs to be specified.
 
 [[gkzoo]][[GSACG00214]][[the-delete-annotation]]
 
-The `@Delete` Annotation
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `@Delete` Annotation
 
 By placing the `org.glassfish.config.support.Delete` annotation on a
 method, you provide the following information:
@@ -1482,8 +1446,7 @@ instance to be deleted.
 
 [[gkzpl]][[GSACG00215]][[the-listing-annotation]]
 
-The `@Listing` Annotation
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `@Listing` Annotation
 
 By placing the `org.glassfish.config.support.Listing` annotation on a
 method, you provide the following information:
@@ -1522,8 +1485,7 @@ public interface Clusters extends ConfigBeanProxy, Injectable {
 
 [[gkznf]][[GSACG00216]][[create-command-decorators]]
 
-Create Command Decorators
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Create Command Decorators
 
 Most create commands must do more than create a single configuration
 object instance with default attribute values. For example, most create
@@ -1629,8 +1591,7 @@ also inject HK2 services or configuration instances.
 
 [[gkznx]][[GSACG00217]][[delete-command-decorators]]
 
-Delete Command Decorators
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Delete Command Decorators
 
 Some delete commands must do more than delete a single configuration
 object instance. For example, the `delete-cluster` subcommand deletes
@@ -1715,8 +1676,7 @@ also inject HK2 services or configuration instances.
 
 [[gkzmu]][[GSACG00218]][[specifying-command-execution]]
 
-Specifying Command Execution
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Command Execution
 
 Commands specified with the `@Create`, `@Delete`, and `@Listing`
 annotations can use the `@ExecuteOn` annotation. The `@ExecuteOn`
@@ -1736,8 +1696,7 @@ annotation, use the `cluster` element. For example:
 
 [[gkznd]][[GSACG00219]][[using-multiple-command-annotations]]
 
-Using Multiple Command Annotations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Multiple Command Annotations
 
 You can specify multiple command annotations on the same method. The
 following example combines create, delete, and list commands for

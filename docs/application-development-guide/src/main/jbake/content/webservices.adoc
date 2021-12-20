@@ -5,15 +5,13 @@ next=jpa.html
 prev=securing-apps.html
 ~~~~~~
 
-Developing Web Services
-=======================
+= Developing Web Services
 
 [[GSDVG00007]][[gaszn]]
 
 
 [[developing-web-services]]
-5 Developing Web Services
--------------------------
+== 5 Developing Web Services
 
 This chapter describes Oracle GlassFish Server support for web services.
 The following topics are addressed here:
@@ -68,8 +66,7 @@ Metro WSIT Guide]
 
 [[gbizi]][[GSDVG00126]][[creating-portable-web-service-artifacts]]
 
-Creating Portable Web Service Artifacts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating Portable Web Service Artifacts
 
 For a tutorial that shows how to use the `wsimport` and `wsgen`
 commands, see "https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services[
@@ -77,8 +74,7 @@ Web Services]" in The Jakarta EE Tutorial.
 
 [[gbixz]][[GSDVG00127]][[deploying-a-web-service]]
 
-Deploying a Web Service
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying a Web Service
 
 You deploy a web service endpoint to the GlassFish Server just as you
 would any servlet, stateless session bean (SLSB), or application.
@@ -108,8 +104,7 @@ GlassFish Server Open Source Edition Reference Manual].
 
 [[gbiyw]][[GSDVG00128]][[the-web-service-uri-wsdl-file-and-test-page]]
 
-The Web Service URI, WSDL File, and Test Page
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The Web Service URI, WSDL File, and Test Page
 
 Clients can run a deployed web service by accessing its service endpoint
 address URI, which has the following format:
@@ -171,8 +166,7 @@ Application Deployment Guide].
 
 [[CHDEBBCH]][[GSDVG536]][[the-databinding-provider]]
 
-The Databinding Provider
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== The Databinding Provider
 
 The JAX-WS reference implementation (RI) used to be dependent on the
 JAXB RI for databinding. JAXB and JAX-WS implementations have been
@@ -308,8 +302,7 @@ in GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[gelxr]][[GSDVG00387]][[using-the-jbi.xml-file]]
 
-Using the `jbi.xml` File
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the `jbi.xml` File
 
 Section 6.3.1 of the JSR 208 specification describes the `jbi.xml` file.
 This is a deployment descriptor, located in the `META-INF` directory. To

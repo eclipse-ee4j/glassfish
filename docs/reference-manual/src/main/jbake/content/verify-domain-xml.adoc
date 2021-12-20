@@ -5,13 +5,11 @@ next=version.html
 prev=validate-multicast.html
 ~~~~~~
 
-verify-domain-xml
-=================
+= verify-domain-xml
 
 [[verify-domain-xml-1]][[GSRFM00260]][[verify-domain-xml]]
 
-verify-domain-xml
------------------
+== verify-domain-xml
 
 Verifies the content of the domain.xml file
 

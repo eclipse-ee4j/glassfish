@@ -5,13 +5,11 @@ next=create-virtual-server.html
 prev=create-threadpool.html
 ~~~~~~
 
-create-transport
-================
+= create-transport
 
 [[create-transport-1]][[GSRFM00061]][[create-transport]]
 
-create-transport
-----------------
+== create-transport
 
 Adds a new transport
 

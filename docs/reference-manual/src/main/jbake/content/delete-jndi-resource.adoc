@@ -5,13 +5,11 @@ next=delete-jvm-options.html
 prev=delete-jms-resource.html
 ~~~~~~
 
-delete-jndi-resource
-====================
+= delete-jndi-resource
 
 [[delete-jndi-resource-1]][[GSRFM00093]][[delete-jndi-resource]]
 
-delete-jndi-resource
---------------------
+== delete-jndi-resource
 
 Removes a JNDI resource
 

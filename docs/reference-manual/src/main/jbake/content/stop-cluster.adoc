@@ -5,13 +5,11 @@ next=stop-database.html
 prev=start-local-instance.html
 ~~~~~~
 
-stop-cluster
-============
+= stop-cluster
 
 [[stop-cluster-1]][[GSRFM00238]][[stop-cluster]]
 
-stop-cluster
-------------
+== stop-cluster
 
 Stops a {productName} cluster
 

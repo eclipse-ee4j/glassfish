@@ -5,13 +5,11 @@ next=list-jobs.html
 prev=list-jndi-entries.html
 ~~~~~~
 
-list-jndi-resources
-===================
+= list-jndi-resources
 
 [[list-jndi-resources-1]][[GSRFM00179]][[list-jndi-resources]]
 
-list-jndi-resources
--------------------
+== list-jndi-resources
 
 Lists all existing JNDI resources
 

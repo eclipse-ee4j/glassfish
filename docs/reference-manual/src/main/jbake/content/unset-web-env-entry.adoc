@@ -5,13 +5,11 @@ next=update-connector-security-map.html
 prev=unset-web-context-param.html
 ~~~~~~
 
-unset-web-env-entry
-===================
+= unset-web-env-entry
 
 [[unset-web-env-entry-1]][[GSRFM00249]][[unset-web-env-entry]]
 
-unset-web-env-entry
--------------------
+== unset-web-env-entry
 
 Unsets an environment entry for a deployed web application or module
 

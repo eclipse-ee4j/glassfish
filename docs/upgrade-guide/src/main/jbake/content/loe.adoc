@@ -5,12 +5,10 @@ next=lot.html
 prev=toc.html
 ~~~~~~
 
-List of Examples
-================
+= List of Examples
 
 [[list-of-examples]]
-List of Examples
-----------------
+== List of Examples
 
 * link:upgrading-legacy-installation.html#gktiu[2-1 Using the asupgrade
 Command Line]

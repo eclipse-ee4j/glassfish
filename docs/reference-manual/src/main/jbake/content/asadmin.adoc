@@ -5,16 +5,14 @@ next=debug-asadmin.html
 prev=appclient.html
 ~~~~~~
 
-asadmin
-=======
+= asadmin
 
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
 [[asadmin-1m]][[GSRFM00263]][[asadmin]]
 
-asadmin
--------
+== asadmin
 
 Utility for performing administrative tasks for Oracle {productName}
 

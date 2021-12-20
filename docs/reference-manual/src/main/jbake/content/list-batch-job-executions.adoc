@@ -5,13 +5,11 @@ next=list-batch-jobs.html
 prev=list-backups.html
 ~~~~~~
 
-list-batch-job-executions
-=========================
+= list-batch-job-executions
 
 [[list-batch-job-executions-1]][[GSRFM884]][[list-batch-job-executions]]
 
-list-batch-job-executions
--------------------------
+== list-batch-job-executions
 
 Lists batch job executions and execution details
 

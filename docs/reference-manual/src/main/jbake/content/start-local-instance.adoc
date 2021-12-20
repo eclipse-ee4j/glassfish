@@ -5,13 +5,11 @@ next=stop-cluster.html
 prev=start-instance.html
 ~~~~~~
 
-start-local-instance
-====================
+= start-local-instance
 
 [[start-local-instance-1]][[GSRFM00237]][[start-local-instance]]
 
-start-local-instance
---------------------
+== start-local-instance
 
 Starts a {productName} instance on the host where the subcommand is run
 

@@ -5,13 +5,11 @@ next=install-node.html
 prev=get-health.html
 ~~~~~~
 
-import-sync-bundle
-==================
+= import-sync-bundle
 
 [[import-sync-bundle-1]][[GSRFM00142]][[import-sync-bundle]]
 
-import-sync-bundle
-------------------
+== import-sync-bundle
 
 Imports the configuration data of a clustered instance or standalone
 instance from an archive file

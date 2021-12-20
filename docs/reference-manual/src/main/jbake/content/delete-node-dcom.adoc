@@ -5,13 +5,11 @@ next=delete-node-ssh.html
 prev=delete-node-config.html
 ~~~~~~
 
-delete-node-dcom
-================
+= delete-node-dcom
 
 [[delete-node-dcom-1]][[GSRFM569]][[delete-node-dcom]]
 
-delete-node-dcom
-----------------
+== delete-node-dcom
 
 Deletes a node that is enabled for communication over DCOM
 

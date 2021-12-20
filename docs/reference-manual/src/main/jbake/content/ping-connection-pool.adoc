@@ -5,13 +5,11 @@ next=ping-node-dcom.html
 prev=osgi-shell.html
 ~~~~~~
 
-ping-connection-pool
-====================
+= ping-connection-pool
 
 [[ping-connection-pool-1]][[GSRFM00214]][[ping-connection-pool]]
 
-ping-connection-pool
---------------------
+== ping-connection-pool
 
 Tests if a connection pool is usable
 

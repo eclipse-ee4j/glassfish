@@ -5,13 +5,11 @@ next=list-system-properties.html
 prev=list-sub-components.html
 ~~~~~~
 
-list-supported-cipher-suites
-============================
+= list-supported-cipher-suites
 
 [[list-supported-cipher-suites-1]][[GSRFM00202]][[list-supported-cipher-suites]]
 
-list-supported-cipher-suites
-----------------------------
+== list-supported-cipher-suites
 
 Enables administrators to list the cipher suites that are supported and
 available to a specified {productName} target

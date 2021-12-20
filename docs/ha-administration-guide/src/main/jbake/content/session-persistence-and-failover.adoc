@@ -5,14 +5,12 @@ next=jms.html
 prev=rolling-upgrade.html
 ~~~~~~
 
-Configuring High Availability Session Persistence and Failover
-==============================================================
+= Configuring High Availability Session Persistence and Failover
 
 [[GSHAG00011]][[abdkz]]
 
 [[configuring-high-availability-session-persistence-and-failover]]
-9 Configuring High Availability Session Persistence and Failover
-----------------------------------------------------------------
+== 9 Configuring High Availability Session Persistence and Failover
 
 This chapter explains how to enable and configure high availability
 session persistence.
@@ -23,8 +21,7 @@ session persistence.
 
 [[abdla]][[GSHAG00209]][[overview-of-session-persistence-and-failover]]
 
-Overview of Session Persistence and Failover
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Overview of Session Persistence and Failover
 
 GlassFish Server provides high availability session persistence through
 failover of HTTP session data and stateful session bean (SFSB) session
@@ -55,8 +52,7 @@ The following topics are addressed here:
 
 [[abdlb]][[GSHAG00300]][[requirements]]
 
-Requirements
-^^^^^^^^^^^^
+==== Requirements
 
 A distributed session can run in multiple Oracle GlassFish Server
 instances, if:
@@ -103,8 +99,7 @@ and link:../reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
 
 [[abdlc]][[GSHAG00301]][[restrictions]]
 
-Restrictions
-^^^^^^^^^^^^
+==== Restrictions
 
 When configuring session persistence and failover, note the following restrictions:
 
@@ -188,8 +183,7 @@ instance and container levels.
 
 [[abdle]][[GSHAG00210]][[enabling-the-high-availability-session-persistence-service]]
 
-Enabling the High Availability Session Persistence Service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Enabling the High Availability Session Persistence Service
 
 This section explains how to configure and enable the high availability
 session persistence service.
@@ -202,8 +196,7 @@ session persistence service.
 
 [[abdlf]][[GSHAG00154]][[to-enable-availability-for-a-cluster-standalone-instance-or-container]]
 
-To Enable Availability for a Cluster, Standalone Instance or Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable Availability for a Cluster, Standalone Instance or Container
 
 This procedure explains how to enable high availability for a cluster as
 a whole, or for Web, EJB, or JMS containers that run in a cluster, or
@@ -322,8 +315,7 @@ See Also
 
 [[abdll]][[GSHAG00303]][[configuring-availability-for-individual-web-applications]]
 
-Configuring Availability for Individual Web Applications
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Availability for Individual Web Applications
 
 To enable and configure availability for an individual web application,
 edit the application deployment descriptor file, `glassfish-web.xml`.
@@ -336,8 +328,7 @@ the type of session persistence an application uses. It must be set to
 
 [[abdlm]][[GSHAG00247]][[example]]
 
-Example
-+++++++
+===== Example
 
 [source,xml]
 ----
@@ -356,9 +347,7 @@ Example
 
 [[gkwqu]][[GSHAG00304]][[configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions]]
 
-Configuring Replication and Multi-Threaded Concurrent Access to
-`HttpSessions`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`
 
 If you are using Memory Replication and your web application involves
 multiple client threads concurrently accessing the same session ID, then
@@ -387,8 +376,7 @@ the container.
 
 [[gkwrj]][[GSHAG00248]][[example-1]]
 
-Example
-+++++++
+===== Example
 
 The following is an example snippet from a `glassfish-web.xml` file that
 illustrates where to add the `relaxVersionSemantics` property.
@@ -410,8 +398,7 @@ illustrates where to add the `relaxVersionSemantics` property.
 
 [[abdln]][[GSHAG00305]][[using-single-sign-on-with-session-failover]]
 
-Using Single Sign-on with Session Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Single Sign-on with Session Failover
 
 In a single application server instance, once a user is authenticated by
 an application, the user is not required to re-authenticate individually
@@ -440,8 +427,7 @@ sso-failover-enabled="true"
 
 [[abdlo]][[GSHAG00249]][[single-sign-on-groups]]
 
-Single Sign-On Groups
-+++++++++++++++++++++
+===== Single Sign-On Groups
 
 Applications that can be accessed through a single name and password
 combination constitute a single sign-on group. For HTTP sessions
@@ -487,8 +473,7 @@ accessing the application.
 
 [[gkyyl]][[GSHAG00306]][[using-coherenceweb-for-http-session-persistence]]
 
-Using Coherence*Web for HTTP Session Persistence
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Coherence*Web for HTTP Session Persistence
 
 Built on top of Oracle Coherence, Coherence*Web is an HTTP session
 management module dedicated to managing session state in clustered
@@ -507,8 +492,7 @@ Coherence*Web with GlassFish Server]
 
 [[abdlp]][[GSHAG00211]][[stateful-session-bean-failover]]
 
-Stateful Session Bean Failover
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Stateful Session Bean Failover
 
 Stateful session beans (SFSBs) contain client-specific state. There is a
 one-to-one relationship between clients and the stateful session beans.
@@ -549,8 +533,7 @@ SFSB while the GlassFish Server instance is running.
 
 [[abdlq]][[GSHAG00307]][[configuring-availability-for-the-ejb-container]]
 
-Configuring Availability for the EJB Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Availability for the EJB Container
 
 To enable availability for the EJB container use the `asadmin set`
 command to set the following three properties for the configuration:
@@ -583,8 +566,7 @@ ejb-container-availability.sfsb-ha-persistence-type="replicated"
 
 [[abdls]][[GSHAG00250]][[configuring-the-sfsb-session-store-when-availability-is-disabled]]
 
-Configuring the SFSB Session Store When Availability Is Disabled
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Configuring the SFSB Session Store When Availability Is Disabled
 
 If availability is disabled, the local file system is used for SFSB
 state passivation, but not persistence. To change where the SFSB state
@@ -594,8 +576,7 @@ Administration Console online help.
 
 [[abdlt]][[GSHAG00308]][[configuring-availability-for-an-individual-application-or-ejb-module]]
 
-Configuring Availability for an Individual Application or EJB Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Availability for an Individual Application or EJB Module
 
 You can enable SFSB availability for an individual application or EJB
 module during deployment:
@@ -609,8 +590,7 @@ link:../reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
 
 [[abdlu]][[GSHAG00309]][[configuring-availability-for-an-individual-bean]]
 
-Configuring Availability for an Individual Bean
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Availability for an Individual Bean
 
 To enable availability and select methods to be checkpointed for an
 individual SFSB, use the `glassfish-ejb-jar.xml` deployment descriptor
@@ -639,8 +619,7 @@ Enabled
 
 [[abdlw]][[GSHAG00310]][[specifying-methods-to-be-checkpointed]]
 
-Specifying Methods to Be Checkpointed
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Methods to Be Checkpointed
 
 If enabled, checkpointing generally occurs after the bean completes any
 transaction, even if the transaction rolls back. To specify additional

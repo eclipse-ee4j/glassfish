@@ -5,13 +5,11 @@ next=list-file-groups.html
 prev=list-custom-resources.html
 ~~~~~~
 
-list-domains
-============
+= list-domains
 
 [[list-domains-1]][[GSRFM00163]][[list-domains]]
 
-list-domains
-------------
+== list-domains
 
 Lists the domains in the specified directory
 

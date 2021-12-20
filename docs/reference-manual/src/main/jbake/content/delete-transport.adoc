@@ -5,13 +5,11 @@ next=delete-virtual-server.html
 prev=delete-threadpool.html
 ~~~~~~
 
-delete-transport
-================
+= delete-transport
 
 [[delete-transport-1]][[GSRFM00112]][[delete-transport]]
 
-delete-transport
-----------------
+== delete-transport
 
 Removes a transport
 

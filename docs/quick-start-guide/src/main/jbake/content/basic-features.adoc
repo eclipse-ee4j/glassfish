@@ -4,15 +4,13 @@ title=Quick Start for Basic Features
 prev=preface.html
 ~~~~~~
 
-Quick Start for Basic Features
-==============================
+= Quick Start for Basic Features
 
 [[GSQSG00003]][[aboaa]]
 
 
 [[quick-start-for-basic-features]]
-1 Quick Start for Basic Features
---------------------------------
+== 1 Quick Start for Basic Features
 
 Eclipse GlassFish Server provides a server for the
 development and deployment of Java Platform, Enterprise Edition (Jakarta EE
@@ -39,8 +37,7 @@ The following topics are addressed here:
 
 [[ghgpe]][[GSQSG00030]][[about-this-quick-start-guide]]
 
-About This Quick Start Guide
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About This Quick Start Guide
 
 Eclipse GlassFish Server 7 Quick Start Guide demonstrates
 key features of the GlassFish Server product and enables you to quickly
@@ -75,8 +72,7 @@ installing and working with GlassFish Server 7 software.
 
 [[ghpfg]][[GSQSG00031]][[default-paths-and-file-names]]
 
-Default Paths and File Names
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Paths and File Names
 
 The following table describes the default paths and file names that are
 used in this book.
@@ -127,8 +123,7 @@ SystemDrive``:\glassfish7``
 
 [[gixue]][[GSQSG00032]][[default-administration-values]]
 
-Default Administration Values
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Administration Values
 
 The following table lists default administration values for GlassFish
 Server. See link:#ghpfg[Default Paths and File Names] for more
@@ -173,8 +168,7 @@ Table 1-2 Default Administration Values
 
 [[gglog]][[GSQSG00033]][[starting-and-stopping-the-default-domain]]
 
-Starting and Stopping the Default Domain
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Starting and Stopping the Default Domain
 
 When you install GlassFish Server, a default domain named `domain1` is
 created. The following procedures describe how to start and stop
@@ -185,8 +179,7 @@ Source Edition Administration Guide.
 
 [[ggmpd]][[GSQSG00005]][[to-start-the-default-domain]]
 
-To Start the Default Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start the Default Domain
 
 [[sthref6]]
 
@@ -205,8 +198,7 @@ The command starts the default domain, `domain1`.
 
 [[ggmsx]][[GSQSG00006]][[to-stop-the-default-domain]]
 
-To Stop the Default Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Stop the Default Domain
 
 Run the `asadmin stop-domain` command without an operand:
 
@@ -232,8 +224,7 @@ as-install/bin/asadmin list-domains
 
 [[gglmh]][[GSQSG00034]][[starting-and-stopping-the-database-server]]
 
-Starting and Stopping the Database Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Starting and Stopping the Database Server
 
 A database server is not started by default when you start the GlassFish
 Server domain. If your applications require a database back end, you
@@ -254,8 +245,7 @@ Connectivity]" in Eclipse GlassFish Server Administration Guide.
 
 [[ggncr]][[GSQSG00007]][[to-start-the-apache-derby-server]]
 
-To Start the Apache Derby Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start the Apache Derby Server
 
 [[sthref7]]
 
@@ -282,8 +272,7 @@ as-install/bin/asadmin start-database --dbhome as-install-parent/javadb
 
 [[ggnez]][[GSQSG00008]][[to-stop-the-apache-derby-server]]
 
-To Stop the Apache Derby Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Stop the Apache Derby Server
 
 Run the `asadmin stop-database` command:
 
@@ -294,16 +283,14 @@ as-install/bin/asadmin stop-database
 
 [[ggllq]][[GSQSG00035]][[starting-the-administration-console]]
 
-Starting the Administration Console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Starting the Administration Console
 
 The GlassFish Server Administration Console provides a browser interface
 for configuring, administering, and monitoring GlassFish Server.
 
 [[ggnbp]][[GSQSG00009]][[to-start-the-administration-console]]
 
-To Start the Administration Console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start the Administration Console
 
 [[sthref8]]
 
@@ -333,8 +320,7 @@ For more information, see the Administration Console online help.
 
 [[geyvr]][[GSQSG00036]][[deploying-and-undeploying-applications]]
 
-Deploying and Undeploying Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying and Undeploying Applications
 
 The process of configuring and enabling applications to run within the
 GlassFish Server framework is referred to as deployment.
@@ -350,8 +336,7 @@ The following topics are addressed here:
 
 [[ghgis]][[GSQSG00010]][[to-obtain-the-sample-application]]
 
-To Obtain the Sample Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Obtain the Sample Application
 
 1. Download a copy of the `hello.war` sample application from
 `https://github.com/eclipse-ee4j/glassfishdownloads/quickstart/hello.war`.
@@ -362,8 +347,7 @@ This directory is referred to as sample-dir.
 
 [[gkpao]][[GSQSG00044]][[deploying-and-undeploying-the-sample-application-from-the-command-line]]
 
-Deploying and Undeploying the Sample Application From the Command Line
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deploying and Undeploying the Sample Application From the Command Line
 
 GlassFish Server provides `asadmin` subcommands for performing the
 following deployment-related tasks:
@@ -374,8 +358,7 @@ following deployment-related tasks:
 
 [[ggndq]][[GSQSG00011]][[to-deploy-the-sample-application-from-the-command-line]]
 
-To Deploy the Sample Application From the Command Line
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Deploy the Sample Application From the Command Line
 
 [[sthref10]]
 
@@ -434,8 +417,7 @@ Deployment Guide].
 
 [[ggnco]][[GSQSG00012]][[to-list-deployed-applications-from-the-command-line]]
 
-To List Deployed Applications From the Command Line
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To List Deployed Applications From the Command Line
 
 Run the `asadmin list-applications` command:
 
@@ -446,8 +428,7 @@ as-install/bin/asadmin list-applications
 
 [[ggnbm]][[GSQSG00013]][[to-undeploy-the-sample-application-from-the-command-line]]
 
-To Undeploy the Sample Application From the Command Line
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Undeploy the Sample Application From the Command Line
 
 Run the `asadmin undeploy` command.
 
@@ -476,8 +457,7 @@ link:../reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
 
 [[gkpau]][[GSQSG00045]][[deploying-and-undeploying-applications-by-using-the-administration-console]]
 
-Deploying and Undeploying Applications by Using the Administration Console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deploying and Undeploying Applications by Using the Administration Console
 
 The graphical Administration Console of GlassFish Server enables you to
 perform the following deployment-related tasks:
@@ -488,8 +468,7 @@ perform the following deployment-related tasks:
 
 [[ggnbn]][[GSQSG00014]][[to-deploy-the-sample-application-by-using-the-administration-console]]
 
-To Deploy the Sample Application by Using the Administration Console
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Deploy the Sample Application by Using the Administration Console
 
 [[sthref13]]
 
@@ -549,8 +528,7 @@ For more information, see the Administration Console online help.
 
 [[ggncd]][[GSQSG00015]][[to-view-deployed-applications-in-the-administration-console]]
 
-To View Deployed Applications in the Administration Console
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To View Deployed Applications in the Administration Console
 
 1. Launch the Administration Console by typing the following URL in
 your browser:
@@ -567,8 +545,7 @@ also listed in the table on the Applications page.
 
 [[ggneh]][[GSQSG00016]][[to-undeploy-the-sample-application-by-using-the-administration-console]]
 
-To Undeploy the Sample Application by Using the Administration Console
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Undeploy the Sample Application by Using the Administration Console
 
 1. Launch the Administration Console by typing the following URL in your browser:
 +
@@ -595,8 +572,7 @@ For more information, see the Administration Console online help.
 
 [[gkpaa]][[GSQSG00046]][[deploying-and-undeploying-the-sample-application-automatically]]
 
-Deploying and Undeploying the Sample Application Automatically
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deploying and Undeploying the Sample Application Automatically
 
 GlassFish Server enables you to performing the following
 deployment-related tasks automatically:
@@ -606,8 +582,7 @@ deployment-related tasks automatically:
 
 [[geyvj]][[GSQSG00017]][[to-deploy-the-sample-application-automatically]]
 
-To Deploy the Sample Application Automatically
-++++++++++++++++++++++++++++++++++++++++++++++
+===== To Deploy the Sample Application Automatically
 
 You can deploy applications automatically by placing them in the
 domain-dir`/autodeploy` directory, where domain-dir is the directory of
@@ -652,8 +627,7 @@ http://localhost:8080/hello/
 
 [[ggncw]][[GSQSG00018]][[to-undeploy-the-sample-application-automatically]]
 
-To Undeploy the Sample Application Automatically
-++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Undeploy the Sample Application Automatically
 
 1. Change to the domain's `autodeploy` directory.
 +
@@ -678,8 +652,7 @@ del hello.war
 
 [[gktqx]][[GSQSG00037]][[high-availability-clustering-and-load-balancing]]
 
-High Availability Clustering and Load Balancing
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== High Availability Clustering and Load Balancing
 
 GlassFish Server enables multiple GlassFish Server instances to be
 clustered to provide high availability through failure protection,
@@ -689,8 +662,7 @@ GlassFish Server.
 
 [[gktob]][[GSQSG00047]][[clusters-of-glassfish-server-instances]]
 
-Clusters of GlassFish Server Instances
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Clusters of GlassFish Server Instances
 
 A cluster is a collection of GlassFish Server instances that work
 together as one logical entity. A cluster provides a runtime environment
@@ -722,8 +694,7 @@ Eclipse GlassFish Server High Availability Administration Guide
 
 [[gktpt]][[GSQSG00048]][[session-persistence-and-failover]]
 
-Session Persistence and Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Session Persistence and Failover
 
 Storing session state data enables the session state to be recovered
 after the failover of an instance in a cluster. Recovering the session
@@ -737,8 +708,7 @@ Source Edition High Availability Administration Guide.
 
 [[gksbz]][[GSQSG00049]][[load-balancing-for-clustered-configurations]]
 
-Load Balancing for Clustered Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Load Balancing for Clustered Configurations
 
 GlassFish Server supports web server and hardware-based load balancing
 for clustered configurations. A load balancer is deployed with a
@@ -767,8 +737,7 @@ GlassFish Server Open Source Edition High Availability Administration Guide
 
 [[ggkzh]][[GSQSG00040]][[for-more-information]]
 
-For More Information
-~~~~~~~~~~~~~~~~~~~~
+=== For More Information
 
 Additional resources are available to help you learn more about
 GlassFish Server 7 and related technologies.
@@ -781,8 +750,7 @@ The following resources are described here:
 
 [[ghhir]][[GSQSG00050]][[product-documentation]]
 
-Product Documentation
-^^^^^^^^^^^^^^^^^^^^^
+==== Product Documentation
 
 Comprehensive product documentation is available and includes the
 following.
@@ -794,8 +762,7 @@ and working with GlassFish Server software.
 
 [[giyjo]][[GSQSG00052]][[tutorials]]
 
-Tutorials
-^^^^^^^^^
+==== Tutorials
 
 The following tutorials provide working examples and detailed
 instructions for creating enterprise applications for the Jakarta EE platform.

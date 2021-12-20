@@ -5,13 +5,11 @@ next=validate-multicast.html
 prev=uptime.html
 ~~~~~~
 
-validate-dcom
-=============
+= validate-dcom
 
 [[validate-dcom-1]][[GSRFM796]][[validate-dcom]]
 
-validate-dcom
--------------
+== validate-dcom
 
 Tests the connection over DCOM to a remote host
 

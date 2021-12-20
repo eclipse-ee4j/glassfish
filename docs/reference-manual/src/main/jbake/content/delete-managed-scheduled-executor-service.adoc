@@ -5,13 +5,11 @@ next=delete-managed-thread-factory.html
 prev=delete-managed-executor-service.html
 ~~~~~~
 
-delete-managed-scheduled-executor-service
-=========================================
+= delete-managed-scheduled-executor-service
 
 [[delete-managed-scheduled-executor-service-1]][[GSRFM850]][[delete-managed-scheduled-executor-service]]
 
-delete-managed-scheduled-executor-service
------------------------------------------
+== delete-managed-scheduled-executor-service
 
 Removes a managed scheduled executor service resource with the specified
 JNDI name

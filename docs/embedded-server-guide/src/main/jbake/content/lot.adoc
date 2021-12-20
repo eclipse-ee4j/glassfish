@@ -5,12 +5,10 @@ next=title.html
 prev=loe.html
 ~~~~~~
 
-List of Tables
-==============
+= List of Tables
 
 [[list-of-tables]]
-List of Tables
---------------
+== List of Tables
 
 * link:embedded-server-guide.html#gksir[1-1 Methods of the
 BootstrapProperties Class]

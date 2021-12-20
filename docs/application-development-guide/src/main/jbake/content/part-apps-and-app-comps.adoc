@@ -5,16 +5,13 @@ next=securing-apps.html
 prev=debugging-apps.html
 ~~~~~~
 
-Developing Applications and Application Components
-==================================================
+= Developing Applications and Application Components
 
 [[fvyme]][[GSDVG00046]][[part-ii]]
 
-Part II
--------
+== Part II
 
 [[developing-applications-and-application-components]]
-Developing Applications and Application Components
---------------------------------------------------
+== Developing Applications and Application Components
 
 

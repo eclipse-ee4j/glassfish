@@ -5,13 +5,11 @@ next=list-auth-realms.html
 prev=list-applications.html
 ~~~~~~
 
-list-audit-modules
-==================
+= list-audit-modules
 
 [[list-audit-modules-1]][[GSRFM00149]][[list-audit-modules]]
 
-list-audit-modules
-------------------
+== list-audit-modules
 
 Gets all audit modules and displays them
 

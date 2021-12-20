@@ -5,13 +5,11 @@ next=delete-jacc-provider.html
 prev=delete-iiop-listener.html
 ~~~~~~
 
-delete-instance
-===============
+= delete-instance
 
 [[delete-instance-1]][[GSRFM00085]][[delete-instance]]
 
-delete-instance
----------------
+== delete-instance
 
 Deletes a {productName} instance
 

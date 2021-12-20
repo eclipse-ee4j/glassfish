@@ -5,13 +5,11 @@ next=uninstall-node-dcom.html
 prev=unfreeze-transaction-service.html
 ~~~~~~
 
-uninstall-node
-==============
+= uninstall-node
 
 [[uninstall-node-1]][[GSRFM00246]][[uninstall-node]]
 
-uninstall-node
---------------
+== uninstall-node
 
 Uninstalls {productName} software from specified hosts
 

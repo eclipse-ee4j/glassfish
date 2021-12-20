@@ -5,15 +5,13 @@ next=tuning-apps.html
 prev=preface.html
 ~~~~~~
 
-Overview of GlassFish Server Performance Tuning
-===============================================
+= Overview of GlassFish Server Performance Tuning
 
 [[GSPTG00003]][[giekg]]
 
 
 [[overview-of-glassfish-server-performance-tuning]]
-1 Overview of GlassFish Server Performance Tuning
--------------------------------------------------
+== 1 Overview of GlassFish Server Performance Tuning
 
 You can significantly improve performance of the Oracle GlassFish Server
 and of applications deployed to it by adjusting a few deployment and
@@ -31,8 +29,7 @@ The following topics are addressed here:
 
 [[abear]][[GSPTG00048]][[process-overview]]
 
-Process Overview
-~~~~~~~~~~~~~~~~
+=== Process Overview
 
 The following table outlines the overall GlassFish Server 7
 administration process, and shows where performance tuning fits in the
@@ -95,8 +92,7 @@ a|The following chapters:
 
 [[abeas]][[GSPTG00035]][[performance-tuning-sequence]]
 
-Performance Tuning Sequence
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Performance Tuning Sequence
 
 Application developers should tune applications prior to production use.
 Tuning applications often produces dramatic performance improvements.
@@ -117,8 +113,7 @@ link:tuning-os.html#abeir[Tuning the Operating System and Platform].
 
 [[abeat]][[GSPTG00049]][[understanding-operational-requirements]]
 
-Understanding Operational Requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Understanding Operational Requirements
 
 Before you begin to deploy and tune your application on the GlassFish
 Server, it is important to clearly define the operational environment.
@@ -133,8 +128,7 @@ requirements such as:
 
 [[abeau]][[GSPTG00154]][[application-architecture]]
 
-Application Architecture
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Application Architecture
 
 The Jakarta EE Application model, as shown in the following figure, is very
 flexible; allowing the application architect to split application logic
@@ -166,16 +160,14 @@ business application to an existing application server deployment.
 
 [[abeav]][[GSPTG00155]][[security-requirements]]
 
-Security Requirements
-^^^^^^^^^^^^^^^^^^^^^
+==== Security Requirements
 
 Most business applications require security. This section discusses
 security considerations and decisions.
 
 [[abeaw]][[GSPTG00080]][[user-authentication-and-authorization]]
 
-User Authentication and Authorization
-+++++++++++++++++++++++++++++++++++++
+===== User Authentication and Authorization
 
 Application users must be authenticated. The GlassFish Server provides a
 number of choices for user authentication, including file-based,
@@ -213,8 +205,7 @@ planning, you must take this additional overhead into account.
 
 [[abeax]][[GSPTG00081]][[encryption]]
 
-Encryption
-++++++++++
+===== Encryption
 
 For security reasons, sensitive user inputs and application output must
 be encrypted. Most business-oriented web applications encrypt all or
@@ -269,8 +260,7 @@ Security]" in GlassFish Server Open Source Edition Security Guide.
 
 [[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
 
-High Availability Clustering, Load Balancing, and Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== High Availability Clustering, Load Balancing, and Failover
 
 GlassFish Server 7 enables multiple GlassFish Server instances to be
 clustered to provide high availability through failure protection,
@@ -302,8 +292,7 @@ features in GlassFish Server 7.
 
 [[abeay]][[GSPTG00157]][[hardware-resources]]
 
-Hardware Resources
-^^^^^^^^^^^^^^^^^^
+==== Hardware Resources
 
 The type and quantity of hardware resources available greatly influence
 performance tuning and site planning.
@@ -329,8 +318,7 @@ instances and hardware nodes.
 
 [[abeaz]][[GSPTG00158]][[administration]]
 
-Administration
-^^^^^^^^^^^^^^
+==== Administration
 
 A single GlassFish Server installation on a server can encompass
 multiple instances. A group of one or more instances that are
@@ -361,8 +349,7 @@ link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition
 
 [[abeba]][[GSPTG00050]][[general-tuning-concepts]]
 
-General Tuning Concepts
-~~~~~~~~~~~~~~~~~~~~~~~
+=== General Tuning Concepts
 
 Some key concepts that affect performance tuning are:
 
@@ -437,8 +424,7 @@ Measure your deployment under real and simulated peak loads.
 
 [[abebb]][[GSPTG00159]][[capacity-planning]]
 
-Capacity Planning
-^^^^^^^^^^^^^^^^^
+==== Capacity Planning
 
 The previous discussion guides you towards defining a deployment
 architecture. However, you determine the actual size of the deployment
@@ -454,8 +440,7 @@ using an application with realistic data sets and workloads.
 
 [[gacmz]][[GSPTG00036]][[to-determine-capacity]]
 
-To Determine Capacity
-+++++++++++++++++++++
+===== To Determine Capacity
 
 1. Determine performance on a single CPU.
 +
@@ -492,8 +477,7 @@ determined in step link:#CEGHGCGI[2].
 
 [[abebc]][[GSPTG00160]][[user-expectations]]
 
-User Expectations
-^^^^^^^^^^^^^^^^^
+==== User Expectations
 
 Application end-users generally have some performance expectations.
 Often you can numerically quantify them. To ensure that customer needs
@@ -526,8 +510,7 @@ downtimes for upgrades.
 
 [[abebd]][[GSPTG00051]][[further-information]]
 
-Further Information
-~~~~~~~~~~~~~~~~~~~
+=== Further Information
 
 * For more information on Java performance, see
 http://java.sun.com/docs/performance[Java Performance Documentation]

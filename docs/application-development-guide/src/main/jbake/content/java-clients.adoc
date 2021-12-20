@@ -5,15 +5,13 @@ next=connectors.html
 prev=container_managed-persistence.html
 ~~~~~~
 
-Developing Java Clients
-=======================
+= Developing Java Clients
 
 [[GSDVG00012]][[beakt]]
 
 
 [[developing-java-clients]]
-10 Developing Java Clients
---------------------------
+== 10 Developing Java Clients
 
 This chapter describes how to develop, assemble, and deploy Java
 clients.
@@ -43,8 +41,7 @@ the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
 
 [[beaku]][[GSDVG00159]][[introducing-the-application-client-container]]
 
-Introducing the Application Client Container
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Introducing the Application Client Container
 
 The Application Client Container (ACC) includes a set of Java classes,
 libraries, and other files that are required for and distributed with
@@ -72,8 +69,7 @@ running under different major versions is not supported.
 
 [[fvymq]][[GSDVG00459]][[acc-security]]
 
-ACC Security
-^^^^^^^^^^^^
+==== ACC Security
 
 The ACC determines when authentication is needed. This typically occurs
 when the client refers to an EJB component that requires authorization
@@ -103,8 +99,7 @@ Login Using the ProgrammaticLogin Class].
 
 [[fvymv]][[GSDVG00460]][[acc-naming]]
 
-ACC Naming
-^^^^^^^^^^
+==== ACC Naming
 
 The client container enables the application clients to use the Java
 Naming and Directory Interface (JNDI) to look up Jakarta EE services (such
@@ -113,8 +108,7 @@ and to reference configurable parameters set at the time of deployment.
 
 [[gbgfe]][[GSDVG00461]][[application-client-annotation]]
 
-Application Client Annotation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Application Client Annotation
 
 Annotation is supported for the main class and the optional callback
 handler class in application clients. For more information, see
@@ -123,8 +117,7 @@ Server Open Source Edition Application Deployment Guide.
 
 [[gavkg]][[GSDVG00462]][[java-web-start]]
 
-Java Web Start
-^^^^^^^^^^^^^^
+==== Java Web Start
 
 Java Web Start allows your application client to be easily launched and
 automatically downloaded and updated. It is enabled for all application
@@ -133,8 +126,7 @@ Start].
 
 [[gipjj]][[GSDVG00463]][[application-client-jar-file]]
 
-Application Client JAR File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Application Client JAR File
 
 In GlassFish Server 7, the downloaded appclient JAR file is smaller
 than in previous releases, with dependent classes in separate JAR files.
@@ -146,8 +138,7 @@ another location.
 
 [[beakv]][[GSDVG00160]][[developing-clients-using-the-acc]]
 
-Developing Clients Using the ACC
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Developing Clients Using the ACC
 
 This section describes the procedure to develop, assemble, and deploy
 client applications using the ACC.
@@ -170,8 +161,7 @@ Script]
 
 [[beakw]][[GSDVG00072]][[to-access-an-ejb-component-from-an-application-client]]
 
-To Access an EJB Component From an Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Access an EJB Component From an Application Client
 
 1. In your client code, reference the EJB component by using an `@EJB`
 annotation or by looking up the JNDI name as defined in the `ejb-jar.xml` file. +
@@ -278,8 +268,7 @@ Server Open Source Edition High Availability Administration Guide.
 
 [[beakx]][[GSDVG00073]][[to-access-a-jms-resource-from-an-application-client]]
 
-To Access a JMS Resource From an Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Access a JMS Resource From an Application Client
 
 1. Create a JMS client.
 +
@@ -334,8 +323,7 @@ Application Client Using the `appclient` Script].
 
 [[gavmf]][[GSDVG00464]][[using-java-web-start]]
 
-Using Java Web Start
-^^^^^^^^^^^^^^^^^^^^
+==== Using Java Web Start
 
 Java Web Start allows your application client to be easily launched and
 automatically downloaded and updated. General information about Java Web
@@ -354,8 +342,7 @@ The following topics are addressed here:
 
 [[gavqb]][[GSDVG00312]][[enabling-and-disabling-java-web-start]]
 
-Enabling and Disabling Java Web Start
-+++++++++++++++++++++++++++++++++++++
+===== Enabling and Disabling Java Web Start
 
 Java Web Start is enabled for all application clients by default.
 
@@ -392,8 +379,7 @@ Edition Reference Manual].
 
 [[gavmk]][[GSDVG00313]][[downloading-and-launching-an-application-client]]
 
-Downloading and Launching an Application Client
-+++++++++++++++++++++++++++++++++++++++++++++++
+===== Downloading and Launching an Application Client
 
 If Java Web Start is enabled for your deployed application client, you
 can launch it for testing. Simply click on the Launch button next to the
@@ -425,8 +411,7 @@ client machines have the latest version.
 
 [[gavor]][[GSDVG00314]][[the-application-client-url]]
 
-The Application Client URL
-++++++++++++++++++++++++++
+===== The Application Client URL
 
 The default URL for an application or module generally is as follows:
 
@@ -503,8 +488,7 @@ on it.
 
 [[gcjlg]][[GSDVG00315]][[signing-jar-files-used-in-java-web-start]]
 
-Signing JAR Files Used in Java Web Start
-++++++++++++++++++++++++++++++++++++++++
+===== Signing JAR Files Used in Java Web Start
 
 Java Web Start enforces a security sandbox. By default it grants any
 application, including application clients, only minimal privileges.
@@ -662,8 +646,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[geqxg]][[GSDVG00316]][[error-handling]]
 
-Error Handling
-++++++++++++++
+===== Error Handling
 
 When an application client is launched using Java Web Start, any error
 that the application client logic does not catch and handle is written
@@ -674,8 +657,7 @@ and handle errors itself.
 
 [[geqwd]][[GSDVG00317]][[vendor-icon-splash-screen-and-text]]
 
-Vendor Icon, Splash Screen, and Text
-++++++++++++++++++++++++++++++++++++
+===== Vendor Icon, Splash Screen, and Text
 
 To specify a vendor-specific icon, splash screen, text string, or a
 combination of these for Java Web Start download and launch screens, use
@@ -729,8 +711,7 @@ Custom JNLP File].
 
 [[gkmbs]][[GSDVG00318]][[creating-a-custom-jnlp-file]]
 
-Creating a Custom JNLP File
-+++++++++++++++++++++++++++
+===== Creating a Custom JNLP File
 
 You can partially customize the Java Network Launching Protocol (JNLP)
 file that GlassFish Server uses for Java Web Start.
@@ -1107,8 +1088,7 @@ extension.
 
 [[gipkt]][[GSDVG00465]][[using-the-embeddable-acc]]
 
-Using the Embeddable ACC
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the Embeddable ACC
 
 You can embed the ACC into your application client. If you place the
 as-install`/lib/gf-client.jar` file in your runtime classpath, your
@@ -1183,8 +1163,7 @@ might not support such serial or concurrent reuse.
 
 [[beaky]][[GSDVG00466]][[running-an-application-client-using-the-appclient-script]]
 
-Running an Application Client Using the `appclient` Script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Running an Application Client Using the `appclient` Script
 
 To run an application client, you can launch the ACC using the
 `appclient` script, whether or not Java Web Start is enabled. This is
@@ -1194,8 +1173,7 @@ Reference Manual].
 
 [[beakz]][[GSDVG00467]][[using-the-package-appclient-script]]
 
-Using the `package-appclient` Script
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the `package-appclient` Script
 
 You can package the GlassFish Server system files required to launch
 application clients on remote systems into a single JAR file using the
@@ -1205,8 +1183,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[fvymy]][[GSDVG00468]][[the-client.policy-file]]
 
-The `client.policy` File
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `client.policy` File
 
 The `client.policy` file is the J2SE policy file used by the application
 client. Each application client has a `client.policy` file. The default
@@ -1226,8 +1203,7 @@ For more information about the permissions you can set in the
 
 [[gckgn]][[GSDVG00469]][[using-rmiiiop-over-ssl]]
 
-Using RMI/IIOP Over SSL
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Using RMI/IIOP Over SSL
 
 You can configure RMI/IIOP over SSL in two ways: using a username and
 password, or using a client certificate.
@@ -1326,8 +1302,7 @@ export VMARGS="-Djavax.net.ssl.keyStore=${keystore.db.file}
 
 [[ghbpc]][[GSDVG00470]][[connecting-to-a-remote-ejb-module-through-a-firewall]]
 
-Connecting to a Remote EJB Module Through a Firewall
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Connecting to a Remote EJB Module Through a Firewall
 
 To deploy and run an application client that connects to an EJB module
 on a GlassFish Server instance that is behind a firewall, you must set
@@ -1355,8 +1330,7 @@ in the GlassFish Server configuration.
 
 [[gipkj]][[GSDVG00471]][[specifying-a-splash-screen]]
 
-Specifying a Splash Screen
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying a Splash Screen
 
 Java SE 6 offers splash screen support, either through a Java
 command-line option or a manifest entry in the application's JAR file.
@@ -1396,8 +1370,7 @@ advantage of the Java SE 6 splash screen feature.
 
 [[gjiec]][[GSDVG00472]][[setting-login-retries]]
 
-Setting Login Retries
-^^^^^^^^^^^^^^^^^^^^^
+==== Setting Login Retries
 
 You can set a JVM option using the `appclient` script that determines
 the number of login retries allowed. This option is
@@ -1416,8 +1389,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[gjpjt]][[GSDVG00473]][[using-libraries-with-application-clients]]
 
-Using Libraries with Application Clients
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Libraries with Application Clients
 
 The Libraries field in the Administration Console's deployment page and
 the `--libraries` option of the `asadmin deploy` command do not apply to
@@ -1434,8 +1406,7 @@ application client JAR file's manifest `Class-Path`.
 
 [[gkusn]][[GSDVG00161]][[developing-clients-without-the-acc]]
 
-Developing Clients Without the ACC
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Developing Clients Without the ACC
 
 This section describes the procedure to create, assemble, and deploy a
 Java-based client that is not packaged using the Application Client
@@ -1452,8 +1423,7 @@ Using the ACC].
 
 [[gkusp]][[GSDVG00074]][[to-access-an-ejb-component-from-a-stand-alone-client]]
 
-To access an EJB component from a stand-alone client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To access an EJB component from a stand-alone client
 
 1. In your client code, instantiate the `InitialContext`:
 +
@@ -1549,8 +1519,7 @@ compatible, you merely need to run the `main` class.
 
 [[gkutw]][[GSDVG00075]][[to-access-an-ejb-component-from-a-server-side-module]]
 
-To access an EJB component from a server-side module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To access an EJB component from a server-side module
 
 A server-side module can be a servlet, another EJB component, or another
 type of module.
@@ -1639,8 +1608,7 @@ Deployment Guide.
 
 [[gkuqa]][[GSDVG00076]][[to-access-a-jms-resource-from-a-stand-alone-client]]
 
-To access a JMS resource from a stand-alone client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To access a JMS resource from a stand-alone client
 
 1. Create a JMS client.
 +

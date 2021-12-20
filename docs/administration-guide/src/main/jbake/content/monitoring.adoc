@@ -5,15 +5,13 @@ next=lifecycle-modules.html
 prev=logging.html
 ~~~~~~
 
-Administering the Monitoring Service
-====================================
+= Administering the Monitoring Service
 
 [[GSADG00011]][[ablur]]
 
 
 [[administering-the-monitoring-service]]
-8 Administering the Monitoring Service
---------------------------------------
+== 8 Administering the Monitoring Service
 
 This chapter explains how to monitor the GlassFish Server Open Source
 Edition 7 components and services by using the `asadmin` command-line
@@ -38,8 +36,7 @@ Administer GlassFish Server].
 
 [[ablus]][[GSADG00557]][[about-monitoring]]
 
-About Monitoring
-~~~~~~~~~~~~~~~~
+=== About Monitoring
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. The monitoring service can track
@@ -64,8 +61,7 @@ The following topics are addressed here:
 
 [[ghbaz]][[GSADG00727]][[how-the-monitoring-tree-structure-works]]
 
-How the Monitoring Tree Structure Works
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== How the Monitoring Tree Structure Works
 
 A monitorable object is a component, subcomponent, or service that can
 be monitored. GlassFish Server uses a tree structure to track
@@ -116,8 +112,7 @@ link:#ablvp[Configuring Monitoring].
 
 [[abluv]][[GSADG00647]][[tree-structure-of-monitorable-objects]]
 
-Tree Structure of Monitorable Objects
-+++++++++++++++++++++++++++++++++++++
+===== Tree Structure of Monitorable Objects
 
 Each monitorable object has a hierarchical tree structure. In the tree,
 a replaceable such as *statistics represents the name of the attribute
@@ -448,8 +443,7 @@ statistics, see link:#ghljx[Web Module Common Statistics].
 
 [[gitkq]][[GSADG00728]][[about-monitoring-for-add-on-components]]
 
-About Monitoring for Add-on Components
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== About Monitoring for Add-on Components
 
 An add-on component typically generates statistics that GlassFish Server
 can gather at runtime. Adding monitoring capabilities enables an add-on
@@ -461,8 +455,7 @@ the origin of the component.
 
 [[ghbfq]][[GSADG00729]][[tools-for-monitoring-glassfish-server]]
 
-Tools for Monitoring GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tools for Monitoring GlassFish Server
 
 The following `asadmin` subcommands are provided for monitoring the
 services and components of GlassFish Server:
@@ -486,8 +479,7 @@ Monitoring].
 
 [[ablvp]][[GSADG00558]][[configuring-monitoring]]
 
-Configuring Monitoring
-~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Monitoring
 
 By default, the monitoring service is enabled for GlassFish Server, but
 monitoring for the individual modules is not. To enable monitoring for a
@@ -507,8 +499,7 @@ The following tasks are addressed here:
 
 [[ablvr]][[GSADG00386]][[to-enable-monitoring]]
 
-To Enable Monitoring
-^^^^^^^^^^^^^^^^^^^^
+==== To Enable Monitoring
 
 Use the `enable-monitoring` subcommand to enable the monitoring service
 itself, or to enable monitoring for individual modules. Monitoring is
@@ -586,8 +577,7 @@ typing `asadmin help enable-monitoring` at the command line.
 
 [[gglcu]][[GSADG00387]][[to-disable-monitoring]]
 
-To Disable Monitoring
-^^^^^^^^^^^^^^^^^^^^^
+==== To Disable Monitoring
 
 Use the `disable-monitoring` subcommand to disable the monitoring
 service itself, or to disable monitoring for individual modules.
@@ -664,8 +654,7 @@ typing `asadmin help disable-monitoring` at the command line.
 
 [[ablvs]][[GSADG00559]][[viewing-common-monitoring-data]]
 
-Viewing Common Monitoring Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Viewing Common Monitoring Data
 
 Use the `monitor` subcommand to display basic data on commonly-monitored
 objects.
@@ -675,8 +664,7 @@ objects.
 
 [[gelol]][[GSADG00388]][[to-view-common-monitoring-data]]
 
-To View Common Monitoring Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To View Common Monitoring Data
 
 Use the `--type` option of the `monitor` subcommand to specify the
 object for which you want to display data, such as `httplistener`,
@@ -725,8 +713,7 @@ typing `asadmin help monitor` at the command line.
 
 [[ghmdc]][[GSADG00730]][[common-monitoring-statistics]]
 
-Common Monitoring Statistics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Common Monitoring Statistics
 
 Common monitoring statistics are described in the following sections:
 
@@ -736,8 +723,7 @@ Common monitoring statistics are described in the following sections:
 
 [[ghltk]][[GSADG00648]][[http-listener-common-statistics]]
 
-HTTP Listener Common Statistics
-+++++++++++++++++++++++++++++++
+===== HTTP Listener Common Statistics
 
 The statistics available for the `httplistener` type are shown in the
 following table.
@@ -766,8 +752,7 @@ processing times over request
 
 [[ghlvm]][[GSADG00649]][[jvm-common-statistics]]
 
-JVM Common Statistics
-+++++++++++++++++++++
+===== JVM Common Statistics
 
 The statistics available for the `jvm` type are shown in the following
 table.
@@ -800,8 +785,7 @@ since it was last started
 
 [[ghljx]][[GSADG00650]][[web-module-common-statistics]]
 
-Web Module Common Statistics
-++++++++++++++++++++++++++++
+===== Web Module Common Statistics
 
 The statistics available for the `webmodule` type are shown in the
 following table.
@@ -839,8 +823,7 @@ are loaded
 
 [[ghmct]][[GSADG00560]][[viewing-comprehensive-monitoring-data]]
 
-Viewing Comprehensive Monitoring Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Viewing Comprehensive Monitoring Data
 
 By applying the `list` and `get` subcommands against the tree structure
 using dotted names, you can display more comprehensive monitoring data,
@@ -856,8 +839,7 @@ Monitoring]
 
 [[ablwh]][[GSADG00731]][[guidelines-for-using-the-list-and-get-subcommands-for-monitoring]]
 
-Guidelines for Using the `list` and `get` Subcommands for Monitoring
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Guidelines for Using the `list` and `get` Subcommands for Monitoring
 
 The underlying assumptions for using the `list` and `get` subcommands
 with dotted names are:
@@ -915,8 +897,7 @@ link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help
 
 [[ablvv]][[GSADG00389]][[to-view-comprehensive-monitoring-data]]
 
-To View Comprehensive Monitoring Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To View Comprehensive Monitoring Data
 
 Although the `monitor` subcommand is useful in many situations, it does
 not offer the complete list of all monitorable objects. To work with
@@ -1054,8 +1035,7 @@ server.jvm.runtime.vmversion-current = 10.0-b23
 
 [[ghmcn]][[GSADG00732]][[comprehensive-monitoring-statistics]]
 
-Comprehensive Monitoring Statistics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Comprehensive Monitoring Statistics
 
 You can get comprehensive monitoring statistics by forming a dotted name
 that specifies the statistic you are looking for. For example, the
@@ -1082,8 +1062,7 @@ available for each monitorable object:
 
 [[gjkbi]][[GSADG00651]][[ejb-statistics]]
 
-EJB Statistics
-++++++++++++++
+===== EJB Statistics
 
 EJBs fit into the tree of objects as shown in link:#abluw[Applications
 Tree Hierarchy]. Use the following dotted name pattern to get EJB
@@ -1317,8 +1296,7 @@ system.
 
 [[ablvg]][[GSADG00652]][[http-service-statistics]]
 
-HTTP Service Statistics
-+++++++++++++++++++++++
+===== HTTP Service Statistics
 
 The HTTP service fits into the tree of objects as shown in
 link:#ghlin[HTTP Service Tree Hierarchy].
@@ -1408,8 +1386,7 @@ so far
 
 [[gjjyb]][[GSADG00653]][[jersey-statistics]]
 
-Jersey Statistics
-+++++++++++++++++
+===== Jersey Statistics
 
 Jersey fits into the tree of objects as shown in
 link:#abluw[Applications Tree Hierarchy].
@@ -1441,8 +1418,7 @@ resource class
 
 [[ablvi]][[GSADG00654]][[jmsconnector-service-statistics]]
 
-JMS/Connector Service Statistics
-++++++++++++++++++++++++++++++++
+===== JMS/Connector Service Statistics
 
 The JMS/Connector Service fits into the tree of objects as shown in
 link:#ablva[JMS/Container Service Tree Hierarchy].
@@ -1568,8 +1544,7 @@ work object before it gets executed.
 
 [[ablvm]][[GSADG00655]][[jvm-statistics]]
 
-JVM Statistics
-++++++++++++++
+===== JVM Statistics
 
 The JVM fits into the tree of objects as show in link:#ghlic[JVM Tree
 Hierarchy].
@@ -1865,8 +1840,7 @@ specification version implemented by the JVM
 
 [[gjipy]][[GSADG00656]][[network-statistics]]
 
-Network Statistics
-++++++++++++++++++
+===== Network Statistics
 
 Network fits into the tree of objects as shown in link:#giznj[Network
 Tree Hierarchy].
@@ -2073,8 +2047,7 @@ tasks, which were executed by the thread pool
 
 [[ablvj]][[GSADG00657]][[orb-statistics-connection-manager]]
 
-ORB Statistics (Connection Manager)
-+++++++++++++++++++++++++++++++++++
+===== ORB Statistics (Connection Manager)
 
 The ORB fits into the tree of objects as shown in link:#ablvb[ORB Tree
 Hierarchy].
@@ -2111,8 +2084,7 @@ to the ORB
 
 [[gipzv]][[GSADG00658]][[resource-statistics-connection-pool]]
 
-Resource Statistics (Connection Pool)
-+++++++++++++++++++++++++++++++++++++
+===== Resource Statistics (Connection Pool)
 
 By monitoring connection pool resources you can measure performance and
 capture resource usage at runtime. Connections are expensive and
@@ -2254,8 +2226,7 @@ connections that were used (high water mark)
 
 [[gjiov]][[GSADG00659]][[security-statistics]]
 
-Security Statistics
-+++++++++++++++++++
+===== Security Statistics
 
 Security fits into the tree of objects as shown in link:#gjios[Security
 Tree Hierarchy].
@@ -2352,8 +2323,7 @@ Table 8-30 Realm Security Monitoring Statistics
 
 [[ablvk]][[GSADG00660]][[thread-pool-statistics]]
 
-Thread Pool Statistics
-++++++++++++++++++++++
+===== Thread Pool Statistics
 
 The thread pool fits into the tree of objects as shown in
 link:#ablvc[Thread Pool Tree Hierarchy].
@@ -2458,8 +2428,7 @@ monitoring is disabled.
 
 [[ablvl]][[GSADG00661]][[transaction-service-statistics]]
 
-Transaction Service Statistics
-++++++++++++++++++++++++++++++
+===== Transaction Service Statistics
 
 The transaction service allows the client to freeze the transaction
 subsystem in order to roll back transactions and determine which
@@ -2505,8 +2474,7 @@ been frozen.
 
 [[ablvf]][[GSADG00662]][[web-statistics]]
 
-Web Statistics
-++++++++++++++
+===== Web Statistics
 
 The web module fits into the tree of objects as shown in link:#ghlff[Web
 Tree Hierarchy].
@@ -2713,8 +2681,7 @@ sessions
 
 [[giwqm]][[GSADG00561]][[configuring-jconsole-to-view-glassfish-server-monitoring-data]]
 
-Configuring JConsole to View GlassFish Server Monitoring Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring JConsole to View GlassFish Server Monitoring Data
 
 Java SE provides tools to connect to an MBean Server and view the MBeans
 registered with the server. JConsole is one such popular JMX Connector
@@ -2725,8 +2692,7 @@ JMX connector's client end.
 
 [[ggpfh]][[GSADG00390]][[to-connect-jconsole-to-glassfish-server]]
 
-To Connect JConsole to GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Connect JConsole to GlassFish Server
 
 Java SE 6 enhances management and monitoring of the virtual machine by
 including a Platform MBean Server and by including managed beans

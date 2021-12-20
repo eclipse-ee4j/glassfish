@@ -5,15 +5,13 @@ next=upgrading-legacy-installation.html
 prev=preface.html
 ~~~~~~
 
-GlassFish Server Upgrade Compatibility Issues
-=============================================
+= GlassFish Server Upgrade Compatibility Issues
 
 [[GSUPG00002]][[abmaq]]
 
 
 [[glassfish-server-upgrade-compatibility-issues]]
-1 GlassFish Server Upgrade Compatibility Issues
------------------------------------------------
+== 1 GlassFish Server Upgrade Compatibility Issues
 
 This section describes some compatibility issues between GlassFish
 Server 7 and earlier product releases. This section also describes
@@ -38,8 +36,7 @@ The following topics are addressed here:
 
 [[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
 
-Binary-Compatible Releases For GlassFish Server 7
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Binary-Compatible Releases For GlassFish Server 7
 
 GlassFish Server Open Source Edition 7 is NOT binary-compatible with the
 following earlier releases of the software:
@@ -67,8 +64,7 @@ applications and data.
 
 [[gkric]][[GSUPG00029]][[new-default-installation-directory]]
 
-New Default Installation Directory
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== New Default Installation Directory
 
 The default GlassFish Server 7 installation directories are as follows:
 
@@ -88,8 +84,7 @@ installation root directory was `glassfishv3`.
 
 [[gklhr]][[GSUPG00030]][[changes-to-group-management-service-settings]]
 
-Changes to Group Management Service Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Changes to Group Management Service Settings
 
 The functionality of the Group Management Service (GMS) has not changed
 since Sun GlassFish Enterprise Server v2.1.1, but the names of GMS
@@ -119,8 +114,7 @@ are not supported and have been removed.
 
 [[geyyk]][[GSUPG00031]][[application-client-interoperability]]
 
-Application Client Interoperability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Application Client Interoperability
 
 The Jakarta EE 6 platform specification imposes stricter requirements than
 Jakarta EE 5 did on which JAR files can be visible to various modules
@@ -171,8 +165,7 @@ clients and servers synchronized and using the same runtime.
 
 [[gktad]][[GSUPG00032]][[node-agent-support]]
 
-Node Agent Support
-~~~~~~~~~~~~~~~~~~
+=== Node Agent Support
 
 GlassFish Server 7 does not support node agents. When updating from
 installations of earlier product versions in which node agents were
@@ -183,8 +176,7 @@ Agent Configurations] for more information.
 
 [[gkrjm]][[GSUPG00033]][[hadb-and-hadbm-command-support]]
 
-HADB and `hadbm` Command Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== HADB and `hadbm` Command Support
 
 GlassFish Server 7 does not support HADB or the `hadbm` management command.
 
@@ -198,8 +190,7 @@ for more information.
 
 [[abmbc]][[GSUPG00034]][[command-line-interface-the-asadmin-command]]
 
-Command Line Interface: The `asadmin` Command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Command Line Interface: The `asadmin` Command
 
 The following sections describe changes to the command line utility `asadmin`:
 
@@ -211,8 +202,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[abmbd]][[GSUPG00053]][[deprecated-asadmin-subcommands]]
 
-Deprecated `asadmin` Subcommands
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deprecated `asadmin` Subcommands
 
 In GlassFish Server 7, it is recommended that utility options of the
 `asadmin` command precede the subcommand. Utility options are options
@@ -231,8 +221,7 @@ subcommand is deprecated.
 
 [[abmbf]][[GSUPG00054]][[deprecated-unsupported-and-obsolete-options]]
 
-Deprecated, Unsupported, and Obsolete Options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deprecated, Unsupported, and Obsolete Options
 
 Options in link:#gaeki[Table 1-2] are deprecated or no longer supported,
 or are obsolete and are ignored.
@@ -347,8 +336,7 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 
 [[gflnv]][[GSUPG00035]][[applications-that-use-java-db]]
 
-Applications That Use Java DB
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Applications That Use Java DB
 
 The directory location of Java DB in GlassFish Server 7 has changed
 from its location in previous installations. Suppose that you have
@@ -377,8 +365,7 @@ asadmin start-database --dbhome c:\glassfish\databases
 
 [[gjizi]][[GSUPG00036]][[applications-that-use-persistence]]
 
-Applications That Use Persistence
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Applications That Use Persistence
 
 GlassFish Server 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
 use the persistence provider EclipseLink, while earlier versions used
@@ -446,8 +433,7 @@ however, so you must obtain it from the EclipseLink project download site.
 
 [[gjiqj]][[GSUPG00037]][[http-service-to-network-service-changes]]
 
-HTTP Service to Network Service Changes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== HTTP Service to Network Service Changes
 
 In GlassFish Server 7, most HTTP Service settings are defined in the
 Network Service configuration that was introduced in Sun GlassFish
@@ -462,8 +448,7 @@ The changes are described in the following sections.
 
 [[gipsa]][[GSUPG00055]][[changes-to-dotted-names]]
 
-Changes to Dotted Names
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Changes to Dotted Names
 
 The dotted name hierarchy for the HTTP Service configuration in
 GlassFish Server 7 is shown below. Elements that are no longer
@@ -547,8 +532,7 @@ listener.http-1.listenerport=4321
 
 [[giprg]][[GSUPG00056]][[changes-to-asadmin-subcommands]]
 
-Changes to `asadmin` Subcommands
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Changes to `asadmin` Subcommands
 
 To accommodate the move of HTTP Service into the new Network Service
 configuration, link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommands are changed as
@@ -564,8 +548,7 @@ options of this commands are unchanged.
 
 [[gipfo]][[GSUPG00057]][[remapping-of-http-service-attributes-and-properties]]
 
-Remapping of HTTP Service Attributes and Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Remapping of HTTP Service Attributes and Properties
 
 The following tables describe how attributes and properties in the HTTP
 Service configuration for GlassFish Server 7 are remapped to
@@ -866,8 +849,7 @@ still properties
 
 [[gipcg]][[GSUPG00058]][[new-network-service-elements-and-attributes]]
 
-New Network Service Elements and Attributes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== New Network Service Elements and Attributes
 
 The following tables describe the Network Service elements and
 attributes that were introduced in Sun GlassFish Enterprise Server v3.
@@ -1085,8 +1067,7 @@ link:#gipfn[Table 1-4], link:#gipev[Table 1-6], and link:#gipdo[Table
 
 [[gktkt]][[GSUPG00038]][[nss-cryptographic-token-support]]
 
-NSS Cryptographic Token Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== NSS Cryptographic Token Support
 
 GlassFish Server 7 does not support Network Security Services (NSS)
 cryptographic tokens. When upgrading to GlassFish Server 7 from

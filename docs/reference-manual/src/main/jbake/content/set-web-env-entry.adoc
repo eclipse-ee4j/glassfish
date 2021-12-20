@@ -5,13 +5,11 @@ next=show-component-status.html
 prev=set-web-context-param.html
 ~~~~~~
 
-set-web-env-entry
-=================
+= set-web-env-entry
 
 [[set-web-env-entry-1]][[GSRFM00231]][[set-web-env-entry]]
 
-set-web-env-entry
------------------
+== set-web-env-entry
 
 Sets an environment entry for a deployed web application or module
 

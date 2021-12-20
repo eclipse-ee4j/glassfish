@@ -5,13 +5,11 @@ next=get-health.html
 prev=get-active-module-config.html
 ~~~~~~
 
-get-client-stubs
-================
+= get-client-stubs
 
 [[get-client-stubs-1]][[GSRFM00140]][[get-client-stubs]]
 
-get-client-stubs
-----------------
+== get-client-stubs
 
 Retrieves the application JAR files needed to launch the application
 client.

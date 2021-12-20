@@ -5,15 +5,13 @@ next=batch.html
 prev=monitoring.html
 ~~~~~~
 
-Administering Life Cycle Modules
-================================
+= Administering Life Cycle Modules
 
 [[GSADG00013]][[giury]]
 
 
 [[administering-life-cycle-modules]]
-9 Administering Life Cycle Modules
-----------------------------------
+== 9 Administering Life Cycle Modules
 
 This chapter provides procedures for administering life cycle modules in
 the GlassFish Server Open Source Edition 7 environment.
@@ -29,8 +27,7 @@ online help.
 
 [[giuxo]][[GSADG00566]][[about-life-cycle-modules]]
 
-About Life Cycle Modules
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Life Cycle Modules
 
 Life cycle modules, also known as initialization services, provide a
 means of running short or long duration Java-based tasks within the
@@ -70,8 +67,7 @@ not shutdown or termination.
 
 [[giuue]][[GSADG00567]][[configuring-life-cycle-modules]]
 
-Configuring Life Cycle Modules
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Life Cycle Modules
 
 The following topics are addressed here:
 
@@ -82,8 +78,7 @@ The following topics are addressed here:
 
 [[giuus]][[GSADG00399]][[to-create-a-life-cycle-module]]
 
-To Create a Life Cycle Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Life Cycle Module
 
 Use the `create-lifecycle-module` subcommand in remote mode to create a
 life cycle module.
@@ -121,8 +116,7 @@ typing `asadmin help create-lifecycle-module` at the command line.
 
 [[giuvh]][[GSADG00400]][[to-list-life-cycle-modules]]
 
-To List Life Cycle Modules
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Life Cycle Modules
 
 Use the `list-lifecycle-modules` subcommand in remote mode to list the
 existing life cycle modules.
@@ -152,8 +146,7 @@ typing `asadmin help list-lifecycle-modules` at the command line.
 
 [[giuyh]][[GSADG00401]][[to-update-a-life-cycle-module]]
 
-To Update a Life Cycle Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Life Cycle Module
 
 Use the `set` subcommand to update an existing life cycle module.
 
@@ -203,8 +196,7 @@ typing `asadmin help set` at the command line.
 
 [[giuux]][[GSADG00402]][[to-delete-a-life-cycle-module]]
 
-To Delete a Life Cycle Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Life Cycle Module
 
 Use the `delete-lifecycle-module` subcommand in remote mode to delete a
 life cycle module.

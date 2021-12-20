@@ -5,13 +5,11 @@ next=create-http-health-checker.html
 prev=create-file-user.html
 ~~~~~~
 
-create-http
-===========
+= create-http
 
 [[create-http-1]][[GSRFM00025]][[create-http]]
 
-create-http
------------
+== create-http
 
 Sets HTTP parameters for a protocol
 

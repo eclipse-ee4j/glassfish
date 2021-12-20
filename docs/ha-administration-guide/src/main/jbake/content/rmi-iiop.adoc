@@ -4,14 +4,12 @@ title=RMI-IIOP Load Balancing and Failover
 prev=jms.html
 ~~~~~~
 
-RMI-IIOP Load Balancing and Failover
-====================================
+= RMI-IIOP Load Balancing and Failover
 
 [[GSHAG00013]][[fxxqs]]
 
 [[rmi-iiop-load-balancing-and-failover]]
-11 RMI-IIOP Load Balancing and Failover
----------------------------------------
+== 11 RMI-IIOP Load Balancing and Failover
 
 This chapter describes using high-availability features for remote EJB
 references and JNDI objects over RMI-IIOP in GlassFish Server.
@@ -22,8 +20,7 @@ references and JNDI objects over RMI-IIOP in GlassFish Server.
 
 [[abdbe]][[GSHAG00215]][[overview]]
 
-Overview
-~~~~~~~~
+=== Overview
 
 With RMI-IIOP load balancing, IIOP client requests are distributed to
 different server instances or name servers. The goal is to spread the
@@ -38,8 +35,7 @@ The following topics are addressed here:
 
 [[abdbf]][[GSHAG00313]][[general-requirements-for-configuring-load-balancing]]
 
-General Requirements for Configuring Load Balancing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== General Requirements for Configuring Load Balancing
 
 Oracle GlassFish Server provides high availability of remote EJB
 references and `NameService` objects over RMI-IIOP, provided all the
@@ -64,8 +60,7 @@ over secure sockets layer (SSL).
 
 [[gknpk]][[GSHAG00314]][[load-balancing-models]]
 
-Load Balancing Models
-^^^^^^^^^^^^^^^^^^^^^
+==== Load Balancing Models
 
 GlassFish Server supports two general models for load balancing:
 
@@ -83,8 +78,7 @@ link:#gknpv[Per-Request Load Balancing (PRLB)]::
 
 [[gknqo]][[GSHAG00216]][[initialcontext-load-balancing]]
 
-`InitialContext` Load Balancing
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== `InitialContext` Load Balancing
 
 The following topics are addressed here:
 
@@ -94,8 +88,7 @@ The following topics are addressed here:
 
 [[gknpn]][[GSHAG00315]][[initialcontext-summary]]
 
-`InitialContext` Summary
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== `InitialContext` Summary
 
 When `InitialContext` load balancing is used, the client calls the
 `InitialContext()` method to create a new `InitialContext` (IC) object
@@ -124,8 +117,7 @@ bootstrapping purposes, in case one of the endpoints has failed.
 
 [[abdbg]][[GSHAG00316]][[initialcontext-algorithm]]
 
-`InitialContext` Algorithm
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== `InitialContext` Algorithm
 
 GlassFish Server uses a randomization and round-robin algorithm for
 RMI-IIOP load balancing and failover.
@@ -160,8 +152,7 @@ applications running in the ACC.
 
 [[abdbd]][[GSHAG00317]][[enabling-rmi-iiop-hardware-load-balancing-and-failover]]
 
-Enabling RMI-IIOP Hardware Load Balancing and Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enabling RMI-IIOP Hardware Load Balancing and Failover
 
 You can enable RMI-IIOP load balancing and failover for applications
 running in the application client container (ACC). Weighted round-robin
@@ -169,8 +160,7 @@ load balancing is also supported.
 
 [[abdbi]][[GSHAG00161]][[to-enable-rmi-iiop-hardware-load-balancing-for-the-application-client-container]]
 
-To Enable RMI-IIOP Hardware Load Balancing for the Application Client Container
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Enable RMI-IIOP Hardware Load Balancing for the Application Client Container
 
 This procedure provides an overview of the steps necessary to enable
 RMI-IIOP load balancing and failover with the application client
@@ -356,8 +346,7 @@ container running in a cluster.
 
 [[gknpv]][[GSHAG00217]][[per-request-load-balancing-prlb]]
 
-Per-Request Load Balancing (PRLB)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Per-Request Load Balancing (PRLB)
 
 The following topics are addressed here:
 
@@ -366,8 +355,7 @@ The following topics are addressed here:
 
 [[gksgt]][[GSHAG00318]][[prlb-summary]]
 
-PRLB Summary
-^^^^^^^^^^^^
+==== PRLB Summary
 
 Per Request Load Balancing (PRLB) is a method for load balancing
 stateless EJBs that enables load-balancing for each request to an EJB
@@ -391,8 +379,7 @@ other bean types will result in a deployment error.
 
 [[gksgy]][[GSHAG00319]][[enabling-per-request-load-balancing]]
 
-Enabling Per-Request Load Balancing
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enabling Per-Request Load Balancing
 
 You can enable Per-Request Load Balancing (PRLB) by setting the boolean
 `per-request-load-balancing` property to `true` in the
@@ -402,8 +389,7 @@ stateless EJB.
 
 [[gksgo]][[GSHAG00162]][[to-enable-rmi-iiop-per-request-load-balancing-for-a-stateless-ejb]]
 
-To Enable RMI-IIOP Per-Request Load Balancing for a Stateless EJB
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Enable RMI-IIOP Per-Request Load Balancing for a Stateless EJB
 
 This procedure describes how to enable PRLB for a stateless EJB that is
 deployed to clustered GlassFish Server instances. This procedure also

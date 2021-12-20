@@ -5,14 +5,12 @@ next=adding-configuration-data.html
 prev=extending-asadmin.html
 ~~~~~~
 
-Adding Monitoring Capabilities
-==============================
+= Adding Monitoring Capabilities
 
 [[GSACG00005]][[ghmos]]
 
 [[adding-monitoring-capabilities]]
-Adding Monitoring Capabilities
-------------------------------
+== Adding Monitoring Capabilities
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
@@ -39,8 +37,7 @@ The following topics are addressed here:
 
 [[ghopc]][[GSACG00116]][[defining-statistics-that-are-to-be-monitored]]
 
-Defining Statistics That Are to Be Monitored
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Defining Statistics That Are to Be Monitored
 
 At runtime, your add-on component might perform operations that affect
 the behavior and performance of your system. For example, your component
@@ -75,8 +72,7 @@ tasks:
 
 [[gkadk]][[GSACG00220]][[defining-an-event-provider]]
 
-Defining an Event Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Defining an Event Provider
 
 An event provider defines the types of events for the operations that
 generate statistics for an add-on component.
@@ -93,8 +89,7 @@ defining and event provider.
 
 [[ghovq]][[GSACG00164]][[defining-an-event-provider-by-writing-a-java-class]]
 
-Defining an Event Provider by Writing a Java Class
-++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Defining an Event Provider by Writing a Java Class
 
 To define an event provider, write a Java language class that defines
 the types of events for the component. Your class is not required to
@@ -214,8 +209,7 @@ public class TxManager {
 
 [[gkaec]][[GSACG00165]][[defining-an-event-provider-by-writing-an-xml-fragment]]
 
-Defining an Event Provider by Writing an XML Fragment
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Defining an Event Provider by Writing an XML Fragment
 
 To define an event provider, write an extensible markup language (XML)
 fragment that contains a single `probe-provider` element.
@@ -314,8 +308,7 @@ void jspLoaded(String jsp, String hostName)
 
 [[gkaie]][[GSACG00166]][[packaging-a-components-event-providers]]
 
-Packaging a Component's Event Providers
-+++++++++++++++++++++++++++++++++++++++
+===== Packaging a Component's Event Providers
 
 Packaging a component's event providers enables the monitoring
 infrastructure of GlassFish Server to discover the event providers automatically.
@@ -360,8 +353,7 @@ probe-provider-class-names : org.glassfish.pluggability.monitoring.ModuleProbePr
 
 [[ghprg]][[GSACG00221]][[sending-an-event]]
 
-Sending an Event
-^^^^^^^^^^^^^^^^
+==== Sending an Event
 
 At runtime, your add-on component might perform an operation that
 generates statistics. To provide statistics about the operation to
@@ -412,8 +404,7 @@ public class TransactionManagerImpl {
 
 [[ghplw]][[GSACG00117]][[updating-the-monitorable-object-tree]]
 
-Updating the Monitorable Object Tree
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Updating the Monitorable Object Tree
 
 A monitorable object is a component, subcomponent, or service that can
 be monitored. GlassFish Server uses a tree structure to track
@@ -458,8 +449,7 @@ Updating the monitorable object tree involves the following tasks:
 
 [[ghpni]][[GSACG00222]][[creating-event-listeners]]
 
-Creating Event Listeners
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Creating Event Listeners
 
 An event listener gathers statistics from events that an event provider
 sends. To enable an add-on component to gather statistics from events,
@@ -500,8 +490,7 @@ computing resources, such as memory or processor cycles.
 
 [[ghptp]][[GSACG00223]][[representing-a-components-statistics-in-an-event-listener-class]]
 
-Representing a Component's Statistics in an Event Listener Class
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Representing a Component's Statistics in an Event Listener Class
 
 Represent each statistic as the property of a JavaBeans specification
 getter method of your listener class. Methods in the listener class for
@@ -575,8 +564,7 @@ public class TxListener {
 
 [[ghpml]][[GSACG00224]][[subscribing-to-events-from-event-provider-classes]]
 
-Subscribing to Events From Event Provider Classes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Subscribing to Events From Event Provider Classes
 
 To receive events from event provider classes, a listener must subscribe
 to the events. Subscribing to events also specifies the provider and the
@@ -659,8 +647,7 @@ public class TxListener {
 
 [[ghpsp]][[GSACG00167]][[listening-for-changes-to-values-that-are-not-part-of-the-target-method-definition]]
 
-Listening for Changes to Values That are Not Part of the Target Method Definition
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Listening for Changes to Values That are Not Part of the Target Method Definition
 
 Event listeners can express their interest in certain predefined values
 that are not part of the target method definition. For example,
@@ -670,8 +657,7 @@ only on demand and provided by the event infrastructure.
 
 [[ghpsw]][[GSACG00168]][[getting-information-about-a-event-provider]]
 
-Getting Information About a Event Provider
-++++++++++++++++++++++++++++++++++++++++++
+===== Getting Information About a Event Provider
 
 `ProbeProviderInfo` contains details about individual event types in an
 event provider class.
@@ -697,8 +683,7 @@ public interface ProbeProviderInfo {
 
 [[ghpmt]][[GSACG00225]][[listening-for-events-from-classes-that-are-not-event-providers]]
 
-Listening for Events From Classes That Are Not Event Providers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Listening for Events From Classes That Are Not Event Providers
 
 gfProbes infrastructure allows clients to monitor glassfish even in the
 absence of provider classes. This is done by allowing clients to receive
@@ -722,8 +707,7 @@ public class TxMonitor {
 
 [[ghpql]][[GSACG00169]][[monitoring-method-entry]]
 
-Monitoring Method Entry
-+++++++++++++++++++++++
+===== Monitoring Method Entry
 
 The @MethodEntry annotation must be used by the client to receive
 callback when the target method is entered. The client method argument
@@ -731,8 +715,7 @@ types and count must match the target methods parameter types/count.
 
 [[ghppg]][[GSACG00170]][[monitoring-method-exit]]
 
-Monitoring Method Exit
-++++++++++++++++++++++
+===== Monitoring Method Exit
 
 The @MethodExit annotation must be used by the client to receive
 callback when the target method is exited. The client method argument
@@ -742,8 +725,7 @@ target method (only if the target method has a non void return type)
 
 [[ghplj]][[GSACG00171]][[monitoring-exceptions]]
 
-Monitoring Exceptions
-+++++++++++++++++++++
+===== Monitoring Exceptions
 
 The @OnException annotation must be used by the client to receive
 callback when the target method exits because of an exception. The
@@ -753,8 +735,7 @@ first parameter in the client method should be of type Throwable
 
 [[ghppo]][[GSACG00226]][[registering-an-event-listener]]
 
-Registering an Event Listener
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Registering an Event Listener
 
 Registering an event listener enables the listener to receive callbacks
 from the GlassFish Server event infrastructure. The listener can then
@@ -826,8 +807,7 @@ public class TransactionManagerImpl {
 
 [[ghrma]][[GSACG00118]][[dotted-names-and-rest-urls-for-an-add-on-components-statistics]]
 
-Dotted Names and REST URLs for an Add-On Component's Statistics
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Dotted Names and REST URLs for an Add-On Component's Statistics
 
 The GlassFish Server administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
 link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a statistic
@@ -896,8 +876,7 @@ for administration is 4848.
 
 [[ghmox]][[GSACG00119]][[adding-a-type-to-the-monitor-command]]
 
-Adding a Type to the `monitor` Command
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding a Type to the `monitor` Command
 
 To add a type to the `monitor` command, implement the `MonitorContract` interface.
 
@@ -906,8 +885,7 @@ that provides monitoring data to the `monitor` command.
 
 [[ghptj]][[GSACG00120]][[example-of-adding-monitoring-capabilities]]
 
-Example of Adding Monitoring Capabilities
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Example of Adding Monitoring Capabilities
 
 This example shows a component that monitors the number of requests that
 a container receives. The following table provides a cross-reference to

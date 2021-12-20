@@ -5,13 +5,11 @@ next=unset-web-env-entry.html
 prev=unset.html
 ~~~~~~
 
-unset-web-context-param
-=======================
+= unset-web-context-param
 
 [[unset-web-context-param-1]][[GSRFM00248]][[unset-web-context-param]]
 
-unset-web-context-param
------------------------
+== unset-web-context-param
 
 Unsets a servlet context-initialization parameter of a deployed web
 application or module

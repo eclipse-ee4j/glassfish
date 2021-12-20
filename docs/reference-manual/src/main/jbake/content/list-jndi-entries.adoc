@@ -5,13 +5,11 @@ next=list-jndi-resources.html
 prev=list-jms-resources.html
 ~~~~~~
 
-list-jndi-entries
-=================
+= list-jndi-entries
 
 [[list-jndi-entries-1]][[GSRFM00178]][[list-jndi-entries]]
 
-list-jndi-entries
------------------
+== list-jndi-entries
 
 Browses and queries the JNDI tree
 

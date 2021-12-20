@@ -5,13 +5,11 @@ next=delete-node-dcom.html
 prev=delete-network-listener.html
 ~~~~~~
 
-delete-node-config
-==================
+= delete-node-config
 
 [[delete-node-config-1]][[GSRFM00099]][[delete-node-config]]
 
-delete-node-config
-------------------
+== delete-node-config
 
 Deletes a node that is not enabled for remote communication
 

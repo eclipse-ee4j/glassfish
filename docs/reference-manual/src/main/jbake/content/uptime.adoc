@@ -5,13 +5,11 @@ next=validate-dcom.html
 prev=update-password-alias.html
 ~~~~~~
 
-uptime
-======
+= uptime
 
 [[uptime-1]][[GSRFM00258]][[uptime]]
 
-uptime
-------
+== uptime
 
 Returns the length of time that the DAS has been running
 

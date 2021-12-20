@@ -5,13 +5,11 @@ next=list-managed-executor-services.html
 prev=list-loggers.html
 ~~~~~~
 
-list-log-levels
-===============
+= list-log-levels
 
 [[list-log-levels-1]][[GSRFM00183]][[list-log-levels]]
 
-list-log-levels
----------------
+== list-log-levels
 
 Lists the loggers and their log levels
 

@@ -5,15 +5,13 @@ next=http_https.html
 prev=jdbc.html
 ~~~~~~
 
-Administering EIS Connectivity
-==============================
+= Administering EIS Connectivity
 
 [[GSADG00016]][[abllp]]
 
 
 [[administering-eis-connectivity]]
-12 Administering EIS Connectivity
----------------------------------
+== 12 Administering EIS Connectivity
 
 This chapter provides information and procedures for administering
 connections to enterprise information system (EIS) data in the Oracle
@@ -48,8 +46,7 @@ link:jdbc.html#ablih[Administering Database Connectivity].
 
 [[abllq]][[GSADG00580]][[about-eis-connectivity]]
 
-About EIS Connectivity
-~~~~~~~~~~~~~~~~~~~~~~
+=== About EIS Connectivity
 
 Enterprise information system (EIS) refers to any system that holds the
 data of an organization. It can be a mainframe, a messaging system, a
@@ -123,8 +120,7 @@ closes the connection and returns the connection to the connection pool.
 
 [[ablls]][[GSADG00581]][[administering-connector-connection-pools]]
 
-Administering Connector Connection Pools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Connector Connection Pools
 
 After a connector module has been deployed, you are ready to create a
 connector connection pool for it.
@@ -140,8 +136,7 @@ Connection Pool]
 
 [[gioce]][[GSADG00431]][[to-create-a-connector-connection-pool]]
 
-To Create a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Connector Connection Pool
 
 Use the `create-connector-connection-pool` subcommand in remote mode to
 create a connector connection pool for a deployed connector module. When
@@ -206,8 +201,7 @@ line.
 
 [[giocg]][[GSADG00432]][[to-list-connector-connection-pools]]
 
-To List Connector Connection Pools
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Connector Connection Pools
 
 Use the `list-connector-connection-pools` subcommand in remote mode to
 list the pools that have been created.
@@ -238,8 +232,7 @@ line.
 
 [[gjiqz]][[GSADG00433]][[to-connect-to-ping-or-reset-flush-a-connector-connection-pool]]
 
-To Connect to (Ping) or Reset (Flush) a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Connect to (Ping) or Reset (Flush) a Connector Connection Pool
 
 Use the `ping-connection-pool` or `flush-connection-pool` subcommands in
 remote mode to perform these tasks on a connection pools. See
@@ -254,8 +247,7 @@ link:../reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-p
 
 [[gioti]][[GSADG00434]][[to-update-a-connector-connection-pool]]
 
-To Update a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Connector Connection Pool
 
 Use the `get` and `set` subcommands to view and change the values of the
 connector connection pool properties.
@@ -284,8 +276,7 @@ If your server needs to be restarted, see link:domains.html#ginqj[To Restart a D
 
 [[giocp]][[GSADG00435]][[to-delete-a-connector-connection-pool]]
 
-To Delete a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Connector Connection Pool
 
 Use the `delete-connector-connection-pool` subcommand in remote mode to
 remove a connector connection pool.
@@ -318,8 +309,7 @@ line.
 
 [[abllx]][[GSADG00582]][[administering-connector-resources]]
 
-Administering Connector Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Connector Resources
 
 A connector resource provides an application or module with the means of
 connecting to an EIS. Typically, you create a connector resource for
@@ -334,8 +324,7 @@ The following topics are addressed here:
 
 [[giogt]][[GSADG00436]][[to-create-a-connector-resource]]
 
-To Create a Connector Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Connector Resource
 
 Use the `create-connector-resource` subcommand in remote mode to
 register a new connector resource with its JNDI name.
@@ -388,8 +377,7 @@ typing `asadmin help create-connector-resource` at the command line.
 
 [[giohs]][[GSADG00437]][[to-list-connector-resources]]
 
-To List Connector Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Connector Resources
 
 Use the `list-connector-resources` subcommand in remote mode to list the
 connector resources that have been created.
@@ -419,8 +407,7 @@ typing `asadmin help list-connector-resources` at the command line.
 
 [[giosg]][[GSADG00438]][[to-update-a-connector-resource]]
 
-To Update a Connector Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Connector Resource
 
 Use the `get` and `set` subcommands to view and change the values of the
 connector resource properties.
@@ -449,8 +436,7 @@ If your server needs to be restarted, see link:domains.html#ginqj[To Restart a D
 
 [[giofs]][[GSADG00439]][[to-delete-a-connector-resource]]
 
-To Delete a Connector Resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Connector Resource
 
 Use the `delete-connector-resource` subcommand in remote mode to remove
 a connector resource by specifying the JNDI name.
@@ -488,8 +474,7 @@ typing `asadmin help delete-connector-resource` at the command line.
 
 [[giope]][[GSADG00583]][[administering-the-resource-adapter-configuration]]
 
-Administering the Resource Adapter Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering the Resource Adapter Configuration
 
 The following topics are addressed here:
 
@@ -501,8 +486,7 @@ Adapter]
 
 [[gioqx]][[GSADG00440]][[to-create-configuration-information-for-a-resource-adapter]]
 
-To Create Configuration Information for a Resource Adapter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create Configuration Information for a Resource Adapter
 
 Use the `create-resource-adapter-config` subcommand in remote mode to
 create configuration information for a resource adapter, also known as a
@@ -541,8 +525,7 @@ line.
 
 [[giorn]][[GSADG00441]][[to-list-resource-adapter-configurations]]
 
-To List Resource Adapter Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Resource Adapter Configurations
 
 Use the `list-resource-adapter-configs` subcommand in remote mode to
 list the configuration information contained in the domain configuration
@@ -575,8 +558,7 @@ typing `asadmin help list-resource-adapter-configs` at the command line.
 
 [[gioum]][[GSADG00442]][[to-update-a-resource-adapter-configuration]]
 
-To Update a Resource Adapter Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Resource Adapter Configuration
 
 Use the `get` and `set` subcommands to view and change the values of the
 resource adapter configuration properties.
@@ -602,8 +584,7 @@ asadmin> set domain.resources.resource-adapter-config.ra1.raSpecificProperty=val
 
 [[gionv]][[GSADG00443]][[to-delete-a-resource-adapter-configuration]]
 
-To Delete a Resource Adapter Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Resource Adapter Configuration
 
 Use the `delete-resource-adapter-config` subcommand in remote mode to
 delete the configuration information contained in the domain
@@ -637,8 +618,7 @@ line.
 
 [[gitxy]][[GSADG00584]][[administering-connector-security-maps]]
 
-Administering Connector Security Maps
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Connector Security Maps
 
 The EIS is any system that holds the data of an organization. It can be
 a mainframe, a messaging system, a database system, or an application.
@@ -658,8 +638,7 @@ The following topics are addressed here:
 
 [[gitzz]][[GSADG00444]][[to-create-a-connector-security-map]]
 
-To Create a Connector Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Connector Security Map
 
 Use the `create-connector-security-map` subcommand in remote mode to
 create a security map for the specified connector connection pool. If
@@ -708,8 +687,7 @@ Command create-connector-security-map executed successfully
 
 [[gitwx]][[GSADG00445]][[to-list-connector-security-maps]]
 
-To List Connector Security Maps
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Connector Security Maps
 
 Use the `list-connector-security-maps` subcommand in remote mode to list
 the existing security maps belonging to the specified connector
@@ -769,8 +747,7 @@ Command list-connector-security-maps executed successfully.
 
 [[gityj]][[GSADG00446]][[to-update-a-connector-security-map]]
 
-To Update a Connector Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Connector Security Map
 
 Use the `update-connector-security-map` subcommand in remote mode to
 create or modify a security map for the specified connector connection
@@ -802,8 +779,7 @@ Command update-connector-security-map executed successfully.
 
 [[gitvf]][[GSADG00447]][[to-delete-a-connector-security-map]]
 
-To Delete a Connector Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Connector Security Map
 
 Use the `delete-connector-security-map` subcommand in remote mode to
 delete a security map for the specified connector connection pool.
@@ -831,8 +807,7 @@ Command delete-connector-security-map executed successfully
 
 [[giohl]][[GSADG00585]][[administering-connector-work-security-maps]]
 
-Administering Connector Work Security Maps
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Connector Work Security Maps
 
 The EIS is any system that holds the data of an organization. It can be
 a mainframe, a messaging system, a database system, or an application.
@@ -852,8 +827,7 @@ The following topics are addressed here:
 
 [[giofz]][[GSADG00448]][[to-create-a-connector-work-security-map]]
 
-To Create a Connector Work Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Connector Work Security Map
 
 Use the `create-connector-work-security-map` subcommand in remote mode
 to map the caller identity of the work submitted by the connector module
@@ -913,8 +887,7 @@ line.
 
 [[gioir]][[GSADG00449]][[to-list-connector-work-security-maps]]
 
-To List Connector Work Security Maps
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Connector Work Security Maps
 
 Use the `list-connector-work-security-maps` subcommand in remote mode to
 list the work security maps that belong to a specific connector module.
@@ -947,8 +920,7 @@ line.
 
 [[giogm]][[GSADG00450]][[to-update-a-connector-work-security-map]]
 
-To Update a Connector Work Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Connector Work Security Map
 
 Use the `update-connector-work-security-map` subcommand in remote to
 modify a work security map that belongs to a specific resource adapter
@@ -984,8 +956,7 @@ line.
 
 [[gioin]][[GSADG00451]][[to-delete-a-connector-work-security-map]]
 
-To Delete a Connector Work Security Map
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Connector Work Security Map
 
 Use the `delete-connector-work-security-map` subcommand in remote mode
 to delete a work security map that belongs to a specific connector
@@ -1019,8 +990,7 @@ line.
 
 [[ablmc]][[GSADG00586]][[administering-administered-objects]]
 
-Administering Administered Objects
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Administered Objects
 
 Packaged within a connector module, an administered object provides
 specialized functionality for an application. For example, an
@@ -1036,8 +1006,7 @@ The following topics are addressed here:
 
 [[giolr]][[GSADG00452]][[to-create-an-administered-object]]
 
-To Create an Administered Object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Administered Object
 
 Use the `create-admin-object` subcommand to create an administered
 object resource. When creating an administered object resource,
@@ -1086,8 +1055,7 @@ typing `asadmin help create-admin-object` at the command line.
 
 [[giokm]][[GSADG00453]][[to-list-administered-objects]]
 
-To List Administered Objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Administered Objects
 
 Use the `list-admin-object` subcommand in remote mode to list the
 existing administered objects.
@@ -1117,8 +1085,7 @@ typing `asadmin help list-admin-object` at the command line.
 
 [[giots]][[GSADG00454]][[to-update-an-administered-object]]
 
-To Update an Administered Object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update an Administered Object
 
 Use the `get` and `set` subcommands to view and change the values of the
 administered objects properties.
@@ -1147,8 +1114,7 @@ If your server needs to be restarted, see link:domains.html#ginqj[To Restart a D
 
 [[gioma]][[GSADG00455]][[to-delete-an-administered-object]]
 
-To Delete an Administered Object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an Administered Object
 
 Use the `delete-admin-object` subcommand to delete an administered objects.
 

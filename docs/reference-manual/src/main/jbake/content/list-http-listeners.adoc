@@ -5,13 +5,11 @@ next=list-iiop-listeners.html
 prev=list-http-lbs.html
 ~~~~~~
 
-list-http-listeners
-===================
+= list-http-listeners
 
 [[list-http-listeners-1]][[GSRFM00168]][[list-http-listeners]]
 
-list-http-listeners
--------------------
+== list-http-listeners
 
 Lists the existing network listeners
 

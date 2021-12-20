@@ -5,15 +5,13 @@ next=security-in-cluster-mode.html
 prev=user-security.html
 ~~~~~~
 
-Administering Message Security
-==============================
+= Administering Message Security
 
 [[GSSCG00037]][[ablrk]]
 
 
 [[administering-message-security]]
-3 Administering Message Security
---------------------------------
+== 3 Administering Message Security
 
 This chapter provides information and procedures on configuring the
 message layer security for web services in the GlassFish Server environment.
@@ -42,8 +40,7 @@ Administration Console are contained in the Administration Console online help.
 
 [[ablrn]][[GSSCG00153]][[about-message-security-in-glassfish-server]]
 
-About Message Security in GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Message Security in GlassFish Server
 
 Message security enables a server to perform end-to-end authentication
 of web service invocations and responses at the message layer. Security
@@ -79,8 +76,7 @@ The following topics are addressed here:
 
 [[ablrs]][[GSSCG00218]][[security-tokens-and-security-mechanisms]]
 
-Security Tokens and Security Mechanisms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Security Tokens and Security Mechanisms
 
 WS-Security is a specification that provides a communications protocol
 for applying security to web services. The security mechanisms implement
@@ -124,8 +120,7 @@ supports encryption must be installed.
 
 [[ablrx]][[GSSCG00219]][[authentication-providers]]
 
-Authentication Providers
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Authentication Providers
 
 The authentication layer is the message layer on which authentication
 processing must be performed. GlassFish Server enforces web services
@@ -172,8 +167,7 @@ has not been bound.
 
 [[ablrw]][[GSSCG00220]][[message-protection-policies]]
 
-Message Protection Policies
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Protection Policies
 
 A request policy defines the authentication policy requirements
 associated with request processing performed by the authentication
@@ -214,8 +208,7 @@ Server Open Source Edition Application Development Guide.
 
 [[ablrz]][[GSSCG00221]][[application-specific-web-services-security]]
 
-Application-Specific Web Services Security
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Application-Specific Web Services Security
 
 Application-specific web services security functionality is configured
 (at application assembly) by defining the `message-security-binding`
@@ -232,8 +225,7 @@ Server Open Source Edition Application Development Guide.
 
 [[gioom]][[GSSCG00222]][[message-security-administration]]
 
-Message Security Administration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Security Administration
 
 When GlassFish Server is installed, SOAP layer message security
 providers are configured in the client and server-side containers of
@@ -272,8 +264,7 @@ performed.
 
 [[giose]][[GSSCG00199]][[message-security-tasks]]
 
-Message Security Tasks
-++++++++++++++++++++++
+===== Message Security Tasks
 
 The general implementation tasks for message security include some or
 all of the following:
@@ -291,8 +282,7 @@ When using a username/password token, an appropriate realm must be
 
 [[ablro]][[GSSCG00200]][[message-security-roles]]
 
-Message Security Roles
-++++++++++++++++++++++
+===== Message Security Roles
 
 In GlassFish Server, the administrator and the application deployer are
 expected to take primary responsibility for configuring message
@@ -348,8 +338,7 @@ from that bound to the container.
 
 [[ablsa]][[GSSCG00223]][[sample-application-for-web-services]]
 
-Sample Application for Web Services
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Sample Application for Web Services
 
 GlassFish Server includes a sample application named `xms`. The `xms`
 application features a simple web service that is implemented by both a
@@ -377,8 +366,7 @@ as-install``/samples/webservices/security/ejb/apps/xms/``
 
 [[giood]][[GSSCG00154]][[enabling-default-message-security-providers-for-web-services]]
 
-Enabling Default Message Security Providers for Web Services
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Enabling Default Message Security Providers for Web Services
 
 By default, message security is disabled on GlassFish Server. Default
 message security providers have been created, but are not active until
@@ -392,8 +380,7 @@ The following topics are addressed here:
 
 [[giork]][[GSSCG00123]][[to-enable-a-default-server-provider]]
 
-To Enable a Default Server Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable a Default Server Provider
 
 To enable message security for web services endpoints deployed in
 GlassFish Server, you must specify a security provider to be used by
@@ -420,8 +407,7 @@ Source Edition Administration Guide.
 
 [[giort]][[GSSCG00124]][[to-enable-a-default-client-provider]]
 
-To Enable a Default Client Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable a Default Client Provider
 
 To enable message security for web service invocations originating from
 deployed endpoints, you must specify a default client provider. If you
@@ -448,8 +434,7 @@ Source Edition Administration Guide.
 
 [[giouf]][[GSSCG00155]][[configuring-message-protection-policies]]
 
-Configuring Message Protection Policies
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Message Protection Policies
 
 Message protection policies are defined for request message processing
 and response message processing. The policies are expressed in terms of
@@ -468,8 +453,7 @@ Application Client Configuration]
 
 [[giraj]][[GSSCG00224]][[message-protection-policy-mapping]]
 
-Message Protection Policy Mapping
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Protection Policy Mapping
 
 The following table shows message protection policy configurations and
 the resulting message security operations performed by the WS-Security
@@ -536,8 +520,7 @@ body. The key is encrypted in the public key of the recipient.
 
 [[gioqu]][[GSSCG00125]][[to-configure-the-message-protection-policies-for-a-provider]]
 
-To Configure the Message Protection Policies for a Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure the Message Protection Policies for a Provider
 
 Typically, you would not reconfigure a provider. However, if needed for
 your situation, you can modify a provider's message protection policies
@@ -592,8 +575,7 @@ provider-config.ServerProvider.request-policy.auth_recipient=[before-content | a
 
 [[ablsl]][[GSSCG00225]][[setting-the-request-and-response-policy-for-the-application-client-configuration]]
 
-Setting the Request and Response Policy for the Application Client Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Setting the Request and Response Policy for the Application Client Configuration
 
 The request and response policies define the authentication policy
 requirements associated with request and response processing performed
@@ -660,8 +642,7 @@ for example:
 
 [[giosl]][[GSSCG00156]][[administering-non-default-message-security-providers]]
 
-Administering Non-default Message Security Providers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Non-default Message Security Providers
 
 The following topics are addressed here:
 
@@ -674,8 +655,7 @@ The following topics are addressed here:
 
 [[giory]][[GSSCG00126]][[to-create-a-message-security-provider]]
 
-To Create a Message Security Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Message Security Provider
 
 Use the `create-message-security-provider` subcommand in remote mode to
 create a new message provider for the security service. If the message
@@ -720,8 +700,7 @@ line.
 
 [[giotv]][[GSSCG00127]][[to-list-message-security-providers]]
 
-To List Message Security Providers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Message Security Providers
 
 Use the `list-message-security-providers` subcommand in remote mode to
 list the message providers for the security layer.
@@ -755,8 +734,7 @@ line.
 
 [[giwkd]][[GSSCG00128]][[to-update-a-message-security-provider]]
 
-To Update a Message Security Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Message Security Provider
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
@@ -768,8 +746,7 @@ The message security provider is identified by its dotted name.
 
 [[giorr]][[GSSCG00129]][[to-delete-a-message-security-provider]]
 
-To Delete a Message Security Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Message Security Provider
 
 Use the `delete-message-security-provider` subcommand in remote mode to
 remove a message security provider.
@@ -802,8 +779,7 @@ line.
 
 [[gkxru]][[GSSCG00130]][[to-configure-a-servlet-layer-server-authentication-module-sam]]
 
-To Configure a Servlet Layer Server Authentication Module (SAM)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a Servlet Layer Server Authentication Module (SAM)
 
 You configure a JSR 196 Server Authentication Module (SAM) as an
 HttpServlet-layer message security provider, either through the
@@ -881,8 +857,7 @@ typing `asadmin help create-message-security-provider` at the command line.
 
 [[gdhgg]][[GSSCG00157]][[enabling-message-security-for-application-clients]]
 
-Enabling Message Security for Application Clients
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Enabling Message Security for Application Clients
 
 The message protection policies of client providers must be configured
 such that they are equivalent to the message protection policies of the
@@ -897,8 +872,7 @@ Protection Policies].
 
 [[gglrb]][[GSSCG00158]][[additional-information-about-message-security]]
 
-Additional Information About Message Security
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Additional Information About Message Security
 
 For additional information about message security, see the following documentation:
 

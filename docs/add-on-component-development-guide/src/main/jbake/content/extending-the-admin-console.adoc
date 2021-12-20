@@ -5,15 +5,13 @@ next=extending-asadmin.html
 prev=writing-hk2-components.html
 ~~~~~~
 
-Extending the Administration Console
-====================================
+= Extending the Administration Console
 
 [[GSACG00003]][[ghmrb]]
 
 
 [[extending-the-administration-console]]
-Extending the Administration Console
-------------------------------------
+== Extending the Administration Console
 
 The Administration Console is a browser-based tool for administering
 Eclipse GlassFish Server. It features an easy-to-navigate interface and online
@@ -43,8 +41,7 @@ The following topics are addressed here:
 
 [[ghmof]][[GSACG00097]][[administration-console-architecture]]
 
-Administration Console Architecture
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administration Console Architecture
 
 The Administration Console is a web application that is composed of OSGi
 bundles. These bundles provide all the features of the Administration
@@ -86,8 +83,7 @@ Administration Console.
 
 [[ghnzl]][[GSACG00187]][[implementing-a-console-provider]]
 
-Implementing a Console Provider
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Implementing a Console Provider
 
 The `org.glassfish.api.admingui.ConsoleProvider` interface has one
 required method, `getConfiguration`. The `getConfiguration` method
@@ -131,8 +127,7 @@ return the URL where the file can be found.
 
 [[ghmom]][[GSACG00098]][[about-administration-console-templates]]
 
-About Administration Console Templates
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Administration Console Templates
 
 GlassFish Server includes a set of templates that make it easier to
 create Jakarta Server Faces pages for your add-on component. These templates
@@ -151,8 +146,7 @@ sections of this chapter:
 
 [[ghmqr]][[GSACG00099]][[about-integration-points]]
 
-About Integration Points
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Integration Points
 
 The integration points for your add-on component are the individual
 Administration Console user interface features that your add-on
@@ -180,8 +174,7 @@ link:integration-point-reference.html#ghmrp[Integration Point Reference].
 
 [[ghmpg]][[GSACG00100]][[specifying-the-id-of-an-add-on-component]]
 
-Specifying the ID of an Add-On Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Specifying the ID of an Add-On Component
 
 The `console-config.xml` file consists of a `console-config` element
 that encloses a series of `integration-point` elements. The
@@ -217,8 +210,7 @@ value.
 
 [[ghmpk]][[GSACG00101]][[adding-functionality-to-the-administration-console]]
 
-Adding Functionality to the Administration Console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding Functionality to the Administration Console
 
 The `integration-point` elements in the `console-config.xml` file
 specify attributes for the user interface features that you choose to
@@ -267,8 +259,7 @@ The following topics are addressed here:
 
 [[ghocf]][[GSACG00188]][[adding-a-node-to-the-navigation-tree]]
 
-Adding a Node to the Navigation Tree
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding a Node to the Navigation Tree
 
 You can add a node to the navigation tree, either at the top level or
 under another node. To add a node, use an integration point of type
@@ -337,8 +328,7 @@ nodes under the Resources and Configuration nodes.
 
 [[ghoej]][[GSACG00158]][[creating-a-javaserver-faces-page-for-your-node]]
 
-Creating a Jakarta Server Faces Page for Your Node
-++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Creating a Jakarta Server Faces Page for Your Node
 
 A Jakarta Server Faces page for a tree node uses the tag `sun:treeNode`.
 This tag provides all the capabilities of the Project Woodstock tag
@@ -394,8 +384,7 @@ pages, specify the attributes of this tag as follows:
 
 [[ghotv]][[GSACG00189]][[adding-tabs-to-a-page]]
 
-Adding Tabs to a Page
-^^^^^^^^^^^^^^^^^^^^^
+==== Adding Tabs to a Page
 
 You can add a tab to an existing tab set, or you can create a tab set
 for your own page. One way to add a tab or tab set is to use an
@@ -490,8 +479,7 @@ the tabs.
 
 [[ghovg]][[GSACG00159]][[creating-javaserver-faces-pages-for-your-tabs]]
 
-Creating Jakarta Server Faces Pages for Your Tabs
-+++++++++++++++++++++++++++++++++++++++++++++++++
+===== Creating Jakarta Server Faces Pages for Your Tabs
 
 A Jakarta Server Faces page for a tab uses the tag `sun:tab`. This tag
 provides all the capabilities of the Project Woodstock tag
@@ -553,8 +541,7 @@ setSessionAttribute(key="serverInstTabs" value="sampleSubTab2");
 
 [[ghmqw]][[GSACG00190]][[adding-a-task-to-the-common-tasks-page]]
 
-Adding a Task to the Common Tasks Page
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding a Task to the Common Tasks Page
 
 You can add either a single task or a group of tasks to the Common Tasks
 page of the Administration Console. To add a task or task group, use an
@@ -594,8 +581,7 @@ Faces page that displays the task.
 
 [[ghoeu]][[GSACG00160]][[creating-a-javaserver-faces-page-for-your-task]]
 
-Creating a Jakarta Server Faces Page for Your Task
-++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Creating a Jakarta Server Faces Page for Your Task
 
 A Jakarta Server Faces page for a task uses the tag `sun:commonTask`.
 This tag provides all the capabilities of the Project Woodstock tag `webuijsf:commonTask`.
@@ -637,8 +623,7 @@ Jakarta Server Faces pages, specify the attributes of this tag as follows:
 
 [[ghozn]][[GSACG00191]][[adding-a-task-group-to-the-common-tasks-page]]
 
-Adding a Task Group to the Common Tasks Page
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding a Task Group to the Common Tasks Page
 
 You can add a new group of tasks to the Common Tasks page to display the
 most important tasks for your add-on component. To add a task group, use
@@ -676,8 +661,7 @@ Faces page that displays the task.
 
 [[ghoya]][[GSACG00161]][[creating-a-javaserver-faces-page-for-your-task-group]]
 
-Creating a Jakarta Server Faces Page for Your Task Group
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Creating a Jakarta Server Faces Page for Your Task Group
 
 A Jakarta Server Faces page for a task group uses the tag
 `sun:commonTasksGroup`. This tag provides all the capabilities of the
@@ -721,8 +705,7 @@ specifies the name of the task group.
 
 [[ghmrg]][[GSACG00192]][[adding-content-to-a-page]]
 
-Adding Content to a Page
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding Content to a Page
 
 You can add content for your add-on component to an existing top-level
 page, such as the Configuration page or the Resources page.
@@ -766,8 +749,7 @@ places similar content on the Configuration page.
 
 [[ghpao]][[GSACG00162]][[creating-a-javaserver-faces-page-for-your-page-content]]
 
-Creating a Jakarta Server Faces Page for Your Page Content
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Creating a Jakarta Server Faces Page for Your Page Content
 
 A Jakarta Server Faces page for page content often uses the tag
 `sun:property` to specify a property on a property sheet. This tag
@@ -817,8 +799,7 @@ You can use many other kinds of user interface elements within a
 
 [[ghmqe]][[GSACG00193]][[adding-a-page-to-the-administration-console]]
 
-Adding a Page to the Administration Console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding a Page to the Administration Console
 
 Your add-on component may require new configuration tasks. In addition
 to implementing commands that accomplish these tasks (see
@@ -866,8 +847,7 @@ additional directives, events, and tags to specify its content.
 
 [[ghmqi]][[GSACG00102]][[adding-internationalization-support]]
 
-Adding Internationalization Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Adding Internationalization Support
 
 To add internationalization support for your add-on component to the
 Administration Console, you can place an event and handler like the
@@ -885,8 +865,7 @@ appropriate values for your component.
 
 [[ghmqg]][[GSACG00103]][[changing-the-theme-or-brand-of-the-administration-console]]
 
-Changing the Theme or Brand of the Administration Console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Changing the Theme or Brand of the Administration Console
 
 To change the theme or brand of the Administration Console for your
 add-on component, use the integration point type
@@ -989,8 +968,7 @@ of your theme.
 
 [[ghpkz]][[GSACG00104]][[creating-an-integration-point-type]]
 
-Creating an Integration Point Type
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating an Integration Point Type
 
 If your add-on component provides new content that you would like other
 people to extend, you may define your own integration point types. For
@@ -1002,8 +980,7 @@ extend.
 
 [[sthref4]][[to-create-an-integration-point-type]]
 
-To Create an Integration Point Type
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Integration Point Type
 
 1. Decide on the name of your integration point type.
 +

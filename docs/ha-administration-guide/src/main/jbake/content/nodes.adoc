@@ -5,15 +5,13 @@ next=clusters.html
 prev=ssh-setup.html
 ~~~~~~
 
-Administering GlassFish Server Nodes
-====================================
+= Administering GlassFish Server Nodes
 
 [[GSHAG00004]][[gkrle]]
 
 
 [[administering-glassfish-server-nodes]]
-3 Administering GlassFish Server Nodes
---------------------------------------
+== 3 Administering GlassFish Server Nodes
 
 A node represents a host on which the GlassFish Server software is
 installed. A node must exist for every host on which GlassFish Server
@@ -31,8 +29,7 @@ The following topics are addressed here:
 
 [[gksgh]][[GSHAG00179]][[types-of-glassfish-server-nodes]]
 
-Types of GlassFish Server Nodes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Types of GlassFish Server Nodes
 
 Each GlassFish Server node is one of the following types of node:
 
@@ -66,8 +63,7 @@ Each GlassFish Server node is one of the following types of node:
 
 [[CHDBIHFJ]][[GSHAG463]][[creating-listing-testing-and-deleting-dcom-nodes]]
 
-Creating, Listing, Testing, and Deleting `DCOM` Nodes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Listing, Testing, and Deleting `DCOM` Nodes
 
 A `DCOM` node supports communication over DCOM. If DCOM is set up and
 you plan to administer your GlassFish Server instances centrally, the
@@ -88,8 +84,7 @@ The following topics are addressed here:
 
 [[CHDIGBJB]][[GSHAG464]][[to-create-a-dcom-node]]
 
-To Create a `DCOM` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a `DCOM` Node
 
 Use the `create-node-dcom` subcommand in remote mode to create a `DCOM` node.
 
@@ -182,8 +177,7 @@ in the following sections:
 
 [[CHDDCBEG]][[GSHAG469]][[to-list-dcom-nodes-in-a-domain]]
 
-To List `DCOM` Nodes in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List `DCOM` Nodes in a Domain
 
 Use the `list-nodes-dcom` subcommand in remote mode to obtain
 information about existing `DCOM` nodes in a domain.
@@ -252,8 +246,7 @@ typing the following commands at the command line:
 
 [[CHDIFJCC]][[GSHAG473]][[to-test-if-a-dcom-node-is-reachable]]
 
-To Test if a `DCOM` Node is Reachable
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Test if a `DCOM` Node is Reachable
 
 Use the `ping-node-dcom` subcommand in remote mode to test if a `DCOM`
 node is reachable.
@@ -306,8 +299,7 @@ typing `asadmin help ping-node-dcom` at the command line.
 
 [[CHDCFHBA]][[GSHAG477]][[to-delete-a-dcom-node]]
 
-To Delete a `DCOM` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a `DCOM` Node
 
 Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM` node.
 
@@ -378,8 +370,7 @@ typing the following commands at the command line:
 
 [[gkrkn]][[GSHAG00180]][[creating-listing-testing-and-deleting-ssh-nodes]]
 
-Creating, Listing, Testing, and Deleting `SSH` Nodes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Listing, Testing, and Deleting `SSH` Nodes
 
 An `SSH` node supports communication over SSH. If SSH is set up and you
 plan to administer your GlassFish Server instances centrally, the
@@ -407,8 +398,7 @@ The following topics are addressed here:
 
 [[gkrnf]][[GSHAG00088]][[to-create-an-ssh-node]]
 
-To Create an `SSH` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an `SSH` Node
 
 Use the `create-node-ssh` subcommand in remote mode to create an `SSH`
 node.
@@ -504,8 +494,7 @@ in the following sections:
 
 [[gkrme]][[GSHAG00089]][[to-list-ssh-nodes-in-a-domain]]
 
-To List `SSH` Nodes in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List `SSH` Nodes in a Domain
 
 Use the `list-nodes-ssh` subcommand in remote mode to obtain information
 about existing `SSH` nodes in a domain.
@@ -572,8 +561,7 @@ typing the following commands at the command line:
 
 [[gksig]][[GSHAG00090]][[to-test-if-an-ssh-node-is-reachable]]
 
-To Test if an `SSH` Node is Reachable
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Test if an `SSH` Node is Reachable
 
 Use the `ping-node-ssh` subcommand in remote mode to test if an `SSH`
 node is reachable.
@@ -626,8 +614,7 @@ typing `asadmin help ping-node-ssh` at the command line.
 
 [[gkrlz]][[GSHAG00091]][[to-delete-an-ssh-node]]
 
-To Delete an `SSH` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an `SSH` Node
 
 Use the `delete-node-ssh` subcommand in remote mode to delete an `SSH`
 node.
@@ -698,8 +685,7 @@ typing the following commands at the command line:
 
 [[gkrnp]][[GSHAG00181]][[creating-listing-and-deleting-config-nodes]]
 
-Creating, Listing, and Deleting `CONFIG` Nodes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Listing, and Deleting `CONFIG` Nodes
 
 A `CONFIG` node does not support remote communication. If neither DCOM
 nor SSH is set up and you plan to administer your instances locally, the
@@ -718,8 +704,7 @@ The following topics are addressed here:
 
 [[gkrll]][[GSHAG00092]][[to-create-a-config-node]]
 
-To Create a `CONFIG` Node
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a `CONFIG` Node
 
 Use the `create-node-config` command in remote mode to create a `CONFIG` node.
 
@@ -793,8 +778,7 @@ in link:instances.html#gkqbl[To Create an Instance Locally].
 
 [[gkrjr]][[GSHAG00093]][[to-list-config-nodes-in-a-domain]]
 
-To List `CONFIG` Nodes in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List `CONFIG` Nodes in a Domain
 
 Use the `list-nodes-config` subcommand in remote mode to obtain
 information about existing `CONFIG` nodes in a domain.
@@ -865,8 +849,7 @@ typing the following commands at the command line:
 
 [[gkrms]][[GSHAG00094]][[to-delete-a-config-node]]
 
-To Delete a `CONFIG` Node
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a `CONFIG` Node
 
 Use the `delete-node-config` subcommand in remote mode to delete a
 `CONFIG` node.
@@ -935,8 +918,7 @@ typing the following commands at the command line:
 
 [[gksjd]][[GSHAG00182]][[updating-and-changing-the-type-of-a-node]]
 
-Updating and Changing the Type of a Node
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Updating and Changing the Type of a Node
 
 GlassFish Server enables you to update the configuration data of any
 node and to change the type of a node.
@@ -950,8 +932,7 @@ The following topics are addressed here:
 
 [[CHDHHAAE]][[GSHAG481]][[to-update-a-dcom-node]]
 
-To Update a `DCOM` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a `DCOM` Node
 
 Use the `update-node-dcom` subcommand in remote mode to update a `DCOM` node.
 
@@ -1004,8 +985,7 @@ typing `asadmin help update-node-dcom` at the command line.
 
 [[gksjq]][[GSHAG00095]][[to-update-an-ssh-node]]
 
-To Update an `SSH` Node
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update an `SSH` Node
 
 Use the `update-node-ssh` subcommand in remote mode to update an `SSH` node.
 
@@ -1060,8 +1040,7 @@ typing `asadmin help update-node-ssh` at the command line.
 
 [[gksjv]][[GSHAG00096]][[to-update-a-config-node]]
 
-To Update a `CONFIG` Node
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a `CONFIG` Node
 
 Use the `update-node-config` subcommand in remote mode to update a
 `CONFIG` node.
@@ -1114,8 +1093,7 @@ typing `asadmin help update-node-config` at the command line.
 
 [[gkski]][[GSHAG00097]][[to-change-the-type-of-a-node]]
 
-To Change the Type of a Node
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change the Type of a Node
 
 The subcommands for updating a node can also be used to change the type
 of a node.

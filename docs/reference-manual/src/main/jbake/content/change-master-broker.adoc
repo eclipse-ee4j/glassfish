@@ -5,13 +5,11 @@ next=change-master-password.html
 prev=change-admin-password.html
 ~~~~~~
 
-change-master-broker
-====================
+= change-master-broker
 
 [[change-master-broker-1]][[GSRFM00005]][[change-master-broker]]
 
-change-master-broker
---------------------
+== change-master-broker
 
 Changes the master broker in a Message Queue cluster providing JMS
 services for a {productName} cluster.

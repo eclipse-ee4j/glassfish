@@ -5,13 +5,11 @@ next=list-jms-resources.html
 prev=list-jmsdest.html
 ~~~~~~
 
-list-jms-hosts
-==============
+= list-jms-hosts
 
 [[list-jms-hosts-1]][[GSRFM00176]][[list-jms-hosts]]
 
-list-jms-hosts
---------------
+== list-jms-hosts
 
 Lists the existing JMS hosts
 

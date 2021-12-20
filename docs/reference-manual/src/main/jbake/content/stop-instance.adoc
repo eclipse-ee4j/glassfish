@@ -5,13 +5,11 @@ next=stop-local-instance.html
 prev=stop-domain.html
 ~~~~~~
 
-stop-instance
-=============
+= stop-instance
 
 [[stop-instance-1]][[GSRFM00241]][[stop-instance]]
 
-stop-instance
--------------
+== stop-instance
 
 Stops a running {productName} instance
 

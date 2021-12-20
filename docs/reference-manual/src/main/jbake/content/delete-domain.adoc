@@ -5,13 +5,11 @@ next=delete-file-user.html
 prev=delete-custom-resource.html
 ~~~~~~
 
-delete-domain
-=============
+= delete-domain
 
 [[delete-domain-1]][[GSRFM00075]][[delete-domain]]
 
-delete-domain
--------------
+== delete-domain
 
 Deletes a domain
 

@@ -5,14 +5,12 @@ next=adding-container-capabilities.html
 prev=adding-monitoring-capabilities.html
 ~~~~~~
 
-Adding Configuration Data for a Component
-=========================================
+= Adding Configuration Data for a Component
 
 [[GSACG00006]][[gjlpe]]
 
 [[adding-configuration-data-for-a-component]]
-Adding Configuration Data for a Component
------------------------------------------
+== Adding Configuration Data for a Component
 
 The configuration data of a component determines the characteristics and
 runtime behavior of a component. Eclipse GlassFish provides interfaces to
@@ -39,8 +37,7 @@ The following topics are addressed here:
 
 [[gjrdv]][[GSACG00121]][[how-glassfish-server-stores-configuration-data]]
 
-How GlassFish Server Stores Configuration Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== How GlassFish Server Stores Configuration Data
 
 GlassFish Server stores the configuration data for a domain in a single
 configuration file that is named `domain.xml`. This file is an
@@ -54,8 +51,7 @@ follow.
 
 [[gjlop]][[GSACG00122]][[defining-an-element]]
 
-Defining an Element
-~~~~~~~~~~~~~~~~~~~
+=== Defining an Element
 
 An element represents an item of configuration data. For example, to
 represent the configuration data for a network listener, GlassFish
@@ -66,8 +62,7 @@ adding.
 
 [[gjcnt]][[GSACG00074]][[to-define-an-element]]
 
-To Define an Element
-^^^^^^^^^^^^^^^^^^^^
+==== To Define an Element
 
 1. Define a Java language interface to represent the element.
 Define one interface for each element. Do not represent multiple
@@ -133,8 +128,7 @@ implement the interface.
 
 [[gjlpb]][[GSACG00123]][[defining-an-attribute-of-an-element]]
 
-Defining an Attribute of an Element
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Defining an Attribute of an Element
 
 The attributes of an element describe the characteristics of the
 element.
@@ -143,8 +137,7 @@ element identifies the port number on which the listener listens.
 
 [[gjorj]][[GSACG00227]][[representing-an-attribute-of-an-element]]
 
-Representing an Attribute of an Element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Representing an Attribute of an Element
 
 Represent each attribute of an element as the property of a pair of
 JavaBeans specification getter and setter methods of the interface that
@@ -154,8 +147,7 @@ The setter method enables the attribute to be updated.
 
 [[gjopa]][[GSACG00228]][[specifying-the-data-type-of-an-attribute]]
 
-Specifying the Data Type of an Attribute
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Data Type of an Attribute
 
 The data type of an attribute is the return type of the getter method
 that is associated with the attribute. To enable the attribute take
@@ -164,8 +156,7 @@ type as `String`.
 
 [[gjopm]][[GSACG00229]][[identifying-an-attribute-of-an-element]]
 
-Identifying an Attribute of an Element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Identifying an Attribute of an Element
 
 To identify an attribute of an element, annotate the declaration of the
 getter method that is associated with the attribute with the
@@ -176,8 +167,7 @@ To specify the properties of the attribute, use the elements of the
 
 [[gjopq]][[GSACG00230]][[specifying-the-name-of-an-attribute]]
 
-Specifying the Name of an Attribute
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Name of an Attribute
 
 To specify the name of an attribute, set the `value` element of the
 `@Attribute` annotation to a string that specifies the name. If you do
@@ -194,8 +184,7 @@ the attribute is `number-of-instances`.
 
 [[gjoqj]][[GSACG00231]][[specifying-the-default-value-of-an-attribute]]
 
-Specifying the Default Value of an Attribute
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Default Value of an Attribute
 
 The default value of an attribute is the value that is applied if the
 attribute is omitted when the element is written to the domain
@@ -208,8 +197,7 @@ default value.
 
 [[gjoui]][[GSACG00232]][[specifying-whether-an-attribute-is-required-or-optional]]
 
-Specifying Whether an Attribute Is Required or Optional
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying Whether an Attribute Is Required or Optional
 
 Whether an attribute is required or optional determines how GlassFish
 Server responds if the parameter is omitted when the element is written
@@ -228,8 +216,7 @@ This value is the default.
 
 [[gjrdz]][[GSACG00233]][[example-of-defining-an-attribute-of-an-element]]
 
-Example of Defining an Attribute of an Element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Example of Defining an Attribute of an Element
 
 [[sthref7]]
 
@@ -251,8 +238,7 @@ import org.jvnet.hk2.config.Attribute;
 
 [[gjlov]][[GSACG00124]][[defining-a-subelement]]
 
-Defining a Subelement
-~~~~~~~~~~~~~~~~~~~~~
+=== Defining a Subelement
 
 A subelement represents a containment or ownership relationship. For
 example, GlassFish Server defines the `network-listeners` element to
@@ -263,8 +249,7 @@ the `network-listener` element, which is a subelement of
 
 [[gjzlb]][[GSACG00075]][[to-define-a-subelement]]
 
-To Define a Subelement
-^^^^^^^^^^^^^^^^^^^^^^
+==== To Define a Subelement
 
 1. Define an interface to represent the subelement.
 For more information, see link:#gjlop[Defining an Element].
@@ -320,8 +305,7 @@ import java.beans.PropertyVetoException;
 
 [[gjlpu]][[GSACG00125]][[validating-configuration-data]]
 
-Validating Configuration Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Validating Configuration Data
 
 Validating configuration data ensures that attribute values that are
 being set or updated do not violate any constraints that you impose on
@@ -415,8 +399,7 @@ String getClassname();
 
 [[gjrdj]][[GSACG00126]][[initializing-a-components-configuration-data]]
 
-Initializing a Component's Configuration Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Initializing a Component's Configuration Data
 
 To ensure that a component's configuration data is added to the
 `domain.xml` file when the component is first instantiated, you must
@@ -431,8 +414,7 @@ tasks:
 
 [[gkbgi]][[GSACG00076]][[to-define-a-components-initial-configuration-data]]
 
-To Define a Component's Initial Configuration Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Define a Component's Initial Configuration Data
 
 1. Create a plain-text file that contains an XML fragment to represent
 the configuration data.
@@ -464,8 +446,7 @@ follows:
 
 [[gjses]][[GSACG00077]][[to-write-a-components-initial-configuration-data-to-the-domain.xml-file]]
 
-To Write a Component's Initial Configuration Data to the `domain.xml` File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Write a Component's Initial Configuration Data to the `domain.xml` File
 
 Add code to write the component's initial configuration data in the
 class that represents your add-on component. If your add-on component is
@@ -581,8 +562,7 @@ element.
 
 [[gjrcz]][[GSACG00127]][[creating-a-transaction-to-update-configuration-data]]
 
-Creating a Transaction to Update Configuration Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating a Transaction to Update Configuration Data
 
 Creating a transaction to update configuration data enables the data to
 be updated without the need to specify a dotted name in the
@@ -599,8 +579,7 @@ Console].
 
 [[gkakw]][[GSACG00078]][[to-create-a-transaction-to-update-configuration-data]]
 
-To Create a Transaction to Update Configuration Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Transaction to Update Configuration Data
 
 Any transaction that you create to modify configuration data must use a
 configuration change transaction to ensure that the change is atomic,
@@ -673,8 +652,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 [[gjmkt]][[GSACG00128]][[dotted-names-and-rest-urls-of-configuration-attributes]]
 
-Dotted Names and REST URLs of Configuration Attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Dotted Names and REST URLs of Configuration Attributes
 
 The GlassFish Server administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
 link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
@@ -729,8 +707,7 @@ for administration is 4848.
 
 [[gkaal]][[GSACG00131]][[examples-of-adding-configuration-data-for-a-component]]
 
-Examples of Adding Configuration Data for a Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Examples of Adding Configuration Data for a Component
 
 This example shows the interfaces that define the configuration data for
 the Greeter Container component. The data is comprised of the following

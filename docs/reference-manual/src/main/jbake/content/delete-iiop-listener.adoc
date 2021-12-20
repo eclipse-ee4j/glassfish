@@ -5,13 +5,11 @@ next=delete-instance.html
 prev=delete-http-redirect.html
 ~~~~~~
 
-delete-iiop-listener
-====================
+= delete-iiop-listener
 
 [[delete-iiop-listener-1]][[GSRFM00084]][[delete-iiop-listener]]
 
-delete-iiop-listener
---------------------
+== delete-iiop-listener
 
 Removes an IIOP listener
 

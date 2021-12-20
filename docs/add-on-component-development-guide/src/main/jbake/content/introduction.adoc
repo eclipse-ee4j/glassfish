@@ -5,15 +5,13 @@ next=writing-hk2-components.html
 prev=preface.html
 ~~~~~~
 
-Introduction to the Development Environment for Eclipse GlassFish Add-On Components
-===================================================================================
+= Introduction to the Development Environment for Eclipse GlassFish Add-On Components
 
 [[GSACG00001]][[ghmlv]]
 
 
 [[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
-Introduction to the Development Environment for Eclipse GlassFish Add-On Components
------------------------------------------------------------------------------------
+== Introduction to the Development Environment for Eclipse GlassFish Add-On Components
 
 Eclipse GlassFish enables an external vendor such as
 an independent software vendor (ISV), original equipment manufacturer
@@ -36,8 +34,7 @@ Component]
 
 [[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
 
-GlassFish Server Modular Architecture and Add-On Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Modular Architecture and Add-On Components
 
 GlassFish Server has a modular architecture in which the features of
 GlassFish Server are provided by a consistent set of components that
@@ -72,8 +69,7 @@ Server]" in Eclipse GlassFish Administration Guide.
 
 [[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
 
-OSGi Alliance Module Management Subsystem
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== OSGi Alliance Module Management Subsystem
 
 To enable components to be added when required, GlassFish Server
 provides a lightweight and extensible kernel that uses the module
@@ -96,8 +92,7 @@ are compatible with the OSGi Service Platform Release 4 API.
 
 [[ghmnq]][[GSACG00089]][[hundred-kilobyte-kernel]]
 
-Hundred-Kilobyte Kernel
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Hundred-Kilobyte Kernel
 
 The https://github.com/eclipse-ee4j/glassfish-hk2[Hundred-Kilobyte Kernel (HK2)]
 (`https://github.com/eclipse-ee4j/glassfish-hk2`) is the lightweight and extensible kernel
@@ -118,8 +113,7 @@ HK2 Components].
 
 [[ghmns]][[GSACG00090]][[overview-of-the-development-process-for-an-add-on-component]]
 
-Overview of the Development Process for an Add-On Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Overview of the Development Process for an Add-On Component
 
 To ensure that an add-on component behaves identically to components
 that are supplied in GlassFish Server distributions, the component must
@@ -148,8 +142,7 @@ development process that is described in the following sections:
 
 [[ghpqc]][[GSACG00173]][[writing-hk2-components]]
 
-Writing HK2 Components
-^^^^^^^^^^^^^^^^^^^^^^
+==== Writing HK2 Components
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
 kernel of GlassFish Server. To interact with GlassFish Server, add-on
@@ -164,8 +157,7 @@ HK2 Components].
 
 [[ghokn]][[GSACG00174]][[extending-the-administration-console]]
 
-Extending the Administration Console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Extending the Administration Console
 
 The Administration Console is a browser-based tool for administering
 GlassFish Server. It features an easy-to-navigate interface and online
@@ -184,8 +176,7 @@ Console].
 
 [[ghohx]][[GSACG00175]][[extending-the-asadmin-utility]]
 
-Extending the `asadmin` Utility
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Extending the `asadmin` Utility
 
 The `asadmin` utility is a command-line tool for configuring and
 administering GlassFish Server. Extending the `asadmin` utility enables
@@ -200,8 +191,7 @@ For more information, see link:extending-asadmin.html#ghmrd[Extending the
 
 [[ghojs]][[GSACG00176]][[adding-monitoring-capabilities]]
 
-Adding Monitoring Capabilities
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding Monitoring Capabilities
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
@@ -225,8 +215,7 @@ Capabilities].
 
 [[gkahs]][[GSACG00177]][[adding-configuration-data-for-a-component]]
 
-Adding Configuration Data for a Component
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding Configuration Data for a Component
 
 The configuration data of a component determines the characteristics and
 runtime behavior of a component. GlassFish Server provides interfaces to
@@ -246,8 +235,7 @@ Component].
 
 [[ghojq]][[GSACG00178]][[adding-container-capabilities]]
 
-Adding Container Capabilities
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Adding Container Capabilities
 
 Applications run on GlassFish Server in containers. GlassFish Server
 enables you to create containers that extend or replace the existing
@@ -261,8 +249,7 @@ Capabilities].
 
 [[gktld]][[GSACG00179]][[creating-a-session-persistence-module]]
 
-Creating a Session Persistence Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Creating a Session Persistence Module
 
 GlassFish Server enables you to create a session persistence module in
 the web container for high availability-related functionality by
@@ -282,8 +269,7 @@ Persistence Module].
 
 [[ghoiu]][[GSACG00180]][[packaging-and-delivering-an-add-on-component]]
 
-Packaging and Delivering an Add-On Component
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Packaging and Delivering an Add-On Component
 
 Packaging an add-on component enables the component to interact with the
 GlassFish Server kernel in the same way as other components. Integrating

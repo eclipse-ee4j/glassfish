@@ -5,13 +5,11 @@ next=create-jvm-options.html
 prev=create-jms-resource.html
 ~~~~~~
 
-create-jndi-resource
-====================
+= create-jndi-resource
 
 [[create-jndi-resource-1]][[GSRFM00041]][[create-jndi-resource]]
 
-create-jndi-resource
---------------------
+== create-jndi-resource
 
 Registers a JNDI resource
 

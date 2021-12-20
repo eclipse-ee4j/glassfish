@@ -5,13 +5,11 @@ next=create-file-user.html
 prev=create-custom-resource.html
 ~~~~~~
 
-create-domain
-=============
+= create-domain
 
 [[create-domain-1]][[GSRFM00023]][[create-domain]]
 
-create-domain
--------------
+== create-domain
 
 Creates a domain
 

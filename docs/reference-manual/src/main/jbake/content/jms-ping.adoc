@@ -5,13 +5,11 @@ next=list.html
 prev=install-node-ssh.html
 ~~~~~~
 
-jms-ping
-========
+= jms-ping
 
 [[jms-ping-1]][[GSRFM00144]][[jms-ping]]
 
-jms-ping
---------
+== jms-ping
 
 Checks if the JMS service is up and running
 

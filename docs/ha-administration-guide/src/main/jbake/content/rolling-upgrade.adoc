@@ -5,15 +5,13 @@ next=session-persistence-and-failover.html
 prev=http-load-balancing.html
 ~~~~~~
 
-Upgrading Applications Without Loss of Availability
-===================================================
+= Upgrading Applications Without Loss of Availability
 
 [[GSHAG00010]][[abdik]]
 
 
 [[upgrading-applications-without-loss-of-availability]]
-8 Upgrading Applications Without Loss of Availability
------------------------------------------------------
+== 8 Upgrading Applications Without Loss of Availability
 
 Upgrading an application to a new version without loss of availability
 to users is called a rolling upgrade. Carefully managing the two
@@ -57,8 +55,7 @@ Therefore, the risk of version mismatch is avoided.
 
 [[abdil]][[GSHAG00205]][[application-compatibility]]
 
-Application Compatibility
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Application Compatibility
 
 Rolling upgrades pose varying degrees of difficulty depending on the
 magnitude of changes between the two application versions.
@@ -95,8 +92,7 @@ approach.
 
 [[abdim]][[GSHAG00206]][[upgrading-in-a-single-cluster]]
 
-Upgrading In a Single Cluster
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading In a Single Cluster
 
 You can perform a rolling upgrade of an application deployed to a single
 cluster, providing the cluster's configuration is not shared with any
@@ -104,8 +100,7 @@ other cluster.
 
 [[fxxvd]][[GSHAG00151]][[to-upgrade-an-application-in-a-single-cluster]]
 
-To Upgrade an Application in a Single Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade an Application in a Single Cluster
 
 1. Deploy the upgraded application to the cluster in a disabled state
 and with a new version identifier. For example:
@@ -145,13 +140,11 @@ Enabling the upgraded application version automatically disables the previous ve
 
 [[abdin]][[GSHAG00207]][[upgrading-in-multiple-clusters]]
 
-Upgrading in Multiple Clusters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading in Multiple Clusters
 
 [[fxxvb]][[GSHAG00152]][[to-upgrade-a-compatible-application-in-two-or-more-clusters]]
 
-To Upgrade a Compatible Application in Two or More Clusters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade a Compatible Application in Two or More Clusters
 
 Repeat the following procedure for each cluster.
 
@@ -194,8 +187,7 @@ previous version.
 
 [[abdio]][[GSHAG00208]][[upgrading-incompatible-applications]]
 
-Upgrading Incompatible Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading Incompatible Applications
 
 If the new version of the application is incompatible with the old
 version, use the following procedure. For information on what makes
@@ -220,8 +212,7 @@ simply fail.
 
 [[abdip]][[GSHAG00153]][[to-upgrade-an-incompatible-application-by-creating-a-second-cluster]]
 
-To Upgrade an Incompatible Application by Creating a Second Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Upgrade an Incompatible Application by Creating a Second Cluster
 
 1. Create a "shadow cluster" on the same or a different set of machines
 as the existing cluster. If you already have a second cluster, skip this

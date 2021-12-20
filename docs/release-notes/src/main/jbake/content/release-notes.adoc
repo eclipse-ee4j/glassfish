@@ -4,15 +4,13 @@ title=Eclipse GlassFish Server 7 Release Notes
 prev=preface.html
 ~~~~~~
 
-Eclipse GlassFish Server 7 Release Notes
-========================================
+= Eclipse GlassFish Server 7 Release Notes
 
 [[GSRLN00001]][[abppa]]
 
 
 [[glassfish-server-open-source-edition-release-notes]]
-1 Eclipse GlassFish Server 7 Release Notes
-------------------------------------------
+== 1 Eclipse GlassFish Server 7 Release Notes
 
 [CAUTION]
 ====
@@ -55,8 +53,7 @@ view the most up-to-date product information.
 
 [[ghmvk]][[GSRLN00128]][[revision-history]]
 
-Revision History
-~~~~~~~~~~~~~~~~
+=== Revision History
 
 This section lists the revision history for these Release Notes.
 
@@ -73,8 +70,7 @@ Table 1-1 Revision History
 
 [[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-release]]
 
-What's New in the GlassFish Server 7 Release?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== What's New in the GlassFish Server 7 Release?
 
 GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE 10
 introduces ... To Be Done
@@ -112,8 +108,7 @@ properly with some of the new features added in support of the Jakarta EE 10 pla
 
 [[abpaj]][[GSRLN00131]][[hardware-and-software-requirements]]
 
-Hardware and Software Requirements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Hardware and Software Requirements
 
 This section lists the requirements that must be met before installing
 Eclipse GlassFish Server Release 7 software.
@@ -128,8 +123,7 @@ The following topics are addressed here:
 
 [[abpak]][[GSRLN00246]][[required-jdk-versions]]
 
-Required JDK Versions
-^^^^^^^^^^^^^^^^^^^^^
+==== Required JDK Versions
 
 Eclipse GlassFish Server Release 7 requires Oracle JDK 8
 Update 144 or later.
@@ -145,8 +139,7 @@ DAS or server instance have a minimum of 1 GB RAM.
 
 [[ggppy]][[GSRLN00248]][[required-disk-space]]
 
-Required Disk Space
-^^^^^^^^^^^^^^^^^^^
+==== Required Disk Space
 
 The download sizes for GlassFish Server 7 vary depending on the
 package you choose. The following are the approximate sizes of the ZIP
@@ -164,8 +157,7 @@ follows:
 
 [[ggpoq]][[GSRLN00249]][[required-free-ports]]
 
-Required Free Ports
-^^^^^^^^^^^^^^^^^^^
+==== Required Free Ports
 
 You must have sixteen unused ports available for the ports GlassFish
 Server uses. The installation program automatically detects ports that
@@ -223,8 +215,7 @@ configure the JMS host and the GMS to use specific ports.
 
 [[sthref4]][[to-configure-specific-ports-for-a-jms-host]]
 
-To Configure Specific Ports for a JMS Host
-++++++++++++++++++++++++++++++++++++++++++
+===== To Configure Specific Ports for a JMS Host
 
 When you create a JMS Host, GlassFish server automatically selects ports
 for the JMS provider (called the portmapper port in Message Queue
@@ -252,8 +243,7 @@ jms-host-name
 
 [[sthref5]][[to-configure-specific-gms-ports-for-a-cluster]]
 
-To Configure Specific GMS Ports for a Cluster
-+++++++++++++++++++++++++++++++++++++++++++++
+===== To Configure Specific GMS Ports for a Cluster
 
 When you create a cluster, GlassFish server automatically selects a port
 for GMS multicast that does not conflict with the GMS multicast port of
@@ -290,8 +280,7 @@ configuration, as this has not been tested.
 
 [[gkxlg]][[GSRLN00250]][[message-queue-broker-requirements]]
 
-Message Queue Broker Requirements
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message Queue Broker Requirements
 
 GlassFish Server 7 is now bundled with Message Queue (MQ) Broker
 5.1.1. Refer to the
@@ -300,8 +289,7 @@ for complete information about MQ Broker requirements.
 
 [[gfgps]][[GSRLN00252]][[paths-and-environment-settings-for-the-jdk-software]]
 
-Paths and Environment Settings for the JDK Software
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Paths and Environment Settings for the JDK Software
 
 Ensure that your JDK configuration settings on all local and remote
 GlassFish Server hosts adhere to the guidelines listed below. Failure to
@@ -316,8 +304,7 @@ The following topics are addressed here:
 
 [[gldjj]][[GSRLN00155]][[use-the-jdk-binaries]]
 
-Use the JDK Binaries
-++++++++++++++++++++
+===== Use the JDK Binaries
 
 The following binary files that are used with GlassFish Server must come
 from the JDK software, not the Java Runtime Environment (JRE) software:
@@ -330,8 +317,7 @@ software precedes the `bin` directory for the JRE software in your path.
 
 [[gldgl]][[GSRLN00156]][[set-the-java_home-environment-variable]]
 
-Set the `JAVA_HOME` Environment Variable
-++++++++++++++++++++++++++++++++++++++++
+===== Set the `JAVA_HOME` Environment Variable
 
 Before performing any GlassFish Server installation or configuration
 procedures, set the `JAVA_HOME` environment variable on the GlassFish
@@ -342,8 +328,7 @@ remote GlassFish Server hosts.
 
 [[gldho]][[GSRLN00157]][[set-other-environment-variables-as-necessary]]
 
-Set Other Environment Variables As Necessary
-++++++++++++++++++++++++++++++++++++++++++++
+===== Set Other Environment Variables As Necessary
 
 All remote `asadmin` subcommands require the correct version of Java to
 be available on the affected remote machine. For example, when creating
@@ -375,8 +360,7 @@ property in the in the as-install`/config/asenv.conf` file.
 
 [[glcmm]][[GSRLN00253]][[known-issues-in-glassfish-server-5.1]]
 
-Known Issues in GlassFish Server 7
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Known Issues in GlassFish Server 7
 
 This section describes known issues and any available workarounds for
 Eclipse GlassFish Server 7 software.
@@ -394,8 +378,7 @@ The following topics are addressed here:
 
 [[sthref6]][[description]]
 
-Description
-+++++++++++
+===== Description
 
 Jakarta XML Binding (previous JAXB) and Jakarta XML Web Services (previouly JAX-WS)
 are part of Jakarta EE platform, but as optional technologies. However,
@@ -409,20 +392,17 @@ not part of web profile.
 
 [[sthref7]][[workaround]]
 
-Workaround
-++++++++++
+===== Workaround
 
 None
 
 [[CHDIBEAJ]][[resource-validation-property-is-enabled-in-the-jvm-option-for-deployment]]
 
-Resource validation property is enabled in the JVM option for deployment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Resource validation property is enabled in the JVM option for deployment
 
 [[sthref8]][[description-1]]
 
-Description
-+++++++++++
+===== Description
 
 A new JVM option for deployment - deployment.resource.validation is
 introduced in GlassFish Server 7. This property is set to True by
@@ -445,21 +425,18 @@ https://github.com/eclipse-ee4j/glassfishdoc/5.1/administration-guide.pdf#G11.99
 
 [[sthref9]][[workaround-1]]
 
-Workaround
-++++++++++
+===== Workaround
 
 In case you do not want the resource validation to take place during the
 deployment, you can set this property value to False.
 
 [[CHDBJDGF]][[update-tool-and-pkg-command-no-longer-part-of-glassfish-server]]
 
-Update Tool and pkg Command no longer part of GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Update Tool and pkg Command no longer part of GlassFish Server
 
 [[sthref10]][[description-2]]
 
-Description
-+++++++++++
+===== Description
 
 In previous releases, you could update your GlassFish Server software
 using the pkg command and the Update tool. Since the recent release of
@@ -468,20 +445,17 @@ been removed from the GlassFish server installation.
 
 [[sthref11]][[workaround-2]]
 
-Workaround
-++++++++++
+===== Workaround
 
 No workaround.
 
 [[CHDJGJHD]][[java-db-has-been-replaced-by-apache-derby]]
 
-Java DB has been replaced by Apache Derby
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Java DB has been replaced by Apache Derby
 
 [[sthref12]][[description-3]]
 
-Description
-+++++++++++
+===== Description
 
 In the previous releases, Java DB was used as the database for GlassFish
 servers. With the release of GlassFish Server 7, Apache Derby
@@ -489,15 +463,13 @@ servers. With the release of GlassFish Server 7, Apache Derby
 
 [[sthref13]][[workaround-3]]
 
-Workaround
-++++++++++
+===== Workaround
 
 No workaround.
 
 [[ggqok]][[GSRLN00133]][[restrictions-and-deprecated-functionality]]
 
-Restrictions and Deprecated Functionality
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Restrictions and Deprecated Functionality
 
 This section describes restrictions and deprecated functionality in
 Oracle GlassFish Server 7.
@@ -512,8 +484,7 @@ The following topics are addressed here:
 
 [[ggqoc]][[GSRLN00258]][[asadmin-subcommands]]
 
-`asadmin` Subcommands
-^^^^^^^^^^^^^^^^^^^^^
+==== `asadmin` Subcommands
 
 In GlassFish Server 7, it is recommended that utility options of the
 `asadmin` command precede the subcommand. Utility options are options
@@ -532,8 +503,7 @@ subcommand is deprecated.
 
 [[abmbf]][[GSRLN00259]][[deprecated-unsupported-and-obsolete-options]]
 
-Deprecated, Unsupported, and Obsolete Options
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deprecated, Unsupported, and Obsolete Options
 
 Options in link:#gaeki[Table 1-3] are deprecated or no longer supported,
 or are obsolete and are ignored.
@@ -623,8 +593,7 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 
 [[gkueg]][[GSRLN00260]][[applications-that-use-apache-derby]]
 
-Applications That Use Apache Derby
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Applications That Use Apache Derby
 
 The directory location of Apache Derby in GlassFish Server 7 has
 changed from its location in previous installations. Suppose that you
@@ -653,8 +622,7 @@ asadmin start-database --dbhome c:\glassfish\databases
 
 [[ghpen]][[GSRLN00261]][[no-support-for-client-vm-on-windows-amd64]]
 
-No Support for Client VM on Windows AMD64
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== No Support for Client VM on Windows AMD64
 
 By default, the GlassFish Server DAS uses the Client VM to achieve best
 startup and deployment performance. If you are using Windows AMD64, edit
@@ -669,8 +637,7 @@ the 5.1 Java Virtual Machine].
 
 [[gkwbd]][[GSRLN00262]][[metro-reliable-messaging-in-inorder-delivery-mode]]
 
-Metro Reliable Messaging in `InOrder` Delivery Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Metro Reliable Messaging in `InOrder` Delivery Mode
 
 The Metro Reliable Messaging in `InOrder` Delivery mode has not been
 tested for high availability in GlassFish Server 7. The feature may
@@ -679,8 +646,7 @@ supported feature.
 
 [[glgiy]][[GSRLN00263]][[no-support-for-kerberos-on-aix]]
 
-No Support for Kerberos on AIX
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== No Support for Kerberos on AIX
 
 GlassFish Server 7 does not support Kerberos on the AIX platform.
 
@@ -689,8 +655,7 @@ https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
 
 [[BABDACBE]][[documentation-errata]]
 
-Documentation Errata
-~~~~~~~~~~~~~~~~~~~~
+=== Documentation Errata
 
 This section describes documentation errata.
 
@@ -698,8 +663,7 @@ This section describes documentation errata.
 
 [[BABIDEHD]][[upgrading-to-oracle-glassfish-server-is-not-necessary]]
 
-Upgrading to Oracle GlassFish Server Is Not Necessary
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Upgrading to Oracle GlassFish Server Is Not Necessary
 
 The Eclipse GlassFish Server Administration Guide discusses
 upgrading Eclipse GlassFish Server to Oracle GlassFish
@@ -715,8 +679,7 @@ Upgrading may not work for GlassFish Server 7
 
 [[giraq]][[GSRLN00135]][[features-available-only-in-the-full-platform]]
 
-Features Available Only in the Full Platform
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Features Available Only in the Full Platform
 
 The following features of GlassFish Server 7 are available only in the
 Full Platform:
@@ -746,8 +709,7 @@ only in the Eclipse GlassFish Server 7 full platform.
 
 [[gipkz]][[GSRLN00136]][[java-ee-standards-support]]
 
-Jakarta EE Standards Support
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Jakarta EE Standards Support
 
 link:#gjxcp[Table 1-4] lists the Jakarta EE standards implemented in
 GlassFish Server 7. The table also indicates the distributions in
@@ -977,8 +939,7 @@ extensions, including the following:
 
 [[abpha]][[GSRLN00138]][[how-to-report-problems-and-provide-feedback]]
 
-How to Report Problems and Provide Feedback
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== How to Report Problems and Provide Feedback
 
 If you have problems with GlassFish Server 7, provide feedback through
 one of the following mechanisms:
@@ -992,8 +953,7 @@ one of the following mechanisms:
 
 [[abphc]][[GSRLN00139]][[additional-resources]]
 
-Additional Resources
-~~~~~~~~~~~~~~~~~~~~
+=== Additional Resources
 
 Useful information can be found at the following locations:
 

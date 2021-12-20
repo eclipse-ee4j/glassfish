@@ -5,13 +5,11 @@ next=disable-secure-admin-principal.html
 prev=disable-secure-admin.html
 ~~~~~~
 
-disable-secure-admin-internal-user
-==================================
+= disable-secure-admin-internal-user
 
 [[disable-secure-admin-internal-user-1]][[GSRFM00122]][[disable-secure-admin-internal-user]]
 
-disable-secure-admin-internal-user
-----------------------------------
+== disable-secure-admin-internal-user
 
 Instructs the {productName} DAS and instances to not use the
 specified admin user to authenticate with each other and to authorize

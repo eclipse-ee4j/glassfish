@@ -5,13 +5,11 @@ next=disable-secure-admin-internal-user.html
 prev=disable-monitoring.html
 ~~~~~~
 
-disable-secure-admin
-====================
+= disable-secure-admin
 
 [[disable-secure-admin-1]][[GSRFM00121]][[disable-secure-admin]]
 
-disable-secure-admin
---------------------
+== disable-secure-admin
 
 Disables secure admin if it is already enabled.
 

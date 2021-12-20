@@ -5,13 +5,11 @@ next=update-file-user.html
 prev=update-connector-security-map.html
 ~~~~~~
 
-update-connector-work-security-map
-==================================
+= update-connector-work-security-map
 
 [[update-connector-work-security-map-1]][[GSRFM00253]][[update-connector-work-security-map]]
 
-update-connector-work-security-map
-----------------------------------
+== update-connector-work-security-map
 
 Modifies a work security map for the specified resource adapter
 

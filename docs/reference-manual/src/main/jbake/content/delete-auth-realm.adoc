@@ -5,13 +5,11 @@ next=delete-cluster.html
 prev=delete-audit-module.html
 ~~~~~~
 
-delete-auth-realm
-=================
+= delete-auth-realm
 
 [[delete-auth-realm-1]][[GSRFM00066]][[delete-auth-realm]]
 
-delete-auth-realm
------------------
+== delete-auth-realm
 
 Removes the named authentication realm
 

@@ -5,13 +5,11 @@ next=list-context-services.html
 prev=list-connector-work-security-maps.html
 ~~~~~~
 
-list-containers
-===============
+= list-containers
 
 [[list-containers-1]][[GSRFM00161]][[list-containers]]
 
-list-containers
----------------
+== list-containers
 
 Lists application containers
 

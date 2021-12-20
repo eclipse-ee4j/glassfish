@@ -5,15 +5,13 @@ next=lifecycle-listeners.html
 prev=java-clients.html
 ~~~~~~
 
-Developing Connectors
-=====================
+= Developing Connectors
 
 [[GSDVG00013]][[bealk]]
 
 
 [[developing-connectors]]
-11 Developing Connectors
-------------------------
+== 11 Developing Connectors
 
 This chapter describes Oracle GlassFish Server support for the Jakarta EE
 Connector Architecture, also known as
@@ -58,8 +56,7 @@ The following topics are addressed here:
 
 [[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
 
-Connector Support in the GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Connector Support in the GlassFish Server
 
 The GlassFish Server supports the development and deployment of resource
 adapters that are compatible with the Connector 1.6 specification (and,
@@ -100,8 +97,7 @@ EIS to the application server.
 
 [[bealm]][[GSDVG00474]][[connector-architecture-for-jms-and-jdbc]]
 
-Connector Architecture for JMS and JDBC
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Connector Architecture for JMS and JDBC
 
 In the Administration Console, connector, JMS, and JDBC resources are
 handled differently, but they use the same underlying Connector
@@ -120,8 +116,7 @@ JDBC API for Database Access].
 
 [[bealn]][[GSDVG00475]][[connector-configuration]]
 
-Connector Configuration
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Connector Configuration
 
 The GlassFish Server does not need to use `sun-ra.xml`, which previous
 GlassFish Server versions used, to store server-specific deployment
@@ -138,8 +133,7 @@ GlassFish Server.
 
 [[bealr]][[GSDVG00163]][[advanced-connector-configuration-options]]
 
-Advanced Connector Configuration Options
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Advanced Connector Configuration Options
 
 The following topics are addressed here:
 
@@ -158,8 +152,7 @@ The following topics are addressed here:
 
 [[beals]][[GSDVG00476]][[thread-associations]]
 
-Thread Associations
-^^^^^^^^^^^^^^^^^^^
+==== Thread Associations
 
 Connectors can submit work instances to the GlassFish Server for
 execution. By default, the GlassFish Server services work requests for
@@ -190,8 +183,7 @@ with the new configuration properties.
 
 [[bealt]][[GSDVG00477]][[security-maps]]
 
-Security Maps
-^^^^^^^^^^^^^
+==== Security Maps
 
 Create a security map for a connector connection pool to map an
 application principal or a user group to a back end EIS principal. The
@@ -223,8 +215,7 @@ back end EIS principal.
 
 [[giqgt]][[GSDVG00478]][[work-security-maps]]
 
-Work Security Maps
-^^^^^^^^^^^^^^^^^^
+==== Work Security Maps
 
 A work security map for a resource adapter maps an EIS principal or
 group to a application principal or group. A work security map is useful
@@ -247,8 +238,7 @@ specification, if any, to determine the application principal.
 
 [[bealu]][[GSDVG00479]][[overriding-configuration-properties]]
 
-Overriding Configuration Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Overriding Configuration Properties
 
 You can override the properties (`config-property` elements) specified
 in the `ra.xml` file of a resource adapter:
@@ -278,8 +268,7 @@ Changes to system properties take effect upon server restart.
 
 [[bealv]][[GSDVG00480]][[testing-a-connector-connection-pool]]
 
-Testing a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Testing a Connector Connection Pool
 
 You can test a connector connection pool for usability in one of these
 ways:
@@ -309,8 +298,7 @@ Reference Manual].
 
 [[gizcv]][[GSDVG00481]][[flushing-a-connector-connection-pool]]
 
-Flushing a Connector Connection Pool
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Flushing a Connector Connection Pool
 
 Flushing a connector connection pool recreates all the connections in
 the pool and brings the pool to the steady pool size without the need
@@ -331,8 +319,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[bealw]][[GSDVG00482]][[handling-invalid-connections]]
 
-Handling Invalid Connections
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Handling Invalid Connections
 
 If a resource adapter generates a `ConnectionErrorOccured` event, the
 GlassFish Server considers the connection invalid and removes the
@@ -384,8 +371,7 @@ connection pool is resized.
 
 [[bealx]][[GSDVG00483]][[setting-the-shutdown-timeout]]
 
-Setting the Shutdown Timeout
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Setting the Shutdown Timeout
 
 According to the Connector specification, while an application server
 shuts down, all resource adapters should be stopped. A resource adapter
@@ -411,8 +397,7 @@ before stopping a resource adapter.
 
 [[gjjyy]][[GSDVG00484]][[specifying-the-class-loading-policy]]
 
-Specifying the Class Loading Policy
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Specifying the Class Loading Policy
 
 Use the `class-loading-policy` setting to determine which resource
 adapters accessible to applications. Allowed values are:
@@ -435,8 +420,7 @@ Reference Manual].
 
 [[bealy]][[GSDVG00485]][[using-last-agent-optimization-of-transactions]]
 
-Using Last Agent Optimization of Transactions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Last Agent Optimization of Transactions
 
 Transactions that involve multiple resources or multiple participant
 processes are distributed or global transactions. A global transaction
@@ -463,8 +447,7 @@ ignored.
 
 [[gizba]][[GSDVG00486]][[disabling-pooling-for-a-connection]]
 
-Disabling Pooling for a Connection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disabling Pooling for a Connection
 
 To disable connection pooling, set the Pooling attribute to false. The
 default is true. You can enable or disable connection pooling in one of
@@ -480,8 +463,7 @@ Reference Manual].
 
 [[gizcs]][[GSDVG00487]][[using-application-scoped-connectors]]
 
-Using Application-Scoped Connectors
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Application-Scoped Connectors
 
 You can define an application-scoped connector or other resource for an
 enterprise application, web module, EJB module, connector module, or
@@ -492,8 +474,7 @@ Open Source Edition Application Deployment Guide.
 
 [[bealz]][[GSDVG00164]][[inbound-communication-support]]
 
-Inbound Communication Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Inbound Communication Support
 
 The Connector specification defines the transaction and message inflow
 system contracts for achieving inbound connectivity from an EIS. The
@@ -533,8 +514,7 @@ Java Message Service].
 
 [[gizdm]][[GSDVG00165]][[outbound-communication-support]]
 
-Outbound Communication Support
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Outbound Communication Support
 
 The Connector specification defines the system contracts for achieving
 outbound connectivity from an EIS. A resource adapter supporting
@@ -559,8 +539,7 @@ Console.
 
 [[beama]][[GSDVG00166]][[configuring-a-message-driven-bean-to-use-a-resource-adapter]]
 
-Configuring a Message Driven Bean to Use a Resource Adapter
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring a Message Driven Bean to Use a Resource Adapter
 
 The Connectors specification's message inflow contract provides a
 generic mechanism to plug in a wide-range of message providers,

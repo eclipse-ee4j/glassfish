@@ -5,13 +5,11 @@ next=delete-connector-resource.html
 prev=delete-config.html
 ~~~~~~
 
-delete-connector-connection-pool
-================================
+= delete-connector-connection-pool
 
 [[delete-connector-connection-pool-1]][[GSRFM00070]][[delete-connector-connection-pool]]
 
-delete-connector-connection-pool
---------------------------------
+== delete-connector-connection-pool
 
 Removes the specified connector connection pool
 

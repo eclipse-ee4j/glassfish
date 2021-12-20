@@ -5,13 +5,11 @@ next=delete-jms-host.html
 prev=delete-jdbc-resource.html
 ~~~~~~
 
-delete-jmsdest
-==============
+= delete-jmsdest
 
 [[delete-jmsdest-1]][[GSRFM00090]][[delete-jmsdest]]
 
-delete-jmsdest
---------------
+== delete-jmsdest
 
 Removes a JMS physical destination
 

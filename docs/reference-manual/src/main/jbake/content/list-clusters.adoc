@@ -5,13 +5,11 @@ next=list-commands.html
 prev=list-batch-runtime-configuration.html
 ~~~~~~
 
-list-clusters
-=============
+= list-clusters
 
 [[list-clusters-1]][[GSRFM00153]][[list-clusters]]
 
-list-clusters
--------------
+== list-clusters
 
 Lists existing clusters in a domain
 

@@ -5,13 +5,11 @@ next=enable-monitoring.html
 prev=enable-http-lb-application.html
 ~~~~~~
 
-enable-http-lb-server
-=====================
+= enable-http-lb-server
 
 [[enable-http-lb-server-1]][[GSRFM00127]][[enable-http-lb-server]]
 
-enable-http-lb-server
----------------------
+== enable-http-lb-server
 
 Enables a previously disabled sever or cluster managed by a load
 balancer

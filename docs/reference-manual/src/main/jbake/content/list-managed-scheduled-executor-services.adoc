@@ -5,13 +5,11 @@ next=list-managed-thread-factories.html
 prev=list-managed-executor-services.html
 ~~~~~~
 
-list-managed-scheduled-executor-services
-========================================
+= list-managed-scheduled-executor-services
 
 [[list-managed-scheduled-executor-services-1]][[GSRFM873]][[list-managed-scheduled-executor-services]]
 
-list-managed-scheduled-executor-services
-----------------------------------------
+== list-managed-scheduled-executor-services
 
 Lists managed scheduled executor service resources
 

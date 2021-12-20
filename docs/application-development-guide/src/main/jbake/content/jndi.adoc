@@ -5,15 +5,13 @@ next=jms.html
 prev=transaction-service.html
 ~~~~~~
 
-Using the Java Naming and Directory Interface
-=============================================
+= Using the Java Naming and Directory Interface
 
 [[GSDVG00019]][[beanr]]
 
 
 [[using-the-java-naming-and-directory-interface]]
-16 Using the Java Naming and Directory Interface
-------------------------------------------------
+== 16 Using the Java Naming and Directory Interface
 
 A naming service maintains a set of bindings, which relate names to
 objects. The Jakarta EE naming service is based on the Java Naming and
@@ -44,8 +42,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 [[beans]][[GSDVG00192]][[accessing-the-naming-context]]
 
-Accessing the Naming Context
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Accessing the Naming Context
 
 The Oracle GlassFish Server provides a naming environment, or context,
 which is compliant with standard Jakarta EE requirements. A `Context`
@@ -81,8 +78,7 @@ have the same name.
 
 [[BGBJGGAD]][[GSDVG560]][[portable-global-jndi-names]]
 
-Portable Global JNDI Names
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Portable Global JNDI Names
 
 If an EJB component is a kind of session bean and it is deployed to any
 implementation supporting the EJB 3.1specification (for example,
@@ -107,8 +103,7 @@ link:#gkndi[Disabling GlassFish Server V2 JNDI Names].
 
 [[gcjkd]][[GSDVG00519]][[glassfish-server-v2-vendor-specific-global-jndi-names]]
 
-GlassFish Server V2 Vendor-Specific Global JNDI Names
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server V2 Vendor-Specific Global JNDI Names
 
 GlassFish Server v2 vendor-specific global JNDI names are assigned
 according to the following precedence rules:
@@ -154,8 +149,7 @@ name is `jdbc/Foo`.
 
 [[gkndi]][[GSDVG00526]][[disabling-glassfish-server-v2-jndi-names]]
 
-Disabling GlassFish Server V2 JNDI Names
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disabling GlassFish Server V2 JNDI Names
 
 The EJB 3.1 specification supported by GlassFish Server 7 defines
 portable EJB JNDI names for session beans. Because of this, there is
@@ -192,8 +186,7 @@ server.
 
 [[beanu]][[GSDVG00520]][[accessing-ejb-components-using-the-cosnaming-naming-context]]
 
-Accessing EJB Components Using the `CosNaming` Naming Context
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Accessing EJB Components Using the `CosNaming` Naming Context
 
 The preferred way of accessing the naming service, even in code that
 runs outside of a Jakarta EE container, is to use the no-argument
@@ -231,8 +224,7 @@ The property is not cluster-aware.
 
 [[beanv]][[GSDVG00521]][[accessing-ejb-components-in-a-remote-glassfish-server]]
 
-Accessing EJB Components in a Remote GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Accessing EJB Components in a Remote GlassFish Server
 
 The recommended approach for looking up an EJB component in a remote
 GlassFish Server from a client that is a servlet or EJB component is to
@@ -295,8 +287,7 @@ re-bound to the namespace.
 
 [[beanw]][[GSDVG00522]][[naming-environment-for-lifecycle-modules]]
 
-Naming Environment for Lifecycle Modules
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Naming Environment for Lifecycle Modules
 
 Lifecycle listener modules provide a means of running short or long
 duration tasks based on Java technology within the GlassFish Server
@@ -316,8 +307,7 @@ server life cycle events.
 
 [[beanx]][[GSDVG00193]][[configuring-resources]]
 
-Configuring Resources
-~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Resources
 
 The GlassFish Server exposes special resources in the naming
 environment.
@@ -329,8 +319,7 @@ environment.
 
 [[beany]][[GSDVG00523]][[external-jndi-resources]]
 
-External JNDI Resources
-^^^^^^^^^^^^^^^^^^^^^^^
+==== External JNDI Resources
 
 An external JNDI resource defines custom JNDI contexts and implements
 the javax.naming.spi.InitialContextFactory interface. There is no
@@ -349,8 +338,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[beanz]][[GSDVG00524]][[custom-resources]]
 
-Custom Resources
-^^^^^^^^^^^^^^^^
+==== Custom Resources
 
 A custom resource specifies a custom server-wide resource object factory
 that implements the javax.naming.spi.ObjectFactory interface. There is
@@ -369,8 +357,7 @@ Edition Reference Manual].
 
 [[giyvw]][[GSDVG00525]][[built-in-factories-for-custom-resources]]
 
-Built-in Factories for Custom Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Built-in Factories for Custom Resources
 
 The GlassFish Server provides built-in factories for the following types
 of custom resources:
@@ -389,8 +376,7 @@ Guide].
 
 [[giywi]][[GSDVG00329]][[javabeanfactory]]
 
-JavaBeanFactory
-+++++++++++++++
+===== JavaBeanFactory
 
 To create a custom resource that provides instances of a JavaBean class,
 follow these steps:
@@ -409,8 +395,7 @@ directory.
 
 [[giysn]][[GSDVG00330]][[propertiesfactory]]
 
-PropertiesFactory
-+++++++++++++++++
+===== PropertiesFactory
 
 To create a custom resource that provides properties to applications,
 set the custom resource's factory class to
@@ -438,8 +423,7 @@ takes precedence.
 
 [[giytz]][[GSDVG00331]][[primitivesandstringfactory]]
 
-PrimitivesAndStringFactory
-++++++++++++++++++++++++++
+===== PrimitivesAndStringFactory
 
 To create a custom resource that provides Java primitives to
 applications, follow these steps:
@@ -465,8 +449,7 @@ create a property with the name `value` and the value `22.1`.
 
 [[giywh]][[GSDVG00332]][[urlfactory]]
 
-URLFactory
-++++++++++
+===== URLFactory
 
 To create a custom resource that provides URL instances to applications,
 follow these steps:
@@ -488,8 +471,7 @@ the value of the entire URL.
 
 [[gkpdn]][[GSDVG00527]][[using-application-scoped-resources]]
 
-Using Application-Scoped Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Application-Scoped Resources
 
 You can define an application-scoped JNDI or other resource for an
 enterprise application, web module, EJB module, connector module, or
@@ -500,8 +482,7 @@ Open Source Edition Application Deployment Guide.
 
 [[gcpge]][[GSDVG00194]][[using-a-custom-jndi.properties-file]]
 
-Using a Custom `jndi.properties` File
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using a Custom `jndi.properties` File
 
 To use a custom `jndi.properties` file, JAR it and place it in the
 domain-dir`/lib` directory. This adds the custom `jndi.properties` file
@@ -514,8 +495,7 @@ all of the values, whichever makes sense.
 
 [[beaoa]][[GSDVG00195]][[mapping-references]]
 
-Mapping References
-~~~~~~~~~~~~~~~~~~
+=== Mapping References
 
 The following XML elements in the GlassFish Server deployment
 descriptors map resource references in application client, EJB, and web

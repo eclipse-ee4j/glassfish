@@ -5,13 +5,11 @@ next=disable-http-lb-server.html
 prev=disable.html
 ~~~~~~
 
-disable-http-lb-application
-===========================
+= disable-http-lb-application
 
 [[disable-http-lb-application-1]][[GSRFM00118]][[disable-http-lb-application]]
 
-disable-http-lb-application
----------------------------
+== disable-http-lb-application
 
 Disables an application managed by a load balancer
 

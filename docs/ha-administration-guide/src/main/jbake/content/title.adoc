@@ -5,12 +5,10 @@ next=preface.html
 prev=loe.html
 ~~~~~~
 
-Eclipse GlassFish Server High Availability Administration Guide, Release 7
-==========================================================================
+= Eclipse GlassFish Server High Availability Administration Guide, Release 7
 
 [[eclipse-glassfish-server]]
-Eclipse GlassFish Server
-------------------------
+== Eclipse GlassFish Server
 
 High Availability Administration Guide
 

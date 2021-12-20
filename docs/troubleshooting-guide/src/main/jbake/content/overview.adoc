@@ -5,15 +5,13 @@ next=specific-issues.html
 prev=preface.html
 ~~~~~~
 
-Overview of Eclipse GlassFish Server Troubleshooting
-====================================================
+= Overview of Eclipse GlassFish Server Troubleshooting
 
 [[GSTSG00002]][[abgap]]
 
 
 [[overview-of-glassfish-server-open-source-edition-troubleshooting]]
-1 Overview of Eclipse GlassFish Server Troubleshooting
-------------------------------------------------------
+== 1 Overview of Eclipse GlassFish Server Troubleshooting
 
 This chapter describes some of the tools, methods, and resources
 available for troubleshooting Eclipse GlassFish Server.
@@ -27,8 +25,7 @@ This chapter contains the following sections:
 
 [[abgar]][[GSTSG00039]][[identifying-the-problem]]
 
-Identifying the Problem
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Identifying the Problem
 
 Application servers are typically deployed in complex operating
 environments and involve many technologies, products, and tools.
@@ -43,16 +40,14 @@ describes how to get started , and contains the following topics:
 
 [[ghvay]][[GSTSG00171]][[first-steps]]
 
-First Steps
-^^^^^^^^^^^
+==== First Steps
 
 Sometimes the most obvious solutions are overlooked. As you begin your
 investigation, try the following steps first.
 
 [[ghyku]][[GSTSG00077]][[verify-system-requirements-and-configuration]]
 
-Verify System Requirements and Configuration
-++++++++++++++++++++++++++++++++++++++++++++
+===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
 "link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
@@ -91,8 +86,7 @@ supported JDK version.
 
 [[ghyml]][[GSTSG00078]][[review-known-issues]]
 
-Review Known Issues
-+++++++++++++++++++
+===== Review Known Issues
 
 Your problem might be related to a known issue for the release. Refer to
 the link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release Notes] for
@@ -102,8 +96,7 @@ Also search the GlassFish Issue Tracker at
 
 [[ghykl]][[GSTSG00079]][[search-the-product-documentation]]
 
-Search the Product Documentation
-++++++++++++++++++++++++++++++++
+===== Search the Product Documentation
 
 Eclipse GlassFish Server includes complete product
 documentation. Search the documentation to see if your problem is
@@ -127,8 +120,7 @@ be to figure out why something isn't working.
 
 [[ghymp]][[GSTSG00080]][[search-the-glassfish-mailing-lists-and-forums]]
 
-Search the GlassFish Mailing Lists and Forums
-+++++++++++++++++++++++++++++++++++++++++++++
+===== Search the GlassFish Mailing Lists and Forums
 
 Lists and forums are extremely helpful resources, and are accessed as follows:
 
@@ -138,8 +130,7 @@ Lists and forums are extremely helpful resources, and are accessed as follows:
 
 [[ghuvf]][[GSTSG00172]][[gathering-information]]
 
-Gathering Information
-^^^^^^^^^^^^^^^^^^^^^
+==== Gathering Information
 
 Troubleshooting and analysis require information. The more information
 you have the easier it is to classify a problem and search for its
@@ -151,8 +142,7 @@ As you continue your investigation, consider the following questions.
 
 [[ghvar]][[GSTSG00081]][[when-does-the-problem-occur]]
 
-When Does the Problem Occur?
-++++++++++++++++++++++++++++
+===== When Does the Problem Occur?
 
 * What do the logs show? What kind of error message are you getting? For
 more information about logs, see link:#abgax[Examining Log Files]. Logs
@@ -168,8 +158,7 @@ undeployed?
 
 [[ghvbb]][[GSTSG00082]][[what-is-your-environment]]
 
-What Is Your Environment?
-+++++++++++++++++++++++++
+===== What Is Your Environment?
 
 * What version of Eclipse GlassFish Server are you using?
 What operating system and version? What JDK version? Many problems are
@@ -195,8 +184,7 @@ server?
 
 [[ghvce]][[GSTSG00083]][[what-is-your-system-configuration]]
 
-What Is Your System Configuration?
-++++++++++++++++++++++++++++++++++
+===== What Is Your System Configuration?
 
 * What are your settings?
 * On which port is Eclipse GlassFish Server configured — the
@@ -217,8 +205,7 @@ happens if you disable your firewall and attempt the task?
 
 [[ghvcr]][[GSTSG00084]][[what-is-different]]
 
-What Is Different?
-++++++++++++++++++
+===== What Is Different?
 
 * What is different that could have provoked the problem or triggered
 the event? Was something new added or changed? Have any new applications
@@ -231,8 +218,7 @@ environment?
 
 [[abgax]][[GSTSG00173]][[examining-log-files]]
 
-Examining Log Files
-^^^^^^^^^^^^^^^^^^^
+==== Examining Log Files
 
 Logging is one of your most important troubleshooting tools. It is the
 process by which Eclipse GlassFish Server captures data
@@ -289,8 +275,7 @@ Server Open Source Edition Administration Guide.
 
 [[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
 
-Monitoring the System
-^^^^^^^^^^^^^^^^^^^^^
+==== Monitoring the System
 
 Monitoring is another helpful tool. It is the process of reviewing the
 statistics of a system to improve performance or solve problems. By
@@ -304,8 +289,7 @@ Server Open Source Edition Administration Guide.
 
 [[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
 
-Troubleshooting Tools
-~~~~~~~~~~~~~~~~~~~~~
+=== Troubleshooting Tools
 
 Several tools are available that can be used to collect information for
 troubleshooting purposes. This section provides basic information about
@@ -318,8 +302,7 @@ some of them, and includes the following:
 
 [[ghvcm]][[GSTSG00175]][[operating-system-utilities]]
 
-Operating System Utilities
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Operating System Utilities
 
 Operating system utilities, such as `pkginfo` and `showrev` on Solaris
 and `rpm` on Linux, are helpful in gathering system information.
@@ -329,8 +312,7 @@ are running, including their process identification numbers (PIDs).
 
 [[ghvbo]][[GSTSG00176]][[stack-traces-and-thread-dumps]]
 
-Stack Traces and Thread Dumps
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Stack Traces and Thread Dumps
 
 A stack trace is a user-friendly snapshot of the threads and monitors in
 a Virtual Machine for the Java platform (Java Virtual Machine or JVM
@@ -348,8 +330,7 @@ Introduction to Java Stack Traces]"
 
 [[ghykr]][[GSTSG00023]][[to-obtain-a-server-thread-dump]]
 
-To Obtain a Server Thread Dump
-++++++++++++++++++++++++++++++
+===== To Obtain a Server Thread Dump
 
 Type the following command:
 
@@ -366,8 +347,7 @@ link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-repor
 
 [[ghyjq]][[GSTSG00177]][[visualvm]]
 
-VisualVM
-^^^^^^^^
+==== VisualVM
 
 VisualVM is a Java troubleshooting tool that uses various technologies
 such as `jvmstat`, JMX, and Attach API to access monitored applications.
@@ -389,8 +369,7 @@ more information about VisualVM, see `http://visualvm.java.net`.
 
 [[gjjjl]][[GSTSG00178]][[jvm-command-line-tools]]
 
-JVM Command-Line Tools
-^^^^^^^^^^^^^^^^^^^^^^
+==== JVM Command-Line Tools
 
 JVM command-line tools can be used to provide valuable information about
 hung Java processes or Java core dumps. These tools include the
@@ -411,8 +390,7 @@ attach to the server using Java Remote Invocation Method (RMI).
 
 [[ghuyv]][[GSTSG00041]][[where-to-go-for-more-information]]
 
-Where to Go for More Information
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Where to Go for More Information
 
 These resources were mentioned throughout this chapter and are provided
 again here for easy reference.

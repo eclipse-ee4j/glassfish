@@ -5,13 +5,11 @@ next=update-password-alias.html
 prev=update-node-dcom.html
 ~~~~~~
 
-update-node-ssh
-===============
+= update-node-ssh
 
 [[update-node-ssh-1]][[GSRFM00256]][[update-node-ssh]]
 
-update-node-ssh
----------------
+== update-node-ssh
 
 Updates the configuration data of a node
 

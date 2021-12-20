@@ -5,13 +5,11 @@ next=create-transport.html
 prev=create-system-properties.html
 ~~~~~~
 
-create-threadpool
-=================
+= create-threadpool
 
 [[create-threadpool-1]][[GSRFM00060]][[create-threadpool]]
 
-create-threadpool
------------------
+== create-threadpool
 
 Adds a thread pool
 

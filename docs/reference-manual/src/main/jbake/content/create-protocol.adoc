@@ -5,13 +5,11 @@ next=create-protocol-filter.html
 prev=create-profiler.html
 ~~~~~~
 
-create-protocol
-===============
+= create-protocol
 
 [[create-protocol-1]][[GSRFM00051]][[create-protocol]]
 
-create-protocol
----------------
+== create-protocol
 
 Adds a new protocol
 

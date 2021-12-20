@@ -5,12 +5,10 @@ next=lot.html
 prev=loe.html
 ~~~~~~
 
-List of Figures
-===============
+= List of Figures
 
 [[list-of-figures]]
-List of Figures
----------------
+== List of Figures
 
 * link:general-administration.html#gjjce[2-1 Web Page for the REST
 Resource for Managing a Domain]

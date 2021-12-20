@@ -5,13 +5,11 @@ next=list-javamail-resources.html
 prev=list-instances.html
 ~~~~~~
 
-list-jacc-providers
-===================
+= list-jacc-providers
 
 [[list-jacc-providers-1]][[GSRFM00171]][[list-jacc-providers]]
 
-list-jacc-providers
--------------------
+== list-jacc-providers
 
 Enables administrators to list JACC providers defined for a domain
 

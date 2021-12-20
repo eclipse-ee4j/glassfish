@@ -5,13 +5,11 @@ next=create-http-redirect.html
 prev=create-http-lb-ref.html
 ~~~~~~
 
-create-http-listener
-====================
+= create-http-listener
 
 [[create-http-listener-1]][[GSRFM00030]][[create-http-listener]]
 
-create-http-listener
---------------------
+== create-http-listener
 
 Adds a new HTTP network listener socket
 

@@ -5,13 +5,11 @@ next=add-resources.html
 prev=manvol1.html
 ~~~~~~
 
-add-library
-===========
+= add-library
 
 [[add-library-1]][[GSRFM00818]][[add-library]]
 
-add-library
------------
+== add-library
 
 Adds one or more library JAR files to {productName}
 

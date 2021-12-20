@@ -5,13 +5,11 @@ next=basic-features.html
 prev=title.html
 ~~~~~~
 
-Preface
-=======
+= Preface
 
 [[gkamj]][[preface]]
 
-Preface
--------
+== Preface
 
 [NOTE]
 ====
@@ -53,8 +51,7 @@ The following topics are addressed here:
 
 [[ghpbz]][[glassfish-server-documentation-set]]
 
-GlassFish Server Documentation Set
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Documentation Set
 
 The GlassFish Server documentation set describes deployment planning and
 system installation. For an introduction to GlassFish Server, refer to
@@ -156,8 +153,7 @@ messages.
 
 [[fwbkx]][[typographic-conventions]]
 
-Typographic Conventions
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Typographic Conventions
 
 The following table describes the typographic changes that are used in
 this book.
@@ -194,8 +190,7 @@ Do not save the file.
 
 [[fquvc]][[symbol-conventions]]
 
-Symbol Conventions
-~~~~~~~~~~~~~~~~~~
+=== Symbol Conventions
 
 The following table explains symbols that might be used in this book.
 

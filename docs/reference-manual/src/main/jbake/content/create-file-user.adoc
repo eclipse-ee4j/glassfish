@@ -5,13 +5,11 @@ next=create-http.html
 prev=create-domain.html
 ~~~~~~
 
-create-file-user
-================
+= create-file-user
 
 [[create-file-user-1]][[GSRFM00024]][[create-file-user]]
 
-create-file-user
-----------------
+== create-file-user
 
 Creates a new file user
 

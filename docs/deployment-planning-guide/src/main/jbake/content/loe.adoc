@@ -5,12 +5,10 @@ next=lot.html
 prev=toc.html
 ~~~~~~
 
-List of Examples
-================
+= List of Examples
 
 [[list-of-examples]]
-List of Examples
-----------------
+== List of Examples
 
 * link:planning.html#fygam[2-1 Calculation of Response Time]
 * link:planning.html#fygaj[2-2 Calculation of Requests Per Second]

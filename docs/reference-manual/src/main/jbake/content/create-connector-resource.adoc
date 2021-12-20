@@ -5,13 +5,11 @@ next=create-connector-security-map.html
 prev=create-connector-connection-pool.html
 ~~~~~~
 
-create-connector-resource
-=========================
+= create-connector-resource
 
 [[create-connector-resource-1]][[GSRFM00019]][[create-connector-resource]]
 
-create-connector-resource
--------------------------
+== create-connector-resource
 
 Registers the connector resource with the specified JNDI name
 

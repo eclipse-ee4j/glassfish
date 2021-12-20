@@ -5,13 +5,11 @@ next=set-log-file-format.html
 prev=set-batch-runtime-configuration.html
 ~~~~~~
 
-set-log-attributes
-==================
+= set-log-attributes
 
 [[set-log-attributes-1]][[GSRFM00227]][[set-log-attributes]]
 
-set-log-attributes
-------------------
+== set-log-attributes
 
 Sets the logging attributes for one or more loggers
 

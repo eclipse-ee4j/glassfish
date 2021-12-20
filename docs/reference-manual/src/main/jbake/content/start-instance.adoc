@@ -5,13 +5,11 @@ next=start-local-instance.html
 prev=start-domain.html
 ~~~~~~
 
-start-instance
-==============
+= start-instance
 
 [[start-instance-1]][[GSRFM00236]][[start-instance]]
 
-start-instance
---------------
+== start-instance
 
 Starts a {productName} instance
 

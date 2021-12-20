@@ -5,13 +5,11 @@ next=create-http-lb.html
 prev=create-http.html
 ~~~~~~
 
-create-http-health-checker
-==========================
+= create-http-health-checker
 
 [[create-http-health-checker-1]][[GSRFM00026]][[create-http-health-checker]]
 
-create-http-health-checker
---------------------------
+== create-http-health-checker
 
 Creates a health-checker for a specified load balancer configuration
 

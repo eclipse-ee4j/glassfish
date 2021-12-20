@@ -5,13 +5,11 @@ next=jms-ping.html
 prev=install-node-dcom.html
 ~~~~~~
 
-install-node-ssh
-================
+= install-node-ssh
 
 [[install-node-ssh-1]][[GSRFM628]][[install-node-ssh]]
 
-install-node-ssh
-----------------
+== install-node-ssh
 
 Installs {productName} software on specified SSH-enabled hosts
 

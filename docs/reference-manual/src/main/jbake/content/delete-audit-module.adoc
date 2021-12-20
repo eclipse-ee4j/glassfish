@@ -5,13 +5,11 @@ next=delete-auth-realm.html
 prev=delete-application-ref.html
 ~~~~~~
 
-delete-audit-module
-===================
+= delete-audit-module
 
 [[delete-audit-module-1]][[GSRFM00065]][[delete-audit-module]]
 
-delete-audit-module
--------------------
+== delete-audit-module
 
 Removes the named audit-module
 

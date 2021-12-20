@@ -5,13 +5,11 @@ next=start-instance.html
 prev=start-database.html
 ~~~~~~
 
-start-domain
-============
+= start-domain
 
 [[start-domain-1]][[GSRFM00235]][[start-domain]]
 
-start-domain
-------------
+== start-domain
 
 Starts the DAS of the specified domain
 

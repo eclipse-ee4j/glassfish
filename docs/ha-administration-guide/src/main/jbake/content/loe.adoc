@@ -5,12 +5,10 @@ next=title.html
 prev=toc.html
 ~~~~~~
 
-List of Examples
-================
+= List of Examples
 
 [[list-of-examples]]
-List of Examples
-----------------
+== List of Examples
 
 * link:ssh-setup.html#sthref7[2-1 Creating an Alias for the Windows
 User's Password]

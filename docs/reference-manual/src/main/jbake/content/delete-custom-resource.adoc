@@ -5,13 +5,11 @@ next=delete-domain.html
 prev=delete-context-service.html
 ~~~~~~
 
-delete-custom-resource
-======================
+= delete-custom-resource
 
 [[delete-custom-resource-1]][[GSRFM00074]][[delete-custom-resource]]
 
-delete-custom-resource
-----------------------
+== delete-custom-resource
 
 Removes a custom resource
 

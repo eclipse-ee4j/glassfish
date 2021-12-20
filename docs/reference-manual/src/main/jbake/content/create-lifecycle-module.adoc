@@ -5,13 +5,11 @@ next=create-local-instance.html
 prev=create-jvm-options.html
 ~~~~~~
 
-create-lifecycle-module
-=======================
+= create-lifecycle-module
 
 [[create-lifecycle-module-1]][[GSRFM00043]][[create-lifecycle-module]]
 
-create-lifecycle-module
------------------------
+== create-lifecycle-module
 
 Creates a lifecycle module
 

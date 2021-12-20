@@ -5,13 +5,11 @@ next=set.html
 prev=rollback-transaction.html
 ~~~~~~
 
-rotate-log
-==========
+= rotate-log
 
 [[rotate-log-1]][[GSRFM00224]][[rotate-log]]
 
-rotate-log
-----------
+== rotate-log
 
 Rotates the log file
 

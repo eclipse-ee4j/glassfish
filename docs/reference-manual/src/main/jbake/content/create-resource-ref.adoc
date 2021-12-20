@@ -5,13 +5,11 @@ next=create-service.html
 prev=create-resource-adapter-config.html
 ~~~~~~
 
-create-resource-ref
-===================
+= create-resource-ref
 
 [[create-resource-ref-1]][[GSRFM00055]][[create-resource-ref]]
 
-create-resource-ref
--------------------
+== create-resource-ref
 
 Creates a reference to a resource
 

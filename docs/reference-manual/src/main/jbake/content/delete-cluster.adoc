@@ -5,13 +5,11 @@ next=delete-config.html
 prev=delete-auth-realm.html
 ~~~~~~
 
-delete-cluster
-==============
+= delete-cluster
 
 [[delete-cluster-1]][[GSRFM00068]][[delete-cluster]]
 
-delete-cluster
---------------
+== delete-cluster
 
 Deletes a {productName} cluster
 

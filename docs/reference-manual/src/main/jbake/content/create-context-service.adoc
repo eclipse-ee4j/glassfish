@@ -5,13 +5,11 @@ next=create-custom-resource.html
 prev=create-connector-work-security-map.html
 ~~~~~~
 
-create-context-service
-======================
+= create-context-service
 
 [[create-context-service-1]][[GSRFM838]][[create-context-service]]
 
-create-context-service
-----------------------
+== create-context-service
 
 Creates a context service resource
 

@@ -5,13 +5,11 @@ next=list-log-attributes.html
 prev=list-libraries.html
 ~~~~~~
 
-list-lifecycle-modules
-======================
+= list-lifecycle-modules
 
 [[list-lifecycle-modules-1]][[GSRFM00181]][[list-lifecycle-modules]]
 
-list-lifecycle-modules
-----------------------
+== list-lifecycle-modules
 
 Lists the lifecycle modules
 

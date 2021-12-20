@@ -5,13 +5,11 @@ next=configure-managed-jobs.html
 prev=configure-lb-weight.html
 ~~~~~~
 
-configure-ldap-for-admin
-========================
+= configure-ldap-for-admin
 
 [[configure-ldap-for-admin-1]][[GSRFM00010]][[configure-ldap-for-admin]]
 
-configure-ldap-for-admin
-------------------------
+== configure-ldap-for-admin
 
 Configures the authentication realm named admin-realm for the given LDAP
 

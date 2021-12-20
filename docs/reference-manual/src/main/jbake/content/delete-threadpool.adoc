@@ -5,13 +5,11 @@ next=delete-transport.html
 prev=delete-system-property.html
 ~~~~~~
 
-delete-threadpool
-=================
+= delete-threadpool
 
 [[delete-threadpool-1]][[GSRFM00111]][[delete-threadpool]]
 
-delete-threadpool
------------------
+== delete-threadpool
 
 Removes a thread pool
 

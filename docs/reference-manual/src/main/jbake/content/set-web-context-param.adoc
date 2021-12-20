@@ -5,13 +5,11 @@ next=set-web-env-entry.html
 prev=setup-ssh.html
 ~~~~~~
 
-set-web-context-param
-=====================
+= set-web-context-param
 
 [[set-web-context-param-1]][[GSRFM00230]][[set-web-context-param]]
 
-set-web-context-param
----------------------
+== set-web-context-param
 
 Sets a servlet context-initialization parameter of a deployed web
 application or module

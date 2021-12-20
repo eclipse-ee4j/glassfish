@@ -5,13 +5,11 @@ next=manvol1m.html
 prev=verify-domain-xml.html
 ~~~~~~
 
-version
-=======
+= version
 
 [[version-1]][[GSRFM00261]][[version]]
 
-version
--------
+== version
 
 Displays version information for{productName}
 

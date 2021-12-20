@@ -5,12 +5,10 @@ next=preface.html
 prev=lot.html
 ~~~~~~
 
-Eclipse GlassFish Server Embedded Server Guide, Release 7
-=========================================================
+= Eclipse GlassFish Server Embedded Server Guide, Release 7
 
 [[eclipse-glassfish-server]]
-Eclipse GlassFish Server
-------------------------
+== Eclipse GlassFish Server
 
 Embedded Server Guide
 

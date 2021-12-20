@@ -5,13 +5,11 @@ next=restart-local-instance.html
 prev=restart-domain.html
 ~~~~~~
 
-restart-instance
-================
+= restart-instance
 
 [[restart-instance-1]][[GSRFM00219]][[restart-instance]]
 
-restart-instance
-----------------
+== restart-instance
 
 Restarts a running {productName} instance
 

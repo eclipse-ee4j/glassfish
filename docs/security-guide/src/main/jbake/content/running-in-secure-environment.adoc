@@ -4,15 +4,13 @@ title=Running in a Secure Environment
 prev=administrative-security.html
 ~~~~~~
 
-Running in a Secure Environment
-===============================
+= Running in a Secure Environment
 
 [[GSSCG00040]][[gkscr]]
 
 
 [[running-in-a-secure-environment]]
-6 Running in a Secure Environment
----------------------------------
+== 6 Running in a Secure Environment
 
 This chapter describes important information about running GlassFish
 Server in a secure environment.
@@ -36,8 +34,7 @@ The chapter describes the following topics:
 
 [[gksbk]][[GSSCG00169]][[determining-your-security-needs]]
 
-Determining Your Security Needs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Determining Your Security Needs
 
 Before you deploy GlassFish Server and your Jakarta EE applications into a
 production environment, determine your security needs and make sure that
@@ -49,8 +46,7 @@ following sections:
 
 [[gkscs]][[GSSCG00237]][[understand-your-environment]]
 
-Understand Your Environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Understand Your Environment
 
 To better understand your security needs, ask yourself the following
 questions:
@@ -87,8 +83,7 @@ See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
 
 [[GSSCG00239]][[read-security-publications]]
 
-Read Security Publications
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Read Security Publications
 
 Read about security issues:
 
@@ -99,8 +94,7 @@ at `http://www.cert.org/`.
 
 [[gksbw]][[GSSCG00170]][[installing-glassfish-server-in-a-secure-environment]]
 
-Installing GlassFish Server in a Secure Environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Installing GlassFish Server in a Secure Environment
 
 This section describes recommendations for installing GlassFish Server
 in a secure environment. The link:#gkscn[Enable the Secure
@@ -108,8 +102,7 @@ Administration Feature] topic is described.
 
 [[gkscn]][[GSSCG00240]][[enable-the-secure-administration-feature]]
 
-Enable the Secure Administration Feature
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enable the Secure Administration Feature
 
 The secure administration feature allows an administrator to secure all
 administrative communication between the domain administration server
@@ -130,8 +123,7 @@ Security] for information on enabling the secure administration feature.
 
 [[gksby]][[GSSCG00172]][[run-on-the-web-profile-if-possible]]
 
-Run on the Web Profile if Possible
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Run on the Web Profile if Possible
 
 If your applications can run on the Web Profile, use that instead of the
 Full Platform.
@@ -157,8 +149,7 @@ in GlassFish Server Open Source Edition Release Notes.
 
 [[gksct]][[GSSCG00173]][[securing-the-glassfish-server-host]]
 
-Securing the GlassFish Server Host
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Securing the GlassFish Server Host
 
 A GlassFish Server production environment is only as secure as the
 security of the machine on which it is running. It is important that you
@@ -345,8 +336,7 @@ and critical patch updates.
 
 [[gksca]][[GSSCG00174]][[securing-glassfish-server]]
 
-Securing GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Securing GlassFish Server
 
 GlassFish Server provides a powerful and flexible set of software tools
 for securing the subsystems and applications that run on a server
@@ -477,8 +467,7 @@ should set a password for admin.
 
 [[gksbf]][[GSSCG00175]][[securing-applications]]
 
-Securing Applications
-~~~~~~~~~~~~~~~~~~~~~
+=== Securing Applications
 
 Although much of the responsibility for securing the GlassFish Server
 resources in a domain fall within the scope of the server, some security

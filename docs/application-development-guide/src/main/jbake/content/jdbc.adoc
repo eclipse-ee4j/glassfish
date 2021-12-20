@@ -5,15 +5,13 @@ next=transaction-service.html
 prev=part-services-and-apis.html
 ~~~~~~
 
-Using the JDBC API for Database Access
-======================================
+= Using the JDBC API for Database Access
 
 [[GSDVG00017]][[beamj]]
 
 
 [[using-the-jdbc-api-for-database-access]]
-14 Using the JDBC API for Database Access
------------------------------------------
+== 14 Using the JDBC API for Database Access
 
 This chapter describes how to use the Java Database Connectivity (JDBC)
 API for database access with the Oracle GlassFish Server. This chapter
@@ -46,8 +44,7 @@ The following topics are addressed here:
 
 [[giyck]][[GSDVG00182]][[statements]]
 
-Statements
-~~~~~~~~~~
+=== Statements
 
 The following topics are addressed here:
 
@@ -59,8 +56,7 @@ The following topics are addressed here:
 
 [[giyfu]][[GSDVG00495]][[using-an-initialization-statement]]
 
-Using an Initialization Statement
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using an Initialization Statement
 
 You can specify a statement that executes each time a physical
 connection to the database is created (not reused) from a JDBC
@@ -87,8 +83,7 @@ Edition Reference Manual].
 
 [[ghqrx]][[GSDVG00496]][[setting-a-statement-timeout]]
 
-Setting a Statement Timeout
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Setting a Statement Timeout
 
 An abnormally long running JDBC query executed by an application may
 leave it in a hanging state unless a timeout is explicitly set on the
@@ -110,8 +105,7 @@ the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 
 [[gktbf]][[GSDVG00497]][[statement-leak-detection-and-leaked-statement-reclamation]]
 
-Statement Leak Detection and Leaked Statement Reclamation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Statement Leak Detection and Leaked Statement Reclamation
 
 If statements are not closed by an application after use, it is possible
 for the application to run out of cursors. Enabling statement leak
@@ -159,8 +153,7 @@ asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-reclaim=true
 
 [[giyci]][[GSDVG00498]][[statement-caching]]
 
-Statement Caching
-^^^^^^^^^^^^^^^^^
+==== Statement Caching
 
 Statement caching stores statements, prepared statements, and callable
 statements that are executed repeatedly by applications in a cache,
@@ -197,8 +190,7 @@ the statement cache are recreated.
 
 [[giygg]][[GSDVG00499]][[statement-tracing]]
 
-Statement Tracing
-^^^^^^^^^^^^^^^^^
+==== Statement Tracing
 
 You can trace the SQL statements executed by applications that use a
 JDBC connection pool. Set the SQL Trace Listeners attribute to a
@@ -276,8 +268,7 @@ asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queri
 
 [[giyeq]][[GSDVG00183]][[connections]]
 
-Connections
-~~~~~~~~~~~
+=== Connections
 
 The following topics are addressed here:
 
@@ -291,8 +282,7 @@ The following topics are addressed here:
 
 [[gktas]][[GSDVG00500]][[transparent-pool-reconfiguration]]
 
-Transparent Pool Reconfiguration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Transparent Pool Reconfiguration
 
 When the properties or attributes of a JDBC connection pool are changed,
 the connection pool is destroyed and re-created. Normally, applications
@@ -331,8 +321,7 @@ retried.
 
 [[giygl]][[GSDVG00501]][[disabling-pooling]]
 
-Disabling Pooling
-^^^^^^^^^^^^^^^^^
+==== Disabling Pooling
 
 To disable connection pooling, set the Pooling attribute to false. The
 default is true. You can enable or disable connection pooling in one of
@@ -373,8 +362,7 @@ environment:
 
 [[giydr]][[GSDVG00502]][[associating-connections-with-threads]]
 
-Associating Connections with Threads
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Associating Connections with Threads
 
 To associate connections with a thread, set the Associate With Thread
 attribute to `true`. The default is `false`. A `true` setting allows
@@ -416,8 +404,7 @@ Edition Reference Manual].
 
 [[giyfg]][[GSDVG00503]][[custom-connection-validation]]
 
-Custom Connection Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Custom Connection Validation
 
 You can specify a custom implementation for Connection Validation that
 is faster or optimized for a specific database. Set the Validation
@@ -465,8 +452,7 @@ implementation.
 
 [[beams]][[GSDVG00504]][[sharing-connections]]
 
-Sharing Connections
-^^^^^^^^^^^^^^^^^^^
+==== Sharing Connections
 
 When multiple connections acquired by an application use the same JDBC
 resource, the connection pool provides connection sharing within the
@@ -489,8 +475,7 @@ Server Open Source Edition Administration Guide.
 
 [[gezfh]][[GSDVG00505]][[marking-bad-connections]]
 
-Marking Bad Connections
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Marking Bad Connections
 
 The `DataSource` implementation in the GlassFish Server provides a
 `markConnectionAsBad` method. A marked bad connection is removed from
@@ -525,8 +510,7 @@ finally{
 
 [[gipzl]][[GSDVG00506]][[handling-invalid-connections]]
 
-Handling Invalid Connections
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Handling Invalid Connections
 
 If a `ConnectionErrorOccured` event occurs, the GlassFish Server
 considers the connection invalid and removes the connection from the
@@ -577,8 +561,7 @@ connection pool is resized.
 
 [[giyde]][[GSDVG00184]][[connection-wrapping]]
 
-Connection Wrapping
-~~~~~~~~~~~~~~~~~~~
+=== Connection Wrapping
 
 The following topics are addressed here:
 
@@ -588,8 +571,7 @@ The following topics are addressed here:
 
 [[ghqxi]][[GSDVG00507]][[wrapping-connections]]
 
-Wrapping Connections
-^^^^^^^^^^^^^^^^^^^^
+==== Wrapping Connections
 
 If the Wrap JDBC Objects option is `true` (the default), wrapped JDBC
 objects are returned for `Statement`, `PreparedStatement`,
@@ -611,8 +593,7 @@ the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 
 [[beamt]][[GSDVG00508]][[obtaining-a-physical-connection-from-a-wrapped-connection]]
 
-Obtaining a Physical Connection From a Wrapped Connection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Obtaining a Physical Connection From a Wrapped Connection
 
 The `DataSource` implementation in the GlassFish Server provides a
 `getConnection` method that retrieves the JDBC driver's `SQLConnection`
@@ -641,8 +622,7 @@ con.close(); // return wrapped connection to pool.
 
 [[ggrum]][[GSDVG00509]][[using-the-connection.unwrap-method]]
 
-Using the `Connection.unwrap()` Method
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the `Connection.unwrap()` Method
 
 Using the `Connection.unwrap()` method on a vendor-provided interface
 returns an object or a wrapper object implementing the vendor-provided
@@ -654,8 +634,7 @@ vendor's documentation for information on these interfaces.
 
 [[gavro]][[GSDVG00185]][[allowing-non-component-callers]]
 
-Allowing Non-Component Callers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Allowing Non-Component Callers
 
 You can allow non-Java-EE components, such as servlet filters, lifecycle
 modules, and third party persistence managers, to use this JDBC
@@ -694,8 +673,7 @@ Transaction Synchronization Registry, and `UserTransaction`].
 
 [[giydx]][[GSDVG00186]][[using-application-scoped-resources]]
 
-Using Application-Scoped Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using Application-Scoped Resources
 
 You can define an application-scoped database or other resource for an
 enterprise application, web module, EJB module, connector module, or
@@ -706,16 +684,14 @@ Open Source Edition Application Deployment Guide.
 
 [[geqvg]][[GSDVG00187]][[restrictions-and-optimizations]]
 
-Restrictions and Optimizations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Restrictions and Optimizations
 
 This section discusses restrictions and performance optimizations that
 affect using the JDBC API.
 
 [[geqvy]][[GSDVG00510]][[disabling-stored-procedure-creation-on-sybase]]
 
-Disabling Stored Procedure Creation on Sybase
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disabling Stored Procedure Creation on Sybase
 
 By default, DataDirect and Oracle JDBC drivers for Sybase databases
 create a stored procedure for each parameterized `PreparedStatement`. On

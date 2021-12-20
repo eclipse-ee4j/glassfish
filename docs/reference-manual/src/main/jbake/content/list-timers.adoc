@@ -5,13 +5,11 @@ next=list-transports.html
 prev=list-threadpools.html
 ~~~~~~
 
-list-timers
-===========
+= list-timers
 
 [[list-timers-1]][[GSRFM00205]][[list-timers]]
 
-list-timers
------------
+== list-timers
 
 Lists all of the persistent timers owned by server instance(s)
 

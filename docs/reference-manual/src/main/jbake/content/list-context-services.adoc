@@ -5,13 +5,11 @@ next=list-custom-resources.html
 prev=list-containers.html
 ~~~~~~
 
-list-context-services
-=====================
+= list-context-services
 
 [[list-context-services-1]][[GSRFM865]][[list-context-services]]
 
-list-context-services
----------------------
+== list-context-services
 
 Lists context service resources
 

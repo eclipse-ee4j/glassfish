@@ -5,13 +5,11 @@ next=create-auth-realm.html
 prev=create-application-ref.html
 ~~~~~~
 
-create-audit-module
-===================
+= create-audit-module
 
 [[create-audit-module-1]][[GSRFM00014]][[create-audit-module]]
 
-create-audit-module
--------------------
+== create-audit-module
 
 Adds an audit module
 

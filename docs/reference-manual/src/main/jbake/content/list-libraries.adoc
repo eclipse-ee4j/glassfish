@@ -5,13 +5,11 @@ next=list-lifecycle-modules.html
 prev=list-jvm-options.html
 ~~~~~~
 
-list-libraries
-==============
+= list-libraries
 
 [[list-libraries-1]][[GSRFM00819]][[list-libraries]]
 
-list-libraries
---------------
+== list-libraries
 
 Lists library JAR files on {productName}
 

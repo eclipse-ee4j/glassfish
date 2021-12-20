@@ -5,15 +5,13 @@ next=dd-files.html
 prev=deploying-applications.html
 ~~~~~~
 
-The asadmin Deployment Subcommands
-==================================
+= The asadmin Deployment Subcommands
 
 [[GSDPG00005]][[gihzw]]
 
 
 [[a-the-asadmin-deployment-subcommands]]
-A The `asadmin` Deployment Subcommands
---------------------------------------
+== A The `asadmin` Deployment Subcommands
 
 This appendix lists the `asadmin` deployment subcommands that are
 included with this release of the GlassFish Server Open Source

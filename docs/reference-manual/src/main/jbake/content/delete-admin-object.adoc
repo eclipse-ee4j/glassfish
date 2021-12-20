@@ -5,13 +5,11 @@ next=delete-application-ref.html
 prev=create-virtual-server.html
 ~~~~~~
 
-delete-admin-object
-===================
+= delete-admin-object
 
 [[delete-admin-object-1]][[GSRFM00063]][[delete-admin-object]]
 
-delete-admin-object
--------------------
+== delete-admin-object
 
 Removes the administered object with the specified JNDI name.
 

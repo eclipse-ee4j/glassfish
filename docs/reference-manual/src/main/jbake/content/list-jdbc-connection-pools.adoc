@@ -5,13 +5,11 @@ next=list-jdbc-resources.html
 prev=list-javamail-resources.html
 ~~~~~~
 
-list-jdbc-connection-pools
-==========================
+= list-jdbc-connection-pools
 
 [[list-jdbc-connection-pools-1]][[GSRFM00173]][[list-jdbc-connection-pools]]
 
-list-jdbc-connection-pools
---------------------------
+== list-jdbc-connection-pools
 
 Lists all JDBC connection pools
 

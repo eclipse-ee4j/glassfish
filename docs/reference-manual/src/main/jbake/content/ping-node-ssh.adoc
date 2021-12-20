@@ -5,13 +5,11 @@ next=recover-transactions.html
 prev=ping-node-dcom.html
 ~~~~~~
 
-ping-node-ssh
-=============
+= ping-node-ssh
 
 [[ping-node-ssh-1]][[GSRFM00215]][[ping-node-ssh]]
 
-ping-node-ssh
--------------
+== ping-node-ssh
 
 Tests if a node that is enabled for communication over SSH is usable
 

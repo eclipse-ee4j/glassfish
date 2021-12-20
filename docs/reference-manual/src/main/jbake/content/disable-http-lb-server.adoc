@@ -5,13 +5,11 @@ next=disable-monitoring.html
 prev=disable-http-lb-application.html
 ~~~~~~
 
-disable-http-lb-server
-======================
+= disable-http-lb-server
 
 [[disable-http-lb-server-1]][[GSRFM00119]][[disable-http-lb-server]]
 
-disable-http-lb-server
-----------------------
+== disable-http-lb-server
 
 Disables a sever or cluster managed by a load balancer
 

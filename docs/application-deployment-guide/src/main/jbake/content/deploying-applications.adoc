@@ -5,15 +5,13 @@ next=asadmin-deployment-subcommands.html
 prev=overview.html
 ~~~~~~
 
-Deploying Applications
-======================
+= Deploying Applications
 
 [[GSDPG00004]][[beact]]
 
 
 [[deploying-applications]]
-2 Deploying Applications
-------------------------
+== 2 Deploying Applications
 
 This chapter provides procedures and guidelines for deploying
 applications and modules in the GlassFish Server Open Source
@@ -39,8 +37,7 @@ Console are contained in the Administration Console online help.
 
 [[gilfm]][[GSDPG00065]][[deploying-applications-and-modules]]
 
-Deploying Applications and Modules
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying Applications and Modules
 
 Application deployment is a dynamic process, which means that deployed
 applications and modules become available without requiring you to
@@ -69,8 +66,7 @@ Console are contained in the Administration Console online help.
 
 [[gijmq]][[GSDPG00033]][[to-deploy-an-application-or-module]]
 
-To Deploy an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy an Application or Module
 
 Use the `deploy` subcommand in remote mode to deploy an assembled
 application or module to GlassFish Server. If an error occurs during
@@ -199,8 +195,7 @@ typing `asadmin help deploy` at the command line.
 
 [[gijrc]][[GSDPG00034]][[to-change-targets-for-a-deployed-application-or-module]]
 
-To Change Targets for a Deployed Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change Targets for a Deployed Application or Module
 
 After deployment, the deployed application or module exists in the
 central repository and can be referenced by the server instances or
@@ -228,8 +223,7 @@ typing `asadmin help create-application-ref` or
 
 [[giulr]][[GSDPG00035]][[to-list-deployed-applications-or-modules]]
 
-To List Deployed Applications or Modules
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Deployed Applications or Modules
 
 There are a number of commands that can be used to list deployed
 applications or modules and their subcomponents. Use the commands in
@@ -294,8 +288,7 @@ Command show-component-status executed successfully
 
 [[gijmb]][[GSDPG00036]][[to-redeploy-an-application-or-module]]
 
-To Redeploy an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Redeploy an Application or Module
 
 Use the `redeploy` subcommand in remote mode to overwrite a
 previously-deployed application or module. You can also accomplish this
@@ -376,8 +369,7 @@ typing `asadmin help redeploy` at the command line.
 
 [[fvyje]][[GSDPG00037]][[to-disable-an-application-or-module]]
 
-To Disable an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Disable an Application or Module
 
 Use the `disable` subcommand in remote mode to immediately deactivate a
 deployed application or module without removing it from the server.
@@ -439,8 +431,7 @@ typing `asadmin help disable` at the command line.
 
 [[gijjy]][[GSDPG00038]][[to-enable-an-application-or-module]]
 
-To Enable an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable an Application or Module
 
 An enabled application or module is runnable and can be accessed by
 clients if it has been deployed to an accessible server instance or
@@ -487,8 +478,7 @@ typing `asadmin help enable` at the command line.
 
 [[gijkl]][[GSDPG00039]][[to-undeploy-an-application-or-module]]
 
-To Undeploy an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Undeploy an Application or Module
 
 Use the `undeploy` subcommand in remote mode to uninstall a deployed
 application or module and remove it from the repository. To reinstate
@@ -548,8 +538,7 @@ typing `asadmin help undeploy` at the command line.
 
 [[fwakh]][[GSDPG00040]][[to-reload-changes-to-applications-or-modules-dynamically]]
 
-To Reload Changes to Applications or Modules Dynamically
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Reload Changes to Applications or Modules Dynamically
 
 Dynamic reloading enables you to change the code or deployment
 descriptors of an application or module without needing to perform an
@@ -592,8 +581,7 @@ creates it.
 
 [[fvxze]][[GSDPG00041]][[to-deploy-an-application-or-module-automatically]]
 
-To Deploy an Application or Module Automatically
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy an Application or Module Automatically
 
 [NOTE]
 ====
@@ -660,8 +648,7 @@ typing `asadmin set --help` at the command line.
 
 [[gijyb]][[GSDPG00042]][[to-deploy-an-application-or-module-by-using-a-deployment-plan]]
 
-To Deploy an Application or Module by Using a Deployment Plan
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy an Application or Module by Using a Deployment Plan
 
 In the deployment plan for an EAR file, the `glassfish-application.xml`
 file is located at the root. The deployment descriptor for each module
@@ -743,8 +730,7 @@ the JSR 88 page at `http://jcp.org/en/jsr/detail?id=88`.
 
 [[gilcn]][[GSDPG00043]][[to-deploy-an-application-or-module-in-a-directory-format]]
 
-To Deploy an Application or Module in a Directory Format
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy an Application or Module in a Directory Format
 
 
 [NOTE]
@@ -835,8 +821,7 @@ typing `asadmin help deploy` at the command line.
 
 [[gjiwk]][[GSDPG00066]][[modifying-the-configuration-of-a-web-application-or-module]]
 
-Modifying the Configuration of a Web Application or Module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Modifying the Configuration of a Web Application or Module
 
 You can modify the configuration of a web application or a module by
 modifying the deployment descriptors and then repackaging and
@@ -859,8 +844,7 @@ The following topics are addressed here:
 
 [[giyce]][[GSDPG00044]][[to-set-a-web-context-parameter]]
 
-To Set a Web Context Parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set a Web Context Parameter
 
 Use the `set-web-context-param` subcommand in remote mode to change the
 configuration of a deployed application without the need to modify the
@@ -922,8 +906,7 @@ typing `asadmin help set-web-context-param` at the command line.
 
 [[giycy]][[GSDPG00045]][[to-unset-a-web-context-parameter]]
 
-To Unset a Web Context Parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Unset a Web Context Parameter
 
 Use the `unset-web-context-param` subcommand in remote mode to unset an
 environment entry for a deployed web application or module that has been
@@ -984,8 +967,7 @@ typing `asadmin help unset-web-context-param` at the command line.
 
 [[giybo]][[GSDPG00046]][[to-list-web-context-parameters]]
 
-To List Web Context Parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Web Context Parameters
 
 Use the `list-web-context-param` subcommand in remote mode to list the
 parameters that have previously been set by using the
@@ -1036,8 +1018,7 @@ typing `asadmin help list-web-context-param` at the command line.
 
 [[giyhc]][[GSDPG00047]][[to-set-a-web-environment-entry]]
 
-To Set a Web Environment Entry
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set a Web Environment Entry
 
 An application uses the values of environment entries to customize its
 behavior or presentation. Use the `set-web-env-entry` subcommand in
@@ -1100,8 +1081,7 @@ typing `asadmin help set-web-env-entry` at the command line.
 
 [[giyjr]][[GSDPG00048]][[to-unset-a-web-environment-entry]]
 
-To Unset a Web Environment Entry
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Unset a Web Environment Entry
 
 Use the `unset-web-env-entry` subcommand in remote mode to unset an
 environment entry for a deployed web application or module.
@@ -1136,8 +1116,7 @@ typing `asadmin help unset-web-env-entry` at the command line.
 
 [[giyip]][[GSDPG00049]][[to-list-web-environment-entries]]
 
-To List Web Environment Entries
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Web Environment Entries
 
 Use the `list-web-env-entry` subcommand to list environment entries for
 a deployed web application or module. For each entry, the following
@@ -1181,8 +1160,7 @@ typing `asadmin help list-web-env-entry` at the command line.
 
 [[beaej]][[GSDPG00067]][[web-module-deployment-guidelines]]
 
-Web Module Deployment Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Web Module Deployment Guidelines
 
 The following guidelines apply to deploying a web module in GlassFish
 Server:
@@ -1265,8 +1243,7 @@ deployment. See the following sections:
 
 [[beaek]][[GSDPG00068]][[ejb-module-deployment-guidelines]]
 
-EJB Module Deployment Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== EJB Module Deployment Guidelines
 
 
 [NOTE]
@@ -1325,8 +1302,7 @@ these Jakarta EE 6 and later restrictions.
 
 [[gilxc]][[GSDPG00069]][[deploying-a-connector-module]]
 
-Deploying a Connector Module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying a Connector Module
 
 Deploying a stand-alone connector module allows multiple deployed Java
 EE applications to share the connector module. A resource adapter
@@ -1340,8 +1316,7 @@ The following topics are addressed here:
 
 [[fvynl]][[GSDPG00050]][[to-deploy-and-configure-a-stand-alone-connector-module]]
 
-To Deploy and Configure a Stand-Alone Connector Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy and Configure a Stand-Alone Connector Module
 
 As an alternative to Step link:#gkojp[3] through Step link:#gkohy[6],
 you can define application-scoped resources in the
@@ -1387,8 +1362,7 @@ Open Source Edition Administration Guide.
 
 [[bealp]][[GSDPG00332]][[redeploying-a-stand-alone-connector-module]]
 
-Redeploying a Stand-Alone Connector Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Redeploying a Stand-Alone Connector Module
 
 Redeployment of a connector module maintains all connector connection
 pools, connector resources, and administered objects defined for the
@@ -1416,8 +1390,7 @@ GlassFish Server provides an error message.
 
 [[bealq]][[GSDPG00333]][[deploying-and-configuring-an-embedded-resource-adapter]]
 
-Deploying and Configuring an Embedded Resource Adapter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deploying and Configuring an Embedded Resource Adapter
 
 A connector module can be deployed as a Jakarta EE component in a Jakarta EE
 application. Such connectors are only visible to components residing in
@@ -1442,8 +1415,7 @@ component is specified in the GlassFish Server-specific XML descriptor
 
 [[beaem]][[GSDPG00070]][[assembling-and-deploying-an-application-client-module]]
 
-Assembling and Deploying an Application Client Module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Assembling and Deploying an Application Client Module
 
 Deployment is necessary for application clients that communicate with
 EJB components or that use Java Web Start launch support. Java Web Start
@@ -1468,8 +1440,7 @@ Client]
 
 [[fvyal]][[GSDPG00051]][[to-assemble-and-deploy-an-application-client]]
 
-To Assemble and Deploy an Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Assemble and Deploy an Application Client
 
 1. Assemble the necessary client components.
 +
@@ -1535,8 +1506,7 @@ information on the following topics:
 
 [[fwahd]][[GSDPG00052]][[to-prepare-another-machine-for-running-an-application-client]]
 
-To Prepare Another Machine for Running an Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Prepare Another Machine for Running an Application Client
 
 If Java Web Start is enabled, the default URL format for an application
 is `http://`host:port`/`context-root. For example:
@@ -1603,8 +1573,7 @@ For more detailed information about Java Web Start and the
 
 [[gavpv]][[GSDPG00334]][[to-undeploy-an-application-client]]
 
-To Undeploy an Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Undeploy an Application Client
 
 After application clients are downloaded, they remain on the client
 until they are manually removed. Use the Java Web Start control panel to
@@ -1628,8 +1597,7 @@ to a previously-located resource that becomes inaccessible.
 
 [[beael]][[GSDPG00071]][[lifecycle-module-deployment-guidelines]]
 
-Lifecycle Module Deployment Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Lifecycle Module Deployment Guidelines
 
 A lifecycle module, also called a lifecycle listener module, provides a
 means of running long or short Java-based tasks within the GlassFish
@@ -1667,8 +1635,7 @@ server initialization or startup, but not shutdown or termination.
 
 [[gbiye]][[GSDPG00072]][[web-service-deployment-guidelines]]
 
-Web Service Deployment Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Web Service Deployment Guidelines
 
 
 [NOTE]
@@ -1703,8 +1670,7 @@ Source Edition Application Development Guide.
 
 [[gkkmb]][[GSDPG00073]][[osgi-bundle-deployment-guidelines]]
 
-OSGi Bundle Deployment Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== OSGi Bundle Deployment Guidelines
 
 To deploy an OSGi bundle using the Administration Console, select Other
 from the Type drop-down list and check the OSGI Type checkbox.
@@ -1736,8 +1702,7 @@ a plain WAR file as a WAB.
 
 [[gkoif]][[GSDPG00074]][[transparent-jdbc-connection-pool-reconfiguration]]
 
-Transparent JDBC Connection Pool Reconfiguration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Transparent JDBC Connection Pool Reconfiguration
 
 In this GlassFish Server release, reconfiguration of a JDBC connection
 pool due to attribute or property changes can be transparent to the
@@ -1769,8 +1734,7 @@ dynamic-reconfiguration-wait-timeout-in-seconds=30
 
 [[giydj]][[GSDPG00075]][[application-scoped-resources]]
 
-Application-Scoped Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Application-Scoped Resources
 
 You can define an application-scoped JDBC resource or other resource for
 an enterprise application, web module, EJB module, connector module, or

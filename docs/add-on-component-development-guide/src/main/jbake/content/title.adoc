@@ -5,13 +5,11 @@ next=preface.html
 prev=lot.html
 ~~~~~~
 
-Eclipse GlassFish Server Add-On Component Development Guide, Release 7
-======================================================================
+= Eclipse GlassFish Server Add-On Component Development Guide, Release 7
 
 
 [[eclipse-glassfish-server]]
-Eclipse GlassFish Server
-------------------------
+== Eclipse GlassFish Server
 
 Add-On Component Development Guide
 

@@ -5,13 +5,11 @@ next=list-http-listeners.html
 prev=list-http-lb-configs.html
 ~~~~~~
 
-list-http-lbs
-=============
+= list-http-lbs
 
 [[list-http-lbs-1]][[GSRFM00167]][[list-http-lbs]]
 
-list-http-lbs
--------------
+== list-http-lbs
 
 Lists load balancers
 

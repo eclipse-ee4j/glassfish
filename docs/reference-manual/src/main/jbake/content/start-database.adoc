@@ -5,13 +5,11 @@ next=start-domain.html
 prev=start-cluster.html
 ~~~~~~
 
-start-database
-==============
+= start-database
 
 [[start-database-1]][[GSRFM00234]][[start-database]]
 
-start-database
---------------
+== start-database
 
 Starts the Java DB
 

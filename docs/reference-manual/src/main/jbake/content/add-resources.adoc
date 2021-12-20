@@ -5,13 +5,11 @@ next=apply-http-lb-changes.html
 prev=add-library.html
 ~~~~~~
 
-add-resources
-=============
+= add-resources
 
 [[add-resources-1]][[GSRFM00001]][[add-resources]]
 
-add-resources
--------------
+== add-resources
 
 Creates the resources specified in an XML file
 

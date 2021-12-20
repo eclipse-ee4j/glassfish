@@ -5,13 +5,11 @@ next=list-threadpools.html
 prev=list-supported-cipher-suites.html
 ~~~~~~
 
-list-system-properties
-======================
+= list-system-properties
 
 [[list-system-properties-1]][[GSRFM00203]][[list-system-properties]]
 
-list-system-properties
-----------------------
+== list-system-properties
 
 Lists the system properties of the domain, configuration, cluster, or
 server instance

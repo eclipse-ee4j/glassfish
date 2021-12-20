@@ -5,13 +5,11 @@ next=delete-javamail-resource.html
 prev=delete-instance.html
 ~~~~~~
 
-delete-jacc-provider
-====================
+= delete-jacc-provider
 
 [[delete-jacc-provider-1]][[GSRFM00086]][[delete-jacc-provider]]
 
-delete-jacc-provider
---------------------
+== delete-jacc-provider
 
 Enables administrators to delete JACC providers defined for a domain
 

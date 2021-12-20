@@ -5,15 +5,13 @@ next=debugging-apps.html
 prev=setting-up-dev-env.html
 ~~~~~~
 
-Class Loaders
-=============
+= Class Loaders
 
 [[GSDVG00003]][[beade]]
 
 
 [[class-loaders]]
-2 Class Loaders
----------------
+== 2 Class Loaders
 
 Understanding Oracle GlassFish Server class loaders can help you
 determine where to place supporting JAR and resource files for your
@@ -50,8 +48,7 @@ link:debugging-apps.html#gkpdk[Class Loader Debugging].
 
 [[beadf]][[GSDVG00094]][[the-class-loader-hierarchy]]
 
-The Class Loader Hierarchy
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The Class Loader Hierarchy
 
 Class loaders in the GlassFish Server runtime follow a delegation
 hierarchy that is illustrated in the following figure and fully
@@ -131,8 +128,7 @@ information, see link:#beadk[Using the Java Optional Package Mechanism].
 
 [[gfqpi]][[GSDVG00095]][[delegation]]
 
-Delegation
-~~~~~~~~~~
+=== Delegation
 
 Note that the class loader hierarchy is not a Java inheritance
 hierarchy, but a delegation hierarchy. In the delegation design, a class
@@ -167,8 +163,7 @@ are part of the Jakarta EE platform.
 
 [[beadk]][[GSDVG00096]][[using-the-java-optional-package-mechanism]]
 
-Using the Java Optional Package Mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using the Java Optional Package Mechanism
 
 Optional packages are packages of Java classes and associated native
 code that application developers can use to extend the functionality of
@@ -191,8 +186,7 @@ Extension Class Loading]
 
 [[gchif]][[GSDVG00097]][[using-the-endorsed-standards-override-mechanism]]
 
-Using the Endorsed Standards Override Mechanism
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using the Endorsed Standards Override Mechanism
 
 Endorsed standards handle changes to classes and APIs that are bundled
 in the JDK but are subject to change by external bodies.
@@ -208,8 +202,7 @@ Standards Override Mechanism]
 
 [[beadg]][[GSDVG00098]][[class-loader-universes]]
 
-Class Loader Universes
-~~~~~~~~~~~~~~~~~~~~~~
+=== Class Loader Universes
 
 Access to components within applications and modules installed on the
 server occurs within the context of isolated class loader universes,
@@ -240,8 +233,7 @@ module-name/WEB-INF/lib
 
 [[gatej]][[GSDVG00099]][[application-specific-class-loading]]
 
-Application-Specific Class Loading
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Application-Specific Class Loading
 
 You can specify module- or application-specific library classes in one
 of the following ways:
@@ -314,8 +306,7 @@ link:securing-apps.html#beabz[Changing Permissions for an Application].
 
 [[beadh]][[GSDVG00100]][[circumventing-class-loader-isolation]]
 
-Circumventing Class Loader Isolation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Circumventing Class Loader Isolation
 
 Since each application or individually deployed module class loader
 universe is isolated, an application or module cannot load classes from
@@ -334,8 +325,7 @@ Application]
 
 [[beadj]][[GSDVG00342]][[using-the-common-class-loader]]
 
-Using the Common Class Loader
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the Common Class Loader
 
 To use the Common class loader, copy the JAR files into the
 domain-dir``/lib`` or as-install``/lib`` directory, or use the
@@ -362,16 +352,14 @@ domain-dir`/lib` directory, then restart the server.
 
 [[gcrnt]][[GSDVG00343]][[sharing-libraries-across-a-cluster]]
 
-Sharing Libraries Across a Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Sharing Libraries Across a Cluster
 
 To share libraries across a specific cluster, copy the JAR files to the
 domain-dir``/config/``cluster-config-name``/lib`` directory.
 
 [[beadl]][[GSDVG00344]][[packaging-the-client-jar-for-one-application-in-another-application]]
 
-Packaging the Client JAR for One Application in Another Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Packaging the Client JAR for One Application in Another Application
 
 By packaging the client JAR for one application in a second application,
 you allow an EJB or web component in the second application to call an
@@ -386,8 +374,7 @@ or modules deployed on servers that share the same configuration.
 
 [[fvyab]][[GSDVG00048]][[to-package-the-client-jar-for-one-application-in-another-application]]
 
-To Package the Client JAR for One Application in Another Application
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Package the Client JAR for One Application in Another Application
 
 1. Deploy the dependent application.
 2. Add the dependent application's client JAR file to the calling

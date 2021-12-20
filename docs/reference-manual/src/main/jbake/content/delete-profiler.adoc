@@ -5,13 +5,11 @@ next=delete-protocol.html
 prev=delete-password-alias.html
 ~~~~~~
 
-delete-profiler
-===============
+= delete-profiler
 
 [[delete-profiler-1]][[GSRFM00102]][[delete-profiler]]
 
-delete-profiler
----------------
+== delete-profiler
 
 Removes the profiler element
 

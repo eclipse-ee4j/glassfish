@@ -5,13 +5,11 @@ next=delete-lifecycle-module.html
 prev=delete-jndi-resource.html
 ~~~~~~
 
-delete-jvm-options
-==================
+= delete-jvm-options
 
 [[delete-jvm-options-1]][[GSRFM00094]][[delete-jvm-options]]
 
-delete-jvm-options
-------------------
+== delete-jvm-options
 
 Removes one or more options for the Java application launcher
 

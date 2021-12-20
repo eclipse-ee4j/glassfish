@@ -5,13 +5,11 @@ next=list-connector-security-maps.html
 prev=list-connector-connection-pools.html
 ~~~~~~
 
-list-connector-resources
-========================
+= list-connector-resources
 
 [[list-connector-resources-1]][[GSRFM00158]][[list-connector-resources]]
 
-list-connector-resources
-------------------------
+== list-connector-resources
 
 Lists all connector resources
 

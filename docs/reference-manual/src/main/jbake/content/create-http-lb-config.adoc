@@ -5,13 +5,11 @@ next=create-http-lb-ref.html
 prev=create-http-lb.html
 ~~~~~~
 
-create-http-lb-config
-=====================
+= create-http-lb-config
 
 [[create-http-lb-config-1]][[GSRFM00028]][[create-http-lb-config]]
 
-create-http-lb-config
----------------------
+== create-http-lb-config
 
 Creates a configuration for the load balancer
 

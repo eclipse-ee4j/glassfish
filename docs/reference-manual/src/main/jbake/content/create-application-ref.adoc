@@ -5,13 +5,11 @@ next=create-audit-module.html
 prev=create-admin-object.html
 ~~~~~~
 
-create-application-ref
-======================
+= create-application-ref
 
 [[create-application-ref-1]][[GSRFM00013]][[create-application-ref]]
 
-create-application-ref
-----------------------
+== create-application-ref
 
 Creates a reference to an application
 

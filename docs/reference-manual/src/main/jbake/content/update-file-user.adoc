@@ -5,13 +5,11 @@ next=update-node-config.html
 prev=update-connector-work-security-map.html
 ~~~~~~
 
-update-file-user
-================
+= update-file-user
 
 [[update-file-user-1]][[GSRFM00254]][[update-file-user]]
 
-update-file-user
-----------------
+== update-file-user
 
 Updates a current file user as specified
 

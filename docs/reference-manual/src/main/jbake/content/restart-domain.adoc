@@ -5,13 +5,11 @@ next=restart-instance.html
 prev=remove-library.html
 ~~~~~~
 
-restart-domain
-==============
+= restart-domain
 
 [[restart-domain-1]][[GSRFM00218]][[restart-domain]]
 
-restart-domain
---------------
+== restart-domain
 
 Restarts the DAS of the specified domain
 

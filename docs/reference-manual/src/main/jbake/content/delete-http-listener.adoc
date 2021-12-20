@@ -5,13 +5,11 @@ next=delete-http-redirect.html
 prev=delete-http-lb-ref.html
 ~~~~~~
 
-delete-http-listener
-====================
+= delete-http-listener
 
 [[delete-http-listener-1]][[GSRFM00082]][[delete-http-listener]]
 
-delete-http-listener
---------------------
+== delete-http-listener
 
 Removes a network listener
 

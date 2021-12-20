@@ -5,13 +5,11 @@ next=delete-http.html
 prev=delete-domain.html
 ~~~~~~
 
-delete-file-user
-================
+= delete-file-user
 
 [[delete-file-user-1]][[GSRFM00076]][[delete-file-user]]
 
-delete-file-user
-----------------
+== delete-file-user
 
 Removes the named file user
 

@@ -5,13 +5,11 @@ next=create-http-listener.html
 prev=create-http-lb-config.html
 ~~~~~~
 
-create-http-lb-ref
-==================
+= create-http-lb-ref
 
 [[create-http-lb-ref-1]][[GSRFM00029]][[create-http-lb-ref]]
 
-create-http-lb-ref
-------------------
+== create-http-lb-ref
 
 Adds an existing cluster or server instance to an existing load balancer
 configuration or load balancer

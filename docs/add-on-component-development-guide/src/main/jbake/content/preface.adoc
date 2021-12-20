@@ -5,13 +5,11 @@ next=introduction.html
 prev=title.html
 ~~~~~~
 
-Preface
-=======
+= Preface
 
 [[sthref2]]
 [[preface]]
-Preface
--------
+== Preface
 
 This document explains how to use published interfaces of
 GlassFish Server Open Source Edition to develop add-on components
@@ -49,8 +47,7 @@ The following topics are addressed here:
 [[GSACG00079]][[ghpbz]]
 
 [[glassfish-server-documentation-set]]
-GlassFish Server Documentation Set
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Documentation Set
 
 The GlassFish Server documentation set describes deployment planning and
 system installation. For an introduction to GlassFish Server, refer to
@@ -155,8 +152,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 [[GSACG00080]][[giprl]]
 
 [[related-documentation]]
-Related Documentation
-~~~~~~~~~~~~~~~~~~~~~
+=== Related Documentation
 
 The following tutorials explain how to develop Jakarta EE applications:
 
@@ -200,8 +196,7 @@ available from the repository
 [[GSACG00081]][[fwbkx]]
 
 [[typographic-conventions]]
-Typographic Conventions
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Typographic Conventions
 
 The following table describes the typographic changes that are used in
 this book.
@@ -241,8 +236,7 @@ Do not save the file.
 [[GSACG00082]][[fquvc]]
 
 [[symbol-conventions]]
-Symbol Conventions
-~~~~~~~~~~~~~~~~~~
+=== Symbol Conventions
 
 The following table explains symbols that might be used in this book.
 
@@ -286,8 +280,7 @@ The following table explains symbols that might be used in this book.
 
 
 [[default-paths-and-file-names]]
-Default Paths and File Names
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Paths and File Names
 
 The following table describes the default paths and file names that are
 used in this book.

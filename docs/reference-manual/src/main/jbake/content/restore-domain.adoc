@@ -5,13 +5,11 @@ next=rollback-transaction.html
 prev=restart-local-instance.html
 ~~~~~~
 
-restore-domain
-==============
+= restore-domain
 
 [[restore-domain-1]][[GSRFM00221]][[restore-domain]]
 
-restore-domain
---------------
+== restore-domain
 
 Restores files from backup
 

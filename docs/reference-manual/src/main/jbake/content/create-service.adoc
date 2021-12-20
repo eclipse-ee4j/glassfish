@@ -5,13 +5,11 @@ next=create-ssl.html
 prev=create-resource-ref.html
 ~~~~~~
 
-create-service
-==============
+= create-service
 
 [[create-service-1]][[GSRFM00057]][[create-service]]
 
-create-service
---------------
+== create-service
 
 Configures the starting of a DAS or a {productName} instance on an
 unattended boot

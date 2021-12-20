@@ -5,15 +5,13 @@ next=concurrent.html
 prev=connectors.html
 ~~~~~~
 
-Administering Internet Connectivity
-===================================
+= Administering Internet Connectivity
 
 [[GSADG00017]][[ablsw]]
 
 
 [[administering-internet-connectivity]]
-13 Administering Internet Connectivity
---------------------------------------
+== 13 Administering Internet Connectivity
 
 This chapter provides procedures for performing internet connectivity
 tasks in the GlassFish Server Open Source Edition 7 environment by
@@ -31,8 +29,7 @@ online help.
 
 [[giusf]][[GSADG00587]][[about-internet-connectivity]]
 
-About Internet Connectivity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Internet Connectivity
 
 The HTTP service provides functionality for deploying web applications
 and for making deployed web applications accessible by Internet clients,
@@ -50,8 +47,7 @@ The following topics are addressed here:
 
 [[giuri]][[GSADG00766]][[about-http-network-listeners]]
 
-About HTTP Network Listeners
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== About HTTP Network Listeners
 
 An HTTP listener, also known as a network listener, is a listen socket
 that has an Internet Protocol (IP) address, a port number, a server
@@ -89,8 +85,7 @@ default context root).
 
 [[giupz]][[GSADG00767]][[about-virtual-servers]]
 
-About Virtual Servers
-^^^^^^^^^^^^^^^^^^^^^
+==== About Virtual Servers
 
 A virtual server, sometimes called a virtual host, is an object that
 allows the same physical server to host multiple Internet domain names.
@@ -132,8 +127,7 @@ domains to your `/etc/hosts` file (if the setting for `hosts` in your
 
 [[ggnfu]][[GSADG00588]][[administering-http-network-listeners]]
 
-Administering HTTP Network Listeners
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering HTTP Network Listeners
 
 By default, when GlassFish Server starts, the following HTTP listeners
 are started automatically:
@@ -180,8 +174,7 @@ The following topics are addressed here:
 
 [[ggnfh]][[GSADG00456]][[to-create-an-internet-connection]]
 
-To Create an Internet Connection
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an Internet Connection
 
 Use the subcommands in this procedure to create an internet connection
 with the full range of listener options. A network listener is created
@@ -219,8 +212,7 @@ command line.
 
 [[gjkuy]][[GSADG00768]][[administering-http-protocols]]
 
-Administering HTTP Protocols
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering HTTP Protocols
 
 Each HTTP listener has an HTTP protocol, which is created either by
 using the `create-protocol` subcommand or by using the built-in
@@ -235,8 +227,7 @@ The following topics are addressed here:
 
 [[gjhot]][[GSADG00457]][[to-create-a-protocol]]
 
-To Create a Protocol
-++++++++++++++++++++
+===== To Create a Protocol
 
 Use the `create-protocol` subcommand in remote mode to create a
 protocol.
@@ -267,8 +258,7 @@ typing `asadmin help create-protocol` at the command line.
 
 [[gjhna]][[GSADG00458]][[to-list-protocols]]
 
-To List Protocols
-+++++++++++++++++
+===== To List Protocols
 
 Use the `list-protocols` subcommand in remote mode to list the existing
 HTTP protocols.
@@ -301,8 +291,7 @@ typing `asadmin help list-protocols` at the command line.
 
 [[gjhnx]][[GSADG00459]][[to-delete-a-protocol]]
 
-To Delete a Protocol
-++++++++++++++++++++
+===== To Delete a Protocol
 
 Use the `delete-protocol` subcommand in remote mode to remove a
 protocol.
@@ -331,8 +320,7 @@ typing `asadmin help delete-protocol` at the command line.
 
 [[gjkzi]][[GSADG00769]][[administering-http-configurations]]
 
-Administering HTTP Configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering HTTP Configurations
 
 Each HTTP listener has an HTTP configuration, which is created either by
 using the `create-http` subcommand or by using the built-in
@@ -346,8 +334,7 @@ The following topics are addressed here:
 
 [[gjhqc]][[GSADG00460]][[to-create-an-http-configuration]]
 
-To Create an HTTP Configuration
-+++++++++++++++++++++++++++++++
+===== To Create an HTTP Configuration
 
 Use the `create-http` subcommand in remote mode to create a set of HTTP
 parameters for a protocol. This set of parameters configures one or more
@@ -380,8 +367,7 @@ typing `asadmin help create-http` at the command line.
 
 [[gjhqa]][[GSADG00461]][[to-delete-an-http-configuration]]
 
-To Delete an HTTP Configuration
-+++++++++++++++++++++++++++++++
+===== To Delete an HTTP Configuration
 
 Use the `delete-http` subcommand in remote mode to remove HTTP
 parameters from a protocol.
@@ -410,8 +396,7 @@ typing `asadmin help delete-http` at the command line.
 
 [[gjkym]][[GSADG00770]][[administering-http-transports]]
 
-Administering HTTP Transports
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering HTTP Transports
 
 Each HTTP listener has an HTTP transport, which is created either by
 using the `create-transport` subcommand or by using the built-in
@@ -426,8 +411,7 @@ The following topics are addressed here:
 
 [[gjhps]][[GSADG00462]][[to-create-a-transport]]
 
-To Create a Transport
-+++++++++++++++++++++
+===== To Create a Transport
 
 Use the `create-transport` subcommand in remote mode to create a
 transport for a network listener,
@@ -458,8 +442,7 @@ typing `asadmin help create-transport` at the command line.
 
 [[gjhmx]][[GSADG00463]][[to-list-transports]]
 
-To List Transports
-++++++++++++++++++
+===== To List Transports
 
 Use the `list-transports` subcommand in remote mode to list the existing
 HTTP transports.
@@ -490,8 +473,7 @@ typing `asadmin help list-transports` at the command line.
 
 [[gjhqp]][[GSADG00464]][[to-delete-a-transport]]
 
-To Delete a Transport
-+++++++++++++++++++++
+===== To Delete a Transport
 
 Use the `delete-transport` subcommand in remote mode to remove a
 transport.
@@ -520,8 +502,7 @@ typing `asadmin help delete-transport` at the command line.
 
 [[gjkwt]][[GSADG00771]][[administering-http-network-listeners-1]]
 
-Administering HTTP Network Listeners
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Administering HTTP Network Listeners
 
 The following topics are addressed here:
 
@@ -537,8 +518,7 @@ The following topics are addressed here:
 
 [[gjimx]][[GSADG00465]][[to-create-an-http-network-listener]]
 
-To Create an HTTP Network Listener
-++++++++++++++++++++++++++++++++++
+===== To Create an HTTP Network Listener
 
 Use the `create-http-listener` subcommand or the
 `create-network-listener` subcommand in remote mode to create a
@@ -600,8 +580,7 @@ typing `asadmin help create-http-listener` or
 
 [[ggnbv]][[GSADG00466]][[to-list-http-network-listeners]]
 
-To List HTTP Network Listeners
-++++++++++++++++++++++++++++++
+===== To List HTTP Network Listeners
 
 Use the `list-http-listeners` subcommand or the `list-network-listeners`
 subcommand in remote mode to list the existing HTTP listeners.
@@ -636,8 +615,7 @@ typing `asadmin help list-http-listeners` or
 
 [[giwls]][[GSADG00467]][[to-update-an-http-network-listener]]
 
-To Update an HTTP Network Listener
-++++++++++++++++++++++++++++++++++
+===== To Update an HTTP Network Listener
 
 1. List HTTP listeners by using the
 link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] or
@@ -660,8 +638,7 @@ Command set executed successfully.
 
 [[ggndu]][[GSADG00468]][[to-delete-an-http-network-listener]]
 
-To Delete an HTTP Network Listener
-++++++++++++++++++++++++++++++++++
+===== To Delete an HTTP Network Listener
 
 Use the `delete-http-listener` subcommand or the
 `delete-network-listener` subcommand in remote mode to delete an
@@ -699,8 +676,7 @@ typing `asadmin help delete-http-listener` or
 
 [[ggnbj]][[GSADG00469]][[to-configure-an-http-listener-for-ssl]]
 
-To Configure an HTTP Listener for SSL
-+++++++++++++++++++++++++++++++++++++
+===== To Configure an HTTP Listener for SSL
 
 Use the `create-ssl` subcommand in remote mode to create and configure
 an SSL element in the specified listener. This enables secure
@@ -733,8 +709,7 @@ typing `asadmin help create-ssl` at the command line.
 
 [[CHDEDCEA]][[GSADG1106]][[to-configure-optional-client-authentication-for-ssl]]
 
-To Configure Optional Client Authentication for SSL
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Configure Optional Client Authentication for SSL
 
 In GlassFish Server, you can configure the SSL protocol of an HTTP
 listener such that it requests a certificate before permitting a client
@@ -750,8 +725,7 @@ protocol.listener-name.ssl.client-auth=want
 
 [[CHDHEFHG]][[GSADG1107]][[to-configure-a-custom-ssl-implementation]]
 
-To Configure a Custom SSL Implementation
-++++++++++++++++++++++++++++++++++++++++
+===== To Configure a Custom SSL Implementation
 
 In GlassFish Server, you can configure the SSL protocol an HTTP listener
 such that it uses a custom implementation of SSL. To enable this
@@ -770,8 +744,7 @@ By default, GlassFish Server uses the implementation
 
 [[ggncl]][[GSADG00470]][[to-delete-ssl-from-an-http-listener]]
 
-To Delete SSL From an HTTP Listener
-+++++++++++++++++++++++++++++++++++
+===== To Delete SSL From an HTTP Listener
 
 Use the `delete-ssl` subcommand in remote mode to delete the SSL element
 in the specified listener. This disables secure communications for the
@@ -804,8 +777,7 @@ typing `asadmin help delete-ssl` at the command line.
 
 [[gixjb]][[GSADG00471]][[to-assign-a-default-virtual-server-to-an-http-listener]]
 
-To Assign a Default Virtual Server to an HTTP Listener
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Assign a Default Virtual Server to an HTTP Listener
 
 1. In the Administration Console, open the HTTP Service component under
 the relevant configuration.
@@ -825,8 +797,7 @@ the HTTP Listeners page.
 
 [[ggncs]][[GSADG00589]][[administering-virtual-servers]]
 
-Administering Virtual Servers
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Virtual Servers
 
 A virtual server is a virtual web server that serves content targeted
 for a specific URL. Multiple virtual servers can serve content using the
@@ -873,8 +844,7 @@ The following topics are addressed here:
 
 [[ggnfr]][[GSADG00472]][[to-create-a-virtual-server]]
 
-To Create a Virtual Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Virtual Server
 
 By default, when GlassFish Server starts, the following virtual servers
 are started automatically:
@@ -937,8 +907,7 @@ typing `asadmin help create-virutal-server` at the command line.
 
 [[ggndw]][[GSADG00473]][[to-list-virtual-servers]]
 
-To List Virtual Servers
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Virtual Servers
 
 Use the `list-virtual-servers` subcommand in remote mode to list the
 existing virtual servers.
@@ -971,8 +940,7 @@ typing `asadmin help list-virutal-servers` at the command line.
 
 [[giwkp]][[GSADG00474]][[to-update-a-virtual-server]]
 
-To Update a Virtual Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Virtual Server
 
 1. List virtual servers by using the
 link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
@@ -983,8 +951,7 @@ The virtual server is identified by its dotted name.
 
 [[ggnen]][[GSADG00475]][[to-delete-a-virtual-server]]
 
-To Delete a Virtual Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Virtual Server
 
 Use the `delete-virtual-server` subcommand in remote mode to delete an
 existing virtual server.
@@ -1020,8 +987,7 @@ typing `asadmin help delete-virutal-server` at the command line.
 
 [[beaga]][[GSADG00772]][[to-assign-a-default-web-module-to-a-virtual-server]]
 
-To Assign a Default Web Module to a Virtual Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Assign a Default Web Module to a Virtual Server
 
 A default web module can be assigned to the default virtual server and
 to each new virtual server. To access the default web module for a
@@ -1048,8 +1014,7 @@ http://myvserver:3184/hellothere.jsp
 
 [[gixku]][[GSADG00476]][[to-assign-a-virtual-server-to-an-application-or-module]]
 
-To Assign a Virtual Server to an Application or Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Assign a Virtual Server to an Application or Module
 
 You can assign a virtual server to a deployed application or web module.
 
@@ -1074,8 +1039,7 @@ a Virtual Server].
 
 [[glavy]][[GSADG00477]][[to-set-jsessionidsso-cookie-attributes]]
 
-To Set `JSESSIONIDSSO` Cookie Attributes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set `JSESSIONIDSSO` Cookie Attributes
 
 Use the `sso-cookie-http-only` and `sso-cookie-secure` virtual server
 attributes to set the `HttpOnly` and `Secure` attributes of any

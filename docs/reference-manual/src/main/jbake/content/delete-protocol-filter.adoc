@@ -5,13 +5,11 @@ next=delete-protocol-finder.html
 prev=delete-protocol.html
 ~~~~~~
 
-delete-protocol-filter
-======================
+= delete-protocol-filter
 
 [[delete-protocol-filter-1]][[GSRFM00104]][[delete-protocol-filter]]
 
-delete-protocol-filter
-----------------------
+== delete-protocol-filter
 
 Removes a protocol filter
 

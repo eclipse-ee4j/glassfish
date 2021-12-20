@@ -5,13 +5,11 @@ next=list-components.html
 prev=list-clusters.html
 ~~~~~~
 
-list-commands
-=============
+= list-commands
 
 [[list-commands-1]][[GSRFM00154]][[list-commands]]
 
-list-commands
--------------
+== list-commands
 
 Lists available commands
 

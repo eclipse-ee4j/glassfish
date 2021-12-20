@@ -5,15 +5,13 @@ next=rmi-iiop.html
 prev=session-persistence-and-failover.html
 ~~~~~~
 
-Configuring Java Message Service High Availability
-==================================================
+= Configuring Java Message Service High Availability
 
 [[GSHAG00012]][[abdbk]]
 
 
 [[configuring-java-message-service-high-availability]]
-10 Configuring Java Message Service High Availability
------------------------------------------------------
+== 10 Configuring Java Message Service High Availability
 
 This chapter describes how to configure the high availability features
 of the Java Message Service (JMS). It covers how to configure Message
@@ -26,8 +24,7 @@ and load balancing, as described in the following topics:
 
 [[abdbx]][[GSHAG00212]][[using-message-queue-broker-clusters-with-glassfish-server]]
 
-Using Message Queue Broker Clusters With GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using Message Queue Broker Clusters With GlassFish Server
 
 This section describes how the JMS service uses Message Queue broker
 clusters to support high-availability JMS messaging in GlassFish Server
@@ -54,8 +51,7 @@ Cluster]
 
 [[gktgs]][[GSHAG00311]][[about-message-queue-broker-clusters]]
 
-About Message Queue Broker Clusters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== About Message Queue Broker Clusters
 
 The following discussion provides a brief overview of Message Queue
 broker clusters. For complete information, see "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
@@ -120,8 +116,7 @@ in Open Message Queue Developer's Guide for Java Clients.
 
 [[gktft]][[GSHAG00312]][[configuring-glassfish-clusters-to-use-message-queue-broker-clusters]]
 
-Configuring GlassFish Clusters to Use Message Queue Broker Clusters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring GlassFish Clusters to Use Message Queue Broker Clusters
 
 When a GlassFish Server cluster is created, the JMS service
 automatically configures a Message Queue conventional broker cluster
@@ -171,8 +166,7 @@ clusters in all these contexts.
 
 [[gktge]][[GSHAG00155]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker]]
 
-To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster With Master Broker
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster With Master Broker
 
 Use the `configure-jms-cluster` subcommand in remote `asadmin` mode to
 configure a conventional broker cluster with master broker to service a
@@ -224,8 +218,7 @@ typing `asadmin help configure-jms-cluster` at the command line.
 
 [[gktfr]][[GSHAG00156]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers]]
 
-To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster of Peer Brokers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster of Peer Brokers
 
 Use the `configure-jms-cluster` subcommand in remote `asadmin` mode to
 configure a conventional broker cluster of peer brokers to service a
@@ -287,8 +280,7 @@ typing `asadmin help configure-jms-cluster` at the command line.
 
 [[gkthc]][[GSHAG00157]][[to-change-the-master-broker-in-an-embedded-or-local-broker-cluster]]
 
-To Change the Master Broker in an Embedded or Local Broker Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change the Master Broker in an Embedded or Local Broker Cluster
 
 Use the `change-master-broker` subcommand in remote `asadmin` mode to
 change the master broker to a different broker in a conventional broker
@@ -329,8 +321,7 @@ typing `asadmin help change-master-broker` at the command line.
 
 [[gktgj]][[GSHAG00158]][[to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters]]
 
-To Migrate Between Types of Embedded or Local Conventional Broker Clusters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Migrate Between Types of Embedded or Local Conventional Broker Clusters
 
 If the need arises to convert from a conventional broker cluster with
 master broker to a conventional broker cluster of peer brokers, or the
@@ -339,8 +330,7 @@ Conventional Clusters]" in Open Message Queue Administration Guide.
 
 [[gktfl]][[GSHAG00159]][[to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster]]
 
-To Configure a GlassFish Cluster to Use a Local Enhanced Broker Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a GlassFish Cluster to Use a Local Enhanced Broker Cluster
 
 Use the `configure-jms-cluster` subcommand in remote `asadmin` mode to
 configure an enhanced broker cluster to service a GlassFish Server
@@ -400,8 +390,7 @@ typing `asadmin help configure-jms-cluster` at the command line.
 
 [[abdby]][[GSHAG00160]][[to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster]]
 
-To Configure a GlassFish Cluster to Use a Remote Broker Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure a GlassFish Cluster to Use a Remote Broker Cluster
 
 [[GSHAG439]]
 
@@ -446,8 +435,7 @@ link:instances.html#gkqbl[To Create an Instance Locally].
 
 [[abdbv]][[GSHAG00213]][[connection-failover]]
 
-Connection Failover
-~~~~~~~~~~~~~~~~~~~
+=== Connection Failover
 
 The use of Message Queue broker clusters provides JMS connection
 failover, including several options that control how connection failures
@@ -536,8 +524,7 @@ Administration Guide.
 
 [[abdbw]][[GSHAG00214]][[load-balanced-delivery-to-mdbs]]
 
-Load-Balanced Delivery to MDBs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Load-Balanced Delivery to MDBs
 
 When a message-driven bean (MDB) application is deployed to a GlassFish
 cluster, incoming messages are delivered randomly to MDBs without regard

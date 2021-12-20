@@ -5,13 +5,11 @@ next=list-nodes-config.html
 prev=list-network-listeners.html
 ~~~~~~
 
-list-nodes
-==========
+= list-nodes
 
 [[list-nodes-1]][[GSRFM00187]][[list-nodes]]
 
-list-nodes
-----------
+== list-nodes
 
 Lists all {productName} nodes in a domain
 

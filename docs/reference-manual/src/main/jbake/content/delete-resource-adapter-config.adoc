@@ -5,13 +5,11 @@ next=delete-resource-ref.html
 prev=delete-protocol-finder.html
 ~~~~~~
 
-delete-resource-adapter-config
-==============================
+= delete-resource-adapter-config
 
 [[delete-resource-adapter-config-1]][[GSRFM00106]][[delete-resource-adapter-config]]
 
-delete-resource-adapter-config
-------------------------------
+== delete-resource-adapter-config
 
 Deletes the resource adapter configuration
 

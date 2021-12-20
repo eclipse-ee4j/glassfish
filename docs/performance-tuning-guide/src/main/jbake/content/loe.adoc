@@ -5,12 +5,10 @@ next=lof.html
 prev=toc.html
 ~~~~~~
 
-List of Examples
-================
+= List of Examples
 
 [[list-of-examples]]
-List of Examples
-----------------
+== List of Examples
 
 * link:tuning-java.html#fxxpw[4-1 Heap Configuration on Solaris]
 * link:tuning-java.html#fxxpz[4-2 Heap Configuration on Windows]

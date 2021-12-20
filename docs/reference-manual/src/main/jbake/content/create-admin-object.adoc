@@ -5,13 +5,11 @@ next=create-application-ref.html
 prev=copy-config.html
 ~~~~~~
 
-create-admin-object
-===================
+= create-admin-object
 
 [[create-admin-object-1]][[GSRFM00012]][[create-admin-object]]
 
-create-admin-object
--------------------
+== create-admin-object
 
 Adds the administered object with the specified JNDI name for a resource adapter
 

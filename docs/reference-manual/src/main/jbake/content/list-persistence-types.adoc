@@ -5,13 +5,11 @@ next=list-protocol-filters.html
 prev=list-password-aliases.html
 ~~~~~~
 
-list-persistence-types
-======================
+= list-persistence-types
 
 [[list-persistence-types-1]][[GSRFM00191]][[list-persistence-types]]
 
-list-persistence-types
-----------------------
+== list-persistence-types
 
 Lists registered persistence types for HTTP sessions and SFSB instances
 

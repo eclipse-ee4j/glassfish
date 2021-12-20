@@ -5,15 +5,13 @@ next=mail.html
 prev=jndi.html
 ~~~~~~
 
-Using the Java Message Service
-==============================
+= Using the Java Message Service
 
 [[GSDVG00020]][[beaob]]
 
 
 [[using-the-java-message-service]]
-17 Using the Java Message Service
----------------------------------
+== 17 Using the Java Message Service
 
 This chapter describes how to use the Java Message Service (JMS) API.
 The Oracle GlassFish Server has a fully integrated JMS provider: the
@@ -45,8 +43,7 @@ The following topics are addressed here:
 
 [[gkpcz]][[GSDVG00196]][[using-application-scoped-jms-resources]]
 
-Using Application-Scoped JMS Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using Application-Scoped JMS Resources
 
 You can define an application-scoped JMS or other resource for an
 enterprise application, web module, EJB module, connector module, or
@@ -57,8 +54,7 @@ Open Source Edition Application Deployment Guide.
 
 [[beaop]][[GSDVG00197]][[load-balanced-message-inflow]]
 
-Load-Balanced Message Inflow
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Load-Balanced Message Inflow
 
 You can configure `ActivationSpec` properties of the `jmsra` resource
 adapter in the `glassfish-ejb-jar.xml` file for a message-driven bean
@@ -98,8 +94,7 @@ Server instances that belong to a cluster.
 
 [[beaor]][[GSDVG00198]][[authentication-with-connectionfactory]]
 
-Authentication With `ConnectionFactory`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Authentication With `ConnectionFactory`
 
 If your web, EJB, or client module has `res-auth` set to `Container`,
 but you use the `ConnectionFactory.createConnection("user","password")`
@@ -110,8 +105,7 @@ situation.
 
 [[beaot]][[GSDVG00199]][[delivering-soap-messages-using-the-jms-api]]
 
-Delivering SOAP Messages Using the JMS API
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Delivering SOAP Messages Using the JMS API
 
 Web service clients use the Simple Object Access Protocol (SOAP) to
 communicate with web services. SOAP uses a combination of XML-based data
@@ -134,8 +128,7 @@ The following topics are addressed here:
 
 [[beaou]][[GSDVG00077]][[to-send-soap-messages-using-the-jms-api]]
 
-To Send SOAP Messages Using the JMS API
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Send SOAP Messages Using the JMS API
 
 1. Import the `MessageTransformer` library.
 +
@@ -213,8 +206,7 @@ tc.close();
 
 [[beaov]][[GSDVG00078]][[to-receive-soap-messages-using-the-jms-api]]
 
-To Receive SOAP Messages Using the JMS API
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Receive SOAP Messages Using the JMS API
 
 1. Import the `MessageTransformer` library.
 +

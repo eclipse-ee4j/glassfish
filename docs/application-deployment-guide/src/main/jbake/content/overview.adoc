@@ -5,15 +5,13 @@ next=deploying-applications.html
 prev=preface.html
 ~~~~~~
 
-Overview of GlassFish Server Open Source Edition 7 Application Deployment
-=========================================================================
+= Overview of GlassFish Server Open Source Edition 7 Application Deployment
 
 [[GSDPG00003]][[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
-1 Overview of GlassFish Server Open Source Edition 7 Application Deployment
----------------------------------------------------------------------------
+== 1 Overview of GlassFish Server Open Source Edition 7 Application Deployment
 
 GlassFish Server Open Source Edition 7 provides an environment for
 developing and deploying Java applications and web services. GlassFish
@@ -37,8 +35,7 @@ are contained in the Administration Console online help.
 
 [[gihzx]][[GSDPG00061]][[about-application-deployment]]
 
-About Application Deployment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Application Deployment
 
 Assembly, also known as packaging, is the process of combining discrete
 components of an application or module into a single unit that can be
@@ -67,8 +64,7 @@ The following topics are addressed here:
 
 [[giptw]][[GSDPG00319]][[general-deployment-functionality]]
 
-General Deployment Functionality
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== General Deployment Functionality
 
 Various Jakarta EE module types, such as connector module, web module, EJB
 module, application client module, can be deployed in the following
@@ -124,8 +120,7 @@ Guide.
 
 [[gihzc]][[GSDPG00320]][[deployment-descriptors-and-annotations]]
 
-Deployment Descriptors and Annotations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deployment Descriptors and Annotations
 
 A deployment descriptor is an XML file that describes how a Jakarta EE
 application or module should be deployed. Each deployment descriptor XML
@@ -222,8 +217,7 @@ metadata, and a warning message is logged.
 
 [[gikhs]][[GSDPG00321]][[modules-and-applications]]
 
-Modules and Applications
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Modules and Applications
 
 An application is a logical collection of one or more modules joined by
 application annotations or deployment descriptors. You assemble
@@ -244,8 +238,7 @@ The following topics are addressed here:
 
 [[beacv]][[GSDPG00307]][[types-of-modules]]
 
-Types of Modules
-++++++++++++++++
+===== Types of Modules
 
 GlassFish Server supports the following types of modules:
 
@@ -293,8 +286,7 @@ Open Source Edition Application Development Guide for more information.
 
 [[beacu]][[GSDPG00308]][[module-based-deployment]]
 
-Module-Based Deployment
-+++++++++++++++++++++++
+===== Module-Based Deployment
 
 You can deploy web, EJB, and application client modules separately,
 outside of any application. Module-based deployment is appropriate when
@@ -316,8 +308,7 @@ deployment."]
 
 [[beacw]][[GSDPG00309]][[application-based-deployment]]
 
-Application-Based Deployment
-++++++++++++++++++++++++++++
+===== Application-Based Deployment
 
 Application-based deployment is appropriate when components need to work
 together as one unit.
@@ -335,8 +326,7 @@ image:img/dgdeploya.png[
 
 [[gijla]][[GSDPG00322]][[access-to-shared-framework-classes]]
 
-Access to Shared Framework Classes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Access to Shared Framework Classes
 
 If you assemble a large, shared library into every module that uses it,
 the result is a huge file that takes too long to register with the
@@ -373,8 +363,7 @@ an application using the JAR Extension Mechanism Architecture.
 
 [[gihzk]][[GSDPG00323]][[naming-standards]]
 
-Naming Standards
-^^^^^^^^^^^^^^^^
+==== Naming Standards
 
 Names of applications and individually-deployed modules must be unique
 within a GlassFish Server domain. Modules within an application must
@@ -399,8 +388,7 @@ The following topics are addressed here:
 
 [[gjjfg]][[GSDPG00310]][[portable-naming]]
 
-Portable Naming
-+++++++++++++++
+===== Portable Naming
 
 Starting in Jakarta EE 6, the Jakarta EE specification defines the portable
 `application-name`, which allows you to specify an application name in
@@ -427,8 +415,7 @@ descriptors, the archive name, minus the file type suffix, is used.
 
 [[giidg]][[GSDPG00311]][[jndi-naming]]
 
-JNDI Naming
-+++++++++++
+===== JNDI Naming
 
 Java Naming and Directory Interface (JNDI) lookup names for EJB
 components must also be unique. Establishing a consistent naming
@@ -438,8 +425,7 @@ module name to the EJB name is a way to guarantee unique names, such as,
 
 [[beada]][[GSDPG00312]][[directory-structure]]
 
-Directory Structure
-+++++++++++++++++++
+===== Directory Structure
 
 Application and module directory structures must follow the structure
 outlined in the Jakarta EE specification. During deployment, the
@@ -456,8 +442,7 @@ in a Directory Format].
 
 [[gkhhv]][[GSDPG00324]][[module-and-application-versions]]
 
-Module and Application Versions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Module and Application Versions
 
 Application and module versioning allows multiple versions of the same
 application to exist in a GlassFish Server domain, which simplifies
@@ -477,8 +462,7 @@ The following topics are addressed here:
 
 [[gkhmg]][[GSDPG00314]][[version-identifiers-and-expressions]]
 
-Version Identifiers and Expressions
-+++++++++++++++++++++++++++++++++++
+===== Version Identifiers and Expressions
 
 The version identifier is a suffix to the module or application name. It
 is separated from the name by a colon (`:`). It must begin with a letter
@@ -540,8 +524,7 @@ find out which version is enabled, use the `--long` option.
 
 [[gkhmm]][[GSDPG00315]][[choosing-the-enabled-version]]
 
-Choosing the Enabled Version
-++++++++++++++++++++++++++++
+===== Choosing the Enabled Version
 
 At most one version of a module or application can be enabled on a
 server instance. All other versions are disabled. Enabling one version
@@ -559,8 +542,7 @@ subcommand.
 
 [[gkhob]][[GSDPG00316]][[versioning-restrictions-and-limitations]]
 
-Versioning Restrictions and Limitations
-+++++++++++++++++++++++++++++++++++++++
+===== Versioning Restrictions and Limitations
 
 Module and application versioning in GlassFish Server is subject to the
 following restrictions and limitations:
@@ -598,8 +580,7 @@ warnings.
 
 [[giphm]][[GSDPG00062]][[about-assembly-and-deployment-events]]
 
-About Assembly and Deployment Events
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Assembly and Deployment Events
 
 The deployment tools that are provided by GlassFish Server can be used
 by any user authorized as an administrator to deploy applications and
@@ -646,8 +627,7 @@ the problem, depending on what the problem is.
 
 [[giifh]][[GSDPG00063]][[about-deployment-tools]]
 
-About Deployment Tools
-~~~~~~~~~~~~~~~~~~~~~~
+=== About Deployment Tools
 
 GlassFish Server provides tools for assembling and deploying a module or
 application.
@@ -662,8 +642,7 @@ The following topics are addressed here:
 
 [[giijz]][[GSDPG00325]][[administration-console]]
 
-Administration Console
-^^^^^^^^^^^^^^^^^^^^^^
+==== Administration Console
 
 The GlassFish Server Administration Console is a browser-based utility
 that features a graphical interface that includes extensive online help
@@ -684,8 +663,7 @@ link in the See Also list.
 
 [[giijf]][[GSDPG00326]][[the-asadmin-utility]]
 
-The `asadmin` Utility
-^^^^^^^^^^^^^^^^^^^^^
+==== The `asadmin` Utility
 
 The GlassFish Server `asadmin` utility is a command-line tool that
 invokes subcommands for identifying the operation or task that you want
@@ -725,8 +703,7 @@ link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
 [[giijq]][[GSDPG00329]][[netbeans-ide]]
 
-NetBeans IDE
-^^^^^^^^^^^^
+==== NetBeans IDE
 
 You can use the NetBeans Integrated Development Environment (IDE), or
 another IDE, to assemble Jakarta EE applications and modules. The NetBeans
@@ -737,16 +714,14 @@ For additional information, see `http://www.netbeans.org`.
 
 [[gikwq]][[GSDPG00330]][[eclipse-ide]]
 
-Eclipse IDE
-^^^^^^^^^^^
+==== Eclipse IDE
 
 In addition to the bundled NetBeans IDE, a plug-in for the Eclipse IDE
 extends GlassFish to the Eclipse community.
 
 [[beaee]][[GSDPG00331]][[jsr-88-client]]
 
-JSR 88 Client
-^^^^^^^^^^^^^
+==== JSR 88 Client
 
 The syntax of the URI entry for the `getDeploymentManager` method is as
 follows:
@@ -765,8 +740,7 @@ deployer:Sun:AppServer::localhost:4848:https
 
 [[gipud]][[GSDPG00064]][[additional-information-on-application-deployment]]
 
-Additional Information on Application Deployment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Additional Information on Application Deployment
 
 As specified from Jakarta EE specifications, the relevant specifications
 are the following:

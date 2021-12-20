@@ -5,13 +5,11 @@ next=enable-http-lb-application.html
 prev=disable-secure-admin-principal.html
 ~~~~~~
 
-enable
-======
+= enable
 
 [[enable-1]][[GSRFM00124]][[enable]]
 
-enable
-------
+== enable
 
 Enables the component
 

@@ -5,15 +5,12 @@ next=jdbc.html
 prev=osgi.html
 ~~~~~~
 
-Using Services and APIs
-=======================
+= Using Services and APIs
 
 [[fvyam]][[GSDVG00047]][[part-iii]]
 
-Part III
---------
+== Part III
 
 [[using-services-and-apis]]
-Using Services and APIs
------------------------
+== Using Services and APIs
 

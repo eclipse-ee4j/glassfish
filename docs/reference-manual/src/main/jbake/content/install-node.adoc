@@ -5,13 +5,11 @@ next=install-node-dcom.html
 prev=import-sync-bundle.html
 ~~~~~~
 
-install-node
-============
+= install-node
 
 [[install-node-1]][[GSRFM00143]][[install-node]]
 
-install-node
-------------
+== install-node
 
 Installs {productName} software on specified SSH-enabled hosts
 

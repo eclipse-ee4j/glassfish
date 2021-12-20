@@ -5,15 +5,13 @@ next=tuning-java.html
 prev=tuning-apps.html
 ~~~~~~
 
-Tuning the GlassFish Server
-===========================
+= Tuning the GlassFish Server
 
 [[GSPTG00005]][[abedn]]
 
 
 [[tuning-the-glassfish-server]]
-3 Tuning the GlassFish Server
------------------------------
+== 3 Tuning the GlassFish Server
 
 This chapter describes some ways to tune your GlassFish Server
 installation for optimum performance.
@@ -46,8 +44,7 @@ The following topics are addressed here:
 
 [[gkxwm]][[GSPTG00055]][[using-the-glassfish-server-performance-tuner]]
 
-Using the GlassFish Server Performance Tuner
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using the GlassFish Server Performance Tuner
 
 You can significantly improve the performance of GlassFish Server and
 the applications deployed on it by adjusting a few deployment and server
@@ -81,8 +78,7 @@ blog.
 
 [[abedo]][[GSPTG00056]][[deployment-settings]]
 
-Deployment Settings
-~~~~~~~~~~~~~~~~~~~
+=== Deployment Settings
 
 Deployment settings can have significant impact on performance. Follow
 these guidelines when configuring deployment settings for best
@@ -94,8 +90,7 @@ performance:
 
 [[abedp]][[GSPTG00180]][[disable-auto-deployment]]
 
-Disable Auto-Deployment
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Disable Auto-Deployment
 
 Enabling auto-deployment will adversely affect deployment, though it is
 a convenience in a development environment. For a production system,
@@ -113,8 +108,7 @@ or disabling auto-deployment.
 
 [[abedq]][[GSPTG00181]][[use-pre-compiled-javaserver-pages]]
 
-Use Pre-compiled JavaServer Pages
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Use Pre-compiled JavaServer Pages
 
 Compiling JSP files is resource intensive and time consuming.
 Pre-compiling JSP files before deploying applications on the server will
@@ -130,8 +124,7 @@ further instructions.
 
 [[abedr]][[GSPTG00182]][[disable-dynamic-application-reloading]]
 
-Disable Dynamic Application Reloading
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disable Dynamic Application Reloading
 
 If dynamic reloading is enabled, the server periodically checks for
 changes in deployed applications and automatically reloads the
@@ -146,8 +139,7 @@ the Administration Console for further instructions.
 
 [[abeds]][[GSPTG00057]][[logger-settings]]
 
-Logger Settings
-~~~~~~~~~~~~~~~
+=== Logger Settings
 
 The GlassFish Server produces writes log messages and exception stack
 trace output to the log file in the logs directory of the instance,
@@ -156,8 +148,7 @@ performance; particularly in benchmarking situations.
 
 [[abedt]][[GSPTG00183]][[general-settings]]
 
-General Settings
-^^^^^^^^^^^^^^^^
+==== General Settings
 
 In general, writing to the system log slows down performance slightly;
 and increased disk access (increasing the log level, decreasing the file
@@ -169,8 +160,7 @@ performance.
 
 [[abedu]][[GSPTG00184]][[log-levels]]
 
-Log Levels
-^^^^^^^^^^
+==== Log Levels
 
 Set the log level for the server and its subsystems in the GlassFish
 Server Administration Console. Navigate to the
@@ -182,8 +172,7 @@ Administration Guide.
 
 [[abedw]][[GSPTG00058]][[web-container-settings]]
 
-Web Container Settings
-~~~~~~~~~~~~~~~~~~~~~~
+=== Web Container Settings
 
 Set Web container settings in the GlassFish Server Administration
 Console by navigating to the Configurations>configuration-name>Web
@@ -199,8 +188,7 @@ Guide.
 
 [[abedx]][[GSPTG00185]][[session-properties-session-timeout]]
 
-Session Properties: Session Timeout
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Session Properties: Session Timeout
 
 Session timeout determines how long the server maintains a session if a
 user does not explicitly invalidate the session. The default value is 30
@@ -212,8 +200,7 @@ reclaim sessions too soon.
 
 [[abedy]][[GSPTG00186]][[manager-properties-reap-interval]]
 
-Manager Properties: Reap Interval
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Manager Properties: Reap Interval
 
 Modifying the reap interval can improve performance, but setting it
 without considering the nature of your sessions and business logic can
@@ -241,8 +228,7 @@ behavior of the application when adjusting the reap interval.
 
 [[abedz]][[GSPTG00187]][[disable-dynamic-jsp-reloading]]
 
-Disable Dynamic JSP Reloading
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Disable Dynamic JSP Reloading
 
 On a production system, improve web container performance by disabling
 dynamic JSP reloading. To do so, edit the `default-web.xml` file in the
@@ -271,8 +257,7 @@ a JSP file to look like this:
 
 [[abeea]][[GSPTG00059]][[ejb-container-settings]]
 
-EJB Container Settings
-~~~~~~~~~~~~~~~~~~~~~~
+=== EJB Container Settings
 
 The EJB Container has many settings that affect performance. As with
 other areas, use monitor the EJB Container to track its execution and
@@ -285,8 +270,7 @@ the instructions in the online help.
 
 [[abeeb]][[GSPTG00188]][[monitoring-the-ejb-container]]
 
-Monitoring the EJB Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Monitoring the EJB Container
 
 Monitoring the EJB container is disabled by default. You can enable EJB
 monitoring through the GlassFish Server Administration Console by
@@ -298,8 +282,7 @@ EJB business methods.
 
 [[abeec]][[GSPTG00189]][[tuning-the-ejb-container]]
 
-Tuning the EJB Container
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning the EJB Container
 
 The EJB container caches and pools EJB components for better
 performance. Tuning the cache and pool properties can provide
@@ -318,8 +301,7 @@ The following topics are addressed here:
 
 [[abeed]][[GSPTG00117]][[overview-of-ejb-pooling-and-caching]]
 
-Overview of EJB Pooling and Caching
-+++++++++++++++++++++++++++++++++++
+===== Overview of EJB Pooling and Caching
 
 Both stateless session beans and entity beans can be pooled to improve
 server performance. In addition, both stateful session beans and entity
@@ -361,8 +343,7 @@ production-level deployment.
 
 [[abeee]][[GSPTG00118]][[tuning-the-ejb-pool]]
 
-Tuning the EJB Pool
-+++++++++++++++++++
+===== Tuning the EJB Pool
 
 A bean in the pool represents the pooled state in the EJB lifecycle.
 This means that the bean does not have an identity. The advantage of
@@ -426,8 +407,7 @@ see the pool draining back to steady size quickly enough.
 
 [[abeeg]][[GSPTG00119]][[tuning-the-ejb-cache]]
 
-Tuning the EJB Cache
-++++++++++++++++++++
+===== Tuning the EJB Cache
 
 A bean in the cache represents the ready state in the EJB lifecycle.
 This means that the bean has an identity (for example, a primary key or
@@ -507,8 +487,7 @@ Property button in the Additional Properties section.
 
 [[abeei]][[GSPTG00120]][[pool-and-cache-settings-for-individual-ejb-components]]
 
-Pool and Cache Settings for Individual EJB Components
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Pool and Cache Settings for Individual EJB Components
 
 Individual EJB pool and cache settings in the `sun-ejb-jar.xml`
 deployment descriptor override those of the EJB container. The following
@@ -542,8 +521,7 @@ table lists the cache and pool settings for each type of EJB component.
 
 [[abeej]][[GSPTG00121]][[commit-option]]
 
-Commit Option
-+++++++++++++
+===== Commit Option
 
 The commit option controls the action taken by the EJB container when an
 EJB component completes a transaction. The commit option has a
@@ -596,8 +574,7 @@ cache-misses then tune `max-cache-size`, and probably
 
 [[abeel]][[GSPTG00060]][[java-message-service-settings]]
 
-Java Message Service Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Java Message Service Settings
 
 The Type attribute that determines whether the Java Message Service
 (JMS) is on local or remote system affects performance. Local JMS
@@ -610,8 +587,7 @@ Administration Guide.
 
 [[abeem]][[GSPTG00061]][[transaction-service-settings]]
 
-Transaction Service Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Transaction Service Settings
 
 The transaction manager makes it possible to commit and roll back
 distributed transactions.
@@ -627,8 +603,7 @@ The following topics are addressed here:
 
 [[abeen]][[GSPTG00190]][[monitoring-the-transaction-service]]
 
-Monitoring the Transaction Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Monitoring the Transaction Service
 
 Transaction Manager monitoring is disabled by default. Enable monitoring
 of the transaction service through the GlassFish Server Administration
@@ -646,8 +621,7 @@ reconfig serverInstance
 
 [[abeeo]][[GSPTG00122]][[viewing-monitoring-information]]
 
-Viewing Monitoring Information
-++++++++++++++++++++++++++++++
+===== Viewing Monitoring Information
 
 To view monitoring information for the transaction service in the
 GlassFish Server Administration Console, navigate to the server (Admin
@@ -663,8 +637,7 @@ The following statistics are gathered on the transaction service:
 
 [[abeep]][[GSPTG00191]][[tuning-the-transaction-service]]
 
-Tuning the Transaction Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning the Transaction Service
 
 This property can be used to disable the transaction logging, where the
 performance is of utmost importance more than the recovery. This
@@ -680,8 +653,7 @@ Guide.
 
 [[abeeq]][[GSPTG00123]][[disable-distributed-transaction-logging]]
 
-Disable Distributed Transaction Logging
-+++++++++++++++++++++++++++++++++++++++
+===== Disable Distributed Transaction Logging
 
 You can disable transaction logging through the Administration Console
 or by using the following `asadmin set` subcommand:
@@ -702,8 +674,7 @@ transaction recovery.
 
 [[abeer]][[GSPTG00124]][[recover-on-restart-automatic-recovery]]
 
-Recover On Restart (Automatic Recovery)
-+++++++++++++++++++++++++++++++++++++++
+===== Recover On Restart (Automatic Recovery)
 
 You can set the Recover on Restart attribute through the Administration
 Console or by entering the following `asadmin set` subcommand:
@@ -731,8 +702,7 @@ transaction-intensive tests. Gains in real applications may be less.
 
 [[abees]][[GSPTG00125]][[keypoint-interval]]
 
-Keypoint Interval
-+++++++++++++++++
+===== Keypoint Interval
 
 The keypoint interval determines how often entries for completed
 transactions are removed from the log file. Keypointing prevents a
@@ -743,8 +713,7 @@ the Keypoint Interval is 2048, which is sufficient in most cases.
 
 [[abeet]][[GSPTG00062]][[http-service-settings]]
 
-HTTP Service Settings
-~~~~~~~~~~~~~~~~~~~~~
+=== HTTP Service Settings
 
 Tuning the monitoring and access logging settings for the HTTP server
 instances that handle client requests are important parts of ensuring
@@ -757,8 +726,7 @@ The following topics are addressed here:
 
 [[abeeu]][[GSPTG00192]][[monitoring-the-http-service]]
 
-Monitoring the HTTP Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Monitoring the HTTP Service
 
 Disabling the collection of monitoring statistics can increase overall
 GlassFish Server performance. You can enable or disable monitoring
@@ -794,8 +762,7 @@ information to review includes the following:
 
 [[abeew]][[GSPTG00126]][[dns-cache-information-dns]]
 
-DNS Cache Information (dns)
-+++++++++++++++++++++++++++
+===== DNS Cache Information (dns)
 
 The DNS cache caches IP addresses and DNS names. The DNS cache is
 disabled by default. In the DNS Statistics for Process ID All page under
@@ -907,8 +874,7 @@ The current number of lookups in progress.
 
 [[abefh]][[GSPTG00127]][[file-cache-information-file-cache]]
 
-File Cache Information (file-cache)
-+++++++++++++++++++++++++++++++++++
+===== File Cache Information (file-cache)
 
 The file cache caches static content so that the server handles requests
 for static content quickly. The file-cache section provides statistics
@@ -940,8 +906,7 @@ represents a single URI. This is a tunable setting.
 
 [[abefi]][[GSPTG00128]][[keep-alive-keep-alive]]
 
-Keep Alive (keep-alive)
-+++++++++++++++++++++++
+===== Keep Alive (keep-alive)
 
 The following are statistics related to the Keep Alive system. The most
 important settings you can tune here relate to HTTP Timeout. See
@@ -958,8 +923,7 @@ Connections
 
 [[abefg]][[GSPTG00129]][[connection-queue]]
 
-Connection Queue
-++++++++++++++++
+===== Connection Queue
 
 * Total Connections Queued: Total connections queued is the total number
 of times a connection has been queued. This includes newly accepted
@@ -972,8 +936,7 @@ request.
 
 [[abefk]][[GSPTG00193]][[http-service-access-logging]]
 
-HTTP Service Access Logging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== HTTP Service Access Logging
 
 Accessing Logging can be tuned using several `asadmin` subcommands.
 Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
@@ -994,8 +957,7 @@ Rotation to ensure that the logs do not run out of disk space.
 
 [[abegk]][[GSPTG00063]][[network-listener-settings]]
 
-Network Listener Settings
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Network Listener Settings
 
 You can tune Network Listener settings from the command line by using
 the instructions in "link:../administration-guide/http_https.html#GSADG00588[Administering HTTP Network
@@ -1017,8 +979,7 @@ Administration Console:
 
 [[abegl]][[GSPTG00194]][[general-settings-1]]
 
-General Settings
-^^^^^^^^^^^^^^^^
+==== General Settings
 
 For machines with only one network interface card (NIC), set the network
 address to the IP address of the machine (for example, 192.18.80.23
@@ -1030,8 +991,7 @@ each NIC.
 
 [[gkxjd]][[GSPTG00195]][[http-settings]]
 
-HTTP Settings
-^^^^^^^^^^^^^
+==== HTTP Settings
 
 The following settings on the HTTP tab can significantly affect
 performance:
@@ -1043,8 +1003,7 @@ performance:
 
 [[abeft]][[GSPTG00130]][[max-connections]]
 
-Max Connections
-+++++++++++++++
+===== Max Connections
 
 Max Connections controls the number of requests that a particular client
 can make over a keep-alive connection. The range is any positive
@@ -1061,8 +1020,7 @@ Connections simultaneous keep alive connections.
 
 [[abegd]][[GSPTG00131]][[dns-lookup-enabled]]
 
-DNS Lookup Enabled
-++++++++++++++++++
+===== DNS Lookup Enabled
 
 This setting specifies whether the server performs DNS (domain name
 service) lookups on clients that access the server. When DNS lookup is
@@ -1080,8 +1038,7 @@ modify this setting with caution.
 
 [[abefu]][[GSPTG00132]][[timeout]]
 
-Timeout
-+++++++
+===== Timeout
 
 Timeout determines the maximum time (in seconds) that the server holds
 open an HTTP keep alive connection. A client can keep a connection to
@@ -1122,8 +1079,7 @@ settings.
 
 [[abefq]][[GSPTG00133]][[header-buffer-length]]
 
-Header Buffer Length
-++++++++++++++++++++
+===== Header Buffer Length
 
 The size (in bytes) of the buffer used by each of the request processing
 threads for reading the request data from the client.
@@ -1134,8 +1090,7 @@ size is large, increase this parameter.
 
 [[gkxit]][[GSPTG00196]][[file-cache-settings]]
 
-File Cache Settings
-^^^^^^^^^^^^^^^^^^^
+==== File Cache Settings
 
 The GlassFish Server uses a file cache to serve static information
 faster. The file cache contains information about static files such as
@@ -1150,8 +1105,7 @@ performance:
 
 [[abegf]][[GSPTG00134]][[max-file-count]]
 
-Max File Count
-++++++++++++++
+===== Max File Count
 
 Max File Count determines how many files are in the cache. If the value
 is too big, the server caches little-needed files, which wastes memory.
@@ -1161,8 +1115,7 @@ applications—generally, the effects will not be great.
 
 [[abegh]][[GSPTG00135]][[max-age]]
 
-Max Age
-+++++++
+===== Max Age
 
 This parameter controls how long cached information is used after a file
 has been cached. An entry older than the maximum age is replaced by a
@@ -1183,8 +1136,7 @@ previous version of a content file after the file has been modified.
 
 [[gkxjt]][[GSPTG00064]][[transport-settings]]
 
-Transport Settings
-~~~~~~~~~~~~~~~~~~
+=== Transport Settings
 
 The Acceptor Threads property for the Transport service specifies how
 many threads you want in accept mode on a listen socket at any time. It
@@ -1205,8 +1157,7 @@ page.
 
 [[abehk]][[GSPTG00065]][[thread-pool-settings]]
 
-Thread Pool Settings
-~~~~~~~~~~~~~~~~~~~~
+=== Thread Pool Settings
 
 You can tune thread pool settings by following the instructions in
 "link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in GlassFish Server Open
@@ -1222,8 +1173,7 @@ GlassFish Server performance:
 
 [[abefn]][[GSPTG00197]][[max-thread-pool-size]]
 
-Max Thread Pool Size
-^^^^^^^^^^^^^^^^^^^^
+==== Max Thread Pool Size
 
 The Max Thread Pool Size parameter specifies the maximum number of
 simultaneous requests the server can handle. The default value is 5.
@@ -1257,8 +1207,7 @@ stop increasing thread count.
 
 [[abefo]][[GSPTG00198]][[min-thread-pool-size]]
 
-Min Thread Pool Size
-^^^^^^^^^^^^^^^^^^^^
+==== Min Thread Pool Size
 
 The Min Thread Pool Size property specifies the minimum number of
 threads the server initiates upon startup. The default value is 2. Min
@@ -1273,8 +1222,7 @@ quite significantly.
 
 [[abegt]][[GSPTG00066]][[orb-settings]]
 
-ORB Settings
-~~~~~~~~~~~~
+=== ORB Settings
 
 The GlassFish Server includes a high performance and scalable CORBA
 Object Request Broker (ORB). The ORB is the foundation of the EJB
@@ -1299,8 +1247,7 @@ The following topics are addressed here:
 
 [[abegu]][[GSPTG00199]][[overview]]
 
-Overview
-^^^^^^^^
+==== Overview
 
 The ORB is primarily used by EJB components via:
 
@@ -1322,8 +1269,7 @@ not require copying any objects.
 
 [[abegv]][[GSPTG00200]][[how-a-client-connects-to-the-orb]]
 
-How a Client Connects to the ORB
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== How a Client Connects to the ORB
 
 A rich client Java program performs a new `initialContext()` call which
 creates a client side ORB instance. This in turn creates a socket
@@ -1345,8 +1291,7 @@ rich client application exits.
 
 [[abegw]][[GSPTG00201]][[monitoring-the-orb]]
 
-Monitoring the ORB
-^^^^^^^^^^^^^^^^^^
+==== Monitoring the ORB
 
 ORB statistics are disabled by default. To gather ORB statistics, enable
 monitoring with the following `asadmin` command:
@@ -1370,8 +1315,7 @@ The following statistics are of particular interest when tuning the ORB:
 
 [[abegx]][[GSPTG00136]][[connection-statistics]]
 
-Connection Statistics
-+++++++++++++++++++++
+===== Connection Statistics
 
 The following statistics are gathered on ORB connections:
 
@@ -1388,8 +1332,7 @@ asadmin get --monitor
 
 [[abegy]][[GSPTG00137]][[thread-pools]]
 
-Thread Pools
-++++++++++++
+===== Thread Pools
 
 The following statistics are gathered on ORB thread pools:
 
@@ -1406,8 +1349,7 @@ asadmin get --monitor
 
 [[abegz]][[GSPTG00202]][[tuning-the-orb]]
 
-Tuning the ORB
-^^^^^^^^^^^^^^
+==== Tuning the ORB
 
 Tune ORB performance by setting ORB parameters and ORB thread pool
 parameters. You can often decrease response time by leveraging
@@ -1426,8 +1368,7 @@ The following topics are addressed here:
 
 [[abeha]][[GSPTG00138]][[tunable-orb-parameters]]
 
-Tunable ORB Parameters
-++++++++++++++++++++++
+===== Tunable ORB Parameters
 
 You can tune ORB parameters using the instructions in
 "link:../administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
@@ -1463,8 +1404,7 @@ idle-thread-timeout-in-seconds
 
 [[abehb]][[GSPTG00139]][[orb-thread-pool-parameters]]
 
-ORB Thread Pool Parameters
-++++++++++++++++++++++++++
+===== ORB Thread Pool Parameters
 
 The ORB thread pool contains a task queue and a pool of threads. Tasks
 or jobs are inserted into the task queue and free threads pick tasks
@@ -1502,8 +1442,7 @@ more information, see link:#abehg[Thread Pool Sizing].
 
 [[abehc]][[GSPTG00140]][[client-orb-properties]]
 
-Client ORB Properties
-+++++++++++++++++++++
+===== Client ORB Properties
 
 Specify the following properties as command-line arguments when
 launching the client program. You do this by using the following syntax
@@ -1600,8 +1539,7 @@ currently for the lifetime of the connection).
 
 [[abehg]][[GSPTG00141]][[thread-pool-sizing]]
 
-Thread Pool Sizing
-++++++++++++++++++
+===== Thread Pool Sizing
 
 After examining the number of inbound and outbound connections as
 explained above, tune the size of the thread pool appropriately. This
@@ -1629,8 +1567,7 @@ idle thread timeout period.
 
 [[abehh]][[GSPTG00142]][[examining-iiop-messages]]
 
-Examining IIOP Messages
-+++++++++++++++++++++++
+===== Examining IIOP Messages
 
 It is sometimes useful to examine the IIOP messages passed by the
 GlassFish Server. To make the server save IIOP messages to the
@@ -1683,8 +1620,7 @@ for writing messages.
 
 [[abehp]][[GSPTG00067]][[resource-settings]]
 
-Resource Settings
-~~~~~~~~~~~~~~~~~
+=== Resource Settings
 
 Tuning JDBC and connector resources can significantly improve GlassFish
 Server performance.
@@ -1696,8 +1632,7 @@ The following topics are addressed here:
 
 [[abehq]][[GSPTG00203]][[jdbc-connection-pool-settings]]
 
-JDBC Connection Pool Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== JDBC Connection Pool Settings
 
 For optimum performance of database-intensive applications, tune the
 JDBC Connection Pools managed by the GlassFish Server. These connection
@@ -1722,8 +1657,7 @@ The following topics are addressed here:
 
 [[abehr]][[GSPTG00143]][[monitoring-jdbc-connection-pools]]
 
-Monitoring JDBC Connection Pools
-++++++++++++++++++++++++++++++++
+===== Monitoring JDBC Connection Pools
 
 Statistics-gathering is disabled by default for JDBC Connection Pools.
 Refer to for instructions on enabling JDBC monitoring in
@@ -1757,8 +1691,7 @@ instructions.
 
 [[abehs]][[GSPTG00144]][[tuning-jdbc-connection-pools]]
 
-Tuning JDBC Connection Pools
-++++++++++++++++++++++++++++
+===== Tuning JDBC Connection Pools
 
 Refer to "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
 GlassFish Server Open Source Edition Administration Guide for
@@ -1922,8 +1855,7 @@ failed connections.
 
 [[abehy]][[GSPTG00204]][[connector-connection-pool-settings]]
 
-Connector Connection Pool Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Connector Connection Pool Settings
 
 From a performance standpoint, connector connection pools are similar to
 JDBC connection pools. Follow all the recommendations in the previous
@@ -1931,8 +1863,7 @@ section, link:#abehs[Tuning JDBC Connection Pools].
 
 [[abehz]][[GSPTG00145]][[transaction-support]]
 
-Transaction Support
-+++++++++++++++++++
+===== Transaction Support
 
 You may be able to improve performance by overriding the default
 transaction support specified for each connector connection pool.
@@ -1966,8 +1897,7 @@ TESTPOOL
 
 [[gkxvd]][[GSPTG00068]][[load-balancer-settings]]
 
-Load Balancer Settings
-~~~~~~~~~~~~~~~~~~~~~~
+=== Load Balancer Settings
 
 GlassFish Server Open Source Edition is compatible with the Apache HTTP
 server `mod_jk` module for load balancing.

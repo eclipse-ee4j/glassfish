@@ -5,13 +5,11 @@ next=monitor.html
 prev=login.html
 ~~~~~~
 
-migrate-timers
-==============
+= migrate-timers
 
 [[migrate-timers-1]][[GSRFM00211]][[migrate-timers]]
 
-migrate-timers
---------------
+== migrate-timers
 
 Moves EJB timers when a clustered instance was stopped or has crashed
 

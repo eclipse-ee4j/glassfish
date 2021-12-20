@@ -5,13 +5,11 @@ next=create-managed-scheduled-executor-service.html
 prev=create-local-instance.html
 ~~~~~~
 
-create-managed-executor-service
-===============================
+= create-managed-executor-service
 
 [[create-managed-executor-service-1]][[GSRFM840]][[create-managed-executor-service]]
 
-create-managed-executor-service
--------------------------------
+== create-managed-executor-service
 
 Creates a managed executor service resource
 

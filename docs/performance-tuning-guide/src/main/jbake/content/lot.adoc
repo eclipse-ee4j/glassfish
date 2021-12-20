@@ -5,12 +5,10 @@ next=title.html
 prev=lof.html
 ~~~~~~
 
-List of Tables
-==============
+= List of Tables
 
 [[list-of-tables]]
-List of Tables
---------------
+== List of Tables
 
 * link:overview.html#gacmh[1-1 Performance Tuning Roadmap]
 * link:overview.html#gacmp[1-2 Factors That Affect Performance]

@@ -5,13 +5,11 @@ next=list-jmsdest.html
 prev=list-jdbc-connection-pools.html
 ~~~~~~
 
-list-jdbc-resources
-===================
+= list-jdbc-resources
 
 [[list-jdbc-resources-1]][[GSRFM00174]][[list-jdbc-resources]]
 
-list-jdbc-resources
--------------------
+== list-jdbc-resources
 
 Lists all JDBC resources
 

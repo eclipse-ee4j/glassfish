@@ -5,15 +5,13 @@ next=logging.html
 prev=threadpools.html
 ~~~~~~
 
-Administering Web Applications
-==============================
+= Administering Web Applications
 
 [[GSADG00009]][[gbbjk]]
 
 
 [[administering-web-applications]]
-6 Administering Web Applications
---------------------------------
+== 6 Administering Web Applications
 
 This chapter explains how to administer web applications in the
 GlassFish Server Open Source Edition 7 environment.
@@ -33,8 +31,7 @@ online help.
 
 [[beagk]][[GSADG00548]][[invoking-a-servlet-by-alternate-means]]
 
-Invoking a Servlet by Alternate Means
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Invoking a Servlet by Alternate Means
 
 You can call a servlet deployed to GlassFish Server by using a URL in a
 browser or embedded as a link in an HTML or JSP file. The format of a
@@ -102,8 +99,7 @@ For example:
 
 [[gixud]][[GSADG00549]][[changing-log-output-for-a-servlet]]
 
-Changing Log Output for a Servlet
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Changing Log Output for a Servlet
 
 `ServletContext.log` messages are sent to the server log. By default,
 the `System.out` and `System.err` output of servlets are sent to the
@@ -118,8 +114,7 @@ system default location only.
 
 [[beagc]][[GSADG00550]][[defining-global-features-for-web-applications]]
 
-Defining Global Features for Web Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Defining Global Features for Web Applications
 
 You can use the `default-web.xml` file to define features such as
 filters and security constraints that apply to all web applications.
@@ -161,8 +156,7 @@ file, or edit the file directly using the following steps.
 
 [[fvymc]][[GSADG00370]][[to-use-the-default-web.xml-file]]
 
-To Use the `default-web.xml` File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Use the `default-web.xml` File
 
 1. Place the JAR file for the filter, security constraint, or other
 feature in the domain-dir`/lib` directory.
@@ -174,8 +168,7 @@ See link:domains.html#ginqj[To Restart a Domain].
 
 [[gixrb]][[GSADG00551]][[redirecting-a-url]]
 
-Redirecting a URL
-~~~~~~~~~~~~~~~~~
+=== Redirecting a URL
 
 You can specify that a request for an old URL be treated as a request
 for a new URL. This is called redirecting a URL.
@@ -205,8 +198,7 @@ This example redirects `from` `dummy` to `etude`:
 
 [[gfaad]][[GSADG00552]][[administering-mod_jk]]
 
-Administering `mod_jk`
-~~~~~~~~~~~~~~~~~~~~~~
+=== Administering `mod_jk`
 
 The Apache Tomcat Connector `mod_jk` can be used to connect the web
 container with web servers such as Apache HTTP Server. By using
@@ -230,8 +222,7 @@ GlassFish Server]
 
 [[gixqw]][[GSADG00371]][[to-enable-mod_jk]]
 
-To Enable `mod_jk`
-^^^^^^^^^^^^^^^^^^
+==== To Enable `mod_jk`
 
 You can front GlassFish Server with Apache HTTP Server by enabling the
 `mod_jk` protocol for one of GlassFish Server's network listeners, as
@@ -348,8 +339,7 @@ For more information on Apache Tomcat Connector, see
 
 [[gixpx]][[GSADG00372]][[to-load-balance-using-mod_jk-and-glassfish-server]]
 
-To Load Balance Using `mod_jk` and GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Load Balance Using `mod_jk` and GlassFish Server
 
 Load balancing is the process of dividing the amount of work that a
 computer has to do between two or more computers so that more work gets
@@ -437,8 +427,7 @@ worker.loadbalancer.balance_workers=worker1,worker2
 
 [[gjpat]][[GSADG00373]][[to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser]]
 
-To Enable SSL Between the `mod_jk` Load Balancer and the Browser
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable SSL Between the `mod_jk` Load Balancer and the Browser
 
 To activate security for `mod_jk` on GlassFish Server, you must first
 generate a Secure Socket Layer (SSL) self-signed certificate on the
@@ -513,8 +502,7 @@ JkMount /* worker1
 
 [[gjpan]][[GSADG00374]][[to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server]]
 
-To Enable SSL Between the `mod_jk` Load Balancer and GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable SSL Between the `mod_jk` Load Balancer and GlassFish Server
 
 This procedure does not enable SSL transfer between `mod_jk` and
 GlassFish Server. It enables `mod_jk` to forward SSL-encrypted
@@ -563,8 +551,7 @@ Server.
 
 [[CIHJDAJD]][[GSADG861]][[administering-mod_proxy_ajp]]
 
-Administering `mod_proxy_ajp`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering `mod_proxy_ajp`
 
 The Apache Connector `mod_proxy_ajp` can be used to connect the web
 container with Apache HTTP Server. By using `mod_proxy_ajp`, you can
@@ -574,8 +561,7 @@ front GlassFish Server with Apache HTTP Server.
 
 
 [[to-enable-mod_proxy_ajp]]
-To Enable `mod_proxy_ajp`
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable `mod_proxy_ajp`
 
 You can front GlassFish Server with Apache HTTP Server and its
 `mod_proxy_ajp` connector by enabling the AJP protocol for one of
@@ -654,8 +640,7 @@ For more information on the AJP protocol, see
 
 
 [[to-load-balance-using-mod_proxy_ajp-and-glassfish-server]]
-To Load Balance Using `mod_proxy_ajp` and GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Load Balance Using `mod_proxy_ajp` and GlassFish Server
 
 Load balancing is the process of dividing the amount of work that a
 computer has to do between two or more computers so that more work gets

@@ -5,15 +5,13 @@ next=administrative-security.html
 prev=message-security.html
 ~~~~~~
 
-Administering Security in Cluster Mode
-======================================
+= Administering Security in Cluster Mode
 
 [[GSSCG00038]][[gknpf]]
 
 
 [[administering-security-in-cluster-mode]]
-4 Administering Security in Cluster Mode
-----------------------------------------
+== 4 Administering Security in Cluster Mode
 
 This chapter describes important information about administering
 security in a cluster.
@@ -34,8 +32,7 @@ Console online help.
 
 [[gksam]][[GSSCG00159]][[configuring-certificates-in-cluster-mode]]
 
-Configuring Certificates in Cluster Mode
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Certificates in Cluster Mode
 
 The sections link:system-security.html#abloj[Certificates and SSL] and
 link:system-security.html#ablqz[Administering JSSE Certificates] describe
@@ -51,8 +48,7 @@ link:administrative-security.html#gkped[Using Your Own Certificates].
 
 [[gkmhh]][[GSSCG00160]][[dynamic-reconfiguration]]
 
-Dynamic Reconfiguration
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Dynamic Reconfiguration
 
 Administrative commands that you execute on the domain administration
 server (DAS) must either be replicated on the affected server instances,
@@ -111,8 +107,7 @@ The `--target` operand is supported for the following security-related CLI subco
 
 [[gkned]][[GSSCG00226]][[enabling-dynamic-configuration]]
 
-Enabling Dynamic Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Enabling Dynamic Configuration
 
 Dynamic configuration is enabled by default and no additional action is required.
 
@@ -140,8 +135,7 @@ without having those changes take effect immediately.
 
 [[gktgi]][[GSSCG00161]][[understanding-synchronization]]
 
-Understanding Synchronization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Understanding Synchronization
 
 As described in "link:../ha-administration-guide/instances.html#GSHAG00189[
 Resynchronizing GlassFish Server Instances and the DAS]"

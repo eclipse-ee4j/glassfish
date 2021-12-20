@@ -5,13 +5,11 @@ next=create-jms-host.html
 prev=create-jdbc-resource.html
 ~~~~~~
 
-create-jmsdest
-==============
+= create-jmsdest
 
 [[create-jmsdest-1]][[GSRFM00038]][[create-jmsdest]]
 
-create-jmsdest
---------------
+== create-jmsdest
 
 Creates a JMS physical destination
 

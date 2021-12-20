@@ -5,13 +5,11 @@ next=list-clusters.html
 prev=list-batch-job-steps.html
 ~~~~~~
 
-list-batch-runtime-configuration
-================================
+= list-batch-runtime-configuration
 
 [[list-batch-runtime-configuration-1]][[GSRFM863]][[list-batch-runtime-configuration]]
 
-list-batch-runtime-configuration
---------------------------------
+== list-batch-runtime-configuration
 
 Displays the configuration of the batch runtime
 

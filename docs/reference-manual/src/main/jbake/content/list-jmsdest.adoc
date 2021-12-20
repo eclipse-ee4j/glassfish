@@ -5,13 +5,11 @@ next=list-jms-hosts.html
 prev=list-jdbc-resources.html
 ~~~~~~
 
-list-jmsdest
-============
+= list-jmsdest
 
 [[list-jmsdest-1]][[GSRFM00175]][[list-jmsdest]]
 
-list-jmsdest
-------------
+== list-jmsdest
 
 Lists the existing JMS physical destinations
 

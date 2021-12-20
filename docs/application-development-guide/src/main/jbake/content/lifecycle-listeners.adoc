@@ -5,15 +5,13 @@ next=osgi.html
 prev=connectors.html
 ~~~~~~
 
-Developing Lifecycle Listeners
-==============================
+= Developing Lifecycle Listeners
 
 [[GSDVG00014]][[beamc]]
 
 
 [[developing-lifecycle-listeners]]
-12 Developing Lifecycle Listeners
----------------------------------
+== 12 Developing Lifecycle Listeners
 
 Lifecycle listener modules provide a means of running short or long
 duration Java-based tasks within the Oracle GlassFish Server
@@ -47,8 +45,7 @@ The following topics are addressed here:
 
 [[beamd]][[GSDVG00167]][[server-life-cycle-events]]
 
-Server Life Cycle Events
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Server Life Cycle Events
 
 A lifecycle module listens for and performs its tasks in response to the
 following events in the server life cycle:
@@ -71,8 +68,7 @@ LifecycleListener interface.
 
 [[beame]][[GSDVG00168]][[the-lifecyclelistener-interface]]
 
-The LifecycleListener Interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The LifecycleListener Interface
 
 To create a lifecycle module is to configure a customized class that
 implements the com.sun.appserv.server.LifecycleListener interface. You
@@ -95,8 +91,7 @@ lifecycle events.
 
 [[beamf]][[GSDVG00169]][[the-lifecycleevent-class]]
 
-The `LifecycleEvent` Class
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The `LifecycleEvent` Class
 
 The `com.sun.appserv.server.LifecycleEvent` class defines a server life
 cycle event. The following methods are associated with the event:
@@ -119,8 +114,7 @@ A `LifecycleEvent` instance is passed to the
 
 [[beamg]][[GSDVG00170]][[the-server-lifecycle-event-context]]
 
-The Server Lifecycle Event Context
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== The Server Lifecycle Event Context
 
 The com.sun.appserv.server.LifecycleEventContext interface exposes
 runtime information about the server. The lifecycle event context is
@@ -150,8 +144,7 @@ initial context to which all the resources are bound.
 
 [[beamh]][[GSDVG00171]][[deploying-a-lifecycle-module]]
 
-Deploying a Lifecycle Module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying a Lifecycle Module
 
 For instructions on how to deploy a lifecycle module, see the
 link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
@@ -166,8 +159,7 @@ instance synchronizes with the Domain Administration Server.
 
 [[beami]][[GSDVG00172]][[considerations-for-lifecycle-modules]]
 
-Considerations for Lifecycle Modules
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Considerations for Lifecycle Modules
 
 The resources allocated at initialization or startup should be freed at
 shutdown or termination. The lifecycle module classes are called

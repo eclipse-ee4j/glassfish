@@ -5,13 +5,11 @@ next=enable-http-lb-server.html
 prev=enable.html
 ~~~~~~
 
-enable-http-lb-application
-==========================
+= enable-http-lb-application
 
 [[enable-http-lb-application-1]][[GSRFM00126]][[enable-http-lb-application]]
 
-enable-http-lb-application
---------------------------
+== enable-http-lb-application
 
 Enables a previously-disabled application managed by a load balancer
 

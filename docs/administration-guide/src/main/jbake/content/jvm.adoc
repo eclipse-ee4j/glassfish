@@ -5,15 +5,13 @@ next=threadpools.html
 prev=domains.html
 ~~~~~~
 
-Administering the Virtual Machine for the Java Platform
-=======================================================
+= Administering the Virtual Machine for the Java Platform
 
 [[GSADG00007]][[ablwj]]
 
 
 [[administering-the-virtual-machine-for-the-java-platform]]
-4 Administering the Virtual Machine for the Java Platform
----------------------------------------------------------
+== 4 Administering the Virtual Machine for the Java Platform
 
 This chapter provides procedures for administering the Virtual Machine
 for the Java platform (Java Virtual Machine) or JVM machine) in the
@@ -30,8 +28,7 @@ Console are contained in the Administration Console online help.
 
 [[gepzd]][[GSADG00544]][[administering-jvm-options]]
 
-Administering JVM Options
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering JVM Options
 
 The Java Virtual Machine is an interpretive computing engine responsible
 for running the byte codes in a compiled Java program. The virtual
@@ -49,8 +46,7 @@ The following topics are addressed here:
 
 [[ggnes]][[GSADG00359]][[to-create-jvm-options]]
 
-To Create JVM Options
-^^^^^^^^^^^^^^^^^^^^^
+==== To Create JVM Options
 
 Use the `create-jvm-options` subcommand in remote mode to create JVM
 options in the Java configuration or the profiler elements of the
@@ -94,8 +90,7 @@ typing `asadmin help create-jvm-options` at the command line.
 
 [[ggnce]][[GSADG00360]][[to-list-jvm-options]]
 
-To List JVM Options
-^^^^^^^^^^^^^^^^^^^
+==== To List JVM Options
 
 Use the `list-jvm-options` subcommand in remote mode to list the
 existing JVM options.
@@ -140,8 +135,7 @@ typing `asadmin help list-jvm-options` at the command line.
 
 [[ggnfi]][[GSADG00361]][[to-delete-jvm-options]]
 
-To Delete JVM Options
-^^^^^^^^^^^^^^^^^^^^^
+==== To Delete JVM Options
 
 Use the `delete-jvm-options` subcommand in remote mode to delete JVM
 options from the Java configuration or profiler elements of the
@@ -194,8 +188,7 @@ typing `asadmin help delete-jvm-options` at the command line.
 
 [[ggnbu]][[GSADG00362]][[to-generate-a-jvm-report]]
 
-To Generate a JVM Report
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Generate a JVM Report
 
 Use the `generate-jvm-report` subcommand in remote mode to generate a
 JVM report showing the threads (dump of a stack trace), classes, memory,
@@ -245,8 +238,7 @@ typing `asadmin help generate-jvm-report` at the command line.
 
 [[ggnde]][[GSADG00545]][[administering-the-profiler]]
 
-Administering the Profiler
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering the Profiler
 
 A profiler generates information used to analyze server performance.
 
@@ -257,8 +249,7 @@ The following topics are addressed here:
 
 [[ggneb]][[GSADG00363]][[to-create-a-profiler]]
 
-To Create a Profiler
-^^^^^^^^^^^^^^^^^^^^
+==== To Create a Profiler
 
 A server instance is tied to a particular profiler by the profiler
 element in the Java configuration. If JVM options are created for a
@@ -301,8 +292,7 @@ typing `asadmin help create-profiler` at the command line.
 
 [[ggnem]][[GSADG00365]][[to-delete-a-profiler]]
 
-To Delete a Profiler
-^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Profiler
 
 Use the `delete-profiler` subcommand in remote mode to delete the
 profiler element from the Java configuration. You can then create a new

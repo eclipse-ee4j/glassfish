@@ -5,13 +5,11 @@ next=create-admin-object.html
 prev=configure-managed-jobs.html
 ~~~~~~
 
-copy-config
-===========
+= copy-config
 
 [[copy-config-1]][[GSRFM00011]][[copy-config]]
 
-copy-config
------------
+== copy-config
 
 Copies an existing named configuration to create another configuration
 

@@ -5,13 +5,11 @@ next=delete-jmsdest.html
 prev=delete-jdbc-connection-pool.html
 ~~~~~~
 
-delete-jdbc-resource
-====================
+= delete-jdbc-resource
 
 [[delete-jdbc-resource-1]][[GSRFM00089]][[delete-jdbc-resource]]
 
-delete-jdbc-resource
---------------------
+== delete-jdbc-resource
 
 Removes a JDBC resource with the specified JNDI name
 

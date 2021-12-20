@@ -5,14 +5,12 @@ next=manvol1.html
 prev=title.html
 ~~~~~~
 
-Preface
-=======
+= Preface
 
 [[GSRFM441]][[sthref2]]
 
 [[preface]]
-Preface
--------
+== Preface
 
 [NOTE]
 ====
@@ -37,8 +35,7 @@ reference manual. They are not intended to be a tutorial.
 
 
 [[overview]]
-Overview
-~~~~~~~~
+=== Overview
 
 The following contains a brief description of each man page section and
 the information it references:

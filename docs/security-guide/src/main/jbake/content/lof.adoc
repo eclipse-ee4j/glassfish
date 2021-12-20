@@ -5,12 +5,10 @@ next=lot.html
 prev=loe.html
 ~~~~~~
 
-List of Figures
-===============
+= List of Figures
 
 [[list-of-figures]]
-List of Figures
----------------
+== List of Figures
 
 * link:system-security.html#fxjfw[1-1 Role Mapping]
 * link:administrative-security.html#gkqpv[5-1 Sample Browser Response to

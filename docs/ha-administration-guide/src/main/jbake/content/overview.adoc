@@ -5,15 +5,13 @@ next=ssh-setup.html
 prev=preface.html
 ~~~~~~
 
-High Availability in GlassFish Server
-=====================================
+= High Availability in GlassFish Server
 
 [[GSHAG00002]][[abdaq]]
 
 
 [[high-availability-in-glassfish-server]]
-1 High Availability in GlassFish Server
----------------------------------------
+== 1 High Availability in GlassFish Server
 
 This chapter describes the high availability features in Eclipse GlassFish Server 7.
 
@@ -26,8 +24,7 @@ The following topics are addressed here:
 
 [[abdar]][[GSHAG00168]][[overview-of-high-availability]]
 
-Overview of High Availability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Overview of High Availability
 
 High availability applications and services provide their functionality
 continuously, regardless of hardware and software failures. To make such
@@ -48,8 +45,7 @@ GlassFish Server provides the following high availability features:
 
 [[gksdm]][[GSHAG00252]][[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
 
-Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 
 A common load balancing configuration for GlassFish Server 7 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
@@ -62,8 +58,7 @@ Apache HTTP Server and `mod_proxy_ajp`] for more information.
 
 [[gaynn]][[GSHAG00253]][[high-availability-session-persistence]]
 
-High Availability Session Persistence
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== High Availability Session Persistence
 
 GlassFish Server provides high availability of HTTP requests and session
 data (both HTTP session data and stateful session bean data).
@@ -91,8 +86,7 @@ Availability Session Persistence and Failover].
 
 [[gayna]][[GSHAG00254]][[high-availability-java-message-service]]
 
-High Availability Java Message Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== High Availability Java Message Service
 
 GlassFish Server supports the Java Message Service (JMS) API and JMS
 messaging through its built-in jmsra resource adapter communicating with
@@ -129,8 +123,7 @@ Connection Failover::
 
 [[gaymz]][[GSHAG00255]][[rmi-iiop-load-balancing-and-failover]]
 
-RMI-IIOP Load Balancing and Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== RMI-IIOP Load Balancing and Failover
 
 With RMI-IIOP load balancing, IIOP client requests are distributed to
 different server instances or name servers, which spreads the load
@@ -162,8 +155,7 @@ link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 
 [[gaymr]][[GSHAG00169]][[how-glassfish-server-provides-high-availability]]
 
-How GlassFish Server Provides High Availability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== How GlassFish Server Provides High Availability
 
 GlassFish Server provides high availability through the following
 subcomponents and features:
@@ -173,8 +165,7 @@ subcomponents and features:
 
 [[gjghv]][[GSHAG00256]][[storage-for-session-state-data]]
 
-Storage for Session State Data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Storage for Session State Data
 
 Storing session state data enables the session state to be recovered
 after the failover of a server instance in a cluster. Recovering the
@@ -204,8 +195,7 @@ possible.
 
 [[abdax]][[GSHAG00257]][[highly-available-clusters]]
 
-Highly Available Clusters
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Highly Available Clusters
 
 A highly available cluster integrates a state replication service with
 clusters and load balancer.
@@ -223,8 +213,7 @@ Loadbalancer Plug-In available in Oracle GlassFish Server.
 
 [[abday]][[GSHAG00218]][[clusters-instances-sessions-and-load-balancing]]
 
-Clusters, Instances, Sessions, and Load Balancing
-+++++++++++++++++++++++++++++++++++++++++++++++++
+===== Clusters, Instances, Sessions, and Load Balancing
 
 Clusters, server instances, load balancers, and sessions are related as
 follows:
@@ -253,8 +242,7 @@ upgrade components within the GlassFish Server without loss of service.
 
 [[gktax]][[GSHAG00219]][[protocols-for-centralized-cluster-administration]]
 
-Protocols for Centralized Cluster Administration
-++++++++++++++++++++++++++++++++++++++++++++++++
+===== Protocols for Centralized Cluster Administration
 
 GlassFish Server uses the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to ensure that clusters that span
@@ -287,8 +275,7 @@ Administration of GlassFish Server Instances].
 
 [[gbcot]][[GSHAG00170]][[recovering-from-failures]]
 
-Recovering from Failures
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Recovering from Failures
 
 You can use various techniques to manually recover individual
 subcomponents after hardware failures such as disk crashes.
@@ -302,8 +289,7 @@ The following topics are addressed here:
 
 [[gcmkp]][[GSHAG00258]][[recovering-the-domain-administration-server]]
 
-Recovering the Domain Administration Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Recovering the Domain Administration Server
 
 Loss of the Domain Administration Server (DAS) affects only
 administration. GlassFish Server clusters and standalone instances, and
@@ -325,8 +311,7 @@ Restore it on the new host, assigning it the same network identity.
 
 [[gcmkc]][[GSHAG00259]][[recovering-glassfish-server-instances]]
 
-Recovering GlassFish Server Instances
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Recovering GlassFish Server Instances
 
 GlassFish Server provide tools for backing up and restoring GlassFish
 Server instances. For more information, see link:instances.html#gksdy[To
@@ -334,8 +319,7 @@ Resynchronize an Instance and the DAS Offline].
 
 [[gcmjs]][[GSHAG00260]][[recovering-the-http-load-balancer-and-web-server]]
 
-Recovering the HTTP Load Balancer and Web Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Recovering the HTTP Load Balancer and Web Server
 
 There are no explicit commands to back up only a web server
 configuration. Simply zip the web server installation directory. After
@@ -358,8 +342,7 @@ The web-install`/`web-instance`/config` directory contains the
 
 [[gcmjr]][[GSHAG00261]][[recovering-message-queue]]
 
-Recovering Message Queue
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Recovering Message Queue
 
 When a Message Queue broker becomes unavailable, the method you use to
 restore the broker to operation depends on the nature of the failure
@@ -387,8 +370,7 @@ to operation to return the cluster to its previous capacity.
 
 [[glaiv]][[GSHAG00220]][[recovering-from-power-failure-and-failures-other-than-disk-storage]]
 
-Recovering From Power Failure and Failures Other Than Disk Storage
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Recovering From Power Failure and Failures Other Than Disk Storage
 
 When a host is affected by a power failure or failure of a non-disk
 component such as memory, processor or network card, restore Message
@@ -401,8 +383,7 @@ as Remote JMS hosts, use the `imqbrokerd` Message Queue utility.
 
 [[glaiu]][[GSHAG00221]][[recovering-from-failure-of-disk-storage]]
 
-Recovering from Failure of Disk Storage
-+++++++++++++++++++++++++++++++++++++++
+===== Recovering from Failure of Disk Storage
 
 Message Queue uses disk storage for software, configuration files and
 persistent data stores. In a default GlassFish installation, all three
@@ -433,8 +414,7 @@ production environments.
 
 [[abdaz]][[GSHAG00171]][[more-information]]
 
-More Information
-~~~~~~~~~~~~~~~~
+=== More Information
 
 For information about planning a high-availability deployment, including
 assessing hardware requirements, planning network configuration, and

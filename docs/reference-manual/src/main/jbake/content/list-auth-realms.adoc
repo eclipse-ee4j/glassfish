@@ -5,13 +5,11 @@ next=list-backups.html
 prev=list-audit-modules.html
 ~~~~~~
 
-list-auth-realms
-================
+= list-auth-realms
 
 [[list-auth-realms-1]][[GSRFM00150]][[list-auth-realms]]
 
-list-auth-realms
-----------------
+== list-auth-realms
 
 Lists the authentication realms
 

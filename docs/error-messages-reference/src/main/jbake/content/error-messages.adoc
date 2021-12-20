@@ -4,13 +4,11 @@ title=GlassFish Server Open Source Edition Error Messages
 prev=preface.html
 ~~~~~~
 
-GlassFish Server Open Source Edition Error Messages
-===================================================
+= GlassFish Server Open Source Edition Error Messages
 
 [[sthref2]][[glassfish-server-open-source-edition-error-messages]]
 
-1 GlassFish Server Open Source Edition Error Messages
------------------------------------------------------
+== 1 GlassFish Server Open Source Edition Error Messages
 
 This chapter provides a compilation of error messages that you might
 encounter when using GlassFish Server Open Source Edition.

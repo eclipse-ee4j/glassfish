@@ -5,13 +5,11 @@ next=delete-threadpool.html
 prev=delete-ssl.html
 ~~~~~~
 
-delete-system-property
-======================
+= delete-system-property
 
 [[delete-system-property-1]][[GSRFM00110]][[delete-system-property]]
 
-delete-system-property
-----------------------
+== delete-system-property
 
 Removes a system property of the domain, configuration, cluster, or
 server instance, one at a time

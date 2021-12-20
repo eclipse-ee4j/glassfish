@@ -5,13 +5,11 @@ next=delete-local-instance.html
 prev=delete-jvm-options.html
 ~~~~~~
 
-delete-lifecycle-module
-=======================
+= delete-lifecycle-module
 
 [[delete-lifecycle-module-1]][[GSRFM00095]][[delete-lifecycle-module]]
 
-delete-lifecycle-module
------------------------
+== delete-lifecycle-module
 
 Removes the lifecycle module
 

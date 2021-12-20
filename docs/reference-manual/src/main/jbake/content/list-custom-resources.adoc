@@ -5,13 +5,11 @@ next=list-domains.html
 prev=list-context-services.html
 ~~~~~~
 
-list-custom-resources
-=====================
+= list-custom-resources
 
 [[list-custom-resources-1]][[GSRFM00162]][[list-custom-resources]]
 
-list-custom-resources
----------------------
+== list-custom-resources
 
 Gets all custom resources
 

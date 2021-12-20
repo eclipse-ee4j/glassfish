@@ -5,13 +5,11 @@ next=export.html
 prev=enable-secure-admin-internal-user.html
 ~~~~~~
 
-enable-secure-admin-principal
-=============================
+= enable-secure-admin-principal
 
 [[enable-secure-admin-principal-1]][[GSRFM00131]][[enable-secure-admin-principal]]
 
-enable-secure-admin-principal
------------------------------
+== enable-secure-admin-principal
 
 Instructs {productName}, when secure admin is enabled, to accept
 admin requests from clients identified by the specified SSL certificate.

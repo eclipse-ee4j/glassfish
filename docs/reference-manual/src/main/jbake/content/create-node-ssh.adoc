@@ -5,13 +5,11 @@ next=create-password-alias.html
 prev=create-node-dcom.html
 ~~~~~~
 
-create-node-ssh
-===============
+= create-node-ssh
 
 [[create-node-ssh-1]][[GSRFM00048]][[create-node-ssh]]
 
-create-node-ssh
----------------
+== create-node-ssh
 
 Creates a node that is enabled for communication over SSH
 

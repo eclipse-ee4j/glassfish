@@ -5,13 +5,11 @@ next=list-message-security-providers.html
 prev=list-managed-scheduled-executor-services.html
 ~~~~~~
 
-list-managed-thread-factories
-=============================
+= list-managed-thread-factories
 
 [[list-managed-thread-factories-1]][[GSRFM875]][[list-managed-thread-factories]]
 
-list-managed-thread-factories
------------------------------
+== list-managed-thread-factories
 
 Lists managed thread factory resources
 

@@ -5,15 +5,13 @@ next=tuning-glassfish.html
 prev=overview.html
 ~~~~~~
 
-Tuning Your Application
-=======================
+= Tuning Your Application
 
 [[GSPTG00004]][[abebe]]
 
 
 [[tuning-your-application]]
-2 Tuning Your Application
--------------------------
+== 2 Tuning Your Application
 
 This chapter provides information on tuning applications for maximum
 performance. A complete guide to writing high performance Java and Java
@@ -27,8 +25,7 @@ The following topics are addressed here:
 
 [[abebf]][[GSPTG00052]][[java-programming-guidelines]]
 
-Java Programming Guidelines
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Java Programming Guidelines
 
 This section covers issues related to Java coding and performance. The
 guidelines outlined are not specific to GlassFish Server, but are
@@ -52,8 +49,7 @@ The following topics are addressed here:
 
 [[abebg]][[GSPTG00161]][[avoid-serialization-and-deserialization]]
 
-Avoid Serialization and Deserialization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Avoid Serialization and Deserialization
 
 Serialization and deserialization of objects is a CPU-intensive
 procedure and is likely to slow down your application. Use the
@@ -63,8 +59,7 @@ be beneficial in some cases.
 
 [[abebh]][[GSPTG00162]][[use-stringbuilder-to-concatenate-strings]]
 
-Use `StringBuilder` to Concatenate Strings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Use `StringBuilder` to Concatenate Strings
 
 To improve performance, instead of using string concatenation, use
 `StringBuilder.append()`.
@@ -106,8 +101,7 @@ String str = tmp.toString();
 
 [[abebi]][[GSPTG00163]][[assign-null-to-variables-that-are-no-longer-needed]]
 
-Assign null to Variables That Are No Longer Needed
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Assign null to Variables That Are No Longer Needed
 
 Explicitly assigning a null value to variables that are no longer needed
 helps the garbage collector to identify the parts of memory that can be
@@ -127,8 +121,7 @@ collections.
 
 [[abebj]][[GSPTG00164]][[declare-methods-as-final-only-if-necessary]]
 
-Declare Methods as final Only If Necessary
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Declare Methods as final Only If Necessary
 
 Modern optimizing dynamic compilers can perform inlining and other
 inter-procedural optimizations, even if Java methods are not declared
@@ -140,16 +133,14 @@ use the `final` keyword.
 
 [[abebk]][[GSPTG00165]][[declare-constants-as-static-final]]
 
-Declare Constants as static final
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Declare Constants as static final
 
 The dynamic compiler can perform some constant folding optimizations
 easily, when you declare constants as `static final` variables.
 
 [[abebl]][[GSPTG00166]][[avoid-finalizers]]
 
-Avoid Finalizers
-^^^^^^^^^^^^^^^^
+==== Avoid Finalizers
 
 Adding finalizers to code makes the garbage collector more expensive and
 unpredictable. The virtual machine does not guarantee the time at which
@@ -159,8 +150,7 @@ lead to unpredictable application behavior.
 
 [[abebm]][[GSPTG00167]][[declare-method-arguments-final]]
 
-Declare Method Arguments final
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Declare Method Arguments final
 
 Declare method arguments `final` if they are not modified in the method.
 In general, declare all variables `final` if they are not modified after
@@ -168,8 +158,7 @@ being initialized or set to some value.
 
 [[abebn]][[GSPTG00168]][[synchronize-only-when-necessary]]
 
-Synchronize Only When Necessary
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Synchronize Only When Necessary
 
 Do not synchronize code blocks or methods unless synchronization is
 required. Keep synchronized blocks or methods as short as possible to
@@ -179,8 +168,7 @@ such as `java.util.HashTable`.
 
 [[abebo]][[GSPTG00169]][[use-datahandlers-for-soap-attachments]]
 
-Use DataHandlers for SOAP Attachments
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Use DataHandlers for SOAP Attachments
 
 Using a `javax.activation.DataHandler` for a SOAP attachment will
 improve performance.
@@ -213,8 +201,7 @@ and multiplies throughput by approximately 1.5 for `text/xml` or
 
 [[abebp]][[GSPTG00053]][[java-server-page-and-servlet-tuning]]
 
-Java Server Page and Servlet Tuning
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Java Server Page and Servlet Tuning
 
 Many applications running on the GlassFish Server use servlets or
 JavaServer Pages (JSP) technology in the presentation tier. This section
@@ -223,8 +210,7 @@ coding practices and through deployment and configuration settings.
 
 [[abebq]][[GSPTG00170]][[suggested-coding-practices]]
 
-Suggested Coding Practices
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Suggested Coding Practices
 
 This section provides some tips on coding practices that improve servlet
 and JSP application performance.
@@ -238,8 +224,7 @@ The following topics are addressed here:
 
 [[abebr]][[GSPTG00082]][[general-guidelines]]
 
-General Guidelines
-++++++++++++++++++
+===== General Guidelines
 
 Follow these general guidelines to increase performance of the
 presentation tier:
@@ -252,8 +237,7 @@ initialization.
 
 [[abebs]][[GSPTG00083]][[avoid-shared-modified-class-variables]]
 
-Avoid Shared Modified Class Variables
-+++++++++++++++++++++++++++++++++++++
+===== Avoid Shared Modified Class Variables
 
 In the servlet multithread model (the default), a single instance of a
 servlet is created for each application server instance. All requests
@@ -264,8 +248,7 @@ shared modified class variables because they create the need for synchronization
 
 [[abebt]][[GSPTG00084]][[http-session-handling]]
 
-HTTP Session Handling
-+++++++++++++++++++++
+===== HTTP Session Handling
 
 Follow these guidelines when using HTTP sessions:
 
@@ -291,8 +274,7 @@ bean-managed persistence entity beans for cached access to read-only data.
 
 [[abebu]][[GSPTG00085]][[configuration-and-deployment-tips]]
 
-Configuration and Deployment Tips
-+++++++++++++++++++++++++++++++++
+===== Configuration and Deployment Tips
 
 Follow these configuration tips to improve performance. These tips are
 intended for production environments, not development environments.
@@ -356,8 +338,7 @@ online help for more information.
 
 [[abebw]][[GSPTG00054]][[ejb-performance-tuning]]
 
-EJB Performance Tuning
-~~~~~~~~~~~~~~~~~~~~~~
+=== EJB Performance Tuning
 
 The GlassFish Server's high-performance EJB container has numerous
 parameters that affect performance. Individual EJB components also have
@@ -405,8 +386,7 @@ cases.
 
 [[abeby]][[GSPTG00172]][[monitoring-ejb-components]]
 
-Monitoring EJB Components
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Monitoring EJB Components
 
 When the EJB container has monitoring enabled, you can examine
 statistics for individual beans based on the bean pool and cache
@@ -494,8 +474,7 @@ production systems, specifying the pool as unbounded is NOT recommended.
 
 [[abebz]][[GSPTG00086]][[monitoring-individual-ejb-components]]
 
-Monitoring Individual EJB Components
-++++++++++++++++++++++++++++++++++++
+===== Monitoring Individual EJB Components
 
 To gather method invocation statistics for all methods in a bean, use
 the following command:
@@ -569,8 +548,7 @@ From the attribute values that are returned, use this command:
 
 [[abeca]][[GSPTG00173]][[general-guidelines-1]]
 
-General Guidelines
-^^^^^^^^^^^^^^^^^^
+==== General Guidelines
 
 The following guidelines can improve performance of EJB components. Keep
 in mind that decomposing an application into many EJB components creates
@@ -580,8 +558,7 @@ security, and transactions, as well as properties and methods.
 
 [[abecb]][[GSPTG00087]][[use-high-performance-beans]]
 
-Use High Performance Beans
-++++++++++++++++++++++++++
+===== Use High Performance Beans
 
 Use high-performance beans as much as possible to improve the overall
 performance of your application. For more information, see
@@ -608,8 +585,7 @@ the Administration Console online help for detailed instructions.
 
 [[abecc]][[GSPTG00088]][[use-caching]]
 
-Use Caching
-+++++++++++
+===== Use Caching
 
 Caching can greatly improve performance when used wisely. For example:
 
@@ -625,8 +601,7 @@ Remember to release acquired resources in the `ejbRemove()` method.
 
 [[abecd]][[GSPTG00089]][[use-the-appropriate-stubs]]
 
-Use the Appropriate Stubs
-+++++++++++++++++++++++++
+===== Use the Appropriate Stubs
 
 The stub classes needed by EJB applications are generated dynamically at
 runtime when an EJB client needs them. This means that it is not
@@ -643,16 +618,14 @@ Troubleshooting Guide] for more details.
 
 [[abece]][[GSPTG00090]][[remove-unneeded-stateful-session-beans]]
 
-Remove Unneeded Stateful Session Beans
-++++++++++++++++++++++++++++++++++++++
+===== Remove Unneeded Stateful Session Beans
 
 Removing unneeded stateful session beans avoids passivating them, which
 requires disk operations.
 
 [[abecf]][[GSPTG00091]][[cache-and-pool-tuning-tips]]
 
-Cache and Pool Tuning Tips
-++++++++++++++++++++++++++
+===== Cache and Pool Tuning Tips
 
 Follow these tips when using the EJB cache and pools to improve
 performance:
@@ -677,16 +650,14 @@ Beans].
 
 [[abecg]][[GSPTG00174]][[using-local-and-remote-interfaces]]
 
-Using Local and Remote Interfaces
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Local and Remote Interfaces
 
 This section describes some considerations when EJB components are used
 by local and remote clients.
 
 [[abech]][[GSPTG00092]][[prefer-local-interfaces]]
 
-Prefer Local Interfaces
-+++++++++++++++++++++++
+===== Prefer Local Interfaces
 
 An EJB component can have remote and local interfaces. Clients not
 located in the same application server instance as the bean (remote
@@ -709,8 +680,7 @@ local clients can use the local interface for efficiency.
 
 [[abeci]][[GSPTG00093]][[using-pass-by-reference-semantics]]
 
-Using Pass-By-Reference Semantics
-+++++++++++++++++++++++++++++++++
+===== Using Pass-By-Reference Semantics
 
 By default, the GlassFish Server uses pass-by-value semantics for
 calling the remote interface of a bean, even if it is co-located. This
@@ -764,8 +734,7 @@ invocation.
 
 [[abecj]][[GSPTG00175]][[improving-performance-of-ejb-transactions]]
 
-Improving Performance of EJB Transactions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Improving Performance of EJB Transactions
 
 This section provides some tips to improve performance when using
 transactions.
@@ -783,24 +752,21 @@ The following topics are addressed here:
 
 [[abeck]][[GSPTG00094]][[use-container-managed-transactions]]
 
-Use Container-Managed Transactions
-++++++++++++++++++++++++++++++++++
+===== Use Container-Managed Transactions
 
 Container-managed transactions are preferred for consistency, and
 provide better performance.
 
 [[abecl]][[GSPTG00095]][[do-not-encompass-user-input-time]]
 
-Do Not Encompass User Input Time
-++++++++++++++++++++++++++++++++
+===== Do Not Encompass User Input Time
 
 To avoid resources being held unnecessarily for long periods, a
 transaction should not encompass user input or user think time.
 
 [[abecm]][[GSPTG00096]][[identify-non-transactional-methods]]
 
-Identify Non-Transactional Methods
-++++++++++++++++++++++++++++++++++
+===== Identify Non-Transactional Methods
 
 Declare non-transactional methods of session EJB components with
 `NotSupported` or `Never` transaction attributes. These attributes can
@@ -809,8 +775,7 @@ should span the minimum time possible since they lock database rows.
 
 [[abecn]][[GSPTG00097]][[use-tx_required-for-long-transaction-chains]]
 
-Use `TX_REQUIRED` for Long Transaction Chains
-+++++++++++++++++++++++++++++++++++++++++++++
+===== Use `TX_REQUIRED` for Long Transaction Chains
 
 For very large transaction chains, use the transaction attribute
 `TX_REQUIRED.` To ensure EJB methods in a call chain, use the same
@@ -818,8 +783,7 @@ transaction.
 
 [[abeco]][[GSPTG00098]][[use-lowest-cost-database-locking]]
 
-Use Lowest Cost Database Locking
-++++++++++++++++++++++++++++++++
+===== Use Lowest Cost Database Locking
 
 Use the lowest cost locking available from the database that is
 consistent with any transaction. Commit the data after the transaction
@@ -827,8 +791,7 @@ completes rather than after each method call.
 
 [[abecp]][[GSPTG00099]][[use-xa-capable-data-sources-only-when-needed]]
 
-Use XA-Capable Data Sources Only When Needed
-++++++++++++++++++++++++++++++++++++++++++++
+===== Use XA-Capable Data Sources Only When Needed
 
 When multiple database resources, connector resources or JMS resources
 are involved in one transaction, a distributed or global transaction
@@ -841,8 +804,7 @@ JDBC resources and use the appropriate resource in the application.
 
 [[abecq]][[GSPTG00100]][[configure-jdbc-resources-as-one-phase-commit-resources]]
 
-Configure JDBC Resources as One-Phase Commit Resources
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Configure JDBC Resources as One-Phase Commit Resources
 
 To improve performance of transactions involving multiple resources, the
 GlassFish Server uses last agent optimization (LAO), which allows the
@@ -861,8 +823,7 @@ and all others should be configured as XA.
 
 [[abecr]][[GSPTG00101]][[use-the-least-expensive-transaction-attribute]]
 
-Use the Least Expensive Transaction Attribute
-+++++++++++++++++++++++++++++++++++++++++++++
+===== Use the Least Expensive Transaction Attribute
 
 Set the following transaction attributes in the EJB deployment
 descriptor file (`ejb-jar.xml`). Options are listed from best
@@ -878,8 +839,7 @@ attribute that will provide the functionality your application needs:
 
 [[abecs]][[GSPTG00176]][[using-special-techniques]]
 
-Using Special Techniques
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using Special Techniques
 
 Special performance-enhancing techniques are discussed in the following
 sections:
@@ -889,8 +849,7 @@ sections:
 
 [[abect]][[GSPTG00102]][[version-consistency]]
 
-Version Consistency
-+++++++++++++++++++
+===== Version Consistency
 
 
 [NOTE]
@@ -990,8 +949,7 @@ CREATE TRIGGER OrderTrigger
 
 [[abecu]][[GSPTG00103]][[request-partitioning]]
 
-Request Partitioning
-++++++++++++++++++++
+===== Request Partitioning
 
 Request partitioning enables you to assign a request priority to an EJB
 component. This gives you the flexibility to make certain EJB components
@@ -1064,8 +1022,7 @@ an EJB component named "`TheGreeter`" is assigned to a thread pool named `priori
 
 [[abecv]][[GSPTG00177]][[tuning-tips-for-specific-types-of-ejb-components]]
 
-Tuning Tips for Specific Types of EJB Components
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning Tips for Specific Types of EJB Components
 
 This section provides tips for tuning various specific types of EJB components:
 
@@ -1084,8 +1041,7 @@ in GlassFish Server Open Source Edition High Availability Administration Guide.
 
 [[abecw]][[GSPTG00104]][[entity-beans]]
 
-Entity Beans
-++++++++++++
+===== Entity Beans
 
 Depending on the usage of a particular entity bean, one should tune
 `max-cache-size` so that the beans that are used less frequently (for
@@ -1096,8 +1052,7 @@ cached more.
 
 [[abecx]][[GSPTG00105]][[stateful-session-beans]]
 
-Stateful Session Beans
-++++++++++++++++++++++
+===== Stateful Session Beans
 
 When a stateful bean represents a user, a reasonable `max-cache-size` of
 beans is the expected number of concurrent users on the application
@@ -1127,8 +1082,7 @@ checkpointed into the persistent store.
 
 [[abecz]][[GSPTG00106]][[stateless-session-beans]]
 
-Stateless Session Beans
-+++++++++++++++++++++++
+===== Stateless Session Beans
 
 Stateless session beans are more readily pooled than entity or the
 stateful session beans. Valid values for `steady-pool-size`,
@@ -1150,8 +1104,7 @@ size exceeds `max-pool-size`.
 
 [[abeda]][[GSPTG00107]][[read-only-entity-beans]]
 
-Read-Only Entity Beans
-++++++++++++++++++++++
+===== Read-Only Entity Beans
 
 Read-only entity beans cache data from the database. GlassFish Server
 supports read-only beans that use both bean-managed persistence (BMP)
@@ -1215,8 +1168,7 @@ database (the default behavior if no refresh period is given).
 
 [[abedc]][[GSPTG00108]][[pre-fetching-container-managed-relationship-cmr-beans]]
 
-Pre-Fetching Container Managed Relationship (CMR) Beans
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Pre-Fetching Container Managed Relationship (CMR) Beans
 
 If a container-managed relationship (CMR) exists in your application,
 loading one bean will load all its related beans. The canonical example
@@ -1324,8 +1276,7 @@ the `Orderlines`. However, you can prevent pre-fetching for the
 
 [[abedd]][[GSPTG00178]][[jdbc-and-database-access]]
 
-JDBC and Database Access
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== JDBC and Database Access
 
 The following are some tips to improve the performance of database
 access:
@@ -1337,32 +1288,28 @@ access:
 
 [[abede]][[GSPTG00109]][[use-jdbc-directly]]
 
-Use JDBC Directly
-+++++++++++++++++
+===== Use JDBC Directly
 
 When dealing with large amounts of data, such as searching a large
 database, use JDBC directly rather than using Entity EJB components.
 
 [[abedf]][[GSPTG00110]][[encapsulate-business-logic-in-entity-ejb-components]]
 
-Encapsulate Business Logic in Entity EJB Components
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Encapsulate Business Logic in Entity EJB Components
 
 Combine business logic with the Entity EJB component that holds the data
 needed for that logic to process.
 
 [[abedg]][[GSPTG00111]][[close-connections]]
 
-Close Connections
-+++++++++++++++++
+===== Close Connections
 
 To ensure that connections are returned to the pool, always close the
 connections after use.
 
 [[abedh]][[GSPTG00112]][[minimize-the-database-transaction-isolation-level]]
 
-Minimize the Database Transaction Isolation Level
-+++++++++++++++++++++++++++++++++++++++++++++++++
+===== Minimize the Database Transaction Isolation Level
 
 Use the default isolation level provided by the JDBC driver rather than
 calling `setTransactionIsolationLevel()`, unless you are certain that
@@ -1385,24 +1332,21 @@ link:tuning-glassfish.html#abehq[JDBC Connection Pool Settings].
 
 [[abedi]][[GSPTG00179]][[tuning-message-driven-beans]]
 
-Tuning Message-Driven Beans
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning Message-Driven Beans
 
 This section provides some tips to improve performance when using JMS
 with message-driven beans (MDBs).
 
 [[abedj]][[GSPTG00113]][[use-getconnection]]
 
-Use `getConnection()`
-+++++++++++++++++++++
+===== Use `getConnection()`
 
 JMS connections are served from a connection pool. This means that
 calling `getConnection()` on a Queue connection factory is fast.
 
 [[abedk]][[GSPTG00114]][[tune-the-message-driven-beans-pool-size]]
 
-Tune the Message-Driven Bean's Pool Size
-++++++++++++++++++++++++++++++++++++++++
+===== Tune the Message-Driven Bean's Pool Size
 
 The container for message-driven beans (MDB) is different than the
 containers for entity and session beans. In the MDB container, sessions
@@ -1428,8 +1372,7 @@ asadmin set server.mdb-container.max-pool-size = value
 
 [[abedl]][[GSPTG00115]][[cache-bean-specific-resources]]
 
-Cache Bean-Specific Resources
-+++++++++++++++++++++++++++++
+===== Cache Bean-Specific Resources
 
 Use the `setMessageDrivenContext()` or `ejbCreate()` method to cache
 bean specific resources, and release those resources from the
@@ -1437,8 +1380,7 @@ bean specific resources, and release those resources from the
 
 [[abedm]][[GSPTG00116]][[limit-use-of-jms-connections]]
 
-Limit Use of JMS Connections
-++++++++++++++++++++++++++++
+===== Limit Use of JMS Connections
 
 When designing an application that uses JMS connections make sure you
 use a methodology that sparingly uses connections, by either pooling

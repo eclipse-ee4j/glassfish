@@ -5,13 +5,11 @@ next=create-protocol-finder.html
 prev=create-protocol.html
 ~~~~~~
 
-create-protocol-filter
-======================
+= create-protocol-filter
 
 [[create-protocol-filter-1]][[GSRFM00052]][[create-protocol-filter]]
 
-create-protocol-filter
-----------------------
+== create-protocol-filter
 
 Adds a new protocol filter
 

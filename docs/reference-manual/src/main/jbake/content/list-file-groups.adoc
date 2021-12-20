@@ -5,13 +5,11 @@ next=list-file-users.html
 prev=list-domains.html
 ~~~~~~
 
-list-file-groups
-================
+= list-file-groups
 
 [[list-file-groups-1]][[GSRFM00164]][[list-file-groups]]
 
-list-file-groups
-----------------
+== list-file-groups
 
 Lists file groups
 

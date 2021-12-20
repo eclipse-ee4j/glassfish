@@ -5,13 +5,11 @@ next=list-jacc-providers.html
 prev=list-iiop-listeners.html
 ~~~~~~
 
-list-instances
-==============
+= list-instances
 
 [[list-instances-1]][[GSRFM00170]][[list-instances]]
 
-list-instances
---------------
+== list-instances
 
 Lists {productName} instances in a domain
 

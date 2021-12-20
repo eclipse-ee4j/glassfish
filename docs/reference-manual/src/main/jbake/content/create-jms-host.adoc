@@ -5,13 +5,11 @@ next=create-jms-resource.html
 prev=create-jmsdest.html
 ~~~~~~
 
-create-jms-host
-===============
+= create-jms-host
 
 [[create-jms-host-1]][[GSRFM00039]][[create-jms-host]]
 
-create-jms-host
----------------
+== create-jms-host
 
 Creates a JMS host
 

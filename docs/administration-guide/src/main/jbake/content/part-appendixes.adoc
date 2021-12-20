@@ -5,15 +5,12 @@ next=asadmin-subcommands.html
 prev=transactions.html
 ~~~~~~
 
-Appendixes
-==========
+= Appendixes
 
 [[gitym]][[GSADG00299]][[part-iii]]
 
-Part III
---------
+== Part III
 
 [[appendixes]]
-Appendixes
-----------
+== Appendixes
 

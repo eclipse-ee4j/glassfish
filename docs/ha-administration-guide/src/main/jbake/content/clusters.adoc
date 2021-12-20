@@ -5,15 +5,13 @@ next=instances.html
 prev=nodes.html
 ~~~~~~
 
-Administering GlassFish Server Clusters
-=======================================
+= Administering GlassFish Server Clusters
 
 [[GSHAG00005]][[gjfom]]
 
 
 [[administering-glassfish-server-clusters]]
-4 Administering GlassFish Server Clusters
------------------------------------------
+== 4 Administering GlassFish Server Clusters
 
 A cluster is a collection of GlassFish Server instances that work
 together as one logical entity. A cluster provides a runtime environment
@@ -35,8 +33,7 @@ The following topics are addressed here:
 
 [[gjfqp]][[GSHAG00183]][[about-glassfish-server-clusters]]
 
-About GlassFish Server Clusters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About GlassFish Server Clusters
 
 A cluster is a named collection of GlassFish Server instances that share
 the same applications, resources, and configuration information. For
@@ -72,8 +69,7 @@ increase overall system throughput.
 
 [[gjfnl]][[GSHAG00184]][[group-management-service]]
 
-Group Management Service
-~~~~~~~~~~~~~~~~~~~~~~~~
+=== Group Management Service
 
 The Group Management Service (GMS) is an infrastructure component that
 is enabled for the instances in a cluster. When GMS is enabled, if a
@@ -101,8 +97,7 @@ The following topics are addressed here:
 
 [[CHDFEGAG]][[GSHAG485]][[protocols-and-transports-for-gms]]
 
-Protocols and Transports for GMS
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Protocols and Transports for GMS
 
 You can specify that GMS should use one of the following combinations of
 protocol and transport for broadcasting messages:
@@ -138,8 +133,7 @@ discovering a cluster, GMS uses UDP multicast by default.
 
 [[gjfpd]][[GSHAG00264]][[gms-configuration-settings]]
 
-GMS Configuration Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GMS Configuration Settings
 
 GlassFish Server has the following types of GMS settings:
 
@@ -218,8 +212,7 @@ Configuration Settings].
 
 [[gjfog]][[GSHAG00265]][[dotted-names-for-gms-settings]]
 
-Dotted Names for GMS Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Dotted Names for GMS Settings
 
 Below are sample link:../reference-manual/get.html#GSRFM00139[`get`] subcommands to get all the GMS
 configuration settings (attributes associated with the referenced
@@ -260,8 +253,7 @@ Settings After Cluster Creation].
 
 [[gkoac]][[GSHAG00098]][[to-preconfigure-nondefault-gms-configuration-settings]]
 
-To Preconfigure Nondefault GMS Configuration Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Preconfigure Nondefault GMS Configuration Settings
 
 You can preconfigure GMS with values different than the defaults without
 requiring a restart of the DAS and the cluster.
@@ -327,8 +319,7 @@ You can also view the full syntax and options of a subcommand by typing
 
 [[gkqqo]][[GSHAG00099]][[to-change-gms-settings-after-cluster-creation]]
 
-To Change GMS Settings After Cluster Creation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Change GMS Settings After Cluster Creation
 
 To avoid the need to restart the DAS and the cluster, configure GMS
 configuration settings before cluster creation as explained in
@@ -408,8 +399,7 @@ You can also view the full syntax and options of a subcommand by typing
 
 [[gklhl]][[GSHAG00100]][[to-check-the-health-of-instances-in-a-cluster]]
 
-To Check the Health of Instances in a Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Check the Health of Instances in a Cluster
 
 The `get-health` subcommand only works when GMS is enabled. This is the
 quickest way to evaluate the health of a cluster and to detect if
@@ -451,8 +441,7 @@ typing `asadmin help get-health` at the command line.
 
 [[gklhd]][[GSHAG00101]][[to-validate-that-multicast-transport-is-available-for-a-cluster]]
 
-To Validate That Multicast Transport Is Available for a Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Validate That Multicast Transport Is Available for a Cluster
 
 [[GSHAG370]]
 
@@ -569,8 +558,7 @@ typing `asadmin help get-health` at the command line.
 
 [[CHDGAIBJ]][[GSHAG00373]][[discovering-a-cluster-when-multicast-transport-is-unavailable]]
 
-Discovering a Cluster When Multicast Transport Is Unavailable
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Discovering a Cluster When Multicast Transport Is Unavailable
 
 When multicast transport is unavailable, GlassFish Server instances that
 are joining a cluster cannot rely on broadcast messages from GMS to
@@ -603,8 +591,7 @@ Is Running on a Different Host]
 
 [[CHDCGIFF]][[GSHAG486]][[to-discover-a-cluster-when-multiple-instances-in-a-cluster-are-running-on-a-host]]
 
-To Discover a Cluster When Multiple Instances in a Cluster are Running on a Host
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Discover a Cluster When Multiple Instances in a Cluster are Running on a Host
 
 If multiple instances in the same cluster are running on a host, you
 must provide a list of uniform resource indicators (URIs). Each URI must
@@ -772,8 +759,7 @@ See Also
 
 [[CHDIGFCG]][[GSHAG489]][[to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host]]
 
-To Discover a Cluster When Each Instance in a Cluster Is Running on a Different Host
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Discover a Cluster When Each Instance in a Cluster Is Running on a Different Host
 
 If all instances in a cluster and the DAS are running on different
 hosts, you can specify the locations of instances to use for discovering
@@ -895,8 +881,7 @@ See Also
 
 [[gjdlw]][[GSHAG00266]][[using-the-multi-homing-feature-with-gms]]
 
-Using the Multi-Homing Feature With GMS
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the Multi-Homing Feature With GMS
 
 Multi-homing enables GlassFish Server clusters to be used in an
 environment that uses multiple Network Interface Cards (NICs). A
@@ -918,8 +903,7 @@ that interface.
 
 [[gjdoo]][[GSHAG00224]][[traffic-separation-using-multi-homing]]
 
-Traffic Separation Using Multi-Homing
-+++++++++++++++++++++++++++++++++++++
+===== Traffic Separation Using Multi-Homing
 
 You can separate the internal traffic resulting from GMS from the
 external traffic. Traffic separation enables you plan a network better
@@ -987,8 +971,7 @@ asadmin set c1-config.network-config.network-listeners.network-listener.http-2.a
 
 [[gkqdy]][[GSHAG00185]][[creating-listing-and-deleting-clusters]]
 
-Creating, Listing, and Deleting Clusters
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating, Listing, and Deleting Clusters
 
 GlassFish Server enables you to create clusters, obtain information
 about clusters, and delete clusters that are no longer required.
@@ -1001,8 +984,7 @@ The following topics are addressed here:
 
 [[gkqdm]][[GSHAG00103]][[to-create-a-cluster]]
 
-To Create a Cluster
-^^^^^^^^^^^^^^^^^^^
+==== To Create a Cluster
 
 Use the `create-cluster` subcommand in remote mode to create a cluster.
 
@@ -1190,8 +1172,7 @@ typing the following commands at the command line:
 
 [[gkqdn]][[GSHAG00104]][[to-list-all-clusters-in-a-domain]]
 
-To List All Clusters in a Domain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List All Clusters in a Domain
 
 Use the `list-clusters` subcommand in remote mode to obtain information
 about existing clusters in a domain.
@@ -1243,8 +1224,7 @@ typing `asadmin help list-clusters` at the command line.
 
 [[gkqcp]][[GSHAG00105]][[to-delete-a-cluster]]
 
-To Delete a Cluster
-^^^^^^^^^^^^^^^^^^^
+==== To Delete a Cluster
 
 Use the `delete-cluster` subcommand in remote mode to remove a cluster
 from the DAS configuration.

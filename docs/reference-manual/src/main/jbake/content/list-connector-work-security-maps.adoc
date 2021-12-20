@@ -5,13 +5,11 @@ next=list-containers.html
 prev=list-connector-security-maps.html
 ~~~~~~
 
-list-connector-work-security-maps
-=================================
+= list-connector-work-security-maps
 
 [[list-connector-work-security-maps-1]][[GSRFM00160]][[list-connector-work-security-maps]]
 
-list-connector-work-security-maps
----------------------------------
+== list-connector-work-security-maps
 
 Lists the work security maps belonging to the specified resource adapter
 

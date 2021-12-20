@@ -5,13 +5,11 @@ next=list-libraries.html
 prev=list-jobs.html
 ~~~~~~
 
-list-jvm-options
-================
+= list-jvm-options
 
 [[list-jvm-options-1]][[GSRFM00180]][[list-jvm-options]]
 
-list-jvm-options
-----------------
+== list-jvm-options
 
 Lists options for the Java application launcher
 

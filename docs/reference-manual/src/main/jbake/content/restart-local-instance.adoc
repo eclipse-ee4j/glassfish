@@ -5,13 +5,11 @@ next=restore-domain.html
 prev=restart-instance.html
 ~~~~~~
 
-restart-local-instance
-======================
+= restart-local-instance
 
 [[restart-local-instance-1]][[GSRFM00220]][[restart-local-instance]]
 
-restart-local-instance
-----------------------
+== restart-local-instance
 
 Restarts a running {productName} instance on the host where the
 subcommand is run

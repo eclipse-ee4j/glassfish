@@ -5,13 +5,11 @@ next=delete-http-lb-ref.html
 prev=delete-http-lb.html
 ~~~~~~
 
-delete-http-lb-config
-=====================
+= delete-http-lb-config
 
 [[delete-http-lb-config-1]][[GSRFM00080]][[delete-http-lb-config]]
 
-delete-http-lb-config
----------------------
+== delete-http-lb-config
 
 Deletes a load balancer configuration
 

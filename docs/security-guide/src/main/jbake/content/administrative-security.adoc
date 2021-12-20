@@ -5,15 +5,13 @@ next=running-in-secure-environment.html
 prev=security-in-cluster-mode.html
 ~~~~~~
 
-Managing Administrative Security
-================================
+= Managing Administrative Security
 
 [[GSSCG00039]][[gknqh]]
 
 
 [[managing-administrative-security]]
-5 Managing Administrative Security
-----------------------------------
+== 5 Managing Administrative Security
 
 This chapter describes how to manage administrative security by using
 the secure administration feature.
@@ -36,8 +34,7 @@ Console online help.
 
 [[gkocp]][[GSSCG00162]][[secure-administration-overview]]
 
-Secure Administration Overview
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Secure Administration Overview
 
 The secure administration feature allows an administrator to secure all
 administrative communication between the domain administration server
@@ -92,8 +89,7 @@ and the implications of doing so.
 
 [[gkofl]][[GSSCG00163]][[how-secure-admin-works-the-big-picture]]
 
-How Secure Admin Works: The Big Picture
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== How Secure Admin Works: The Big Picture
 
 Secure admin is a domain-wide setting. It affects the DAS and all
 instances and all administration clients. This section describes the
@@ -109,8 +105,7 @@ following topics:
 
 [[gkqce]][[GSSCG00227]][[functions-performed-by-secure-admin]]
 
-Functions Performed by Secure Admin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Functions Performed by Secure Admin
 
 The `enable-secure-admin` subcommand performs the following functions.
 Subsequent sections describe these functions in more detail.
@@ -143,8 +138,7 @@ the instances, the DAS delivers the updated configuration to the instances.
 
 [[gkocv]][[GSSCG00228]][[which-administration-account-is-used]]
 
-Which Administration Account is Used?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Which Administration Account is Used?
 
 If only one administration account exists in the realm, GlassFish Server
 treats that account as the current default administration account. In
@@ -171,8 +165,7 @@ and you must have set up the account as a member of the admin group.
 
 [[gkodi]][[GSSCG00229]][[what-authentication-methods-are-used-for-secure-administration]]
 
-What Authentication Methods Are Used for Secure Administration?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== What Authentication Methods Are Used for Secure Administration?
 
 The secure admin feature enforces security via the following
 authentication methods:
@@ -234,8 +227,7 @@ Table 5-1 Authentication Methods Employed
 
 [[gkpex]][[GSSCG00230]][[understanding-how-certificate-authentication-is-performed]]
 
-Understanding How Certificate Authentication is Performed
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Understanding How Certificate Authentication is Performed
 
 The domain creation process creates a primary (private) key and a
 self-signed certificate for the DAS, and a separate private key and
@@ -260,8 +252,7 @@ adminalias from the instance's truststore.
 
 [[gkoey]][[GSSCG00231]][[what-certificates-are-used]]
 
-What Certificates Are Used?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== What Certificates Are Used?
 
 When you enable secure admin, you can optionally set the `--adminalias`
 and `--instancealias` options that tell secure admin which aliases to
@@ -318,8 +309,7 @@ truststore, and configuration to each instance.
 
 [[gkpfi]][[GSSCG00201]][[self-signed-certificates-and-trust]]
 
-Self-Signed Certificates and Trust
-++++++++++++++++++++++++++++++++++
+===== Self-Signed Certificates and Trust
 
 The self-signed certificates that GlassFish Server uses might not be
 trusted by clients by default because a certificate authority does not
@@ -420,8 +410,7 @@ instance certificate.
 
 [[gkped]][[GSSCG00202]][[using-your-own-certificates]]
 
-Using Your Own Certificates
-+++++++++++++++++++++++++++
+===== Using Your Own Certificates
 
 By default, `--adminalias` of the `enable-secure-admin` subcommand uses
 the `s1as` alias, and the `--instancealias` option uses the
@@ -462,8 +451,7 @@ of the same keystore and truststore
 
 [[glgmy]][[GSSCG00232]][[an-alternate-approach-using-distinguished-names-to-specify-certificates]]
 
-An Alternate Approach: Using Distinguished Names to Specify Certificates
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== An Alternate Approach: Using Distinguished Names to Specify Certificates
 
 By default, the DAS uses the alias associated with the `--instancealias`
 option to check incoming requests that use SSL/TLS cert authentication.
@@ -628,8 +616,7 @@ admin requests from clients.
 
 [[gkqjj]][[GSSCG00233]][[guarding-against-unwanted-connections]]
 
-Guarding Against Unwanted Connections
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Guarding Against Unwanted Connections
 
 Secure admin guards against unwanted connections in several ways:
 
@@ -674,8 +661,7 @@ targeting an instance on "test2."
 
 [[gkofe]][[GSSCG00164]][[considerations-when-running-glassfish-server-with-default-security]]
 
-Considerations When Running GlassFish Server With Default Security
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Considerations When Running GlassFish Server With Default Security
 
 In GlassFish Server, the default admin account is username "admin" with
 an empty password. Admin clients provide empty credentials or none at
@@ -724,16 +710,14 @@ DAS will not see the instance.
 
 [[gkomz]][[GSSCG00165]][[running-secure-admin]]
 
-Running Secure Admin
-~~~~~~~~~~~~~~~~~~~~
+=== Running Secure Admin
 
 This section describes how to run secure admin. The section begins with
 prerequisites for running secure admin.
 
 [[gkokc]][[GSSCG00234]][[prerequisites-for-running-secure-admin]]
 
-Prerequisites for Running Secure Admin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Prerequisites for Running Secure Admin
 
 Before running GlassFish Server with secure admin enabled, you must make
 sure that:
@@ -762,8 +746,7 @@ If you are not using the default self-signed certificates, you must add
 
 [[glgmh]][[GSSCG00235]][[an-alternate-approach-using-a-user-name-and-password-for-internal-authentication-and-authorization]]
 
-An Alternate Approach: Using A User Name and Password for Internal Authentication and Authorization
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== An Alternate Approach: Using A User Name and Password for Internal Authentication and Authorization
 
 By default, secure admin uses the GlassFish Server self-signed
 certificates, via the aliases corresponding to these certificates, to
@@ -864,8 +847,7 @@ operations.
 
 [[gkqby]][[GSSCG00236]][[example-of-running-enable-secure-admin]]
 
-Example of Running enable-secure-admin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Example of Running enable-secure-admin
 
 The following example shows how to enable secure admin for a domain
 using the default admin alias and the default instance alias. You must
@@ -912,8 +894,7 @@ Command get executed successfully.
 
 [[gkolu]][[GSSCG00166]][[additional-considerations-when-creating-local-instances]]
 
-Additional Considerations When Creating Local Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Additional Considerations When Creating Local Instances
 
 If you use `xxx-local-instance` commands to set up local instances,
 either leave secure admin disabled, or enable it before you create or
@@ -925,8 +906,7 @@ recommended because it can result in an inconsistent security model.
 
 [[gkqah]][[GSSCG00167]][[secure-admin-use-case]]
 
-Secure Admin Use Case
-~~~~~~~~~~~~~~~~~~~~~
+=== Secure Admin Use Case
 
 This section describes a simple secure admin use case.
 
@@ -973,8 +953,7 @@ header in the realm Executes command, and responds with success status.
 
 [[gkodn]][[GSSCG00168]][[upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin]]
 
-Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin
 
 If you enable secure admin on an SSL-enabled GlassFish Server
 installation, secure admin uses the existing <ssl cert-nickname> value

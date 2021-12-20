@@ -5,13 +5,11 @@ next=import-sync-bundle.html
 prev=get-client-stubs.html
 ~~~~~~
 
-get-health
-==========
+= get-health
 
 [[get-health-1]][[GSRFM00141]][[get-health]]
 
-get-health
-----------
+== get-health
 
 Provides information on the cluster health
 

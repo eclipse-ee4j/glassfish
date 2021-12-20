@@ -5,13 +5,11 @@ next=domain.html
 prev=application.html
 ~~~~~~
 
-configuration
-=============
+= configuration
 
 [[configuration-5asc]][[GSRFM00266]][[configuration]]
 
-configuration
--------------
+== configuration
 
 The data set that determines how {productName} operates
 

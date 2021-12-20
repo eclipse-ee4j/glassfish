@@ -5,13 +5,11 @@ next=undeploy.html
 prev=stop-instance.html
 ~~~~~~
 
-stop-local-instance
-===================
+= stop-local-instance
 
 [[stop-local-instance-1]][[GSRFM00242]][[stop-local-instance]]
 
-stop-local-instance
--------------------
+== stop-local-instance
 
 Stops a {productName} instance on the machine where the subcommand is run
 

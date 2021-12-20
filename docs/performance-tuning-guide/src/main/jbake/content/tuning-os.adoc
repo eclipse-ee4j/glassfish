@@ -4,15 +4,13 @@ title=Tuning the Operating System and Platform
 prev=tuning-java.html
 ~~~~~~
 
-Tuning the Operating System and Platform
-========================================
+= Tuning the Operating System and Platform
 
 [[GSPTG00007]][[abeir]]
 
 
 [[tuning-the-operating-system-and-platform]]
-5 Tuning the Operating System and Platform
-------------------------------------------
+== 5 Tuning the Operating System and Platform
 
 This chapter discusses tuning the operating system (OS) for optimum
 performance. It discusses the following topics:
@@ -26,8 +24,7 @@ performance. It discusses the following topics:
 
 [[abeis]][[GSPTG00074]][[server-scaling]]
 
-Server Scaling
-~~~~~~~~~~~~~~
+=== Server Scaling
 
 This section provides recommendations for optimal performance scaling
 server for the following server subsystems:
@@ -40,8 +37,7 @@ server for the following server subsystems:
 
 [[abeit]][[GSPTG00210]][[processors]]
 
-Processors
-^^^^^^^^^^
+==== Processors
 
 The GlassFish Server automatically takes advantage of multiple CPUs. In
 general, the effectiveness of multiple CPUs varies with the operating
@@ -57,8 +53,7 @@ percent.
 
 [[abeiu]][[GSPTG00211]][[memory]]
 
-Memory
-^^^^^^
+==== Memory
 
 See the section Hardware and Software Requirements in the GlassFish
 Server Release Notes for specific memory recommendations for each
@@ -66,8 +61,7 @@ supported operating system.
 
 [[abeiv]][[GSPTG00212]][[disk-space]]
 
-Disk Space
-^^^^^^^^^^
+==== Disk Space
 
 It is best to have enough disk space for the OS, document tree, and log
 files. In most cases 2GB total is sufficient.
@@ -84,8 +78,7 @@ document tree.
 
 [[abeiw]][[GSPTG00213]][[networking]]
 
-Networking
-^^^^^^^^^^
+==== Networking
 
 To determine the bandwidth the application needs, determine the
 following values:
@@ -116,8 +109,7 @@ Gigabit Ethernet technology.
 
 [[glglf]][[GSPTG00214]][[udp-buffer-sizes]]
 
-UDP Buffer Sizes
-^^^^^^^^^^^^^^^^
+==== UDP Buffer Sizes
 
 GlassFish Server uses User Datagram Protocol (UDP) for the transmission
 of multicast messages to GlassFish Server instances in a cluster. For
@@ -128,8 +120,7 @@ excessive UDP datagram loss.
 
 [[sthref13]][[to-determine-an-optimal-udp-buffer-size]]
 
-To Determine an Optimal UDP Buffer Size
-+++++++++++++++++++++++++++++++++++++++
+===== To Determine an Optimal UDP Buffer Size
 
 The size of UDP buffer that is required to prevent excessive UDP
 datagram loss depends on many factors, such as:
@@ -188,8 +179,7 @@ increase the size of the UDP buffer.
 
 [[glglz]][[GSPTG00040]][[to-set-the-udp-buffer-size-on-linux-systems]]
 
-To Set the UDP Buffer Size on Linux Systems
-+++++++++++++++++++++++++++++++++++++++++++
+===== To Set the UDP Buffer Size on Linux Systems
 
 On Linux systems, a default UDP buffer size is set for the client, but
 not for the server. Therefore, on Linux systems, the UDP buffer size
@@ -262,8 +252,7 @@ net.core.wmem_default = 524288
 
 [[gfpzp]][[GSPTG00075]][[solaris-10-platform-specific-tuning-information]]
 
-Solaris 10 Platform-Specific Tuning Information
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Solaris 10 Platform-Specific Tuning Information
 
 Solaris Dynamic Tracing (DTrace) is a comprehensive dynamic tracing
 framework for the Solaris Operating System (OS). You can use the DTrace
@@ -275,16 +264,14 @@ page]
 
 [[abeix]][[GSPTG00076]][[tuning-for-the-solaris-os]]
 
-Tuning for the Solaris OS
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Tuning for the Solaris OS
 
 * link:#abeiy[Tuning Parameters]
 * link:#abeja[File Descriptor Setting]
 
 [[abeiy]][[GSPTG00215]][[tuning-parameters]]
 
-Tuning Parameters
-^^^^^^^^^^^^^^^^^
+==== Tuning Parameters
 
 Tuning Solaris TCP/IP settings benefits programs that open and close
 many sockets. Since the GlassFish Server operates with a small fixed set
@@ -414,8 +401,7 @@ network traffic.
 
 [[abeiz]][[GSPTG00153]][[sizing-the-connection-hash-table]]
 
-Sizing the Connection Hash Table
-++++++++++++++++++++++++++++++++
+===== Sizing the Connection Hash Table
 
 The connection hash table keeps all the information for active TCP
 connections. Use the following command to get the size of the connection
@@ -442,8 +428,7 @@ netstat -nP tcp|wc -l
 
 [[abeja]][[GSPTG00216]][[file-descriptor-setting]]
 
-File Descriptor Setting
-^^^^^^^^^^^^^^^^^^^^^^^
+==== File Descriptor Setting
 
 On the Solaris OS, setting the maximum number of open files property
 using `ulimit` has the biggest impact on efforts to support the maximum
@@ -489,8 +474,7 @@ These settings apply to RMI/IIOP clients on the Solaris OS.
 
 [[abeje]][[GSPTG00077]][[tuning-for-solaris-on-x86]]
 
-Tuning for Solaris on x86
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Tuning for Solaris on x86
 
 The following are some options to consider when tuning Solaris on x86
 for GlassFish Server:
@@ -503,8 +487,7 @@ making any changes to `/etc/system`, reboot the machines.
 
 [[abejg]][[GSPTG00217]][[file-descriptors]]
 
-File Descriptors
-^^^^^^^^^^^^^^^^
+==== File Descriptors
 
 Add (or edit) the following lines in the `/etc/system` file:
 
@@ -522,8 +505,7 @@ These settings affect the file descriptors.
 
 [[abejh]][[GSPTG00218]][[ip-stack-settings]]
 
-IP Stack Settings
-^^^^^^^^^^^^^^^^^
+==== IP Stack Settings
 
 Add (or edit) the following lines in the `/etc/system` file:
 
@@ -560,8 +542,7 @@ ndd -set /dev/tcp tcp_recv_hiwat 32768
 
 [[abeji]][[GSPTG00078]][[tuning-for-linux-platforms]]
 
-Tuning for Linux platforms
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Tuning for Linux platforms
 
 To tune for maximum performance on Linux, you need to make adjustments
 to the following:
@@ -575,8 +556,7 @@ to the following:
 
 [[gkvjl]][[GSPTG00219]][[startup-files]]
 
-Startup Files
-^^^^^^^^^^^^^
+==== Startup Files
 
 The following parameters must be added to the `/etc/rc.d/rc.local` file
 that gets executed during system startup.
@@ -636,8 +616,7 @@ kernel.shmmax = 67108864
 
 [[abejj]][[GSPTG00220]][[file-descriptors-1]]
 
-File Descriptors
-^^^^^^^^^^^^^^^^
+==== File Descriptors
 
 You may need to increase the number of file descriptors from the
 default. Having a higher number of file descriptors ensures that the
@@ -744,8 +723,7 @@ might not be required, depending on how pluggable authentication modules
 
 [[abejk]][[GSPTG00221]][[virtual-memory]]
 
-Virtual Memory
-^^^^^^^^^^^^^^
+==== Virtual Memory
 
 To change virtual memory settings, add the following to `/etc/rc.local`:
 
@@ -758,8 +736,7 @@ For more information, view the man pages for `bdflush`.
 
 [[abejl]][[GSPTG00222]][[network-interface]]
 
-Network Interface
-^^^^^^^^^^^^^^^^^
+==== Network Interface
 
 To ensure that the network interface is operating in full duplex mode,
 add the following entry into `/etc/rc.local`:
@@ -773,15 +750,13 @@ where eth0 is the name of the network interface card (NIC).
 
 [[abejm]][[GSPTG00223]][[disk-io-settings]]
 
-Disk I/O Settings
-^^^^^^^^^^^^^^^^^
+==== Disk I/O Settings
 
  
 
 [[gaclw]][[GSPTG00041]][[to-tune-disk-io-performance-for-non-scsi-disks]]
 
-To tune disk I/O performance for non SCSI disks
-+++++++++++++++++++++++++++++++++++++++++++++++
+===== To tune disk I/O performance for non SCSI disks
 
 1. Test the disk speed.
 +
@@ -815,15 +790,13 @@ for Linux Servers — SCSI]
 
 [[abejn]][[GSPTG00224]][[tcpip-settings]]
 
-TCP/IP Settings
-^^^^^^^^^^^^^^^
+==== TCP/IP Settings
 
  
 
 [[gacmd]][[GSPTG00042]][[to-tune-the-tcpip-settings]]
 
-To tune the TCP/IP settings
-+++++++++++++++++++++++++++
+===== To tune the TCP/IP settings
 
 1. Add the following entry to `/etc/rc.local`
 +
@@ -875,8 +848,7 @@ tcp_recv_hiwat ndd /dev/tcp 8129 32768
 
 [[gfpzh]][[GSPTG00079]][[tuning-ultrasparc-cmt-based-systems]]
 
-Tuning UltraSPARC CMT-Based Systems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Tuning UltraSPARC CMT-Based Systems
 
 Use a combination of tunable parameters and other parameters to tune
 UltraSPARC CMT-based systems. These values are an example of how you
@@ -884,8 +856,7 @@ might tune your system to achieve the desired result.
 
 [[gfpzv]][[GSPTG00225]][[tuning-operating-system-and-tcp-settings]]
 
-Tuning Operating System and TCP Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Tuning Operating System and TCP Settings
 
 The following table shows the operating system tuning for Solaris 10
 used when benchmarking for performance and scalability on UtraSPARC
@@ -1013,8 +984,7 @@ Note that the IPGE driver version is 1.25.25.
 
 [[gfpzm]][[GSPTG00226]][[disk-configuration]]
 
-Disk Configuration
-^^^^^^^^^^^^^^^^^^
+==== Disk Configuration
 
 If HTTP access is logged, follow these guidelines for the disk:
 
@@ -1028,8 +998,7 @@ yield better disk performance: `nologging`, `directio`, `noatime`.
 
 [[gfpzk]][[GSPTG00227]][[network-configuration]]
 
-Network Configuration
-^^^^^^^^^^^^^^^^^^^^^
+==== Network Configuration
 
 If more than one network interface card is used, make sure the network
 interrupts are not all going to the same core. Run the following script

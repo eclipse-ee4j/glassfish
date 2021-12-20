@@ -5,13 +5,11 @@ next=enable-secure-admin-principal.html
 prev=enable-secure-admin.html
 ~~~~~~
 
-enable-secure-admin-internal-user
-=================================
+= enable-secure-admin-internal-user
 
 [[enable-secure-admin-internal-user-1]][[GSRFM00130]][[enable-secure-admin-internal-user]]
 
-enable-secure-admin-internal-user
----------------------------------
+== enable-secure-admin-internal-user
 
 Instructs the {productName} DAS and instances to use the specified
 admin user and the password associated with the password alias to

@@ -5,13 +5,11 @@ next=create-managed-executor-service.html
 prev=create-lifecycle-module.html
 ~~~~~~
 
-create-local-instance
-=====================
+= create-local-instance
 
 [[create-local-instance-1]][[GSRFM00044]][[create-local-instance]]
 
-create-local-instance
----------------------
+== create-local-instance
 
 Creates a {productName} instance on the host where the subcommand is
 run

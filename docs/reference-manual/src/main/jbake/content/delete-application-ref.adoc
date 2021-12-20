@@ -5,13 +5,11 @@ next=delete-audit-module.html
 prev=delete-admin-object.html
 ~~~~~~
 
-delete-application-ref
-======================
+= delete-application-ref
 
 [[delete-application-ref-1]][[GSRFM00064]][[delete-application-ref]]
 
-delete-application-ref
-----------------------
+== delete-application-ref
 
 Removes a reference to an application
 

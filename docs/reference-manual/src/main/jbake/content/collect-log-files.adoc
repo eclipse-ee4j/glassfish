@@ -5,13 +5,11 @@ next=configure-jms-cluster.html
 prev=change-master-password.html
 ~~~~~~
 
-collect-log-files
-=================
+= collect-log-files
 
 [[collect-log-files-1]][[GSRFM00007]][[collect-log-files]]
 
-collect-log-files
------------------
+== collect-log-files
 
 Creates a ZIP archive of all available log files
 

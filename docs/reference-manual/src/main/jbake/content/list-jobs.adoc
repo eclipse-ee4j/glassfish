@@ -5,13 +5,11 @@ next=list-jvm-options.html
 prev=list-jndi-resources.html
 ~~~~~~
 
-list-jobs
-=========
+= list-jobs
 
 [[list-jobs-1]][[GSRFM867]][[list-jobs]]
 
-list-jobs
----------
+== list-jobs
 
 Lists information about subcommands that were started using
 `asadmin --detach` or that contain progress information

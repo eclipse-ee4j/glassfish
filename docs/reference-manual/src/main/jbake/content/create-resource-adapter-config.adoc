@@ -5,13 +5,11 @@ next=create-resource-ref.html
 prev=create-protocol-finder.html
 ~~~~~~
 
-create-resource-adapter-config
-==============================
+= create-resource-adapter-config
 
 [[create-resource-adapter-config-1]][[GSRFM00054]][[create-resource-adapter-config]]
 
-create-resource-adapter-config
-------------------------------
+== create-resource-adapter-config
 
 Creates the configuration information for the connector module
 

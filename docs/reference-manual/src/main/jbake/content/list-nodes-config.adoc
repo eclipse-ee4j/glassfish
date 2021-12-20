@@ -5,13 +5,11 @@ next=list-nodes-dcom.html
 prev=list-nodes.html
 ~~~~~~
 
-list-nodes-config
-=================
+= list-nodes-config
 
 [[list-nodes-config-1]][[GSRFM00188]][[list-nodes-config]]
 
-list-nodes-config
------------------
+== list-nodes-config
 
 Lists all {productName} nodes that do not support remote
 communication in a domain

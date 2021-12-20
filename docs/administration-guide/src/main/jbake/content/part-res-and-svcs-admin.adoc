@@ -5,15 +5,12 @@ next=jdbc.html
 prev=batch.html
 ~~~~~~
 
-Resources and Services Administration
-=====================================
+= Resources and Services Administration
 
 [[gitxw]][[GSADG00298]][[part-ii]]
 
-Part II
--------
+== Part II
 
 [[resources-and-services-administration]]
-Resources and Services Administration
--------------------------------------
+== Resources and Services Administration
 

@@ -5,15 +5,13 @@ next=ejb.html
 prev=jpa.html
 ~~~~~~
 
-Developing Web Applications
-===========================
+= Developing Web Applications
 
 [[GSDVG00009]][[beafs]]
 
 
 [[developing-web-applications]]
-7 Developing Web Applications
------------------------------
+== 7 Developing Web Applications
 
 This chapter describes how web applications are supported in the Oracle
 GlassFish Server.
@@ -44,8 +42,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 [[beagj]][[GSDVG00140]][[using-servlets]]
 
-Using Servlets
-~~~~~~~~~~~~~~
+=== Using Servlets
 
 GlassFish Server supports the Java Servlet Specification version 4.0.
 
@@ -79,8 +76,7 @@ The following topics are addressed here:
 
 [[beagm]][[GSDVG00397]][[caching-servlet-results]]
 
-Caching Servlet Results
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Caching Servlet Results
 
 The GlassFish Server can cache the results of invoking a servlet, a JSP,
 or any URL pattern to make subsequent invocations of the same servlet,
@@ -121,8 +117,7 @@ The following topics are addressed here:
 
 [[beagn]][[GSDVG00251]][[caching-features]]
 
-Caching Features
-++++++++++++++++
+===== Caching Features
 
 The GlassFish Server has the following web application response caching
 capabilities:
@@ -167,8 +162,7 @@ These are elements in the `glassfish-web.xml` file.
 
 [[beago]][[GSDVG00252]][[default-cache-configuration]]
 
-Default Cache Configuration
-+++++++++++++++++++++++++++
+===== Default Cache Configuration
 
 If you enable caching but do not provide any special configuration for a
 servlet or JSP, the default cache configuration is as follows:
@@ -190,8 +184,7 @@ never cached.
 
 [[beagp]][[GSDVG00253]][[caching-example]]
 
-Caching Example
-+++++++++++++++
+===== Caching Example
 
 Here is an example cache element in the `glassfish-web.xml` file:
 
@@ -247,8 +240,7 @@ Application Deployment Guide.
 
 [[beagq]][[GSDVG00254]][[the-cachekeygenerator-interface]]
 
-The CacheKeyGenerator Interface
-+++++++++++++++++++++++++++++++
+===== The CacheKeyGenerator Interface
 
 The built-in default CacheHelper implementation allows web applications
 to customize the key generation. An application component (in a servlet
@@ -263,8 +255,7 @@ Edition Application Deployment Guide.
 
 [[beagr]][[GSDVG00398]][[about-the-servlet-engine]]
 
-About the Servlet Engine
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== About the Servlet Engine
 
 Servlets exist in and are managed by the servlet engine in the GlassFish
 Server. The servlet engine is an internal object that handles all
@@ -279,8 +270,7 @@ The following topics are addressed here:
 
 [[beags]][[GSDVG00255]][[instantiating-and-removing-servlets]]
 
-Instantiating and Removing Servlets
-+++++++++++++++++++++++++++++++++++
+===== Instantiating and Removing Servlets
 
 After the servlet engine instantiates the servlet, the servlet engine
 calls the servlet's `init` method to perform any necessary
@@ -296,8 +286,7 @@ caught in garbage collection.
 
 [[beagt]][[GSDVG00256]][[request-handling]]
 
-Request Handling
-++++++++++++++++
+===== Request Handling
 
 When a request is made, the GlassFish Server hands the incoming data to
 the servlet engine. The servlet engine processes the request's input
@@ -326,8 +315,7 @@ object or in a JDBC `ResultSet` object.
 
 [[beagu]][[GSDVG00141]][[using-javaserver-pages]]
 
-Using JavaServer Pages
-~~~~~~~~~~~~~~~~~~~~~~
+=== Using JavaServer Pages
 
 The GlassFish Server supports the following JSP features:
 
@@ -353,8 +341,7 @@ The following topics are addressed here:
 
 [[beagv]][[GSDVG00399]][[jsp-tag-libraries-and-standard-portable-tags]]
 
-JSP Tag Libraries and Standard Portable Tags
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== JSP Tag Libraries and Standard Portable Tags
 
 GlassFish Server supports tag libraries and standard portable tags. For
 more information, see the JavaServer Pages Standard Tag Library (JSTL)
@@ -371,8 +358,7 @@ link:#beagw[JSP Caching], next.
 
 [[beagw]][[GSDVG00400]][[jsp-caching]]
 
-JSP Caching
-^^^^^^^^^^^
+==== JSP Caching
 
 JSP caching lets you cache tag invocation results within the Java
 engine. Each can be cached using different cache criteria. For example,
@@ -392,8 +378,7 @@ see link:#beagm[Caching Servlet Results].
 
 [[gaxbq]][[GSDVG00257]][[enabling-jsp-caching]]
 
-Enabling JSP Caching
-++++++++++++++++++++
+===== Enabling JSP Caching
 
 To globally enable JSP caching, set the `jspCachingEnabled` property to
 `true`. The default is `false`. For example:
@@ -436,8 +421,7 @@ tags are available as `<mypfx:cache>` and `<mypfx:flush>`.
 
 [[gaxcr]][[GSDVG00258]][[caching-scope]]
 
-Caching Scope
-+++++++++++++
+===== Caching Scope
 
 JSP caching is available in three different scopes: `request`,
 `session`, and `application`. The default is `application`. To use a
@@ -475,8 +459,7 @@ specified in the `jspcachtags.tld` file.
 
 [[beagx]][[GSDVG00259]][[the-cache-tag]]
 
-The `cache` Tag
-+++++++++++++++
+===== The `cache` Tag
 
 The cache tag caches the body between the beginning and ending tags
 according to the attributes specified. The first time the tag is
@@ -558,8 +541,7 @@ The following example represents a cached JSP file:
 
 [[beagy]][[GSDVG00260]][[the-flush-tag]]
 
-The `flush` Tag
-+++++++++++++++
+===== The `flush` Tag
 
 Forces the cache to be flushed. If a `key` is specified, only the entry
 with that key is flushed. If no key is specified, the entire cache is
@@ -612,8 +594,7 @@ To flush the entire cache:
 
 [[beagz]][[GSDVG00401]][[options-for-compiling-jsp-files]]
 
-Options for Compiling JSP Files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Options for Compiling JSP Files
 
 GlassFish Server provides the following ways of compiling JSP source
 files into servlets:
@@ -628,8 +609,7 @@ Source Edition Reference Manual].
 
 [[beaha]][[GSDVG00142]][[creating-and-managing-sessions]]
 
-Creating and Managing Sessions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Creating and Managing Sessions
 
 This section describes how to create and manage HTTP sessions that
 allows users and transaction information to persist between
@@ -642,8 +622,7 @@ The following topics are addressed here:
 
 [[beahb]][[GSDVG00402]][[configuring-sessions]]
 
-Configuring Sessions
-^^^^^^^^^^^^^^^^^^^^
+==== Configuring Sessions
 
 The following topics are addressed here:
 
@@ -655,8 +634,7 @@ The following topics are addressed here:
 
 [[beahc]][[GSDVG00261]][[http-sessions-cookies-and-url-rewriting]]
 
-HTTP Sessions, Cookies, and URL Rewriting
-+++++++++++++++++++++++++++++++++++++++++
+===== HTTP Sessions, Cookies, and URL Rewriting
 
 To configure whether and how HTTP sessions use cookies and URL
 rewriting, edit the `session-properties` and `cookie-properties`
@@ -674,8 +652,7 @@ Availability Administration Guide].
 
 [[beahd]][[GSDVG00262]][[coordinating-session-access]]
 
-Coordinating Session Access
-+++++++++++++++++++++++++++
+===== Coordinating Session Access
 
 Make sure that multiple threads don't simultaneously modify the same
 session object in conflicting ways. If the persistence type is
@@ -695,8 +672,7 @@ modifies the session and the others have read-only access.
 
 [[ghmih]][[GSDVG00263]][[saving-sessions-during-redeployment]]
 
-Saving Sessions During Redeployment
-+++++++++++++++++++++++++++++++++++
+===== Saving Sessions During Redeployment
 
 Whenever a redeployment is done, the sessions at that transit time
 become invalid unless you use the `--keepstate=true` option of the
@@ -731,8 +707,7 @@ loaders, see link:class-loaders.html#beade[Class Loaders].
 
 [[gixeb]][[GSDVG00264]][[logging-session-attributes]]
 
-Logging Session Attributes
-++++++++++++++++++++++++++
+===== Logging Session Attributes
 
 You can write session attribute values to an access log. The access log
 format token ``%session.``name``%`` logs one of the following:
@@ -747,8 +722,7 @@ Administration Console.
 
 [[beahe]][[GSDVG00265]][[distributed-sessions-and-persistence]]
 
-Distributed Sessions and Persistence
-++++++++++++++++++++++++++++++++++++
+===== Distributed Sessions and Persistence
 
 A distributed HTTP session can run in multiple GlassFish Server
 instances, provided the following criteria are met:
@@ -842,8 +816,7 @@ correctly rolled back or committed.
 
 [[beahf]][[GSDVG00403]][[session-managers]]
 
-Session Managers
-^^^^^^^^^^^^^^^^
+==== Session Managers
 
 A session manager automatically creates new session objects whenever a
 new session starts. In some circumstances, clients do not join the
@@ -874,8 +847,7 @@ GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[beahg]][[GSDVG00266]][[the-memory-persistence-type]]
 
-The `memory` Persistence Type
-+++++++++++++++++++++++++++++
+===== The `memory` Persistence Type
 
 This persistence type is not designed for a production environment that
 requires session persistence. It provides no session persistence.
@@ -920,8 +892,7 @@ Guide].
 
 [[beahh]][[GSDVG00267]][[the-file-persistence-type]]
 
-The `file` Persistence Type
-+++++++++++++++++++++++++++
+===== The `file` Persistence Type
 
 This persistence type provides session persistence to the local file
 system, and allows a single server domain to recover the session state
@@ -976,8 +947,7 @@ Guide].
 
 [[gdshu]][[GSDVG00268]][[the-replicated-persistence-type]]
 
-The `replicated` Persistence Type
-+++++++++++++++++++++++++++++++++
+===== The `replicated` Persistence Type
 
 The replicated persistence type uses other servers in the cluster for
 session persistence. Clustered server instances replicate session state.
@@ -1069,8 +1039,7 @@ cluster.
 
 [[ggrgt]][[GSDVG00143]][[using-comet]]
 
-Using Comet
-~~~~~~~~~~~
+=== Using Comet
 
 This section explains the Comet programming technique and how to create
 and deploy a Comet-enabled application with the Oracle GlassFish Server.
@@ -1083,8 +1052,7 @@ The following topics are addressed here:
 
 [[ggrgy]][[GSDVG00404]][[introduction-to-comet]]
 
-Introduction to Comet
-^^^^^^^^^^^^^^^^^^^^^
+==== Introduction to Comet
 
 Comet is a programming technique that allows a web server to send
 updates to clients without requiring the clients to explicitly request
@@ -1117,8 +1085,7 @@ updates.
 
 [[ggrib]][[GSDVG00270]][[the-grizzly-implementation-of-comet]]
 
-The Grizzly Implementation of Comet
-+++++++++++++++++++++++++++++++++++
+===== The Grizzly Implementation of Comet
 
 A limitation of the Comet technique is that you must use it with a web
 server that supports non-blocking connections to avoid poor performance.
@@ -1156,8 +1123,7 @@ your web application.
 
 [[ggrim]][[GSDVG00271]][[client-technologies-to-use-with-comet]]
 
-Client Technologies to Use With Comet
-+++++++++++++++++++++++++++++++++++++
+===== Client Technologies to Use With Comet
 
 In addition to creating a web component that uses the Comet APIs, you
 need to enable your client to accept asynchronous updates from the web
@@ -1183,8 +1149,7 @@ use JavaScript with an HTTP-streaming connection.
 
 [[ggrgo]][[GSDVG00272]][[types-of-comet-connections]]
 
-Types of Comet Connections
-++++++++++++++++++++++++++
+===== Types of Comet Connections
 
 When working with Comet, as implemented in Grizzly, you have two
 different ways to handle client connections to the server:
@@ -1247,8 +1212,7 @@ your application if you plan to use HTTP-streaming behind a proxy.
 
 [[ghgxk]][[GSDVG00405]][[grizzly-comet]]
 
-Grizzly Comet
-^^^^^^^^^^^^^
+==== Grizzly Comet
 
 For details on using Grizzly Comet including a sample application, refer
 to the https://eclipse-ee4j.github.io/grizzly/comet.html[Grizzly Comet documentation].
@@ -1294,8 +1258,7 @@ cometContext.notify((Object)(handler))
 
 [[ghgxn]][[GSDVG00406]][[bayeux-protocol]]
 
-Bayeux Protocol
-^^^^^^^^^^^^^^^
+==== Bayeux Protocol
 
 The Bayeux protocol, often referred to as `Cometd`, greatly simplifies
 the use of Comet. No server-side coding is needed for servers such as
@@ -1310,8 +1273,7 @@ The following topics are addressed here:
 
 [[ghhaw]][[GSDVG00280]][[enabling-comet]]
 
-Enabling Comet
-++++++++++++++
+===== Enabling Comet
 
 Before running a Comet-enabled application, you need to enable Comet in
 the HTTP listener for your application by setting a special attribute in
@@ -1327,8 +1289,7 @@ Substitute the name of the protocol for `http-1`.
 
 [[ghhap]][[GSDVG00067]][[to-configure-the-web.xml-file]]
 
-To Configure the `web.xml` File
-+++++++++++++++++++++++++++++++
+===== To Configure the `web.xml` File
 
 To enable the Bayeux protocol on the GlassFish Server, you must
 reference the `CometdServlet` in your web application's `web.xml` file.
@@ -1377,8 +1338,7 @@ Note that the `load-on-startup` value for the `CometdServlet` is `1`.
 
 [[ghhtv]][[GSDVG00068]][[to-write-deploy-and-run-the-client]]
 
-To Write, Deploy, and Run the Client
-++++++++++++++++++++++++++++++++++++
+===== To Write, Deploy, and Run the Client
 
 1. Add script tags to the HTML page. For example:
 +
@@ -1434,8 +1394,7 @@ For more information about the Dojo toolkit, see
 
 [[beaft]][[GSDVG00144]][[advanced-web-application-features]]
 
-Advanced Web Application Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Advanced Web Application Features
 
 The following topics are addressed here:
 
@@ -1455,8 +1414,7 @@ The following topics are addressed here:
 
 [[beafu]][[GSDVG00407]][[internationalization-issues]]
 
-Internationalization Issues
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Internationalization Issues
 
 The following topics are addressed here:
 
@@ -1465,8 +1423,7 @@ The following topics are addressed here:
 
 [[beafv]][[GSDVG00281]][[the-servers-default-locale]]
 
-The Server's Default Locale
-+++++++++++++++++++++++++++
+===== The Server's Default Locale
 
 To set the default locale of the entire GlassFish Server, which
 determines the locale of the Administration Console, the logs, and so
@@ -1476,8 +1433,7 @@ the Administration Console.
 
 [[beafw]][[GSDVG00282]][[servlet-character-encoding]]
 
-Servlet Character Encoding
-++++++++++++++++++++++++++
+===== Servlet Character Encoding
 
 This section explains how the GlassFish Server determines the character
 encoding for the servlet request and the servlet response. For encodings
@@ -1518,8 +1474,7 @@ encoding:
 
 [[gilyj]][[GSDVG00408]][[virtual-server-properties]]
 
-Virtual Server Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Virtual Server Properties
 
 You can set virtual server properties in the following ways:
 
@@ -1554,8 +1509,7 @@ GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[beagb]][[GSDVG00409]][[class-loader-delegation]]
 
-Class Loader Delegation
-^^^^^^^^^^^^^^^^^^^^^^^
+==== Class Loader Delegation
 
 The Servlet specification recommends that a web application class loader
 look in the local class loader before delegating to its parent. To make
@@ -1582,8 +1536,7 @@ link:class-loaders.html#beade[Class Loaders].
 
 [[beagc]][[GSDVG00410]][[using-the-default-web.xml-file]]
 
-Using the `default-web.xml` File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using the `default-web.xml` File
 
 You can use the `default-web.xml` file to define features such as
 filters and security constraints that apply to all web applications.
@@ -1629,8 +1582,7 @@ steps.
 
 [[fvymc]][[GSDVG00069]][[to-use-the-default-web.xml-file]]
 
-To Use the `default-web.xml` File
-+++++++++++++++++++++++++++++++++
+===== To Use the `default-web.xml` File
 
 1. Place the JAR file for the filter, security constraint, or other
 feature in the domain-dir`/lib` directory.
@@ -1640,8 +1592,7 @@ JAR file.
 
 [[beagd]][[GSDVG00411]][[configuring-logging-and-monitoring-in-the-web-container]]
 
-Configuring Logging and Monitoring in the Web Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Logging and Monitoring in the Web Container
 
 For information about configuring logging and monitoring in the web
 container using the Administration Console, click the Help button in the
@@ -1651,8 +1602,7 @@ instance from the table, and select the Monitor tab.
 
 [[beage]][[GSDVG00412]][[configuring-idempotent-url-requests]]
 
-Configuring Idempotent URL Requests
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Idempotent URL Requests
 
 An idempotent request is one that does not cause any change or
 inconsistency in an application when retried. To enhance the
@@ -1669,8 +1619,7 @@ The following topics are addressed here:
 
 [[beagf]][[GSDVG00283]][[specifying-an-idempotent-url]]
 
-Specifying an Idempotent URL
-++++++++++++++++++++++++++++
+===== Specifying an Idempotent URL
 
 To configure idempotent URL response, specify the URLs that can be
 safely retried in `idempotent-url-pattern` elements in the
@@ -1689,8 +1638,7 @@ error page is returned.
 
 [[beagg]][[GSDVG00284]][[characteristics-of-an-idempotent-url]]
 
-Characteristics of an Idempotent URL
-++++++++++++++++++++++++++++++++++++
+===== Characteristics of an Idempotent URL
 
 Since all requests for a given session are sent to the same application
 server instance, and if that GlassFish Server instance is unreachable,
@@ -1725,8 +1673,7 @@ twice from your account.
 
 [[beagi]][[GSDVG00413]][[header-management]]
 
-Header Management
-^^^^^^^^^^^^^^^^^
+==== Header Management
 
 In all Editions of the GlassFish Server, the `Enumeration` from
 `request.getHeaders()` contains multiple elements (one element per
@@ -1738,8 +1685,7 @@ created.
 
 [[geqrh]][[GSDVG00414]][[configuring-valves-and-catalina-listeners]]
 
-Configuring Valves and Catalina Listeners
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Configuring Valves and Catalina Listeners
 
 You can configure custom valves and Catalina listeners for web modules
 or virtual servers by defining properties. A valve class must implement
@@ -1770,8 +1716,7 @@ information, see link:#gilyj[Virtual Server Properties].
 
 [[geqpl]][[GSDVG00415]][[alternate-document-roots]]
 
-Alternate Document Roots
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Alternate Document Roots
 
 An alternate document root (docroot) allows a web application to serve
 requests for certain resources from outside its own docroot, based on
@@ -1894,8 +1839,7 @@ standard docroot, as usual.
 
 [[geurd]][[GSDVG00416]][[using-a-context.xml-file]]
 
-Using a context.xml File
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using a context.xml File
 
 You can define a `context.xml` file for all web applications, for web
 applications assigned to a specific virtual server, or for a specific
@@ -1942,8 +1886,7 @@ parameters, environment entries, and resource definitions in
 
 [[gezcx]][[GSDVG00417]][[enabling-webdav]]
 
-Enabling WebDav
-^^^^^^^^^^^^^^^
+==== Enabling WebDav
 
 To enable WebDav in the GlassFish Server, you edit the `web.xml` and
 `glassfish-web.xml` files as follows.
@@ -2050,8 +1993,7 @@ protect it.
 
 [[ghepd]][[GSDVG00418]][[using-ssi]]
 
-Using SSI
-^^^^^^^^^
+==== Using SSI
 
 To enable SSI (server-side includes) processing for a specific web
 module, add the `SSIServlet` to your `web.xml` file as follows:
@@ -2118,8 +2060,7 @@ For more information about SSI, see
 
 [[ghepi]][[GSDVG00419]][[using-cgi]]
 
-Using CGI
-^^^^^^^^^
+==== Using CGI
 
 To enable CGI (common gateway interface) processing for a specific web
 module, add the `CGIServlet` to your `web.xml` file as follows:

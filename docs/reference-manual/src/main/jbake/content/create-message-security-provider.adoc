@@ -5,13 +5,11 @@ next=create-module-config.html
 prev=create-managed-thread-factory.html
 ~~~~~~
 
-create-message-security-provider
-================================
+= create-message-security-provider
 
 [[create-message-security-provider-1]][[GSRFM00045]][[create-message-security-provider]]
 
-create-message-security-provider
---------------------------------
+== create-message-security-provider
 
 Enables administrators to create a message security provider, which
 specifies how SOAP messages will be secured.

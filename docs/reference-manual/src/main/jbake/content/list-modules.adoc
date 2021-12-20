@@ -5,13 +5,11 @@ next=list-network-listeners.html
 prev=list-message-security-providers.html
 ~~~~~~
 
-list-modules
-============
+= list-modules
 
 [[list-modules-1]][[GSRFM00185]][[list-modules]]
 
-list-modules
-------------
+== list-modules
 
 Lists {productName} modules
 

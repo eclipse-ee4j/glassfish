@@ -5,13 +5,11 @@ next=create-system-properties.html
 prev=create-service.html
 ~~~~~~
 
-create-ssl
-==========
+= create-ssl
 
 [[create-ssl-1]][[GSRFM00058]][[create-ssl]]
 
-create-ssl
-----------
+== create-ssl
 
 Creates and configures the SSL element in the selected HTTP listener,
 IIOP listener, or IIOP service

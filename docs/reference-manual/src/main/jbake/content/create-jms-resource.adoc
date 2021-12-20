@@ -5,13 +5,11 @@ next=create-jndi-resource.html
 prev=create-jms-host.html
 ~~~~~~
 
-create-jms-resource
-===================
+= create-jms-resource
 
 [[create-jms-resource-1]][[GSRFM00040]][[create-jms-resource]]
 
-create-jms-resource
--------------------
+== create-jms-resource
 
 Creates a JMS resource
 

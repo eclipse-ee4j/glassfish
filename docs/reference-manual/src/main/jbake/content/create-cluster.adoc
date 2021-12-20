@@ -5,13 +5,11 @@ next=create-connector-connection-pool.html
 prev=create-auth-realm.html
 ~~~~~~
 
-create-cluster
-==============
+= create-cluster
 
 [[create-cluster-1]][[GSRFM00017]][[create-cluster]]
 
-create-cluster
---------------
+== create-cluster
 
 Creates a {productName} cluster
 

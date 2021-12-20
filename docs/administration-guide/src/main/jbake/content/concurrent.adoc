@@ -5,15 +5,13 @@ next=orb.html
 prev=http_https.html
 ~~~~~~
 
-Administering Concurrent Resources
-==================================
+= Administering Concurrent Resources
 
 [[GSADG1108]][[sthref73]]
 
 
 [[administering-concurrent-resources]]
-14 Administering Concurrent Resources
--------------------------------------
+== 14 Administering Concurrent Resources
 
 This chapter provides procedures for administering concurrent resources
 in the GlassFish Server environment by using the `asadmin` command-line
@@ -33,8 +31,7 @@ Console are contained in the Administration Console online help.
 
 [[DAFGCCDI]][[GSADG1109]][[about-concurrent-resources]]
 
-About Concurrent Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Concurrent Resources
 
 Concurrent resources are managed objects that provide concurrency
 capabilities to Jakarta EE applications. In GlassFish Server, you configure
@@ -60,8 +57,7 @@ Java Specification Request 236: Concurrency Utilities for Jakarta EE].
 
 [[DAFFGDCD]][[GSADG1110]][[default-concurrent-resources]]
 
-Default Concurrent Resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Concurrent Resources
 
 When you create a concurrent resource, you specify a unique JNDI name
 for the resource. Applications use this name to access the resource.
@@ -88,8 +84,7 @@ java:comp/DefaultManagedScheduledExecutorService::
 
 [[DAFFCEEA]][[GSADG1111]][[configuring-context-services]]
 
-Configuring Context Services
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Context Services
 
 Context services are used to create dynamic proxy objects that capture
 the context of a container and enable applications to run within that
@@ -105,8 +100,7 @@ The following tasks are used to administer context service resources:
 
 [[DAFJACDI]][[GSADG1112]][[to-create-a-context-service]]
 
-To Create a Context Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Context Service
 
 Use the `create-context-service` subcommand in remote mode to create a
 context service resource.
@@ -157,8 +151,7 @@ typing `asadmin help create-context-service` at the command line.
 
 [[DAFDCFCB]][[GSADG1115]][[to-list-context-services]]
 
-To List Context Services
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Context Services
 
 Use the `list-context-services` subcommand in remote mode to list the
 existing context service resources.
@@ -191,8 +184,7 @@ typing `asadmin help list-context-services` at the command line.
 
 [[DAFBFICB]][[GSADG1118]][[to-update-a-context-service]]
 
-To Update a Context Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Context Service
 
 You can change all of the settings for an existing context service
 resource except its JNDI name. Use the `get` and `set` subcommands to
@@ -227,8 +219,7 @@ asadmin> set resources.context-service.concurrent/Context1.deployment-order=120
 
 [[DAFGGGEC]][[GSADG1119]][[to-delete-a-context-service]]
 
-To Delete a Context Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Context Service
 
 Use the `delete-context-service` subcommand in remote mode to delete an
 existing context service. Deleting a context service is a dynamic event
@@ -266,8 +257,7 @@ typing `asadmin help delete-context-service` at the command line.
 
 [[DAFBAAIJ]][[GSADG1122]][[configuring-managed-thread-factories]]
 
-Configuring Managed Thread Factories
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Managed Thread Factories
 
 Managed thread factories are used by applications to create managed
 threads on demand. The threads are started and managed by the container.
@@ -284,8 +274,7 @@ resources:
 
 [[DAFGFAEI]][[GSADG1123]][[to-create-a-managed-thread-factory]]
 
-To Create a Managed Thread Factory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Managed Thread Factory
 
 Use the `create-managed-thread-factory` subcommand in remote mode to
 create a managed thread factory resource.
@@ -334,8 +323,7 @@ typing `asadmin help create-managed-thread-factory` at the command line.
 
 [[DAFDGEGE]][[GSADG1126]][[to-list-managed-thread-factories]]
 
-To List Managed Thread Factories
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Managed Thread Factories
 
 Use the `list-managed-thread-factories` subcommand in remote mode to
 list the existing managed thread factory resources.
@@ -368,8 +356,7 @@ typing `asadmin help list-managed-thread-factories` at the command line.
 
 [[DAFDIJIH]][[GSADG1129]][[to-update-a-managed-thread-factory]]
 
-To Update a Managed Thread Factory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Managed Thread Factory
 
 You can change all of the settings for an existing managed thread
 factory resource except its JNDI name. Use the `get` and `set`
@@ -405,8 +392,7 @@ asadmin> set resources.managed-thread-factory.concurrent/Factory1.deployment-ord
 
 [[DAFCEDEI]][[GSADG1130]][[to-delete-a-managed-thread-factory]]
 
-To Delete a Managed Thread Factory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Managed Thread Factory
 
 Use the `delete-managed-thread-factory` subcommand in remote mode to
 delete an existing managed thread factory. Deleting a managed thread
@@ -444,8 +430,7 @@ typing `asadmin help delete-managed-thread-factory` at the command line.
 
 [[DAFBHEDI]][[GSADG1133]][[configuring-managed-executor-services]]
 
-Configuring Managed Executor Services
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Managed Executor Services
 
 Managed executor services are used by applications to execute submitted
 tasks asynchronously. Tasks are executed on threads that are started and
@@ -462,8 +447,7 @@ resources:
 
 [[DAFJIEGA]][[GSADG1134]][[to-create-a-managed-executor-service]]
 
-To Create a Managed Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Managed Executor Service
 
 Use the `create-managed-executor-service` subcommand in remote mode to
 create a managed executor service resource.
@@ -516,8 +500,7 @@ line.
 
 [[DAFIJDAE]][[GSADG1137]][[to-list-managed-executor-services]]
 
-To List Managed Executor Services
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Managed Executor Services
 
 Use the `list-managed-executor-services` subcommand in remote mode to
 list the existing managed executor service resources.
@@ -551,8 +534,7 @@ line.
 
 [[DAFICEJF]][[GSADG1140]][[to-update-a-managed-executor-service]]
 
-To Update a Managed Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Managed Executor Service
 
 You can change all of the settings for an existing managed executor
 service resource except its JNDI name. Use the `get` and `set`
@@ -588,8 +570,7 @@ asadmin> set resources.managed-executor-service.concurrent/Executor1.deployment-
 
 [[DAFDAGAD]][[GSADG1141]][[to-delete-a-managed-executor-service]]
 
-To Delete a Managed Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Managed Executor Service
 
 Use the `delete-managed-executor-service` subcommand in remote mode to
 delete an existing managed executor service. Deleting a managed executor
@@ -628,8 +609,7 @@ line.
 
 [[DAFHJHCF]][[GSADG1144]][[configuring-managed-scheduled-executor-services]]
 
-Configuring Managed Scheduled Executor Services
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring Managed Scheduled Executor Services
 
 Managed scheduled executor services are used by applications to execute
 submitted tasks asynchronously at specific times. Tasks are executed on
@@ -646,8 +626,7 @@ service resources:
 
 [[DAFFGDGG]][[GSADG1145]][[to-create-a-managed-scheduled-executor-service]]
 
-To Create a Managed Scheduled Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create a Managed Scheduled Executor Service
 
 Use the `create-managed-scheduled-executor-service` subcommand in remote
 mode to create a managed scheduled executor service resource.
@@ -701,8 +680,7 @@ command line.
 
 [[DAFJBADD]][[GSADG1148]][[to-list-managed-scheduled-executor-services]]
 
-To List Managed Scheduled Executor Services
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Managed Scheduled Executor Services
 
 Use the `list-managed-scheduled-executor-services` subcommand in remote
 mode to list the existing managed scheduled executor service resources.
@@ -736,8 +714,7 @@ command line.
 
 [[DAFGEBEI]][[GSADG1151]][[to-update-a-managed-scheduled-executor-service]]
 
-To Update a Managed Scheduled Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update a Managed Scheduled Executor Service
 
 You can change all of the settings for an existing managed scheduled
 executor service resource except its JNDI name. Use the `get` and `set`
@@ -772,8 +749,7 @@ asadmin> set resources.managed-scheduled-executor-service.concurrent/ScheduledEx
 
 [[DAFEBEGC]][[GSADG1152]][[to-delete-a-managed-scheduled-executor-service]]
 
-To Delete a Managed Scheduled Executor Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a Managed Scheduled Executor Service
 
 Use the `delete-managed-scheduled-executor-service` subcommand in remote
 mode to delete an existing managed scheduled executor service. Deleting

@@ -5,13 +5,11 @@ next=stop-domain.html
 prev=stop-cluster.html
 ~~~~~~
 
-stop-database
-=============
+= stop-database
 
 [[stop-database-1]][[GSRFM00239]][[stop-database]]
 
-stop-database
--------------
+== stop-database
 
 Stops the Java DB
 

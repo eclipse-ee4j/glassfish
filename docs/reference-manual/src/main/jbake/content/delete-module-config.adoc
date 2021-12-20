@@ -5,13 +5,11 @@ next=delete-network-listener.html
 prev=delete-message-security-provider.html
 ~~~~~~
 
-delete-module-config
-====================
+= delete-module-config
 
 [[delete-module-config-1]][[GSRFM854]][[delete-module-config]]
 
-delete-module-config
---------------------
+== delete-module-config
 
 Removes the configuration of a module from `domain.xml`
 

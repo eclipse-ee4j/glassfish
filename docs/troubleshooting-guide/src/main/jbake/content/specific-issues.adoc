@@ -5,15 +5,13 @@ next=faqs.html
 prev=overview.html
 ~~~~~~
 
-Specific Issues
-===============
+= Specific Issues
 
 [[GSTSG00003]][[abgbj]]
 
 
 [[specific-issues]]
-2 Specific Issues
------------------
+== 2 Specific Issues
 
 This chapter lists problems that you might encounter when using Oracle
 GlassFish Server 7. The following topics are addressed:
@@ -35,8 +33,7 @@ GlassFish Server 7. The following topics are addressed:
 
 [[abgca]][[GSTSG00043]][[cannot-access-local-server-httplocalhost8080]]
 
-Cannot Access Local Server (`http://localhost:8080`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Cannot Access Local Server (`http://localhost:8080`)
 
 When this error occurs, check the following:
 
@@ -46,13 +43,11 @@ When this error occurs, check the following:
 
 [[abgcb]][[GSTSG00179]][[did-the-server-start]]
 
-Did the Server Start?
-^^^^^^^^^^^^^^^^^^^^^
+==== Did the Server Start?
 
 [[abgcc]][[GSTSG00085]][[description]]
 
-Description
-+++++++++++
+===== Description
 
 If the console window is still open, the expected message indicates that
 the default domain was started successfully.
@@ -76,13 +71,11 @@ To easily determine if a domain is running, use the `asadmin list-domains` comma
 
 [[abgcd]][[GSTSG00180]][[was-the-server-started-at-the-expected-port]]
 
-Was the Server Started at the Expected Port?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Was the Server Started at the Expected Port?
 
 [[abgce]][[GSTSG00086]][[description-1]]
 
-Description
-+++++++++++
+===== Description
 
 The server might be running at a different port number than expected,
 either because it was intentionally installed there, or because another
@@ -118,16 +111,14 @@ of ways in which the expected value can change:
 
 [[gjjpn]][[GSTSG00181]][[is-a-personal-firewall-enabled]]
 
-Is a Personal Firewall Enabled?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is a Personal Firewall Enabled?
 
 Issues might result when personal firewalls are enabled. Disable your
 personal firewall and see if the server access problem still exists.
 
 [[abgcf]][[GSTSG00044]][[cannot-access-remote-server]]
 
-Cannot Access Remote Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Cannot Access Remote Server
 
 When attempting to open the start page of GlassFish Server, the initial
 screen does not appear.
@@ -139,21 +130,18 @@ When this error occurs, check the following:
 
 [[abgcg]][[GSTSG00182]][[is-the-server-available-locally]]
 
-Is the Server Available Locally?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is the Server Available Locally?
 
 [[abgch]][[GSTSG00087]][[description-2]]
 
-Description
-+++++++++++
+===== Description
 
 If the server cannot be accessed from the web, but it is running
 locally, then the server is actually running.
 
 [[abgci]][[GSTSG00088]][[solution]]
 
-Solution
-++++++++
+===== Solution
 
 Verify that the server is running locally.
 
@@ -176,13 +164,11 @@ does not appear, see link:#abgcb[Did the Server Start?].
 
 [[abgcj]][[GSTSG00183]][[is-the-proxy-setting-causing-a-problem]]
 
-Is the Proxy Setting Causing a Problem?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is the Proxy Setting Causing a Problem?
 
 [[abgck]][[GSTSG00089]][[description-3]]
 
-Description
-+++++++++++
+===== Description
 
 The server should be accessible directly from the host on which it is
 running (`localhost`); for example, using the default port `8080`:
@@ -194,8 +180,7 @@ http://localhost:8080/
 
 [[abgcl]][[GSTSG00090]][[solution-1]]
 
-Solution
-++++++++
+===== Solution
 
 A server instance running on `localhost` might not be accessible if the
 server host machine is connected to the web through a proxy. To solve
@@ -221,8 +206,7 @@ To determine the host name for the `localhost` machine, type `hostname` at the c
 
 [[abgcm]][[GSTSG00045]][[cannot-access-the-administration-console]]
 
-Cannot Access the Administration Console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Cannot Access the Administration Console
 
 The Administration Console provides a graphical interface for
 administrative functions. If the Administration Console is not
@@ -238,34 +222,29 @@ Source Edition Administration Guide.
 
 [[abgcn]][[GSTSG00184]][[is-the-application-server-running]]
 
-Is the Application Server Running?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is the Application Server Running?
 
 [[abgco]][[GSTSG00091]][[description-4]]
 
-Description
-+++++++++++
+===== Description
 
 The server must be running before the Administration Console can be
 accessed.
 
 [[abgcp]][[GSTSG00092]][[solution-2]]
 
-Solution
-++++++++
+===== Solution
 
 Review the information in link:#abgcb[Did the Server Start?] to
 determine if the server is running.
 
 [[abgcq]][[GSTSG00185]][[is-the-administration-console-running-on-the-expected-port]]
 
-Is the Administration Console Running on the Expected Port?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is the Administration Console Running on the Expected Port?
 
 [[abgcr]][[GSTSG00093]][[description-5]]
 
-Description
-+++++++++++
+===== Description
 
 The default port number for the Administration Console is `4848`.
 However, it could be running on a different port number than expected,
@@ -274,8 +253,7 @@ port was in use when the server was started.
 
 [[abgcs]][[GSTSG00094]][[solution-3]]
 
-Solution
-++++++++
+===== Solution
 
 Refer to link:#abgcd[Was the Server Started at the Expected Port?] for
 guidelines on verifying the port on which the Administration Console is
@@ -284,8 +262,7 @@ invoking the Administration Console.
 
 [[abgcw]][[GSTSG00046]][[cannot-access-a-server-application]]
 
-Cannot Access a Server Application
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Cannot Access a Server Application
 
 If a particular application cannot be accessed through GlassFish Server,
 check the following:
@@ -295,20 +272,17 @@ check the following:
 
 [[abgcx]][[GSTSG00186]][[is-the-application-server-running-1]]
 
-Is the Application Server Running?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is the Application Server Running?
 
 [[abgcy]][[GSTSG00095]][[description-6]]
 
-Description
-+++++++++++
+===== Description
 
 If GlassFish Server is not running, applications are not accessible.
 
 [[abgcz]][[GSTSG00096]][[solution-4]]
 
-Solution
-++++++++
+===== Solution
 
 Review the information in link:#abgcb[Did the Server Start?] to
 determine if the server is running. The server must be running before a
@@ -316,20 +290,17 @@ server application can be accessed.
 
 [[abgda]][[GSTSG00187]][[was-application-deployment-successful]]
 
-Was Application Deployment Successful?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Was Application Deployment Successful?
 
 [[abgdb]][[GSTSG00097]][[description-7]]
 
-Description
-+++++++++++
+===== Description
 
 An application must be successfully deployed before it can be accessed.
 
 [[abgdc]][[GSTSG00098]][[solution-5]]
 
-Solution
-++++++++
+===== Solution
 
 Verify that the application was successfully deployed. There are several
 ways to do this:
@@ -352,8 +323,7 @@ Console online help.
 
 [[gjjoz]][[GSTSG00047]][[administrator-user-name-or-password-not-known]]
 
-Administrator User Name or Password Not Known
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administrator User Name or Password Not Known
 
 If you have forgotten the administrator user name, you can find it by
 inspecting the domain-dir`/config/admin-keyfile` file, where domain-dir
@@ -368,20 +338,17 @@ domain to the other domain.
 
 [[gjjpj]][[GSTSG00048]][[experience-issues-related-to-the-jdk]]
 
-Experience Issues Related to the JDK
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Experience Issues Related to the JDK
 
 [[gjjpl]][[GSTSG00188]][[description-8]]
 
-Description
-^^^^^^^^^^^
+==== Description
 
 You experience JDK-related issues in a variety of circumstances.
 
 [[gjjop]][[GSTSG00189]][[solution-6]]
 
-Solution
-^^^^^^^^
+==== Solution
 
 GlassFish Server 7 requires JDK 6, so check your system for that
 dependency.
@@ -401,8 +368,7 @@ supported JDK version.
 
 [[abgdi]][[GSTSG00049]][[server-will-not-start-on-windows-port-conflict]]
 
-Server Will Not Start on Windows (Port Conflict)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Server Will Not Start on Windows (Port Conflict)
 
 If a message similar to the following is displayed when starting
 GlassFish Server on Microsoft Windows, a server port conflict has
@@ -424,29 +390,25 @@ You might also check the following:
 
 [[abgdj]][[GSTSG00190]][[is-another-application-running-on-the-servers-port]]
 
-Is Another Application Running on the Server's Port?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Is Another Application Running on the Server's Port?
 
 If another application is using the server's port, stop the other
 application, then restart GlassFish Server.
 
 [[abgdk]][[GSTSG00191]][[has-an-ungraceful-shutdown-occurred-on-a-previously-running-server]]
 
-Has an Ungraceful Shutdown Occurred on a Previously Running Server?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Has an Ungraceful Shutdown Occurred on a Previously Running Server?
 
 Use the `asadmin stop-domain` command to stop the server, or explicitly
 kill the Java process and then restart GlassFish Server.
 
 [[gkvcs]][[GSTSG00050]][[glassfish-server-fails-to-start-in-an-opensolaris-zone]]
 
-GlassFish Server Fails to Start in an OpenSolaris Zone
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Server Fails to Start in an OpenSolaris Zone
 
 [[gkvcx]][[GSTSG00192]][[description-9]]
 
-Description
-^^^^^^^^^^^
+==== Description
 
 If GlassFish Server is installed in an OpenSolaris zone, an attempt to
 start a domain might fail with the following error message:
@@ -466,8 +428,7 @@ without language and encoding support, which GlassFish Server requires.
 
 [[gkvdf]][[GSTSG00026]][[resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone]]
 
-Resolution: To Enable GlassFish Server to Run in an OpenSolaris Zone
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Resolution: To Enable GlassFish Server to Run in an OpenSolaris Zone
 
 1. Install the package that provides language and encoding support for
 your locale.
@@ -488,13 +449,11 @@ variable to `en_US.UTF-8`.
 
 [[abgdr]][[GSTSG00051]][[two-server-instances-bind-to-same-port-on-windows]]
 
-Two Server Instances Bind to Same Port on Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Two Server Instances Bind to Same Port on Windows
 
 [[abgds]][[GSTSG00193]][[description-10]]
 
-Description
-^^^^^^^^^^^
+==== Description
 
 This problem occurs on Windows XP systems with GlassFish Server
 software, and is due to a known Windows security flaw rather than a
@@ -521,21 +480,18 @@ only reports the first instance.
 
 [[fxxyd]][[GSTSG00194]][[solution-7]]
 
-Solution
-^^^^^^^^
+==== Solution
 
 Be sure to use unique port numbers for all server instances on Windows
 systems.
 
 [[abgel]][[GSTSG00052]][[cannot-produce-a-jvm-thread-dump-after-server-crash]]
 
-Cannot Produce a JVM Thread Dump After Server Crash
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Cannot Produce a JVM Thread Dump After Server Crash
 
 [[abgem]][[GSTSG00195]][[description-11]]
 
-Description
-^^^^^^^^^^^
+==== Description
 
 If GlassFish Server crashes, the server dumps a core file and, by
 default, restarts with the `-Xrs` flag, which prevents the dump of a JVM
@@ -543,13 +499,11 @@ thread dump.
 
 [[fxxyw]][[GSTSG00196]][[solution-8]]
 
-Solution
-^^^^^^^^
+==== Solution
 
 [[ghylc]][[GSTSG00027]][[to-obtain-a-server-thread-dump-specific-issues]]
 
-To Obtain a Server Thread Dump
-++++++++++++++++++++++++++++++
+===== To Obtain a Server Thread Dump
 
 Type the following command:
 
@@ -566,18 +520,15 @@ link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-repor
 
 [[ghvgk]][[GSTSG00053]][[issues-related-to-applications]]
 
-Issues Related to Applications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Issues Related to Applications
 
 [[abgee]][[GSTSG00197]][[cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows]]
 
-Cannot Undeploy or Redeploy Application With Open Streams to `jar` Files (Windows)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Cannot Undeploy or Redeploy Application With Open Streams to `jar` Files (Windows)
 
 [[abgef]][[GSTSG00099]][[description-12]]
 
-Description
-+++++++++++
+===== Description
 
 On Windows systems, after running an application, subsequent attempts to
 undeploy it or redeploy it throw exceptions about the server being
@@ -593,8 +544,7 @@ reasons.
 
 [[fxxyr]][[GSTSG00100]][[solution-9]]
 
-Solution
-++++++++
+===== Solution
 
 Be sure to close streams opened by your applications. Also, if an
 application needs to be redeployed or undeployed repeatedly, and also
@@ -613,13 +563,11 @@ open until the server is stopped.
 
 [[gldbk]][[GSTSG00198]][[maxpermgen-exception]]
 
-`MaxPermGen` Exception
-^^^^^^^^^^^^^^^^^^^^^^
+==== `MaxPermGen` Exception
 
 [[gldbn]][[GSTSG00101]][[description-13]]
 
-Description
-+++++++++++
+===== Description
 
 Application servers such as GlassFish Server allow you to redeploy an
 application without restarting the server. Simply make the change in
@@ -654,8 +602,7 @@ exception.
 
 [[gldbw]][[GSTSG00102]][[solution-10]]
 
-Solution
-++++++++
+===== Solution
 
 Classloader leaks are difficult to diagnose. Most profilers list leaked
 objects but don't highlight the ones causing classloader leaks. Most
@@ -685,13 +632,11 @@ To override the original `jhat` code, put the JAR file of the modified
 
 [[ghvhy]][[GSTSG00054]][[issues-related-to-asadmin]]
 
-Issues Related to `asadmin`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Issues Related to `asadmin`
 
 [[ghvhi]][[GSTSG00199]][[asadmin-start-domain-command-fails]]
 
-`asadmin` `start-domain` Command Fails
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== `asadmin` `start-domain` Command Fails
 
 The command `asadmin start-domain` fails with the following error:
 
@@ -702,8 +647,7 @@ There is more than one domain...
 
 [[gjkph]][[GSTSG00103]][[description-14]]
 
-Description
-+++++++++++
+===== Description
 
 When issued with no arguments, the command `asadmin start-domain` fails.
 
@@ -713,8 +657,7 @@ with the `start-domain` command.
 
 [[gjkoy]][[GSTSG00104]][[solution-11]]
 
-Solution
-++++++++
+===== Solution
 
 Specify the domain when issuing the `start-domain` command:
 
@@ -732,20 +675,17 @@ asadmin start-domain mycustomdomain
 
 [[ghvhx]][[GSTSG00200]][[cannot-stop-domain-using-asadmin-stop-domain]]
 
-Cannot Stop Domain Using `asadmin` `stop-domain`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Cannot Stop Domain Using `asadmin` `stop-domain`
 
 [[ghvhl]][[GSTSG00105]][[description-15]]
 
-Description
-+++++++++++
+===== Description
 
 You cannot stop the domain using the `asadmin` `stop-domain` command.
 
 [[ghvha]][[GSTSG00106]][[solution-12]]
 
-Solution
-++++++++
+===== Solution
 
 Look for error messages that display in the console when you issue the command.
 
@@ -754,25 +694,21 @@ inability to stop the domain.
 
 [[ghvgu]][[GSTSG00055]][[issues-related-to-installation]]
 
-Issues Related to Installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Issues Related to Installation
 
 [[gjjnu]][[GSTSG00201]][[installation-hangs-during-update-tool-configuration]]
 
-Installation Hangs During Update Tool Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Installation Hangs During Update Tool Configuration
 
 [[giqjt]][[GSTSG00107]][[description-16]]
 
-Description
-+++++++++++
+===== Description
 
 Installation hangs more than five minutes during Update Tool configuration.
 
 [[giqle]][[GSTSG00108]][[solution-13]]
 
-Solution
-++++++++
+===== Solution
 
 Cancel the installation and run the installation program again, but this
 time deselect the Install Update Tool check box. Update Tool can be
@@ -795,13 +731,11 @@ link:../upgrade-guide/toc.html#GSUPG[GlassFish Server Open Source Edition Upgrad
 
 [[gjjob]][[GSTSG00202]][[glassfish-server-components-not-removed-during-uninstallation]]
 
-GlassFish Server Components Not Removed During Uninstallation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== GlassFish Server Components Not Removed During Uninstallation
 
 [[gjjoh]][[GSTSG00109]][[description-17]]
 
-Description
-+++++++++++
+===== Description
 
 Not all GlassFish Server directories are automatically removed by the
 uninstallation program. Some directories and files remain after
@@ -809,8 +743,7 @@ uninstalling.
 
 [[gjjnk]][[GSTSG00110]][[solution-14]]
 
-Solution
-++++++++
+===== Solution
 
 Examine the remaining directories and remove any files or directories
 that you do not want, including hidden directories prefixed with a dot.
@@ -823,18 +756,15 @@ in GlassFish Server Open Source Edition Installation Guide.
 
 [[ghvrh]][[GSTSG00056]][[issues-related-to-security]]
 
-Issues Related to Security
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Issues Related to Security
 
 [[abgjt]][[GSTSG00203]][[java.security.accesscontrolexception-access-denied-error]]
 
-`java.security.AccessControlException`: Access Denied Error
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== `java.security.AccessControlException`: Access Denied Error
 
 [[abgju]][[GSTSG00111]][[description-18]]
 
-Description
-+++++++++++
+===== Description
 
 The following error occurs from an application client, or appears in the
 `server.log` file:
@@ -852,8 +782,7 @@ property.
 
 [[fxxzk]][[GSTSG00112]][[solution-15]]
 
-Solution
-++++++++
+===== Solution
 
 Add the permission in `client.policy` (for the application client), or
 in `server.policy` (for web modules) for the application that needs to
@@ -873,21 +802,18 @@ grant codeBase "file:/.../build/sparc_SunOS/sec/-" {
 
 [[abgka]][[GSTSG00204]][[mutual-authentication-not-working-with-the-application-client]]
 
-Mutual Authentication Not Working With the Application Client
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Mutual Authentication Not Working With the Application Client
 
 [[abgkb]][[GSTSG00113]][[description-19]]
 
-Description
-+++++++++++
+===== Description
 
 This failure can occur when the keystore and truststore properties are
 not set properly.
 
 [[fxxzu]][[GSTSG00114]][[solution-16]]
 
-Solution
-++++++++
+===== Solution
 
 Set the following properties on the JVM:
 

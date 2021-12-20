@@ -5,13 +5,11 @@ next=list-modules.html
 prev=list-managed-thread-factories.html
 ~~~~~~
 
-list-message-security-providers
-===============================
+= list-message-security-providers
 
 [[list-message-security-providers-1]][[GSRFM00184]][[list-message-security-providers]]
 
-list-message-security-providers
--------------------------------
+== list-message-security-providers
 
 Lists all security message providers for the given message layer
 

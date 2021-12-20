@@ -5,15 +5,13 @@ next=part-res-and-svcs-admin.html
 prev=lifecycle-modules.html
 ~~~~~~
 
-Administering Batch Jobs
-========================
+= Administering Batch Jobs
 
 [[GSADG1077]][[sthref66]]
 
 
 [[administering-batch-jobs]]
-10 Administering Batch Jobs
----------------------------
+== 10 Administering Batch Jobs
 
 This chapter provides procedures for administering batch jobs in the
 GlassFish Server environment by using the `asadmin` command-line
@@ -30,8 +28,7 @@ Console are contained in the Administration Console online help.
 
 [[BABCHGJJ]][[GSADG1078]][[about-batch-jobs]]
 
-About Batch Jobs
-~~~~~~~~~~~~~~~~
+=== About Batch Jobs
 
 GlassFish Server provides a batch runtime for the scheduling and
 execution of batch jobs. Batch jobs are typically long-running,
@@ -57,8 +54,7 @@ and executing batch jobs.
 
 [[BABIHIGA]][[GSADG1079]][[viewing-batch-jobs]]
 
-Viewing Batch Jobs
-~~~~~~~~~~~~~~~~~~
+=== Viewing Batch Jobs
 
 You can view detailed information about batch jobs, executions, and
 steps. Users who log in to the `asadmin` utility or to the
@@ -74,8 +70,7 @@ The following tasks are used to view information about batch jobs:
 
 [[BABIBFDJ]][[GSADG1080]][[to-list-batch-jobs]]
 
-To List Batch Jobs
-^^^^^^^^^^^^^^^^^^
+==== To List Batch Jobs
 
 Use the `list-batch-jobs` subcommand in remote mode to list batch jobs
 and job details.
@@ -108,8 +103,7 @@ typing `asadmin help list-batch-jobs` at the command line.
 
 [[BABFBGJB]][[GSADG1083]][[to-list-batch-job-executions]]
 
-To List Batch Job Executions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Batch Job Executions
 
 When the batch runtime executes a job, the execution is given a unique
 execution ID. An execution ID is similar to a process ID. A new
@@ -148,8 +142,7 @@ typing `asadmin help list-batch-job-executions` at the command line.
 
 [[BABGJIDD]][[GSADG1086]][[to-list-batch-job-steps]]
 
-To List Batch Job Steps
-^^^^^^^^^^^^^^^^^^^^^^^
+==== To List Batch Job Steps
 
 A batch job consists of one or more steps. A step is an independent and
 sequential phase of a batch job.
@@ -198,8 +191,7 @@ typing `asadmin help list-batch-job-steps` at the command line.
 
 [[BABBFFIG]][[GSADG1089]][[configuring-the-batch-runtime]]
 
-Configuring the Batch Runtime
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring the Batch Runtime
 
 The batch runtime uses a data source and a managed executor service to
 execute batch jobs. The data source stores information about current and
@@ -228,8 +220,7 @@ The following tasks are used to view and configure the batch runtime:
 
 [[BABBGHCJ]][[GSADG1090]][[to-list-the-batch-runtime-configuration]]
 
-To List the Batch Runtime Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List the Batch Runtime Configuration
 
 Use the `list-batch-runtime-configuration` subcommand in remote mode to
 display the configuration of the batch runtime.
@@ -274,8 +265,7 @@ line.
 
 [[BABFEJAD]][[GSADG1093]][[to-configure-the-batch-runtime]]
 
-To Configure the Batch Runtime
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure the Batch Runtime
 
 Use the `set-batch-runtime-configuration` subcommand in remote mode to
 configure the batch runtime.

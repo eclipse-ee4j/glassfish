@@ -5,13 +5,11 @@ next=start-cluster.html
 prev=set-web-env-entry.html
 ~~~~~~
 
-show-component-status
-=====================
+= show-component-status
 
 [[show-component-status-1]][[GSRFM00232]][[show-component-status]]
 
-show-component-status
----------------------
+== show-component-status
 
 Displays the status of the deployed component
 

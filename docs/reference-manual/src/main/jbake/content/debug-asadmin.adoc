@@ -5,16 +5,14 @@ next=capture-schema.html
 prev=asadmin.html
 ~~~~~~
 
-debug-asadmin
-=============
+= debug-asadmin
 
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
 [[debug-asadmin-1m]][[GSRFM00263]][[debug-asadmin]]
 
-debug-asadmin
--------------
+== debug-asadmin
 
 Variant of the `asadmin` utility for performing administrative tasks for Oracle {productName}. This variant
 is useful for debugging local admin commands the launching of {productName}. It suspends immediately

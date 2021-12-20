@@ -5,13 +5,11 @@ next=list-nodes.html
 prev=list-modules.html
 ~~~~~~
 
-list-network-listeners
-======================
+= list-network-listeners
 
 [[list-network-listeners-1]][[GSRFM00186]][[list-network-listeners]]
 
-list-network-listeners
-----------------------
+== list-network-listeners
 
 Lists the existing network listeners
 

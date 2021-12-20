@@ -5,13 +5,11 @@ next=list-http-lbs.html
 prev=list-file-users.html
 ~~~~~~
 
-list-http-lb-configs
-====================
+= list-http-lb-configs
 
 [[list-http-lb-configs-1]][[GSRFM00166]][[list-http-lb-configs]]
 
-list-http-lb-configs
---------------------
+== list-http-lb-configs
 
 Lists load balancer configurations
 

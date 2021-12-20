@@ -5,13 +5,11 @@ next=delete-protocol-filter.html
 prev=delete-profiler.html
 ~~~~~~
 
-delete-protocol
-===============
+= delete-protocol
 
 [[delete-protocol-1]][[GSRFM00103]][[delete-protocol]]
 
-delete-protocol
----------------
+== delete-protocol
 
 Removes a protocol
 

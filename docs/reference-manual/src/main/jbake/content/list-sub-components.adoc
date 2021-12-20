@@ -5,13 +5,11 @@ next=list-supported-cipher-suites.html
 prev=list-secure-admin-principals.html
 ~~~~~~
 
-list-sub-components
-===================
+= list-sub-components
 
 [[list-sub-components-1]][[GSRFM00201]][[list-sub-components]]
 
-list-sub-components
--------------------
+== list-sub-components
 
 Lists EJB or servlet components in a deployed module or module of a
 deployed application

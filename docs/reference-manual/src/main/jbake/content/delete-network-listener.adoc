@@ -5,13 +5,11 @@ next=delete-node-config.html
 prev=delete-module-config.html
 ~~~~~~
 
-delete-network-listener
-=======================
+= delete-network-listener
 
 [[delete-network-listener-1]][[GSRFM00098]][[delete-network-listener]]
 
-delete-network-listener
------------------------
+== delete-network-listener
 
 Removes a network listener
 

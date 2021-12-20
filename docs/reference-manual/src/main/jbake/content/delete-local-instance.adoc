@@ -5,13 +5,11 @@ next=delete-managed-executor-service.html
 prev=delete-lifecycle-module.html
 ~~~~~~
 
-delete-local-instance
-=====================
+= delete-local-instance
 
 [[delete-local-instance-1]][[GSRFM00096]][[delete-local-instance]]
 
-delete-local-instance
----------------------
+== delete-local-instance
 
 Deletes a {productName} instance on the machine where the subcommand is run
 

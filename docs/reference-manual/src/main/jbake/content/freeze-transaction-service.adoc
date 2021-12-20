@@ -5,13 +5,11 @@ next=generate-jvm-report.html
 prev=flush-jmsdest.html
 ~~~~~~
 
-freeze-transaction-service
-==========================
+= freeze-transaction-service
 
 [[freeze-transaction-service-1]][[GSRFM00137]][[freeze-transaction-service]]
 
-freeze-transaction-service
---------------------------
+== freeze-transaction-service
 
 Freezes the transaction subsystem
 

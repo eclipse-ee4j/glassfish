@@ -5,13 +5,11 @@ next=list-log-levels.html
 prev=list-log-attributes.html
 ~~~~~~
 
-list-loggers
-============
+= list-loggers
 
 [[list-loggers-1]][[GSRFM869]][[list-loggers]]
 
-list-loggers
-------------
+== list-loggers
 
 Lists existing loggers
 

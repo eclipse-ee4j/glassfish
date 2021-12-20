@@ -5,13 +5,11 @@ next=delete-system-property.html
 prev=delete-resource-ref.html
 ~~~~~~
 
-delete-ssl
-==========
+= delete-ssl
 
 [[delete-ssl-1]][[GSRFM00109]][[delete-ssl]]
 
-delete-ssl
-----------
+== delete-ssl
 
 Deletes the SSL element in the selected HTTP listener, IIOP listener, or
 IIOP service

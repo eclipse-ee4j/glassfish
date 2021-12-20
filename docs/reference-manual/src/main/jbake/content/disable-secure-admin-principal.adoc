@@ -5,13 +5,11 @@ next=enable.html
 prev=disable-secure-admin-internal-user.html
 ~~~~~~
 
-disable-secure-admin-principal
-==============================
+= disable-secure-admin-principal
 
 [[disable-secure-admin-principal-1]][[GSRFM00123]][[disable-secure-admin-principal]]
 
-disable-secure-admin-principal
-------------------------------
+== disable-secure-admin-principal
 
 Disables the certificate for authorizing access in secure
 administration.

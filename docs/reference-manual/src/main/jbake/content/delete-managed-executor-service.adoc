@@ -5,13 +5,11 @@ next=delete-managed-scheduled-executor-service.html
 prev=delete-local-instance.html
 ~~~~~~
 
-delete-managed-executor-service
-===============================
+= delete-managed-executor-service
 
 [[delete-managed-executor-service-1]][[GSRFM848]][[delete-managed-executor-service]]
 
-delete-managed-executor-service
--------------------------------
+== delete-managed-executor-service
 
 Removes a managed executor service resource with the specified JNDI name
 

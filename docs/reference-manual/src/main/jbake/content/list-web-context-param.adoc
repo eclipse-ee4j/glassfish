@@ -5,13 +5,11 @@ next=list-web-env-entry.html
 prev=list-virtual-servers.html
 ~~~~~~
 
-list-web-context-param
-======================
+= list-web-context-param
 
 [[list-web-context-param-1]][[GSRFM00208]][[list-web-context-param]]
 
-list-web-context-param
-----------------------
+== list-web-context-param
 
 Lists servlet context-initialization parameters of a deployed web
 application or module

@@ -4,13 +4,11 @@ title=security
 prev=resource.html
 ~~~~~~
 
-security
-========
+= security
 
 [[security-5asc]][[GSRFM00274]][[security]]
 
-security
---------
+== security
 
 Secure and administer {productName} applications
 

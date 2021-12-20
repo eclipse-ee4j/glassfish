@@ -5,13 +5,11 @@ next=delete-admin-object.html
 prev=create-transport.html
 ~~~~~~
 
-create-virtual-server
-=====================
+= create-virtual-server
 
 [[create-virtual-server-1]][[GSRFM00062]][[create-virtual-server]]
 
-create-virtual-server
----------------------
+== create-virtual-server
 
 Creates the named virtual server
 

@@ -5,13 +5,11 @@ next=delete-connector-work-security-map.html
 prev=delete-connector-resource.html
 ~~~~~~
 
-delete-connector-security-map
-=============================
+= delete-connector-security-map
 
 [[delete-connector-security-map-1]][[GSRFM00072]][[delete-connector-security-map]]
 
-delete-connector-security-map
------------------------------
+== delete-connector-security-map
 
 Deletes a security map for the specified connector connection pool
 

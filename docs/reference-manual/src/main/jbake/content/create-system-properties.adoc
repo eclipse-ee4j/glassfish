@@ -5,13 +5,11 @@ next=create-threadpool.html
 prev=create-ssl.html
 ~~~~~~
 
-create-system-properties
-========================
+= create-system-properties
 
 [[create-system-properties-1]][[GSRFM00059]][[create-system-properties]]
 
-create-system-properties
-------------------------
+== create-system-properties
 
 Adds one or more system property elements that can be referenced
 elsewhere in the configuration.

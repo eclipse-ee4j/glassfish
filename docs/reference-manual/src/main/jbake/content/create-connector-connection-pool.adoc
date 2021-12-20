@@ -5,13 +5,11 @@ next=create-connector-resource.html
 prev=create-cluster.html
 ~~~~~~
 
-create-connector-connection-pool
-================================
+= create-connector-connection-pool
 
 [[create-connector-connection-pool-1]][[GSRFM00018]][[create-connector-connection-pool]]
 
-create-connector-connection-pool
---------------------------------
+== create-connector-connection-pool
 
 Adds a connection pool with the specified connection pool name
 

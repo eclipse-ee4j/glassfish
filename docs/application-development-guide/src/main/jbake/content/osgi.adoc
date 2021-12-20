@@ -5,14 +5,12 @@ next=part-services-and-apis.html
 prev=lifecycle-listeners.html
 ~~~~~~
 
-Developing OSGi-enabled Jakarta EE Applications
-===============================================
+= Developing OSGi-enabled Jakarta EE Applications
 
 [[GSDVG00015]][[gkpch]]
 
 [[developing-osgi-enabled-java-ee-applications]]
-13 Developing OSGi-enabled Jakarta EE Applications
---------------------------------------------------
+== 13 Developing OSGi-enabled Jakarta EE Applications
 
 This chapter describes the features and interfaces that GlassFish Server
 provides to develop OSGi-enabled enterprise applications. This chapter
@@ -24,8 +22,7 @@ includes the following sections:
 
 [[gkpay]][[GSDVG00173]][[overview-of-osgi-application-and-glassfish-server]]
 
-Overview of OSGi Application and GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Overview of OSGi Application and GlassFish Server
 
 {productName} is fully-compliant with Jakarta EE 10, so it provides the
 latest Jakarta EE APIs and frameworks. It is built using OSGi technology,
@@ -63,8 +60,7 @@ Bundles].
 
 [[glhek]][[GSDVG00488]][[benefits-of-using-osgi-in-enterprise-java-applications]]
 
-Benefits of Using OSGi in Enterprise Java Applications
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Benefits of Using OSGi in Enterprise Java Applications
 
 Enterprise applications typically need transactional, secured access to
 data stores, messaging systems and other such enterprise information
@@ -98,8 +94,7 @@ unavailable to applications built using just one of the two platforms.
 
 [[gkqff]][[GSDVG00174]][[developing-osgi-application-bundles-for-glassfish-server]]
 
-Developing OSGi Application Bundles for GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Developing OSGi Application Bundles for GlassFish Server
 
 GlassFish Server enables interaction between OSGi components and Jakarta EE
 components. OSGi services managed by the OSGi framework can invoke Java
@@ -119,8 +114,7 @@ OSGi services in a type-safe manner.
 
 [[gkupd]][[GSDVG00489]][[developing-plain-osgi-bundles]]
 
-Developing Plain OSGi Bundles
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Developing Plain OSGi Bundles
 
 Jakarta EE components (like an EJB or Servlet) can look up Jakarta EE platform
 services using JNDI names in the associated Jakarta EE naming context. Such
@@ -141,8 +135,7 @@ are available as OSGi services:
 
 [[gkunk]][[GSDVG00319]][[http-service]]
 
-HTTP Service
-++++++++++++
+===== HTTP Service
 
 The GlassFish Server web container is made available as a service for
 OSGi users who do not use OSGi Web Application Bundles (WABs). This
@@ -198,8 +191,7 @@ new HelloWorldServlet(), null, ctx);
 
 [[gkunn]][[GSDVG00320]][[transaction-service]]
 
-Transaction Service
-+++++++++++++++++++
+===== Transaction Service
 
 The Java Transaction API (JTA) defines three interfaces to interact with
 the transaction management system: `UserTransaction`,
@@ -251,8 +243,7 @@ context.getService(txRef);
 
 [[gkuof]][[GSDVG00321]][[jdbc-data-source-service]]
 
-JDBC Data Source Service
-++++++++++++++++++++++++
+===== JDBC Data Source Service
 
 Any JDBC data source created in GlassFish Server is automatically made
 available as an OSGi Service; therefore, OSGi bundles can track
@@ -276,8 +267,7 @@ code sample that looks up a data source service:
 
 [[gkuoq]][[GSDVG00322]][[jms-resource-service]]
 
-JMS Resource Service
-++++++++++++++++++++
+===== JMS Resource Service
 
 Like JDBC data sources, JMS administered objects, such as destinations
 and connection factories, are also automatically made available as OSGi
@@ -311,8 +301,7 @@ was created.
 
 [[gkunr]][[GSDVG00490]][[developing-web-application-bundles]]
 
-Developing Web Application Bundles
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Developing Web Application Bundles
 
 When a web application is packaged and deployed as an OSGi bundle, it is
 called a Web Application Bundle (WAB). WAB support is based on the OSGi
@@ -342,8 +331,7 @@ only additional OSGi metadata.
 
 [[gkvau]][[GSDVG00323]][[required-wab-metadata]]
 
-Required WAB Metadata
-+++++++++++++++++++++
+===== Required WAB Metadata
 
 In addition to the standard OSGi metadata, the main attributes of
 `META-INF/MANIFEST.MF` of the WAB must have an additional attribute
@@ -386,8 +374,7 @@ Then the OSGi metadata for the WAB as specified in
 
 [[gkvat]][[GSDVG00324]][[how-wabs-consume-osgi-services]]
 
-How WABs Consume OSGi Services
-++++++++++++++++++++++++++++++
+===== How WABs Consume OSGi Services
 
 Since a WAB has a valid `Bundle-Context`, it can consume OSGi services.
 Although you are free to use any OSGi API to locate OSGi services,
@@ -411,8 +398,7 @@ Extension for WABs].
 
 [[gkvbi]][[GSDVG00325]][[osgi-cdi-extension-for-wabs]]
 
-OSGi CDI Extension for WABs
-+++++++++++++++++++++++++++
+===== OSGi CDI Extension for WABs
 
 GlassFish Server includes a CDI extension that enables web applications,
 such as servlets, that are part of WABs to express a type-safe
@@ -470,8 +456,7 @@ BarServlet could look like:
 
 [[gkunh]][[GSDVG00491]][[developing-ejb-application-bundles]]
 
-Developing EJB Application Bundles
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Developing EJB Application Bundles
 
 Another type of hybrid application bundle is the EJB Application Bundle.
 When an EJB Jar is packaged with additional OSGi metadata and deployed
@@ -481,8 +466,7 @@ required OSGi metadata, just as you would package an `ejb-jar` file.
 
 [[gkvck]][[GSDVG00326]][[required-ejb-metadata]]
 
-Required EJB Metadata
-+++++++++++++++++++++
+===== Required EJB Metadata
 
 An EJB Application Bundle must have a manifest metadata called
 Export-EJB in order to be considered as an EJB Bundle. For syntax of
@@ -512,8 +496,7 @@ MANIFEST.MF:
 
 [[gkvcj]][[GSDVG00327]][[how-ejb-bundles-consume-osgi-services]]
 
-How EJB Bundles Consume OSGi Services
-+++++++++++++++++++++++++++++++++++++
+===== How EJB Bundles Consume OSGi Services
 
 Since an EJB has a valid Bundle-Context, it can consume OSGi services.
 Although you are free to use any OSGi API to locate OSGi services,
@@ -537,8 +520,7 @@ CDI Extension With EJB Bundles].
 
 [[gkvbj]][[GSDVG00328]][[using-the-osgi-cdi-extension-with-ejb-bundles]]
 
-Using the OSGi CDI Extension With EJB Bundles
-+++++++++++++++++++++++++++++++++++++++++++++
+===== Using the OSGi CDI Extension With EJB Bundles
 
 GlassFish Server includes a CDI extension that enables EJB application
 bundles to express a type-safe dependency on an OSGi Service using CDI
@@ -559,8 +541,7 @@ in the OSGi service registry.
 
 [[gkveh]][[GSDVG00175]][[deploying-osgi-bundles-in-glassfish-server]]
 
-Deploying OSGi Bundles in GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploying OSGi Bundles in GlassFish Server
 
 For instruction on deploying OSGi bundle, see
 "link:../application-deployment-guide/deploying-applications.html#GSDPG00073[

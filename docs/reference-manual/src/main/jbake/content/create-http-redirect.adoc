@@ -5,13 +5,11 @@ next=create-iiop-listener.html
 prev=create-http-listener.html
 ~~~~~~
 
-create-http-redirect
-====================
+= create-http-redirect
 
 [[create-http-redirect-1]][[GSRFM00031]][[create-http-redirect]]
 
-create-http-redirect
---------------------
+== create-http-redirect
 
 Adds a new HTTP redirect
 

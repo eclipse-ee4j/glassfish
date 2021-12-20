@@ -5,13 +5,11 @@ next=passwords.html
 prev=logging.html
 ~~~~~~
 
-monitoring
-==========
+= monitoring
 
 [[monitoring-5asc]][[GSRFM00271]][[monitoring]]
 
-monitoring
-----------
+== monitoring
 
 Reviewing the runtime state of components and services deployed in {productName}
 

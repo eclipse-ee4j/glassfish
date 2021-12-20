@@ -1,0 +1,48 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Release Notes, Release 7
+next=title.html
+~~~~~~
+= Eclipse GlassFish Server Release Notes, Release 7
+
+[[contents]]
+== Contents
+
+* link:title.html#eclipse-glassfish-server[Eclipse GlassFish Server]
+
+=== link:preface.html#preface[Preface]
+
+** link:preface.html#ghpbz[GlassFish Server Documentation Set]
+** link:preface.html#giprl[Related Documentation]
+** link:preface.html#fwbkx[Typographic Conventions]
+** link:preface.html#fquvc[Symbol Conventions]
+** link:preface.html#ghpfg[Default Paths and File Names]
+
+[[glassfish-server-open-source-edition-release-notes]]
+=== link:release-notes.html#GSRLN00001[1 Eclipse GlassFish Server 7 Release Notes]
+
+** link:release-notes.html#GSRLN00128[Revision History]
+** link:release-notes.html#GSRLN00129[What's New in the GlassFish Server 7 Release?]
+** link:release-notes.html#GSRLN00131[Hardware and Software Requirements]
+*** link:release-notes.html#GSRLN00246[Required JDK Versions]
+*** link:release-notes.html#GSRLN00248[Required Disk Space]
+*** link:release-notes.html#GSRLN00249[Required Free Ports]
+*** link:release-notes.html#GSRLN00250[Message Queue Broker Requirements]
+*** link:release-notes.html#GSRLN00252[Paths and Environment Settings for the JDK Software]
+** link:release-notes.html#GSRLN00253[Known Issues in GlassFish Server 7]
+*** link:release-notes.html#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
+*** link:release-notes.html#CHDBJDGF[Update Tool and pkg Command no longer part of GlassFish Server]
+*** link:release-notes.html#CHDJGJHD[Java DB has been replaced by Apache Derby]
+** link:release-notes.html#GSRLN00133[Restrictions and Deprecated Functionality]
+*** link:release-notes.html#GSRLN00258[`asadmin` Subcommands]
+*** link:release-notes.html#GSRLN00259[Deprecated, Unsupported, and Obsolete Options]
+*** link:release-notes.html#GSRLN00260[Applications That Use Apache Derby]
+*** link:release-notes.html#GSRLN00261[No Support for Client VM on Windows AMD64]
+*** link:release-notes.html#GSRLN00262[Metro Reliable Messaging in `InOrder` Delivery Mode]
+*** link:release-notes.html#GSRLN00263[No Support for Kerberos on AIX]
+** link:release-notes.html#BABDACBE[Documentation Errata]
+*** link:release-notes.html#BABIDEHD[Upgrading to Oracle GlassFish Server Is Not Necessary]
+** link:release-notes.html#GSRLN00135[Features Available Only in the Full Platform]
+** link:release-notes.html#GSRLN00136[Jakarta EE Standards Support]
+** link:release-notes.html#GSRLN00138[How to Report Problems and Provide Feedback]
+** link:release-notes.html#GSRLN00139[Additional Resources]

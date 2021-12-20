@@ -5,15 +5,13 @@ next=nodes.html
 prev=overview.html
 ~~~~~~
 
-Enabling Centralized Administration of GlassFish Server Instances
-=================================================================
+= Enabling Centralized Administration of GlassFish Server Instances
 
 [[GSHAG00003]][[gkshg]]
 
 
 [[enabling-centralized-administration-of-glassfish-server-instances]]
-2 Enabling Centralized Administration of GlassFish Server Instances
--------------------------------------------------------------------
+== 2 Enabling Centralized Administration of GlassFish Server Instances
 
 GlassFish Server uses the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to ensure that clusters that span
@@ -54,8 +52,7 @@ The following topics are addressed here:
 
 [[gkshz]][[GSHAG00172]][[about-centralized-administration-of-glassfish-server-instances]]
 
-About Centralized Administration of GlassFish Server Instances
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== About Centralized Administration of GlassFish Server Instances
 
 The use of DCOM or SSH to enable centralized administration of remote
 instances is optional and is required only for specific operations.
@@ -67,8 +64,7 @@ remote instances locally.
 
 
 [[determining-whether-to-enable-centralized-administration]]
-Determining Whether to Enable Centralized Administration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Determining Whether to Enable Centralized Administration
 
 Before setting up a GlassFish Server cluster, use the following
 considerations to determine whether to enable centralized administration
@@ -111,8 +107,7 @@ for enabling centralized administration, if any.
 
 
 [[considerations-for-using-dcom-for-centralized-administration]]
-Considerations for Using DCOM for Centralized Administration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Considerations for Using DCOM for Centralized Administration
 
 DCOM enables communications between Windows hosts. In a typical
 GlassFish Server deployment, the DAS acts as a DCOM client, and hosts
@@ -142,8 +137,7 @@ administration is simplest if the Windows user is the user that starts the DAS:
 
 
 [[considerations-for-using-ssh-for-centralized-administration]]
-Considerations for Using SSH for Centralized Administration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Considerations for Using SSH for Centralized Administration
 
 In a typical GlassFish Server deployment, the DAS acts as the SSH
 client, and hosts where instances reside act as SSH servers. The SSH
@@ -164,8 +158,7 @@ setup is required to install and configure an SSH provider.
 
 [[gksmt]][[GSHAG00262]][[obtaining-ssh-software]]
 
-Obtaining SSH Software
-++++++++++++++++++++++
+===== Obtaining SSH Software
 
 On UNIX and Linux systems, SSH software is typically installed as part
 of the base operating system.
@@ -178,8 +171,7 @@ However, on Windows systems, you must install one of the following SSH providers
 
 [[gkshj]][[GSHAG00263]][[determining-the-ssh-user]]
 
-Determining the SSH User
-++++++++++++++++++++++++
+===== Determining the SSH User
 
 Before setting up SSH, decide which SSH user GlassFish Server will use
 when connecting to remote hosts. For the following reasons,
@@ -194,8 +186,7 @@ running the DAS.
 
 [[glghe]][[GSHAG00222]][[requirements-for-the-ssh-users-environment]]
 
-Requirements for the SSH User's Environment
-+++++++++++++++++++++++++++++++++++++++++++
+===== Requirements for the SSH User's Environment
 
 The environment of the SSH user on any remote host to which the user
 will connect must meet the requirements that are stated in
@@ -216,8 +207,7 @@ contains the required environment settings for the SSH user.
 
 [[glgfy]][[GSHAG00223]][[file-access-permissions-on-uac-enabled-windows-systems]]
 
-File Access Permissions on UAC-Enabled Windows Systems
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== File Access Permissions on UAC-Enabled Windows Systems
 
 
 [NOTE]
@@ -240,8 +230,7 @@ operating system.
 
 [[CEGIFJJF]][[GSHAG448]][[setting-up-dcom-and-testing-the-dcom-set-up]]
 
-Setting Up DCOM and Testing the DCOM Set Up
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up DCOM and Testing the DCOM Set Up
 
 Setting up DCOM on a host involves the following tasks:
 
@@ -256,8 +245,7 @@ host.
 
 [[CEGDAFHD]][[GSHAG449]][[windows-operating-system-settings]]
 
-Windows Operating System Settings
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Windows Operating System Settings
 
 To enable access to a host over DCOM, ensure that the following items in
 the Windows operating system are set as follows on the host:
@@ -275,8 +263,7 @@ the Windows operating system are set as follows on the host:
 
 [[CEGCJGCF]][[GSHAG450]][[to-enable-the-windows-user-to-run-scripts-on-a-remote-host]]
 
-To Enable the Windows User to Run Scripts on a Remote Host
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Enable the Windows User to Run Scripts on a Remote Host
 
 To run scripts on a remote host, full control over the following Windows
 registry keys must be allowed for the Windows user or the group that
@@ -352,8 +339,7 @@ link:#CEGCDCEF[To Set Up Password Authentication for the Windows User].
 
 [[CEGCDCEF]][[GSHAG452]][[to-set-up-password-authentication-for-the-windows-user]]
 
-To Set Up Password Authentication for the Windows User
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up Password Authentication for the Windows User
 
 When a GlassFish Server subcommand uses DCOM to log in to a remote host,
 GlassFish Server requires the Windows user's password to authenticate
@@ -465,8 +451,7 @@ Connection Over DCOM to a Remote Host].
 
 [[CEGJFADH]][[GSHAG457]][[to-test-the-connection-over-dcom-to-a-remote-host]]
 
-To Test the Connection Over DCOM to a Remote Host
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Test the Connection Over DCOM to a Remote Host
 
 Testing the connection over DCOM to a remote host verifies that the
 required Windows services are running, the required ports are open, and
@@ -554,8 +539,7 @@ typing `asadmin help validate-dcom` at the command line.
 
 [[gksiy]][[GSHAG00173]][[setting-up-cygwin-ssh-on-windows]]
 
-Setting Up Cygwin SSH on Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up Cygwin SSH on Windows
 
 Set up Cygwin SSH on the DAS host and on all hosts where instances in
 your cluster will reside.
@@ -570,8 +554,7 @@ The following topics are addressed here:
 
 [[gksjn]][[GSHAG00071]][[to-download-and-install-cygwin]]
 
-To Download and Install Cygwin
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Download and Install Cygwin
 
 For centralized GlassFish Server administration, a basic Cygwin
 installation that includes the SSH client and the SSH server daemon
@@ -625,8 +608,7 @@ Setup]" in Cygwin User's Guide
 
 [[gksin]][[GSHAG00072]][[to-set-the-path-for-windows-and-for-the-cygwin-shell]]
 
-To Set the Path for Windows and for the Cygwin Shell
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set the Path for Windows and for the Cygwin Shell
 
 To enable GlassFish Server tools to find commands for SSH, each user's
 path for Windows and for the Cygwin shell must contain the following directories:
@@ -648,8 +630,7 @@ change applies to all users.
 
 [[gksov]][[GSHAG00073]][[to-set-the-home-directory-for-the-cygwin-ssh-user]]
 
-To Set the Home Directory for the Cygwin SSH User
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set the Home Directory for the Cygwin SSH User
 
 The SSH Server Daemon `sshd` locates a user's home directory from the
 configuration in the user database, not from environment variables such
@@ -677,8 +658,7 @@ for the SSH user to specify the user's home directory for Windows.
 
 [[gkskx]][[GSHAG00074]][[to-configure-and-start-the-cygwin-ssh-server-daemon-sshd]]
 
-To Configure and Start the Cygwin SSH Server Daemon `sshd`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure and Start the Cygwin SSH Server Daemon `sshd`
 
 [[GSHAG322]]
 
@@ -754,8 +734,7 @@ the host as explained in link:#gkslw[Testing the SSH Setup on a Host].
 
 [[gkskf]][[GSHAG00174]][[setting-up-the-mks-toolkit-on-windows]]
 
-Setting Up the MKS Toolkit on Windows
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up the MKS Toolkit on Windows
 
 Set up the MKS Toolkit on the DAS host and on all hosts where instances
 in your cluster will reside.
@@ -770,8 +749,7 @@ The following topics are addressed here:
 
 [[gksmq]][[GSHAG00075]][[to-install-the-mks-toolkit]]
 
-To Install the MKS Toolkit
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Install the MKS Toolkit
 
 For centralized GlassFish Server administration, the default
 installation of the MKS Toolkit is sufficient.
@@ -790,8 +768,7 @@ MKS Toolkit]" in MKS Toolkit v9.4 Release Notes
 
 [[gksmu]][[GSHAG00076]][[to-set-the-path-for-windows-and-for-the-mks-toolkit-shell]]
 
-To Set the Path for Windows and for the MKS Toolkit Shell
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set the Path for Windows and for the MKS Toolkit Shell
 
 To enable GlassFish Server tools to find commands for SSH, each user's
 path for Windows and for the MKS Toolkit shell must contain the
@@ -816,8 +793,7 @@ variable.
 
 [[gksox]][[GSHAG00077]][[to-set-the-home-directory-for-the-mks-toolkit-ssh-user]]
 
-To Set the Home Directory for the MKS Toolkit SSH User
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set the Home Directory for the MKS Toolkit SSH User
 
 The SSH Server Daemon `sshd` locates a user's home directory from the
 configuration in the user database, not from environment variables such
@@ -919,8 +895,7 @@ $ userinfo -u -fHomeDirDrive:"C:"
 
 [[gksnx]][[GSHAG00078]][[to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd]]
 
-To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`
 
 
 [NOTE]
@@ -976,8 +951,7 @@ the host as explained in link:#gkslw[Testing the SSH Setup on a Host].
 
 [[gksja]][[GSHAG00175]][[setting-up-ssh-on-unix-and-linux-systems]]
 
-Setting Up SSH on UNIX and Linux Systems
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up SSH on UNIX and Linux Systems
 
 Setting up SSH on UNIX and Linux systems involves verifying that the SSH
 server daemon `sshd` is running and, if necessary, starting this daemon.
@@ -999,8 +973,7 @@ sections:
 
 [[gksjx]][[GSHAG00079]][[to-set-up-ssh-on-oracle-solaris-systems]]
 
-To Set Up SSH on Oracle Solaris Systems
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up SSH on Oracle Solaris Systems
 
 1. Ensure that the following options in the configuration file
 `/etc/ssh/sshd_config` are set to `yes`:
@@ -1050,8 +1023,7 @@ the host as explained in link:#gkslw[Testing the SSH Setup on a Host].
 
 [[gkspz]][[GSHAG00080]][[to-set-up-ssh-on-macos-systems]]
 
-To Set Up SSH on MacOS Systems
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up SSH on MacOS Systems
 
 1. Open System Preferences and click Sharing. +
 The Sharing window opens.
@@ -1092,8 +1064,7 @@ the host as explained in link:#gkslw[Testing the SSH Setup on a Host].
 
 [[gksrd]][[GSHAG00081]][[to-set-up-ssh-on-linux-systems]]
 
-To Set Up SSH on Linux systems
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up SSH on Linux systems
 
 1. Ensure that the following options in the configuration file
 `/etc/ssh/sshd_config` are set to `yes`:
@@ -1136,8 +1107,7 @@ the host as explained in link:#gkslw[Testing the SSH Setup on a Host].
 
 [[gkslw]][[GSHAG00176]][[testing-the-ssh-setup-on-a-host]]
 
-Testing the SSH Setup on a Host
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Testing the SSH Setup on a Host
 
 After setting up SSH on a host, test the setup to ensure that you can
 use SSH to contact the host from another host. Testing the SSH setup on
@@ -1149,8 +1119,7 @@ before setting up SSH user authentication.
 
 [[gkskk]][[GSHAG00082]][[to-test-the-ssh-setup-on-a-host]]
 
-To Test the SSH Setup on a Host
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Test the SSH Setup on a Host
 
 1. From another host, use SSH to log in into the host that you are
 testing as the SSH user.
@@ -1205,8 +1174,7 @@ information, see link:#gkshh[Setting Up SSH User Authentication].
 
 [[gkshh]][[GSHAG00177]][[setting-up-ssh-user-authentication]]
 
-Setting Up SSH User Authentication
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting Up SSH User Authentication
 
 When a GlassFish Server subcommand uses SSH to log in to a remote host,
 GlassFish Server must be able to authenticate the SSH user. Setting up
@@ -1249,8 +1217,7 @@ The following topics are addressed here:
 
 [[gksqe]][[GSHAG00083]][[to-set-up-public-key-authentication-without-encryption]]
 
-To Set Up Public Key Authentication Without Encryption
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up Public Key Authentication Without Encryption
 
 Use the `setup-ssh` subcommand in local mode to set up public key
 authentication without encryption. This subcommand enables you to set up
@@ -1382,8 +1349,7 @@ typing `asadmin help setup-ssh` at the command line.
 
 [[gktaq]][[GSHAG00084]][[to-set-up-encrypted-public-key-authentication]]
 
-To Set Up Encrypted Public Key Authentication
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up Encrypted Public Key Authentication
 
 Encrypted key file authentication uses an encrypted private key file
 that is protected with a passphrase. This passphrase must be provided to
@@ -1610,8 +1576,7 @@ typing the following commands at the command line:
 
 [[gktbd]][[GSHAG00085]][[to-set-up-password-authentication]]
 
-To Set Up Password Authentication
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Set Up Password Authentication
 
 To use SSH to log in to a remote host, GlassFish Server requires the SSH
 user's password. To provide this password securely to GlassFish Server,
@@ -1709,8 +1674,7 @@ typing `asadmin help create-password-alias` at the command line.
 
 [[gkshn]][[GSHAG00178]][[installing-and-removing-glassfish-server-software-on-multiple-hosts]]
 
-Installing and Removing GlassFish Server Software on Multiple Hosts
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Installing and Removing GlassFish Server Software on Multiple Hosts
 
 GlassFish Server software must be installed on all hosts where GlassFish
 Server will run. How to install GlassFish Server software on multiple
@@ -1736,8 +1700,7 @@ The following topics are addressed here:
 
 [[gksil]][[GSHAG00086]][[to-copy-a-glassfish-server-installation-to-multiple-hosts]]
 
-To Copy a GlassFish Server Installation to Multiple Hosts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Copy a GlassFish Server Installation to Multiple Hosts
 
 Use the `install-node-dcom` subcommand or the `install-node-ssh`
 subcommand in local mode to copy an installation of GlassFish Server
@@ -1873,8 +1836,7 @@ typing the following commands at the command line:
 
 [[gktaw]][[GSHAG00087]][[to-remove-glassfish-server-software-from-multiple-hosts]]
 
-To Remove GlassFish Server Software From Multiple Hosts
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Remove GlassFish Server Software From Multiple Hosts
 
 Use the `uninstall-node-dcom` subcommand or the `uninstall-node-ssh`
 subcommand in local mode to remove GlassFish Server software from

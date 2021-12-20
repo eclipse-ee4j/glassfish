@@ -5,13 +5,11 @@ next=list-jdbc-connection-pools.html
 prev=list-jacc-providers.html
 ~~~~~~
 
-list-javamail-resources
-=======================
+= list-javamail-resources
 
 [[list-javamail-resources-1]][[GSRFM00172]][[list-javamail-resources]]
 
-list-javamail-resources
------------------------
+== list-javamail-resources
 
 Lists the existing JavaMail session resources
 

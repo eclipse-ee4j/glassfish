@@ -5,13 +5,11 @@ next=list-batch-runtime-configuration.html
 prev=list-batch-jobs.html
 ~~~~~~
 
-list-batch-job-steps
-====================
+= list-batch-job-steps
 
 [[list-batch-job-steps-1]][[GSRFM895]][[list-batch-job-steps]]
 
-list-batch-job-steps
---------------------
+== list-batch-job-steps
 
 Lists steps for a specific batch job execution
 

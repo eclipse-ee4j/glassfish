@@ -5,13 +5,11 @@ next=delete-jms-resource.html
 prev=delete-jmsdest.html
 ~~~~~~
 
-delete-jms-host
-===============
+= delete-jms-host
 
 [[delete-jms-host-1]][[GSRFM00091]][[delete-jms-host]]
 
-delete-jms-host
----------------
+== delete-jms-host
 
 Removes a JMS host
 

@@ -5,13 +5,11 @@ next=list-batch-job-executions.html
 prev=list-auth-realms.html
 ~~~~~~
 
-list-backups
-============
+= list-backups
 
 [[list-backups-1]][[GSRFM00152]][[list-backups]]
 
-list-backups
-------------
+== list-backups
 
 Lists all backups
 

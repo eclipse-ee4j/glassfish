@@ -5,13 +5,11 @@ next=remove-library.html
 prev=recover-transactions.html
 ~~~~~~
 
-redeploy
-========
+= redeploy
 
 [[redeploy-1]][[GSRFM00217]][[redeploy]]
 
-redeploy
---------
+== redeploy
 
 Redeploys the specified component
 

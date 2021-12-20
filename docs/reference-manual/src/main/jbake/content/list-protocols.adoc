@@ -5,13 +5,11 @@ next=list-resource-adapter-configs.html
 prev=list-protocol-finders.html
 ~~~~~~
 
-list-protocols
-==============
+= list-protocols
 
 [[list-protocols-1]][[GSRFM00195]][[list-protocols]]
 
-list-protocols
---------------
+== list-protocols
 
 Lists the existing protocols
 

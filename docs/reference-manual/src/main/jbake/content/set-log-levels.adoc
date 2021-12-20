@@ -5,13 +5,11 @@ next=setup-local-dcom.html
 prev=set-log-file-format.html
 ~~~~~~
 
-set-log-levels
-==============
+= set-log-levels
 
 [[set-log-levels-1]][[GSRFM00228]][[set-log-levels]]
 
-set-log-levels
---------------
+== set-log-levels
 
 Sets the log level for one or more loggers
 

@@ -5,13 +5,11 @@ next=restart-domain.html
 prev=redeploy.html
 ~~~~~~
 
-remove-library
-==============
+= remove-library
 
 [[remove-library-1]][[GSRFM00820]][[remove-library]]
 
-remove-library
---------------
+== remove-library
 
 Removes one or more library JAR files from {productName}
 

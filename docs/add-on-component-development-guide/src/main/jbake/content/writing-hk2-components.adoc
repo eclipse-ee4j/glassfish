@@ -5,15 +5,13 @@ next=extending-the-admin-console.html
 prev=introduction.html
 ~~~~~~
 
-Writing HK2 Components
-======================
+= Writing HK2 Components
 
 [[GSACG00002]][[ghmna]]
 
 
 [[writing-hk2-components]]
-Writing HK2 Components
-----------------------
+== Writing HK2 Components
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
 kernel of GlassFish Server. To interact with GlassFish Server, add-on
@@ -34,8 +32,7 @@ The following topics are addressed here:
 
 [[ghokq]][[GSACG00091]][[hk2-component-model]]
 
-HK2 Component Model
-~~~~~~~~~~~~~~~~~~~
+=== HK2 Component Model
 
 The Hundred-Kilobyte Kernel (HK2) provides a module system and component
 model for building complex software systems. HK2 forms the core of
@@ -52,8 +49,7 @@ injected to other objects that need it
 
 [[ghojt]][[GSACG00092]][[services-in-the-hk2-component-model]]
 
-Services in the HK2 Component Model
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Services in the HK2 Component Model
 
 An HK2 service identifies the building blocks or the extension points of
 an application. A service is a plain-old Java object (POJO) with the
@@ -99,8 +95,7 @@ http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[
 
 [[ghokt]][[GSACG00093]][[hk2-runtime]]
 
-HK2 Runtime
-~~~~~~~~~~~
+=== HK2 Runtime
 
 Once Services are defined, the HK2 runtime can be used to instantiate or
 retrieve instances of services. Each service instance has a scope,
@@ -108,8 +103,7 @@ specified as singleton, per thread, per application, or a custom scope.
 
 [[ghoib]][[GSACG00181]][[scopes-of-services]]
 
-Scopes of Services
-^^^^^^^^^^^^^^^^^^
+==== Scopes of Services
 
 You can specify the scope of a service by adding an
 `org.jvnet.hk2.annotations.Scoped` annotation to the class-level of your
@@ -151,8 +145,7 @@ scope.
 
 [[ghoky]][[GSACG00182]][[instantiation-of-components-in-hk2]]
 
-Instantiation of Components in HK2
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Instantiation of Components in HK2
 
 Do not call the `new` method to instantiate components. Instead,
 retrieve components by using the `Habitat` instance. The simplest way to
@@ -170,8 +163,7 @@ http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html[`H
 
 [[ghois]][[GSACG00183]][[hk2-lifecycle-interfaces]]
 
-HK2 Lifecycle Interfaces
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== HK2 Lifecycle Interfaces
 
 Components can attach behaviors to their construction and destruction
 events by implementing the
@@ -213,8 +205,7 @@ public class MyContainer implements Container, PostConstruct, PreDestroy {
 
 [[ghojb]][[GSACG00094]][[inversion-of-control]]
 
-Inversion of Control
-~~~~~~~~~~~~~~~~~~~~
+=== Inversion of Control
 
 Inversion of control (IoC) refers to a style of software architecture
 where the behavior of a system is determined by the runtime capabilities
@@ -228,8 +219,7 @@ system, components use injection to gain access to other components.
 
 [[ghoiz]][[GSACG00184]][[injecting-hk2-components]]
 
-Injecting HK2 Components
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== Injecting HK2 Components
 
 Services usually rely on other services to perform their tasks. The HK2
 runtime identifies the `@Contract` implementations required by a service
@@ -269,8 +259,7 @@ AdminCommand deployCommand;
 
 [[ghoic]][[GSACG00186]][[instantiation-cascading-in-hk2]]
 
-Instantiation Cascading in HK2
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Instantiation Cascading in HK2
 
 Injection of instances that have not been already instantiated triggers
 more instantiation. You can see this as a component instantiation
@@ -307,8 +296,7 @@ public Class ConfigService implements ... {...}
 
 [[ghmoe]][[GSACG00095]][[identifying-a-class-as-an-add-on-component]]
 
-Identifying a Class as an Add-On Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Identifying a Class as an Add-On Component
 
 GlassFish Server discovers add-on components by identifying Java
 programming language classes that are annotated with the
@@ -360,8 +348,7 @@ public class SamplePlugin implements ConsoleProvider {
 
 [[ghpvp]][[GSACG00096]][[using-the-apache-maven-build-system-to-develop-hk2-components]]
 
-Using the Apache Maven Build System to Develop HK2 Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using the Apache Maven Build System to Develop HK2 Components
 
 If you are using Maven 2 to build HK2 components, invoke the
 `auto-depends` plug-in for Maven so that the `META-INF/services` files

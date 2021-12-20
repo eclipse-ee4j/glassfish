@@ -5,13 +5,11 @@ next=list-protocols.html
 prev=list-protocol-filters.html
 ~~~~~~
 
-list-protocol-finders
-=====================
+= list-protocol-finders
 
 [[list-protocol-finders-1]][[GSRFM00194]][[list-protocol-finders]]
 
-list-protocol-finders
----------------------
+== list-protocol-finders
 
 Lists the existing protocol finders
 

@@ -5,13 +5,11 @@ next=list-loggers.html
 prev=list-lifecycle-modules.html
 ~~~~~~
 
-list-log-attributes
-===================
+= list-log-attributes
 
 [[list-log-attributes-1]][[GSRFM00182]][[list-log-attributes]]
 
-list-log-attributes
--------------------
+== list-log-attributes
 
 Lists all logging attributes defined for a specified target in a domain
 

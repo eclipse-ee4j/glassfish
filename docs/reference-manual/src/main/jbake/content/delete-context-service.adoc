@@ -5,13 +5,11 @@ next=delete-custom-resource.html
 prev=delete-connector-work-security-map.html
 ~~~~~~
 
-delete-context-service
-======================
+= delete-context-service
 
 [[delete-context-service-1]][[GSRFM846]][[delete-context-service]]
 
-delete-context-service
-----------------------
+== delete-context-service
 
 Removes a context service resource with the specified JNDI name
 

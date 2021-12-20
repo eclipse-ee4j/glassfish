@@ -5,13 +5,11 @@ next=list-managed-scheduled-executor-services.html
 prev=list-log-levels.html
 ~~~~~~
 
-list-managed-executor-services
-==============================
+= list-managed-executor-services
 
 [[list-managed-executor-services-1]][[GSRFM871]][[list-managed-executor-services]]
 
-list-managed-executor-services
-------------------------------
+== list-managed-executor-services
 
 Lists managed executor service resources
 

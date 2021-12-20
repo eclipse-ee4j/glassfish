@@ -5,15 +5,13 @@ next=domains.html
 prev=part-runtime-admin.html
 ~~~~~~
 
-General Administration
-======================
+= General Administration
 
 [[GSADG00005]][[gitya]]
 
 
 [[general-administration]]
-2 General Administration
-------------------------
+== 2 General Administration
 
 This chapter provides instructions for performing general administration
 tasks in the GlassFish Server Open Source Edition 7 environment by
@@ -34,8 +32,7 @@ online help.
 
 [[giobi]][[GSADG00530]][[using-the-asadmin-utility]]
 
-Using the `asadmin` Utility
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using the `asadmin` Utility
 
 Use the `asadmin` utility to perform administrative tasks for GlassFish
 Server from the command line or from a script. You can use this utility
@@ -55,8 +52,7 @@ Subcommand]
 
 [[giwdb]][[GSADG00705]][[path-to-the-asadmin-utility]]
 
-Path to the `asadmin` Utility
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Path to the `asadmin` Utility
 
 The `asadmin` utility is located in the as-install`/bin` directory. To
 run the `asadmin` utility without specifying the path, ensure that this
@@ -64,8 +60,7 @@ directory is in your path.
 
 [[givvn]][[GSADG00706]][[asadmin-utility-syntax]]
 
-`asadmin` Utility Syntax
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== `asadmin` Utility Syntax
 
 The syntax for running the `asadmin` utility is as follows:
 
@@ -81,8 +76,7 @@ help page.
 
 [[ghvzn]][[GSADG00631]][[subcommands-of-the-asadmin-utility]]
 
-Subcommands of the `asadmin` Utility
-++++++++++++++++++++++++++++++++++++
+===== Subcommands of the `asadmin` Utility
 
 The subcommand identifies the operation or task that you are performing.
 Subcommands are case-sensitive. Each subcommand is either a local
@@ -102,8 +96,7 @@ Server Open Source Edition Reference Manual].
 
 [[ghvyd]][[GSADG00632]][[asadmin-utility-options-and-subcommand-options]]
 
-`asadmin` Utility Options and Subcommand Options
-++++++++++++++++++++++++++++++++++++++++++++++++
+===== `asadmin` Utility Options and Subcommand Options
 
 Options control the behavior of the `asadmin` utility and its
 subcommands. Options are case-sensitive.
@@ -156,8 +149,7 @@ toggle to enable or disable a feature.
 
 [[ghvyj]][[GSADG00633]][[operands-of-asadmin-utility-subcommands]]
 
-Operands of `asadmin` Utility Subcommands
-+++++++++++++++++++++++++++++++++++++++++
+===== Operands of `asadmin` Utility Subcommands
 
 Operands specify the items on which the subcommand is to act. Operands
 must follow the argument values of subcommand options, and are set off
@@ -167,8 +159,7 @@ operand.
 
 [[ghvzx]][[GSADG00304]][[to-run-an-asadmin-utility-subcommand-in-single-mode]]
 
-To Run an `asadmin` Utility Subcommand in Single Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Run an `asadmin` Utility Subcommand in Single Mode
 
 In single mode, you must type a separate `asadmin` command for each
 subcommand that you want to use. After the subcommand has run, you are
@@ -242,8 +233,7 @@ Command list-applications executed successfully.
 
 [[givlw]][[GSADG00305]][[to-display-help-information-for-the-asadmin-utility-or-a-subcommand]]
 
-To Display Help Information for the `asadmin` Utility or a Subcommand
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Display Help Information for the `asadmin` Utility or a Subcommand
 
 GlassFish Server provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
@@ -294,8 +284,7 @@ local subcommands are displayed.
 
 [[giodz]][[GSADG00306]][[to-start-a-multimode-session]]
 
-To Start a Multimode Session
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Start a Multimode Session
 
 The `asadmin` utility can be used in multiple command mode, or
 multimode. In multimode, you run the `asadmin` utility once to start a
@@ -379,8 +368,7 @@ typing `asadmin help multimode` at the command line.
 
 [[givjn]][[GSADG00307]][[to-end-a-multimode-session]]
 
-To End a Multimode Session
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To End a Multimode Session
 
 At the `asadmin>` prompt, type one of the following commands or key
 combinations:
@@ -407,8 +395,7 @@ remaining multimode session.
 
 [[givjd]][[GSADG00308]][[to-run-a-set-of-asadmin-subcommands-from-a-file]]
 
-To Run a Set of `asadmin` Subcommands From a File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Run a Set of `asadmin` Subcommands From a File
 
 Running a set of `asadmin` subcommands from a file enables you to
 automate repetitive tasks.
@@ -476,8 +463,7 @@ the following help pages:
 
 [[CACDDHBA]][[GSADG1055]][[to-run-asadmin-subcommands-in---detach-mode]]
 
-To Run `asadmin` Subcommands in `--detach` Mode
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Run `asadmin` Subcommands in `--detach` Mode
 
 You can use the `--detach` option of the `asadmin` utility to detach
 `asadmin` subcommands and run them in the background in detach mode. The
@@ -577,8 +563,7 @@ examples, see the following help pages:
 
 [[ghcjc]][[GSADG00531]][[administering-system-properties]]
 
-Administering System Properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering System Properties
 
 Shared server instances will often need to override attributes defined
 in their referenced configuration. Any configuration attribute can be
@@ -592,8 +577,7 @@ The following topics are addressed here:
 
 [[ggonc]][[GSADG00309]][[to-create-system-properties]]
 
-To Create System Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create System Properties
 
 Use the `create-system-properties` subcommand in remote mode to create
 or update one or more system properties of the domain or configuration.
@@ -628,8 +612,7 @@ typing `asadmin help create-system-properties` at the command line.
 
 [[ggodt]][[GSADG00310]][[to-list-system-properties]]
 
-To List System Properties
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To List System Properties
 
 Use the `list-system-properties` subcommand in remote mode to list the
 system properties that apply to a domain, cluster, or server instance or
@@ -663,8 +646,7 @@ typing `asadmin help list-system-properties` at the command line.
 
 [[ggomm]][[GSADG00311]][[to-delete-a-system-property]]
 
-To Delete a System Property
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete a System Property
 
 Use the `delete-system-property` subcommand in remote mode to delete
 system properties.
@@ -698,8 +680,7 @@ typing `asadmin help delete-system-property` at the command line.
 
 [[CHDJBJDA]][[GSADG1096]][[using-configuration-modularity]]
 
-Using Configuration Modularity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using Configuration Modularity
 
 With configuration modularity in GlassFish Server Open Source Edition,
 new modules can be added to GlassFish Server distributions without
@@ -717,8 +698,7 @@ configuration of a module.
 
 [[CHDGCJCF]][[GSADG1097]][[to-add-the-default-configuration-of-a-module-to-domain.xml]]
 
-To Add the Default Configuration of a Module to `domain.xml`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Add the Default Configuration of a Module to `domain.xml`
 
 Use the `create-module-config` subcommand to add the default
 configuration of a module to `domain.xml`.
@@ -749,8 +729,7 @@ typing `asadmin help create-module-config` at the command line.
 
 [[CHDJCJFA]][[GSADG1100]][[to-remove-the-configuration-of-a-module-from-domain.xml]]
 
-To Remove the Configuration of a Module From `domain.xml`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Remove the Configuration of a Module From `domain.xml`
 
 Use the `delete-module-config` subcommand to remove the configuration of
 a module from `domain.xml` and cause the module to use the default
@@ -781,8 +760,7 @@ typing `asadmin help delete-module-config` at the command line.
 
 [[CHDICIJE]][[GSADG1103]][[to-display-the-current-active-configuration-of-a-module]]
 
-To Display the Current Active Configuration of a Module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Display the Current Active Configuration of a Module
 
 Use the `get-active-module-config` subcommand to display the current
 active configuration of a module.
@@ -816,8 +794,7 @@ typing `asadmin help get-active-module-config` at the command line.
 
 [[gixps]][[GSADG00532]][[administering-resources]]
 
-Administering Resources
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering Resources
 
 This section contains instructions for integrating resources into the
 GlassFish Server environment. Information about administering specific
@@ -825,8 +802,7 @@ resources, such as JDBC, is contained in other chapters.
 
 [[ggoeh]][[GSADG00312]][[to-add-resources-from-an-xml-file]]
 
-To Add Resources From an XML File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Add Resources From an XML File
 
 Use the `add-resources` subcommand in remote mode to create the
 resources named in the specified XML file. The following resources are
@@ -871,8 +847,7 @@ typing `asadmin help add-resources` at the command line.
 
 [[ggocm]][[GSADG00533]][[listing-various-system-elements]]
 
-Listing Various System Elements
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Listing Various System Elements
 
 The following topics are addressed here:
 
@@ -886,8 +861,7 @@ The following topics are addressed here:
 
 [[ghhox]][[GSADG00316]][[to-display-the-glassfish-server-version]]
 
-To Display the GlassFish Server Version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Display the GlassFish Server Version
 
 Use the `version` subcommand in remote mode to display information about
 the GlassFish Server version for a particular server. If the subcommand
@@ -920,8 +894,7 @@ typing `asadmin help version` at the command line.
 
 [[ggocy]][[GSADG00317]][[to-list-applications]]
 
-To List Applications
-^^^^^^^^^^^^^^^^^^^^
+==== To List Applications
 
 Use the `list-applications` subcommand in remote mode to list the
 deployed Java applications. If the `--type` option is not specified, all
@@ -952,8 +925,7 @@ typing `asadmin help list-applications` at the command line.
 
 [[ggocv]][[GSADG00319]][[to-list-containers]]
 
-To List Containers
-^^^^^^^^^^^^^^^^^^
+==== To List Containers
 
 Use the `list-containers` subcommand in remote mode to list application
 containers.
@@ -993,8 +965,7 @@ typing `asadmin help list-containers` at the command line.
 
 [[ghlgf]][[GSADG00320]][[to-list-modules]]
 
-To List Modules
-^^^^^^^^^^^^^^^
+==== To List Modules
 
 Use the `list-modules` subcommand in remote mode to list the modules
 that are accessible to the GlassFish Server module subsystem. The status
@@ -1052,8 +1023,7 @@ typing `asadmin help list-modules` at the command line.
 
 [[ggoeg]][[GSADG00321]][[to-list-subcommands]]
 
-To List Subcommands
-^^^^^^^^^^^^^^^^^^^
+==== To List Subcommands
 
 Use the `list-commands` subcommand in remote mode to list the deployed
 `asadmin` subcommands. You can specify that only remote subcommands or
@@ -1095,8 +1065,7 @@ typing `asadmin help list-commands` at the command line.
 
 [[giojd]][[GSADG00322]][[to-list-timers]]
 
-To List Timers
-^^^^^^^^^^^^^^
+==== To List Timers
 
 The timer service is a persistent and transactional notification service
 that is provided by the enterprise bean container and is used to
@@ -1128,8 +1097,7 @@ The list-timers command was executed successfully.
 
 [[giyjd]][[GSADG00323]][[to-show-component-status]]
 
-To Show Component Status
-^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Show Component Status
 
 Use the `show-component-status` subcommand in remote mode to get the
 status (either enabled or disabled) of the specified deployed component.
@@ -1152,8 +1120,7 @@ Command show-component-status executed successfully.
 
 [[gjipx]][[GSADG00534]][[using-rest-interfaces-to-administer-glassfish-server]]
 
-Using REST Interfaces to Administer GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using REST Interfaces to Administer GlassFish Server
 
 GlassFish Server provides representational state transfer (REST)
 interfaces to enable you to access monitoring and configuration data for
@@ -1201,8 +1168,7 @@ Objects]
 
 [[gjipk]][[GSADG00707]][[using-rest-urls-to-administer-glassfish-server]]
 
-Using REST URLs to Administer GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using REST URLs to Administer GlassFish Server
 
 Each object in the configuration and monitoring object trees is
 represented as a REST resource that is accessible through an HTTP
@@ -1211,8 +1177,7 @@ Server monitoring and configuration data requires a running DAS.
 
 [[gkwhy]][[GSADG00634]][[rest-urls-to-resources-for-configuration-and-monitoring-objects]]
 
-REST URLs to Resources for Configuration and Monitoring Objects
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== REST URLs to Resources for Configuration and Monitoring Objects
 
 The formats of the URLs to resources that represent objects in the
 configuration and monitoring object trees are as follows:
@@ -1272,8 +1237,7 @@ image:img/rest-management.png[
 
 [[gkwib]][[GSADG00635]][[rest-urls-for-accessing-the-log-file]]
 
-REST URLs for Accessing the Log File
-++++++++++++++++++++++++++++++++++++
+===== REST URLs for Accessing the Log File
 
 The `server.log` file of the DAS is represented as a child that is named
 `view-log` of the resource for managing the domain. A child of the
@@ -1310,8 +1274,7 @@ can monitor the log entries that were added in the last 10 seconds.
 
 [[gjijx]][[GSADG00708]][[using-rest-resource-methods-to-administer-glassfish-server]]
 
-Using REST Resource Methods to Administer GlassFish Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Using REST Resource Methods to Administer GlassFish Server
 
 The GlassFish Server REST interfaces support methods for accessing
 objects in the monitoring and configuration object trees.
@@ -1360,8 +1323,7 @@ in the Tree].
 
 [[gjjei]][[GSADG00324]][[to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports]]
 
-To Determine the Methods and Method Parameters That an Object in the Tree Supports
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Determine the Methods and Method Parameters That an Object in the Tree Supports
 
 The methods and method parameters that an object in the tree supports
 depend on the REST resource that represents the object:
@@ -1464,8 +1426,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 
 [[gjjel]][[GSADG00325]][[to-retrieve-data-for-an-object-in-the-tree]]
 
-To Retrieve Data for an Object in the Tree
-++++++++++++++++++++++++++++++++++++++++++
+===== To Retrieve Data for an Object in the Tree
 
 Retrieving data for an object in the tree obtains the following
 information about the REST resource that represents the object:
@@ -1546,8 +1507,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 
 [[gjjdv]][[GSADG00326]][[to-add-an-object-to-the-tree]]
 
-To Add an Object to the Tree
-++++++++++++++++++++++++++++
+===== To Add an Object to the Tree
 
 1. Ensure that the server is running.
 +
@@ -1663,8 +1623,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 
 [[gjjgj]][[GSADG00327]][[to-update-an-object-in-the-tree]]
 
-To Update an Object in the Tree
-+++++++++++++++++++++++++++++++
+===== To Update an Object in the Tree
 
 1. Ensure that the server is running.
 Operations on REST resources for GlassFish Server data require a running server.
@@ -1784,8 +1743,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 
 [[gjjgm]][[GSADG00328]][[to-delete-an-object-from-the-tree]]
 
-To Delete an Object From the Tree
-+++++++++++++++++++++++++++++++++
+===== To Delete an Object From the Tree
 
 1. Ensure that the server is running.
 +
@@ -1893,8 +1851,7 @@ http://localhost:4848/management/domain/resources/jdbc-resource
 
 [[gjjdg]][[GSADG00709]][[resources-for-asadmin-subcommands-that-perform-non-crud-operations]]
 
-Resources for `asadmin` Subcommands That Perform Non-CRUD Operations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Resources for `asadmin` Subcommands That Perform Non-CRUD Operations
 
 The GlassFish Server REST interfaces also support operations other than
 create, read, update, and delete (CRUD) operations, for example:
@@ -1918,8 +1875,7 @@ operations on the node:
 
 [[gjiut]][[GSADG00710]][[securing-glassfish-server-rest-interfaces]]
 
-Securing GlassFish Server REST Interfaces
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Securing GlassFish Server REST Interfaces
 
 The GlassFish Server REST interfaces support the following
 authentication schemes for securing the REST interfaces:
@@ -1934,8 +1890,7 @@ the URLs to REST resources and provide a user name and password.
 
 
 [[setting-up-basic-authentication-over-a-secure-connection]]
-Setting Up Basic Authentication Over a Secure Connection
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Setting Up Basic Authentication Over a Secure Connection
 
 Setting up basic authentication over a secure connection to secure
 GlassFish Server REST interfaces involves the following sequence of
@@ -1962,8 +1917,7 @@ Console online help:
 
 [[gkvtj]][[GSADG00329]][[to-secure-rest-interfaces-by-using-session-tokens]]
 
-To Secure REST Interfaces by Using Session Tokens
-+++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Secure REST Interfaces by Using Session Tokens
 
 Basic authentication requires a REST client to cache a user's
 credentials to enable the client to pass the credentials with each
@@ -1992,8 +1946,7 @@ after 30 minutes of inactivity.
 
 [[gjijz]][[GSADG00711]][[formats-for-resource-representation-of-configuration-objects]]
 
-Formats for Resource Representation of Configuration Objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Formats for Resource Representation of Configuration Objects
 
 The GlassFish Server REST interfaces represent resources for
 configuration objects in the following formats:
@@ -2026,8 +1979,7 @@ representation through the `-H` option as follows:
 
 [[gjiji]][[GSADG00636]][[json-resource-representation-for-configuration-objects]]
 
-JSON Resource Representation for Configuration Objects
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== JSON Resource Representation for Configuration Objects
 
 The general format for the JSON representation of a resource for a
 configuration object is as follows:
@@ -2236,8 +2188,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gkvzs]][[GSADG00637]][[xml-resource-representation-for-configuration-objects]]
 
-XML Resource Representation for Configuration Objects
-+++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== XML Resource Representation for Configuration Objects
 
 The general format for the XML representation of a resource for a
 configuration object is as follows:
@@ -2539,8 +2490,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gjipm]][[GSADG00638]][[html-resource-representation-for-configuration-objects]]
 
-HTML Resource Representation for Configuration Objects
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== HTML Resource Representation for Configuration Objects
 
 The format for the HTML representation of a resource for a configuration
 object is a web page that provides the following information about the
@@ -2561,8 +2511,7 @@ DAS is running on the local host and the HTTP port for administration is
 
 [[gkwdd]][[GSADG00712]][[formats-for-resource-representation-of-monitoring-objects]]
 
-Formats for Resource Representation of Monitoring Objects
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Formats for Resource Representation of Monitoring Objects
 
 The GlassFish Server REST interfaces represent resources for monitoring
 data in the following formats:
@@ -2573,8 +2522,7 @@ data in the following formats:
 
 [[gkwgi]][[GSADG00639]][[json-resource-representation-for-monitoring-objects]]
 
-JSON Resource Representation for Monitoring Objects
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== JSON Resource Representation for Monitoring Objects
 
 The general format for the JSON representation of a resource for a
 monitoring object is as follows:
@@ -2758,8 +2706,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gkwew]][[GSADG00640]][[xml-resource-representation-for-monitoring-objects]]
 
-XML Resource Representation for Monitoring Objects
-++++++++++++++++++++++++++++++++++++++++++++++++++
+===== XML Resource Representation for Monitoring Objects
 
 The general format for the XML representation of a resource for a
 monitoring object is as follows:
@@ -3001,8 +2948,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gkwij]][[GSADG00641]][[html-resource-representation-for-monitoring-objects]]
 
-HTML Resource Representation for Monitoring Objects
-+++++++++++++++++++++++++++++++++++++++++++++++++++
+===== HTML Resource Representation for Monitoring Objects
 
 The format for the HTML representation of a resource for a monitoring
 object is a web page that provides the following information about the
@@ -3026,8 +2972,7 @@ class loader statistics."]
 
 [[gkwid]][[GSADG00713]][[formats-for-resource-representation-of-log-file-details]]
 
-Formats for Resource Representation of Log File Details
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Formats for Resource Representation of Log File Details
 
 The GlassFish Server REST interfaces represent resources for log file
 details in the following formats:
@@ -3037,8 +2982,7 @@ details in the following formats:
 
 [[gkwnp]][[GSADG00642]][[json-resource-representation-for-log-file-details]]
 
-JSON Resource Representation for Log File Details
-+++++++++++++++++++++++++++++++++++++++++++++++++
+===== JSON Resource Representation for Log File Details
 
 The general format for the JSON representation of a resource for log
 file details is as follows:
@@ -3161,8 +3105,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gkwmi]][[GSADG00643]][[xml-resource-representation-for-log-file-details]]
 
-XML Resource Representation for Log File Details
-++++++++++++++++++++++++++++++++++++++++++++++++
+===== XML Resource Representation for Log File Details
 
 The general format for the XML representation of a resource for log file
 details is as follows:
@@ -3255,8 +3198,7 @@ Line breaks and white space are added to enhance readability.
 
 [[gkwsq]][[GSADG00714]][[supported-content-types-in-requests-to-rest-resources]]
 
-Supported Content Types in Requests to REST Resources
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Supported Content Types in Requests to REST Resources
 
 The GlassFish Server REST interfaces support the following types in the
 content-type header of a client request:

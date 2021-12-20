@@ -5,13 +5,11 @@ next=list-audit-modules.html
 prev=list-application-refs.html
 ~~~~~~
 
-list-applications
-=================
+= list-applications
 
 [[list-applications-1]][[GSRFM00148]][[list-applications]]
 
-list-applications
------------------
+== list-applications
 
 Lists deployed applications
 

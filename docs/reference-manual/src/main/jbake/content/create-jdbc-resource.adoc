@@ -5,13 +5,11 @@ next=create-jmsdest.html
 prev=create-jdbc-connection-pool.html
 ~~~~~~
 
-create-jdbc-resource
-====================
+= create-jdbc-resource
 
 [[create-jdbc-resource-1]][[GSRFM00037]][[create-jdbc-resource]]
 
-create-jdbc-resource
---------------------
+== create-jdbc-resource
 
 Creates a JDBC resource with the specified JNDI name
 

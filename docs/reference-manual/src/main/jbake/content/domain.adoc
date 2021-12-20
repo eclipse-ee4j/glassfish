@@ -5,13 +5,11 @@ next=dotted-names.html
 prev=configuration.html
 ~~~~~~
 
-domain
-======
+= domain
 
 [[domain-5asc]][[GSRFM00267]][[domain]]
 
-domain
-------
+== domain
 
 Domains have their own configurations.
 

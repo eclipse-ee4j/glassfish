@@ -5,15 +5,13 @@ next=part-runtime-admin.html
 prev=preface.html
 ~~~~~~
 
-Overview of GlassFish Server Administration
-===========================================
+= Overview of GlassFish Server Administration
 
 [[GSADG00004]][[ablaq]]
 
 
 [[overview-of-glassfish-server-administration]]
-1 Overview of GlassFish Server Administration
----------------------------------------------
+== 1 Overview of GlassFish Server Administration
 
 GlassFish Server Open Source Edition provides a server for developing
 and deploying Java Platform Enterprise Edition (Jakarta EE) applications
@@ -36,8 +34,7 @@ The following topics are addressed here:
 
 [[giubb]][[GSADG00526]][[default-settings-and-locations]]
 
-Default Settings and Locations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Default Settings and Locations
 
 After installation, you might need to perform some immediate
 configuration tasks to make your installation function as intended. If
@@ -101,8 +98,7 @@ link:preface.html#ghpfg[Default Paths and File Names].
 
 [[ghrcy]][[GSADG00527]][[configuration-tasks]]
 
-Configuration Tasks
-~~~~~~~~~~~~~~~~~~~
+=== Configuration Tasks
 
 Some configuration tasks must be performed directly after installation
 for your GlassFish Server environment to work as intended. For example,
@@ -124,8 +120,7 @@ The following topics are addressed here:
 
 [[gitwr]][[GSADG00694]][[initial-configuration-tasks]]
 
-Initial Configuration Tasks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Initial Configuration Tasks
 
 This section maps the common configuration tasks to the command-line
 procedures in this guide. In some situations, the resource or service is
@@ -219,8 +214,7 @@ online help.
 
 [[giusb]][[GSADG00695]][[how-dotted-names-work-for-configuration]]
 
-How Dotted Names Work for Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== How Dotted Names Work for Configuration
 
 After the initial configuration is working, you will continue to manage
 ongoing configuration for the life of your GlassFish Server
@@ -310,8 +304,7 @@ asadmin> set server.http-service.http-listener.http-listener-1.security-enabled 
 
 [[gjjrl]][[GSADG00696]][[configuration-files]]
 
-Configuration Files
-^^^^^^^^^^^^^^^^^^^
+==== Configuration Files
 
 The bulk of the configuration information about GlassFish Server
 resources, applications, and instances is stored in the `domain.xml`
@@ -349,8 +342,7 @@ Manual editing is prone to error and can have unexpected results.
 
 [[gitzw]][[GSADG00697]][[impact-of-configuration-changes]]
 
-Impact of Configuration Changes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Impact of Configuration Changes
 
 Some configuration changes require that you restart the DAS or GlassFish
 Server instances for the changes to take effect. Other changes are
@@ -373,8 +365,7 @@ The following topics are addressed here:
 
 [[gkvaj]][[GSADG00300]][[to-determine-whether-the-das-or-an-instance-requires-restart]]
 
-To Determine Whether the DAS or an Instance Requires Restart
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Determine Whether the DAS or an Instance Requires Restart
 
 1. Ensure that the DAS is running.
 To obtain information about the DAS or an instance, a running server is required.
@@ -448,8 +439,7 @@ typing the following commands at the command line.
 
 [[ghciy]][[GSADG00628]][[configuration-changes-that-require-restart]]
 
-Configuration Changes That Require Restart
-++++++++++++++++++++++++++++++++++++++++++
+===== Configuration Changes That Require Restart
 
 The following configuration changes require restart for the changes to
 take effect:
@@ -473,8 +463,7 @@ Edition Security Guide
 
 [[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
 
-Dynamic Configuration Changes
-+++++++++++++++++++++++++++++
+===== Dynamic Configuration Changes
 
 With dynamic configuration, changes take effect while the DAS or
 instance is running. The following configuration changes do not require
@@ -494,8 +483,7 @@ port
 
 [[gkvas]][[GSADG00630]][[changes-that-affect-applications]]
 
-Changes That Affect Applications
-++++++++++++++++++++++++++++++++
+===== Changes That Affect Applications
 
 Some changes to resources or connection pools affect the applications
 that use the resources or connection pools. These changes do not require
@@ -548,8 +536,7 @@ or connector resources do not affect applications.)
 
 [[ggjxp]][[GSADG00528]][[administration-tools]]
 
-Administration Tools
-~~~~~~~~~~~~~~~~~~~~
+=== Administration Tools
 
 For the most part, you can perform the same tasks by using either the
 graphical Administration Console or the `asadmin` command-line utility,
@@ -566,8 +553,7 @@ The following GlassFish Server administration tools are described here:
 
 [[ablav]][[GSADG00698]][[administration-console]]
 
-Administration Console
-^^^^^^^^^^^^^^^^^^^^^^
+==== Administration Console
 
 The Administration Console is a browser-based utility that features an
 easy-to-navigate graphical interface that includes extensive online help
@@ -638,8 +624,7 @@ Security]" in GlassFish Server Open Source Edition Security Guide.
 
 [[gcocs]][[GSADG00699]][[asadmin-utility]]
 
-`asadmin` Utility
-^^^^^^^^^^^^^^^^^
+==== `asadmin` Utility
 
 The `asadmin` utility is a command-line tool that runs subcommands for
 identifying the operation or task that you want to perform. You can run
@@ -690,8 +675,7 @@ Manual].
 
 [[gjjok]][[GSADG00700]][[rest-interfaces]]
 
-REST Interfaces
-^^^^^^^^^^^^^^^
+==== REST Interfaces
 
 GlassFish Server provides representational state transfer (REST)
 interfaces to enable you to access monitoring and configuration data for
@@ -702,8 +686,7 @@ Administer GlassFish Server].
 
 [[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
 
-OSGi Module Management Subsystem
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== OSGi Module Management Subsystem
 
 The OSGi module management subsystem that is provided with GlassFish
 Server is the http://felix.apache.org/[Apache Felix OSGi framework] . To
@@ -732,8 +715,7 @@ such as:
 
 [[glhdz]][[GSADG00302]][[to-enable-the-apache-felix-gogo-remote-shell]]
 
-To Enable the Apache Felix Gogo Remote Shell
-++++++++++++++++++++++++++++++++++++++++++++
+===== To Enable the Apache Felix Gogo Remote Shell
 
 By default, the Apache Felix Gogo remote shell in GlassFish Server is
 disabled. Before using the shell to administer OSGi bundles in GlassFish
@@ -774,8 +756,7 @@ For instructions, see link:domains.html#ginqj[To Restart a Domain].
 
 [[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
 
-To Run Apache Felix Gogo Remote Shell Commands
-++++++++++++++++++++++++++++++++++++++++++++++
+===== To Run Apache Felix Gogo Remote Shell Commands
 
 The Apache Felix Gogo remote shell is integrated with the GlassFish
 Server `asadmin` command line utility. You can use the `asadmin`
@@ -878,8 +859,7 @@ this example for readability.
 [source]
 ----
 asadmin> osgi inspect service capability 251
-GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
----------------------------------------------------------------------------
+== GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
 objectClass = org.glassfish.osgijavaeebase.Extender
 service.id = 68
 -----
@@ -891,8 +871,7 @@ Command osgi executed successfully.
 asadmin> osgi -shell
 Use "exit" to exit and "help" for online help.
 gogo$ inspect service capability 251
-GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
----------------------------------------------------------------------------
+== GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
 objectClass = org.glassfish.osgijavaeebase.Extender
 service.id = 68
 ...
@@ -901,8 +880,7 @@ gogo$
 
 [[gkwvx]][[GSADG00303]][[to-download-and-install-the-glassfish-osgi-web-console]]
 
-To Download and Install the GlassFish OSGi Web Console
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Download and Install the GlassFish OSGi Web Console
 
 The GlassFish OSGi Web Console is distributed as follows:
 
@@ -945,8 +923,7 @@ GlassFish Server Administration Console]
 
 [[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
 
-To Access the GlassFish OSGi Web Console Through the GlassFish Server Administration Console
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Access the GlassFish OSGi Web Console Through the GlassFish Server Administration Console
 
 A tab for the GlassFish OSGi Web Console is provided for the DAS and for
 every GlassFish Server instance in a domain.
@@ -983,8 +960,7 @@ The GlassFish OSGi Web Console page opens.
 
 [[BABDJHAF]][[GSADG799]][[to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application]]
 
-To Access the GlassFish OSGi Web Console as a Standalone Web Application
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== To Access the GlassFish OSGi Web Console as a Standalone Web Application
 
 1. Ensure that the DAS or the instance for which you want to access the
 GlassFish OSGi Web Console is running.
@@ -1017,8 +993,7 @@ The user name and password of this user are both preset to `admin`.
 
 [[ghcjl]][[GSADG00703]][[keytool-utility]]
 
-`keytool` Utility
-^^^^^^^^^^^^^^^^^
+==== `keytool` Utility
 
 The `keytool` utility is used to set up and work with Java Security
 Socket Extension (JSSE) digital certificates. See
@@ -1027,8 +1002,7 @@ Open Source Edition Security Guide for instructions on using `keytool`.
 
 [[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
 
-Java Monitoring and Management Console (JConsole)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Java Monitoring and Management Console (JConsole)
 
 Java SE provides tools to connect to an MBean server and view the MBeans
 that are registered with the server. JConsole is one such popular JMX
@@ -1039,8 +1013,7 @@ to View GlassFish Server Monitoring Data].
 
 [[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
 
-Instructions for Administering GlassFish Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Instructions for Administering GlassFish Server
 
 Information and instructions on performing most of the administration
 tasks from the command line are provided in this document and in the

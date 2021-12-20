@@ -5,13 +5,11 @@ next=create-protocol.html
 prev=create-password-alias.html
 ~~~~~~
 
-create-profiler
-===============
+= create-profiler
 
 [[create-profiler-1]][[GSRFM00050]][[create-profiler]]
 
-create-profiler
----------------
+== create-profiler
 
 Creates the profiler element
 

@@ -1,0 +1,71 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Deployment Planning Guide, Release 7
+next=title.html
+~~~~~~
+= Eclipse GlassFish Server Deployment Planning Guide, Release 7
+
+[[contents]]
+== Contents
+
+* link:title.html#eclipse-glassfish-server[Eclipse GlassFish Server]
+
+=== link:preface.html#preface[Preface]
+
+** link:preface.html#sthref3[GlassFish Server Documentation Set]
+** link:preface.html#GSPLG00011[Related Documentation]
+** link:preface.html#GSPLG00013[Typographic Conventions]
+** link:preface.html#GSPLG00014[Symbol Conventions]
+** link:preface.html#GSPLG00012[Default Paths and File Names]
+
+[[product-concepts]]
+=== link:concepts.html#GSPLG00001[1 Product Concepts]
+
+** link:concepts.html#GSPLG00016[Jakarta EE Platform Overview]
+*** link:concepts.html#GSPLG00040[Jakarta EE Applications]
+*** link:concepts.html#GSPLG00041[Containers]
+*** link:concepts.html#GSPLG00042[Jakarta EE Services]
+*** link:concepts.html#GSPLG00043[Web Services]
+*** link:concepts.html#GSPLG00044[Client Access]
+*** link:concepts.html#GSPLG00045[External Systems and Resources]
+** link:concepts.html#GSPLG00017[GlassFish Server Components]
+*** link:concepts.html#GSPLG00046[Server Instances]
+*** link:concepts.html#GSPLG00047[Administrative Domains]
+*** link:concepts.html#GSPLG00048[Clusters]
+*** link:concepts.html#GSPLG00049[Named Configurations]
+*** link:concepts.html#GSPLG00050[HTTP Load Balancer Plug-in]
+*** link:concepts.html#GSPLG00051[Session Persistence]
+*** link:concepts.html#GSPLG00052[IIOP Load Balancing in a Cluster]
+*** link:concepts.html#GSPLG00053[Message Queue and JMS Resources]
+** link:concepts.html#GSPLG00018[Configuration Roadmap for High Availability of GlassFish Server]
+*** link:concepts.html#sthref6[To Configure GlassFish Server for High Availability]
+
+[[planning-your-deployment]]
+=== link:planning.html#GSPLG00002[2 Planning your Deployment]
+
+** link:planning.html#GSPLG00019[Establishing Performance Goals]
+*** link:planning.html#GSPLG00054[Estimating Throughput]
+*** link:planning.html#GSPLG00055[Estimating Load on GlassFish Server Instances]
+** link:planning.html#GSPLG00020[Planning the Network Configuration]
+*** link:planning.html#GSPLG00056[Setting Up Traffic Separation]
+*** link:planning.html#GSPLG00057[Estimating Bandwidth Requirements]
+*** link:planning.html#GSPLG00058[Calculating Bandwidth Required]
+*** link:planning.html#GSPLG00059[Estimating Peak Load]
+*** link:planning.html#GSPLG00060[Choosing Network Cards]
+** link:planning.html#GSPLG00021[Planning for Availability]
+*** link:planning.html#GSPLG00061[Rightsizing Availability]
+*** link:planning.html#GSPLG00062[Using Clusters to Improve Availability]
+*** link:planning.html#GSPLG00063[Adding Redundancy to the System]
+** link:planning.html#GSPLG00022[Design Decisions]
+*** link:planning.html#GSPLG00064[Designing for Peak or Steady State Load]
+*** link:planning.html#GSPLG00065[System Sizing]
+*** link:planning.html#GSPLG00066[Sizing the Administration Thread Pool]
+** link:planning.html#GSPLG00023[Planning Message Queue Broker Deployment]
+*** link:planning.html#GSPLG00067[Multi-Broker Clusters]
+*** link:planning.html#GSPLG00068[Configuring GlassFish Server to Use Message Queue Brokers]
+*** link:planning.html#GSPLG00069[Example Deployment Scenarios]
+
+[[checklist-for-deployment]]
+=== link:checklist.html#GSPLG00003[3 Checklist for Deployment]
+
+** link:checklist.html#checklist[Checklist]

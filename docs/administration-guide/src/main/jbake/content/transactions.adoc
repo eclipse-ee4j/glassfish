@@ -5,15 +5,13 @@ next=part-appendixes.html
 prev=jndi.html
 ~~~~~~
 
-Administering Transactions
-==========================
+= Administering Transactions
 
 [[GSADG00022]][[ablsn]]
 
 
 [[administering-transactions]]
-19 Administering Transactions
------------------------------
+== 19 Administering Transactions
 
 This chapter discusses how to manage the transaction service for the
 GlassFish Server Open Source Edition environment by using the `asadmin`
@@ -43,8 +41,7 @@ in The Jakarta EE Tutorial.
 
 [[ablso]][[GSADG00605]][[about-transactions]]
 
-About Transactions
-~~~~~~~~~~~~~~~~~~
+=== About Transactions
 
 A transaction is a series of discreet actions in an application that
 must all complete successfully. By enclosing one or more actions in an
@@ -111,8 +108,7 @@ The following topics are addressed here:
 
 [[beann]][[GSADG00785]][[transaction-resource-managers]]
 
-Transaction Resource Managers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Transaction Resource Managers
 
 There are three types of transaction resource managers:
 
@@ -139,8 +135,7 @@ link:connectors.html#abllp[Administering EIS Connectivity].
 
 [[beano]][[GSADG00786]][[transaction-scope]]
 
-Transaction Scope
-^^^^^^^^^^^^^^^^^
+==== Transaction Scope
 
 A local transaction involves only one non-XA resource and requires that
 all participating application components execute within one process.
@@ -186,8 +181,7 @@ request (`ABORT`) and the transaction is rolled back.
 
 [[beanp]][[GSADG00606]][[configuring-the-transaction-service]]
 
-Configuring the Transaction Service
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Configuring the Transaction Service
 
 You can configure the transaction service in the GlassFish Server in the
 following ways:
@@ -277,8 +271,7 @@ The `JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR` default is the default
 
 [[giubd]][[GSADG00607]][[managing-the-transaction-service-for-rollbacks]]
 
-Managing the Transaction Service for Rollbacks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Managing the Transaction Service for Rollbacks
 
 You can roll back a single transaction by using the `asadmin`
 subcommands described in this section. To do so, the transaction service
@@ -295,8 +288,7 @@ The following topics are addressed here:
 
 [[giufn]][[GSADG00513]][[to-stop-the-transaction-service]]
 
-To Stop the Transaction Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Stop the Transaction Service
 
 Use the `freeze-transaction-service` subcommand in remote mode to stop
 the transaction service. When the transaction service is stopped, all
@@ -331,8 +323,7 @@ typing `asadmin help freeze-transaction-service` at the command line.
 
 [[giugk]][[GSADG00514]][[to-roll-back-a-transaction]]
 
-To Roll Back a Transaction
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Roll Back a Transaction
 
 In some situations, you might want to roll back a particular
 transaction. Before you can roll back a transaction, you must first stop
@@ -388,8 +379,7 @@ typing `asadmin help rollback-transaction` at the command line.
 
 [[giuet]][[GSADG00515]][[to-restart-the-transaction-service]]
 
-To Restart the Transaction Service
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Restart the Transaction Service
 
 Use the `unfreeze-transaction-service` subcommand in remote mote to
 resume all the suspended in-flight transactions. Run this subcommand to
@@ -419,8 +409,7 @@ typing `asadmin help unfreeze-transaction-service` at the command line.
 
 [[gkrbo]][[GSADG00787]][[determining-local-transaction-completion-at-shutdown]]
 
-Determining Local Transaction Completion at Shutdown
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Determining Local Transaction Completion at Shutdown
 
 When you shut down a GlassFish Server instance, all database connections
 are closed. When an Oracle JDBC driver-based database connection is
@@ -443,8 +432,7 @@ asadmin> create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.c
 
 [[gjjpy]][[GSADG00608]][[recovering-transactions]]
 
-Recovering Transactions
-~~~~~~~~~~~~~~~~~~~~~~~
+=== Recovering Transactions
 
 There are some situations where the commit or rollback operations might
 be interrupted, typically because the server crashed or a resource
@@ -465,8 +453,7 @@ The following topics are addressed here:
 
 [[gkoen]][[GSADG00788]][[automatic-transaction-recovery]]
 
-Automatic Transaction Recovery
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Automatic Transaction Recovery
 
 GlassFish Server can perform automatic recovery in these ways:
 
@@ -483,8 +470,7 @@ If commit fails during recovery, a message is written to the server log.
 
 [[giuhe]][[GSADG00516]][[to-manually-recover-transactions]]
 
-To Manually Recover Transactions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Manually Recover Transactions
 
 Use the `recover-transactions` subcommand in remote mode to manually
 recover transactions that were pending when a resource or a server
@@ -555,8 +541,7 @@ typing `asadmin help recover-transactions` at the command line.
 
 [[gaxim]][[GSADG00789]][[distributed-transaction-recovery]]
 
-Distributed Transaction Recovery
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Distributed Transaction Recovery
 
 To enable cluster-wide automatic recovery, you must first facilitate
 storing of transaction logs in a shared file system. See
@@ -569,8 +554,7 @@ link:#beanp[Configuring the Transaction Service].
 
 [[gaxig]][[GSADG00790]][[recovery-workarounds-and-limitations]]
 
-Recovery Workarounds and Limitations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Recovery Workarounds and Limitations
 
 The GlassFish Server provides workarounds for some known issues with
 transaction recovery implementations.
@@ -584,8 +568,7 @@ These workarounds do not imply support for any particular JDBC driver.
 
 [[gknau]][[GSADG00689]][[general-recovery-limitations]]
 
-General Recovery Limitations
-++++++++++++++++++++++++++++
+===== General Recovery Limitations
 
 The following general limitations apply to transaction recovery:
 
@@ -610,8 +593,7 @@ available until the broker restarts.
 
 [[gknee]][[GSADG00690]][[oracle-setup-for-transaction-recovery]]
 
-Oracle Setup for Transaction Recovery
-+++++++++++++++++++++++++++++++++++++
+===== Oracle Setup for Transaction Recovery
 
 You must configure the following `grant` statements in your Oracle
 database to set up transaction recovery:
@@ -631,8 +613,7 @@ driver the last `grant execute` fails. You can ignore this.
 
 [[gjiep]][[GSADG00691]][[oracle-thin-driver]]
 
-Oracle Thin Driver
-++++++++++++++++++
+===== Oracle Thin Driver
 
 In the Oracle thin driver, the `XAResource.recover` method repeatedly
 returns the same set of in-doubt Xids regardless of the input flag.
@@ -649,8 +630,7 @@ disabled.
 
 [[gkneq]][[GSADG00692]][[delegated-recovery-after-server-crash-doesnt-work-on-mysql]]
 
-Delegated Recovery After Server Crash Doesn't Work on MySQL
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Delegated Recovery After Server Crash Doesn't Work on MySQL
 
 The MySQL database supports XA transaction recovery only when the
 database crashes. When a GlassFish Server instance crashes, MySQL rolls
@@ -658,8 +638,7 @@ back prepared transactions.
 
 [[glclh]][[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
 
-Call to `XATeminator.recover()` During `ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+===== Call to `XATeminator.recover()` During `ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled
 
 Calls to `XATerminator.recover()` from the `ResourceAdapter.start()`
 method never return because GlassFish Server deadlocks. This only occurs
@@ -672,8 +651,7 @@ transaction or calling `XATerminator.recover()`, during
 
 [[beanq]][[GSADG00609]][[transaction-logging]]
 
-Transaction Logging
-~~~~~~~~~~~~~~~~~~~
+=== Transaction Logging
 
 The transaction service writes transactional activity into transaction
 logs so that transactions can be recovered. You can control transaction
@@ -716,8 +694,7 @@ system (NFS) to avoid a single point of failure.
 
 [[gcmam]][[GSADG00517]][[to-store-transaction-logs-in-a-database]]
 
-To Store Transaction Logs in a Database
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Store Transaction Logs in a Database
 
 For multi-core machines, logging transactions to a database may be more
 efficient. Transaction logging is designed to work with any

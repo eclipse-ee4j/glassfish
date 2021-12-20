@@ -5,13 +5,11 @@ next=disable.html
 prev=deploy.html
 ~~~~~~
 
-deploydir
-=========
+= deploydir
 
 [[deploydir-1]][[GSRFM00115]][[deploydir]]
 
-deploydir
----------
+== deploydir
 
 Deploys an exploded format of application archive
 

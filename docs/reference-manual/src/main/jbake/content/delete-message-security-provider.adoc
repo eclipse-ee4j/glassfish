@@ -5,13 +5,11 @@ next=delete-module-config.html
 prev=delete-managed-thread-factory.html
 ~~~~~~
 
-delete-message-security-provider
-================================
+= delete-message-security-provider
 
 [[delete-message-security-provider-1]][[GSRFM00097]][[delete-message-security-provider]]
 
-delete-message-security-provider
---------------------------------
+== delete-message-security-provider
 
 Enables administrators to delete a message security provider
 

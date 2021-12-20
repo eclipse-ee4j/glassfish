@@ -5,13 +5,11 @@ next=create-context-service.html
 prev=create-connector-security-map.html
 ~~~~~~
 
-create-connector-work-security-map
-==================================
+= create-connector-work-security-map
 
 [[create-connector-work-security-map-1]][[GSRFM00021]][[create-connector-work-security-map]]
 
-create-connector-work-security-map
-----------------------------------
+== create-connector-work-security-map
 
 Creates a work security map for the specified resource adapter
 

@@ -5,15 +5,13 @@ next=javamail.html
 prev=concurrent.html
 ~~~~~~
 
-Administering the Object Request Broker (ORB)
-=============================================
+= Administering the Object Request Broker (ORB)
 
 [[GSADG00018]][[abltr]]
 
 
 [[administering-the-object-request-broker-orb]]
-15 Administering the Object Request Broker (ORB)
-------------------------------------------------
+== 15 Administering the Object Request Broker (ORB)
 
 GlassFish Server supports a standard set of protocols and formats that
 ensure interoperability. Among these protocols are those defined by
@@ -35,8 +33,7 @@ online help.
 
 [[ablts]][[GSADG00590]][[about-the-orb]]
 
-About the ORB
-~~~~~~~~~~~~~
+=== About the ORB
 
 The Common Object Request Broker Architecture (CORBA) model is based on
 clients requesting services from distributed objects or servers through
@@ -51,8 +48,7 @@ and operation dispatching.
 
 [[abltw]][[GSADG00591]][[configuring-the-orb]]
 
-Configuring the ORB
-~~~~~~~~~~~~~~~~~~~
+=== Configuring the ORB
 
 A CORBA object never talks directly with another. Instead, the object
 makes requests through a remote stub to the Internet Inter-Orb Protocol
@@ -66,8 +62,7 @@ beans (EJB modules) communicate with GlassFish Server by using RMI-IIOP.
 
 [[ablty]][[GSADG00592]][[administering-iiop-listeners]]
 
-Administering IIOP Listeners
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Administering IIOP Listeners
 
 An IIOP listener is a listen socket that accepts incoming connections
 from the remote clients of enterprise beans and from other CORBA-based
@@ -86,8 +81,7 @@ The following topics are addressed here:
 
 [[gioyo]][[GSADG00478]][[to-create-an-iiop-listener]]
 
-To Create an IIOP Listener
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Create an IIOP Listener
 
 Use the `create-iiop-listener` subcommand in remote mode to create an
 IIOP listener.
@@ -123,8 +117,7 @@ typing `asadmin help create-iiop-listener` at the command line.
 
 [[giowc]][[GSADG00479]][[to-list-iiop-listeners]]
 
-To List IIOP Listeners
-^^^^^^^^^^^^^^^^^^^^^^
+==== To List IIOP Listeners
 
 Use the `list-iiop-listeners` subcommand in remote mode to list the
 existing IIOP listeners.
@@ -157,8 +150,7 @@ typing `asadmin help list-iiop-listeners` at the command line.
 
 [[giwlq]][[GSADG00480]][[to-update-an-iiop-listener]]
 
-To Update an IIOP Listener
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Update an IIOP Listener
 
 1. List the IIOP listeners by using the
 link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
@@ -181,8 +173,7 @@ Command set executed successfully.
 
 [[giowj]][[GSADG00481]][[to-delete-an-iiop-listener]]
 
-To Delete an IIOP Listener
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Delete an IIOP Listener
 
 Use the `delete-iiop-listener` subcommand in remote mode to delete an
 IIOP listener.

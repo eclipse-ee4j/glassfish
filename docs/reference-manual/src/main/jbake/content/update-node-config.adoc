@@ -5,13 +5,11 @@ next=update-node-dcom.html
 prev=update-file-user.html
 ~~~~~~
 
-update-node-config
-==================
+= update-node-config
 
 [[update-node-config-1]][[GSRFM00255]][[update-node-config]]
 
-update-node-config
-------------------
+== update-node-config
 
 Updates the configuration data of a node
 

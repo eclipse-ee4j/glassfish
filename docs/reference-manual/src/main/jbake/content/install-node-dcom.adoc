@@ -5,13 +5,11 @@ next=install-node-ssh.html
 prev=install-node.html
 ~~~~~~
 
-install-node-dcom
-=================
+= install-node-dcom
 
 [[install-node-dcom-1]][[GSRFM626]][[install-node-dcom]]
 
-install-node-dcom
------------------
+== install-node-dcom
 
 Installs {productName} software on specified DCOM-enabled hosts
 

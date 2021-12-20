@@ -5,13 +5,11 @@ next=verify-domain-xml.html
 prev=validate-dcom.html
 ~~~~~~
 
-validate-multicast
-==================
+= validate-multicast
 
 [[validate-multicast-1]][[GSRFM00259]][[validate-multicast]]
 
-validate-multicast
-------------------
+== validate-multicast
 
 Validates that multicast transport is available for clusters
 

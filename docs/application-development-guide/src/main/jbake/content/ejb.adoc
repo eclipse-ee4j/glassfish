@@ -5,15 +5,13 @@ next=container_managed-persistence.html
 prev=webapps.html
 ~~~~~~
 
-Using Enterprise JavaBeans Technology
-=====================================
+= Using Enterprise JavaBeans Technology
 
 [[GSDVG00010]][[beahl]]
 
 
 [[using-enterprise-javabeans-technology]]
-8 Using Enterprise JavaBeans Technology
----------------------------------------
+== 8 Using Enterprise JavaBeans Technology
 
 This chapter describes how Enterprise JavaBeans ( EJB) technology is
 supported in the Oracle GlassFish Server.
@@ -48,8 +46,7 @@ you should develop new beans as 3.1 enterprise beans.
 
 [[beahn]][[GSDVG00145]][[value-added-features]]
 
-Value Added Features
-~~~~~~~~~~~~~~~~~~~~
+=== Value Added Features
 
 The GlassFish Server provides a number of value additions that relate to
 EJB development. References to more in-depth material are included.
@@ -64,8 +61,7 @@ The following topics are addressed here:
 
 [[beaho]][[GSDVG00420]][[read-only-beans]]
 
-Read-Only Beans
-^^^^^^^^^^^^^^^
+==== Read-Only Beans
 
 Another feature that the GlassFish Server provides is the read-only
 bean, an EJB 2.1 entity bean that is never modified by an EJB client.
@@ -106,8 +102,7 @@ usage guidelines, see link:#beail[Using Read-Only Beans].
 
 [[beahp]][[GSDVG00421]][[the-pass-by-reference-element]]
 
-The `pass-by-reference` Element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== The `pass-by-reference` Element
 
 The `pass-by-reference` element in the `glassfish-ejb-jar.xml` file
 allows you to specify the parameter passing semantics for colocated
@@ -118,8 +113,7 @@ Edition Application Deployment Guide.
 
 [[beahq]][[GSDVG00422]][[pooling-and-caching]]
 
-Pooling and Caching
-^^^^^^^^^^^^^^^^^^^
+==== Pooling and Caching
 
 The EJB container of the GlassFish Server pools anonymous instances
 (message-driven beans, stateless session beans, and entity beans) to
@@ -153,8 +147,7 @@ Source Edition Application Deployment Guide.
 
 [[beahr]][[GSDVG00285]][[pooling-parameters]]
 
-Pooling Parameters
-++++++++++++++++++
+===== Pooling Parameters
 
 One of the most important parameters for GlassFish Server pooling is
 `steady-pool-size`. When `steady-pool-size` is set to a value greater
@@ -184,8 +177,7 @@ this specified duration.
 
 [[beahs]][[GSDVG00286]][[caching-parameters]]
 
-Caching Parameters
-++++++++++++++++++
+===== Caching Parameters
 
 GlassFish Server provides a way that completely avoids caching of entity
 beans, using commit option C. Commit option C is particularly useful if
@@ -202,8 +194,7 @@ a specified duration).
 
 [[beahu]][[GSDVG00423]][[priority-based-scheduling-of-remote-bean-invocations]]
 
-Priority Based Scheduling of Remote Bean Invocations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Priority Based Scheduling of Remote Bean Invocations
 
 You can create multiple thread pools, each having its own work queues.
 An optional element in the `glassfish-ejb-jar.xml` file,
@@ -216,8 +207,7 @@ the element is absent, the default thread pool is used.
 
 [[beahv]][[GSDVG00424]][[immediate-flushing]]
 
-Immediate Flushing
-^^^^^^^^^^^^^^^^^^
+==== Immediate Flushing
 
 Normally, all entity bean updates within a transaction are batched and
 executed at the end of the transaction. The only exception is the
@@ -248,8 +238,7 @@ transaction.
 
 [[beahw]][[GSDVG00146]][[ejb-timer-service]]
 
-EJB Timer Service
-~~~~~~~~~~~~~~~~~
+=== EJB Timer Service
 
 The EJB Timer Service uses a database to store persistent information
 about EJB timers. The EJB Timer Service in GlassFish Server is
@@ -345,8 +334,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[gktqo]][[GSDVG00070]][[to-deploy-an-ejb-timer-to-a-cluster]]
 
-To Deploy an EJB Timer to a Cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== To Deploy an EJB Timer to a Cluster
 
 This procedure explains how to deploy an EJB timer to a cluster.
 
@@ -426,8 +414,7 @@ domain-dir`/generated/ejb/``ejb-timer-service-app`.
 
 [[beahx]][[GSDVG00147]][[using-session-beans]]
 
-Using Session Beans
-~~~~~~~~~~~~~~~~~~~
+=== Using Session Beans
 
 This section provides guidelines for creating session beans in the
 GlassFish Server environment.
@@ -443,8 +430,7 @@ Specification, v3.1.
 
 [[beahy]][[GSDVG00425]][[about-the-session-bean-containers]]
 
-About the Session Bean Containers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== About the Session Bean Containers
 
 Like an entity bean, a session bean can access a database through Java
 Database Connectivity (JDBC) calls. A session bean can also provide
@@ -462,8 +448,7 @@ The following topics are addressed here:
 
 [[beahz]][[GSDVG00287]][[stateless-container]]
 
-Stateless Container
-+++++++++++++++++++
+===== Stateless Container
 
 The stateless container manages stateless session beans, which, by
 definition, do not carry client-specific states. All session beans (of a
@@ -489,8 +474,7 @@ Server Open Source Edition Reference Manual].
 
 [[beaia]][[GSDVG00288]][[stateful-container]]
 
-Stateful Container
-++++++++++++++++++
+===== Stateful Container
 
 The stateful container manages the stateful session beans, which, by
 definition, carry the client-specific state. There is a one-to-one
@@ -542,8 +526,7 @@ link:#beaic[Choosing a Persistence Store].
 
 [[beaib]][[GSDVG00426]][[stateful-session-bean-failover]]
 
-Stateful Session Bean Failover
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Stateful Session Bean Failover
 
 An SFSB's state can be saved in a persistent store in case a server
 instance fails. The state of an SFSB is saved to the persistent store at
@@ -665,8 +648,7 @@ Configure SFSB failover by:
 
 [[beaic]][[GSDVG00289]][[choosing-a-persistence-store]]
 
-Choosing a Persistence Store
-++++++++++++++++++++++++++++
+===== Choosing a Persistence Store
 
 The following types of persistent storage are supported for passivation
 and checkpointing of the SFSB state:
@@ -746,8 +728,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 [[beaid]][[GSDVG00290]][[enabling-checkpointing]]
 
-Enabling Checkpointing
-++++++++++++++++++++++
+===== Enabling Checkpointing
 
 The following sections describe how to enable SFSB checkpointing:
 
@@ -796,8 +777,7 @@ To enable SFSB checkpointing at the SFSB level, set
 
 [[beaih]][[GSDVG00291]][[specifying-methods-to-be-checkpointed]]
 
-Specifying Methods to Be Checkpointed
-+++++++++++++++++++++++++++++++++++++
+===== Specifying Methods to Be Checkpointed
 
 If SFSB checkpointing is enabled, checkpointing generally occurs after
 any transaction involving the SFSB is completed, even if the transaction
@@ -865,8 +845,7 @@ to the bean's state.
 
 [[beaii]][[GSDVG00427]][[session-bean-restrictions-and-optimizations]]
 
-Session Bean Restrictions and Optimizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Session Bean Restrictions and Optimizations
 
 This section discusses restrictions on developing session beans and
 provides some optimization guidelines.
@@ -877,8 +856,7 @@ provides some optimization guidelines.
 
 [[beaij]][[GSDVG00292]][[optimizing-session-bean-performance]]
 
-Optimizing Session Bean Performance
-+++++++++++++++++++++++++++++++++++
+===== Optimizing Session Bean Performance
 
 For stateful session beans, colocating the stateful beans with their
 clients so that the client and bean are executing in the same process
@@ -886,8 +864,7 @@ address space improves performance.
 
 [[beaik]][[GSDVG00293]][[restricting-transactions]]
 
-Restricting Transactions
-++++++++++++++++++++++++
+===== Restricting Transactions
 
 The following restrictions on transactions are enforced by the container
 and must be observed as session beans are developed:
@@ -905,16 +882,14 @@ business interface object, or an exception is thrown.
 
 [[glanq]][[GSDVG00294]][[ejb-singletons]]
 
-EJB Singletons
-++++++++++++++
+===== EJB Singletons
 
 EJB Singletons are created for each server instance in a cluster, and
 not once per cluster.
 
 [[beail]][[GSDVG00148]][[using-read-only-beans]]
 
-Using Read-Only Beans
-~~~~~~~~~~~~~~~~~~~~~
+=== Using Read-Only Beans
 
 A read-only bean is an EJB 2.1 entity bean that is never modified by an
 EJB client. The data that a read-only bean represents can be updated
@@ -945,8 +920,7 @@ The following topics are addressed here:
 
 [[beaim]][[GSDVG00428]][[read-only-bean-characteristics-and-life-cycle]]
 
-Read-Only Bean Characteristics and Life Cycle
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Read-Only Bean Characteristics and Life Cycle
 
 Read-only beans are best suited for situations where the underlying data
 never changes, or changes infrequently. For example, a read-only bean
@@ -994,8 +968,7 @@ read-write entity beans are looked up.
 
 [[beain]][[GSDVG00429]][[read-only-bean-good-practices]]
 
-Read-Only Bean Good Practices
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Read-Only Bean Good Practices
 
 For best results, follow these guidelines when developing read-only
 beans:
@@ -1010,8 +983,7 @@ used to force `ejbLoad`.
 
 [[beaio]][[GSDVG00430]][[refreshing-read-only-beans]]
 
-Refreshing Read-Only Beans
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Refreshing Read-Only Beans
 
 There are several ways of refreshing read-only beans, as addressed in
 the following sections:
@@ -1022,15 +994,13 @@ the following sections:
 
 [[beaip]][[GSDVG00295]][[invoking-a-transactional-method]]
 
-Invoking a Transactional Method
-+++++++++++++++++++++++++++++++
+===== Invoking a Transactional Method
 
 Invoking any transactional method invokes `ejbLoad`.
 
 [[beaiq]][[GSDVG00296]][[refreshing-periodically]]
 
-Refreshing Periodically
-+++++++++++++++++++++++
+===== Refreshing Periodically
 
 Use the `refresh-period-in-seconds` element in the
 `glassfish-ejb-jar.xml` file to refresh a read-only bean periodically.
@@ -1070,8 +1040,7 @@ asadmin create-jvm-options -Dcom.sun.ejb.containers.readonly.relative.refresh.mo
 
 [[beair]][[GSDVG00297]][[refreshing-programmatically]]
 
-Refreshing Programmatically
-+++++++++++++++++++++++++++
+===== Refreshing Programmatically
 
 Typically, beans that update any data that is cached by read-only beans
 need to notify the read-only beans to refresh their state. Use
@@ -1117,8 +1086,7 @@ For Javadoc tool pages relevant to read-only beans, go to
 
 [[beais]][[GSDVG00431]][[deploying-read-only-beans]]
 
-Deploying Read-Only Beans
-^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Deploying Read-Only Beans
 
 Read-only beans are deployed in the same manner as other entity beans.
 However, in the entry for the bean in the `glassfish-ejb-jar.xml` file,
@@ -1142,8 +1110,7 @@ Open Source Edition Application Deployment Guide.
 
 [[beait]][[GSDVG00149]][[using-message-driven-beans]]
 
-Using Message-Driven Beans
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Using Message-Driven Beans
 
 This section describes message-driven beans and explains the
 requirements for creating them in the GlassFish Server environment.
@@ -1155,8 +1122,7 @@ The following topics are addressed here:
 
 [[beaiu]][[GSDVG00432]][[message-driven-bean-configuration]]
 
-Message-Driven Bean Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message-Driven Bean Configuration
 
 The following topics are addressed here:
 
@@ -1169,8 +1135,7 @@ beans, see link:jms.html#beaop[Load-Balanced Message Inflow].
 
 [[beaiv]][[GSDVG00298]][[connection-factory-and-destination]]
 
-Connection Factory and Destination
-++++++++++++++++++++++++++++++++++
+===== Connection Factory and Destination
 
 A message-driven bean is a client to a Connector inbound resource
 adapter. The message-driven bean container uses the JMS service
@@ -1191,8 +1156,7 @@ the message-driven bean.
 
 [[beaiw]][[GSDVG00299]][[message-driven-bean-pool]]
 
-Message-Driven Bean Pool
-++++++++++++++++++++++++
+===== Message-Driven Bean Pool
 
 The container manages a pool of message-driven beans for the concurrent
 processing of a stream of messages. The `glassfish-ejb-jar.xml` file
@@ -1210,8 +1174,7 @@ Open Source Edition Application Deployment Guide.
 
 [[beaix]][[GSDVG00300]][[domain-level-settings]]
 
-Domain-Level Settings
-+++++++++++++++++++++
+===== Domain-Level Settings
 
 You can control the following domain-level message-driven bean settings
 in the EJB container:
@@ -1252,8 +1215,7 @@ GlassFish Server Open Source Edition Administration Guide.
 
 [[beaiy]][[GSDVG00433]][[message-driven-bean-restrictions-and-optimizations]]
 
-Message-Driven Bean Restrictions and Optimizations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== Message-Driven Bean Restrictions and Optimizations
 
 This section discusses the following restrictions and performance
 optimizations that pertain to developing message-driven beans:
@@ -1263,8 +1225,7 @@ optimizations that pertain to developing message-driven beans:
 
 [[beaiz]][[GSDVG00301]][[pool-tuning-and-monitoring]]
 
-Pool Tuning and Monitoring
-++++++++++++++++++++++++++
+===== Pool Tuning and Monitoring
 
 The message-driven bean pool is also a pool of threads, with each
 message-driven bean instance in the pool associating with a server
@@ -1292,8 +1253,7 @@ information on how to get message-driven bean pool statistics.
 
 [[beaja]][[GSDVG00302]][[the-onmessage-runtime-exception]]
 
-The `onMessage` Runtime Exception
-+++++++++++++++++++++++++++++++++
+===== The `onMessage` Runtime Exception
 
 Message-driven beans, like other well-behaved MessageListeners, should
 not, in general, throw runtime exceptions. If a message-driven bean's

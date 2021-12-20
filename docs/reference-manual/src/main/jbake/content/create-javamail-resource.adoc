@@ -5,13 +5,11 @@ next=create-jdbc-connection-pool.html
 prev=create-jacc-provider.html
 ~~~~~~
 
-create-javamail-resource
-========================
+= create-javamail-resource
 
 [[create-javamail-resource-1]][[GSRFM00035]][[create-javamail-resource]]
 
-create-javamail-resource
-------------------------
+== create-javamail-resource
 
 Creates a JavaMail session resource
 

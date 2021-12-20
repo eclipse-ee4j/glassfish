@@ -5,13 +5,11 @@ next=stop-instance.html
 prev=stop-database.html
 ~~~~~~
 
-stop-domain
-===========
+= stop-domain
 
 [[stop-domain-1]][[GSRFM00240]][[stop-domain]]
 
-stop-domain
------------
+== stop-domain
 
 Stops the Domain Administration Server of the specified domain
 

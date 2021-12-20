@@ -5,13 +5,11 @@ next=create-node-dcom.html
 prev=create-network-listener.html
 ~~~~~~
 
-create-node-config
-==================
+= create-node-config
 
 [[create-node-config-1]][[GSRFM00047]][[create-node-config]]
 
-create-node-config
-------------------
+== create-node-config
 
 Creates a node that is not enabled for remote communication
 

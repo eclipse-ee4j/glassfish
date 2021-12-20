@@ -5,13 +5,11 @@ next=list-web-context-param.html
 prev=list-transports.html
 ~~~~~~
 
-list-virtual-servers
-====================
+= list-virtual-servers
 
 [[list-virtual-servers-1]][[GSRFM00207]][[list-virtual-servers]]
 
-list-virtual-servers
---------------------
+== list-virtual-servers
 
 Lists the existing virtual servers
 

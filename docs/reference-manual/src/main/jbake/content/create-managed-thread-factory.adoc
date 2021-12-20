@@ -5,13 +5,11 @@ next=create-message-security-provider.html
 prev=create-managed-scheduled-executor-service.html
 ~~~~~~
 
-create-managed-thread-factory
-=============================
+= create-managed-thread-factory
 
 [[create-managed-thread-factory-1]][[GSRFM842]][[create-managed-thread-factory]]
 
-create-managed-thread-factory
------------------------------
+== create-managed-thread-factory
 
 Creates a managed thread factory resource
 

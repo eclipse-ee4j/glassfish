@@ -5,13 +5,11 @@ next=list-secure-admin-principals.html
 prev=list-resource-refs.html
 ~~~~~~
 
-list-secure-admin-internal-users
-================================
+= list-secure-admin-internal-users
 
 [[list-secure-admin-internal-users-1]][[GSRFM00199]][[list-secure-admin-internal-users]]
 
-list-secure-admin-internal-users
---------------------------------
+== list-secure-admin-internal-users
 
 Lists the user names that the {productName} DAS and instances use to
 authenticate with each other and to authorize admin operations.

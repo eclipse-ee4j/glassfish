@@ -12,6 +12,7 @@ SYNOPSIS
            [--threadpriority threadpriority]
            [--longrunningtasks={false|true}]
            [--hungafterseconds hungafterseconds]
+           [--hungloggerprintonce={false|true}]
            [--hungloggerinitialdelayseconds hungloggerinitialdelayseconds]
            [--hungloggerintervalseconds hungloggerintervalseconds]
            [--corepoolsize corepoolsize]
@@ -61,6 +62,11 @@ OPTIONS
            Specifies the number of seconds that a task can execute before it
            is considered unresponsive. The default value is 0, which means
            that tasks are never considered unresponsive.
+
+       --hungloggerprintonce
+           Specifies whether to print the warning message once or repeatedly.
+           The default value is false. If set to true, the warning message is
+           printed only once when detect a hung task exceeds "hungafterseconds".
 
        --hungloggerinitialdelayseconds
            Specifies the number of seconds to delay logging the detection of

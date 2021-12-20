@@ -65,6 +65,9 @@
             <sun:textField id="hungafter" styleClass="integer" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.common.description']}" text="#{pageSession.valueMap['hungAfterSeconds']}" />
             <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Seconds}"/>
        </sun:property>
+       <sun:property id="hungLoggerPrintOnce"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncon.hungLoggerPrintOnce}">
+            <sun:checkbox  selected="#{pageSession.valueMap['hungLoggerPrintOnce']}" selectedValue="true"  />
+       </sun:property>
        <sun:property id="hungLoggerInitialDelay" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncon.hungLoggerInitialDelaySeconds}"  helpText="$resource{i18ncon.hungLoggerInitialDelaySecondsHelp}">
             <sun:textField id="hungLoggerInitialDelay" styleClass="integer" columns="$int{55}" maxLength="#{sessionScope.fieldLengths['maxLength.common.description']}" text="#{pageSession.valueMap['hungLoggerInitialDelaySeconds']}" />
             <sun:staticText id="sec" style="padding: 8pt" text="$resource{i18n.common.Seconds}"/>

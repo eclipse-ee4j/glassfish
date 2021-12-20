@@ -89,6 +89,23 @@ public interface ManagedExecutorServiceBase extends ConfigBeanProxy,
     void setHungAfterSeconds(String value) throws PropertyVetoException;
 
     /**
+     * Gets the value of the hungLoggerPrintOnce property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    @Attribute(defaultValue="false", dataType=Boolean.class)
+    String getHungLoggerPrintOnce();
+
+    /**
+     * Sets the value of the hungLoggerPrintOnce property.
+     *
+     * @param value allowed object is
+     *              {@link String }
+     */
+    void setHungLoggerPrintOnce(String value) throws PropertyVetoException;
+
+    /**
      * Gets the value of the hungLoggerInitialDelaySeconds property.
      *
      * @return possible object is {@link String }

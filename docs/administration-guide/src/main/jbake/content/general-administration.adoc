@@ -1246,9 +1246,8 @@ resource for the `server.log` file represents the log file details
 The formats of the URLs to resources that represent the log file are as
 follows:
 
-* Log file: `http://`host`:`port`/management/domain/view-log`
-* Log file details:
-`http://`host`:`port`/monitoring/domain/view-log/details`
+* Log file: ``http://``host``:``port``/management/domain/view-log``
+* Log file details: ``http://``host``:``port``/monitoring/domain/view-log/details``
 
 The replaceable items in these URLs are as follows:
 

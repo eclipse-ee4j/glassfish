@@ -70,7 +70,7 @@ component_name::
   (`.`) characters. For more information about module and application
   versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]" in
-  GlassFish Server Open Source Edition Application Deployment Guide. +
+  {productName} Application Deployment Guide. +
   At most one version of a module or application can be enabled on a
   server instance. All other versions are disabled. Enabling one version
   automatically disables all others.
@@ -110,7 +110,7 @@ link:deploy.html#deploy-1[`deploy`(1)],
 link:disable.html#disable-1[`disable`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

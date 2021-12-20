@@ -121,7 +121,7 @@ asadmin-options::
   (`.`) characters. For more information about module and application
   versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]" in
-  GlassFish Server Open Source Edition Application Deployment Guide.
+  {productName} Application Deployment Guide.
 `--retrieve`::
   Retrieves the client stub JAR file from the server machine to the
   local directory.
@@ -427,7 +427,7 @@ link:redeploy.html#redeploy-1[`redeploy`(1)],
 link:set.html#set-1[`set`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

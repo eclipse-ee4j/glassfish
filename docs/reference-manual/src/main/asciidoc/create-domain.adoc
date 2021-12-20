@@ -54,7 +54,7 @@ choosing. By default, the domain configuration is created in the default
 directory for domains. You can override this location to store the
 configuration elsewhere.
 
-If domain customizers are found in JAR files in the as-install`/modules`
+If domain customizers are found in JAR files in the as-install``/modules``
 directory when the `create-domain` subcommand is run, the customizers
 are processed. A domain customizer is a class that implements the
 `DomainInitializer` interface.
@@ -130,7 +130,7 @@ When the `--portbase` option is specified, the output of this
   The file name, including a relative or absolute path, of a domain
   configuration template to use for creating the domain. If a relative
   path is specified, the subcommand appends the path to the
-  as-install`/lib/templates` directory to locate the file. If it is an
+  as-install``/lib/templates`` directory to locate the file. If it is an
   absolute pathname, the subcommand locates the file in the specified
   path. +
   This option enables domains of different types to be created and
@@ -139,7 +139,7 @@ When the `--portbase` option is specified, the output of this
   The directory where the domain is to be created. If specified, the
   path must be accessible in the filesystem. If not specified, the
   domain is created in the default domain directory,
-  as-install`/domains`.
+  as-install``/domains``.
 `--savemasterpassword`::
   Setting this option to `true` allows the master password to be written
   to the file system. If this option is `true`, the

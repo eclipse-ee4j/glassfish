@@ -27,8 +27,7 @@ The following topics are addressed here:
 
 [NOTE]
 ====
-Jakarta Mail resources are supported only in the full Eclipse GlassFish
-Server, not in the Web Profile.
+Jakarta Mail resources are supported only in the full {productName}, not in the Web Profile.
 ====
 
 
@@ -57,7 +56,7 @@ message data and to handle commands intended to interact with that data.
 
 For more information, see
 "link:../administration-guide/mail.html#GSADG00019[Administering the Jakarta Mail Service]"
-in GlassFish Server Administration Guide
+in {productName} Administration Guide
 and the Jakarta Mail specification at
 `https://jakarta.ee/specifications/mail`.
 
@@ -71,14 +70,14 @@ You can create a Jakarta Mail session in the following ways:
 Jakarta Mail Sessions. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin create-mail-resource` command. For details, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[beaoz]][[GSDVG00202]][[jakarta-mail-session-properties]]
 
 === Jakarta Mail Session Properties
 
 You can set properties for a Jakarta Mail `Session` object. Every property
-name must start with a `mail-` prefix. The GlassFish Server changes the
+name must start with a `mail-` prefix. The {productName} changes the
 dash (`-`) character to a period (`.`) in the name of the property and
 saves the property to the `MailConfiguration` and Jakarta Mail `Session`
 objects. If the name of the property doesn't start with `mail-`, the
@@ -245,7 +244,6 @@ You can define an application-scoped Jakarta Mail or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 

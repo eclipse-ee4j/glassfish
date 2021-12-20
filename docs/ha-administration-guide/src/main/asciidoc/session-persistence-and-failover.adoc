@@ -23,7 +23,7 @@ session persistence.
 
 === Overview of Session Persistence and Failover
 
-GlassFish Server provides high availability session persistence through
+{productName} provides high availability session persistence through
 failover of HTTP session data and stateful session bean (SFSB) session
 data. Failover means that in the event of an server instance or hardware
 failure, another server instance in a cluster takes over a distributed session.
@@ -40,8 +40,7 @@ When using high availability session persistence together with a load
 balancer, use a load balancer that includes session-based stickiness as
 part of its load-balancing algorithm. Otherwise, session data can be
 misdirected or lost. An example of a load balancer that includes
-session-based stickiness is the Loadbalancer Plug-In available in Oracle
-GlassFish Server.
+session-based stickiness is the Loadbalancer Plug-In available in {productName}.
 ====
 
 The following topics are addressed here:
@@ -54,14 +53,13 @@ The following topics are addressed here:
 
 ==== Requirements
 
-A distributed session can run in multiple Oracle GlassFish Server
+A distributed session can run in multiple {productName}
 instances, if:
 
 * Each server instance has access to the same session state data.
-GlassFish Server supports in-memory session replication on other servers
+{productName} supports in-memory session replication on other servers
 in the cluster for maintaining HTTP session and stateful session bean
-data. In-memory session replication is enabled by default for GlassFish
-Server clustered environments if the Group Management Service is enabled.
+data. In-memory session replication is enabled by default for {productName} clustered environments if the Group Management Service is enabled.
 +
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
@@ -79,7 +77,7 @@ possible.
 +
 [NOTE]
 ====
-GlassFish Server 7 does not support High Availability Database (HADB)
+{productName} 7 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
 link:overview.html#gaynn[High Availability Session Persistence].
 ====
@@ -115,14 +113,14 @@ features are for development, not production environments, so you must
 disable them before enabling the session persistence service.
 For information about how to disable these features, see the
 link:../application-deployment-guide/toc.html#GSDPG[
-GlassFish Server Open Source Edition Application Deployment Guide].
+{productName} Application Deployment Guide].
 
-* GlassFish Server 7 does not support High Availability Database
+* {productName} 7 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
 in link:overview.html#gaynn[High Availability Session Persistence].
 
 * You can only bind certain objects to distributed sessions that support
-failover. Contrary to the Servlet 2.4 specification, GlassFish Server 7 does not throw an `IllegalArgumentException` if an object type not
+failover. Contrary to the Servlet 2.4 specification, {productName} 7 does not throw an `IllegalArgumentException` if an object type not
 supported for failover is bound into a distributed session.
 +
 You can bind the following objects into a distributed session that
@@ -166,7 +164,7 @@ ranging from highest to lowest:
 In general, enabling or disabling availability session persistence for a
 cluster or container involves setting the boolean `availability-service`
 property to `true` or `false` by means of the `asadmin set` subcommand.
-The availability service is enabled by default for GlassFish Server
+The availability service is enabled by default for {productName}
 clusters and all Web, EJB, and JMS containers running in a cluster.
 
 The value set for the `availability-service` property is inherited by
@@ -202,7 +200,7 @@ This procedure explains how to enable high availability for a cluster as
 a whole, or for Web, EJB, or JMS containers that run in a cluster, or
 for a standalone server instance that is not part of a cluster.
 
-1. Create a GlassFish Server cluster.
+1. Create a {productName} cluster.
 +
 For more information, see link:clusters.html#gkqdm[To Create a Cluster].
 
@@ -299,7 +297,7 @@ For more information, see link:#abdlu[Configuring Availability for an Individual
 7. Make each web module distributable if you want it to be highly available.
 +
 For more information, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00067[Web Module Deployment
-Guidelines]" in GlassFish Server Open Source Edition Application Deployment Guide.
+Guidelines]" in {productName} Application Deployment Guide.
 
 8. Enable availability for individual applications, web modules, or EJB
 modules during deployment.
@@ -352,7 +350,7 @@ the type of session persistence an application uses. It must be set to
 If you are using Memory Replication and your web application involves
 multiple client threads concurrently accessing the same session ID, then
 you may experience session loss even without any instance failure. The
-problem is that the GlassFish Server 7 memory replication framework
+problem is that the {productName} 7 memory replication framework
 makes use of session versioning. This feature was designed with the more
 traditional HTTP request/response communication model in mind.
 
@@ -477,17 +475,17 @@ accessing the application.
 
 Built on top of Oracle Coherence, Coherence*Web is an HTTP session
 management module dedicated to managing session state in clustered
-environments. Starting with Coherence 3.7 and GlassFish Server 7,
+environments. Starting with Coherence 3.7 and {productName} 7,
 there is a new feature of Coherence*Web called ActiveCache for
 GlassFish. ActiveCache for GlassFish provides Coherence*Web
-functionality in web applications deployed on GlassFish Servers. Within
-GlassFish Server, Coherence*Web functions as an additional web container
+functionality in web applications deployed on {productName}s. Within
+{productName}, Coherence*Web functions as an additional web container
 persistence type, named `coherence-web`.
 
 For information about how to configure and deploy Coherence*Web on
-GlassFish Server, see
+{productName}, see
 http://download.oracle.com/docs/cd/E18686_01/coh.37/e18690/glassfish.html[Using
-Coherence*Web with GlassFish Server]
+Coherence*Web with {productName}]
 (`http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html`).
 
 [[abdlp]][[GSHAG00211]][[stateful-session-bean-failover]]
@@ -527,9 +525,9 @@ If a distributable web application references an SFSB, and the web
 application's session fails over, the EJB reference is also failed over.
 
 If an SFSB that uses session persistence is undeployed while the
-GlassFish Server instance is stopped, the session data in the
+{productName} instance is stopped, the session data in the
 persistence store might not be cleared. To prevent this, undeploy the
-SFSB while the GlassFish Server instance is running.
+SFSB while the {productName} instance is running.
 
 [[abdlq]][[GSHAG00307]][[configuring-availability-for-the-ejb-container]]
 

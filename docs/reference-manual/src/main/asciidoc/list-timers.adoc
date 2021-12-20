@@ -93,6 +93,6 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-the-timer-service[
 Using the Timer Service] in The Jakarta EE Tutorial
 
 "link:../application-development-guide/ejb.html#GSDVG00146[EJB Timer Service]"
-in GlassFish Server Open Source Edition Application Development Guide
+in {productName} Application Development Guide
 
 

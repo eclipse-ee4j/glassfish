@@ -1,15 +1,15 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Add-On Component Development Guide, Release 7
+title={productName} Add-On Component Development Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Add-On Component Development Guide, Release 7
+= {productName} Add-On Component Development Guide, Release 7
 
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Add-On Component Development Guide
 
@@ -17,14 +17,12 @@ Release 7
 
 Contributed 2018-2022
 
-This document explains how to use published interfaces of Eclipse GlassFish
-Server to develop add-on components for GlassFish
-Server. This document explains how to perform only those tasks that
-ensure that the add-on component is suitable for GlassFish Server.
+This document explains how to use published interfaces of {productName} to develop add-on components for {productName}. This document explains how to perform only those tasks that
+ensure that the add-on component is suitable for {productName}.
 
 This document is for software developers who are developing add-on
-components for GlassFish Server. This document assumes that the
-developers are working with a distribution of GlassFish Server. Access
+components for {productName}. This document assumes that the
+developers are working with a distribution of {productName}. Access
 to the source code of the GlassFish project is not required to perform
 the tasks in this document. This document also assumes the ability to
 program in the Java language.
@@ -33,7 +31,7 @@ program in the Java language.
 
 '''''
 
-Eclipse GlassFish Server Add-On Component Development Guide,
+{productName} Add-On Component Development Guide,
 Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.

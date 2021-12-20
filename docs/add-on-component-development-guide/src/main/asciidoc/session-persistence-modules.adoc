@@ -13,7 +13,7 @@ prev=adding-container-capabilities.html
 [[creating-a-session-persistence-module]]
 == Creating a Session Persistence Module
 
-GlassFish Server enables you to create a session persistence module in
+{productName} enables you to create a session persistence module in
 the web container for high availability-related functionality by
 implementing the `PersistenceStrategyBuilder` interface . Using the
 `PersistenceStrategyBuilder` interface in an HK2 service makes the
@@ -22,7 +22,7 @@ type without having to modify the web container code.
 
 For information about other high-availability, session persistence
 solutions, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
-Persistence and Failover]" in GlassFish Server Open Source Edition High
+Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 
 [[gkmhr]][[GSACG00141]][[implementing-the-persistencestrategybuilder-interface]]
@@ -91,7 +91,7 @@ public class XYZStrategyBuilder implements PersistenceStrategyBuilder {
 }
 ----
 
-If a `Manager` is provided, then it will be used in GlassFish Server.
+If a `Manager` is provided, then it will be used in {productName}.
 
 
 [NOTE]

@@ -1,43 +1,42 @@
 type=page
 status=published
-title=Administering GlassFish Server Instances
+title=Administering {productName} Instances
 next=named-configurations.html
 prev=clusters.html
 ~~~~~~
 
-= Administering GlassFish Server Instances
+= Administering {productName} Instances
 
 [[GSHAG00006]][[gkrbv]]
 
 [[administering-glassfish-server-instances]]
-== 5 Administering GlassFish Server Instances
+== 5 Administering {productName} Instances
 
-A GlassFish Server instance is a single Virtual Machine for the Java
+A {productName} instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
-GlassFish Server is running. A node defines the host where the GlassFish
-Server instance resides. The JVM machine must be compatible with the
+{productName} is running. A node defines the host where the {productName} instance resides. The JVM machine must be compatible with the
 Java Platform, Enterprise Edition (Jakarta EE).
 
-GlassFish Server instances form the basis of an application deployment.
+{productName} instances form the basis of an application deployment.
 An instance is a building block in the clustering, load balancing, and
-session persistence features of GlassFish Server. Each instance belongs
+session persistence features of {productName}. Each instance belongs
 to a single domain and has its own directory structure, configuration,
 and deployed applications. Every instance contains a reference to a node
 that defines the host where the instance resides.
 
 The following topics are addressed here:
 
-* link:#gkrbn[Types of GlassFish Server Instances]
-* link:#gkqal[Administering GlassFish Server Instances Centrally]
-* link:#gkqdw[Administering GlassFish Server Instances Locally]
-* link:#gkrdd[Resynchronizing GlassFish Server Instances and the DAS]
+* link:#gkrbn[Types of {productName} Instances]
+* link:#gkqal[Administering {productName} Instances Centrally]
+* link:#gkqdw[Administering {productName} Instances Locally]
+* link:#gkrdd[Resynchronizing {productName} Instances and the DAS]
 * link:#gkqcr[Migrating EJB Timers]
 
 [[gkrbn]][[GSHAG00186]][[types-of-glassfish-server-instances]]
 
-=== Types of GlassFish Server Instances
+=== Types of {productName} Instances
 
-Each GlassFish Server instance is one of the following types of
+Each {productName} instance is one of the following types of
 instance:
 
 Standalone instance::
@@ -70,16 +69,16 @@ Clustered instance::
 
 [[gkqal]][[GSHAG00187]][[administering-glassfish-server-instances-centrally]]
 
-=== Administering GlassFish Server Instances Centrally
+=== Administering {productName} Instances Centrally
 
 Centralized administration requires the Distributed Component Object
 Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
 or SSH is set up, you can administer clustered instances without the
 need to log in to hosts where remote instances reside. For information
 about setting up DCOM and SSH, see link:ssh-setup.html#gkshg[Enabling
-Centralized Administration of GlassFish Server Instances].
+Centralized Administration of {productName} Instances].
 
-Administering GlassFish Server instances centrally involves the
+Administering {productName} instances centrally involves the
 following tasks:
 
 * link:#gkqch[To Create an Instance Centrally]
@@ -96,7 +95,7 @@ following tasks:
 ==== To Create an Instance Centrally
 
 Use the `create-instance` subcommand in remote mode to create a
-GlassFish Server instance centrally. Creating an instance adds the
+{productName} instance centrally. Creating an instance adds the
 instance to the DAS configuration and creates the instance's files on
 the host where the instance resides.
 
@@ -274,10 +273,10 @@ asadmin> list-instances
 ----
 
 [[GSHAG00040]][[gksfe]]
-Example 5-2 Listing Basic Information About All GlassFish Server
+Example 5-2 Listing Basic Information About All {productName}
 Instances in a Domain
 
-This example lists the name and status of all GlassFish Server instances
+This example lists the name and status of all {productName} instances
 in the current domain.
 
 [source]
@@ -292,10 +291,10 @@ Command list-instances executed successfully.
 ----
 
 [[GSHAG00041]][[gkabz]]
-Example 5-3 Listing Detailed Information About All GlassFish Server
+Example 5-3 Listing Detailed Information About All {productName}
 Instances in a Domain
 
-This example lists detailed information about all GlassFish Server
+This example lists detailed information about all {productName}
 instances in the current domain.
 
 [source]
@@ -325,7 +324,7 @@ typing `asadmin help list-instances` at the command line.
 ==== To Delete an Instance Centrally
 
 Use the `delete-instance` subcommand in remote mode to delete a
-GlassFish Server instance centrally.
+{productName} instance centrally.
 
 
 [CAUTION]
@@ -467,8 +466,7 @@ typing `asadmin help start-cluster` at the command line.
 Next Steps
 
 After starting a cluster, you can deploy applications to the cluster.
-For more information, see link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
-Edition Application Deployment Guide].
+For more information, see link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 [[gkqcl]][[GSHAG00110]][[to-stop-a-cluster]]
 
@@ -594,8 +592,7 @@ typing `asadmin help start-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
-Edition Application Deployment Guide].
+For more information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 [[gkqaj]][[GSHAG00112]][[to-stop-an-individual-instance-centrally]]
 
@@ -701,13 +698,13 @@ system to kill the instance process before restarting the instance.
 
 [[gkqdw]][[GSHAG00188]][[administering-glassfish-server-instances-locally]]
 
-=== Administering GlassFish Server Instances Locally
+=== Administering {productName} Instances Locally
 
 Local administration does not require DCOM or SSH to be set up. If
 neither DCOM nor SSH is set up, you must log in to each host where
 remote instances reside and administer the instances individually.
 
-Administering GlassFish Server instances locally involves the following
+Administering {productName} instances locally involves the following
 tasks:
 
 * link:#gkqbl[To Create an Instance Locally]
@@ -731,7 +728,7 @@ Instances in a Domain].
 ==== To Create an Instance Locally
 
 Use the `create-local-instance` subcommand in remote mode to create a
-GlassFish Server instance locally. Creating an instance adds the
+{productName} instance locally. Creating an instance adds the
 instance to the DAS configuration and creates the instance's files on
 the host where the instance resides.
 
@@ -756,7 +753,7 @@ ensure that the node exists.
 ====
 If you create the instance on a host for which no nodes are defined, you
 can create the instance without creating a node beforehand. In this
-situation, GlassFish Server creates a `CONFIG` node for you. The name of
+situation, {productName} creates a `CONFIG` node for you. The name of
 the node is the unqualified name of the host.
 ====
 
@@ -813,7 +810,7 @@ node-name::
   The node on which the instance is to reside. +
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
-  If no nodes are defined for the host, GlassFish Server creates a
+  If no nodes are defined for the host, {productName} creates a
   CONFIG node for you. The name of the node is the unqualified name of the host. +
   If one node is defined for the host, the instance is created on that node.
 configuration-name::
@@ -845,7 +842,7 @@ node-name::
   The node on which the instance is to reside. +
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
-  If no nodes are defined for the host, GlassFish Server creates a
+  If no nodes are defined for the host, {productName} creates a
   `CONFIG` node for you. The name of the node is the unqualified name of the host. +
   If one node is defined for the host, the instance is created on that node.
 configuration-name::
@@ -878,7 +875,7 @@ node-name::
   The node on which the instance is to reside. +
   If you are creating the instance on a host for which fewer than two
   nodes are defined, you may omit this option. +
-  If no nodes are defined for the host, GlassFish Server creates a
+  If no nodes are defined for the host, {productName} creates a
   `CONFIG` node for you. The name of the node is the unqualified name of the host. +
   If one node is defined for the host, the instance is created on that node.
 bind-address::
@@ -983,7 +980,7 @@ the following sections:
 ==== To Delete an Instance Locally
 
 Use the `delete-local-instance` subcommand in remote mode to delete a
-GlassFish Server instance locally.
+{productName} instance locally.
 
 [CAUTION]
 ====
@@ -1041,7 +1038,7 @@ admin-port::
   requests, you may omit this option.
 node-name::
   The node on which the instance resides. If only one node is defined
-  for the GlassFish Server installation that you are running on the
+  for the {productName} installation that you are running on the
   node's host, you may omit this option.
 instance-name::
   The name of the instance that you are deleting.
@@ -1102,7 +1099,7 @@ link:../reference-manual/start-local-instance.html#GSRFM00237[`start-local-insta
 
 node-name::
   The node on which the instance resides. If only one node is defined
-  for the GlassFish Server installation that you are running on the
+  for the {productName} installation that you are running on the
   node's host, you may omit this option.
 instance-name::
   The name of the instance that you are starting.
@@ -1138,8 +1135,7 @@ typing `asadmin help start-local-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
-Edition Application Deployment Guide].
+For more information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 [[gkqci]][[GSHAG00117]][[to-stop-an-individual-instance-locally]]
 
@@ -1161,7 +1157,7 @@ $ asadmin stop-local-instance [--node node-name]instance-name
 ----
 node-name::
   The node on which the instance resides. If only one node is defined
-  for the GlassFish Server installation that you are running on the
+  for the {productName} installation that you are running on the
   node's host, you may omit this option.
 instance-name::
   The name of the instance that you are stopping.
@@ -1221,7 +1217,7 @@ $ asadmin restart-local-instance [--node node-name]instance-name
 ----
 node-name::
   The node on which the instance resides. If only one node is defined
-  for the GlassFish Server installation that you are running on the
+  for the {productName} installation that you are running on the
   node's host, you may omit this option.
 instance-name::
   The name of the instance that you are restarting.
@@ -1258,9 +1254,9 @@ system to kill the instance process before restarting the instance.
 
 [[gkrdd]][[GSHAG00189]][[resynchronizing-glassfish-server-instances-and-the-das]]
 
-=== Resynchronizing GlassFish Server Instances and the DAS
+=== Resynchronizing {productName} Instances and the DAS
 
-Configuration data for a GlassFish Server instance is stored as follows:
+Configuration data for a {productName} instance is stored as follows:
 
 * In the repository of the domain administration server (DAS)
 * In a cache on the host that is local to the instance
@@ -1269,8 +1265,7 @@ The configuration data in these locations must be synchronized. The
 cache is synchronized in the following circumstances:
 
 * Whenever an `asadmin` subcommand is run. For more information, see
-"link:../administration-guide/overview.html#GSADG00697[Impact of Configuration Changes]" in GlassFish Server
-Open Source Edition Administration Guide.
+"link:../administration-guide/overview.html#GSADG00697[Impact of Configuration Changes]" in {productName} Administration Guide.
 * When a user uses the administration tools to start or restart an instance.
 
 [[gksbo]][[GSHAG00267]][[default-synchronization-for-files-and-directories]]
@@ -1381,7 +1376,7 @@ out of date in the cache.
   other utility libraries that are shared by all applications in the domain. +
   The contents of these directories are loaded by the common class
   loader. For more information, see "link:../application-development-guide/class-loaders.html#GSDVG00342[
-  Using the Common Class Loader]" in GlassFish Server Open Source Edition Application
+  Using the Common Class Loader]" in {productName} Application
   Development Guide.
   The class loader loads the contents of these directories in the following order:
 +
@@ -1488,7 +1483,7 @@ link:../reference-manual/start-local-instance.html#GSRFM00237[`start-local-insta
 
 node-name::
   The node on which the instance resides. If only one node is defined
-  for the GlassFish Server installation that you are running on the
+  for the {productName} installation that you are running on the
   node's host, you may omit this option.
 instance-name::
   The name of the instance that you are starting.
@@ -1500,7 +1495,7 @@ This example determines that the instance `yml-i1` is stopped and fully
 resynchronizes the instance with the DAS. Because neither DCOM nor SSH
 is set up, the instance is started locally on the host where the
 instance resides. In this example, multiple nodes are defined for the
-GlassFish Server installation that is running on the node's host.
+{productName} installation that is running on the node's host.
 
 To determine whether the instance is stopped, the following command is
 run in multimode on the DAS host:
@@ -1606,7 +1601,7 @@ typing the command `asadmin help deploy` at the command line.
 
 ==== To Resynchronize Custom Configuration Files for an Instance
 
-Configuration files in the domain-dir`/config` directory that are
+Configuration files in the domain-dir``/config`` directory that are
 resynchronized are resynchronized for the entire domain. If you create a
 custom configuration file for an instance or a cluster, the custom file
 is resynchronized only for the instance or cluster.
@@ -1716,7 +1711,7 @@ See Also
 
 ==== To Resynchronize Additional Configuration Files
 
-By default, GlassFish Server synchronizes only the following
+By default, {productName} synchronizes only the following
 configuration files:
 
 * `admin-keyfile`
@@ -1739,8 +1734,7 @@ files to resynchronize.
 [CAUTION]
 ====
 If you specify a list of files to resynchronize, you must specify all
-the files that the instances require, including the files that GlassFish
-Server resynchronizes by default. Any file in the instance's cache that
+the files that the instances require, including the files that {productName} resynchronizes by default. Any file in the instance's cache that
 is not in the list is deleted when the instance is resynchronized with
 the DAS.
 ====
@@ -1755,7 +1749,7 @@ Example 5-18 `config-files` File
 
 This example shows the content of a `config-files` file. This file
 specifies that the `some-other-info` file is to be resynchronized in
-addition to the files that GlassFish Server resynchronizes by default:
+addition to the files that {productName} resynchronizes by default:
 
 [source]
 ----
@@ -1784,7 +1778,7 @@ the DAS resynchronizes, these files are deleted when the DAS
 resynchronizes an instance with the DAS.
 
 Put the files in a subdirectory under the domain directory that is not
-defined by GlassFish Server, for example,
+defined by {productName}, for example,
 `/export/glassfish7/glassfish/domains/domain1/myapp/myfile`.
 
 [[gksdy]][[GSHAG00125]][[to-resynchronize-an-instance-and-the-das-offline]]
@@ -1925,7 +1919,7 @@ typing the following commands at the command line.
 
 === Migrating EJB Timers
 
-If a GlassFish Server server instance stops or fails abnormally, it may
+If a {productName} server instance stops or fails abnormally, it may
 be desirable to migrate the EJB timers defined for that stopped server
 instance to another running server instance.
 
@@ -1973,8 +1967,7 @@ This enables automatic timer migration for failed server instances in
 the cluster.
 
 For instructions on enabling delegated transaction recovery, see
-"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in GlassFish Server Open
-Source Edition Administration Guide.
+"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in {productName} Administration Guide.
 
 [[abdji]][[GSHAG00127]][[to-migrate-ejb-timers-manually]]
 

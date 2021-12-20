@@ -14,7 +14,7 @@ not alter the content in any way.
 
 == asadmin
 
-Utility for performing administrative tasks for Oracle {productName}
+Utility for performing administrative tasks for {productName}
 
 [[sthref2364]]
 
@@ -39,8 +39,7 @@ asadmin [--host host]
 
 === Description
 
-Use the `asadmin` utility to perform administrative tasks for Oracle
-GlassFish Server. You can use this utility instead of the Administration
+Use the `asadmin` utility to perform administrative tasks for {productName}. You can use this utility instead of the Administration
 Console interface.
 
 === Subcommands of the asadmin Utility

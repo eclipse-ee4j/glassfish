@@ -1,19 +1,18 @@
 type=page
 status=published
-title=Elements of the GlassFish Server Deployment Descriptors
+title=Elements of the {productName} Deployment Descriptors
 prev=dd-files.html
 ~~~~~~
 
-= Elements of the GlassFish Server Deployment Descriptors
+= Elements of the {productName} Deployment Descriptors
 
 [[GSDPG00007]][[beaqi]]
 
 
 [[c-elements-of-the-glassfish-server-deployment-descriptors]]
-== C Elements of the GlassFish Server Deployment Descriptors
+== C Elements of the {productName} Deployment Descriptors
 
-This appendix describes the elements of the GlassFish Server Open Source
-Editiondeployment descriptors.
+This appendix describes the elements of the {productName}deployment descriptors.
 
 [[beaqs]][[GSDPG00085]][[activation-config]]
 
@@ -334,8 +333,7 @@ JAAS is available on the ACC. Defines the optional configuration for a
 JAAS authentication realm. Authentication realms require
 provider-specific properties, which vary depending on what a particular
 implementation needs. For more information about how to define realms,
-see "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in GlassFish Server Open
-Source Edition Application Development Guide.
+see "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvyot]][[GSDPG00349]][[superelements-8]]
 
@@ -402,8 +400,7 @@ Here is an example of the default file realm:
 Which properties an `auth-realm` element uses depends on the value of
 the `auth-realm` element's `name` attribute. The file realm uses `file`
 and `jaas-context` properties. Other realms use different properties.
-See "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in GlassFish Server Open
-Source Edition Application Development Guide.
+See "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[giyjv]][[GSDPG00094]][[backend-principal]]
 
@@ -1312,7 +1309,7 @@ are ignored by the class loader.
 
 === `client-container`
 
-Defines the GlassFish Server specific configuration for the application
+Defines the {productName} specific configuration for the application
 client container. This is the root element; there can only be one
 `client-container` element in a `sun-acc.xml` file. See
 link:dd-files.html#beaqp[The sun-acc.xml File].
@@ -1344,9 +1341,9 @@ link:#beaye[`target-server`]
 
  |one or more a|
 Specifies the IIOP listener for the target server. Also specifies IIOP
-endpoints used for load balancing. If the GlassFish Server instance on
+endpoints used for load balancing. If the {productName} instance on
 which the application client is deployed participates in a cluster,
-GlassFish Server finds all currently active IIOP endpoints in the
+{productName} finds all currently active IIOP endpoints in the
 cluster automatically. However, a client should have at least two
 endpoints specified for bootstrapping purposes, in case one of the
 endpoints has failed.
@@ -1622,7 +1619,7 @@ link:#beatc[`fetched-with`]
 
 Specifies the database to be used for storing CMP beans. For more
 information about this element, see "link:../application-development-guide/container_managed-persistence.html#GSDVG00154[Configuring the
-CMP Resource]" in GlassFish Server Open Source Edition Application
+CMP Resource]" in {productName} Application
 Development Guide.
 
 [[fvypz]][[GSDPG00403]][[superelements-30]]
@@ -1860,13 +1857,13 @@ related table.
 === `commit-option`
 
 Specifies the commit option used on transaction completion. Valid values
-for GlassFish Server are `B` or `C`. Default value is `B`. Applies to
+for {productName} are `B` or `C`. Default value is `B`. Applies to
 entity beans.
 
 
 [NOTE]
 ====
-Commit option A is not supported for this GlassFish Server release.
+Commit option A is not supported for this {productName} release.
 ====
 
 
@@ -1886,10 +1883,10 @@ none - contains data
 
 === `compatibility`
 
-Specifies the GlassFish Server release with which to be backward
+Specifies the {productName} release with which to be backward
 compatible in terms of JAR visibility requirements for applications. The
-current allowed value is `v2`, which refers to GlassFish Server version
-2 or GlassFish Server version 9.1 or 9.1.1. Starting in Jakarta EE 6, the
+current allowed value is `v2`, which refers to {productName} version
+2 or {productName} version 9.1 or 9.1.1. Starting in Jakarta EE 6, the
 Jakarta EE specification imposes stricter requirements than Jakarta EE 5 did
 on which JAR files can be visible to various modules within an EAR file.
 Setting this element to `v2` removes these Jakarta EE 6 and later
@@ -2217,7 +2214,7 @@ of attempts is unlimited.
 [NOTE]
 ====
 All JMS administered object resource properties that worked with version
-7 of the GlassFish Server are supported for backward compatibility.
+7 of the {productName} are supported for backward compatibility.
 ====
 
 
@@ -2514,8 +2511,7 @@ module. If none is specified, a default is generated; see
 link:#gauax[`java-web-start-access`].
 
 If you are setting up load balancing, web module context roots must be
-unique within a server instance. See the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server
-Open Source Edition High Availability Administration Guide] for more
+unique within a server instance. See the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide] for more
 information about load balancing.
 
 [[fvysx]][[GSDPG00429]][[superelements-44]]
@@ -2600,7 +2596,7 @@ Table C-45 `cookie-properties` Properties
 |Specifies the pathname that is set when the cookie is created. The
 browser sends the cookie if the pathname for the request contains this
 pathname. If set to `/` (slash), the browser sends cookies to all URLs
-served by GlassFish Server. You can set the path to a narrower mapping
+served by {productName}. You can set the path to a narrower mapping
 to limit the request URLs to which the browser sends cookies.
 
 |`cookieMaxAgeSeconds` |none |Specifies the expiration time (in seconds)
@@ -2641,8 +2637,7 @@ the database. If `false` (the default if this element is not present),
 does not create tables.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytc]][[GSDPG00434]][[superelements-46]]
 
@@ -2758,8 +2753,7 @@ read. If the connection cannot be established, or if the value is not
 recognized, SQL-92 compliance is presumed.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytf]][[GSDPG00436]][[superelements-48]]
 
@@ -2873,7 +2867,7 @@ to the value specified for this property to determine whether a
 customized CacheKeyGenerator implementation is used. An application can
 provide a customized key generator rather than using the `default`
 helper. See "link:../application-development-guide/webapps.html#GSDVG00254[The CacheKeyGenerator Interface]" in
-GlassFish Server Open Source Edition Application Development Guide.
+{productName} Application Development Guide.
 |===
 
 
@@ -2961,9 +2955,9 @@ none - contains data
 === `disable-nonportable-jndi-names`
 
 Because the EJB 3.1 specification defines portable EJB JNDI names, there
-is less need for GlassFish Server specific JNDI names. By default,
-GlassFish Server specific default JNDI names are applied automatically
-for backward compatibility. To disable GlassFish Server specific JNDI
+is less need for {productName} specific JNDI names. By default,
+{productName} specific default JNDI names are applied automatically
+for backward compatibility. To disable {productName} specific JNDI
 names for an EJB module, set the value of this element to `true`. The
 default is `false`.
 
@@ -3011,8 +3005,7 @@ undeployed. If `true`, drops tables from the database. If `false` (the
 default if this element is not present), does not drop tables.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytu]][[GSDPG00453]][[superelements-56]]
 
@@ -3782,8 +3775,7 @@ resource.
 Specifies the fully qualified name of the factory class, which
 implements javax.naming.spi.InitialContextFactory .
 
-For more information about JNDI, see the link:../application-development-guide/toc.html#GSDVG[GlassFish Server
-Open Source Edition Application Development Guide].
+For more information about JNDI, see the link:../application-development-guide/toc.html#GSDVG[{productName} Application Development Guide].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:
@@ -3838,8 +3830,7 @@ subelement. The default subelement is as follows:
 Managed fields are multiple CMP or CMR fields that are mapped to the
 same column. A managed field can have any `fetched-with` subelement
 except `<default/>`. For additional information, see
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00306[Managed Fields]" in GlassFish Server Open Source
-Edition Application Development Guide.
+"link:../application-development-guide/container_managed-persistence.html#GSDVG00306[Managed Fields]" in {productName} Application Development Guide.
 
 [[fvyuw]][[GSDPG00479]][[superelements-68]]
 
@@ -4080,7 +4071,7 @@ link:#beauc[`local-home-impl`]
 
 === `glassfish-application`
 
-Defines the GlassFish Server specific configuration for an application.
+Defines the {productName} specific configuration for an application.
 This is the root element; there can only be one `glassfish-application`
 element in a `glassfish-application.xml` file. See
 link:dd-files.html#beaqk[The glassfish-application.xml File].
@@ -4187,7 +4178,7 @@ a|
 link:#gjjak[`compatibility`]
 
 
- |zero or one |Specifies the GlassFish Server release with which to be
+ |zero or one |Specifies the {productName} release with which to be
 backward compatible in terms of JAR visibility requirements for
 applications.
 
@@ -4210,7 +4201,7 @@ link:#gkkfd[`version-identifier`]
 
 === `glassfish-application-client`
 
-Defines the GlassFish Server specific configuration for an application
+Defines the {productName} specific configuration for an application
 client. This is the root element; there can only be one
 `glassfish-application-client` element in a
 `glassfish-application-client.xml` file. See link:dd-files.html#beaqo[The
@@ -4294,7 +4285,7 @@ link:#gkkfd[`version-identifier`]
 
 === `glassfish-ejb-jar`
 
-Defines the GlassFish Server specific configuration for an EJB JAR file.
+Defines the {productName} specific configuration for an EJB JAR file.
 This is the root element; there can only be one `glassfish-ejb-jar`
 element in a `glassfish-ejb-jar.xml` file. See
 link:dd-files.html#beaqm[The glassfish-ejb-jar.xml File].
@@ -4338,7 +4329,7 @@ a|
 link:#gjjak[`compatibility`]
 
 
- |zero or one |Specifies the GlassFish Server release with which to be
+ |zero or one |Specifies the {productName} release with which to be
 backward compatible in terms of JAR visibility requirements for
 applications.
 
@@ -4346,7 +4337,7 @@ a|
 link:#gkhtw[`disable-nonportable-jndi-names`]
 
 
- |zero or one |Disables GlassFish Server specific JNDI names.
+ |zero or one |Disables {productName} specific JNDI names.
 
 a|
 link:#gkhtr[`keep-state`]
@@ -4367,7 +4358,7 @@ link:#gkkfd[`version-identifier`]
 
 === `glassfish-web-app`
 
-Defines GlassFish Server specific configuration for a web module. This
+Defines {productName} specific configuration for a web module. This
 is the root element; there can only be one `glassfish-web-app` element
 in a `glassfish-web.xml` file. See link:dd-files.html#beaql[The
 glassfish-web.xml File].
@@ -4627,9 +4618,9 @@ instead.
 Specifies a fully qualified class name of a custom valve, where n is a
 positive integer that allows specification of more than one. The valve
 class must implement the org.apache.catalina.Valve interface from Tomcat
-or previous GlassFish Server releases, or the
+or previous {productName} releases, or the
 org.glassfish.web.valve.GlassFishValve interface from the current
-GlassFish Server release. For example:
+{productName} release. For example:
 
 [source,xml]
 ----
@@ -4703,7 +4694,7 @@ encoded using the response's charset instead of the default (UTF-8).
 
 === `group-map`
 
-Maps an EIS group to a group defined in the GlassFish Server domain.
+Maps an EIS group to a group defined in the {productName} domain.
 
 [[GSDPG925]][[sthref108]]
 
@@ -4737,7 +4728,7 @@ Table C-68 `group-map` Attributes
 |Attribute |Default |Description
 |`eis-group` |none |Specifies an EIS group.
 
-|`mapped-group` |none |Specifies a group defined in the GlassFish Server
+|`mapped-group` |none |Specifies a group defined in the {productName}
 domain.
 |===
 
@@ -5245,10 +5236,10 @@ is mandatory if and only if `connection-``validation-``method` is set to
 (optional) Specifies the custom validation implementation class name.
 This parameter is mandatory if `connection-validation-method` is set to
 `custom-validation`. The classname provided must be accessible to the
-GlassFish Server. The specified class must implement the
+{productName}. The specified class must implement the
 org.glassfish.api.jdbc.ConnectionValidation interface.
 
-GlassFish Server provides the following custom validation class
+{productName} provides the following custom validation class
 templates for MSSQL, DB2, and Sybase databases. All of them implement
 the org.glassfish.api.jdbc.ConnectionValidation interface.
 
@@ -5284,7 +5275,7 @@ caller.
 (optional) Specifies the time interval within which a connection is
 validated at most once. Minimizes the number of validation calls.
 
-A value of zero implies that GlassFish Server does not attempt to
+A value of zero implies that {productName} does not attempt to
 minimize the number of validation requests by a connection. That is, a
 value of zero disables this attribute. As a result, the same connection
 is validated every time the application acquires the connection.
@@ -5422,10 +5413,10 @@ applications.
 
 
 [[glassfish-server-properties]]
-==== GlassFish Server Properties
+==== {productName} Properties
 
 The following table describes properties for the `jdbc-connection-pool`
-element that are specific to GlassFish Server.
+element that are specific to {productName}.
 
 [[GSDPG938]][[sthref124]][[sthref125]]
 
@@ -5471,7 +5462,7 @@ is set to `HIGH` and the `sql-trace-listeners` attribute is set.
 
 Most JDBC drivers allow use of standard property lists to specify the
 user, password, and other resource configuration information. Although
-properties are optional with respect to the GlassFish Server, some
+properties are optional with respect to the {productName}, some
 properties might be necessary for most databases. For details, see the
 JDBC 4.0 Standard Extension API.
 
@@ -5663,7 +5654,7 @@ information is alternatively specified within the
 link:#beaqs[`activation-config`] subelement of the
 link:#beaus[`mdb-resource-adapter`] element. For more information about
 JMS resources, see "link:../application-development-guide/jms.html#GSDVG00020[Using the Java Message Service]" in
-GlassFish Server Open Source Edition Application Development Guide.
+{productName} Application Development Guide.
 
 [[fvyyy]][[GSDPG00523]][[superelements-92]]
 
@@ -5722,8 +5713,7 @@ the JAR from the path in the JAR:
 ----
 
 For information about the allowed contents of a custom JNLP file, see
-"link:../application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in {productName} Application Development Guide.
 
 [[gkhuj]][[GSDPG00525]][[superelements-93]]
 
@@ -5815,7 +5805,7 @@ documentation for more information:
 
 `http://antinstaller.sourceforge.net/manual/manual/`
 
-|`compilerSourceVM` |Depends on GlassFish Server's Java runtime a|
+|`compilerSourceVM` |Depends on {productName}'s Java runtime a|
 Specifies the JDK release with which source compatibility of the
 generated servlets is provided. Same as the `-source` release option of
 `javac`.
@@ -5823,7 +5813,7 @@ generated servlets is provided. Same as the `-source` release option of
 For more information, see
 `http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/javac.html#options`.
 
-|`compilerTargetVM` |Depends on GlassFish Server's Java runtime a|
+|`compilerTargetVM` |Depends on {productName}'s Java runtime a|
 Specifies the Virtual Machine for the Java platform (JVM software)
 version for which the servlet class files are generated. Same as the
 `-target` release option of `javac`.
@@ -5960,7 +5950,7 @@ preserved or restored, none of these will be available when the
 redeployment is complete. However, the redeployment continues and a
 warning is logged.
 
-To preserve active state data, GlassFish Server serializes the data and
+To preserve active state data, {productName} serializes the data and
 saves it in memory. To restore the data, the class loader of the newly
 redeployed application deserializes the data that was previously saved.
 
@@ -6228,7 +6218,7 @@ Table C-85 `locale-charset-map` Attributes
 |`locale` |none |Specifies the locale name.
 
 |`agent` |none |(optional) Specifies the type of client that interacts
-with the GlassFish Server. For a given locale, different agents can have
+with the {productName}. For a given locale, different agents can have
 different preferred character encodings. The value of this attribute
 must exactly match the value of the `user-agent` HTTP request header
 sent by the client. See link:#fvzbb[Table C-86] for more information.
@@ -6543,7 +6533,7 @@ enabled at runtime.
 
 You can set properties for the `mail-resource` element and then get
 these properties in a Jakarta Mail `Session` object later. Every property
-name must start with a `mail-` prefix. The GlassFish Server changes the
+name must start with a `mail-` prefix. The {productName} changes the
 dash (`-`) character to a period (`.`) in the name of the property, then
 saves the property to the `MailConfiguration` and Jakarta Mail `Session`
 objects. If the name of the property doesn't start with `mail-`, the
@@ -6656,9 +6646,9 @@ session state is preserved between application restarts, if preserving
 the state is possible. A relative path is relative to the temporary
 directory for this web module, one of the following:
 
-domain-dir`/generated/jsp/`module-name
+domain-dir``/generated/jsp/``module-name
 
-domain-dir`/generated/jsp/`app-name`/`module-name
+domain-dir``/generated/jsp/``app-name`/``module-name
 
 By default, this property's value is set to an empty string, which
 disables this property and does not preserve the session state.
@@ -7614,7 +7604,7 @@ undefined.
 
 When a servlet or enterprise bean calls a remote interface method in
 another bean that is colocated within the same process, by default
-GlassFish Server makes copies of all the call parameters in order to
+{productName} makes copies of all the call parameters in order to
 preserve the pass-by-value semantics. This increases the call overhead
 and decreases performance.
 
@@ -7897,7 +7887,7 @@ link:#beavf[`name`]
 
 === `principal-map`
 
-Maps an EIS principal to a principal defined in the GlassFish Server
+Maps an EIS principal to a principal defined in the {productName}
 domain.
 
 [[GSDPG982]][[sthref174]]
@@ -7934,7 +7924,7 @@ Table C-111 `principal-map` Attributes
 |`eis-principal` |none |Specifies an EIS principal.
 
 |`mapped-principal` |none |Specifies a principal defined in the
-GlassFish Server domain.
+{productName} domain.
 |===
 
 
@@ -7990,8 +7980,8 @@ Specifies the name and value of a property. A property adds
 configuration information to its parent element that is one or both of
 the following:
 
-* Optional with respect to GlassFish Server
-* Needed by a system or object that GlassFish Server doesn't have
+* Optional with respect to {productName}
+* Needed by a system or object that {productName} doesn't have
 knowledge of, such as an LDAP server or a Java class
 
 [[fvzeb]][[GSDPG00636]][[superelements-146]]
@@ -8080,8 +8070,8 @@ Specifies the name and value of a property. A property adds
 configuration information to its parent element that is one or both of
 the following:
 
-* Optional with respect to GlassFish Server
-* Needed by a system or object that GlassFish Server doesn't have
+* Optional with respect to {productName}
+* Needed by a system or object that {productName} doesn't have
 knowledge of, such as an LDAP server or a Java class
 
 [[fvzcl]][[GSDPG00640]][[superelements-147]]
@@ -8358,8 +8348,7 @@ Specifies the name of the realm used to process all authentication
 requests associated with this application. If this element is not
 specified or does not match the name of a configured realm, the default
 realm is used. For more information about realms, see
-"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in GlassFish Server Open Source
-Edition Application Development Guide.
+"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvzaa]][[GSDPG00658]][[superelements-155]]
 
@@ -8907,7 +8896,7 @@ resource.
 [NOTE]
 ====
 Connections acquired from JMS connection factories are not shareable in
-the current release of GlassFish Server. The `res-sharing-scope` element
+the current release of {productName}. The `res-sharing-scope` element
 in the `ejb-jar.xml` file `resource-ref` element is ignored for JMS
 connection factories.
 
@@ -8993,7 +8982,7 @@ glassfish-resources.xml File].
 You must specify a Java Naming and Directory Interface (JNDI) name for
 each resource. To avoid collisions with names of other enterprise
 resources in JNDI, and to avoid portability problems, all names in a
-GlassFish Server application should begin with the string `java:app/`.
+{productName} application should begin with the string `java:app/`.
 ====
 
 
@@ -9248,8 +9237,7 @@ element is empty, the database schema file is automatically generated at
 deployment time. Otherwise, the `schema` element names a `.dbschema`
 file with a pathname relative to the directory containing the
 `sun-cmp-mappings.xml` file, but without the `.dbschema` extension. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema Capture]" in GlassFish
-Server Open Source Edition Application Development Guide.
+"link:../application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema Capture]" in {productName} Application Development Guide.
 
 [[fvzfa]][[GSDPG00703]][[superelements-176]]
 
@@ -9325,9 +9313,9 @@ Table C-131 `schema-generator-properties` Properties
 |===
 |Property |Default |Description
 |`use-unique-table-names` |`false` |Specifies that generated table names
-are unique within each GlassFish Server domain. This property can be
+are unique within each {productName} domain. This property can be
 overridden during deployment. See "link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options
-for CMP]" in GlassFish Server Open Source Edition Application
+for CMP]" in {productName} Application
 Development Guide.
 
 |bean-name`.`field-name`.`attribute |none |Defines a column attribute.
@@ -9482,12 +9470,12 @@ link:#beark[`cert-db`]
 
 Maps the principal received during servlet or EJB authentication to the
 credentials accepted by the EIS. This mapping is optional. It is
-possible to map multiple GlassFish Server principals to the same
+possible to map multiple {productName} principals to the same
 back-end principal.
 
 This is different from a link:#giyht[`work-security-map`], which maps a
 principal associated with an incoming work instance to a principal in
-the GlassFish Server's security domain.
+the {productName}'s security domain.
 
 [[GSDPG1014]][[sthref210]]
 
@@ -9557,8 +9545,7 @@ Table C-136 `security-map` Attributes
 === `security-role-mapping`
 
 Maps roles to users or groups in the currently active realm. See
-"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in GlassFish Server Open Source
-Edition Application Development Guide.
+"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 The role mapping element maps a role, as specified in the EJB JAR
 `role-name` entries, to a environment-specific user or group. If it maps
@@ -9990,7 +9977,7 @@ are `memory`, `file`, and `replicated`.
 
 If you have installed and configured Coherence*Web, the `coherence-web`
 persistence type is also available. For more information, see Using
-Coherence*Web with GlassFish Server
+Coherence*Web with {productName}
 (`http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html`).
 
 |===
@@ -10390,7 +10377,7 @@ link:#beasy[`entity-mapping`]
 
 === `sun-cmp-mappings`
 
-Defines the GlassFish Server specific CMP mapping configuration for an
+Defines the {productName} specific CMP mapping configuration for an
 EJB JAR file. This is the root element; there can only be one
 `sun-cmp-mappings` element in a `sun-cmp-mappings.xml` file. See
 link:dd-files.html#beaqn[The sun-cmp-mappings.xml File].
@@ -10430,7 +10417,7 @@ link:#beaxy[`sun-cmp-mapping`]
 
 Specifies the name of a database table. The table must be present in the
 database schema file. See "link:../application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema
-Capture]" in GlassFish Server Open Source Edition Application
+Capture]" in {productName} Application
 Development Guide.
 
 [[fvzis]][[GSDPG00756]][[superelements-199]]
@@ -10451,9 +10438,9 @@ none - contains data
 === `target-server`
 
 Specifies the IIOP listener for the target server. Also specifies IIOP
-endpoints used for load balancing. If the GlassFish Server instance on
+endpoints used for load balancing. If the {productName} instance on
 which the application client is deployed participates in a cluster,
-GlassFish Server finds all currently active IIOP endpoints in the
+{productName} finds all currently active IIOP endpoints in the
 cluster automatically. However, a client should have at least two
 endpoints specified for bootstrapping purposes, in case one of the
 endpoints has failed.
@@ -10848,9 +10835,9 @@ Table C-158 `valve` Attributes
 
 |`class-name` |none |Specifies the fully qualified class name of the
 valve. The valve class must implement the org.apache.catalina.Valve
-interface from Tomcat or previous GlassFish Server releases, or the
+interface from Tomcat or previous {productName} releases, or the
 org.glassfish.web.valve.GlassFishValve interface from the current
-GlassFish Server release.
+{productName} release.
 |===
 
 
@@ -11228,9 +11215,9 @@ link:#beavy[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
 === `work-security-map`
 
 Defines a work security map, which maps a principal associated with an
-incoming work instance to a principal in the GlassFish Server's security
+incoming work instance to a principal in the {productName}'s security
 domain. It is possible to map multiple EIS group or user principals to
-the same GlassFish Server principal.
+the same {productName} principal.
 
 This is different from a link:#giyhy[`security-map`], which maps the
 principal received during servlet or EJB authentication to the
@@ -11270,14 +11257,13 @@ link:#giyif[`principal-map`]
 
 
  |zero or more |Maps an EIS principal to a principal defined in the
-GlassFish Server domain.
+{productName} domain.
 
 a|
 link:#giygy[`group-map`]
 
 
- |zero or more |Maps an EIS group to a group defined in the GlassFish
-Server domain.
+ |zero or more |Maps an EIS group to a group defined in the {productName} domain.
 |===
 
 

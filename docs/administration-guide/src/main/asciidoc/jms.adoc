@@ -19,22 +19,21 @@ Jakarta EE applications and components, including message-driven beans
 distributed communication that is loosely coupled, reliable, and
 asynchronous.
 
-GlassFish Server supports JMS messaging by communicating with a JMS
+{productName} supports JMS messaging by communicating with a JMS
 provider through a Jakarta EE Connector resource adapter. By default,
-GlassFish Server provides JMS messaging through its built-in jmsra
+{productName} provides JMS messaging through its built-in jmsra
 resource adapter communicating with Open Message Queue, which is
-included with GlassFish Server. This combination, known as the JMS
-Service, is tightly integrated with GlassFish Server, providing a rich
+included with {productName}. This combination, known as the JMS
+Service, is tightly integrated with {productName}, providing a rich
 set of `asadmin` subcommands and Administration Console pages to
 simplify JMS messaging administration tasks.
 
-GlassFish Server also supports the Generic Resource Adapter for JMS
+{productName} also supports the Generic Resource Adapter for JMS
 (GenericJMSRA) for use as a resource adapter to connect to other JMS
 providers. The last section in this chapter, link:#gbtvg[Using the
 Generic Resource Adapter for JMS to Integrate Supported External JMS
 Providers], describes the GenericJMSRA and provides instructions for
-using it to make other supported JMS providers available to GlassFish
-Server.
+using it to make other supported JMS providers available to {productName}.
 
 The following topics are addressed here:
 
@@ -103,7 +102,7 @@ JMS Physical Destinations::
 
 ==== JMS Service High Availability
 
-Just as GlassFish Server supports clusters of instances to provide high
+Just as {productName} supports clusters of instances to provide high
 availability, Message Queue supports clusters of brokers to provide
 service availability or service and data availability, depending on the
 type of broker cluster, as described in "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
@@ -117,8 +116,7 @@ can use Message Queue broker clusters as Remote type JMS hosts.
 
 For information about how the JMS service supports GlassFish clusters
 and Message Queue broker clusters, see "link:../ha-administration-guide/jms.html#GSHAG00012[Configuring
-Java Message Service High Availability]" in GlassFish Server Open Source
-Edition High Availability Administration Guide.
+Java Message Service High Availability]" in {productName} High Availability Administration Guide.
 
 [[beaof]][[GSADG00596]][[updating-the-jms-service-configuration]]
 
@@ -143,7 +141,7 @@ The attributes you can set are:
   `EMBEDDED`, `LOCAL` and `REMOTE`. See link:#giplw[About JMS Host
   Types] for more information.
 `init-timeout-in-seconds`::
-  The number of seconds GlassFish Server waits for the JMS service to
+  The number of seconds {productName} waits for the JMS service to
   start before aborting the startup.
 `start-args`::
   A list of arguments the JMS service passes to Embedded and Local type
@@ -194,7 +192,7 @@ The attributes you can set are:
 
 [NOTE]
 ====
-After making changes to the JMS service configuration, GlassFish Server
+After making changes to the JMS service configuration, {productName}
 instances that use the configuration must be restarted in order for the
 changes to be propagated.
 ====
@@ -234,7 +232,7 @@ the value specified in the JMS host is used.
 
 A JMS host represents a Message Queue broker. JMS contains a JMS hosts
 list (the `AddressList` property) that contains all the JMS hosts that
-are used by GlassFish Server. The JMS hosts list is populated with the
+are used by {productName}. The JMS hosts list is populated with the
 hosts and ports of the specified Message Queue brokers and is updated
 whenever a JMS host configuration changes. When you create JMS resources
 or deploy message driven beans, the resources or beans inherit the JMS
@@ -251,8 +249,7 @@ The following topics are addressed here:
 
 For information about administering JMS hosts that are servicing
 GlassFish clusters, see "link:../ha-administration-guide/jms.html#GSHAG00312[Configuring GlassFish Clusters
-to Use Message Queue Broker Clusters]" in GlassFish Server Open Source
-Edition High Availability Administration Guide.
+to Use Message Queue Broker Clusters]" in {productName} High Availability Administration Guide.
 
 [[giplw]][[GSADG00775]][[about-jms-host-types]]
 
@@ -263,7 +260,7 @@ integrating them in three ways:
 
 Embedded Type::
   When the JMS service configuration's `type` attribute is `EMBEDDED`,
-  the MQ broker is co-located in the same JVM as the GlassFish server
+  the MQ broker is co-located in the same JVM as the {productName}
   instance it services. The JMS service starts it in-process and manages
   its configuration and lifecycle. +
   For this type, the JMS service uses lazy initialization to start the
@@ -279,7 +276,7 @@ Local Type::
   When the JMS service configuration's `type` attribute is `LOCAL`, the
   JMS service starts the MQ broker specified in the configuration as the
   default JMS host in a separate process on the same host as the
-  GlassFish server instance. The JMS service manages its configuration
+  {productName} instance. The JMS service manages its configuration
   and lifecycle. +
   For this type, the JMS service starts the broker immediately when the
   GlassFish instance is started. +
@@ -329,10 +326,10 @@ as-install/nodes/node-name/instance-name/imq
 
 For example, the broker log file for an Embedded or Local JMS host
 servicing the DAS is available at
-domain-root-dir`/`domain-dir`/imq/instances/imqbroker/log/log.txt`, and
+domain-root-dir``/``domain-dir``/imq/instances/imqbroker/log/log.txt``, and
 the broker log file for an Embedded or Local JMS host servicing any
 other GlassFish instance is available at
-as-install`/nodes/`node-name`/`instance-name`/imq/instances/`mq-instance-name`/log/log.txt`.
+as-install``/nodes/``node-name``/``instance-name`/imq/instances/``mq-instance-name``/log/log.txt``.
 
 
 [NOTE]
@@ -375,7 +372,7 @@ asadmin> create-jms-host --mqhost hostName --mqport portNumber
 `--mqpassword`::
   The password of the administrative user of the Message Queue broker.
 `--target`::
-  The GlassFish Server object for which the JMS host is being created.
+  The {productName} object for which the JMS host is being created.
   For details, see link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
 `--property`::
   A list of one or more Message Queue broker properties to configure the
@@ -557,7 +554,7 @@ The JMS API uses two kinds of administered objects. Connection factory
 objects allow an application to create other JMS objects
 programmatically. Destination objects serve as repositories for
 messages. How these objects are created is specific to each
-implementation of JMS. In GlassFish Server, JMS is implemented by
+implementation of JMS. In {productName}, JMS is implemented by
 performing the following tasks:
 
 * Creating a connection factory
@@ -573,14 +570,14 @@ The order in which the resources are created does not matter.
 
 The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
-default resources. GlassFish Server makes these names available through
+default resources. {productName} makes these names available through
 the use of logical JNDI names, which map Jakarta EE standard JNDI names to
-specific GlassFish Server resources. For JMS connection factory
+specific {productName} resources. For JMS connection factory
 resources, the Jakarta EE standard name
 `java:comp/DefaultJMSConnectionFactory` is mapped to the
 `jms/__defaultConnectionFactory` resource.
 
-GlassFish Server provides the following types of connection factory
+{productName} provides the following types of connection factory
 objects:
 
 * `QueueConnectionFactory` objects, used for point-to-point
@@ -590,7 +587,7 @@ communication
 * `ConnectionFactory` objects, which can be used for both point-to-point
 and publish-subscribe communications (recommended for new applications)
 
-GlassFish Server provides the following types of destination objects:
+{productName} provides the following types of destination objects:
 
 * `Queue` objects, used for point-to-point communication
 * `Topic` objects, used for publish-subscribe communication
@@ -604,8 +601,7 @@ The following topics are addressed here:
 The subcommands in this section can be used to administer both the
 connection factory resources and the destination resources. For
 information on JMS service support of connection pooling and failover,
-see "link:../ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in GlassFish Server Open
-Source Edition High Availability Administration Guide. For instructions
+see "link:../ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
 on administering physical destinations, see link:#ablkj[Administering
 JMS Physical Destinations].
 
@@ -613,10 +609,10 @@ JMS Physical Destinations].
 
 ==== To Create a Connection Factory or Destination Resource
 
-For each JMS connection factory that you create, GlassFish Server
+For each JMS connection factory that you create, {productName}
 creates a connector connection pool and connector resource. For each JMS
-destination that you create, GlassFish Server creates a connector admin
-object resource. If you delete a JMS resource, GlassFish Server
+destination that you create, {productName} creates a connector admin
+object resource. If you delete a JMS resource, {productName}
 automatically deletes the connector resources.
 
 Use the `create-jms-resource` command in remote `asadmin` mode to create
@@ -798,7 +794,7 @@ resource, see link:#giotd[To Create a Connection Factory or Destination
 Resource].
 
 If a message-driven bean is deployed and the physical destination it
-listens to does not exist, GlassFish Server automatically creates the
+listens to does not exist, {productName} automatically creates the
 physical destination and sets the value of the `maxNumActiveConsumers`
 property to `-1`. However, it is good practice to create the physical
 destination beforehand. The first time that an application accesses a
@@ -974,7 +970,7 @@ typing `asadmin help delete-jmsdest` at the command line.
 === Special Situations When Using the JMS Service
 
 As mentioned earlier, Message Queue, through the built-in `jmsra`
-resource adapter, is tightly integrated with GlassFish Server to provide
+resource adapter, is tightly integrated with {productName} to provide
 JMS messaging managed through a rich set of `asadmin` subcommands and
 Administration Console pages to simplify JMS messaging administration
 tasks. In most instances, this tight integration is transparent and
@@ -1026,11 +1022,11 @@ If you encounter problems, consider the following:
 
 * Use the link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] subcommand to confirm that the
 Message Queue broker is running.
-* View the GlassFish Server log file. For `server`, the Domain
+* View the {productName} log file. For `server`, the Domain
 Administrations Server (DAS), the log is available at
-domain-dir`/logs/server.log`; for other GlassFish instances, the log is
+domain-dir``/logs/server.log``; for other GlassFish instances, the log is
 available at
-as-install`/nodes/`node-name`/`instance-name`/logs/server.log`.
+as-install``/nodes/``node-name``/``instance-name``/logs/server.log``.
 +
 If the log file indicates that a Message Queue broker acting as a Remote
 JMS host did not respond to a message, stop the broker and then restart
@@ -1039,11 +1035,11 @@ it.
 Administration Server (DAS), the log is available at
 domain-dir`/imq/instances/imqbroker/log/log.txt`; for brokers associated
 with other GlassFish instances, the log is available at
-as-install`/nodes/`node-name`/`instance-name`/imq/instances/`mq-instance-name`/log/log.txt`.
+as-install``/nodes/``node-name``/``instance-name`/imq/instances/``mq-instance-name``/log/log.txt``.
 * For Remote type JMS hosts, be sure to start Message Queue brokers
-first, then GlassFish Server instances.
+first, then {productName} instances.
 * If all Message Queue brokers are down, it can take up to 30 minutes
-for GlassFish Server to go down or up when you are using the default
+for {productName} to go down or up when you are using the default
 values in JMS. You can change the default values for this timeout. For
 example:
 +
@@ -1056,13 +1052,13 @@ asadmin set domain1.jms-service.reconnect-interval-in-seconds=5
 
 === Using the Generic Resource Adapter for JMS to Integrate Supported External JMS Providers
 
-GlassFish Server supports the integration and use of Oracle WebLogic JMS
+{productName} supports the integration and use of Oracle WebLogic JMS
 and IBM WebSphere MQ JMS providers through the use of the Generic
 Resource Adapter for JMS (GenericJMSRA). This Jakarta EE connector 1.5
 resource adapter can wrap the JMS client library of Oracle WebLogic JMS
 and IBM WebSphere MQ and make it available for use by GlassFish. The
 adapter is a `.rar` archive that can be deployed and configured using
-GlassFish Server administration tools.
+{productName} administration tools.
 
 The following topics are addressed here:
 
@@ -1104,16 +1100,15 @@ set.
 ===== To Deploy and Configure GenericJMSRA
 
 Before deploying GenericJMSRA, JMS client libraries must be made
-available to GlassFish Server. For some JMS providers, client libraries
+available to {productName}. For some JMS providers, client libraries
 might also include native libraries. In such cases, these native
-libraries must be made available to any GlassFish Server JVMs.
+libraries must be made available to any {productName} JVMs.
 
 1. Download the `genericra.rar` archive.
 2. Deploy GenericJMSRA the same way you would deploy a connector
 module.
 +
-See "link:../application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+See "link:../application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in {productName} Application Deployment Guide.
 3. Configure the resource adapter's properties.
 +
 See link:#gbtvu[GenericJMSRA Configuration Properties].
@@ -1284,7 +1279,7 @@ of the JMS client. Required only if `ProviderIntegrationMode` is
 
 ===== Activation Spec Properties
 
-Properties in this section are specified in the GlassFish Server
+Properties in this section are specified in the {productName}
 `glassfish-ejb-jar.xml` deployment descriptor of an MDB as
 `activation-config-properties`. All the resource adapter properties can
 be overridden in an Activation Spec. Additional properties available
@@ -1376,20 +1371,19 @@ attempted in case exception listener catches an error on connection.
 ==== Using GenericJMSRA with WebLogic JMS
 
 You can configure GenericJMSRA to enable applications running in
-GlassFish Server to send messages to, and receive messages from, Oracle
+{productName} to send messages to, and receive messages from, Oracle
 WebLogic JMS.
 
 GenericJMSRA should be used in conjunction with the WebLogic Server Thin
 T3 Client. Due to the nature of this client, messages exchanged between
-GlassFish Server and WebLogic Server cannot be sent or received in XA
+{productName} and WebLogic Server cannot be sent or received in XA
 transactions. There is also only limited support for asynchronous
 receipt of messages in an MDB, as described in detail in
 link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
 
 The following topics are addressed here:
 
-* link:#gkmeb[Deploy the WebLogic Thin T3 Client JAR in GlassFish
-Server]
+* link:#gkmeb[Deploy the WebLogic Thin T3 Client JAR in {productName}]
 * link:#gkmek[Configure WebLogic JMS Resources for Integration]
 * link:#gkmee[Create a Resource Adapter Configuration for GenericJMSRA
 to Work With WebLogic JMS]
@@ -1402,38 +1396,36 @@ WebLogic JMS]
 
 [[gkmeb]][[GSADG00678]][[deploy-the-weblogic-thin-t3-client-jar-in-glassfish-server]]
 
-===== Deploy the WebLogic Thin T3 Client JAR in GlassFish Server
+===== Deploy the WebLogic Thin T3 Client JAR in {productName}
 
 WebLogic Server provides several different clients for use by standalone
 applications that run outside of WebLogic Server. These client are
 summarized in
 "http://www.oracle.com/pls/as1111/lookup?id=SACLT117[Overview of
 Stand-alone Clients"] in Programming Stand-alone Clients for Oracle
-WebLogic Server. When connecting from GlassFish Server to WebLogic JMS
+WebLogic Server. When connecting from {productName} to WebLogic JMS
 resources you must use the WebLogic Thin T3 client,
 `wlthint3client.jar`.
 
 There are a couple of methods to deploy the WebLogic Thin T3 client in
-GlassFish Server and make it available to GenericJMSRA:
+{productName} and make it available to GenericJMSRA:
 
 * To make the Thin T3 client available to all applications, copy the
-`wlthint3client.jar` to the as-install`/lib` directory under your
-GlassFish Server installation. The Thin T3 client can be found in a
+`wlthint3client.jar` to the as-install``/lib`` directory under your
+{productName} installation. The Thin T3 client can be found in a
 WebLogic Server installation in a directory similar to
-MW_HOME`/server/lib`.
+MW_HOME``/server/lib``.
 * It is also possible to deploy the Thin T3 client in a less global
 manner, so that it is specific to an individual application. For
 information on how to do this, see
-"link:../application-development-guide/class-loaders.html#GSDVG00099[Application-Specific Class Loading]" in GlassFish
-Server Open Source Edition Application Development Guide.
+"link:../application-development-guide/class-loaders.html#GSDVG00099[Application-Specific Class Loading]" in {productName} Application Development Guide.
 
 [[gkmek]][[GSADG00679]][[configure-weblogic-jms-resources-for-integration]]
 
 ===== Configure WebLogic JMS Resources for Integration
 
 If you need to configure the necessary WebLogic JMS resources on the
-WebLogic Server from which you want to access messages using GlassFish
-Server, then follow the instructions in the WebLogic Server
+WebLogic Server from which you want to access messages using {productName}, then follow the instructions in the WebLogic Server
 documentation for configuring the necessary resources, such as
 destinations, and connection factories.
 
@@ -1458,7 +1450,7 @@ Console Online Help.
 ===== Create a Resource Adapter Configuration for GenericJMSRA to Work With WebLogic JMS
 
 When you deploy GenericJMSRA, you also need to create a resource adapter
-configuration in GlassFish Server. You can do this using either the
+configuration in {productName}. You can do this using either the
 Administration Console or the `asadmin` command. If you use
 theAdministration Console then you need deploy the GenericJMSRA resource
 archive first. Here's an example using `asadmin`:
@@ -1545,7 +1537,7 @@ Configuration for GenericJMSRA to Work With WebLogic JMS].
 ===== Configuring an MDB to Receive Messages from WebLogic JMS
 
 In this example, all configuration information is defined in two
-deployment descriptor files: `ejb-jar.xml` and the GlassFish Server
+deployment descriptor files: `ejb-jar.xml` and the {productName}
 `glassfish-ejb-jar.xml` file. To configure a MDB to receive messages
 from WebLogic JMS, you would configure these deployment descriptor files
 as follows:
@@ -1680,7 +1672,7 @@ Connector Resource].
 +
 The following code looks up a connection factory with the JNDI name
 `jms/QCFactory` and a queue with the name `jms/outboundQueue` from the
-GlassFish Server JNDI store:
+{productName} JNDI store:
 +
 [source,java]
 ----
@@ -1689,11 +1681,11 @@ GlassFish Server JNDI store:
           jndiContext.lookup("java:comp/env/jms/MyQCFactory");
      Queue queue = (Queue) jndiContext.lookup("java:comp/env/jms/outboundQueue");
 ----
-Note that the resources used are GlassFish Server resources, not
+Note that the resources used are {productName} resources, not
 WebLogic JMS resources. For every connection factory or destination that
 you want to use in the WebLogic JMS JNDI store, you need to create a
-corresponding connection factory or destination in the GlassFish Server
-JNDI store and configure the GlassFish Server object to point to the
+corresponding connection factory or destination in the {productName}
+JNDI store and configure the {productName} object to point to the
 corresponding WebLogic JMS object.
 2. Declaring the connection factory and destination
 +
@@ -1721,8 +1713,7 @@ with `<resource-env-ref>` elements, as follows:
 entering the following `asadmin` commands, both all in one line:
 +
 In order to configure a JMS Connection Factory using GenericJMSRA, a
-Connector connection pool and resource need to be created in GlassFish
-Server using names that map to the corresponding connection factory in
+Connector connection pool and resource need to be created in {productName} using names that map to the corresponding connection factory in
 the WebLogic JNDI store.
 +
 [source]
@@ -1737,7 +1728,7 @@ asadmin create-connector-resource --host localhost --port 4848
     --poolname qcpool --target server jms/QCFactory
 ----
 These `asadmin` commands together creates a connection factory in
-GlassFish Server and its corresponding connection pool.
+{productName} and its corresponding connection pool.
 * The connection pool has the JNDI name `jms/WLoutboundQueueFactory` and
 obtains connections from a connection pool named `qcpool`.
 * The connection pool `qcpool` uses the resource adapter `genericra` and
@@ -1773,7 +1764,7 @@ asadmin create-admin-object --host localhost --port 4848 --target server
     --restype jakarta.jms.Queue --property DestinationJndiName=jms/WLOutboundQueue
     --raname genericra jms/outboundQueue
 ----
-This `asadmin` command creates a destination in GlassFish Server.
+This `asadmin` command creates a destination in {productName}.
 * The destination has the JNDI name `jms/outboundQueue`, uses the
 resource adapter `genericra`, and is of type `jakarta.jms.Queue`.
 * The destination is configured with the properties specified using the
@@ -1986,7 +1977,7 @@ level of logging.
 
 Connection Factory Properties
 
-`ManagedConnectionFactory` objects are created in the GlassFish Server
+`ManagedConnectionFactory` objects are created in the {productName}
 JNDI store using the Administration Console or the
 `asadmin connector-connection-pool` command. All the properties that can
 be set on a resource adapter configuration can be overridden by setting
@@ -2000,20 +1991,20 @@ them on a destination object. The properties specific to
 specification.
 
 |`ConnectionFactoryJndiName` |A valid JNDI Name |None |JNDI name of
-connection factory in the GlassFish Server JNDI store. This connection
+connection factory in the {productName} JNDI store. This connection
 factory should be configured to refer to the physical connection factory
 in the WebLogic JNDI store.
 
 |`ConnectionValidationEnabled` |`true` or `false` |FALSE |If set to
 `true`, the resource adapter will use an exception listener to catch any
 connection exception and will send a `CONNECTION_ERROR_OCCURED` event to
-GlassFish Server.
+{productName}.
 |===
 
 
 Destination Properties
 
-Destination (queue or topic) objects are created in the GlassFish Server
+Destination (queue or topic) objects are created in the {productName}
 JNDI store using the Administration Console or the
 `asadmin connector-admin-object` command. All the properties that can be
 set on a resource adapter configuration can be overridden by setting
@@ -2024,7 +2015,7 @@ objects are listed in the following table.
 |===
 |Property Name |Valid Value |Default Value |Description
 |`DestinationJndiName` |A valid JNDI name |None |JNDI name of the
-destination object in the GlassFish Server JNDI store. This destination
+destination object in the {productName} JNDI store. This destination
 object should be configured to refer to the corresponding physical
 destination in the WebLogic JNDI store.
 |===
@@ -2033,7 +2024,7 @@ destination in the WebLogic JNDI store.
 ActivationSpec Properties
 
 An ActivationSpec is a set of properties that configures a MDB. It is
-defined either in the MDB's GlassFish Server deployment descriptor
+defined either in the MDB's {productName} deployment descriptor
 `glassfish-ejb-jar.xml` using `activation-config-property` elements or
 in the MDB itself using annotation. All the resource adapter properties
 listed in the table above can be overridden in an ActivationSpec.
@@ -2065,12 +2056,12 @@ selector.
 |`ClientID` |A valid client ID |None |JMS ClientID.
 
 |`ConnectionFactoryJndiName` |A valid JNDI Name |None |JNDI name of
-connection factory in the GlassFish Server JNDI store. This connection
+connection factory in the {productName} JNDI store. This connection
 factory should be configured to refer to the physical connection factory
 in the WebLogic JNDI store.
 
 |`DestinationJndiName` |A valid JNDI Name |None |JNDI name of
-destination in the GlassFish Server JNDI store. This destination should
+destination in the {productName} JNDI store. This destination should
 be configured to refer to the physical destination in the WebLogic JNDI
 store.
 
@@ -2091,12 +2082,11 @@ attempts.
 ==== Using GenericJMSRA with IBM WebSphere MQ
 
 You can configure GenericJMSRA to enable applications running in
-GlassFish Server to send messages to, and receive messages from, IBM
-WebSphere MQ. GlassFish Serveronly supports using GenericJMSRA with
+{productName} to send messages to, and receive messages from, IBM
+WebSphere MQ. {productName}only supports using GenericJMSRA with
 WebSphere MQ version 6.0 and WebSphere MQ version 7.0
 
-These instructions assume that the WebSphere MQ broker and GlassFish
-Server are deployed and running on the same physical host/machine. If
+These instructions assume that the WebSphere MQ broker and {productName} are deployed and running on the same physical host/machine. If
 you have the WebSphere MQ broker running on a different machine and need
 to access it remotely, refer to the WebSphere MQ documentation for
 configuration details. The resource adapter configuration and other
@@ -2110,7 +2100,7 @@ The following topics are addressed here:
 to Work With WebSphere MQ]
 * link:#gksnh[Deploy the GenericJMSRA Archive]
 * link:#gkson[Create the Connection Factories and Administered Objects
-in GlassFish Server]
+in {productName}]
 * link:#gktmn[Configuring an MDB to Receive Messages from WebSphere MQ]
 
 [[gksiw]][[GSADG00683]][[preliminary-setup-procedures-for-websphere-mq-integration]]
@@ -2118,7 +2108,7 @@ in GlassFish Server]
 ===== Preliminary Setup Procedures for WebSphere MQ Integration
 
 Before you can configure WebSphere MQ to exchange messages with
-GlassFish Server, you must complete the following tasks:
+{productName}, you must complete the following tasks:
 
 * The following permissions must be added to the `server.policy` and the
 `client.policy` file to deploy GenericJMSRA and to run the client
@@ -2144,10 +2134,10 @@ following permission:
 permission javax.security.auth.PrivateCredentialPermission
 "javax.resource.spi.security.PasswordCredential * \"*\"","read";
 ----
-* To integrate GlassFish Serverwith WebSphere MQ 6.0 or 7.0, copy the
-necessary JAR files to the as-install`/lib` directory:
+* To integrate {productName}with WebSphere MQ 6.0 or 7.0, copy the
+necessary JAR files to the as-install``/lib`` directory:
 
-** For WebSphere MQ 6.0, copy these JAR files to the as-install`/lib`
+** For WebSphere MQ 6.0, copy these JAR files to the as-install``/lib``
 directory:
 +
 [source]
@@ -2166,7 +2156,7 @@ directory:
 ----
 where `/opt/mqm` is the location of the WebSphere MQ 6.0 installation.
 
-** For WebSphere MQ 7.0, copy these JAR files to the as-install`/lib`
+** For WebSphere MQ 7.0, copy these JAR files to the as-install``/lib``
 directory:
 +
 [source]
@@ -2185,7 +2175,7 @@ directory:
 ----
 where `/opt/mqm` is the location of the WebSphere MQ 7.0 installation.
 * Set the `LD_LIBRARY_PATH` environment variable to the `java/lib`
-directory, and then restart GlassFish Server. For example, in a
+directory, and then restart {productName}. For example, in a
 UNIX—based system, with WebSphere MQ installed under `/opt/mqm`, you
 would enter:
 +
@@ -2201,7 +2191,7 @@ $ export LD_LIBRARY_PATH=/opt/mqm/java/lib
 This section provides an example of how you could configure the
 necessary administered objects, such as destinations and connection
 factories, on the WebSphere MQ instance from which you want to access
-messages using GlassFish Server. Therefore, you will need to change the
+messages using {productName}. Therefore, you will need to change the
 administered object names to suit your installation.
 
 [[GSADG1028]]
@@ -2326,7 +2316,7 @@ $ ./JMSAdmin
 ===== Create a Resource Adapter Configuration for GenericJMSRA to Work With WebSphere MQ
 
 Before deploying GenericJMSRA, you need to create a resource adapter
-configuration in GlassFish Server. You can do this using either the
+configuration in {productName}. You can do this using either the
 Administration Console or the `asadmin` command. Use the following
 `asadmin` command to create a resource adapter configuration for
 `genericra` to configure it to work with WebSphere MQ.
@@ -2459,16 +2449,15 @@ link:#gkkxz[Deploy the GenericJMSRA Resource Archive].
 
 [[gkson]][[GSADG00686]][[create-the-connection-factories-and-administered-objects-in-glassfish-server]]
 
-===== Create the Connection Factories and Administered Objects in GlassFish Server
+===== Create the Connection Factories and Administered Objects in {productName}
 
 In order to configure a JMS Connection Factory using GenericJMSRA, a
-Connector Connection Pool and resource needs to be created in GlassFish
-Server, as described in this section.
+Connector Connection Pool and resource needs to be created in {productName}, as described in this section.
 
 Using the example WebSphere MQ configuration in link:#gksli[Configure
 the WebSphere MQ Administered Objects], you will see `mypool` (pointing
 to `GenericJMSRA` and `QCF`) and `jms/MyQCF` (for `mypool`) created in
-GlassFish Server.
+{productName}.
 
 
 [NOTE]
@@ -2491,7 +2480,7 @@ Creating Connections and Destinations
 
 In order to configure a JMS Connection Factory, using GenericJMSRA, a
 Connector Connection Pool and Destination resources need to be created
-in GlassFish Server using names that map to the corresponding connection
+in {productName} using names that map to the corresponding connection
 and destination resources in WebSphere MQ. The connections and
 destination name in these steps map to the example WebSphere MQ
 configuration in link:#gksli[Configure the WebSphere MQ Administered
@@ -2538,10 +2527,10 @@ The following `asadmin` command creates a connector resource named
 3. Create the JMS destination resources as administered objects.
 +
 In the image above, `jms/MyQueue` (pointing to `GenericJMSRA` and
-`TQueue`) is created in GlassFish Server.
+`TQueue`) is created in {productName}.
 +
 The following `asadmin` command creates a `jakarta.jms.Queue` administered
-object and binds it to the GlassFish Server JNDI tree at `jms/MyQueue`
+object and binds it to the {productName} JNDI tree at `jms/MyQueue`
 and points to the `jms/TQueue` created in WebSphere MQ.
 +
 [source]
@@ -2550,7 +2539,7 @@ and points to the `jms/TQueue` created in WebSphere MQ.
             --property DestinationJndiName=TQueue jms/MyQueue
 ----
 The following `asadmin` command creates a `jakarta.jms.Topic` administered
-object and binds it to the GlassFish Server JNDI tree at `jms/MyTopic`
+object and binds it to the {productName} JNDI tree at `jms/MyTopic`
 and points to the `jms/TTopic` created in WebSphere MQ.
 +
 [source]
@@ -2570,7 +2559,7 @@ to take into account the resource adapter and the connection resources
 that have been created. A sample `sun-ejb-jar.xml` for a Message Driven
 Bean that listens to a destination called `TQueue` in WebSphere MQ, and
 publishes back reply messages to a destination resource named
-`jms/replyQueue` in GlassFish Server, as shown below.
+`jms/replyQueue` in {productName}, as shown below.
 
 [source,xml]
 ----

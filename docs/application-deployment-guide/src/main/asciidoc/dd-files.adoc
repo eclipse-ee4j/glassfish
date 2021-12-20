@@ -1,25 +1,25 @@
 type=page
 status=published
-title=GlassFish Server Deployment Descriptor Files
+title={productName} Deployment Descriptor Files
 next=dd-elements.html
 prev=asadmin-deployment-subcommands.html
 ~~~~~~
 
-= GlassFish Server Deployment Descriptor Files
+= {productName} Deployment Descriptor Files
 
 [[GSDPG00006]][[giida]]
 
 
 [[b-glassfish-server-deployment-descriptor-files]]
-== B GlassFish Server Deployment Descriptor Files
+== B {productName} Deployment Descriptor Files
 
-This appendix describes the element hierarchies in the GlassFish Server
+This appendix describes the element hierarchies in the {productName}
 deployment descriptors that are included in this release of the
-GlassFish Server Open Source Edition software.
+{productName} software.
 
 The following topics are addressed here:
 
-* link:#giiie[About the GlassFish Server Deployment Descriptors]
+* link:#giiie[About the {productName} Deployment Descriptors]
 * link:#beaqk[The glassfish-application.xml File]
 * link:#beaql[The glassfish-web.xml File]
 * link:#beaqm[The glassfish-ejb-jar.xml File]
@@ -27,22 +27,20 @@ The following topics are addressed here:
 * link:#beaqo[The glassfish-application-client.xml file]
 * link:#beaqp[The sun-acc.xml File]
 * link:#giyhh[The glassfish-resources.xml File]
-* link:#gkiot[WebLogic Server Deployment Descriptor Support in GlassFish
-Server]
+* link:#gkiot[WebLogic Server Deployment Descriptor Support in {productName}]
 
 [[giiie]][[GSDPG00076]][[about-the-glassfish-server-deployment-descriptors]]
 
-=== About the GlassFish Server Deployment Descriptors
+=== About the {productName} Deployment Descriptors
 
 Each deployment descriptor XML file has a corresponding Document Type
 Definition (DTD) file, which defines the elements, data, and attributes
 that the deployment descriptor file can contain. For example, the
 `glassfish-application_6_0-1.dtd` file defines the structure of the
-`glassfish-application.xml` file. The DTD files for the GlassFish Server
-deployment descriptors are located in the as-install`/lib/dtds`
-directory.
+`glassfish-application.xml` file. The DTD files for the {productName}
+deployment descriptors are located in the as-install``/lib/dtds`` directory.
 
-The GlassFish Server deployment descriptor files must be readable and
+The {productName} deployment descriptor files must be readable and
 writable by the file owners. In each deployment descriptor file,
 subelements must be defined in the order in which they are listed under
 each Subelements heading, unless otherwise noted. For general
@@ -53,17 +51,17 @@ information about DTD files and XML, see the XML specification at
 [NOTE]
 ====
 Do not edit the DTD files; their contents change only with new versions
-of GlassFish Server.
+of {productName}.
 ====
 
 
-The following table lists the GlassFish Server deployment descriptors
+The following table lists the {productName} deployment descriptors
 and their DTD files.
 
 [[GSDPG835]][[sthref6]][[giiht]]
 
 
-Table B-1 GlassFish Server Deployment Descriptors and DTDs
+Table B-1 {productName} Deployment Descriptors and DTDs
 
 [width="100%",cols="30%,39%,31%",options="header",]
 |===
@@ -86,8 +84,8 @@ Client Container (ACC) client (JAR file).
 
 |`sun-acc.xml` |`sun-application-client-container_1_2.dtd` |Configures
 the Application Client Container. This is more of a configuration file
-than a deployment descriptor. GlassFish Server provides a default file
-in the domain-dir`/config` directory. Specifying a different file is
+than a deployment descriptor. {productName} provides a default file
+in the domain-dir``/config`` directory. Specifying a different file is
 optional.
 
 |`glassfish-resources.xml` |`glassfish-resources_1_5.dtd` |Configures
@@ -892,8 +890,7 @@ GlassFish Application Server 3.1 Application Client 6.0//EN""
 === The sun-acc.xml File
 
 The `sun-acc.xml` file configures the Application Client Container. This
-is more of a configuration file than a deployment descriptor. GlassFish
-Server provides a default file in the domain-dir`/config` directory.
+is more of a configuration file than a deployment descriptor. {productName} provides a default file in the domain-dir``/config`` directory.
 Specifying a different file is optional. The element hierarchy is as
 follows:
 
@@ -976,27 +973,27 @@ resources
 
 [[gkiot]][[GSDPG00084]][[weblogic-server-deployment-descriptor-support-in-glassfish-server]]
 
-=== WebLogic Server Deployment Descriptor Support in GlassFish Server
+=== WebLogic Server Deployment Descriptor Support in {productName}
 
-GlassFish Server offers limited support for the
+{productName} offers limited support for the
 `weblogic-application.xml`, `weblogic.xml`, and
 `weblogic-webservices.xml` deployment descriptor files.
 
-The only element in `weblogic-application.xml` that GlassFish Server
+The only element in `weblogic-application.xml` that {productName}
 supports is `security`. The equivalent element in the
 `glassfish-application.xml` file is `security-role-mapping`.
 
-The elements of `weblogic.xml` that GlassFish Server supports are
+The elements of `weblogic.xml` that {productName} supports are
 explained in the following table.
 
 [[GSDPG836]][[sthref7]][[gkinm]]
 
 
-Table B-2 `weblogic.xml` Support in GlassFish Server
+Table B-2 `weblogic.xml` Support in {productName}
 
 [width="100%",cols="43%,57%",options="header",]
 |===
-|`weblogic.xml` Element Name |GlassFish Server Support
+|`weblogic.xml` Element Name |{productName} Support
 |`role-name` under `security-role-assignment`
 |`role-name` under `security-role-mapping` `glassfish-web.xml` equivalent
 
@@ -1086,22 +1083,22 @@ Table B-2 `weblogic.xml` Support in GlassFish Server
 |===
 
 
-The elements of `weblogic-webservices.xml` that GlassFish Server
+The elements of `weblogic-webservices.xml` that {productName}
 supports are explained in the following table.
 
 [[GSDPG837]][[sthref8]][[gkkht]]
 
 
-Table B-3 `weblogic-webservices.xml` Support in GlassFish Server
+Table B-3 `weblogic-webservices.xml` Support in {productName}
 
 [width="100%",cols="34%,66%",options="header",]
 |===
 |`weblogic-webservices.xml` Element Name
-|GlassFish Server Support
+|{productName} Support
 
 |`webservice-type`
 |Possible values are `JAXRPC` or `JAXWS`.
-GlassFish Server does not support JAX-RPC web services with JSR 181 annotations.
+{productName} does not support JAX-RPC web services with JSR 181 annotations.
 The use of this element is limited, because the container can find out
 if the type is JAX-WS or JAX-RPC based on presence of JSR 181 annotations.
 

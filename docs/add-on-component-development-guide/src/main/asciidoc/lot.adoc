@@ -11,4 +11,4 @@ prev=loe.html
 == List of Tables
 
 * link:adding-configuration-data.html#gjrlg[6-1 Commonly Used Annotations
-for Validating GlassFish Server Configuration Data]
+for Validating {productName} Configuration Data]

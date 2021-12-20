@@ -39,7 +39,7 @@ server for the following server subsystems:
 
 ==== Processors
 
-The GlassFish Server automatically takes advantage of multiple CPUs. In
+The {productName} automatically takes advantage of multiple CPUs. In
 general, the effectiveness of multiple CPUs varies with the operating
 system and the workload, but more processors will generally improve
 dynamic content performance.
@@ -55,8 +55,7 @@ percent.
 
 ==== Memory
 
-See the section Hardware and Software Requirements in the GlassFish
-Server Release Notes for specific memory recommendations for each
+See the section Hardware and Software Requirements in the {productName} Release Notes for specific memory recommendations for each
 supported operating system.
 
 [[abeiv]][[GSPTG00212]][[disk-space]]
@@ -66,13 +65,13 @@ supported operating system.
 It is best to have enough disk space for the OS, document tree, and log
 files. In most cases 2GB total is sufficient.
 
-Put the OS, swap/paging file, GlassFish Server logs, and document tree
+Put the OS, swap/paging file, {productName} logs, and document tree
 each on separate hard drives. This way, if the log files fill up the log
 drive, the OS does not suffer. Also, its easy to tell if the OS paging
 file is causing drive activity, for example.
 
 OS vendors generally provide specific recommendations for how much swap
-or paging space to allocate. Based on Oracle testing, GlassFish Server
+or paging space to allocate. Based on Oracle testing, {productName}
 performs best with swap space equal to RAM, plus enough to map the
 document tree.
 
@@ -111,9 +110,9 @@ Gigabit Ethernet technology.
 
 ==== UDP Buffer Sizes
 
-GlassFish Server uses User Datagram Protocol (UDP) for the transmission
-of multicast messages to GlassFish Server instances in a cluster. For
-peak performance from a GlassFish Server cluster that uses UDP
+{productName} uses User Datagram Protocol (UDP) for the transmission
+of multicast messages to {productName} instances in a cluster. For
+peak performance from a {productName} cluster that uses UDP
 multicast, limit the need to retransmit UDP messages. To limit the need
 to retransmit UDP messages, set the size of the UDP buffer to avoid
 excessive UDP datagram loss.
@@ -148,11 +147,11 @@ on Linux Systems].
 
 [[glgiw]]
 
-1. Ensure that no GlassFish Server clusters are running.
+1. Ensure that no {productName} clusters are running.
 +
 If necessary, stop any running clusters as explained in
 "link:../ha-administration-guide/instances.html#GSHAG00110[To Stop a Cluster]"
-in GlassFish Server Open Source Edition High Availability Administration Guide.
+in {productName} High Availability Administration Guide.
 
 2. Determine the absolute number of lost UDP packets when no clusters
 are running.
@@ -166,10 +165,10 @@ system. For example:
 `fragments dropped (dup or out of space)` count in the `ip` section.
 
 3. Start all the clusters that are configured for your installation of
-GlassFish Server.
+{productName}.
 +
 Start each cluster as explained in "link:../ha-administration-guide/instances.html#GSHAG00109[To Start a
-Cluster]" in GlassFish Server Open Source Edition High Availability
+Cluster]" in {productName} High Availability
 Administration Guide.
 
 4. Determine the absolute number of lost UDP packets after the clusters are started.
@@ -274,7 +273,7 @@ page]
 ==== Tuning Parameters
 
 Tuning Solaris TCP/IP settings benefits programs that open and close
-many sockets. Since the GlassFish Server operates with a small fixed set
+many sockets. Since the {productName} operates with a small fixed set
 of connections, the performance gain might not be significant.
 
 The following table shows Solaris tuning parameters that affect
@@ -477,7 +476,7 @@ These settings apply to RMI/IIOP clients on the Solaris OS.
 === Tuning for Solaris on x86
 
 The following are some options to consider when tuning Solaris on x86
-for GlassFish Server:
+for {productName}:
 
 * link:#abejg[File Descriptors]
 * link:#abejh[IP Stack Settings]

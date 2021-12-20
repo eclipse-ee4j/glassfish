@@ -199,7 +199,7 @@ asadmin-options::
 `--nodedir`::
   Specifies the directory that contains the instance's node directory.
   The instance's files are stored in the instance's node directory. The
-  default is as-install`/nodes`. If this option is specified, the
+  default is as-install``/nodes``. If this option is specified, the
   operand must specify an instance.
 `--node`::
   Specifies the node on which the instance resides. This option may be
@@ -233,7 +233,7 @@ Found the Windows Service and successfully uninstalled it.
 The Windows Service was created successfully.  It is ready to be started.  Here are
 the details:
 ID of the service: domain1
-Display Name of the service:domain1 GlassFish Server
+Display Name of the service:domain1 Eclipse GlassFish
 Domain Directory: C:\glassfish7\glassfish\domains\domain1
 Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
 domain1\bin\domain1Service.xml

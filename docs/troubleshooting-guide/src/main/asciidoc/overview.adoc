@@ -1,20 +1,20 @@
 type=page
 status=published
-title=Overview of Eclipse GlassFish Server Troubleshooting
+title=Overview of {productName} Troubleshooting
 next=specific-issues.html
 prev=preface.html
 ~~~~~~
 
-= Overview of Eclipse GlassFish Server Troubleshooting
+= Overview of {productName} Troubleshooting
 
 [[GSTSG00002]][[abgap]]
 
 
 [[overview-of-glassfish-server-open-source-edition-troubleshooting]]
-== 1 Overview of Eclipse GlassFish Server Troubleshooting
+== 1 Overview of {productName} Troubleshooting
 
 This chapter describes some of the tools, methods, and resources
-available for troubleshooting Eclipse GlassFish Server.
+available for troubleshooting {productName}.
 Guidelines for evaluating and investigating a problem are provided.
 
 This chapter contains the following sections:
@@ -51,16 +51,14 @@ investigation, try the following steps first.
 
 Ensure that your system meets the requirements listed in
 "link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
-in GlassFish Server Open Source Edition Release Notes.
+in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
 Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
-in GlassFish Server Open Source
-Edition Release Notes for known issues related to installation.
+in {productName} Release Notes for known issues related to installation.
 
-Eclipse GlassFish Server requires JDK release 6. The minimum
-(and certified) version of the JDK that is required for GlassFish Server
-Open Source Edition depends on the operating system:
+{productName} requires JDK release 6. The minimum
+(and certified) version of the JDK that is required for {productName} depends on the operating system:
 
 * For supported operating systems except Mac OS, the minimum required version is 1.6.0_17.
 * For the Mac OS X operating system, the minimum required version is 1.6.0_15.
@@ -72,7 +70,7 @@ http://www.oracle.com/technetwork/java/javase/downloads/index.html[
 Java SE downloads page]
 (`http://www.oracle.com/technetwork/java/javase/downloads/index.html`).
 
-For Mac OS X systems, Eclipse GlassFish Server uses the JDK
+For Mac OS X systems, {productName} uses the JDK
 that is part of the Macintosh operating system. If necessary, obtain the
 required JDK version from the http://support.apple.com/downloads/[Mac OS
 X Updates site] (`http://support.apple.com/downloads/`).
@@ -89,7 +87,7 @@ supported JDK version.
 ===== Review Known Issues
 
 Your problem might be related to a known issue for the release. Refer to
-the link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release Notes] for
+the link:../release-notes/toc.html#GSRLN[{productName} Release Notes] for
 the latest information regarding known issues and possible workarounds.
 Also search the GlassFish Issue Tracker at
 `http://java.net/jira/browse/GLASSFISH`.
@@ -98,9 +96,9 @@ Also search the GlassFish Issue Tracker at
 
 ===== Search the Product Documentation
 
-Eclipse GlassFish Server includes complete product
+{productName} includes complete product
 documentation. Search the documentation to see if your problem is
-addressed. See link:preface.html#ghpbz[GlassFish Server Documentation
+addressed. See link:preface.html#ghpbz[{productName} Documentation
 Set] for the books in the documentation set and a description of their
 contents. Also see the Administration Console online help for detailed
 information about performing administrative tasks using the graphical
@@ -108,14 +106,13 @@ interface.
 
 The following books will be especially helpful for troubleshooting:
 
-* link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release Notes],
+* link:../release-notes/toc.html#GSRLN[{productName} Release Notes],
   which provides the latest information regarding known issues and possible workarounds.
 * link:../error-messages-reference/toc.html#GSEMR[
-  Eclipse GlassFish Server Error Message Reference],
-  which lists error messages you might encounter when using GlassFish Server.
+  {productName} Error Message Reference],
+  which lists error messages you might encounter when using {productName}.
 
-Use the product documentation to learn more about GlassFish Server Open
-Source Edition. The more you know about the product the easier it might
+Use the product documentation to learn more about {productName}. The more you know about the product the easier it might
 be to figure out why something isn't working.
 
 [[ghymp]][[GSTSG00080]][[search-the-glassfish-mailing-lists-and-forums]]
@@ -160,10 +157,10 @@ undeployed?
 
 ===== What Is Your Environment?
 
-* What version of Eclipse GlassFish Server are you using?
+* What version of {productName} are you using?
 What operating system and version? What JDK version? Many problems are
 caused simply because system requirements for the release are not met.
-Refer to the link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server Release
+Refer to the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes] for the latest information regarding system requirements, and
 make sure your system meets those requirements.
 * What resources does your system have, such as memory, disk, and swap
@@ -176,9 +173,8 @@ operating system patch numbers?
 the installation?
 * How many application servers, web servers, and directory servers are
 installed? What are the products and versions?
-* How is the web server connected to GlassFish Server Open Source
-Edition? On the same system?
-* How is Eclipse GlassFish Server connected to the directory
+* How is the web server connected to {productName}? On the same system?
+* How is {productName} connected to the directory
 server?
 * What JDBC driver is being used to access the database?
 
@@ -187,7 +183,7 @@ server?
 ===== What Is Your System Configuration?
 
 * What are your settings?
-* On which port is Eclipse GlassFish Server configured — the
+* On which port is {productName} configured — the
 default or something else?
 * What defaults were changed during installation and what are the
 values?
@@ -221,7 +217,7 @@ environment?
 ==== Examining Log Files
 
 Logging is one of your most important troubleshooting tools. It is the
-process by which Eclipse GlassFish Server captures data
+process by which {productName} captures data
 about events that occur during server operation, such as configuration
 errors, security failures, or server malfunction. This data is recorded
 in log files, and is usually your first source of information when
@@ -229,28 +225,25 @@ Enterprise Server problems occur. The primary purpose of log files is to
 provide troubleshooting information. Analyzing the log files can help
 determine the health of the server and identify problem areas.
 
-By default, log information for each GlassFish Server Open Source
-Edition server instance is captured in a `server.log` file. That is,
+By default, log information for each {productName} server instance is captured in a `server.log` file. That is,
 each instance, including the domain administration server (DAS), has an
 individual log file. By default, the log file for the DAS is located in
 domain-dir``/logs``, and the log file for each instance is located in
 instance-dir``/logs`.
 
-In addition, for domains that use clustering, GlassFish Server Open
-Source Edition captures log information for each cluster instance in a
+In addition, for domains that use clustering, {productName} captures log information for each cluster instance in a
 `cluster.log` file. By default, the `cluster.log` file is also located
-in instance-dir`/logs`.
+in instance-dir``/logs``.
 
 Oracle recommends using the Administration Console to view logging
 information. However, you can open a log file in a text editor and
-search for the module or message in which you are interested. GlassFish
-Server Open Source Edition also lets you collect log files into a ZIP
+search for the module or message in which you are interested. {productName} also lets you collect log files into a ZIP
 file, which provides a convenient means to collect and view the log
 files for an instance or a domain even when it is not running.
 
 You configure the Logging Service by setting attributes in the
 `logging.properties` file. Each server, configuration, instance, and
-cluster in the Eclipse GlassFish Server domain has an
+cluster in the {productName} domain has an
 individual `logging.properties` file. The root directory in which these
 `logging.properties` files are located is the same directory as for the
 `domain.xml` file, typically domain-dir/`config`. The default target
@@ -262,7 +255,7 @@ Administration Console.
 
 Log levels such as `SEVERE`, `WARNING`, `INFO`, `CONFIG`, and others can
 be set to provide different types and amounts of information. The
-default setting is `INFO`. Each Eclipse GlassFish Server
+default setting is `INFO`. Each {productName}
 module has its own logger, and each logger has its own namespace. Log
 levels can be set globally for all loggers, or individually for
 module-specific loggers.
@@ -270,8 +263,7 @@ module-specific loggers.
 For information about using the Administration Console log viewer and
 logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
-"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in GlassFish
-Server Open Source Edition Administration Guide.
+"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide.
 
 [[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
 
@@ -280,12 +272,11 @@ Server Open Source Edition Administration Guide.
 Monitoring is another helpful tool. It is the process of reviewing the
 statistics of a system to improve performance or solve problems. By
 monitoring the state of various components and services deployed in
-Eclipse GlassFish Server you can identify performance
+{productName} you can identify performance
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in GlassFish
-Server Open Source Edition Administration Guide.
+"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
 
@@ -321,8 +312,7 @@ given time and is useful in debugging. When the application server
 freezes, hangs, or becomes sluggish for no apparent reason, you should
 generate and analyze a thread dump.
 
-This section explains how to obtain a thread dump for GlassFish Server
-Open Source Edition. More information about analyzing the information
+This section explains how to obtain a thread dump for {productName}. More information about analyzing the information
 contained in a thread dump can be found in
 "http://java.sun.com/developer/technicalArticles/Programming/Stacktrace[An
 Introduction to Java Stack Traces]"
@@ -395,9 +385,9 @@ attach to the server using Java Remote Invocation Method (RMI).
 These resources were mentioned throughout this chapter and are provided
 again here for easy reference.
 
-* Release Notes: link:../release-notes/toc.html#GSRLN[Eclipse GlassFish Server
+* Release Notes: link:../release-notes/toc.html#GSRLN[{productName}
 Release Notes]
-* Error messages: link:../error-messages-reference/toc.html#GSEMR[Eclipse GlassFish Server Error
+* Error messages: link:../error-messages-reference/toc.html#GSEMR[{productName} Error
 Message Reference]
 * Mailing lists and forums: See link:#ghymp[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.

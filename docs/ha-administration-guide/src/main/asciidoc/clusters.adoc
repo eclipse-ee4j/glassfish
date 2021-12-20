@@ -1,19 +1,19 @@
 type=page
 status=published
-title=Administering GlassFish Server Clusters
+title=Administering {productName} Clusters
 next=instances.html
 prev=nodes.html
 ~~~~~~
 
-= Administering GlassFish Server Clusters
+= Administering {productName} Clusters
 
 [[GSHAG00005]][[gjfom]]
 
 
 [[administering-glassfish-server-clusters]]
-== 4 Administering GlassFish Server Clusters
+== 4 Administering {productName} Clusters
 
-A cluster is a collection of GlassFish Server instances that work
+A cluster is a collection of {productName} instances that work
 together as one logical entity. A cluster provides a runtime environment
 for one or more Java Platform, Enterprise Edition (Jakarta EE)
 applications. A cluster provides high availability through failure
@@ -27,20 +27,20 @@ correctly.
 
 The following topics are addressed here:
 
-* link:#gjfqp[About GlassFish Server Clusters]
+* link:#gjfqp[About {productName} Clusters]
 * link:#gjfnl[Group Management Service]
 * link:#gkqdy[Creating, Listing, and Deleting Clusters]
 
 [[gjfqp]][[GSHAG00183]][[about-glassfish-server-clusters]]
 
-=== About GlassFish Server Clusters
+=== About {productName} Clusters
 
-A cluster is a named collection of GlassFish Server instances that share
+A cluster is a named collection of {productName} instances that share
 the same applications, resources, and configuration information. For
-information about GlassFish Server instances, see
-link:instances.html#gkrbv[Administering GlassFish Server Instances].
+information about {productName} instances, see
+link:instances.html#gkrbv[Administering {productName} Instances].
 
-GlassFish Server enables you to administer all the instances in a
+{productName} enables you to administer all the instances in a
 cluster as a single unit from a single host, regardless of whether the
 instances reside on the same host or different hosts. You can perform
 the same operations on a cluster that you can perform on an unclustered
@@ -50,7 +50,7 @@ A cluster provides high availability through failure protection,
 scalability, and load balancing.
 
 * Failure protection. If an instance or a host in a cluster fails,
-GlassFish Server detects the failure and recovers the user session
+{productName} detects the failure and recovers the user session
 state. If a load balancer is configured for the cluster, the load
 balancer redirects requests from the failed instance to other instances
 in the cluster. Because the same applications and resources are on all
@@ -75,7 +75,7 @@ The Group Management Service (GMS) is an infrastructure component that
 is enabled for the instances in a cluster. When GMS is enabled, if a
 clustered instance fails, the cluster and the Domain Administration
 Server (DAS) are aware of the failure and can take action when failure
-occurs. Many features of GlassFish Server depend upon GMS. For example,
+occurs. Many features of {productName} depend upon GMS. For example,
 GMS is used by the in-memory session replication, transaction service,
 and timer service features.
 
@@ -110,7 +110,7 @@ ensure that TCP is enabled. On Windows systems, enabling TCP involves
 enabling a protocol and port for security when a firewall is enabled.
 
 If GMS should use UDP multicast for broadcasting messages and if
-GlassFish Server instances in a cluster are located on different hosts,
+{productName} instances in a cluster are located on different hosts,
 the following conditions must be met:
 
 * The DAS host and all hosts for the instances must be on the same subnet.
@@ -135,7 +135,7 @@ discovering a cluster, GMS uses UDP multicast by default.
 
 ==== GMS Configuration Settings
 
-GlassFish Server has the following types of GMS settings:
+{productName} has the following types of GMS settings:
 
 * GMS cluster settings — These are determined during cluster creation.
 For more information about these settings, see link:#gkqdm[To Create a Cluster].
@@ -203,7 +203,7 @@ discovery and failure detection:
 The heartbeat frequency, maximum missed heartbeats, peer-to-peer
 connection-based failure detection, and the verify timeouts are all
 needed to ensure that failure detection is robust and reliable in
-GlassFish Server.
+{productName}.
 
 For the dotted names for each of these GMS configuration settings, see
 link:#gjfog[Dotted Names for GMS Settings]. For the steps to specify
@@ -560,7 +560,7 @@ typing `asadmin help get-health` at the command line.
 
 ==== Discovering a Cluster When Multicast Transport Is Unavailable
 
-When multicast transport is unavailable, GlassFish Server instances that
+When multicast transport is unavailable, {productName} instances that
 are joining a cluster cannot rely on broadcast messages from GMS to
 discover the cluster. Instead, an instance that is joining a cluster
 uses a running instance or the DAS in the cluster to discover the
@@ -595,7 +595,7 @@ Is Running on a Different Host]
 
 If multiple instances in the same cluster are running on a host, you
 must provide a list of uniform resource indicators (URIs). Each URI must
-locate a GlassFish Server instance or the DAS in the cluster.
+locate a {productName} instance or the DAS in the cluster.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -626,7 +626,7 @@ discovering the cluster.
 asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=uri-list cluster-name
 ----
 uri-list::
-  A comma-separated list of URIs that locate a GlassFish Server instance
+  A comma-separated list of URIs that locate a {productName} instance
   or the DAS in the cluster. +
   The format of each URI in the list is as follows: +
   scheme``://``host-name-or -IP-address``:``port
@@ -661,9 +661,9 @@ asadmin> create-local-instance
 --systemproperties GMS_LISTENER_PORT-cluster-name=gms-port --cluster  cluster-name instance-name
 ----
 node-name::
-  The name of an existing GlassFish Server node on which the instance is
+  The name of an existing {productName} node on which the instance is
   to reside. For more information about nodes, see
-  link:nodes.html#gkrle[Administering GlassFish Server Nodes].
+  link:nodes.html#gkrle[Administering {productName} Nodes].
 cluster-name::
   The name of the cluster to which the you are adding the instance.
 gms-port::
@@ -767,7 +767,7 @@ the cluster as follows:
 
 * By specifying a list of host names or Internet Protocol (IP)
 addresses. Each host name or IP address must locate a host on which the
-DAS or a GlassFish Server instance in the cluster is running. Instances
+DAS or a {productName} instance in the cluster is running. Instances
 that are joining the cluster will use the DAS or the instances to
 discover the cluster.
 * By generating the list of locations automatically. The generated list
@@ -883,7 +883,7 @@ See Also
 
 ==== Using the Multi-Homing Feature With GMS
 
-Multi-homing enables GlassFish Server clusters to be used in an
+Multi-homing enables {productName} clusters to be used in an
 environment that uses multiple Network Interface Cards (NICs). A
 multi-homed host has multiple network connections, of which the
 connections may or may not be the on same network. Multi-homing provides
@@ -973,7 +973,7 @@ asadmin set c1-config.network-config.network-listeners.network-listener.http-2.a
 
 === Creating, Listing, and Deleting Clusters
 
-GlassFish Server enables you to create clusters, obtain information
+{productName} enables you to create clusters, obtain information
 about clusters, and delete clusters that are no longer required.
 
 The following topics are addressed here:
@@ -994,10 +994,10 @@ to restart the DAS and the cluster, configure a cluster's GMS settings
 when you create the cluster. If you change GMS settings for an existing
 cluster, the DAS and the cluster must be restarted to apply the changes.
 
-When you create a cluster, GlassFish Server automatically creates a
-Message Queue cluster for the GlassFish Server cluster. For more
+When you create a cluster, {productName} automatically creates a
+Message Queue cluster for the {productName} cluster. For more
 information about Message Queue clusters, see link:jms.html#abdbx[Using
-Message Queue Broker Clusters With GlassFish Server].
+Message Queue Broker Clusters With {productName}].
 
 [[GSHAG374]]
 
@@ -1147,7 +1147,7 @@ Command create-cluster executed successfully.
 
 Next Steps
 
-After creating a cluster, you can add GlassFish Server instances to the
+After creating a cluster, you can add {productName} instances to the
 cluster as explained in the following sections:
 
 * link:instances.html#gkqch[To Create an Instance Centrally]
@@ -1159,8 +1159,7 @@ See Also
 
 * link:named-configurations.html#abdjr[To Create a Named Configuration]
 * link:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:jms.html#abdbx[Using Message Queue Broker Clusters With GlassFish
-Server]
+* link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}]
 * link:../reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)]
 * link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
 
@@ -1241,7 +1240,7 @@ Ensure that following prerequisites are met:
 
 * The cluster that you are deleting is stopped. For information about
 how to stop a cluster, see link:instances.html#gkqcl[To Stop a Cluster].
-* The cluster that you are deleting contains no GlassFish Server
+* The cluster that you are deleting contains no {productName}
 instances. For information about how to remove instances from a cluster,
 see the following sections:
 

@@ -14,8 +14,7 @@ prev=jdbc.html
 == 12 Administering EIS Connectivity
 
 This chapter provides information and procedures for administering
-connections to enterprise information system (EIS) data in the Oracle
-GlassFish Server 7 environment by using the `asadmin` command-line utility.
+connections to enterprise information system (EIS) data in the {productName} 7 environment by using the `asadmin` command-line utility.
 
 
 [NOTE]
@@ -57,11 +56,11 @@ The key elements of EIS connectivity are the following:
 
 * Connector Module. A connector module, also called a resource adapter,
 is a Jakarta EE component that enables applications to interact with EIS
-software. A connector module is used by GlassFish Server to implement
+software. A connector module is used by {productName} to implement
 Java Message Service (JMS). Like other Jakarta EE modules, a connector
 module is installed when it is deployed. For instructions on creating a
 connector module, see "link:../application-development-guide/connectors.html#GSDVG00013[Developing Connectors]" in
-GlassFish Server Open Source Edition Application Development Guide.
+{productName} Application Development Guide.
 * Connector Connection Pool. A connector connection pool is a group of
 reusable connections for a particular EIS. A connector connection pool
 is created when you specify the connector module that is associated with
@@ -86,7 +85,7 @@ link:#gitxy[Administering Connector Security Maps].
 * Connector Work Security Map. A connector work security map associates
 the caller identity of the work submitted by the connector module
 (resource adapter) EIS principal or EIS user group to a suitable
-principal or user group in the GlassFish Server security domain. For
+principal or user group in the {productName} security domain. For
 administration procedures, see link:#giohl[Administering Connector Work
 Security Maps].
 * Administered Object. An administered object provides specialized
@@ -107,7 +106,7 @@ connection pool.
 2. Using the connector resource, the application gets an EIS
 connection.
 +
-GlassFish Server retrieves a physical connection from the connection
+{productName} retrieves a physical connection from the connection
 pool that corresponds to the EIS resource. The pool defines connection
 attributes such as the EIS name, user name, and password.
 3. After the EIS connection is established, the application can read,
@@ -812,7 +811,7 @@ Command delete-connector-security-map executed successfully
 The EIS is any system that holds the data of an organization. It can be
 a mainframe, a messaging system, a database system, or an application.
 The connector work security map is used to is used to map the EIS
-credentials to the credentials of GlassFish Server security domain.
+credentials to the credentials of {productName} security domain.
 
 A security map applies to a particular connector connection pool. One or
 more named security maps can be associated with a connector connection
@@ -832,7 +831,7 @@ The following topics are addressed here:
 Use the `create-connector-work-security-map` subcommand in remote mode
 to map the caller identity of the work submitted by the connector module
 (resource adapter) EIS principal or EIS user group to a suitable
-principal or user group in the GlassFish Server security domain. One or
+principal or user group in the {productName} security domain. One or
 more work security maps can be associated with a connector module.
 
 The connector security map configuration supports the use of the wild

@@ -46,7 +46,7 @@ asadmin-options::
   The directory where the domain to be deleted is located. If specified,
   the path must be accessible in the file system. If not specified, the
   domain under the domain root directory, which defaults to
-  as-install`/domains`, is deleted.
+  as-install``/domains``, is deleted.
 
 [[sthref677]]
 

@@ -51,7 +51,7 @@ asadmin-options::
   The directory where the domains are to be listed. If specified, the
   path must be accessible in the files stem. If not specified, the
   domains in the domain root directory are listed. The default location
-  of the domain root directory is as-install`/domains`.
+  of the domain root directory is as-install``/domains``.
 `--long`::
 `-l`::
   Displays detailed information about the administration servers in the

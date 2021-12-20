@@ -1,18 +1,18 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 7 Utility Commands
+title={productName} 7 Utility Commands
 next=appclient.html
 prev=version.html
 ~~~~~~
 
-= Eclipse GlassFish Server 7 Utility Commands
+= {productName} 7 Utility Commands
 
 [[GSRFM803]][[sthref2356]]
 
 
 [[glassfish-server-open-source-edition-5.0-utility-commands]]
-== 2 Eclipse GlassFish Server 7 Utility Commands
+== 2 {productName} 7 Utility Commands
 
-This section describes GlassFish Server utility commands.
+This section describes {productName} utility commands.
 
 

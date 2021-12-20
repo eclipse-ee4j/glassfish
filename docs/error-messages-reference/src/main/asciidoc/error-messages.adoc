@@ -1,30 +1,29 @@
 type=page
 status=published
-title=GlassFish Server Open Source Edition Error Messages
+title={productName} Error Messages
 prev=preface.html
 ~~~~~~
 
-= GlassFish Server Open Source Edition Error Messages
+= {productName} Error Messages
 
 [[sthref2]][[glassfish-server-open-source-edition-error-messages]]
 
-== 1 GlassFish Server Open Source Edition Error Messages
+== 1 {productName} Error Messages
 
 This chapter provides a compilation of error messages that you might
-encounter when using GlassFish Server Open Source Edition.
+encounter when using {productName}.
 
 Error messages provide information about events that occur during
-GlassFish Server operation, such as configuration errors, security
+{productName} operation, such as configuration errors, security
 failures, or server malfunction. These messages often include diagnostic
 and troubleshooting information.
 
 Error messages can also be viewed in the Administration Console Log
 Viewer. For more information about logging, see
-”link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service”] in GlassFish
-Server Open Source Edition Administration Guide.
+”link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service”] in {productName} Administration Guide.
 
 For additional troubleshooting information, see the
-link:../troubleshooting-guide/toc.html#GSTSG[GlassFish Server Open Source Edition Troubleshooting Guide].
+link:../troubleshooting-guide/toc.html#GSTSG[{productName} Troubleshooting Guide].
 
 Error messages in this chapter are listed in alphabetic and numeric
 order by message ID. The text is as it appears in the actual error

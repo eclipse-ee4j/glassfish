@@ -143,8 +143,7 @@ at the domain level, it is only active at the specified `--target`.
 +
 Additionally, you can specify `connector-connection-pool` attributes
   as connector resource properties. For a list of these attributes, see
-  "link:../application-deployment-guide/dd-elements.html#GSDPG00124[connector-connection-pool]" in GlassFish Server Open
-  Source Edition Application Deployment Guide. +
+  "link:../application-deployment-guide/dd-elements.html#GSDPG00124[connector-connection-pool]" in {productName} Application Deployment Guide. +
   You can specify the following properties for a destination resource:
 
   `Name`;;

@@ -1,29 +1,28 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Deployment Planning Guide, Release 7
+title={productName} Deployment Planning Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Deployment Planning Guide, Release 7
+= {productName} Deployment Planning Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Deployment Planning Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
-This book explains how to build a production deployment of GlassFish
-Server Open Source Edition.
+This book explains how to build a production deployment of {productName}.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Deployment Planning Guide, Release 7
+{productName} Deployment Planning Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

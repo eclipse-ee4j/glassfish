@@ -52,18 +52,17 @@ asadmin-options::
 --
   `common`;;
     Lists the library files for the Common class loader directory,
-    domain-dir`/lib`. This is the default.
+    domain-dir``/lib``. This is the default.
   `ext`;;
     Lists the library files for the Java optional package directory,
-    domain-dir`/lib/ext`.
+    domain-dir``/lib/ext``.
   `app`;;
     Lists the library files for the application-specific class loader
-    directory, domain-dir`/lib/applibs`.
+    directory, domain-dir``/lib/applibs``.
 --
 +
 For more information about these directories, see
-  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-  Edition Application Development Guide.
+  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
 
 [[sthref1618]]
 
@@ -104,7 +103,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:add-library.html#add-library-1[`add-library`(1)],
 link:remove-library.html#remove-library-1[`remove-library`(1)]
 
-"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-Edition Application Development Guide
+"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
 
 

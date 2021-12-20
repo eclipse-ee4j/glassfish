@@ -14,7 +14,7 @@ prev=lifecycle-modules.html
 == 10 Administering Batch Jobs
 
 This chapter provides procedures for administering batch jobs in the
-GlassFish Server environment by using the `asadmin` command-line
+{productName} environment by using the `asadmin` command-line
 utility.
 
 The following topics are addressed here:
@@ -30,7 +30,7 @@ Console are contained in the Administration Console online help.
 
 === About Batch Jobs
 
-GlassFish Server provides a batch runtime for the scheduling and
+{productName} provides a batch runtime for the scheduling and
 execution of batch jobs. Batch jobs are typically long-running,
 bulk-oriented tasks that contain a series of steps and can be executed
 without user interaction. Examples include billing, report generation,
@@ -40,7 +40,7 @@ Batch applications submit jobs to the batch runtime and provide
 instructions about how and when to execute the steps. The batch runtime
 processes the steps as directed by job XML documents packaged with the
 applications and stores information about jobs in a job repository. In
-GlassFish Server, the job repository is a database
+{productName}, the job repository is a database
 
 For detailed information about batch jobs, batch processing, and the
 batch processing framework, see
@@ -199,7 +199,7 @@ past jobs, and the managed executor service provides threads to jobs.
 Batch runtime configuration data is stored in the `config` element in
 `domain.xml`.
 
-GlassFish Server provides a default data source and managed executor
+{productName} provides a default data source and managed executor
 service for the execution of batch jobs. For the domain administration
 server (DAS), the default data source is `jdbc/__TimerPool` and the
 default managed executor service is

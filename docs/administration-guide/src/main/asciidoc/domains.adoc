@@ -14,7 +14,7 @@ prev=general-administration.html
 == 3 Administering Domains
 
 This chapter provides procedures for administering domains in the
-GlassFish Server Open Source Edition environment by using the `asadmin`
+{productName} environment by using the `asadmin`
 command-line utility.
 
 The following topics are addressed here:
@@ -22,7 +22,7 @@ The following topics are addressed here:
 * link:#ggoek[About Administering Domains]
 * link:#gitvz[Creating, Logging In To, and Deleting a Domain]
 * link:#gitwj[Starting and Stopping a Domain]
-* link:#gglqp[Configuring a DAS or a GlassFish Server Instance for Automatic Restart]
+* link:#gglqp[Configuring a DAS or a {productName} Instance for Automatic Restart]
 * link:#gityo[Backing Up and Restoring a Domain]
 * link:#gglri[Re-Creating the Domain Administration Server (DAS)]
 * link:#gitvn[Additional Domain Tasks]
@@ -35,36 +35,35 @@ online help.
 
 === About Administering Domains
 
-A domain contains a group of GlassFish Server instances that are
+A domain contains a group of {productName} instances that are
 administered together. Each domain has a domain administration server
 (DAS) that hosts administrative applications. These concepts are
 explained in more detail in the following sections:
 
-* link:#geolm[GlassFish Server Instances]
-* link:#geojp[Domains for Administering GlassFish Server]
+* link:#geolm[{productName} Instances]
+* link:#geojp[Domains for Administering {productName}]
 * link:#geojl[Domain Administration Server (DAS)]
 
 [[geolm]][[GSADG00715]][[glassfish-server-instances]]
 
-==== GlassFish Server Instances
+==== {productName} Instances
 
-A GlassFish Server instance is a single Virtual Machine for the Java
+A {productName} instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
-GlassFish Server is running. A node defines the host where the GlassFish
-Server instance resides. The JVM machine must be compatible with the
+{productName} is running. A node defines the host where the {productName} instance resides. The JVM machine must be compatible with the
 Java Platform, Enterprise Edition (Jakarta EE).
 
-GlassFish Server instances form the basis of an application deployment.
+{productName} instances form the basis of an application deployment.
 
-Whenever a domain is created, GlassFish Server creates a default
+Whenever a domain is created, {productName} creates a default
 instance that is named `server`. If a single instance meets your
 requirements, you can use this instance for deploying applications
-without the need to administer GlassFish Server instances explicitly.
+without the need to administer {productName} instances explicitly.
 You administer the default instance when you administer its domain.
 
 If you require multiple instances, you must administer the instances
 explicitly. For more information, see "link:../ha-administration-guide/instances.html#GSHAG00006[Administering
-GlassFish Server Instances]" in GlassFish Server Open Source Edition
+{productName} Instances]" in {productName}
 High Availability Administration Guide.
 
 For an instance, you can also create virtual servers. Virtual servers do
@@ -81,10 +80,10 @@ link:http_https.html#ggncs[Administering Virtual Servers].
 
 [[geojp]][[GSADG00716]][[domains-for-administering-glassfish-server]]
 
-==== Domains for Administering GlassFish Server
+==== Domains for Administering {productName}
 
 A domain is an administrative boundary that contains a group of
-GlassFish Server instances that are administered together. Each instance
+{productName} instances that are administered together. Each instance
 can belong to only one domain. A domain provides a preconfigured runtime
 for user applications. Each domain has its own configuration data, log
 files, and application deployment areas that are independent of other
@@ -92,27 +91,26 @@ domains. If the configuration is changed for one domain, the
 configurations of other domains are not affected.
 
 Domains enable different organizations and administrators to share
-securely a single GlassFish Server installation. Each organization or
+securely a single {productName} installation. Each organization or
 administrator can administer the instances in a single domain without
 affecting the instances in other domains.
 
-At installation time, GlassFish Server creates a default domain that is
+At installation time, {productName} creates a default domain that is
 named `domain1`. After installation, you can create additional domains
 as necessary.
 
 When a domain is created, you are prompted for the administration user
 name and password. If you accept the default, the user `admin` is
 created without password. To reset the administration password, see
-"link:../security-guide/system-security.html#GSSCG00095[To Change an Administration Password]" in GlassFish
-Server Open Source Edition Security Guide.
+"link:../security-guide/system-security.html#GSSCG00095[To Change an Administration Password]" in {productName} Security Guide.
 
 [[geojl]][[GSADG00717]][[domain-administration-server-das]]
 
 ==== Domain Administration Server (DAS)
 
 The domain administration server (DAS) is a specially designated
-GlassFish Server instance that hosts administrative applications. The
-DAS is similar to any other GlassFish Server instance, except that the
+{productName} instance that hosts administrative applications. The
+DAS is similar to any other {productName} instance, except that the
 DAS has additional administration capabilities. The DAS authenticates
 the administrator, accepts requests from administration tools, and
 communicates with other instances in the domain to carry out the
@@ -126,7 +124,7 @@ The DAS has the master copy of the configuration data for all instances
 in a domain. If an instance is destroyed, for example, because a host
 failed, the instance can be re-created from the data in the DAS.
 
-The DAS is the default GlassFish Server instance in a domain and is
+The DAS is the default {productName} instance in a domain and is
 named `server`. If a single instance meets your requirements, you can
 use the DAS for deploying applications and for administering the domain.
 
@@ -152,7 +150,7 @@ The following topics are addressed here:
 
 ==== To Create a Domain
 
-After installing GlassFish Server and creating the default domain
+After installing {productName} and creating the default domain
 (`domain1`), you can create additional domains by using the local
 `create-domain` subcommand. This subcommand creates the configuration of
 a domain. Any user who has access to the `asadmin` utility on a given
@@ -210,7 +208,7 @@ http://hostname:5000
 For this example, the domain's log files, configuration files, and
 deployed applications now reside in the following directory:
 
-domain-root-dir`/mydomain`
+domain-root-dir``/mydomain``
 
 [[GSADG819]]
 
@@ -334,7 +332,7 @@ one of the following names:::
 [TIP]
 ====
 For information about how these tokens are used in the default template,
-examine the as-install`/lib/templates/domain.xml` file.
+examine the as-install``/lib/templates/domain.xml`` file.
 ====
 
 5. Create the domain that you want to be based on a custom template.
@@ -367,7 +365,7 @@ typing the following commands at the command line.
 
 Use the `list-domains` subcommand to display a list of domains and their statuses.
 If the domain directory is not specified, the contents of the
-domain-root-dir, the default for which is as-install`/domains`, is listed.
+domain-root-dir, the default for which is as-install``/domains``, is listed.
 If there is more than one domain, the domain name must be specified.
 
 To list domains that were created in other directories, specify the `--domaindir` option.
@@ -494,7 +492,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help login` at the command line. For additional
 information about passwords, see "link:../security-guide/system-security.html#GSSCG00144[Administering
-Passwords]" in GlassFish Server Open Source Edition Security Guide.
+Passwords]" in {productName} Security Guide.
 
 [[ggofa]][[GSADG00334]][[to-delete-a-domain]]
 
@@ -563,12 +561,10 @@ separately.
 ====
 For Microsoft Windows, you can use an alternate method to start a
 domain. From the Windows Start menu, select the command for your
-distribution of GlassFish Server:
+distribution of {productName}:
 
-* If you are using the Full Platform, select Programs > Oracle GlassFish
-Server > Start Admin Server.
-* If you are using the Web Profile, select Programs > Oracle GlassFish
-Server Web Profile > Start Admin Server.
+* If you are using the Full Platform, select Programs > {productName} > Start Admin Server.
+* If you are using the Web Profile, select Programs > {productName} Web Profile > Start Admin Server.
 ====
 
 
@@ -622,12 +618,10 @@ link:../reference-manual/restart-domain.html#GSRFM00218[`restart-domain`] subcom
 ====
 For Microsoft Windows, you can use an alternate method to stop a domain.
 From the Start menu, select the command for your distribution of
-GlassFish Server:
+{productName}:
 
-* If you are using the Full Platform, select Programs > Oracle GlassFish
-Server > Stop Admin Server.
-* If you are using the Web Profile, select Programs > Oracle GlassFish
-Server Web Profile > Stop Admin Server.
+* If you are using the Full Platform, select Programs > {productName} > Stop Admin Server.
+* If you are using the Web Profile, select Programs > {productName} Web Profile > Stop Admin Server.
 ====
 
 
@@ -708,11 +702,11 @@ typing `asadmin help restart-domain` at the command line.
 
 [[gglqp]][[GSADG00538]][[configuring-a-das-or-a-glassfish-server-instance-for-automatic-restart]]
 
-=== Configuring a DAS or a GlassFish Server Instance for Automatic Restart
+=== Configuring a DAS or a {productName} Instance for Automatic Restart
 
 Use the `create-service` subcommand in local mode to configure your
 system to automatically restart a domain administration server (DAS) or
-a GlassFish Server instance. GlassFish Server enables you to configure a
+a {productName} instance. {productName} enables you to configure a
 DAS or an instance for automatic restart on the following operating
 systems:
 
@@ -775,17 +769,17 @@ Found the Windows Service and successfully uninstalled it.
 The Windows Service was created successfully.  It is ready to be started.  Here are
 the details:
 ID of the service: domain1
-Display Name of the service:domain1 GlassFish Server
-Domain Directory: C:\glassfishv3\glassfish\domains\domain1
-Configuration file for Windows Services Wrapper: C:\glassfishv3\glassfish\domains\
+Display Name of the service:domain1 Eclipse GlassFish
+Domain Directory: C:\glassfish7\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfish7\glassfish\domains\
 domain1\bin\domain1Service.xml
 The service can be controlled using the Windows Services Manager or you can use the
 Windows Services Wrapper instead:
-Start Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe  start
-Stop Command:   C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe  stop
-Uninstall Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe
+Start Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Uninstall Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 uninstall
-Install Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe
+Install Command:  C:\glassfish7\glassfish\domains\domain1\bin\domain1Service.exe
 install
 
 This message is also available in a file named PlatformServices.log in the domain's
@@ -869,8 +863,7 @@ Command create-service executed successfully.
 
 [[giusi]][[GSADG00340]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris]]
 
-To Configure a DAS or an Instance for Automatic Restart on Oracle
-==== Solaris
+==== To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris
 
 On Oracle Solaris systems, the `create-service` subcommand creates an
 Oracle Solaris Service Management Facility (SMF) service that restarts a
@@ -909,7 +902,7 @@ and
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`]
 must be available in the PATH.
 
-If a particular GlassFish Server domain or instance should not have
+If a particular {productName} domain or instance should not have
 default user privileges, modify the manifest of the service and reimport
 the service.
 
@@ -939,9 +932,9 @@ The Service was created successfully. Here are the details:
 Name of the service:application/GlassFish/domain1
 Type of the service:Domain
 Configuration location of the service:/home/gfuser/glassfish-installations
-/glassfishv3/glassfish/domains
+/glassfish7/glassfish/domains
 Manifest file location on the system:/var/svc/manifest/application
-/GlassFish/domain1_home_gfuser_glassfish-installations_glassfishv3
+/GlassFish/domain1_home_gfuser_glassfish-installations_glassfish7
 _glassfish_domains/Domain-service-smf.xml.
 You have created the service but you need to start it yourself.
 Here are the most typical Solaris commands of interest:
@@ -980,7 +973,7 @@ Services (Tasks)]" in System Administration Guide: Basic Administration
 By default, the Java Virtual Machine (VM) receives signals from Windows
 that indicate that Windows is shutting down, or that a user is logging
 out of Windows, which causes the system to shut itself down cleanly.
-This behavior causes the GlassFish Server service to shut down. To
+This behavior causes the {productName} service to shut down. To
 prevent the service from shutting down when a user logs out, you must
 set the `-Xrs` Java VM option
 (`https://github.com/eclipse-ee4j/glassfishdocumentation`).
@@ -1011,7 +1004,7 @@ to the line that runs the `admin-cli.jar` file.
 %JAVA% -Xrs -jar "%~dp0..\glassfish\modules\admin-cli.jar" %*
 ----
 
-4. If the GlassFish Server service is running, restart the service for your changes to take effect.
+4. If the {productName} service is running, restart the service for your changes to take effect.
 
 [[gityo]][[GSADG00541]][[backing-up-and-restoring-a-domain]]
 
@@ -1030,16 +1023,16 @@ The following topics are addressed here:
 Use the `backup-domain` subcommand in local mode to make a backup of a
 specified domain.
 
-When you use the `backup-domain` subcommand, GlassFish Server creates a
+When you use the `backup-domain` subcommand, {productName} creates a
 ZIP file backup of all the files and subdirectories in the domain's
-directory, domain-root-dir`/`domain-dir, except for the `backups`
+directory, domain-root-dir``/``domain-dir, except for the `backups`
 subdirectory.
 
 The `backup-domain` subcommand provides several options to meet
 particular needs, including:
 
 * `--backupdir` to specify a directory in which to store the backup
-instead of the default domain-root-dir`/`domain-dir`/backups`.
+instead of the default domain-root-dir``/``domain-dir``/backups``.
 * `--description` to provide a description of the backup to be stored in
 the backup itself.
 
@@ -1083,7 +1076,7 @@ directory.
 The `restore-domain` subcommand can use backup files created by the
 `backup-domain` subcommand and by automatic backup configurations, both
 full backups and configuration-only backups. Automatic backup
-configurations are available only in Oracle GlassFish Server.
+configurations are available only in {productName}.
 
 1. If necessary, notify domain users that the domain is being restored
 from backup.
@@ -1134,7 +1127,7 @@ directory.
 
 The `list-backups` subcommand provides several options to meet
 particular needs, including `--backupdir` to specify a directory where
-backups are stored instead of the default domain-dir`/backups`.
+backups are stored instead of the default domain-dir``/backups``.
 
 List backups by using the `list-backups` subcommand.
 
@@ -1156,8 +1149,7 @@ Command list-backups executed successfully.
 ----
 
 Note that this listing includes backups created automatically by a
-backup configuration. This feature is available only in Oracle GlassFish
-Server.
+backup configuration. This feature is available only in {productName}.
 
 [[GSADG844]]
 
@@ -1186,16 +1178,15 @@ situation where the first host crashes or is being taken out of service.
 You must maintain a backup of the DAS from the first host using the
 olink:GSRFM00003[`backup-domain`] subcommand as described in
 link:#ggocq[To Back Up a Domain]. You can automatically maintain a
-backup of the DAS using the automatic backups feature of Oracle
-GlassFish Server.
+backup of the DAS using the automatic backups feature of {productName}.
 ====
 
 
 
 [NOTE]
 ====
-Oracle GlassFish Server includes `asadmin` subcommands that simplify
-this procedure. If you are using Oracle GlassFish Server, see
+{productName} includes `asadmin` subcommands that simplify
+this procedure. If you are using {productName}, see
 link:#gglnp[To Migrate the DAS].
 ====
 
@@ -1207,7 +1198,7 @@ link:#gglnp[To Migrate the DAS].
 The following steps are required to migrate the DAS from the first host
 (olddashost) to the third host (newdashost).
 
-1. Install GlassFish Server on newdashost just as it was installed on olddashost.
+1. Install {productName} on newdashost just as it was installed on olddashost.
 This is required so that the DAS can be properly restored on newdashost without causing path conflicts.
 
 2. Use the `restore-domain` subcommand to restore the latest backup file onto newdashost.
@@ -1236,8 +1227,8 @@ asadmin> start-domain domain1
 
 5. If the domain on olddashost was centrally administered, set up
 centralized administration on newdashost.
-See "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[Enabling Centralized Administration of GlassFish Server Instances]"
-in GlassFish Server Open Source Edition High Availability Administration Guide for instructions.
+See "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[Enabling Centralized Administration of {productName} Instances]"
+in {productName} High Availability Administration Guide for instructions.
 
 6. Verify that instances on other hosts are visible to the new DAS on newdashost:
 +
@@ -1313,7 +1304,7 @@ typing `asadmin help uptime` at the command line.
 
 ==== To Switch a Domain to Another Supported Java Version
 
-GlassFish Server 7 requires Java SE 11 as the underlying virtual
+{productName} 7 requires Java SE 11 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]

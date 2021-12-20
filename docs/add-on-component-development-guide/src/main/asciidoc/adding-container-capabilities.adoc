@@ -13,11 +13,11 @@ prev=adding-configuration-data.html
 [[adding-container-capabilities]]
 == Adding Container Capabilities
 
-Applications run on Eclipse GlassFish Server in containers. GlassFish Server
+Applications run on {productName} in containers. {productName}
 enables you to create containers that extend or replace the existing
-containers of GlassFish Server. Adding container capabilities enables
+containers of {productName}. Adding container capabilities enables
 you to run new types of applications and to deploy new archive types in
-GlassFish Server.
+{productName}.
 
 The following topics are addressed here:
 
@@ -30,8 +30,7 @@ The following topics are addressed here:
 
 === Creating a `Container` Implementation
 
-To implement a container that extends or replaces a service in GlassFish
-Server, you must create a Java programming language class that includes
+To implement a container that extends or replaces a service in {productName}, you must create a Java programming language class that includes
 the following characteristics:
 
 * It is annotated with the `org.jvnet.hk2.annotations.Service`
@@ -81,9 +80,8 @@ public class MyContainer implements Container {
 
 The `org.glassfish.api.container.Container` interface is the contract
 that defines a container implementation. Classes that implement
-`Container` can extend or replace the functionality in GlassFish Server
-by allowing applications to be deployed and run within the GlassFish
-Server runtime.
+`Container` can extend or replace the functionality in {productName}
+by allowing applications to be deployed and run within the {productName} runtime.
 
 The `Container` interface consists of two methods, `getDeployer` and
 `getName`. The `getDeployer` method returns an implementation class of
@@ -102,7 +100,7 @@ methods:
 `loadMetaData`::
   Loads the metadata associated with an application.
 `prepare`::
-  Prepares the application to run in GlassFish Server.
+  Prepares the application to run in {productName}.
 `load`::
   Loads a previously prepared application to the container.
 `unload`::
@@ -119,7 +117,7 @@ Example 7-1 Example Implementation of `Container`
 
 This example shows a Java programming language class that implements the
 `Container` interface and is capable of extending the functionality of
-GlassFish Server.
+{productName}.
 
 [source,java]
 ----
@@ -187,7 +185,7 @@ public class MyDeployer {
 
 An archive type is an abstraction of the archive file format. An archive
 type can be implemented as a plain JAR file, as a directory layout, or a
-custom type. By default, GlassFish Server recognizes JAR based and
+custom type. By default, {productName} recognizes JAR based and
 directory based archive types. A new container might require a new
 archive type.
 
@@ -290,12 +288,12 @@ containers in which the application will be deployed.
 
 Connector modules are small add-on modules that consist of application
 "sniffers" that associate application types with containers that can run
-the application type. GlassFish Server connector modules are separate
+the application type. {productName} connector modules are separate
 from the associated add-on module that delivers the container
-implementation to allow GlassFish Server to dynamically install and
+implementation to allow {productName} to dynamically install and
 configure containers on demand.
 
-When a deployment request is received by the GlassFish Server runtime:
+When a deployment request is received by the {productName} runtime:
 
 1. The current `Sniffer` implementations are used to determine the application type.
 2. Once an application type is found, the runtime looks for a running
@@ -309,8 +307,8 @@ associated with the application type as defined by the `Sniffer` implementation.
 ==== Associating File Types With Containers by Using the `Sniffer` Interface
 
 Containers do not necessarily need to be installed on the local machine
-for GlassFish Server to recognize the container's application type.
-GlassFish Server uses a "sniffer" concept to study the artifacts in a
+for {productName} to recognize the container's application type.
+{productName} uses a "sniffer" concept to study the artifacts in a
 deployment request and to choose the associated container that handles
 the application type that the user is trying to deploy. To create this
 association, create a Java programming language class that implements
@@ -326,7 +324,7 @@ A simple version of a `Sniffer` implementation uses the `handles` method
 to check the existence of a file in the archive that denotes the
 application type (as `WEB-INF/web.xml` denotes a web application).
 Once a `Sniffer` implementation has detected that it can handle the
-deployment request artifact, GlassFish Server calls the `setUp` method.
+deployment request artifact, {productName} calls the `setUp` method.
 The `setUp` method is responsible for setting up the container, which
 can involve one or more of the following actions:
 
@@ -360,8 +358,7 @@ The `Sniffer` interface defines the following methods:
   Sets up the container libraries so that any dependent bundles from the
   connector JAR file will be made available to the HK2 runtime. The
   `setup` method returns an array of `com.sun.enterprise.module.Module`
-  classes, which are definitions of container implementations. GlassFish
-  Server can then load these modules so that it can create an instance
+  classes, which are definitions of container implementations. {productName} can then load these modules so that it can create an instance
   of the container's `Deployer` or `Container` implementations when it
   needs to. The module is locked as long as at least one module is
   loaded in the associated container.
@@ -377,8 +374,7 @@ The `Sniffer` interface defines the following methods:
 `getDeploymentConfigurations(final ReadableArchive source)`::
   Returns a `Map<String, String>` of deployment configuration names to
   configurations from this `Sniffer` implementation for the specified
-  application (the archive source). The names are created by GlassFish
-  Server; the configurations are the names of the files that contain
+  application (the archive source). The names are created by {productName}; the configurations are the names of the files that contain
   configuration information (for example, `WEB-INF/web.xml` and possibly
   `WEB-INF/sun-web.xml` for a web application). If the
   `getDeploymentConfigurations` method encounters errors while searching
@@ -387,13 +383,12 @@ The `Sniffer` interface defines the following methods:
 
 [[ghpbx]][[GSACG00172]][[making-sniffer-implementations-available-to-the-glassfish-server]]
 
-===== Making `Sniffer` Implementations Available to the GlassFish Server
+===== Making `Sniffer` Implementations Available to the {productName}
 
 Package `Sniffer` implementation code into modules and install the
-modules in the as-install`/modules` directory. GlassFish Server will
+modules in the as-install``/modules`` directory. {productName} will
 automatically discover these modules. If an administrator installs
-connector modules that contain`Sniffer` implementations while GlassFish
-Server is running, GlassFish Server will pick them up at the next
+connector modules that contain`Sniffer` implementations while {productName} is running, {productName} will pick them up at the next
 deployment request.
 
 [[gkane]][[GSACG00135]][[example-of-adding-container-capabilities]]

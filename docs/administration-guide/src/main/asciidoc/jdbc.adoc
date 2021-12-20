@@ -14,7 +14,7 @@ prev=part-res-and-svcs-admin.html
 == 11 Administering Database Connectivity
 
 This chapter provides procedures for performing database connectivity
-tasks in the GlassFish Server Open Source Edition 7 environment by
+tasks in the {productName} 7 environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -70,7 +70,7 @@ pool.
 
 2. Using the JDBC resource, the application gets a database connection.
 +
-GlassFish Server retrieves a physical connection from the connection
+{productName} retrieves a physical connection from the connection
 pool that corresponds to the database. The pool defines connection
 attributes such as the database name (URL), user name, and password.
 
@@ -106,12 +106,11 @@ The following topics are addressed here:
 
 1. Install a supported database product.
 +
-To see the current list of database products supported by GlassFish
-Server, refer to the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release Notes].
+To see the current list of database products supported by {productName}, refer to the link:../release-notes/toc.html#GSRLN[{productName} Release Notes].
 
 2. Install a supported JDBC driver for the database product.
 +
-For a list of drivers supported by GlassFish Server, see
+For a list of drivers supported by {productName}, see
 link:#beamw[Configuration Specifics for JDBC Drivers].
 
 3. Make the JDBC driver JAR file accessible to the domain
@@ -139,9 +138,9 @@ Driver].
 
 ==== To Start the Database
 
-GlassFish Server includes an implementation of the Apache Derby
+{productName} includes an implementation of the Apache Derby
 database, however, you can use any JDBC-compliant database. The database
-is not started automatically when you start GlassFish Server, so if you
+is not started automatically when you start {productName}, so if you
 have applications that require a database, you need to start Apache
 Derby database manually by using the local `start-database` subcommand.
 
@@ -228,9 +227,9 @@ typing `asadmin help stop-database` at the command line.
 ==== Apache Derby Database Utility Scripts
 
 The Apache Derby database configuration that is available for use with
-GlassFish Server includes scripts that can help you use the Apache Derby
+{productName} includes scripts that can help you use the Apache Derby
 database. The following scripts are available in the
-as-install`/javadb/bin` directory:
+as-install``/javadb/bin`` directory:
 
 `startNetworkServer,startNetworkServer.bat`::
   Script to start the network server
@@ -253,7 +252,7 @@ as-install`/javadb/bin` directory:
 1. Ensure that the `JAVA_HOME` environment variable specifies the
 directory where the JDK is installed.
 2. Set the `JAVADB_HOME` environment variable to point to the
-as-install`/javadb` directory.
+as-install``/javadb`` directory.
 
 [[GSADG953]]
 
@@ -272,7 +271,7 @@ Administration Guide]
 === Configuring Access to the Database
 
 After establishing the database, you are ready to set up access for
-GlassFish Server applications. The high-level steps include creating a
+{productName} applications. The high-level steps include creating a
 JDBC connection pool, creating a JDBC resource for the connection pool,
 and integrating a JDBC driver into an administrative domain.
 
@@ -291,14 +290,13 @@ Environment]
 
 A JDBC connection pool is a group of reusable connections for a
 particular database. Because creating each new physical connection is
-time consuming, GlassFish Server maintains a pool of available
+time consuming, {productName} maintains a pool of available
 connections. When an application requests a connection, it obtains one
 from the pool. When an application closes a connection, the connection
 is returned to the pool. JDBC connection pools can be globally
 accessible or be scoped to an enterprise application, web module, EJB
 module, connector module or application client module, as described in
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 A JDBC resource is created by specifying the connection pool with which
 the resource is associated. Multiple JDBC resources can specify a single
@@ -541,7 +539,7 @@ link:overview.html#ghciy[Configuration Changes That Require Restart].
 See Also
 
 For information about how to tune a connection pool, see the
-link:../performance-tuning-guide/toc.html#GSPTG[GlassFish Server Open Source Edition Performance Tuning
+link:../performance-tuning-guide/toc.html#GSPTG[{productName} Performance Tuning
 Guide].
 
 [[ggngb]][[GSADG00425]][[to-delete-a-jdbc-connection-pool]]
@@ -589,7 +587,7 @@ typing `asadmin help delete-jdbc-connection-pool` at the command line.
 
 ===== Configuring Specific JDBC Connection Pool Features
 
-In GlassFish Server, JDBC Connection Pools support a variety of features
+In {productName}, JDBC Connection Pools support a variety of features
 to simplify administration, monitoring and performance tuning. The
 following topics address several of these features:
 
@@ -744,8 +742,7 @@ thereby improving performance. Instead of the statement being prepared
 each time, the cache is searched for a match. The overhead of parsing
 and creating new statements each time is eliminated.
 
-Statement caching is usually a feature of the JDBC driver. The GlassFish
-Server provides caching for drivers that do not support caching. To
+Statement caching is usually a feature of the JDBC driver. The {productName} provides caching for drivers that do not support caching. To
 enable this feature, set the Statement Cache Size for the JDBC
 connection pool in one of the following ways:
 
@@ -792,13 +789,13 @@ For example:
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.sql-trace-listeners=listeners
 ----
 
-The GlassFish Server provides a public interface,
+The {productName} provides a public interface,
 org.glassfish.api.jdbc.SQLTraceListener , that implements a means of
 recording `SQLTraceRecord` objects. To make custom implementations of
-this interface available to the GlassFish Server, place the
-implementation classes in as-install`/lib`.
+this interface available to the {productName}, place the
+implementation classes in as-install``/lib``.
 
-The GlassFish Server provides an SQL tracing logger to log the SQL
+The {productName} provides an SQL tracing logger to log the SQL
 operations in the form of `SQLTraceRecord` objects in the `server.log`
 file. The module name under which the SQL operation is logged is
 `jakarta.enterprise.resource.sqltrace`. SQL traces are logged as FINE
@@ -807,7 +804,7 @@ logs. A sample SQL trace record looks like this:
 
 [source]
 ----
-[#|2009-11-27T15:46:52.202+0530|FINE|glassfishv3.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
+[#|2009-11-27T15:46:52.202+0530|FINE|glassfish7.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
 |_ThreadID=29;_ThreadName=Thread-1;ClassName=com.sun.gjc.util.SQLTraceLogger;MethodName=sqlTrace;
 |ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202
 | ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate
@@ -818,7 +815,7 @@ This trace shows that an `executeUpdate(String sql, String columnNames)`
 operation is being done.
 
 When SQL statement tracing is enabled and JDBC connection pool
-monitoring is enabled, GlassFish Server maintains a tracing cache of
+monitoring is enabled, {productName} maintains a tracing cache of
 recent queries and their frequency of use. The following JDBC connection
 pool properties can be configured to control this cache and the
 monitoring statistics available from it:
@@ -856,7 +853,7 @@ in a domain. Multiple JDBC resources can be specified for a database.
 JDBC resources can be globally accessible or be scoped to an enterprise
 application, web module, EJB module, connector module or application
 client module, as described in "link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped
-Resources]" in GlassFish Server Open Source Edition Application
+Resources]" in {productName} Application
 Deployment Guide.
 
 A JDBC resource is created by specifying the connection pool with which
@@ -867,9 +864,9 @@ name for the resource of a payroll database might be
 
 The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
-default resources. GlassFish Server makes these names available through
+default resources. {productName} makes these names available through
 the use of logical JNDI names, which map Jakarta EE standard JNDI names to
-specific GlassFish Server resources. For JDBC resources, the Jakarta EE
+specific {productName} resources. For JDBC resources, the Jakarta EE
 standard name `java:comp/DefaultDataSource` is mapped to the
 `jdbc/__default` resource.
 
@@ -1029,7 +1026,7 @@ typing `asadmin help delete-jdbc-resource` at the command line.
 
 ==== Enabling the `jdbc/__default` Resource in a Clustered Environment
 
-GlassFish Server 7 includes a preconfigured JDBC resource with the
+{productName} 7 includes a preconfigured JDBC resource with the
 JNDI name `jdbc/__default`. This `jdbc/__default` resource is not
 enabled by default, so you need to explicitly enable it if you want to
 use it in a cluster.
@@ -1041,7 +1038,7 @@ use it in a cluster.
 Instructions for creating JDBC resources in general are provided in
 link:#ggnda[To Create a JDBC Resource]. Use the following procedure to
 enable the preconfigured `jdbc/__default` resource for a clustered
-GlassFish Server environment.
+{productName} environment.
 
 1. Create the `jdbc/__default` resource reference for the cluster.
 +
@@ -1071,7 +1068,7 @@ asadmin start-cluster cluster-name
 ==== Integrating the JDBC Driver
 
 To use JDBC features, you must choose a JDBC driver to work with the
-GlassFish Server, then you must set up the driver. This section covers
+{productName}, then you must set up the driver. This section covers
 these topics:
 
 * link:#gkpdj[Supported Database Drivers]
@@ -1083,15 +1080,14 @@ these topics:
 ===== Supported Database Drivers
 
 Supported JDBC drivers are those that have been fully tested by Oracle.
-For a list of the JDBC drivers currently supported by the GlassFish
-Server, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 link:#beamw[Configuration Specifics for JDBC Drivers].
 
 
 [NOTE]
 ====
-Because the drivers and databases supported by the GlassFish Server are
+Because the drivers and databases supported by the {productName} are
 constantly being updated, and because database vendors continue to
 upgrade their products, always check with Oracle technical support for
 the latest database support information.
@@ -1102,17 +1098,17 @@ the latest database support information.
 
 ===== Making the JDBC Driver JAR Files Accessible
 
-To integrate the JDBC driver into a GlassFish Server domain, copy the
-JAR files into the domain-dir`/lib` directory, then restart the server.
+To integrate the JDBC driver into a {productName} domain, copy the
+JAR files into the domain-dir``/lib`` directory, then restart the server.
 This makes classes accessible to all applications or modules deployed on
 servers that share the same configuration. For more information about
-GlassFish Server class loaders, see "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in
-GlassFish Server Open Source Edition Application Development Guide.
+{productName} class loaders, see "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in
+{productName} Application Development Guide.
 
 If you are using an Oracle database with EclipseLink extensions, copy
-the JAR files into the domain-dir`/lib/ext` directory, then restart the
+the JAR files into the domain-dir``/lib/ext`` directory, then restart the
 server. For details, see "link:../application-development-guide/jpa.html#GSDVG00390[Oracle Database
-Enhancements]" in GlassFish Server Open Source Edition Application
+Enhancements]" in {productName} Application
 Development Guide.
 
 [[gkpfj]][[GSADG00673]][[automatic-detection-of-installed-drivers]]
@@ -1137,7 +1133,7 @@ Properties section.
 
 === Configuration Specifics for JDBC Drivers
 
-GlassFish Server is designed to support connectivity to any database
+{productName} is designed to support connectivity to any database
 management system by using a corresponding JDBC driver. Configuration
 information is provided for these JDBC drivers:
 
@@ -1221,9 +1217,9 @@ connection pool using the following settings:
 
 ==== Apache Derby DB/Derby Type 4 Driver
 
-The Apache Derby DB/Derby JDBC driver is included with GlassFish Server
+The Apache Derby DB/Derby JDBC driver is included with {productName}
 by default, so you do not need to integrate this JDBC driver with
-GlassFish Server.
+{productName}.
 
 The JAR file for the Apache Derby DB driver is `derbyclient.jar`.
 Configure the connection pool using the following settings:
@@ -1366,7 +1362,7 @@ XA specifications, the Transaction Manager initially calls this method
 with `TMSTARTSCAN` and then with `TMNOFLAGS` repeatedly until no Xids
 are returned. The `XAResource.commit` method also has some issues.
 
-To disable this GlassFish Server workaround, the
+To disable this {productName} workaround, the
 `oracle-xa-recovery-workaround` property value must be set to `false`.
 
 Additionally, in order for the transaction manager to recover

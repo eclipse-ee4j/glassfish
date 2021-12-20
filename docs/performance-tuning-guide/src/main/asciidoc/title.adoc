@@ -1,28 +1,28 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Performance Tuning Guide, Release 7
+title={productName} Performance Tuning Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Performance Tuning Guide, Release 7
+= {productName} Performance Tuning Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Performance Tuning Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
-This book describes how to get the best performance with GlassFish Server 7.
+This book describes how to get the best performance with {productName} 7.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Performance Tuning Guide, Release 7
+{productName} Performance Tuning Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

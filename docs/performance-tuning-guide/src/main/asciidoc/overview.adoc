@@ -1,19 +1,19 @@
 type=page
 status=published
-title=Overview of GlassFish Server Performance Tuning
+title=Overview of {productName} Performance Tuning
 next=tuning-apps.html
 prev=preface.html
 ~~~~~~
 
-= Overview of GlassFish Server Performance Tuning
+= Overview of {productName} Performance Tuning
 
 [[GSPTG00003]][[giekg]]
 
 
 [[overview-of-glassfish-server-performance-tuning]]
-== 1 Overview of GlassFish Server Performance Tuning
+== 1 Overview of {productName} Performance Tuning
 
-You can significantly improve performance of the Oracle GlassFish Server
+You can significantly improve performance of the {productName}
 and of applications deployed to it by adjusting a few deployment and
 server configuration settings. However, it is important to understand
 the environment and performance goals. An optimal configuration for a
@@ -31,7 +31,7 @@ The following topics are addressed here:
 
 === Process Overview
 
-The following table outlines the overall GlassFish Server 7
+The following table outlines the overall {productName} 7
 administration process, and shows where performance tuning fits in the
 sequence.
 
@@ -43,48 +43,48 @@ Table 1-1 Performance Tuning Roadmap
 |===
 |Step |Description of Task |Location of Instructions
 |1
-|Design: Decide on the high-availability topology and set up GlassFish Server.
+|Design: Decide on the high-availability topology and set up {productName}.
 a|link:../deployment-planning-guide/toc.html#GSPLG[
-GlassFish Server Open Source Edition Deployment Planning Guide]
+{productName} Deployment Planning Guide]
 
 |2
 |Capacity Planning: Make sure the systems have sufficient resources to perform well.
 a|link:../deployment-planning-guide/toc.html#GSPLG[
-GlassFish Server Open Source Edition Deployment Planning Guide]
+{productName} Deployment Planning Guide]
 
 |3
 |Installation: Configure your DAS, clusters, and clustered server instances.
 a|link:../installation-guide/toc.html#GSING[
-GlassFish Server Open Source Edition Installation Guide]
+{productName} Installation Guide]
 
 |4
 |Deployment: Install and run your applications.
-Familiarize yourself with how to configure and administer the GlassFish Server.
+Familiarize yourself with how to configure and administer the {productName}.
 a|The following books:
 
 * link:../application-deployment-guide/toc.html#GSDPG[
-GlassFish Server Open Source Edition Application Deployment Guide]
+{productName} Application Deployment Guide]
 * link:../administration-guide/toc.html#GSADG[
-GlassFish Server Open Source Edition Administration Guide]
+{productName} Administration Guide]
 
 |5
 |High Availability Configuration: Configuring your DAS, clusters, and
 clustered server instances for high availability and failover
 a|link:../ha-administration-guide/toc.html#GSHAG[
-GlassFish Server Open Source Edition High Availability Administration Guide]
+{productName} High Availability Administration Guide]
 
 |6
 a|Performance Tuning: Tune the following items:
 
 * Applications
-* GlassFish Server
+* {productName}
 * Java Runtime System
 * Operating system and platform
 
 a|The following chapters:
 
 * link:tuning-apps.html#abebe[Tuning Your Application]
-* link:tuning-glassfish.html#abedn[Tuning the GlassFish Server]
+* link:tuning-glassfish.html#abedn[Tuning the {productName}]
 * link:tuning-java.html#abeia[Tuning the Java Runtime System]
 * link:tuning-os.html#abeir[Tuning the Operating System and Platform]
 |===
@@ -105,7 +105,7 @@ Ideally, follow this sequence of steps when you are tuning performance:
 1. Tune your application, described in
 link:tuning-apps.html#abebe[Tuning Your Application].
 2. Tune the server, described in link:tuning-glassfish.html#abedn[Tuning
-the GlassFish Server].
+the {productName}].
 3. Tune the Java runtime system, described in
 link:tuning-java.html#abeia[Tuning the Java Runtime System].
 4. Tune the operating system, described in
@@ -115,8 +115,7 @@ link:tuning-os.html#abeir[Tuning the Operating System and Platform].
 
 === Understanding Operational Requirements
 
-Before you begin to deploy and tune your application on the GlassFish
-Server, it is important to clearly define the operational environment.
+Before you begin to deploy and tune your application on the {productName}, it is important to clearly define the operational environment.
 The operational environment is determined by high-level constraints and
 requirements such as:
 
@@ -145,17 +144,17 @@ image:img/appmodel.png["Jakarta EE Application Mode"]
 
 Moderately complex enterprise applications can be developed entirely
 using servlets and JSP technology. More complex business applications
-often use Enterprise JavaBeans (EJB) components. The GlassFish Server
+often use Enterprise JavaBeans (EJB) components. The {productName}
 integrates the Web and EJB containers in a single process. Local access
 to EJB components from servlets is very efficient. However, some
 application deployments may require EJB components to execute in a
 separate process; and be accessible from standalone client applications
 as well as servlets. Based on the application architecture, the server
-administrator can employ the GlassFish Server in multiple tiers, or
+administrator can employ the {productName} in multiple tiers, or
 simply host both the presentation and business logic on a single tier.
 
 It is important to understand the application architecture before
-designing a new GlassFish Server deployment, and when deploying a new
+designing a new {productName} deployment, and when deploying a new
 business application to an existing application server deployment.
 
 [[abeav]][[GSPTG00155]][[security-requirements]]
@@ -169,7 +168,7 @@ security considerations and decisions.
 
 ===== User Authentication and Authorization
 
-Application users must be authenticated. The GlassFish Server provides a
+Application users must be authenticated. The {productName} provides a
 number of choices for user authentication, including file-based,
 administration, LDAP, certificate, JDBC, digest, PAM, Solaris, and
 custom realms.
@@ -184,8 +183,7 @@ already use a directory server may find it advantageous to leverage
 investment in Solaris security infrastructure.
 
 For more information on security realms, see
-"link:../security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in GlassFish
-Server Open Source Edition Security Guide.
+"link:../security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in {productName} Security Guide.
 
 The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
@@ -209,14 +207,14 @@ planning, you must take this additional overhead into account.
 
 For security reasons, sensitive user inputs and application output must
 be encrypted. Most business-oriented web applications encrypt all or
-some of the communication flow between the browser and GlassFish Server.
+some of the communication flow between the browser and {productName}.
 Online shopping applications encrypt traffic when the user is completing
 a purchase or supplying private data. Portal applications such as news
 and media typically do not employ encryption. Secure Sockets Layer (SSL)
 is the most common security framework, and is supported by many browsers
 and application servers.
 
-The GlassFish Server supports SSL 2.0 and 3.0 and contains software
+The {productName} supports SSL 2.0 and 3.0 and contains software
 support for various cipher suites. It also supports integration of
 hardware encryption cards for even higher performance. Security
 considerations, particularly when using the integrated software
@@ -234,15 +232,14 @@ backend enterprise systems?
 +
 A DMZ-style deployment is recommended for high security. It is also
 useful when the application has a significant amount of static text and
-image content and some business logic that executes on the GlassFish
-Server, behind the most secure firewall. GlassFish Server provides
+image content and some business logic that executes on the {productName}, behind the most secure firewall. {productName} provides
 secure reverse proxy plugins to enable integration with popular web
-servers. The GlassFish Server can also be deployed and used as a web
+servers. The {productName} can also be deployed and used as a web
 server in DMZ.
 
 * Is encryption required between the web servers in the DMZ and
 application servers in the next tier? The reverse proxy plugins supplied
-with GlassFish Server support SSL encryption between the web server and
+with {productName} support SSL encryption between the web server and
 application server tier. If SSL is enabled, hardware capacity planning
 must be take into account the encryption policy and mechanisms.
 
@@ -255,28 +252,28 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and GlassFish Server, see "link:../security-guide/message-security.html#GSSCG00037[Administering Message
-Security]" in GlassFish Server Open Source Edition Security Guide.
+and {productName}, see "link:../security-guide/message-security.html#GSSCG00037[Administering Message
+Security]" in {productName} Security Guide.
 
 [[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
 
 ==== High Availability Clustering, Load Balancing, and Failover
 
-GlassFish Server 7 enables multiple GlassFish Server instances to be
+{productName} 7 enables multiple {productName} instances to be
 clustered to provide high availability through failure protection,
 scalability, and load balancing.
 
 High availability applications and services provide their functionality
 continuously, regardless of hardware and software failures. To make such
-reliability possible, GlassFish Server 7 provides mechanisms for
-maintaining application state data between clustered GlassFish Server
+reliability possible, {productName} 7 provides mechanisms for
+maintaining application state data between clustered {productName}
 instances. Application state data, such as HTTP session data, stateful
 EJB sessions, and dynamic cache information, is replicated in real time
 across server instances. If any one server instance goes down, the
 session state is available to the next failover server, resulting in
 minimum application downtime and enhanced transactional security.
 
-GlassFish Server provides the following high availability features:
+{productName} provides the following high availability features:
 
 * High Availability Session Persistence
 * High Availability Java Message Service
@@ -285,10 +282,10 @@ GlassFish Server provides the following high availability features:
 See link:tuning-java.html#glaat[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
-See the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High
+See the link:../ha-administration-guide/toc.html#GSHAG[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
-features in GlassFish Server 7.
+features in {productName} 7.
 
 [[abeay]][[GSPTG00157]][[hardware-resources]]
 
@@ -297,7 +294,7 @@ features in GlassFish Server 7.
 The type and quantity of hardware resources available greatly influence
 performance tuning and site planning.
 
-GlassFish Server provides excellent vertical scalability. It can scale
+{productName} provides excellent vertical scalability. It can scale
 to efficiently utilize multiple high-performance CPUs, using just one
 application server process. A smaller number of application server
 instances makes maintenance easier and administration less expensive.
@@ -307,7 +304,7 @@ of cached data between co-located applications. Such servers must also
 contain large amounts of memory, disk space, and network capacity to
 cope with increased load.
 
-GlassFish Server can also be deployed on large "farms" of relatively
+{productName} can also be deployed on large "farms" of relatively
 modest hardware units. Business applications can be partitioned across
 various server instances. Using one or more external load balancers can
 efficiently spread user access across all the application server
@@ -320,7 +317,7 @@ instances and hardware nodes.
 
 ==== Administration
 
-A single GlassFish Server installation on a server can encompass
+A single {productName} installation on a server can encompass
 multiple instances. A group of one or more instances that are
 administered by a single Administration Server is called a domain.
 Grouping server instances into domains permits different people to
@@ -339,13 +336,13 @@ Resources applications may be hosted on one or more servers in one
 Administrative domain, while external customer applications are hosted
 on several administrative domains in a server farm.
 
-GlassFish Server supports virtual server capability for web
+{productName} supports virtual server capability for web
 applications. For example, a web application hosting service provider
-can host different URL domains on a single GlassFish Server process for
+can host different URL domains on a single {productName} process for
 efficient administration.
 
 For detailed information on administration, see the
-link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration Guide].
+link:../administration-guide/toc.html#GSADG[{productName} Administration Guide].
 
 [[abeba]][[GSPTG00050]][[general-tuning-concepts]]
 
@@ -464,7 +461,7 @@ from a similar application that has already been load tested.
 Running a series of performance tests on one to eight CPUs, in
 incremental steps, generally provides a sense of the vertical
 scalability characteristics of the system. Be sure to properly tune the
-application, GlassFish Server, backend database resources, and operating
+application, {productName}, backend database resources, and operating
 system so that they do not skew the results.
 3. Determine horizontal scalability.
 +
@@ -518,23 +515,21 @@ http://java.sun.com/docs/performance[Java Performance Documentation]
 http://java.sun.com/blueprints/performance/index.html[Java Performance
 BluePrints] (`http://java.sun.com/blueprints/performance/index.html`).
 * For more information about performance tuning for high availability
-configurations, see the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition
+configurations, see the link:../ha-administration-guide/toc.html#GSHAG[{productName}
 High Availability Administration Guide].
 * For complete information about using the Performance Tuning features
-available through the GlassFish Server Administration Console, refer to
+available through the {productName} Administration Console, refer to
 the Administration Console online help.
 * For details on optimizing EJB components, see
 http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/[Seven
 Rules for Optimizing Entity Beans]
 (`http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/`)
-* For details on profiling, see "link:../application-development-guide/setting-up-dev-env.html#GSDVG00341[Profiling Tools]" in
-GlassFish Server Open Source Edition Application Development Guide.
-* To view a demonstration video showing how to use the GlassFish Server
-Performance Tuner, see the
-http://www.youtube.com/watch?v=FavsE2pzAjc[Oracle GlassFish Server 3.1 -
-Performance Tuner demo] (`http://www.youtube.com/watch?v=FavsE2pzAjc`).
+* For details on profiling,
+see "link:../application-development-guide/setting-up-dev-env.html#GSDVG00341[
+Profiling Tools]" in {productName} Application Development Guide.
+* To view a demonstration video showing how to use the {productName} Performance Tuner,
+see the http://www.youtube.com/watch?v=FavsE2pzAjc[
+Oracle GlassFish 3.1 - Performance Tuner demo].
 * To find additional Performance Tuning development information, see the
-http://blogs.oracle.com/jenblog/entry/performance_tuner_in_oracle_glassfish[Performance
-Tuner in Oracle GlassFish Server 3.1]
-(`http://blogs.oracle.com/jenblog/entry/performance_tuner_in_oracle_glassfish`)
-blog.
+http://blogs.oracle.com/jenblog/entry/performance_tuner_in_oracle_glassfish[
+Performance Tuner in Oracle GlassFish 3.1] blog.

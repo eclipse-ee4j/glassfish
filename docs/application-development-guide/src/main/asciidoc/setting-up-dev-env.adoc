@@ -14,9 +14,9 @@ prev=part-tasks-and-tools.html
 == 1 Setting Up a Development Environment
 
 This chapter gives guidelines for setting up an application development
-environment in the Oracle GlassFish Server. Setting up an environment
+environment in the {productName}. Setting up an environment
 for creating, assembling, deploying, and debugging your code involves
-installing the mainstream version of the GlassFish Server and making use
+installing the mainstream version of the {productName} and making use
 of development tools. In addition, sample applications are available.
 
 The following topics are addressed here:
@@ -30,14 +30,14 @@ The following topics are addressed here:
 
 === Installing and Preparing the Server for Development
 
-For more information about GlassFish Server installation, see the
+For more information about {productName} installation, see the
 link:../installation-guide/toc.html#GSING[
-GlassFish Server Open Source Edition Installation Guide].
+{productName} Installation Guide].
 
 The following components are included in the full installation.
 
 * JDK
-* GlassFish Server core
+* {productName} core
 
 ** Java Platform, Standard Edition (Java SE) 11
 ** Jakarta EE 10 compliant application server
@@ -49,10 +49,10 @@ The following components are included in the full installation.
 ** Load balancer plug-ins for web servers
 
 The NetBeans Integrated Development Environment (IDE) bundles the
-GlassFish edition of the GlassFish Server, so information about this IDE
+GlassFish edition of the {productName}, so information about this IDE
 is provided as well.
 
-After you have installed GlassFish Server, you can further optimize the
+After you have installed {productName}, you can further optimize the
 server for development in these ways:
 
 * Locate utility classes and libraries so they can be accessed by the
@@ -63,15 +63,14 @@ link:debugging-apps.html#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
 For more information, see "link:../administration-guide/jvm.html#GSADG00007[
 Administering the Virtual Machine for the Java Platform]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[beaas]][[GSDVG00091]][[high-availability-features]]
 
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source
-Edition High Availability Administration Guide]. This book describes the
+are discussed in detail in the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
@@ -87,12 +86,12 @@ link:jms.html#beaop[Load-Balanced Message Inflow].
 
 === Development Tools
 
-The following general tools are provided with the GlassFish Server:
+The following general tools are provided with the {productName}:
 
 * link:#beaau[The `asadmin` Command]
 * link:#beaav[The Administration Console]
 
-The following development tools are provided with the GlassFish Server
+The following development tools are provided with the {productName}
 or downloadable from Oracle:
 
 * link:#beaba[The Migration Tool]
@@ -110,9 +109,9 @@ The following third-party tools might also be useful:
 The `asadmin` command allows you to configure a local or remote server
 and perform both administrative and development tasks at the command
 line. For general information about `asadmin`, see the
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
-The `asadmin` command is located in the as-install`/bin` directory. Type
+The `asadmin` command is located in the as-install``/bin`` directory. Type
 `asadmin help` for a list of subcommands.
 
 [[beaav]][[GSDVG00334]][[the-administration-console]]
@@ -122,12 +121,11 @@ The `asadmin` command is located in the as-install`/bin` directory. Type
 The Administration Console lets you configure the server and perform
 both administrative and development tasks using a web browser. For
 general information about the Administration Console, click the Help
-button in the Administration Console. This displays the GlassFish Server
+button in the Administration Console. This displays the {productName}
 online help.
 
 To access the Administration Console, type `http://`host`:4848` in your
-browser. The host is the name of the machine on which the GlassFish
-Server is running. By default, the host is `localhost`. For example:
+browser. The host is the name of the machine on which the {productName} is running. By default, the host is `localhost`. For example:
 
 [source]
 ----
@@ -150,13 +148,12 @@ to download the Migration Tool, see
 ==== The NetBeans IDE
 
 The NetBeans IDE allows you to create, assemble, and debug code from a
-single, easy-to-use interface. The GlassFish edition of the GlassFish
-Server is bundled with the NetBeans 6.1 IDE. To download the NetBeans
+single, easy-to-use interface. The GlassFish edition of the {productName} is bundled with the NetBeans 6.1 IDE. To download the NetBeans
 IDE, see `http://www.netbeans.org`. This site also provides
 documentation on how to use the NetBeans IDE with the bundled GlassFish
-edition of the GlassFish Server.
+edition of the {productName}.
 
-You can also use the GlassFish Server with the Java Studio Enterprise
+You can also use the {productName} with the Java Studio Enterprise
 software, which is built on the NetBeans IDE. For more information, see
 `http://developers.sun.com/jsenterprise/`.
 
@@ -164,14 +161,14 @@ software, which is built on the NetBeans IDE. For more information, see
 
 ==== Debugging Tools
 
-You can use several debugging tools with the GlassFish Server. For more
+You can use several debugging tools with the {productName}. For more
 information, see link:debugging-apps.html#beafc[Debugging Applications].
 
 [[beabc]][[GSDVG00341]][[profiling-tools]]
 
 ==== Profiling Tools
 
-You can use several profilers with the GlassFish Server. For more
+You can use several profilers with the {productName}. For more
 information, see link:debugging-apps.html#beafn[Profiling Tools].
 
 [[beabf]][[GSDVG00093]][[sample-applications]]
@@ -180,7 +177,7 @@ information, see link:debugging-apps.html#beafn[Profiling Tools].
 
 The samples are available from `https://github.com/eclipse-ee4j/glassfish-samples`.
 
-Most GlassFish Server samples have the following directory structure:
+Most {productName} samples have the following directory structure:
 
 * The `docs` directory contains instructions for how to use the sample.
 * The `pom.xml` file defines Maven targets for the sample.

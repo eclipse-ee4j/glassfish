@@ -13,19 +13,19 @@ prev=adding-monitoring-capabilities.html
 == Adding Configuration Data for a Component
 
 The configuration data of a component determines the characteristics and
-runtime behavior of a component. Eclipse GlassFish provides interfaces to
+runtime behavior of a component. {productName} provides interfaces to
 enable an add-on component to store its configuration data in the same
-way as other GlassFish Server components. These interfaces are similar
+way as other {productName} components. These interfaces are similar
 to interfaces that are defined in
 [Jakarta XML Binding](`https://jakarta.ee/specifications/xml-binding/`). By using these interfaces to
 store configuration data, you ensure that the add-on component is fully
-integrated with GlassFish Server. As a result, administrators can
+integrated with {productName}. As a result, administrators can
 configure an add-on component in the same way as they can configure
-other GlassFish Server components.
+other {productName} components.
 
 The following topics are addressed here:
 
-* link:#gjrdv[How GlassFish Server Stores Configuration Data]
+* link:#gjrdv[How {productName} Stores Configuration Data]
 * link:#gjlop[Defining an Element]
 * link:#gjlpb[Defining an Attribute of an Element]
 * link:#gjlov[Defining a Subelement]
@@ -37,9 +37,9 @@ The following topics are addressed here:
 
 [[gjrdv]][[GSACG00121]][[how-glassfish-server-stores-configuration-data]]
 
-=== How GlassFish Server Stores Configuration Data
+=== How {productName} Stores Configuration Data
 
-GlassFish Server stores the configuration data for a domain in a single
+{productName} stores the configuration data for a domain in a single
 configuration file that is named `domain.xml`. This file is an
 extensible markup language (XML) instance that contains a hierarchy of
 elements to represent a domain's configuration. The content model of
@@ -54,8 +54,7 @@ follow.
 === Defining an Element
 
 An element represents an item of configuration data. For example, to
-represent the configuration data for a network listener, GlassFish
-Server defines the `network-listener` element.
+represent the configuration data for a network listener, {productName} defines the `network-listener` element.
 
 Define an element for each item of configuration data that you are
 adding.
@@ -121,8 +120,8 @@ public interface WombatContainerConfig extends Container {
 How Interfaces That Are Annotated With @Configured Are Implemented
 
 You are not required to implement any interfaces that you annotate with
-the `@Configured` annotation. GlassFish Server implements these
-interfaces by using the `Dom` class. GlassFish Server creates a proxy
+the `@Configured` annotation. {productName} implements these
+interfaces by using the `Dom` class. {productName} creates a proxy
 for each `Dom` object to implement the interface.
 
 [[gjlpb]][[GSACG00123]][[defining-an-attribute-of-an-element]]
@@ -198,8 +197,7 @@ default value.
 
 ==== Specifying Whether an Attribute Is Required or Optional
 
-Whether an attribute is required or optional determines how GlassFish
-Server responds if the parameter is omitted when the element is written
+Whether an attribute is required or optional determines how {productName} responds if the parameter is omitted when the element is written
 to the domain configuration file:
 
 * If the attribute is required, an error occurs.
@@ -240,7 +238,7 @@ import org.jvnet.hk2.config.Attribute;
 === Defining a Subelement
 
 A subelement represents a containment or ownership relationship. For
-example, GlassFish Server defines the `network-listeners` element to
+example, {productName} defines the `network-listeners` element to
 contain the configuration data for individual network listeners. The
 configuration data for an individual network listener is represented by
 the `network-listener` element, which is a subelement of
@@ -315,7 +313,7 @@ or update an attribute value that fails validation fails. Any
 validations that you specify for an attribute are performed when the
 attribute is initialized and every time the attribute is changed.
 
-To standardize the validation of configuration data, GlassFish Server
+To standardize the validation of configuration data, {productName}
 uses https://jakarta.ee/specifications/bean-validation/[Jakarta Bean Validation]
 (`https://jakarta.ee/specifications/bean-validation/`) for validating configuration
 data.
@@ -325,7 +323,7 @@ JavaBeans components.
 To validate an attribute of an element, annotate the attribute's getter
 method with the annotation in the `jakarta.validation.constraints` package
 that performs the validation that you require. The following table lists
-commonly used annotations for validating GlassFish Server configuration
+commonly used annotations for validating {productName} configuration
 data.
 For the complete list of annotations, see the
 https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html[`jakarta.validation.constraints`
@@ -334,7 +332,7 @@ package summary]
 
 [[sthref8]][[gjrlg]]
 
-Table 6-1 Commonly Used Annotations for Validating GlassFish Server
+Table 6-1 Commonly Used Annotations for Validating {productName}
 Configuration Data
 
 [width="100%",cols="<37%,<63%",options="header",]
@@ -478,7 +476,7 @@ to write the fragment to the correct location in the `domain.xml` file.
 object only if the instance is `null`.
 If your add-on component is a container, invoke this method within the
 implementation of the `setup` method the sniffer class.
-When the container is first instantiated, GlassFish Server invokes the `setup` method.
+When the container is first instantiated, {productName} invokes the `setup` method.
 The test that the instance is `null` is required to ensure that the
 configuration data is added only if the data is not already present in
 the `domain.xml` file.
@@ -653,7 +651,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 === Dotted Names and REST URLs of Configuration Attributes
 
-The GlassFish Server administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
+The {productName} administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
 link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:

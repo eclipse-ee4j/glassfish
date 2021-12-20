@@ -14,9 +14,9 @@ prev=part-services-and-apis.html
 == 14 Using the JDBC API for Database Access
 
 This chapter describes how to use the Java Database Connectivity (JDBC)
-API for database access with the Oracle GlassFish Server. This chapter
+API for database access with the {productName}. This chapter
 also provides high level JDBC implementation instructions for servlets
-and EJB components using the GlassFish Server.
+and EJB components using the {productName}.
 
 The JDBC specifications are available at
 `http://www.oracle.com/technetwork/java/javase/jdbc/index.html`.
@@ -27,7 +27,7 @@ A useful JDBC tutorial is located at
 
 [NOTE]
 ====
-The GlassFish Server does not support connection pooling or transactions
+The {productName} does not support connection pooling or transactions
 for an application's database access if it does not use standard Jakarta EE
 `DataSource` objects.
 ====
@@ -70,7 +70,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--initsql` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `init-sql` option in the `asadmin set` command. For
 example:
 +
@@ -78,8 +78,7 @@ example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-string"
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[ghqrx]][[GSDVG00496]][[setting-a-statement-timeout]]
 
@@ -101,7 +100,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--statementtimeout` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[gktbf]][[GSDVG00497]][[statement-leak-detection-and-leaked-statement-reclamation]]
 
@@ -161,8 +160,7 @@ thereby improving performance. Instead of the statement being prepared
 each time, the cache is searched for a match. The overhead of parsing
 and creating new statements each time is eliminated.
 
-Statement caching is usually a feature of the JDBC driver. The GlassFish
-Server provides caching for drivers that do not support caching. To
+Statement caching is usually a feature of the JDBC driver. The {productName} provides caching for drivers that do not support caching. To
 enable this feature, set the Statement Cache Size for the JDBC
 connection pool in one of the following ways:
 
@@ -171,7 +169,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--statementcachesize` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `statement-cache-size` option in the `asadmin set`
 command. For example:
 +
@@ -179,8 +177,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.statement-cache-size=10
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 By default, this attribute is set to zero and the statement caching is
 turned off. To enable statement caching, you can set any positive
@@ -202,7 +199,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--sqltracelisteners` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `sql-trace-listeners` option in the `asadmin set` command.
 For example:
 +
@@ -210,16 +207,15 @@ For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.sql-trace-listeners=listeners
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
-The GlassFish Server provides a public interface,
+The {productName} provides a public interface,
 org.glassfish.api.jdbc.SQLTraceListener , that implements a means of
 recording `SQLTraceRecord` objects. To make custom implementations of
-this interface available to the GlassFish Server, place the
-implementation classes in as-install`/lib`.
+this interface available to the {productName}, place the
+implementation classes in as-install``/lib``.
 
-The GlassFish Server provides an SQL tracing logger to log the SQL
+The {productName} provides an SQL tracing logger to log the SQL
 operations in the form of `SQLTraceRecord` objects in the `server.log`
 file. The module name under which the SQL operation is logged is
 `jakarta.enterprise.resource.sqltrace`. SQL traces are logged as FINE
@@ -239,7 +235,7 @@ This trace shows that an `executeUpdate(String sql, String columnNames)`
 operation is being done.
 
 When SQL statement tracing is enabled and JDBC connection pool
-monitoring is enabled, GlassFish Server maintains a tracing cache of
+monitoring is enabled, {productName} maintains a tracing cache of
 recent queries and their frequency of use. The following JDBC connection
 pool properties can be configured to control this cache and the
 monitoring statistics available from it:
@@ -332,7 +328,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify the `--pooling` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `pooling` option in the `asadmin set` command. For
 example:
 +
@@ -340,8 +336,7 @@ example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.pooling=false
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 The `pooling` option and the system property
 `com.sun.enterprise.connectors.SwitchoffACCConnectionPooling`, which
@@ -391,7 +386,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--associatewiththread` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `associate-with-thread` option in the `asadmin set`
 command. For example:
 +
@@ -399,8 +394,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.associate-with-thread=true
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[giyfg]][[GSDVG00503]][[custom-connection-validation]]
 
@@ -410,7 +404,7 @@ You can specify a custom implementation for Connection Validation that
 is faster or optimized for a specific database. Set the Validation
 Method attribute to the value `custom-validation`. (Other validation
 methods available are `table` (the default), `auto-commit`, and
-`meta-data`.) The GlassFish Server provides a public interface,
+`meta-data`.) The {productName} provides a public interface,
 org.glassfish.api.jdbc.ConnectionValidation, which you can implement to
 plug in your implementation. A new attribute, Validation Classname,
 specifies the fully qualified name of the class that implements the
@@ -430,7 +424,7 @@ information, click the Help button in the Administration Console.
 * Specify the `--isconnectionvalidatereq`, `--validationmethod`, and
 `--validationclassname` options in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `is-connection-validation-required`,
 `connection-validation-method`, and `validation-classname` options in
 the `asadmin set` command. For example:
@@ -441,8 +435,7 @@ asadmin set domain1.resources.jdbc-connection-pool.MyPool.is-connection-validati
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.connection-validation-method=custom-validation
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.validation-classname=impl-class
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 By default, optimized validation mechanisms are provided for DB2, Apache
 Derby, MSSQL, MySQL, Oracle, PostgreSQL and Sybase databases.
@@ -470,14 +463,13 @@ reference. To turn off connection sharing, set `res-sharing-scope` to
 `Unshareable`.
 
 For general information about connections and JDBC URLs, see
-"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in GlassFish
-Server Open Source Edition Administration Guide.
+"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide.
 
 [[gezfh]][[GSDVG00505]][[marking-bad-connections]]
 
 ==== Marking Bad Connections
 
-The `DataSource` implementation in the GlassFish Server provides a
+The `DataSource` implementation in the {productName} provides a
 `markConnectionAsBad` method. A marked bad connection is removed from
 its connection pool when it is closed. The method signature is as
 follows:
@@ -512,7 +504,7 @@ finally{
 
 ==== Handling Invalid Connections
 
-If a `ConnectionErrorOccured` event occurs, the GlassFish Server
+If a `ConnectionErrorOccured` event occurs, the {productName}
 considers the connection invalid and removes the connection from the
 connection pool. Typically, a JDBC driver generates a
 `ConnectionErrorOccured` event when it finds a `ManagedConnection`
@@ -550,12 +542,12 @@ asadmin set server.resources.jdbc-connection-pool.JCPool1.is-connection-validati
 asadmin set server.resources.jdbc-connection-pool.JCPool1.property.prefer-validate-over-recreate="true"
 ----
 
-For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+For details, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual].
 
 The interface ValidatingManagedConnectionFactory exposes the method
 `getInvalidConnections` to allow retrieval of the invalid connections.
-The GlassFish Server checks if the JDBC driver implements this
+The {productName} checks if the JDBC driver implements this
 interface, and if it does, invalid connections are removed when the
 connection pool is resized.
 
@@ -589,15 +581,15 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--wrapjdbcobjects` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[beamt]][[GSDVG00508]][[obtaining-a-physical-connection-from-a-wrapped-connection]]
 
 ==== Obtaining a Physical Connection From a Wrapped Connection
 
-The `DataSource` implementation in the GlassFish Server provides a
+The `DataSource` implementation in the {productName} provides a
 `getConnection` method that retrieves the JDBC driver's `SQLConnection`
-from the GlassFish Server's `Connection` wrapper. The method signature
+from the {productName}'s `Connection` wrapper. The method signature
 is as follows:
 
 [source,java]
@@ -653,7 +645,7 @@ Advanced Attributes page in the Administration Console. The default is
 Administration Console.
 * Specify the `--allownoncomponentcallers` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `allow-non-component-callers` option in the `asadmin set`
 command. For example:
 +
@@ -661,8 +653,7 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.allow-non-component-callers=true
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Create a JDBC resource with a `__pm` suffix.
 
 Accessing a `DataSource` using the `Synchronization.beforeCompletion()`
@@ -679,8 +670,7 @@ You can define an application-scoped database or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[geqvg]][[GSDVG00187]][[restrictions-and-optimizations]]
 
@@ -695,7 +685,7 @@ affect using the JDBC API.
 
 By default, DataDirect and Oracle JDBC drivers for Sybase databases
 create a stored procedure for each parameterized `PreparedStatement`. On
-the GlassFish Server, exceptions are thrown when primary key identity
+the {productName}, exceptions are thrown when primary key identity
 generation is attempted. To disable the creation of these stored
 procedures, set the property `PrepareMethod=direct` for the JDBC
 connection pool.

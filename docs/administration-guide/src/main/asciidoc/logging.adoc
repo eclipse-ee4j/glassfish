@@ -14,7 +14,7 @@ prev=webapps.html
 == 7 Administering the Logging Service
 
 This chapter provides instructions on how to configure logging and how
-to view log information in the GlassFish Server Open Source Edition 7 environment.
+to view log information in the {productName} 7 environment.
 
 The following topics are addressed here:
 
@@ -31,7 +31,7 @@ Administration Console online help.
 
 === About Logging
 
-Logging is the process by which GlassFish Server Open Source Edition
+Logging is the process by which {productName}
 captures information about events that occur, such as configuration
 errors, security failures, or server malfunction. This data is recorded
 in log files and is usually the first source of information when
@@ -55,7 +55,7 @@ The following topics are addressed here:
 
 ==== Log Files
 
-GlassFish Server Open Source Edition log records are captured in the
+{productName} log records are captured in the
 server log file, which captures information about the operation of a server instance
 running in the domain. Each instance, managed server
 instance (that is, each cluster member), and the domain administration
@@ -71,7 +71,7 @@ The following topics are addressed here:
 
 ===== Log File Names and Locations
 
-In an GlassFish Server Open Source Edition domain, log files have the
+In an {productName} domain, log files have the
 following name and location by default:
 
 [width="100%",cols="27%,73%",options="header",]
@@ -88,7 +88,7 @@ cluster with two managed servers (`ClusterServer1` and `ClusterServer1`)
 and a standalone instance (`StandaloneServer`), the log files might be
 arranged in the following directory structure. In this directory
 structure, the `server.log` file for the DAS is located in
-domain-dir`/logs`.
+domain-dir``/logs``.
 
 [source]
 ----
@@ -119,7 +119,7 @@ link:#gkmak[To Change the Name and Location of the Log File].
 
 ===== Log Records
 
-GlassFish Server Open Source Edition writes log records in either the
+{productName} writes log records in either the
 Oracle Diagnostics Logging (ODL) format or the Uniform Log Formatter
 (ULF) format. The default format is ODL. For information about changing
 the format, see link:#CEGDJEBG[Setting the Log File Format].
@@ -127,9 +127,9 @@ the format, see link:#CEGDJEBG[Setting the Log File Format].
 A custom formatter can also be used by specifying the fully qualified
 name of a class that extends the `java.util.logging.Formatter` class.
 The custom formatter class can be packaged in a JAR file and placed in
-the domain-dir`/lib/ext` directory, or implemented as a Hundred-Kilobyte
+the domain-dir``/lib/ext`` directory, or implemented as a Hundred-Kilobyte
 Kernel (HK2) service and the JAR containing the formatter implementation
-placed in the as-install`/modules` directory.
+placed in the as-install``/modules`` directory.
 
 Log records formatted in the ODL format are displayed as follows:
 
@@ -143,8 +143,7 @@ Log records formatted in the ODL format are displayed as follows:
 fields may be empty.
 * yyyy-mm-dd`T`hh:mm:ss.SSSS-Z represents the date and time that the
 record was created. For example: `2013-04-12T08:08:30.154-0700`
-* ProductName-Version represents the current version of GlassFish Server
-Open Source Edition. For example: `glassfish`
+* ProductName-Version represents the current version of {productName}. For example: `glassfish`
 * Log Level represents the log level. You can set any of the following
 values: `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`, `CONFIG`,
 `FINE`, `FINER`, and `FINEST`. The default is `INFO`.
@@ -182,14 +181,13 @@ record was created. For example: `2013-04-18T09:27:44.315-0700`
 * Log Level represents the log level. You can set any of the following
 values: `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`, `CONFIG`,
 `FINE`, `FINER`, and `FINEST`. The default is `INFO`.
-* ProductName-Version represents the current version of GlassFish Server
-Open Source Edition. For example: `glassfish`
+* ProductName-Version represents the current version of {productName}. For example: `glassfish`
 * LoggerName represents a hierarchical logger namespace that identifies
 the source of the log module. For example: `jakarta.enterprise.web.core`
 * Key Value Pairs represents pairs of key names and values and can
 include a message ID. For example: `_MessageID=AS-WEB-CORE-00306`.
 +
-Message IDs are included for all GlassFish Server Open Source Edition
+Message IDs are included for all {productName}
 `EMERGENCY`, `ALERT`, `SEVERE`, and `WARNING` messages, and for many
 `INFO` messages.
 * Message represents the text of the log message. Multiline messages
@@ -212,8 +210,7 @@ Administration Console, see link:#gkobx[Viewing Log Records].
 
 ===== Log Rotation
 
-By default, when a log file grows to 2 MB, GlassFish Server Open Source
-Edition renames (rotates) the file to incorporate a timestamp and
+By default, when a log file grows to 2 MB, {productName} renames (rotates) the file to incorporate a timestamp and
 creates a new log file. The log file is renamed as `server.log_`date,
 where date is the date and time that the file was rotated.
 
@@ -225,7 +222,7 @@ Rotation].
 
 ==== Logger Namespaces
 
-GlassFish Server Open Source Edition provides a logger for each of its
+{productName} provides a logger for each of its
 modules. The following list is an example of the logger namespaces in a
 server instance as they appear when using the `list-log-levels`
 subcommand.
@@ -284,10 +281,10 @@ Loggers].
 
 ==== Logging Targets
 
-Each instance in an GlassFish Server Open Source Edition domain has a
+Each instance in an {productName} domain has a
 dedicated log file, and each instance and cluster has its own logging
 properties file. To configure logging for an instance or a cluster,
-GlassFish Server Open Source Edition allows you target specific log
+{productName} allows you target specific log
 files or logging properties files when you do the following:
 
 * Set global or module-specific log levels
@@ -341,20 +338,20 @@ configuration files. A logging properties file is named
 * Properties for custom handlers
 * Log rotation and logger format properties
 
-By default in an GlassFish Server Open Source Edition domain, logging
+By default in an {productName} domain, logging
 properties files are created in the following locations:
 
 [width="100%",cols="18%,82%",options="header",]
 |===
 |Target |Default Location of Logging Properties File
-|DAS |domain-dir`/config``/logging.properties`
+|DAS |domain-dir``/config```/logging.properties`
 
 |A configuration |domain-dir`/config/`config-name`/logging.properties`,
 where config-name represents the name of a configuration that is shared
 by one or more instances or clusters.
 
 |An instance
-|domain-dir`/config``/`instance-name`-config/logging.properties`, where
+|domain-dir``/config```/`instance-name`-config/logging.properties`, where
 instance-name represents the name of the instance.
 
 |A cluster
@@ -478,7 +475,7 @@ is used by all instances running on the same host.
 [NOTE]
 ====
 Setting the `java.util.logging.config.file` system property causes all
-other GlassFish Server Open Source Edition logging properties files on
+other {productName} logging properties files on
 the host to be overridden.
 ====
 
@@ -492,7 +489,7 @@ java -Djava.util.logging.config.file=properties_file
 ----
 Alternatively, you can use the Administration Console to set this system property.
 
-2. To apply your change, restart GlassFish Server Open Source Edition.
+2. To apply your change, restart {productName}.
 
 [[GSADG00175]][[gkmgz]]
 Example 7-2 Setting the `java.util.logging.config.file` System Property
@@ -530,7 +527,7 @@ addition, when setting log levels, you can target a configuration,
 server, instance, or cluster.
 
 Because setting log levels is a dynamic operation, you do not need to
-restart GlassFish Server Open Source Edition for changes to take effect.
+restart {productName} for changes to take effect.
 
 Setting either global or logger-specific log levels is done by using the
 `set-log-levels` subcommand. Listing log levels is done by using the
@@ -546,7 +543,7 @@ The following topics are addressed here:
 
 ===== To List Log Levels
 
-GlassFish Server Open Source Edition provides the means to list all
+{productName} provides the means to list all
 loggers and their log levels. Listing the loggers provides a convenient
 means to view current loggers and log levels either prior to or after
 making log level changes.
@@ -692,7 +689,7 @@ jakarta.enterprise.system.container.web.level=FINE
 ----
 
 Because setting log levels is a dynamic operation, you do not need to
-restart GlassFish Server Open Source Edition for changes to take effect.
+restart {productName} for changes to take effect.
 
 1. Ensure that the target server or cluster is running. Remote subcommands require a running server.
 
@@ -763,7 +760,7 @@ topics are addressed here:
 ===== To Set the Log File Format
 
 Use the `set-log-file-format` subcommand in remote mode to set the
-formatter used by GlassFish Server Open Source Edition to format log
+formatter used by {productName} to format log
 records in log files. You can also use the `set-log-attributes`
 subcommand. Log formats for all server instances in a cluster will be
 the same. For information about log formats, see link:#gkmex[Log
@@ -780,7 +777,7 @@ same file.
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
 2. Set the formatter by using the
 link:../reference-manual/redeploy.html#GSRFM00217[`set-log-file-format`] subcommand.
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG1064]][[sthref23]]
 Example 7-8 Setting the Log File Format using `set-log-file-format`
@@ -846,7 +843,7 @@ com.sun.enterprise.server.logging.GFFileHandler.excludeFields=fields
 where `fields` is a comma-separated list of the name-value fields to
 exclude from the log file.
 
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG1068]][[sthref25]]
 Example 7-10 Excluding Fields in Log Records
@@ -890,7 +887,7 @@ following attribute and its value (`true` or `false`):
 com.sun.enterprise.server.logging.GFFileHandler.multiLineMode=value
 ----
 
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG1071]][[sthref26]]
 Example 7-11 Setting Multiline Mode
@@ -919,15 +916,14 @@ You can view the full syntax and options of the subcommand by typing
 
 ==== Setting Log File Rotation
 
-As explained in link:#ablul[Log Files], GlassFish Server Open Source
-Edition by default rotates log files when they reach 2 MB in size.
+As explained in link:#ablul[Log Files], {productName} by default rotates log files when they reach 2 MB in size.
 However, you can change the default rotation settings. For example, you
 can change the file size at which the server rotates the log file or you
 can configure a server to rotate log files based on a time interval. In
 addition to changing when rotation occurs, you can also:
 
 * Specify the maximum number of rotated files that can accumulate.
-By default, GlassFish Server Open Source Edition does not limit the
+By default, {productName} does not limit the
 number of rotated log files that are retained. However, you can set a
 limit. After the number of log files reaches this limit, subsequent file
 rotations delete the oldest rotated log file.
@@ -965,7 +961,7 @@ specifying the following attribute and the desired limit in bytes:
 com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes=bytes
 ----
 
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG00181]][[gkmay]]
 Example 7-12 Changing the Rotation Size
@@ -1015,7 +1011,7 @@ specifying the following attribute and the desired limit in minutes:
 com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=minutes
 ----
 
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG00182]][[gkmbc]]
 Example 7-13 Changing the Rotation Interval
@@ -1075,14 +1071,13 @@ com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=minutes
 The behavior of the `com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles`
 attribute is as follows:
 +
-* If the property is not set, GlassFish Server Open Source Edition keeps
+* If the property is not set, {productName} keeps
   a maximum of 10 rotated log files.
-* If the property is set to an invalid number or null, GlassFish Server
-  Open Source Edition keeps a maximum of 10 rotated log files.
-* If the property is set to 0, GlassFish Server Open Source Edition
+* If the property is set to an invalid number or null, {productName} keeps a maximum of 10 rotated log files.
+* If the property is set to 0, {productName}
   retains all rotated log files (that is, sets no maximum).
 
-3. To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart {productName}.
 
 [[GSADG00183]][[gkmaq]]
 Example 7-14 Changing the Limit Number of Retained Files
@@ -1119,7 +1114,7 @@ immediately moved to a new time-stamped file and a new log file is
 created.
 
 Because log rotation is a dynamic operation, you do not need to restart
-GlassFish Server Open Source Edition for changes to take effect.
+{productName} for changes to take effect.
 
 1. Ensure that the target server or cluster is running.
 2. Rotate log files by using the link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]
@@ -1150,13 +1145,13 @@ You can view the full syntax and options of the subcommand by typing
 
 ==== Adding a Custom Logging Handler
 
-By default, GlassFish Server Open Source Edition log records are
+By default, {productName} log records are
 captured in a server log file using the format described in
 link:#gkmex[Log Records]. However, you may find that you want to log
 messages to a different location, such as a database or a remote server,
 or log messages from specific loggers to your own file. This can be done
 by implementing a custom log handler. This section explains how to add a
-custom log handler to the GlassFish Server Open Source Edition logging
+custom log handler to the {productName} logging
 service.
 
 [[ghmen]][[GSADG00384]][[to-add-a-custom-log-handler]]
@@ -1173,24 +1168,22 @@ configured as follows:
 handlers=java.util.logging.ConsoleHandler
 ----
 
-In GlassFish Server Open Source Edition, the best approach to developing
+In {productName}, the best approach to developing
 a custom handler is to define a Hundred-Kilobyte Kernel (HK2) component
-that implements the handler contract. GlassFish Server Open Source
-Edition registers this handler automatically because it is an HK2
-component. There is no task required of the administrator.
+that implements the handler contract. {productName} registers this handler automatically
+because it is an HK2 component. There is no task required of the administrator.
 
 
 [NOTE]
 ====
 The custom handler class should be packaged in an OSGi module and the
-JAR file placed in the as-install`/modules` directory.
+JAR file placed in the as-install``/modules`` directory.
 ====
 
 
 To configure a custom handler that is not developed as an HK2 component,
 add the new handler to the `logging.properties` file after the developer
-has put the custom handler JAR file into the domain-dir`/lib/ext`
-directory.
+has put the custom handler JAR file into the domain-dir``/lib/ext`` directory.
 
 [[GSADG872]]
 
@@ -1208,7 +1201,7 @@ handler to the `handlers` attribute.
 +
 The default target of this subcommand is the DAS. Optionally you can
 target a configuration, server, instance, or cluster.
-3. To apply your changes, restart GlassFish Server Open Source Edition.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -1244,7 +1237,7 @@ use the Log Viewer in the Administration Console. The Log Viewer
 simplifies reading, searching, and filtering log file contents. For
 instructions, see the Administration Console online help.
 
-GlassFish Server Open Source Edition also allows you to collect log
+{productName} also allows you to collect log
 files into a ZIP archive, which provides the means to obtain and view
 log files for an instance or cluster even when it is not currently
 running. The following section explains how to collect all available log
@@ -1321,7 +1314,7 @@ You can view the full syntax and options of the subcommand by typing
 === Listing Loggers
 
 You can list and view information about all public loggers in your
-distribution of GlassFish Server Open Source Edition.
+distribution of {productName}.
 
 [[CEGGICGF]][[GSADG1074]][[to-list-loggers]]
 
@@ -1329,7 +1322,7 @@ distribution of GlassFish Server Open Source Edition.
 
 Use the `list-loggers` subcommand in remote mode to list the logger
 name, subsystem, and description of loggers in your distribution of
-GlassFish Server Open Source Edition. Internal loggers are not listed.
+{productName}. Internal loggers are not listed.
 
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
 2. List loggers by using the link:../reference-manual/redeploy.html#GSRFM00217[`list-loggers`]

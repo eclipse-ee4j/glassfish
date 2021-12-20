@@ -56,7 +56,7 @@ create these files as follows:
 `derby.log`, the `start-database` subcommand creates the files in the
 current working directory.
 * Otherwise, the `start-database` subcommand creates the files in the
-as-install`/databases` directory.
+as-install``/databases`` directory.
 
 The `start-database` subcommand starts the database process, even if it
 cannot write to the log file.
@@ -102,7 +102,7 @@ asadmin-options::
   `derby.log`, the `start-database` subcommand creates the files in the
   current working directory.
   * Otherwise, the `start-database` subcommand creates the files in the
-  as-install`/databases` directory.
+  as-install``/databases`` directory.
 
 +
 To create the database files at a particular location, you must set
@@ -164,8 +164,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:stop-database.html#stop-database-1[`stop-database`(1)]
 
-"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in GlassFish
-Server Open Source Edition Administration Guide
+"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

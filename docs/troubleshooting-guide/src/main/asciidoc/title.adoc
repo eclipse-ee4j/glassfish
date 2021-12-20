@@ -1,29 +1,29 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Troubleshooting Guide, Release 7
+title={productName} Troubleshooting Guide, Release 7
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= Eclipse GlassFish Server Troubleshooting Guide, Release 7
+= {productName} Troubleshooting Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Troubleshooting Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This guide describes common problems that you might encounter when using
-Eclipse GlassFish Server and how to solve them.
+{productName} and how to solve them.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Troubleshooting Guide, Release 7
+{productName} Troubleshooting Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

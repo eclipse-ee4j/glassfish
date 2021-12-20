@@ -247,13 +247,13 @@ delete files might fail.
 
 Application files can remain open because the files have been used by
 class loaders to find classes or resources, or have been opened
-explicitly by GlassFish Server or application code but never explicitly
+explicitly by {productName} or application code but never explicitly
 closed. On Windows systems, open files cannot be renamed or deleted. To
-overcome this limitation, GlassFish Server uses the `System.gc()` method
+overcome this limitation, {productName} uses the `System.gc()` method
 to garbage collect the Java object that corresponds to an open file.
 When the Java object that corresponds to an open file is garbage
 collected, the object's `finalize` method closes the open channel to the
-file. GlassFish Server can then delete or rename the file.
+file. {productName} can then delete or rename the file.
 ====
 
 
@@ -261,7 +261,7 @@ file. GlassFish Server can then delete or rename the file.
 
 ===== Setting the Frequency of Full Garbage Collection
 
-GlassFish Server uses RMI in the Administration module for monitoring.
+{productName} uses RMI in the Administration module for monitoring.
 Garbage cannot be collected in RMI-based distributed applications
 without occasional local collections, so RMI forces a periodic full
 collection. Control the frequency of these collections with the property
@@ -356,7 +356,7 @@ to the old generation is controlled by `NewRatio`. For example, setting
 generation is 1:3, the combined size of eden and the survivor spaces
 will be fourth of the heap.
 
-By default, the GlassFish Server is invoked with the Java HotSpot Server
+By default, the {productName} is invoked with the Java HotSpot Server
 JVM. The default `NewRatio` for the Server JVM is 2: the old generation
 occupies 2/3 of the heap while the new generation occupies 1/3. The
 larger new generation can accommodate many more short-lived objects,
@@ -384,7 +384,7 @@ HotSpot VM Options]
 [[GSPTG00032]][[fxxpw]]
 Example 4-1 Heap Configuration on Solaris
 
-This is an exmple heap configuration used by GlassFish Server on Solaris
+This is an exmple heap configuration used by {productName} on Solaris
 for large applications:
 
 [source]
@@ -418,20 +418,19 @@ observing the lifetime distribution of an application.
 ==== Rebasing DLLs on Windows
 
 When the JVM initializes, it tries to allocate its heap using the `-Xms`
-setting. The base addresses of GlassFish Server DLLs can restrict the
+setting. The base addresses of {productName} DLLs can restrict the
 amount of contiguous address space available, causing JVM initialization
 to fail. The amount of contiguous address space available for Java
 memory varies depending on the base addresses assigned to the DLLs. You
 can increase the amount of contiguous address space available by
-rebasing the GlassFish Server DLLs.
+rebasing the {productName} DLLs.
 
 To prevent load address collisions, set preferred base addresses with
 the rebase utilty that comes with Visual Studio and the Platform SDK.
-Use the rebase utility to reassign the base addresses of the GlassFish
-Server DLLs to prevent relocations at load time and increase the
+Use the rebase utility to reassign the base addresses of the {productName} DLLs to prevent relocations at load time and increase the
 available process memory for the Java heap.
 
-There are a few GlassFish Server DLLs that have non-default base
+There are a few {productName} DLLs that have non-default base
 addresses that can cause collisions. For example:
 
 * The `nspr` libraries have a preferred address of 0x30000000.
@@ -440,11 +439,11 @@ addresses that can cause collisions. For example:
 Move these libraries near the system DLLs (`msvcrt.dll` is at
 `0x78000000`) to increase the available maximum contiguous address space
 substantially. Since rebasing can be done on any DLL, rebase to the DLLs
-after installing the GlassFish Server.
+after installing the {productName}.
 
 [[gacmt]][[GSPTG00039]][[to-rebase-the-glassfish-servers-dlls]]
 
-===== To rebase the GlassFish Server's DLLs
+===== To rebase the {productName}'s DLLs
 
 [[sthref11]]
 
@@ -478,12 +477,12 @@ Walker website] (`http://www.dependencywalker.com`).
 4. Increase the size for the Java heap, and set the JVM Option
 accordingly on the JVM Settings page in the Admin Console.
 
-5. Restart the GlassFish Server.
+5. Restart the {productName}.
 
 [[GSPTG00033]][[fxxpz]]
 Example 4-2 Heap Configuration on Windows
 
-This is an example heap configuration used by Oracle GlassFish Server
+This is an example heap configuration used by {productName}
 for heavy server-centric applications, on Windows, as set in the
 `domain.xml` file.
 

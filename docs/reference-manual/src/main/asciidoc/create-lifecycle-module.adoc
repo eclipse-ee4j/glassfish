@@ -136,7 +136,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:delete-lifecycle-module.html#delete-lifecycle-module-1[`delete-lifecycle-module`(1)],
 link:list-lifecycle-modules.html#list-lifecycle-modules-1[`list-lifecycle-modules`(1)]
 
-"link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in GlassFish Server
-Open Source Edition Application Development Guide
+"link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in {productName} Application Development Guide
 
 

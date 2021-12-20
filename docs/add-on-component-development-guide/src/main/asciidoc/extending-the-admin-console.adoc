@@ -14,7 +14,7 @@ prev=writing-hk2-components.html
 == Extending the Administration Console
 
 The Administration Console is a browser-based tool for administering
-Eclipse GlassFish Server. It features an easy-to-navigate interface and online
+{productName}. It features an easy-to-navigate interface and online
 help. Extending the Administration Console enables you to provide a
 graphical user interface for administering your add-on component. You
 can use any of the user interface features of the Administration
@@ -48,14 +48,13 @@ bundles. These bundles provide all the features of the Administration
 Console, such as the Web Applications, Update Center, and Security
 content. To provide support for your add-on component, create your own
 OSGi bundle that implements the parts of the user interface that you
-need. Place your bundle in the `modules` directory of your GlassFish
-Server installation, along with the other Administration Console
-bundles.
+need. Place your bundle in the `modules` directory of your {productName} installation,
+along with the other Administration Console bundles.
 
 To learn how to package the Administration Console features for an
-add-on component, go to the `modules` directory of your GlassFish Server
+add-on component, go to the `modules` directory of your {productName}
 installation and examine the contents of the files named
-`console-`componentname`-plugin.jar`. Place the `console-sample-ip`
+``console-``componentname``-plugin.jar``. Place the `console-sample-ip`
 project bundle in the same place to deploy it and examine the changes
 that it makes to the Administration Console.
 
@@ -129,7 +128,7 @@ return the URL where the file can be found.
 
 === About Administration Console Templates
 
-GlassFish Server includes a set of templates that make it easier to
+{productName} includes a set of templates that make it easier to
 create Jakarta Server Faces pages for your add-on component. These templates
 use Templating for Jakarta Server Faces Technology, which is also known as
 JSFTemplating.
@@ -203,7 +202,7 @@ For example, a URL to an image named `my.gif` might look like this:
 
 The URL is constructed as follows:
 
-* `/resource` is required to locate any resource URL.
+* ``/resource`` is required to locate any resource URL.
 * `sample` is the add-on component ID. You must choose a unique ID
 value.
 * `images` is a folder under the root of the add-on component JAR file.
@@ -271,7 +270,7 @@ include the following:
 `tree`::
   At the top level
 `applicationServer`::
-  Under the GlassFish Server node
+  Under the {productName} node
 `applications`::
   Under the Applications node
 `resources`::
@@ -389,7 +388,7 @@ pages, specify the attributes of this tag as follows:
 You can add a tab to an existing tab set, or you can create a tab set
 for your own page. One way to add a tab or tab set is to use an
 integration point of type `org.glassfish.admingui:serverInstTab`, which
-adds a tab to the tab set on the main GlassFish Server page of the
+adds a tab to the tab set on the main {productName} page of the
 Administration Console. You can also create sub-tabs. Once again, the
 `parentId` element specifies where to place the tab or tab set.
 
@@ -397,7 +396,7 @@ Administration Console. You can also create sub-tabs. Once again, the
 Example 3-4 Example Tab Integration Point
 
 In the example, the following `integration-point` element adds a new tab
-on the main GlassFish Server page of the Administration Console:
+on the main {productName} page of the Administration Console:
 
 [source,xml]
 ----
@@ -414,7 +413,7 @@ This example specifies the following values:
 
 * The `id` value, `sampleTab`, specifies the integration point ID.
 * The `parentId` value, `serverInstTabs`, specifies the tab set
-associated with the server instance. The GlassFish Server page is the
+associated with the server instance. The {productName} page is the
 only one of the default Administration Console pages that has a tab set.
 * The `type` value, `org.glassfish.admingui:serverInstTab`, specifies
 the integration point type as a tab associated with the server instance.
@@ -427,7 +426,7 @@ page that displays the tab.
 Example 3-5 Example Tab Set Integration Points
 
 The following `integration-point` elements add a new tab with two
-sub-tabs, also on the main GlassFish Server page of the Administration
+sub-tabs, also on the main {productName} page of the Administration
 Console:
 
 [source,xml]

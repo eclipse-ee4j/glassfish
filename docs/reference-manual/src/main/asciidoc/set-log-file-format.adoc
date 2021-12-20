@@ -101,7 +101,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:list-loggers.html#list-loggers-1[`list-loggers`(1)]
 
-"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in GlassFish
-Server Open Source Edition Administration Guide
+"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
 
 

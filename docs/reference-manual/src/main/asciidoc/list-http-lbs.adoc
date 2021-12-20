@@ -34,8 +34,8 @@ Use the `list-http-lbs` subcommand to list physical load balancers.
 
 [NOTE]
 ====
-This subcommand is only applicable to Oracle GlassFish Server. This
-subcommand is not applicable to GlassFish Server Open Source Edition.
+This subcommand is only applicable to {productName}. This
+subcommand is not applicable to {productName}.
 ====
 
 [[sthref1495]]

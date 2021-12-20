@@ -1,29 +1,29 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Installation Guide, Release 7
+title={productName} Installation Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Installation Guide, Release 7
+= {productName} Installation Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Installation Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This book contains instructions for installing and uninstalling
-Eclipse GlassFish Server software.
+{productName} software.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Installation Guide, Release 7
+{productName} Installation Guide, Release 7
 
 Copyright © 2010, 2019 Oracle and/or its affiliates. All rights reserved.
 

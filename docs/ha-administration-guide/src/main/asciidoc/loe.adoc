@@ -26,13 +26,13 @@ Without Encryption]
 Authentication]
 * link:ssh-setup.html#gktba[2-8 Creating an Alias for the SSH User's
 Password]
-* link:ssh-setup.html#sthref9[2-9 Copying a GlassFish Server Installation
+* link:ssh-setup.html#sthref9[2-9 Copying a {productName} Installation
 to Multiple DCOM-Enabled Hosts]
-* link:ssh-setup.html#sthref10[2-10 Copying a GlassFish Server
+* link:ssh-setup.html#sthref10[2-10 Copying a {productName}
 Installation to Multiple SSH-Enabled Hosts]
-* link:ssh-setup.html#sthref11[2-11 Removing GlassFish Server Software
+* link:ssh-setup.html#sthref11[2-11 Removing {productName} Software
 From Multiple DCO\M-Enabled Hosts]
-* link:ssh-setup.html#sthref12[2-12 Removing GlassFish Server Software
+* link:ssh-setup.html#sthref12[2-12 Removing {productName} Software
 From Multiple SSH-Enabled Hosts]
 * link:nodes.html#sthref13[3-1 Creating a DCOM Node]
 * link:nodes.html#sthref14[3-2 Listing Basic Information About All DCOM
@@ -78,9 +78,9 @@ With a Node]
 * link:clusters.html#gkqkr[4-10 Deleting a Cluster]
 * link:instances.html#gkqmv[5-1 Creating a Clustered Instance Centrally]
 * link:instances.html#gksfe[5-2 Listing Basic Information About All
-GlassFish Server Instances in a Domain]
+{productName} Instances in a Domain]
 * link:instances.html#gkabz[5-3 Listing Detailed Information About All
-GlassFish Server Instances in a Domain]
+{productName} Instances in a Domain]
 * link:instances.html#gkqms[5-4 Deleting an Instance Centrally]
 * link:instances.html#gkqml[5-5 Starting a Cluster]
 * link:instances.html#gkqmn[5-6 Stopping a Cluster]

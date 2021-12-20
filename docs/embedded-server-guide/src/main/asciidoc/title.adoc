@@ -1,31 +1,30 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Embedded Server Guide, Release 7
+title={productName} Embedded Server Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Embedded Server Guide, Release 7
+= {productName} Embedded Server Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Embedded Server Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
-This document explains how to run applications in embedded GlassFish
-Server Open Source Edition and to develop applications in which
-GlassFish Server is embedded. This document is for software developers
-who are developing applications to run in embedded GlassFish Server. The
+This document explains how to run applications in embedded {productName} and to develop applications in which
+{productName} is embedded. This document is for software developers
+who are developing applications to run in embedded {productName}. The
 ability to program in the Java language is assumed.
 
-Note: The main thrust of the Eclipse GlassFish Server 7
+Note: The main thrust of the {productName} 7
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Jakarta EE 10
-platform. Thus, the embedded server feature of GlassFish Server was not
+platform. Thus, the embedded server feature of {productName} was not
 a focus of this release. This feature is included in the release, but it
 may not function properly with some of the new features added in support
 of the Jakarta EE 10 platform.
@@ -34,7 +33,7 @@ of the Jakarta EE 10 platform.
 
 '''''
 
-Eclipse GlassFish Server Embedded Server Guide, Release 7
+{productName} Embedded Server Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

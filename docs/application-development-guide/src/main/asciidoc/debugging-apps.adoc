@@ -13,8 +13,7 @@ prev=class-loaders.html
 [[debugging-applications]]
 == 3 Debugging Applications
 
-This chapter gives guidelines for debugging applications in the Oracle
-GlassFish Server.
+This chapter gives guidelines for debugging applications in the {productName}.
 
 The following topics are addressed here:
 
@@ -25,7 +24,7 @@ The following topics are addressed here:
 * link:#beafk[Open Message Queue Debugging]
 * link:#beafl[Enabling Verbose Mode]
 * link:#gkpdk[Class Loader Debugging]
-* link:#beafm[GlassFish Server Logging]
+* link:#beafm[{productName} Logging]
 * link:#beafn[Profiling Tools]
 
 [[beafd]][[GSDVG00101]][[enabling-debugging]]
@@ -63,17 +62,16 @@ For more information about the `jdb` debugger, see the following links:
 * Java Platform Debugger Architecture - Connecting with JDB:
 `http://java.sun.com/javase/technologies/core/toolsapis/jpda/`
 
-GlassFish Server debugging is based on the JPDA. For more information,
+{productName} debugging is based on the JPDA. For more information,
 see link:#beafe[JPDA Options].
 
-You can attach to the GlassFish Server using any JPDA compliant
+You can attach to the {productName} using any JPDA compliant
 debugger, including that of http://www.netbeans.org[NetBeans]
 (`http://www.netbeans.org`), Java Studio Enterprise, JBuilder, Eclipse,
 and so on.
 
-You can enable debugging even when the GlassFish Server is started
-without the `--debug` option. This is useful if you start the GlassFish
-Server from the Windows Start Menu, or if you want to make sure that
+You can enable debugging even when the {productName} is started
+without the `--debug` option. This is useful if you start the {productName} from the Windows Start Menu, or if you want to make sure that
 debugging is always turned on.
 
 [[fvyit]][[GSDVG00049]][[to-set-the-server-to-automatically-start-up-in-debug-mode]]
@@ -100,7 +98,7 @@ the JVM Settings page.
 
 === JPDA Options
 
-The default JPDA options in GlassFish Server are as follows:
+The default JPDA options in {productName} are as follows:
 
 [source]
 ----
@@ -128,8 +126,7 @@ To generate a Java stack trace for debugging, use the
 `asadmin generate-jvm-report --type=thread` command. The stack trace
 goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
-`asadmin generate-jvm-report` command, see the link:../reference-manual/toc.html#GSRFM[GlassFish
-Server Open Source Edition Reference Manual].
+`asadmin generate-jvm-report` command, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[gekvq]][[GSDVG00104]][[application-client-debugging]]
 
@@ -155,14 +152,12 @@ debugging both concurrently. For details about setting the port, see
 link:#beafe[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
-information about the `appclient` script, see the link:../reference-manual/toc.html#GSRFM[GlassFish
-Server Open Source Edition Reference Manual].
+information about the `appclient` script, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
 ====
-The Application Client Container is supported only in the full GlassFish
-Server, not in the Web Profile. See
+The Application Client Container is supported only in the full {productName}, not in the Web Profile. See
 link:java-clients.html#beakt[Developing Java Clients].
 ====
 
@@ -181,7 +176,7 @@ Message Queue Administration Guide].
 
 [NOTE]
 ====
-JMS resources are supported only in the full GlassFish Server, not in
+JMS resources are supported only in the full {productName}, not in
 the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
 ====
 
@@ -241,15 +236,15 @@ not work with the JRockit JVM.
 ====
 
 
-To send the GlassFish Server messages to the Administration Console
+To send the {productName} messages to the Administration Console
 instead of `stderr`, start the domain in verbose mode as described in
 link:#beafl[Enabling Verbose Mode].
 
 [[beafm]][[GSDVG00108]][[glassfish-server-logging]]
 
-=== GlassFish Server Logging
+=== {productName} Logging
 
-You can use the GlassFish Server's log files to help debug your
+You can use the {productName}'s log files to help debug your
 applications. Use the Administration Console. Select the Stand-Alone
 Instances component, select the instance from the table, then click the
 View Log Files button in the General Information page. Or select the
@@ -265,9 +260,8 @@ For details about logging, click the Help button in the Administration Console.
 
 === Profiling Tools
 
-You can use a profiler to perform remote profiling on the GlassFish
-Server to discover bottlenecks in server-side performance. This section
-describes how to configure profilers for use with GlassFish Server.
+You can use a profiler to perform remote profiling on the {productName} to discover bottlenecks in server-side performance. This section
+describes how to configure profilers for use with {productName}.
 
 The following topics are addressed here:
 
@@ -362,7 +356,7 @@ the same thing as JVM options.
 ====
 
 3. [[hprofstp2]]
-Restart the GlassFish Server.
+Restart the {productName}.
 +
 This writes an HPROF stack dump to the file you specified using the file
 HPROF parameter.
@@ -383,7 +377,7 @@ libraries are loaded into the server process.
 
 1. Install JProbe 3.0.1.1. For details, see the JProbe documentation.
 
-2. Configure GlassFish Server using the Administration Console:
+2. Configure {productName} using the Administration Console:
 [arabic]
 .. Select the JVM Settings component under the relevant configuration.
 .. Then select the Profiler tab.
@@ -406,7 +400,7 @@ the Value field, then check its box:
 ====
 If any of the configuration options are missing or incorrect, the
 profiler might experience problems that affect the performance of the
-GlassFish Server.
+{productName}.
 ====
 +
 When the server starts up with this configuration, you can attach the

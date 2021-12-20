@@ -14,17 +14,17 @@ prev=user-security.html
 == 3 Administering Message Security
 
 This chapter provides information and procedures on configuring the
-message layer security for web services in the GlassFish Server environment.
+message layer security for web services in the {productName} environment.
 
 [NOTE]
 ====
 Message security (JSR 196) is supported only in the Full Platform
-Profile of GlassFish Server, not in the Web Profile.
+Profile of {productName}, not in the Web Profile.
 ====
 
 The following topics are addressed here:
 
-* link:#ablrn[About Message Security in GlassFish Server]
+* link:#ablrn[About Message Security in {productName}]
 * link:#giood[Enabling Default Message Security Providers for Web Services]
 * link:#giouf[Configuring Message Protection Policies]
 * link:#giosl[Administering Non-default Message Security Providers]
@@ -33,14 +33,14 @@ The following topics are addressed here:
 
 Some of the material in this chapter assumes a basic understanding of
 security and web services concepts. For more information about security,
-see link:system-security.html#ggktf[About System Security in GlassFish Server].
+see link:system-security.html#ggktf[About System Security in {productName}].
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console online help.
 
 [[ablrn]][[GSSCG00153]][[about-message-security-in-glassfish-server]]
 
-=== About Message Security in GlassFish Server
+=== About Message Security in {productName}
 
 Message security enables a server to perform end-to-end authentication
 of web service invocations and responses at the message layer. Security
@@ -50,20 +50,19 @@ destination(s). Message security differs from transport layer security
 in that message security can be used to decouple message protection from
 message transport so that messages remain protected after transmission.
 
-Web services deployed on GlassFish Server are secured by binding SOAP
+Web services deployed on {productName} are secured by binding SOAP
 layer message security providers and message protection policies to the
 containers in which the applications are deployed, or to web service
 endpoints served by the applications. SOAP layer message security
-functionality is configured in the client-side containers of GlassFish
-Server by binding SOAP layer message security providers and message
+functionality is configured in the client-side containers of {productName} by binding SOAP layer message security providers and message
 protection policies to the client containers or to the portable service
 references declared by client applications.
 
-Message-level security can be configured for the entire GlassFish Server
+Message-level security can be configured for the entire {productName}
 or for specific applications or methods. Configuring message security at
 the application level is discussed in the
 link:../application-development-guide/toc.html#GSDVG[
-GlassFish Server Open Source Edition Application Development Guide].
+{productName} Application Development Guide].
 
 The following topics are addressed here:
 
@@ -88,19 +87,19 @@ WS-Security as provided by WSIT is in addition to existing
 transport-level security, which can still be used.
 
 The Simple Object Access Protocol (SOAP) layer message security
-providers installed with GlassFish Server can be used to employ
+providers installed with {productName} can be used to employ
 username/password and X.509 certificate security tokens to authenticate
 and encrypt SOAP web services messages.
 
-* Username Tokens. GlassFish Server uses username tokens in SOAP
+* Username Tokens. {productName} uses username tokens in SOAP
 messages to authenticate the message sender. The recipient of a message
 containing a username token (within embedded password) validates that
 the message sender is authorized to act as the user (identified in the
 token) by confirming that the sender knows the password of the user.
 +
 When using a username token, a valid user database must be configured on
-GlassFish Server.
-* Digital Signatures. GlassFish Server uses XML digital signatures to
+{productName}.
+* Digital Signatures. {productName} uses XML digital signatures to
 bind an authentication identity to message content. Clients use digital
 signatures to establish their caller identity. Digital signatures are
 verified by the message receiver to authenticate the source of the
@@ -108,7 +107,7 @@ message content (which might be different from the sender of the
 message.)
 +
 When using digital signatures, valid keystore and truststore files must
-be configured on GlassFish Server.
+be configured on {productName}.
 * Encryption. The purpose of encryption is to modify the data so that it
 can only be understood by its intended audience. This is accomplished by
 substituting an encrypted element for the original content. When based
@@ -123,18 +122,18 @@ supports encryption must be installed.
 ==== Authentication Providers
 
 The authentication layer is the message layer on which authentication
-processing must be performed. GlassFish Server enforces web services
+processing must be performed. {productName} enforces web services
 message security at the SOAP layer. The types of authentication that are
 supported include the following:
 
 * Sender authentication, including username-password authentication
 * Content authentication, including XML digital signatures
 
-GlassFish Server invokes authentication providers to process SOAP
+{productName} invokes authentication providers to process SOAP
 message layer security. The message security providers provide
 information such as the type of authentication that is required for the
 request and response messages. The following message security providers
-are included with GlassFish Server:
+are included with {productName}:
 
 * Client-side Provider. A client-side provider establishes (by signature
 or username/password) the source identity of request messages and/or
@@ -144,7 +143,7 @@ establishes its container as an authorized recipient of a received
 response (by successfully decrypting it) and validates passwords or
 signatures in the response to authenticate the source identity
 associated with the response. Client-side providers configured in
-GlassFish Server can be used to protect the request messages sent and
+{productName} can be used to protect the request messages sent and
 the response messages received by server-side components (servlets and
 EJB components) acting as clients of other services.
 +
@@ -197,14 +196,13 @@ message sender.
 Request and response message protection policies are defined when a
 security provider is configured into a container. Application-specific
 message protection policies (at the granularity of the web service port
-or operation) can also be configured within the GlassFish Server
+or operation) can also be configured within the {productName}
 deployment descriptors of the application or application client. In any
 situation where message protection policies are defined, the request and
 response message protection policies of the client must be equivalent t)
 the request and response message protection policies of the server. For
 more information about defining application-specific message protection
-policies, see "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in GlassFish
-Server Open Source Edition Application Development Guide.
+policies, see "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in {productName} Application Development Guide.
 
 [[ablrz]][[GSSCG00221]][[application-specific-web-services-security]]
 
@@ -212,7 +210,7 @@ Server Open Source Edition Application Development Guide.
 
 Application-specific web services security functionality is configured
 (at application assembly) by defining the `message-security-binding`
-elements in the GlassFish Server deployment descriptors of the
+elements in the {productName} deployment descriptors of the
 application. These `message-security-binding` elements are used to
 associate a specific security provider or message protection policy with
 a web service endpoint or service reference, and might be qualified so
@@ -220,16 +218,15 @@ that they apply to a specific port or method of the corresponding
 endpoint or referenced service.
 
 For information about defining application-specific message protection
-policies, see "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in GlassFish
-Server Open Source Edition Application Development Guide.
+policies, see "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in {productName} Application Development Guide.
 
 [[gioom]][[GSSCG00222]][[message-security-administration]]
 
 ==== Message Security Administration
 
-When GlassFish Server is installed, SOAP layer message security
+When {productName} is installed, SOAP layer message security
 providers are configured in the client and server-side containers of
-GlassFish Server, where they are available for binding for use by the
+{productName}, where they are available for binding for use by the
 containers, or by individual applications or clients deployed in the
 containers. During installation, the default providers are configured
 with a simple message protection policy that, if bound to a container,
@@ -237,29 +234,29 @@ or to an application or client in a container, would cause the source of
 the content in all request and response messages to be authenticated by
 XML digital signature.
 
-GlassFish Server administrative interfaces can be used as follows:
+{productName} administrative interfaces can be used as follows:
 
 * To modify the message protection policies enforced by the providers
 * To bind the existing providers for use by the server-side containers
-of GlassFish Server
+of {productName}
 * To create new security provider configurations with alternative
 message protection policies
 
 Analogous administrative operations can be performed on the SOAP message
 layer security configuration of the application client container. If you
 want web services security to protect all web services applications
-deployed on GlassFish Server. See link:#gdhgg[Enabling Message Security
+deployed on {productName}. See link:#gdhgg[Enabling Message Security
 for Application Clients].
 
-By default, message layer security is disabled on GlassFish Server. To
-configure message layer security for the GlassFish Server see
+By default, message layer security is disabled on {productName}. To
+configure message layer security for the {productName} see
 link:#giood[Enabling Default Message Security Providers for Web
 Services].
 
-In most cases, you must restart GlassFish Server after performing
+In most cases, you must restart {productName} after performing
 administrative tasks. This is especially true if you want the effects of
 the administrative change to be applied to applications that were
-already deployed on GlassFish Server at the time the operation was
+already deployed on {productName} at the time the operation was
 performed.
 
 [[giose]][[GSSCG00199]][[message-security-tasks]]
@@ -277,14 +274,14 @@ all of the following:
 When using a username/password token, an appropriate realm must be
    configured and a user database must be configured for the realm.
 3. Managing certificates and private keys, if necessary
-4. Enabling the GlassFish Server default providers
+4. Enabling the {productName} default providers
 5. Configuring new message security providers
 
 [[ablro]][[GSSCG00200]][[message-security-roles]]
 
 ===== Message Security Roles
 
-In GlassFish Server, the administrator and the application deployer are
+In {productName}, the administrator and the application deployer are
 expected to take primary responsibility for configuring message
 security. In some situations, the application developer might also
 contribute.
@@ -298,7 +295,7 @@ security tasks:
 
 * Administering server security settings and certificate databases
 * Administering keystore and truststore files
-* Configuring message security providers on GlassFish Server
+* Configuring message security providers on {productName}
 * Turning on message security
 * (If needed) Installing the samples server
 
@@ -312,7 +309,7 @@ security tasks:
 * Specifying (at application reassembly) any required
 application-specific message protection policies if such policies have
 not already been specified by the developer/assembler.
-* Modifying GlassFish Server deployment descriptors to specify
+* Modifying {productName} deployment descriptors to specify
 application-specific message protection policies information
 (message-security-binding elements) to web service endpoint and service references.
 
@@ -340,7 +337,7 @@ from that bound to the container.
 
 ==== Sample Application for Web Services
 
-GlassFish Server includes a sample application named `xms`. The `xms`
+{productName} includes a sample application named `xms`. The `xms`
 application features a simple web service that is implemented by both a
 Jakarta EE EJB endpoint and a Java servlet endpoint. Both endpoints share
 the same service endpoint interface. The service endpoint interface
@@ -348,9 +345,9 @@ defines a single operation, `sayHello`, which takes a string argument,
 and returns a `String` composed by pre-pending `Hello` to the invocation argument.
 
 The `xms` sample application is provided to demonstrate the use of
-GlassFish Server WS-Security functionality to secure an existing web
+{productName} WS-Security functionality to secure an existing web
 services application. The instructions which accompany the sample
-describe how to enable the WS-Security functionality of GlassFish Server
+describe how to enable the WS-Security functionality of {productName}
 such that it is used to secure the `xms` application. The sample also
 demonstrates the binding of WS-Security functionality directly to the
 application as described in link:#ablrz[Application-Specific Web
@@ -359,7 +356,7 @@ Services Security] application.
 For information about compiling, packaging, and running the `xms` sample
 application, "link:../application-development-guide/securing-apps.html#GSDVG00006[
 Securing Applications]" in
-GlassFish Server Open Source Edition Application Development Guide.
+{productName} Application Development Guide.
 
 The `xms` sample application is installed in the following directory:
 as-install``/samples/webservices/security/ejb/apps/xms/``
@@ -368,7 +365,7 @@ as-install``/samples/webservices/security/ejb/apps/xms/``
 
 === Enabling Default Message Security Providers for Web Services
 
-By default, message security is disabled on GlassFish Server. Default
+By default, message security is disabled on {productName}. Default
 message security providers have been created, but are not active until
 you enable them. After the providers have been enabled, message security
 is enabled.
@@ -383,10 +380,10 @@ The following topics are addressed here:
 ==== To Enable a Default Server Provider
 
 To enable message security for web services endpoints deployed in
-GlassFish Server, you must specify a security provider to be used by
+{productName}, you must specify a security provider to be used by
 default on the server side. If you enable a default provider for message
 security, you also need to enable providers to be used by clients of the
-web services deployed in GlassFish Server.
+web services deployed in {productName}.
 
 1. Specify the default server provider by using the
 link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
@@ -400,10 +397,9 @@ server-config.security-service.message-security-config.SOAP.
 default_provider=ServerProvider
 ----
 2. To apply your changes to applications that are already running,
-restart GlassFish Server.
+restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[giort]][[GSSCG00124]][[to-enable-a-default-client-provider]]
 
@@ -411,8 +407,8 @@ Source Edition Administration Guide.
 
 To enable message security for web service invocations originating from
 deployed endpoints, you must specify a default client provider. If you
-enabled a default client provider for GlassFish Server, you must ensure
-that any services invoked from endpoints deployed in GlassFish Server
+enabled a default client provider for {productName}, you must ensure
+that any services invoked from endpoints deployed in {productName}
 are compatibly configured for message layer security.
 
 1. Specify the default client provider by using the
@@ -427,10 +423,9 @@ server-config.security-service.message-security-config.SOAP.
 default_client_provider=ClientProvider
 ----
 2. To apply your changes to applications that are already running,
-restart GlassFish Server.
+restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[giouf]][[GSSCG00155]][[configuring-message-protection-policies]]
 
@@ -591,7 +586,7 @@ server policy for request/response protection at application-level
 message binding.
 
 To set the request policy for the application client configuration,
-modify the GlassFish Server-specific configuration for the application
+modify the {productName}-specific configuration for the application
 client container as described in link:#gdhgg[Enabling Message Security
 for Application Clients].
 
@@ -672,9 +667,9 @@ page.
 +
 Some properties require server restart. See
 "link:../administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
-GlassFish Server Open Source Edition Administration Guide. If your
+{productName} Administration Guide. If your
 server needs to be restarted, see "link:../administration-guide/domains.html#GSADG00337[To Restart a
-Domain]" in GlassFish Server Open Source Edition Administration Guide.
+Domain]" in {productName} Administration Guide.
 
 [[GSSCG00089]][[giosd]]
 Example 3-2 Creating a Message Security Provider
@@ -803,9 +798,9 @@ httpservlet-security-provider="MySAM".
 +
 Some properties require server restart. See
 "link:../administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
-GlassFish Server Open Source Edition Administration Guide. If your
+{productName} Administration Guide. If your
 server needs to be restarted, see "link:../administration-guide/domains.html#GSADG00337[To Restart a
-Domain]" in GlassFish Server Open Source Edition Administration Guide.
+Domain]" in {productName} Administration Guide.
 
 [[GSSCG00092]][[gkxqz]]
 Example 3-5 Creating a Message Security Provider
@@ -862,11 +857,9 @@ typing `asadmin help create-message-security-provider` at the command line.
 The message protection policies of client providers must be configured
 such that they are equivalent to the message protection policies of the
 server-side providers they will be interacting with. This is already the
-situation for the providers configured (but not enabled) when GlassFish
-Server is installed.
+situation for the providers configured (but not enabled) when {productName} is installed.
 
-To enable message security for client applications, modify the GlassFish
-Server specific configuration for the application client container. The
+To enable message security for client applications, modify the {productName} specific configuration for the application client container. The
 process is analogous to the process in link:#giouf[Configuring Message
 Protection Policies].
 
@@ -879,6 +872,6 @@ For additional information about message security, see the following documentati
 * https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
 Introduction to Security in the Jakarta EE Platform] in The Jakarta EE Tutorial
 * "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
-in GlassFish Server Open Source Edition Application Development Guide
+in {productName} Application Development Guide
 
 

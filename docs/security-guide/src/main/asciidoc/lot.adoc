@@ -19,9 +19,8 @@ Operations if Secure Admin is Disabled]
 * link:administrative-security.html#gkqax[5-3 asadmin --secure=false,
 With Username and Password]
 * link:running-in-secure-environment.html#gksbt[6-1 Securing the
-GlassFish Server Host]
-* link:running-in-secure-environment.html#gkscz[6-2 Securing GlassFish
-Server]
+{productName} Host]
+* link:running-in-secure-environment.html#gkscz[6-2 Securing {productName}]
 * link:running-in-secure-environment.html#gkscv[6-3 Securing
 Applications]
 

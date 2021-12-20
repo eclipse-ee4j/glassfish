@@ -1,33 +1,33 @@
 type=page
 status=published
-title=Tuning the GlassFish Server
+title=Tuning the {productName}
 next=tuning-java.html
 prev=tuning-apps.html
 ~~~~~~
 
-= Tuning the GlassFish Server
+= Tuning the {productName}
 
 [[GSPTG00005]][[abedn]]
 
 
 [[tuning-the-glassfish-server]]
-== 3 Tuning the GlassFish Server
+== 3 Tuning the {productName}
 
-This chapter describes some ways to tune your GlassFish Server
+This chapter describes some ways to tune your {productName}
 installation for optimum performance.
 
 Note that while this chapter describes numerous interactions with both
-the GlassFish Server Administration Console and the command-line
+the {productName} Administration Console and the command-line
 interface, it is not intended to provide exhaustive descriptions of
 either. For complete information about using the Administration Console,
 refer to the Administration Console online help. For complete
-information about using the GlassFish Server command-line interface,
-refer to the other titles in the GlassFish Server documentation set at
+information about using the {productName} command-line interface,
+refer to the other titles in the {productName} documentation set at
 `http://docs.oracle.com/docs/cd/E18930_01/index.html`.
 
 The following topics are addressed here:
 
-* link:#gkxwm[Using the GlassFish Server Performance Tuner]
+* link:#gkxwm[Using the {productName} Performance Tuner]
 * link:#abedo[Deployment Settings]
 * link:#abeds[Logger Settings]
 * link:#abedw[Web Container Settings]
@@ -44,35 +44,35 @@ The following topics are addressed here:
 
 [[gkxwm]][[GSPTG00055]][[using-the-glassfish-server-performance-tuner]]
 
-=== Using the GlassFish Server Performance Tuner
+=== Using the {productName} Performance Tuner
 
-You can significantly improve the performance of GlassFish Server and
+You can significantly improve the performance of {productName} and
 the applications deployed on it by adjusting a few deployment and server
 configuration settings. These changes can be made manually, as described
 in this chapter, or by using the built-in Performance Tuner in the
-GlassFish Server Administration Console.
+{productName} Administration Console.
 
 The Performance Tuner recommends server settings to suit the needs of
-your GlassFish Server deployment. It helps you reach an optimal
+your {productName} deployment. It helps you reach an optimal
 configuration, although finer tuning might be needed in case of specific
 requirements. You can configure performance tuning for the entire
-domain, or for individual GlassFish Server instances or clusters. The
-Tuner performs a static analysis of GlassFish Server resources and
+domain, or for individual {productName} instances or clusters. The
+Tuner performs a static analysis of {productName} resources and
 throughput requirements. Note that no dynamic inspection of the system
 is performed.
 
 For complete information about using the Performance Tuning features
-available through the GlassFish Server Administration Console, refer to
+available through the {productName} Administration Console, refer to
 the Administration Console online help. You may also want to refer to
 the following resources for additional information:
 
-* To view a demonstration video showing how to use the GlassFish Server
+* To view a demonstration video showing how to use the {productName}
 Performance Tuner, see the
-http://www.youtube.com/watch?v=FavsE2pzAjc[Oracle GlassFish Server 3.1 -
+http://www.youtube.com/watch?v=FavsE2pzAjc[{productName} 3.1 -
 Performance Tuner demo] (`http://www.youtube.com/watch?v=FavsE2pzAjc`).
 * To find additional Performance Tuning development information, see the
 http://blogs.oracle.com/jenblog/entry/performance_tuner_in_oracle_glassfish[Performance
-Tuner in Oracle GlassFish Server 3.1]
+Tuner in {productName} 3.1]
 (`http://blogs.oracle.com/jenblog/entry/performance_tuner_in_oracle_glassfish`)
 blog.
 
@@ -98,12 +98,11 @@ disable auto-deploy to optimize performance. If auto-deployment is
 enabled, then the Reload Poll Interval setting can have a significant
 performance impact.
 
-To enable or disable auto-deployment from the GlassFish Server
+To enable or disable auto-deployment from the {productName}
 Administration Console, navigate to the Domain node and then click the
 Applications Configuration tab. Refer to the Administration Console for
 further instructions. Alternatively, refer to "link:../application-deployment-guide/deploying-applications.html#GSDPG00041[To
-Deploy an Application or Module Automatically]" in GlassFish Server Open
-Source Edition Application Deployment Guide for instructions on enabling
+Deploy an Application or Module Automatically]" in {productName} Application Deployment Guide for instructions on enabling
 or disabling auto-deployment.
 
 [[abedq]][[GSPTG00181]][[use-pre-compiled-javaserver-pages]]
@@ -141,9 +140,9 @@ the Administration Console for further instructions.
 
 === Logger Settings
 
-The GlassFish Server produces writes log messages and exception stack
+The {productName} produces writes log messages and exception stack
 trace output to the log file in the logs directory of the instance,
-domain-dir`/logs`. The volume of log activity can impact server
+domain-dir``/logs``. The volume of log activity can impact server
 performance; particularly in benchmarking situations.
 
 [[abedt]][[GSPTG00183]][[general-settings]]
@@ -162,24 +161,23 @@ performance.
 
 ==== Log Levels
 
-Set the log level for the server and its subsystems in the GlassFish
-Server Administration Console. Navigate to the
+Set the log level for the server and its subsystems in the {productName} Administration Console. Navigate to the
 Configurations>configuration-name>Logger Settings page, and follow the
 instructions in the online help. Alternatively, you can configure
 logging by following the instructions in "link:../administration-guide/logging.html#GSADG00010[Administering
-the Logging Service]" in GlassFish Server Open Source Edition
+the Logging Service]" in {productName}
 Administration Guide.
 
 [[abedw]][[GSPTG00058]][[web-container-settings]]
 
 === Web Container Settings
 
-Set Web container settings in the GlassFish Server Administration
+Set Web container settings in the {productName} Administration
 Console by navigating to the Configurations>configuration-name>Web
 Container node. Follow the instructions in the online help for more
 information. Alternatively, you can configure Web container settings by
 following the instructions in "link:../administration-guide/webapps.html#GSADG00009[Administering Web
-Applications]" in GlassFish Server Open Source Edition Administration
+Applications]" in {productName} Administration
 Guide.
 
 * link:#abedx[Session Properties: Session Timeout]
@@ -218,7 +216,7 @@ For example, consider the following online auction scenario:
 (three 20 second intervals).
 * During the next 40 seconds, the client starts incrementing the price.
 The value the client sees is $10.
-* During the client's 20 second rest, the GlassFish Server stops and
+* During the client's 20 second rest, the {productName} stops and
 starts in 10 seconds. As a result, the latest value recorded at the 60
 second interval ($8) is be loaded into the session.
 * The client clicks again expecting to see $11; but instead sees is $9,
@@ -263,7 +261,7 @@ The EJB Container has many settings that affect performance. As with
 other areas, use monitor the EJB Container to track its execution and
 performance.
 
-You can configure most EJB container settings from the GlassFish Server
+You can configure most EJB container settings from the {productName}
 Administration Console by navigating to the
 Configurations>configuration-name>EJB Container node and then following
 the instructions in the online help.
@@ -273,7 +271,7 @@ the instructions in the online help.
 ==== Monitoring the EJB Container
 
 Monitoring the EJB container is disabled by default. You can enable EJB
-monitoring through the GlassFish Server Administration Console by
+monitoring through the {productName} Administration Console by
 navagating to the the Configurations>configuration-name>Monitoring node
 and then following the instructions in the online help. Set the
 monitoring level to LOW for to monitor all deployed EJB components, EJB
@@ -582,7 +580,7 @@ performance is better than remote JMS performance. However, a remote
 cluster can provide failover capabilities and can be administrated
 together, so there may be other advantages of using remote JMS. For more
 information on using JMS, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java
-Message Service (JMS)]" in GlassFish Server Open Source Edition
+Message Service (JMS)]" in {productName}
 Administration Guide.
 
 [[abeem]][[GSPTG00061]][[transaction-service-settings]]
@@ -606,7 +604,7 @@ The following topics are addressed here:
 ==== Monitoring the Transaction Service
 
 Transaction Manager monitoring is disabled by default. Enable monitoring
-of the transaction service through the GlassFish Server Administration
+of the transaction service through the {productName} Administration
 Console by navigating to the
 Configurations>configuration-name>Monitoring node. Refer to the
 Administration Console for complete instructions.
@@ -624,7 +622,7 @@ reconfig serverInstance
 ===== Viewing Monitoring Information
 
 To view monitoring information for the transaction service in the
-GlassFish Server Administration Console, navigate to the server (Admin
+{productName} Administration Console, navigate to the server (Admin
 Server) node and then select the Monitor tab.
 
 The following statistics are gathered on the transaction service:
@@ -644,11 +642,11 @@ performance is of utmost importance more than the recovery. This
 property, by default, won't exist in the server configuration.
 
 Most Transaction Service tuning tasks can be performed through the
-GlassFish Server Administration Console by navigating to the
+{productName} Administration Console by navigating to the
 Configurations>configuration-name>Transaction Service node and then
 following the instructions in the online help. Alternatively, you can
 follow the instructions in "link:../administration-guide/transactions.html#GSADG00022[Administering
-Transactions]" in GlassFish Server Open Source Edition Administration
+Transactions]" in {productName} Administration
 Guide.
 
 [[abeeq]][[GSPTG00123]][[disable-distributed-transaction-logging]]
@@ -717,7 +715,7 @@ the Keypoint Interval is 2048, which is sufficient in most cases.
 
 Tuning the monitoring and access logging settings for the HTTP server
 instances that handle client requests are important parts of ensuring
-peak GlassFish Server performance.
+peak {productName} performance.
 
 The following topics are addressed here:
 
@@ -729,12 +727,12 @@ The following topics are addressed here:
 ==== Monitoring the HTTP Service
 
 Disabling the collection of monitoring statistics can increase overall
-GlassFish Server performance. You can enable or disable monitoring
+{productName} performance. You can enable or disable monitoring
 statistics collection for the HTTP service using either the
 Administration Console or `asadmin` subcommands.
 
 Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
-GlassFish Server Open Source Edition Administration Guide for complete
+{productName} Administration Guide for complete
 instructions on configuring the monitoring service using `asadmin`
 subcommands.
 
@@ -746,7 +744,7 @@ instructions.
 
 For instructions on viewing comprehensive monitoring statistics using
 `asadmin` subcommands, see "link:../administration-guide/monitoring.html#GSADG00560[Viewing Comprehensive
-Monitoring Data]" in GlassFish Server Open Source Edition Administration
+Monitoring Data]" in {productName} Administration
 Guide. If using the Administration Console, you can view monitoring
 statistics by navigating to the server (Admin Server) node, and then
 clicking the Monitor tab. Refer to the online help for configuring
@@ -940,7 +938,7 @@ request.
 
 Accessing Logging can be tuned using several `asadmin` subcommands.
 Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
-GlassFish Server Open Source Edition Administration Guide for
+{productName} Administration Guide for
 information about using these subcommands.
 
 If using the Administration Console, Access Logging is configured from
@@ -961,7 +959,7 @@ Rotation to ensure that the logs do not run out of disk space.
 
 You can tune Network Listener settings from the command line by using
 the instructions in "link:../administration-guide/http_https.html#GSADG00588[Administering HTTP Network
-Listeners]" in GlassFish Server Open Source Edition Administration
+Listeners]" in {productName} Administration
 Guide.
 
 If using the Administration Console, navigate to the Configurations
@@ -969,7 +967,7 @@ If using the Administration Console, navigate to the Configurations
 and then click the tab for the desired configuration page. Refer to the
 online help for complete instructions about the options on these tabs.
 
-GlassFish Server Network Listener performance can be enhanced by
+{productName} Network Listener performance can be enhanced by
 modifying settings on the following Edit Network Listener tabs in the
 Administration Console:
 
@@ -1063,7 +1061,7 @@ requests per second. If every request was allowed to keep the connection
 open indefinitely, the server could become overloaded with connections.
 On Unix/Linux systems, this could easily lead to a file table overflow.
 
-The GlassFish Server's Keep Alive system, which is affected by the
+The {productName}'s Keep Alive system, which is affected by the
 Timeout setting, addresses this problem. A waiting keep alive connection
 has completed processing the previous request, and is waiting for a new
 request to arrive on the same connection. The server maintains a counter
@@ -1092,7 +1090,7 @@ size is large, increase this parameter.
 
 ==== File Cache Settings
 
-The GlassFish Server uses a file cache to serve static information
+The {productName} uses a file cache to serve static information
 faster. The file cache contains information about static files such as
 HTML, CSS, image, or text files. Enabling the HTTP file cache will
 improve performance of applications that contain static files.
@@ -1143,13 +1141,13 @@ many threads you want in accept mode on a listen socket at any time. It
 is a good practice to set this to less than or equal to the number of
 CPUs in your system.
 
-In the GlassFish Server, acceptor threads on an HTTP Listener accept
+In the {productName}, acceptor threads on an HTTP Listener accept
 connections and put them onto a connection queue. Session threads then
 pick up connections from the queue and service the requests. The server
 posts more session threads if required at the end of the request.
 
 See "link:../administration-guide/http_https.html#GSADG00771[Administering HTTP Network Listeners]" in
-GlassFish Server Open Source Edition Administration Guide for
+{productName} Administration Guide for
 instructions on modifying the Acceptor Threads property. If using the
 Administration Console, the Acceptor Threads property is available on
 the Configurations>configuration-name>Network Config>Transports>tcp
@@ -1160,13 +1158,12 @@ page.
 === Thread Pool Settings
 
 You can tune thread pool settings by following the instructions in
-"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in GlassFish Server Open
-Source Edition Administration Guide. If using the Administration Console
+"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration Console
 Thread Pool settings are available on the
 Configurations>configuration-name>Thread Pools>thread-pool-name page.
 
 The following thread pool settings can have significant effects on
-GlassFish Server performance:
+{productName} performance:
 
 * link:#abefn[Max Thread Pool Size]
 * link:#abefo[Min Thread Pool Size]
@@ -1216,7 +1213,7 @@ active threads that can run simultaneously, which can become a
 bottleneck for performance.
 
 Specifying the same value for minimum and maximum threads allows
-GlassFish Server to use a slightly more optimized thread pool. This
+{productName} to use a slightly more optimized thread pool. This
 configuration should be considered unless the load on the server varies
 quite significantly.
 
@@ -1224,16 +1221,15 @@ quite significantly.
 
 === ORB Settings
 
-The GlassFish Server includes a high performance and scalable CORBA
+The {productName} includes a high performance and scalable CORBA
 Object Request Broker (ORB). The ORB is the foundation of the EJB
 Container on the server.
 
 For complete instructions on configuring ORB settings, refer to
 "link:../administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
-GlassFish Server Open Source Edition Administration Guide. Also refer to
-"link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in GlassFish
-Server Open Source Edition High Availability Administration Guide. You
-can also configure most ORB settings through the GlassFish Server
+{productName} Administration Guide. Also refer to
+"link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
+can also configure most ORB settings through the {productName}
 Administration Console by navigating to the
 Configurations>configuration-name> ORB node and then following the
 instructions in the Administration Console online help.
@@ -1253,7 +1249,7 @@ The ORB is primarily used by EJB components via:
 
 * RMI/IIOP path from an application client (or rich client) using the
 application client container.
-* RMI/IIOP path from another GlassFish Server instance ORB.
+* RMI/IIOP path from another {productName} instance ORB.
 * RMI/IIOP path from another vendor's ORB.
 * In-process path from the Web Container or MDB (message driven beans)
 container.
@@ -1273,7 +1269,7 @@ not require copying any objects.
 
 A rich client Java program performs a new `initialContext()` call which
 creates a client side ORB instance. This in turn creates a socket
-connection to the GlassFish Server IIOP port. The reader thread is
+connection to the {productName} IIOP port. The reader thread is
 started on the server ORB to service IIOP requests from this client.
 Using the `initialContext`, the client code does a lookup of an EJB
 deployed on the server. An IOR which is a remote reference to the
@@ -1372,7 +1368,7 @@ The following topics are addressed here:
 
 You can tune ORB parameters using the instructions in
 "link:../administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
-GlassFish Server Open Source Edition Administration Guide. If using the
+{productName} Administration Guide. If using the
 Administration Console, navigate to the
 Configurations>configuration-name>ORB node and refer to the online help.
 
@@ -1389,7 +1385,7 @@ Table 3-2 Tunable ORB Parameters
 infrastructure, thread pool |steady-thread-pool-size,
 max-thread-pool-size, idle-thread-timeout-in-seconds
 
-|RMI/ IIOP from ORB to GlassFish Server |communication infrastructure,
+|RMI/ IIOP from ORB to {productName} |communication infrastructure,
 thread pool |steady-thread-pool-size, max-thread-pool-size,
 idle-thread-timeout-in-seconds
 
@@ -1412,7 +1408,7 @@ from this queue for execution. Do not set a thread pool size such that
 the task queue is always empty. It is normal for a large application's
 Max Pool Size to be ten times the size of the current task queue.
 
-The GlassFish Server uses the ORB thread pool to:
+The {productName} uses the ORB thread pool to:
 
 * Execute every ORB request
 * Trim EJB pools and caches
@@ -1423,8 +1419,7 @@ set the size of the threadpool to facilitate cleaning up the EJB pools
 and caches.
 
 You can set ORB thread pool attributes using the instructions in
-"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in GlassFish Server Open
-Source Edition Administration Guide. If using the Administration
+"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration
 Console, navigate to Configurations>configuration-name> Thread
 Pools>thread-pool-name, where thread-pool-name is the thread pool ID
 selected for the ORB. Thread pools have the following attributes that
@@ -1505,7 +1500,7 @@ config-name::
 max-connections::
   An integer that specifies the maximum number of client connections.
 
-For updates to this value to take effect, restart GlassFish Server.
+For updates to this value to take effect, restart {productName}.
 
 The following example shows how to set the maximum number of client
 connections for the ORB in the DAS to `512`:
@@ -1522,12 +1517,11 @@ Command set executed successfully.
 Load Balancing
 
 For information on how to configure HTTP load balancing, see
-"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in GlassFish Server
-Open Source Edition High Availability Administration Guide.
+"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 For information on how to configure RMI/IIOP for multiple application
 server instances in a cluster, "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing
-and Failover]" in GlassFish Server Open Source Edition High Availability
+and Failover]" in {productName} High Availability
 Administration Guide.
 
 When tuning the client ORB for load-balancing and connections, consider
@@ -1570,7 +1564,7 @@ idle thread timeout period.
 ===== Examining IIOP Messages
 
 It is sometimes useful to examine the IIOP messages passed by the
-GlassFish Server. To make the server save IIOP messages to the
+{productName}. To make the server save IIOP messages to the
 `server.log` file, set the JVM option `-Dcom.sun.CORBA.ORBDebug=giop`.
 Use the same option on the client ORB.
 
@@ -1622,8 +1616,7 @@ for writing messages.
 
 === Resource Settings
 
-Tuning JDBC and connector resources can significantly improve GlassFish
-Server performance.
+Tuning JDBC and connector resources can significantly improve {productName} performance.
 
 The following topics are addressed here:
 
@@ -1635,7 +1628,7 @@ The following topics are addressed here:
 ==== JDBC Connection Pool Settings
 
 For optimum performance of database-intensive applications, tune the
-JDBC Connection Pools managed by the GlassFish Server. These connection
+JDBC Connection Pools managed by the {productName}. These connection
 pools maintain numerous live database connections that can be reused to
 reduce the overhead of opening and closing database connections. This
 section describes how to tune JDBC Connection Pools to improve
@@ -1647,7 +1640,7 @@ allowed to refer to the same JDBC Connection Pool. In such a case, the
 physical connection pool is shared by all the resources.
 
 Refer to "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
-GlassFish Server Open Source Edition Administration Guide for more
+{productName} Administration Guide for more
 information about managing JDBC connection pools.
 
 The following topics are addressed here:
@@ -1661,8 +1654,7 @@ The following topics are addressed here:
 
 Statistics-gathering is disabled by default for JDBC Connection Pools.
 Refer to for instructions on enabling JDBC monitoring in
-"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in GlassFish
-Server Open Source Edition Administration Guide. If using the
+"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide. If using the
 Administration Console, JDBC monitoring can be enabled on the
 Configurations>configuration-name>Monitoring page.
 
@@ -1694,13 +1686,13 @@ instructions.
 ===== Tuning JDBC Connection Pools
 
 Refer to "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
-GlassFish Server Open Source Edition Administration Guide for
+{productName} Administration Guide for
 instructions on configuring JDBC connection pools. If using the
-GlassFish Server Administration Console by navigating to the
+{productName} Administration Console by navigating to the
 Resources>JDBC>JDBC Connection Pools>jdbc-pool-name page and then
 clicking the desired tab.
 
-The following JDBC properites affect GlassFish Server performance:
+The following JDBC properites affect {productName} performance:
 
 * link:#abeht[Pool Size Settings]
 * link:#abehu[Timeout Settings]
@@ -1771,7 +1763,7 @@ server.
 +
 Keep this timeout shorter than the database server timeout (if such
 timeouts are configured on the database), to prevent accumulation of
-unusable connection in GlassFish Server.
+unusable connection in {productName}.
 +
 For best performance, set Idle Timeout to zero (0) seconds, so that idle
 connections will not be removed. This ensures that there is normally no
@@ -1899,16 +1891,14 @@ TESTPOOL
 
 === Load Balancer Settings
 
-GlassFish Server Open Source Edition is compatible with the Apache HTTP
+{productName} is compatible with the Apache HTTP
 server `mod_jk` module for load balancing.
 
-GlassFish Server load balancing configurations can vary widely depending
+{productName} load balancing configurations can vary widely depending
 on the needs of your enterprise and are beyond the scope of this
 Performance Tuning Guide. For complete information about configuring
-load balancing in GlassFish Server, refer to the following
+load balancing in {productName}, refer to the following
 documentation:
 
-* "link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in GlassFish
-Server Open Source Edition High Availability Administration Guide
-* "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in GlassFish
-Server Open Source Edition High Availability Administration Guide
+* "link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
+* "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide

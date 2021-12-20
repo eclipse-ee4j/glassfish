@@ -163,13 +163,12 @@ The default value is `true`.
     on this virtual server file downloads using SSL work properly in
     Internet Explorer. +
     You can set this property for a specific web application. For
-    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
-    Server Open Source Edition Application Deployment Guide.
+    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
   `contextXmlDefault`;;
     Specifies the location, relative to domain-dir, of the `context.xml`
     file for this virtual server, if one is used. For more information
     about the `context.xml` file, see "link:../application-development-guide/webapps.html#GSDVG00416[Using a
-    context.xml File]" in GlassFish Server Open Source Edition
+    context.xml File]" in {productName}
     Application Development Guide and The Context Container
     (`http://tomcat.apache.org/tomcat-5.5-doc/config/context.html`).
     Context parameters, environment entries, and resource definitions in
@@ -215,8 +214,7 @@ The `value` of each alternate docroot has two components: The first
     physical location (directory). Spaces are allowed in the `dir`
     component. +
     You can set this property for a specific web application. For
-    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
-    Server Open Source Edition Application Deployment Guide.
+    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
   `send-error_n`;;
     Specifies custom error page mappings for the virtual server, which
     are inherited by all web applications deployed on the virtual
@@ -231,7 +229,7 @@ The `value` of each alternate docroot has two components: The first
     the response.
     * The second component, `path`, specifies the absolute or relative
     file system path of the custom error page. A relative file system
-    path is interpreted as relative to the domain-dir`/config`
+    path is interpreted as relative to the domain-dir``/config``
     directory.
     * The third component, `reason`, is optional and specifies the text of
     the reason string (such as `Unauthorized` or `Forbidden`) to be
@@ -286,8 +284,7 @@ For example:
 ----
 +
 You can set this property for a specific web application. For
-    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
-    Server Open Source Edition Application Deployment Guide.
+    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
   ``listener_n``;;
     Specifies a fully qualified class name of a custom Catalina
     listener, where n is a positive integer that allows specification of
@@ -302,8 +299,7 @@ You can set this property for a specific web application. For
 ----
 +
 You can set this property for a specific web application. For
-    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish
-    Server Open Source Edition Application Deployment Guide.
+    details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
   `docroot`;;
     Absolute path to root document directory for server. Deprecated.
     Replaced with a `virtual-server` attribute, `docroot`, that is

@@ -13,8 +13,7 @@ prev=jpa.html
 [[developing-web-applications]]
 == 7 Developing Web Applications
 
-This chapter describes how web applications are supported in the Oracle
-GlassFish Server.
+This chapter describes how web applications are supported in the {productName}.
 
 The following topics are addressed here:
 
@@ -31,9 +30,9 @@ The Web Tier]" in The Jakarta EE Tutorial.
 
 [NOTE]
 ====
-The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+The Web Profile of the {productName} supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
-among other features. The full GlassFish Server supports the entire EJB
+among other features. The full {productName} supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
@@ -44,7 +43,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 === Using Servlets
 
-GlassFish Server supports the Java Servlet Specification version 4.0.
+{productName} supports the Java Servlet Specification version 4.0.
 
 
 [NOTE]
@@ -59,15 +58,14 @@ To develop servlets, use the Java Servlet API. For information about
 using the Java Servlet API, see the documentation at
 `http://www.oracle.com/technetwork/java/javaee/servlet/index.html`.
 
-The GlassFish Server provides the `wscompile` and `wsdeploy` tools to
+The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a servlet. For more
-information about these tools, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open
-Source Edition Reference Manual].
+information about these tools, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 This section describes how to create effective servlets to control
-application interactions running on a GlassFish Server, including
+application interactions running on a {productName}, including
 standard-based servlets. In addition, this section describes the
-GlassFish Server features to use to augment the standards.
+{productName} features to use to augment the standards.
 
 The following topics are addressed here:
 
@@ -78,11 +76,11 @@ The following topics are addressed here:
 
 ==== Caching Servlet Results
 
-The GlassFish Server can cache the results of invoking a servlet, a JSP,
+The {productName} can cache the results of invoking a servlet, a JSP,
 or any URL pattern to make subsequent invocations of the same servlet,
-JSP, or URL pattern faster. The GlassFish Server caches the request
+JSP, or URL pattern faster. The {productName} caches the request
 results for a specific amount of time. In this way, if another data call
-occurs, the GlassFish Server can return the cached data instead of
+occurs, the {productName} can return the cached data instead of
 performing the operation again. For example, if your servlet returns a
 stock quote that updates every 5 minutes, you set the cache to expire
 after 300 seconds.
@@ -93,7 +91,7 @@ submission, because the input to the servlet is different each time.
 However, it makes sense to cache a high level report showing demographic
 data taken from quiz results that is updated once an hour.
 
-To define how a GlassFish Server web application handles response
+To define how a {productName} web application handles response
 caching, you edit specific fields in the `glassfish-web.xml` file.
 
 
@@ -119,7 +117,7 @@ The following topics are addressed here:
 
 ===== Caching Features
 
-The GlassFish Server has the following web application response caching
+The {productName} has the following web application response caching
 capabilities:
 
 * Caching is configurable based on the servlet name or the URI.
@@ -155,9 +153,8 @@ clears the cache during dynamic deployment or reloading of classes.
 * Results produced by resources that are the target of a
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 cached if caching has been enabled for those resources. For details, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00101[cache-mapping]" in GlassFish Server Open Source
-Edition Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#GSDPG00140[dispatcher]"
-in GlassFish Server Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00101[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#GSDPG00140[dispatcher]"
+in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 
 [[beago]][[GSDVG00252]][[default-cache-configuration]]
@@ -235,7 +232,7 @@ Here is an example cache element in the `glassfish-web.xml` file:
 ----
 
 For more information about the `glassfish-web.xml` caching settings, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00097[cache]" in GlassFish Server Open Source Edition
+"link:../application-deployment-guide/dd-elements.html#GSDPG00097[cache]" in {productName}
 Application Deployment Guide.
 
 [[beagq]][[GSDVG00254]][[the-cachekeygenerator-interface]]
@@ -250,15 +247,13 @@ attribute in the `ServletContext`.
 The name of the context attribute is configurable as the `value` of the
 `cacheKeyGeneratorAttrName` property in the `default-helper` element of
 the `glassfish-web.xml` deployment descriptor. For more information, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00136[default-helper]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00136[default-helper]" in {productName} Application Deployment Guide.
 
 [[beagr]][[GSDVG00398]][[about-the-servlet-engine]]
 
 ==== About the Servlet Engine
 
-Servlets exist in and are managed by the servlet engine in the GlassFish
-Server. The servlet engine is an internal object that handles all
+Servlets exist in and are managed by the servlet engine in the {productName}. The servlet engine is an internal object that handles all
 servlet meta functions. These functions include instantiation,
 initialization, destruction, access from other components, and
 configuration management.
@@ -288,7 +283,7 @@ caught in garbage collection.
 
 ===== Request Handling
 
-When a request is made, the GlassFish Server hands the incoming data to
+When a request is made, the {productName} hands the incoming data to
 the servlet engine. The servlet engine processes the request's input
 data, such as form data, cookies, session information, and URL
 name-value pairs, into an `HttpServletRequest` request object type.
@@ -317,7 +312,7 @@ object or in a JDBC `ResultSet` object.
 
 === Using JavaServer Pages
 
-The GlassFish Server supports the following JSP features:
+The {productName} supports the following JSP features:
 
 * JavaServer Pages (JSP) Specification
 * Precompilation of JSP files, which is especially useful for production
@@ -331,7 +326,7 @@ For information about Java Beans, see the JavaBeans web page at
 `http://www.oracle.com/technetwork/java/javase/tech/index-jsp-138795.html`.
 
 This section describes how to use JavaServer Pages (JSP files) as page
-templates in a GlassFish Server web application.
+templates in a {productName} web application.
 
 The following topics are addressed here:
 
@@ -343,16 +338,16 @@ The following topics are addressed here:
 
 ==== JSP Tag Libraries and Standard Portable Tags
 
-GlassFish Server supports tag libraries and standard portable tags. For
+{productName} supports tag libraries and standard portable tags. For
 more information, see the JavaServer Pages Standard Tag Library (JSTL)
 page at `http://www.oracle.com/technetwork/java/index-jsp-135995.html`.
 
 Web applications don't need to bundle copies of the `jsf-impl.jar` or
-`appserv-jstl.jar` JSP tag libraries (in as-install`/lib`) to use
+`appserv-jstl.jar` JSP tag libraries (in as-install``/lib``) to use
 JavaServer Faces technology or JSTL, respectively. These tag libraries
 are automatically available to all web applications.
 
-However, the as-install`/lib/jspcachtags.jar` tag library for JSP
+However, the as-install``/lib/jspcachtags.jar`` tag library for JSP
 caching is not automatically available to web applications. See
 link:#beagw[JSP Caching], next.
 
@@ -389,12 +384,12 @@ asadmin set server-config.web-container.property.jspCachingEnabled="true"
 ----
 
 For more information about the `asadmin set` command, see the
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 To enable JSP caching for a single web application, follow these steps:
 
 1. Extract the `META-INF/jspcachtags.tld` file from the
-as-install`/modules/web-glue.jar` file.
+as-install``/modules/web-glue.jar`` file.
 2. Create a new JAR file (for example, `jspcachtags.jar`) containing
 just the `META-INF/jspcachtags.tld` file previously extracted.
 3. Bundle this new JAR file in the `WEB-INF/lib` directory of your web
@@ -408,7 +403,7 @@ are not portable.
 ====
 
 
-Refer to GlassFish Server tags in JSP files as follows:
+Refer to {productName} tags in JSP files as follows:
 
 [source,xml]
 ----
@@ -596,16 +591,15 @@ To flush the entire cache:
 
 ==== Options for Compiling JSP Files
 
-GlassFish Server provides the following ways of compiling JSP source
+{productName} provides the following ways of compiling JSP source
 files into servlets:
 
 * JSP files are automatically compiled at runtime.
 * The `asadmin deploy` command has a `--precompilejsp` option. For
-details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+details, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual].
 * The `jspc` command line tool allows you to precompile JSP files at the
-command line. For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open
-Source Edition Reference Manual].
+command line. For details, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[beaha]][[GSDVG00142]][[creating-and-managing-sessions]]
 
@@ -640,14 +634,12 @@ To configure whether and how HTTP sessions use cookies and URL
 rewriting, edit the `session-properties` and `cookie-properties`
 elements in the `glassfish-web.xml` file for an individual web
 application. For more about the properties you can configure, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00276[session-properties]" in GlassFish Server Open Source
-Edition Application Deployment Guide and
-"link:../application-deployment-guide/dd-elements.html#GSDPG00130[cookie-properties]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00276[session-properties]" in {productName} Application Deployment Guide and
+"link:../application-deployment-guide/dd-elements.html#GSDPG00130[cookie-properties]" in {productName} Application Deployment Guide.
 
 For information about configuring default session properties for the
 entire web container, see link:#beagc[Using the `default-web.xml` File]
-and the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High
+and the link:../ha-administration-guide/toc.html#GSHAG[{productName} High
 Availability Administration Guide].
 
 [[beahd]][[GSDVG00262]][[coordinating-session-access]]
@@ -683,7 +675,7 @@ become invalid unless you use the `--keepstate=true` option of the
 asadmin redeploy --keepstate=true --name hello.war
 ----
 
-For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+For details, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual].
 
 The default for `--keepstate` is false. This option is supported only on
@@ -724,7 +716,7 @@ Administration Console.
 
 ===== Distributed Sessions and Persistence
 
-A distributed HTTP session can run in multiple GlassFish Server
+A distributed HTTP session can run in multiple {productName}
 instances, provided the following criteria are met:
 
 * Each server instance has the same distributable web application
@@ -739,12 +731,12 @@ session persistence type reverts to `memory`. See link:#gdshu[The
 listed in link:#fvyem[Table 7-3].
 * The web application must be deployed using the `deploy` or `deploydir`
 command with the `--availabilityenabled` option set to `true`. See the
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
 ====
-Contrary to the Servlet 5.0 specification, GlassFish Server does not
+Contrary to the Servlet 5.0 specification, {productName} does not
 throw an `IllegalArgumentException` if an object type not supported for
 failover is bound into a distributed session.
 
@@ -762,7 +754,7 @@ list of the types of references that `HTTPSession` failover supports.
 * References to open files or network connections are lost.
 
 For information about how to work around these limitations, see the
-link:../deployment-planning-guide/toc.html#GSPLG[GlassFish Server Open Source Edition Deployment Planning
+link:../deployment-planning-guide/toc.html#GSPLG[{productName} Deployment Planning
 Guide].
 
 In the following table, No indicates that failover for the object type
@@ -776,7 +768,7 @@ link:jndi.html#beans[Accessing the Naming Context]. For more information
 about transaction recovery, see link:transaction-service.html#beanm[Using
 the Transaction Service]. For more information about Administered
 Objects, see "link:../administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[GSDVG543]][[sthref15]][[fvyem]]
 
@@ -823,7 +815,7 @@ new session starts. In some circumstances, clients do not join the
 session, for example, if the session manager uses cookies and the client
 does not accept cookies.
 
-GlassFish Server offers these session management options, determined by
+{productName} offers these session management options, determined by
 the `session-manager` element's `persistence-type` attribute in the
 `glassfish-web.xml` file:
 
@@ -843,7 +835,7 @@ used.
 
 
 For more information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00275[session-manager]" in
-GlassFish Server Open Source Edition Application Deployment Guide.
+{productName} Application Deployment Guide.
 
 [[beahg]][[GSDVG00266]][[the-memory-persistence-type]]
 
@@ -879,15 +871,14 @@ web application.
 
 The only manager property that the `memory` persistence type supports is
 `sessionFilename`, which is listed under
-"link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in GlassFish Server Open Source
-Edition Application Deployment Guide. The `sessionFilename` property
+"link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
 specifies the name of the file where sessions are serialized and
 persisted if the web application or the server is stopped. To disable
 this behavior, specify an empty string as the value of
 `sessionFilename`. The default value is an empty string.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide].
 
 [[beahh]][[GSDVG00267]][[the-file-persistence-type]]
@@ -935,14 +926,12 @@ container availability settings for the web application.
 ----
 
 The `file` persistence type supports all the manager properties listed
-under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in GlassFish Server Open
-Source Edition Application Deployment Guide except `sessionFilename`,
+under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
 and supports the `directory` store property listed under
-"link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide].
 
 [[gdshu]][[GSDVG00268]][[the-replicated-persistence-type]]
@@ -963,9 +952,9 @@ Select the Availability Service component under the relevant
 configuration in the Administration Console. Check the Availability
 Service box. To enable availability for the web container, select the
 Web Container Availability tab, then check the Availability Service box.
-All instances in an GlassFish Server cluster should have the same
+All instances in an {productName} cluster should have the same
 availability settings to ensure consistent behavior. For details, see
-the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High Availability
+the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability
 Administration Guide].
 
 To change settings such as persistence frequency and persistence scope
@@ -981,7 +970,7 @@ server-config.availability-service.web-container-availability.persistence-freque
 ----
 
 For more information, see the description of the `asadmin set` command
-in the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference
+in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
 Manual].
 
 To specify the `replicated` persistence type for a specific web
@@ -1010,14 +999,12 @@ application.
 ----
 
 The `replicated` persistence type supports all the manager properties
-listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in GlassFish Server
-Open Source Edition Application Deployment Guide except
+listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except
 `sessionFilename`, and supports the `persistenceScope` store property
-listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide].
 
 To specify that web sessions for which high availability is enabled are
@@ -1042,7 +1029,7 @@ cluster.
 === Using Comet
 
 This section explains the Comet programming technique and how to create
-and deploy a Comet-enabled application with the Oracle GlassFish Server.
+and deploy a Comet-enabled application with the {productName}.
 
 The following topics are addressed here:
 
@@ -1094,7 +1081,7 @@ thread for each request. If the web server were to use blocking
 connections then it might end up holding many thousands of threads,
 thereby hindering its scalability.
 
-The GlassFish server includes the Grizzly HTTP Engine, which enables
+The {productName} includes the Grizzly HTTP Engine, which enables
 asynchronous request processing (ARP) by avoiding blocking connections.
 Grizzly's ARP implementation accomplishes this by using the Java NIO
 API.
@@ -1110,8 +1097,7 @@ Grizzly supports two different implementations of Comet:
 
 * link:#ghgxk[Grizzly Comet] — Based on ARP, this includes a set of APIs
 that you use from a web component to enable Comet functionality in your
-web application. Grizzly Comet is specific to the Oracle GlassFish
-Server.
+web application. Grizzly Comet is specific to the {productName}.
 * link:#ghgxn[Bayeux Protocol] — Often referred to as `Cometd`, it
 consists of the JSON-based Bayeux message protocol, a set of Dojo or
 Ajax libraries, and an event handler. The Bayeux protocol uses a
@@ -1262,7 +1248,7 @@ cometContext.notify((Object)(handler))
 
 The Bayeux protocol, often referred to as `Cometd`, greatly simplifies
 the use of Comet. No server-side coding is needed for servers such as
-GlassFish Server that support the Bayeux protocol. Just enable Comet and
+{productName} that support the Bayeux protocol. Just enable Comet and
 the Bayeux protocol, then write and deploy the client.
 
 The following topics are addressed here:
@@ -1291,7 +1277,7 @@ Substitute the name of the protocol for `http-1`.
 
 ===== To Configure the `web.xml` File
 
-To enable the Bayeux protocol on the GlassFish Server, you must
+To enable the Bayeux protocol on the {productName}, you must
 reference the `CometdServlet` in your web application's `web.xml` file.
 In addition, if your web application includes a servlet, set the
 `load-on-startup` value for your servlet to `0` (zero) so that it will
@@ -1369,7 +1355,7 @@ asadmin deploy cometd-example.war
 ----
 5. Run the application as you would any other web application.
 +
-The context root for the example chat application is `/cometd` and the
+The context root for the example chat application is ``/cometd`` and the
 HTML page is `index.html`. So the URL might look like this:
 +
 [source]
@@ -1381,8 +1367,8 @@ http://localhost:8080/cometd/index.html
 
 See Also
 
-For more information about deployment in the GlassFish Server, see the
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+For more information about deployment in the {productName}, see the
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide].
 
 For more information about the Bayeux protocol, see
@@ -1425,7 +1411,7 @@ The following topics are addressed here:
 
 ===== The Server's Default Locale
 
-To set the default locale of the entire GlassFish Server, which
+To set the default locale of the entire {productName}, which
 determines the locale of the Administration Console, the logs, and so
 on, use the Administration Console. Select the domain component. Then
 type a value in the Locale field. For details, click the Help button in
@@ -1435,7 +1421,7 @@ the Administration Console.
 
 ===== Servlet Character Encoding
 
-This section explains how the GlassFish Server determines the character
+This section explains how the {productName} determines the character
 encoding for the servlet request and the servlet response. For encodings
 you can use, see
 `http://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html`.
@@ -1457,8 +1443,7 @@ the `glassfish-web.xml` file
 * The default, which is `ISO-8859-1`
 
 For details about the `parameter-encoding` element, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00218[parameter-encoding]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00218[parameter-encoding]" in {productName} Application Deployment Guide.
 
 [[beafy]][[GSDVG00032]][[servlet-response]]
 
@@ -1505,7 +1490,7 @@ Console.
 
 Some virtual server properties can be set for a specific web
 application. For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
-GlassFish Server Open Source Edition Application Deployment Guide.
+{productName} Application Deployment Guide.
 
 [[beagb]][[GSDVG00409]][[class-loader-delegation]]
 
@@ -1522,8 +1507,7 @@ The default value is `delegate="true"`, which causes the web application
 class loader to delegate in the same manner as the other class loaders.
 Use `delegate="true"` for a web application that accesses EJB components
 or that acts as a web service client or endpoint. For details about
-`glassfish-web.xml`, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
-Edition Application Deployment Guide].
+`glassfish-web.xml`, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
@@ -1585,8 +1569,8 @@ steps.
 ===== To Use the `default-web.xml` File
 
 1. Place the JAR file for the filter, security constraint, or other
-feature in the domain-dir`/lib` directory.
-2. Edit the domain-dir`/config/default-web.xml` file to refer to the
+feature in the domain-dir``/lib`` directory.
+2. Edit the domain-dir``/config/default-web.xml`` file to refer to the
 JAR file.
 3. Restart the server.
 
@@ -1606,9 +1590,9 @@ instance from the table, and select the Monitor tab.
 
 An idempotent request is one that does not cause any change or
 inconsistency in an application when retried. To enhance the
-availability of your applications deployed on an GlassFish Server
+availability of your applications deployed on an {productName}
 cluster, configure the load balancer to retry failed idempotent HTTP
-requests on all the GlassFish Server instances in a cluster. This option
+requests on all the {productName} instances in a cluster. This option
 can be used for read-only requests, for example, to retry a search
 request.
 
@@ -1630,8 +1614,7 @@ safely retried in `idempotent-url-pattern` elements in the
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
 
-For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00164[idempotent-url-pattern]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00164[idempotent-url-pattern]" in {productName} Application Deployment Guide.
 
 If none of the server instances can successfully serve the request, an
 error page is returned.
@@ -1641,11 +1624,11 @@ error page is returned.
 ===== Characteristics of an Idempotent URL
 
 Since all requests for a given session are sent to the same application
-server instance, and if that GlassFish Server instance is unreachable,
+server instance, and if that {productName} instance is unreachable,
 the load balancer returns an error message. Normally, the request is not
-retried on another GlassFish Server instance. However, if the URL
+retried on another {productName} instance. However, if the URL
 pattern matches that specified in the `glassfish-web.xml` file, the
-request is implicitly retried on another GlassFish Server instance in
+request is implicitly retried on another {productName} instance in
 the cluster.
 
 In HTTP, some methods (such as GET) are idempotent, while other methods
@@ -1660,10 +1643,10 @@ cause an update or modification of data.
 A search engine, for example, sends HTTP requests with the same URL
 pattern to the load balancer. Specifying the URL pattern of the search
 request to the load balancer ensures that HTTP requests with the
-specified URL pattern are implicitly retried on another GlassFish Server
+specified URL pattern are implicitly retried on another {productName}
 instance.
 
-For example, if the request URL sent to the GlassFish Server is of the
+For example, if the request URL sent to the {productName} is of the
 type ``/search/``something``.html``, then the URL pattern can be specified
 as ``/search/*``.
 
@@ -1675,7 +1658,7 @@ twice from your account.
 
 ==== Header Management
 
-In all Editions of the GlassFish Server, the `Enumeration` from
+In all Editions of the {productName}, the `Enumeration` from
 `request.getHeaders()` contains multiple elements (one element per
 request header) instead of a single, aggregated value.
 
@@ -1690,8 +1673,8 @@ created.
 You can configure custom valves and Catalina listeners for web modules
 or virtual servers by defining properties. A valve class must implement
 the org.apache.catalina.Valve interface from Tomcat or previous
-GlassFish Server releases, or the org.glassfish.web.valve.GlassFishValve
-interface from the current GlassFish Server release. A listener class
+{productName} releases, or the org.glassfish.web.valve.GlassFishValve
+interface from the current {productName} release. A listener class
 for a virtual server must implement the
 org.apache.catalina.ContainerListener or
 org.apache.catalina.LifecycleListener interface. A listener class for a
@@ -1728,8 +1711,7 @@ server, use the `alternatedocroot_n` property, where n is a positive
 integer that allows specification of more than one. This property can be
 a subelement of a `glassfish-web-app` element in the `glassfish-web.xml`
 file or a virtual server property. For more information about these
-elements, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+elements, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
 
 A virtual server's alternate docroots are considered only if a request
 does not map to any of the web modules deployed on that virtual server.
@@ -1846,7 +1828,7 @@ applications assigned to a specific virtual server, or for a specific
 web application.
 
 To define a global `context.xml` file, place the file in the
-domain-dir`/config` directory and name it `context.xml`.
+domain-dir``/config`` directory and name it `context.xml`.
 
 Use the `contextXmlDefault` property to specify the name and the
 location, relative to domain-dir, of the `context.xml` file for a
@@ -1882,13 +1864,13 @@ http://tomcat.apache.org/tomcat-5.5-doc/config/context.html[The Context
 Container]
 (`http://tomcat.apache.org/tomcat-5.5-doc/config/context.html`). Context
 parameters, environment entries, and resource definitions in
-`context.xml` are supported in the GlassFish Server.
+`context.xml` are supported in the {productName}.
 
 [[gezcx]][[GSDVG00417]][[enabling-webdav]]
 
 ==== Enabling WebDav
 
-To enable WebDav in the GlassFish Server, you edit the `web.xml` and
+To enable WebDav in the {productName}, you edit the `web.xml` and
 `glassfish-web.xml` files as follows.
 
 First, enable the WebDav servlet in your `web.xml` file:
@@ -2021,7 +2003,7 @@ module, add the `SSIServlet` to your `web.xml` file as follows:
 To enable SSI processing for all web modules, un-comment the
 corresponding sections in the `default-web.xml` file.
 
-If the `mime-mapping` is not specified in `web.xml`, GlassFish Server
+If the `mime-mapping` is not specified in `web.xml`, {productName}
 attempts to determine the MIME type from `default-web.xml` or the
 operating system default.
 
@@ -2138,7 +2120,7 @@ To work with a native executable, do the following:
 3. Use directory deployment to deploy the web module. Do not deploy it
 as a WAR file, because the executable bit information is lost during the
 process of `jar` and `unjar`. For more information about directory
-deployment, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition
+deployment, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
 Application Deployment Guide].
 
 

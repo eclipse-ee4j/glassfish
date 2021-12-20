@@ -13,7 +13,7 @@ prev=part-appendixes.html
 == A Subcommands for the `asadmin` Utility
 
 This appendix lists the `asadmin` subcommands that are included with
-this release of the GlassFish Server Open Source Edition 7 software.
+this release of the {productName} 7 software.
 
 * link:#ggltk[General Administration Subcommands]
 * link:#CHDJGEEG[Batch Jobs Subcommands]
@@ -32,12 +32,11 @@ this release of the GlassFish Server Open Source Edition 7 software.
 * link:#gitxi[Transaction Service Subcommands]
 
 For information and instructions on using the `asadmin` application
-deployment subcommands, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
-Edition Application Deployment Guide].
+deployment subcommands, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 Online help for the `asadmin` subcommands can be invoked on the command
 line, for example, `asadmin create-domain` `help`. The
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual] also
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual] also
 provides a collection of these help pages.
 
 
@@ -121,7 +120,7 @@ link:../reference-manual/list-jobs.html#GSRFM867[`list-jobs`]::
   link:general-administration.html#CACDDHBA[To Run `asadmin` Subcommands
   in `--detach` Mode].
 link:../reference-manual/list-modules.html#GSRFM00185[`list-modules`]::
-  Lists modules that are accessible to the GlassFish Server subsystem.
+  Lists modules that are accessible to the {productName} subsystem.
   The status of each module is included. Supported in remote mode only.
   For procedural information in this guide, see
   link:general-administration.html#ghlgf[To List Modules].
@@ -162,7 +161,7 @@ link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-s
   link:general-administration.html#giyjd[To Show Component Status].
 link:../reference-manual/start-database.html#GSRFM00234[`start-database`]::
   Starts the Apache Derby database server. Use this subcommand only for
-  working with applications deployed to the GlassFish Server. For
+  working with applications deployed to the {productName}. For
   procedural information in this guide, see link:jdbc.html#ggndz[To Start
   the Database].
 link:../reference-manual/stop-database.html#GSRFM00239[`stop-database`]::
@@ -173,7 +172,7 @@ link:../reference-manual/version.html#GSRFM00261[`version`]::
   Displays the version information for the option specified in archive
   or folder format. Supported in remote mode only. For procedural
   information in this guide, see
-  link:general-administration.html#ghhox[To Display the GlassFish Server
+  link:general-administration.html#ghhox[To Display the {productName}
   Version].
 
 [[CHDJGEEG]][[GSADG1155]][[batch-jobs-subcommands]]
@@ -394,7 +393,7 @@ link:../reference-manual/list-backups.html#GSRFM00152[`list-backups`]::
 link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`]::
   Lists the existing domains and their statuses. If the domain directory
   is not specified, the domains in the domain-root-dir, the default for
-  which is as-install`/domains`, are displayed. For procedural
+  which is as-install``/domains``, are displayed. For procedural
   information in this guide, see link:domains.html#ggoco[To List
   Domains].
 link:../reference-manual/login.html#GSRFM00210[`login`]::
@@ -636,11 +635,11 @@ link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]::
   Delete a Profiler].
 link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`]::
   Generates a report showing the threads, classes, and memory for the
-  virtual machine that runs GlassFish Server. For procedural information
+  virtual machine that runs {productName}. For procedural information
   in this guide, see link:jvm.html#ggnbu[To Generate a JVM Report].
 link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]::
   Lists the command-line options that are passed to the Java application
-  launcher when GlassFish Server is started. Supported in remote mode
+  launcher when {productName} is started. Supported in remote mode
   only. For procedural information in this guide, see
   link:jvm.html#ggnce[To List JVM Options].
 
@@ -686,12 +685,11 @@ link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`]::
   procedural information in this guide, see link:logging.html#gjirr[To
   List Log Levels].
 link:../reference-manual/list-loggers.html#GSRFM869[`list-loggers`]::
-  Lists all public loggers in your distribution of GlassFish Server Open
-  Source Edition. Internal loggers are not listed. For procedural
+  Lists all public loggers in your distribution of {productName}. Internal loggers are not listed. For procedural
   information in this guide, see link:logging.html#CEGGICGF[To List
   Loggers].
 link:../reference-manual/monitor.html#GSRFM00212[`monitor`]::
-  Displays monitoring information for the common GlassFish Server
+  Displays monitoring information for the common {productName}
   resources. Supported in remote mode only. For procedural information
   in this guide, see link:monitoring.html#gelol[To View Common Monitoring
   Data].

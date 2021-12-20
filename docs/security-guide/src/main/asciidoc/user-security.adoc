@@ -14,8 +14,8 @@ prev=system-security.html
 == 2 Administering User Security
 
 This chapter provides instructions for administering user security in
-the Oracle GlassFish Server environment by using the `asadmin`
-command-line utility. GlassFish Server enforces its authentication and
+the {productName} environment by using the `asadmin`
+command-line utility. {productName} enforces its authentication and
 authorization policies upon realms, users, and groups. This chapter
 assumes that you are familiar with security features such as
 authentication, authorization, and certificates. If you are not, see
@@ -55,33 +55,33 @@ The following topics are addressed here:
 * link:#ggmww[To Configure a JDBC or Digest Authentication Realm]
 * link:#gkbeo[To Configure LDAP Authentication with OID]
 * link:#gksgi[To Configure LDAP Authentication with OVD]
-* link:#gkbjp[To Enable LDAP Authentication on the GlassFish Server DAS]
+* link:#gkbjp[To Enable LDAP Authentication on the {productName} DAS]
 
 [[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
 
 ==== Overview of Authentication Realms
 
 An authentication realm, also called a security policy domain or
-security domain, is a scope over which the GlassFish Server defines and
-enforces a common security policy. GlassFish Server is preconfigured
+security domain, is a scope over which the {productName} defines and
+enforces a common security policy. {productName} is preconfigured
 with the file, certificate, and administration realms. In addition, you
 can set up LDAP, JDBC, digest, Oracle Solaris, or custom realms. An
 application can specify which realm to use in its deployment descriptor.
-If the application does not specify a realm, GlassFish Server uses its
+If the application does not specify a realm, {productName} uses its
 default realm (`file`).
 
 File realm::
-  GlassFish Server stores user credentials locally in a file named
+  {productName} stores user credentials locally in a file named
   `keyfile`. The file realm is the initial default realm.
 Administration realm::
   The administration realm is also a file realm and stores administrator
   user credentials locally in a file named `admin-keyfile`.
 Certificate realm::
-  GlassFish Server stores user credentials in a certificate database.
+  {productName} stores user credentials in a certificate database.
   When using the certificate realm, the server uses certificates with
   the HTTPS protocol to authenticate web clients.
 LDAP realm::
-  GlassFish Server can get user credentials from a Lightweight Directory
+  {productName} can get user credentials from a Lightweight Directory
   Access Protocol (LDAP) server such as Oracle Virtual Directory (OVD)
   (`http://www.oracle.com/technetwork/middleware/id-mgmt/overview/index.html`),
   Oracle Internet Directory (OID)
@@ -92,31 +92,30 @@ LDAP realm::
   individuals, and other resources such as files and devices in a
   network, whether on the public Internet or on a corporate intranet. +
   See link:#gkbeo[To Configure LDAP Authentication with OID] for
-  instructions on configuring GlassFish Server to work with an OVD/OID
+  instructions on configuring {productName} to work with an OVD/OID
   LDAP provider.
 +
 [NOTE]
 ====
-By default, GlassFish Server performs LDAP group search. If you have
+By default, {productName} performs LDAP group search. If you have
 not created any groups in LDAP, the search fails.
 
 To disable LDAP group search in LDAP user name search, set the
 `com.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH`
-Java system property to `true` in the required GlassFish Server
+Java system property to `true` in the required {productName}
 instance or cluster configurations:
 [source]
 ----
 asadmin> create-jvm-options --target=target
 -Dcom.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH=true
 ----
-where target is the GlassFish Server instance or cluster for which you
+where target is the {productName} instance or cluster for which you
 are disabling LDAP group search. For more information about the
-`create-jvm-options` subcommand, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server
-Open Source Edition Reference Manual].
+`create-jvm-options` subcommand, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 ====
 
 JDBC realm::
-  GlassFish Server gets user credentials from a database. The server
+  {productName} gets user credentials from a database. The server
   uses the database information and the enabled JDBC realm option in the
   configuration file.
 Digest realm::
@@ -124,14 +123,14 @@ Digest realm::
   password. However, the authentication is performed by transmitting the
   password in an encrypted form.
 Oracle Solaris realm::
-  GlassFish Server gets user credentials from the Oracle Solaris
+  {productName} gets user credentials from the Oracle Solaris
   operating system. This realm is supported on the Oracle Solaris 9 and
   Oracle Solaris 10 operating systems. Consult your Oracle Solaris
   documentation for information about managing users and groups in the
   Oracle Solaris realm.
 PAM realm::
   A Pluggable Authentication Module (PAM) realm allows applications
-  deployed on GlassFish Server to authenticate users against a native
+  deployed on {productName} to authenticate users against a native
   Unix (Solaris/Linux/Mac OS) users list. PAM realms use the class name
   `com.sun.enterprise.security.auth.realm.pam.PamRealm` and the JAAS
   Context `pamRealm`. +
@@ -144,9 +143,9 @@ Custom realm::
   instructions on creating a custom realm, see
   "link:../application-development-guide/securing-apps.html#GSDVG00367[
   Creating a Custom Realm]" in
-  GlassFish Server Open Source Edition Application Development Guide.
+  {productName} Application Development Guide.
 
-The GlassFish Server authentication service can govern users in multiple realms.
+The {productName} authentication service can govern users in multiple realms.
 
 [[ggnca]][[GSSCG00110]][[to-create-an-authentication-realm]]
 
@@ -180,8 +179,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-auth-realm` at the command line.
 
 For information on creating a custom realm, see
-"link:../application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in {productName} Application Development Guide.
 
 [[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
 
@@ -235,10 +233,9 @@ subcommand.
 link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
 
@@ -253,9 +250,8 @@ link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`] su
 3. If necessary, notify users that the realm is being deleted.
 4. Delete the realm by using the
 link:../reference-manual/delete-auth-realm.html#GSRFM00066[`delete-auth-realm`] subcommand.
-5. To apply your changes, restart GlassFish Server. See
-"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open Source
-Edition Administration Guide.
+5. To apply your changes, restart {productName}. See
+"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00081]][[ggpjf]]
 Example 2-3 Deleting a Realm
@@ -279,7 +275,7 @@ typing `asadmin help delete-auth-realm` at the command line.
 
 ==== To Configure a JDBC or Digest Authentication Realm
 
-GlassFish Server enables you to specify a user's credentials (user name
+{productName} enables you to specify a user's credentials (user name
 and password) in the JDBC realm instead of in the connection pool. Using
 the `jdbc` type realm instead of the connection pool prevents other
 applications from browsing the database tables for user credentials.
@@ -303,11 +299,11 @@ database that you are using.
 
 3. Create a JDBC connection pool for the database. +
 See "link:../administration-guide/jdbc.html#GSADG00420[
-To Create a JDBC Connection Pool]" in GlassFish Server Open Source Edition Administration Guide.
+To Create a JDBC Connection Pool]" in {productName} Administration Guide.
 
 4. Create a JDBC resource for the database. +
 "link:../administration-guide/jdbc.html#GSADG00426[
-To Create a JDBC Resource]" in GlassFish Server Open Source Edition Administration Guide.
+To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
 Create a realm. +
@@ -330,7 +326,7 @@ Modify the deployment descriptor that is associated with your application.
 +
 For more information about how to specify a realm, see
 "link:../application-development-guide/securing-apps.html#GSDVG00365[
-How to Configure a Realm]" in GlassFish Server Open Source Edition Application Development Guide.
+How to Configure a Realm]" in {productName} Application Development Guide.
 
 7. Assign security roles to users in the realm. +
 To assign a security role to a user, add a `security-role-mapping`
@@ -338,11 +334,11 @@ element to the deployment descriptor that you modified.
 
 8. Verify that the database is running. +
 If needed, see "link:../administration-guide/jdbc.html#GSADG00417[To Start the Database]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 9. To apply the authentication, restart the server. +
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[GSSCG00082]][[ghysu]]
 Example 2-4 Assigning a Security Role
@@ -362,7 +358,7 @@ security role `Employee` to user `Calvin`
 
 ==== To Configure LDAP Authentication with OID
 
-This procedure explains how to configure GlassFish Server to use LDAP
+This procedure explains how to configure {productName} to use LDAP
 authentication with Oracle Internet Directory.
 
 1. Install Oracle Enterprise Manager 11g and the latest Enterprise
@@ -386,14 +382,14 @@ of Oracle Internet Directory Administrator's Guide
 (`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html`).
 
 4. Using Oracle Wallet Manager, export an SSL self-signed certificate
-you want to use with GlassFish Server. +
+you want to use with {productName}. +
 Instructions for using Oracle Wallet Manager to create and export SSL
 certificates are provided in the "Configure Oracle Internet Directory
 for SSL" (`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html#CHDCADIJ`)
 section of the SSL chapter in Oracle Internet Directory Administrator's
 Guide (`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html`).
 
-5. On the GlassFish Server side, use the `keytool` command import the
+5. On the {productName} side, use the `keytool` command import the
 certificate you exported with Oracle Wallet Manager. +
 The `keytool` command is available in the `$JAVA_HOME/bin` directory.
 Use the following syntax:
@@ -415,18 +411,17 @@ cert-name::
   Path to the certificate that you exported with Oracle Wallet Manager.
 --
 +
-For example, to import a certificate named `oi.cer` for a GlassFish
-Server domain in `/glassfishv3/glassfish/domains/domain1`, using an
+For example, to import a certificate named `oi.cer` for a {productName} domain in `/glassfish7/glassfish/domains/domain1`, using an
 alias called "OID self-signed certificate," you would use the following command:
 +
 [source]
 ----
 keytool -importcert -alias "OID self signed certificate" -keystore \
-/glassfishv3/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
+/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
 ----
-6. Restart the GlassFish Server domain. +
+6. Restart the {productName} domain. +
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
 Anonymous Bind for OID. +
 For example:
@@ -461,7 +456,7 @@ complete instructions on the `ldapmodify` command.
 
 ==== To Configure LDAP Authentication with OVD
 
-This procedure explains how to configure GlassFish Server to use LDAP
+This procedure explains how to configure {productName} to use LDAP
 authentication with Oracle Virtual Directory.
 
 1. Create the OVD adapter, as described in the "Creating and
@@ -479,11 +474,11 @@ Control" in SSL Configuration in Oracle Fusion Middleware
 Also, configure the SSL for the OVD listener in server authentication mode.
 
 3. Export the certificate from JKS keystore you want to use with
-GlassFish Server. See "Exporting a Keystore Using Fusion Middleware Control"
+{productName}. See "Exporting a Keystore Using Fusion Middleware Control"
 (`http://docs.oracle.com/cd/E16764_01/core.1111/e10105/wallets.html#CIHECAIB`)
 for information.
 
-4. On the GlassFish Server side, use the `keytool` command to import
+4. On the {productName} side, use the `keytool` command to import
 the certificate you exported from the JKS keystore. +
 The `keytool` command is available in the `$JAVA_HOME/bin` directory.
 Use the following syntax:
@@ -505,29 +500,28 @@ cert-name::
   Path to the certificate that you exported from the keystore.
 --
 +
-For example, to import a certificate named `ovd.cer` for a GlassFish
-Server domain in `/glassfishv3/glassfish/domains/domain1`, using an
+For example, to import a certificate named `ovd.cer` for a {productName} domain in `/glassfish7/glassfish/domains/domain1`, using an
 alias called "OVD self-signed certificate," you would use the following command:
 +
 [source]
 ----
 keytool -importcert -alias "OVD self signed certificate" -keystore \
-/glassfishv3/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
+/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
 ----
-5. Restart the GlassFish Server domain. +
+5. Restart the {productName} domain. +
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
 
-==== To Enable LDAP Authentication on the GlassFish Server DAS
+==== To Enable LDAP Authentication on the {productName} DAS
 
 This procedure explains how to enable LDAP authentication for logins to
-the GlassFish Server Domain Administration Server (DAS). Logging in to
-the DAS is typically only performed by GlassFish Server administrators
-who want to use the GlassFish Server Administration Console or `asadmin`
+the {productName} Domain Administration Server (DAS). Logging in to
+the DAS is typically only performed by {productName} administrators
+who want to use the {productName} Administration Console or `asadmin`
 command. See link:#gkbeo[To Configure LDAP Authentication with OID] for
-instructions on enabling general LDAP authentication for GlassFish Server.
+instructions on enabling general LDAP authentication for {productName}.
 
 [[sthref24]]
 
@@ -535,7 +529,7 @@ Before you begin, ensure that you have followed the configuration instructions i
 link:#gkbeo[To Configure LDAP Authentication with OID]
 
 Use the `asadmin configure-ldap-for-admin` subcommand to enable user
-authentication to the GlassFish Server DAS.
+authentication to the {productName} DAS.
 
 Use the following syntax:
 
@@ -578,11 +572,11 @@ about the `configure-ldap-for-admin subcommand`.
 === Administering File Users
 
 A user is an individual (or application program) identity that is
-defined in GlassFish Server. A user who has been authenticated is
+defined in {productName}. A user who has been authenticated is
 sometimes called a principal.
 
 As the administrator, you are responsible for integrating users into the
-GlassFish Server environment so that their credentials are securely
+{productName} environment so that their credentials are securely
 established and they are provided with access to the applications and
 services that they are entitled to use.
 
@@ -731,9 +725,9 @@ update an administrative user to have a blank password.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update the user information by using the
 link:../reference-manual/update-file-user.html#GSRFM00254[`update-file-user`] subcommand.
-3. To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart {productName}. +
 See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[GSSCG00086]][[ggpgh]]
 Example 2-8 Updating a User

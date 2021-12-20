@@ -77,7 +77,7 @@ The default is the current setting of this option for the domain that
   The domain root directory, which contains the directory of the domain
   that is to be restarted. If specified, the path must be accessible in
   the file system. The default location of the domain root directory is
-  as-install`/domains`.
+  as-install``/domains``.
 `--force`::
   Specifies whether the domain is forcibly stopped immediately before it
   is restarted. Possible values are as follows:

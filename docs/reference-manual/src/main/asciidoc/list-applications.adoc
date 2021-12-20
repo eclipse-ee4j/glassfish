@@ -39,7 +39,7 @@ If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
 application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
-Versions]" in GlassFish Server Open Source Edition Application
+Versions]" in {productName} Application
 Deployment Guide.
 
 This subcommand is supported in remote mode only.
@@ -132,7 +132,7 @@ link:list-components.html#list-components-1[`list-components`(1)],
 link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)],
 link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

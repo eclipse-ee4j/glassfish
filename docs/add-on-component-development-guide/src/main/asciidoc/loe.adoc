@@ -56,7 +56,7 @@ Subcommand]
 * link:extending-asadmin.html#ghpvm[4-3 Adding Message Strings to an
 asadmin Subcommand]
 * link:extending-asadmin.html#ghrfh[4-4 BrandingVersion.properties File
-for Changing the Brand in the GlassFish Server CLI]
+for Changing the Brand in the {productName} CLI]
 * link:extending-asadmin.html#ghrnt[4-5 asadmin Subcommand With Empty
 execute Method]
 * link:extending-asadmin.html#ghrsi[4-6 asadmin Subcommand for Retrieving

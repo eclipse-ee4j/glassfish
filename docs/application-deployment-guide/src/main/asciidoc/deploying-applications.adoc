@@ -14,8 +14,7 @@ prev=overview.html
 == 2 Deploying Applications
 
 This chapter provides procedures and guidelines for deploying
-applications and modules in the GlassFish Server Open Source
-Editionenvironment by using the `asadmin` command-line utility.
+applications and modules in the {productName}environment by using the `asadmin` command-line utility.
 
 The following topics are addressed here:
 
@@ -69,7 +68,7 @@ Console are contained in the Administration Console online help.
 ==== To Deploy an Application or Module
 
 Use the `deploy` subcommand in remote mode to deploy an assembled
-application or module to GlassFish Server. If an error occurs during
+application or module to {productName}. If an error occurs during
 deployment, the application or module is not deployed. If a module
 within an application contains an error, the entire application is not
 deployed. These failures prevent a partial deployment that could leave
@@ -102,10 +101,9 @@ Use the `--altdd` or `--runtimealtdd` options of the `deploy` (and
 `redeploy`) subcommand to deploy an application or module using a
 top-level alternate deployment descriptor. The `--altdd` option
 specifies a top-level alternate Jakarta EE standard deployment descriptor.
-The `--runtimealtdd` option specifies a top-level alternate GlassFish
-Server runtime deployment descriptor. See link:#CHDFHDGD[Example 2-3].
+The `--runtimealtdd` option specifies a top-level alternate {productName} runtime deployment descriptor. See link:#CHDFHDGD[Example 2-3].
 For more information about deployment descriptors associated with
-GlassFish Server, see link:overview.html#gihzc[Deployment Descriptors and
+{productName}, see link:overview.html#gihzc[Deployment Descriptors and
 Annotations].
 
 You can also specify the deployment order of an application by using the
@@ -568,7 +566,7 @@ domain-dir/applications/module-name
 +
 [NOTE]
 ====
-Deployment directories might change between GlassFish Server releases.
+Deployment directories might change between {productName} releases.
 ====
 
 2. Create or update the timestamp of the `.reload` file to load the changes.
@@ -590,7 +588,7 @@ This task is best suited for use in a development environment.
 
 Automatic deployment involves copying an archive file into a special
 autodeploy directory where the archive is automatically deployed by
-GlassFish Server at predefined intervals. This method is useful in a
+{productName} at predefined intervals. This method is useful in a
 development environment because it allows new code to be tested quickly.
 Automatic deployment is enabled by default, and is available only on the
 default server instance.
@@ -604,7 +602,7 @@ code changes and dynamically reloaded. The default is `2`.
 precompilation.
 3. Copy your archive file to the autodeploy directory.
 +
-The default location is domain-dir`/autodeploy`. The application will be
+The default location is domain-dir``/autodeploy``. The application will be
 deployed at the next interval.
 +
 To undeploy an automatically deployed application or module, remove its
@@ -612,7 +610,7 @@ archive file from the autodeploy directory.
 +
 [NOTE]
 ====
-Deployment directories might change between GlassFish Server releases.
+Deployment directories might change between {productName} releases.
 ====
 
 [[GSDPG00021]][[giqrk]]
@@ -668,7 +666,7 @@ option.
 
 [NOTE]
 ====
-Deployment directories might change between GlassFish Server releases.
+Deployment directories might change between {productName} releases.
 ====
 
 
@@ -707,7 +705,7 @@ $ jar -tvf mydeployplan.jar
 Example 2-20 Deployment Plan Structure for an EJB Module
 
 In the deployment plan for an EJB module, the deployment descriptor that
-is specific to GlassFish Server is at the root level. If a standalone
+is specific to {productName} is at the root level. If a standalone
 EJB module contains a CMP bean, the deployment plan includes the
 `sun-cmp-mappings.xml` and `.dbschema` files at the root level. In the
 following listing, the deployment plan describes a CMP bean:
@@ -779,8 +777,8 @@ or module is deployed, the directory must be accessible and must contain
 the same files as found by the DAS.
 
 On Windows, if you are deploying a directory on a mapped drive, you must
-be running GlassFish Server as the same user to which the mapped drive
-is assigned. This enables GlassFish Server to access the directory.
+be running {productName} as the same user to which the mapped drive
+is assigned. This enables {productName} to access the directory.
 
 1. Ensure that the server is running.
 +
@@ -795,7 +793,7 @@ subcommand and specifying the path to the expanded directory.
 
 [NOTE]
 ====
-Deployment directories might change between GlassFish Server releases.
+Deployment directories might change between {productName} releases.
 ====
 
 
@@ -1162,18 +1160,17 @@ typing `asadmin help list-web-env-entry` at the command line.
 
 === Web Module Deployment Guidelines
 
-The following guidelines apply to deploying a web module in GlassFish
-Server:
+The following guidelines apply to deploying a web module in {productName}:
 
 * Context Root. When you deploy a web module, if you do not specify a
 context root, the default is the name of the WAR file without the `.war`
 extension. The web module context root must be unique within the server
 instance.
 +
-The domain administration server (DAS) in GlassFish Server versions
+The domain administration server (DAS) in {productName} versions
 2.1.1 and later supports the deployment of multiple web applications
 using the same web context root as long as those applications are
-deployed to different GlassFish Server stand-alone instances. Deploying
+deployed to different {productName} stand-alone instances. Deploying
 multiple applications using the same context root within a single
 instance produces an error.
 * Data Source. If a web application accesses a `DataSource` that is not
@@ -1195,10 +1192,9 @@ deployment option was set to true. This option is not supported and
 ignored in a clustered environment. See link:#gijzm[Example 2-8].
 +
 For information about HTTP session persistence, see the
-link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source Edition High Availability
+link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability
 Administration Guide].
-* Load Balancing. See the link:../ha-administration-guide/toc.html#GSHAG[GlassFish Server Open Source
-Edition High Availability Administration Guide] for information about
+* Load Balancing. See the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide] for information about
 load balancing.
 * JSP Precompilation. You can precompile JSP files during deployment by
 checking the appropriate box in the Administration Console, or by using
@@ -1218,8 +1214,8 @@ For example:
 </glassfish-web-app>
 ----
 If you include this property when you deploy the WAR file, the generated
-source is kept in domain-dir`/generated/jsp/`app-name`/`module-name for
-an application, or domain-dir`/generated/jsp/`module-name for an
+source is kept in domain-dir``/generated/jsp/``app-name``/``module-name for
+an application, or domain-dir``/generated/jsp/``module-name for an
 individually-deployed web module.
 +
 For more information about JSP precompilation, see
@@ -1248,16 +1244,15 @@ deployment. See the following sections:
 
 [NOTE]
 ====
-The GlassFish Server Web Profile supports the EJB 3.1 Lite
+The {productName} Web Profile supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
-among other features. The GlassFish Server Full Platform Profile
+among other features. The {productName} Full Platform Profile
 supports the entire EJB 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 ====
 
 
-The following guidelines apply to deploying an EJB module in GlassFish
-Server:
+The following guidelines apply to deploying an EJB module in {productName}:
 
 * JNDI Name. — If no JNDI name for the EJB JAR module is specified in
 the `jndi-name` element immediately under the `ejb` element in
@@ -1266,9 +1261,9 @@ default, non-clashing JNDI name is derived. A warning message is logged,
 recording the JNDI name used to look up the EJB JAR module.
 +
 Because the EJB 3.1 specification defines portable EJB JNDI names, there
-is less need for GlassFish Server specific JNDI names. By default,
-GlassFish Server specific default JNDI names are applied automatically
-for backward compatibility. To disable GlassFish Server specific JNDI
+is less need for {productName} specific JNDI names. By default,
+{productName} specific default JNDI names are applied automatically
+for backward compatibility. To disable {productName} specific JNDI
 names for an EJB module, set the value of the
 `<disable-nonportable-jndi-names>` element in the
 `glassfish-ejb-jar.xml` file to `true`. The default is `false`.
@@ -1291,10 +1286,10 @@ in a cluster, and not once per cluster.
 subcommand in remote mode to retrieve stubs and ties.
 * Compatibility of JAR Visibility Requirements. — Use the
 `compatibility` element of the `glassfish-application.xml` or
-`glassfish-ejb-jar.xml` file to specify the GlassFish Server release
+`glassfish-ejb-jar.xml` file to specify the {productName} release
 with which to be backward compatible in terms of JAR visibility
 requirements for applications. The current allowed value is `v2`, which
-refers to GlassFish Server version 2 or GlassFish Server version 9.1 or
+refers to {productName} version 2 or {productName} version 9.1 or
 9.1.1. Starting in Jakarta EE 6, the Jakarta EE specification imposes stricter
 requirements than Jakarta EE 5 did on which JAR files can be visible to
 various modules within an EAR file. Setting this element to `v2` removes
@@ -1333,13 +1328,13 @@ Configure connector connection pools for the deployed connector module.
 +
 Use the `create-connector-connection-pool` subcommand. For procedures,
 see "link:../administration-guide/connectors.html#GSADG00431[To Create a Connector Connection Pool]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 4. Configure connector resources for the connector connection pools.
 +
 Use the `create-resource-adapter-config` subcommand. For procedures, see
 "link:../administration-guide/connectors.html#GSADG00440[To Create Configuration Information for a Resource
-Adapter]" in GlassFish Server Open Source Edition Administration Guide.
+Adapter]" in {productName} Administration Guide.
 If needed, you can override the default configuration properties of a
 resource adapter.
 +
@@ -1349,7 +1344,7 @@ This step associates a connector resource with a JNDI name.
 +
 Use the `create-resource-adapter-config` subcommand. For procedures, see
 "link:../administration-guide/connectors.html#GSADG00440[To Create Configuration Information for a Resource
-Adapter]" in GlassFish Server Open Source Edition Administration Guide.
+Adapter]" in {productName} Administration Guide.
 If needed, you can override the default configuration properties of a
 resource adapter.
 
@@ -1357,8 +1352,7 @@ resource adapter.
 If needed, create an administered object for an inbound resource adapter.
 +
 Use the `create-admin-object` subcommand. For procedures, see
-"link:../administration-guide/connectors.html#GSADG00452[To Create an Administered Object]" in GlassFish Server
-Open Source Edition Administration Guide.
+"link:../administration-guide/connectors.html#GSADG00452[To Create an Administered Object]" in {productName} Administration Guide.
 
 [[bealp]][[GSDPG00332]][[redeploying-a-stand-alone-connector-module]]
 
@@ -1375,8 +1369,7 @@ module. Redeployment of a connector module results in the shared class
 loader reloading the new classes. Other modules that refer to the old
 resource adapter classes must be redeployed to gain access to the new
 classes. For more information about class loaders, see
-"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-Edition Application Development Guide.
+"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
 
 During connector module redeployment, the server log provides a warning
 indicating that all dependent applications should be redeployed. Client
@@ -1386,7 +1379,7 @@ not redeployed after connector module redeployment.
 
 To disable automatic redeployment, set the `--force` option to `false`.
 In this case, if the connector module has already been deployed,
-GlassFish Server provides an error message.
+{productName} provides an error message.
 
 [[bealq]][[GSDPG00333]][[deploying-and-configuring-an-embedded-resource-adapter]]
 
@@ -1409,8 +1402,8 @@ app-name`#`connector-name. To undeploy the connector module, you must
 undeploy the application in which it is embedded.
 
 The association between the physical JNDI name for the connector module
-in GlassFish Server and the logical JNDI name used in the application
-component is specified in the GlassFish Server-specific XML descriptor
+in {productName} and the logical JNDI name used in the application
+component is specified in the {productName}-specific XML descriptor
 `glassfish-ejb-jar.xml`.
 
 [[beaem]][[GSDPG00070]][[assembling-and-deploying-an-application-client-module]]
@@ -1421,13 +1414,12 @@ Deployment is necessary for application clients that communicate with
 EJB components or that use Java Web Start launch support. Java Web Start
 is supported for application clients and for applications that contain
 application clients. By default, Java Web Start is enabled in
-application clients and in GlassFish Server.
+application clients and in {productName}.
 
 
 [NOTE]
 ====
-The Application Client Container is supported only in the GlassFish
-Server Full Platform Profile, not in the Web Profile.
+The Application Client Container is supported only in the {productName} Full Platform Profile, not in the Web Profile.
 ====
 
 
@@ -1459,7 +1451,7 @@ Module].
 client, retrieve the client files.
 +
 The client artifacts contain the ties and necessary classes for the
-application client. In this release of GlassFish Server, the client
+application client. In this release of {productName}, the client
 artifacts include multiple files. You can use either the
 `get-client-stubs` subcommand or the `--retrieve` option of the `deploy`
 subcommand, but you do not need to use both.
@@ -1468,13 +1460,13 @@ option to retrieve the client files as part of deploying the
 application.
 * Use the link:../reference-manual/get-client-stubs.html#GSRFM00140[`get-client-stubs`] subcommand to retrieve
 client files for a previously-deployed application.
-6. Test the client on the GlassFish Server machine in one of the
+6. Test the client on the {productName} machine in one of the
 following ways:
 * If Java Web Start is enabled for the application client, use the
 Launch link on the Application Client Modules.
 * Run an application client by using the `appclient` script.
 +
-The `appclient` script is located in the as-install`/bin` directory.
+The `appclient` script is located in the as-install``/bin`` directory.
 +
 If you are using the default server instance, the only required option
 is `-client`, which points to the client JAR file. For example:
@@ -1494,8 +1486,7 @@ For more detailed information about the `appclient` script, see
 link:../reference-manual/appclient.html#GSRFM00262[`appclient`(1M)].
 
 For more detailed information about creating application clients, see
-"link:../application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in GlassFish Server Open
-Source Edition Application Development Guide. This chapter includes
+"link:../application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in {productName} Application Development Guide. This chapter includes
 information on the following topics:
 
 * Accessing EJB components and JMS resources from application clients
@@ -1509,7 +1500,7 @@ information on the following topics:
 ==== To Prepare Another Machine for Running an Application Client
 
 If Java Web Start is enabled, the default URL format for an application
-is `http://`host:port`/`context-root. For example:
+is ``http://`host:port``/``context-root. For example:
 
 [source]
 ----
@@ -1517,7 +1508,7 @@ http://localhost:80/myapp
 ----
 
 The default URL format for a standalone application client module is
-`http://`host:port`/`module-id. For example:
+``http://``host:port``/``module-id. For example:
 
 [source]
 ----
@@ -1546,8 +1537,8 @@ application client on a system other than where the server runs.
 
 1. Create the application client package JAR file.
 +
-Use the `package-appclient` script in the as-install`/bin` directory.
-This JAR file is created in the as-install`/lib/appclient` directory.
+Use the `package-appclient` script in the as-install``/bin`` directory.
+This JAR file is created in the as-install``/lib/appclient`` directory.
 2. Copy the application client package JAR file to the client machine.
 3. Extract the contents of the JAR file.
 +
@@ -1600,25 +1591,23 @@ to a previously-located resource that becomes inaccessible.
 === Lifecycle Module Deployment Guidelines
 
 A lifecycle module, also called a lifecycle listener module, provides a
-means of running long or short Java-based tasks within the GlassFish
-Server environment, such as instantiation of singletons or RMI servers.
+means of running long or short Java-based tasks within the {productName} environment, such as instantiation of singletons or RMI servers.
 Lifecycle modules are automatically initiated at server startup and are
 notified at various phases of the server life cycle. All lifecycle
-module interfaces are in the as-install`/modules/glassfish-api.jar`
+module interfaces are in the as-install``/modules/glassfish-api.jar``
 file.
 
 For general information about lifecycle modules, see
-"link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in GlassFish Server
-Open Source Edition Application Development Guide.
+"link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in {productName} Application Development Guide.
 
 You can deploy a lifecycle module using the `create-lifecycle-module`
 subcommand. Do not use `asadmin deploy` or related commands.
 
 You do not need to specify a classpath for the lifecycle module if you
-place it in the domain-dir`/lib` or domain-dir`/lib/classes` directory
+place it in the domain-dir``/lib`` or domain-dir`/lib/classes` directory
 for the Domain Administration Server (DAS). Do not place it in the `lib`
 directory for a particular server instance, or it will be deleted when
-that instance synchronizes with the GlassFish Server.
+that instance synchronizes with the {productName}.
 
 After you deploy a lifecycle module, you must restart the server. During
 server initialization, the server instantiates the module and registers
@@ -1648,13 +1637,11 @@ a web service endpoint, and the `glassfish-web.xml` and
 ====
 
 
-The following guidelines apply when deploying a web service in GlassFish
-Server:
+The following guidelines apply when deploying a web service in {productName}:
 
-* Web Service Endpoint. Deploy a web service endpoint to GlassFish
-Server as you would any servlet or stateless session bean. If the
+* Web Service Endpoint. Deploy a web service endpoint to {productName} as you would any servlet or stateless session bean. If the
 deployed application or module has a web service endpoint, the endpoint
-is detected automatically during deployment. The GlassFish Server
+is detected automatically during deployment. The {productName}
 -specific deployment descriptor files, `glassfish-web.xml` and
 `glassfish-ejb-jar.xml`, provide optional web service enhancements in
 their link:dd-elements.html#beayv[`webservice-endpoint`] and
@@ -1665,8 +1652,7 @@ click the Web Service component. The table in the right frame lists
 deployed web service endpoints.
 
 For more information about web services, see
-"link:../application-development-guide/webservices.html#GSDVG00007[Developing Web Services]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/webservices.html#GSDVG00007[Developing Web Services]" in {productName} Application Development Guide.
 
 [[gkkmb]][[GSDPG00073]][[osgi-bundle-deployment-guidelines]]
 
@@ -1694,7 +1680,7 @@ subcommand accepts properties arguments to wrap a WAR file as a WAB (Web
 Application Bundle) at the time of deployment. The subcommand looks for
 a key named `UriScheme` and, if present, uses the key as a URL stream
 handler to decorate the input stream. Other properties are used in the
-decoration process. For example, the GlassFish Server OSGi web container
+decoration process. For example, the {productName} OSGi web container
 registers a URL stream handler named `webbundle`, which is used to wrap
 a plain WAR file as a WAB.
 ====
@@ -1704,7 +1690,7 @@ a plain WAR file as a WAB.
 
 === Transparent JDBC Connection Pool Reconfiguration
 
-In this GlassFish Server release, reconfiguration of a JDBC connection
+In this {productName} release, reconfiguration of a JDBC connection
 pool due to attribute or property changes can be transparent to the
 applications or modules that use the pool, even if pool reconfiguration
 results in pool recreation. You do not need to redeploy the application
@@ -1770,8 +1756,8 @@ directory. If any submodule archives of an enterprise application
 archive have their own `glassfish-resources.xml` files, the resource
 definitions are scoped to those modules only. For more information about
 the `glassfish-resources.xml` file, see
-link:dd-files.html#giida[GlassFish Server Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the GlassFish Server
+link:dd-files.html#giida[{productName} Deployment Descriptor Files]
+and link:dd-elements.html#beaqi[Elements of the {productName}
 Deployment Descriptors].
 
 Naming. Application-scoped resource JNDI names begin with `java:app` or

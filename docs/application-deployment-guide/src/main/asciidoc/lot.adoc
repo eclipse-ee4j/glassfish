@@ -10,11 +10,11 @@ prev=lof.html
 [[list-of-tables]]
 == List of Tables
 
-* link:dd-files.html#giiht[B-1 GlassFish Server Deployment Descriptors
+* link:dd-files.html#giiht[B-1 {productName} Deployment Descriptors
 and DTDs]
-* link:dd-files.html#gkinm[B-2 weblogic.xml Support in GlassFish Server]
+* link:dd-files.html#gkinm[B-2 weblogic.xml Support in {productName}]
 * link:dd-files.html#gkkht[B-3 weblogic-webservices.xml Support in
-GlassFish Server]
+{productName}]
 * link:dd-elements.html#fvynw[C-1 activation-config subelements]
 * link:dd-elements.html#fvynv[C-2 activation-config-property subelements]
 * link:dd-elements.html#sthref14[C-3 admin-object-resource Subelements]

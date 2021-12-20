@@ -1,32 +1,31 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Administration Guide, Release 7
+title={productName} Administration Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
 
-= Eclipse GlassFish Server Administration Guide, Release 7
+= {productName} Administration Guide, Release 7
 
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Administration Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
-Eclipse GlassFish Server 7 Administration Guide provides
-instructions for configuring and administering GlassFish Server Open
-Source Edition.
+{productName} 7 Administration Guide provides
+instructions for configuring and administering {productName}.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Administration Guide, Release 7
+{productName} Administration Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

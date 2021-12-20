@@ -89,7 +89,7 @@ asadmin-options::
 `--nodedir`::
   The directory that contains the instance's node directory. The
   instance's files are stored in the instance's node directory. The
-  default is as-install`/nodes`.
+  default is as-install``/nodes``.
 `--node`::
   The node on which the instance resides. If this option is omitted, the
   subcommand determines the node from the DAS configuration in the

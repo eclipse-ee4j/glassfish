@@ -125,7 +125,7 @@ asadmin-options::
 
   `security.config`;;
     Specifies the location of the message security configuration file.
-    To point to a configuration file in the domain-dir`/config`
+    To point to a configuration file in the domain-dir``/config``
     directory, use the system property
     `${com.sun.aas.instanceRoot}/config/`, for example:
     `${com.sun.aas.instanceRoot}/config/wss-server-config-1.0.xml`. The

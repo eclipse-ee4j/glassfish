@@ -1,25 +1,25 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Application Development Guide, Release 7
+title={productName} Application Development Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Application Development Guide, Release 7
+= {productName} Application Development Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Application Development Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This Application Development Guide describes how to create and run Java
 Platform, Enterprise Edition (Jakarta EE platform) applications that follow
 the open Java standards model for Jakarta EE components and APIs in the
-Eclipse GlassFish Server environment. Topics include
+{productName} environment. Topics include
 developer tools, security, and debugging. This book is intended for use
 by software developers who create, assemble, and deploy Jakarta EE
 applications using Oracle servers and software.
@@ -28,7 +28,7 @@ applications using Oracle servers and software.
 
 '''''
 
-Eclipse GlassFish Server Application Development Guide,
+{productName} Application Development Guide,
 Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.

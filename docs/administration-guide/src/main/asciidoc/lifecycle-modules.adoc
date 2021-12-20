@@ -14,7 +14,7 @@ prev=monitoring.html
 == 9 Administering Life Cycle Modules
 
 This chapter provides procedures for administering life cycle modules in
-the GlassFish Server Open Source Edition 7 environment.
+the {productName} 7 environment.
 
 The following topics are addressed here:
 
@@ -31,16 +31,16 @@ online help.
 
 Life cycle modules, also known as initialization services, provide a
 means of running short or long duration Java-based tasks within the
-GlassFish Server environment. These modules are automatically initiated
+{productName} environment. These modules are automatically initiated
 at server startup and are notified at various phases of the server life
 cycle. Configured properties for a life cycle module are passed as
 properties during server initialization.
 
 All life cycle module classes and interfaces are in the
-as-install`/modules/glassfish-api.jar` file.
+as-install``/modules/glassfish-api.jar`` file.
 
 A life cycle module listens for and performs its tasks in response to
-the following GlassFish Server sequence of events:
+the following {productName} sequence of events:
 
 1. Initialization. The server reads the configuration, initializes
 built-in subsystems (such as security and logging services), and creates
@@ -53,7 +53,7 @@ subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
 on creating life cycle modules, see "link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing
-Lifecycle Listeners]" in GlassFish Server Open Source Edition
+Lifecycle Listeners]" in {productName}
 Application Development Guide.
 
 

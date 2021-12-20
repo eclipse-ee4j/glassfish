@@ -1,26 +1,31 @@
 type=page
 status=published
-title=Upgrading an Installation of Application Server or GlassFish Server
+title=Upgrading an Installation of Application Server or {productName}
 prev=upgrade-compatibility-issues.html
 ~~~~~~
 
-= Upgrading an Installation of Application Server or GlassFish Server
+= Upgrading an Installation of Application Server or {productName}
 
 [[GSUPG00003]][[abmbq]]
 
 
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
-== 2 Upgrading an Installation of Application Server or GlassFish Server
+== 2 Upgrading an Installation of Application Server or {productName}
 
-The Upgrade Tool that is bundled with GlassFish Server 7 replicates
+[CAUTION]
+====
+This chapter is obsoleted and must be revided.
+====
+
+The Upgrade Tool that is bundled with {productName} 7 replicates
 the configuration of a previously installed server in the target
 installation. The Upgrade Tool assists in upgrading the configuration
 and applications from an earlier version of the Application Server or
-GlassFish Server to GlassFish Server 7.
+{productName} to {productName} 7.
 
 In addition to Upgrade Tool, there are three Update Center tools that
-can be used to perform an in-place upgrade to GlassFish Server 7 from
-GlassFish Server 3.1.1, 3.1, 3.0.1, and Enterprise Server v3. These
+can be used to perform an in-place upgrade to {productName} 7 from
+{productName} 3.1.1, 3.1, 3.0.1, and Enterprise Server v3. These
 three Update Center tools are:
 
 * Update Tool
@@ -31,7 +36,7 @@ Upgrade Tool and the three Update Center tools are explained later in
 this chapter.
 
 To view a list of the older versions from which you can upgrade, see
-link:#gjxkx[Supported Releases for Upgrade to GlassFish Server 7].
+link:#gjxkx[Supported Releases for Upgrade to {productName} 7].
 
 The following topics are addressed here:
 
@@ -55,28 +60,27 @@ The following topics are addressed here:
 * link:#gkxum[Upgrade Paths]
 * link:#gdkiw[Upgrade Terminology]
 * link:#gktcb[Summary of Upgrade Tools and Procedures]
-* link:#gjxkx[Supported Releases for Upgrade to GlassFish Server 7]
+* link:#gjxkx[Supported Releases for Upgrade to {productName} 7]
 * link:#gkufi[Upgrading From Version 8.x or Older Product Releases]
-* link:#gkxrp[Upgrading GlassFish Server Inside a Closed Network]
+* link:#gkxrp[Upgrading {productName} Inside a Closed Network]
 
 [[gkxum]][[GSUPG00059]][[upgrade-paths]]
 
 ==== Upgrade Paths
 
-There are two general paths you can use when upgrading to GlassFish
-Server 7:
+There are two general paths you can use when upgrading to {productName} 7:
 
 Side-by-Side::
-  A side-by-side upgrade means that the new GlassFish Server release is
+  A side-by-side upgrade means that the new {productName} release is
   installed in a different directory than the release from which you are
   upgrading. +
   In this scenario, you perform the following steps:
 
-  1.  Perform a basic installation of GlassFish Server 7 in a location
+  1.  Perform a basic installation of {productName} 7 in a location
   other than the one being used for the older product.
   2.  Use Upgrade Tool to migrate the old configurations and
-  applications to the new GlassFish Server 7 directories.
-  3.  Test the new GlassFish Server installation to make sure everything
+  applications to the new {productName} 7 directories.
+  3.  Test the new {productName} installation to make sure everything
   is working properly.
   4.  When you are satisfied that the new installation works properly,
   modify your production environment to use the new installation.
@@ -84,25 +88,25 @@ Side-by-Side::
 +
 The side-by-side upgrade path is typically used for live production
   environments because it allows you to thoroughly test the new
-  GlassFish Server installation before bringing it into production.
+  {productName} installation before bringing it into production.
 
 In-Place::
-  An in-place upgrade means that the new GlassFish Server release is
+  An in-place upgrade means that the new {productName} release is
   installed directly over and into the same directory as the previous
   product release. The existing configuration is reused in the updated
   installation. +
 In this scenario, you simply use Update Tool, the `pkg` utility, or
   the Update Notifier in your old installation to overwrite the old
-  installation with the new GlassFish Server 7 product. +
+  installation with the new {productName} 7 product. +
   Performing an in-place upgrade is easier than performing a
   side-by-side upgrade, but you lose the ability to switch back and
   forth between the old and new installations. There is also no way to
   revert an in-place upgrade back to the previous product version.
   Because of these limitations, in-place upgrades are typically only
-  used by developers and for non-production GlassFish Server
+  used by developers and for non-production {productName}
   deployments. +
   Note also that it is only possible to perform an in-place upgrade when
-  upgrading from GlassFish Server 3.1.1, 3.1, 3.0.1, or v3. If you are
+  upgrading from {productName} 3.1.1, 3.1, 3.0.1, or v3. If you are
   upgrading from product versions prior to 3x, you must perform a
   side-by-side upgrade.
 
@@ -123,7 +127,7 @@ Target Root Domain's Directory::
   upgrading (for example, `c:\glassfish7\glassfish\domains`).
 Master Password::
   The SSL certificate database password used in operations such as
-  GlassFish Server startup. This term refers to the master password of
+  {productName} startup. This term refers to the master password of
   the installation from which you want to upgrade. You need to specify
   this password if you have changed it from the default value of
   `changeit`.
@@ -132,9 +136,8 @@ Master Password::
 
 ==== Summary of Upgrade Tools and Procedures
 
-There are several tools you can use to upgrade from an earlier GlassFish
-Server or Enterprise Server installation to GlassFish Server 7. The
-general procedures for upgrading to GlassFish Server 7 vary depending
+There are several tools you can use to upgrade from an earlier {productName} or Enterprise Server installation to {productName} 7. The
+general procedures for upgrading to {productName} 7 vary depending
 on which tool you use and the product version from which you are upgrading.
 
 The following topics are addressed here:
@@ -149,8 +152,7 @@ The following topics are addressed here:
 
 ===== Summary of Tools for Performing an Upgrade
 
-There are several tools you can use to perform an upgrade to GlassFish
-Server 7 are described below.
+There are several tools you can use to perform an upgrade to {productName} 7 are described below.
 
 * link:#gktcz[Upgrade Tool]
 * link:#gktha[Update Tool and the `pkg` Utility]
@@ -160,22 +162,21 @@ Server 7 are described below.
 
 Upgrade Tool
 
-The GlassFish Server Upgrade Tool is tended solely for performing
+The {productName} Upgrade Tool is tended solely for performing
 side-by-side upgrades from any compatible older product version to
-GlassFish Server 7.
+{productName} 7.
 
 Upgrade Tool provides a number of features that aid in the migration of
-older configurations and applications to a new GlassFish Server 7
+older configurations and applications to a new {productName} 7
 installation. These features are described in more detail in
 link:#gdkix[Upgrade Tool Functionality].
 
-In GlassFish Server 7 Upgrade Tool is installed in the
+In {productName} 7 Upgrade Tool is installed in the
 as-install``/bin`` directory.
 
 [NOTE]
 ====
-Upgrade Tool is the only tool you can use when upgrading to GlassFish
-Server 7 from product versions prior to GlassFish Server 3.0.1 or
+Upgrade Tool is the only tool you can use when upgrading to {productName} 7 from product versions prior to {productName} 3.0.1 or
 Enterprise Server v3.
 ====
 
@@ -187,28 +188,28 @@ Upgrade Tool.
 
 Update Tool and the `pkg` Utility
 
-The GlassFish Server Update Tool is a graphical utility that is
-typically used for the day-to-day maintenance of GlassFish Server
+The {productName} Update Tool is a graphical utility that is
+typically used for the day-to-day maintenance of {productName}
 components and additional features. For example, Update Tool can be used
-to update GlassFish Server components or install additional features
+to update {productName} components or install additional features
 such as OSGi Admin Console.
 
 The command-line counterpart to Update Tool is the `pkg` utility. While
 the `pkg` utility does not provide exactly the same set of features as
-Update Tool, for the purposes of upgrading to GlassFish Server 7, the
+Update Tool, for the purposes of upgrading to {productName} 7, the
 `pkg` utility and Update Tool feature sets are almost identical.
 
 In addition to day-to-day maintenance tasks, Update Tool and the `pkg`
 utility can be used to perform an in-place upgrade of an entire
-GlassFish Server 3.0.1 or Enterprise Server v3 installation to the
-GlassFish Server 7 or later release.
+{productName} 3.0.1 or Enterprise Server v3 installation to the
+{productName} 7 or later release.
 
-In GlassFish Server 7 Update Tool is installed in the
+In {productName} 7 Update Tool is installed in the
 as-install-parent``/bin`` directory.
 
 [NOTE]
 ====
-It is not possible to use Update Tool to upgrade from GlassFish Server
+It is not possible to use Update Tool to upgrade from {productName}
 or Enterprise Server versions prior to 3x. For these older versions, you
 must use the Upgrade Tool, described in link:#gktcz[Upgrade Tool].
 ====
@@ -217,21 +218,21 @@ See link:#gktcl[Summary of Procedure for Upgrading With Update Tool] for
 an overview of the general procedure for performing an upgrade with
 Update Tool. For more information about Update Tool in general, see
 "link:../administration-guide/toc.html#GSADG00701[Update Tool]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[gkuff]][[GSUPG00006]][[software-update-notifier]]
 
 Software Update Notifier
 
-The GlassFish Server Software Update Notifier is similar to Update Tool
+The {productName} Software Update Notifier is similar to Update Tool
 and the `pkg` utility in that it enables you to perform an in-place
-upgrade from GlassFish Server 3.1.1, 3.1, 3.0.1, or Enterprise Server
+upgrade from {productName} 3.1.1, 3.1, 3.0.1, or Enterprise Server
 v3. As with Update Tool and the `pkg` utility, you cannot use the
 Software Update tool to upgrade from product releases prior 3.0.1 and
 v3.
 
 The Software Update Notifier is distributed as a configuration option
-during GlassFish Server 7, 3.0.1, and Enterprise Server v3
+during {productName} 7, 3.0.1, and Enterprise Server v3
 installation. If installed and enabled, the Software Update Notifier
 monitors your installation and pops up a notification balloon when
 updates or upgrades are available for your product.
@@ -246,21 +247,20 @@ the Update Notifier, refer to the Update Tool online help.
 ===== Summary of Procedure for Upgrading With Upgrade Tool
 
 The general procedure for using Upgrade Tool to perform an upgrade to
-GlassFish Server 7 from any compatible older version of GlassFish
-Server or Enterprise Server comprises the following steps:
+{productName} 7 from any compatible older version of {productName} or Enterprise Server comprises the following steps:
 
-1. Download GlassFish Server 7 and perform a Standard Installation,
+1. Download {productName} 7 and perform a Standard Installation,
 as described in "link:../installation-guide/toc.html#GSING00007[
-To Install GlassFish Server Using the Self-Extracting File]"
-in GlassFish Server Open Source Edition Installation Guide.
+To Install {productName} Using the Self-Extracting File]"
+in {productName} Installation Guide.
 2. Copy any custom or third-party libraries from the older installation
-to their corresponding locations in the new GlassFish Server 7
+to their corresponding locations in the new {productName} 7
 installation directories. Note that you should only copy custom or
 third-party libraries here. Do not copy an libraries from the actual
 domain that will be upgraded.
-3. Run the `asupgrade` command from the new GlassFish Server 7
+3. Run the `asupgrade` command from the new {productName} 7
 as-install``/bin`` directory.
-4. Start the new GlassFish Server 7 DAS with the
+4. Start the new {productName} 7 DAS with the
 `asadmin start-domain` subcommand.
 
 This procedure is described in more detail in link:#abmbr[Performing a
@@ -271,13 +271,13 @@ Side-By-Side Upgrade With Upgrade Tool].
 ===== Summary of Procedure for Upgrading With Update Tool
 
 The general procedure for using Update Tool to perform an upgrade to
-GlassFish Server 7 from GlassFish Server 3.0.1 or Enterprise Server v3
+{productName} 7 from {productName} 3.0.1 or Enterprise Server v3
 comprises the following steps:
 
 1. Manually stop all server instances and the domain.
 2. Launch Update Tool by using the as-install-parent`/bin/updatetool`
 command in the older product directory.
-3. In Update Tool, select and install the latest GlassFish Server
+3. In Update Tool, select and install the latest {productName}
 product release. This updates your server to the 7 release.
 4. Upgrade the domain by running the `asadmin start-domain --upgrade`
 subcommand. This performs the upgrade and then shuts down the DAS.
@@ -292,7 +292,7 @@ Using the Update Tool GUI].
 ===== Summary of Procedure for Upgrading With the Software Update Notifier
 
 The general procedure for using the Software Update Notifier to perform
-an upgrade to GlassFish Server 7 from GlassFish Server3.0.1 or
+an upgrade to {productName} 7 from {productName}3.0.1 or
 Enterprise Server v3 comprises the following steps:
 
 1. Wait for the Software Update Notifier to pop up a notification
@@ -314,7 +314,7 @@ Using the Software Update Notifier].
 ===== Summary of Procedure for Upgrading With the `pkg` Utility
 
 The general procedure for using the `pkg` utility to perform an upgrade
-to GlassFish Server 7 from GlassFish Server3.0.1 or Enterprise Server
+to {productName} 7 from {productName}3.0.1 or Enterprise Server
 v3 comprises the following steps:
 
 1. Manually stop all server instances and the domain.
@@ -331,34 +331,34 @@ From the Command Line Using the `pkg` Utility].
 
 [[gjxkx]][[GSUPG00062]][[supported-releases-for-upgrade-to-glassfish-server-7]]
 
-==== Supported Releases for Upgrade to GlassFish Server 7
+==== Supported Releases for Upgrade to {productName} 7
 
-Upgrades to GlassFish Server 7 are supported from the following
-earlier GlassFish Server product releases:
+Upgrades to {productName} 7 are supported from the following
+earlier {productName} product releases:
 
 * Sun GlassFish Enterprise Server v2.1.1
 * Sun GlassFish Enterprise Server v3
-* GlassFish Server Open Source Edition 3.0.1
-* GlassFish Server Open Source Edition 3.1
-* GlassFish Server Open Source Edition 3.1.1
+* {productName} 3.0.1
+* {productName} 3.1
+* {productName} 3.1.1
 
 [[gkufi]][[GSUPG00063]][[upgrading-from-version-8.x-or-older-product-releases]]
 
 ==== Upgrading From Version 8.x or Older Product Releases
 
-It is not possible to upgrade to GlassFish Server 7 directly from Sun
+It is not possible to upgrade to {productName} 7 directly from Sun
 GlassFish Enterprise Server 8.x or older product releases.
 
 To upgrade from a product release that is older than any of those listed
-in link:#gjxkx[Supported Releases for Upgrade to GlassFish Server 7],
+in link:#gjxkx[Supported Releases for Upgrade to {productName} 7],
 you must first upgrade your older product release to one of the releases
-that are supported for upgrade to GlassFish Server 7.
+that are supported for upgrade to {productName} 7.
 
 For example, to upgrade from any Enterprise Server 8.x release, you
 first need to upgrade that older release to Enterprise Server 2.1.1.
 That is, your upgrade path would be as follows:
 
-Enterprise Server 8.x⇒Enterprise Server 2.1.1⇒GlassFish Server 7
+Enterprise Server 8.x⇒Enterprise Server 2.1.1⇒{productName} 7
 
 Sun GlassFish Enterprise Server 2.1.1 is available for download from the
 http://glassfish.java.net/public/downloadsindex.html[GlassFish Community
@@ -370,24 +370,24 @@ GlassFish Enterprise Server 2.1.1 Upgrade Guide]
 
 After upgrading your older Enterprise Server installation to Enterprise
 Server 2.1.1, you can proceed normally with the instructions in this
-guide to complete the upgrade to GlassFish Server 7.
+guide to complete the upgrade to {productName} 7.
 
 [[gkxrp]][[GSUPG00065]][[upgrading-glassfish-server-inside-a-closed-network]]
 
-==== Upgrading GlassFish Server Inside a Closed Network
+==== Upgrading {productName} Inside a Closed Network
 
-For instructions on upgrading a GlassFish Server installation in an
+For instructions on upgrading a {productName} installation in an
 environment where Internet access is not available, see
 "link:../administration-guide/toc.html#GSADG00575[
-Extending and Updating GlassFish Server Inside a Closed Network]"
-in GlassFish Server Open Source Edition Administration Guide.
+Extending and Updating {productName} Inside a Closed Network]"
+in {productName} Administration Guide.
 
 [[abmbr]][[GSUPG00040]][[performing-a-side-by-side-upgrade-with-upgrade-tool]]
 
 === Performing a Side-By-Side Upgrade With Upgrade Tool
 
 This section explains how to use Upgrade Tool to perform a side-by-side
-upgrade to GlassFish Server 7 from any compatible older product release.
+upgrade to {productName} 7 from any compatible older product release.
 
 The following topics are addressed here:
 
@@ -428,7 +428,7 @@ Briefly, the Upgrade Tool performs the following steps:
 
 * Copies the older source domain directory to the new target `domains` directory.
 * Calls the `asadmin start-domain --upgrade` command to migrate the
-source configurations to the new target GlassFish Server installation.
+source configurations to the new target {productName} installation.
 * Sends all `asadmin` command output to the screen and to the
 `upgrade.log` file, and sends all server output to the `server.log` file.
 
@@ -444,10 +444,9 @@ Additional Upgrade Tool functions are explained in the following sections:
 
 Application archives (EAR files) and component archives (JAR, WAR, and
 RAR files) that are deployed in the source server do not require any
-modification to run on GlassFish Server Open Source Edition 7.
-Components that may have incompatibilities are deployed on GlassFish
-Server 7 with the `compatibility` property set to `v2` and will run
-without change on GlassFish Server 7. You may, however, want to
+modification to run on {productName} 7.
+Components that may have incompatibilities are deployed on {productName} 7 with the `compatibility` property set to `v2` and will run
+without change on {productName} 7. You may, however, want to
 consider modifying the applications to conform to Jakarta EE 6 requirements.
 
 The Jakarta EE 6 platform specification imposes stricter requirements than
@@ -474,8 +473,7 @@ attempt to reconfigure the incorrect configurations.
 ===== Upgrade of Clusters
 
 When upgrading from a clustered configuration, the older cluster
-information is retained in a new `domain.xml` file in the GlassFish
-Server 7 installation directories. However, it is still necessary to
+information is retained in a new `domain.xml` file in the {productName} 7 installation directories. However, it is still necessary to
 manually re-create the server instances that are contained in the
 clusters. This procedure is explained in link:#gfybw[Upgrading Clusters
 and Node Agent Configurations].
@@ -490,12 +488,12 @@ the Upgrade Tool is run. Additional information is recorded in the
 server log of the upgraded domain.
 
 You can also use the `asadmin version` subcommand after starting the
-upgraded domain to verify the new GlassFish Server product version; for example:
+upgraded domain to verify the new {productName} product version; for example:
 
 [source]
 ----
 asadmin> version
-Version = Oracle GlassFish Server 3.1 (build 42)
+Version = Eclipse GlassFish 7.0.0 (build 42)
 Command version executed successfully.
 ----
 
@@ -504,9 +502,8 @@ Command version executed successfully.
 ==== To Upgrade From the Command Line Using Upgrade Tool
 
 This procedure explains how to use the Upgrade Tool command line to
-upgrade to GlassFish Server 7 from any supported older product
-release. See link:#gjxkx[Supported Releases for Upgrade to GlassFish
-Server 7] for a list of supported releases.
+upgrade to {productName} 7 from any supported older product
+release. See link:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
 
 [[sthref29]]
 
@@ -515,14 +512,14 @@ Before You Begin
 Ensure that the domains on the source server from which you are
 upgrading are stopped before proceeding.
 
-1. Download and install GlassFish Server 7 using the Typical
+1. Download and install {productName} 7 using the Typical
 Installation path. +
 See "link:../installation-guide/toc.html#GSING00025[
-Installing GlassFish Server From a Self-Extracting Bundle]"
-in GlassFish Server Open Source Edition Installation Guide for instructions.
+Installing {productName} From a Self-Extracting Bundle]"
+in {productName} Installation Guide for instructions.
 
 2. Copy any custom or third-party libraries that may be located in the
-source as-install`/lib` directory to the target as-install`/lib`
+source as-install``/lib`` directory to the target as-install``/lib``
 directory. +
 Custom and third-party libraries should normally be located in the
 domain-dir``/lib`` directory. This step is only necessary for custom or
@@ -533,7 +530,7 @@ as-install``/lib`` directory.
 +
 [NOTE]
 ====
-Use the Upgrade Tool that is located in the target GlassFish Server 7
+Use the Upgrade Tool that is located in the target {productName} 7
 installation, not the older source installation.
 ====
 +
@@ -593,7 +590,7 @@ If there are any `SEVERE` or `WARNING` messages in the `server.log`
 file, the upgrade output will say
 `"Possible error encountered during upgrade. See server log after upgrade process completes."`
 
-6. Start the upgraded GlassFish Server 7 domain.
+6. Start the upgraded {productName} 7 domain.
 +
 [source]
 ----
@@ -604,7 +601,7 @@ used in the older server.
 +
 [NOTE]
 ====
-GlassFish Server 7 does not support NSS authentication. If you are
+{productName} 7 does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
 authentication, follow the procedure in link:#gktnh[Upgrading
 Installations That Use NSS Cryptographic Tokens].
@@ -619,7 +616,7 @@ Example 2-1 Using the `asupgrade` Command Line
 
 The following example shows how to use the `asupgrade` command-line
 utility in non-interactive mode to upgrade an existing Sun GlassFish
-Enterprise Server v2.1 installation to GlassFish Server 7. The
+Enterprise Server v2.1 installation to {productName} 7. The
 following command should be entered on a single line.
 
 [source]
@@ -645,7 +642,7 @@ short form, the long form, and a description of each option.
 
 |`-V`
 |`--version`
-|The version of the GlassFish Server.
+|The version of the {productName}.
 
 |`-h`
 |`--help`
@@ -657,7 +654,7 @@ short form, the long form, and a description of each option.
 
 |`-t` target-domains-directory
 |`--target` target-domains-directory
-|The desired domain-root-dir directory in the GlassFish Server 7 target
+|The desired domain-root-dir directory in the {productName} 7 target
 installation; default is as-install``/domains``
 
 |`-f` password-file
@@ -671,10 +668,10 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir``/docroot/index.html`` file. This file is brought over during
-the upgrade. You may want to copy the default GlassFish Server 7 file
+the upgrade. You may want to copy the default {productName} 7 file
 from the `domain1.original/docroot` directory and customize it for your
-GlassFish Server 7 installation.
-* To register your installation of GlassFish Server from the
+{productName} 7 installation.
+* To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
@@ -684,9 +681,8 @@ click the Help button on the Administration Console.
 ==== To Upgrade Using the Upgrade Tool Wizard
 
 This procedure explains how to use the graphical Upgrade Tool Wizard to
-upgrade to GlassFish Server 7 from any supported older product
-release. See link:#gjxkx[Supported Releases for Upgrade to GlassFish
-Server 7] for a list of supported releases.
+upgrade to {productName} 7 from any supported older product
+release. See link:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
 
 [[sthref32]]
 
@@ -695,10 +691,10 @@ Before You Begin
 Ensure that the source domains from which you are upgrading are stopped
 before proceeding.
 
-1. Download and install GlassFish Server 7 using the Typical Installation path. +
+1. Download and install {productName} 7 using the Typical Installation path. +
 See "link:../installation-guide/toc.html#GSING00025[
-Installing GlassFish Server From a Self-Extracting Bundle]"
-in GlassFish Server Open Source Edition Installation Guide for instructions.
+Installing {productName} From a Self-Extracting Bundle]"
+in {productName} Installation Guide for instructions.
 
 2. Copy any custom or third-party libraries that may be located in the
 source as-install``/lib`` directory to the target as-install``/lib`` directory. +
@@ -712,7 +708,7 @@ operating environment.
 +
 [NOTE]
 ====
-Use the Upgrade Tool that is located in the target GlassFish Server 7
+Use the Upgrade Tool that is located in the target {productName} 7
 installation, not the older source installation.
 ====
 +
@@ -743,10 +739,10 @@ click Browse. +
 For example, you might type `c:\glassfish\domains\domain1`.
 
 5. In the Target Domains Root Directory field, type the location of the
-GlassFish Server 7 installation to which to transfer the
+{productName} 7 installation to which to transfer the
 configuration, or click Browse. +
 The default is the full path name of the `domains` directory of your
-GlassFish Server 7 installation (for example,
+{productName} 7 installation (for example,
 `c:\glassfish7\glassfish\domains`).
 
 6. Provide the master password of the source application server. +
@@ -755,7 +751,7 @@ specify a password here, the default master password is used.
 +
 [NOTE]
 ====
-GlassFish Server 7 does not support NSS authentication. If you are
+{productName} 7 does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
 authentication, follow the procedure in link:#gktnh[Upgrading
 Installations That Use NSS Cryptographic Tokens].
@@ -786,7 +782,7 @@ file, the upgrade output will say
 9. Click Finish to exit the Upgrade Tool when the upgrade process is
 complete.
 
-10. Start the upgraded GlassFish Server 7 domain.
+10. Start the upgraded {productName} 7 domain.
 +
 [source]
 ----
@@ -803,10 +799,10 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default GlassFish Server 7 file
+the upgrade. You may want to copy the default {productName} 7 file
 from the `domain1.original/docroot` directory and customize it for your
-GlassFish Server 7 installation.
-* To register your installation of GlassFish Server from the
+{productName} 7 installation.
+* To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
@@ -816,8 +812,7 @@ click the Help button on the Administration Console.
 === Performing an In-Place Upgrade With the Update Center Tools
 
 This section explains how to use the three Update Center tools to
-perform an in-place upgrade to GlassFish Server 7 from GlassFish
-Server 3.0.1 or Enterprise Server v3. Specifically, the three tools
+perform an in-place upgrade to {productName} 7 from {productName} 3.0.1 or Enterprise Server v3. Specifically, the three tools
 explained in this section are:
 
 * Update Tool
@@ -826,7 +821,7 @@ explained in this section are:
 
 [NOTE]
 ====
-GlassFish Server 3.0.1 and Enterprise Server v3 are the only product
+{productName} 3.0.1 and Enterprise Server v3 are the only product
 releases that can be upgraded to the 7 release with the Update Center
 tools. If you are upgrading from any other product release, you must use
 Upgrade Tool, as described in link:#abmbr[Performing a Side-By-Side
@@ -845,8 +840,7 @@ The following topics are addressed here:
 ==== Update Center Tool Procedures
 
 Unlike when using Upgrade Tool, when you use the Update Tool, the
-Software Update Notifier, or the `pkg` utility to perform a GlassFish
-Server 7 upgrade, the older source server directories are overwritten
+Software Update Notifier, or the `pkg` utility to perform a {productName} 7 upgrade, the older source server directories are overwritten
 with the new target server directories, and the existing configuration
 and deployed applications are reused in the updated installation.
 
@@ -865,7 +859,7 @@ following ways:
 ==== To Upgrade Using the Update Tool GUI
 
 This procedure explains how to use the graphical Update Tool to perform
-an in-place upgrade to GlassFish Server 7 from GlassFish Server 3.0.1
+an in-place upgrade to {productName} 7 from {productName} 3.0.1
 or Enterprise Server v3. Note that it is not possible to use this
 procedure with any other product releases.
 
@@ -905,10 +899,10 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir``/docroot/index.html`` file. This file is brought over during
-the upgrade. You may want to copy the default GlassFish Server 7 file
+the upgrade. You may want to copy the default {productName} 7 file
 from the `domain1.original/docroot` directory and customize it for your
-GlassFish Server 7 installation.
-* To register your installation of GlassFish Server from the
+{productName} 7 installation.
+* To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
@@ -918,8 +912,7 @@ click the Help button on the Administration Console.
 ==== To Upgrade Using the Software Update Notifier
 
 This procedure explains how to use the Software Update Notifier to
-perform an in-place upgrade to GlassFish Server 7 from GlassFish
-Server 3.0.1 or Enterprise Server v3. Note that it is not possible to
+perform an in-place upgrade to {productName} 7 from {productName} 3.0.1 or Enterprise Server v3. Note that it is not possible to
 use this procedure with any other product releases.
 
 [[sthref35]]
@@ -927,9 +920,9 @@ use this procedure with any other product releases.
 Before You Begin
 
 The Software Update Notifier must be installed and enabled on the
-GlassFish Server or Enterprise Server release from which you are
+{productName} or Enterprise Server release from which you are
 upgrading. Software Update Notifier installation is typically performed
-during the initial GlassFish Server or Enterprise Server installation.
+during the initial {productName} or Enterprise Server installation.
 The Software Update Notifier can also be installed later using Update
 Tool. For more information about the Update Notifier, refer to the
 Update Tool online help.
@@ -943,7 +936,7 @@ balloon informing you that updates are available.
 
 4. Using the Software Update GUI, select the items you want to upgrade
 and start the installation. +
-Ensure that GlassFish Server 7 is one of the items you select for
+Ensure that {productName} 7 is one of the items you select for
 upgrade. This upgrades the server and selected components to the latest
 available versions.
 
@@ -968,10 +961,10 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default GlassFish Server 7 file
+the upgrade. You may want to copy the default {productName} 7 file
 from the `domain1.original/docroot` directory and customize it for your
-GlassFish Server 7 installation.
-* To register your installation of GlassFish Server from the
+{productName} 7 installation.
+* To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
@@ -981,7 +974,7 @@ click the Help button on the Administration Console.
 ==== To Upgrade From the Command Line Using the `pkg` Utility
 
 This procedure explains how to use the `pkg` utility to perform an
-in-place upgrade to GlassFish Server 7 from GlassFish Server 3.0.1 or
+in-place upgrade to {productName} 7 from {productName} 3.0.1 or
 Enterprise Server v3. Note that it is not possible to use this procedure
 with any other product releases.
 
@@ -991,8 +984,7 @@ upgrading are stopped before proceeding.
 2. In a command shell for your operating environment, navigate to the
 as-install-parent``/bin`` directory.
 
-3. Use the `pkg image-update` command to update your entire GlassFish
-Server 3.0.1 or Enterprise Server v3 installation to GlassFish Server 7.
+3. Use the `pkg image-update` command to update your entire {productName} 3.0.1 or Enterprise Server v3 installation to {productName} 7.
 +
 [source]
 ----
@@ -1021,10 +1013,10 @@ Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
 domain-dir`/docroot/index.html` file. This file is brought over during
-the upgrade. You may want to copy the default GlassFish Server 7 file
+the upgrade. You may want to copy the default {productName} 7 file
 from the `domain1.original/docroot` directory and customize it for your
-GlassFish Server 7 installation.
-* To register your installation of GlassFish Server from the
+{productName} 7 installation.
+* To register your installation of {productName} from the
 Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
@@ -1033,8 +1025,8 @@ click the Help button on the Administration Console.
 
 === Upgrading Installations That Use NSS Cryptographic Tokens
 
-GlassFish Server v2.x EE (Enterprise Edition) uses Network Security
-Services (NSS) for cryptographic software tokens. GlassFish Server 7
+{productName} v2.x EE (Enterprise Edition) uses Network Security
+Services (NSS) for cryptographic software tokens. {productName} 7
 does not support NSS, so when performing an upgrade from v2.x EE to 7
 additional manual configuration steps must be performed.
 
@@ -1049,31 +1041,30 @@ The following topics are addressed here:
 ==== To Prepare for the Upgrade
 
 This procedure explains how to prepare for modifying an NSS-based
-GlassFish Server 2.x installation when upgrading to GlassFish Server 7.
+{productName} 2.x installation when upgrading to {productName} 7.
 
-1. Download and install GlassFish Server 7 using the Typical Installation path. +
-Ensure that you install the new GlassFish Server 7 product in a
+1. Download and install {productName} 7 using the Typical Installation path. +
+Ensure that you install the new {productName} 7 product in a
 directory that is different than the one used for the older installation
 from which you are upgrading. +
 See "link:../installation-guide/toc.html#GSING00025[
-Installing GlassFish Server From a Self-Extracting Bundle]"
-in GlassFish Server Open Source Edition Installation Guide for instructions.
+Installing {productName} From a Self-Extracting Bundle]"
+in {productName} Installation Guide for instructions.
 
-2. Rename the new GlassFish Server 7 domain-dir (the default is
+2. Rename the new {productName} 7 domain-dir (the default is
 as-install``/domains/domain1``) to a name of your choice. +
-In this procedure, `31domain` is used for the renamed GlassFish Server 7 domain.
+In this procedure, `31domain` is used for the renamed {productName} 7 domain.
 
-3. Copy the older source domain to be upgraded to the new GlassFish
-Server 7 as-install``/domains`` directory. +
+3. Copy the older source domain to be upgraded to the new {productName} 7 as-install``/domains`` directory. +
 In this procedure, `domain1` is used for the older source domain that is
-copied to the new GlassFish Server 7 installation.
+copied to the new {productName} 7 installation.
 +
 [NOTE]
 ====
 The remaining steps in this procedure are performed on the copy of your
 source domain that you created in this step, rather than on your
 original source domain. It is strongly recommended that you perform the
-GlassFish Server 7 upgrade on a copy of your old domain rather than on
+{productName} 7 upgrade on a copy of your old domain rather than on
 the original.
 ====
 
@@ -1109,7 +1100,7 @@ password used in the `./31domain`.
 -Dcom.sun.appserv.nss.db=${com.sun.aas.instanceRoot}/config
 ----
 
-6. Upgrade `./domain1` by starting the DAS in the new GlassFish Server 7
+6. Upgrade `./domain1` by starting the DAS in the new {productName} 7
 installation with the `--upgrade` option.
 +
 [source]
@@ -1130,7 +1121,7 @@ as-install/bin/asadmin start-domain domain1
 
 These instructions explain the post-upgrade configuration steps that
 must be performed when upgrading from an NSS-based installation to
-GlassFish Server 7.
+{productName} 7.
 
 [[sthref38]]
 
@@ -1139,8 +1130,8 @@ Before You Begin
 Before proceeding with this procedure, complete the procedure explained
 in link:#gktnq[To Prepare for the Upgrade].
 
-1. Start the GlassFish Server 7 domain, if it is not already running,
-and open the GlassFish Server Admin Console in a browser window. +
+1. Start the {productName} 7 domain, if it is not already running,
+and open the {productName} Admin Console in a browser window. +
 The default URL is `https://localhost:4848` +
 As part of the link:#gktnq[To Prepare for the Upgrade] procedure, the
 default keystore with a default self-signed key-certificate pair with an
@@ -1170,8 +1161,7 @@ keytool -storepasswd -new v2-master-password \
 
 4. Take note of all the `KeyEntries` that exist in your NSS database.
 +
-These entries must be migrated to the `keystore.jks` in the GlassFish
-Server 7 domain. The following command can be used to list all the
+These entries must be migrated to the `keystore.jks` in the {productName} 7 domain. The following command can be used to list all the
 `KeyEntries` in the NSS database:
 +
 [source]
@@ -1279,15 +1269,14 @@ default `truststore`.
 
 ==== To Upgrade PKCS#11 Hardware Tokens
 
-If you are using GlassFish Server v2.x Enterprise Edition with Hardware
+If you are using {productName} v2.x Enterprise Edition with Hardware
 Tokens (for example, FIPS-140 compliant Sun Cryptographic Accelerator
 6000 or other Sun Cryptographic Accelerators) configured by means of
 NSS-PKCS11, then the v2.x EE-to-7 upgrade solution is to directly
 configure the Hardware Token as a PKCS11 token using the JDK-JSSE
 supported mechanisms for configuring PKCS#11 tokens.
 
-1. Set the `javax.net.ssl.keyStoreType` `jvm-options` in GlassFish
-Server 7 to PKCS11.
+1. Set the `javax.net.ssl.keyStoreType` `jvm-options` in {productName} 7 to PKCS11.
 +
 [source,xml]
 ----
@@ -1302,7 +1291,7 @@ is a hardware token.
 <jvm-options>-Djavax.net.ssl.keyStore=NONE</jvm-options>
 ----
 
-3. Change the password for the `truststore` and the GlassFish Server
+3. Change the password for the `truststore` and the {productName}
 `MasterPassword` to match the PIN of your `HardwareToken`.
 
 4. Since you are using a Hardware Token, you can delete the
@@ -1315,7 +1304,7 @@ For example, the `cert-nickname` attribute for the `<ssl/>` element
 under the `protocol` configuration.
 
 6. If the Hardware Token is to act as a `TrustStore` as well, remove
-the `cacerts.jks` file from the domain-dir`/config` directory. +
+the `cacerts.jks` file from the domain-dir``/config`` directory. +
 Ensure that the following two `jvm-options` are set in the `domain.xml` file:
 +
 [source,xml]
@@ -1330,18 +1319,18 @@ Ensure that the following two `jvm-options` are set in the `domain.xml` file:
 
 This section explains additional steps you need to perform when
 upgrading cluster and node agent configurations from Application Server
-or Enterprise Server to GlassFish Server 7.
+or Enterprise Server to {productName} 7.
 
-GlassFish Server 7 does not support node agents. As part of the
+{productName} 7 does not support node agents. As part of the
 upgrade process, any node agent elements in the older source
 configuration are transformed into `CONFIG` node elements in the
 `domain.xml` file for the upgraded DAS. If the source node agent
-configuration is incompatible with your GlassFish Server 7
+configuration is incompatible with your {productName} 7
 installation, you must correct the node configuration on the upgraded DAS.
 
 In addition, although the source cluster configuration is retained in
 the `domain.xml` file for the upgraded DAS, it is still necessary to
-install GlassFish Server 7 on each node host and manually re-create
+install {productName} 7 on each node host and manually re-create
 the server instances that are contained in the clusters.
 
 The following topics are addressed here:
@@ -1355,21 +1344,21 @@ The following topics are addressed here:
 ==== Overview of Cluster and Node Agent Upgrade Procedures
 
 The general steps for upgrading a cluster and node agent configuration
-so it will work in GlassFish Server 7 are as follows:
+so it will work in {productName} 7 are as follows:
 
 1. Perform a side-by-side upgrade of the DAS. This procedure is
 described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
-2. Perform new (not upgrade) GlassFish Server 7 installations on each
-node host. GlassFish Server 7 installation instructions are provided
+2. Perform new (not upgrade) {productName} 7 installations on each
+node host. {productName} 7 installation instructions are provided
 in the link:../installation-guide/toc.html#GSING[
-GlassFish Server Open Source Edition Installation Guide].
+{productName} Installation Guide].
 
 3. Correct the node configuration on the upgraded DAS, if necessary.
 This procedure is described in link:#gktle[To Correct the Configuration
 of a Node After an Upgrade].
 
-4. Re-create the clusters and server instances on each GlassFish Server 7 node host.
+4. Re-create the clusters and server instances on each {productName} 7 node host.
 This procedure is described in link:#gktkx[To Re-Create a Cluster].
 
 [[gktle]][[GSUPG00018]][[to-correct-the-configuration-of-a-node-after-an-upgrade]]
@@ -1377,10 +1366,10 @@ This procedure is described in link:#gktkx[To Re-Create a Cluster].
 ==== To Correct the Configuration of a Node After an Upgrade
 
 As part of the upgrade process, node agent elements in the DAS
-configuration are transformed into GlassFish Server node elements of
+configuration are transformed into {productName} node elements of
 type `CONFIG`. This transformation does not affect the node agent
-directories for GlassFish Server instances. To create the equivalent
-directories for GlassFish Server instances after an upgrade, you must
+directories for {productName} instances. To create the equivalent
+directories for {productName} instances after an upgrade, you must
 re-create the instances as explained in link:#gktkx[To Re-Create a
 Cluster].
 
@@ -1395,19 +1384,18 @@ node host, you must update the node to specify the host that the node represents
 Default values are applied to the remainder of the node's configuration data.
 
 The default values of the following items in a node's configuration data
-might not meet your requirements for the upgraded installation of GlassFish Server:
+might not meet your requirements for the upgraded installation of {productName}:
 
-* The parent of the base installation directory of the GlassFish Server
+* The parent of the base installation directory of the {productName}
 software on the host, for example, `/export/glassfish7`. +
 The default is the parent of the default base installation directory of
-the GlassFish Server 7 software on the DAS host. If the GlassFish
-Server software is installed under a different directory on the node
+the {productName} 7 software on the DAS host. If the {productName} software is installed under a different directory on the node
 host, you must update the node's configuration to specify the correct directory.
 
-* The directory that will contain the GlassFish Server instances that
+* The directory that will contain the {productName} instances that
 are to reside on the node. +
 The default is as-install``/nodes``, where as-install is the base
-installation directory of the GlassFish Server software on the host. If
+installation directory of the {productName} software on the host. If
 you require the instances to be contained in a different directory, you
 must update the node's configuration to specify that directory.
 
@@ -1415,9 +1403,8 @@ If you are using secure shell (SSH) for centralized administration, you
 must also change the type of the node to `SSH` to enable the node for
 remote communication.
 
-For more information about GlassFish Server nodes, see
-"link:../ha-administration-guide/nodes.html#GSHAG00004[Administering GlassFish Server Nodes]" in GlassFish
-Server Open Source Edition High Availability Administration Guide.
+For more information about {productName} nodes, see
+"link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
 
 [[sthref39]]
 
@@ -1433,12 +1420,12 @@ configured on the host where the DAS is running and on the host that the
 node represents. For more information, see
 "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
 Setting Up SSH for Centralized Administration]" in
-GlassFish Server Open Source Edition High Availability Administration Guide.
+{productName} High Availability Administration Guide.
 
 * If you are upgrading from an Enterprise Profile configuration that
 uses NSS authentication, ensure that the procedure in
 link:#gktnh[Upgrading Installations That Use NSS Cryptographic Tokens]
-has been performed. GlassFish Server 7 does not support NSS authentication.
+has been performed. {productName} 7 does not support NSS authentication.
 
 1. Ensure that the DAS is running. +
 Remote subcommands require a running server.
@@ -1466,10 +1453,10 @@ node-update-subcommand::
   `update-node-ssh` subcommand on the node.
 as-install-parent::
   The full path to the parent of the base installation directory of the
-  GlassFish Server software on the host, for example,
+  {productName} software on the host, for example,
   `/export/glassfish7`.
 node-dir::
-  The path to the directory that will contain GlassFish Server instances
+  The path to the directory that will contain {productName} instances
   that are to reside on the node. If a relative path is specified, the
   path is relative to the as-install directory.
 node-host::
@@ -1499,7 +1486,7 @@ Command update-node-config executed successfully.
 Next Steps
 
 Re-create the cluster configuration from the older source installation
-in the new GlassFish Server 7 installation in as explained in
+in the new {productName} 7 installation in as explained in
 link:#gktkx[To Re-Create a Cluster].
 
 [[sthref41]]
@@ -1508,9 +1495,9 @@ See Also
 
 * "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
 Setting Up SSH for Centralized Administration]" in
-GlassFish Server Open Source Edition High Availability Administration Guide
-* "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering GlassFish Server Nodes]"
-in GlassFish Server Open Source Edition High Availability Administration Guide
+{productName} High Availability Administration Guide
+* "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]"
+in {productName} High Availability Administration Guide
 * link:../reference-manual/update-node-config.html#GSRFM00255[`update-node-config`(1)]
 * link:../reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)]
 
@@ -1518,20 +1505,20 @@ in GlassFish Server Open Source Edition High Availability Administration Guide
 
 ==== To Re-Create a Cluster
 
-This procedure explains how to re-create a clustered GlassFish Server or
-Enterprise Server configuration for GlassFish Server 7.
+This procedure explains how to re-create a clustered {productName} or
+Enterprise Server configuration for {productName} 7.
 
 [[sthref42]]
 
 Before proceeding with these instructions, ensure that you have
 completed the following procedures:
 --
-* Perform the standard upgrade to GlassFish Server 7 on the DAS, as
+* Perform the standard upgrade to {productName} 7 on the DAS, as
 described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
-* Perform a new (not upgrade) installation of GlassFish Server 7 on
+* Perform a new (not upgrade) installation of {productName} 7 on
 each node host. See the link:../installation-guide/toc.html#GSING[
-GlassFish Server Open Source Edition Installation Guide] for instructions.
+{productName} Installation Guide] for instructions.
 
 * Correct the upgraded node configuration, if necessary, as described
 link:#gktle[To Correct the Configuration of a Node After an Upgrade].
@@ -1570,7 +1557,7 @@ The specific commands to use depend on your configuration.
 instances' configuration data, as explained in
 "link:../ha-administration-guide/instances.html#GSHAG00125[
 To Resynchronize an Instance and the DAS Offline]"
-in GlassFish Server Open Source Edition High Availability Administration Guide.
+in {productName} High Availability Administration Guide.
 
 * If remote hosts can contact the DAS, create each instance individually
 and resynchronize the instance with the DAS, as explained in the
@@ -1578,19 +1565,19 @@ following sections:
 
 ** "link:../ha-administration-guide/instances.html#GSHAG00114[
 To Create an Instance Locally]"
-in GlassFish Server Open Source Edition High Availability Administration Guide
+in {productName} High Availability Administration Guide
 
 ** "link:../ha-administration-guide/instances.html#GSHAG00119[
 To Resynchronize an Instance and the DAS Online]"
-in GlassFish Server Open Source Edition High Availability Administration Guide +
+in {productName} High Availability Administration Guide +
 Note that the node name matches that used for the node agent in the 2.x
 installation. If you get an error stating that some attributes do not
 match the values in the DAS configuration, follow the instructions in
 link:#gktle[To Correct the Configuration of a Node After an Upgrade].
 
-4. After creating the instances, manually copy the instance-dir`/imq`
+4. After creating the instances, manually copy the instance-dir``/imq``
 directory for each instance from the older source installation to the
-target GlassFish Server 7 installation.
+target {productName} 7 installation.
 
 5. If necessary, start the cluster. +
 For example:
@@ -1628,7 +1615,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 === Correcting Potential Upgrade Problems
 
 This section addresses issues that can occur during an upgrade to
-GlassFish Server 7.
+{productName} 7.
 
 The following topics are addressed here:
 
@@ -1641,7 +1628,7 @@ The following topics are addressed here:
 ==== Cluster Profile Security Setting
 
 When upgrading a clustered domain configuration from Application Server
-9.1 or Enterprise Server v2 to GlassFish Server 7, you may encounter
+9.1 or Enterprise Server v2 to {productName} 7, you may encounter
 problems if the `admin-service` element in the DAS `domain.xml` file
 sets both of the following attributes:
 
@@ -1695,9 +1682,9 @@ source domain's directory and re-run Upgrade Tool.
 
 ==== `asupgrade` Fails Without Internet Connection
 
-This problem only occurs when using GlassFish Server 3.1 Upgrade Tool to
+This problem only occurs when using {productName} 3.1 Upgrade Tool to
 perform a side-by-side upgrade on a 2.x domain without an Internet
-connection. It does not occur when using GlassFish Server 3.1.1.
+connection. It does not occur when using {productName} 3.1.1.
 
 The workaround for this issue is as follows:
 

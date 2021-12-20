@@ -13,8 +13,7 @@ prev=overview.html
 [[specific-issues]]
 == 2 Specific Issues
 
-This chapter lists problems that you might encounter when using Oracle
-GlassFish Server 7. The following topics are addressed:
+This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
 
 * link:#abgca[Cannot Access Local Server (`http://localhost:8080`)]
 * link:#abgcf[Cannot Access Remote Server]
@@ -23,7 +22,7 @@ GlassFish Server 7. The following topics are addressed:
 * link:#gjjoz[Administrator User Name or Password Not Known]
 * link:#gjjpj[Experience Issues Related to the JDK]
 * link:#abgdi[Server Will Not Start on Windows (Port Conflict)]
-* link:#gkvcs[GlassFish Server Fails to Start in an OpenSolaris Zone]
+* link:#gkvcs[{productName} Fails to Start in an OpenSolaris Zone]
 * link:#abgdr[Two Server Instances Bind to Same Port on Windows]
 * link:#abgel[Cannot Produce a JVM Thread Dump After Server Crash]
 * link:#ghvgk[Issues Related to Applications]
@@ -66,7 +65,7 @@ the console, and appears at the end of the log file.
 For more information about starting a domain, see
 "link:../administration-guide/domains.html#GSADG00537[
 Starting and Stopping a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 To easily determine if a domain is running, use the `asadmin list-domains` command.
 
 [[abgcd]][[GSTSG00180]][[was-the-server-started-at-the-expected-port]]
@@ -120,7 +119,7 @@ personal firewall and see if the server access problem still exists.
 
 === Cannot Access Remote Server
 
-When attempting to open the start page of GlassFish Server, the initial
+When attempting to open the start page of {productName}, the initial
 screen does not appear.
 
 When this error occurs, check the following:
@@ -217,8 +216,7 @@ accessible, check the following:
 Port?]
 
 For more information about the Administration Console, see
-"link:../administration-guide/overview.html#GSADG00698[Administration Console]" in GlassFish Server Open
-Source Edition Administration Guide.
+"link:../administration-guide/overview.html#GSADG00698[Administration Console]" in {productName} Administration Guide.
 
 [[abgcn]][[GSTSG00184]][[is-the-application-server-running]]
 
@@ -264,7 +262,7 @@ invoking the Administration Console.
 
 === Cannot Access a Server Application
 
-If a particular application cannot be accessed through GlassFish Server,
+If a particular application cannot be accessed through {productName},
 check the following:
 
 * link:#abgcx[Is the Application Server Running?]
@@ -278,7 +276,7 @@ check the following:
 
 ===== Description
 
-If GlassFish Server is not running, applications are not accessible.
+If {productName} is not running, applications are not accessible.
 
 [[abgcz]][[GSTSG00096]][[solution-4]]
 
@@ -317,8 +315,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in GlassFish Server Open
-Source Edition Application Deployment Guide. Also see the Administration
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[gjjoz]][[GSTSG00047]][[administrator-user-name-or-password-not-known]]
@@ -350,7 +347,7 @@ You experience JDK-related issues in a variety of circumstances.
 
 ==== Solution
 
-GlassFish Server 7 requires JDK 11, so check your system for that dependency.
+{productName} 7 requires JDK 11, so check your system for that dependency.
 
 Ensure that the required JDK software is installed and that the
 `JAVA_HOME` environment variable points to the JDK installation
@@ -364,7 +361,7 @@ supported JDK version.
 === Server Will Not Start on Windows (Port Conflict)
 
 If a message similar to the following is displayed when starting
-GlassFish Server on Microsoft Windows, a server port conflict has
+{productName} on Microsoft Windows, a server port conflict has
 occurred:
 
 [source]
@@ -372,9 +369,8 @@ occurred:
 Address already in use
 ----
 
-This error occurs when another application is running on the GlassFish
-Server port (default `8080`), or because a previous instance of
-GlassFish Server did not shut down cleanly.
+This error occurs when another application is running on the {productName} port (default `8080`), or because a previous instance of
+{productName} did not shut down cleanly.
 
 You might also check the following:
 
@@ -386,24 +382,24 @@ You might also check the following:
 ==== Is Another Application Running on the Server's Port?
 
 If another application is using the server's port, stop the other
-application, then restart GlassFish Server.
+application, then restart {productName}.
 
 [[abgdk]][[GSTSG00191]][[has-an-ungraceful-shutdown-occurred-on-a-previously-running-server]]
 
 ==== Has an Ungraceful Shutdown Occurred on a Previously Running Server?
 
 Use the `asadmin stop-domain` command to stop the server, or explicitly
-kill the Java process and then restart GlassFish Server.
+kill the Java process and then restart {productName}.
 
 [[gkvcs]][[GSTSG00050]][[glassfish-server-fails-to-start-in-an-opensolaris-zone]]
 
-=== GlassFish Server Fails to Start in an OpenSolaris Zone
+=== {productName} Fails to Start in an OpenSolaris Zone
 
 [[gkvcx]][[GSTSG00192]][[description-9]]
 
 ==== Description
 
-If GlassFish Server is installed in an OpenSolaris zone, an attempt to
+If {productName} is installed in an OpenSolaris zone, an attempt to
 start a domain might fail with the following error message:
 
 [source]
@@ -417,11 +413,11 @@ Failed to complete iconv_open() setup
 ----
 
 The failure occurs because, by default, an OpenSolaris zone is installed
-without language and encoding support, which GlassFish Server requires.
+without language and encoding support, which {productName} requires.
 
 [[gkvdf]][[GSTSG00026]][[resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone]]
 
-==== Resolution: To Enable GlassFish Server to Run in an OpenSolaris Zone
+==== Resolution: To Enable {productName} to Run in an OpenSolaris Zone
 
 1. Install the package that provides language and encoding support for
 your locale.
@@ -448,11 +444,11 @@ variable to `en_US.UTF-8`.
 
 ==== Description
 
-This problem occurs on Windows XP systems with GlassFish Server
+This problem occurs on Windows XP systems with {productName}
 software, and is due to a known Windows security flaw rather than a
-problem with GlassFish Server itself.
+problem with {productName} itself.
 
-The problem occurs when two or more instances of GlassFish Server are
+The problem occurs when two or more instances of {productName} are
 created using the same port number for the `instanceport` option; for
 example:
 
@@ -486,7 +482,7 @@ systems.
 
 ==== Description
 
-If GlassFish Server crashes, the server dumps a core file and, by
+If {productName} crashes, the server dumps a core file and, by
 default, restarts with the `-Xrs` flag, which prevents the dump of a JVM
 thread dump.
 
@@ -562,7 +558,7 @@ open until the server is stopped.
 
 ===== Description
 
-Application servers such as GlassFish Server allow you to redeploy an
+Application servers such as {productName} allow you to redeploy an
 application without restarting the server. Simply make the change in
 your source code, compile the source, and redeploy the application.
 
@@ -694,32 +690,32 @@ Installation hangs more than five minutes during Update Tool configuration.
 
 Cancel the installation and run the installation program again, but this
 time deselect the Install Update Tool check box. Update Tool can be
-installed later from as-install`/bin/`. For more information about
-Update Tool, see "link:../administration-guide/toc.html#GSADG00701[Update Tool]" in GlassFish Server
-Open Source Edition Administration Guide. For general information about
-GlassFish Serverinstallation, see the link:../installation-guide/toc.html#GSING[GlassFish Server Open
-Source Edition Installation Guide].
+installed later from as-install``/bin/``. For more information about
+Update Tool, see "link:../administration-guide/toc.html#GSADG00701[Update Tool]"
+in {productName} Administration Guide. For general information about
+{productName}installation, see the link:../installation-guide/toc.html#GSING[
+{productName} Installation Guide].
 
 
 [NOTE]
 ====
 Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
-GlassFish Server to the current version.
+{productName} to the current version.
 For more information about Upgrade Tool and upgrading, see the
-link:../upgrade-guide/toc.html#GSUPG[GlassFish Server Open Source Edition Upgrade Guide].
+link:../upgrade-guide/toc.html#GSUPG[{productName} Upgrade Guide].
 ====
 
 
 [[gjjob]][[GSTSG00202]][[glassfish-server-components-not-removed-during-uninstallation]]
 
-==== GlassFish Server Components Not Removed During Uninstallation
+==== {productName} Components Not Removed During Uninstallation
 
 [[gjjoh]][[GSTSG00109]][[description-17]]
 
 ===== Description
 
-Not all GlassFish Server directories are automatically removed by the
+Not all {productName} directories are automatically removed by the
 uninstallation program. Some directories and files remain after
 uninstalling.
 
@@ -734,7 +730,7 @@ have examined them.
 
 For information related to uninstallation, see
 "link:../installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
-in GlassFish Server Open Source Edition Installation Guide.
+in {productName} Installation Guide.
 
 [[ghvrh]][[GSTSG00056]][[issues-related-to-security]]
 

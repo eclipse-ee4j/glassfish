@@ -14,7 +14,7 @@ prev=introduction.html
 == Writing HK2 Components
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
-kernel of GlassFish Server. To interact with GlassFish Server, add-on
+kernel of {productName}. To interact with {productName}, add-on
 components plug in to this kernel. In the HK2 component model, the
 functions of an add-on component are declared through a contract-service
 implementation paradigm. An HK2 contract identifies and describes the
@@ -36,7 +36,7 @@ The following topics are addressed here:
 
 The Hundred-Kilobyte Kernel (HK2) provides a module system and component
 model for building complex software systems. HK2 forms the core of
-GlassFish Server's architecture.
+{productName}'s architecture.
 
 The module system is responsible for instantiating classes that
 constitute the application functionality. The HK2 runtime complements
@@ -298,11 +298,11 @@ public Class ConfigService implements ... {...}
 
 === Identifying a Class as an Add-On Component
 
-GlassFish Server discovers add-on components by identifying Java
+{productName} discovers add-on components by identifying Java
 programming language classes that are annotated with the
 `org.jvnet.hk2.annotation.Service` annotation.
 
-To identify a class as an implementation of an GlassFish Server service,
+To identify a class as an implementation of an {productName} service,
 add the `org.jvnet.hk2.annotations.Service` annotation at the
 class-definition level of your Java programming language class.
 

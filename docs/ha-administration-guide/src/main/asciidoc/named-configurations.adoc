@@ -13,13 +13,13 @@ prev=instances.html
 == 6 Administering Named Configurations
 
 A named configuration is a set of configuration information for
-GlassFish Server instances and clusters. A configuration sets port
+{productName} instances and clusters. A configuration sets port
 numbers for listeners that an instance or a cluster uses and defines
 settings for items such as the EJB container, security, logging, and
 monitoring. Applications and resources are not defined in named configurations.
 
-GlassFish Server enables you to create configurations for use by
-clusters and instances. GlassFish Server creates configurations
+{productName} enables you to create configurations for use by
+clusters and instances. {productName} creates configurations
 automatically for clusters and instances that do not reference an
 existing configuration. You can modify any existing named configuration
 regardless of how the configuration was created.
@@ -34,7 +34,7 @@ The following topics are addressed here:
 
 === About Named Configurations
 
-Configurations exist in a domain. Multiple GlassFish Server instances or
+Configurations exist in a domain. Multiple {productName} instances or
 clusters in the domain can reference the same configuration, or they can
 have separate configurations. To ensure that the environment in a
 cluster's instances is homogenous, all instances in the cluster inherit
@@ -61,7 +61,7 @@ Shared configuration::
 
 The type of an unclustered instance is determined by the type of the
 configuration that the instance references. For more information, see
-link:instances.html#gkrbn[Types of GlassFish Server Instances].
+link:instances.html#gkrbn[Types of {productName} Instances].
 
 [[abdjn]][[GSHAG00269]][[the-default-config-configuration]]
 
@@ -79,7 +79,7 @@ configuration can only be copied to create configurations.
 When you create a cluster or an instance, you can choose whether to
 specify an existing configuration that the new cluster or instance will
 reference. If you choose to create a cluster or an instance without
-specifying an existing configuration, GlassFish Server automatically
+specifying an existing configuration, {productName} automatically
 creates a configuration for the cluster or instance. For more
 information, see the following sections:
 
@@ -87,14 +87,14 @@ information, see the following sections:
 * link:instances.html#gkqch[To Create an Instance Centrally]
 * link:instances.html#gkqbl[To Create an Instance Locally]
 
-GlassFish Server automatically creates a configuration by copying the
+{productName} automatically creates a configuration by copying the
 `default-config` configuration. If you require an instance or cluster to
 reference a copy of a different configuration, copy the configuration
 and specify the copy when you create the instance or cluster. For
 information about how to copy a configuration, see link:#abdjr[To Create
 a Named Configuration].
 
-GlassFish Server assigns the name cluster-or-instance`-config` to an
+{productName} assigns the name cluster-or-instance`-config` to an
 automatically created configuration. cluster-or-instance is the name of
 the cluster or instance for which the configuration is created. The
 `server-config` configuration is automatically created for the domain
@@ -104,7 +104,7 @@ administration server (DAS) when the domain is created.
 
 ==== Directory for Configuration Synchronization
 
-When a named configuration is created, GlassFish Server creates a
+When a named configuration is created, {productName} creates a
 configuration directory on the domain administration server (DAS) at
 domain-dir``/config/``config-name.
 
@@ -120,7 +120,7 @@ inherit or reference the configuration.
 
 === Creating, Listing, and Deleting Named Configurations
 
-GlassFish Server enables you to create configurations for use by
+{productName} enables you to create configurations for use by
 clusters and instances, obtain information about configurations, and
 delete configurations that are no longer required.
 
@@ -138,7 +138,7 @@ The following topics are addressed here:
 Use the `copy-config` subcommand in remote mode to create a named
 configuration by copying an existing configuration.
 
-GlassFish Server requires you to create a configuration by copying a
+{productName} requires you to create a configuration by copying a
 configuration because a configuration contains many required settings.
 The newly created configuration is identical to the configuration that
 you copy until you change its configuration settings.
@@ -150,7 +150,7 @@ Create a named configuration only if you plan to share the configuration
 among multiple unclustered instances or clusters, or if you are using a
 configuration to preconfigure GMS settings. Otherwise, create clusters
 and instances without specifying an existing configuration.
-If no configuration is specified, GlassFish Server creates a copy of the
+If no configuration is specified, {productName} creates a copy of the
 default configuration for the cluster or instance.
 
 For more information, see the following sections:
@@ -255,8 +255,7 @@ typing `asadmin help list-configs` at the command line.
 Use the `list-clusters` subcommand and the `list-instances` subcommand
 in remote mode to list the targets of a named configuration.
 
-The targets of a named configuration are the clusters and GlassFish
-Server instances that reference the configuration.
+The targets of a named configuration are the clusters and {productName} instances that reference the configuration.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -322,7 +321,7 @@ You cannot delete the `default-config` configuration.
 [NOTE]
 ====
 A standalone configuration that was created automatically for a cluster
-or a GlassFish Server instance is deleted when the cluster or instance is deleted.
+or a {productName} instance is deleted when the cluster or instance is deleted.
 ====
 
 
@@ -603,7 +602,7 @@ in the instance's configuration, the instance's port number remains
 unchanged.
 
 The port numbers of an instance are stored as Java system properties.
-When GlassFish Server is started, it treats these properties in the same
+When {productName} is started, it treats these properties in the same
 way as properties that are passed through the `-D` option of the Java
 application launcher.
 

@@ -1,87 +1,84 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 7 Embedded Server Guide
+title={productName} 7 Embedded Server Guide
 prev=preface.html
 ~~~~~~
 
-= Eclipse GlassFish Server 7 Embedded Server Guide
+= {productName} 7 Embedded Server Guide
 
 [[GSESG00001]][[gjldt]]
 
 
 [[glassfish-server-open-source-edition-embedded-server-guide]]
-== 1 Eclipse GlassFish Server 7 Embedded Server Guide
+== 1 {productName} 7 Embedded Server Guide
 
-This document explains how to run applications in embedded GlassFish
-Server Open Source Edition and to develop applications in which
-GlassFish Server is embedded. This document is for software developers
-who are developing applications to run in embedded GlassFish Server. The
+This document explains how to run applications in embedded {productName} and to develop applications in which
+{productName} is embedded. This document is for software developers
+who are developing applications to run in embedded {productName}. The
 ability to program in the Java language is assumed.
 
 The following topics are addressed here:
 
-* link:#giidt[Introduction to Embedded GlassFish Server]
-* link:#gkubb[Embedded GlassFish Server File System]
-* link:#giijw[Including the GlassFish Server Embedded Server API in Applications]
-* link:#gijhs[Testing Applications with the Maven Plug-in for Embedded GlassFish Server]
-* link:#gjlde[Using the EJB 3.1 Embeddable API with Embedded GlassFish Server]
-* link:#gjlfe[Changing Log Levels in Embedded GlassFish Server]
-* link:#gksmw[Default Java Persistence Data Source for Embedded GlassFish Server]
-* link:#gihxf[Restrictions for Embedded GlassFish Server]
+* link:#giidt[Introduction to Embedded {productName}]
+* link:#gkubb[Embedded {productName} File System]
+* link:#giijw[Including the {productName} Embedded Server API in Applications]
+* link:#gijhs[Testing Applications with the Maven Plug-in for Embedded {productName}]
+* link:#gjlde[Using the EJB 3.1 Embeddable API with Embedded {productName}]
+* link:#gjlfe[Changing Log Levels in Embedded {productName}]
+* link:#gksmw[Default Java Persistence Data Source for Embedded {productName}]
+* link:#gihxf[Restrictions for Embedded {productName}]
 
 [[giidt]][[GSESG00035]][[introduction-to-embedded-glassfish-server]]
 
-=== Introduction to Embedded GlassFish Server
+=== Introduction to Embedded {productName}
 
-Embedded Eclipse GlassFish Server enables you to use
-GlassFish Server as a library. Embedded GlassFish Server also enables
-you to run GlassFish Server inside any Virtual Machine for the Java
+Embedded {productName} enables you to use
+{productName} as a library. Embedded {productName} also enables
+you to run {productName} inside any Virtual Machine for the Java
 platform (Java Virtual Machine or JVMmachine).
 
-No installation or configuration of embedded GlassFish Server is
-required. The ability to run GlassFish Server inside applications
+No installation or configuration of embedded {productName} is
+required. The ability to run {productName} inside applications
 without installation or configuration simplifies the process of bundling
-GlassFish Server with applications.
+{productName} with applications.
 
 
 [NOTE]
 ====
-Embedded GlassFish Server does not run on the Java Platform, Micro Edition (Java ME platform).
+Embedded {productName} does not run on the Java Platform, Micro Edition (Java ME platform).
 ====
 
-You can use embedded GlassFish Server in the following ways:
+You can use embedded {productName} in the following ways:
 
-* With the Embedded Server API (see link:#giijw[Including the GlassFish
-Server Embedded Server API in Applications])
+* With the Embedded Server API (see link:#giijw[Including the {productName} Embedded Server API in Applications])
 * With the Maven Plug-in (see link:#gijhs[Testing Applications with the
-Maven Plug-in for Embedded GlassFish Server])
+Maven Plug-in for Embedded {productName}])
 * With the EJB 3.1 Embeddable API (see link:#gjlde[Using the EJB 3.1
-Embeddable API with Embedded GlassFish Server])
+Embeddable API with Embedded {productName}])
 
-Embedded GlassFish Server provides a plug-in for
+Embedded {productName} provides a plug-in for
 http://maven.apache.org/[Apache Maven] (`http://maven.apache.org/`).
 This plug-in simplifies the testing of applications by enabling you to
-build an application and run it with GlassFish Server on a single
+build an application and run it with {productName} on a single
 system. Testing and debugging are simplified because the need for an
-installed and configured GlassFish Server is eliminated. Therefore, you
+installed and configured {productName} is eliminated. Therefore, you
 can run unit tests automatically in every build.
 
 
 [NOTE]
 ====
-For information on how to embed GlassFish Server in an OSGi environment,
-see the link:../add-on-component-development-guide/toc.html#GSACG[GlassFish Server Open Source Edition Add-On
+For information on how to embed {productName} in an OSGi environment,
+see the link:../add-on-component-development-guide/toc.html#GSACG[{productName} Add-On
 Component Development Guide].
 ====
 
 
 [[gkubb]][[GSESG00036]][[embedded-glassfish-server-file-system]]
 
-=== Embedded GlassFish Server File System
+=== Embedded {productName} File System
 
-The following Embedded GlassFish Server directories and files are
-important if you are referencing a nonembedded installation of GlassFish
-Server:
+The following Embedded {productName} directories and files are
+important if you are referencing a nonembedded installation of {productName}:
 
 * link:#gikqf[Installation Root Directory]
 * link:#gikvf[Instance Root Directory]
@@ -92,17 +89,17 @@ Server:
 ==== Installation Root Directory
 
 The installation root directory, represented as as-install, is the
-parent of the directory that embedded GlassFish Server uses for
+parent of the directory that embedded {productName} uses for
 configuration files. This directory corresponds to the base directory
-for an installation of GlassFish Server. Configuration files are
+for an installation of {productName}. Configuration files are
 contained in the following directories in the base directory for an
-installation of GlassFish Server:
+installation of {productName}:
 
 * `domains`
 * `lib`
 
 Specify the installation root directory only if you have a valid
-nonembedded GlassFish Server installation and are using
+nonembedded {productName} installation and are using
 `glassfish-embedded-static-shell.jar`.
 
 [[gikvf]][[GSESG00055]][[instance-root-directory]]
@@ -110,27 +107,26 @@ nonembedded GlassFish Server installation and are using
 ==== Instance Root Directory
 
 The instance root directory, represented as domain-dir, is the parent
-directory of a server instance directory. Embedded GlassFish Server Open
-Source Edition uses the server instance directory for domain
+directory of a server instance directory. Embedded {productName} uses the server instance directory for domain
 configuration files.
 
 Specify the instance root directory only if you have a valid nonembedded
-GlassFish Server domain directory and are using
+{productName} domain directory and are using
 `glassfish-embedded-static-shell.jar`.
 
 
 [NOTE]
 ====
-If you have valid nonembedded GlassFish Server as-install and domain-dir
+If you have valid nonembedded {productName} as-install and domain-dir
 directories, specify both in the `BootstrapProperties` and
 `GlassFishProperties` classes respectively as described in
-link:#gihyr[Creating and Configuring an Embedded GlassFish Server].
+link:#gihyr[Creating and Configuring an Embedded {productName}].
 ====
 
 
-If domain-dir is not specified, GlassFish Server creates a directory
+If domain-dir is not specified, {productName} creates a directory
 named ``gfembed``random-number``tmp`` in a temporary directory, where
-random-number is a randomly generated 19-digit number. GlassFish Server
+random-number is a randomly generated 19-digit number. {productName}
 then copies configuration files into this directory. The temporary
 directory is the value of the system property `java.io.tmpdir`. You can
 override this value by specifying the `glassfish.embedded.tmpdir`
@@ -141,42 +137,40 @@ property in the `GlassFishProperties` class or as a system property.
 ==== The `domain.xml` File
 
 Using an existing `domain.xml` file avoids the need to configure
-embedded GlassFish Server programmatically in your application. Your
+embedded {productName} programmatically in your application. Your
 application obtains domain configuration data from an existing
 `domain.xml` file. You can create this file by using the administrative
-interfaces of an installation of nonembedded GlassFish Server. To
+interfaces of an installation of nonembedded {productName}. To
 specify an existing `domain.xml` file, invoke the `setConfigFileURI`
 method of the `GlassFishProperties` class as described in
-link:#gihyr[Creating and Configuring an Embedded GlassFish Server].
+link:#gihyr[Creating and Configuring an Embedded {productName}].
 
 
 [NOTE]
 ====
-The built-in `domain.xml` file used by default by Embedded GlassFish
-Server can be downloaded from
+The built-in `domain.xml` file used by default by Embedded {productName} can be downloaded from
 `http://embedded-glassfish.java.net/domain.xml`. You can customize this
 file and pass it in using the `setConfigFileURI` method while creating
-an Embedded GlassFish Server.
+an Embedded {productName}.
 ====
 
 
 [[giijw]][[GSESG00037]][[including-the-glassfish-server-embedded-server-api-in-applications]]
 
-=== Including the GlassFish Server Embedded Server API in Applications
+=== Including the {productName} Embedded Server API in Applications
 
-Eclipse GlassFish Server provides an application programming
-interface (API) for developing applications in which GlassFish Server is
+{productName} provides an application programming
+interface (API) for developing applications in which {productName} is
 embedded. For details, see the `org.glassfish.embeddable` packages at
 `http://embedded-glassfish.java.net/nonav/apidocs/`.
 
 The following topics are addressed here:
 
 * link:#giide[Setting the Class Path]
-* link:#giiky[Creating, Starting, and Stopping Embedded GlassFish
-Server]
+* link:#giiky[Creating, Starting, and Stopping Embedded {productName}]
 * link:#giigc[Deploying and Undeploying an Application in an Embedded
-GlassFish Server]
-* link:#gjldy[Running `asadmin` Commands Using the GlassFish Server
+{productName}]
+* link:#gjldy[Running `asadmin` Commands Using the {productName}
 Embedded Server API]
 * link:#gikrt[Sample Applications]
 
@@ -185,7 +179,7 @@ Embedded Server API]
 ==== Setting the Class Path
 
 To enable your applications to locate the class libraries for embedded
-GlassFish Server, add one of the following JAR files to your class path:
+{productName}, add one of the following JAR files to your class path:
 
 `glassfish-embedded-nucleus.jar`::
   Corresponds to the nucleus distribution. Download this file from
@@ -201,8 +195,8 @@ GlassFish Server, add one of the following JAR files to your class path:
 `glassfish-embedded-static-shell.jar`::
   Contains references to classes needed for deploying all Jakarta EE
   application types. Must be used with a nonembedded installation of
-  GlassFish Server. Reference this file from the
-  as-install`/lib/embedded` directory of a nonembedded GlassFish Server
+  {productName}. Reference this file from the
+  as-install``/lib/embedded`` directory of a nonembedded {productName}
   installation. Do not move this file or it will not work. For an
   explanation of as-install, see link:#gikqf[Installation Root
   Directory].
@@ -210,9 +204,9 @@ GlassFish Server, add one of the following JAR files to your class path:
 
 [NOTE]
 ====
-Oracle GlassFish Server only supports use of the
+{productName} only supports use of the
 `glassfish-embedded-static-shell.jar` file. The other files are part of
-Eclipse GlassFish Server and are offered without official support.
+{productName} and are offered without official support.
 ====
 
 
@@ -223,21 +217,21 @@ database other than Java DB, include the Java DataBase Connectivity
 
 [[giiky]][[GSESG00058]][[creating-starting-and-stopping-embedded-glassfish-server]]
 
-==== Creating, Starting, and Stopping Embedded GlassFish Server
+==== Creating, Starting, and Stopping Embedded {productName}
 
 Before you can run applications, you must set up and run the embedded
-GlassFish Server.
+{productName}.
 
 The following topics are addressed here:
 
-* link:#gihyr[Creating and Configuring an Embedded GlassFish Server]
-* link:#gihyz[Running an Embedded GlassFish Server]
+* link:#gihyr[Creating and Configuring an Embedded {productName}]
+* link:#gihyz[Running an Embedded {productName}]
 
 [[gihyr]][[GSESG00043]][[creating-and-configuring-an-embedded-glassfish-server]]
 
-===== Creating and Configuring an Embedded GlassFish Server
+===== Creating and Configuring an Embedded {productName}
 
-To create and configure an embedded GlassFish Server, perform these
+To create and configure an embedded {productName}, perform these
 tasks:
 
 1. Instantiate the `org.glassfish.embeddable.BootstrapProperties`
@@ -323,7 +317,7 @@ setConfigFileReadOnly(boolean readOnly)
 ----
 |`true`
 
-|Sets the port on which Embedded GlassFish Server listens.
+|Sets the port on which Embedded {productName} listens.
 |`setPort`(String networkListener, int port)
 |none
 |===
@@ -335,9 +329,9 @@ Do not use `setPort` if you are using `setInstanceRoot` or `setConfigFileURI`.
 
 
 [[GSESG00005]][[gikmz]]
-Example 1-1 Creating an Embedded GlassFish Server
+Example 1-1 Creating an Embedded {productName}
 
-This example shows code for creating an Embedded GlassFish Server.
+This example shows code for creating an Embedded {productName}.
 
 [source,java]
 ----
@@ -350,10 +344,10 @@ import org.glassfish.embeddable.*;
 ----
 
 [[GSESG00006]][[gksjo]]
-Example 1-2 Creating an Embedded GlassFish Server with configuration
+Example 1-2 Creating an Embedded {productName} with configuration
 customizations
 
-This example shows code for creating an Embedded GlassFish Server using
+This example shows code for creating an Embedded {productName} using
 the existing domain-dir
 `C:\samples\test\applicationserver\domains\domain1`.
 
@@ -376,19 +370,19 @@ import org.glassfish.embeddable.*;
 
 [[gihyz]][[GSESG00044]][[running-an-embedded-glassfish-server]]
 
-===== Running an Embedded GlassFish Server
+===== Running an Embedded {productName}
 
-After you create an embedded GlassFish Server as described in
-link:#gihyr[Creating and Configuring an Embedded GlassFish Server], you
+After you create an embedded {productName} as described in
+link:#gihyr[Creating and Configuring an Embedded {productName}], you
 can perform operations such as:
 
-* link:#gjkxx[Setting the Port of an Embedded GlassFish Server From an Application]
-* link:#gihzg[Starting an Embedded GlassFish Server From an Application]
-* link:#gihzy[Stopping an Embedded GlassFish Server From an Application]
+* link:#gjkxx[Setting the Port of an Embedded {productName} From an Application]
+* link:#gihzg[Starting an Embedded {productName} From an Application]
+* link:#gihzy[Stopping an Embedded {productName} From an Application]
 
 [[gjkxx]][[GSESG00002]][[setting-the-port-of-an-embedded-glassfish-server-from-an-application]]
 
-Setting the Port of an Embedded GlassFish Server From an Application
+Setting the Port of an Embedded {productName} From an Application
 
 You must set the server's HTTP or HTTPS port. If you do not set the
 port, your application fails to start and throws an exception. You can
@@ -407,10 +401,9 @@ Do not use `setPort` if you are using `setInstanceRoot` or
 port. For more information, see link:#giiak[The `domain.xml` File].
 
 [[GSESG00007]][[gjkxc]]
-Example 1-3 Setting the port of an Embedded GlassFish Server
+Example 1-3 Setting the port of an Embedded {productName}
 
-This example shows code for setting the port of an embedded GlassFish
-Server.
+This example shows code for setting the port of an embedded {productName}.
 
 [source,java]
 ----
@@ -425,16 +418,16 @@ import org.glassfish.embeddable.*;
 
 [[gihzg]][[GSESG00003]][[starting-an-embedded-glassfish-server-from-an-application]]
 
-Starting an Embedded GlassFish Server From an Application
+Starting an Embedded {productName} From an Application
 
-To start an embedded GlassFish Server, invoke the `start` method of the
+To start an embedded {productName}, invoke the `start` method of the
 `GlassFish` object.
 
 [[GSESG00008]][[gilry]]
-Example 1-4 Starting an Embedded GlassFish Server
+Example 1-4 Starting an Embedded {productName}
 
 This example shows code for setting the port and starting an embedded
-GlassFish Server. This example also includes the code from
+{productName}. This example also includes the code from
 link:#gikmz[Example 1-1] for creating a `GlassFish` object.
 
 [source,java]
@@ -453,9 +446,9 @@ import org.glassfish.embeddable.*;
 
 [[gihzy]][[GSESG00004]][[stopping-an-embedded-glassfish-server-from-an-application]]
 
-Stopping an Embedded GlassFish Server From an Application
+Stopping an Embedded {productName} From an Application
 
-The API for embedded GlassFish Server provides a method for stopping an
+The API for embedded {productName} provides a method for stopping an
 embedded server. Using this method enables your application to stop the
 server in an orderly fashion by performing any necessary cleanup steps
 before stopping the server, for example:
@@ -463,14 +456,14 @@ before stopping the server, for example:
 * Undeploying deployed applications
 * Releasing any resources that your application uses
 
-To stop an embedded GlassFish Server, invoke the `stop` method of an
+To stop an embedded {productName}, invoke the `stop` method of an
 existing `GlassFish` object.
 
 [[GSESG00009]][[gilnz]]
-Example 1-5 Stopping an Embedded GlassFish Server
+Example 1-5 Stopping an Embedded {productName}
 
 This example shows code for prompting the user to press the Enter key to
-stop an embedded GlassFish Server. Code for creating a `GlassFish`
+stop an embedded {productName}. Code for creating a `GlassFish`
 object is not shown in this example. For an example of code for creating
 a `GlassFish` object, see link:#gikmz[Example 1-1].
 
@@ -483,19 +476,19 @@ import org.glassfish.embeddable.*;
 ...
     System.out.println("Press Enter to stop server");
         // wait for Enter
-    glassfish.stop(); // Stop Embedded GlassFish Server
+    glassfish.stop(); // Stop Embedded GlassFish
 ...
 ----
 
 As an alternative, you can use the `dispose` method to stop an embedded
-GlassFish Server and dispose of the temporary file system.
+{productName} and dispose of the temporary file system.
 
 [[giigc]][[GSESG00059]][[deploying-and-undeploying-an-application-in-an-embedded-glassfish-server]]
 
-==== Deploying and Undeploying an Application in an Embedded GlassFish Server
+==== Deploying and Undeploying an Application in an Embedded {productName}
 
 Deploying an application installs the files that comprise the
-application into Embedded GlassFish Server and makes the application
+application into Embedded {productName} and makes the application
 ready to run. By default, an application is enabled when it is deployed.
 
 The following topics are addressed here:
@@ -505,8 +498,7 @@ The following topics are addressed here:
 * link:#gjrcs[Creating a Scattered Archive]
 * link:#gkvgc[Creating a Scattered Enterprise Archive]
 
-For general information about deploying applications in GlassFish
-Server, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition
+For general information about deploying applications in {productName}, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
 Application Deployment Guide].
 
 [[gilrf]][[GSESG00021]][[to-deploy-an-application-from-an-archive-file-or-a-directory]]
@@ -517,18 +509,16 @@ An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
 the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in GlassFish Server Open
-Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide.
 
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive
 file. The contents of the directory must match the contents of the
-expanded Jakarta EE archive file as laid out by the GlassFish Server. The
+expanded Jakarta EE archive file as laid out by the {productName}. The
 directory must be accessible to the machine on which the deploying
 application runs. For more information about the requirements for
 deploying an application from a directory, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00043[To
-Deploy an Application or Module in a Directory Format]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+Deploy an Application or Module in a Directory Format]" in {productName} Application Deployment Guide.
 
 If some of the resources needed by an application are not under the
 application's directory, see link:#gjrcs[Creating a Scattered Archive].
@@ -581,17 +571,17 @@ import org.glassfish.embeddable.*;
 ===== Undeploying an Application
 
 Undeploy an application when the application is no longer required to
-run in GlassFish Server. For example, before stopping GlassFish Server,
-undeploy all applications that are running in GlassFish Server.
+run in {productName}. For example, before stopping {productName},
+undeploy all applications that are running in {productName}.
 
 
 [NOTE]
 ====
-If you reference a nonembedded GlassFish Server installation using the
+If you reference a nonembedded {productName} installation using the
 `glassfish-embedded-static-shell.jar` file and do not undeploy your
 applications in the same server life cycle in which you deployed them,
 expanded archives for these applications remain under the
-domain-dir`/applications` directory.
+domain-dir``/applications`` directory.
 ====
 
 
@@ -895,27 +885,27 @@ import org.glassfish.embeddable.*;
 
 [[gjldy]][[GSESG00060]][[running-asadmin-commands-using-the-glassfish-server-embedded-server-api]]
 
-Running `asadmin` Commands Using the GlassFish Server Embedded Server
+Running `asadmin` Commands Using the {productName} Embedded Server
 ==== API
 
 Running link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] commands from an application enables
-the application to configure the embedded GlassFish Server to suit the
+the application to configure the embedded {productName} to suit the
 application's requirements. For example, an application can run the
 required `asadmin` commands to create a JDBC technology connection to a
 database.
 
-For more information about configuring embedded GlassFish Server, see
-the link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration
+For more information about configuring embedded {productName}, see
+the link:../administration-guide/toc.html#GSADG[{productName} Administration
 Guide]. For detailed information about `asadmin` commands, see Section 1
-of the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference
+of the link:../reference-manual/toc.html#GSRFM[{productName} Reference
 Manual].
 
 
 [NOTE]
 ====
-Ensure that your application has started an embedded GlassFish Server
+Ensure that your application has started an embedded {productName}
 before the application attempts to run `asadmin` commands. For more
-information, see link:#gihyz[Running an Embedded GlassFish Server].
+information, see link:#gihyz[Running an Embedded {productName}].
 ====
 
 
@@ -966,7 +956,7 @@ import org.glassfish.embeddable.*;
 ----
 
 For another way to change log levels, see link:#gjlfe[Changing Log
-Levels in Embedded GlassFish Server].
+Levels in Embedded {productName}].
 
 [[gikrt]][[GSESG00061]][[sample-applications]]
 
@@ -1031,10 +1021,10 @@ public class Main {
 
 [[gijhs]][[GSESG00038]][[testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server]]
 
-=== Testing Applications with the Maven Plug-in for Embedded GlassFish Server
+=== Testing Applications with the Maven Plug-in for Embedded {productName}
 
 If you are using http://maven.apache.org/[Apache Maven]
-(`http://maven.apache.org/`), the plug-in for embedded GlassFish Server
+(`http://maven.apache.org/`), the plug-in for embedded {productName}
 simplifies the testing of applications. This plug-in enables you to
 build and start an unpackaged application with a single Maven goal.
 
@@ -1042,23 +1032,23 @@ The following topics are addressed here:
 
 * link:#gihus[To Set Up Your Maven Environment]
 * link:#giivt[To Build and Start an Application From Maven]
-* link:#gijly[To Stop Embedded GlassFish Server]
+* link:#gijly[To Stop Embedded {productName}]
 * link:#gijjn[To Redeploy an Application That Was Built and Started From Maven]
-* link:#gjkps[Maven Goals for Embedded GlassFish Server]
+* link:#gjkps[Maven Goals for Embedded {productName}]
 
-Predefined Maven goals for embedded GlassFish Server are described in
-link:#gjkps[Maven Goals for Embedded GlassFish Server].
+Predefined Maven goals for embedded {productName} are described in
+link:#gjkps[Maven Goals for Embedded {productName}].
 
-To use Maven with Embedded GlassFish Server and the EJB 3.1 Embeddable
+To use Maven with Embedded {productName} and the EJB 3.1 Embeddable
 API, see link:#gjxff[Using Maven with the EJB 3.1 Embeddable API and
-Embedded GlassFish Server].
+Embedded {productName}].
 
 [[gihus]][[GSESG00022]][[to-set-up-your-maven-environment]]
 
 ==== To Set Up Your Maven Environment
 
 Setting up your Maven environment enables Maven to download the required
-embedded GlassFish Server distribution file when you build your project.
+embedded {productName} distribution file when you build your project.
 Setting up your Maven environment also identifies the plug-in that
 enables you to build and start an unpackaged application with a single
 Maven goal.
@@ -1070,7 +1060,7 @@ Before You Begin
 Ensure that http://maven.apache.org/[Apache Maven]
 (`http://maven.apache.org/`) is installed.
 
-1. Identify the Maven plug-in for embedded GlassFish Server.
+1. Identify the Maven plug-in for embedded {productName}.
 +
 Add the following `plugin` element to your POM file:
 +
@@ -1092,7 +1082,7 @@ Add the following `plugin` element to your POM file:
 version::
   The version to use. The version of the final promoted build for this
   release is `3.1.1`. The Maven plug-in is not bound to a specific version
-  of GlassFish Server. You can specify the version you want to use. If
+  of {productName}. You can specify the version you want to use. If
   no version is specified, a default version is used.
 
 2. Configure the `embedded-glassfish` goal prefix, the application
@@ -1126,7 +1116,7 @@ app::
   In the app parameter, substitute the archive file or directory for your
   application. The optional port, contextRoot, and autoDelete parameters
   show example values. For details, see link:#gjkps[Maven Goals for
-  Embedded GlassFish Server].
+  Embedded {productName}].
 
 3. Perform advanced plug-in configuration. This step is optional.
 Add the following `configuration` element to your POM file:
@@ -1201,7 +1191,7 @@ Add `execution` elements to your POM file:
 ...
 ----
 goal::
-  The goal to use. See link:#gjkps[Maven Goals for Embedded GlassFish Server].
+  The goal to use. See link:#gjkps[Maven Goals for Embedded {productName}].
 
 5. Configure the repository.
 Add the following `repository` element to your POM file:
@@ -1218,9 +1208,9 @@ Add the following `repository` element to your POM file:
 ----
 
 [[GSESG00017]][[gjkod]]
-Example 1-13 POM File for Configuring Maven to Use Embedded GlassFish Server
+Example 1-13 POM File for Configuring Maven to Use Embedded {productName}
 
-This example shows a POM file for configuring Maven to use embedded GlassFish Server.
+This example shows a POM file for configuring Maven to use embedded {productName}.
 
 [source,xml]
 ----
@@ -1278,7 +1268,7 @@ http://maven.apache.org/maven-v4_0_0.xsd">
 
 If you are using Maven to manage the development of your application,
 you can use a Maven goal to build and start the application in embedded
-GlassFish Server.
+{productName}.
 
 [[sthref9]]
 
@@ -1302,20 +1292,19 @@ mvn install
 This command performs the following actions:
 * Installs the Maven repository in a directory named `.m2` under your
 home directory.
-* Starts Embedded GlassFish Server.
+* Starts Embedded {productName}.
 * Deploys your application.
 +
-The application continues to run in Embedded GlassFish Server until
-Embedded GlassFish Server is stopped.
+The application continues to run in Embedded {productName} until
+Embedded {productName} is stopped.
 
 [[gijly]][[GSESG00024]][[to-stop-embedded-glassfish-server]]
 
-==== To Stop Embedded GlassFish Server
+==== To Stop Embedded {productName}
 
 1. Change to the root directory of the Maven project for your
 application.
-2. Run the Maven goal to stop the application in embedded GlassFish
-Server.
+2. Run the Maven goal to stop the application in embedded {productName}.
 +
 [source]
 ----
@@ -1323,7 +1312,7 @@ mvn embedded-glassfish:stop
 ----
 This runs the `stop` method of the `GlassFish` object and any other
 methods that are required to shut down the server in an orderly fashion.
-See link:#gihzy[Stopping an Embedded GlassFish Server From an
+See link:#gihzy[Stopping an Embedded {productName} From an
 Application].
 
 [[gijjn]][[GSESG00025]][[to-redeploy-an-application-that-was-built-and-started-from-maven]]
@@ -1331,7 +1320,7 @@ Application].
 ==== To Redeploy an Application That Was Built and Started From Maven
 
 An application that was built and started from Maven continues to run in
-Embedded GlassFish Server until Embedded GlassFish Server is stopped.
+Embedded {productName} until Embedded {productName} is stopped.
 While the application is running, you can test changes to the
 application by redeploying it.
 
@@ -1340,10 +1329,10 @@ started from Maven, press Enter.
 
 [[gjkps]][[GSESG00062]][[maven-goals-for-embedded-glassfish-server]]
 
-==== Maven Goals for Embedded GlassFish Server
+==== Maven Goals for Embedded {productName}
 
 You can use the following Maven goals to test your applications with
-embedded GlassFish Server:
+embedded {productName}:
 
 * link:#gjkxo[`embedded-glassfish:run` Goal]
 * link:#gjkwy[`embedded-glassfish:start` Goal]
@@ -1399,7 +1388,7 @@ In order of precedence:
 * The name of the archive file without the extension or the directory name.
 
 For more information, see "link:../application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
-Eclipse GlassFish Server Application Deployment Guide.
+{productName} Application Deployment Guide.
 
  |(optional) The name of the application.
 
@@ -1432,7 +1421,7 @@ dropped.
 Root Directory] when the server is stopped.
 
 Caution: Do not set `autoDelete` to `true` if you are using
-`installRoot` to refer to a preexisting GlassFish Server installation.
+`installRoot` to refer to a preexisting {productName} installation.
 
 |===
 
@@ -1464,7 +1453,7 @@ In order of precedence:
 
 * `glassfish.embedded.tmpdir` system property value
 * `java.io.tmpdir` system property value
-* as-install`/domains/domain1`
+* as-install``/domains/domain1``
 
  |(optional) The link:#gikvf[Instance Root Directory]
 
@@ -1479,7 +1468,7 @@ file. |The HTTP or HTTPS port.
 Root Directory] when the server is stopped.
 
 Caution: Do not set `autoDelete` to `true` if you are using
-`installRoot` to refer to a preexisting GlassFish Server installation.
+`installRoot` to refer to a preexisting {productName} installation.
 
 |===
 
@@ -1513,7 +1502,7 @@ In order of precedence:
 name.
 
 For more information, see "link:../application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
-Eclipse GlassFish Server Application Deployment Guide.
+{productName} Application Deployment Guide.
 
  |(optional) The name of the application.
 
@@ -1541,11 +1530,11 @@ deployment for beans that are automatically mapped by the EJB container.
 
 [NOTE]
 ====
-If you reference a nonembedded GlassFish Server installation using the
+If you reference a nonembedded {productName} installation using the
 `glassfish-embedded-static-shell.jar` file and do not undeploy your
 applications in the same server life cycle in which you deployed them,
 expanded archives for these applications remain under the
-domain-dir`/applications` directory.
+domain-dir``/applications`` directory.
 ====
 
 
@@ -1608,10 +1597,10 @@ Table 1-9 `embedded-glassfish:stop` Parameters
 
 ===== `embedded-glassfish:admin` Goal
 
-This goal runs a GlassFish Server administration command. You must use
+This goal runs a {productName} administration command. You must use
 either the command and commandParameters parameters in combination or
 the commandLine parameter. For more information about administration
-commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+commands, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual]. You can set the parameters described in the following
 table.
 
@@ -1638,20 +1627,20 @@ command.
 
 [[gjlde]][[GSESG00039]][[using-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
 
-=== Using the EJB 3.1 Embeddable API with Embedded GlassFish Server
+=== Using the EJB 3.1 Embeddable API with Embedded {productName}
 
 The EJB 3.1 Embeddable API is designed for unit testing of EJB modules.
-You must use this API with a pre-installed, nonembedded GlassFish Server
-instance. However, you can take advantage of Embedded GlassFish Server's
-ease of use by referencing the nonembedded GlassFish Server instance
+You must use this API with a pre-installed, nonembedded {productName}
+instance. However, you can take advantage of Embedded {productName}'s
+ease of use by referencing the nonembedded {productName} instance
 with the `glassfish-embedded-static-shell.jar` file.
 
-Embedded GlassFish Server is not related to the EJB 3.1 Embeddable API,
+Embedded {productName} is not related to the EJB 3.1 Embeddable API,
 but you can use these APIs together.
 
 The Maven plug-in does not apply to embeddable EJB applications.
 However, you can use Maven with the POM file shown in link:#gjxff[Using
-Maven with the EJB 3.1 Embeddable API and Embedded GlassFish Server].
+Maven with the EJB 3.1 Embeddable API and Embedded {productName}].
 
 The EJB 3.1 Embeddable API is described in
 http://jcp.org/en/jsr/detail?id=318[Java Specification Request (JSR)
@@ -1679,22 +1668,21 @@ and can't be loaded by the client class loader.
 
 The following topics are addressed here:
 
-* link:#gjlcr[To Use the EJB 3.1 Embeddable API with Embedded GlassFish
-Server]
+* link:#gjlcr[To Use the EJB 3.1 Embeddable API with Embedded {productName}]
 * link:#gksnv[EJB 3.1 Embeddable API Properties]
 * link:#gjxff[Using Maven with the EJB 3.1 Embeddable API and Embedded
-GlassFish Server]
+{productName}]
 
 [[gjlcr]][[GSESG00026]][[to-use-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
 
-==== To Use the EJB 3.1 Embeddable API with Embedded GlassFish Server
+==== To Use the EJB 3.1 Embeddable API with Embedded {productName}
 
-1. To specify GlassFish Server as the Container Provider, include
+1. To specify {productName} as the Container Provider, include
 `glassfish-embedded-static-shell.jar` or `glassfish-embedded-all.jar` in
 the class path of your embeddable EJB application.
 +
 Reference the `glassfish-embedded-static-shell.jar` file from the
-as-install`/lib/embedded` directory of a GlassFish Server installation.
+as-install``/lib/embedded`` directory of a {productName} installation.
 Do not move this file or it will not work.
 +
 See link:#giide[Setting the Class Path] and Section 22.3.3 of the EJB
@@ -1703,15 +1691,15 @@ See link:#giide[Setting the Class Path] and Section 22.3.3 of the EJB
 +
 For more information about configuring resources, see the Administration
 Console Online Help or "link:../administration-guide/toc.html#GSADG00298[Resources and Services
-Administration]" in Eclipse GlassFish Server Administration
+Administration]" in {productName} Administration
 Guide. The `jdbc/__default` Java DB database is preconfigured with all
-distributions of GlassFish Server. However, if you are using
+distributions of {productName}. However, if you are using
 `glassfish-embedded-static-shell.jar`, you must start the database
 manually.
 +
 If your embeddable EJB application uses Java Persistence, you do not
 need to specify a JDBC resource. See link:#gksmw[Default Java
-Persistence Data Source for Embedded GlassFish Server].
+Persistence Data Source for Embedded {productName}].
 3. Invoke one of the `createEJBContainer` methods.
 +
 
@@ -1728,9 +1716,9 @@ previously deployed applications or modules.
 value by using the `createEJBContainer``(Map<?, ?> properties)` method.
 +
 The default link:#gikvf[Instance Root Directory] location is
-as-install`/domains/domain1` if a nonembedded installation is
+as-install``/domains/domain1`` if a nonembedded installation is
 referenced. This system property applies only to embeddable EJB
-applications used with nonembedded GlassFish Server.
+applications used with nonembedded {productName}.
 5. Close the EJB container properly to release all acquired resources
 and threads.
 
@@ -1752,7 +1740,7 @@ Table 1-11 EJB 3.1 Embeddable API Properties
 [width="100%",cols="<30%,<39%,<31%",options="header",]
 |===
 |Property |Default |Description
-|`installation.root` |GlassFish Server installation location from which
+|`installation.root` |{productName} installation location from which
 `glassfish-embedded-static-shell.jar` is referenced |The
 link:#gikqf[Installation Root Directory].
 
@@ -1763,8 +1751,7 @@ In order of precedence:
 `GlassFishProperties` object
 * `glassfish.embedded.tmpdir` system property value
 * `java.io.tmp` system property value
-* as-install`/domains/domain1` if a nonembedded installation is
-referenced
+* as-install``/domains/domain1`` if a nonembedded installation is referenced
 
  |The link:#gikvf[Instance Root Directory].
 
@@ -1773,7 +1760,7 @@ file.
 
 |`keep-temporary-files` |`false` |If `true`, keeps temporary files
 (exploded EAR file and configuration file) created by the embedded EJB
-container when Embedded GlassFish Server is stopped.
+container when Embedded {productName} is stopped.
 
 |`web.http.port` |None |Enables the web container if set. Needed for
 testing web services in a WAR file. The value is ignored and can be an
@@ -1783,7 +1770,7 @@ empty string.
 existing configuration file, and a temporary server instance is not
 created for the embedded run. Instead, execution happens against the
 existing server instance. Do not use this option if the reused server
-instance could be in use by the running nonembedded GlassFish Server.
+instance could be in use by the running nonembedded {productName}.
 
 |`skip-client-modules` |`false` |If `true`, omits modules from the
 classpath if they are not specified using `EJBContainer.MODULES` and
@@ -1793,19 +1780,18 @@ have a manifest file with a `Main-Class` attribute.
 
 [[gjxff]][[GSESG00064]][[using-maven-with-the-ejb-3.1-embeddable-api-and-embedded-glassfish-server]]
 
-==== Using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish Server
+==== Using Maven with the EJB 3.1 Embeddable API and Embedded {productName}
 
-When using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish
-Server, you cannot use the features of the Maven plug-in. You must start
-and stop Embedded GlassFish Server manually or programmatically outside
+When using Maven with the EJB 3.1 Embeddable API and Embedded {productName}, you cannot use the features of the Maven plug-in. You must start
+and stop Embedded {productName} manually or programmatically outside
 of Maven.
 
 [[GSESG00018]][[gjxds]]
 Example 1-14 Maven POM File for Using the EJB 3.1 Embeddable API with
-Embedded GlassFish Server
+Embedded {productName}
 
 This example shows a POM file for configuring Maven to use the EJB 3.1
-Embeddable API with Embedded GlassFish Server.
+Embeddable API with Embedded {productName}.
 
 [source,xml]
 ----
@@ -1863,25 +1849,25 @@ directory before running the `mvn clean verify` command.
 
 [[gjlfe]][[GSESG00040]][[changing-log-levels-in-embedded-glassfish-server]]
 
-=== Changing Log Levels in Embedded GlassFish Server
+=== Changing Log Levels in Embedded {productName}
 
-To change log levels in Embedded GlassFish Server, you can follow the
+To change log levels in Embedded {productName}, you can follow the
 steps in this section or you can use the Embedded Server API as shown in
-link:#gjlfm[Example 1-11]. For more information about GlassFish Server
+link:#gjlfm[Example 1-11]. For more information about {productName}
 logging, see "link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
-Eclipse GlassFish Server Administration Guide.
+{productName} Administration Guide.
 
-You can change log levels in Embedded GlassFish Server in either of the
+You can change log levels in Embedded {productName} in either of the
 following ways:
 
-* Using the GlassFish Server Embedded Server API
+* Using the {productName} Embedded Server API
 * Creating a custom logging configuration file
 
 Both these ways use logger names. For a list of logger names, use the
 link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 [[GSESG00019]][[gkrhh]]
-Example 1-15 Using the GlassFish Server Embedded Server API
+Example 1-15 Using the {productName} Embedded Server API
 
 This example shows how to set log levels using the `getLogger` method in
 the API.
@@ -1922,7 +1908,7 @@ jakarta.enterprise.system.level = FINEST
 ----
 
 Pass the name of this custom logging configuration file to the `java`
-command when you invoke Embedded GlassFish Server. For example:
+command when you invoke Embedded {productName}. For example:
 
 [source]
 ----
@@ -1931,28 +1917,27 @@ java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFis
 
 [[gksmw]][[GSESG00041]][[default-java-persistence-data-source-for-embedded-glassfish-server]]
 
-=== Default Java Persistence Data Source for Embedded GlassFish Server
+=== Default Java Persistence Data Source for Embedded {productName}
 
 The `jdbc/__default` Java DB database is preconfigured with Embedded
-GlassFish Server. It is used when an application is deployed in Embedded
-GlassFish Server that uses Java Persistence but doesn't specify a data
-source. Embedded GlassFish Server uses the embedded Java DB database
-created in a temporary domain that is destroyed when Embedded GlassFish
-Server is stopped. You can use a Java DB database configured with
-nonembedded GlassFish Server if you explicitly specify the instance root
+{productName}. It is used when an application is deployed in Embedded
+{productName} that uses Java Persistence but doesn't specify a data
+source. Embedded {productName} uses the embedded Java DB database
+created in a temporary domain that is destroyed when Embedded {productName} is stopped. You can use a Java DB database configured with
+nonembedded {productName} if you explicitly specify the instance root
 directory or the configuration file.
 
-By default, weaving is enabled when the GlassFish Server Embedded Server
+By default, weaving is enabled when the {productName} Embedded Server
 API is used. To disable weaving, set the
 `org.glassfish.persistence.embedded.weaving.enabled` property to
 `false`.
 
 [[gihxf]][[GSESG00042]][[restrictions-for-embedded-glassfish-server]]
 
-=== Restrictions for Embedded GlassFish Server
+=== Restrictions for Embedded {productName}
 
-The `glassfish-embedded-web.jar` file for embedded GlassFish Server
-supports only these features of nonembedded GlassFish Server:
+The `glassfish-embedded-web.jar` file for embedded {productName}
+supports only these features of nonembedded {productName}:
 
 * The following web technologies of the Jakarta EE platform:
 
@@ -1968,36 +1953,36 @@ supports only these features of nonembedded GlassFish Server:
 
 The `glassfish-embedded-all.jar` and
 `glassfish-embedded-static-shell.jar` files support all features of
-nonembedded GlassFish Server with these exceptions:
+nonembedded {productName} with these exceptions:
 
 * Installers
 * Administration Console
 * Update Tool
 * Apache Felix OSGi framework
-* The Maven plug-in for embedded GlassFish Server does not support
+* The Maven plug-in for embedded {productName} does not support
 application clients.
 * Applications that require ports for communication, such as remote EJB
 components, do not work with the EJB 3.1 Embeddable API running with
-embedded GlassFish Server if a nonembedded GlassFish Server is running
+embedded {productName} if a nonembedded {productName} is running
 in parallel.
 
-Embedded GlassFish Server requires no installation or configuration. As
+Embedded {productName} requires no installation or configuration. As
 a result, the following files and directories are absent from the file
-system until embedded GlassFish Server is started:
+system until embedded {productName} is started:
 
 * `default-web.xml` file
 * `domain.xml` file
 * Applications directory
 * Instance root directory
 
-When embedded GlassFish Server is started, the base installation
-directory that GlassFish Server uses depends on the options with which
-GlassFish Server is started. If necessary, embedded GlassFish Server
-creates a base installation directory. Embedded GlassFish Server then
+When embedded {productName} is started, the base installation
+directory that {productName} uses depends on the options with which
+{productName} is started. If necessary, embedded {productName}
+creates a base installation directory. Embedded {productName} then
 copies the following directories and their contents from the Java
-archive (JAR) file in which embedded GlassFish Server is distributed:
+archive (JAR) file in which embedded {productName} is distributed:
 
 * `domains`
 * `lib`
 
-If necessary, GlassFish Server also creates an instance root directory.
+If necessary, {productName} also creates an instance root directory.

@@ -27,26 +27,23 @@ Please see the Title page for additional license information.
 ====
 
 The Performance Tuning Guide describes how to get the best performance
-with GlassFish Server 7.
+with {productName} 7.
 
 This preface contains information about and conventions for the entire
-Eclipse GlassFish Server (GlassFish Server) documentation set.
+{productName} ({productName}) documentation set.
 
-GlassFish Server 7 is developed through the GlassFish project
+{productName} 7 is developed through the GlassFish project
 open-source community at `http://glassfish.java.net/`. The GlassFish
-project provides a structured process for developing the GlassFish
-Server platform that makes the new features of the Jakarta EE platform
+project provides a structured process for developing the {productName} platform that makes the new features of the Jakarta EE platform
 available faster, while maintaining the most important feature of Java
-EE: compatibility. It enables Java developers to access the GlassFish
-Server source code and to contribute to the development of the GlassFish
-Server. The GlassFish project is designed to encourage communication
+EE: compatibility. It enables Java developers to access the {productName} source code and to contribute to the development of the {productName}. The GlassFish project is designed to encourage communication
 between Oracle engineers and the community.
 
 [[GSPTG00043]][[gksfg]]
 
 
 [[oracle-glassfish-server-documentation-set]]
-=== Oracle GlassFish Server Documentation Set
+=== {productName} Documentation Set
 
 [width="100%",cols="<30%,<70%",options="header",]
 |===
@@ -57,60 +54,59 @@ table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
 |link:../quick-start-guide/toc.html#GSQSG[Quick Start Guide] |Explains how to get started with the
-GlassFish Server product.
+{productName} product.
 
 |link:../installation-guide/toc.html#GSING[Installation Guide] |Explains how to install the software
 and its components.
 
 |link:../upgrade-guide/toc.html#GSUPG[Upgrade Guide] |Explains how to upgrade to the latest
-version of GlassFish Server. This guide also describes differences
+version of {productName}. This guide also describes differences
 between adjacent product releases and configuration options that can
 result in incompatibility with the product specifications.
 
 |link:../deployment-planning-guide/toc.html#GSPLG[Deployment Planning Guide] |Explains how to build a
-production deployment of GlassFish Server that meets the requirements of
+production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
 |link:../administration-guide/toc.html#GSADG[Administration Guide] |Explains how to configure, monitor,
-and manage GlassFish Server subsystems and components from the command
+and manage {productName} subsystems and components from the command
 line by using the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility. Instructions for
 performing these tasks from the Administration Console are provided in
 the Administration Console online help.
 
 |link:../security-guide/toc.html#GSSCG[Security Guide] |Provides instructions for configuring and
-administering GlassFish Server security.
+administering {productName} security.
 
 |link:../application-deployment-guide/toc.html#GSDPG[Application Deployment Guide] |Explains how to assemble and
-deploy applications to the GlassFish Server and provides information
+deploy applications to the {productName} and provides information
 about deployment descriptors.
 
 |link:../application-development-guide/toc.html#GSDVG[Application Development Guide] |Explains how to create and
 implement Java Platform, Enterprise Edition (Jakarta EE platform)
-applications that are intended to run on the GlassFish Server. These
+applications that are intended to run on the {productName}. These
 applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs). This guide provides
 information about developer tools, security, and debugging.
 
 |link:../embedded-server-guide/toc.html#GSESG[Embedded Server Guide] |Explains how to run applications in
-embedded GlassFish Server and to develop applications in which GlassFish
-Server is embedded.
+embedded {productName} and to develop applications in which {productName} is embedded.
 
 |link:../ha-administration-guide/toc.html#GSHAG[High Availability Administration Guide] |Explains how to
-configure GlassFish Server to provide higher availability and
+configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
 |link:../performance-tuning-guide/toc.html#GSPTG[Performance Tuning Guide] |Explains how to optimize the
-performance of GlassFish Server.
+performance of {productName}.
 
 |link:../troubleshooting-guide/toc.html#GSTSG[Troubleshooting Guide] |Describes common problems that you
-might encounter when using GlassFish Server and explains how to solve
+might encounter when using {productName} and explains how to solve
 them.
 
 |link:../error-messages-reference/toc.html#GSEMR[Error Message Reference] |Describes error messages that you
-might encounter when using GlassFish Server.
+might encounter when using {productName}.
 
 |link:../reference-manual/toc.html#GSRFM[Reference Manual] |Provides reference information in man
-page format for GlassFish Server administration commands, utility
+page format for {productName} administration commands, utility
 commands, and related concepts.
 
 |link:../../openmq/mq-release-notes/toc.html#GMRLN[Message Queue Release Notes] |Describes new features,
@@ -130,7 +126,7 @@ conformance with the Java Management Extensions (JMX).
 
 |link:../../openmq/mq-dev-guide-java/toc.html#GMJVG[Message Queue Developer's Guide for Java Clients] |Provides
 information about concepts and procedures for developing Java messaging
-applications (Java clients) that work with GlassFish Server.
+applications (Java clients) that work with {productName}.
 
 |link:../../openmq/mq-dev-guide-c/toc.html#GMCCG[Message Queue Developer's Guide for C Clients] |Provides
 programming and reference information for developers working with
@@ -240,7 +236,7 @@ used in this book.
 |Placeholder |Description |Default Value
 
 |as-install
-a|Represents the base installation directory for GlassFish Server.
+a|Represents the base installation directory for {productName}.
 
 In configuration files, as-install is represented as follows:
 
@@ -255,7 +251,7 @@ Installations on the Windows operating system:
 SystemDrive``:\glassfish7\glassfish``
 
 |as-install-parent
-|Represents the parent of the base installation directory for GlassFish Server.
+|Represents the parent of the base installation directory for {productName}.
 a|Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 

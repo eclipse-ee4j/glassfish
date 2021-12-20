@@ -158,7 +158,7 @@ asadmin-options::
 
 `--nodedir`::
   The path to the directory in which the files for instance's node is to
-  be stored. The default is as-install`/nodes`.
+  be stored. The default is as-install``/nodes``.
 `--config`::
   Specifies the named configuration that the instance references.
   The configuration must exist and must not be named `default-config` or

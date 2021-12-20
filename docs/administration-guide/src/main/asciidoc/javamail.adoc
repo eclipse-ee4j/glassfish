@@ -13,7 +13,7 @@ prev=orb.html
 [[administering-the-javamail-service]]
 == 16 Administering the JavaMail Service
 
-GlassFish Server includes the JavaMail API along with JavaMail service
+{productName} includes the JavaMail API along with JavaMail service
 providers that allow an application component to send email
 notifications over the Internet and to read email from IMAP and POP3
 mail servers.
@@ -58,7 +58,7 @@ the session properties you assign for them. When creating a mail
 session, you can designate the mail hosts, the transport and store
 protocols, and the default mail user so that components that use
 JavaMail do not have to set these properties. Applications that are
-heavy email users benefit because GlassFish Server creates a single
+heavy email users benefit because {productName} creates a single
 session object and makes the session available to any component that
 needs it.
 
@@ -102,7 +102,7 @@ link:../reference-manual/create-javamail-resource.html#GSRFM00035[`create-javama
 +
 Information about the properties for the subcommand is included in this
 help page.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -200,7 +200,7 @@ References to the specified resource must be removed before running the
 link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommands.
 3. Delete a JavaMail resource by using the
 link:../reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`] subcommands.
-4. To apply your changes, restart GlassFish Server.
+4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 

@@ -13,10 +13,8 @@ prev=logging.html
 [[administering-the-monitoring-service]]
 == 8 Administering the Monitoring Service
 
-This chapter explains how to monitor the GlassFish Server Open Source
-Edition 7 components and services by using the `asadmin` command-line
-utility. Instructions for configuring JConsole to monitor GlassFish
-Server resources are also provided.
+This chapter explains how to monitor the {productName} 7 components and services by using the `asadmin` command-line
+utility. Instructions for configuring JConsole to monitor {productName} resources are also provided.
 
 The following topics are addressed here:
 
@@ -24,7 +22,7 @@ The following topics are addressed here:
 * link:#ablvp[Configuring Monitoring]
 * link:#ablvs[Viewing Common Monitoring Data]
 * link:#ghmct[Viewing Comprehensive Monitoring Data]
-* link:#giwqm[Configuring JConsole to View GlassFish Server Monitoring
+* link:#giwqm[Configuring JConsole to View {productName} Monitoring
 Data]
 
 Instructions for monitoring by using the Administration Console are
@@ -32,7 +30,7 @@ contained in the Administration Console online help.
 
 For information on using REST interfaces for monitoring, see
 link:general-administration.html#gjipx[Using REST Interfaces to
-Administer GlassFish Server].
+Administer {productName}].
 
 [[ablus]][[GSADG00557]][[about-monitoring]]
 
@@ -42,13 +40,13 @@ Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. The monitoring service can track
 and display operational statistics, such as the number of requests per
 second, the average response time, and the throughput. By monitoring the
-state of various components and services deployed in GlassFish Server,
+state of various components and services deployed in {productName},
 you can identify performance bottlenecks, predict failures, perform root
 cause analysis, and ensure that everything is functioning as expected.
 Data gathered by monitoring can also be useful in performance tuning and
 capacity planning.
 
-For this release of GlassFish Server, monitoring is exposed in a modular
+For this release of {productName}, monitoring is exposed in a modular
 way so that many client modules can access and display the monitoring
 statistics. These clients include the Administration Console, the
 `asadmin` utility, AMX, and REST interfaces.
@@ -57,16 +55,16 @@ The following topics are addressed here:
 
 * link:#ghbaz[How the Monitoring Tree Structure Works]
 * link:#gitkq[About Monitoring for Add-on Components]
-* link:#ghbfq[Tools for Monitoring GlassFish Server]
+* link:#ghbfq[Tools for Monitoring {productName}]
 
 [[ghbaz]][[GSADG00727]][[how-the-monitoring-tree-structure-works]]
 
 ==== How the Monitoring Tree Structure Works
 
 A monitorable object is a component, subcomponent, or service that can
-be monitored. GlassFish Server uses a tree structure to track
+be monitored. {productName} uses a tree structure to track
 monitorable objects. Because the tree is dynamic, the tree changes as
-GlassFish Server components are added or removed.
+{productName} components are added or removed.
 
 In the tree, a monitorable object can have child objects (nodes) that
 represent exactly what can be monitored for that object. All child
@@ -445,20 +443,20 @@ statistics, see link:#ghljx[Web Module Common Statistics].
 
 ==== About Monitoring for Add-on Components
 
-An add-on component typically generates statistics that GlassFish Server
+An add-on component typically generates statistics that {productName}
 can gather at runtime. Adding monitoring capabilities enables an add-on
-component to provide statistics to GlassFish Server in the same way as
-components that are supplied in the GlassFish Server distributions. As a
+component to provide statistics to {productName} in the same way as
+components that are supplied in the {productName} distributions. As a
 result, you can use the same administrative interfaces to monitor
-statistics from any installed GlassFish Server component, regardless of
+statistics from any installed {productName} component, regardless of
 the origin of the component.
 
 [[ghbfq]][[GSADG00729]][[tools-for-monitoring-glassfish-server]]
 
-==== Tools for Monitoring GlassFish Server
+==== Tools for Monitoring {productName}
 
 The following `asadmin` subcommands are provided for monitoring the
-services and components of GlassFish Server:
+services and components of {productName}:
 
 * The `enable-monitoring`, `disable-monitoring`, or the `get` and `set`
 subcommands are used to turn monitoring on or off. For instructions, see
@@ -481,7 +479,7 @@ Monitoring].
 
 === Configuring Monitoring
 
-By default, the monitoring service is enabled for GlassFish Server, but
+By default, the monitoring service is enabled for {productName}, but
 monitoring for the individual modules is not. To enable monitoring for a
 module, you change the monitoring level for that module to LOW or HIGH,
 You can choose to leave monitoring OFF for objects that do not need to
@@ -503,11 +501,11 @@ The following tasks are addressed here:
 
 Use the `enable-monitoring` subcommand to enable the monitoring service
 itself, or to enable monitoring for individual modules. Monitoring is
-immediately activated, without restarting GlassFish Server.
+immediately activated, without restarting {productName}.
 
 You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to enable
 monitoring for a module. Using the `set` command is not a dynamic
-procedure, so you need to restart GlassFish Server for your changes to
+procedure, so you need to restart {productName} for your changes to
 take effect.
 
 1. Determine which services and components are currently enabled for
@@ -581,11 +579,11 @@ typing `asadmin help enable-monitoring` at the command line.
 
 Use the `disable-monitoring` subcommand to disable the monitoring
 service itself, or to disable monitoring for individual modules.
-Monitoring is immediately stopped, without restarting GlassFish Server.
+Monitoring is immediately stopped, without restarting {productName}.
 
 You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to disable
 monitoring for a module. Using the `set` command is not a dynamic
-procedure, so you need to restart GlassFish Server for your changes to
+procedure, so you need to restart {productName} for your changes to
 take effect.
 
 1. Determine which services and components currently are enabled for
@@ -1529,7 +1527,7 @@ the connector.
 completed.
 
 |`rejectedworkcount` |CountStatistic |Number of work objects rejected by
-the GlassFish Server.
+the {productName}.
 
 |`submittedworkcount` |CountStatistic |Number of work objects submitted
 by a connector module.
@@ -2681,30 +2679,29 @@ sessions
 
 [[giwqm]][[GSADG00561]][[configuring-jconsole-to-view-glassfish-server-monitoring-data]]
 
-=== Configuring JConsole to View GlassFish Server Monitoring Data
+=== Configuring JConsole to View {productName} Monitoring Data
 
 Java SE provides tools to connect to an MBean Server and view the MBeans
 registered with the server. JConsole is one such popular JMX Connector
 Client and is available as part of the standard Java SE distribution.
-When you configure JConsole for use with GlassFish Server, GlassFish
-Server becomes the JMX Connector's server end and JConsole becomes the
+When you configure JConsole for use with {productName}, {productName} becomes the JMX Connector's server end and JConsole becomes the
 JMX connector's client end.
 
 [[ggpfh]][[GSADG00390]][[to-connect-jconsole-to-glassfish-server]]
 
-==== To Connect JConsole to GlassFish Server
+==== To Connect JConsole to {productName}
 
 Java SE 6 enhanced management and monitoring of the virtual machine by
 including a Platform MBean Server and by including managed beans
 (MBeans) to configure the virtual machine.
 
-To view all MBeans, GlassFish Server provides a configuration of the
+To view all MBeans, {productName} provides a configuration of the
 standard JMX connector server called System JMX Connector Server. As
-part of GlassFish Server startup, an instance of this JMX Connector
+part of {productName} startup, an instance of this JMX Connector
 Server is started. Any compliant JMX connector client can connect to the
 server using the JMX Connector Server.
 
-By default, GlassFish Server is configured with a non-secure System JMX
+By default, {productName} is configured with a non-secure System JMX
 Connector Server. If this is an issue, the JMX connector can be removed.
 However, access can be restricted to a specific IP address (for example,
 the loopback address) by setting `address` to `locahost`.
@@ -2739,7 +2736,7 @@ something like this:
 +
 [source]
 ----
-[#|2009-12-03T10:25:17.737-0800|INFO|glassfishv3.0|
+[#|2009-12-03T10:25:17.737-0800|INFO|glassfish7.0|
 x..system.tools.admin.org.glassfish.server|_ThreadID=20;
 _ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
 URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]

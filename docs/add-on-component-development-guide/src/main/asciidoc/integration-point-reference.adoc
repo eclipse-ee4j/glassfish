@@ -82,7 +82,7 @@ attributes and their content as follows.
   `registration`;;
     The Registration node
   `applicationServer`;;
-    The GlassFish Server node
+    The {productName} node
   `applications`;;
     The Applications node
   `resources`;;
@@ -156,7 +156,7 @@ attributes and their content as follows.
 === `org.glassfish.admingui:serverInstTab` Integration Point
 
 Use an `org.glassfish.admingui:serverInstTab` integration point to place
-an additional tab on the GlassFish Server page of the Administration
+an additional tab on the {productName} page of the Administration
 Console. Specify the attributes and their content as follows.
 
 `type`::
@@ -164,8 +164,7 @@ Console. Specify the attributes and their content as follows.
 `parentId`::
   The `id` value of the tab set that is the parent for this tab. For a
   top-level tab on this page, this value is `serverInstTabs`, the tab
-  set that contains the general information property pages for GlassFish
-  Server.
+  set that contains the general information property pages for {productName}.
   For a sub-tab, the value is the `id` value for the parent tab.
 `priority`::
   A numeric value that specifies the relative ordering of the tab on the

@@ -14,18 +14,17 @@ prev=extending-asadmin.html
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
-components and services that are deployed in the GlassFish Server,
+components and services that are deployed in the {productName},
 system administrators can identify performance bottlenecks, predict
 failures, perform root cause analysis, and ensure that everything is
 functioning as expected. Monitoring data can also be useful in
 performance tuning and capacity planning.
 
-An add-on component typically generates statistics that the Eclipse GlassFish
-Server can gather at run time. Adding monitoring capabilities enables an
-add-on component to provide statistics to GlassFish Server in the same
-way as components that are supplied in GlassFish Server distributions.
+An add-on component typically generates statistics that the {productName} can gather at run time. Adding monitoring capabilities enables an
+add-on component to provide statistics to {productName} in the same
+way as components that are supplied in {productName} distributions.
 As a result, system administrators can use the same administrative
-interfaces to monitor statistics from any installed GlassFish Server
+interfaces to monitor statistics from any installed {productName}
 component, regardless of the origin of the component.
 
 The following topics are addressed here:
@@ -46,7 +45,7 @@ request a connection from a connection pool. Monitoring the statistics
 that are related to these operations helps a system administrator
 maintain the system.
 
-To provide statistics to GlassFish Server, your component must define
+To provide statistics to {productName}, your component must define
 events for the operations that generate these statistics. At runtime,
 your component must send these events when performing the operations for
 which the events are defined. For example, to enable the number of
@@ -77,7 +76,7 @@ tasks:
 An event provider defines the types of events for the operations that
 generate statistics for an add-on component.
 
-GlassFish Server enables you to define an event provider in the
+{productName} enables you to define an event provider in the
 following ways:
 
 * By writing a Java Class. Define an event provider this way if you have
@@ -101,27 +100,26 @@ the class with the
 annotation.
 
 To create a name space for event providers and to uniquely identify an
-event provider to the monitoring infrastructure of GlassFish Server, set
+event provider to the monitoring infrastructure of {productName}, set
 the elements of the `@ProbeProvider` annotation as follows:
 
 `moduleProviderName`::
   Your choice of text to identify the application to which the event
   provider belongs. The value of the `moduleProviderName` element is not
   required to be unique.
-  For example, for event providers from GlassFish Server Open Source
-  Edition, `moduleProviderName` is `glassfish`.
+  For example, for event providers from {productName}, `moduleProviderName` is `glassfish`.
 `moduleName`::
   Your choice of name for the module for which the event provider is
   defined. A module provides significant functionality of an
   application. The value of the `moduleName` element is not required to
   be unique.
-  In GlassFish Server, examples of module names are `web-container`,
+  In {productName}, examples of module names are `web-container`,
   `ejb-container`, `transaction`, and `webservices`.
 `probeProviderName`::
   Your choice of name to identify the event provider. To uniquely
   identify the event provider, ensure that `probeProviderName` is unique
   for all event providers in the same module.
-  In GlassFish Server, examples of event-provider names are `jsp`,
+  In {productName}, examples of event-provider names are `jsp`,
   `servlet`, and `web-module`.
 
 [[ghosi]][[GSACG00011]][[defining-event-types-in-an-event-provider-class]]
@@ -215,27 +213,26 @@ To define an event provider, write an extensible markup language (XML)
 fragment that contains a single `probe-provider` element.
 
 To create a name space for event providers and to uniquely identify an
-event provider to the monitoring infrastructure of GlassFish Server, set
+event provider to the monitoring infrastructure of {productName}, set
 the attributes of the `probe-provider` element as follows:
 
 `moduleProviderName`::
   Your choice of text to identify the application to which the event
   provider belongs. The value of the `moduleProviderName` attribute is
   not required to be unique.
-  For example, for event providers from GlassFish Server Open Source
-  Edition, `moduleProviderName` is `glassfish`.
+  For example, for event providers from {productName}, `moduleProviderName` is `glassfish`.
 `moduleName`::
   Your choice of name for the module for which the event provider is
   defined. A module provides significant functionality of an
   application. The value of the `moduleName` attribute is not required
   to be unique.
-  In GlassFish Server, examples of module names are `web-container`,
+  In {productName}, examples of module names are `web-container`,
   `ejb-container`, `transaction`, and `webservices`.
 `probeProviderName`::
   Your choice of name to identify the event provider. To uniquely
   identify the event provider, ensure that `probeProviderName` is unique
   for all event providers in the same module.
-  In GlassFish Server, examples of event—provider names are `jsp`,
+  In {productName}, examples of event—provider names are `jsp`,
   `servlet`, and `web-module`.
 
 Within the `probe-provider` element, add one `probe` element for each
@@ -311,7 +308,7 @@ void jspLoaded(String jsp, String hostName)
 ===== Packaging a Component's Event Providers
 
 Packaging a component's event providers enables the monitoring
-infrastructure of GlassFish Server to discover the event providers automatically.
+infrastructure of {productName} to discover the event providers automatically.
 
 To package a component's event providers, add an entry to the
 component's `META-INF/MANIFEST.MF` file that identifies all of the
@@ -357,7 +354,7 @@ probe-provider-class-names : org.glassfish.pluggability.monitoring.ModuleProbePr
 
 At runtime, your add-on component might perform an operation that
 generates statistics. To provide statistics about the operation to
-GlassFish Server, your component must send an event of the correct type
+{productName}, your component must send an event of the correct type
 when performing the operation.
 
 To send an event, instantiate your event provider class and invoke the
@@ -407,11 +404,11 @@ public class TransactionManagerImpl {
 === Updating the Monitorable Object Tree
 
 A monitorable object is a component, subcomponent, or service that can
-be monitored. GlassFish Server uses a tree structure to track
+be monitored. {productName} uses a tree structure to track
 monitorable objects.
 
 Because the tree is dynamic, the tree changes as components of the
-GlassFish Server instance are added, modified, or removed. Objects are
+{productName} instance are added, modified, or removed. Objects are
 also added to or removed from the tree in response to configuration
 changes. For example, if monitoring for a component is turned off, the
 component's monitorable object is removed from the tree.
@@ -419,14 +416,14 @@ component's monitorable object is removed from the tree.
 To enable system administrators to access statistics for all components
 in the same way, you must provide statistics for an add-on component by
 updating the monitorable object tree. Statistics for the add-on
-component are then available through the GlassFish Server administrative
+component are then available through the {productName} administrative
 commands link:../reference-manual/get.html#GSRFM00139[`get`], olink:GSRFM00145[`list`], and
 link:../reference-manual/set.html#GSRFM00226[`set`]. These commands locate an object in the tree
 through the object's dotted name.
 
 For more information about the tree structure of monitorable objects,
 see "link:../administration-guide/monitoring.html#GSADG00727[How the Monitoring Tree Structure Works]" in
-Eclipse GlassFish Administration Guide.
+{productName} Administration Guide.
 
 To make an add-on component a monitorable object, you must add the
 add-on component to the monitorable object tree.
@@ -469,8 +466,7 @@ Ensure that the class that you write meets these requirements:
 
 * The return value of all callback methods in the listener must be void.
 * Because the methods of your event provider class may be entered by
-multiple threads, the listener must be thread safe. However,GlassFish
-Server provides utility classes to perform some common operations such
+multiple threads, the listener must be thread safe. However,{productName} provides utility classes to perform some common operations such
 as `count`, `avg`, and `sum`.
 * The listener must have the same restrictions as a Jakarta EE application. For example, the listener
 cannot open server sockets, or create threads.
@@ -738,7 +734,7 @@ first parameter in the client method should be of type Throwable
 ==== Registering an Event Listener
 
 Registering an event listener enables the listener to receive callbacks
-from the GlassFish Server event infrastructure. The listener can then
+from the {productName} event infrastructure. The listener can then
 collect data from events and update monitorable objects in the object
 tree. These monitorable objects form the basis for monitoring
 statistics.
@@ -747,7 +743,7 @@ Registering an event listener also makes a component and its statistics
 monitorable objects by adding statistics for the component to the
 monitorable object tree.
 
-At runtime, the GlassFish Server event infrastructure registers
+At runtime, the {productName} event infrastructure registers
 listeners for an event provider when the event provider is started and
 unregisters them when the event provider is shut down. As a result,
 listeners have no dependencies on other components.
@@ -809,7 +805,7 @@ public class TransactionManagerImpl {
 
 === Dotted Names and REST URLs for an Add-On Component's Statistics
 
-The GlassFish Server administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
+The {productName} administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
 link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a statistic
 through the dotted name of the statistic. The dotted name of a statistic
 for an add-on component is determined from the registration of the event

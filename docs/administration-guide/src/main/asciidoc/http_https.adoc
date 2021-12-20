@@ -14,7 +14,7 @@ prev=connectors.html
 == 13 Administering Internet Connectivity
 
 This chapter provides procedures for performing internet connectivity
-tasks in the GlassFish Server Open Source Edition 7 environment by
+tasks in the {productName} 7 environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -37,8 +37,7 @@ either in a single application server instance or in a cluster of
 multiple server instances. HTTP services are provided by two kinds of
 related objects: listeners and virtual servers.
 
-For more information about clusters, see the link:../ha-administration-guide/toc.html#GSHAG[GlassFish
-Server Open Source Edition High Availability Administration Guide].
+For more information about clusters, see the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide].
 
 The following topics are addressed here:
 
@@ -68,13 +67,13 @@ on all IP addresses on a port, you cannot create HTTP listeners for
 additional IP addresses that listen on the same port for a specific IP
 address. For example, if an HTTP listener uses 0.0.0.0:8080 (all IP
 addresses on port 8080), another HTTP listener cannot use 1.2.3.4:8080.
-The host running the GlassFish Server typically has access to only one
+The host running the {productName} typically has access to only one
 IP address. HTTP listeners typically use the 0.0.0.0 IP address and
 different port numbers, with each port number serving a different
 purpose. However, if the host does have access to more than one IP
 address, each address can serve a different purpose.
 
-To access a web application deployed on GlassFish Server, use the URL
+To access a web application deployed on {productName}, use the URL
 `http://localhost:8080/` (or `https://localhost:8081/` for a secure
 application), along with the context root specified for the web
 application.
@@ -92,14 +91,14 @@ allows the same physical server to host multiple Internet domain names.
 All virtual servers hosted on the same physical server share the IP
 address of that physical server. A virtual server associates a domain
 name for a server (such as `www.aaa.com`) with the particular server on
-which GlassFish Server is running. Each virtual server must be
+which {productName} is running. Each virtual server must be
 registered with the DNS server for your network.
 
 
 [NOTE]
 ====
 Do not confuse an Internet domain with the administrative domain of
-GlassFish Server.
+{productName}.
 ====
 
 
@@ -129,7 +128,7 @@ domains to your `/etc/hosts` file (if the setting for `hosts` in your
 
 === Administering HTTP Network Listeners
 
-By default, when GlassFish Server starts, the following HTTP listeners
+By default, when {productName} starts, the following HTTP listeners
 are started automatically:
 
 * HTTP listeners associated with the virtual server named `server`:
@@ -138,7 +137,7 @@ are started automatically:
 * An HTTP listener named `admin-listener`, associated with the virtual
 server named `__asadmin`. For this listener, security is not enabled.
 
-The following table describes the GlassFish Server default ports for the
+The following table describes the {productName} default ports for the
 listeners that use ports.
 
 [[GSADG990]][[sthref72]][[ggnpj]]
@@ -200,7 +199,7 @@ For additional thread pool information, see link:threadpools.html#abluc[Administ
 6. Create an HTTP listener by using the
 link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
 Specify a protocol and transport, optionally a thread pool.
-7. To apply your changes, restart GlassFish Server. See link:domains.html#ginqj[To Restart a Domain].
+7. To apply your changes, restart {productName}. See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG991]]
 
@@ -651,7 +650,7 @@ link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listener
 3. Delete an HTTP listener by using the
 link:../reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener`] or
 link:../reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`] subcommand.
-4. To apply your changes, restart GlassFish Server.
+4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -685,7 +684,7 @@ communication for the listener.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Configure an HTTP listener by using the
 link:../reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -711,7 +710,7 @@ typing `asadmin help create-ssl` at the command line.
 
 ===== To Configure Optional Client Authentication for SSL
 
-In GlassFish Server, you can configure the SSL protocol of an HTTP
+In {productName}, you can configure the SSL protocol of an HTTP
 listener such that it requests a certificate before permitting a client
 connection, but does not refuse a connection if the client does not
 provide one. To enable this feature, set the `client-auth` property of
@@ -727,7 +726,7 @@ protocol.listener-name.ssl.client-auth=want
 
 ===== To Configure a Custom SSL Implementation
 
-In GlassFish Server, you can configure the SSL protocol an HTTP listener
+In {productName}, you can configure the SSL protocol an HTTP listener
 such that it uses a custom implementation of SSL. To enable this
 feature, set the `classname` property of the SSL protocol to the name of
 a class that implements the `com.sun.grizzly.util.net.SSLImplementation`
@@ -739,7 +738,7 @@ asadmin> set configs.config.config-name.network-config.protocols.\
 protocol.listener-name.ssl.classname=SSLImplementation-class-name
 ----
 
-By default, GlassFish Server uses the implementation
+By default, {productName} uses the implementation
 `com.sun.enterprise.security.ssl.GlassfishSSLImpl` for the SSL protocol.
 
 [[ggncl]][[GSADG00470]][[to-delete-ssl-from-an-http-listener]]
@@ -753,7 +752,7 @@ listener.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Delete SSL from an HTTP listener by using the
 link:../reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`] subcommand.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -805,7 +804,7 @@ same or different host names, port numbers, or IP addresses. The HTTP
 service directs incoming web requests to different virtual servers based
 on the URL.
 
-When you first install GlassFish Server, a default virtual server is
+When you first install {productName}, a default virtual server is
 created. You can assign a default virtual server to each new HTTP
 listener you create.
 
@@ -817,8 +816,7 @@ web application and don't specify any assigned virtual servers, the web
 application is assigned to all currently defined virtual servers. If you
 then create additional virtual servers and want to assign existing web
 applications to them, you must redeploy the web applications. For more
-information about deployment, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open
-Source Edition Application Deployment Guide].
+information about deployment, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
 
 You can define virtual server properties using the `asadmin set`
 command. For example:
@@ -830,7 +828,7 @@ asadmin> set server-config.http-service.virtual-server.MyVS.property.sso-enabled
 
 Some virtual server properties can be set for a specific web
 application. For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
-GlassFish Server Open Source Edition Application Deployment Guide.
+{productName} Application Deployment Guide.
 
 The following topics are addressed here:
 
@@ -846,7 +844,7 @@ The following topics are addressed here:
 
 ==== To Create a Virtual Server
 
-By default, when GlassFish Server starts, the following virtual servers
+By default, when {productName} starts, the following virtual servers
 are started automatically:
 
 * A virtual server named `server`, which hosts all user-defined web
@@ -882,7 +880,7 @@ link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-s
 +
 Information about properties for this subcommand is included in this
 help page.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -962,7 +960,7 @@ link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-serv
 3. If necessary, notify users that the virtual server is being deleted.
 4. Delete a virtual server by using the
 link:../reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`] subcommand.
-5. To apply your changes, restart GlassFish Server.
+5. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -1001,7 +999,7 @@ http://myvserver:3184/
 
 A virtual server with no default web module assigned serves HTML or
 JavaServer Pages ( JSP) content from its document root, which is usually
-domain-dir`/docroot`. To access this HTML or JSP content, point your
+domain-dir``/docroot``. To access this HTML or JSP content, point your
 browser to the URL for the virtual server, do not supply a context root,
 but specify the target file.
 
@@ -1023,7 +1021,7 @@ You can assign a virtual server to a deployed application or web module.
 Before You Begin
 
 The application or module must already be deployed. For more
-information, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition
+information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
 Application Deployment Guide].
 
 1. In the Administration Console, open the HTTP Service component under

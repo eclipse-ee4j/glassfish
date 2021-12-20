@@ -76,7 +76,7 @@ asadmin-options::
 `--nodedir`::
   The path to the directory that is to contain {productName}
   instances that are created on the node. The default is
-  as-install`/nodes`, where as-install is the base installation
+  as-install``/nodes``, where as-install is the base installation
   directory of the {productName} software on the host. If a relative
   path is specified, the path is relative to the as-install directory.
 `--sshport`::

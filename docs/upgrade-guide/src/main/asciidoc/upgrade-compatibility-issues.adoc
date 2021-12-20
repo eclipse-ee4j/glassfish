@@ -1,28 +1,27 @@
 type=page
 status=published
-title=GlassFish Server Upgrade Compatibility Issues
+title={productName} Upgrade Compatibility Issues
 next=upgrading-legacy-installation.html
 prev=preface.html
 ~~~~~~
 
-= GlassFish Server Upgrade Compatibility Issues
+= {productName} Upgrade Compatibility Issues
 
 [[GSUPG00002]][[abmaq]]
 
 
 [[glassfish-server-upgrade-compatibility-issues]]
-== 1 GlassFish Server Upgrade Compatibility Issues
+== 1 {productName} Upgrade Compatibility Issues
 
-This section describes some compatibility issues between GlassFish
-Server 7 and earlier product releases. This section also describes
+This section describes some compatibility issues between {productName} 7 and earlier product releases. This section also describes
 some compatibility issues that affect Java applications that run on
-earlier product releases with which Oracle GlassFish Server 7 is
-binary-compatible. When you upgrade to GlassFish Server 7, you must
+earlier product releases with which {productName} 7 is
+binary-compatible. When you upgrade to {productName} 7, you must
 address these issues.
 
 The following topics are addressed here:
 
-* link:#gjwpd[Binary-Compatible Releases For GlassFish Server 7]
+* link:#gjwpd[Binary-Compatible Releases For {productName} 7]
 * link:#gkric[New Default Installation Directory]
 * link:#gklhr[Changes to Group Management Service Settings]
 * link:#geyyk[Application Client Interoperability]
@@ -36,19 +35,20 @@ The following topics are addressed here:
 
 [[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
 
-=== Binary-Compatible Releases For GlassFish Server 7
+=== Binary-Compatible Releases For {productName} 7
 
-GlassFish Server Open Source Edition 7 is NOT binary-compatible with the
-following earlier releases of the software:
+{productName} 7 is NOT binary-compatible with the earlier releases of the software:
 
 * Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer Profiles)
 * Sun GlassFish Enterprise Server v3
 * GlassFish Server Open Source Edition 3.0.1
 * GlassFish Server Open Source Edition 3.1
 * GlassFish Server Open Source Edition 3.1.1
+* GlassFish Server Open Source Edition 4.x
+* GlassFish Server Open Source Edition 5.x
+* Eclipse GlassFish 6.x
 
-Java applications that run on these releases also work on GlassFish
-Server Open Source Edition 7 except for the compatibility issues that
+Java applications that run on these releases also work on {productName} 7 except for the compatibility issues that
 are listed in the remainder of this chapter.
 
 
@@ -56,8 +56,8 @@ are listed in the remainder of this chapter.
 ====
 The compatibility issues that are listed in the remainder of this
 chapter do not affect Java applications that run on Sun GlassFish
-Enterprise Server v3 and GlassFish Server 3.0.1. The differences between
-GlassFish Server 7 and the Enterprise Server v3 releases do not affect
+Enterprise Server v3 and {productName} 3.0.1. The differences between
+{productName} 7 and the Enterprise Server v3 releases do not affect
 applications and data.
 ====
 
@@ -66,7 +66,7 @@ applications and data.
 
 === New Default Installation Directory
 
-The default GlassFish Server 7 installation directories are as follows:
+The default {productName} 7 installation directories are as follows:
 
 Solaris, Linux, and Mac OS X systems::
 [source]
@@ -79,8 +79,8 @@ Windows systems::
 SystemDrive\glassfish7
 ----
 
-In GlassFish Server 3.0.1 and Enterprise Server v3, the default
-installation root directory was `glassfishv3`.
+In {productName} 3.0.1 and Enterprise Server v3, the default
+installation root directory was `glassfish7`.
 
 [[gklhr]][[GSUPG00030]][[changes-to-group-management-service-settings]]
 
@@ -123,14 +123,13 @@ access to EJB JAR files or other JAR files in the EAR file unless they
 use a `Class-Path` header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
 Jakarta EE `library-directory` mechanism. Deployed Jakarta EE 5 applications
-that are upgraded to GlassFish Server 7 will have the `compatibility`
-property set to `v2` and will run without change on GlassFish Server 7.
+that are upgraded to {productName} 7 will have the `compatibility`
+property set to `v2` and will run without change on {productName} 7.
 You may, however, want to consider modifying the applications to
 conform to Jakarta EE 6 requirements.
 
 If your upgrade includes a deployed application with an application
-client, you will need to retrieve the client stubs using GlassFish
-Server 7 in order to run the client. Use the
+client, you will need to retrieve the client stubs using {productName} 7 in order to run the client. Use the
 `asadmin get-client-stubs` command.
 
 If you try to run the application client before retrieving the client
@@ -143,14 +142,13 @@ Invalid or corrupt jarfile jar-file-name
 
 If you commonly distribute application clients to remote systems from
 which users will run them, you must not only retrieve the client stubs,
-but you must also run the `package-appclient` utility for GlassFish
-Server 7 to upgrade the GlassFish Server system files. This utility
+but you must also run the `package-appclient` utility for {productName} 7 to upgrade the {productName} system files. This utility
 creates a JAR file, which you can then expand on the remote systems.
 
 Application clients use EJBs, web services, or other enterprise
 components that are in the application server (on the server side). The
 application client and the application server must use the same version
-and implementation of the RMI-IIOP protocol. GlassFish Server 7 does
+and implementation of the RMI-IIOP protocol. {productName} 7 does
 not support communication between different versions of the protocol
 implementation. You cannot run application clients with one version of
 the application server runtime with a server that has a different
@@ -168,7 +166,7 @@ clients and servers synchronized and using the same runtime.
 
 === Node Agent Support
 
-GlassFish Server 7 does not support node agents. When updating from
+{productName} 7 does not support node agents. When updating from
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
@@ -179,14 +177,14 @@ Agent Configurations] for more information.
 
 === HADB and `hadbm` Command Support
 
-GlassFish Server 7 does not support HADB or the `hadbm` management command.
+{productName} 7 does not support HADB or the `hadbm` management command.
 
-Instead of HADB, GlassFish Server 7 supports high availability
+Instead of HADB, {productName} 7 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
 See "link:../ha-administration-guide/overview.html#GSHAG00002[
-High Availability in GlassFish Server]" in
-GlassFish Server Open Source Edition High Availability Administration Guide
+High Availability in {productName}]" in
+{productName} High Availability Administration Guide
 for more information.
 
 [[abmbc]][[GSUPG00034]][[command-line-interface-the-asadmin-command]]
@@ -199,13 +197,13 @@ The following sections describe changes to the command line utility `asadmin`:
 * link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
 
 For more information about `asadmin` and its subcommands, see the
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[abmbd]][[GSUPG00053]][[deprecated-asadmin-subcommands]]
 
 ==== Deprecated `asadmin` Subcommands
 
-In GlassFish Server 7, it is recommended that utility options of the
+In {productName} 7, it is recommended that utility options of the
 `asadmin` command precede the subcommand. Utility options are options
 that control the behavior of the `asadmin` utility, as distinguished
 from subcommand options. Use of the following options after the
@@ -339,17 +337,16 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 
 === Applications That Use Java DB
 
-The directory location of Java DB in GlassFish Server 7 has changed
+The directory location of Java DB in {productName} 7 has changed
 from its location in previous installations. Suppose that you have
 deployed applications that use Java DB databases in your previous server
-installation, and you upgrade your existing installation to GlassFish
-Server 7. If you run the `asadmin start-database` command and
+installation, and you upgrade your existing installation to {productName} 7. If you run the `asadmin start-database` command and
 successfully start Java DB, you could run into problems while trying to
 run applications that were deployed on your previous server
 installation.
 
 To solve this problem, you can copy the `databases` directory from your
-previous installation to as-install`/databases`. Make sure the database
+previous installation to as-install``/databases``. Make sure the database
 is not running when you do this.
 
 Alternatively, you can perform these steps:
@@ -362,19 +359,19 @@ For example:
 ----
 asadmin start-database --dbhome c:\glassfish\databases
 ----
-2. After upgrade, start GlassFish Server 7.
+2. After upgrade, start {productName} 7.
 
 [[gjizi]][[GSUPG00036]][[applications-that-use-persistence]]
 
 === Applications That Use Persistence
 
-GlassFish Server 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
+{productName} 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
 use the persistence provider EclipseLink, while earlier versions used
 TopLink Essentials.
 
 An application that uses the container to create an `EntityManager` or
 `EntityManagerFactory` and that used Toplink Essentials as its provider
-will work in GlassFish Server 7. The container creates an
+will work in {productName} 7. The container creates an
 `EntityManager` if the application uses the `@PersistenceContext`
 annotation to inject an `EntityManager`, as in the following example:
 
@@ -396,7 +393,7 @@ EntityManagerFactory emf;
 EntityManager em = emf.createEntityManager();
 ----
 
-When the application is loaded, GlassFish Server 7 will translate the
+When the application is loaded, {productName} 7 will translate the
 provider to EclipseLink and will also translate `toplink.*` properties
 in the `persistence.xml` to corresponding EclipseLink properties. (The
 actual `persistence.xml` file remains unchanged.)
@@ -429,14 +426,14 @@ the code to cast to `org.eclipse.persistence.*`. You can use the package
 renamer tool described on the
 http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages[
 Eclipse wiki]
-to do this. This tool is not provided with GlassFish Server 7,
+to do this. This tool is not provided with {productName} 7,
 however, so you must obtain it from the EclipseLink project download site.
 
 [[gjiqj]][[GSUPG00037]][[http-service-to-network-service-changes]]
 
 === HTTP Service to Network Service Changes
 
-In GlassFish Server 7, most HTTP Service settings are defined in the
+In {productName} 7, most HTTP Service settings are defined in the
 Network Service configuration that was introduced in Sun GlassFish
 Enterprise Server v3.
 
@@ -452,7 +449,7 @@ The changes are described in the following sections.
 ==== Changes to Dotted Names
 
 The dotted name hierarchy for the HTTP Service configuration in
-GlassFish Server 7 is shown below. Elements that are no longer
+{productName} 7 is shown below. Elements that are no longer
 supported are `request-processing`, `keep-alive`, `connection-pool`,
 `http-protocol`, `http-file-cache`, and `http-listener`. During the
 upgrade process, these discontinued elements are remapped to the new
@@ -479,7 +476,7 @@ config
         thread-pool
 ----
 
-The dotted name hierarchy for the GlassFish Server 7 Network Service
+The dotted name hierarchy for the {productName} 7 Network Service
 and HTTP Service configurations is shown below. The `network-config`
 element and all its children are new except for `ssl`.
 
@@ -513,7 +510,7 @@ config
 ----
 
 The following example compares the commands for setting a listener port
-for Sun GlassFish Enterprise Server v3 and GlassFish Server 7. Note
+for Sun GlassFish Enterprise Server v3 and {productName} 7. Note
 that the configuration for Enterprise Server v3 also applies to all
 earlier Enterprise Server 2.x releases.
 
@@ -523,7 +520,7 @@ earlier Enterprise Server 2.x releases.
 ----
 asadmin set server-config.http-service.http-listener.http-1.listenerport=4321
 ----
-* Command for GlassFish Server 7:
+* Command for {productName} 7:
 +
 [source]
 ----
@@ -552,7 +549,7 @@ options of this commands are unchanged.
 ==== Remapping of HTTP Service Attributes and Properties
 
 The following tables describe how attributes and properties in the HTTP
-Service configuration for GlassFish Server 7 are remapped to
+Service configuration for {productName} 7 are remapped to
 attributes in the Network Service configuration for older product
 releases. If you use a configuration from a Sun GlassFish Enterprise
 Server v2 or v3 release, this remapping happens automatically and then
@@ -1070,8 +1067,8 @@ link:#gipfn[Table 1-4], link:#gipev[Table 1-6], and link:#gipdo[Table
 
 === NSS Cryptographic Token Support
 
-GlassFish Server 7 does not support Network Security Services (NSS)
-cryptographic tokens. When upgrading to GlassFish Server 7 from
+{productName} 7 does not support Network Security Services (NSS)
+cryptographic tokens. When upgrading to {productName} 7 from
 Enterprise Server v2.x, additional manual configuration steps must be
 performed. These steps are explained later in this guide, in
 link:upgrading-legacy-installation.html#gktnh[Upgrading Installations

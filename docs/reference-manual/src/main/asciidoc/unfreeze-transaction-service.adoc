@@ -91,8 +91,7 @@ link:freeze-transaction-service.html#freeze-transaction-service-1[`freeze-transa
 link:recover-transactions.html#recover-transactions-1[`recover-transactions`(1)],
 link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)]
 
-"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in GlassFish Server Open
-Source Edition Administration Guide
+"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in {productName} Administration Guide
 
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
 in The Jakarta EE Tutorial

@@ -14,15 +14,15 @@ prev=webservices.html
 == 6 Configuring the Java Persistence Provider
 
 This chapter describes Oracle TopLink, the default persistence provider
-in GlassFish Server Open Source Edition, and introduces how to use it.
+in {productName}, and introduces how to use it.
 This chapter also tells how to set the default persistence provider in
-GlassFish Server and how to use persistence-related features specific to
-GlassFish Server such as automatic schema generation.
+{productName} and how to use persistence-related features specific to
+{productName} such as automatic schema generation.
 
 The following topics are addressed here:
 
 * link:#CHDJJAEI[Overview of Oracle TopLink]
-* link:#CHDHDABJ[Using Oracle TopLink in GlassFish Server]
+* link:#CHDHDABJ[Using Oracle TopLink in {productName}]
 * link:#gbwmj[Specifying the Database for an Application]
 * link:#gdkwf[Specifying the Persistence Provider for an Application]
 * link:#gescc[Primary Key Generation Defaults]
@@ -33,14 +33,12 @@ The following topics are addressed here:
 
 === Overview of Oracle TopLink
 
-Oracle TopLink is the default persistence provider in Oracle GlassFish
-Server. It is a comprehensive standards-based object-persistence and
+Oracle TopLink is the default persistence provider in {productName}. It is a comprehensive standards-based object-persistence and
 object-transformation framework that provides APIs, schemas, and
 run-time services for the persistence layer of an application.
 
 TopLink includes all of EclipseLink, from the Eclipse Foundation.
-EclipseLink is the default persistence provider in GlassFish Server Open
-Source Edition. EclipseLink is the open source implementation of the
+EclipseLink is the default persistence provider in {productName}. EclipseLink is the open source implementation of the
 development framework and the runtime provided in TopLink. EclipseLink
 implements the following specifications, plus value-added extensions:
 
@@ -62,15 +60,13 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
 in The Jakarta EE Tutorial.
 * Java Architecture for XML Binding (JAXB) 2.0. The EclipseLink JAXB
 implementation, plus EclipseLink extensions, is called MOXy. The
-`org.eclipse.persistence.moxy.jar` file is bundled with GlassFish
-Server. For more information about MOXy support in GlassFish Server, see
+`org.eclipse.persistence.moxy.jar` file is bundled with {productName}. For more information about MOXy support in {productName}, see
 link:webservices.html#CHDEBBCH[The Databinding Provider].
 +
 For the JAXB 2.0 specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
 Specification Request (JSR) 222].
-* EclipseLink utilities are not included but can be used with GlassFish
-Server. Download the EclipseLink zip file at
+* EclipseLink utilities are not included but can be used with {productName}. Download the EclipseLink zip file at
 `http://www.eclipse.org/eclipselink/downloads/` and unzip it. The
 utility files are located here:
 +
@@ -83,8 +79,7 @@ bin/jaxb-compiler.sh
 In addition to all of EclipseLink, Oracle TopLink includes TopLink Grid,
 an integration between TopLink and Oracle Coherence that allows TopLink
 to use Oracle Coherence as a level 2 (L2) cache and persistence layer
-for entities. The `toplink-grid.jar` file is bundled with Oracle
-GlassFish Server.
+for entities. The `toplink-grid.jar` file is bundled with {productName}.
 
 
 [NOTE]
@@ -113,9 +108,9 @@ Grid]
 
 [[CHDHDABJ]][[GSDVG538]][[using-oracle-toplink-in-glassfish-server]]
 
-=== Using Oracle TopLink in GlassFish Server
+=== Using Oracle TopLink in {productName}
 
-To run TopLink JPA applications in GlassFish Server, you must configure
+To run TopLink JPA applications in {productName}, you must configure
 the server and coordinate certain server and application settings. These
 are described in the following steps. For a summary of these steps, see
 "http://docs.oracle.com/html/E25034_01/tlandgs.html#CIHDDACF[Using
@@ -125,13 +120,12 @@ see the links in the steps.
 
 1. Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[
 Administering Database Connectivity]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
 see https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
 in The Jakarta EE Tutorial.
 3. Create the `persistence.xml` file. See link:#gbwmj[Specifying the
-Database for an Application] for considerations specific to GlassFish
-Server.
+Database for an Application] for considerations specific to {productName}.
 +
 If you are using the Java Persistence API by calling
 `Persistence.createEMF()`, see link:#gdkwf[Specifying the Persistence
@@ -140,19 +134,19 @@ Provider for an Application].
 Persistence API by calling `Persistence.createEMF()`, see
 link:securing-apps.html#gbyah[Enabling and Disabling the Security
 Manager].
-5. Deploy the application. See the GlassFish Server Open Source Edition
+5. Deploy the application. See the {productName}
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
 7. Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[
 Administering the Monitoring Service]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 
 [[gbwmj]][[GSDVG00130]][[specifying-the-database-for-an-application]]
 
 === Specifying the Database for an Application
 
-GlassFish Server uses the bundled Apache Derby database by default,
+{productName} uses the bundled Apache Derby database by default,
 named `jdbc/__default`. If the `transaction-type` element is omitted or
 specified as `JTA` and both the `jta-data-source` and
 `non-jta-data-source` elements are omitted in the `persistence.xml`
@@ -188,7 +182,7 @@ type is correct. For example:
 ----
 
 The following `eclipselink.target-database` property values are allowed.
-Supported platforms have been tested with the GlassFish Server and are
+Supported platforms have been tested with the {productName} and are
 found to be Jakarta EE compatible.
 
 [source]
@@ -248,11 +242,10 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
     </persistence>
 ----
 
-For a list of the JDBC drivers currently supported by the GlassFish
-Server, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 [[gdkwf]][[GSDVG00138]][[specifying-the-persistence-provider-for-an-application]]
 
@@ -273,8 +266,8 @@ You can specify a non-default persistence provider for an application in
 the manner described in the Java Persistence API Specification:
 
 1. Install the provider. Copy the provider JAR files to the
-domain-dir`/lib` directory, and restart the GlassFish Server. For more
-information about the domain-dir`/lib` directory, see
+domain-dir``/lib`` directory, and restart the {productName}. For more
+information about the domain-dir``/lib`` directory, see
 link:class-loaders.html#beadj[Using the Common Class Loader]. The new
 persistence provider is now available to all modules and applications
 deployed on servers that share the same configuration.
@@ -355,7 +348,7 @@ default provider. The default `sequenceName` is the specified `name`.
 
 === Automatic Schema Generation
 
-The automatic schema generation feature of the GlassFish Server defines
+The automatic schema generation feature of the {productName} defines
 database tables based on the fields or properties in entities and the
 relationships between the fields or properties. This insulates
 developers from many of the database related aspects of development,
@@ -490,8 +483,7 @@ If not specified, tables are dropped only if the
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server
-Open Source Edition Reference Manual].
+and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 When `asadmin` deployment options and `persistence.xml` options are both
 specified, the `asadmin` deployment options take precedence.
@@ -520,16 +512,16 @@ The following topics are addressed here:
 EclipseLink features a number of enhancements for use with Oracle
 databases. These enhancements require classes from the Oracle JDBC
 driver JAR files to be visible to EclipseLink at runtime. If you place
-the JDBC driver JAR files in domain-dir`/lib`, the classes are not
-visible to GlassFish Server components, including EclipseLink.
+the JDBC driver JAR files in domain-dir``/lib``, the classes are not
+visible to {productName} components, including EclipseLink.
 
 If you are using an Oracle database, put JDBC driver JAR files in
-domain-dir`/lib/ext` instead. This ensures that the JDBC driver classes
+domain-dir``/lib/ext`` instead. This ensures that the JDBC driver classes
 are visible to EclipseLink.
 
 If you do not want to take advantage of Oracle-specific extensions from
 EclipseLink or you cannot put JDBC driver JAR files in
-domain-dir`/lib/ext`, set the `eclipselink.target-database` property to
+domain-dir``/lib/ext``, set the `eclipselink.target-database` property to
 the value `org.eclipse.persistence.platform.database.OraclePlatform`.
 For more information about the `eclipselink.target-database` property,
 see link:#gbwmj[Specifying the Database for an Application].
@@ -548,7 +540,7 @@ Even in a single-instance environment, if a stateful session bean is
 passivated, its extended persistence context could be lost when the
 stateful session bean is activated.
 
-Therefore, in GlassFish Server, a stateful session bean with an extended
+Therefore, in {productName}, a stateful session bean with an extended
 persistence context is never passivated and cannot be failed over.
 
 [[gezxw]][[GSDVG00392]][[using-orderby-with-a-shared-session-cache]]
@@ -586,7 +578,7 @@ database's `streamstolob` property value to `true`.
 Mapping references to column or table names must be in accordance with
 the expected column or table name case, and ensuring this is the
 programmer's responsibility. If column or table names are not explicitly
-specified for a field or entity, the GlassFish Server uses upper case
+specified for a field or entity, the {productName} uses upper case
 column names by default, so any mapping references to the column or
 table names must be in upper case. If column or table names are
 explicitly specified, the case of all mapping references to the column
@@ -619,7 +611,7 @@ each field with the required case. For example:
 public class Department{ @Column(name="deptName") private String deptName; }
 ----
 
-Otherwise, the `ALTER TABLE` statement generated by the GlassFish Server
+Otherwise, the `ALTER TABLE` statement generated by the {productName}
 uses the incorrect case, and the creation of the unique constraint
 fails.
 
@@ -694,7 +686,7 @@ characters.
 ==== MySQL Database Restrictions
 
 The following restrictions apply when you use a MySQL database with the
-GlassFish Server for persistence.
+{productName} for persistence.
 
 * MySQL treats `int1` and `int2` as reserved words. If you want to
 define `int1` and `int2` as fields in your table, use `\`int1\`` and

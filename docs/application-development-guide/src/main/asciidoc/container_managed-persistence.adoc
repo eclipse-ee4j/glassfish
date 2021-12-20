@@ -14,11 +14,11 @@ prev=ejb.html
 == 9 Using Container-Managed Persistence
 
 This chapter contains information on how EJB 2.1 container-managed
-persistence (CMP) works in Oracle GlassFish Server.
+persistence (CMP) works in {productName}.
 
 The following topics are addressed here:
 
-* link:#beajk[GlassFish Server Support for CMP]
+* link:#beajk[{productName} Support for CMP]
 * link:#beajl[CMP Mapping]
 * link:#beajv[Automatic Schema Generation for CMP]
 * link:#beajy[Schema Capture]
@@ -30,9 +30,9 @@ The following topics are addressed here:
 
 [NOTE]
 ====
-The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
+The Web Profile of the {productName} supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
-among other features. The full GlassFish Server supports the entire EJB
+among other features. The full {productName} supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
@@ -41,9 +41,9 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 [[beajk]][[GSDVG00150]][[glassfish-server-support-for-cmp]]
 
-=== GlassFish Server Support for CMP
+=== {productName} Support for CMP
 
-GlassFish Server support for EJB 2.1 CMP beans includes:
+{productName} support for EJB 2.1 CMP beans includes:
 
 * Full support for the J2EE v1.4 specification's CMP model. Extensive
 information on CMP is contained in chapters 10, 11, and 14 of the
@@ -55,7 +55,7 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
    This ensures portability, and is noted because some vendors allow primitive
    types (such as `int`) to be used as the primary key class.
 
-* The GlassFish Server CMP implementation, which provides the following:
+* The {productName} CMP implementation, which provides the following:
 ** An Object/Relational (O/R) mapping tool that creates XML deployment
    descriptors for EJB JAR files that contain beans that use CMP.
 ** Support for compound (multi-column) primary keys.
@@ -63,7 +63,7 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
 ** Standards-based query language (EJB QL).
 ** CMP runtime support. See link:#beakb[Configuring the CMP Resource].
 
-* GlassFish Server performance-related features, including the following:
+* {productName} performance-related features, including the following:
 ** Version column consistency checking
 ** Relationship prefetching
 ** Read-Only Beans
@@ -98,7 +98,7 @@ for the particular needs of an application. The result is a single data
 model through which both persistent database information and regular
 transient program data are accessed.
 
-The mapping capabilities provided by the GlassFish Server include:
+The mapping capabilities provided by the {productName} include:
 
 * Mapping a CMP bean to one or more tables
 * Mapping CMP fields to one or more columns
@@ -117,14 +117,13 @@ Each module with CMP beans must have the following files:
 * `ejb-jar.xml` - The J2EE standard file for assembling enterprise
 beans. For a detailed description, see the Enterprise JavaBeans
 Specification, v2.1.
-* `glassfish-ejb-jar.xml` - The GlassFish Server standard file for
+* `glassfish-ejb-jar.xml` - The {productName} standard file for
 assembling enterprise beans. For a detailed description, see
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 * `sun-cmp-mappings.xml` - The mapping deployment descriptor file, which
 describes the mapping of CMP beans to tables in a database. For a
 detailed description, see "link:../application-deployment-guide/dd-files.html#GSDPG00080[The sun-cmp-mappings.xml
-File]" in GlassFish Server Open Source Edition Application Deployment
+File]" in {productName} Application Deployment
 Guide.
 
 The `sun-cmp-mappings.xml` file can be automatically generated and does
@@ -154,7 +153,7 @@ The `sun-cmp-mappings.xml` file conforms to the
 `sun-cmp-mapping_1_2.dtd` file and is packaged with the user-defined
 bean classes in the EJB JAR file under the `META-INF` directory.
 
-The GlassFish Server creates the mappings in the `sun-cmp-mappings.xml`
+The {productName} creates the mappings in the `sun-cmp-mappings.xml`
 file automatically during deployment if the file is not present.
 
 To map the fields and relationships of your entity beans manually, edit
@@ -197,21 +196,19 @@ JavaBeans Specification, v2.1.
 
 ===== Automatic Primary Key Generation
 
-The GlassFish Server supports automatic primary key generation for EJB
+The {productName} supports automatic primary key generation for EJB
 1.1, 2.0, and 2.1 CMP beans. To specify automatic primary key
 generation, give the `prim-key-class` element in the `ejb-jar.xml` file
 the value `java.lang.Object`. CMP beans with automatically generated
 primary keys can participate in relationships with other CMP beans. The
-GlassFish Server does not support database-generated primary key values.
+{productName} does not support database-generated primary key values.
 
-If the database schema is created during deployment, the GlassFish
-Server creates the schema with the primary key column, then generates
+If the database schema is created during deployment, the {productName} creates the schema with the primary key column, then generates
 unique values for the primary key column at runtime.
 
 If the database schema is not created during deployment, the primary key
 column in the mapped table must be of type `NUMERIC` with a precision of
-19 or more, and must not be mapped to any CMP field. The GlassFish
-Server generates unique values for the primary key column at runtime.
+19 or more, and must not be mapped to any CMP field. The {productName} generates unique values for the primary key column at runtime.
 
 [[beajr]][[GSDVG00305]][[fixed-length-char-primary-keys]]
 
@@ -219,7 +216,7 @@ Server generates unique values for the primary key column at runtime.
 
 If an existing database table has a primary key column in which the
 values vary in length, but the type is `CHAR` instead of `VARCHAR`, the
-GlassFish Server automatically trims any extra spaces when retrieving
+{productName} automatically trims any extra spaces when retrieving
 primary key values. It is not a good practice to use a fixed length
 `CHAR` column as a primary key. Use this feature with schemas that
 cannot be changed, such as a schema inherited from a legacy application.
@@ -233,15 +230,14 @@ database column as another CMP or CMR field. CMP fields mapped to the
 same column and CMR fields mapped to exactly the same column lists
 always have the same value in memory. For CMR fields that share only a
 subset of their mapped columns, changes to the columns affect the
-relationship fields in memory differently. Basically, the GlassFish
-Server always tries to keep the state of the objects in memory
+relationship fields in memory differently. Basically, the {productName} always tries to keep the state of the objects in memory
 synchronized with the database.
 
 A managed field can have any `fetched-with` subelement. If the
 `fetched-with` subelement is `<default/>`, the
 `-DAllowManagedFieldsInDefaultFetchGroup` flag must be set to `true`.
 See link:#gemln[Default Fetch Group Flags] and
-"link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in GlassFish Server Open Source Edition
+"link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName}
 Application Deployment Guide.
 
 [[beajt]][[GSDVG00307]][[blob-support]]
@@ -259,7 +255,7 @@ fetched from the database is deserialized. However, if a CMP field is
 defined as `byte[]`, it is stored directly instead of being serialized
 and deserialized when stored and fetched, respectively.
 
-To enable BLOB support in the GlassFish Server environment, define a CMP
+To enable BLOB support in the {productName} environment, define a CMP
 field of type `byte[]` or a user-defined type that implements the
 java.io.Serializable interface. If you map the CMP bean to an existing
 database schema, map the field to a column of type BLOB.
@@ -268,11 +264,10 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the GlassFish
-Server, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 For automatic mapping, you might need to change the default BLOB column
 length for the generated schema using the `schema-generator-properties`
@@ -302,7 +297,7 @@ example:
 Character Large Object (CLOB) is a data type used to store and retrieve
 very long text fields. CLOBs translate into long strings.
 
-To enable CLOB support in the GlassFish Server environment, define a CMP
+To enable CLOB support in the {productName} environment, define a CMP
 field of type `java.lang.String`. If you map the CMP bean to an existing
 database schema, map the field to a column of type CLOB.
 
@@ -310,11 +305,10 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the GlassFish
-Server, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 For automatic mapping, you might need to change the default CLOB column
 length for the generated schema using the `schema-generator-properties`
@@ -341,7 +335,7 @@ example:
 
 === Automatic Schema Generation for CMP
 
-The automatic schema generation feature provided in the GlassFish Server
+The automatic schema generation feature provided in the {productName}
 defines database tables based on the fields in entity beans and the
 relationships between the fields. This insulates developers from many of
 the database related aspects of development, allowing them to focus on
@@ -435,11 +429,11 @@ type (or a collection of such) can be the type of a CMR field.
 
 The following table contains the mappings of JDBC types to database
 vendor-specific types when automatic mapping is used. For a list of the
-JDBC drivers currently supported by the GlassFish Server, see the
-link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release Notes]. For
+JDBC drivers currently supported by the {productName}, see the
+link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 [[GSDVG551]][[sthref20]][[fvymp]]
 
@@ -519,7 +513,7 @@ The following optional data subelements of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file control the automatic creation of
 database tables at deployment. For more information about the
 `cmp-resource` element, see "link:../application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
-GlassFish Server Open Source Edition Application Deployment Guide and
+{productName} Application Deployment Guide and
 link:#beakb[Configuring the CMP Resource].
 
 [[GSDVG552]][[sthref21]][[fvymo]]
@@ -564,11 +558,10 @@ For example:
 
 Also allows you to set the `use-unique-table-names` property. If `true`,
 this property specifies that generated table names are unique within
-each GlassFish Server domain. The default is `false`.
+each {productName} domain. The default is `false`.
 
 For further information and an example, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in GlassFish Server Open
-Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in {productName} Application Deployment Guide.
 
 |===
 
@@ -606,7 +599,7 @@ If `false`, settings of `create-tables-at-deploy` or
 overridden.
 
 |`--uniquetablenames` |none |If `true`, specifies that table names are
-unique within each GlassFish Server domain. If not specified, the value
+unique within each {productName} domain. If not specified, the value
 of the `use-unique-table-names` property in `glassfish-ejb-jar.xml` is
 used.
 
@@ -656,8 +649,7 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server
-Open Source Edition Reference Manual].
+and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
@@ -675,7 +667,7 @@ The following topics are addressed here:
 
 ==== Automatic Database Schema Capture
 
-You can configure a CMP bean in GlassFish Server to automatically
+You can configure a CMP bean in {productName} to automatically
 capture the database metadata and save it in a `.dbschema` file during
 deployment. If the `sun-cmp-mappings.xml` file contains an empty
 `<schema/>` entry, the `cmp-resource` entry in the
@@ -697,7 +689,7 @@ Resource].
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about
@@ -730,17 +722,16 @@ resource in the `jndi-name` subelement of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file. Set `PersistenceManagerFactory`
 properties as properties of the `cmp-resource` element in the
 `glassfish-ejb-jar.xml` file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
-GlassFish Server Open Source Edition Application Deployment Guide.
+{productName} Application Deployment Guide.
 
 In the Administration Console, open the Resources component, then select
 JDBC. Click the Help button in the Administration Console for
 information on creating a new JDBC resource.
 
-For a list of the JDBC drivers currently supported by the GlassFish
-Server, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
-GlassFish Server Open Source Edition Administration Guide.
+{productName} Administration Guide.
 
 For example, if the JDBC resource has the JNDI name `jdbc/MyDatabase`,
 set the CMP resource in the `glassfish-ejb-jar.xml` file as follows:
@@ -756,7 +747,7 @@ set the CMP resource in the `glassfish-ejb-jar.xml` file as follows:
 
 === Performance-Related Features
 
-The GlassFish Server provides the following features to enhance
+The {productName} provides the following features to enhance
 performance or allow more fine-grained data checking. These features are
 supported only for entity beans with container managed persistence.
 
@@ -797,8 +788,7 @@ specified row.
 4. Specify the version column. +
 This is specified in the `check-version-of-accessed-instances`
 subelement of the `consistency` element in the `sun-cmp-mappings.xml`
-file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in GlassFish Server Open
-Source Edition Application Deployment Guide.
+file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
 5. Map the CMP bean to an existing schema.
 +
 Automatic schema generation is not supported for beans with version
@@ -821,13 +811,11 @@ file. By default, these CMR fields are prefetched whenever
 `findByPrimaryKey` or a custom finder is executed for the entity, or
 when the entity is navigated to from a relationship. (Recursive
 prefetching is not supported, because it does not usually enhance
-performance.) See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+performance.) See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:../application-deployment-guide/dd-elements.html#GSDPG00226[prefetch-disabled]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00226[prefetch-disabled]" in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following
@@ -842,14 +830,14 @@ asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTIL
 
 ==== Read-Only Beans
 
-Another feature that the GlassFish Server provides is the read-only
+Another feature that the {productName} provides is the read-only
 bean, an entity bean that is never modified by an EJB client. Read-only
 beans avoid database updates completely.
 
 
 [NOTE]
 ====
-Read-only beans are specific to the GlassFish Server and are not part of
+Read-only beans are specific to the {productName} and are not part of
 the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
 EJB 2.1 bean results in a non-portable application.
 ====
@@ -860,7 +848,7 @@ frequently accessed but rarely updated (externally by other beans). When
 the data that is cached by a read-only bean is updated by another bean,
 the read-only bean can be notified to refresh its cached data.
 
-The GlassFish Server provides a number of ways by which a read-only
+The {productName} provides a number of ways by which a read-only
 bean's state can be refreshed. By setting the
 `refresh-period-in-seconds` element in the `glassfish-ejb-jar.xml` file
 and the `trans-attribute` element (or `@TransactionAttribute`
@@ -893,8 +881,7 @@ is loaded into memory. These could be multiple fields mapped to the same
 column in the database table, for example, an instance field and a CMR.
 By default this flag is set to `false`.
 
-For additional information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00181[level]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+For additional information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00181[level]" in {productName} Application Deployment Guide.
 
 Setting `-DAllowMediatedWriteInDefaultFetchGroup` specifies how updated
 CMP fields are written back to the database. If the flag is `false`, all
@@ -930,7 +917,7 @@ The following topics are addressed here:
 ==== About JDOQL Queries
 
 The Enterprise JavaBeans Specification, v1.1 does not specify the format
-of the finder method description. The GlassFish Server uses an extension
+of the finder method description. The {productName} uses an extension
 of Java Data Objects Query Language (JDOQL) queries to implement finder
 and selector methods. You can specify the following elements of the
 underlying JDOQL query:
@@ -947,7 +934,7 @@ language. A query filter might use query variables to implement joins.
 * Query ordering declaration - Specifies the ordering expression of the
 query. Corresponds to the ORDER BY clause of EJB QL.
 
-The GlassFish Server specific deployment descriptor
+The {productName} specific deployment descriptor
 (`glassfish-ejb-jar.xml`) provides the following elements to store the
 EJB 1.1 finder method settings:
 
@@ -1004,7 +991,7 @@ Collection.isEmpty()
 String.startsWith(String s)
 String.endsWith(String e)
 ----
-In addition, the GlassFish Server supports the following nonstandard
+In addition, the {productName} supports the following nonstandard
 JDOQL methods.
 +
 [source,java]
@@ -1228,8 +1215,7 @@ optimal for entity objects with large state if most business methods
 require access to only parts of the state.
 
 Use the `fetched-with` element in `sun-cmp-mappings.xml` for fields that
-are used infrequently. See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+are used infrequently. See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
 
 [[beako]][[GSDVG00452]][[restrictions-on-remote-interfaces]]
 
@@ -1276,8 +1262,7 @@ implemented by placing update locks on the data corresponding to a bean
 when the data is loaded from the database. There is no suitable
 mechanism available on Sybase databases to implement this feature.
 Therefore, the `lock-when-loaded` consistency level is not supported on
-Sybase databases. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+Sybase databases. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
 
 [[beakp]][[GSDVG00455]][[sybase-finder-limitation]]
 
@@ -1363,7 +1348,7 @@ go
 ==== MySQL Database Restrictions
 
 The following restrictions apply when you use a MySQL database with the
-GlassFish Server for persistence.
+{productName} for persistence.
 
 * MySQL treats `int1` and `int2` as reserved words. If you want to
 define `int1` and `int2` as fields in your table, use `\`int1\`` and

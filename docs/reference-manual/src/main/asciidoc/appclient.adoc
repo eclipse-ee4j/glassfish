@@ -108,7 +108,7 @@ client_application_classfile::
   optional if using the default domain, instance, and name
   (`sun-acc.xml`), otherwise it is required; identifies the name and
   location of the client configuration XML file. If not specified,
-  defaults to the `sun-acc.xml` file in the domain-dir`/config`
+  defaults to the `sun-acc.xml` file in the domain-dir``/config``
   directory.
 `-textauth`::
   optional; used to specify using text format authentication when

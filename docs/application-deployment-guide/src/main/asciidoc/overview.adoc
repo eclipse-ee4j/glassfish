@@ -1,25 +1,23 @@
 type=page
 status=published
-title=Overview of GlassFish Server Open Source Edition 7 Application Deployment
+title=Overview of {productName} 7 Application Deployment
 next=deploying-applications.html
 prev=preface.html
 ~~~~~~
 
-= Overview of GlassFish Server Open Source Edition 7 Application Deployment
+= Overview of {productName} 7 Application Deployment
 
 [[GSDPG00003]][[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
-== 1 Overview of GlassFish Server Open Source Edition 7 Application Deployment
+== 1 Overview of {productName} 7 Application Deployment
 
-GlassFish Server Open Source Edition 7 provides an environment for
-developing and deploying Java applications and web services. GlassFish
-Server applications include Java Platform, Enterprise Edition (Jakarta EE
-platform) standard features as well as features specific to GlassFish
-Server. This guide explains the tools and processes used for deploying
-applications and modules in the GlassFish Server environment. Only
-GlassFish Server features are described in detail in this document.
+{productName} 7 provides an environment for
+developing and deploying Java applications and web services. {productName} applications include Java Platform, Enterprise Edition (Jakarta EE
+platform) standard features as well as features specific to {productName}. This guide explains the tools and processes used for deploying
+applications and modules in the {productName} environment. Only
+{productName} features are described in detail in this document.
 
 The following topics are addressed here:
 
@@ -39,18 +37,18 @@ are contained in the Administration Console online help.
 
 Assembly, also known as packaging, is the process of combining discrete
 components of an application or module into a single unit that can be
-installed on an application server. The GlassFish Server assembly
+installed on an application server. The {productName} assembly
 process conforms to the customary Jakarta EE specifications. The only
 difference is that when you assemble applications or modules in
-GlassFish Server, you can include optional GlassFish Server deployment
+{productName}, you can include optional {productName} deployment
 descriptors that enhance functionality.
 
 Deployment is the process of installing an application or module on
-GlassFish Server, optionally specifying location-specific information,
+{productName}, optionally specifying location-specific information,
 such as a list of local users that can access the application, or the
-name of the local database. GlassFish Server deployment tools expand the
+name of the local database. {productName} deployment tools expand the
 archive file into an open directory structure that is ready for users.
-GlassFish Server deployment tools are described in link:#giifh[About
+{productName} deployment tools are described in link:#giifh[About
 Deployment Tools].
 
 The following topics are addressed here:
@@ -89,7 +87,7 @@ Application or Module in a Directory Format].
 options. See link:#beaee[JSR 88 Client] and link:#giiel[JSR 88 Naming].
 
 A deployment plan, which deploys a portable archive along with a
-deployment plan containing GlassFish Server deployment descriptors, can
+deployment plan containing {productName} deployment descriptors, can
 apply to any of these deployment techniques. For instructions, see
 link:deploying-applications.html#gijyb[To Deploy an Application or Module
 by Using a Deployment Plan].
@@ -115,7 +113,7 @@ For production environments, any upgrade should be performed as a
 rolling upgrade, which upgrades applications and modules without
 interruption in service. For more information, see
 link:../ha-administration-guide/rolling-upgrade.html#GSHAG00010[Upgrading Applications Without Loss of Availability] in
-GlassFish Server Open Source Edition High Availability Administration
+{productName} High Availability Administration
 Guide.
 
 [[gihzc]][[GSDPG00320]][[deployment-descriptors-and-annotations]]
@@ -133,11 +131,11 @@ requirements that you must resolve.
 
 Because the information in a deployment descriptor is declarative, it
 can be changed without requiring modifications to source code. During
-deployment, GlassFish Server reads the information in the deployment
+deployment, {productName} reads the information in the deployment
 descriptor and deploys the application or module as directed.
 
 The following types of deployment descriptors are associated with
-GlassFish Server:
+{productName}:
 
 * Jakarta EE Standard Descriptors.
 Jakarta EE standard deployment descriptors are described
@@ -159,39 +157,37 @@ packaged in an application archive. For example, for EAR files, an
 alternate deployment descriptor overrides `application.xml`. For
 standalone modules, an alternate deployment descriptor overrides the
 top-level module descriptor, such as `web.xml`.
-* GlassFish Server Descriptors. GlassFish Server provides optional
+* {productName} Descriptors. {productName} provides optional
 deployment descriptors for configuring features that are specific to
-GlassFish Server. For example, when you assemble an EJB module, you
-annotate or create two GlassFish Server deployment descriptor files with
+{productName}. For example, when you assemble an EJB module, you
+annotate or create two {productName} deployment descriptor files with
 these names: `ejb-jar.xml` and `glassfish-ejb-jar.xml`. If the EJB
 component is an entity bean with container-managed persistence (CMP),
 you can also create a `.dbschema` file and a `sun-cmp-mapping.xml` file.
 For complete descriptions of these files and their elements, see
-link:dd-files.html#giida[GlassFish Server Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the GlassFish Server
+link:dd-files.html#giida[{productName} Deployment Descriptor Files]
+and link:dd-elements.html#beaqi[Elements of the {productName}
 Deployment Descriptors].
 +
-GlassFish Server also permits the use of alternate top-level GlassFish
-Server runtime deployment descriptors that reside outside of an
-application archive. Alternate GlassFish Server deployment descriptors
+{productName} also permits the use of alternate top-level {productName} runtime deployment descriptors that reside outside of an
+application archive. Alternate {productName} deployment descriptors
 override the top-level deployment descriptors packaged in the archive.
-For example, for EAR files, an alternate GlassFish Server deployment
+For example, for EAR files, an alternate {productName} deployment
 descriptor overrides `glassfish-application.xml`. For standalone
-modules, an alternate GlassFish Server deployment descriptor overrides
+modules, an alternate {productName} deployment descriptor overrides
 the top-level module descriptor, such as `glassfish-web.xml`. The name
-of the GlassFish Server alternate deployment descriptor file must begin
+of the {productName} alternate deployment descriptor file must begin
 with `glassfish-`. Alternate deployment descriptors do not apply to
 `sun-*.xml` deployment descriptors.
 +
-Unless otherwise stated, settings in the GlassFish Server deployment
+Unless otherwise stated, settings in the {productName} deployment
 descriptors override corresponding settings in the Jakarta EE standard
-descriptors and in the GlassFish Server configuration.
+descriptors and in the {productName} configuration.
 
 An annotation, also called metadata, enables a declarative style of
 programming. You can specify information within a class file by using
 annotations. When the application or module is deployed, the information
-can either be used or overridden by the deployment descriptor. GlassFish
-Server supports annotation according to the following specifications:
+can either be used or overridden by the deployment descriptor. {productName} supports annotation according to the following specifications:
 
 * http://www.jcp.org/en/jsr/detail?id=250[JSR 250 Common Annotation
 Specification]
@@ -208,8 +204,7 @@ deployment descriptors have specified the `metadata-complete` attribute,
 annotations in the application or module are ignored.
 * Jakarta EE applications or modules can be fully annotated with metadata
 defined by the listed specifications. Annotation eliminates the need for
-Jakarta EE standard deployment descriptors. In most cases, the GlassFish
-Server deployment descriptors are also not needed.
+Jakarta EE standard deployment descriptors. In most cases, the {productName} deployment descriptors are also not needed.
 * Jakarta EE applications or modules can be partially annotated with some
 deployment information in standard deployment descriptors. In case of
 conflicts, deployment descriptor values supersede the annotated
@@ -240,7 +235,7 @@ The following topics are addressed here:
 
 ===== Types of Modules
 
-GlassFish Server supports the following types of modules:
+{productName} supports the following types of modules:
 
 * Web Module. A web module, also known as a web application, is a
 collection of servlets, EJBs, HTML pages, classes, and other resources
@@ -266,23 +261,20 @@ EJB components to access foreign enterprise information system (EIS)
 data. A connector module consists of all Java interfaces, classes, and
 native libraries for implementing a resource module, plus a resource
 deployment descriptor. A resource adapter archive (RAR) is the standard
-format for assembling connector modules. Each GlassFish Server connector
+format for assembling connector modules. Each {productName} connector
 has annotations or a deployment descriptor file (`ra.xml`).
 +
 After deploying a J2EE connector module, you must configure it as
-described in link:../application-development-guide/connectors.html#GSDVG00013[Developing Connectors] in GlassFish Server
-Open Source Edition Application Development Guide.
+described in link:../application-development-guide/connectors.html#GSDVG00013[Developing Connectors] in {productName} Application Development Guide.
 * Application Client Module. An application client module is a
 deployable software unit that consists of one or more classes, and
 application client deployment descriptors (`application-client.xml` and
 `glassfish-application-client.xml`). An application client JAR file
-applies to a GlassFish Server type of Jakarta EE client. An application
+applies to a {productName} type of Jakarta EE client. An application
 client supports the standard Jakarta EE Application Client specifications.
 * Lifecycle Module. A lifecycle module provides a means of running
-short-duration or long-duration Java-based tasks within the GlassFish
-Server environment. Lifecycle modules are not Jakarta EE standard modules.
-See link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners] in GlassFish Server
-Open Source Edition Application Development Guide for more information.
+short-duration or long-duration Java-based tasks within the {productName} environment. Lifecycle modules are not Jakarta EE standard modules.
+See link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
 
 [[beacu]][[GSDPG00308]][[module-based-deployment]]
 
@@ -344,11 +336,11 @@ directory, the Java optional package directory, or the
 application-specific class loader directory, use the `add-library`
 subcommand. You can then list the libraries with `list-libraries` and
 remove the libraries with `remove-library`. For more information about
-all these commands, see the GlassFish Server Open Source Edition
+all these commands, see the {productName}
 Reference Manual.
 
 For more information about class loaders, see link:../application-development-guide/class-loaders.html#GSDVG00003[Class
-Loaders] in GlassFish Server Open Source Edition Application Development
+Loaders] in {productName} Application Development
 Guide.
 
 
@@ -366,7 +358,7 @@ an application using the JAR Extension Mechanism Architecture.
 ==== Naming Standards
 
 Names of applications and individually-deployed modules must be unique
-within a GlassFish Server domain. Modules within an application must
+within a {productName} domain. Modules within an application must
 have unique names. In addition, for enterprise beans that use
 container-managed persistence (CMP), the `.dbschema` file names must be
 unique within an application.
@@ -376,7 +368,7 @@ file names, module names as found in the `module-name` portion of the
 `ejb-jar.xml` files, and EJB names as found in the `ejb-name` portion of
 the `ejb-jar.xml` files. This hierarchical naming scheme ensures that
 name collisions do not occur. The benefits of this naming practice apply
-not only to GlassFish Server, but to other Jakarta EE application servers
+not only to {productName}, but to other Jakarta EE application servers
 as well.
 
 The following topics are addressed here:
@@ -402,7 +394,7 @@ the `application.xml` file. For example:
 The Jakarta EE specification also defines the portable `module-name`
 element in the module standard deployment descriptors.
 
-GlassFish Server determines the application registration name according
+{productName} determines the application registration name according
 to the following order of precedence:
 
 1. The name specified at deployment time in the Administration Console
@@ -445,7 +437,7 @@ in a Directory Format].
 ==== Module and Application Versions
 
 Application and module versioning allows multiple versions of the same
-application to exist in a GlassFish Server domain, which simplifies
+application to exist in a {productName} domain, which simplifies
 upgrade and rollback tasks. At most one version of an application or
 module can be enabled on a server any given time. Versioning provides
 extensions to tools for deploying, viewing, and managing multiple
@@ -544,13 +536,13 @@ subcommand.
 
 ===== Versioning Restrictions and Limitations
 
-Module and application versioning in GlassFish Server is subject to the
+Module and application versioning in {productName} is subject to the
 following restrictions and limitations:
 
 * Use of the `--name` option is mandatory for modules and applications
 that use versioning. There is no automatic version identifier
 generation.
-* GlassFish Server does not recognize any relationship between versions
+* {productName} does not recognize any relationship between versions
 such as previous or later versions. All version relationships must be
 tracked manually.
 * There is no limit to the number of versions you can deploy except what
@@ -571,10 +563,10 @@ the same for the old and new versions.
 application name. This means that an older version's resources do not
 automatically refer to a newer version of the module or application.
 Therefore, you must explicitly create resources for a newer version of a
-module or application. GlassFish Server ignores duplicate exported
+module or application. {productName} ignores duplicate exported
 global resources and lets deployment succeed.
 * OSGi already has its own versioning system. Therefore, when you deploy
-an OSGi bundle, GlassFish Server ignores any version information
+an OSGi bundle, {productName} ignores any version information
 provided with the name but permits the deployment to succeed with
 warnings.
 
@@ -582,9 +574,9 @@ warnings.
 
 === About Assembly and Deployment Events
 
-The deployment tools that are provided by GlassFish Server can be used
+The deployment tools that are provided by {productName} can be used
 by any user authorized as an administrator to deploy applications and
-modules into any GlassFish Server environment. However, effective
+modules into any {productName} environment. However, effective
 application deployment requires planning and care. Only the developer
 knows exactly what is required by an application, so the developer is
 responsible for initial assembly and deployment.
@@ -593,10 +585,10 @@ responsible for initial assembly and deployment.
 the deployment descriptors or equivalent annotations using Java
 standards and tools.
 +
-Details of the GlassFish Server deployment descriptors are contained in
-link:dd-files.html#giida[GlassFish Server Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the GlassFish Server
-Deployment Descriptors]. The GlassFish Server sample applications
+Details of the {productName} deployment descriptors are contained in
+link:dd-files.html#giida[{productName} Deployment Descriptor Files]
+and link:dd-elements.html#beaqi[Elements of the {productName}
+Deployment Descriptors]. The {productName} sample applications
 contain deployment descriptors that can be used as templates for
 developing deployment descriptors.
 2. Assembly. The developer assembles the archive file(s) using Java
@@ -604,7 +596,7 @@ standards and tools, such as the `jar` command. The application or
 module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on
 naming, see link:#gihzk[Naming Standards].
 +
-There are no GlassFish Server issues to consider.
+There are no {productName} issues to consider.
 3. Test Deployment. The developer performs a test deployment of the
 archive. For instructions, see link:deploying-applications.html#gijmq[To
 Deploy an Application or Module].
@@ -629,7 +621,7 @@ the problem, depending on what the problem is.
 
 === About Deployment Tools
 
-GlassFish Server provides tools for assembling and deploying a module or
+{productName} provides tools for assembling and deploying a module or
 application.
 
 The following topics are addressed here:
@@ -644,7 +636,7 @@ The following topics are addressed here:
 
 ==== Administration Console
 
-The GlassFish Server Administration Console is a browser-based utility
+The {productName} Administration Console is a browser-based utility
 that features a graphical interface that includes extensive online help
 for the administrative tasks. The format for starting the Administration
 Console in a web browser is `http://`hostname`:`port. For example:
@@ -665,11 +657,11 @@ link in the See Also list.
 
 ==== The `asadmin` Utility
 
-The GlassFish Server `asadmin` utility is a command-line tool that
+The {productName} `asadmin` utility is a command-line tool that
 invokes subcommands for identifying the operation or task that you want
 to perform. You can run `asadmin` commands either from a command prompt
 or from a script. The format for starting the `asadmin` utility on the
-command line is as-install`/bin/asadmin` subcommand --option. For
+command line is as-install``/bin/asadmin`` subcommand --option. For
 example:
 
 [source]
@@ -679,8 +671,8 @@ asadmin list-applications --type web
 
 Application deployment commands are listed in
 link:asadmin-deployment-subcommands.html#gihzw[The `asadmin` Deployment
-Subcommands]. All GlassFish Server `asadmin` subcommands are documented
-in the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference
+Subcommands]. All {productName} `asadmin` subcommands are documented
+in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
 Manual].
 
 For the most part, you can perform the same administrative tasks by
@@ -697,8 +689,7 @@ asadmin help list-applications
 ----
 
 For additional information on the `asadmin` utility, see
-"link:../administration-guide/general-administration.html#GSADG00530[Using the `asadmin` Utility]" in GlassFish Server Open
-Source Edition Administration Guide and the
+"link:../administration-guide/general-administration.html#GSADG00530[Using the `asadmin` Utility]" in {productName} Administration Guide and the
 link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
 [[giijq]][[GSDPG00329]][[netbeans-ide]]
@@ -762,12 +753,12 @@ The following product documentation might be relevant to some aspects of
 application deployment:
 
 * link:../application-development-guide/toc.html#GSDVG[
-GlassFish Server Open Source Edition Application Development Guide]
+{productName} Application Development Guide]
 * link:../administration-guide/toc.html#GSADG[
-GlassFish Server Open Source Edition Administration Guide]
+{productName} Administration Guide]
 * link:../add-on-component-development-guide/toc.html#GSACG[
-GlassFish Server Open Source Edition Add-On Component Development Guide]
+{productName} Add-On Component Development Guide]
 * link:../reference-manual/toc.html#GSRFM[
-GlassFish Server Open Source Edition Reference Manual]
-* GlassFish Server Administration Console online help
+{productName} Reference Manual]
+* {productName} Administration Console online help
 

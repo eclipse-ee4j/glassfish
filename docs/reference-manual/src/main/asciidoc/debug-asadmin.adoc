@@ -14,7 +14,7 @@ not alter the content in any way.
 
 == debug-asadmin
 
-Variant of the `asadmin` utility for performing administrative tasks for Oracle {productName}. This variant
+Variant of the `asadmin` utility for performing administrative tasks for {productName}. This variant
 is useful for debugging local admin commands the launching of {productName}. It suspends immediately
 waiting for a debug connection to port 9008.
 
@@ -41,8 +41,7 @@ debug-asadmin [--host host]
 
 === Description
 
-Use the `debug-asadmin` utility to debug local admin commands and the launching of the Oracle
-GlassFish Server. See the `asadmin` command for full documentation.
+Use the `debug-asadmin` utility to debug local admin commands and the launching of the {productName}. See the `asadmin` command for full documentation.
 
 
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]

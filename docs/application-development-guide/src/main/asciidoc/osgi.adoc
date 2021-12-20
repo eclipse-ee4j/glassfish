@@ -12,27 +12,26 @@ prev=lifecycle-listeners.html
 [[developing-osgi-enabled-java-ee-applications]]
 == 13 Developing OSGi-enabled Jakarta EE Applications
 
-This chapter describes the features and interfaces that GlassFish Server
+This chapter describes the features and interfaces that {productName}
 provides to develop OSGi-enabled enterprise applications. This chapter
 includes the following sections:
 
-* link:#gkpay[Overview of OSGi Application and GlassFish Server]
-* link:#gkqff[Developing OSGi Application Bundles for GlassFish Server]
-* link:#gkveh[Deploying OSGi Bundles in GlassFish Server]
+* link:#gkpay[Overview of OSGi Application and {productName}]
+* link:#gkqff[Developing OSGi Application Bundles for {productName}]
+* link:#gkveh[Deploying OSGi Bundles in {productName}]
 
 [[gkpay]][[GSDVG00173]][[overview-of-osgi-application-and-glassfish-server]]
 
-=== Overview of OSGi Application and GlassFish Server
+=== Overview of OSGi Application and {productName}
 
 {productName} is fully-compliant with Jakarta EE 10, so it provides the
 latest Jakarta EE APIs and frameworks. It is built using OSGi technology,
 and includes as its OSGi module management subsystem the
 http://felix.apache.org[Apache Felix OSGi framework]
 (`http://felix.apache.org`), which is a fully-compliant implementation
-of the OSGi Service Platform R4 Version 4.3 specification. GlassFish
-Server supports deployment of OSGi-based applications using this
+of the OSGi Service Platform R4 Version 4.3 specification. {productName} supports deployment of OSGi-based applications using this
 framework. OSGi applications can make use of core as well as enterprise
-OSGi features. GlassFish Server makes available many of its Jakarta EE
+OSGi features. {productName} makes available many of its Jakarta EE
 platform services, such as the transaction service, HTTP service, JDBC
 Service and JMS, as OSGi services. It also enables use of Jakarta EE
 programming model in OSGi applications, so enterprise Java application
@@ -41,7 +40,7 @@ applications. See link:#glhek[Benefits of Using OSGi in Enterprise Java
 Applications] for more information.
 
 OSGi applications are deployed as one or more OSGi bundles, and the
-GlassFish Server deployment and administration infrastructure enables
+{productName} deployment and administration infrastructure enables
 you to deploy and manage your OSGi bundles. This chapter classifies OSGi
 bundles into two categories based on the features they use:
 
@@ -49,7 +48,7 @@ bundles into two categories based on the features they use:
 EE components. See link:#gkupd[Developing Plain OSGi Bundles].
 * Hybrid Application Bundles - bundles that are an OSGi bundle as wells
 as a Jakarta EE module. At runtime, such modules have both an OSGi bundle
-context and a Jakarta EE context. GlassFish Server supports the following
+context and a Jakarta EE context. {productName} supports the following
 hybrid application bundles:
 
 ** Web Application Bundles (or WABs) , see link:#gkunr[Developing Web
@@ -87,24 +86,23 @@ system used together allow a system to be more agile during development
 as well as in production. It makes them better suited to run in an
 Platform-as-a-Service (PaaS) environment.
 
-With GlassFish Server, you do not have to chose one of the two
+With {productName}, you do not have to chose one of the two
 platforms. A hybrid approach like OSGi enabling your Jakarta EE
 applications allows new capabilities to applications hitherto
 unavailable to applications built using just one of the two platforms.
 
 [[gkqff]][[GSDVG00174]][[developing-osgi-application-bundles-for-glassfish-server]]
 
-=== Developing OSGi Application Bundles for GlassFish Server
+=== Developing OSGi Application Bundles for {productName}
 
-GlassFish Server enables interaction between OSGi components and Jakarta EE
+{productName} enables interaction between OSGi components and Jakarta EE
 components. OSGi services managed by the OSGi framework can invoke Java
 EE components managed by the Jakarta EE container and vice versa. For
 example, developers can declaratively export EJBs as OSGi services
 without having to write any OSGi code. This allows any plain OSGi
 component, which is running without the Jakarta EE context, to discover the
 EJB and invoke it. Similarly, Jakarta EE components can locate OSGi
-services provided by plain OSGi bundles and use them as well. GlassFish
-Server extends the Jakarta EE Context and Dependency Injection (CDI)
+services provided by plain OSGi bundles and use them as well. {productName} extends the Jakarta EE Context and Dependency Injection (CDI)
 framework to make it easier for Jakarta EE components to consume dynamic
 OSGi services in a type-safe manner.
 
@@ -122,9 +120,9 @@ code can rely on the Jakarta EE container to inject the required services
 as well. Unfortunately, neither of them works when the code runs outside
 a Jakarta EE context. An example of such code is the `BundleActivator` of
 an OSGi bundle. For such code to access Jakarta EE platform services,
-GlassFish Server makes key services and resources of the underlying Java
+{productName} makes key services and resources of the underlying Java
 EE platform available as OSGi services. Thus, an OSGi bundle deployed in
-GlassFish Server can access these services using OSGi Service look-up
+{productName} can access these services using OSGi Service look-up
 APIs or by using a white board pattern. The following Jakarta EE services
 are available as OSGi services:
 
@@ -137,7 +135,7 @@ are available as OSGi services:
 
 ===== HTTP Service
 
-The GlassFish Server web container is made available as a service for
+The {productName} web container is made available as a service for
 OSGi users who do not use OSGi Web Application Bundles (WABs). This
 service is made available using the standard OSGi/HTTP service
 specification, which is a light API that predates the concept of a web
@@ -147,14 +145,14 @@ around them in the form of a `HttpContext`. This simple API can be used
 to build feature-rich web application, such as the Felix Web Console for
 example.
 
-The GlassFish Server web container has one or more virtual servers. A
+The {productName} web container has one or more virtual servers. A
 virtual server has one or more web application deployed in it. Each web
 application has a distinct context path. Each virtual server has a set
 of HTTP listeners. Each HTTP listener listens on a particular port. When
 multiple virtual servers are present, one of them is treated as the
 default virtual server. Every virtual server comes configured with a
 default web application. The default web application is used to serve
-static content from the `docroot` of GlassFish Server. This default web
+static content from the `docroot` of {productName}. This default web
 application uses `/` as the context path. A web application contains
 static and dynamic resources. Each virtual server is mapped to an
 `org.osgi.services.http.HttpService` instance. When there are multiple
@@ -165,14 +163,14 @@ service property named `VirtualServer`, whose value is the name of the
 virtual server. The service corresponding to default virtual server has
 the highest ranking, so when looking up a service of type `HttpService`
 without any additional criteria returns the `HttpService` corresponding
-to the default virtual server. In a typical GlassFish Server
+to the default virtual server. In a typical {productName}
 installation, the default virtual server is configured to listen on port
 8080 for the HTTP protocol and port 8181 for the HTTPS protocol.
 
 The context path `/` is reserved for the default web application. Every
 resource and servlet registered using the `registerResource()` and
 `registerServlet()` methods of `HttpService` are made available under a
-special context path named `/osgi` in the virtual server. The `/osgi`
+special context path named ``/osgi`` in the virtual server. The ``/osgi``
 context path can be changed to some other value by setting an
 appropriate value in the OSGi configuration property or in a system
 property called `org.glassfish.osgihttp.ContextPath`.
@@ -245,15 +243,15 @@ context.getService(txRef);
 
 ===== JDBC Data Source Service
 
-Any JDBC data source created in GlassFish Server is automatically made
+Any JDBC data source created in {productName} is automatically made
 available as an OSGi Service; therefore, OSGi bundles can track
 availability of JDBC data sources using the `ServiceTracking` facility
 of the OSGi platform. The life of the OSGi service matches that of the
-underlying data source created in GlassFish Server. For instructions on
-administering JDBC resources in GlassFish Server, see the
-link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration Guide].
+underlying data source created in {productName}. For instructions on
+administering JDBC resources in {productName}, see the
+link:../administration-guide/toc.html#GSADG[{productName} Administration Guide].
 
-GlassFish Server registers each JDBC data source as an OSGi service with
+{productName} registers each JDBC data source as an OSGi service with
 `objectClass = "javax.sql.DataSource"` and a service property called
 `jndi-name`, which is set to the JNDI name of the data source. Here is a
 code sample that looks up a data source service:
@@ -309,7 +307,7 @@ Web Application specification , which is part of the OSGi Service
 Platform, Enterprise Specification, Release 4, Version 4.3. A WAB is
 packaged as an OSGi bundle, so all the OSGi packaging rules apply to WAB
 packaging. When a WAB is not packaged like a WAR, the OSGi Web Container
-of GlassFish Server maps the WAB to the hierarchical structure of web
+of {productName} maps the WAB to the hierarchical structure of web
 application using the following rules:
 
 * The root of the WAB corresponds to the `docroot` of the web
@@ -378,7 +376,7 @@ Then the OSGi metadata for the WAB as specified in
 
 Since a WAB has a valid `Bundle-Context`, it can consume OSGi services.
 Although you are free to use any OSGi API to locate OSGi services,
-GlassFish Server makes it easy for WAB users to use OSGi services by
+{productName} makes it easy for WAB users to use OSGi services by
 virtue of extending the Context and Dependency Injection (CDI)
 framework. Here's an example of the injection of an OSGi Service into a
 Servlet:
@@ -400,7 +398,7 @@ Extension for WABs].
 
 ===== OSGi CDI Extension for WABs
 
-GlassFish Server includes a CDI extension that enables web applications,
+{productName} includes a CDI extension that enables web applications,
 such as servlets, that are part of WABs to express a type-safe
 dependency on an OSGi service using CDI APIs. An OSGi service can be
 provided by any OSGi bundle without any knowledge of Jakarta EE/CDI, and
@@ -460,8 +458,7 @@ BarServlet could look like:
 
 Another type of hybrid application bundle is the EJB Application Bundle.
 When an EJB Jar is packaged with additional OSGi metadata and deployed
-as an OSGi bundle it is called an EJB Application Bundle. GlassFish
-Serversupports only packaging the OSGi bundle as a simple JAR file with
+as an OSGi bundle it is called an EJB Application Bundle. {productName}supports only packaging the OSGi bundle as a simple JAR file with
 required OSGi metadata, just as you would package an `ejb-jar` file.
 
 [[gkvck]][[GSDVG00326]][[required-ejb-metadata]]
@@ -500,7 +497,7 @@ MANIFEST.MF:
 
 Since an EJB has a valid Bundle-Context, it can consume OSGi services.
 Although you are free to use any OSGi API to locate OSGi services,
-GlassFish Server makes it easy to use OSGi services by virtue of
+{productName} makes it easy to use OSGi services by virtue of
 extending the Context and Dependency Injection (CDI) framework. Here's
 an example of injection of an OSGi Service into a servlet:
 
@@ -522,7 +519,7 @@ CDI Extension With EJB Bundles].
 
 ===== Using the OSGi CDI Extension With EJB Bundles
 
-GlassFish Server includes a CDI extension that enables EJB application
+{productName} includes a CDI extension that enables EJB application
 bundles to express a type-safe dependency on an OSGi Service using CDI
 APIs. An OSGi service can be provided by any OSGi bundle without any
 knowledge of Jakarta EE/CDI, and they are allowed to be injected
@@ -541,11 +538,11 @@ in the OSGi service registry.
 
 [[gkveh]][[GSDVG00175]][[deploying-osgi-bundles-in-glassfish-server]]
 
-=== Deploying OSGi Bundles in GlassFish Server
+=== Deploying OSGi Bundles in {productName}
 
 For instruction on deploying OSGi bundle, see
 "link:../application-deployment-guide/deploying-applications.html#GSDPG00073[
 OSGi Bundle Deployment Guidelines]"
-in GlassFish Server Open Source Edition Application Deployment Guide.
+in {productName} Application Deployment Guide.
 
 

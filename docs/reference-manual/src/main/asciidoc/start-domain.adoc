@@ -46,7 +46,7 @@ This subcommand is supported in local mode only.
 
 [NOTE]
 ====
-In Oracle GlassFish Server, the `start-domain` subcommand prompts for a
+In {productName}, the `start-domain` subcommand prompts for a
 new admin user password if no password has been set for the admin user.
 Additionally, the admin user password must not be blank if secure
 administration is enabled; otherwise, the `start-domain` subcommand
@@ -171,10 +171,8 @@ asadmin-options::
 === Operands
 
 domain-name::
-  The unique name of the domain you want to start.
-+
-  This operand is optional if only one domain exists in the
-  {productName} installation.
+  The unique name of the domain you want to start. +
+  This operand is optional if only one domain exists in the {productName} installation.
 
 [[sthref2129]]
 
@@ -191,8 +189,8 @@ This example starts `mydomain4` in the default domains directory.
 asadmin> start-domain mydomain4
 Waiting for DAS to start. ...........
 Started domain: mydomain4
-Domain location: /myhome/glassfishv3/glassfish/domains/mydomain4
-Log file: /myhome/glassfishv3/glassfish/domains/mydomain4/logs/server.log
+Domain location: /myhome/glassfish7/glassfish/domains/mydomain4
+Log file: /myhome/glassfish7/glassfish/domains/mydomain4/logs/server.log
 Admin port for the domain: 4848
 Command start-domain executed successfully.
 ----

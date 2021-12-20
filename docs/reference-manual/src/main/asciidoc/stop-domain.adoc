@@ -54,7 +54,7 @@ asadmin-options::
 `--domaindir`::
   Specifies the directory of the domain that is to be stopped. If
   specified, the path must be accessible in the file system. If not
-  specified, the domain in the default as-install`/domains` directory is
+  specified, the domain in the default as-install``/domains`` directory is
   stopped.
 `--force`::
   Specifies whether the domain is forcibly stopped immediately. +

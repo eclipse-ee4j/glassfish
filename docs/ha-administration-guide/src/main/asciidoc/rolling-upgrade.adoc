@@ -22,7 +22,7 @@ With a rolling upgrade, users are unaware that the upgrade occurs.
 
 For more information about application versions and how they are
 identified, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
-GlassFish Server Open Source Edition Application Deployment Guide.
+{productName} Application Deployment Guide.
 
 In a clustered environment, a rolling upgrade redeploys an application
 with a minimal loss of service and sessions. A session is any artifact
@@ -35,7 +35,7 @@ that can be replicated, for example:
 * Stateful session bean
 
 A rolling upgrade can take place under light to moderate loads. The
-procedure requires about 10-15 minutes for each GlassFish Server
+procedure requires about 10-15 minutes for each {productName}
 instance.
 
 

@@ -10,7 +10,7 @@ prev=loe.html
 [[list-of-tables]]
 == List of Tables
 
-* link:class-loaders.html#fvxzq[2-1 Oracle GlassFish Server Class
+* link:class-loaders.html#fvxzq[2-1 {productName} Class
 Loaders]
 * link:securing-apps.html#sthref6[4-1 Predefined System Properties]
 * link:securing-apps.html#sthref8[4-2 Message Security Provider

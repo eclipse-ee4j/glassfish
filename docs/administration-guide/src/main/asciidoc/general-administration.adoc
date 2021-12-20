@@ -14,7 +14,7 @@ prev=part-runtime-admin.html
 == 2 General Administration
 
 This chapter provides instructions for performing general administration
-tasks in the GlassFish Server Open Source Edition 7 environment by
+tasks in the {productName} 7 environment by
 using the `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -24,7 +24,7 @@ The following topics are addressed here:
 * link:#CHDJBJDA[Using Configuration Modularity]
 * link:#gixps[Administering Resources]
 * link:#ggocm[Listing Various System Elements]
-* link:#gjipx[Using REST Interfaces to Administer GlassFish Server]
+* link:#gjipx[Using REST Interfaces to Administer {productName}]
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -34,8 +34,7 @@ online help.
 
 === Using the `asadmin` Utility
 
-Use the `asadmin` utility to perform administrative tasks for GlassFish
-Server from the command line or from a script. You can use this utility
+Use the `asadmin` utility to perform administrative tasks for {productName} from the command line or from a script. You can use this utility
 instead of the Administration Console interface.
 
 The following topics are addressed here:
@@ -54,7 +53,7 @@ Subcommand]
 
 ==== Path to the `asadmin` Utility
 
-The `asadmin` utility is located in the as-install`/bin` directory. To
+The `asadmin` utility is located in the as-install``/bin`` directory. To
 run the `asadmin` utility without specifying the path, ensure that this
 directory is in your path.
 
@@ -89,10 +88,9 @@ in to the machine that hosts the domain.
 * A remote subcommand is always run by connecting to a DAS and running
 the subcommand there. A running DAS is required.
 
-For a list of the subcommands for this release of GlassFish Server, see
+For a list of the subcommands for this release of {productName}, see
 Section 1 of the
-https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[GlassFish
-Server Open Source Edition Reference Manual].
+https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[{productName} Reference Manual].
 
 [[ghvyd]][[GSADG00632]][[asadmin-utility-options-and-subcommand-options]]
 
@@ -115,14 +113,12 @@ link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 subcommand, not the `asadmin` utility. Subcommand options must follow
 the subcommand. For a description of a subcommand's options, see the
 entry for the subcommand in the
-https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[GlassFish
-Server Open Source Edition Reference Manual].
+https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[{productName} Reference Manual].
 +
 
 [NOTE]
 ====
-Not all subcommand options are supported for this release of GlassFish
-Server. If you specify an unsupported option, a syntax error does not
+Not all subcommand options are supported for this release of {productName}. If you specify an unsupported option, a syntax error does not
 occur. Instead, the command runs successfully and the unsupported option
 is silently ignored.
 ====
@@ -235,11 +231,10 @@ Command list-applications executed successfully.
 
 ==== To Display Help Information for the `asadmin` Utility or a Subcommand
 
-GlassFish Server provides help information about the syntax, purpose,
+{productName} provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
 information is written in the style of UNIX platform man pages. This
-help information is also available in the link:../reference-manual/toc.html#GSRFM[GlassFish Server
-Open Source Edition Reference Manual].
+help information is also available in the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 1. If you are displaying help information for a remote subcommand,
 ensure that the server is running.
@@ -307,7 +302,7 @@ Starting a multimode session does not require a running DAS.
 apply throughout the multimode session.
 3. In a multimode session, the `asadmin>` prompt is displayed on the
 command line. You can now type `asadmin` subcommands at this prompt to
-administer GlassFish Server.
+administer {productName}.
 
 [[GSADG00103]][[givuq]]
 Example 2-6 Starting a Multimode Session With `asadmin` Utility Options
@@ -381,8 +376,7 @@ combinations:
 
 [CAUTION]
 ====
-Do not type Ctrl-C to end a multimode session. If a domain or GlassFish
-Server instance is started from the multimode session, typing Ctrl-C
+Do not type Ctrl-C to end a multimode session. If a domain or {productName} instance is started from the multimode session, typing Ctrl-C
 kills the domain or instance process.
 ====
 
@@ -682,8 +676,8 @@ typing `asadmin help delete-system-property` at the command line.
 
 === Using Configuration Modularity
 
-With configuration modularity in GlassFish Server Open Source Edition,
-new modules can be added to GlassFish Server distributions without
+With configuration modularity in {productName},
+new modules can be added to {productName} distributions without
 modifying the global `domain.xml` configuration file. Default
 configuration data for modules is stored in the modules themselves,
 rather than in `domain.xml`, and loaded when needed.
@@ -797,7 +791,7 @@ typing `asadmin help get-active-module-config` at the command line.
 === Administering Resources
 
 This section contains instructions for integrating resources into the
-GlassFish Server environment. Information about administering specific
+{productName} environment. Information about administering specific
 resources, such as JDBC, is contained in other chapters.
 
 [[ggoeh]][[GSADG00312]][[to-add-resources-from-an-xml-file]]
@@ -810,9 +804,9 @@ supported: JDBC connection pool and resource, JMS, JNDI, and JavaMail
 resources, custom resource, connector resource and work security map,
 admin object, and resource adapter configuration.
 
-The XML file must reside in the domain-dir`/config` directory. If you
+The XML file must reside in the domain-dir``/config`` directory. If you
 specify a relative path or simply provide the name of the XML file, this
-subcommand will prepend domain-dir`/config` to this operand.
+subcommand will prepend domain-dir``/config`` to this operand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Add resources from an XML file by using the
@@ -820,7 +814,7 @@ link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcomma
 +
 Information about properties for the subcommand is included in this help
 page.
-3. Restart GlassFish Server.
+3. Restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -851,7 +845,7 @@ typing `asadmin help add-resources` at the command line.
 
 The following topics are addressed here:
 
-* link:#ghhox[To Display the GlassFish Server Version]
+* link:#ghhox[To Display the {productName} Version]
 * link:#ggocy[To List Applications]
 * link:#ggocv[To List Containers]
 * link:#ghlgf[To List Modules]
@@ -861,10 +855,10 @@ The following topics are addressed here:
 
 [[ghhox]][[GSADG00316]][[to-display-the-glassfish-server-version]]
 
-==== To Display the GlassFish Server Version
+==== To Display the {productName} Version
 
 Use the `version` subcommand in remote mode to display information about
-the GlassFish Server version for a particular server. If the subcommand
+the {productName} version for a particular server. If the subcommand
 cannot communicate with the server by using the specified login
 (user/password) and target (host/port) information, then the local
 version is displayed along with a warning message.
@@ -876,12 +870,12 @@ subcommand.
 [[GSADG00114]][[ghjnb]]
 Example 2-22 Displaying Version Information
 
-This example displays the version of GlassFish Server on the local host.
+This example displays the version of {productName} on the local host.
 
 [source]
 ----
 asadmin> version
-Version = Oracle GlassFish Server 3.0.1 (build 19)
+Version = Eclipse GlassFish 7.0.0 (build 19)
 Command version executed successfully.
 ----
 
@@ -968,7 +962,7 @@ typing `asadmin help list-containers` at the command line.
 ==== To List Modules
 
 Use the `list-modules` subcommand in remote mode to list the modules
-that are accessible to the GlassFish Server module subsystem. The status
+that are accessible to the {productName} module subsystem. The status
 of each module is included. Possible statuses include NEW and READY.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -1120,21 +1114,21 @@ Command show-component-status executed successfully.
 
 [[gjipx]][[GSADG00534]][[using-rest-interfaces-to-administer-glassfish-server]]
 
-=== Using REST Interfaces to Administer GlassFish Server
+=== Using REST Interfaces to Administer {productName}
 
-GlassFish Server provides representational state transfer (REST)
+{productName} provides representational state transfer (REST)
 interfaces to enable you to access monitoring and configuration data for
-GlassFish Server, including data that is provided by newly installed
+{productName}, including data that is provided by newly installed
 add-on components.
 
-You can access the GlassFish Server REST interfaces through client
+You can access the {productName} REST interfaces through client
 applications such as:
 
 * Web browsers
 * http://curl.haxx.se/[cURL]
 * http://www.gnu.org/software/wget/[GNU Wget]
 
-You can also use the GlassFish Server REST interfaces in REST client
+You can also use the {productName} REST interfaces in REST client
 applications that are developed in languages such as:
 
 * JavaScript
@@ -1143,7 +1137,7 @@ applications that are developed in languages such as:
 * Java
 * JavaFX
 
-The implementation of the GlassFish Server REST interfaces is based on
+The implementation of the {productName} REST interfaces is based on
 https://eclipse-ee4j.github.io/jersey/[project Jersey]. Project Jersey is the
 reference implementation of http://jcp.org/en/jsr/summary?id=311[
 Java Specification Request (JSR) 311: JAX-RS: The Java API for RESTful Web Services].
@@ -1154,12 +1148,11 @@ https://jakarta.ee/specifications/restful-ws/
 
 The following topics are addressed here:
 
-* link:#gjipk[Using REST URLs to Administer GlassFish Server]
-* link:#gjijx[Using REST Resource Methods to Administer GlassFish
-Server]
+* link:#gjipk[Using REST URLs to Administer {productName}]
+* link:#gjijx[Using REST Resource Methods to Administer {productName}]
 * link:#gjjdg[Resources for `asadmin` Subcommands That Perform Non-CRUD
 Operations]
-* link:#gjiut[Securing GlassFish Server REST Interfaces]
+* link:#gjiut[Securing {productName} REST Interfaces]
 * link:#gjijz[Formats for Resource Representation of Configuration
 Objects]
 * link:#gkwdd[Formats for Resource Representation of Monitoring Objects]
@@ -1168,12 +1161,11 @@ Objects]
 
 [[gjipk]][[GSADG00707]][[using-rest-urls-to-administer-glassfish-server]]
 
-==== Using REST URLs to Administer GlassFish Server
+==== Using REST URLs to Administer {productName}
 
 Each object in the configuration and monitoring object trees is
 represented as a REST resource that is accessible through an HTTP
-uniform resource locator (URL). Access to REST resources for GlassFish
-Server monitoring and configuration data requires a running DAS.
+uniform resource locator (URL). Access to REST resources for {productName} monitoring and configuration data requires a running DAS.
 
 [[gkwhy]][[GSADG00634]][[rest-urls-to-resources-for-configuration-and-monitoring-objects]]
 
@@ -1198,7 +1190,7 @@ path::
 
 [NOTE]
 ====
-The path to a GlassFish Server instance is ``servers/server/``instance-name,
+The path to a {productName} instance is ``servers/server/``instance-name,
 where instance-name is the name of the instance.
 For the DAS, instance-name is `server` and the path is `servers/server/server`.
 ====
@@ -1209,7 +1201,7 @@ For more information, see the following documentation:
 * link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
 * link:overview.html#giusb[How Dotted Names Work for Configuration]
 
-If the URL to a REST resource for GlassFish Server monitoring or
+If the URL to a REST resource for {productName} monitoring or
 configuration data is opened in a web browser, the browser displays a
 web page that contains the following information about the resource:
 
@@ -1273,9 +1265,9 @@ can monitor the log entries that were added in the last 10 seconds.
 
 [[gjijx]][[GSADG00708]][[using-rest-resource-methods-to-administer-glassfish-server]]
 
-==== Using REST Resource Methods to Administer GlassFish Server
+==== Using REST Resource Methods to Administer {productName}
 
-The GlassFish Server REST interfaces support methods for accessing
+The {productName} REST interfaces support methods for accessing
 objects in the monitoring and configuration object trees.
 
 The following table shows the REST methods for administering monitoring
@@ -1346,14 +1338,14 @@ Each `POST` method and `DELETE` method that a REST resource supports has
 an equivalent `asadmin` subcommand. The parameters of a `POST` method or
 a `DELETE` method correspond to the options of the method's equivalent
 `asadmin` subcommand. For information about the options of `asadmin`
-subcommand, see the olink:GSRFM[GlassFish Server Open Source Edition
+subcommand, see the olink:GSRFM[{productName}
 Reference Manual].
 ====
 
 
 1. Ensure that the server is running.
 +
-Operations on REST resources for GlassFish Server data require a running
+Operations on REST resources for {productName} data require a running
 server.
 2. Use the `GET` method on the REST resource that represents the
 object.
@@ -1440,7 +1432,7 @@ Configuration Objects].
 
 1. Ensure that the server is running.
 +
-Operations on REST resources for GlassFish Server data require a running
+Operations on REST resources for {productName} data require a running
 server.
 2. Use the `GET` method on the REST resource that represents the
 object.
@@ -1510,7 +1502,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 
 1. Ensure that the server is running.
 +
-Operations on REST resources for GlassFish Server data require a running
+Operations on REST resources for {productName} data require a running
 server.
 2. Determine the acceptable message parameters for the `POST` method of
 the resource that represents the parent of the object.
@@ -1625,7 +1617,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 ===== To Update an Object in the Tree
 
 1. Ensure that the server is running.
-Operations on REST resources for GlassFish Server data require a running server.
+Operations on REST resources for {productName} data require a running server.
 
 2. Determine the acceptable message parameters for the `POST` method of
 the resource that represents the object.
@@ -1746,7 +1738,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 
 1. Ensure that the server is running.
 +
-Operations on REST resources for GlassFish Server data require a running
+Operations on REST resources for {productName} data require a running
 server.
 2. Confirm that the object can be deleted.
 +
@@ -1852,7 +1844,7 @@ http://localhost:4848/management/domain/resources/jdbc-resource
 
 ==== Resources for `asadmin` Subcommands That Perform Non-CRUD Operations
 
-The GlassFish Server REST interfaces also support operations other than
+The {productName} REST interfaces also support operations other than
 create, read, update, and delete (CRUD) operations, for example:
 
 * State management
@@ -1874,9 +1866,9 @@ operations on the node:
 
 [[gjiut]][[GSADG00710]][[securing-glassfish-server-rest-interfaces]]
 
-==== Securing GlassFish Server REST Interfaces
+==== Securing {productName} REST Interfaces
 
-The GlassFish Server REST interfaces support the following
+The {productName} REST interfaces support the following
 authentication schemes for securing the REST interfaces:
 
 * Basic authentication over a secure connection
@@ -1892,7 +1884,7 @@ the URLs to REST resources and provide a user name and password.
 ===== Setting Up Basic Authentication Over a Secure Connection
 
 Setting up basic authentication over a secure connection to secure
-GlassFish Server REST interfaces involves the following sequence of
+{productName} REST interfaces involves the following sequence of
 tasks:
 
 1. Adding an `admin-realm` user to the `asadmin` user group
@@ -1901,10 +1893,8 @@ tasks:
 For information about how to perform these tasks from the command line,
 see the following documentation:
 
-* "link:../security-guide/user-security.html#GSSCG00110[To Create an Authentication Realm]" in GlassFish
-Server Open Source Edition Security Guide
-* "link:../security-guide/user-security.html#GSSCG00118[To Create a File User]" in GlassFish Server Open
-Source Edition Security Guide
+* "link:../security-guide/user-security.html#GSSCG00110[To Create an Authentication Realm]" in {productName} Security Guide
+* "link:../security-guide/user-security.html#GSSCG00118[To Create a File User]" in {productName} Security Guide
 * link:http_https.html#ggnbj[To Configure an HTTP Listener for SSL]
 
 For information about how to perform these tasks by using the
@@ -1925,7 +1915,7 @@ client must use session tokens for authentication.
 
 1. Request a session token by using the `GET` method on the resource at
 `http://`host`:`port`/management/sessions`.
-GlassFish Server uses basic authentication to authenticate the client,
+{productName} uses basic authentication to authenticate the client,
 generates a session token, and passes the token to the client.
 
 2. In each subsequent request that requires authentication, use the
@@ -1947,14 +1937,14 @@ after 30 minutes of inactivity.
 
 ==== Formats for Resource Representation of Configuration Objects
 
-The GlassFish Server REST interfaces represent resources for
+The {productName} REST interfaces represent resources for
 configuration objects in the following formats:
 
 * http://www.json.org/[JSON]
 * XML
 * HTML
 
-GlassFish Server enables you to specify the resource representation
+{productName} enables you to specify the resource representation
 through the filename extension in the URL or through the HTTP header:
 
 * To specify the resource representation through the filename extension
@@ -2512,7 +2502,7 @@ DAS is running on the local host and the HTTP port for administration is
 
 ==== Formats for Resource Representation of Monitoring Objects
 
-The GlassFish Server REST interfaces represent resources for monitoring
+The {productName} REST interfaces represent resources for monitoring
 data in the following formats:
 
 * http://www.json.org/[JSON]
@@ -2973,7 +2963,7 @@ class loader statistics."]
 
 ==== Formats for Resource Representation of Log File Details
 
-The GlassFish Server REST interfaces represent resources for log file
+The {productName} REST interfaces represent resources for log file
 details in the following formats:
 
 * http://www.json.org/[JSON]
@@ -3034,22 +3024,21 @@ product-name::
   The application that created the log message, for example, `glassfish7`.
 logger-class-name::
   The fully qualified name of the Java class of the logger class that
-  created the log message. Each component of GlassFish Server provides
+  created the log message. Each component of {productName} provides
   its own logger class. For detailed information about the names of
-  logger classes in GlassFish Server, see link:logging.html#gkres[Logger
+  logger classes in {productName}, see link:logging.html#gkres[Logger
   Namespaces].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::
   The name of the thread that created the message.
 message-id::
-  A unique identifier for the message. For messages from GlassFish
-  Server, this identifier consists of a module code and a numerical
+  A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
-  and some `INFO` messages from GlassFish Server contain a message
+  and some `INFO` messages from {productName} contain a message
   identifier. For more information, see the
   link:../error-messages-reference/toc.html#GSEMR[
-  GlassFish Server Open Source Edition Error Message Reference].
+  {productName} Error Message Reference].
 message-text::
   The text of the log message.
 
@@ -3144,17 +3133,15 @@ log-level::
   information, see link:logging.html#gklml[Setting Log Levels].
 logger-class-name::
   The fully qualified name of the Java class of the logger class that
-  created the log message. Each component of GlassFish Server provides
+  created the log message. Each component of {productName} provides
   its own logger class. For detailed information about the names of
-  logger classes in GlassFish Server, see link:logging.html#gkres[Logger
+  logger classes in {productName}, see link:logging.html#gkres[Logger
   Namespaces].
 message-id::
-  A unique identifier for the message. For messages from GlassFish
-  Server, this identifier consists of a module code and a numerical
+  A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
-  and some `INFO` messages from GlassFish Server contain a message
-  identifier. For more information, see the link:../error-messages-reference/toc.html#GSEMR[GlassFish Server
-  Open Source Edition Error Message Reference].
+  and some `INFO` messages from {productName} contain a message
+  identifier. For more information, see the link:../error-messages-reference/toc.html#GSEMR[{productName} Error Message Reference].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::
@@ -3199,7 +3186,7 @@ Line breaks and white space are added to enhance readability.
 
 ==== Supported Content Types in Requests to REST Resources
 
-The GlassFish Server REST interfaces support the following types in the
+The {productName} REST interfaces support the following types in the
 content-type header of a client request:
 
 * http://www.json.org/[JSON]

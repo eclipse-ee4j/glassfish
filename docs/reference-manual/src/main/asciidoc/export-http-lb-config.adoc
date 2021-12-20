@@ -46,8 +46,8 @@ subcommand, you do not need to use `export-http-lb-config`.
 
 [NOTE]
 ====
-This subcommand is only applicable to Oracle GlassFish Server. This
-subcommand is not applicable to GlassFish Server Open Source Edition.
+This subcommand is only applicable to {productName}. This
+subcommand is not applicable to {productName}.
 ====
 
 
@@ -94,7 +94,7 @@ file_name::
   is created with that name in the current working directory.
   * If you do not specify this operand, the default value is a file
   named `loadbalancer.xml.`load_balancer_config_name created in the
-  domain-dir`/generated` directory.
+  domain-dir``/generated`` directory.
 target::
   Specifies the target to which the configuration will be exported. +
   Valid values are:

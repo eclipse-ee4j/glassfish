@@ -12,7 +12,7 @@ prev=jms.html
 == 11 RMI-IIOP Load Balancing and Failover
 
 This chapter describes using high-availability features for remote EJB
-references and JNDI objects over RMI-IIOP in GlassFish Server.
+references and JNDI objects over RMI-IIOP in {productName}.
 
 * link:#abdbe[Overview]
 * link:#gknqo[`InitialContext` Load Balancing]
@@ -37,7 +37,7 @@ The following topics are addressed here:
 
 ==== General Requirements for Configuring Load Balancing
 
-Oracle GlassFish Server provides high availability of remote EJB
+{productName} provides high availability of remote EJB
 references and `NameService` objects over RMI-IIOP, provided all the
 following apply:
 
@@ -46,14 +46,14 @@ following apply:
 participate in load balancing.
 * RMI-IIOP client applications are enabled for load balancing.
 
-GlassFish Server supports load balancing for Java applications executing
+{productName} supports load balancing for Java applications executing
 in the Application Client Container (ACC). See link:#abdbd[Enabling
 RMI-IIOP Hardware Load Balancing and Failover].
 
 
 [NOTE]
 ====
-GlassFish Server does not support RMI-IIOP load balancing and failover
+{productName} does not support RMI-IIOP load balancing and failover
 over secure sockets layer (SSL).
 ====
 
@@ -62,7 +62,7 @@ over secure sockets layer (SSL).
 
 ==== Load Balancing Models
 
-GlassFish Server supports two general models for load balancing:
+{productName} supports two general models for load balancing:
 
 link:#gknqo[`InitialContext` Load Balancing]::
   When a client performs a JNDI lookup for an object, the Naming Service
@@ -106,9 +106,9 @@ to the same server instance.
 
 IIOP load balancing and failover happens transparently. No special steps
 are needed during application deployment. IIOP load balancing and
-failover for the GlassFish Server supports dynamically reconfigured
-clusters. If the GlassFish Server instance on which the application
-client is deployed participates in a cluster, the GlassFish Server finds
+failover for the {productName} supports dynamically reconfigured
+clusters. If the {productName} instance on which the application
+client is deployed participates in a cluster, the {productName} finds
 all currently active IIOP endpoints in the cluster automatically.
 Therefore, you are not required to manually update the list of endpoints
 if a new instance is added to the cluster or deleted from the cluster.
@@ -119,11 +119,11 @@ bootstrapping purposes, in case one of the endpoints has failed.
 
 ==== `InitialContext` Algorithm
 
-GlassFish Server uses a randomization and round-robin algorithm for
+{productName} uses a randomization and round-robin algorithm for
 RMI-IIOP load balancing and failover.
 
 When an RMI-IIOP client first creates a new `InitialContext` object, the
-list of available GlassFish Server IIOP endpoints is randomized for that
+list of available {productName} IIOP endpoints is randomized for that
 client. For that `InitialContext` object, the load balancer directs
 lookup requests and other `InitialContext` operations to an endpoint on
 the randomized list. If that endpoint is not available then a different
@@ -136,10 +136,10 @@ rotation is not to the next endpoint in the list, but instead to a
 random endpoint in the list.
 
 When you obtain or create beans from references obtained by an
-`InitialContext` object, those beans are created on the GlassFish Server
+`InitialContext` object, those beans are created on the {productName}
 instance serving the IIOP endpoint assigned to the `InitialContext`
 object. The references to those beans contain the IIOP endpoint
-addresses of all GlassFish Server instances in the cluster.
+addresses of all {productName} instances in the cluster.
 
 The primary endpoint is the bean endpoint corresponding to the
 `InitialContext` endpoint used to look up or create the bean. The other
@@ -165,8 +165,7 @@ load balancing is also supported.
 This procedure provides an overview of the steps necessary to enable
 RMI-IIOP load balancing and failover with the application client
 container (ACC). For additional information on the ACC, see
-"link:../application-development-guide/java-clients.html#GSDVG00160[Developing Clients Using the ACC]" in GlassFish Server
-Open Source Edition Application Development Guide.
+"link:../application-development-guide/java-clients.html#GSDVG00160[Developing Clients Using the ACC]" in {productName} Application Development Guide.
 
 [[GSHAG440]]
 
@@ -179,7 +178,7 @@ environment. For example, a developer who wants to experiment with a
 cluster and load balancing might create two instances on the same system
 on which the DAS is running. In such cases, these steps are unnecessary.
 
-1. Go to the install_dir `/bin` directory.
+1. Go to the install_dir ``/bin`` directory.
 
 2. Run `package-appclient`. +
 This utility produces an `appclient.jar` file. For more information on
@@ -240,7 +239,7 @@ Add at least two `target-server` elements in the `sun-acc.xml` file.
 Use the endpoints that you obtained in link:#gevjb[Find the IIOP
 listener port number for at least two instances in the cluster.].
 +
-If the GlassFish Server instance on which the application client is
+If the {productName} instance on which the application client is
 deployed participates in a cluster, the ACC finds all currently active
 IIOP endpoints in the cluster automatically. However, a client should
 have at least two endpoints specified for bootstrapping purposes, in
@@ -249,8 +248,7 @@ case one of the endpoints has failed.
 The `target-server` element specifies one or more IIOP endpoints used
 for load balancing. The `address` attribute is an IPv4 address or host
 name, and the `port` attribute specifies the port number. See
-"link:../application-deployment-guide/dd-elements.html#GSDPG00111[client-container]" in GlassFish Server Open Source
-Edition Application Deployment Guide.
+"link:../application-deployment-guide/dd-elements.html#GSDPG00111[client-container]" in {productName} Application Deployment Guide.
 +
 As an alternative to using `target-server` elements, you can use the
 `endpoints` property as follows:
@@ -392,7 +390,7 @@ stateless EJB.
 ===== To Enable RMI-IIOP Per-Request Load Balancing for a Stateless EJB
 
 This procedure describes how to enable PRLB for a stateless EJB that is
-deployed to clustered GlassFish Server instances. This procedure also
+deployed to clustered {productName} instances. This procedure also
 provides an client-side example for accessing a stateless EJB that uses
 PRLB.
 
@@ -401,14 +399,12 @@ PRLB.
 In this example, an EJB named `TheGreeter` is used.
 +
 For instructions on developing and assembling an EJB for deployment to
-GlassFish Server, refer to the following documentation:
+{productName}, refer to the following documentation:
 
-* "link:../application-development-guide/ejb.html#GSDVG00010[Using Enterprise JavaBeans Technology]" in GlassFish
-Server Open Source Edition Application Development Guide
-* "link:../application-deployment-guide/deploying-applications.html#GSDPG00068[EJB Module Deployment Guidelines]" in GlassFish
-Server Open Source Edition Application Deployment Guide
+* "link:../application-development-guide/ejb.html#GSDVG00010[Using Enterprise JavaBeans Technology]" in {productName} Application Development Guide
+* "link:../application-deployment-guide/deploying-applications.html#GSDPG00068[EJB Module Deployment Guidelines]" in {productName} Application Deployment Guide
 * "link:../application-deployment-guide/deploying-applications.html#GSDPG00070[Assembling and Deploying an Application Client
-Module]" in GlassFish Server Open Source Edition Application Deployment Guide
+Module]" in {productName} Application Deployment Guide
 
 2. Set the `per-request-load-balancing` property to `true` in the
 `glassfish-ejb-jar.xml` deployment descriptor file for the EJB.
@@ -416,7 +412,7 @@ Module]" in GlassFish Server Open Source Edition Application Deployment Guide
 For more information about the `glassfish-ejb-jar.xml` deployment
 descriptor file, refer to
 "link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]"
-in GlassFish Server Open Source Edition Application Deployment Guide
+in {productName} Application Deployment Guide
 +
 For example, the `glassfish-ejb-jar.xml` file for a sample EJB named
 `TheGreeter` is listed below.
@@ -440,10 +436,8 @@ If the EJB was previously deployed, it must be redployed.
 +
 For instructions on deploying EJBs, refer to the following documentation:
 
-* "link:../application-deployment-guide/deploying-applications.html#GSDPG00033[To Deploy an Application or Module]" in GlassFish
-Server Open Source Edition Application Deployment Guide
-* "link:../application-deployment-guide/deploying-applications.html#GSDPG00036[To Redeploy an Application or Module]" in GlassFish
-Server Open Source Edition Application Deployment Guide
+* "link:../application-deployment-guide/deploying-applications.html#GSDPG00033[To Deploy an Application or Module]" in {productName} Application Deployment Guide
+* "link:../application-deployment-guide/deploying-applications.html#GSDPG00036[To Redeploy an Application or Module]" in {productName} Application Deployment Guide
 
 4. Verify the PRLB configuration by looking for the following `FINE`
 message in the CORBA log file:

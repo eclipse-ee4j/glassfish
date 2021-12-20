@@ -46,7 +46,7 @@ asadmin-options::
 `--domaindir`::
   Specifies the domain root directory, where the domains are located.
   The path must be accessible in the file system. The default is
-  as-install`/domains`.
+  as-install``/domains``.
 
 [[sthref2342]]
 

@@ -13,7 +13,7 @@ prev=concurrent.html
 [[administering-the-object-request-broker-orb]]
 == 15 Administering the Object Request Broker (ORB)
 
-GlassFish Server supports a standard set of protocols and formats that
+{productName} supports a standard set of protocols and formats that
 ensure interoperability. Among these protocols are those defined by
 CORBA. The Object Request Broker (ORB) is the central component of
 CORBA. The ORB provides the required infrastructure to identify and
@@ -58,7 +58,7 @@ appropriate object, processes the request, and returns the results.
 
 IIOP can be used as a Remote Method Invocation (RMI) protocol by
 applications or objects using RMI-IIOP. Remote clients of enterprise
-beans (EJB modules) communicate with GlassFish Server by using RMI-IIOP.
+beans (EJB modules) communicate with {productName} by using RMI-IIOP.
 
 [[ablty]][[GSADG00592]][[administering-iiop-listeners]]
 
@@ -66,7 +66,7 @@ beans (EJB modules) communicate with GlassFish Server by using RMI-IIOP.
 
 An IIOP listener is a listen socket that accepts incoming connections
 from the remote clients of enterprise beans and from other CORBA-based
-clients. Multiple IIOP listeners can be configured for GlassFish Server.
+clients. Multiple IIOP listeners can be configured for {productName}.
 For each listener, specify a port number (optional; default 1072), a
 network address, and security attributes (optional). If you create
 multiple listeners, you must assign a different port number for each
@@ -92,7 +92,7 @@ link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-liste
 +
 Information about the properties for the subcommand is included in this
 help page.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -183,7 +183,7 @@ IIOP listener.
 link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
 3. Delete an IIOP listener by using the
 link:../reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`] subcommand.
-4. To apply your changes, restart GlassFish Server.
+4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 

@@ -28,7 +28,7 @@ The following topics are addressed here:
 === Java Programming Guidelines
 
 This section covers issues related to Java coding and performance. The
-guidelines outlined are not specific to GlassFish Server, but are
+guidelines outlined are not specific to {productName}, but are
 general rules that are useful in many situations. For a complete
 discussion of Java coding best practices, see the
 http://www.oracle.com/technetwork/java/javaee/blueprints/index.html[Java
@@ -203,7 +203,7 @@ and multiplies throughput by approximately 1.5 for `text/xml` or
 
 === Java Server Page and Servlet Tuning
 
-Many applications running on the GlassFish Server use servlets or
+Many applications running on the {productName} use servlets or
 JavaServer Pages (JSP) technology in the presentation tier. This section
 describes how to improve performance of such applications, both through
 coding practices and through deployment and configuration settings.
@@ -259,7 +259,7 @@ when they are no longer needed.
 * Keep session size small, to reduce response times. If possible, keep
 session size below 7 kilobytes.
 * Use the directive `<%page session="false"%>` in JSP files to prevent
-the GlassFish Server from automatically creating sessions when they are
+the {productName} from automatically creating sessions when they are
 not necessary.
 * Avoid large object graphs in an `HttpSession`. They force
 serialization and add computational overhead. Generally, do not store
@@ -269,7 +269,7 @@ an `HttpSession` is not transactional. Do not use it as a cache of
 transactional data, which is better kept in the database and accessed
 using entity beans. Transactions will rollback upon failures to their
 original state. However, stale and inaccurate data may remain in
-`HttpSession` objects. GlassFish Server provides "read-only"
+`HttpSession` objects. {productName} provides "read-only"
 bean-managed persistence entity beans for cached access to read-only data.
 
 [[abebu]][[GSPTG00085]][[configuration-and-deployment-tips]]
@@ -285,8 +285,7 @@ the server `CLASSPATH`. Put application-related classes into JAR files.
 the HTTP server is tuned in general. For more information, see
 link:tuning-glassfish.html#abeet[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
-"link:../application-development-guide/webapps.html#GSDVG00009[Developing Web Applications]" in GlassFish Server Open
-Source Edition Application Development Guide.
+"link:../application-development-guide/webapps.html#GSDVG00009[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
 application as a WAR file, not an EAR file.
 
@@ -329,9 +328,9 @@ will be run on the server and you do not use authentication within your
 application, then you can disable the security manager.
 
 See "link:../application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security Manager]" in
-GlassFish Server Open Source Edition Application Development Guide for
+{productName} Application Development Guide for
 instructions on enabling or disabling the security manager. If using the
-GlassFish Server Administration Console, navigate to the
+{productName} Administration Console, navigate to the
 Configurations>configuration-name>Security node and check or uncheck the
 Security Manager option as desired. Refer to the Administration Console
 online help for more information.
@@ -340,7 +339,7 @@ online help for more information.
 
 === EJB Performance Tuning
 
-The GlassFish Server's high-performance EJB container has numerous
+The {productName}'s high-performance EJB container has numerous
 parameters that affect performance. Individual EJB components also have
 parameters that affect performance. The value of individual EJB
 component's parameter overrides the value of the same parameter for the
@@ -519,12 +518,11 @@ asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 
 For more information about administering the monitoring service in
 general, see "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
-GlassFish Server Open Source Edition Administration Guide. For
+{productName} Administration Guide. For
 information about viewing comprehensive EJB monitoring statistics, see
-"link:../administration-guide/monitoring.html#GSADG00651[EJB Statistics]" in GlassFish Server Open Source
-Edition Administration Guide.
+"link:../administration-guide/monitoring.html#GSADG00651[EJB Statistics]" in {productName} Administration Guide.
 
-To configure EJB monitoring using the GlassFish Server Administration
+To configure EJB monitoring using the {productName} Administration
 Console, navigate to the Configurations>configuration-name>Monitoring
 node. After configuring monitoring, you can view monitoring statistics
 by navigating to the server (Admin Server) node and then selecting the
@@ -577,9 +575,9 @@ read-only
 
 For more information about configuring high availability session
 persistence, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
-Persistence and Failover]" in GlassFish Server Open Source Edition High
+Persistence and Failover]" in {productName} High
 Availability Administration Guide. To configure EJB beans using the
-GlassFish Server Administration Console, navigate to the
+{productName} Administration Console, navigate to the
 Configurations>configuration-name>EJB Container node and then refer to
 the Administration Console online help for detailed instructions.
 
@@ -613,7 +611,7 @@ option, which can speed up deployment.
 If you have a legacy rich-client application that directly uses the
 CosNaming service (not a recommended configuration), then you must
 generate the stubs for your application explicitly using RMIC. For more
-information, see the link:../troubleshooting-guide/toc.html#GSTSG[GlassFish Server Open Source Edition
+information, see the link:../troubleshooting-guide/toc.html#GSTSG[{productName}
 Troubleshooting Guide] for more details.
 
 [[abece]][[GSPTG00090]][[remove-unneeded-stateful-session-beans]]
@@ -682,7 +680,7 @@ local clients can use the local interface for efficiency.
 
 ===== Using Pass-By-Reference Semantics
 
-By default, the GlassFish Server uses pass-by-value semantics for
+By default, the {productName} uses pass-by-value semantics for
 calling the remote interface of a bean, even if it is co-located. This
 can be expensive, since clients using pass-by-value semantics must copy
 arguments before passing them to the EJB component.
@@ -706,7 +704,7 @@ without any local interfaces.
 * There are bean-to-bean calls and the client beans are written without
 making any co-location assumptions about the called beans.
 
-For these cases, the GlassFish Server provides a pass-by-reference
+For these cases, the {productName} provides a pass-by-reference
 option that clients can use to pass arguments by reference to the remote
 interface of a co-located EJB component.
 
@@ -715,8 +713,7 @@ or a single EJB component. When specified at the application level, all
 beans in the application use pass-by-reference semantics when passing
 arguments to their remote interfaces. When specified at the bean level,
 all calls to the remote interface of the bean use pass-by-reference
-semantics. See "link:../application-development-guide/ejb.html#GSDVG00145[Value Added Features]" in GlassFish
-Server Open Source Edition Application Development Guide for more
+semantics. See "link:../application-development-guide/ejb.html#GSDVG00145[Value Added Features]" in {productName} Application Development Guide for more
 details about the pass-by-reference flag.
 
 To specify that an EJB component will use pass by reference semantics,
@@ -807,7 +804,7 @@ JDBC resources and use the appropriate resource in the application.
 ===== Configure JDBC Resources as One-Phase Commit Resources
 
 To improve performance of transactions involving multiple resources, the
-GlassFish Server uses last agent optimization (LAO), which allows the
+{productName} uses last agent optimization (LAO), which allows the
 configuration of one of the resources in a distributed transaction as a
 one-phase commit (1PC) resource. Since the overhead of multiple-resource
 transactions is much higher for a JDBC resource than a message queue,
@@ -927,7 +924,7 @@ particular bean:
 
 In addition, you must establish a trigger on the database to
 automatically update the version column when data in the specified table
-is modified. The GlassFish Server requires such a trigger to use version
+is modified. The {productName} requires such a trigger to use version
 consistency. Having such a trigger also ensures that external
 applications that modify the EJB data will not conflict with EJB
 transactions in progress.
@@ -975,16 +972,16 @@ Follow this procedure.
 
 1. Configure additional threadpools for EJB execution.
 +
-Using the GlassFish Server Administration Console, navigate to the
+Using the {productName} Administration Console, navigate to the
 Configurations>configuration-name>Thread Pools node.
 Refer to the Administration Console online help for more information.
 Alternatively, you can follow the instructions in
 "link:../administration-guide/threadpools.html#GSADG00008[
-Administering Thread Pools]" in GlassFish Server Open Source Edition Administration Guide.
+Administering Thread Pools]" in {productName} Administration Guide.
 +
 Configure the threadpools as follows:
 [arabic]
-.. Add the additional threadpool IDs to the GlassFish Server's ORB.
+.. Add the additional threadpool IDs to the {productName}'s ORB.
 +
 This can be done on the Configurations>configuration-name>ORB node in
 the Administration Console.
@@ -1018,7 +1015,7 @@ an EJB component named "`TheGreeter`" is assigned to a thread pool named `priori
 </sun-ejb-jar>
 ----
 
-2. Restart the GlassFish Server.
+2. Restart the {productName}.
 
 [[abecv]][[GSPTG00177]][[tuning-tips-for-specific-types-of-ejb-components]]
 
@@ -1032,12 +1029,12 @@ This section provides tips for tuning various specific types of EJB components:
 * link:#abeda[Read-Only Entity Beans]
 * link:#abedc[Pre-Fetching Container Managed Relationship (CMR) Beans]
 
-These components can all be configured in the GlassFish Server
+These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
 following the instructions in "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[
 RMI-IIOP Load Balancing and Failover]"
-in GlassFish Server Open Source Edition High Availability Administration Guide.
+in {productName} High Availability Administration Guide.
 
 [[abecw]][[GSPTG00104]][[entity-beans]]
 
@@ -1106,7 +1103,7 @@ size exceeds `max-pool-size`.
 
 ===== Read-Only Entity Beans
 
-Read-only entity beans cache data from the database. GlassFish Server
+Read-only entity beans cache data from the database. {productName}
 supports read-only beans that use both bean-managed persistence (BMP)
 and container-managed persistence (CMP). Of the two types, CMP read-only
 beans provide significantly better performance. In the EJB lifecycle,
@@ -1321,12 +1318,11 @@ Reduced isolation levels reduce work in the database tier, and could
 lead to better application performance. However, this must be done after
 carefully analyzing the database table usage patterns.
 
-To set the database transaction isolation level using the GlassFish
-Server Administration Console, navigate to the Resources>JDBC>JDBC
+To set the database transaction isolation level using the {productName} Administration Console, navigate to the Resources>JDBC>JDBC
 Connection Pools>pool-name node. Refer to the Administration Console
 online help for complete instructions. Alternatively, follow the
 instructions in "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]"
-in GlassFish Server Open Source Edition Administration Guide. For more
+in {productName} Administration Guide. For more
 information on tuning JDBC connection pools, see
 link:tuning-glassfish.html#abehq[JDBC Connection Pool Settings].
 
@@ -1359,7 +1355,7 @@ processing of messages. Set the size of the MDB pool to, based on all
 the parameters of the server (taking other applications into account).
 For example, a value greater than 500 is generally too large.
 
-To configure MDB pool settings in the GlassFish Server Administration
+To configure MDB pool settings in the {productName} Administration
 Console, navigate to the Configurations>configuration-name>EJB Container
 node and then select the MDB Settings tab. Refer to the Administration
 Console online help for more information. Alternatively, you can set the

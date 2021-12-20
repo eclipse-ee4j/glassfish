@@ -1,29 +1,29 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Security Guide, Release 7
+title={productName} Security Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
 
-= Eclipse GlassFish Server Security Guide, Release 7
+= {productName} Security Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Security Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This book provides instructions for configuring and administering
-GlassFish Server security.
+{productName} security.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Security Guide, Release 7
+{productName} Security Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

@@ -67,7 +67,7 @@ asadmin-options::
 
   `common`;;
     Removes the library files from the Common class loader directory,
-    domain-dir`/lib`. This is the default.
+    domain-dir``/lib``. This is the default.
   `ext`;;
     Removes the library files from the Java optional package directory,
     domain-dir`/lib/ext`.
@@ -77,8 +77,7 @@ asadmin-options::
 
 +
 For more information about these directories, see
-  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-  Edition Application Development Guide.
+  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
 
 [[sthref1973]]
 
@@ -124,7 +123,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:add-library.html#add-library-1[`add-library`(1)],
 link:list-libraries.html#list-libraries-1[`list-libraries`(1)]
 
-"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-Edition Application Development Guide
+"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
 
 

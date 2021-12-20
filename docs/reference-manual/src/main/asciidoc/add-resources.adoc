@@ -104,7 +104,7 @@ xml-file-name::
 +
   * If you specify an absolute path, the XML file can be anywhere.
   * If you specify only the file name, the XML file must reside in the
-  domain-dir`/config` directory on the DAS host. This requirement must
+  domain-dir``/config`` directory on the DAS host. This requirement must
   be met even if you run the subcommand from another host.
   * If you specify a relative path, the XML file must be in the relative   directory.
 

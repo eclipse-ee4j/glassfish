@@ -1,27 +1,26 @@
 type=page
 status=published
-title=Administering GlassFish Server Nodes
+title=Administering {productName} Nodes
 next=clusters.html
 prev=ssh-setup.html
 ~~~~~~
 
-= Administering GlassFish Server Nodes
+= Administering {productName} Nodes
 
 [[GSHAG00004]][[gkrle]]
 
 
 [[administering-glassfish-server-nodes]]
-== 3 Administering GlassFish Server Nodes
+== 3 Administering {productName} Nodes
 
-A node represents a host on which the GlassFish Server software is
-installed. A node must exist for every host on which GlassFish Server
+A node represents a host on which the {productName} software is
+installed. A node must exist for every host on which {productName}
 instances reside. A node's configuration contains information about the
-host such as the name of the host and the location where the GlassFish
-Server is installed on the host.
+host such as the name of the host and the location where the {productName} is installed on the host.
 
 The following topics are addressed here:
 
-* link:#gksgh[Types of GlassFish Server Nodes]
+* link:#gksgh[Types of {productName} Nodes]
 * link:#CHDBIHFJ[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
 * link:#gkrkn[Creating, Listing, Testing, and Deleting `SSH` Nodes]
 * link:#gkrnp[Creating, Listing, and Deleting `CONFIG` Nodes]
@@ -29,15 +28,15 @@ The following topics are addressed here:
 
 [[gksgh]][[GSHAG00179]][[types-of-glassfish-server-nodes]]
 
-=== Types of GlassFish Server Nodes
+=== Types of {productName} Nodes
 
-Each GlassFish Server node is one of the following types of node:
+Each {productName} node is one of the following types of node:
 
 `DCOM`::
   A `DCOM` node supports communication over the Distributed Component
   Object Model (DCOM) remote protocol. The DCOM remote protocol is
   available only on Windows systems. If DCOM is set up and you plan to
-  administer your GlassFish Server instances centrally, the instances
+  administer your {productName} instances centrally, the instances
   must reside on `DCOM` nodes. +
   A `DCOM` node's configuration contains the information that is
   required to connect to the host through DCOM. This information
@@ -45,7 +44,7 @@ Each GlassFish Server node is one of the following types of node:
   number for DCOM connections to the host.
 `SSH`::
   An `SSH` node supports communication over secure shell (SSH). If SSH
-  is set up and you plan to administer your GlassFish Server instances
+  is set up and you plan to administer your {productName} instances
   centrally, the instances must reside on `SSH` nodes. +
   An `SSH` node's configuration contains the information that is
   required to connect to the host through SSH. This information
@@ -66,12 +65,12 @@ Each GlassFish Server node is one of the following types of node:
 === Creating, Listing, Testing, and Deleting `DCOM` Nodes
 
 A `DCOM` node supports communication over DCOM. If DCOM is set up and
-you plan to administer your GlassFish Server instances centrally, the
+you plan to administer your {productName} instances centrally, the
 instances must reside on `DCOM` nodes. For information about setting up
 DCOM, see link:ssh-setup.html#gkshg[Enabling Centralized Administration
-of GlassFish Server Instances].
+of {productName} Instances].
 
-GlassFish Server enables you to create `DCOM` nodes for use by
+{productName} enables you to create `DCOM` nodes for use by
 instances, obtain information about `DCOM` nodes, test if `DCOM` nodes
 are reachable, and delete `DCOM` nodes that are no longer required.
 
@@ -135,8 +134,8 @@ node-host::
   must be specified. Otherwise, an error occurs.
 install-dir::
   The full path to the parent of the base installation directory of the
-  GlassFish Server software on the host, for example, `C:\glassfish7`.
-  If the GlassFish Server software is installed in the same directory on
+  {productName} software on the host, for example, `C:\glassfish7`.
+  If the {productName} software is installed in the same directory on
   the node's host and the DAS host, you can omit this option.
 node-name::
   Your choice of name for the node that you are creating.
@@ -145,7 +144,7 @@ node-name::
 Example 3-1 Creating a `DCOM` Node
 
 This example creates the `DCOM` node `wpmdl1` to represent the host
-`wpmdl1.example.com`. The GlassFish Server software is installed in the
+`wpmdl1.example.com`. The {productName} software is installed in the
 same directory on the DAS host and on the host `wpmdl1.example.com`.
 
 [source]
@@ -304,14 +303,14 @@ typing `asadmin help ping-node-dcom` at the command line.
 Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM` node.
 
 Deleting a node removes the node from the configuration of the DAS. The
-node's directories and files are deleted when the last GlassFish Server
+node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
 
 [[GSHAG478]]
 
 Before You Begin
 
-Ensure that no GlassFish Server instances reside on the node that you
+Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance, see the
 following sections.
 
@@ -373,10 +372,10 @@ typing the following commands at the command line:
 === Creating, Listing, Testing, and Deleting `SSH` Nodes
 
 An `SSH` node supports communication over SSH. If SSH is set up and you
-plan to administer your GlassFish Server instances centrally, the
+plan to administer your {productName} instances centrally, the
 instances must reside on `SSH` nodes. For information about setting up
 SSH, see link:ssh-setup.html#gkshg[Enabling Centralized Administration of
-GlassFish Server Instances].
+{productName} Instances].
 
 
 [NOTE]
@@ -385,7 +384,7 @@ Windows systems also support communications over DCOM as an alternative to SSH.
 ====
 
 
-GlassFish Server enables you to create `SSH` nodes for use by instances,
+{productName} enables you to create `SSH` nodes for use by instances,
 obtain information about `SSH` nodes, test if `SSH` nodes are reachable,
 and delete `SSH` nodes that are no longer required.
 
@@ -438,8 +437,8 @@ node-host::
   must be specified. Otherwise, an error occurs.
 install-dir::
   The full path to the parent of the base installation directory of the
-  GlassFish Server software on the host, for example,
-  `/export/glassfish7/`. If the GlassFish Server software is installed
+  {productName} software on the host, for example,
+  `/export/glassfish7/`. If the {productName} software is installed
   in the same directory on the node's host and the DAS host, you can
   omit this option.
 node-name::
@@ -449,7 +448,7 @@ node-name::
 Example 3-6 Creating an `SSH` Node
 
 This example creates the `SSH` node `sj01` to represent the host
-`sj01.example.com`. The GlassFish Server software is installed in the
+`sj01.example.com`. The {productName} software is installed in the
 same directory on the DAS host and on the host `sj01.example.com`.
 
 [source]
@@ -620,14 +619,14 @@ Use the `delete-node-ssh` subcommand in remote mode to delete an `SSH`
 node.
 
 Deleting a node removes the node from the configuration of the DAS. The
-node's directories and files are deleted when the last GlassFish Server
+node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
 
 [[GSHAG354]]
 
 Before You Begin
 
-Ensure that no GlassFish Server instances reside on the node that you
+Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance, see the
 following sections.
 
@@ -692,7 +691,7 @@ nor SSH is set up and you plan to administer your instances locally, the
 instances can reside on `CONFIG` nodes. You cannot use `CONFIG` nodes
 for instances that you plan to administer centrally.
 
-GlassFish Server enables you to create `CONFIG` nodes for use by
+{productName} enables you to create `CONFIG` nodes for use by
 instances, obtain information about `CONFIG` nodes, and delete `CONFIG`
 nodes that are no longer required.
 
@@ -712,7 +711,7 @@ Use the `create-node-config` command in remote mode to create a `CONFIG` node.
 ====
 If you create an instance locally on a host for which no nodes are
 defined, you can create the instance without creating a node beforehand.
-In this situation, GlassFish Server creates a `CONFIG` node for you. The
+In this situation, {productName} creates a `CONFIG` node for you. The
 name of the node is the unqualified name of the host. For more
 information, see link:instances.html#gkqbl[To Create an Instance Locally].
 ====
@@ -739,7 +738,7 @@ node-host::
   reside on the node are created.
 install-dir::
   The full path to the parent of the base installation directory of the
-  GlassFish Server software on the host, for example,
+  {productName} software on the host, for example,
   `/export/glassfish7/`. You may omit this option. The installation
   directory can be determined when instances that reside on the node are
   created.
@@ -750,7 +749,7 @@ node-name::
 Example 3-11 Creating a `CONFIG` Node
 
 This example creates the `CONFIG` node `cfg01`. The host that the node
-represents and the installation directory of the GlassFish Server
+represents and the installation directory of the {productName}
 software on the host are to be determined when instances are added to
 the node.
 
@@ -855,14 +854,14 @@ Use the `delete-node-config` subcommand in remote mode to delete a
 `CONFIG` node.
 
 Deleting a node removes the node from the configuration of the DAS. The
-node's directories and files are deleted when the last GlassFish Server
+node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
 
 [[GSHAG359]]
 
 Before You Begin
 
-Ensure that no GlassFish Server instances reside on the node that you
+Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance that
 resides on a `CONFIG` node, see link:instances.html#gkqed[To Delete an
 Instance Locally].
@@ -920,7 +919,7 @@ typing the following commands at the command line:
 
 === Updating and Changing the Type of a Node
 
-GlassFish Server enables you to update the configuration data of any
+{productName} enables you to update the configuration data of any
 node and to change the type of a node.
 
 The following topics are addressed here:

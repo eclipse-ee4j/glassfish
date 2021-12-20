@@ -77,7 +77,7 @@ asadmin-options::
 +
 For more information about these directories, see
 "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]"
-in GlassFish Server Open Source Edition Application Development Guide.
+in {productName} Application Development Guide.
 
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
@@ -149,7 +149,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:list-libraries.html#list-libraries-1[`list-libraries`(1)],
 link:remove-library.html#remove-library-1[`remove-library`(1)]
 
-"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in GlassFish Server Open Source
-Edition Application Development Guide
+"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
 
 

@@ -96,7 +96,7 @@ reference_name::
   application versions, see
   "link:../application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]"
-  in GlassFish Server Open Source Edition Application Deployment Guide.
+  in {productName} Application Deployment Guide.
 
 [[sthref127]]
 
@@ -133,7 +133,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)],
 link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

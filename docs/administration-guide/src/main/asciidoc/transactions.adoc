@@ -14,7 +14,7 @@ prev=jndi.html
 == 19 Administering Transactions
 
 This chapter discusses how to manage the transaction service for the
-GlassFish Server Open Source Edition environment by using the `asadmin`
+{productName} environment by using the `asadmin`
 command-line utility. Instructions for manually recovering transactions
 are also included.
 
@@ -74,7 +74,7 @@ implementing various APIs and functionalities:
 * Transaction Manager. Provides the services and management functions
 required to support transaction demarcation, transactional resource
 management, synchronization, and transaction context propagation.
-* GlassFish Server. Provides the infrastructure required to support the
+* {productName}. Provides the infrastructure required to support the
 application runtime environment that includes transaction state
 management.
 * Resource Manager. Through a resource adapter, the resource manager
@@ -83,22 +83,21 @@ participates in distributed transactions by implementing a transaction
 resource interface used by the transaction manager to communicate
 transaction association, transaction completion, and recovery work. An
 example of such a resource manager is a relational database server.
-* Resource Adapter. A system-level software library is used by GlassFish
-Server or a client to connect to a resource manager. A resource adapter
+* Resource Adapter. A system-level software library is used by {productName} or a client to connect to a resource manager. A resource adapter
 is typically specific to a resource manager. The resource adapter is
 available as a library and is used within the address space of the
 client using it. An example of such a resource adapter is a Java
 Database Connectivity (JDBC) driver. For information on supported JDBC
 drivers, see link:jdbc.html#beamw[Configuration Specifics for JDBC
 Drivers].
-* Transactional User Application. In the GlassFish Server environment,
+* Transactional User Application. In the {productName} environment,
 the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
 transaction demarcation. For more information, see "link:../application-development-guide/transaction-service.html#GSDVG00191[The
 Transaction Manager, the Transaction Synchronization Registry, and
-UserTransaction]" in GlassFish Server Open Source Edition Application
+UserTransaction]" in {productName} Application
 Development Guide.
 
 The following topics are addressed here:
@@ -115,16 +114,16 @@ There are three types of transaction resource managers:
 * Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
 JDBC transaction isolation levels, see "link:../application-development-guide/transaction-service.html#GSDVG00511[Using JDBC
-Transaction Isolation Levels]" in GlassFish Server Open Source Edition
+Transaction Isolation Levels]" in {productName}
 Application Development Guide.
 +
-The GlassFish Server supports a variety of JDBC XA drivers. For a list
-of the JDBC drivers currently supported by the GlassFish Server, see the
-link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release Notes]. For
+The {productName} supports a variety of JDBC XA drivers. For a list
+of the JDBC drivers currently supported by the {productName}, see the
+link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 link:jdbc.html#beamw[Configuration Specifics for JDBC Drivers].
 * Java Message Service (JMS) Providers - Use of transactions ensures
-that messages are reliably delivered. The GlassFish Server is integrated
+that messages are reliably delivered. The {productName} is integrated
 with Open Message Queue, a fully capable JMS provider. For more
 information about transactions and the JMS API, see
 link:jms.html#abljw[Administering the Java Message Service (JMS)].
@@ -142,7 +141,7 @@ all participating application components execute within one process.
 Local transaction optimization is specific to the resource manager and
 is transparent to the Jakarta EE application.
 
-In the GlassFish Server, a JDBC resource is non-XA if it meets either of
+In the {productName}, a JDBC resource is non-XA if it meets either of
 the following criteria:
 
 * In the JDBC connection pool configuration, the DataSource class does
@@ -183,7 +182,7 @@ request (`ABORT`) and the transaction is rolled back.
 
 === Configuring the Transaction Service
 
-You can configure the transaction service in the GlassFish Server in the
+You can configure the transaction service in the {productName} in the
 following ways:
 
 * To configure the transaction service using the Administration Console,
@@ -252,7 +251,7 @@ property to override server names that can cause errors.
 +
 You can use the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
-For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+For details, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual].
 +
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
@@ -411,7 +410,7 @@ typing `asadmin help unfreeze-transaction-service` at the command line.
 
 ==== Determining Local Transaction Completion at Shutdown
 
-When you shut down a GlassFish Server instance, all database connections
+When you shut down a {productName} instance, all database connections
 are closed. When an Oracle JDBC driver-based database connection is
 closed in the middle of a non-XA transaction, all pending changes are
 committed. Other databases usually roll back pending changes when a
@@ -419,7 +418,7 @@ connection is closed without being explicitly committed. To determine
 the exact behavior for your database, refer to the documentation from
 your JDBC driver vendor.
 
-To explicitly specify whether GlassFish Server commits or rolls back
+To explicitly specify whether {productName} commits or rolls back
 non-XA transactions at server shutdown, set the
 `com.sun.enterprise.in-progress-local-transaction.completion-mode` JVM
 option to either `commit` or `rollback` using the
@@ -437,7 +436,7 @@ asadmin> create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.c
 There are some situations where the commit or rollback operations might
 be interrupted, typically because the server crashed or a resource
 manager crashed. Crash situations can leave some transactions stranded
-between steps. GlassFish Server is designed to recover from these
+between steps. {productName} is designed to recover from these
 failures. If the failed transaction spans multiple servers, the server
 that started the transaction can contact the other servers to get the
 outcome of the transaction. If the other servers are unreachable, the
@@ -455,7 +454,7 @@ The following topics are addressed here:
 
 ==== Automatic Transaction Recovery
 
-GlassFish Server can perform automatic recovery in these ways:
+{productName} can perform automatic recovery in these ways:
 
 * Pending transactions are completed upon server startup if
 `automatic-recovery` is set to `true`.
@@ -500,7 +499,7 @@ resource is restarted.
 * Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
 information, see "link:../performance-tuning-guide/tuning-glassfish.html#GSPTG00030[Connection Validation Settings]" in
-GlassFish Server Open Source Edition Performance Tuning Guide.
+{productName} Performance Tuning Guide.
 
 If commit fails during recovery, a message is written to the server log.
 
@@ -556,7 +555,7 @@ link:#beanp[Configuring the Transaction Service].
 
 ==== Recovery Workarounds and Limitations
 
-The GlassFish Server provides workarounds for some known issues with
+The {productName} provides workarounds for some known issues with
 transaction recovery implementations.
 
 
@@ -575,7 +574,7 @@ The following general limitations apply to transaction recovery:
 * Recovery succeeds if there are no exceptions during the process. This
 is independent of the number of transactions that need to be recovered.
 * Only transactions that did not complete the two-phase commit can be
-recovered (one of the XA resources failed or GlassFish Server crashed
+recovered (one of the XA resources failed or {productName} crashed
 after resources were prepared).
 * Manual transaction recovery cannot recover transactions after a server
 crash on a standalone server instance. Manual operations are intended
@@ -622,7 +621,7 @@ calls this method with TMSTARTSCAN and then with TMNOFLAGS repeatedly
 until no Xids are returned. The `XAResource.commit` method also has some
 issues.
 
-To disable the GlassFish Server workaround, set the
+To disable the {productName} workaround, set the
 `oracle-xa-recovery-workaround` property value to `false`. For details
 about how to set this property, see link:#beanp[Configuring the
 Transaction Service]. This workaround is used unless explicitly
@@ -633,7 +632,7 @@ disabled.
 ===== Delegated Recovery After Server Crash Doesn't Work on MySQL
 
 The MySQL database supports XA transaction recovery only when the
-database crashes. When a GlassFish Server instance crashes, MySQL rolls
+database crashes. When a {productName} instance crashes, MySQL rolls
 back prepared transactions.
 
 [[glclh]][[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
@@ -641,7 +640,7 @@ back prepared transactions.
 ===== Call to `XATeminator.recover()` During `ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled
 
 Calls to `XATerminator.recover()` from the `ResourceAdapter.start()`
-method never return because GlassFish Server deadlocks. This only occurs
+method never return because {productName} deadlocks. This only occurs
 when automatic recovery is enabled.
 
 It is not advisable to do transactional activities, such as starting a
@@ -659,7 +658,7 @@ logging in these ways:
 
 * Set the location of the transaction log files in one of these ways:
 
-** Set the GlassFish Server's `log-root` setting to a shared file system
+** Set the {productName}'s `log-root` setting to a shared file system
 base directory and set the transaction service's `tx-log-dir` attribute
 to a relative path.
 
@@ -699,7 +698,7 @@ system (NFS) to avoid a single point of failure.
 For multi-core machines, logging transactions to a database may be more
 efficient. Transaction logging is designed to work with any
 JDBC-compliant database. For databases with which transaction logging
-has been tested, see the GlassFish Server Open Source Edition Release
+has been tested, see the {productName} Release
 Notes.
 
 1. [[CIHDBIJI]]
@@ -724,7 +723,7 @@ it `txn_log_table` with the following schema:
 |`GTRID` |`VARBINARY`
 |===
 The size of the `SERVERNAME` column should be at least the length of the
-GlassFish Server host name plus 10 characters. +
+{productName} host name plus 10 characters. +
 The size of the `GTRID` column should be at least 64 bytes.
 
 4. Add the `db-logging-resource` property to the transaction service.
@@ -804,8 +803,8 @@ See Also
 For information about JDBC connection pools and resources, see
 link:jdbc.html#ablih[Administering Database Connectivity]. For more
 information about the `asadmin set` and `asadmin create-jvm-options`
-commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
+commands, see the link:../reference-manual/toc.html#GSRFM[{productName}
 Reference Manual]. For databases with which transaction logging has been
-tested, see the GlassFish Server Open Source Edition Release Notes.
+tested, see the {productName} Release Notes.
 
 

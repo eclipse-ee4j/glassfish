@@ -36,8 +36,7 @@ connections to systems, such as database servers and messaging systems.
 A JDBC resource is sometimes referred to as a data source. Each resource
 object is identified by a unique, people-friendly name, called the JNDI
 name. A resource object and its JNDI name are bound together by the
-naming and directory service, which is included with the GlassFish
-Server.
+naming and directory service, which is included with the {productName}.
 
 When a new name-object binding is entered into the JNDI, a new resource
 is created.
@@ -57,7 +56,7 @@ JNDI names are bound to their objects by the naming and directory
 service that is provided by a Jakarta EE server. Because Jakarta EE components
 access this service through the JNDI API, the object usually uses its
 JNDI name. For example, the JNDI name of the Apache Derby database is
-`jdbc/_default`. At startup, the GlassFish Server reads information from
+`jdbc/_default`. At startup, the {productName} reads information from
 the configuration file and automatically adds JNDI database names to the
 name space, one of which is `jdbc/_default`.
 
@@ -118,7 +117,7 @@ makes it easier for you to assemble Jakarta EE applications from
 preexisting components.
 
 The following table lists JNDI lookups and their associated resource
-references for the Jakarta EE resources used by the GlassFish Server.
+references for the Jakarta EE resources used by the {productName}.
 
 [[GSADG1029]][[sthref87]][[fxizy]]
 
@@ -151,7 +150,7 @@ factories
 
 === Administering JNDI Resources
 
-Within GlassFish Server, you can configure your environment for custom
+Within {productName}, you can configure your environment for custom
 and external JNDI resources. A custom resource accesses a local JNDI
 repository; an external resource accesses an external JNDI repository.
 Both types of resources need user-specified factory class elements, JNDI
@@ -187,7 +186,7 @@ link:../reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-r
 +
 Information on properties for the subcommand is contained in this help
 page.
-3. Restart GlassFish Server.
+3. Restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -297,7 +296,7 @@ typing `asadmin help delete-custom-resource` at the command line.
 
 ==== Administering External JNDI Resources
 
-Applications running on GlassFish Server often require access to
+Applications running on {productName} often require access to
 resources stored in an external JNDI repository. For example, generic
 Java objects might be stored in an LDAP server according to the Java
 schema. External JNDI resource elements let you configure such external
@@ -311,7 +310,7 @@ The following topics are addressed here:
 * link:#giwnr[To Update an External JNDI Resource]
 * link:#gitvt[To Delete an External JNDI Resource]
 * link:#abllk[Example of Using an External JNDI Resource]
-* link:#gknaf[To Disable GlassFish Server v2 Vendor-Specific JNDI Names]
+* link:#gknaf[To Disable {productName} v2 Vendor-Specific JNDI Names]
 
 [[gitxn]][[GSADG00507]][[to-register-an-external-jndi-resource]]
 
@@ -333,7 +332,7 @@ link:../reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resou
 +
 Information on properties for the subcommand is contained in this help
 page.
-3. Restart GlassFish Server.
+3. Restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -501,20 +500,20 @@ typing `asadmin help delete-jndi-resource` at the command line.
 
 [[gknaf]][[GSADG00512]][[to-disable-glassfish-server-v2-vendor-specific-jndi-names]]
 
-===== To Disable GlassFish Server v2 Vendor-Specific JNDI Names
+===== To Disable {productName} v2 Vendor-Specific JNDI Names
 
-The EJB 3.1 specification supported by GlassFish Server 7 defines
+The EJB 3.1 specification supported by {productName} 7 defines
 portable EJB JNDI names. Because of this, there is less need to continue
 to use older vendor-specific JNDI names.
 
-By default, GlassFish Server v2-specific JNDI names are applied
-automatically by GlassFish Server 7 for backward compatibility.
+By default, {productName} v2-specific JNDI names are applied
+automatically by {productName} 7 for backward compatibility.
 However, this can lead to some ease-of-use issues. For example,
 deploying two different applications containing a Remote EJB component
 that exposes the same remote interface causes a conflict between the
 default JNDI names.
 
-The default handling of v2-specific JNDI names in GlassFish Server 7
+The default handling of v2-specific JNDI names in {productName} 7
 can be managed with the `asadmin` command or with the
 `disable-nonportable-jndi-names` boolean property for the
 `ejb-container` element in `glassfish-ejb-jar.xml`.
@@ -534,13 +533,12 @@ asadmin> set server.ejb-container.property.disable-nonportable-jndi-names="true"
 2. Set the value of the `disable-nonportable-jndi-names` boolean, as
 desired.
 +
-`false` - Enables the automatic use of GlassFish Server v2-specific JNDI
+`false` - Enables the automatic use of {productName} v2-specific JNDI
 names. This is the default setting.
 +
 `true` - Disables the automatic use of v2-specific JNDI names. In all
 cases, 5.0-compatible JNDI names will be used.
-3. Save the `glassfish-ejb-jar.xml` file and restart the GlassFish
-Server domain.
+3. Save the `glassfish-ejb-jar.xml` file and restart the {productName} domain.
 +
 This setting applies to all EJBs deployed to the server.
 

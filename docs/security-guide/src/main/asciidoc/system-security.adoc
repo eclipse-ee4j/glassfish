@@ -17,7 +17,7 @@ This chapter describes general information about administering system security.
 
 The following topics are addressed here:
 
-* link:#ggktf[About System Security in GlassFish Server]
+* link:#ggktf[About System Security in {productName}]
 * link:#ghgrp[Administering Passwords]
 * link:#ghgol[Administering Audit Modules]
 * link:#ablqz[Administering JSSE Certificates]
@@ -29,17 +29,16 @@ online help.
 
 Information on application security is contained in
 "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
-in GlassFish Server Open Source Edition Application Development Guide.
+in {productName} Application Development Guide.
 
 [[ggktf]][[GSSCG00143]][[about-system-security-in-glassfish-server]]
 
-=== About System Security in GlassFish Server
+=== About System Security in {productName}
 
 Security is about protecting data, that is, how to prevent unauthorized
-access or damage to data that is in storage or in transit. The GlassFish
-Server is built on the Java security model, which uses a sandbox where
+access or damage to data that is in storage or in transit. The {productName} is built on the Java security model, which uses a sandbox where
 applications can run safely, without potential risk to systems or users.
-System security affects all the applications in the GlassFish Server environment.
+System security affects all the applications in the {productName} environment.
 
 The Jakarta EE Security API specification defines portable, plug-in
 interfaces for authentication and identity stores, and a new
@@ -69,7 +68,7 @@ themselves. Additionally, clients might require servers to authenticate
 themselves. When authentication is bidirectional, it is called mutual
 authentication.
 
-When an entity tries to access a protected resource, GlassFish Server
+When an entity tries to access a protected resource, {productName}
 uses the authentication mechanism configured for that resource to
 determine whether to grant access. For example, a user can enter a user
 name and password in a web browser, and if the application verifies
@@ -84,7 +83,7 @@ Within its deployment descriptors, an application can specify the type
 of authentication that it uses. The Jakarta EE Security API provides an
 alternative mechanism for configuring the type of authentication an
 application uses. See https://jcp.org/en/jsr/detail?id=375[Jakarta EE
-Security API 1.0 specification]. GlassFish Server supports specifying
+Security API 1.0 specification]. {productName} supports specifying
 the following types of authentication in deployment descriptors:
 
 BASIC::
@@ -152,7 +151,7 @@ implementations of the  plug-in SPIs, or define custom implementations.
 
 ===== JSR 196 Server Authentication Modules
 
-GlassFish Server implements the Servlet Container Profile of
+{productName} implements the Servlet Container Profile of
 http://www.jcp.org/en/jsr/detail?id=196[JSR 196 Java Authentication
 Service Provider Interface for Containers specification].
 
@@ -169,8 +168,8 @@ SPI in specific contexts.
 ===== Passwords
 
 Passwords are your first line of defense against unauthorized access to
-the components and data of GlassFish Server. For Information about how
-to use passwords for GlassFish Server, see link:#ghgrp[Administering
+the components and data of {productName}. For Information about how
+to use passwords for {productName}, see link:#ghgrp[Administering
 Passwords].
 
 [[gczen]][[GSSCG00042]][[master-password-and-keystores]]
@@ -178,10 +177,10 @@ Passwords].
 ====== Master Password and Keystores
 
 The master password is not tied to a user account and it is not used for
-authentication. Instead, GlassFish Server uses the master password only
+authentication. Instead, {productName} uses the master password only
 to encrypt the keystore and truststore for the DAS and instances.
 
-When you create a new GlassFish Server domain, a new self-signed
+When you create a new {productName} domain, a new self-signed
 certificate is generated and stored in the domain keystore and
 truststore. The DAS needs the master password to open these stores at
 startup. Similarly, the associated server instances need the master
@@ -192,7 +191,7 @@ truststore, you must provide the master password in that case as well.
 
 The master password is a shared password and must be the same for the
 DAS and all instances in the domain in order to manage the instances
-from the DAS. However, because GlassFish Server never transmits the
+from the DAS. However, because {productName} never transmits the
 master password over the network, it is up to you to keep the master
 password in sync between the DAS and instances.
 
@@ -208,11 +207,11 @@ DAS and instances. The DAS needs the master password to open these
 stores at startup. Similarly, the associated server instances need the
 master password to open their copy of these stores at startup.
 
-GlassFish Server keeps the keystore and truststore for the DAS and
+{productName} keeps the keystore and truststore for the DAS and
 instances in sync, which guarantees that all copies of the stores are
 encrypted with the same master password at any given time.
 
-However, GlassFish Server does not synchronize the master password
+However, {productName} does not synchronize the master password
 itself, and it is possible that the DAS and instances might attempt to
 use different master passwords.
 
@@ -244,12 +243,12 @@ to keep the master password file in sync.
 
 ====== Using the Default Master Password
 
-GlassFish Server uses the known phrase "changeit" as the default master
+{productName} uses the known phrase "changeit" as the default master
 password. This master password is not stored in a file. The default
 password is a convenience feature and provides no additional security
 because it is assumed to be widely known.
 
-All GlassFish Server subcommands work as expected with the default
+All {productName} subcommands work as expected with the default
 master password and there are no synchronization issues.
 
 [[gktfy]][[GSSCG00045]][[saving-the-master-password-to-a-file]]
@@ -288,7 +287,7 @@ keystore is encrypted with a master password that is built into the
 system, or by a user-defined master password.
 
 * If false (default), the keystore is encrypted with a well-known
-password (changeit) that is built into GlassFish Server.
+password (changeit) that is built into {productName}.
 * If true, the subcommand obtains the master password from the
 `AS_ADMIN_MASTERPASSWORD` entry in the password file you specified in
 the `--passwordfile` option of the `asadmin` utility. Or, if none is
@@ -340,7 +339,7 @@ stored credentials for other applications, by exploiting browser
 vulnerabilities or through application-level cross-domain attacks.
 
 To prevent your web browser from saving login credentials for the
-GlassFish Server Administration Console, choose "No" or "Never for this
+{productName} Administration Console, choose "No" or "Never for this
 page" when prompted by the browser during login.
 
 [[ghgoj]][[GSSCG00187]][[password-aliases]]
@@ -363,7 +362,7 @@ sign-on applies to web applications configured for the same realm and
 virtual server. The realm is defined by the `realm-name` element in the
 `web.xml` file.
 
-On GlassFish Server, single sign-on behavior can be inherited from the
+On {productName}, single sign-on behavior can be inherited from the
 HTTP Service, enabled, or disabled. By default, it is inherited from the
 HTTP Service. If enabled, single sign-on is enabled for web applications
 on this virtual server that are configured for the same realm. If
@@ -410,9 +409,9 @@ users, groups, and roles, as illustrated in link:#fxjfw[Figure 1-1].
 ====
 By default, group principal names are mapped to roles of the same name.
 Therefore, the Default Principal To Role Mapping setting is enabled by
-default on the Security page of the GlassFish Server Administration
+default on the Security page of the {productName} Administration
 Console. With this setting enabled, if the group name defined on
-GlassFish Server matches the role name defined in the application, there
+{productName} matches the role name defined in the application, there
 is no need to use the runtime deployment descriptor to provide a
 mapping. The application server will implicitly make this mapping, as
 long as the names of the groups and roles match.
@@ -433,7 +432,7 @@ assigned to roles, and how applications use groups and roles."]
 Java Authorization Contract for Containers (JACC) is the part of the
 Jakarta EE specification that defines an interface for pluggable
 authorization providers. This enables you to set up third-party plug-in
-modules to perform authorization. By default, the GlassFish Server
+modules to perform authorization. By default, the {productName}
 provides a simple, file-based authorization engine that complies with
 the JACC specification.
 
@@ -448,8 +447,8 @@ You can also specify additional third-party JACC providers.
 
 ===== Working With the server.policy Policy File
 
-Each GlassFish Server domain has its own global Java SE policy file,
-located in domain-dir`/config`. The file is named `server.policy`.
+Each {productName} domain has its own global Java SE policy file,
+located in domain-dir``/config``. The file is named `server.policy`.
 
 This section covers the following topics:
 
@@ -574,7 +573,7 @@ grant {
 
 ====== Changing the Default Permissions
 
-The GlassFish Server internal server code is granted all permissions.
+The {productName} internal server code is granted all permissions.
 These grants are covered by the `AllPermission` grant blocks to various
 parts of the server infrastructure code. Do not modify these entries.
 
@@ -586,7 +585,7 @@ The last section, beginning with the comment "Basic set of required
 permissions..." provides the basic set of permissions granted to all
 remaining code.
 
-Depending on your GlassFish Server implementation, deleting or modifying
+Depending on your {productName} implementation, deleting or modifying
 these permissions might be appropriate.
 
 Specifically, the following permission allows all applications to read
@@ -632,9 +631,8 @@ remove these permissions, because they are otherwise unnecessary.
 ==== Auditing
 
 Auditing is the means used to capture security-related events for the
-purpose of evaluating the effectiveness of security measures. GlassFish
-Server uses audit modules to capture audit trails of all authentication
-and authorization decisions. GlassFish Server provides a default audit
+purpose of evaluating the effectiveness of security measures. {productName} uses audit modules to capture audit trails of all authentication
+and authorization decisions. {productName} provides a default audit
 module, as well as the ability to plug in custom audit modules. The
 scope of the audit module is the entire server, which means that all the
 applications on the server will use the same audit module.
@@ -649,7 +647,7 @@ Modules].
 A firewall controls the flow of data between two or more networks, and
 manages the links between the networks. A firewall can consist of both
 hardware and software elements. The following guidelines pertain
-primarily to GlassFish Server:
+primarily to {productName}:
 
 * In general, firewalls should be configured so that clients can access
 the necessary TCP/IP ports.
@@ -671,8 +669,7 @@ creates security risks.
 
 * In double firewall architecture, you must configure the outer firewall
 to allow for HTTP and HTTPS transactions. You must configure the inner
-firewall to allow the HTTP server plug-in to communicate with GlassFish
-Server behind the firewall.
+firewall to allow the HTTP server plug-in to communicate with {productName} behind the firewall.
 
 [[abloj]][[GSSCG00207]][[certificates-and-ssl]]
 
@@ -770,26 +767,26 @@ certificate in the chain.
 
 ===== Certificate Files
 
-During GlassFish Server installation, a certificate is generated in Java
+During {productName} installation, a certificate is generated in Java
 Secure Socket Extension (JSSE) format suitable for internal testing.
-(The certificate is self-signed.) By default, GlassFish Server stores
+(The certificate is self-signed.) By default, {productName} stores
 its certificate information in certificate databases in the
-domain-dir`/config` directory:
+domain-dir``/config`` directory:
 
 Keystore file::
-  The `keystore.jks` file contains GlassFish Server certificate,
+  The `keystore.jks` file contains {productName} certificate,
   including its private key. The keystore file is protected with a
   password. +
   Each keystore entry has a unique alias. After installation, the
-  GlassFish Server keystore has a single entry with an alias of `s1as`.
+  {productName} keystore has a single entry with an alias of `s1as`.
 Truststore file::
-  The `cacerts.jks` file contains the GlassFish Server trusted
+  The `cacerts.jks` file contains the {productName} trusted
   certificates, including public keys for other entities. For a trusted
   certificate, the server has confirmed that the public key in the
   certificate belongs to the certificate's owner. Trusted certificates
   generally include those of CAs.
 
-By default, GlassFish Server is configured with a keystore and
+By default, {productName} is configured with a keystore and
 truststore that will work with the example applications and for
 development purposes.
 
@@ -828,16 +825,15 @@ key to encrypt all their communications with each other. Thus, their
 communications are ensured to be secure.
 
 The newest version of the SSL standard is called Transport Layer
-Security (TLS). The GlassFish Server supports the SSL 3.0 and the TLS
+Security (TLS). The {productName} supports the SSL 3.0 and the TLS
 1.0 encryption protocols.
 
-To use SSL, GlassFish Server must have a certificate for each external
+To use SSL, {productName} must have a certificate for each external
 interface or IP address that accepts secure connections. The HTTPS
 service of most web servers will not run unless a certificate has been
 installed. For instructions on applying SSL to HTTP listeners, see
 "link:../administration-guide/http_https.html#GSADG00469[
-To Configure an HTTP Listener for SSL]" in GlassFish
-Server Open Source Edition Administration Guide.
+To Configure an HTTP Listener for SSL]" in {productName} Administration Guide.
 
 [[ablon]][[GSSCG00052]][[ciphers]]
 
@@ -880,7 +876,7 @@ environment.
 
 ===== Custom Authentication of Client Certificate in SSL Mutual Authentication
 
-Release 7 of GlassFish Server extends the Certificate realm to allow
+Release 7 of {productName} extends the Certificate realm to allow
 custom authentication and group assignment based on the client
 certificate received as part of SSL mutual (two-way) authentication.
 
@@ -986,7 +982,7 @@ public class CertificateLM extends AppservCertificateLoginModule {
 
 After you create your LoginModule, you must plug it in to a
 jaas-context, which you then specify as a parameter to the certificate
-realm in GlassFish Server.
+realm in {productName}.
 
 To do this, perform the following steps:
 
@@ -1023,7 +1019,7 @@ property. For example:
 
 ==== Tools for Managing System Security
 
-GlassFish Server provides the following tools for managing system
+{productName} provides the following tools for managing system
 security:
 
 Administration Console::
@@ -1033,14 +1029,14 @@ Administration Console::
   system-wide security tasks. For a general introduction to the
   Administration Console, see
   "link:../administration-guide/overview.html#GSADG00698[Administration Console]"
-  in GlassFish Server Open Source Edition Administration Guide.
+  in {productName} Administration Guide.
 The `asadmin` utility::
   The `asadmin` command-line utility performs many of the same tasks as
   the Administration Console. You might be able to do some things with
   the `asadmin` utility that you cannot do with the Administration
   Console. For a general introduction to `asadmin`, see
   "link:../administration-guide/overview.html#GSADG00699[asadmin Utility]"
-  in GlassFish Server Open Source Edition Administration Guide.
+  in {productName} Administration Guide.
 The `keytool` utility::
   The `keytool` Java Platform, Standard Edition (Java SE) command-line
   utility is used for managing digital certificates and key pairs. For
@@ -1077,7 +1073,7 @@ The following topics are addressed here:
 
 The master password gives access to the keystore used with the domain.
 This password is not tied to a UNIX user. You should treat this overall
-shared password as sensitive data. GlassFish Server never uses it for
+shared password as sensitive data. {productName} never uses it for
 authentication and never transmits it over the network.
 
 You can choose to type the password manually when required, or to
@@ -1112,15 +1108,14 @@ This subcommand will not work unless the domain is stopped.
 1. Stop the domain whose password you are changing.
 +
 See "link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
-in GlassFish Server Open Source Edition Administration Guide.
+in {productName} Administration Guide.
 2. Change the master password for the domain by using the
 link:../reference-manual/change-master-password.html#GSRFM00006[`change-master-password`] subcommand.
 +
 You are prompted for the old and new passwords. All dependent items are re-encrypted.
 3. Start the domain.
 +
-See "link:../administration-guide/domains.html#GSADG00335[To Start a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+See "link:../administration-guide/domains.html#GSADG00335[To Start a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00061]][[givil]]
 Example 1-2 Changing the Master Password
@@ -1184,14 +1179,14 @@ The `start-instance` and `start-cluster` subcommands are more
 problematic. If you create a domain with a master password other than
 the default, an associated remote instance or cluster must have access
 to the master password in order to start. However, for security reasons
-GlassFish Server never transmits the master password or the master
+{productName} never transmits the master password or the master
 password file over the network.
 
 Consider the following scenario:
 
 1. Change the master password on the DAS and save it with `--savemasterpassword`.
 2. Create an instance on another host using the subcommand
-`create-instance`. GlassFish Server copies the keystore and truststore
+`create-instance`. {productName} copies the keystore and truststore
 from the DAS to the instance, but it does not copy the master password file.
 3. Try to start the instance using the `start-instance` subcommand.
 An error results.
@@ -1280,9 +1275,9 @@ passwords are not echoed to the display.
 
 [NOTE]
 ====
-For the zip bundle of GlassFish Server 7, the default administrator
+For the zip bundle of {productName} 7, the default administrator
 login is `admin`, with no password, which means that no login is
-required. For Oracle GlassFish Server, you are prompted to provide a
+required. For {productName}, you are prompted to provide a
 password for the `admin` user when you start the domain for the first
 time.
 ====
@@ -1307,9 +1302,8 @@ Encrypting the admin password is strongly encouraged.
 1. Change the admin password by using the
 link:../reference-manual/change-admin-password.html#GSRFM00004[`change-admin-password`] subcommand.
 2. Enter the old and new admin passwords when prompted.
-3. Restart GlassFish Server. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+3. Restart {productName}. +
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00062]][[ghlac]]
 Example 1-3 Changing the Admin Password
@@ -1411,7 +1405,7 @@ password itself does not appear in cleartext in the domain's
 `domain.xml` configuration file.
 
 Storing passwords in cleartext format in system configuration files is
-common in many open source projects. In addition to GlassFish Server,
+common in many open source projects. In addition to {productName},
 Apache Tomcat, Maven, and Subversion, among others, store and pass
 passwords in cleartext format. However, storing and passing passwords in
 cleartext can be a security risk, and may violate some corporate
@@ -1701,7 +1695,7 @@ Command delete-audit-module executed successfully.
 
 === Administering JSSE Certificates
 
-In the developer profile, the GlassFish Server 7 uses the JSSE format
+In the developer profile, the {productName} 7 uses the JSSE format
 on the server side to manage certificates and key stores. In all
 profiles, the client side (appclient or stand-alone) uses the JSSE
 format.
@@ -1730,12 +1724,12 @@ directory where the utility is run.
 Before You Begin
 
 To run the `keytool` utility, your shell environment must be configured
-so that the Java SE `/bin` directory is in the path, otherwise the full
+so that the Java SE ``/bin`` directory is in the path, otherwise the full
 path to the utility must be present on the command line.
 
 1. Change to the directory that contains the keystore and truststore files. +
 Always generate the certificate in the directory containing the keystore
-and truststore files. The default is domain-dir`/config`.
+and truststore files. The default is domain-dir``/config``.
 2. Generate the certificate in the keystore file, `keystore.jks`, using
 the following command format:
 +
@@ -1787,9 +1781,8 @@ Information similar to the following is displayed:
 Certificate was added to keystore
 [Saving cacerts.jks]
 ----
-7. To apply your changes, restart GlassFish Server. See
-"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open Source
-Edition Administration Guide.
+7. To apply your changes, restart {productName}. See
+"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00071]][[ghlii]]
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
@@ -1863,7 +1856,7 @@ certificate.
 keytool -delete -alias s1as -keystore keystore.jks -storepass <store_passwd>
 ----
 where <store_passwd> is the password for the keystore. For example,
-"mypass". Note that `s1as` is the default alias of the GlassFish Server
+"mypass". Note that `s1as` is the default alias of the {productName}
 keystore.
 2. Generate a new key pair for the application server:
 +
@@ -1957,10 +1950,9 @@ Serial number: 1375de18b223508c2cb0123059d5c440
 Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
 26 05:29:59 GMT+05:30 2007
 ----
-8. To apply your changes, restart GlassFish Server.
+8. To apply your changes, restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in GlassFish Server Open
-Source Edition Administration Guide.
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00075]][[ghlhu]]
 Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS
@@ -2043,21 +2035,21 @@ J2EE 1.4 specification that defines an interface for pluggable
 authorization providers. This enables the administrator to set up
 third-party plug-in modules to perform authorization.
 
-GlassFish Server includes Administration Console support and subcommands
+{productName} includes Administration Console support and subcommands
 to support JACC providers, as follows:
 
 * create `create-jacc-provider`
 * delete `delete-jacc-provider`
 * list `list-jacc-providers`
 
-The default GlassFish Server installation includes two JACC providers,
+The default {productName} installation includes two JACC providers,
 named default and simple. You should not delete these default providers.
 Any JACC providers you create with the `create-jacc-provider` subcommand
 are in addition to these two default providers.
 
-The GlassFish Server creates a JSR-115-compliant JACC provider that you
+The {productName} creates a JSR-115-compliant JACC provider that you
 can use with third-party authorization modules for applications running
-in GlassFish Server. The JACC provider is created as a `jacc-provider`
+in {productName}. The JACC provider is created as a `jacc-provider`
 element within the security-service element in the domain's `domain.xml`
 file.
 

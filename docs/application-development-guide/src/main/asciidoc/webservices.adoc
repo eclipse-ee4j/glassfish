@@ -13,7 +13,7 @@ prev=securing-apps.html
 [[developing-web-services]]
 == 5 Developing Web Services
 
-This chapter describes Oracle GlassFish Server support for web services.
+This chapter describes {productName} support for web services.
 The following topics are addressed here:
 
 * link:#gbizi[Creating Portable Web Service Artifacts]
@@ -31,11 +31,11 @@ from the Update Tool. Without the Metro add-on component, a servlet or
 EJB component cannot be a web service endpoint, and the
 `glassfish-web.xml` and `glassfish-ejb-jar.xml` elements related to web
 services are ignored. For information about the Update Tool, see
-"olink:GSADG00701[Update Tool]" in GlassFish Server Open Source Edition
+"olink:GSADG00701[Update Tool]" in {productName}
 Administration Guide.
 
-In addition, the as-install`/modules/webservices-osgi.jar` and
-as-install`/modules/webservices-api-osgi.jar` files must be in
+In addition, the as-install``/modules/webservices-osgi.jar`` and
+as-install``/modules/webservices-api-osgi.jar`` files must be in
 the classpath of your web services application. IDEs such as NetBeans
 and Eclipse do this automatically.
 ====
@@ -43,7 +43,7 @@ and Eclipse do this automatically.
 
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services[Web Services]"
 in The Jakarta EE Tutorial shows how to deploy simple web services to
-GlassFish Server.
+{productName}.
 
 For additional information about JAXB (Java Architecture for XML Binding), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
@@ -76,7 +76,7 @@ Web Services]" in The Jakarta EE Tutorial.
 
 === Deploying a Web Service
 
-You deploy a web service endpoint to the GlassFish Server just as you
+You deploy a web service endpoint to the {productName} just as you
 would any servlet, stateless session bean (SLSB), or application.
 
 
@@ -88,7 +88,7 @@ sufficient.
 ====
 
 
-The GlassFish Server deployment descriptor files `glassfish-web.xml` and
+The {productName} deployment descriptor files `glassfish-web.xml` and
 `glassfish-ejb-jar.xml` provide optional web service enhancements in the
 `webservice-endpoint` and `webservice-description` elements, including a
 `debugging-enabled` subelement that enables the creation of a test page.
@@ -97,10 +97,10 @@ link:#gbiyw[The Web Service URI, WSDL File, and Test Page].
 
 For more information about deployment, autodeployment, and deployment
 descriptors, see the link:../application-deployment-guide/toc.html#GSDPG[
-GlassFish Server Open Source Edition Application Deployment Guide].
+{productName} Application Deployment Guide].
 For more information about the
 `asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[
-GlassFish Server Open Source Edition Reference Manual].
+{productName} Reference Manual].
 
 [[gbiyw]][[GSDVG00128]][[the-web-service-uri-wsdl-file-and-test-page]]
 
@@ -161,7 +161,7 @@ Generation of the test page is enabled by default. You can disable the
 test page for a web service by setting the value of the
 `debugging-enabled` element in the `glassfish-web.xml` and
 `glassfish-ejb-jar.xml` deployment descriptor to `false`. For more
-information, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition
+information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
 Application Deployment Guide].
 
 [[CHDEBBCH]][[GSDVG536]][[the-databinding-provider]]
@@ -175,7 +175,7 @@ Jakarta EE APIs.
 
 The EclipseLink JAXB implementation, plus EclipseLink extensions, is
 called MOXy. The `org.eclipse.persistence.moxy.jar` file is bundled with
-GlassFish Server, which supports the JAXB RI and MOXy as databinding
+{productName}, which supports the JAXB RI and MOXy as databinding
 providers.
 
 To specify the databinding provider for the JVM, set the
@@ -242,7 +242,7 @@ import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ----
 
 The EclipseLink JAXB compiler is not included but can be used with
-GlassFish Server. Download the EclipseLink zip file at
+{productName}. Download the EclipseLink zip file at
 `http://www.eclipse.org/eclipselink/downloads/` and unzip it. The
 compiler files are located here:
 
@@ -256,15 +256,15 @@ bin/jaxb-compiler.sh
 
 === GlassFish Jakarta EE Service Engine
 
-GlassFish Server 7 provides the GlassFish Jakarta EE Service Engine, a
+{productName} 7 provides the GlassFish Jakarta EE Service Engine, a
 JSR 208 compliant Java Business Integration (JBI) runtime component that
 connects Jakarta EE web services to JBI components. The Jakarta EE Service
 Engine is installed as an add-on component using the Update Tool. Look
 for the JBI component named Jakarta EE Service Engine. A JBI runtime is not
-installed with or integrated into GlassFish Server 7 and must be
+installed with or integrated into {productName} 7 and must be
 obtained separately. For more information about using the Update Tool to
 obtain the Jakarta EE Service Engine and other add-on components, see
-"link:../administration-guide/toc.html#GSADG00701[Update Tool]" in GlassFish Server Open Source Edition
+"link:../administration-guide/toc.html#GSADG00701[Update Tool]" in {productName}
 Administration Guide.
 
 The Jakarta EE Service Engine acts as a bridge between the Jakarta EE and JBI
@@ -294,11 +294,11 @@ reverse.
 To deploy a Jakarta EE application or module as a JBI service unit, use the
 `asadmin deploy` command, or autodeployment. For more information about
 the `asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[
-GlassFish Server Open Source Edition Reference Manual].
+{productName} Reference Manual].
 For more information about autodeployment, see
 "link:../application-deployment-guide/deploying-applications.html#GSDPG00041[
 To Deploy an Application or Module Automatically]"
-in GlassFish Server Open Source Edition Application Deployment Guide.
+in {productName} Application Deployment Guide.
 
 [[gelxr]][[GSDVG00387]][[using-the-jbi.xml-file]]
 

@@ -14,7 +14,7 @@ prev=http_https.html
 == 14 Administering Concurrent Resources
 
 This chapter provides procedures for administering concurrent resources
-in the GlassFish Server environment by using the `asadmin` command-line
+in the {productName} environment by using the `asadmin` command-line
 utility.
 
 The following topics are addressed here:
@@ -34,7 +34,7 @@ Console are contained in the Administration Console online help.
 === About Concurrent Resources
 
 Concurrent resources are managed objects that provide concurrency
-capabilities to Jakarta EE applications. In GlassFish Server, you configure
+capabilities to Jakarta EE applications. In {productName}, you configure
 concurrent resources and make them available for use by application
 components such as servlets and EJBs. Concurrent resources are accessed
 through JNDI lookup or resource injection.
@@ -64,9 +64,9 @@ for the resource. Applications use this name to access the resource.
 
 The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
-default resources. GlassFish Server makes these names available through
+default resources. {productName} makes these names available through
 the use of logical JNDI names, which map Jakarta EE standard JNDI names to
-specific GlassFish Server resources. For concurrent resources, the
+specific {productName} resources. For concurrent resources, the
 mappings are as follows:
 
 java:comp/DefaultContextService::
@@ -110,7 +110,7 @@ specifying the JNDI name of a context service, use only the
 `concurrent/`name format. For example, `concurrent/Context1`.
 
 For more information about the default context service resource included
-with GlassFish Server, see link:#DAFFGDCD[Default Concurrent Resources].
+with {productName}, see link:#DAFFGDCD[Default Concurrent Resources].
 
 
 [NOTE]
@@ -284,7 +284,7 @@ specifying the JNDI name of a managed thread factory, use only the
 ``concurrent/``name format. For example, `concurrent/Factory1`.
 
 For more information about the default managed thread factory resource
-included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent Resources].
+included with {productName}, see link:#DAFFGDCD[Default Concurrent Resources].
 
 [NOTE]
 ====
@@ -457,7 +457,7 @@ specifying the JNDI name of a managed executor service, use only the
 `concurrent/`name format. For example, `concurrent/Executor1`.
 
 For more information about the default managed executor service resource
-included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent
+included with {productName}, see link:#DAFFGDCD[Default Concurrent
 Resources].
 
 
@@ -637,7 +637,7 @@ only the `concurrent/`name format. For example,
 `concurrent/ScheduledExecutor1`.
 
 For more information about the default managed scheduled executor
-service resource included with GlassFish Server, see
+service resource included with {productName}, see
 link:#DAFFGDCD[Default Concurrent Resources].
 
 

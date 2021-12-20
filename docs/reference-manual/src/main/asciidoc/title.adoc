@@ -1,23 +1,23 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Reference Manual, Release 7
+title={productName} Reference Manual, Release 7
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= Eclipse GlassFish Server Reference Manual, Release 7
+= {productName} Reference Manual, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Reference Manual
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This reference manual describes administration commands and utility
-commands that are available with Eclipse GlassFish Server 7.
+commands that are available with {productName} 7.
 This reference manual also describes concepts that are related to
 {productName} administration.
 
@@ -26,14 +26,13 @@ provided in accordance with standard rules of command syntax, along with
 availability attributes, diagnostic information, and cross-references to
 other manual pages and reference material with relevant information.
 
-This reference manual is for all users of GlassFish Server Open Source
-Edition.
+This reference manual is for all users of {productName}.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Reference Manual, Release 7
+{productName} Reference Manual, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

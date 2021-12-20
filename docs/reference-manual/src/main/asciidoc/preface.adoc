@@ -25,8 +25,7 @@ Enterprise Edition should be considered references to Jakarta EE.
 Please see the Title page for additional license information.
 ====
 
-Both novice users and those familiar with GlassFish Server Open Source
-Edition can use online man pages to obtain information about the product
+Both novice users and those familiar with {productName} can use online man pages to obtain information about the product
 and its features. A man page is intended to answer concisely the
 question "What does it do?" The man pages in general comprise a
 reference manual. They are not intended to be a tutorial.
@@ -41,8 +40,8 @@ The following contains a brief description of each man page section and
 the information it references:
 
 * Section 1 describes, in alphabetical order, the `asadmin` utility subcommands.
-* Section 1M describes GlassFish Server utility commands.
-* Section 5ASC describes concepts that are related to GlassFish Server administration.
+* Section 1M describes {productName} utility commands.
+* Section 5ASC describes concepts that are related to {productName} administration.
 
 Below is a generic format for man pages. The man pages of each manual
 section generally follow this order, but include only needed headings.

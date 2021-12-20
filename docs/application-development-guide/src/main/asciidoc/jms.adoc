@@ -14,13 +14,13 @@ prev=jndi.html
 == 17 Using the Java Message Service
 
 This chapter describes how to use the Java Message Service (JMS) API.
-The Oracle GlassFish Server has a fully integrated JMS provider: the
+The {productName} has a fully integrated JMS provider: the
 Open Message Queue software.
 
 
 [NOTE]
 ====
-JMS resources are supported only in the full GlassFish Server, not in
+JMS resources are supported only in the full {productName}, not in
 the Web Profile.
 ====
 
@@ -30,8 +30,8 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#messaging[Messaging]
 in The Jakarta EE Tutorial.
 
 For detailed information about JMS concepts and JMS support in the
-GlassFish Server, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message
-Service (JMS)]" in GlassFish Server Open Source Edition Administration
+{productName}, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message
+Service (JMS)]" in {productName} Administration
 Guide.
 
 The following topics are addressed here:
@@ -49,8 +49,7 @@ You can define an application-scoped JMS or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in GlassFish Server
-Open Source Edition Application Deployment Guide.
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[beaop]][[GSDVG00197]][[load-balanced-message-inflow]]
 
@@ -61,17 +60,16 @@ adapter in the `glassfish-ejb-jar.xml` file for a message-driven bean
 using `activation-config-property` elements. Whenever a message-driven
 bean (`EndPointFactory`) is deployed, the connector runtime engine finds
 these properties and configures them accordingly in the resource
-adapter. See "link:../application-deployment-guide/dd-elements.html#GSDPG00086[activation-config-property]" in GlassFish
-Server Open Source Edition Application Deployment Guide.
+adapter. See "link:../application-deployment-guide/dd-elements.html#GSDPG00086[activation-config-property]" in {productName} Application Deployment Guide.
 
-The GlassFish Server transparently enables messages to be delivered in
+The {productName} transparently enables messages to be delivered in
 random fashion to message-driven beans having same `ClientID`. The
 `ClientID` is required for durable subscribers.
 
 For nondurable subscribers in which the `ClientID` is not configured,
 all instances of a specific message-driven bean that subscribe to same
 topic are considered equal. When a message-driven bean is deployed to
-multiple instances of the GlassFish Server, only one of the
+multiple instances of the {productName}, only one of the
 message-driven beans receives the message. If multiple distinct
 message-driven beans subscribe to same topic, one instance of each
 message-driven bean receives a copy of the message.
@@ -89,8 +87,7 @@ to `priority`. This setting specifies that the first broker in the
 `AddressList` is selected first. This first broker is the local
 colocated Message Queue instance. If this broker is unavailable,
 connection attempts are made to brokers in the order in which they are
-listed in the `AddressList`. This setting is the default for GlassFish
-Server instances that belong to a cluster.
+listed in the `AddressList`. This setting is the default for {productName} instances that belong to a cluster.
 
 [[beaor]][[GSDVG00198]][[authentication-with-connectionfactory]]
 
@@ -98,9 +95,9 @@ Server instances that belong to a cluster.
 
 If your web, EJB, or client module has `res-auth` set to `Container`,
 but you use the `ConnectionFactory.createConnection("user","password")`
-method to get a connection, the GlassFish Server searches the container
+method to get a connection, the {productName} searches the container
 for authentication information before using the supplied user and
-password. Version 7 of the GlassFish Server threw an exception in this
+password. Version 7 of the {productName} threw an exception in this
 situation.
 
 [[beaot]][[GSDVG00199]][[delivering-soap-messages-using-the-jms-api]]

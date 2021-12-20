@@ -71,7 +71,7 @@ component_name::
   (`.`) characters. To disable multiple versions, you can use an
   asterisk (`*`) as a wildcard character. For more information about
   module and application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and
-  Application Versions]" in GlassFish Server Open Source Edition
+  Application Versions]" in {productName}
   Application Deployment Guide.
 
 [[sthref1043]]
@@ -109,7 +109,7 @@ link:deploy.html#deploy-1[`deploy`(1)],
 link:enable.html#enable-1[`enable`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

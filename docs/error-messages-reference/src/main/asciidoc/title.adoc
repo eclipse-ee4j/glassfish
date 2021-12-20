@@ -1,29 +1,29 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Error Message Reference, Release 7
+title={productName} Error Message Reference, Release 7
 next=preface.html
 prev=toc.html
 ~~~~~~
 
-= Eclipse GlassFish Server Error Message Reference, Release 7
+= {productName} Error Message Reference, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 Error Message Reference
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
 This book describes error messages that you might encounter when using
-GlassFish Server 7.
+{productName} 7.
 
 [[sthref1]]
 
 '''''
 
-Eclipse GlassFish Server Error Message Reference, Release 7
+{productName} Error Message Reference, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

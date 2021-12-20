@@ -14,7 +14,7 @@ prev=jvm.html
 == 5 Administering Thread Pools
 
 This chapter provides procedures for administering thread pools in the
-GlassFish Server Open Source Edition 7 environment by using the
+{productName} 7 environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -31,13 +31,13 @@ Console are contained in the Administration Console online help.
 
 The Virtual Machine for the Java platform (Java Virtual Machine) or JVM
 machine) can support many threads of execution simultaneously. To help
-performance, GlassFish Server maintains one or more thread pools. It is
+performance, {productName} maintains one or more thread pools. It is
 possible to assign specific thread pools to connector modules, to
 network listeners, or to the Object Request Broker (ORB).
 
 One thread pool can serve multiple connector modules and enterprise
 beans. Request threads handle user requests for application components.
-When GlassFish Server receives a request, it assigns the request to a
+When {productName} receives a request, it assigns the request to a
 free thread from the thread pool. The thread executes the client's
 requests and returns results. For example, if the request needs to use a
 system resource that is currently busy, the thread waits until that
@@ -72,9 +72,9 @@ specified. Increasing the number of threads available to a process
 allows the process to respond to more application requests
 simultaneously.
 
-If one resource adapter or application occupies all the GlassFish Server
+If one resource adapter or application occupies all the {productName}
 threads, thread starvation might occur. You can avoid this by dividing
-the GlassFish Server threads into different thread pools.
+the {productName} threads into different thread pools.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a new thread pool by using the
@@ -82,7 +82,7 @@ link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] 
 +
 Information about options for the subcommand is included in this help
 page.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 +
@@ -155,7 +155,7 @@ link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] su
 link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 +
@@ -196,7 +196,7 @@ referenced by a network listener.
 link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] subcommand.
 3. Delete the specified thread pool by using the
 link:../reference-manual/delete-threadpool.html#GSRFM00111[`delete-threadpool`] subcommand.
-4. To apply your changes, restart GlassFish Server.
+4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 +

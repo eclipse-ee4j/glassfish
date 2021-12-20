@@ -12,33 +12,33 @@ prev=title.html
 == Preface
 
 This document explains how to use published interfaces of
-GlassFish Server Open Source Edition to develop add-on components
-for GlassFish Server.
+{productName} to develop add-on components
+for {productName}.
 This document explains how to perform only those tasks that
-ensure that the add-on component is suitable for GlassFish Server.
+ensure that the add-on component is suitable for {productName}.
 
 This document is for software developers who are developing add-on
-components for GlassFish Server. This document assumes that the
-developers are working with a distribution of GlassFish Server. Access
+components for {productName}. This document assumes that the
+developers are working with a distribution of {productName}. Access
 to the source code of the GlassFish project is not required to perform
 the tasks in this document. This document also assumes the ability to
 program in the Java language.
 
 This preface contains information about and conventions for the entire
-GlassFish Server Open Source Edition (GlassFish Server) documentation set.
+{productName} ({productName}) documentation set.
 
-GlassFish Server 7 is developed through the GlassFish project
+{productName} 7 is developed through the GlassFish project
 open-source community at https://github.com/eclipse-ee4j/glassfish.
 The GlassFish project provides a structured process for developing the
-GlassFish Server platform that makes the new features of the Jakarta EE
+{productName} platform that makes the new features of the Jakarta EE
 platform available faster, while maintaining the most important feature
 of Jakarta EE: compatibility. It enables Java developers to access the
-GlassFish Server source code and to contribute to the development of the
-GlassFish Server.
+{productName} source code and to contribute to the development of the
+{productName}.
 
 The following topics are addressed here:
 
-* link:#ghpbz[GlassFish Server Documentation Set]
+* link:#ghpbz[{productName} Documentation Set]
 * link:#giprl[Related Documentation]
 * link:#fwbkx[Typographic Conventions]
 * link:#fquvc[Symbol Conventions]
@@ -47,10 +47,10 @@ The following topics are addressed here:
 [[GSACG00079]][[ghpbz]]
 
 [[glassfish-server-documentation-set]]
-=== GlassFish Server Documentation Set
+=== {productName} Documentation Set
 
-The GlassFish Server documentation set describes deployment planning and
-system installation. For an introduction to GlassFish Server, refer to
+The {productName} documentation set describes deployment planning and
+system installation. For an introduction to {productName}, refer to
 the books in the order in which they are listed in the following table.
 
 [width="100%",cols="<30%,<70%",options="header",]
@@ -62,65 +62,65 @@ table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
 |link:../quick-start-guide/toc.html#GSQSG[Quick Start Guide]
-|Explains how to get started with the GlassFish Server product.
+|Explains how to get started with the {productName} product.
 
 |link:../installation-guide/toc.html#GSING[Installation Guide]
 |Explains how to install the software and its components.
 
 |link:../upgrade-guide/toc.html#GSUPG[Upgrade Guide]
-|Explains how to upgrade to the latest version of GlassFish Server.
+|Explains how to upgrade to the latest version of {productName}.
 This guide also describes differences between adjacent product releases and configuration
 options that can result in incompatibility with the product specifications.
 
 |link:../deployment-planning-guide/toc.html#GSPLG[Deployment Planning Guide]
-|Explains how to build a production deployment of GlassFish Server that meets the requirements of
+|Explains how to build a production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
 |link:../administration-guide/toc.html#GSADG[Administration Guide]
-|Explains how to configure, monitor, and manage GlassFish Server subsystems and components
+|Explains how to configure, monitor, and manage {productName} subsystems and components
 from the command line by using the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
 |link:../security-guide/toc.html#GSSCG[Security Guide]
-|Provides instructions for configuring and administering GlassFish Server security.
+|Provides instructions for configuring and administering {productName} security.
 
 |link:../application-deployment-guide/toc.html#GSDPG[Application Deployment Guide]
-|Explains how to assemble and deploy applications to the GlassFish Server and provides information
+|Explains how to assemble and deploy applications to the {productName} and provides information
 about deployment descriptors.
 
 |link:../application-development-guide/toc.html#GSDVG[Application Development Guide]
 |Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
-applications that are intended to run on the GlassFish Server.
+applications that are intended to run on the {productName}.
 These applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs).
 This guide provides information about developer tools, security, and debugging.
 
 |link:../add-on-component-development-guide/toc.html#GSACG[Add-On Component Development Guide]
-|Explains how to use published interfaces of GlassFish Server to develop add-on components
-for GlassFish Server.
+|Explains how to use published interfaces of {productName} to develop add-on components
+for {productName}.
 This document explains how to perform only those tasks that ensure that the add-on component
-is suitable for GlassFish Server.
+is suitable for {productName}.
 
 |link:../embedded-server-guide/toc.html#GSESG[Embedded Server Guide]
-|Explains how to run applications in embedded GlassFish Server and to develop applications
-in which GlassFish Server is embedded.
+|Explains how to run applications in embedded {productName} and to develop applications
+in which {productName} is embedded.
 
 |link:../ha-administration-guide/toc.html#GSHAG[High Availability Administration Guide]
-|Explains how to configure GlassFish Server to provide higher availability and
+|Explains how to configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
 |link:../performance-tuning-guide/toc.html#GSPTG[Performance Tuning Guide]
-|Explains how to optimize the performance of GlassFish Server.
+|Explains how to optimize the performance of {productName}.
 
 |link:../troubleshooting-guide/toc.html#GSTSG[Troubleshooting Guide]
-|Describes common problems that you might encounter when using GlassFish Server and explains how to solve them.
+|Describes common problems that you might encounter when using {productName} and explains how to solve them.
 
 |link:../error-messages-reference/toc.html#GSEMR[Error Message Reference]
-|Describes error messages that you might encounter when using GlassFish Server.
+|Describes error messages that you might encounter when using {productName}.
 
 |link:../reference-manual/toc.html#GSRFM[Reference Manual]
-|Provides reference information in man page format for GlassFish Server administration commands, utility
+|Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 
 |link:../../openmq/mq-release-notes/toc.html#GMRLN[Message Queue Release Notes]
@@ -140,7 +140,7 @@ conformance with the Java Management Extensions (JMX).
 
 |link:../../openmq/mq-dev-guide-java/toc.html#GMJVG[Message Queue Developer's Guide for Java Clients]
 |Provides information about concepts and procedures for developing Java messaging
-applications (Java clients) that work with GlassFish Server.
+applications (Java clients) that work with {productName}.
 
 |link:../../openmq/mq-dev-guide-c/toc.html#GMCCG[Message Queue Developer's Guide for C Clients]
 |Provides programming and reference information for developers working with
@@ -169,14 +169,14 @@ This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.
 
 Javadoc tool reference documentation for packages that are provided with
-GlassFish Server is available as follows.
+{productName} is available as follows.
 
 * The Jakarta EE specifications and API specification is
 located at https://jakarta.ee/specifications/.
 
-* The API specification for GlassFish Server 7, including Jakarta EE
+* The API specification for {productName} 7, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
-GlassFish Server product, is located at
+{productName} product, is located at
 https://glassfish.org/docs/.
 
 For information about creating enterprise applications in the NetBeans
@@ -185,7 +185,7 @@ https://netbeans.apache.org/kb/docs/java-ee.html[
 NetBeans Documentation, Training & Support page].
 
 For information about the Derby database for use with
-the GlassFish Server, see the https://db.apache.org/derby/index.html[Derby page].
+the {productName}, see the https://db.apache.org/derby/index.html[Derby page].
 
 The Jakarta EE Samples project is a collection of sample applications that
 demonstrate a broad range of Jakarta EE technologies. The Jakarta EE Samples
@@ -290,7 +290,7 @@ used in this book.
 |Placeholder |Description |Default Value
 
 |as-install
-a|Represents the base installation directory for GlassFish Server.
+a|Represents the base installation directory for {productName}.
 In configuration files, as-install is represented as follows:
 `${com.sun.aas.installRoot}`
 a|* Installations on the Oracle Solaris operating system, Linux operating
@@ -303,7 +303,7 @@ user's-home-directory``/glassfish7/glassfish``
 SystemDrive``:\glassfish7\glassfish``
 
 |as-install-parent
-|Represents the parent of the base installation directory for GlassFish Server.
+|Represents the parent of the base installation directory for {productName}.
 a|* Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 +

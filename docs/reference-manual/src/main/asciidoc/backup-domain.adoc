@@ -34,14 +34,12 @@ asadmin [asadmin-options] backup-domain [--help]
 
 The `backup-domain` subcommand backs up files under the named domain.
 
-This subcommand is supported in local mode only in GlassFish Server Open
-Source Edition, and is supported in local mode and remote mode in Oracle
-GlassFish Server.
+This subcommand is supported in local mode only in {productName}, and is supported in local mode and remote mode in {productName}.
 
-In GlassFish Server Open Source Edition, the domain to be backed up must
+In {productName}, the domain to be backed up must
 be stopped.
 
-In Oracle GlassFish Server, the domain to be backed up must be stopped
+In {productName}, the domain to be backed up must be stopped
 or be suspended using the `suspend-domain`(1) subcommand.
 
 [[sthref41]]
@@ -61,8 +59,7 @@ asadmin-options::
   The default value is `false`.
 `--description`::
   Specifies a description to store in the backup file. The description
-  is displayed as part of the information about a backup file.
-+
+  is displayed as part of the information about a backup file. +
   The default value has this form:
 +
 [source]
@@ -71,17 +68,15 @@ domain-name backup created on YYYY_MM_DD by user user-name
 ----
 `--domaindir`::
   Specifies the domain root directory, the parent directory of the
-  domain to back up.
-+
-  The default value is as-install`/domains`.
+  domain to back up. +
+  The default value is as-install``/domains``.
 `--backupdir`::
-  Specifies the directory under which the backup file is to be stored.
-+
-  The default value is as-install`/domains/`domain-dir`/backups`. If the
-  domain is not in the default location, the location is
-  domain-dir`/backups`.
+  Specifies the directory under which the backup file is to be stored. +
+  The default value is as-install``/domains/``domain-dir``/backups``.
+  If the domain is not in the default location, the location is
+  domain-dir``/backups``.
 `--backupconfig`::
-  (Supported only in Oracle GlassFish Server.) The name of the domain
+  (Supported only in {productName}.) The name of the domain
   backup configuration in the backup directory under which the backup
   file is to be stored.
 
@@ -90,10 +85,8 @@ domain-name backup created on YYYY_MM_DD by user user-name
 === Operands
 
 domain-name::
-  Specifies the name of the domain to be backed up.
-+
-  This operand is optional if only one domain exists in the
-  {productName} installation.
+  Specifies the name of the domain to be backed up. +
+  This operand is optional if only one domain exists in the {productName} installation.
 
 [[sthref43]]
 

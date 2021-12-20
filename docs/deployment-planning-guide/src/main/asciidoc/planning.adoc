@@ -13,7 +13,7 @@ prev=concepts.html
 [[planning-your-deployment]]
 == 2 Planning your Deployment
 
-Before deploying GlassFish Server, first determine the performance and
+Before deploying {productName}, first determine the performance and
 availability goals, and then make decisions about the hardware, network,
 and storage requirements accordingly.
 
@@ -51,12 +51,12 @@ figures to calculate server activity.
 
 The results of the calculations described in this chapter are not
 absolute. Treat them as reference points to work against, as you
-fine-tune the performance of GlassFish Server and your applications.
+fine-tune the performance of {productName} and your applications.
 
 The following topics are addressed here:
 
 * link:#abfcd[Estimating Throughput]
-* link:#abfce[Estimating Load on GlassFish Server Instances]
+* link:#abfce[Estimating Load on {productName} Instances]
 * link:#abfcq[Estimating Bandwidth Requirements]
 * link:#abfct[Estimating Peak Load]
 
@@ -65,12 +65,12 @@ The following topics are addressed here:
 ==== Estimating Throughput
 
 In broad terms, throughput measures the amount of work performed by
-GlassFish Server. For GlassFish Server, throughput can be defined as the
+{productName}. For {productName}, throughput can be defined as the
 number of requests processed per minute per server instance.
 
-As described in the next section, GlassFish Server throughput is a
+As described in the next section, {productName} throughput is a
 function of many factors, including the nature and size of user
-requests, number of users, and performance of GlassFish Server instances
+requests, number of users, and performance of {productName} instances
 and back-end databases. You can estimate throughput on a single machine
 by benchmarking with simulated workloads.
 
@@ -82,9 +82,9 @@ is also affected by server settings.
 
 [[abfce]][[GSPLG00055]][[estimating-load-on-glassfish-server-instances]]
 
-==== Estimating Load on GlassFish Server Instances
+==== Estimating Load on {productName} Instances
 
-Consider the following factors to estimate the load on GlassFish Server
+Consider the following factors to estimate the load on {productName}
 instances.
 
 The following topics are addressed here:
@@ -100,7 +100,7 @@ The following topics are addressed here:
 
 Users interact with an application through a client, such as a web
 browser or Java program. Based on the user's actions, the client
-periodically sends requests to the GlassFish Server. A user is
+periodically sends requests to the {productName}. A user is
 considered active as long as the user's session has neither expired nor
 been terminated. When estimating the number of concurrent users, include
 all active users.
@@ -140,7 +140,7 @@ support.
 
 ===== Average Response Time
 
-Response time refers to the amount of time GlassFish Server takes to
+Response time refers to the amount of time {productName} takes to
 return the results of a request to the user. The response time is
 affected by factors such as network bandwidth, number of users, number
 and type of requests submitted, and average think time.
@@ -203,7 +203,7 @@ Therefore, the response time is two seconds.
 After the system's response time has been calculated, particularly at
 peak load, compare it to the acceptable response time for the
 application. Response time, along with throughput, is one of the main
-factors critical to GlassFish Server performance.
+factors critical to {productName} performance.
 
 [[abfcj]][[GSPLG00028]][[requests-per-minute]]
 
@@ -261,7 +261,7 @@ requests per minute is 42000.
 
 === Planning the Network Configuration
 
-When planning how to integrate the GlassFish Server into the network,
+When planning how to integrate the {productName} into the network,
 estimate the bandwidth requirements and plan the network in such a way
 that it can meet users' performance requirements.
 
@@ -289,7 +289,7 @@ different networks, an external IP and an internal IP. The objective is
 to expose only the external IP to user requests. The internal IP is used
 only by the cluster instances for internal communication. For details,
 see "link:../ha-administration-guide/clusters.html#GSHAG00266[Using the Multi-Homing Feature With GMS]" in
-GlassFish Server Open Source Edition High Availability Administration
+{productName} High Availability Administration
 Guide.
 
 To plan for traffic on both networks, see link:#abfcq[Estimating
@@ -316,7 +316,7 @@ peak volume.
 
 For example, assume that at peak load, five percent of users
 occasionally do not have immediate network access when accessing
-applications deployed on GlassFish Server. Of that five percent,
+applications deployed on {productName}. Of that five percent,
 estimate how many users retry access after the first attempt. Again, not
 all of those users might get through, and of that unsuccessful portion,
 another percentage will retry. As a result, the peak appears longer
@@ -329,7 +329,7 @@ access.
 
 Based on the calculations made in link:#abfcc[Establishing Performance
 Goals], determine the additional bandwidth required for deploying
-GlassFish Server at your site.
+{productName} at your site.
 
 Depending on the method of access (T-1 lines, ADSL, cable modem, and so
 on), calculate the amount of increased bandwidth required to handle your
@@ -392,7 +392,7 @@ handled throughout the rest of the day by these many lines.
 
 For greater bandwidth and optimal network performance, use at least 100
 Mbps Ethernet cards or, preferably, 1 Gbps Ethernet cards between
-servers hosting GlassFish Server.
+servers hosting {productName}.
 
 [[abfcy]][[GSPLG00021]][[planning-for-availability]]
 
@@ -435,14 +435,14 @@ existing customers.
 
 ==== Using Clusters to Improve Availability
 
-At the most basic level, a cluster is a group of GlassFish Server
+At the most basic level, a cluster is a group of {productName}
 instances—often hosted on multiple physical servers—that appear to
 clients as a single instance. This provides horizontal scalability as
 well as higher availability than a single instance on a single machine.
 This basic level of clustering works in conjunction with the HTTP load
 balancer plug-in, which accepts HTTP and HTTPS requests and forwards
 them to one of the instances in the cluster. The ORB and integrated JMS
-brokers also perform load balancing to GlassFish Server clusters. If an
+brokers also perform load balancing to {productName} clusters. If an
 instance fails, becomes unavailable (due to network faults), or becomes
 unresponsive, requests are redirected only to existing, available
 machines. The load balancer can also recognize when a failed instance
@@ -487,7 +487,7 @@ tolerated.
 ===== Planning Failover Capacity
 
 Failover capacity planning implies deciding how many additional servers
-and processes you need to add to the GlassFish Server deployment so that
+and processes you need to add to the {productName} deployment so that
 in the event of a server or process failure, the system can seamlessly
 recover data and continue processing. If your system gets overloaded, a
 process or server failure might result, causing response time
@@ -495,10 +495,9 @@ degradation or even total loss of service. Preparing for such an
 occurrence is critical to successful deployment.
 
 To maintain capacity, especially at peak loads, add spare machines
-running GlassFish Server instances to the existing deployment.
+running {productName} instances to the existing deployment.
 
-For example, consider a system with two machines running one GlassFish
-Server instance each. Together, these machines handle a peak load of 300
+For example, consider a system with two machines running one {productName} instance each. Together, these machines handle a peak load of 300
 requests per second. If one of these machines becomes unavailable, the
 system will be able to handle only 150 requests, assuming an even load
 distribution between the machines. Therefore, half the requests during
@@ -551,11 +550,11 @@ resources to the system.
 
 ==== System Sizing
 
-Based on the load on the GlassFish Server instances and failover
+Based on the load on the {productName} instances and failover
 requirements, you can determine the number of applications server
 instances (hosts) needed. Evaluate your environment on the basis of the
-factors explained in link:#abfce[Estimating Load on GlassFish Server
-Instances] to each GlassFish Server instance, although each instance can
+factors explained in link:#abfce[Estimating Load on {productName}
+Instances] to each {productName} instance, although each instance can
 use more than one Central Processing Unit (CPU).
 
 [[gkvcu]][[GSPLG00066]][[sizing-the-administration-thread-pool]]
@@ -577,27 +576,27 @@ The Java Message Service (JMS) API is a messaging standard that allows
 Jakarta EE applications and components to create, send, receive, and read
 messages. It enables distributed communication that is loosely coupled,
 reliable, and asynchronous. Message Queue, which implements JMS, is
-integrated with GlassFish Server, enabling you to create components that
+integrated with {productName}, enabling you to create components that
 send and receive JMS messages, including message-driven beans (MDBs).
 
-Message Queue is integrated with GlassFish Server using a resource
+Message Queue is integrated with {productName} using a resource
 adapter also known as a connector module. A resource adapter is a Java
 EE component defined according to the Jakarta EE Connector Architecture
 (JCA) Specification. This specification defines a standardized way in
-which application servers such as GlassFish Server can integrate with
-enterprise information systems such as JMS providers. GlassFish Server
+which application servers such as {productName} can integrate with
+enterprise information systems such as JMS providers. {productName}
 includes a resource adapter that integrates with its own JMS provider,
 Message Queue. To use a different JMS provider, you must obtain and
 deploy a suitable resource adapter that is designed to integrate with
 it.
 
-Creating a JMS resource in GlassFish Server using the Administration
+Creating a JMS resource in {productName} using the Administration
 Console creates a preconfigured connector resource that uses the Message
 Queue resource adapter. To create JMS Resources that use any other
 resource adapter (including `GenericJMSRA`), you must create them under
 the Connectors node in the Administration Console.
 
-In addition to using resource adapter APIs, GlassFish Server uses
+In addition to using resource adapter APIs, {productName} uses
 additional Message Queue APIs to provide better integration with Message
 Queue. This tight integration enables features such as connector
 failover, load balancing of outbound connections, and load balancing of
@@ -607,7 +606,7 @@ traffic fault-tolerant and highly available.
 The following topics are addressed here:
 
 * link:#abfdo[Multi-Broker Clusters]
-* link:#abfdq[Configuring GlassFish Server to Use Message Queue Brokers]
+* link:#abfdq[Configuring {productName} to Use Message Queue Brokers]
 * link:#abfdx[Example Deployment Scenarios]
 
 [[abfdo]][[GSPLG00067]][[multi-broker-clusters]]
@@ -683,26 +682,25 @@ A shared database of cluster change records can be configured as an
 alternative to using a master broker. For more information, see
 "link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00041[Configuring and Managing Broker Clusters]" in Open
 Message Queue Administration Guide and "link:../ha-administration-guide/jms.html#GSHAG00212[Using Message
-Queue Broker Clusters With GlassFish Server]" in GlassFish Server Open
-Source Edition High Availability Administration Guide.
+Queue Broker Clusters With {productName}]" in {productName} High Availability Administration Guide.
 
 [[abfdq]][[GSPLG00068]][[configuring-glassfish-server-to-use-message-queue-brokers]]
 
-==== Configuring GlassFish Server to Use Message Queue Brokers
+==== Configuring {productName} to Use Message Queue Brokers
 
 By default, Message Queue brokers (JMS hosts) run in the same JVM as the
-GlassFish Server process. However, Message Queue brokers (JMS hosts) can
-be configured to run in a separate JVM from the GlassFish Server
-process. This allows multiple GlassFish Server instances or clusters to
+{productName} process. However, Message Queue brokers (JMS hosts) can
+be configured to run in a separate JVM from the {productName}
+process. This allows multiple {productName} instances or clusters to
 share the same set of Message Queue brokers.
 
-The GlassFish Server's Java Message Service represents the connector
+The {productName}'s Java Message Service represents the connector
 module (resource adapter) for Message Queue. You can manage the Java
 Message Service through the Administration Console or the `asadmin`
 command-line utility.
 
-In GlassFish Server, a JMS host refers to a Message Queue broker. The
-GlassFish Server's Java Message Service configuration contains a JMS
+In {productName}, a JMS host refers to a Message Queue broker. The
+{productName}'s Java Message Service configuration contains a JMS
 Host List (also called AddressList) that contains all the JMS hosts that
 will be used.
 
@@ -710,7 +708,7 @@ will be used.
 
 ===== Java Message Service Type
 
-There are three types of integration between GlassFish Server and
+There are three types of integration between {productName} and
 Message Queue brokers: embedded, local, and remote. You can set this
 type attribute on the Administration Console's Java Message Service page.
 
@@ -718,28 +716,28 @@ type attribute on the Administration Console's Java Message Service page.
 
 Embedded Java Message Service
 
-If the Type attribute is EMBEDDED, GlassFish Server and the JMS broker
+If the Type attribute is EMBEDDED, {productName} and the JMS broker
 are colocated in the same virtual machine. The JMS Service is started
-in-process and managed by GlassFish Server. In EMBEDDED mode, JMS
+in-process and managed by {productName}. In EMBEDDED mode, JMS
 operations on stand-alone server instances bypass the networking stack,
 which leads to performance optimization. The EMBEDDED type is most
-suitable for stand-alone GlassFish Server instances. EMBEDDED mode is
+suitable for stand-alone {productName} instances. EMBEDDED mode is
 not supported for enhanced broker clusters.
 
 With the EMBEDDED type, use the Start Arguments attribute to specify
 Message Queue broker startup parameters.
 
 With the EMBEDDED type, make sure the Java heap size is large enough to
-allow GlassFish Server and Message Queue to run in the same virtual machine.
+allow {productName} and Message Queue to run in the same virtual machine.
 
 [[abfdu]][[GSPLG00005]][[local-java-message-service]]
 
 Local Java Message Service
 
-If the Type attribute is LOCAL, GlassFish Server starts and stops the
-Message Queue broker. When GlassFish Server starts up, it starts the
+If the Type attribute is LOCAL, {productName} starts and stops the
+Message Queue broker. When {productName} starts up, it starts the
 Message Queue broker specified as the Default JMS host. Likewise, when
-the GlassFish Server instance shuts down, it shuts down the Message
+the {productName} instance shuts down, it shuts down the Message
 Queue broker. The LOCAL type is most suitable for use with enhanced
 broker clusters, and for other cases where the administrator prefers the
 use of separate JVMs.
@@ -751,9 +749,9 @@ Message Queue broker startup parameters.
 
 Remote Java Message Service
 
-If the Type attribute is REMOTE, GlassFish Server uses an externally
+If the Type attribute is REMOTE, {productName} uses an externally
 configured broker or broker cluster. In this case, you must start and
-stop Message Queue brokers separately from GlassFish Server, and use
+stop Message Queue brokers separately from {productName}, and use
 Message Queue tools to configure and tune the broker or broker cluster.
 The REMOTE type is most suitable for brokers running on different
 machines from the server instances (to share the load among more
@@ -771,7 +769,7 @@ In the Administration Console, you can set JMS properties using the Java
 Message Service node for a particular configuration. You can set
 properties such as Reconnect Interval and Reconnect Attempts. For more
 information, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message
-Service (JMS)]" in GlassFish Server Open Source Edition Administration
+Service (JMS)]" in {productName} Administration
 Guide.
 
 The JMS Hosts node under the Java Message Service node contains a list
@@ -779,7 +777,7 @@ of JMS hosts. You can add and remove hosts from the list. For each host,
 you can set the host name, port number, and the administration user name
 and password. By default, the JMS Hosts list contains one Message Queue
 broker, called "default_JMS_host," that represents the local Message
-Queue broker integrated with GlassFish Server.
+Queue broker integrated with {productName}.
 
 In REMOTE mode, configure the JMS Hosts list to contain all the Message
 Queue brokers in the cluster. For example, to set up a cluster
@@ -809,8 +807,7 @@ Use the following `asadmin` commands:
 ** `asadmin list-jms-resources`
 
 +
-For more information on these commands, see the link:../reference-manual/toc.html#GSRFM[GlassFish
-Server Open Source Edition Reference Manual] or the corresponding man pages.
+For more information on these commands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual] or the corresponding man pages.
 
 [[abfdw]][[GSPLG00035]][[default-jms-host]]
 
@@ -818,7 +815,7 @@ Server Open Source Edition Reference Manual] or the corresponding man pages.
 
 You can specify the default JMS Host in the Administration Console Java
 Message Service page. If the Java Message Service type is LOCAL,
-GlassFish Server starts the default JMS host when the GlassFish Server
+{productName} starts the default JMS host when the {productName}
 instance starts. If the Java Message Service type is EMBEDDED, the
 default JMS host is started lazily when needed.
 
@@ -828,7 +825,7 @@ as JMS hosts. In this case, the default JMS host becomes the first JMS
 host in the JMS host list.
 
 You can also explicitly set the default JMS host to one of the JMS
-hosts. When the GlassFish Server uses a Message Queue cluster, the
+hosts. When the {productName} uses a Message Queue cluster, the
 default JMS host executes Message Queue-specific commands. For example,
 when a physical destination is created for a Message Queue broker
 cluster, the default JMS host executes the command to create the
@@ -842,9 +839,8 @@ To accommodate your messaging needs, modify the Java Message Service and
 JMS host list to suit your deployment, performance, and availability needs.
 The following sections describe some typical scenarios.
 
-For best availability, deploy Message Queue brokers and GlassFish
-Servers on different machines, if messaging needs are not just with
-GlassFish Server. Another option is to run a GlassFish Server instance
+For best availability, deploy Message Queue brokers and {productName}s on different machines, if messaging needs are not just with
+{productName}. Another option is to run a {productName} instance
 and a Message Queue broker instance on each machine until there is
 sufficient messaging capacity.
 
@@ -852,7 +848,7 @@ sufficient messaging capacity.
 
 ===== Default Deployment
 
-Installing the GlassFish Server automatically creates a domain
+Installing the {productName} automatically creates a domain
 administration server (DAS). By default, the Java Message Service type
 for the DAS is EMBEDDED. So, starting the DAS also starts its default
 Message Queue broker.
@@ -864,15 +860,14 @@ the broker started by the DAS.
 
 [[abfdz]][[GSPLG00037]][[using-a-message-queue-broker-cluster-with-a-glassfish-server-cluster]]
 
-===== Using a Message Queue Broker Cluster with a GlassFish Server Cluster
+===== Using a Message Queue Broker Cluster with a {productName} Cluster
 
-In EMBEDDED or LOCAL mode, when a GlassFish Server is configured, a
-Message Queue broker cluster is auto-configured with each GlassFish
-Server instance associated with a Message Queue broker instance.
+In EMBEDDED or LOCAL mode, when a {productName} is configured, a
+Message Queue broker cluster is auto-configured with each {productName} instance associated with a Message Queue broker instance.
 
-In REMOTE mode, to configure a GlassFish Server cluster to use a Message
+In REMOTE mode, to configure a {productName} cluster to use a Message
 Queue broker cluster, add all the Message Queue brokers as JMS hosts in
-the GlassFish Server's Java Message Service. Any JMS connection
+the {productName}'s Java Message Service. Any JMS connection
 factories created and MDBs deployed then uses the JMS configuration specified.
 
 [[abfeb]][[GSPLG00038]][[specifying-an-application-specific-message-queue-broker-cluster]]
@@ -880,16 +875,16 @@ factories created and MDBs deployed then uses the JMS configuration specified.
 ===== Specifying an Application-Specific Message Queue Broker Cluster
 
 In some cases, an application may need to use a different Message Queue
-broker cluster than the one used by the GlassFish Server cluster. To do
+broker cluster than the one used by the {productName} cluster. To do
 so, use the `AddressList` property of a JMS connection factory or the
 `activation-config` element in an MDB deployment descriptor to specify
 the Message Queue broker cluster.
 
 For more information about configuring connection factories, see
 "link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
-Destinations]" in GlassFish Server Open Source Edition Administration
+Destinations]" in {productName} Administration
 Guide. For more information about MDBs, see "link:../application-development-guide/ejb.html#GSDVG00149[Using
-Message-Driven Beans]" in GlassFish Server Open Source Edition
+Message-Driven Beans]" in {productName}
 Application Development Guide.
 
 [[abfec]][[GSPLG00039]][[application-clients]]

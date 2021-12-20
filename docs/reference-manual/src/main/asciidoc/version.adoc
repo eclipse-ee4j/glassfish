@@ -70,7 +70,7 @@ asadmin-options::
 [source]
 ----
 asadmin> version
-Version = Oracle GlassFish Server 3.1 (build 34)
+Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 
@@ -85,7 +85,7 @@ Version string could not be obtained from Server [localhost:4848] for some reaso
 (Turn debugging on e.g. by setting AS_DEBUG=true in your environment, to see the
  details).
 Using locally retrieved version string from version class.
-Version = Oracle GlassFish Server 3.1 (build 34)
+Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 
@@ -97,7 +97,7 @@ Command version executed successfully.
 ----
 asadmin> version --local
 Using locally retrieved version string from version class.
-Version = Oracle GlassFish Server 3.1 (build 34)
+Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 

@@ -1,24 +1,24 @@
 type=page
 status=published
-title=High Availability in GlassFish Server
+title=High Availability in {productName}
 next=ssh-setup.html
 prev=preface.html
 ~~~~~~
 
-= High Availability in GlassFish Server
+= High Availability in {productName}
 
 [[GSHAG00002]][[abdaq]]
 
 
 [[high-availability-in-glassfish-server]]
-== 1 High Availability in GlassFish Server
+== 1 High Availability in {productName}
 
-This chapter describes the high availability features in Eclipse GlassFish Server 7.
+This chapter describes the high availability features in {productName} 7.
 
 The following topics are addressed here:
 
 * link:#abdar[Overview of High Availability]
-* link:#gaymr[How GlassFish Server Provides High Availability]
+* link:#gaymr[How {productName} Provides High Availability]
 * link:#gbcot[Recovering from Failures]
 * link:#abdaz[More Information]
 
@@ -28,15 +28,15 @@ The following topics are addressed here:
 
 High availability applications and services provide their functionality
 continuously, regardless of hardware and software failures. To make such
-reliability possible, GlassFish Server provides mechanisms for
-maintaining application state data between clustered GlassFish Server
+reliability possible, {productName} provides mechanisms for
+maintaining application state data between clustered {productName}
 instances. Application state data, such as HTTP session data, stateful
 EJB sessions, and dynamic cache information, is replicated in real time
 across server instances. If any one server instance goes down, the
 session state is available to the next failover server, resulting in
 minimum application downtime and enhanced transactional security.
 
-GlassFish Server provides the following high availability features:
+{productName} provides the following high availability features:
 
 * link:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
 * link:#gaynn[High Availability Session Persistence]
@@ -47,20 +47,20 @@ GlassFish Server provides the following high availability features:
 
 ==== Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 
-A common load balancing configuration for GlassFish Server 7 is to use
+A common load balancing configuration for {productName} 7 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
-server and GlassFish Server. See
-link:http-load-balancing.html#gksdt[Configuring GlassFish Server with
+server and {productName}. See
+link:http-load-balancing.html#gksdt[Configuring {productName} with
 Apache HTTP Server and `mod_jk`] and
-link:http-load-balancing.html#CHDCCGDC[Configuring GlassFish Server with
+link:http-load-balancing.html#CHDCCGDC[Configuring {productName} with
 Apache HTTP Server and `mod_proxy_ajp`] for more information.
 
 [[gaynn]][[GSHAG00253]][[high-availability-session-persistence]]
 
 ==== High Availability Session Persistence
 
-GlassFish Server provides high availability of HTTP requests and session
+{productName} provides high availability of HTTP requests and session
 data (both HTTP session data and stateful session bean data).
 
 Jakarta EE applications typically have significant amounts of session state
@@ -71,14 +71,13 @@ interactions need to maintain session state. Both HTTP sessions and
 stateful session beans (SFSBs) have session state data.
 
 Preserving session state across server failures can be important to end
-users. If the GlassFish Server instance hosting the user session
+users. If the {productName} instance hosting the user session
 experiences a failure, the session state can be recovered, and the
 session can continue without loss of information. High availability is
-implemented in GlassFish Server by means of in-memory session
-replication on GlassFish Server instances running in a cluster.
+implemented in {productName} by means of in-memory session
+replication on {productName} instances running in a cluster.
 
-For more information about in-memory session replication in GlassFish
-Server, see link:#gaymr[How GlassFish Server Provides High
+For more information about in-memory session replication in {productName}, see link:#gaymr[How {productName} Provides High
 Availability]. For detailed instructions on configuring high
 availability session persistence, see
 link:session-persistence-and-failover.html#abdkz[Configuring High
@@ -88,7 +87,7 @@ Availability Session Persistence and Failover].
 
 ==== High Availability Java Message Service
 
-GlassFish Server supports the Java Message Service (JMS) API and JMS
+{productName} supports the Java Message Service (JMS) API and JMS
 messaging through its built-in jmsra resource adapter communicating with
 Open Message Queue as the JMS provider. This combination is often called
 the JMS Service.
@@ -109,8 +108,7 @@ Message Queue Broker Clusters::
   GlassFish instances they service, or deploying different numbers of
   Message Queue brokers and GlassFish instances. +
   For more information about Message Queue clustering, see
-  link:jms.html#abdbx[Using Message Queue Broker Clusters With GlassFish
-  Server].
+  link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}].
 Connection Failover::
   The use of Message Queue broker clusters allows connection failover in
   the event of a broker failure. If the primary JMS host (Message Queue
@@ -143,9 +141,9 @@ lookup or EJB method invocation will failover to another server
 instance.
 
 IIOP Load balancing and failover happens transparently. No special steps
-are needed during application deployment. If the GlassFish Server
+are needed during application deployment. If the {productName}
 instance on which the application client is deployed participates in a
-cluster, the GlassFish Server finds all currently active IIOP endpoints
+cluster, the {productName} finds all currently active IIOP endpoints
 in the cluster automatically. However, a client should have at least two
 endpoints specified for bootstrapping purposes, in case one of the
 endpoints has failed.
@@ -155,9 +153,9 @@ link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 
 [[gaymr]][[GSHAG00169]][[how-glassfish-server-provides-high-availability]]
 
-=== How GlassFish Server Provides High Availability
+=== How {productName} Provides High Availability
 
-GlassFish Server provides high availability through the following
+{productName} provides high availability through the following
 subcomponents and features:
 
 * link:#gjghv[Storage for Session State Data]
@@ -170,11 +168,11 @@ subcomponents and features:
 Storing session state data enables the session state to be recovered
 after the failover of a server instance in a cluster. Recovering the
 session state enables the session to continue without loss of
-information. GlassFish Server supports in-memory session replication on
+information. {productName} supports in-memory session replication on
 other servers in the cluster for maintaining HTTP session and stateful
 session bean data.
 
-In-memory session replication is implemented in GlassFish Server 7 as
+In-memory session replication is implemented in {productName} 7 as
 an OSGi module. Internally, the replication module uses a consistent
 hash algorithm to pick a replica server instance within a cluster of
 instances. This allows the replication module to easily locate the
@@ -207,7 +205,7 @@ When implementing a highly available cluster, use a load balancer that
 includes session-based stickiness as part of its load-balancing
 algorithm. Otherwise, session data can be misdirected or lost.
 An example of a load balancer that includes session-based stickiness is the
-Loadbalancer Plug-In available in Oracle GlassFish Server.
+Loadbalancer Plug-In available in {productName}.
 ====
 
 
@@ -238,16 +236,16 @@ occur only within a single cluster.
 
 The cluster thus acts as a safe boundary for session failover for the
 server instances within the cluster. You can use the load balancer and
-upgrade components within the GlassFish Server without loss of service.
+upgrade components within the {productName} without loss of service.
 
 [[gktax]][[GSHAG00219]][[protocols-for-centralized-cluster-administration]]
 
 ===== Protocols for Centralized Cluster Administration
 
-GlassFish Server uses the Distributed Component Object Model (DCOM)
+{productName} uses the Distributed Component Object Model (DCOM)
 remote protocol or secure shell (SSH) to ensure that clusters that span
 multiple hosts can be administered centrally. To perform administrative
-operations on GlassFish Server instances that are remote from the domain
+operations on {productName} instances that are remote from the domain
 administration server (DAS), the DAS must be able to communicate with
 those instances. If an instance is running, the DAS connects to the
 running instance directly. For example, when you deploy an application
@@ -271,7 +269,7 @@ environment, you can administer remote instances locally.
 
 
 For more information, see link:ssh-setup.html#gkshg[Enabling Centralized
-Administration of GlassFish Server Instances].
+Administration of {productName} Instances].
 
 [[gbcot]][[GSHAG00170]][[recovering-from-failures]]
 
@@ -283,7 +281,7 @@ subcomponents after hardware failures such as disk crashes.
 The following topics are addressed here:
 
 * link:#gcmkp[Recovering the Domain Administration Server]
-* link:#gcmkc[Recovering GlassFish Server Instances]
+* link:#gcmkc[Recovering {productName} Instances]
 * link:#gcmjs[Recovering the HTTP Load Balancer and Web Server]
 * link:#gcmjr[Recovering Message Queue]
 
@@ -292,7 +290,7 @@ The following topics are addressed here:
 ==== Recovering the Domain Administration Server
 
 Loss of the Domain Administration Server (DAS) affects only
-administration. GlassFish Server clusters and standalone instances, and
+administration. {productName} clusters and standalone instances, and
 the applications deployed to them, continue to run as before, even if
 the DAS is not reachable
 
@@ -301,20 +299,19 @@ Use any of the following methods to recover the DAS:
 * Back up the domain periodically, so you have periodic snapshots. After
 a hardware failure, re-create the DAS on a new host, as described in
 "link:../administration-guide/domains.html#GSADG00542[Re-Creating the Domain Administration Server (DAS)]"
-in Eclipse GlassFish Server Administration Guide.
+in {productName} Administration Guide.
 * Put the domain installation and configuration on a shared and robust
 file system (NFS for example). If the primary DAS host fails, a second
 host is brought up with the same IP address and will take over with
 manual intervention or user supplied automation.
-* Zip the GlassFish Server installation and domain root directory.
+* Zip the {productName} installation and domain root directory.
 Restore it on the new host, assigning it the same network identity.
 
 [[gcmkc]][[GSHAG00259]][[recovering-glassfish-server-instances]]
 
-==== Recovering GlassFish Server Instances
+==== Recovering {productName} Instances
 
-GlassFish Server provide tools for backing up and restoring GlassFish
-Server instances. For more information, see link:instances.html#gksdy[To
+{productName} provide tools for backing up and restoring {productName} instances. For more information, see link:instances.html#gksdy[To
 Resynchronize an Instance and the DAS Offline].
 
 [[gcmjs]][[GSHAG00260]][[recovering-the-http-load-balancer-and-web-server]]
@@ -337,7 +334,7 @@ an image first.
 
 The Load Balancer Plug-In (`plugins` directory) and configurations are
 in the web server installation directory, typically `/opt/SUNWwbsvr`.
-The web-install`/`web-instance`/config` directory contains the
+The web-install``/``web-instance``/config`` directory contains the
 `loadbalancer.xml` file.
 
 [[gcmjr]][[GSHAG00261]][[recovering-message-queue]]
@@ -388,10 +385,10 @@ as Remote JMS hosts, use the `imqbrokerd` Message Queue utility.
 Message Queue uses disk storage for software, configuration files and
 persistent data stores. In a default GlassFish installation, all three
 of these are generally stored on the same disk: the Message Queue
-software in as-install-parent`/mq`, and broker configuration files and
+software in as-install-parent``/mq``, and broker configuration files and
 persistent data stores (except for the persistent data stores of
 enhanced clusters, which are housed in highly available databases) in
-domain-dir`/imq`. If this disk fails, restoring brokers to operation is
+domain-dir``/imq``. If this disk fails, restoring brokers to operation is
 impossible unless you have previously created a backup of these items.
 To create such a backup, use a utility such as `zip`, `gzip` or `tar` to
 create archives of these directories and all their content. When
@@ -418,21 +415,18 @@ production environments.
 
 For information about planning a high-availability deployment, including
 assessing hardware requirements, planning network configuration, and
-selecting a topology, see the link:../deployment-planning-guide/toc.html#GSPLG[GlassFish Server Open Source
-Edition Deployment Planning Guide]. This manual also provides a
+selecting a topology, see the link:../deployment-planning-guide/toc.html#GSPLG[{productName} Deployment Planning Guide]. This manual also provides a
 high-level introduction to concepts such as:
 
-* GlassFish Server components such as node agents, domains, and clusters
+* {productName} components such as node agents, domains, and clusters
 * IIOP load balancing in a cluster
 * Message queue failover
 
 For more information about developing applications that take advantage
-of high availability features, see the link:../application-development-guide/toc.html#GSDVG[GlassFish Server Open
-Source Edition Application Development Guide].
+of high availability features, see the link:../application-development-guide/toc.html#GSDVG[{productName} Application Development Guide].
 
-For information on how to configure and tune applications and GlassFish
-Server for best performance with high availability, see the
-link:../performance-tuning-guide/toc.html#GSPTG[GlassFish Server Open Source Edition Performance Tuning
+For information on how to configure and tune applications and {productName} for best performance with high availability, see the
+link:../performance-tuning-guide/toc.html#GSPTG[{productName} Performance Tuning
 Guide], which discusses topics such as:
 
 * Tuning persistence frequency and persistence scope

@@ -16,7 +16,7 @@ prev=jdbc.html
 The Jakarta EE platform provides several abstractions that simplify
 development of dependable transaction processing for applications. This
 chapter discusses Jakarta EE transactions and transaction support in the
-Oracle GlassFish Server.
+{productName}.
 
 The following topics are addressed here:
 
@@ -28,7 +28,7 @@ Registry, and `UserTransaction`]
 
 For more information about the Java Transaction API (JTA) and Java
 Transaction Service (JTS), see "link:../administration-guide/transactions.html#GSADG00022[Administering
-Transactions]" in GlassFish Server Open Source Edition Administration
+Transactions]" in {productName} Administration
 Guide and the following sites:
 `http://www.oracle.com/technetwork/java/javaee/jta/index.html` and
 `http://www.oracle.com/technetwork/java/javaee/tech/index.html`.
@@ -51,7 +51,7 @@ The following topics are addressed here:
 ==== Using JDBC Transaction Isolation Levels
 
 Not all database vendors support all transaction isolation levels
-available in the JDBC API. The GlassFish Server permits specifying any
+available in the JDBC API. The {productName} permits specifying any
 isolation level your database supports. The following table defines
 transaction isolation levels.
 
@@ -88,7 +88,7 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--isolationlevel` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `transaction-isolation-level` option in the `asadmin set`
 command. For example:
 +
@@ -96,15 +96,14 @@ command. For example:
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.transaction-isolation-level=serializable
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 Note that you cannot call `setTransactionIsolation` during a
 transaction.
 
 You can set the default transaction isolation level for a JDBC
 connection pool. For details, see "link:../administration-guide/jdbc.html#GSADG00420[To Create a JDBC
-Connection Pool]" in GlassFish Server Open Source Edition Administration
+Connection Pool]" in {productName} Administration
 Guide.
 
 To verify that a level is supported by your database management system,
@@ -143,7 +142,7 @@ Pool or Edit Connection Pool page in the Administration Console. For
 more information, click the Help button in the Administration Console.
 * Specify the `--isisolationguaranteed` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `is-isolation-level-guaranteed` option in the
 `asadmin set` command. For example:
 +
@@ -151,8 +150,7 @@ the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.is-isolation-level-guaranteed=true
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 
 [[beamu]][[GSDVG00512]][[using-non-transactional-connections]]
 
@@ -167,7 +165,7 @@ default is unchecked. For more information, click the Help button in the
 Administration Console.
 * Specify the `--nontransactionalconnections` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
 * Specify the `non-transactional-connections` option in the
 `asadmin set` command. For example:
 +
@@ -175,9 +173,8 @@ the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.non-transactional-connections=true
 ----
-For more information, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source
-Edition Reference Manual].
-* Use the `DataSource` implementation in the GlassFish Server, which
+For more information, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+* Use the `DataSource` implementation in the {productName}, which
 provides a `getNonTxConnection` method. This method retrieves a JDBC
 connection that is not in the scope of any transaction. There are two
 variants.
@@ -219,7 +216,7 @@ commits.
 === Handling Transactions with Enterprise Beans
 
 This section describes the transaction support built into the Enterprise
-JavaBeans programming model for the GlassFish Server.
+JavaBeans programming model for the {productName}.
 
 As a developer, you can write an application that updates data in
 multiple databases distributed across multiple sites. The site might use
@@ -280,7 +277,7 @@ transaction.
 
 [NOTE]
 ====
-Commit option A is not supported for this GlassFish Server release.
+Commit option A is not supported for this {productName} release.
 ====
 
 * Option B - The container caches a ready instance between transactions,
@@ -358,7 +355,7 @@ context in which a `ManagedConnectionFactory` is used.
 
 If a `ManagedConnectionFactory` implements an optional interface called
 com.sun.appserv.connectors.spi.ConfigurableTransactionSupport , the
-GlassFish Server notifies the `ManagedConnectionFactory` of the
+{productName} notifies the `ManagedConnectionFactory` of the
 `transaction-support` configured for the connector connection pool when
 the `ManagedConnectionFactory` instance is created for the pool.
 Connections obtained from the pool can then be used with a transaction
@@ -390,7 +387,7 @@ API documentation and
 http://www.jcp.org/en/jsr/detail?id=907[Java Specification Request (JSR) 907]
 
 If accessing the javax.transaction.TransactionManager implementation is
-absolutely necessary, you can look up the GlassFish Server
+absolutely necessary, you can look up the {productName}
 implementation of this interface using the JNDI name
 java:appserver/TransactionManager . This lookup should not be used by
 the application code.

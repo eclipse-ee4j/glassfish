@@ -1,27 +1,27 @@
 type=page
 status=published
-title=Overview of GlassFish Server Administration
+title=Overview of {productName} Administration
 next=part-runtime-admin.html
 prev=preface.html
 ~~~~~~
 
-= Overview of GlassFish Server Administration
+= Overview of {productName} Administration
 
 [[GSADG00004]][[ablaq]]
 
 
 [[overview-of-glassfish-server-administration]]
-== 1 Overview of GlassFish Server Administration
+== 1 Overview of {productName} Administration
 
-GlassFish Server Open Source Edition provides a server for developing
+{productName} provides a server for developing
 and deploying Java Platform Enterprise Edition (Jakarta EE) applications
 and web Java Web Services.
 
-As an administrator ofGlassFish Server, your main responsibilities are
-to establish a secure GlassFish Server environment and to oversee the
+As an administrator of{productName}, your main responsibilities are
+to establish a secure {productName} environment and to oversee the
 services, resources, and users that participate in that environment.
 Your key tasks include configuring resources and services, managing
-GlassFish Server at runtime, and fixing problems that are associated
+{productName} at runtime, and fixing problems that are associated
 with the server. You might also be involved in installing software,
 integrating add-on components, and deploying applications.
 
@@ -30,7 +30,7 @@ The following topics are addressed here:
 * link:#giubb[Default Settings and Locations]
 * link:#ghrcy[Configuration Tasks]
 * link:#ggjxp[Administration Tools]
-* link:#giudo[Instructions for Administering GlassFish Server]
+* link:#giudo[Instructions for Administering {productName}]
 
 [[giubb]][[GSADG00526]][[default-settings-and-locations]]
 
@@ -39,8 +39,7 @@ The following topics are addressed here:
 After installation, you might need to perform some immediate
 configuration tasks to make your installation function as intended. If
 configuration defaults have been accepted, some features are enabled and
-some not. For an overview of initial configuration tasks for GlassFish
-Server services and resources, see link:#gitwr[Initial Configuration
+some not. For an overview of initial configuration tasks for {productName} services and resources, see link:#gitwr[Initial Configuration
 Tasks].
 
 In addition, you might want to reset default passwords, change names or
@@ -50,7 +49,7 @@ administration values.
 
 [NOTE]
 ====
-For the zip bundle of GlassFish Server 7, the default administrator
+For the zip bundle of {productName} 7, the default administrator
 login is `admin`, with no password, which means that no login is
 required.
 ====
@@ -86,10 +85,10 @@ Table 1-2 Default Locations
 [width="100%",cols="43%,57%",options="header",]
 |===
 |Item |Default
-|Command-line Utility (`asadmin`) |as-install`/bin`
-|Configuration Files |domain-dir`/config`
-|Log Files |domain-dir`/logs`
-|Upgrade Tool (`asupgrade` Command) |as-install`/bin`
+|Command-line Utility (`asadmin`) |as-install``/bin``
+|Configuration Files |domain-dir``/config``
+|Log Files |domain-dir``/logs``
+|Upgrade Tool (`asupgrade` Command) |as-install``/bin``
 |===
 
 
@@ -101,8 +100,8 @@ link:preface.html#ghpfg[Default Paths and File Names].
 === Configuration Tasks
 
 Some configuration tasks must be performed directly after installation
-for your GlassFish Server environment to work as intended. For example,
-if you are using a database with GlassFish Server, you need to set up
+for your {productName} environment to work as intended. For example,
+if you are using a database with {productName}, you need to set up
 database connectivity right away.
 
 Some configuration situations are ongoing and will require you to make
@@ -158,25 +157,23 @@ Life Cycle Modules::
 Security::
   * System Security. Initial configuration tasks might include setting
   up passwords, audit modules, and certificates. See
-  "link:../security-guide/system-security.html#GSSCG00035[Administering System Security]" in GlassFish Server
-  Open Source Edition Security Guide.
+  "link:../security-guide/system-security.html#GSSCG00035[Administering System Security]" in {productName} Security Guide.
   * User Security. Initial configuration tasks might include creating
   authentication realms and file users. See
-  "link:../security-guide/user-security.html#GSSCG00036[Administering User Security]" in GlassFish Server
-  Open Source Edition Security Guide.
+  "link:../security-guide/user-security.html#GSSCG00036[Administering User Security]" in {productName} Security Guide.
   * Message Security. Initial configuration tasks might include
   configuring a Java Cryptography Extension (JCE) provider, enabling
   default and non-default security providers, and configuring message
   protection policies. See "link:../security-guide/message-security.html#GSSCG00037[Administering Message
-  Security]" in GlassFish Server Open Source Edition Security Guide.
+  Security]" in {productName} Security Guide.
 Database Connectivity::
-  The initial tasks involved in configuring GlassFish Server to connect
+  The initial tasks involved in configuring {productName} to connect
   to the Apache Derby database include creating a Java Database
   Connectivity (JDBC) connection pool, creating a JDBC resource, and
   integrating a JDBC driver. See link:jdbc.html#ablih[Administering
   Database Connectivity].
 EIS Connectivity::
-  The initial tasks involved in configuring GlassFish Server to connect
+  The initial tasks involved in configuring {productName} to connect
   to an enterprise information system (EIS) include creating a connector
   connection pool, creating a connector resource, editing a resource
   adapter configuration, creating a connector security map, creating a
@@ -217,7 +214,7 @@ online help.
 ==== How Dotted Names Work for Configuration
 
 After the initial configuration is working, you will continue to manage
-ongoing configuration for the life of your GlassFish Server
+ongoing configuration for the life of your {productName}
 installation. You might need to adjust resources to improve
 productivity, or issues might arise that require settings to be modified
 or defaults to be reset. In some situations, an `asadmin` subcommand is
@@ -306,18 +303,18 @@ asadmin> set server.http-service.http-listener.http-listener-1.security-enabled 
 
 ==== Configuration Files
 
-The bulk of the configuration information about GlassFish Server
+The bulk of the configuration information about {productName}
 resources, applications, and instances is stored in the `domain.xml`
 configuration file.
 This file is the central repository for a given
-administrative domain and contains an XML representation of the GlassFish Server domain model.
+administrative domain and contains an XML representation of the {productName} domain model.
 The default location for the `domain.xml` file is domain-dir``/config``.
 
 [NOTE]
 ====
-GlassFish Server maintains a backup of the `domain.xml` file that is
+{productName} maintains a backup of the `domain.xml` file that is
 named `domain.xml.bak`. The purpose of this file is solely to enable
-GlassFish Server to start a domain if the `domain.xml` file cannot be
+{productName} to start a domain if the `domain.xml` file cannot be
 read.
 Do not modify or delete the `domain.xml.bak` file and do not use this file for any other purpose.
 ====
@@ -328,8 +325,8 @@ the same directory as the `domain.xml` file. For further information on
 the `logging.properties` file, see link:logging.html#gkkit[Logging
 Properties].
 
-The `asenv.conf` file is located in the as-install`/config` directory.
-Its purpose is to store the GlassFish Server environment variables, such
+The `asenv.conf` file is located in the as-install``/config`` directory.
+Its purpose is to store the {productName} environment variables, such
 as the installation location of the database, Message Queue, and so on.
 
 [NOTE]
@@ -344,11 +341,10 @@ Manual editing is prone to error and can have unexpected results.
 
 ==== Impact of Configuration Changes
 
-Some configuration changes require that you restart the DAS or GlassFish
-Server instances for the changes to take effect. Other changes are
+Some configuration changes require that you restart the DAS or {productName} instances for the changes to take effect. Other changes are
 applied dynamically without requiring that the DAS or instances be restarted.
 The procedures in this guide indicate when a restart is required.
-GlassFish Server enables you to determine whether the DAS or
+{productName} enables you to determine whether the DAS or
 an instance must be restarted to apply configuration changes.
 
 Some changes to resources or connection pools affect the applications
@@ -371,7 +367,7 @@ The following topics are addressed here:
 To obtain information about the DAS or an instance, a running server is required.
 
 2. Do one of the following:
-* To determine if the DAS requires restart, list the domains in your GlassFish Server installation.
+* To determine if the DAS requires restart, list the domains in your {productName} installation.
 Use the link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
 +
 [source]
@@ -381,8 +377,8 @@ asadmin> list-domains [--domaindir domain-root-dir]
 +
 The domain-root-dir is the directory that contains the directories in
 which individual domains' configuration is stored.
-The default is as-install`/domains`, where as-install is the base installation
-directory of the GlassFish Server software.
+The default is as-install``/domains``, where as-install is the base installation
+directory of the {productName} software.
 If the DAS requires restart, a statement that restart is required is displayed.
 
 * To determine if an instance requires restart, list information about the instance.
@@ -458,8 +454,7 @@ require restart.
 * Configuring certificates
 * Managing HTTP, JMS, IIOP, JNDI services
 * Enabling or disabling secure administration as explained in
-"link:../security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in GlassFish Server Open Source
-Edition Security Guide
+"link:../security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in {productName} Security Guide
 
 [[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
 
@@ -496,7 +491,7 @@ take effect.
 ====
 If you do not know which applications use the changed resources or
 connection pools, you can apply these changes by restarting the clusters
-orGlassFish Server instances to which applications are deployed.
+or{productName} instances to which applications are deployed.
 However, to minimize the disruption to the services that your
 applications provide, avoid restarting clusters or instances to apply
 these changes if possible.
@@ -542,7 +537,7 @@ For the most part, you can perform the same tasks by using either the
 graphical Administration Console or the `asadmin` command-line utility,
 however, there are exceptions.
 
-The following GlassFish Server administration tools are described here:
+The following {productName} administration tools are described here:
 
 * link:#ablav[Administration Console]
 * link:#gcocs[`asadmin` Utility]
@@ -561,7 +556,7 @@ for the administrative tasks.
 
 To use the Administration Console, the domain administration server
 (DAS) must be running. Each domain has its own DAS, which has a unique
-port number. When GlassFish Server was installed, you chose a port
+port number. When {productName} was installed, you chose a port
 number for the DAS, or used the default port of 4848. You also specified
 a user name and password if you did not accept the default login
 (`admin` with no password).
@@ -576,8 +571,7 @@ example:
 http://kindness.example.com:4848
 ----
 
-If the Administration Console is running on the host where GlassFish
-Server was installed, specify `localhost` for the host name. For
+If the Administration Console is running on the host where {productName} was installed, specify `localhost` for the host name. For
 example:
 
 [source]
@@ -586,12 +580,12 @@ http://localhost:4848
 ----
 
 If the Administration Console is run on a host different from the host
-where GlassFish Server was installed, a secure connection (`https`
+where {productName} was installed, a secure connection (`https`
 instead of `http`) is used. Some browsers do not display pages on secure
 connections by default and must be configured to permit secure protocols
 (SSL and TLS).
 
-For Microsoft Windows, an alternate way to start the GlassFish Server
+For Microsoft Windows, an alternate way to start the {productName}
 Administration Console is by using the Start menu.
 
 You can display the help material for a page in the Administration
@@ -614,11 +608,11 @@ To avoid this situation, do one of the following:
 
 * Do not use a proxy server.
 * Use `localhost` or `127.0.0.1` as the host name.
-* Enable secure admin so that what GlassFish Server interprets as a
+* Enable secure admin so that what {productName} interprets as a
 remote request is accepted as such.
 
 To enable secure admin, see "olink:GSSCG00039[Managing Administrative
-Security]" in GlassFish Server Open Source Edition Security Guide.
+Security]" in {productName} Security Guide.
 ====
 
 
@@ -636,7 +630,7 @@ instructions on using the `asadmin` utility, see
 link:general-administration.html#giobi[Using the `asadmin` Utility].
 
 To issue an `asadmin` subcommand in the standard command shell (single
-mode), go to the as-install`/bin` directory and type the `asadmin`
+mode), go to the as-install``/bin`` directory and type the `asadmin`
 command followed by a subcommand. For example:
 
 [source]
@@ -670,34 +664,33 @@ asadmin help restart-domain
 ----
 
 A collection of the `asadmin` help pages is available in HTML and PDF
-format in the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference
+format in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
 Manual].
 
 [[gjjok]][[GSADG00700]][[rest-interfaces]]
 
 ==== REST Interfaces
 
-GlassFish Server provides representational state transfer (REST)
+{productName} provides representational state transfer (REST)
 interfaces to enable you to access monitoring and configuration data for
-GlassFish Server, including data that is provided by newly installed
+{productName}, including data that is provided by newly installed
 add-on components. For more information, see
 link:general-administration.html#gjipx[Using REST Interfaces to
-Administer GlassFish Server].
+Administer {productName}].
 
 [[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
 
 ==== OSGi Module Management Subsystem
 
-The OSGi module management subsystem that is provided with GlassFish
-Server is the http://felix.apache.org/[Apache Felix OSGi framework] . To
+The OSGi module management subsystem that is provided with {productName} is the http://felix.apache.org/[Apache Felix OSGi framework] . To
 administer this framework, use the either of the following tools:
 
 * http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html[Apache
-Felix Gogo] remote shell. This shell is provided with GlassFish Server.
+Felix Gogo] remote shell. This shell is provided with {productName}.
 The shell uses the Felix Gogo shell service to interact with the OSGi
 module management subsystem.
 * GlassFish OSGi Administration Console. This console is distributed as
-an add-on component for GlassFish Server or as a set of files from the
+an add-on component for {productName} or as a set of files from the
 Maven GlassFish repository. In both distributions, the GlassFish OSGi
 Web Console is provided as an extension to the Administration Console
 and as a standalone web application. The GlassFish OSGi Administration
@@ -717,14 +710,13 @@ such as:
 
 ===== To Enable the Apache Felix Gogo Remote Shell
 
-By default, the Apache Felix Gogo remote shell in GlassFish Server is
-disabled. Before using the shell to administer OSGi bundles in GlassFish
-Server, you must enable the shell.
+By default, the Apache Felix Gogo remote shell in {productName} is
+disabled. Before using the shell to administer OSGi bundles in {productName}, you must enable the shell.
 
-Enabling the Apache Felix Gogo remote shell in GlassFish Server involves
+Enabling the Apache Felix Gogo remote shell in {productName} involves
 changing the value of the property `glassfish.osgi.start.level.final`.
 This property controls whether the OSGi start level service enables the
-shell when the DAS or a GlassFish Server instance is started.
+shell when the DAS or a {productName} instance is started.
 
 1. Ensure that the DAS is running.
 +
@@ -748,7 +740,7 @@ target::
   For a clustered or standalone instance, the target is the name of the
   instance.
 * To change this value by editing a file, edit the plain-text file
-as-install`/config/osgi.properties` to change the value of the
+as-install``/config/osgi.properties`` to change the value of the
 `glassfish.osgi.start.level.final` property from 2 to 3.
 
 3. Restart the DAS.
@@ -758,8 +750,7 @@ For instructions, see link:domains.html#ginqj[To Restart a Domain].
 
 ===== To Run Apache Felix Gogo Remote Shell Commands
 
-The Apache Felix Gogo remote shell is integrated with the GlassFish
-Server `asadmin` command line utility. You can use the `asadmin`
+The Apache Felix Gogo remote shell is integrated with the {productName} `asadmin` command line utility. You can use the `asadmin`
 subcommands `osgi` and `osgi-shell` to access the remote shell and run
 OSGi shell commands.
 
@@ -884,7 +875,7 @@ gogo$
 
 The GlassFish OSGi Web Console is distributed as follows:
 
-* As an add-on component for GlassFish Server
+* As an add-on component for {productName}
 * As a set of files from the https://maven.java.net[GlassFish Maven
 repository]
 
@@ -899,14 +890,14 @@ GlassFish OSGi Admin Console component.
 * If you are obtaining the console from the Maven repository, download
 and unzip the required files.
 2. Download the following files to the parent of the `glassfish7`
-directory of your GlassFish Server installation.
+directory of your {productName} installation.
 http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip[`glassfish-osgi-http-3.1.2.zip`]
 +
 http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-gui/3.1.2/glassfish-osgi-gui-3.1.2.zip[`glassfish-osgi-gui-3.1.2.zip`]
 3. Unzip the files that you downloaded.
 +
 The contents of the files are added to the
-as-install`/modules/autostart` directory of your GlassFish Server
+as-install``/modules/autostart`` directory of your {productName}
 installation.
 4. Restart the DAS. For instructions, see link:domains.html#ginqj[To Restart a Domain].
 
@@ -918,20 +909,20 @@ After downloading and installing the GlassFish OSGi Web Console, you can
 access the console as explained in the following sections:
 
 * link:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
-GlassFish Server Administration Console]
+{productName} Administration Console]
 * link:#BABDJHAF[To Access the GlassFish OSGi Web Console as a Standalone Web Application]
 
 [[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
 
-===== To Access the GlassFish OSGi Web Console Through the GlassFish Server Administration Console
+===== To Access the GlassFish OSGi Web Console Through the {productName} Administration Console
 
 A tab for the GlassFish OSGi Web Console is provided for the DAS and for
-every GlassFish Server instance in a domain.
+every {productName} instance in a domain.
 
 1. Ensure that the DAS and the instance for which you want to access
 the GlassFish OSGi Web Console are running.
 
-2. Start the GlassFish Server Administration Console.
+2. Start the {productName} Administration Console.
 For instructions, see link:#ablav[Administration Console].
 
 3. Open the Administration Console page for the DAS or instance for
@@ -974,12 +965,12 @@ http://host:http-port/osgi/system/console/
 host::
   The host where the DAS or instance is running.
 http-port::
-  The port on which GlassFish Server listens for HTTP requests. The
-  default is 8080.
+  The port on which {productName} listens for HTTP requests.
+  The default is 8080.
 
 +
-  For example, if the DAS is running on the local host and GlassFish
-  Server listens for HTTP requests on the default port, open the following location:
+For example, if the DAS is running on the local host and {productName} listens
+  for HTTP requests on the default port, open the following location:
 +
 [source]
 ----
@@ -997,8 +988,8 @@ The user name and password of this user are both preset to `admin`.
 
 The `keytool` utility is used to set up and work with Java Security
 Socket Extension (JSSE) digital certificates. See
-"link:../security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]" in GlassFish Server
-Open Source Edition Security Guide for instructions on using `keytool`.
+"link:../security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
+in {productName} Security Guide for instructions on using `keytool`.
 
 [[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
 
@@ -1007,13 +998,12 @@ Open Source Edition Security Guide for instructions on using `keytool`.
 Java SE provides tools to connect to an MBean server and view the MBeans
 that are registered with the server. JConsole is one such popular JMX
 Connector Client and is available as part of the standard Java SE
-distribution. For instructions on implementing JConsole in the GlassFish
-Server environment, see link:monitoring.html#giwqm[Configuring JConsole
-to View GlassFish Server Monitoring Data].
+distribution. For instructions on implementing JConsole in the {productName} environment,
+see link:monitoring.html#giwqm[Configuring JConsole to View {productName} Monitoring Data].
 
 [[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
 
-=== Instructions for Administering GlassFish Server
+=== Instructions for Administering {productName}
 
 Information and instructions on performing most of the administration
 tasks from the command line are provided in this document and in the
@@ -1028,22 +1018,20 @@ online help.
 
 [NOTE]
 ====
-Instructions written for the GlassFish Server tools use standard UNIX
+Instructions written for the {productName} tools use standard UNIX
 forward slashes (/) for directory path separators in commands and file
-names. If you are running GlassFish Server on a Microsoft Windows
+names. If you are running {productName} on a Microsoft Windows
 system, use backslashes (\) instead. For example:
 
-* UNIX: as-install`/bin/asadmin`
-* Windows: as-install`\bin\asadmin`
+* UNIX: as-install``/bin/asadmin``
+* Windows: as-install``\bin\asadmin``
 
 ====
 
 
-The following additional documents address specific administration
-areas:
+The following additional documents address specific administration areas:
 
 * Verifying and deploying applications
-link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
-Guide]
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide]
 
 

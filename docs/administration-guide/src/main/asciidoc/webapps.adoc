@@ -14,7 +14,7 @@ prev=threadpools.html
 == 6 Administering Web Applications
 
 This chapter explains how to administer web applications in the
-GlassFish Server Open Source Edition 7 environment.
+{productName} 7 environment.
 
 The following topics are addressed here:
 
@@ -33,7 +33,7 @@ online help.
 
 === Invoking a Servlet by Alternate Means
 
-You can call a servlet deployed to GlassFish Server by using a URL in a
+You can call a servlet deployed to {productName} by using a URL in a
 browser or embedded as a link in an HTML or JSP file. The format of a
 servlet invocation URL is as follows:
 
@@ -159,10 +159,9 @@ file, or edit the file directly using the following steps.
 ==== To Use the `default-web.xml` File
 
 1. Place the JAR file for the filter, security constraint, or other
-feature in the domain-dir`/lib` directory.
-2. Edit the domain-dir`/config/default-web.xml` file to refer to the
-JAR file.
-3. To apply your changes, restart GlassFish Server.
+feature in the domain-dir``/lib`` directory.
+2. Edit the domain-dir``/config/default-web.xml`` file to refer to the JAR file.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -202,38 +201,36 @@ This example redirects `from` `dummy` to `etude`:
 
 The Apache Tomcat Connector `mod_jk` can be used to connect the web
 container with web servers such as Apache HTTP Server. By using
-`mod_jk`, which comes with GlassFish Server, you can front GlassFish
-Server with Apache HTTP Server.
+`mod_jk`, which comes with {productName}, you can front {productName} with Apache HTTP Server.
 
 You can also use `mod_jk` directly at the JSP/servlet engine for load
 balancing. For more information about configuring `mod_jk` and Apache
-HTTP Server for load balancing with GlassFish Server 7 refer to
-"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in GlassFish Server
-Open Source Edition High Availability Administration Guide.
+HTTP Server for load balancing with {productName} 7 refer to
+"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 The following topics are addressed here:
 
 * link:#gixqw[To Enable `mod_jk`]
-* link:#gixpx[To Load Balance Using `mod_jk` and GlassFish Server]
+* link:#gixpx[To Load Balance Using `mod_jk` and {productName}]
 * link:#gjpat[To Enable SSL Between the `mod_jk` Load Balancer and the
 Browser]
 * link:#gjpan[To Enable SSL Between the `mod_jk` Load Balancer and
-GlassFish Server]
+{productName}]
 
 [[gixqw]][[GSADG00371]][[to-enable-mod_jk]]
 
 ==== To Enable `mod_jk`
 
-You can front GlassFish Server with Apache HTTP Server by enabling the
-`mod_jk` protocol for one of GlassFish Server's network listeners, as
+You can front {productName} with Apache HTTP Server by enabling the
+`mod_jk` protocol for one of {productName}'s network listeners, as
 described in this procedure. A typical use for `mod_jk` would be to have
 Apache HTTP Server handle requests for static resources, while having
 requests for dynamic resources, such as servlets and JavaServer Pages
-(JSPs), forwarded to, and handled by the GlassFish Server back-end
+(JSPs), forwarded to, and handled by the {productName} back-end
 instance.
 
 When you use the `jk-enabled` attribute of the network listener, you do
-not need to copy any additional JAR files into the `/lib` directory. You
+not need to copy any additional JAR files into the ``/lib`` directory. You
 can also create JK connectors under different virtual servers by using
 the network listener attribute `jk-enabled`.
 
@@ -249,7 +246,7 @@ the network listener attribute `jk-enabled`.
 link:#gixrq[Example 6-4] and link:#gixqt[Example 6-5] provide examples
 of configuring these two files.
 3. Start Apache HTTP Server (`httpd`).
-4. Start GlassFish Server with at least one web application deployed.
+4. Start {productName} with at least one web application deployed.
 +
 In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
@@ -281,7 +278,7 @@ increase the maximum threads in the `http-thread-pool` pool:
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-8. To apply your changes, restart GlassFish Server.
+8. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -339,7 +336,7 @@ For more information on Apache Tomcat Connector, see
 
 [[gixpx]][[GSADG00372]][[to-load-balance-using-mod_jk-and-glassfish-server]]
 
-==== To Load Balance Using `mod_jk` and GlassFish Server
+==== To Load Balance Using `mod_jk` and {productName}
 
 Load balancing is the process of dividing the amount of work that a
 computer has to do between two or more computers so that more work gets
@@ -348,7 +345,7 @@ or without security.
 
 In order to support stickiness, the Apache `mod_jk` load balancer relies
 on a `jvmRoute` system property that is included in any `JSESSIONID`
-received by the load balancer. This means that every GlassFish Server
+received by the load balancer. This means that every {productName}
 instance that is front-ended by the Apache load balancer must be
 configured with a unique `jvmRoute` system property.
 
@@ -360,7 +357,7 @@ ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
 link:#gixqt[Example 6-5].
 2. On each of the instances, create the `jvmRoute` system property of
-GlassFish Server by using the link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]
+{productName} by using the link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]
 subcommand.
 +
 Use the following format:
@@ -371,8 +368,7 @@ asadmin> create-jvm-options "-DjvmRoute=/instance-worker-name"/
 ----
 where instance-worker-name is the name of the worker that you defined to
 represent the instance in the `workers.properties` file.
-3. To apply your changes, restart Apache HTTP Server and GlassFish
-Server.
+3. To apply your changes, restart Apache HTTP Server and {productName}.
 
 [[GSADG00171]][[gjjzu]]
 Example 6-6 `httpd.conf` File for Load Balancing
@@ -429,7 +425,7 @@ worker.loadbalancer.balance_workers=worker1,worker2
 
 ==== To Enable SSL Between the `mod_jk` Load Balancer and the Browser
 
-To activate security for `mod_jk` on GlassFish Server, you must first
+To activate security for `mod_jk` on {productName}, you must first
 generate a Secure Socket Layer (SSL) self-signed certificate on the
 Apache HTTP Server with the `mod_ssl` module. The tasks include
 generating a private key, a Certificate Signing Request (CSR), a
@@ -502,11 +498,11 @@ JkMount /* worker1
 
 [[gjpan]][[GSADG00374]][[to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server]]
 
-==== To Enable SSL Between the `mod_jk` Load Balancer and GlassFish Server
+==== To Enable SSL Between the `mod_jk` Load Balancer and {productName}
 
 This procedure does not enable SSL transfer between `mod_jk` and
-GlassFish Server. It enables `mod_jk` to forward SSL-encrypted
-information from the browser to GlassFish Server.
+{productName}. It enables `mod_jk` to forward SSL-encrypted
+information from the browser to {productName}.
 
 [[GSADG860]]
 
@@ -515,7 +511,7 @@ Before You Begin
 The self-signed certificate must be configured.
 
 1. Perform the steps in link:#gixqw[To Enable `mod_jk`].
-2. Start another GlassFish Server with at least one web application
+2. Start another {productName} with at least one web application
 deployed.
 +
 In order for the `mod_jk`-enabled network listener to start listening
@@ -546,8 +542,7 @@ JkCIPHERIndicator SSL_CIPHER
 # What is the indicator for the client SSL certificated? (default is SSL_CLIENT_CERT )
 JkCERTSIndicator SSL_CLIENT_CERT
 ----
-5. To apply your changes, restart Apache HTTP Server and GlassFish
-Server.
+5. To apply your changes, restart Apache HTTP Server and {productName}.
 
 [[CIHJDAJD]][[GSADG861]][[administering-mod_proxy_ajp]]
 
@@ -555,7 +550,7 @@ Server.
 
 The Apache Connector `mod_proxy_ajp` can be used to connect the web
 container with Apache HTTP Server. By using `mod_proxy_ajp`, you can
-front GlassFish Server with Apache HTTP Server.
+front {productName} with Apache HTTP Server.
 
 [[GSADG862]][[sthref21]]
 
@@ -563,13 +558,13 @@ front GlassFish Server with Apache HTTP Server.
 [[to-enable-mod_proxy_ajp]]
 ==== To Enable `mod_proxy_ajp`
 
-You can front GlassFish Server with Apache HTTP Server and its
+You can front {productName} with Apache HTTP Server and its
 `mod_proxy_ajp` connector by enabling the AJP protocol for one of
-GlassFish Server's network listeners, as described in this procedure. A
+{productName}'s network listeners, as described in this procedure. A
 typical use for `mod_proxy_ajp` would be to have Apache HTTP Server
 handle requests for static resources, while having requests for dynamic
 resources, such as servlets and JavaServer Pages (JSPs), forwarded to,
-and handled by the GlassFish Server back-end instance.
+and handled by the {productName} back-end instance.
 
 1. Install Apache HTTP Server.
 +
@@ -619,7 +614,7 @@ increase the maximum threads in the `http-thread-pool` pool:
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-6. To apply your changes, restart GlassFish Server.
+6. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -640,13 +635,13 @@ For more information on the AJP protocol, see
 
 
 [[to-load-balance-using-mod_proxy_ajp-and-glassfish-server]]
-==== To Load Balance Using `mod_proxy_ajp` and GlassFish Server
+==== To Load Balance Using `mod_proxy_ajp` and {productName}
 
 Load balancing is the process of dividing the amount of work that a
 computer has to do between two or more computers so that more work gets
-done in the same amount of time. In the GlassFish Server context, load
+done in the same amount of time. In the {productName} context, load
 balancing is most frequently used to distribute work among the instances
-in a GlassFish Server cluster.
+in a {productName} cluster.
 
 To configure load balancing using `mod_proxy_ajp`, you must use the
 `mod_proxy_balancer` Apache module in addition to `mod_proxy_ajp`.
@@ -654,7 +649,7 @@ To configure load balancing using `mod_proxy_ajp`, you must use the
 In order to support stickiness, the `mod_proxy_balancer` load balancer
 relies on a `jvmRoute` system property that is included in any
 `JSESSIONID` received by the load balancer. Consequently, every
-GlassFish Server instance that is front-ended by the Apache load
+{productName} instance that is front-ended by the Apache load
 balancer must be configured with a unique `jvmRoute` system property.
 
 1. Install Apache HTTP Server.
@@ -684,7 +679,7 @@ ProxyPreserveHost On
       Allow from localhost
    </Proxy>
 
-# Each BalancerMember corresponds to an instance in the GlassFish Server
+# Each BalancerMember corresponds to an instance in the Eclipse GlassFish
 # cluster. The port specified for each instance must match the ajp port
 # specified for that instance.
 <Proxy balancer://localhost>
@@ -694,7 +689,7 @@ ProxyPreserveHost On
 </Proxy>
 ----
 3. Start Apache HTTP Server (`httpd`).
-4. In GlassFish Server, use the `create-network-listener` subcommand to
+4. In {productName}, use the `create-network-listener` subcommand to
 create a jk-enabled network listener targeted to the cluster.
 +
 For example:
@@ -744,8 +739,8 @@ asadmin> create-system-properties --target instance3 \
 AJP_INSTANCE_NAME=instance3
 ----
 In this example, `instance1`, `instance2` and `instance3` are the names
-of the GlassFish Server instances in the cluster.
-8. To apply your changes, restart GlassFish Server.
+of the {productName} instances in the cluster.
+8. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 

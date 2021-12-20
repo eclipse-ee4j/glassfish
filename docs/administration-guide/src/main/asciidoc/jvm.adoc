@@ -15,7 +15,7 @@ prev=domains.html
 
 This chapter provides procedures for administering the Virtual Machine
 for the Java platform (Java Virtual Machine) or JVM machine) in the
-GlassFish Server Open Source Edition 7 environment by using the
+{productName} 7 environment by using the
 `asadmin` command-line utility.
 
 The following topics are addressed here:
@@ -33,9 +33,9 @@ Console are contained in the Administration Console online help.
 The Java Virtual Machine is an interpretive computing engine responsible
 for running the byte codes in a compiled Java program. The virtual
 machine translates the Java byte codes into the native instructions of
-the host machine. GlassFish Server, being a Java process, requires a
+the host machine. {productName}, being a Java process, requires a
 virtual machine to run and support the Java applications running on it.
-JVM settings are part of an GlassFish Server configuration.
+JVM settings are part of an {productName} configuration.
 
 The following topics are addressed here:
 
@@ -63,7 +63,7 @@ backslash (\) to offset the colon delimiter.
 +
 Information about properties for the subcommand is included in this help
 page.
-3. To apply your changes, restart GlassFish Server. See
+3. To apply your changes, restart {productName}. See
 link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00154]][[ghqwm]]
@@ -151,7 +151,7 @@ link:../reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`
 To remove more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon, use the backslash
 (\) to offset the colon delimiter.
-5. To apply your changes, restart GlassFish Server. See
+5. To apply your changes, restart {productName}. See
 link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00156]][[ggpgz]]
@@ -267,7 +267,7 @@ subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 
@@ -301,7 +301,7 @@ profiler.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Delete the profiler by using the link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
 subcommand.
-3. To apply your changes, restart GlassFish Server.
+3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
 

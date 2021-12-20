@@ -32,15 +32,14 @@ the load balancer configuration to the physical load balancer. The load
 balancer must already exist. To create a physical load balancer, use the
 `create-http-lb` subcommand.
 
-This subcommand is only applicable to Oracle GlassFish Server. This
-subcommand is not applicable to GlassFish Server Open Source Edition.
+This subcommand is only applicable to {productName}. This
+subcommand is not applicable to {productName}.
 
 [[sthref25]]
 
 Context
 
-The Load Balancer distributes the workload among multiple Oracle
-GlassFish Server instances , increasing the overall throughput of the
+The Load Balancer distributes the workload among multiple {productName} instances , increasing the overall throughput of the
 system. The Load Balancer also enables requests to failover from one
 server instance to another. For HTTP session information to persist,
 configure HTTP session persistence.
@@ -48,9 +47,9 @@ configure HTTP session persistence.
 
 [NOTE]
 ====
-The Load Balancer Plugin is only available with Oracle GlassFish Server,
-and is not available with GlassFish Server Open Source Edition. For
-GlassFish Server Open Source Edition, it is possible to use the `mod_jk`
+The Load Balancer Plugin is only available with {productName},
+and is not available with {productName}. For
+{productName}, it is possible to use the `mod_jk`
 module to configure load balancing on the Apache HTTP server.
 ====
 

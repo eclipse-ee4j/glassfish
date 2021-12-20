@@ -98,8 +98,7 @@ asadmin-options::
     an implementation of the javax.security.auth.spi.LoginModule
     interface, and then plug the module into a `jaas-context`. For more
     information, see "link:../security-guide/system-security.html#GSSCG00196[Custom Authentication of Client
-    Certificate in SSL Mutual Authentication]" in GlassFish Server Open
-    Source Edition Security Guide.
+    Certificate in SSL Mutual Authentication]" in {productName} Security Guide.
 
   * You can specify the following properties for `JDBCRealm`:
 

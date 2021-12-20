@@ -1,30 +1,30 @@
 type=page
 status=published
-title=Eclipse GlassFish Server High Availability Administration Guide, Release 7
+title={productName} High Availability Administration Guide, Release 7
 next=preface.html
 prev=loe.html
 ~~~~~~
 
-= Eclipse GlassFish Server High Availability Administration Guide, Release 7
+= {productName} High Availability Administration Guide, Release 7
 
 [[eclipse-glassfish-server]]
-== Eclipse GlassFish Server
+== {productName}
 
 High Availability Administration Guide
 
 Release 7
 
-Contributed 2018, 2019
+Contributed 2018 - 2022
 
-This book describes thehigh-availability features in GlassFish Server,
+This book describes thehigh-availability features in {productName},
 including converged load balancing, HTTP load balancing, clusters,
 session persistence and failover.
 
-Note: The main thrust of the Eclipse GlassFish Server 7
+Note: The main thrust of the {productName} 7
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the clustering, standalone instance and high
-availability features of GlassFish Server were not a focus of this
+availability features of {productName} were not a focus of this
 release. These features are included in the release, but they may not
 function properly with some of the new features added in support of the
 Jakarta EE 10 platform.
@@ -33,7 +33,7 @@ Jakarta EE 10 platform.
 
 '''''
 
-Eclipse GlassFish Server High Availability Administration
+{productName} High Availability Administration
 Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.

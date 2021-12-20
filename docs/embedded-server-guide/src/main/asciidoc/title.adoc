@@ -1,0 +1,57 @@
+type=page
+status=published
+title=Eclipse GlassFish Server Embedded Server Guide, Release 7
+next=preface.html
+prev=lot.html
+~~~~~~
+
+= Eclipse GlassFish Server Embedded Server Guide, Release 7
+
+[[eclipse-glassfish-server]]
+== Eclipse GlassFish Server
+
+Embedded Server Guide
+
+Release 7
+
+Contributed 2018, 2019
+
+This document explains how to run applications in embedded GlassFish
+Server Open Source Edition and to develop applications in which
+GlassFish Server is embedded. This document is for software developers
+who are developing applications to run in embedded GlassFish Server. The
+ability to program in the Java language is assumed.
+
+Note: The main thrust of the Eclipse GlassFish Server 7
+release is to provide an application server for developers to explore
+and begin exploiting the new and updated technologies in the Jakarta EE 10
+platform. Thus, the embedded server feature of GlassFish Server was not
+a focus of this release. This feature is included in the release, but it
+may not function properly with some of the new features added in support
+of the Jakarta EE 10 platform.
+
+[[sthref1]]
+
+'''''
+
+Eclipse GlassFish Server Embedded Server Guide, Release 7
+
+Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+http://www.eclipse.org/legal/epl-2.0.
+
+SPDX-License-Identifier: EPL-2.0
+
+Oracle and Java are registered trademarks of Oracle and/or its
+affiliates. Other names may be trademarks of their respective owners.
+
+Intel and Intel Xeon are trademarks or registered trademarks of Intel
+Corporation. All SPARC trademarks are used under license and are
+trademarks or registered trademarks of SPARC International, Inc. AMD,
+Opteron, the AMD logo, and the AMD Opteron logo are trademarks or
+registered trademarks of Advanced Micro Devices. UNIX is a registered
+trademark of The Open Group.
+
+image:img/eclipse_foundation_logo_tiny.png["Eclipse Logo"]

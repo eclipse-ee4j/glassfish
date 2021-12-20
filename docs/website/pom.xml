@@ -24,7 +24,6 @@
         <artifactId>docs</artifactId>
         <version>7.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.glassfish.docs</groupId>
     <artifactId>website</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish website content</name>
@@ -36,7 +35,7 @@
 
     <!--
         This project doesn't inherit from ../parent because it doesn't
-        need jbake, and so the jar plugin needs to be configured here...
+        need asciidoc, and so the jar plugin needs to be configured here...
     -->
     <build>
         <defaultGoal>package</defaultGoal>

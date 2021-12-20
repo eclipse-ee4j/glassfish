@@ -30,7 +30,7 @@ asadmin [asadmin-options] list-applications [--help]
 
 === Description
 
-The `list-applications` subcommand lists deployed Java EE applications
+The `list-applications` subcommand lists deployed Jakarta EE applications
 and the type of each application that is listed.
 
 If the `--type` option is not specified, all applications are listed. If
@@ -65,7 +65,7 @@ asadmin-options::
   resources for each component within the application.
 `--subcomponents`::
   Lists the subcomponents of each application. The subcomponents listed
-  depend on the application type. For example, for a Java EE application
+  depend on the application type. For example, for a Jakarta EE application
   (EAR file), modules are listed. For a web application, servlets and
   JSP pages are listed. For an EJB module, EJB subcomponents are listed.
 `--type`::

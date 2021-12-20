@@ -21,7 +21,7 @@ Lists all of the persistent timers owned by server instance(s)
 
 [source]
 ----
-asadmin [asadmin-options] list-timers [--help] 
+asadmin [asadmin-options] list-timers [--help]
 [target]
 ----
 
@@ -91,10 +91,10 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:migrate-timers.html#migrate-timers-1[`migrate-timers`(1)]
 
-"http://docs.oracle.com/javaee/7/tutorial/doc/ejb-basicexamples.html[Using
-the Timer Service]" in The Java EE 8 Tutorial
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-the-timer-service[
+Using the Timer Service] in The Jakarta EE Tutorial
 
-"link:../application-development-guide/ejb.html#GSDVG00146[EJB Timer Service]" in GlassFish Server Open Source
-Edition Application Development Guide
+"link:../application-development-guide/ejb.html#GSDVG00146[EJB Timer Service]"
+in GlassFish Server Open Source Edition Application Development Guide
 
 

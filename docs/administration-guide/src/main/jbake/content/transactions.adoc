@@ -38,8 +38,8 @@ Transaction Service (JTS), see the following sites:
 `http://www.oracle.com/technetwork/java/javaee/tech/jts-140022.html`.
 
 You might also want to read
-"https://javaee.github.io/tutorial/transactions.html[Transactions]" in
-The Java EE 8 Tutorial.
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
+in The Jakarta EE Tutorial.
 
 [[ablso]][[GSADG00605]][[about-transactions]]
 
@@ -145,7 +145,7 @@ Transaction Scope
 A local transaction involves only one non-XA resource and requires that
 all participating application components execute within one process.
 Local transaction optimization is specific to the resource manager and
-is transparent to the Java EE application.
+is transparent to the Jakarta EE application.
 
 In the GlassFish Server, a JDBC resource is non-XA if it meets either of
 the following criteria:

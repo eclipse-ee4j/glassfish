@@ -22,12 +22,12 @@ configuration or load balancer
 
 [source]
 ----
-asadmin [asadmin-options] create-http-lb-ref [--help] 
---config config_name | --lbname load_balancer_name 
-[--lbpolicy round-robin] [--lbpolicymodule lb_policy_module] 
-[--healthcheckerurl url] [--healthcheckerinterval 10] 
-[--healthcheckertimeout 10] [--lbenableallinstances=true] 
-[--lbenableallapplications=true] [--lbweight instance=weight[:instance=weight]*] 
+asadmin [asadmin-options] create-http-lb-ref [--help]
+--config config_name | --lbname load_balancer_name
+[--lbpolicy round-robin] [--lbpolicymodule lb_policy_module]
+[--healthcheckerurl url] [--healthcheckerinterval 10]
+[--healthcheckertimeout 10] [--lbenableallinstances=true]
+[--lbenableallapplications=true] [--lbweight instance=weight[:instance=weight]*]
 target
 ----
 
@@ -139,7 +139,7 @@ balancer configuration named `mylbconfig`.
 
 [source]
 ----
-asadmin> create-http-lb-ref --config mylbconfig cluster2 
+asadmin> create-http-lb-ref --config mylbconfig cluster2
 
 Command create-http-lb-ref executed successfully.
 ----
@@ -153,7 +153,7 @@ balancer named `mylb`.
 
 [source]
 ----
-asadmin> create-http-lb-ref --lbname mylb cluster2 
+asadmin> create-http-lb-ref --lbname mylb cluster2
 
 Command create-http-lb-ref executed successfully.
 ----
@@ -167,9 +167,9 @@ enables the load balancer for instances and applications.
 
 [source]
 ----
-asadmin> create-http-lb-ref --config mylbconfig --lbpolicy weighted-round-robin 
---healthcheckerinterval 40 --healthcheckertimeout 20 
---lbenableallinstances=true --lbenableallapplications=true cluster2 
+asadmin> create-http-lb-ref --config mylbconfig --lbpolicy weighted-round-robin
+--healthcheckerinterval 40 --healthcheckertimeout 20
+--lbenableallinstances=true --lbenableallapplications=true cluster2
 
 Command create-http-lb-ref executed successfully.
 ----

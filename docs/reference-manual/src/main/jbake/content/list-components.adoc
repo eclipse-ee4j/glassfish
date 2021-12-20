@@ -36,7 +36,7 @@ The `list-components` subcommand is deprecated. Use the
 `list-applications` subcommand instead.
 ====
 
-The `list-components` subcommand lists all deployed Java EE components.
+The `list-components` subcommand lists all deployed Jakarta EE components.
 
 If the `--type` option is not specified, all components are listed. If
 the type option is specified, you must specify a type. The possible
@@ -70,7 +70,7 @@ asadmin-options::
   resources for each component within an application.
 `--subcomponents`::
   Lists the subcomponents of each component. The subcomponents listed
-  depend on the component type. For example, for a Java EE application
+  depend on the component type. For example, for a Jakarta EE application
   (EAR file), modules are listed. For a web application, servlets and
   JSP pages are listed. For an EJB module, EJB subcomponents are listed.
 `--type`::

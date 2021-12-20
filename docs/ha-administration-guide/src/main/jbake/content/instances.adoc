@@ -18,7 +18,7 @@ A GlassFish Server instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
 GlassFish Server is running. A node defines the host where the GlassFish
 Server instance resides. The JVM machine must be compatible with the
-Java Platform, Enterprise Edition (Java EE).
+Java Platform, Enterprise Edition (Jakarta EE).
 
 GlassFish Server instances form the basis of an application deployment.
 An instance is a building block in the clustering, load balancing, and
@@ -1384,7 +1384,7 @@ out of date in the cache.
   If a file below a top-level subdirectory is changed without a change
   to a file in the top-level subdirectory, full synchronization is required.
 `generated`::
-  This directory contains generated files for Java EE applications and
+  This directory contains generated files for Jakarta EE applications and
   modules, for example, EJB stubs, compiled JSP classes, and security
   policy files. Do not modify the contents of this directory. +
   This directory is resynchronized when the `applications` directory is

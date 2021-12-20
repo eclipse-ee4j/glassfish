@@ -56,10 +56,10 @@ asadmin-options::
 
 [source]
 ----
-asadmin> configure-ldap-for-admin 
+asadmin> configure-ldap-for-admin
 Enter the value for the basedn option>
 Enter the value for the ldap-group option>
-The LDAP Auth Realm admin-realm was configured correctly 
+The LDAP Auth Realm admin-realm was configured correctly
 in admin server's configuration.
 ----
 

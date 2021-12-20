@@ -21,7 +21,7 @@ Deletes an existing named configuration
 
 [source]
 ----
-asadmin [asadmin-options] delete-config [--help] 
+asadmin [asadmin-options] delete-config [--help]
 configuration-name
 ----
 

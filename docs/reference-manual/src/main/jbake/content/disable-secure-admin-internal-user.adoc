@@ -23,7 +23,7 @@ admin operations.
 
 [source]
 ----
-asadmin [asadmin-options] disable-secure-admin-internal-user [--help] 
+asadmin [asadmin-options] disable-secure-admin-internal-user [--help]
 admin-username
 ----
 

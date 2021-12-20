@@ -27,8 +27,8 @@ The following topics are addressed here:
 * link:#beait[Using Message-Driven Beans]
 
 For general information about enterprise beans, see
-"https://javaee.github.io/tutorial/partentbeans.html[Enterprise Beans]"
-in The Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#enterprise-beans[Enterprise Beans]
+in The Jakarta EE Tutorial.
 
 
 [NOTE]
@@ -579,7 +579,7 @@ serializable.
 
 [[GSDVG549]][[sthref18]][[fvyed]]
 
-Table 8-1 Object Types Supported for Java EE Stateful Session Bean State
+Table 8-1 Object Types Supported for Jakarta EE Stateful Session Bean State
 Failover
 
 [width="100%",cols="45%,55%",options="header",]
@@ -858,7 +858,7 @@ element, the bean's state is not checkpointed at all even if
 
 For better performance, specify a small subset of methods. The methods
 chosen should accomplish a significant amount of work in the context of
-the Java EE application or should result in some important modification
+the Jakarta EE application or should result in some important modification
 to the bean's state.
 ====
 

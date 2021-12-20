@@ -21,9 +21,9 @@ Modifies a work security map for the specified resource adapter
 
 [source]
 ----
-asadmin [asadmin-options] update-connector-work-security-map [--help] 
+asadmin [asadmin-options] update-connector-work-security-map [--help]
 --raname raname
-[--addprincipals eis-principal1=server-principal1[, eis-principal2=server-principal2]*] 
+[--addprincipals eis-principal1=server-principal1[, eis-principal2=server-principal2]*]
 [--addgroups eis-group1=server-group1[, eis-group2=server-group2]*]
 [--removeprincipals eis-principal1[,eis-principal2]*]
 [--removegroups eis-group1[, eis-group2]*]

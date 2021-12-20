@@ -23,8 +23,8 @@ instance-to-DAS admin messages.
 
 [source]
 ----
-asadmin [asadmin-options] enable-secure-admin [--help] 
-[--adminalias=alias] 
+asadmin [asadmin-options] enable-secure-admin [--help]
+[--adminalias=alias]
 [--instancealias=alias]
 ----
 

@@ -174,7 +174,7 @@ be provided.::
   single validation check fails. The default value is false. One attempt
   is made to reestablish failed connections.
 `--allownoncomponentcallers`::
-  A pool with this property set to true can be used by non-Java EE
+  A pool with this property set to true can be used by non-Jakarta EE
   components, that is, components other than EJBs or Servlets. The
   returned connection is enlisted automatically with the transaction
   context obtained from the transaction manager. Connections obtained by

@@ -4,36 +4,19 @@ title=Uninstalling GlassFish Server 7
 prev=installing.html
 ~~~~~~
 
-Uninstalling GlassFish Server 7
-=================================
+= Uninstalling GlassFish
 
 [[GSING00003]][[ghmlt]]
 
 
-[[uninstalling-glassfish-server-5.0]]
-2 Uninstalling GlassFish Server 7
------------------------------------
+[[uninstalling-glassfish]]
+== 2 Uninstalling GlassFish
 
-This chapter describes how to uninstall GlassFish Server Open Source
-Edition 7 software.
+This chapter describes how to uninstall {productName}.
 
 [[gjxfv]][[GSING00028]][[removing-a-glassfish-server-installation]]
 
-Removing a GlassFish Server Installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This section describes how to remove GlassFish Server Open Source
-Edition 7 software.
-
-The following topics are addressed here:
-
-* link:#gkrfi[To Uninstall GlassFish Server Software After a ZIP File
-Installation]
-
-[[gkrfi]][[GSING00012]][[to-uninstall-glassfish-server-software-after-a-zip-file-installation]]
-
-To Uninstall GlassFish Server Software After a ZIP File Installation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=== Removing a Eclipse GlassFish Installation
 
 This procedure describes how to uninstall GlassFish Server software that
 was installed using a ZIP file, as described in

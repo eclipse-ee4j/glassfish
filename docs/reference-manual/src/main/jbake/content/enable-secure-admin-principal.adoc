@@ -22,8 +22,8 @@ admin requests from clients identified by the specified SSL certificate.
 
 [source]
 ----
-asadmin [asadmin-options] enable-secure-admin-principal [--help] 
---alias aliasname | DN 
+asadmin [asadmin-options] enable-secure-admin-principal [--help]
+--alias aliasname | DN
 ----
 
 [[sthref1144]]

@@ -686,7 +686,7 @@ message.
 +
   Action: Trying to invoke the ejb application
 
-[[sthref122]]AS-EJB-00053 The feature \{0} requires Full Java EE Profile to be supported ::
+[[sthref122]]AS-EJB-00053 The feature \{0} requires Full Jakarta EE Profile to be supported ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.

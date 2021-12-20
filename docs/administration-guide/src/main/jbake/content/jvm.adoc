@@ -215,12 +215,12 @@ and memory.
 
 [source]
 ----
-asadmin> generate-jvm-report --type summary 
+asadmin> generate-jvm-report --type summary
 Operating System Information:
 Name of the Operating System: Windows XP
 Binary Architecture name of the Operating System: x86, Version: 5.1
 Number of processors available on the Operating System: 2
-System load on the available processors for the last minute: NOT_AVAILABLE. 
+System load on the available processors for the last minute: NOT_AVAILABLE.
 (Sum of running and queued runnable entities per minute).
 .
 ,

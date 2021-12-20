@@ -466,16 +466,16 @@ modification to run on GlassFish Server Open Source Edition 7.
 Components that may have incompatibilities are deployed on GlassFish
 Server 7 with the `compatibility` property set to `v2` and will run
 without change on GlassFish Server 7. You may, however, want to
-consider modifying the applications to conform to Java EE 6 requirements.
+consider modifying the applications to conform to Jakarta EE 6 requirements.
 
-The Java EE 6 platform specification imposes stricter requirements than
-Java EE 5 did on which JAR files can be visible to various modules
+The Jakarta EE 6 platform specification imposes stricter requirements than
+Jakarta EE 5 did on which JAR files can be visible to various modules
 within an EAR file. In particular, application clients must not have
 access to EJB JAR files or other JAR files in the EAR file unless they
 use a `Class-Path` header in the manifest file, or unless references use
 the standard Java SE mechanisms (extensions, for example), or use the
-Java EE `library-directory` mechanism. Setting the `library-directory`
-property to `v2` removes these Java EE 6 restrictions.
+Jakarta EE `library-directory` mechanism. Setting the `library-directory`
+property to `v2` removes these Jakarta EE 6 restrictions.
 
 Applications and components that are deployed in the source server are
 deployed on the target server during the upgrade. Applications that do

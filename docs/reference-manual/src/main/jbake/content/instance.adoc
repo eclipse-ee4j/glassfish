@@ -13,7 +13,7 @@ instance
 instance
 --------
 
-An instance in {productName} has its own Java EE configuration, Java
+An instance in {productName} has its own Jakarta EE configuration, Java
 EE resources, application deployment areas, and server configuration
 settings
 

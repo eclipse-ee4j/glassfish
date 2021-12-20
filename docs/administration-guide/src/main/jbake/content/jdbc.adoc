@@ -884,11 +884,11 @@ Interface (JNDI) name to identify the resource. For example, the JNDI
 name for the resource of a payroll database might be
 `java:comp/env/jdbc/payrolldb`.
 
-The Java EE standard specifies that certain default resources be made
+The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
 default resources. GlassFish Server makes these names available through
-the use of logical JNDI names, which map Java EE standard JNDI names to
-specific GlassFish Server resources. For JDBC resources, the Java EE
+the use of logical JNDI names, which map Jakarta EE standard JNDI names to
+specific GlassFish Server resources. For JDBC resources, the Jakarta EE
 standard name `java:comp/DefaultDataSource` is mapped to the
 `jdbc/__default` resource.
 
@@ -1201,7 +1201,7 @@ variables . For example:
 
 [source]
 ----
-LD_LIBRARY_PATH=/usr/db2user/sqllib/lib:${Java EE.home}/lib
+LD_LIBRARY_PATH=/usr/db2user/sqllib/lib:${Jakarta EE.home}/lib
 DB2DIR=/opt/IBM/db2/V8.2
 DB2INSTANCE=db2user
 INSTHOME=/usr/db2user
@@ -1334,7 +1334,7 @@ The JAR file for the Oracle 10 database driver is `ojdbc14.jar`. Make
 sure that the shared library is available through `LD_LIBRARY_PATH` and
 that the `ORACLE_HOME` property is set.
 
-To make the Oracle driver behave in a Java EE-compliant manner, you must
+To make the Oracle driver behave in a Jakarta EE-compliant manner, you must
 define the following JVM property:
 
 [source]
@@ -1367,7 +1367,7 @@ Oracle 11 Database Driver
 
 The JAR file for the Oracle 11 database driver is `ojdbc6.jar`.
 
-To make the Oracle driver behave in a Java EE-compliant manner, you must
+To make the Oracle driver behave in a Jakarta EE-compliant manner, you must
 define the following JVM property:
 
 [source]
@@ -1557,7 +1557,7 @@ DataDirect Type 4 Driver for Oracle 11 Database
 
 The JAR file for the DataDirect driver is `oracle.jar`.
 
-To make the Oracle driver behave in a Java EE-compliant manner, you must
+To make the Oracle driver behave in a Jakarta EE-compliant manner, you must
 define the following JVM property:
 
 [source]

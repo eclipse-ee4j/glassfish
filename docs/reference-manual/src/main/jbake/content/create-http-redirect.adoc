@@ -22,8 +22,8 @@ Adds a new HTTP redirect
 [source]
 ----
 asadmin [asadmin-options] create-http-redirect [--help]
-[--redirect-port redirect-port] 
-[--secure-redirect={false|true}] 
+[--redirect-port redirect-port]
+[--secure-redirect={false|true}]
 [--target target]
 protocol-name
 ----

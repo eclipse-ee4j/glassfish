@@ -21,7 +21,7 @@ Lists the names of the current resource adapter configurations
 
 [source]
 ----
-asadmin [asadmin-options] list-resource-adapter-configs [--help] 
+asadmin [asadmin-options] list-resource-adapter-configs [--help]
 [--raname raname] [--verbose {false|true}]
 ----
 

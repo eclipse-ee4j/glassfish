@@ -21,7 +21,7 @@ Sets load balancing weights for clustered instances
 
 [source]
 ----
-asadmin [asadmin-options] configure-lb-weight [--help] 
+asadmin [asadmin-options] configure-lb-weight [--help]
 --cluster cluster_name
 instance-name=weight[:instance-name=weight]
 ----

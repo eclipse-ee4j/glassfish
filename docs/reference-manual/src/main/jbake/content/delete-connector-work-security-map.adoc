@@ -21,7 +21,7 @@ Deletes a work security map for the specified resource adapter
 
 [source]
 ----
-asadmin [asadmin-options] delete-connector-work-security-map [--help] 
+asadmin [asadmin-options] delete-connector-work-security-map [--help]
 --raname raname
 mapname
 ----

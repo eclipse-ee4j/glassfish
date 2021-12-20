@@ -21,9 +21,9 @@ Adds an IIOP listener
 
 [source]
 ----
-asadmin [asadmin-options] create-iiop-listener [--help] 
+asadmin [asadmin-options] create-iiop-listener [--help]
 --listeneraddress address
-[--iiopport iiop-port-number] [--securityenabled={false|true}] [--enabled={true|false}] 
+[--iiopport iiop-port-number] [--securityenabled={false|true}] [--enabled={true|false}]
 [--property (name=value)[:name=value]*]
 [--target target] listener_id
 ----
@@ -93,7 +93,7 @@ The following command creates an IIOP listener named
 
 [source]
 ----
-asadmin> create-iiop-listener --listeneraddress 192.168.1.100 
+asadmin> create-iiop-listener --listeneraddress 192.168.1.100
 --iiopport 1400 sample_iiop_listener
 Command create-iiop-listener executed successfully.
 ----
@@ -107,7 +107,7 @@ for the cluster `mycluster`. It uses the target option.
 
 [source]
 ----
-asadmin> create-iiop-listener --listeneraddress 0.0.0.0 --iiopport 1401 
+asadmin> create-iiop-listener --listeneraddress 0.0.0.0 --iiopport 1401
 --target mycluster iiop_listener_2
 Command create-iiop-listener executed successfully.
 ----

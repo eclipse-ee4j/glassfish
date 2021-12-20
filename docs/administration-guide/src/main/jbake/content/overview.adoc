@@ -16,7 +16,7 @@ Overview of GlassFish Server Administration
 ---------------------------------------------
 
 GlassFish Server Open Source Edition provides a server for developing
-and deploying Java Platform Enterprise Edition (Java EE) applications
+and deploying Java Platform Enterprise Edition (Jakarta EE) applications
 and web Java Web Services.
 
 As an administrator ofGlassFish Server, your main responsibilities are

@@ -29,7 +29,7 @@ link:../reference-manual/add-library.html#GSRFM00818[`add-library`]::
   application-specific class loader directory.
 link:../reference-manual/create-application-ref.html#GSRFM00013[`create-application-ref`]::
   Creates a reference from a cluster or an unclustered server instance
-  to a previously deployed Java EE application or module. This
+  to a previously deployed Jakarta EE application or module. This
   effectively results in the application element being deployed and made
   available on the targeted instance or cluster.
 link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`]::
@@ -38,7 +38,7 @@ link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecyc
   in the server life cycle.
 link:../reference-manual/delete-application-ref.html#GSRFM00064[`delete-application-ref`]::
   Removes a reference from a cluster or an unclustered server instance
-  to a previously deployed Java EE application or module. This
+  to a previously deployed Jakarta EE application or module. This
   effectively results in the application element being undeployed on the
   targeted instance or cluster.
 link:../reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`]::
@@ -72,14 +72,14 @@ link:../reference-manual/get-client-stubs.html#GSRFM00140[`get-client-stubs`]::
   link:deploying-applications.html#beaek[EJB Module Deployment
   Guidelines].
 link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`]::
-  Lists deployed Java EE applications and modules. Optionally lists
+  Lists deployed Jakarta EE applications and modules. Optionally lists
   subcomponents and scoped resources. If the `--type` option is not
   specified, all applications and modules are listed. Supported in
   remote mode only. For usage instructions, see
   link:deploying-applications.html#giulr[To List Deployed Applications or
   Modules].
 link:../reference-manual/list-application-refs.html#GSRFM00147[`list-application-refs`]::
-  Lists Java EE applications and modules deployed on the specified
+  Lists Jakarta EE applications and modules deployed on the specified
   target server instance or cluster.
 link:../reference-manual/list-libraries.html#GSRFM00819[`list-libraries`]::
   Lists library JAR files that have been added to GlassFish Server. You

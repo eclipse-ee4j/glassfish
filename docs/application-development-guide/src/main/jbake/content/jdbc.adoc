@@ -30,7 +30,7 @@ A useful JDBC tutorial is located at
 [NOTE]
 ====
 The GlassFish Server does not support connection pooling or transactions
-for an application's database access if it does not use standard Java EE
+for an application's database access if it does not use standard Jakarta EE
 `DataSource` objects.
 ====
 
@@ -477,7 +477,7 @@ information, and if Bean A completes the transaction, the connection can
 be shared.
 
 Connections obtained through a resource are shared only if the resource
-reference declared by the Java EE component allows it to be shareable.
+reference declared by the Jakarta EE component allows it to be shareable.
 This is specified in a component's deployment descriptor by setting the
 `res-sharing-scope` element to `Shareable` for the particular resource
 reference. To turn off connection sharing, set `res-sharing-scope` to
@@ -661,7 +661,7 @@ You can allow non-Java-EE components, such as servlet filters, lifecycle
 modules, and third party persistence managers, to use this JDBC
 connection pool. The returned connection is automatically enlisted with
 the transaction context obtained from the transaction manager. Standard
-Java EE components can also use such pools. Connections obtained by
+Jakarta EE components can also use such pools. Connections obtained by
 non-component callers are not automatically closed at the end of a
 transaction by the container. They must be explicitly closed by the
 caller.

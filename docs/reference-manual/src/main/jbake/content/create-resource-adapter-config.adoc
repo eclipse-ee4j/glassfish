@@ -21,10 +21,10 @@ Creates the configuration information for the connector module
 
 [source]
 ----
-asadmin [asadmin-options] create-resource-adapter-config [--help] 
-[--threadpoolid threadpool] 
-[--objecttype object-type] 
-[--property (property-name=value)[:name=value]*] 
+asadmin [asadmin-options] create-resource-adapter-config [--help]
+[--threadpoolid threadpool]
+[--objecttype object-type]
+[--property (property-name=value)[:name=value]*]
 raname
 ----
 
@@ -88,7 +88,7 @@ This example creates a resource adapter configuration for `ra1`.
 
 [source]
 ----
-asadmin> create-resource-adapter-config --property foo=bar --threadpoolid 
+asadmin> create-resource-adapter-config --property foo=bar --threadpoolid
 mycustomerthreadpool ra1
 Command create-resource-adapter-config executed successfully
 ----

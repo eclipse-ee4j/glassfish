@@ -27,8 +27,8 @@ The following topics are addressed here:
 * link:#beaft[Advanced Web Application Features]
 
 For general information about web applications, see
-"https://javaee.github.io/tutorial/partwebtier.html[The Web Tier]" in
-The Java EE 8 Tutorial.
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#getting-started-with-web-applications[
+The Web Tier]" in The Jakarta EE Tutorial.
 
 
 [NOTE]
@@ -782,7 +782,7 @@ a direct impact on overall system throughput.
 In the event of an instance or hardware failure, another server instance
 can take over a distributed session, with the following limitations:
 
-* If a distributable web application references a Java EE component or
+* If a distributable web application references a Jakarta EE component or
 resource, the reference might be lost. See link:#fvyem[Table 7-3] for a
 list of the types of references that `HTTPSession` failover supports.
 * References to open files or network connections are lost.
@@ -807,7 +807,7 @@ in GlassFish Server Open Source Edition Administration Guide.
 [[GSDVG543]][[sthref15]][[fvyem]]
 
 
-Table 7-3 Object Types Supported for Java EE Web Application Session
+Table 7-3 Object Types Supported for Jakarta EE Web Application Session
 State Failover
 
 [width="100%",cols="45%,55%",options="header",]
@@ -1251,8 +1251,7 @@ Grizzly Comet
 ^^^^^^^^^^^^^
 
 For details on using Grizzly Comet including a sample application, refer
-to the Grizzly Comet documentation on GitHub
-(`https://javaee.github.io/grizzly/comet.html`).
+to the https://eclipse-ee4j.github.io/grizzly/comet.html[Grizzly Comet documentation].
 
 Grizzly's support for Comet includes a small set of APIs that make it
 easy to add Comet functionality to your web applications. The Grizzly
@@ -1576,7 +1575,7 @@ For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
 the `delegate` setting. This prevents applications from overriding core
 Java runtime classes or changing the API versions of specifications that
-are part of the Java EE platform.
+are part of the Jakarta EE platform.
 
 For general information about class loaders, see
 link:class-loaders.html#beade[Class Loaders].

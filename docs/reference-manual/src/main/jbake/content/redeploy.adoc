@@ -166,7 +166,7 @@ If a directory filepath is specified, this option is ignored.
   pure EAR file. A pure EAR file is an EAR without {productName}
   descriptors.
 `--altdd`::
-  Deploys the application using a Java EE standard deployment descriptor
+  Deploys the application using a Jakarta EE standard deployment descriptor
   that resides outside of the application archive. Specify an absolute
   path or a relative path to the alternate deployment descriptor file.
   The alternate deployment descriptor overrides the top-level deployment
@@ -335,13 +335,13 @@ If a directory filepath is specified, this option is ignored.
     compatible in terms of JAR visibility requirements for applications.
     The only allowed value is `v2`, which refers to Sun Java System
     Application Server version 2 or Sun Java System Application Server
-    version 9.1 or 9.1.1. Beginning in Java EE 6, the Java EE platform
-    specification imposed stricter requirements than Java EE 5 did on
+    version 9.1 or 9.1.1. Beginning in Jakarta EE 6, the Jakarta EE platform
+    specification imposed stricter requirements than Jakarta EE 5 did on
     which JAR files can be visible to various modules within an EAR
     file. In particular, application clients must not have access to EJB
     JAR files or other JAR files in the EAR file unless references use
     the standard Java SE mechanisms (extensions, for example) or the
-    Java EE library-directory mechanism. Setting this property to `v2`
+    Jakarta EE library-directory mechanism. Setting this property to `v2`
     removes these restrictions.
   `keepSessions={false|true}`;;
     Superseded by the `--keepstate` option. +

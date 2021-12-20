@@ -23,7 +23,7 @@ authenticate with each other and to authorize admin operations.
 
 [source]
 ----
-asadmin [asadmin-options] enable-secure-admin-internal-user [--help] 
+asadmin [asadmin-options] enable-secure-admin-internal-user [--help]
 [--passwordalias pwdaliasname]
 admin-username
 ----
@@ -42,7 +42,7 @@ must:
 +
 [source]
 ----
-asadmin> create-file-user --authrealmname admin-realm --groups 
+asadmin> create-file-user --authrealmname admin-realm --groups
 asadmin newAdminUsername
 ----
 2. Create a password alias for the just-created password.
@@ -56,7 +56,7 @@ admin authorization.
 +
 [source]
 ----
-asadmin> enable-secure-admin-internal-user 
+asadmin> enable-secure-admin-internal-user
 --passwordalias passwordAliasName
 newAdminUsername
 ----
@@ -117,7 +117,7 @@ instances, instead of certificates.
 
 [source]
 ----
-asadmin> enable-secure-admin-internal-user 
+asadmin> enable-secure-admin-internal-user
 --passwordalias passwordAliasName
 newAdminUsername
 ----

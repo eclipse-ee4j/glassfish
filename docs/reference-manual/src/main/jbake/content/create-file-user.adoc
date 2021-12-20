@@ -21,9 +21,9 @@ Creates a new file user
 
 [source]
 ----
-asadmin [asadmin-options] create-file-user [--help] 
-[--authrealmnameauth_realm_name] 
-[--target target 
+asadmin [asadmin-options] create-file-user [--help]
+[--authrealmnameauth_realm_name]
+[--target target
 [--groups user_groups[:user_groups]*] user_name
 ----
 
@@ -90,8 +90,8 @@ assumed that an authentication realm has already been created using the
 
 [source]
 ----
-asadmin> create-file-user 
---groups staff:manager 
+asadmin> create-file-user
+--groups staff:manager
 --authrealmname auth-realm1 sample_user
 Command create-file-user executed successfully
 ----

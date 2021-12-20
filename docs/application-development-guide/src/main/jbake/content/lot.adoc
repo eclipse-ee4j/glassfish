@@ -22,11 +22,11 @@ Generation Options]
 * link:jpa.html#gbwmm[6-2 The asadmin undeploy Generation Options]
 * link:webapps.html#fvygg[7-1 The cache Attributes]
 * link:webapps.html#fvyep[7-2 The flush Attributes]
-* link:webapps.html#fvyem[7-3 Object Types Supported for Java EE Web
+* link:webapps.html#fvyem[7-3 Object Types Supported for Jakarta EE Web
 Application Session State Failover]
 * link:webapps.html#gheoy[7-4 SSIServlet init-param Values]
 * link:webapps.html#ghern[7-5 CGIServlet init-param Values]
-* link:ejb.html#fvyed[8-1 Object Types Supported for Java EE Stateful
+* link:ejb.html#fvyed[8-1 Object Types Supported for Jakarta EE Stateful
 Session Bean State Failover]
 * link:container_managed-persistence.html#fvyaq[9-1 Java Type to JDBC
 Type Mappings for CMP]

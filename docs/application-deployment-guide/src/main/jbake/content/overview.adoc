@@ -6,18 +6,18 @@ prev=preface.html
 ~~~~~~
 
 Overview of GlassFish Server Open Source Edition 7 Application Deployment
-===========================================================================
+=========================================================================
 
 [[GSDPG00003]][[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
 1 Overview of GlassFish Server Open Source Edition 7 Application Deployment
------------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
 GlassFish Server Open Source Edition 7 provides an environment for
 developing and deploying Java applications and web services. GlassFish
-Server applications include Java Platform, Enterprise Edition (Java EE
+Server applications include Java Platform, Enterprise Edition (Jakarta EE
 platform) standard features as well as features specific to GlassFish
 Server. This guide explains the tools and processes used for deploying
 applications and modules in the GlassFish Server environment. Only
@@ -43,7 +43,7 @@ About Application Deployment
 Assembly, also known as packaging, is the process of combining discrete
 components of an application or module into a single unit that can be
 installed on an application server. The GlassFish Server assembly
-process conforms to the customary Java EE specifications. The only
+process conforms to the customary Jakarta EE specifications. The only
 difference is that when you assemble applications or modules in
 GlassFish Server, you can include optional GlassFish Server deployment
 descriptors that enhance functionality.
@@ -70,7 +70,7 @@ The following topics are addressed here:
 General Deployment Functionality
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Various Java EE module types, such as connector module, web module, EJB
+Various Jakarta EE module types, such as connector module, web module, EJB
 module, application client module, can be deployed in the following
 ways:
 
@@ -127,7 +127,7 @@ Guide.
 Deployment Descriptors and Annotations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A deployment descriptor is an XML file that describes how a Java EE
+A deployment descriptor is an XML file that describes how a Jakarta EE
 application or module should be deployed. Each deployment descriptor XML
 file has a corresponding Document Type Definition (DTD) file or schema
 (XSD) file, which defines the elements, data, and attributes that the
@@ -144,18 +144,19 @@ descriptor and deploys the application or module as directed.
 The following types of deployment descriptors are associated with
 GlassFish Server:
 
-* Java EE Standard Descriptors. Java EE standard deployment descriptors
-are described in the Java EE 8 specification. You can find the
-specification at `http://www.oracle.com/technetwork/java/javaee/tech/`.
-Information about the XML schemas that define Java EE standard
+* Jakarta EE Standard Descriptors.
+Jakarta EE standard deployment descriptors are described
+in the Jakarta EE specification. You can find the
+specification at `https://jakarta.ee/specifications/`.
+Information about the XML schemas that define Jakarta EE standard
 deployment descriptors is available at
-`http://xmlns.jcp.org/xml/ns/javaee/`.
+`https://jakarta.ee/xml/ns/jakartaee/`.
 +
-The Java EE 8 specification permits the use of alternate top-level
+The Jakarta EE specification permits the use of alternate top-level
 standard deployment descriptors that reside outside of the application
 archive using the `alt-dd` mechanism (alternate module-level deployment
-descriptors were permitted prior to Java EE 7). Alternate deployment
-descriptors are described in the Java EE 7 specification. You can find
+descriptors were permitted prior to Jakarta EE 7). Alternate deployment
+descriptors are described in the Jakarta EE 7 specification. You can find
 the specification at
 `http://www.oracle.com/technetwork/java/javaee/tech/`. Alternate
 deployment descriptors override the top-level deployment descriptors
@@ -188,7 +189,7 @@ with `glassfish-`. Alternate deployment descriptors do not apply to
 `sun-*.xml` deployment descriptors.
 +
 Unless otherwise stated, settings in the GlassFish Server deployment
-descriptors override corresponding settings in the Java EE standard
+descriptors override corresponding settings in the Jakarta EE standard
 descriptors and in the GlassFish Server configuration.
 
 An annotation, also called metadata, enables a declarative style of
@@ -206,15 +207,15 @@ Services Specification]
 The following annotation and deployment descriptor combinations are
 supported:
 
-* Java EE applications or modules can be packaged with full Java EE
+* Jakarta EE applications or modules can be packaged with full Jakarta EE
 compliant standard and runtime deployment descriptors. If the standard
 deployment descriptors have specified the `metadata-complete` attribute,
 annotations in the application or module are ignored.
-* Java EE applications or modules can be fully annotated with metadata
+* Jakarta EE applications or modules can be fully annotated with metadata
 defined by the listed specifications. Annotation eliminates the need for
-Java EE standard deployment descriptors. In most cases, the GlassFish
+Jakarta EE standard deployment descriptors. In most cases, the GlassFish
 Server deployment descriptors are also not needed.
-* Java EE applications or modules can be partially annotated with some
+* Jakarta EE applications or modules can be partially annotated with some
 deployment information in standard deployment descriptors. In case of
 conflicts, deployment descriptor values supersede the annotated
 metadata, and a warning message is logged.
@@ -230,7 +231,7 @@ components into JAR, WAR, or RAR files, then combine these files and,
 optionally, deployment descriptors into an Enterprise archive (EAR) file
 which is deployed.
 
-A module is a collection of one or more Java EE components that run in
+A module is a collection of one or more Jakarta EE components that run in
 the same container type, such as a web container or EJB container. The
 module uses annotations or deployment descriptors of that container
 type. You can deploy a module alone or as part of an application.
@@ -250,7 +251,7 @@ GlassFish Server supports the following types of modules:
 
 * Web Module. A web module, also known as a web application, is a
 collection of servlets, EJBs, HTML pages, classes, and other resources
-that you can bundle and deploy to several Java EE application servers. A
+that you can bundle and deploy to several Jakarta EE application servers. A
 web application archive (WAR) file is the standard format for assembling
 web applications. A WAR file can consist of the following items:
 servlets, JavaServer Pages (JSP) files, JSP tag libraries, utility
@@ -282,11 +283,11 @@ Open Source Edition Application Development Guide.
 deployable software unit that consists of one or more classes, and
 application client deployment descriptors (`application-client.xml` and
 `glassfish-application-client.xml`). An application client JAR file
-applies to a GlassFish Server type of Java EE client. An application
-client supports the standard Java EE Application Client specifications.
+applies to a GlassFish Server type of Jakarta EE client. An application
+client supports the standard Jakarta EE Application Client specifications.
 * Lifecycle Module. A lifecycle module provides a means of running
 short-duration or long-duration Java-based tasks within the GlassFish
-Server environment. Lifecycle modules are not Java EE standard modules.
+Server environment. Lifecycle modules are not Jakarta EE standard modules.
 See link:../application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners] in GlassFish Server
 Open Source Edition Application Development Guide for more information.
 
@@ -322,14 +323,14 @@ Application-based deployment is appropriate when components need to work
 together as one unit.
 
 The following figure shows EJB, web, application client, and connector
-modules assembled into a Java EE application.
+modules assembled into a Jakarta EE application.
 
 [[GSDPG00002]][[fvyip]]
 
 
 .*Figure 1-2 Application-Based Assembly and Deployment*
 image:img/dgdeploya.png[
-"Figure shows Java EE application assembly and deployment."]
+"Figure shows Jakarta EE application assembly and deployment."]
 
 
 [[gijla]][[GSDPG00322]][[access-to-shared-framework-classes]]
@@ -340,7 +341,7 @@ Access to Shared Framework Classes
 If you assemble a large, shared library into every module that uses it,
 the result is a huge file that takes too long to register with the
 server. In addition, several versions of the same class could exist in
-different class loaders, which is a waste of resources. When Java EE
+different class loaders, which is a waste of resources. When Jakarta EE
 applications and modules use shared framework classes (such as utility
 classes and libraries), the classes can be put in the path for the
 common class loader or an application-specific class loader rather than
@@ -363,7 +364,7 @@ Guide.
 
 [NOTE]
 ====
-According to the Java EE specification, section 8.1.1.2, "Dependencies,"
+According to the Jakarta EE specification, section 8.1.1.2, "Dependencies,"
 you cannot package utility classes within an individually-deployed EJB
 module. Instead, you must package the EJB module and utility JAR within
 an application using the JAR Extension Mechanism Architecture.
@@ -386,7 +387,7 @@ file names, module names as found in the `module-name` portion of the
 `ejb-jar.xml` files, and EJB names as found in the `ejb-name` portion of
 the `ejb-jar.xml` files. This hierarchical naming scheme ensures that
 name collisions do not occur. The benefits of this naming practice apply
-not only to GlassFish Server, but to other Java EE application servers
+not only to GlassFish Server, but to other Jakarta EE application servers
 as well.
 
 The following topics are addressed here:
@@ -401,7 +402,7 @@ The following topics are addressed here:
 Portable Naming
 +++++++++++++++
 
-Starting in Java EE 6, the Java EE specification defines the portable
+Starting in Jakarta EE 6, the Jakarta EE specification defines the portable
 `application-name`, which allows you to specify an application name in
 the `application.xml` file. For example:
 
@@ -410,7 +411,7 @@ the `application.xml` file. For example:
 <application-name>xyz</application-name>
 ----
 
-The Java EE specification also defines the portable `module-name`
+The Jakarta EE specification also defines the portable `module-name`
 element in the module standard deployment descriptors.
 
 GlassFish Server determines the application registration name according
@@ -419,7 +420,7 @@ to the following order of precedence:
 1. The name specified at deployment time in the Administration Console
 or in the `--name` option of the `asadmin deploy` command is used.
 2. If no name is specified at deployment time, the portable
-`application-name` or `module-name` in the Java EE deployment descriptor
+`application-name` or `module-name` in the Jakarta EE deployment descriptor
 is used.
 3. If no name is specified at deployment time or in the deployment
 descriptors, the archive name, minus the file type suffix, is used.
@@ -441,7 +442,7 @@ Directory Structure
 +++++++++++++++++++
 
 Application and module directory structures must follow the structure
-outlined in the Java EE specification. During deployment, the
+outlined in the Jakarta EE specification. During deployment, the
 application or module is expanded from the archive file to an open
 directory structure. The directories that hold the individual modules
 are named with `_jar`, `_rar`, and `_war` suffixes.
@@ -728,8 +729,8 @@ NetBeans IDE
 ^^^^^^^^^^^^
 
 You can use the NetBeans Integrated Development Environment (IDE), or
-another IDE, to assemble Java EE applications and modules. The NetBeans
-IDE is included in the tools bundle of the Java EE Software Development
+another IDE, to assemble Jakarta EE applications and modules. The NetBeans
+IDE is included in the tools bundle of the Jakarta EE Software Development
 Kit (SDK). To download, see
 `http://www.oracle.com/technetwork/java/javaee/downloads/index.html`.
 For additional information, see `http://www.netbeans.org`.
@@ -767,37 +768,32 @@ deployer:Sun:AppServer::localhost:4848:https
 Additional Information on Application Deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As specified from Java EE 8 specifications, the relevant specifications
+As specified from Jakarta EE specifications, the relevant specifications
 are the following:
 
-* Java Platform, Enterprise Edition 8 Specification
-+
-`https://jcp.org/en/jsr/detail?id=366`
-* Java EE Application Deployment JSR 88 Specification
-+
+* Jakarta EE Platform, Enterprise Edition 10 Specification +
+`https://jakarta.ee/specifications/platform/`
+* Jakarta EE Application Deployment JSR 88 Specification +
 `http://jcp.org/en/jsr/detail?id=88`
-* Common Annotations for the Java Platform 1.6 Specification
-+
+* Common Annotations for the Java Platform 1.6 Specification +
 `http://jcp.org/en/jsr/detail?id=250`
-* Java Servlet 3.0 Specification
-+
+* Java Servlet 3.0 Specification +
 `http://jcp.org/en/jsr/detail?id=315`
-* Enterprise JavaBeans 3.1 Specification
-+
+* Enterprise JavaBeans 3.1 Specification +
 `http://jcp.org/en/jsr/detail?id=318`
-* Java EE Connector Architecture 1.6 Specification
-+
+* Jakarta EE Connector Architecture 1.6 Specification +
 `http://jcp.org/en/jsr/detail?id=322`
 
 The following product documentation might be relevant to some aspects of
 application deployment:
 
-* link:../application-development-guide/toc.html#GSDVG[GlassFish Server Open Source Edition Application
-Development Guide]
-* link:../administration-guide/toc.html#GSADG[GlassFish Server Open Source Edition Administration Guide]
-* link:../add-on-component-development-guide/toc.html#GSACG[GlassFish Server Open Source Edition Add-On Component
-Development Guide]
-* link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual]
+* link:../application-development-guide/toc.html#GSDVG[
+GlassFish Server Open Source Edition Application Development Guide]
+* link:../administration-guide/toc.html#GSADG[
+GlassFish Server Open Source Edition Administration Guide]
+* link:../add-on-component-development-guide/toc.html#GSACG[
+GlassFish Server Open Source Edition Add-On Component Development Guide]
+* link:../reference-manual/toc.html#GSRFM[
+GlassFish Server Open Source Edition Reference Manual]
 * GlassFish Server Administration Console online help
-
 

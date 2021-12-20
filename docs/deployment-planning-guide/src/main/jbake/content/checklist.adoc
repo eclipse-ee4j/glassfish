@@ -94,7 +94,7 @@ a|
 a|
 * Logging: Enable access log rotation.
 * Choose the right logging level. WARNING is usually appropriate.
-* Configure Java EE containers using the Administration Console.
+* Configure Jakarta EE containers using the Administration Console.
 * Configure HTTP listeners using the Administration Console.
 * Configure ORB threadpool using the Administration Console.
 * If using Type2 drivers or calls involving native code, ensure that

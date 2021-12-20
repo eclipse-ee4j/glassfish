@@ -68,7 +68,7 @@ High Availability Session Persistence
 GlassFish Server provides high availability of HTTP requests and session
 data (both HTTP session data and stateful session bean data).
 
-Java EE applications typically have significant amounts of session state
+Jakarta EE applications typically have significant amounts of session state
 data. A web shopping cart is the classic example of a session state.
 Also, an application can cache frequently-needed data in the session
 object. In fact, almost all applications with significant user

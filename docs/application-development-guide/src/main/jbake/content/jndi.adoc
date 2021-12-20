@@ -16,7 +16,7 @@ Using the Java Naming and Directory Interface
 ------------------------------------------------
 
 A naming service maintains a set of bindings, which relate names to
-objects. The Java EE naming service is based on the Java Naming and
+objects. The Jakarta EE naming service is based on the Java Naming and
 Directory Interface (JNDI) API. The JNDI API allows application
 components and clients to look up distributed resources, services, and
 EJB components. For general information about the JNDI API, see
@@ -48,10 +48,10 @@ Accessing the Naming Context
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Oracle GlassFish Server provides a naming environment, or context,
-which is compliant with standard Java EE requirements. A `Context`
+which is compliant with standard Jakarta EE requirements. A `Context`
 object provides the methods for binding names to objects, unbinding
 names from objects, renaming objects, and listing the bindings. The
-`InitialContext` is the handle to the Java EE naming service that
+`InitialContext` is the handle to the Jakarta EE naming service that
 application components and clients use for lookups.
 
 The JNDI API also provides subcontext functionality. Much like a
@@ -93,10 +93,10 @@ implementation supporting EJB 3.1. No code changes are required to the
 bean class itself in order to have the portable global JNDI name
 automatically assigned when deployed to an EJB 3.1 container.
 
-For more information, see the Java EE 8 Platform Specification, section
+For more information, see the Jakarta EE Platform Specification, section
 EE.5.2.2, "Application Component Environment Namespaces"
-(`http://jcp.org/en/jsr/detail?id=366`), and the EJB 3.1 Specification,
-section 4.4, "Global JNDI Access"
+(`http://jcp.org/en/jsr/detail?id=366`),
+and the EJB 3.1 Specification, section 4.4, "Global JNDI Access"
 (`http://jcp.org/en/jsr/detail?id=318`).
 
 If the `disable-nonportable-jndi-names` property is set to false (the
@@ -196,7 +196,7 @@ Accessing EJB Components Using the `CosNaming` Naming Context
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The preferred way of accessing the naming service, even in code that
-runs outside of a Java EE container, is to use the no-argument
+runs outside of a Jakarta EE container, is to use the no-argument
 `InitialContext` constructor. However, if EJB client code explicitly
 instantiates an `InitialContext` that points to the `CosNaming` naming
 service, it is necessary to set the `java.naming.factory.initial`
@@ -251,7 +251,7 @@ GlassFish Server exactly the same as accessing them in the same server.
 The deployer can change the way the EJB components are physically
 distributed without having to change the code.
 
-For Java EE components, the code still performs a `java:comp/env` lookup
+For Jakarta EE components, the code still performs a `java:comp/env` lookup
 on an EJB reference. The only difference is that the deployer maps the
 `ejb-ref` element to an interoperable name in a GlassFish Server
 deployment descriptor file instead of to a simple global JNDI name.
@@ -278,7 +278,7 @@ Context ic = new InitialContext();
 Object o = ic.lookup("java:comp/env/ejb/Foo");
 ----
 
-For a client that doesn't run within a Java EE container, the code just
+For a client that doesn't run within a Jakarta EE container, the code just
 uses the interoperable global name instead of the simple global JNDI
 name. For example:
 
@@ -509,7 +509,7 @@ to the Common class loader. For more information about class loading,
 see link:class-loaders.html#beade[Class Loaders].
 
 For each property found in more than one `jndi.properties` file, the
-Java EE naming service either uses the first value found or concatenates
+Jakarta EE naming service either uses the first value found or concatenates
 all of the values, whichever makes sense.
 
 [[beaoa]][[GSDVG00195]][[mapping-references]]
@@ -522,13 +522,13 @@ descriptors map resource references in application client, EJB, and web
 application components to JNDI names configured in GlassFish Server:
 
 * `resource-env-ref` - Maps the `@Resource` or `@Resources` annotation
-(or the `resource-env-ref` element in the corresponding Java EE XML
+(or the `resource-env-ref` element in the corresponding Jakarta EE XML
 file) to the absolute JNDI name configured in GlassFish Server.
 * `resource-ref` - Maps the `@Resource` or `@Resources` annotation (or
-the `resource-ref` element in the corresponding Java EE XML file) to the
+the `resource-ref` element in the corresponding Jakarta EE XML file) to the
 absolute JNDI name configured in GlassFish Server.
 * `ejb-ref` - Maps the `@EJB` annotation (or the `ejb-ref` element in
-the corresponding Java EE XML file) to the absolute JNDI name configured
+the corresponding Jakarta EE XML file) to the absolute JNDI name configured
 in GlassFish Server.
 +
 JNDI names for EJB components must be unique. For example, appending the

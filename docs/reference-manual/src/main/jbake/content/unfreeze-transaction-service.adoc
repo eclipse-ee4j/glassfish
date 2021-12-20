@@ -96,7 +96,7 @@ link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)]
 "link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]" in GlassFish Server Open
 Source Edition Administration Guide
 
-"http://docs.oracle.com/javaee/7/tutorial/doc/transactions.html[Transactions]"
-in The Java EE 8 Tutorial
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
+in The Jakarta EE Tutorial
 
 

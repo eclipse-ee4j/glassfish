@@ -47,8 +47,8 @@ GlassFish Server, the job repository is a database
 
 For detailed information about batch jobs, batch processing, and the
 batch processing framework, see
-"https://javaee.github.io/tutorial/batch-processing.html[Batch
-Processing]" in The Java EE 8 Tutorial. Also see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#batch-processing[Batch Processing]
+in The Jakarta EE Tutorial. Also see
 http://jcp.org/en/jsr/detail?id=352[Java Specification Request 352:
 Batch Applications for the Java Platform]
 (`http://jcp.org/en/jsr/detail?id=352`). The specification defines the
@@ -64,7 +64,7 @@ You can view detailed information about batch jobs, executions, and
 steps. Users who log in to the `asadmin` utility or to the
 Administration Console as administrator are the only users who can view
 details for all batch jobs submitted by all applications in the
-GlassFish Server environment.
+{productName} environment.
 
 The following tasks are used to view information about batch jobs:
 

@@ -200,15 +200,15 @@ GlassFish Server, add one of the following JAR files to your class path:
   Corresponds to the nucleus distribution. Download this file from
   `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-nucleus/`.
 `glassfish-embedded-web.jar`::
-  Contains classes needed for deploying Java EE web applications.
+  Contains classes needed for deploying Jakarta EE web applications.
   Download this file from
   `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-web/`.
 `glassfish-embedded-all.jar`::
-  Contains classes needed for deploying all Java EE application types.
+  Contains classes needed for deploying all Jakarta EE application types.
   Download this file from
   `http://download.java.net/maven/glassfish/org/glassfish/extras/glassfish-embedded-all/`.
 `glassfish-embedded-static-shell.jar`::
-  Contains references to classes needed for deploying all Java EE
+  Contains references to classes needed for deploying all Jakarta EE
   application types. Must be used with a nonembedded installation of
   GlassFish Server. Reference this file from the
   as-install`/lib/embedded` directory of a nonembedded GlassFish Server
@@ -529,7 +529,7 @@ To Deploy an Application From an Archive File or a Directory
 
 An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
-the directory structure that the Java EE specifications define for the
+the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
 "link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in GlassFish Server Open
 Source Edition Application Deployment Guide.
@@ -537,7 +537,7 @@ Source Edition Application Deployment Guide.
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive
 file. The contents of the directory must match the contents of the
-expanded Java EE archive file as laid out by the GlassFish Server. The
+expanded Jakarta EE archive file as laid out by the GlassFish Server. The
 directory must be accessible to the machine on which the deploying
 application runs. For more information about the requirements for
 deploying an application from a directory, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00043[To
@@ -1751,7 +1751,7 @@ Persistence Data Source for Embedded GlassFish Server].
 [NOTE]
 ====
 Do not deploy your embeddable EJB application or any of its dependent
-Java EE modules before invoking one of the `createEJBContainer` methods.
+Jakarta EE modules before invoking one of the `createEJBContainer` methods.
 These methods perform deployment in the background and do not load
 previously deployed applications or modules.
 ====
@@ -1992,7 +1992,7 @@ Restrictions for Embedded GlassFish Server
 The `glassfish-embedded-web.jar` file for embedded GlassFish Server
 supports only these features of nonembedded GlassFish Server:
 
-* The following web technologies of the Java EE platform:
+* The following web technologies of the Jakarta EE platform:
 
 ** Java Servlet API
 

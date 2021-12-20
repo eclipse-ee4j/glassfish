@@ -44,7 +44,7 @@ Server is built on the Java security model, which uses a sandbox where
 applications can run safely, without potential risk to systems or users.
 System security affects all the applications in the GlassFish Server environment.
 
-The Java EE Security API specification defines portable, plug-in
+The Jakarta EE Security API specification defines portable, plug-in
 interfaces for authentication and identity stores, and a new
 injectable-type SecurityContext interface that provides an access point
 for programmatic security. You can use the built-in implementations of
@@ -86,9 +86,9 @@ Authentication Types
 ++++++++++++++++++++
 
 Within its deployment descriptors, an application can specify the type
-of authentication that it uses. The Java EE Security API provides an
+of authentication that it uses. The Jakarta EE Security API provides an
 alternative mechanism for configuring the type of authentication an
-application uses. See https://jcp.org/en/jsr/detail?id=375[Java EE
+application uses. See https://jcp.org/en/jsr/detail?id=375[Jakarta EE
 Security API 1.0 specification]. GlassFish Server supports specifying
 the following types of authentication in deployment descriptors:
 
@@ -119,7 +119,7 @@ DIGEST::
 JSR 375 Authentication Mechanisms and Identity Stores
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The Java EE Security API defines the `HttpAuthenticationMechanism`
+The Jakarta EE Security API defines the `HttpAuthenticationMechanism`
 interface, the `IdentityStore` and `IdentityStoreHandler` interfaces.
 
 The `HttpAuthenticationMechanism` interface defines an SPI for writing
@@ -440,7 +440,7 @@ Java Authorization Contract for Containers
 ++++++++++++++++++++++++++++++++++++++++++
 
 Java Authorization Contract for Containers (JACC) is the part of the
-Java EE specification that defines an interface for pluggable
+Jakarta EE specification that defines an interface for pluggable
 authorization providers. This enables you to set up third-party plug-in
 modules to perform authorization. By default, the GlassFish Server
 provides a simple, file-based authorization engine that complies with

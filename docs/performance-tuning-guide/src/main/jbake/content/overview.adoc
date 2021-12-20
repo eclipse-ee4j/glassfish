@@ -136,7 +136,7 @@ requirements such as:
 Application Architecture
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Java EE Application model, as shown in the following figure, is very
+The Jakarta EE Application model, as shown in the following figure, is very
 flexible; allowing the application architect to split application logic
 functionally into many tiers. The presentation layer is typically
 implemented using servlets and JSP technology and executes in the web
@@ -145,8 +145,8 @@ container.
 [[GSPTG00001]][[gacmj]]
 
 
-.*Figure 1-1 Java EE Application Model*
-image:img/appmodel.png["Java EE Application Mode"]
+.*Figure 1-1 Jakarta EE Application Model*
+image:img/appmodel.png["Jakarta EE Application Mode"]
 
 
 Moderately complex enterprise applications can be developed entirely
@@ -206,7 +206,7 @@ documentation for more information on deployment, sizing, and
 availability guidelines.
 
 An authenticated user's access to application functions may also need
-authorization checks. If the application uses the role-based Java EE
+authorization checks. If the application uses the role-based Jakarta EE
 authorization checks, the application server performs some additional
 checking, which incurs additional overheads. When you perform capacity
 planning, you must take this additional overhead into account.

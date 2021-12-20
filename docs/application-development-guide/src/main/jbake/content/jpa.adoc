@@ -49,7 +49,7 @@ implements the following specifications, plus value-added extensions:
 
 * Java Persistence Architecture (JPA) 2.0.
 +
-JPA 2.0 is part of Java Platform, Enterprise Edition 6 (Java EE 6). It
+JPA 2.0 is part of Java Platform, Enterprise Edition 6 (Jakarta EE 6). It
 includes improvements and enhancements to domain modeling,
 object/relational mapping, `EntityManager` and `Query` interfaces, and
 the Java Persistence Query Language (JPQL). It includes an API for
@@ -61,8 +61,8 @@ For the JPA 2.0 Specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr317/index.html[Java
 Specification Request (JSR) 317]. For basic information about the Java
 Persistence API, see
-"https://javaee.github.io/tutorial/partpersist.html[Persistence]" in The
-Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
+in The Jakarta EE Tutorial.
 * Java Architecture for XML Binding (JAXB) 2.0. The EclipseLink JAXB
 implementation, plus EclipseLink extensions, is called MOXy. The
 `org.eclipse.persistence.moxy.jar` file is bundled with GlassFish
@@ -127,12 +127,12 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1. Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[Administering Database
-Connectivity]" in GlassFish Server Open Source Edition Administration
-Guide.
+1. Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[
+Administering Database Connectivity]"
+in GlassFish Server Open Source Edition Administration Guide.
 2. Create the application. For guidance in writing your application,
-see "https://javaee.github.io/tutorial/partpersist.html[Persistence]" in
-The Java EE 8 Tutorial.
+see https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
+in The Jakarta EE Tutorial.
 3. Create the `persistence.xml` file. See link:#gbwmj[Specifying the
 Database for an Application] for considerations specific to GlassFish
 Server.
@@ -148,9 +148,9 @@ Manager].
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7. Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[Administering the
-Monitoring Service]" in GlassFish Server Open Source Edition
-Administration Guide.
+7. Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[
+Administering the Monitoring Service]"
+in GlassFish Server Open Source Edition Administration Guide.
 
 [[gbwmj]][[GSDVG00130]][[specifying-the-database-for-an-application]]
 
@@ -194,7 +194,7 @@ type is correct. For example:
 
 The following `eclipselink.target-database` property values are allowed.
 Supported platforms have been tested with the GlassFish Server and are
-found to be Java EE compatible.
+found to be Jakarta EE compatible.
 
 [source]
 ----

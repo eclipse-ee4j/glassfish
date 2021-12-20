@@ -105,7 +105,7 @@ link:overview.html#gihzk[Naming Standards].
 Use the `--altdd` or `--runtimealtdd` options of the `deploy` (and
 `redeploy`) subcommand to deploy an application or module using a
 top-level alternate deployment descriptor. The `--altdd` option
-specifies a top-level alternate Java EE standard deployment descriptor.
+specifies a top-level alternate Jakarta EE standard deployment descriptor.
 The `--runtimealtdd` option specifies a top-level alternate GlassFish
 Server runtime deployment descriptor. See link:#CHDFHDGD[Example 2-3].
 For more information about deployment descriptors associated with
@@ -159,9 +159,9 @@ Command deploy executed successfully
 ----
 
 [[GSDPG809]][[CHDFHDGD]]
-Example 2-3 Using an Alternate Java EE Standard Deployment Descriptor
+Example 2-3 Using an Alternate Jakarta EE Standard Deployment Descriptor
 
-This example deploys an application using an alternate Java EE standard
+This example deploys an application using an alternate Jakarta EE standard
 deployment descriptor file that resides outside of an application
 archive. Specify an absolute path or a relative path to the alternate
 deployment descriptor file.
@@ -249,7 +249,7 @@ link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-s
 [[GSDPG00010]][[giumj]]
 Example 2-5 Listing Applications
 
-The `list-applications` subcommand lists all deployed Java EE
+The `list-applications` subcommand lists all deployed Jakarta EE
 applications or modules. If the `--type` option is not specified, all
 components are listed. This example lists deployed applications.
 
@@ -879,7 +879,7 @@ This subcommand sets a servlet context-initialization parameter of one
 of the following items:
 
 * A deployed web application
-* A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+* A web module in a deployed Java Platform, Enterprise Edition (Jakarta EE)
 application
 
 [[GSDPG823]]
@@ -935,7 +935,7 @@ This subcommand unsets an environment entry for one of the following
 items:
 
 * A deployed web application
-* A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+* A web module in a deployed Java Platform, Enterprise Edition (Jakarta EE)
 application
 
 When an entry is unset, its value reverts to the value, if any, that is
@@ -1058,7 +1058,7 @@ This subcommand sets an environment entry for one of the following
 items:
 
 * A deployed web application
-* A web module in a deployed Java Platform, Enterprise Edition (Java EE)
+* A web module in a deployed Java Platform, Enterprise Edition (Jakarta EE)
 application
 
 [[GSDPG828]]
@@ -1318,10 +1318,10 @@ subcommand in remote mode to retrieve stubs and ties.
 with which to be backward compatible in terms of JAR visibility
 requirements for applications. The current allowed value is `v2`, which
 refers to GlassFish Server version 2 or GlassFish Server version 9.1 or
-9.1.1. Starting in Java EE 6, the Java EE specification imposes stricter
-requirements than Java EE 5 did on which JAR files can be visible to
+9.1.1. Starting in Jakarta EE 6, the Jakarta EE specification imposes stricter
+requirements than Jakarta EE 5 did on which JAR files can be visible to
 various modules within an EAR file. Setting this element to `v2` removes
-these Java EE 6 and later restrictions.
+these Jakarta EE 6 and later restrictions.
 
 [[gilxc]][[GSDPG00069]][[deploying-a-connector-module]]
 
@@ -1419,13 +1419,13 @@ GlassFish Server provides an error message.
 Deploying and Configuring an Embedded Resource Adapter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A connector module can be deployed as a Java EE component in a Java EE
+A connector module can be deployed as a Jakarta EE component in a Jakarta EE
 application. Such connectors are only visible to components residing in
-the same Java EE application. Deploy this application as you would any
-other Java EE application.
+the same Jakarta EE application. Deploy this application as you would any
+other Jakarta EE application.
 
 You can create new connector connection pools and connector resources
-for a connector module embedded within a Java EE application by
+for a connector module embedded within a Jakarta EE application by
 prefixing the connector name with app-name`#`. For example, if an
 application `appX.ear` has `jdbcra.rar` embedded within it, the
 connector connection pools and connector resources refer to the
@@ -1815,7 +1815,7 @@ Naming. Application-scoped resource JNDI names begin with `java:app` or
 name, it is added. For example, application-scoped databases have JNDI
 names in the following format: `java:app/jdbc/`DataSourceName or
 `java:module/jdbc/`DataSourceName. This is in accordance with the naming
-scopes introduced in the Java EE 6 Specification.
+scopes introduced in the Jakarta EE 6 Specification.
 
 Errors. Application-scoped resource definitions with same resource name,
 resource type, attributes, and properties are duplicates. These generate

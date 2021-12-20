@@ -1356,7 +1356,7 @@ For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
 the delegate setting. This prevents applications from overriding core
 Java runtime classes or changing the API versions of specifications that
-are part of the Java EE platform.
+are part of the Jakarta EE platform.
 
 |`dynamic-reload-interval` | |(optional) Not implemented. Included
 for backward compatibility with previous Oracle Web Server versions.
@@ -1373,7 +1373,7 @@ residing in container-wide library JAR files are loaded in preference to
 classes and resources packaged within the WAR file.
 
 Portable programs that use this element should not be packaged with any
-classes or interfaces that are a part of the Java EE specification. The
+classes or interfaces that are a part of the Jakarta EE specification. The
 behavior of a program that includes such classes or interfaces in its
 WAR file is undefined.
 ====
@@ -2017,10 +2017,10 @@ none - contains data
 Specifies the GlassFish Server release with which to be backward
 compatible in terms of JAR visibility requirements for applications. The
 current allowed value is `v2`, which refers to GlassFish Server version
-2 or GlassFish Server version 9.1 or 9.1.1. Starting in Java EE 6, the
-Java EE specification imposes stricter requirements than Java EE 5 did
+2 or GlassFish Server version 9.1 or 9.1.1. Starting in Jakarta EE 6, the
+Jakarta EE specification imposes stricter requirements than Jakarta EE 5 did
 on which JAR files can be visible to various modules within an EAR file.
-Setting this element to `v2` removes these Java EE 6 and later
+Setting this element to `v2` removes these Jakarta EE 6 and later
 restrictions.
 
 [[gjjaf]][[GSDPG00417]][[superelements-37]]
@@ -3284,21 +3284,21 @@ link:#beasu[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` element in
-the corresponding Java EE XML file.
+the corresponding Jakarta EE XML file.
 
 a|
 link:#beaww[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beawu[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
-the corresponding Java EE XML file.
+the corresponding Jakarta EE XML file.
 
 a|
 link:#beaxk[`service-ref`]
@@ -3548,7 +3548,7 @@ none - contains data
 `ejb-ref`
 ~~~~~~~~~
 
-Maps the `ejb-ref-name` in the corresponding Java EE deployment
+Maps the `ejb-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `ejb-ref` entry to the absolute `jndi-name` of a
 resource.
 
@@ -3584,7 +3584,7 @@ a|
 link:#beasv[`ejb-ref-name`]
 
 
- |only one |Specifies the `ejb-ref-name` in the corresponding Java EE
+ |only one |Specifies the `ejb-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `ejb-ref` entry.
 
 a|
@@ -3600,7 +3600,7 @@ link:#beatw[`jndi-name`]
 `ejb-ref-name`
 ~~~~~~~~~~~~~~
 
-Specifies the `ejb-ref-name` in the corresponding Java EE deployment
+Specifies the `ejb-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `ejb-ref` entry.
 
 [[fvyuh]][[GSDPG00463]][[superelements-60]]
@@ -4379,7 +4379,7 @@ a|
 link:#beaxg[`security-role-mapping`]
 
 
- |zero or more |Maps a role in the corresponding Java EE XML file to a
+ |zero or more |Maps a role in the corresponding Jakarta EE XML file to a
 user or group.
 
 a|
@@ -4393,21 +4393,21 @@ link:#beasu[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beaww[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beawu[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
-the corresponding Java EE XML file.
+the corresponding Jakarta EE XML file.
 
 a|
 link:#beaxk[`service-ref`]
@@ -4495,21 +4495,21 @@ link:#beasu[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beaww[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beawu[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
-the corresponding Java EE XML file.
+the corresponding Jakarta EE XML file.
 
 a|
 link:#beaxk[`service-ref`]
@@ -4580,7 +4580,7 @@ a|
 link:#beaxg[`security-role-mapping`]
 
 
- |zero or more |Maps a role in the corresponding Java EE XML file to a
+ |zero or more |Maps a role in the corresponding Jakarta EE XML file to a
 user or group.
 
 a|
@@ -4690,21 +4690,21 @@ link:#beasu[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beaww[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
-corresponding Java EE XML file.
+corresponding Jakarta EE XML file.
 
 a|
 link:#beawu[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
-the corresponding Java EE XML file.
+the corresponding Jakarta EE XML file.
 
 a|
 link:#beaxk[`service-ref`]
@@ -5573,7 +5573,7 @@ manager.
 non-Java-EE components, such as servlet filters, lifecycle modules, and
 third party persistence managers, can use this JDBC connection pool. The
 returned connection is automatically enlisted with the transaction
-context obtained from the transaction manager. Standard Java EE
+context obtained from the transaction manager. Standard Jakarta EE
 components can also use such pools. Connections obtained by
 non-component callers are not automatically closed at the end of a
 transaction by the container. They must be explicitly closed by the
@@ -7278,9 +7278,9 @@ link:#beavl[`operation-name`]
 
 Specifies the name of a logical `message-destination` defined within an
 application. The `message-destination-name` matches the corresponding
-`message-destination-name` in the corresponding Java EE deployment
+`message-destination-name` in the corresponding Jakarta EE deployment
 descriptor file. Use when the message destination reference in the
-corresponding Java EE deployment descriptor file specifies a
+corresponding Jakarta EE deployment descriptor file specifies a
 `message-destination-link` to a logical `message-destination`.
 
 [[fvzaz]][[GSDPG00573]][[superelements-116]]
@@ -7314,7 +7314,7 @@ link:#beauv[`message-destination-name`]
 
 
  |only one |Specifies the name of a logical message destination defined
-within the corresponding Java EE deployment descriptor file.
+within the corresponding Jakarta EE deployment descriptor file.
 
 a|
 link:#beatw[`jndi-name`]
@@ -7330,7 +7330,7 @@ link:#beatw[`jndi-name`]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the name of a logical message destination defined within the
-corresponding Java EE deployment descriptor file.
+corresponding Jakarta EE deployment descriptor file.
 
 [[fvzcj]][[GSDPG00575]][[superelements-117]]
 
@@ -7354,7 +7354,7 @@ none - contains data
 
 Directly binds a message destination reference to the JNDI name of a
 `Queue`, `Topic`, or other physical destination. Use only when the
-message destination reference in the corresponding Java EE deployment
+message destination reference in the corresponding Jakarta EE deployment
 descriptor file does not specify a `message-destination-link` to a
 logical `message-destination`.
 
@@ -7389,7 +7389,7 @@ link:#gauat[`message-destination-ref-name`]
 
 
  |only one |Specifies the name of a physical message destination defined
-within the corresponding Java EE deployment descriptor file.
+within the corresponding Jakarta EE deployment descriptor file.
 
 a|
 link:#beatw[`jndi-name`]
@@ -7405,7 +7405,7 @@ link:#beatw[`jndi-name`]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Specifies the name of a physical message destination defined within the
-corresponding Java EE deployment descriptor file.
+corresponding Jakarta EE deployment descriptor file.
 
 [[gauaj]][[GSDPG00579]][[superelements-119]]
 
@@ -9181,7 +9181,7 @@ none - contains data
 `res-ref-name`
 ~~~~~~~~~~~~~~
 
-Specifies the `res-ref-name` in the corresponding Java EE deployment
+Specifies the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-ref` entry. The `res-ref-name` element
 specifies the name of a resource manager connection factory reference.
 The name must be unique within an enterprise bean.
@@ -9378,7 +9378,7 @@ none - contains data
 `resource-env-ref`
 ~~~~~~~~~~~~~~~~~~
 
-Maps the `res-ref-name` in the corresponding Java EE deployment
+Maps the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-env-ref` entry to the absolute `jndi-name` of
 a resource.
 
@@ -9412,7 +9412,7 @@ a|
 link:#beawv[`resource-env-ref-name`]
 
 
- |only one |Specifies the `res-ref-name` in the corresponding Java EE
+ |only one |Specifies the `res-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `resource-env-ref` entry.
 
 a|
@@ -9441,7 +9441,7 @@ Example
 `resource-env-ref-name`
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Specifies the `res-ref-name` in the corresponding Java EE deployment
+Specifies the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-env-ref` entry.
 
 [[fvzau]][[GSDPG00688]][[superelements-169]]
@@ -9464,7 +9464,7 @@ none - contains data
 `resource-ref`
 ~~~~~~~~~~~~~~
 
-Maps the `res-ref-name` in the corresponding Java EE deployment
+Maps the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-ref` entry to the absolute `jndi-name` of a
 resource.
 
@@ -9515,7 +9515,7 @@ a|
 link:#beawr[`res-ref-name`]
 
 
- |only one |Specifies the `res-ref-name` in the corresponding Java EE
+ |only one |Specifies the `res-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `resource-ref` entry.
 
 a|
@@ -9768,7 +9768,7 @@ occurs before or after content authentication. Allowed values are
 ~~~~~~~~~~~
 
 Contains the `role-name` in the `security-role` element of the
-corresponding Java EE deployment descriptor file.
+corresponding Jakarta EE deployment descriptor file.
 
 [[fvzek]][[GSDPG00699]][[superelements-174]]
 
@@ -10203,7 +10203,7 @@ link:#beawz[`role-name`]
 
 
  |only one |Contains the `role-name` in the `security-role` element of
-the corresponding Java EE deployment descriptor file.
+the corresponding Jakarta EE deployment descriptor file.
 
 a|
 link:#beavw[`principal-name`]
@@ -10323,7 +10323,7 @@ information is only needed in the following cases:
 * To define the port used to resolve a container-managed port
 * To define the default Stub/Call property settings for Stub objects
 * To define the URL of a final WSDL document to be used instead of the
-one associated with the `service-ref` in the standard Java EE deployment
+one associated with the `service-ref` in the standard Jakarta EE deployment
 descriptor
 
 [[fvzfh]][[GSDPG00722]][[superelements-185]]
@@ -10878,7 +10878,7 @@ for any distributable web module.
 modified. A session is considered to have been modified if
 `HttpSession.setAttribute()` or `HttpSession.removeAttribute()` was
 called. You must guarantee that `setAttribute` is called every time an
-attribute is changed. This is not a Java EE specification requirement,
+attribute is changed. This is not a Jakarta EE specification requirement,
 but it is required for this mode to work properly.
 * `modified-attribute` - Only modified session attributes are stored.
 For this mode to work properly, you must follow some guidelines, which
@@ -12041,7 +12041,7 @@ Table C-163 `work-security-map` Attributes
 
 Specifies a valid URL pointing to a final WSDL document. If not
 specified, the WSDL document associated with the `service-ref` in the
-standard Java EE deployment descriptor is used.
+standard Jakarta EE deployment descriptor is used.
 
 [[fvzjl]][[GSDPG00798]][[superelements-220]]
 

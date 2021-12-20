@@ -21,7 +21,7 @@ Deletes the resource adapter configuration
 
 [source]
 ----
-asadmin [asadmin-options] delete-resource-adapter-config [--help] 
+asadmin [asadmin-options] delete-resource-adapter-config [--help]
 raname
 ----
 

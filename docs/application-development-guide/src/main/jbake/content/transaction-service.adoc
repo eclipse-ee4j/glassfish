@@ -15,9 +15,9 @@ Using the Transaction Service
 15 Using the Transaction Service
 --------------------------------
 
-The Java EE platform provides several abstractions that simplify
+The Jakarta EE platform provides several abstractions that simplify
 development of dependable transaction processing for applications. This
-chapter discusses Java EE transactions and transaction support in the
+chapter discusses Jakarta EE transactions and transaction support in the
 Oracle GlassFish Server.
 
 The following topics are addressed here:
@@ -36,8 +36,8 @@ Guide and the following sites:
 `http://www.oracle.com/technetwork/java/javaee/tech/index.html`.
 
 You might also want to read
-"https://javaee.github.io/tutorial/transactions.html[Transactions]" in
-The Java EE 8 Tutorial.
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
+in The Jakarta EE Tutorial.
 
 [[giybi]][[GSDVG00188]][[handling-transactions-with-databases]]
 
@@ -363,7 +363,7 @@ is not available for transaction recovery.
 Using the ConfigurableTransactionSupport Interface
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Java EE Connector 1.6 specification allows a resource adapter to use
+The Jakarta EE Connector 1.6 specification allows a resource adapter to use
 the `transaction-support` attribute to specify the level of transaction
 support that the resource adapter handles. However, the resource adapter
 vendor does not have a mechanism to figure out the current transactional
@@ -399,10 +399,9 @@ javax.transaction.TransactionSynchronizationRegistry interface instead
 of javax.transaction.TransactionManager , for portability. You can look
 up the implementation of this interface by using the JNDI name
 `java:comp/``TransactionSynchronizationRegistry`. For details, see the
-https://javaee.github.io/javaee-spec/javadocs/[`TransactionSynchronizationRegistryInterface`]
-API documentation (`https://javaee.github.io/javaee-spec/javadocs/`) and
-http://www.jcp.org/en/jsr/detail?id=907[Java Specification Request (JSR)
-907] (`http://www.jcp.org/en/jsr/detail?id=907`).
+https://jakarta.ee/specifications/transactions/2.0/apidocs/jakarta/transaction/transactionsynchronizationregistry[`TransactionSynchronizationRegistryInterface`]
+API documentation and
+http://www.jcp.org/en/jsr/detail?id=907[Java Specification Request (JSR) 907]
 
 If accessing the javax.transaction.TransactionManager implementation is
 absolutely necessary, you can look up the GlassFish Server

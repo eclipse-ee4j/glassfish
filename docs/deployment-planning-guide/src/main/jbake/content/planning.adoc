@@ -600,7 +600,7 @@ Planning Message Queue Broker Deployment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Java Message Service (JMS) API is a messaging standard that allows
-Java EE applications and components to create, send, receive, and read
+Jakarta EE applications and components to create, send, receive, and read
 messages. It enables distributed communication that is loosely coupled,
 reliable, and asynchronous. Message Queue, which implements JMS, is
 integrated with GlassFish Server, enabling you to create components that
@@ -608,7 +608,7 @@ send and receive JMS messages, including message-driven beans (MDBs).
 
 Message Queue is integrated with GlassFish Server using a resource
 adapter also known as a connector module. A resource adapter is a Java
-EE component defined according to the Java EE Connector Architecture
+EE component defined according to the Jakarta EE Connector Architecture
 (JCA) Specification. This specification defines a standardized way in
 which application servers such as GlassFish Server can integrate with
 enterprise information systems such as JMS providers. GlassFish Server

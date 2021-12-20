@@ -15,17 +15,17 @@ Securing Applications
 4 Securing Applications
 -----------------------
 
-This chapter describes how to write secure Java EE applications, which
+This chapter describes how to write secure Jakarta EE applications, which
 contain components that perform user authentication and access
-authorization for the business logic of Java EE components.
+authorization for the business logic of Jakarta EE components.
 
 For information about administrative security for the Oracle GlassFish
 Server, see the link:../security-guide/toc.html#GSSCG[GlassFish Server Open Source Edition
 Security Guide].
 
-For general information about Java EE security, see
-https://javaee.github.io/tutorial/partsecurity.html[Security] in The
-Java EE 8 Tutorial.
+For general information about Jakarta EE security, see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[Security]
+in The Jakarta EE Tutorial.
 
 The following topics are addressed here:
 
@@ -34,7 +34,7 @@ The following topics are addressed here:
 * link:#beabj[Container Security]
 * link:#beacr[Roles, Principals, and Principal to Role Mapping]
 * link:#beabo[Realm Configuration]
-* link:#BACDEIHB[Java EE Security API Support]
+* link:#BACDEIHB[Jakarta EE Security API Support]
 * link:#beabt[JACC Support]
 * link:#beabu[Pluggable Audit Module Support]
 * link:#beabx[The `server.policy` File]
@@ -62,10 +62,10 @@ Security Goals
 
 In an enterprise computing environment, there are many security risks.
 The goal of the GlassFish Server is to provide highly secure,
-interoperable, and distributed component computing based on the Java EE
+interoperable, and distributed component computing based on the Jakarta EE
 security model. Security goals include:
 
-* Full compliance with the Java EE security model. This includes EJB and
+* Full compliance with the Jakarta EE security model. This includes EJB and
 servlet role-based authorization.
 * Support for single sign-on across all GlassFish Server applications
 within a single security domain.
@@ -79,18 +79,17 @@ addition to these.
 * Support for declarative security through GlassFish Server specific
 XML-based role mapping.
 * Support for Java Authorization Contract for Containers (JACC)
-pluggable authorization as included in the Java EE specification and
+pluggable authorization as included in the Jakarta EE specification and
 defined by http://www.jcp.org/en/jsr/detail?id=115[Java Specification
 Request (JSR) 115] (`http://www.jcp.org/en/jsr/detail?id=115`).
 * Support for Java Authentication Service Provider Interface for
-Containers as included in the Java EE specification and defined by
+Containers as included in the Jakarta EE specification and defined by
 http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
 (`http://www.jcp.org/en/jsr/detail?id=196`).
-* Support for Web Services Interoperability Technologies (WSIT) as
-described in
-https://javaee.github.io/metro/doc/user-guide/index.html[Metro Users
-Guide] (`https://javaee.github.io/metro/doc/user-guide/index.html`).
-* Support for the Java EE Security API as included in the Java EE
+* Support for Web Services Interoperability Technologies (WSIT) as described in
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services-interoperability-and-jakarta-xml-web-services[
+Jakarta EE Tutorial].
+* Support for the Jakarta EE Security API as included in the Jakarta EE
 specification and defined by https://jcp.org/en/jsr/detail?id=375[JSR
 375] (`https://jcp.org/en/jsr/detail?id=375`)
 
@@ -99,7 +98,7 @@ specification and defined by https://jcp.org/en/jsr/detail?id=375[JSR
 GlassFish Server Specific Security Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The GlassFish Server supports the Java EE security model, as well as the
+The GlassFish Server supports the Jakarta EE security model, as well as the
 following features which are specific to the GlassFish Server:
 
 * Message security; see link:#beaca[Configuring Message Security for Web
@@ -115,7 +114,7 @@ ProgrammaticLogin Class]
 Container Security
 ~~~~~~~~~~~~~~~~~~
 
-The component containers are responsible for providing Java EE
+The component containers are responsible for providing Jakarta EE
 application security. The container provides two security forms:
 
 * link:#beabl[Declarative Security]
@@ -135,12 +134,12 @@ Declarative Security
 
 Declarative security means that the security mechanism for an
 application is declared and handled externally to the application.
-Deployment descriptors describe the Java EE application's security
+Deployment descriptors describe the Jakarta EE application's security
 structure, including security roles, access control, and authentication
 requirements.
 
 The GlassFish Server supports the deployment descriptors specified by
-Java EE and has additional security elements included in its own
+Jakarta EE and has additional security elements included in its own
 deployment descriptors. Declarative security is the application
 deployer's responsibility. For more information about GlassFish Server
 deployment descriptors, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source
@@ -163,7 +162,7 @@ are scoped to the EJB XML deployment descriptors (`ejb-jar.xml` and
 `glassfish-ejb-jar.xml` files) and to the servlet XML deployment
 descriptors (`web.xml` and `glassfish-web.xml` files). For an
 individually deployed web or EJB module, you define roles using
-`@DeclareRoles` annotations or `role-name` elements in the Java EE
+`@DeclareRoles` annotations or `role-name` elements in the Jakarta EE
 deployment descriptor files `web.xml` or `ejb-jar.xml`.
 
 To map roles to principals and groups, define matching
@@ -199,13 +198,13 @@ Programmatic Security
 ^^^^^^^^^^^^^^^^^^^^^
 
 Programmatic security involves an EJB component or servlet using method
-calls to the security API, as specified by the Java EE security model,
+calls to the security API, as specified by the Jakarta EE security model,
 to make business logic decisions based on the caller or remote user's
 security role. Programmatic security should only be used when
 declarative security alone is insufficient to meet the application's
 security model.
 
-The API for programmatic security consists of methods of the Java EE
+The API for programmatic security consists of methods of the Jakarta EE
 Security API `SecurityContext` interface, and methods of the EJB
 `EJBContext` interface and the servlet `HttpServletRequest` interface.
 The GlassFish Server supports these interfaces as specified in the Java
@@ -215,8 +214,8 @@ There is also a proprietary Glassfish API for programmatic login. See
 link:#beacm[Programmatic Login Using the ProgrammaticLogin Class].
 
 For more information about programmatic security, see
-https://javaee.github.io/tutorial/security-intro003.html#using-programmatic-security[Using
-Programmatic Security] in the The Java EE Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-programmatic-security-with-web-applications[
+Using Programmatic Security] in the The Jakarta EE Tutorial.
 
 [[beacr]][[GSDVG00117]][[roles-principals-and-principal-to-role-mapping]]
 
@@ -228,17 +227,17 @@ mapped to roles with the same names. Therefore, the Default Principal To
 Role Mapping setting is enabled by default on the Security page of the
 GlassFish Administration Console. To change the default mapping you can
 clear this setting. For applications, you define roles in
-`@DeclareRoles` annotations or the Java EE deployment descriptor file
+`@DeclareRoles` annotations or the Jakarta EE deployment descriptor file
 `application.xml`. You define the corresponding role mappings in the
 GlassFish Server deployment descriptor file `glassfish-application.xml`.
 For individually deployed web or EJB modules, you define roles in
-`@DeclareRoles` annotations or the Java EE deployment descriptor files
+`@DeclareRoles` annotations or the Jakarta EE deployment descriptor files
 `web.xml` or `ejb-jar.xml`. You define the corresponding role mappings
 in the GlassFish Server deployment descriptor files `glassfish-web.xml`
 or `glassfish-ejb-jar.xml`.
 
-For more information regarding Java EE deployment descriptors, see the
-Java EE Specification. For more information regarding GlassFish Server
+For more information regarding Jakarta EE deployment descriptors, see the
+Jakarta EE Specification. For more information regarding GlassFish Server
 deployment descriptors, see "link:../application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the GlassFish
 Server Deployment Descriptors]" in GlassFish Server Open Source Edition
 Application Deployment Guide.
@@ -426,15 +425,16 @@ Loaders].
 JAAS is a set of APIs that enable services to authenticate and enforce
 access controls upon users. JAAS provides a pluggable and extensible
 framework for programmatic user authentication and authorization. JAAS
-is a core API and an underlying technology for Java EE security
+is a core API and an underlying technology for Jakarta EE security
 mechanisms. For more information about JAAS, refer to the JAAS
 specification for Java SDK, available at
 `http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html`.
 
 For general information about realms and login modules, see the section
 about working with realms, users, groups, and roles in
-"https://javaee.github.io/tutorial/security-intro.html[Introduction to
-Security in the Java EE Platform]" in The Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
+Introduction to Security in the Jakarta EE Platform]
+in The Jakarta EE Tutorial.
 
 For Javadoc tool pages relevant to custom realms, see the
 `com.sun.appserv.security` package.
@@ -602,7 +602,7 @@ variables.
 
 [[BACDEIHB]][[GSDVG563]][[java-ee-security-api-support]]
 
-Java EE Security API Support
+Jakarta EE Security API Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 JSR-375 defines several authentication-related plugin SPIs, such as,
@@ -624,7 +624,7 @@ period of time, so that the caller can return to the application
 periodically without needing to present primary authentication
 credentials each time.
 
-In addition to these authentication plugin SPIs, the Java EE Security
+In addition to these authentication plugin SPIs, the Jakarta EE Security
 API specification defines the `SecurityContext` API for use by
 application code to query and interact with the current security
 context. The `SecurityContext` interface defines methods that allow an
@@ -638,12 +638,12 @@ a caller, and authorize a caller. These methods include
 JACC Support
 ~~~~~~~~~~~~
 
-JACC (Java Authorization Contract for Containers) is part of the Java EE
+JACC (Java Authorization Contract for Containers) is part of the Jakarta EE
 specification and defined by http://www.jcp.org/en/jsr/detail?id=115[JSR
 115] (`http://www.jcp.org/en/jsr/detail?id=115`). JACC defines an
 interface for pluggable authorization providers. Specifically, JACC is
 used to plug in the Java policy provider used by the container to
-perform Java EE caller access decisions. The Java policy provider
+perform Jakarta EE caller access decisions. The Java policy provider
 performs Java policy decisions during application execution. This
 provides third parties with a mechanism to develop and plug in modules
 that are responsible for answering authorization decisions during Java
@@ -775,10 +775,10 @@ The `server.policy` File
 Each GlassFish Server domain has its own global J2SE policy file,
 located in domain-dir`/config`. The file is named `server.policy`.
 
-The GlassFish Server is a Java EE compliant application server. As such,
-it follows the requirements of the Java EE specification, including the
+The GlassFish Server is a Jakarta EE compliant application server. As such,
+it follows the requirements of the Jakarta EE specification, including the
 presence of the security manager (the Java component that enforces the
-policy) and a limited permission set for Java EE application code.
+policy) and a limited permission set for Jakarta EE application code.
 
 The following topics are addressed here:
 
@@ -805,7 +805,7 @@ not modify these entries.
 
 A few permissions above the minimal set are also granted in the default
 `server.policy` file. These are necessary due to various internal
-dependencies of the server implementation. Java EE application
+dependencies of the server implementation. Jakarta EE application
 developers must not rely on these additional permissions. In some cases,
 deleting these permissions might be appropriate. For example, one
 additional permission is granted specifically for using connectors. If
@@ -869,7 +869,7 @@ to customize configuration.
 Changing Permissions for an Application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The default policy for each domain limits the permissions of Java EE
+The default policy for each domain limits the permissions of Jakarta EE
 deployed applications to the minimal set of permissions required for
 these applications to operate correctly. Do not add extra permissions to
 the default set (the grant block with no codebase, which applies to all
@@ -968,7 +968,7 @@ with it.
 ====
 
 
-As noted in the Java EE specification, an application should provide
+As noted in the Jakarta EE specification, an application should provide
 documentation of the additional permissions it needs. If an application
 requires extra permissions but does not document the set it needs,
 contact the application author for details.
@@ -1059,12 +1059,12 @@ If the security manager is enabled and you are using the Java
 Persistence API by injecting or looking up an entity manager or entity
 manager factory, the EJB container sets this JVM option for you.
 
-You must grant additional permissions to CDI-enabled Java EE
+You must grant additional permissions to CDI-enabled Jakarta EE
 applications that are deployed in a GlassFish Server 7 domain or
 cluster for which security manager is enabled. These additional
 permissions are not required when security manager is disabled.
 
-To deploy CDI-enabled Java EE applications in a GlassFish Server 7
+To deploy CDI-enabled Jakarta EE applications in a GlassFish Server 7
 domain or cluster for which security manager is enabled, add the
 following permissions to the applications:
 
@@ -1127,8 +1127,8 @@ link:webservices.html#gaszn[Developing Web Services].
 
 For more information about message security, see the following:
 
-* "https://javaee.github.io/tutorial/security-intro.html[Introduction to
-Security in the Java EE Platform]" in The Java EE 8 Tutorial
+* "https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[Introduction to
+Security in the Jakarta EE Platform]" in The Jakarta EE Tutorial
 * link:../security-guide/toc.html#GSSCG[GlassFish Server Open Source Edition Security Guide]
 * http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
 (`http://www.jcp.org/en/jsr/detail?id=196`), Java Authentication Service
@@ -1551,7 +1551,7 @@ Set Up the Sample Application].
 
 The objective of this sample application is to demonstrate how a web
 service can be secured with WSS. The web service in the `xms` example is
-a simple web service implemented using a Java EE EJB endpoint and a web
+a simple web service implemented using a Jakarta EE EJB endpoint and a web
 service endpoint implemented using a servlet. In this example, a service
 endpoint interface is defined with one operation, `sayHello`, which
 takes a string then sends a response with `Hello` prefixed to the given
@@ -1684,23 +1684,23 @@ application.
 Programmatic Login Using the ProgrammaticLogin Class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Programmatic login allows a deployed Java EE application or module to
+Programmatic login allows a deployed Jakarta EE application or module to
 invoke a login method. If the login is successful, a `SecurityContext`
 is established as if the client had authenticated using any of the
-conventional Java EE mechanisms. Programmatic login is supported for
+conventional Jakarta EE mechanisms. Programmatic login is supported for
 servlet and EJB components on the server side, and for stand-alone or
 application clients on the client side. Programmatic login is useful for
 an application having special needs that cannot be accommodated by any
-of the Java EE standard authentication mechanisms.
+of the Jakarta EE standard authentication mechanisms.
 
 This section describes a proprietary GlassFish mechanism, but see also
-the standard security APIs in the Java EE tutorial.
+the standard security APIs in the Jakarta EE tutorial.
 
 
 [NOTE]
 ====
 The `com.sun.appserv.security.ProgrammaticLogin` class in GlassFish
-Server is not a Java EE API; therefore, it is not portable to other
+Server is not a Jakarta EE API; therefore, it is not portable to other
 application servers.
 ====
 
@@ -1757,7 +1757,7 @@ The `ProgrammaticLoginPermission` permission is required to invoke the
 programmatic login mechanism for an application if the security manager
 is enabled. For information about the security manager, see
 link:#beabx[The `server.policy` File]. This permission is not granted by
-default to deployed applications because this is not a standard Java EE
+default to deployed applications because this is not a standard Jakarta EE
 mechanism.
 
 To grant the required permission to the application, add the following
@@ -1977,9 +1977,9 @@ authenticates against, in a standard, portable way. You can use the
 built-in implementations of these APIs, or define custom
 implementations.
 
-Java EE Security API defines several annotations, with names that end
+Jakarta EE Security API defines several annotations, with names that end
 with Definition, which when used makes the corresponding built-in
-mechanism available as a CDI bean. Java EE Security API also supports
+mechanism available as a CDI bean. Jakarta EE Security API also supports
 the use of Expression Language 3.0 in these annotations to allow dynamic
 configuration.
 
@@ -2007,7 +2007,7 @@ j_security_check.
 
 In GlassFish Server, all built-in authentication mechanisms need to be
 authenticated using an identity store. The `IdentityStore` interface,
-included in the Java EE Security API, defines an SPI for interacting
+included in the Jakarta EE Security API, defines an SPI for interacting
 with identity stores, which are directories or databases containing user
 account information. The `IdentityStore` interface has four methods:
 `validate(Credential)`, `getCallerGroups(CredentialValidationResult)`,
@@ -2038,7 +2038,7 @@ shows the usage of `DatabaseIdentityStoreDefinition`, which makes
 )
 ----
 
-Since Java EE Security API provides support for Expression Langauge 3.0,
+Since Jakarta EE Security API provides support for Expression Langauge 3.0,
 regular expressions can be used to set value of annotation attributes.
 
 The GlassFish Server provides out of the box implementation of
@@ -2058,7 +2058,7 @@ An application provider can choose to provide its own custom
 authentication mechanism, apart from built-in authentication mechanism.
 
 A custom authentication mechanism implements the
-`HttpAuthenticationMechanism` interface, introduced in Java EE Security
+`HttpAuthenticationMechanism` interface, introduced in Jakarta EE Security
 API. This interface defines the following three methods.
 
 [source,java]
@@ -2106,7 +2106,7 @@ Sample Http Authentication Mechanism
 
 The class `MyAuthenticationMechanism.java` is a sample
 `HttpAuthenticationMechanism` implementation. Note that only
-`validateRequest` method has been implemented, since Java EE Security
+`validateRequest` method has been implemented, since Jakarta EE Security
 API provides default implementation of other two methods. An application
 provider may choose to override the default implementation depending on
 the requirement.

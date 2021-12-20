@@ -31,8 +31,7 @@ The Web Profile of the OracleGlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
 3.1 specification. For details, see
-http://jcp.org/en/jsr/detail?id=318[JSR 318]
-(`http://jcp.org/en/jsr/detail?id=318`).
+http://jcp.org/en/jsr/detail?id=318[JSR 318].
 
 Accordingly, the Application Client Container is supported only in the
 full GlassFish Server, not in the Web Profile.
@@ -50,14 +49,14 @@ Introducing the Application Client Container
 The Application Client Container (ACC) includes a set of Java classes,
 libraries, and other files that are required for and distributed with
 Java client programs that execute in their own Java Virtual Machine
-(JVM). The ACC manages the execution of Java EE application client
+(JVM). The ACC manages the execution of Jakarta EE application client
 components (application clients), which are used to access a variety of
-Java EE services (such as JMS resources, EJB components, web services,
+Jakarta EE services (such as JMS resources, EJB components, web services,
 security, and so on.) from a JVM outside the Oracle GlassFish Server.
 
 The ACC communicates with the GlassFish Server using RMI-IIOP protocol
 and manages the details of RMI-IIOP communication using the client ORB
-that is bundled with it. Compared to other Java EE containers, the ACC
+that is bundled with it. Compared to other Jakarta EE containers, the ACC
 is lightweight.
 
 For information about debugging application clients, see
@@ -96,7 +95,7 @@ identify the fully-qualified name of this class in the
 for the client. The ACC uses this class instead of its default class for
 asking for and reading the authentication information. The class must
 implement the javax.security.auth.callback.CallbackHandler interface.
-See the Java EE specification, section 9.2, Application Clients:
+See the Jakarta EE specification, section 9.2, Application Clients:
 Security, for more details.
 
 Application clients can use link:securing-apps.html#beacm[Programmatic
@@ -108,7 +107,7 @@ ACC Naming
 ^^^^^^^^^^
 
 The client container enables the application clients to use the Java
-Naming and Directory Interface (JNDI) to look up Java EE services (such
+Naming and Directory Interface (JNDI) to look up Jakarta EE services (such
 as JMS resources, EJB components, web services, security, and so on.)
 and to reference configurable parameters set at the time of deployment.
 
@@ -207,7 +206,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 4. Ensure that the client JAR file includes the following files:
 * A Java class to access the bean.
-* `application-client.xml` - (optional) Java EE application client
+* `application-client.xml` - (optional) Jakarta EE application client
 deployment descriptor.
 * `glassfish-application-client.xml` - (optional) GlassFish Server
 specific client deployment descriptor. For information on the
@@ -285,8 +284,8 @@ To Access a JMS Resource From an Application Client
 1. Create a JMS client.
 +
 For detailed instructions on developing a JMS client, see
-"https://javaee.github.io/tutorial/jms-examples.html[Java Message
-Service Examples]" in The Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples[
+Java Message Service Examples]" in The Jakarta EE Tutorial.
 2. Next, configure a JMS resource on the GlassFish Server.
 +
 For information on configuring JMS resources, see
@@ -305,7 +304,7 @@ general explanation of how to map JNDI names using reference elements,
 see link:jndi.html#beaoa[Mapping References].
 4. Ensure that the client JAR file includes the following files:
 * A Java class to access the resource.
-* `application-client.xml` - (optional) Java EE application client
+* `application-client.xml` - (optional) Jakarta EE application client
 deployment descriptor.
 * `glassfish-application-client.xml` - (optional) GlassFish Server
 specific client deployment descriptor. For information on the
@@ -800,7 +799,7 @@ As with any JNLP document, the custom JNLP file can refer to JAR files
 the application client requires.
 
 Do not specify every JAR on which the client depends. GlassFish Server
-automatically handles JAR files that the Java EE specification requires
+automatically handles JAR files that the Jakarta EE specification requires
 to be available to the application client. This includes JAR files
 listed in the application client JAR file's manifest `Class-Path` and
 JAR files in the EAR file's library directory (if any) and their
@@ -816,7 +815,7 @@ corresponds to the top level of the EAR file. Therefore, relative `href`
 references correspond directly to the relative path to the JAR files
 within the EAR file.
 
-Neither the Java EE specification nor GlassFish Server supports
+Neither the Jakarta EE specification nor GlassFish Server supports
 packaging JAR files inside the application client JAR file itself.
 Nothing prevents this, but GlassFish Server does no special processing
 of such JAR files. They do not appear in the runtime class path and they
@@ -1211,7 +1210,7 @@ The `client.policy` File
 
 The `client.policy` file is the J2SE policy file used by the application
 client. Each application client has a `client.policy` file. The default
-policy file limits the permissions of Java EE deployed application
+policy file limits the permissions of Jakarta EE deployed application
 clients to the minimal set of permissions required for these
 applications to operate correctly. If an application client requires
 more than this default set of permissions, edit the `client.policy` file
@@ -1646,14 +1645,14 @@ To access a JMS resource from a stand-alone client
 1. Create a JMS client.
 +
 For detailed instructions on developing a JMS client, see
-"https://javaee.github.io/tutorial/jms-examples.html[Java Message
-Service Examples]" in The Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples[
+Java Message Service Examples] in The Jakarta EE Tutorial.
 2. Configure a JMS resource on GlassFish Server.
 +
 For information on configuring JMS resources, see
-"link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
-Destinations]" in GlassFish Server Open Source Edition Administration
-Guide.
+"link:../administration-guide/jms.html#GSADG00598[
+Administering JMS Connection Factories and Destinations]"
+in GlassFish Server Open Source Edition Administration Guide.
 3. Copy the following JAR files to the client machine and include them
 in the classpath on the client side:
 * `gf-client.jar` - available at as-install`/lib`

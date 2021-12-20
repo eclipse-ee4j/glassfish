@@ -34,27 +34,21 @@ Installing and Preparing the Server for Development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For more information about GlassFish Server installation, see the
-link:../installation-guide/toc.html#GSING[GlassFish Server Open Source Edition Installation Guide].
+link:../installation-guide/toc.html#GSING[
+GlassFish Server Open Source Edition Installation Guide].
 
 The following components are included in the full installation.
 
 * JDK
 * GlassFish Server core
 
-** Java Platform, Standard Edition (Java SE) 8
-
-** Java EE 8 compliant application server
-
+** Java Platform, Standard Edition (Java SE) 11
+** Jakarta EE 10 compliant application server
 ** Administration Console
-
 ** `asadmin` utility
-
 ** Other development and deployment tools
-
 ** Open Message Queue software
-
 ** Apache http://db.apache.org/derby/manuals[Derby database]
-
 ** Load balancer plug-ins for web servers
 
 The NetBeans Integrated Development Environment (IDE) bundles the
@@ -70,9 +64,9 @@ link:class-loaders.html#beadj[Using the Common Class Loader].
 * Set up debugging. For more information, see
 link:debugging-apps.html#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:../administration-guide/jvm.html#GSADG00007[Administering the Virtual
-Machine for the Java Platform]" in GlassFish Server Open Source Edition
-Administration Guide.
+For more information, see "link:../administration-guide/jvm.html#GSADG00007[
+Administering the Virtual Machine for the Java Platform]"
+in GlassFish Server Open Source Edition Administration Guide.
 
 [[beaas]][[GSDVG00091]][[high-availability-features]]
 
@@ -152,7 +146,7 @@ http://localhost:4848
 The Migration Tool
 ^^^^^^^^^^^^^^^^^^
 
-The Migration Tool converts and reassembles Java EE applications and
+The Migration Tool converts and reassembles Jakarta EE applications and
 modules developed on other application servers. This tool also generates
 a report listing how many files are successfully and unsuccessfully
 migrated, with reasons for migration failure. For more information and
@@ -196,9 +190,7 @@ information, see link:debugging-apps.html#beafn[Profiling Tools].
 Sample Applications
 ~~~~~~~~~~~~~~~~~~~
 
-Sample applications that you can examine and deploy to the GlassFish
-Server are included as part of the Java EE 8 SDK bundle. The samples are
-also available from `https://github.com/javaee/glassfish-samples`.
+The samples are available from `https://github.com/eclipse-ee4j/glassfish-samples`.
 
 Most GlassFish Server samples have the following directory structure:
 

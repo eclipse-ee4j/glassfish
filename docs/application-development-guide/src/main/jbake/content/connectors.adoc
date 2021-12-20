@@ -15,24 +15,23 @@ Developing Connectors
 11 Developing Connectors
 ------------------------
 
-This chapter describes Oracle GlassFish Server support for the Java EE
+This chapter describes Oracle GlassFish Server support for the Jakarta EE
 Connector Architecture, also known as
 http://jcp.org/en/jsr/detail?id=322[JSR 322]
 (`http://jcp.org/en/jsr/detail?id=322`).
 
-The Java EE Connector Architecture provides a Java solution to the
+The Jakarta EE Connector Architecture provides a Java solution to the
 problem of connectivity between multiple application servers and
-existing enterprise information systems (EISs). By using the Java EE
+existing enterprise information systems (EISs). By using the Jakarta EE
 Connector architecture, EIS vendors no longer need to customize their
 product for each application server. Application server vendors who
-conform to the Java EE Connector architecture do not need to write
+conform to the Jakarta EE Connector architecture do not need to write
 custom code to add connectivity to a new EIS.
 
 This chapter uses the terms connector and resource adapter
 interchangeably. Both terms refer to a resource adapter module that is
-developed in conformance with the Java EE Connector Architecture
+developed in conformance with the Jakarta EE Connector Architecture
 Specification.
-
 
 [NOTE]
 ====
@@ -41,15 +40,13 @@ outbound communication features and work-management that does not
 involve inbound communication features are supported. Other connector
 features are supported only in the full GlassFish Server.
 ====
-
-
 For more information about connectors, see
-"https://javaee.github.io/tutorial/resources.html[Resource Adapters and
-Contracts]" in The Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#resource-adapters-and-contracts[
+Resource Adapters and Contracts] in The Jakarta EE Tutorial.
 
 For information about deploying a connector to the GlassFish Server, see
-the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application
-Deployment Guide].
+the link:../application-deployment-guide/toc.html#GSDPG[
+GlassFish Server Open Source Edition Application Deployment Guide].
 
 The following topics are addressed here:
 
@@ -57,8 +54,7 @@ The following topics are addressed here:
 * link:#bealr[Advanced Connector Configuration Options]
 * link:#bealz[Inbound Communication Support]
 * link:#gizdm[Outbound Communication Support]
-* link:#beama[Configuring a Message Driven Bean to Use a Resource
-Adapter]
+* link:#beama[Configuring a Message Driven Bean to Use a Resource Adapter]
 
 [[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
 

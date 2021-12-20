@@ -16,39 +16,37 @@ Product Concepts
 ------------------
 
 GlassFish Server Open Source Edition provides a robust platform for the
-development, deployment, and management of Java EE applications. Key
+development, deployment, and management of Jakarta EE applications. Key
 features include scalable transaction management, web services
 performance, clustering, security, and integration capabilities.
 
 The following topics are addressed here:
 
-* link:#abfar[Java EE Platform Overview]
+* link:#abfar[Jakarta EE Platform Overview]
 * link:#abfay[GlassFish Server Components]
 * link:#abfca[Configuration Roadmap for High Availability of GlassFish
 Server]
 
 [[abfar]][[GSPLG00016]][[java-ee-platform-overview]]
 
-Java EE Platform Overview
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Jakarta EE Platform Overview
 
-GlassFish Server implements Java platform, Enterprise Edition (Java EE)
-7 technology. The Java EE platform is a set of standard specifications
+GlassFish Server implements Java platform, Enterprise Edition (Jakarta EE)
+7 technology. The Jakarta EE platform is a set of standard specifications
 that describe application components, APIs, and the runtime containers
 and services of an application server.
 
 [[abfas]][[GSPLG00040]][[java-ee-applications]]
 
-Java EE Applications
-^^^^^^^^^^^^^^^^^^^^
+==== Jakarta EE Applications
 
-Java EE applications are made up of components such as JavaServer Pages
+Jakarta EE applications are made up of components such as JavaServer Pages
 (JSP), Java servlets, and Enterprise JavaBeans (EJB) modules. These
 components enable software developers to build large-scale, distributed
-applications. Developers package Java EE applications in Java Archive
+applications. Developers package Jakarta EE applications in Java Archive
 (JAR) files (similar to zip files), which can be distributed to
-production sites. Administrators install Java EE applications onto
-GlassFish Server by deploying Java EE JAR files onto one or more server
+production sites. Administrators install Jakarta EE applications onto
+GlassFish Server by deploying Jakarta EE JAR files onto one or more server
 instances (or clusters of instances).
 
 [[abfat]][[GSPLG00041]][[containers]]
@@ -58,22 +56,21 @@ Containers
 
 Each server instance includes two containers: web and EJB. A container
 is a runtime environment that provides services such as security and
-transaction management to Java EE components. Web components, such as
+transaction management to Jakarta EE components. Web components, such as
 Java Server Pages and servlets, run within the web container. Enterprise
 JavaBeans run within the EJB container.
 
 [[abfau]][[GSPLG00042]][[java-ee-services]]
 
-Java EE Services
-^^^^^^^^^^^^^^^^
+==== Jakarta EE Services
 
-The Java EE platform provides services for applications, including:
+The Jakarta EE platform provides services for applications, including:
 
 * Naming - A naming and directory service binds objects to names. A Java
 EE application can locate an object by looking up its Java Naming and
 Directory Interface (JNDI) name.
 * Security - The Java Authorization Contract for Containers (JACC) is a
-set of security contracts defined for the Java EE containers. Based on
+set of security contracts defined for the Jakarta EE containers. Based on
 the client's identity, containers can restrict access to the container's
 resources and services.
 * Transaction management - A transaction is an indivisible unit of work.
@@ -82,7 +79,7 @@ A transaction management service ensures that a transaction is either
 completed, or is rolled back.
 * Message Service - Applications hosted on separate systems can
 communicate with each other by exchanging messages using the Java
-Message Service (JMS). JMS is an integral part of the Java EE platform
+Message Service (JMS). JMS is an integral part of the Jakarta EE platform
 and simplifies the task of integrating heterogeneous enterprise
 applications.
 
@@ -91,10 +88,10 @@ applications.
 Web Services
 ^^^^^^^^^^^^
 
-Clients can access a Java EE application as a remote web service in
+Clients can access a Jakarta EE application as a remote web service in
 addition to accessing it through HTTP, RMI/IIOP, and JMS. Web services
 are implemented using the Java API for XML-based web services (JAX-WS).
-A Java EE application can also act as a client to web services, which
+A Jakarta EE application can also act as a client to web services, which
 would be typical in network applications.
 
 Web Services Description Language (WSDL) is an XML format that describes
@@ -109,7 +106,7 @@ the Java API for XML Registries (JAXR).
 Client Access
 ^^^^^^^^^^^^^
 
-Clients can access Java EE applications in several ways. Browser clients
+Clients can access Jakarta EE applications in several ways. Browser clients
 access web applications using hypertext transfer protocol (HTTP). For
 secure communication, browsers use the HTTP secure (HTTPS) protocol that
 uses secure sockets layer (SSL).
@@ -123,8 +120,8 @@ send messages to and receive messages from applications and
 message-driven beans.
 
 Clients that conform to the Web Services-Interoperability (WS-I) Basic
-Profile can access Java EE web services. WS-I is an integral part of the
-Java EE standard and defines interoperable web services. It enables
+Profile can access Jakarta EE web services. WS-I is an integral part of the
+Jakarta EE standard and defines interoperable web services. It enables
 clients written in any supporting language to access web services
 deployed to GlassFish Server.
 
@@ -134,7 +131,7 @@ configurable listeners for HTTP, HTTPS, JMS, IIOP, and IIOP/SSL. You can
 set up multiple listeners for each protocol for increased scalability
 and reliability.
 
-Java EE applications can also act as clients of Java EE components such
+Jakarta EE applications can also act as clients of Jakarta EE components such
 as Enterprise JavaBeans modules deployed on other servers, and can use
 any of these access mechanisms.
 
@@ -143,7 +140,7 @@ any of these access mechanisms.
 External Systems and Resources
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-On the Java EE platform, an external system is called a resource. For
+On the Jakarta EE platform, an external system is called a resource. For
 example, a database management system is a JDBC resource. Each resource
 is uniquely identified and by its Java Naming and Directory Interface
 (JNDI) name. Applications access external systems through the following
@@ -162,13 +159,13 @@ software components or applications. A messaging client sends messages
 to, and receives messages from, any other client via a messaging
 provider that implements the Java Messaging Service (JMS) API. GlassFish
 Server includes a high-performance JMS broker, Open Message Queue.
-* Java EE Connectors - The Java EE Connector architecture enables
-integrating Java EE applications and existing Enterprise Information
-Systems (EIS). An application accesses an EIS through a portable Java EE
+* Jakarta EE Connectors - The Jakarta EE Connector architecture enables
+integrating Jakarta EE applications and existing Enterprise Information
+Systems (EIS). An application accesses an EIS through a portable Jakarta EE
 component called a connector or resource adapter, analogous to using
 JDBC driver to access an RDBMS. Resource adapters are distributed as
-standalone Resource Adapter Archive (RAR) modules or included in Java EE
-application archives. As RARs, they are deployed like other Java EE
+standalone Resource Adapter Archive (RAR) modules or included in Jakarta EE
+application archives. As RARs, they are deployed like other Jakarta EE
 components. GlassFish Server includes evaluation resource adapters that
 integrate with popular EIS.
 * JavaMail - Through the JavaMail API, applications can connect to a
@@ -261,7 +258,7 @@ The DAS is also sometimes referred to as the admin server or default
 server. It is referred to as the default server because it is the
 default target for some administrative operations.
 
-Since the DAS is a GlassFish Server instance, it can also host Java EE
+Since the DAS is a GlassFish Server instance, it can also host Jakarta EE
 applications for testing purposes. However, do not use it to host
 production applications. You might want to deploy applications to the
 DAS, for example, if the clusters and instances that will host the
@@ -325,7 +322,7 @@ Named Configurations
 A named configuration is an abstraction that encapsulates GlassFish
 Server property settings. Clusters and stand-alone server instances
 reference a named configuration to get their property settings. With
-named configurations, Java EE containers' configurations are independent
+named configurations, Jakarta EE containers' configurations are independent
 of the physical machine on which they reside, except for particulars
 such as IP address, port number, and amount of heap memory. Using named
 configurations provides power and flexibility to GlassFish Server
@@ -400,7 +397,7 @@ Open Source Edition High Availability Administration Guide.
 Session Persistence
 ^^^^^^^^^^^^^^^^^^^
 
-Java EE applications typically have significant amounts of session state
+Jakarta EE applications typically have significant amounts of session state
 data. A web shopping cart is the classic example of a session state.
 Also, an application can cache frequently-needed data in the session
 object. In fact, almost all applications with significant user
@@ -511,7 +508,7 @@ Message Queue and JMS Resources
 The Open Message Queue (Message Queue) provides reliable, asynchronous
 messaging for distributed applications. Message Queue is an enterprise
 messaging system that implements the Java Message Service (JMS)
-standard. Message Queue provides messaging for Java EE application
+standard. Message Queue provides messaging for Jakarta EE application
 components such as message-driven beans (MDBs).
 
 GlassFish Server implements the Java Message Service (JMS) API by

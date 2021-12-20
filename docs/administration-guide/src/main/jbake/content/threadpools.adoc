@@ -105,7 +105,7 @@ This example creates `threadpool-l`.
 
 [source]
 ----
-asadmin> create-threadpool --maxthreadpoolsize 100 
+asadmin> create-threadpool --maxthreadpoolsize 100
 --minthreadpoolsize 20 --idletimeout 2 --workqueues 100 threadpool-1
 Command create-threadpool executed successfully
 ----

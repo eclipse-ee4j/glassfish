@@ -17,7 +17,7 @@ Administering GlassFish Server Clusters
 
 A cluster is a collection of GlassFish Server instances that work
 together as one logical entity. A cluster provides a runtime environment
-for one or more Java Platform, Enterprise Edition (Java EE)
+for one or more Java Platform, Enterprise Edition (Jakarta EE)
 applications. A cluster provides high availability through failure
 protection, scalability, and load balancing.
 

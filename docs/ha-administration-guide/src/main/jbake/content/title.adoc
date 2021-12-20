@@ -24,12 +24,12 @@ session persistence and failover.
 
 Note: The main thrust of the Eclipse GlassFish Server 7
 release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Java EE 7
+and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the clustering, standalone instance and high
 availability features of GlassFish Server were not a focus of this
 release. These features are included in the release, but they may not
 function properly with some of the new features added in support of the
-Java EE 7 platform.
+Jakarta EE 10 platform.
 
 [[sthref1]]
 

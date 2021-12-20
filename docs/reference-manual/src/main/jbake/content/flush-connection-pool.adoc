@@ -22,9 +22,9 @@ pool
 
 [source]
 ----
-asadmin [asadmin-options] flush-connection-pool [--help] 
+asadmin [asadmin-options] flush-connection-pool [--help]
 [--appname application [--modulename module]
-pool_name 
+pool_name
 ----
 
 [[sthref1179]]
@@ -53,10 +53,10 @@ lookup using the `java:module` prefix.
 
 The `jndi-name` for application-scoped-resources or
 module-scoped-resources are specified using the format
-`java:app/`jdbc/myDataSource or
-`java:module/`jdbc/myModuleLevelDataSource. This naming scope is defined
-in the Java EE Specification
-(`https://javaee.github.io/javaee-spec/javadocs/`).
+``java:app/``jdbc/myDataSource or
+``java:module/``jdbc/myModuleLevelDataSource. This naming scope is defined
+in the Jakarta EE Specification
+(`https://jakarta.ee/specifications/platform/10/`).
 
 [[sthref1180]]
 

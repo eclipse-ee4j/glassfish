@@ -22,8 +22,8 @@ administration.
 
 [source]
 ----
-asadmin [asadmin-options] disable-secure-admin-principal [--help] 
---alias aliasname | DN 
+asadmin [asadmin-options] disable-secure-admin-principal [--help]
+--alias aliasname | DN
 ----
 
 [[sthref1088]]
@@ -76,7 +76,7 @@ access in secure administration.
 
 [source]
 ----
-asadmin> disable-secure-admin-principal 
+asadmin> disable-secure-admin-principal
 "CN=system.amer.oracle.com,OU=GlassFish,
 O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
 

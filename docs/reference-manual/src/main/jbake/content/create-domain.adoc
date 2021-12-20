@@ -44,7 +44,7 @@ domain-name
 
 The `create-domain` subcommand creates a {productName} domain. A
 domain in {productName} is an administrative namespace that complies
-with the Java Platform, Enterprise Edition (Java EE) standard. Every
+with the Java Platform, Enterprise Edition (Jakarta EE) standard. Every
 domain has a configuration, which is stored in a set of files. Any
 number of domains, each of which has a distinct administrative identity,
 can be created in a given installation of {productName}. A domain

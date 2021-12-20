@@ -12,4 +12,4 @@ List of Figures
 List of Figures
 ---------------
 
-* link:overview.html#gacmj[1-1 Java EE Application Model]
+* link:overview.html#gacmj[1-1 Jakarta EE Application Model]

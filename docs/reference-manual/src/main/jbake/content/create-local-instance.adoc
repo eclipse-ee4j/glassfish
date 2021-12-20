@@ -57,7 +57,7 @@ A {productName} instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
 {productName} is running. A node defines the host where the
 {productName} instance resides. The JVM machine must be compatible
-with the Java Platform, Enterprise Edition (Java EE).
+with the Java Platform, Enterprise Edition (Jakarta EE).
 
 A {productName} instance requires a reference to the following items:
 

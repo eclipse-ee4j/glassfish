@@ -22,7 +22,7 @@ The following topics are addressed here:
 * link:#gbixz[Deploying a Web Service]
 * link:#gbiyw[The Web Service URI, WSDL File, and Test Page]
 * link:#CHDEBBCH[The Databinding Provider]
-* link:#gcgzz[GlassFish Java EE Service Engine]
+* link:#gcgzz[GlassFish Jakarta EE Service Engine]
 
 
 [NOTE]
@@ -43,37 +43,28 @@ and Eclipse do this automatically.
 ====
 
 
-"https://javaee.github.io/tutorial/partwebsvcs.html[Web Services]" in
-The Java EE 8 Tutorial shows how to deploy simple web services to
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services[Web Services]"
+in The Jakarta EE Tutorial shows how to deploy simple web services to
 GlassFish Server.
 
-For additional information about JAXB (Java Architecture for XML
-Binding), see
+For additional information about JAXB (Java Architecture for XML Binding), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
-Specification Request (JSR) 222] and link:#CHDEBBCH[The Databinding
-Provider].
+Specification Request (JSR) 222] and link:#CHDEBBCH[The Databinding Provider].
 
-For additional information about JAX-WS (Java API for XML-Based Web
-Services), see
+For additional information about JAX-WS (Java API for XML-Based Web Services), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr224/index.html[Java
 Specification Request (JSR) 224] and
-http://jcp.org/en/jsr/detail?id=109[Java Specification Request (JSR)
-109].
+http://jcp.org/en/jsr/detail?id=109[Java Specification Request (JSR) 109].
 
 For information about web services security, see
-link:securing-apps.html#beaca[Configuring Message Security for Web
-Services].
+link:securing-apps.html#beaca[Configuring Message Security for Web Services].
 
-The Fast Infoset standard specifies a binary format based on the XML
-Information Set. This format is an efficient alternative to XML. For
-information about using Fast Infoset, see the following links:
+The Fast Infoset standard specifies a binary format based on the XML Information Set.
+This format is an efficient alternative to XML.
+For more information about using Fast Infoset,
+see the https://eclipse-ee4j.github.io/metro-wsit/3.0.0/guide/ch02.html#using-fastinfoset[
+Metro WSIT Guide]
 
-* http://download.oracle.com/docs/cd/E17802_01/webservices/webservices/docs/1.6/ReleaseNotes.html[Java
-Web Services Developer Pack 1.6 Release Notes]
-* http://download.oracle.com/docs/cd/E17802_01/webservices/webservices/docs/1.6/jaxrpc/fastinfoset/manual.html[Fast
-Infoset in Java Web Services Developer Pack, Version 1.6]
-* https://javaee.github.io/metro-fi/[Fast Infoset Project]
-(`https://javaee.github.io/metro-fi/`
 
 [[gbizi]][[GSDVG00126]][[creating-portable-web-service-artifacts]]
 
@@ -81,8 +72,8 @@ Creating Portable Web Service Artifacts
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 For a tutorial that shows how to use the `wsimport` and `wsgen`
-commands, see "https://javaee.github.io/tutorial/partwebsvcs.html[Web
-Services]" in The Java EE 8 Tutorial.
+commands, see "https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services[
+Web Services]" in The Jakarta EE Tutorial.
 
 [[gbixz]][[GSDVG00127]][[deploying-a-web-service]]
 
@@ -109,10 +100,11 @@ The test page feature is enabled by default and described in
 link:#gbiyw[The Web Service URI, WSDL File, and Test Page].
 
 For more information about deployment, autodeployment, and deployment
-descriptors, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition
-Application Deployment Guide]. For more information about the
-`asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open
-Source Edition Reference Manual].
+descriptors, see the link:../application-deployment-guide/toc.html#GSDPG[
+GlassFish Server Open Source Edition Application Deployment Guide].
+For more information about the
+`asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[
+GlassFish Server Open Source Edition Reference Manual].
 
 [[gbiyw]][[GSDVG00128]][[the-web-service-uri-wsdl-file-and-test-page]]
 
@@ -185,7 +177,7 @@ The Databinding Provider
 The JAX-WS reference implementation (RI) used to be dependent on the
 JAXB RI for databinding. JAXB and JAX-WS implementations have been
 decoupled, and databinding is modular. JAXB and JAX-WS are no longer
-Java EE APIs.
+Jakarta EE APIs.
 
 The EclipseLink JAXB implementation, plus EclipseLink extensions, is
 called MOXy. The `org.eclipse.persistence.moxy.jar` file is bundled with
@@ -268,23 +260,22 @@ bin/jaxb-compiler.sh
 
 [[gcgzz]][[GSDVG00129]][[glassfish-java-ee-service-engine]]
 
-GlassFish Java EE Service Engine
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== GlassFish Jakarta EE Service Engine
 
-GlassFish Server 7 provides the GlassFish Java EE Service Engine, a
+GlassFish Server 7 provides the GlassFish Jakarta EE Service Engine, a
 JSR 208 compliant Java Business Integration (JBI) runtime component that
-connects Java EE web services to JBI components. The Java EE Service
+connects Jakarta EE web services to JBI components. The Jakarta EE Service
 Engine is installed as an add-on component using the Update Tool. Look
-for the JBI component named Java EE Service Engine. A JBI runtime is not
+for the JBI component named Jakarta EE Service Engine. A JBI runtime is not
 installed with or integrated into GlassFish Server 7 and must be
 obtained separately. For more information about using the Update Tool to
-obtain the Java EE Service Engine and other add-on components, see
+obtain the Jakarta EE Service Engine and other add-on components, see
 "link:../administration-guide/toc.html#GSADG00701[Update Tool]" in GlassFish Server Open Source Edition
 Administration Guide.
 
-The Java EE Service Engine acts as a bridge between the Java EE and JBI
+The Jakarta EE Service Engine acts as a bridge between the Jakarta EE and JBI
 runtime environments for web service providers and web service
-consumers. The Java EE Service Engine provides better performance than a
+consumers. The Jakarta EE Service Engine provides better performance than a
 SOAP over HTTP binding component due to in-process communication between
 components and additional protocols provided by JBI binding components
 such as JMS, SMTP, and File.
@@ -293,26 +284,27 @@ The http://jcp.org/en/jsr/detail?id=208[JSR 208]
 (`http://jcp.org/en/jsr/detail?id=208`) specification allows
 transactions to be propagated to other components using a message
 exchange property specified in the `JTA_TRANSACTION_PROPERTY_NAME`
-field. The Java EE Service Engine uses this property to set and get a
+field. The Jakarta EE Service Engine uses this property to set and get a
 transaction object from the JBI message exchange. It then uses the
-transaction object to take part in a transaction. This means a Java EE
+transaction object to take part in a transaction. This means a Jakarta EE
 application or module can take part in a transaction started by a JBI
 application. Conversely, a JBI application can take part in a
-transaction started by a Java EE application or module.
+transaction started by a Jakarta EE application or module.
 
 Similarly, the JSR 208 specification allows a security subject to be
 propagated as a message exchange property named
 `javax.jbi.security.subject`. Thus a security subject can be propagated
-from a Java EE application or module to a JBI application or the
+from a Jakarta EE application or module to a JBI application or the
 reverse.
 
-To deploy a Java EE application or module as a JBI service unit, use the
+To deploy a Jakarta EE application or module as a JBI service unit, use the
 `asadmin deploy` command, or autodeployment. For more information about
-the `asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open
-Source Edition Reference Manual]. For more information about
-autodeployment, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00041[To Deploy an Application or Module
-Automatically]" in GlassFish Server Open Source Edition Application
-Deployment Guide.
+the `asadmin deploy` command, see the link:../reference-manual/toc.html#GSRFM[
+GlassFish Server Open Source Edition Reference Manual].
+For more information about autodeployment, see
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00041[
+To Deploy an Application or Module Automatically]"
+in GlassFish Server Open Source Edition Application Deployment Guide.
 
 [[gelxr]][[GSDVG00387]][[using-the-jbi.xml-file]]
 
@@ -321,7 +313,7 @@ Using the `jbi.xml` File
 
 Section 6.3.1 of the JSR 208 specification describes the `jbi.xml` file.
 This is a deployment descriptor, located in the `META-INF` directory. To
-deploy a Java EE application or module as a JBI service unit, you need
+deploy a Jakarta EE application or module as a JBI service unit, you need
 only specify a small subset of elements in the `jbi.xml` file. Here is
 an example provider:
 
@@ -347,10 +339,10 @@ Here is an example consumer:
 </jbi>
 ----
 
-The Java EE Service Engine enables the endpoints described in the
+The Jakarta EE Service Engine enables the endpoints described in the
 `provides` section of the `jbi.xml` file in the JBI runtime. Similarly,
-the Java EE Service Engine routes invocations of the endpoints described
-in the `consumes` section from the Java EE web service consumer to the
+the Jakarta EE Service Engine routes invocations of the endpoints described
+in the `consumes` section from the Jakarta EE web service consumer to the
 JBI runtime.
 
 

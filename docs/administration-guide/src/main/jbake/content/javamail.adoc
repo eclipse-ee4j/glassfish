@@ -46,7 +46,7 @@ the Internet. The API does not provide mail server functionality; you
 must have access to a mail server to use JavaMail.
 
 The JavaMail API is implemented as an optional package in the Java
-platform and is also available as part of the Java EE platform.
+platform and is also available as part of the Jakarta EE platform.
 
 To learn more about the JavaMail API, consult the
 http://www.oracle.com/technetwork/java/javamail/[JavaMail web site] .
@@ -120,8 +120,8 @@ distinguish the dot (.) and at sign (@).
 
 [source]
 ----
-asadmin> create-javamail-resource --mailhost localhost 
---mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession 
+asadmin> create-javamail-resource --mailhost localhost
+--mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession
 Command create-javamail-resource executed successfully.
 ----
 
@@ -151,7 +151,7 @@ This example lists the JavaMail resources on `localhost`.
 
 [source]
 ----
-asadmin> list-javamail-resources 
+asadmin> list-javamail-resources
 mail/MyMailSession
 Command list-javamail-resources executed successfuly.
 ----
@@ -220,7 +220,7 @@ This example deletes the JavaMail session resource named
 
 [source]
 ----
-asadmin> delete-javamail-resource mail/MyMailSession 
+asadmin> delete-javamail-resource mail/MyMailSession
 Command delete-javamail-resource executed successfully.
 ----
 

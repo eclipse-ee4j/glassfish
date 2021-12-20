@@ -109,7 +109,7 @@ How Do I Add Containers?
 
 GlassFish Server has a highly modular architecture that enables you to
 add new types of containers that handle many application types, not just
-Java EE. GlassFish Server defines a service provider interface (SPI),
+Jakarta EE. GlassFish Server defines a service provider interface (SPI),
 which container developers implement. The GlassFish Server framework
 then invokes the container's implementation of the SPI to detect,
 deploy, and manage applications of the new type.

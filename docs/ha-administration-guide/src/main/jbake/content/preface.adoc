@@ -22,7 +22,7 @@ to the Eclipse Foundation and is not intended for use in relation to
 Java Enterprise Edition or Orace GlassFish. The documentation is in the
 process of being revised to reflect the new Jakarta EE branding.
 Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Java EE or Java
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
 Enterprise Edition should be considered references to Jakarta EE.
 
 Please see the Title page for additional license information.
@@ -37,11 +37,11 @@ session persistence and failover.
 ====
 The main thrust of the GlassFish Server Open Source Edition 7 release
 is to provide an application server for developers to explore and begin
-exploiting the new and updated technologies in the Java EE 7 platform.
+exploiting the new and updated technologies in the Jakarta EE 10 platform.
 Thus, the clustering, standalone instance and high availability features
 of GlassFish Server were not a focus of this release. These features are
 included in the release, but they may not function properly with some of
-the new features added in support of the Java EE 7 platform.
+the new features added in support of the Jakarta EE 10 platform.
 ====
 
 
@@ -52,7 +52,7 @@ set.
 GlassFish Server 7 is developed through the GlassFish project
 open-source community at `http://glassfish.java.net/`. The GlassFish
 project provides a structured process for developing the GlassFish
-Server platform that makes the new features of the Java EE platform
+Server platform that makes the new features of the Jakarta EE platform
 available faster, while maintaining the most important feature of Java
 EE: compatibility. It enables Java developers to access the GlassFish
 Server source code and to contribute to the development of the GlassFish
@@ -107,9 +107,9 @@ deploy applications to the GlassFish Server and provides information
 about deployment descriptors.
 
 |link:../application-development-guide/toc.html#GSDVG[Application Development Guide] |Explains how to create and
-implement Java Platform, Enterprise Edition (Java EE platform)
+implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the GlassFish Server. These
-applications follow the open Java standards model for Java EE components
+applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs). This guide provides
 information about developer tools, security, and debugging.
 

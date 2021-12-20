@@ -37,7 +37,7 @@ About Concurrent Resources
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Concurrent resources are managed objects that provide concurrency
-capabilities to Java EE applications. In GlassFish Server, you configure
+capabilities to Jakarta EE applications. In GlassFish Server, you configure
 concurrent resources and make them available for use by application
 components such as servlets and EJBs. Concurrent resources are accessed
 through JNDI lookup or resource injection.
@@ -53,11 +53,10 @@ Executor Services].
 Managed Scheduled Executor Services].
 
 For detailed information about concurrent resources, see
-"https://javaee.github.io/tutorial/concurrency-utilities.html[Concurrency
-Utilities]" in The Java EE 8 Tutorial. Also see
-http://jcp.org/en/jsr/detail?id=236[Java Specification Request 236:
-Concurrency Utilities for Java EE]
-(`http://jcp.org/en/jsr/detail?id=236`).
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-concurrency-2[Concurrency Utilities]
+in The Jakarta EE Tutorial. Also see
+http://jcp.org/en/jsr/detail?id=236[
+Java Specification Request 236: Concurrency Utilities for Jakarta EE].
 
 [[DAFFGDCD]][[GSADG1110]][[default-concurrent-resources]]
 
@@ -67,24 +66,24 @@ Default Concurrent Resources
 When you create a concurrent resource, you specify a unique JNDI name
 for the resource. Applications use this name to access the resource.
 
-The Java EE standard specifies that certain default resources be made
+The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
 default resources. GlassFish Server makes these names available through
-the use of logical JNDI names, which map Java EE standard JNDI names to
+the use of logical JNDI names, which map Jakarta EE standard JNDI names to
 specific GlassFish Server resources. For concurrent resources, the
 mappings are as follows:
 
 java:comp/DefaultContextService::
-  This Java EE standard name is mapped to the
+  This Jakarta EE standard name is mapped to the
   `concurrent/__defaultContextService` resource.
 java:comp/DefaultManagedThreadFactory::
-  This Java EE standard name is mapped to the
+  This Jakarta EE standard name is mapped to the
   `concurrent/__defaultManagedThreadFactory` resource.
 java:comp/DefaultManagedExecutorService::
-  This Java EE standard name is mapped to the
+  This Jakarta EE standard name is mapped to the
   `concurrent/__defaultManagedExecutorService` resource.
 java:comp/DefaultManagedScheduledExecutorService::
-  This Java EE standard name is mapped to the
+  This Jakarta EE standard name is mapped to the
   `concurrent/__defaultManagedScheduledExecutorService` resource.
 
 [[DAFFCEEA]][[GSADG1111]][[configuring-context-services]]
@@ -293,12 +292,10 @@ create a managed thread factory resource.
 
 Because all JNDI names are in the `java:comp/env` subcontext, when
 specifying the JNDI name of a managed thread factory, use only the
-`concurrent/`name format. For example, `concurrent/Factory1`.
+``concurrent/``name format. For example, `concurrent/Factory1`.
 
 For more information about the default managed thread factory resource
-included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent
-Resources].
-
+included with GlassFish Server, see link:#DAFFGDCD[Default Concurrent Resources].
 
 [NOTE]
 ====
@@ -309,7 +306,6 @@ use a resource before it was created, and that resource is created
 later, the application or the server must be restarted. Otherwise, the
 application will not be able to locate the resource.
 ====
-
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a managed thread factory by using the

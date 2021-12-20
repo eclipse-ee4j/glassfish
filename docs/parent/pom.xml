@@ -64,6 +64,7 @@
                             <ignoreTagPatterns>JEET.*</ignoreTagPatterns>
                         </configuration>
                     </execution>
+                    <!-- Filtering - uses properties directly -->
                     <execution>
                         <id>generate-book</id>
                         <phase>generate-resources</phase>

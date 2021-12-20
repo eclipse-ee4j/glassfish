@@ -21,11 +21,11 @@ Creates a work security map for the specified resource adapter
 
 [source]
 ----
-asadmin [asadmin-options] create-connector-work-security-map [--help] 
+asadmin [asadmin-options] create-connector-work-security-map [--help]
 --raname raname
-[--principalsmap eis-principal1=principal_name1[, eis-principal2=principal_name2]* 
+[--principalsmap eis-principal1=principal_name1[, eis-principal2=principal_name2]*
 |--groupsmap eis-group1=server-group1[, eis-group2=server-group2]*}
-[--description description] 
+[--description description]
 mapname
 ----
 
@@ -96,7 +96,7 @@ maps the backend EIS principal to the {productName} principal.
 ----
 asadmin create-connector-work-security-map --raname my-resource-adapter
 --principalsmap eis-principal-1=server-principal-1,eis-principal-2
-=server-principal-2,eis-principal-3=server-principal-1 
+=server-principal-2,eis-principal-3=server-principal-1
 workSecurityMap1
 Command create-connector-work-security-map executed successfully.
 ----

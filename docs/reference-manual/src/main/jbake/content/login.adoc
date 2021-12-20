@@ -85,15 +85,15 @@ specified before the `login` subcommand.
 
 [source]
 ----
-asadmin --host foo --port 8282 login 
+asadmin --host foo --port 8282 login
 Please enter the admin user name>admin
 Please enter the admin password>
 
-Trying to authenticate for administration of server at host [foo] 
+Trying to authenticate for administration of server at host [foo]
 and port [8282] ...
-Login information relevant to admin user name [admin] for host [foo] 
+Login information relevant to admin user name [admin] for host [foo]
 and admin port [8282] stored at [/.asadminpass] successfully.
-Make sure that this file remains protected. Information stored in this 
+Make sure that this file remains protected. Information stored in this
 file will be used by asadmin commands to manage associated domain.
 ----
 
@@ -106,17 +106,17 @@ Options are specified before the `login` subcommand.
 
 [source]
 ----
-asadmin --host myhost login 
+asadmin --host myhost login
 Please enter the admin user name>admin
 Please enter the admin password>
-Trying to authenticate for administration of server 
+Trying to authenticate for administration of server
 at host [myhost] and port [4848] ...
-An entry for login exists for host [myhost] and port [4848], probably 
+An entry for login exists for host [myhost] and port [4848], probably
 from an earlier login operation.
 Do you want to overwrite this entry (y/n)?y
-Login information relevant to admin user name [admin] for host [myhost] 
+Login information relevant to admin user name [admin] for host [myhost]
 and admin port [4848] stored at [/home/joe/.asadminpass] successfully.
-Make sure that this file remains protected. Information stored in this 
+Make sure that this file remains protected. Information stored in this
 file will be used by asadmin commands to manage associated domain.
 ----
 

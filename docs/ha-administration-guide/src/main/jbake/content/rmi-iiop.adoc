@@ -46,7 +46,7 @@ references and `NameService` objects over RMI-IIOP, provided all the
 following apply:
 
 * Your deployment has a cluster of at least two instances.
-* Java EE applications are deployed to all instances and clusters that
+* Jakarta EE applications are deployed to all instances and clusters that
 participate in load balancing.
 * RMI-IIOP client applications are enabled for load balancing.
 

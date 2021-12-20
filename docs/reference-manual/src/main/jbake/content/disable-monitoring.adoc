@@ -21,7 +21,7 @@ Disables monitoring for the server or for specific monitorable modules
 
 [source]
 ----
-asadmin [asadmin-options] disable-monitoring [--help] 
+asadmin [asadmin-options] disable-monitoring [--help]
 [--modules module-name][:module-name]*
 ----
 

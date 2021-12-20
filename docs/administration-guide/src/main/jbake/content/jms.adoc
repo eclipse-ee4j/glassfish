@@ -16,13 +16,13 @@ Administering the Java Message Service (JMS)
 -----------------------------------------------
 
 The Java Message Service (JMS) API is a messaging standard that allows
-Java EE applications and components, including message-driven beans
+Jakarta EE applications and components, including message-driven beans
 (MDBs), to create, send, receive, and read messages. It enables
 distributed communication that is loosely coupled, reliable, and
 asynchronous.
 
 GlassFish Server supports JMS messaging by communicating with a JMS
-provider through a Java EE Connector resource adapter. By default,
+provider through a Jakarta EE Connector resource adapter. By default,
 GlassFish Server provides JMS messaging through its built-in jmsra
 resource adapter communicating with Open Message Queue, which is
 included with GlassFish Server. This combination, known as the JMS
@@ -585,12 +585,12 @@ one destination. By studying the application or consulting with the
 application developer, you can determine what resources must be created.
 The order in which the resources are created does not matter.
 
-The Java EE standard specifies that certain default resources be made
+The Jakarta EE standard specifies that certain default resources be made
 available to applications, and defines specific JNDI names for these
 default resources. GlassFish Server makes these names available through
-the use of logical JNDI names, which map Java EE standard JNDI names to
+the use of logical JNDI names, which map Jakarta EE standard JNDI names to
 specific GlassFish Server resources. For JMS connection factory
-resources, the Java EE standard name
+resources, the Jakarta EE standard name
 `java:comp/DefaultJMSConnectionFactory` is mapped to the
 `jms/__defaultConnectionFactory` resource.
 
@@ -1083,7 +1083,7 @@ Using the Generic Resource Adapter for JMS to Integrate Supported External JMS P
 
 GlassFish Server supports the integration and use of Oracle WebLogic JMS
 and IBM WebSphere MQ JMS providers through the use of the Generic
-Resource Adapter for JMS (GenericJMSRA). This Java EE connector 1.5
+Resource Adapter for JMS (GenericJMSRA). This Jakarta EE connector 1.5
 resource adapter can wrap the JMS client library of Oracle WebLogic JMS
 and IBM WebSphere MQ and make it available for use by GlassFish. The
 adapter is a `.rar` archive that can be deployed and configured using
@@ -1735,7 +1735,7 @@ JNDI store and configure the GlassFish Server object to point to the
 corresponding WebLogic JMS object.
 2. Declaring the connection factory and destination
 +
-In accordance with standard Java EE requirements, these resources need
+In accordance with standard Jakarta EE requirements, these resources need
 to be declared in the deployment descriptor for the MDB, EJB or other
 component. For example, for a session bean, configure the `ejb-jar.xml`
 with `<resource-env-ref>` elements, as follows:

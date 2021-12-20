@@ -57,7 +57,7 @@ The `jndi-name` for application-scoped-resources or
 module-scoped-resources are specified using the format
 ``java:app/``jdbc/myDataSource or
 ``java:module/``jdbc/myModuleLevelDataSource.
-This naming scope is defined in the Java EE 6 Specification
+This naming scope is defined in the Jakarta EE 6 Specification
 (`http://download.oracle.com/javaee/6/api/`).
 
 [[sthref1928]]

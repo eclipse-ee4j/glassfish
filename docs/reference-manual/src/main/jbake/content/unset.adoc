@@ -21,7 +21,7 @@ Removes one or more variables from the multimode environment
 
 [source]
 ----
-asadmin [asadmin-options] unset [--help] 
+asadmin [asadmin-options] unset [--help]
 variable-list
 ----
 

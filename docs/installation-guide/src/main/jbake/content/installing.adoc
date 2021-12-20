@@ -590,10 +590,10 @@ GlassFish Server Download Locations
 
 Installation files for Eclipse GlassFish Server 7 are
 available by download from the
-https://javaee.github.io/glassfish/download[GlassFish Server Downloads]
+https://github.com/eclipse-ee4j/glassfishdownload[GlassFish Server Downloads]
 page.
 
-Eclipse GlassFish Server 7 is also part of the Java EE SDK
+Eclipse GlassFish Server 7 is also part of the Jakarta EE SDK
 distributions. The SDK distributions are available from the
 http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
 EE downloads page] and are not described in this document.
@@ -612,7 +612,7 @@ installation instructions for each method.
 ====
 Before performing any GlassFish Server installation, ensure that your
 environment adheres to the JDK guidelines in
-"https://javaee.github.io/glassfish/doc/5.0/release-notes.pdf[Paths and
+"https://github.com/eclipse-ee4j/glassfishdoc/5.0/release-notes.pdf[Paths and
 Environment Settings for the JDK Software]" in GlassFish Server Open
 Source Edition Release Notes.
 ====
@@ -669,7 +669,7 @@ Each of the installation methods listed in link:#ghtqe[Table 1-1] also
 let you choose to install either the GlassFish Server Full Platform or
 Web Profile distribution. link:#gkuap[Table 1-2] lists the features
 available in each of these two distributions. Note that some of these
-features are value-adds, and are not required by the Java EE specification.
+features are value-adds, and are not required by the Jakarta EE specification.
 
 [[GSING104]][[sthref4]][[gkuap]]
 
@@ -681,7 +681,7 @@ Table 1-2 GlassFish Server Full Profile and Web Profile Features
 
 |Java Platform, Enterprise Edition 8 |X |X
 
-|Java EE Security API |X |X
+|Jakarta EE Security API |X |X
 
 |Java API for JSON Processing 1.1 |X |X
 
@@ -727,7 +727,7 @@ Table 1-2 GlassFish Server Full Profile and Web Profile Features
 
 |EJB 3.2 Full API (Support for Remote Container) |X |-
 
-|Java EE Connector Architecture 1.7 |X |-
+|Jakarta EE Connector Architecture 1.7 |X |-
 
 |JAX-WS 2.3 |X |-
 
@@ -745,7 +745,7 @@ Table 1-2 GlassFish Server Full Profile and Web Profile Features
 
 |Java Authentication Service Provider Interface for Containers 1.1 |X |-
 
-|Java EE Application Deployment 1.2 |X |-
+|Jakarta EE Application Deployment 1.2 |X |-
 
 |J2EE Management 1.1 |X |-
 
@@ -759,8 +759,8 @@ Table 1-2 GlassFish Server Full Profile and Web Profile Features
 |===
 
 
-* The Full Java EE Platform contains the complete CORBA package. The OMG
-CORBA v3.0 APIs are available in the Java EE Web Profile.
+* The Full Jakarta EE Platform contains the complete CORBA package. The OMG
+CORBA v3.0 APIs are available in the Jakarta EE Web Profile.
 
 ** Transaction propagation not supported.
 

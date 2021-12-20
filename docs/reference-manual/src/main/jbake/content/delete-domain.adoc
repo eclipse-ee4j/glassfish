@@ -21,7 +21,7 @@ Deletes a domain
 
 [source]
 ----
-asadmin [asadmin-options] delete-domain [--help] 
+asadmin [asadmin-options] delete-domain [--help]
 [--domaindir domaindir] domain-name
 ----
 

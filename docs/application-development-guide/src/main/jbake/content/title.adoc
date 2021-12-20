@@ -19,11 +19,11 @@ Release 7
 Contributed 2018, 2019
 
 This Application Development Guide describes how to create and run Java
-Platform, Enterprise Edition (Java EE platform) applications that follow
-the open Java standards model for Java EE components and APIs in the
+Platform, Enterprise Edition (Jakarta EE platform) applications that follow
+the open Java standards model for Jakarta EE components and APIs in the
 Eclipse GlassFish Server environment. Topics include
 developer tools, security, and debugging. This book is intended for use
-by software developers who create, assemble, and deploy Java EE
+by software developers who create, assemble, and deploy Jakarta EE
 applications using Oracle servers and software.
 
 [[sthref1]]

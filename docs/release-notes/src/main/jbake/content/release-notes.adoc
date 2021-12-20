@@ -14,15 +14,21 @@ Eclipse GlassFish Server 7 Release Notes
 1 Eclipse GlassFish Server 7 Release Notes
 ------------------------------------------
 
+[CAUTION]
+====
+To Be Done
+
+This page must be updated before the release!
+====
+
 GlassFish Server provides a lightweight, modular server for the
-development of Java Platform Enterprise Edition (Java EE) 8
-applications. It is the Reference Implementation for Java EE. It
+development of Java Platform Enterprise Edition (Jakarta EE) 8
+applications. It is the Reference Implementation for Jakarta EE. It
 delivers a highly productive platform for developing with the latest
-Java EE technologies.
+Jakarta EE technologies.
 
 For any issue or information on Eclipse GlassFish Server,
-see the https://javaee.github.io/glassfish/[GlassFish Server Community]
-(`https://javaee.github.io/glassfish/`).
+see the https://glassfish.org/.
 
 These Release Notes provide late-breaking information about GlassFish Server 7
 software and documentation. These Release Notes include
@@ -42,8 +48,8 @@ view the most up-to-date product information.
 * link:#ggqok["Restrictions and Deprecated Functionality"]
 * link:#BABDACBE["Documentation Errata"]
 * link:#giraq["Features Available Only in the Full Platform"]
-* link:#gipkz["Java EE Standards Support"]
-* link:#ghmtl["Java EE SDK"]
+* link:#gipkz["Jakarta EE Standards Support"]
+* link:#ghmtl["Jakarta EE SDK"]
 * link:#abpha["How to Report Problems and Provide Feedback"]
 * link:#abphc["Additional Resources"]
 
@@ -70,48 +76,28 @@ Table 1-1 Revision History
 What's New in the GlassFish Server 7 Release?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-GlassFish is the Reference Implementation for Java EE. Java EE 8
-introduces the JSON Binding API (JSON-B) for mapping between JSON text
-and Java objects, building on the JSON Processing API (JSON-P). Servlet
-has been enhanced with the addition of support for the new HTTP/2
-protocol. JAX-RS adds support for server-sent events and, building on
-concurrency facilities added in Java SE 8, a reactive client API. The
-new Java EE Security API provides enhanced support for authentication
-and authorization in web modules, and also introduces APIs for access to
-identity stores. The Bean Validation facility is updated to reflect
-enhancements made in Java SE 8 and to extend the range of validated
-objects.
+GlassFish is the Reference Implementation for Jakarta EE. Jakarta EE 10
+introduces ... To Be Done
 
-GlassFish Server 7 includes the following new and updated Java EE standards.
+GlassFish Server 7 includes the following new and updated Jakarta EE standards.
 
 New Features
 
-* Java EE Security API 1.0
-* Java API for JSON Binding (JSON-B) 1.0
+* To Be Done
 
 Updated
 
-* Java API for JSON Processing (JSON-P) 1.1
-* Java API for WebSocket 1.1
-* Java API for RESTful Web Services (JAX-RS) 2.1
-* Contexts and Dependency Injection for Java EE (CDI) 2.0
-* Java Persistence API (JPA) 2.2
-* Common annotations 1.3
-* JavaServer Faces (JSF) 2.3
-* Java Servlet 5.1
-* Bean Validation (BV) 2.0
-* Interceptors 1.2
-* JavaMail 1.6
+* To Be Done
 
-For a complete list of the Java EE technologies included in GlassFish Server 7,
-see link:#gipkz[Java EE Standards Support].
+For a complete list of the Jakarta EE technologies included in GlassFish Server 7,
+see link:#gipkz[Jakarta EE Standards Support].
 
 
 [NOTE]
 ====
 The main thrust of the Eclipse GlassFish Server 7 release
 is to provide an application server for developers to explore and begin
-exploiting the new and updated technologies in the Java EE 8 platform.
+exploiting the new and updated technologies in the Jakarta EE 10 platform.
 Thus, the following features of GlassFish Server were not a focus of
 this release:
 
@@ -121,8 +107,7 @@ this release:
 * Embedded Server
 
 These features are included in the release, but they may not function
-properly with some of the new features added in support of the Java EE 8
-platform.
+properly with some of the new features added in support of the Jakarta EE 10 platform.
 ====
 
 [[abpaj]][[GSRLN00131]][[hardware-and-software-requirements]]
@@ -310,7 +295,7 @@ Message Queue Broker Requirements
 
 GlassFish Server 7 is now bundled with Message Queue (MQ) Broker
 5.1.1. Refer to the
-https://javaee.github.io/glassfish/doc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
+https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
 for complete information about MQ Broker requirements.
 
 [[gfgps]][[GSRLN00252]][[paths-and-environment-settings-for-the-jdk-software]]
@@ -398,23 +383,23 @@ Eclipse GlassFish Server 7 software.
 
 The following topics are addressed here:
 
-* link:#CHDIBHHF[JAXB and JAX-WS no longer part of Java EE platform]
+* link:#CHDIBHHF[JAXB and JAX-WS no longer part of Jakarta EE platform]
 * link:#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
 * link:#CHDBJDGF[Update Tool and pkg Command no longer part of GlassFish Server]
 * link:#CHDJGJHD[Java DB has been replaced by Apache Derby]
 
 [[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
 
-JAXB and JAX-WS no longer part of Java EE platform
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==== JAXB and JAX-WS no longer part of Jakarta EE platform
 
 [[sthref6]][[description]]
 
 Description
 +++++++++++
 
-Jakarta XML Binding (previous JAXB) and Jakarta XML Web Services (previouly JAX-WS) are part of Java EE platform,
-but as optional technologies. However, the jars are packaged in GlassFish.
+Jakarta XML Binding (previous JAXB) and Jakarta XML Web Services (previouly JAX-WS)
+are part of Jakarta EE platform, but as optional technologies. However,
+the jars are packaged in GlassFish.
 
 [NOTE]
 ====
@@ -454,7 +439,7 @@ adapter, a connector resource is created after deployment. For the
 deployment of such applications to succeed, the server(s) must be
 started with this property set to false. For more information on JVM
 deployment options see
-https://javaee.github.io/glassfish/doc/5.1/administration-guide.pdf#G11.998994[`Administering JVM Options.`]
+https://github.com/eclipse-ee4j/glassfishdoc/5.1/administration-guide.pdf#G11.998994[`Administering JVM Options.`]
 ====
 
 
@@ -761,10 +746,10 @@ only in the Eclipse GlassFish Server 7 full platform.
 
 [[gipkz]][[GSRLN00136]][[java-ee-standards-support]]
 
-Java EE Standards Support
+Jakarta EE Standards Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-link:#gjxcp[Table 1-4] lists the Java EE standards implemented in
+link:#gjxcp[Table 1-4] lists the Jakarta EE standards implemented in
 GlassFish Server 7. The table also indicates the distributions in
 which the implementation of a standard is available.
 
@@ -774,208 +759,204 @@ distribution.
 
 [[sthref15]][[gjxcp]]
 
-Table 1-4 Java EE Standards Implementations in GlassFish Server 7
+Table 1-4 Jakarta EE Standards Implementations in GlassFish Server 7
 
-[width="100%",cols="48%,24%,16%,12%",options="header",]
+[width="100%",cols="<48%,<10%,<10%,<10%",options="header",]
 |===
-|Java EE Standard |Java Specification Request (JSR)
-|GlassFish Server 7 Full Platform |GlassFish Server 7 Web Profile
+|Jakarta EE Standard |Version |GlassFish Server 7 Full Platform |GlassFish Server 7 Web Profile
 
-|https://javaee.github.io/javaee-spec/javadocs/[
-Java Platform, Enterprise Edition 8] `(https://javaee.github.io/javaee-spec/javadocs/)`
-|http://jcp.org/en/jsr/detail?id=366[JSR 366]
+|https://jakarta.ee/specifications/platform/10/[Jakarta EE Specification]
+|10
 |X
 |X
 
-|Java EE Security API
-|http://jcp.org/en/jsr/detail?id=375[JSR 375]
-|X
-|X
-
-|Batch Applications for the Java Platform 1.0
-|http://jcp.org/en/jsr/detail?id=352[JSR 352]
+|https://jakarta.ee/specifications/activation/[Activation]
+|2.1
 |X
 |-
 
-|Concurrency Utilities for Java EE 1.0
-|http://jcp.org/en/jsr/detail?id=236[JSR 236]
+|https://jakarta.ee/specifications/security/[Security]
+|3.0
+|X
+|X
+
+|https://jakarta.ee/specifications/batch/[Batch]
+|2.1
 |X
 |-
 
-|Java API for JSON Processing 1.1
-|http://jcp.org/en/jsr/detail?id=374[JSR 374]
-|X
-|X
-
-|Java API for JSON Binding 1.0
-|http://jcp.org/en/jsr/detail?id=367[JSR 367]
-|X
-|X
-
-|Java API for WebSocket 1.1
-|http://jcp.org/en/jsr/detail?id=356[JSR 356]
-|X
-|X
-
-|https://javaee.github.io/servlet-spec/[
-Java Servlet Technology 5.1]`(https://javaee.github.io/servlet-spec/)/`
-|http://jcp.org/en/jsr/detail?id=369[JSR 369]
-|X
-|X
-
-|JavaServer Pages 2.3
-|http://jcp.org/en/jsr/detail?id=245[JSR 245]
-|X
-|X
-
-|Expression Language 3.0
-|http://jcp.org/en/jsr/detail?id=341[JSR 341]
-|X
-|X
-
-|Debugging Support for Other Languages 1.0
-|http://jcp.org/en/jsr/detail?id=45[JSR 45]
-|X
-|X
-
-|Standard Tag Library for JavaServer Pages 1.2
-|http://jcp.org/en/jsr/detail?id=52[JSR 52]
-|X
-|X
-
-|http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html[
-JavaServer Faces 2.3]`(https://github.com/javaserverfaces/)`
-|http://jcp.org/en/jsr/detail?id=372[JSR 372]
-|X
-|X
-
-|Common Annotations for the Java Platform 1.2
-|http://jcp.org/en/jsr/detail?id=250[JSR 250]
-|X
-|X
-
-|https://github.com/javaee/jta-spec[Java Transaction API 1.2]
-`(https://github.com/javaee/jta-spec)`
-|http://jcp.org/en/jsr/detail?id=907[JSR 907]
-|X
-|X
-
-|https://github.com/javaee/jpa-spec[Java Persistence API 2.2]
-`(https://github.com/javaee/jpa-spec)`
-|http://jcp.org/en/jsr/detail?id=338[JSR 338]
-|X
-|X
-
-|Managed Beans 1.0 |http://jcp.org/en/jsr/detail?id=316[JSR 316]
-|X
-|X
-
-|Interceptors 1.2 |http://jcp.org/en/jsr/detail?id=318[JSR 318]
-|X
-|X
-
-|Dependency Injection for Java 1.0
-|http://jcp.org/en/jsr/detail?id=330[JSR 330]
-|X
-|X
-
-|https://github.com/javaee/ejb-spec[Enterprise JavaBeans 3.2 Lite]
-`(https://github.com/javaee/ejb-spec)`
-|http://jcp.org/en/jsr/detail?id=345[JSR 345]
-|X
-|X
-
-|https://github.com/javaee/ejb-spec[
-Enterprise JavaBeans 3.2 Full API]`(https://github.com/javaee/ejb-spec)`
-|http://jcp.org/en/jsr/detail?id=345[JSR 345]
+|https://jakarta.ee/specifications/concurrency/[Concurrency]
+|3.0
 |X
 |-
 
-|Contexts and Dependency Injection for Java EE 2.0
-|http://jcp.org/en/jsr/detail?id=365[JSR 365]
+|https://jakarta.ee/specifications/jsonp/[JSON Processing]
+|2.1
 |X
 |X
 
-|Java API for RESTful Web Service (JAX-RS) 2.1
-|http://jcp.org/en/jsr/detail?id=370[JSR 370]
+|https://jakarta.ee/specifications/jsonb/[JSON Binding]
+|3.0
 |X
 |X
 
-|Bean Validation 2.0
-|http://jcp.org/en/jsr/detail?id=349[JSR 380]
+|https://jakarta.ee/specifications/websocket/[WebSocket]
+|2.1
 |X
 |X
 
-|https://github.com/javaee/connector-spec[
-Java EE Connector Architecture 1.7]`(https://github.com/javaee/connector-spec)`
-|http://jcp.org/en/jsr/detail?id=322[JSR 322]
+|https://jakarta.ee/specifications/websocket/[Servlet]
+|6.0
+|X
+|X
+
+|https://jakarta.ee/specifications/pages/[Server Pages]
+|3.1
+|X
+|X
+
+|https://jakarta.ee/specifications/expression-language/[Expression Language]
+|5.0
+|X
+|X
+
+|https://jakarta.ee/specifications/debugging/[Debugging Support for Other Languages]
+|2.0
+|X
+|X
+
+|https://jakarta.ee/specifications/tags/[Standard Tag Library]
+|3.0
+|X
+|X
+
+|https://jakarta.ee/specifications/mvc/[MVC]
+|2.1
+|X
+|X
+
+|https://jakarta.ee/specifications/faces/[JavaServer Faces]
+|4.0
+|X
+|X
+
+|https://jakarta.ee/specifications/annotations/[Annotations]
+|2.1
+|X
+|X
+
+|https://jakarta.ee/specifications/transactions/[Transactions]
+|2.0
+|X
+|X
+
+|https://jakarta.ee/specifications/persistence/[Persistence]
+|3.1
+|X
+|X
+
+|https://jakarta.ee/specifications/managedbeans/[Managed Beans]
+|2.0
+|X
+|X
+
+|https://jakarta.ee/specifications/interceptors/[Interceptors]
+|2.0
+|X
+|X
+
+|https://jakarta.ee/specifications/dependency-injection/[Dependency Injection]
+|2.0
+|X
+|X
+
+|https://jakarta.ee/specifications/cdi/[Contexts and Dependency Injection]
+|3.0
+|X
+|X
+
+|https://jakarta.ee/specifications/persistence/[Enterprise Beans]
+|4.0
+|X
+|-
+
+|https://jakarta.ee/specifications/restful-ws/[RESTful Web Services]
+|4.0
+|X
+|X
+
+|https://jakarta.ee/specifications/bean-validation/[Bean Validation]
+|3.0
+|X
+|X
+
+|https://jakarta.ee/specifications/connectors/[Connectors]
+|2.1
 |X
 |X^*^
 
-|https://github.com/javaee/metro-jax-ws[
-Java API for XML-Based Web Services (JAX-WS) 2.3]`(https://github.com/javaee/metro-jax-ws)`
-|http://jcp.org/en/jsr/detail?id=224[JSR 224]
+|https://jakarta.ee/specifications/xml-web-services/[XML Web Services]
+|4.0
 |X
 |-
 
-|https://github.com/javaee/jaxb-v2[
-Java Architecture for XML Binding (JAXB) 2.2]`(https://github.com/javaee/jaxb-v2)`
-|http://jcp.org/en/jsr/detail?id=222[JSR 222]
+|https://jakarta.ee/specifications/soap-attachments/[SOAP With Attachements]
+|3.0
 |X
 |-
 
-|Implementing Enterprise Web Services 1.4
-|http://jcp.org/en/jsr/detail?id=109[JSR 109]
+|https://jakarta.ee/specifications/xml-binding/[XML Binding]
+|4.0
 |X
 |-
 
-|Web Services Metadata for the Java Platform 2.1
-|http://jcp.org/en/jsr/detail?id=181[JSR 181]
+|https://jakarta.ee/specifications/enterprise-ws/[Enterprise Web Services]
+|2.0
 |X
 |-
 
-|https://javaee.github.io/jms-spec/[
-Java Message Service 2.0]`(https://javaee.github.io/jms-spec/)`
-|http://jcp.org/en/jsr/detail?id=343[JSR 343]
+|https://jakarta.ee/specifications/web-services-metadata/[Web Services Metadata]
+|3.0
 |X
 |-
 
-|https://javaee.github.io/javamail/[
-JavaMail 1.6]`(https://javaee.github.io/javamail/)`
-|http://jcp.org/en/jsr/detail?id=919[JSR 919]
+|https://jakarta.ee/specifications/messaging/[Messaging]
+|3.1
 |X
 |-
 
-|https://javaee.github.io/jacc-spec/[
-Java Authorization Contract for Containers 1.5]`(https://javaee.github.io/jacc-spec/)`
-|http://jcp.org/en/jsr/detail?id=115[JSR 115]
+|https://jakarta.ee/specifications/mail/[Mail]
+|2.1
 |X
 |-
 
-|Java Authentication Service Provider Interface for Containers 1.1
-|http://jcp.org/en/jsr/detail?id=196[JSR 196]
+|https://jakarta.ee/specifications/authentication/[Authentication]
+|3.0
+|X
+|X
+
+|https://jakarta.ee/specifications/authorization/[Authorization]
+|2.1
 |X
 |-
 
-|Java EE Application Deployment 1.2
-|http://jcp.org/en/jsr/detail?id=88[JSR 88]
+|https://jakarta.ee/specifications/deployment/[Deployment]
+|1.7
 |X
 |-
 
-|J2EE Management 1.1
-|http://jcp.org/en/jsr/detail?id=77[JSR 77]
+|https://jakarta.ee/specifications/management/[Management]
+|1.1
 |X
 |-
 
-|https://github.com/javaee/jax-rpc-ri[
-Java API for XML-Based Remote Procedure Calls (JAX-RPC) 1.1]`
-(https://github.com/javaee/jax-rpc-ri/)`
-|http://jcp.org/en/jsr/detail?id=101[JSR 101]
+|https://jakarta.ee/specifications/xml-rpc/[XML RPC]
+|1.1
 |X
 |-
 
-|Java API for XML-Based Registries (JAXR) 1.0
-|http://jcp.org/en/jsr/detail?id=93[JSR 93]
+|https://jakarta.ee/specifications/xml-registries/[XML Registries]
+|1.0
 |X
 |-
 |===
@@ -993,31 +974,6 @@ extensions, including the following:
   New I/O (NIO) APIs, which make scaling to thousands of users possible.
   The ability to embed components that support HTTP, Bayeux Protocol, Java
   Servlet API, and Comet is provided.
-
-[[ghmtl]][[GSRLN00137]][[java-ee-sdk]]
-
-Java EE SDK
-~~~~~~~~~~~
-
-GlassFish Server 7 is available as part of the Java EE 8 SDK. The
-following versions of the Java EE 8 SDK are available:
-
-* Java EE 8 SDK: This version includes GlassFish Server 7. This
-  version is designed for developers who require the full set of Java EE
-  APIs for enterprise application development.
-* Java EE 8 Web Profile SDK: This version includes GlassFish Server 7
-  Web Profile. This version contains web technologies that are subset of
-  the Full Platform and is designed for developers who do not require the
-  full set of Java EE APIs.
-
-More information about the Java EE SDK distributions are available at
-http://www.oracle.com/technetwork/java/javaee/documentation/index.html[Java
-EE Reference at a Glance]
-(`http://www.oracle.com/technetwork/java/javaee/documentation/index.html`).
-Java EE SDK distributions are available from the
-http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
-EE SDK Downloads page]
-(`http://www.oracle.com/technetwork/java/javaee/downloads/index.html`).
 
 [[abpha]][[GSRLN00138]][[how-to-report-problems-and-provide-feedback]]
 
@@ -1041,8 +997,8 @@ Additional Resources
 
 Useful information can be found at the following locations:
 
-* https://javaee.github.io/glassfish/[GlassFish Server Community]
-(`https://javaee.github.io/glassfish/`)
+* https://github.com/eclipse-ee4j/glassfish[GlassFish Server Community]
+(`https://github.com/eclipse-ee4j/glassfish`)
 * http://www.oracle.com/technetwork/index.html[Oracle Developer
 Information] (`http://www.oracle.com/technetwork/index.html`)
 * http://www.oracle.com/technetwork/indexes/documentation/index.html[Oracle

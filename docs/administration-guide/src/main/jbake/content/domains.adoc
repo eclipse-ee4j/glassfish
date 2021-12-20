@@ -56,7 +56,7 @@ A GlassFish Server instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
 GlassFish Server is running. A node defines the host where the GlassFish
 Server instance resides. The JVM machine must be compatible with the
-Java Platform, Enterprise Edition (Java EE).
+Java Platform, Enterprise Edition (Jakarta EE).
 
 GlassFish Server instances form the basis of an application deployment.
 
@@ -1004,7 +1004,7 @@ out of Windows, which causes the system to shut itself down cleanly.
 This behavior causes the GlassFish Server service to shut down. To
 prevent the service from shutting down when a user logs out, you must
 set the `-Xrs` Java VM option
-(`https://javaee.github.io/glassfish/documentation`).
+(`https://github.com/eclipse-ee4j/glassfishdocumentation`).
 
 1. Ensure that the DAS is running.
 

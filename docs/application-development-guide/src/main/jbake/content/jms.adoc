@@ -28,8 +28,8 @@ the Web Profile.
 
 
 For information about the JMS, see
-"https://javaee.github.io/tutorial/partmessaging.html[Messaging]" in The
-Java EE 8 Tutorial.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#messaging[Messaging]
+in The Jakarta EE Tutorial.
 
 For detailed information about JMS concepts and JMS support in the
 GlassFish Server, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java Message

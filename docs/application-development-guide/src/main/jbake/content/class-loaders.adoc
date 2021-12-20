@@ -77,7 +77,7 @@ Optional Package Mechanism].
 
 |Public API |The Public API class loader makes available all classes
 specifically exported by the GlassFish Server runtime for use by
-deployed applications. This includes, but is not limited to, Java EE
+deployed applications. This includes, but is not limited to, Jakarta EE
 APIs and other Oracle APIs. It is parent to the Common class loader.
 
 |Common |The Common class loader loads JAR files in the as-install`/lib`
@@ -98,7 +98,7 @@ link:lifecycle-listeners.html#beamc[Developing Lifecycle Listeners].
 
 |Applib a|
 The Applib class loader loads the library classes, specified during
-deployment, for a specific enabled module or Java EE application; see
+deployment, for a specific enabled module or Jakarta EE application; see
 link:#gatej[Application-Specific Class Loading]. One instance of this
 class loader is present in each class loader universe; see
 link:#beadg[Class Loader Universes]. It is parent to the Archive class loader.
@@ -163,7 +163,7 @@ For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
 the `delegate` setting. This prevents applications from overriding core
 Java runtime classes or changing the API versions of specifications that
-are part of the Java EE platform.
+are part of the Jakarta EE platform.
 
 [[beadk]][[GSDVG00096]][[using-the-java-optional-package-mechanism]]
 
@@ -215,7 +215,7 @@ Access to components within applications and modules installed on the
 server occurs within the context of isolated class loader universes,
 each of which has its own Applib and Archive class loaders.
 
-* Application Universe - Each Java EE application has its own class
+* Application Universe - Each Jakarta EE application has its own class
 loader universe, which loads the classes in all the modules in the
 application.
 * Individually Deployed Module Universe - Each individually deployed EJB
@@ -402,7 +402,7 @@ syntax:
 Class-Path: filepath1.jar filepath2.jar ...
 ----
 Each filepath is relative to the directory or JAR file containing the
-`MANIFEST.MF` file. For details, see the Java EE specification.
+`MANIFEST.MF` file. For details, see the Jakarta EE specification.
 * For a calling web component, add the client JAR file under the
 `WEB-INF/lib` directory.
 3. If you need to package the client JAR with both the EJB and web

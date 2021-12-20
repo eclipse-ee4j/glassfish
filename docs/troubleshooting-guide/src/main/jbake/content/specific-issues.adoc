@@ -818,8 +818,8 @@ It is safe to remove uninstallation and installation log files after you
 have examined them.
 
 For information related to uninstallation, see
-"link:../installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish Server 3.1]" in GlassFish
-Server Open Source Edition Installation Guide.
+"link:../installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
+in GlassFish Server Open Source Edition Installation Guide.
 
 [[ghvrh]][[GSTSG00056]][[issues-related-to-security]]
 

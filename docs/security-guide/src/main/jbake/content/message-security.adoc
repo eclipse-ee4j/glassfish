@@ -353,7 +353,7 @@ Sample Application for Web Services
 
 GlassFish Server includes a sample application named `xms`. The `xms`
 application features a simple web service that is implemented by both a
-Java EE EJB endpoint and a Java servlet endpoint. Both endpoints share
+Jakarta EE EJB endpoint and a Java servlet endpoint. Both endpoints share
 the same service endpoint interface. The service endpoint interface
 defines a single operation, `sayHello`, which takes a string argument,
 and returns a `String` composed by pre-pending `Hello` to the invocation argument.
@@ -902,9 +902,9 @@ Additional Information About Message Security
 
 For additional information about message security, see the following documentation:
 
-* "http://docs.oracle.com/javaee/7/tutorial/doc/security-intro.html[Introduction
-to Security in the Java EE Platform]" in The Java EE 8 Tutorial
-* "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in GlassFish Server Open
-Source Edition Application Development Guide
+* https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
+Introduction to Security in the Jakarta EE Platform] in The Jakarta EE Tutorial
+* "link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
+in GlassFish Server Open Source Edition Application Development Guide
 
 

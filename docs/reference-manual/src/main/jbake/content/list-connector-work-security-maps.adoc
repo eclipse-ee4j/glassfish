@@ -21,7 +21,7 @@ Lists the work security maps belonging to the specified resource adapter
 
 [source]
 ----
-asadmin [asadmin-options] list-connector-work-security-maps [--help] 
+asadmin [asadmin-options] list-connector-work-security-maps [--help]
 [--securitymap securitymap]
 resource_adapter_name
 ----

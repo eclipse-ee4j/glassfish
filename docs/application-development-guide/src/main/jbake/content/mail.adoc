@@ -178,7 +178,7 @@ Message msg = new MimeMessage(session);
 msg.setSubject(msgSubject);
 msg.setSentDate(new Date());
 msg.setFrom();
-msg.setRecipients(Message.RecipientType.TO, 
+msg.setRecipients(Message.RecipientType.TO,
    InternetAddress.parse(msgRecipient, false));
 msg.setText(msgTxt);
 ----

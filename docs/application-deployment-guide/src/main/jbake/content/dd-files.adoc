@@ -72,7 +72,7 @@ Table B-1 GlassFish Server Deployment Descriptors and DTDs
 |===
 |Deployment Descriptor |DTD File |Description
 |`glassfish-application.xml` |`glassfish-application_6_0-1.dtd`
-|Configures an entire Java EE application (EAR file).
+|Configures an entire Jakarta EE application (EAR file).
 
 |`glassfish-web.xml` |`glassfish-web-app_3_0-1.dtd` |Configures a web
 application (WAR file).
@@ -112,7 +112,7 @@ descriptors are supported for backward compatibility.
 The glassfish-application.xml File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `glassfish-application.xml` file configures an entire Java EE
+The `glassfish-application.xml` file configures an entire Jakarta EE
 application (EAR file). The element hierarchy is as follows:
 
 [source]
@@ -188,7 +188,7 @@ Here is a sample `glassfish-application.xml` file:
 [source,xml]
 ----
 <!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD
-GlassFish Application Server 3.1 Java EE Application 6.0//EN"
+GlassFish Application Server 3.1 Jakarta EE Application 6.0//EN"
 "http://glassfish.org/dtds/glassfish-application_6_0-1.dtd">
 <glassfish-application>
    <unique-id>67488732739338240</unique-id>

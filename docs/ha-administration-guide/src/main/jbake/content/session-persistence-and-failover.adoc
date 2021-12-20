@@ -31,7 +31,7 @@ failover of HTTP session data and stateful session bean (SFSB) session
 data. Failover means that in the event of an server instance or hardware
 failure, another server instance in a cluster takes over a distributed session.
 
-For example, Java EE applications typically have significant amounts of
+For example, Jakarta EE applications typically have significant amounts of
 session state data. A web shopping cart is the classic example of
 session state. Also, an application can cache frequently-needed data in
 the session object. In fact, almost all applications with significant

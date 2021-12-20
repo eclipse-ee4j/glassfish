@@ -22,8 +22,8 @@ settings and remaining in the asadmin utility
 
 [source]
 ----
-asadmin [asadmin-options] multimode [--help] 
-[--file filename] 
+asadmin [asadmin-options] multimode [--help]
+[--file filename]
 [--printprompt={true|false}] [--encoding encode]
 ----
 
@@ -92,7 +92,7 @@ This example starts a multimode session where: `%` is the system prompt.
 [source]
 ----
 % asadmin multimode
-asadmin> 
+asadmin>
 ----
 
 You can also start a multimode session by typing `asadmin` without

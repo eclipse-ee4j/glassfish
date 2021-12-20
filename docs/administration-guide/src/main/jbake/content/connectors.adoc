@@ -59,9 +59,9 @@ applications and modules to access EIS software.)
 The key elements of EIS connectivity are the following:
 
 * Connector Module. A connector module, also called a resource adapter,
-is a Java EE component that enables applications to interact with EIS
+is a Jakarta EE component that enables applications to interact with EIS
 software. A connector module is used by GlassFish Server to implement
-Java Message Service (JMS). Like other Java EE modules, a connector
+Java Message Service (JMS). Like other Jakarta EE modules, a connector
 module is installed when it is deployed. For instructions on creating a
 connector module, see "link:../application-development-guide/connectors.html#GSDVG00013[Developing Connectors]" in
 GlassFish Server Open Source Edition Application Development Guide.

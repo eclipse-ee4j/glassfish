@@ -16,7 +16,7 @@ Administering the Java Naming and Directory Interface (JNDI) Service
 -----------------------------------------------------------------------
 
 The Java Naming and Directory Interface (JNDI) API is used for accessing
-different kinds of naming and directory services. Java EE components
+different kinds of naming and directory services. Jakarta EE components
 locate objects by invoking the JNDI lookup method.
 
 The following topics are addressed here:
@@ -47,32 +47,32 @@ is created.
 
 The following topics are addressed here:
 
-* link:#abllb[Java EE Naming Environment]
+* link:#abllb[Jakarta EE Naming Environment]
 * link:#gglpg[How the Naming Environment and the Container Work
 Together]
 * link:#abllc[Naming References and Binding Information]
 
 [[abllb]][[GSADG00780]][[java-ee-naming-environment]]
 
-Java EE Naming Environment
+Jakarta EE Naming Environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 JNDI names are bound to their objects by the naming and directory
-service that is provided by a Java EE server. Because Java EE components
+service that is provided by a Jakarta EE server. Because Jakarta EE components
 access this service through the JNDI API, the object usually uses its
 JNDI name. For example, the JNDI name of the Apache Derby database is
 `jdbc/_default`. At startup, the GlassFish Server reads information from
 the configuration file and automatically adds JNDI database names to the
 name space, one of which is `jdbc/_default`.
 
-Java EE application clients, enterprise beans, and web components must
+Jakarta EE application clients, enterprise beans, and web components must
 have access to a JNDI naming environment.
 
 The application component's naming environment is the mechanism that
 allows customization of the application component's business logic
 during deployment or assembly. This environment allows you to customize
 the application component without needing to access or change the source
-code off the component. A Java EE container implements the provides the
+code off the component. A Jakarta EE container implements the provides the
 environment to the application component instance as a JNDI naming
 context.
 
@@ -120,11 +120,11 @@ same. This approach to naming requires that you map the two names before
 deployment, but it also decouples components from resources. Because of
 this decoupling, if at a later time the component needs to access a
 different resource, the name does not need to change. This flexibility
-makes it easier for you to assemble Java EE applications from
+makes it easier for you to assemble Jakarta EE applications from
 preexisting components.
 
 The following table lists JNDI lookups and their associated resource
-references for the Java EE resources used by the GlassFish Server.
+references for the Jakarta EE resources used by the GlassFish Server.
 
 [[GSADG1029]][[sthref87]][[fxizy]]
 
@@ -207,7 +207,7 @@ This example creates a custom resource named `sample-custom-resource`.
 
 [source]
 ----
-asadmin> create-custom-resource --restype topic --factoryclass com.imq.topic 
+asadmin> create-custom-resource --restype topic --factoryclass com.imq.topic
 sample_custom_resource
 Command create-custom-resource executed successfully.
 ----
@@ -239,8 +239,8 @@ This example lists the existing custom resources.
 [source]
 ----
 asadmin> list-custom-resources
-sample_custom_resource01 
-sample_custom_resource02 
+sample_custom_resource01
+sample_custom_resource02
 Command list-custom-resources executed successfully
 ----
 
@@ -358,8 +358,8 @@ In This example `sample_jndi_resource` is registered.
 
 [source]
 ----
-asadmin> create-jndi-resource --jndilookupname sample_jndi 
---restype queue --factoryclass sampleClass --description "this is a sample jndi 
+asadmin> create-jndi-resource --jndilookupname sample_jndi
+--restype queue --factoryclass sampleClass --description "this is a sample jndi
 resource" sample_jndi_resource
 Command create-jndi-resource executed successfully
 ----
@@ -456,7 +456,7 @@ This example modifies an external resource.
 [source]
 ----
 asadmin> set server.resources.external-jndi-resource.my-jndi-resource.
-jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jndi-lookup-name=bar 
+jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jndi-lookup-name=bar
 ----
 
 [[gitvt]][[GSADG00511]][[to-delete-an-external-jndi-resource]]
@@ -497,7 +497,7 @@ Example of Using an External JNDI Resource
 [source,xml]
 ----
 <resources>
- <!-- external-jndi-resource element specifies how to access Java EE resources
+ <!-- external-jndi-resource element specifies how to access Jakarta EE resources
  -- stored in an external JNDI repository. This example
  -- illustrates how to access a java object stored in LDAP.
  -- factory-class element specifies the JNDI InitialContext factory that

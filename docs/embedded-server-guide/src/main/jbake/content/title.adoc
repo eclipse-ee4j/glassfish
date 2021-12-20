@@ -26,11 +26,11 @@ ability to program in the Java language is assumed.
 
 Note: The main thrust of the Eclipse GlassFish Server 7
 release is to provide an application server for developers to explore
-and begin exploiting the new and updated technologies in the Java EE 7
+and begin exploiting the new and updated technologies in the Jakarta EE 10
 platform. Thus, the embedded server feature of GlassFish Server was not
 a focus of this release. This feature is included in the release, but it
 may not function properly with some of the new features added in support
-of the Java EE 7 platform.
+of the Jakarta EE 10 platform.
 
 [[sthref1]]
 

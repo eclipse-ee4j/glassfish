@@ -38,9 +38,9 @@ for writing providers that can authenticate users against Identity
 Stores. It also provides two built-in providers. This mechanism is
 conceptually similar to Authentication Realms, but can be configured and
 managed by applications. See
-https://javaee.github.io/tutorial/security-intro005a.html#working-with-identity-stores[Working
-with Identity Stores] in The Java EE Tutorial for more information about
-Identity Stores.
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#working-with-identity-stores[
+Working with Identity Stores]
+in The Jakarta EE Tutorial for more information about Identity Stores.
 ====
 
 [[ggkuk]][[GSSCG00151]][[administering-authentication-realms]]

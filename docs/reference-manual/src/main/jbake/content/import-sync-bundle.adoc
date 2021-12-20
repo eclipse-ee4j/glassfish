@@ -23,7 +23,7 @@ instance from an archive file
 [source]
 ----
 asadmin [asadmin-options] import-sync-bundle [--help]
---instance instance-name 
+--instance instance-name
 [--nodedir node-dir] [--node node-name]
 file-name
 ----
@@ -123,7 +123,7 @@ default HTTP port for administration.
 
 [source]
 ----
-sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2 
+sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2
 /export/glassfish7/glassfish/domains/domain1/sync/ymlcluster-sync-bundle.zip
 Command import-sync-bundle executed successfully.
 ----

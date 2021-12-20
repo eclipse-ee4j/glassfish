@@ -20,7 +20,7 @@ Secure and administer {productName} applications
 
 Security is about protecting data: how to prevent unauthorized access or
 damage to it in storage or transit. {productName} has a dynamic,
-extensible security architecture based on the Java EE standard. Built in
+extensible security architecture based on the Jakarta EE standard. Built in
 security features include cryptography, authentication and
 authorization, and public key infrastructure. {productName} is built
 on the Java security model, which uses a sandbox where applications can

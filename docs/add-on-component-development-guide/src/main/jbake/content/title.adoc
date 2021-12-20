@@ -3,6 +3,7 @@ status=published
 title=Eclipse GlassFish Server Add-On Component Development Guide, Release 7
 next=preface.html
 prev=lot.html
+~~~~~~
 
 Eclipse GlassFish Server Add-On Component Development Guide, Release 7
 ======================================================================

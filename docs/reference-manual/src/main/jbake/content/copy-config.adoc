@@ -21,7 +21,7 @@ Copies an existing named configuration to create another configuration
 
 [source]
 ----
-asadmin [asadmin-options] copy-config [--help] 
+asadmin [asadmin-options] copy-config [--help]
 [--systemproperties (name=value)[:name=value]*]
 source-configuration-name destination-configuration-name
 ----
@@ -152,8 +152,8 @@ ports:
 
 [source]
 ----
-asadmin> copy-config 
---systemproperties HTTP_LISTENER_PORT=2000:HTTP_SSL_LISTENER_PORT=3000 
+asadmin> copy-config
+--systemproperties HTTP_LISTENER_PORT=2000:HTTP_SSL_LISTENER_PORT=3000
 default-config pmdsaconfig
 
 Command copy-config executed successfully.

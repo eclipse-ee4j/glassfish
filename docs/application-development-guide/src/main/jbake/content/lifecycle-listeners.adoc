@@ -82,7 +82,7 @@ The LifecycleListener interface defines this method:
 
 [source,java]
 ----
-public void handleEvent(com.sun.appserv.server.LifecycleEvent event) 
+public void handleEvent(com.sun.appserv.server.LifecycleEvent event)
 throws ServerLifecycleException
 ----
 

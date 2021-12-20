@@ -3,31 +3,19 @@ status=published
 title=Preface
 next=introduction.html
 prev=title.html
+~~~~~~
 
 Preface
 =======
 
-[[sthref2]][[preface]]
-
+[[sthref2]]
+[[preface]]
 Preface
 -------
 
-[NOTE]
-====
-This documentation is part of the Java Enterprise Edition contribution
-to the Eclipse Foundation and is not intended for use in relation to
-Java Enterprise Edition or Orace GlassFish. The documentation is in the
-process of being revised to reflect the new Jakarta EE branding.
-Additional changes will be made as requirements and procedures evolve
-for Jakarta EE. Where applicable, references to Java EE or Java
-Enterprise Edition should be considered references to Jakarta EE.
-
-Please see the Title page for additional license information.
-====
-
-This document explains how to use published interfaces of GlassFish
-Server Open Source Edition to develop add-on components for GlassFish
-Server.
+This document explains how to use published interfaces of
+GlassFish Server Open Source Edition to develop add-on components
+for GlassFish Server.
 This document explains how to perform only those tasks that
 ensure that the add-on component is suitable for GlassFish Server.
 
@@ -39,19 +27,16 @@ the tasks in this document. This document also assumes the ability to
 program in the Java language.
 
 This preface contains information about and conventions for the entire
-GlassFish Server Open Source Edition (GlassFish Server) documentation
-set.
+GlassFish Server Open Source Edition (GlassFish Server) documentation set.
 
 GlassFish Server 7 is developed through the GlassFish project
-open-source community at `http://glassfish.java.net/`. The GlassFish
-project provides a structured process for developing the GlassFish
-Server platform that makes the new features of the Java EE platform
-available faster, while maintaining the most important feature of Java
-EE: compatibility. It enables Java developers to access the GlassFish
-Server source code and to contribute to the development of the GlassFish
-Server.
-The GlassFish project is designed to encourage communication
-between Oracle engineers and the community.
+open-source community at https://github.com/eclipse-ee4j/glassfish.
+The GlassFish project provides a structured process for developing the
+GlassFish Server platform that makes the new features of the Jakarta EE
+platform available faster, while maintaining the most important feature
+of Jakarta EE: compatibility. It enables Java developers to access the
+GlassFish Server source code and to contribute to the development of the
+GlassFish Server.
 
 The following topics are addressed here:
 
@@ -61,9 +46,7 @@ The following topics are addressed here:
 * link:#fquvc[Symbol Conventions]
 * link:#ghpfg[Default Paths and File Names]
 
-
 [[GSACG00079]][[ghpbz]]
-
 
 [[glassfish-server-documentation-set]]
 GlassFish Server Documentation Set
@@ -110,9 +93,9 @@ in the Administration Console online help.
 about deployment descriptors.
 
 |link:../application-development-guide/toc.html#GSDVG[Application Development Guide]
-|Explains how to create and implement Java Platform, Enterprise Edition (Java EE platform)
+|Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the GlassFish Server.
-These applications follow the open Java standards model for Java EE components
+These applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs).
 This guide provides information about developer tools, security, and debugging.
 
@@ -165,65 +148,56 @@ applications (Java clients) that work with GlassFish Server.
 |link:../../openmq/mq-dev-guide-c/toc.html#GMCCG[Message Queue Developer's Guide for C Clients]
 |Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
-Queue messaging service to send, receive, and process Message Queue
-messages.
+Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
 [[GSACG00080]][[giprl]]
 
-
 [[related-documentation]]
 Related Documentation
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following tutorials explain how to develop Java EE applications:
+The following tutorials explain how to develop Jakarta EE applications:
 
-* http://docs.oracle.com/javaee/7/firstcup/doc/home.html[Your First Cup:
-An Introduction to the Java EE Platform](`http://docs.oracle.com/javaee/7/firstcup/doc/home.html`).
-For beginning Java EE programmers, this short tutorial explains the entire process for
-developing a simple enterprise application.
-The sample application is a web application that consists of a component that is based on the
-Enterprise JavaBeans specification, a JAX-RS web service,
+* https://github.com/eclipse-ee4j/jakartaee-firstcup-examples[
+Your First Cup: An Introduction to the Jakarta EE Platform].
+For beginning Jakarta EE programmers, this short tutorial explains the entire
+process for developing a simple enterprise application.
+The sample application is a web application that consists of a component that is
+based on the Enterprise JavaBeans specification, a JAX-RS web service,
 and a JavaServer Faces component for the web front end.
 
-* http://docs.oracle.com/javaee/7/tutorial/doc/home.html[The Java EE 7
-Tutorial](`http://docs.oracle.com/javaee/7/tutorial/doc/home.html`).
-This comprehensive tutorial explains how to use Java EE 7 platform
-technologies and APIs to develop Java EE applications.
+* https://eclipse-ee4j.github.io/jakartaee-tutorial[The Jakarta EE Tutorial].
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.
 
 Javadoc tool reference documentation for packages that are provided with
 GlassFish Server is available as follows.
 
-* The API specification for version 7 of Java EE is located at `http://docs.oracle.com/javaee/7/api/`.
+* The Jakarta EE specifications and API specification is
+located at https://jakarta.ee/specifications/.
 
-* The API specification for GlassFish Server 7, including Java EE 7
+* The API specification for GlassFish Server 7, including Jakarta EE
 platform packages and nonplatform packages that are specific to the
-GlassFish Server product, is located at `http://glassfish.java.net/nonav/docs/v3/api/`.
-
-Additionally, the
-http://www.oracle.com/technetwork/java/javaee/tech/index.html[Java EE
-Specifications]
-(`http://www.oracle.com/technetwork/java/javaee/tech/index.html`) might
-be useful.
+GlassFish Server product, is located at
+https://glassfish.org/docs/.
 
 For information about creating enterprise applications in the NetBeans
 Integrated Development Environment (IDE), see the
-http://www.netbeans.org/kb/[NetBeans Documentation, Training & Support page](`http://www.netbeans.org/kb/`).
+https://netbeans.apache.org/kb/docs/java-ee.html[
+NetBeans Documentation, Training & Support page].
 
-For information about the Java DB database for use with the GlassFish
-Server, see the
-http://www.oracle.com/technetwork/java/javadb/overview/index.html[Java
-DB product page](`http://www.oracle.com/technetwork/java/javadb/overview/index.html`).
+For information about the Derby database for use with
+the GlassFish Server, see the https://db.apache.org/derby/index.html[Derby page].
 
-The Java EE Samples project is a collection of sample applications that
-demonstrate a broad range of Java EE technologies. The Java EE Samples
-are bundled with the Java EE Software Development Kit (SDK) and are also
-available from the http://glassfish-samples.java.net/[Java EE Samples
-project page](`http://glassfish-samples.java.net/`).
+The Jakarta EE Samples project is a collection of sample applications that
+demonstrate a broad range of Jakarta EE technologies. The Jakarta EE Samples
+are bundled with the Jakarta EE Software Development Kit (SDK) and are also
+available from the repository
+(`https://github.com/eclipse-ee4j/glassfish-samples`).
 
 [[GSACG00081]][[fwbkx]]
-
 
 [[typographic-conventions]]
 Typographic Conventions
@@ -235,7 +209,9 @@ this book.
 [width="100%",cols="<14%,<37%,<49%",options="header",]
 |===
 |Typeface |Meaning |Example
-|`AaBbCc123` |The names of commands, files, and directories, and onscreen computer output
+
+|`AaBbCc123`
+|The names of commands, files, and directories, and onscreen computer output
 |Edit your `.login` file.
 
 Use `ls` `a` to list all files.
@@ -263,7 +239,6 @@ Do not save the file.
 
 
 [[GSACG00082]][[fquvc]]
-
 
 [[symbol-conventions]]
 Symbol Conventions
@@ -320,6 +295,7 @@ used in this book.
 [%autowidth.stretch,options="header",]
 |===
 |Placeholder |Description |Default Value
+
 |as-install
 a|Represents the base installation directory for GlassFish Server.
 In configuration files, as-install is represented as follows:

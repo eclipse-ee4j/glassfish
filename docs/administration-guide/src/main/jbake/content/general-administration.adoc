@@ -76,7 +76,7 @@ asadmin [asadmin-util-options] [subcommand [subcommand-options] [operands]]
 
 The replaceable items in this syntax are described in the subsections
 that follow. For full details of this syntax, see the
-https://javaee.github.io/glassfish/doc/5.0/reference-manual.pdf[`asadmin`(1M)]
+https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[`asadmin`(1M)]
 help page.
 
 [[ghvzn]][[GSADG00631]][[subcommands-of-the-asadmin-utility]]
@@ -97,7 +97,7 @@ the subcommand there. A running DAS is required.
 
 For a list of the subcommands for this release of GlassFish Server, see
 Section 1 of the
-https://javaee.github.io/glassfish/doc/5.0/reference-manual.pdf[GlassFish
+https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[GlassFish
 Server Open Source Edition Reference Manual].
 
 [[ghvyd]][[GSADG00632]][[asadmin-utility-options-and-subcommand-options]]
@@ -122,7 +122,7 @@ link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 subcommand, not the `asadmin` utility. Subcommand options must follow
 the subcommand. For a description of a subcommand's options, see the
 entry for the subcommand in the
-https://javaee.github.io/glassfish/doc/5.0/reference-manual.pdf[GlassFish
+https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[GlassFish
 Server Open Source Edition Reference Manual].
 +
 
@@ -1177,11 +1177,13 @@ applications that are developed in languages such as:
 * JavaFX
 
 The implementation of the GlassFish Server REST interfaces is based on
-https://jersey.github.io[project Jersey] . Project Jersey is the
-reference implementation of http://jcp.org/en/jsr/summary?id=311[Java
-Specification Request (JSR) 311: JAX-RS: The Java API for RESTful Web
-Services]. Information about JSR 311 is also available from the JSR
+https://eclipse-ee4j.github.io/jersey/[project Jersey]. Project Jersey is the
+reference implementation of http://jcp.org/en/jsr/summary?id=311[
+Java Specification Request (JSR) 311: JAX-RS: The Java API for RESTful Web Services].
+Information about JSR 311 is also available from the JSR
 https://javaee.github.io/jsr311/[311 project home page] .
+Information about Jakarta RESTful Web Services is here:
+https://jakarta.ee/specifications/restful-ws/
 
 The following topics are addressed here:
 

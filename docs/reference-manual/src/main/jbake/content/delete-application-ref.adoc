@@ -75,7 +75,7 @@ asadmin-options::
 === Operands
 
 reference_name::
-  The name of the application or module, which can be a Java EE
+  The name of the application or module, which can be a Jakarta EE
   application module, Web module, EJB module, connector module,
   application client module, or lifecycle module. +
   The name can include an optional version identifier, which follows the

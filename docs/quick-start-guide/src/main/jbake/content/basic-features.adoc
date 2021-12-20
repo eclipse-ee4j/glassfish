@@ -15,7 +15,7 @@ Quick Start for Basic Features
 --------------------------------
 
 Eclipse GlassFish Server provides a server for the
-development and deployment of Java Platform, Enterprise Edition (Java EE
+development and deployment of Java Platform, Enterprise Edition (Jakarta EE
 platform) applications and web technologies based on Java technology.
 GlassFish Server 7 provides the following:
 
@@ -50,7 +50,7 @@ features and enable you to use them immediately.
 This guide assumes that you have already obtained and installed the
 GlassFish Server 7 software. For more information about installing
 GlassFish Server 7, see the
-https://javaee.github.io/glassfish/documentation[GlassFish Server Open
+https://github.com/eclipse-ee4j/glassfishdocumentation[GlassFish Server Open
 Source Edition Installation Guide].
 
 Instructions and examples in this guide that apply to all supported
@@ -145,7 +145,7 @@ Table 1-2 Default Administration Values
 
 |Master password |`changeit`
 
-|https://javaee.github.io/glassfish/doc/5.0/reference-manual.pdf[
+|https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[
 `asadmin`(1M)] command-line utility
 |as-install`/bin`
 
@@ -245,11 +245,11 @@ starting and stopping other database servers, see the documentation for
 your specific product.
 
 For the list of database products supported in this release, see the
-https://javaee.github.io/glassfish/documentation[GlassFish Server Open
+https://github.com/eclipse-ee4j/glassfishdocumentation[GlassFish Server Open
 Source Edition Release Notes].
 
 For more information about database connectivity, see
-"https://javaee.github.io/glassfish/documentation[Administering Database
+"https://github.com/eclipse-ee4j/glassfishdocumentation[Administering Database
 Connectivity]" in Eclipse GlassFish Server Administration Guide.
 
 [[ggncr]][[GSQSG00007]][[to-start-the-apache-derby-server]]
@@ -354,7 +354,7 @@ To Obtain the Sample Application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Download a copy of the `hello.war` sample application from
-`https://javaee.github.io/glassfish/downloads/quickstart/hello.war`.
+`https://github.com/eclipse-ee4j/glassfishdownloads/quickstart/hello.war`.
 
 2. Save the `hello.war` file in the directory of your choice.
 +
@@ -694,7 +694,7 @@ Clusters of GlassFish Server Instances
 
 A cluster is a collection of GlassFish Server instances that work
 together as one logical entity. A cluster provides a runtime environment
-for one or more Java Platform, Enterprise Edition (Java EE)
+for one or more Java Platform, Enterprise Edition (Jakarta EE)
 applications. A cluster provides high availability through failure
 protection, scalability, and load balancing.
 
@@ -702,7 +702,7 @@ A GlassFish Server instance is a single Virtual Machine for the Java
 platform (Java Virtual Machine or JVM machine) on a single node in which
 GlassFish Server is running. A node defines the host where the GlassFish
 Server instance resides. The JVM machine must be compatible with the
-Java Platform, Enterprise Edition (Java EE).
+Java Platform, Enterprise Edition (Jakarta EE).
 
 GlassFish Server instances form the basis of an application deployment.
 An instance is a building block in the clustering, load balancing, and
@@ -776,9 +776,8 @@ GlassFish Server 7 and related technologies.
 The following resources are described here:
 
 * link:#ghhir[Product Documentation]
-* link:#ghhis[GlassFish Communities]
 * link:#giyjo[Tutorials]
-* link:#gintm[Java EE 8 Samples]
+* link:#gintm[Jakarta EE Examples]
 
 [[ghhir]][[GSQSG00050]][[product-documentation]]
 
@@ -791,34 +790,7 @@ following.
 * link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release Notes]:
 Latest details about new features, known issues, and tips for installing
 and working with GlassFish Server software.
-* http://docs.oracle.com/cd/E26576_01/index.html[Oracle GlassFish Server
-Documentation Library]
-(`http://docs.oracle.com/cd/E26576_01/index.html`): Collection of guides
-that document Oracle GlassFish Server features and functions.
-* https://javaee.github.io/glassfish/documentation[GlassFish Server Open
-Source Edition Product Documentation page]
-(`https://javaee.github.io/glassfish/documentation`): Collection of
-guides that document Eclipse GlassFish Server features and
-functions.
-
-[[ghhis]][[GSQSG00051]][[glassfish-communities]]
-
-GlassFish Communities
-^^^^^^^^^^^^^^^^^^^^^
-
-The following resources will help you connect with other users, learn
-more about GlassFish Server, and get help if needed.
-
-* https://javaee.groups.io/g/javaee[GlassFish Forum]
-(`https://javaee.groups.io/g/javaee`):
-+
-Public online discussion forum that provides community support and tips
-for working with GlassFish Server.
-* https://javaee.github.io/glassfish/documentation[GlassFish
-Documentation Project]
-(`https://javaee.github.io/glassfish/documentation`): Documentation
-community site that provides details about GlassFish Server
-documentation and how you can participate.
+* https://glassfish.org/docs/[{productName}]
 
 [[giyjo]][[GSQSG00052]][[tutorials]]
 
@@ -826,32 +798,25 @@ Tutorials
 ^^^^^^^^^
 
 The following tutorials provide working examples and detailed
-instructions for creating enterprise applications for the Java EE 8
-platform.
+instructions for creating enterprise applications for the Jakarta EE platform.
 
-* http://docs.oracle.com/javaee/7/firstcup/doc/[Your First Cup: An
-Introduction to the Java EE Platform]
-(`https://javaee.github.io/firstcup/`). For beginning Java EE
+* https://github.com/eclipse-ee4j/jakartaee-firstcup-examples[Your First Cup: An
+Introduction to the Jakarta EE Platform]. For beginning Jakarta EE
 programmers, this short tutorial explains the entire process for
 developing a simple enterprise application. The sample application is a
 web application that consists of a component that is based on the
 Enterprise JavaBeans specification, a JAX-RS web service, and a
 JavaServer Faces component for the web front end.
-* http://docs.oracle.com/javaee/7/tutorial/doc/[The Java EE 8 Tutorial]
-(`https://javaee.github.io/tutorial/`). This comprehensive tutorial
-explains how to use Java EE 8 platform technologies and APIs to develop
-Java EE applications.
+* https://eclipse-ee4j.github.io/jakartaee-tutorial/[The Jakarta EE Tutorial].
+This comprehensive tutorial explains how to use Jakarta EE platform technologies
+and APIs to develop Jakarta EE applications.
 
-[[gintm]][[GSQSG00053]][[java-ee-8-samples]]
+[[gintm]][[GSQSG00053]][[jakarta-ee-examples]]
 
-Java EE 8 Samples
-^^^^^^^^^^^^^^^^^
+==== Jakarta EE Examples
 
-The sample applications demonstrate Java EE technologies. The samples
-are available as part of the Java EE SDK distributions. The SDK
-distributions are available from the
-http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
-EE SDK downloads page]
-(`http://www.oracle.com/technetwork/java/javaee/downloads/index.html`).
+https://github.com/eclipse-ee4j/jakartaee-examples[Jakarta EE Examples] -
+The example applications demonstrate Jakarta EE technologies.
+
 
 

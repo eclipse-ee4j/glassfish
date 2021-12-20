@@ -21,7 +21,7 @@ Removes the specified connector connection pool
 
 [source]
 ----
-asadmin [asadmin-options] delete-connector-connection-pool [--help] 
+asadmin [asadmin-options] delete-connector-connection-pool [--help]
 [--target target]
 [--cascade={false|true}] poolname
 ----

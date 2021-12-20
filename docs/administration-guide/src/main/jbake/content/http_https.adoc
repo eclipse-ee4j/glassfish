@@ -838,7 +838,7 @@ When you first install GlassFish Server, a default virtual server is
 created. You can assign a default virtual server to each new HTTP
 listener you create.
 
-Web applications and Java EE applications containing web components (web
+Web applications and Jakarta EE applications containing web components (web
 modules) can be assigned to virtual servers during deployment. A web
 module can be assigned to more than one virtual server, and a virtual
 server can have more than one web module assigned to it. If you deploy a

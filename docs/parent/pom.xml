@@ -112,6 +112,7 @@
                             <sourceDirectory>${bookDirectory}</sourceDirectory>
                             <sourceDocumentName>book.adoc</sourceDocumentName>
                             <outputDirectory>${project.build.directory}/html</outputDirectory>
+                            <outputFile>${project.artifactId}.html</outputFile>
                             <attributes>
                                 <linkcss>true</linkcss>
                                 <toc>left</toc>

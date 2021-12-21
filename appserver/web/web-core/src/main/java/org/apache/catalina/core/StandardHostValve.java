@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -354,24 +353,25 @@ final class StandardHostValve extends ValveBase {
             log("Processing " + errorPage);
         }
 
+        HttpResponse httpResponse = (HttpResponse) response;
+        HttpRequest httpRequest = (HttpRequest) request;
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request.getRequest();
         HttpServletResponse httpServletResponse = (HttpServletResponse) response.getResponse();
 
-        ((HttpRequest) request).setPathInfo(errorPage.getLocation());
+        httpRequest.setPathInfo(errorPage.getLocation());
 
         try {
-            Integer statusCodeObj = (Integer) httpServletRequest.getAttribute(ERROR_STATUS_CODE);
-            int statusCode = statusCodeObj.intValue();
-            String message = (String) httpServletRequest.getAttribute(ERROR_MESSAGE);
-            httpServletResponse.sendError(statusCode, message);
+            httpResponse.setError(
+                (Integer) httpServletRequest.getAttribute(ERROR_STATUS_CODE),
+                (String) httpServletRequest.getAttribute(ERROR_MESSAGE));
 
             // Forward control to the specified location
             ServletContext servletContext = request.getContext().getServletContext();
             ApplicationDispatcher dispatcher = (ApplicationDispatcher) servletContext.getRequestDispatcher(errorPage.getLocation());
 
             if (httpServletResponse.isCommitted()) {
-                // Response is committed - including the error page is the
-                // best we can do
+                // Response is committed - including the error page is the best we can do
                 dispatcher.include(httpServletRequest, httpServletResponse);
             } else {
                 // Reset the response (keeping the real error code and message)
@@ -425,7 +425,6 @@ final class StandardHostValve extends ValveBase {
         }
     }
 
-    // START SJSAS 6324911
     /**
      * Copies the contents of the given error page to the response, and updates the status message with the reason string of
      * the error page.

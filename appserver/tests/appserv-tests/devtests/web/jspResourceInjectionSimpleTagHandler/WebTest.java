@@ -23,15 +23,13 @@ import com.sun.ejte.ccl.reporter.*;
  */
 public class WebTest {
 
-    private static final String TEST_NAME =
-        "jsp-resource-injection-simple-tag-handler";
+    private static final String TEST_NAME = "jsp-resource-injection-simple-tag-handler";
 
-    private static final String EXPECTED_RESPONSE =
-        "ds1-login-timeout=0,ds2-login-timeout=0,ds3-login-timeout=0,"
-        + "ds4-login-timeout=0,ds5-login-timeout=0,ds6-login-timeout=0";
+    private static final String EXPECTED_RESPONSE = 
+        "ds1-login-timeout=0,ds2-login-timeout=0,ds3-login-timeout=0," + 
+        "ds4-login-timeout=0,ds5-login-timeout=0,ds6-login-timeout=0";
 
-    private static SimpleReporterAdapter stat
-        = new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     private String host;
     private String port;
@@ -45,8 +43,7 @@ public class WebTest {
 
     public static void main(String[] args) {
 
-        stat.addDescription("Unit test for resource injection into "
-                            + "JSP SimpleTagHandler");
+        stat.addDescription("Unit test for resource injection into " + "JSP SimpleTagHandler");
         WebTest webTest = new WebTest(args);
 
         try {
@@ -64,8 +61,7 @@ public class WebTest {
         InputStream is = null;
         BufferedReader input = null;
         try {
-            URL url = new URL("http://" + host  + ":" + port
-                              + contextRoot + "/jsp/test.jsp");
+            URL url = new URL("http://" + host + ":" + port + contextRoot + "/jsp/test.jsp");
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
@@ -82,23 +78,24 @@ public class WebTest {
                 if (EXPECTED_RESPONSE.equals(lastLine)) {
                     stat.addStatus(TEST_NAME, stat.PASS);
                 } else {
-                    System.err.println("Wrong response body. Expected: "
-                                       + EXPECTED_RESPONSE + ", received: "
-                                       + lastLine);
+                    System.err.println("Wrong response body. Expected: " + EXPECTED_RESPONSE + ", received: " + lastLine);
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 }
             } else {
-                System.err.println("Wrong response code. Expected: 200"
-                                   + ", received: " + responseCode);
+                System.err.println("Wrong response code. Expected: 200" + ", received: " + responseCode);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
         } finally {
             try {
-                if (is != null) is.close();
-            } catch (IOException ex) {}
+                if (is != null)
+                    is.close();
+            } catch (IOException ex) {
+            }
             try {
-                if (input != null) input.close();
-            } catch (IOException ex) {}
+                if (input != null)
+                    input.close();
+            } catch (IOException ex) {
+            }
         }
     }
 }

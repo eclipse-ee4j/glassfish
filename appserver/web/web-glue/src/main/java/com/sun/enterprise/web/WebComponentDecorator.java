@@ -29,9 +29,9 @@ import org.jvnet.hk2.annotations.Contract;
 public interface WebComponentDecorator<T> {
     /**
      * Decoare a web component.
-     * 
+     *
      * @param webComponent web component to be decorated.
-     * @param wm web module which owns this web component.
+     * @param webModule web module which owns this web component.
      */
-    void decorate(T webComponent, WebModule wm);
+    void decorate(T webComponent, WebModule webModule);
 }

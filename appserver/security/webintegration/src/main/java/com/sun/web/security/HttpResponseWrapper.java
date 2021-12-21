@@ -34,12 +34,13 @@ import jakarta.servlet.http.HttpServletResponseWrapper;
 
 class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResponse {
 
-    private HttpResponse httpResponse;
+    private final HttpResponse httpResponse;
 
     HttpResponseWrapper(HttpResponse response, HttpServletResponse servletResponse) {
         super(servletResponse);
         httpResponse = response;
     }
+
 
     // ----- HttpResponse Methods -----
     @Override
@@ -76,6 +77,13 @@ class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResp
     public void reset(int status, String message) {
         httpResponse.reset(status, message);
     }
+
+    @Override
+    public void setError(int status, String message) {
+        httpResponse.setError(status, message);
+    }
+
+
 
     // ----- Response Methods -----
     @Override
@@ -198,6 +206,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResp
         return httpResponse.getContentLength();
     }
 
+
     /*
      * Delegate to HttpServletResponse public String getContentType() { return httpResponse.getContentType(); }
      */
@@ -211,6 +220,7 @@ class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResp
     public void recycle() {
         httpResponse.recycle();
     }
+
 
     /*
      * Delegate to HttpServletResponse public void resetBuffer() { httpResponse.resetBuffer(); }
@@ -230,4 +240,5 @@ class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResp
     public String encode(String url) {
         return httpResponse.encode(url);
     }
+
 }

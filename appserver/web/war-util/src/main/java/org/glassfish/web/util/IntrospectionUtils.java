@@ -240,8 +240,8 @@ public final class IntrospectionUtils {
     /**
      * Adds classpath entries from a vector of URL's to the "tc_path_add" System
      * property. This System property lists the classpath entries common to web
-     * applications. This System property is currently used by Jasper when its
-     * JSP servlet compiles the Java file for a JSP.
+     * applications. This System property is currently used by WaSP when its
+     * Jakarta Pages servlet compiles the Java file for a Jakarta Page.
      */
     public static String classPathAdd(URL urls[], String cp) {
         if (urls == null)

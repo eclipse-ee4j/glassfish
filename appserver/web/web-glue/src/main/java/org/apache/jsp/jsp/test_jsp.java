@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,15 +22,18 @@ import jakarta.servlet.jsp.*;
 
 public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase implements org.glassfish.wasp.runtime.JspSourceDependent {
 
-    private static java.util.Vector _jspx_dependants;
+    private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
 
-    public java.util.List getDependants() {
+    private static java.util.List<String> _jspx_dependants;
+
+    private org.glassfish.jsp.api.ResourceInjector _jspx_resourceInjector;
+
+    public java.util.List<String> getDependants() {
         return _jspx_dependants;
     }
 
     public void _jspService(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
 
-        JspFactory _jspxFactory = null;
         PageContext pageContext = null;
         HttpSession session = null;
         ServletContext application = null;
@@ -41,8 +44,8 @@ public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase imple
         PageContext _jspx_page_context = null;
 
         try {
-            _jspxFactory = JspFactory.getDefaultFactory();
             response.setContentType("text/html");
+            response.setHeader("X-Powered-By", "JSP/2.3");
             pageContext = _jspxFactory.getPageContext(this, request, response, null, true, 8192, true);
             _jspx_page_context = pageContext;
             application = pageContext.getServletContext();
@@ -50,8 +53,10 @@ public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase imple
             session = pageContext.getSession();
             out = pageContext.getOut();
             _jspx_out = out;
+            _jspx_resourceInjector = (org.glassfish.jsp.api.ResourceInjector)
+                application.getAttribute("com.sun.appserv.jsp.resource.injector");
 
-            out.write("this is the precompiled and bundled jsp\n");
+            out.write("This is my UPDATED output\n\n");
         } catch (Throwable t) {
             if (!(t instanceof SkipPageException)) {
                 out = _jspx_out;
@@ -59,10 +64,11 @@ public final class test_jsp extends org.glassfish.wasp.runtime.HttpJspBase imple
                     out.clearBuffer();
                 if (_jspx_page_context != null)
                     _jspx_page_context.handlePageException(t);
+                else
+                    throw new ServletException(t);
             }
         } finally {
-            if (_jspxFactory != null)
-                _jspxFactory.releasePageContext(_jspx_page_context);
+            _jspxFactory.releasePageContext(_jspx_page_context);
         }
     }
 }

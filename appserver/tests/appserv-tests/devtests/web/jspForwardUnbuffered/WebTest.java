@@ -19,8 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for Bugzilla 13499 ("Jasper throws an exception on an immediate
- * pageContext.forward()").
+ * Unit test for Bugzilla 13499 ("WaSP throws an exception on an immediate pageContext.forward()").
  *
  * If page output is unbuffered, IllegalStateException is no longer
  * thrown on forward if and only if nothing has been written to the page. The
@@ -29,8 +28,7 @@ import com.sun.ejte.ccl.reporter.*;
  */
 public class WebTest {
 
-    private static SimpleReporterAdapter stat =
-        new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "jsp-forward-unbuffered";
 
     private String host;
@@ -59,33 +57,29 @@ public class WebTest {
 
     public void doTest1() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot +
-                          "/from1.jsp");
+        URL url = new URL("http://" + host + ":" + port + contextRoot + "/from1.jsp");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
         if (responseCode != 200) {
-            throw new Exception("Wrong response code. Expected: 200" +
-                                ", received: " + responseCode);
+            throw new Exception("Wrong response code. Expected: 200" + ", received: " + responseCode);
         }
     }
 
     /*
-     * This test expects from2.jsp to throw an IllegalStateException due to
-     * the newline output as a result of its first line.
+     * This test expects from2.jsp to throw an IllegalStateException due to the newline output as a result of its first
+     * line.
      */
     public void doTest2() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot +
-                          "/from2.jsp");
+        URL url = new URL("http://" + host + ":" + port + contextRoot + "/from2.jsp");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
         if (responseCode != 500) {
-            throw new Exception("Wrong response code. Expected: 500" +
-                                ", received: " + responseCode);
+            throw new Exception("Wrong response code. Expected: 500" + ", received: " + responseCode);
         }
     }
 

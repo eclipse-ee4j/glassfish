@@ -1548,6 +1548,10 @@ public class Response
         setStatus(status, null);
     }
 
+    public void setError(int status, String message) {
+        setStatus(status, message);
+    }
+
 
     /**
      * Set the HTTP status and message to be returned with this response.
@@ -1555,12 +1559,8 @@ public class Response
      * @param status The new HTTP status
      * @param message The associated text message
      *
-     * @deprecated As of Version 2.1 of the Java Servlet API, this method
-     *  has been deprecated due to the ambiguous meaning of the message
-     *  parameter.
      */
-    public void setStatus(int status, String message) {
-
+    private void setStatus(int status, String message) {
         if (isCommitted())
             return;
 

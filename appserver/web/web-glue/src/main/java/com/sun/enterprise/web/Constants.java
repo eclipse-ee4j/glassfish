@@ -69,7 +69,7 @@ public final class Constants {
     public static final String DEFAULT_WEB_MODULE_PREFIX = "__default-";
 
     /**
-     * The Apache Jasper JSP servlet class name.
+     * The Eclipse WASP Pages servlet class name.
      */
     public static final String APACHE_JSP_SERVLET_CLASS =
         "org.glassfish.wasp.servlet.JspServlet";

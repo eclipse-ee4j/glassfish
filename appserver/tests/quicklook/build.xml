@@ -27,9 +27,44 @@
 
     <description>Builds, tests, and runs the project Quicklook</description>
 
-    <presetdef name="javac">
-        <javac includeantruntime="false" />
-    </presetdef>
+
+    <target name="initprops">
+        <property name="build.class.dir" value="${basedir}/classes/test" />
+        <property name="Java_SE" value="${basedir}/classes/EJB_remoteview/app" />
+        <property name="test.report" value="${basedir}/test-output" />
+
+        <mkdir dir="${test.report}" />
+
+        <path id="junit.path">
+            <pathelement path="${plugin_classpath}" />
+        </path>
+
+        <typedef name="junitreport" classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" classpathref="junit.path" />
+
+        <path id="run.testng.classpath">
+            <fileset dir="${glassfish.home}/modules">
+                <include name="**/hk2*.jar" />
+                <include name="**/glassfish-api.jar" />
+                <include name="**/amx-core.jar" />
+                <include name="**/amx-javaee.jar" />
+                <include name="**/management-api.jar" />
+            </fileset>
+            <fileset dir="${glassfish.home}/lib">
+                <include name="**/gf-client.jar" />
+            </fileset>
+            <pathelement path="${plugin_classpath}" />
+            <pathelement location="${Java_SE}" />
+            <pathelement location="${build.class.dir}" />
+        </path>
+
+        <path id="embedded.testng.classpath">
+            <fileset dir="${glassfish.home}/lib/embedded">
+                <include name="**/glassfish-embedded-static-shell.jar" />
+            </fileset>
+            <pathelement location="${build.class.dir}" />
+            <pathelement location="${build.class.dir}/../EJB_Embedded/app" />
+        </path>
+    </target>
 
     <target name="all_cluster">
         <record name="${basedir}/allrun.output" action="start" />
@@ -61,14 +96,24 @@
     <!-- target name="all_wd" depends="clean" -->
     <target name="all_wd">
         <record name="${basedir}/allrun.output" action="start" />
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|            all_wd           |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
         <property name="env.security_manager" value="OFF" />
         <antcall target="verify-xml" />
         <antcall target="start-derby" />
         <antcall target="start-server-felix" />
         <antcall target="build-deploy" />
+
         <antcall target="runtest">
             <param name="testng.xml" value="testng/testng_wd.xml" />
         </antcall>
+
         <antcall target="undeploy" />
         <antcall target="quicklook-summary_wd" />
         <antcall target="stop-server" />
@@ -76,20 +121,30 @@
         <copy file="test-output/emailable-report.html" tofile="test-output/QL-WP-report.html" />
         <antcall target="check-logged-messages" />
         <antcall target="testng-summary_wd" />
+
         <record name="${basedir}/allrun.output" action="stop" />
     </target>
 
     <target name="all_wd_security">
         <record name="${basedir}/allrun.output" action="start" />
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|       all_wd_security       |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
         <antcall target="add-quicklook-policy-grants" />
         <property name="env.security_manager" value="ON" />
 
         <antcall target="start_server_with_security_manager_enabled" />
-
         <antcall target="build-deploy" />
+
         <antcall target="runtest">
             <param name="testng.xml" value="testng/testng_wd.xml" />
         </antcall>
+
         <antcall target="undeploy" />
         <antcall target="quicklook-summary_wd" />
 
@@ -101,6 +156,147 @@
         <antcall target="testng-summary_wd" />
         <record name="${basedir}/allrun.output" action="stop" />
     </target>
+
+    <!-- Target for testing glassfish distribution (containing EJB)  -->
+    <target name="all" depends="clean">
+        <record name="${basedir}/allrun.output" action="start" />
+
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|             all             |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
+        <property name="env.security_manager" value="OFF" />
+        <antcall target="verify-xml" />
+        <antcall target="start-derby" />
+        <antcall target="start-server-felix" />
+        <antcall target="build-deploy-gd" />
+        <antcall target="build-deploy" />
+        <antcall target="build-cluster" />
+
+        <antcall target="runtest">
+            <param name="testng.xml" value="testng/testng_gd.xml" />
+        </antcall>
+
+        <antcall target="undeploy" />
+        <antcall target="undeploy-gd" />
+        <antcall target="quicklook-summary" />
+        <antcall target="stop-server" />
+        <antcall target="stop-derby" />
+        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
+        <antcall target="check-logged-messages" />
+        <antcall target="testng-summary" />
+        <record name="${basedir}/allrun.output" action="stop" />
+    </target>
+
+    <!-- Target for testing glassfish distribution (containing EJB)  -->
+    <target name="all_ri" depends="clean">
+        <record name="${basedir}/allrun.output" action="start" />
+
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|            all_ri           |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
+        <property name="env.security_manager" value="OFF" />
+        <antcall target="verify-xml" />
+        <antcall target="start-derby" />
+        <antcall target="start-server-felix" />
+        <antcall target="build-deploy" />
+        <antcall target="build-deploy-gd" />
+
+        <antcall target="runtest">
+            <param name="testng.xml" value="testng/testng_ri.xml" />
+        </antcall>
+
+        <antcall target="undeploy" />
+        <antcall target="undeploy-gd" />
+        <antcall target="quicklook-summary" />
+        <antcall target="stop-server" />
+        <antcall target="stop-derby" />
+        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
+        <antcall target="check-logged-messages" />
+        <antcall target="testng-summary" />
+
+        <record name="${basedir}/allrun.output" action="stop" />
+    </target>
+
+    <!-- Target for testing glassfish distribution (GD) (containing EJB)  -->
+    <target name="all_gd_security" depends="clean">
+        <record name="${basedir}/allrun.output" action="start" />
+
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|       all_gd_security       |</echo>
+        <echo>|     glassfish distribution  |</echo>
+        <echo>+-----------------------------+</echo>
+
+
+        <antcall target="add-quicklook-policy-grants" />
+        <property name="env.security_manager" value="ON" />
+        <antcall target="verify-xml" />
+        <antcall target="start-derby" />
+        <antcall target="start-server-felix" />
+        <antcall target="enable-security-manager" />
+        <antcall target="stop-server" />
+        <antcall target="start-server-felix" />
+        <antcall target="build-deploy" />
+        <antcall target="build-deploy-gd" />
+
+        <antcall target="runtest">
+            <param name="testng.xml" value="testng/testng_gd.xml" />
+        </antcall>
+
+        <antcall target="undeploy" />
+        <antcall target="undeploy-gd" />
+        <antcall target="quicklook-summary" />
+        <antcall target="remove-quicklook-policy-grants" />
+        <antcall target="disable-security-manager" />
+        <antcall target="stop-server" />
+        <antcall target="stop-derby" />
+        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
+        <antcall target="check-logged-messages" />
+        <antcall target="testng-summary" />
+        <record name="${basedir}/allrun.output" action="stop" />
+    </target>
+
+    <!-- Target for testing glassfish distribution (containing EJB)  -->
+    <target name="dev_debug" depends="clean">
+        <record name="${basedir}/allrun.output" action="start" />
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>|        R u n n i n g        |</echo>
+        <echo>|           dev_debug         |</echo>
+        <echo>|     glassfish distribution  |</echo>
+        <echo>+-----------------------------+</echo>
+
+        <antcall target="verify-xml" />
+        <antcall target="start-derby" />
+        <antcall target="build-deploy" />
+        <antcall target="runtest">
+            <param name="testng.xml" value="testng/testng_debug.xml" />
+        </antcall>
+        <antcall target="undeploy" />
+        <antcall target="stop-derby" />
+        <antcall target="check-logged-messages" />
+        <antcall target="testng-summary" />
+
+        <record name="${basedir}/allrun.output" action="stop" />
+    </target>
+
+
+
+    <!--  S T A R T    S E R V E R  -->
+
 
     <target name="start_server_with_security_manager_enabled">
         <property name="env.security_manager" value="ON" />
@@ -119,121 +315,96 @@
         <antcall target="stop-derby" />
     </target>
 
-    <!-- Target for testing glassfish distribution (containing EJB)  -->
-    <target name="all" depends="clean">
-        <record name="${basedir}/allrun.output" action="start" />
-        <property name="env.security_manager" value="OFF" />
-        <antcall target="verify-xml" />
-        <antcall target="start-derby" />
-        <antcall target="start-server-felix" />
-        <antcall target="build-deploy-gd" />
-        <antcall target="build-deploy" />
-        <antcall target="build-cluster" />
-        <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_gd.xml" />
-        </antcall>
-        <antcall target="undeploy" />
-        <antcall target="undeploy-gd" />
-        <antcall target="quicklook-summary" />
-        <antcall target="stop-server" />
-        <antcall target="stop-derby" />
-        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
-        <antcall target="check-logged-messages" />
-        <antcall target="testng-summary" />
-        <record name="${basedir}/allrun.output" action="stop" />
+    <target name="start-server-hk2" depends="setOSConditions">
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>| S T A R T I N G   GLASSFISH |</echo>
+        <echo>|       in HK2 mode           |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
+        <antcall target="start-server-hk2-unix" />
+        <antcall target="start-server-hk2-windows" />
     </target>
 
-    <!-- Target for testing glassfish distribution (containing EJB)  -->
-    <target name="all_ri" depends="clean">
-        <record name="${basedir}/allrun.output" action="start" />
-        <property name="env.security_manager" value="OFF" />
-        <antcall target="verify-xml" />
-        <antcall target="start-derby" />
-        <antcall target="start-server-felix" />
-        <antcall target="build-deploy" />
-        <antcall target="build-deploy-gd" />
-        <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_ri.xml" />
-        </antcall>
-        <antcall target="undeploy" />
-        <antcall target="undeploy-gd" />
-        <antcall target="quicklook-summary" />
-        <antcall target="stop-server" />
-        <antcall target="stop-derby" />
-        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
-        <antcall target="check-logged-messages" />
-        <antcall target="testng-summary" />
-        <record name="${basedir}/allrun.output" action="stop" />
+    <target name="start-server-hk2-windows" if="isWindows">
+        <exec executable="cmd" spawn="true">
+            <env key="GlassFish_Platform" value="HK2" />
+            <arg value="/c" />
+            <arg value="${glassfish.home}\bin\asadmin.bat" />
+            <arg value="start-domain" />
+        </exec>
     </target>
 
-    <!-- Target for testing glassfish distribution (GD) (containing EJB)  -->
-    <target name="all_gd_security" depends="clean">
-        <record name="${basedir}/allrun.output" action="start" />
-        <antcall target="add-quicklook-policy-grants" />
-        <property name="env.security_manager" value="ON" />
-        <antcall target="verify-xml" />
-        <antcall target="start-derby" />
-        <antcall target="start-server-felix" />
-        <antcall target="enable-security-manager" />
-        <antcall target="stop-server" />
-        <antcall target="start-server-felix" />
-        <antcall target="build-deploy" />
-        <antcall target="build-deploy-gd" />
-        <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_gd.xml" />
-        </antcall>
-        <antcall target="undeploy" />
-        <antcall target="undeploy-gd" />
-        <antcall target="quicklook-summary" />
-        <antcall target="remove-quicklook-policy-grants" />
-        <antcall target="disable-security-manager" />
-        <antcall target="stop-server" />
-        <antcall target="stop-derby" />
-        <copy file="test-output/emailable-report.html" tofile="test-output/QL-GP-report.html" failonerror="false" />
-        <antcall target="check-logged-messages" />
-        <antcall target="testng-summary" />
-        <record name="${basedir}/allrun.output" action="stop" />
+    <target name="start-server-hk2-unix" if="isUnix">
+        <exec executable="${glassfish.home}/bin/asadmin">
+            <env key="GlassFish_Platform" value="HK2" />
+            <arg value="start-domain" />
+        </exec>
     </target>
 
-    <!-- Target for testing glassfish distribution (containing EJB)  -->
-    <target name="dev_debug" depends="clean">
-        <record name="${basedir}/allrun.output" action="start" />
-        <antcall target="verify-xml" />
-        <antcall target="start-derby" />
-        <antcall target="build-deploy" />
-        <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_debug.xml" />
-        </antcall>
-        <antcall target="undeploy" />
-        <antcall target="stop-derby" />
-        <antcall target="check-logged-messages" />
-        <antcall target="testng-summary" />
-        <record name="${basedir}/allrun.output" action="stop" />
+    <target name="start-server-felix" depends="setOSConditions">
+
+        <echo>+-----------------------------+</echo>
+        <echo>|                             |</echo>
+        <echo>| S T A R T I N G   GLASSFISH |</echo>
+        <echo>|       in Felix mode         |</echo>
+        <echo>|                             |</echo>
+        <echo>+-----------------------------+</echo>
+
+        <antcall target="start-server-felix-unix" />
+        <antcall target="start-server-felix-windows" />
     </target>
+
+    <target name="start-server-felix-windows" if="isWindows">
+        <exec executable="cmd" spawn="true">
+            <arg value="/c" />
+            <arg value="${glassfish.home}\bin\asadmin.bat" />
+            <arg value="start-domain" />
+            <arg value="domain1" />
+        </exec>
+        <waitfor maxwait="30" maxwaitunit="second" checkevery="500">
+            <http url="http://localhost:4848/" />
+        </waitfor>
+    </target>
+
+    <target name="start-server-felix-unix" if="isUnix">
+        <exec executable="${glassfish.home}/bin/asadmin">
+            <arg value="start-domain" />
+            <arg value="domain1" />
+        </exec>
+    </target>
+
+
+
+    <!--  B U I L D  &  D E P L O Y    T E S T    A R C H I V E S  -->
 
     <target name="build-deploy">
         <record name="${basedir}/build.output" action="start" />
         <echo message="ANT PROJECT ${ant.project.name}" />
-        <ant dir="amx" target="build" />
-        <ant dir="admin" target="build" />
-        <ant dir="admincli" target="build" />
-        <ant dir="adminconsole" target="build" />
-        <ant dir="rest" target="build" />
-        <!--<ant dir="osgitest/basicosgi" target="build"/>-->
-        <ant dir="web/helloworld" target="build-deploy" />
-        <ant dir="web/jsfastrologer" target="build-deploy" />
-        <ant dir="web/jsfinjection" target="build-deploy" />
-        <ant dir="jdbc/jdbcusertx" target="build-deploy" />
-        <ant dir="persistence/jpainjectemf" target="build-deploy" />
-        <ant dir="persistence/jpavalidation" target="build-deploy" />
-        <ant dir="security/helloworld" target="build-deploy" />
-        <ant dir="security/basicauth" target="build-deploy" />
-        <ant dir="ejb/slsbnicmt" target="build-deploy" />
-        <ant dir="ejb/sfulnoi" target="build-deploy" />
-        <ant dir="bean-validator/simple-bv-servlet" target="build-deploy" />
-        <ant dir="weld/numberguess" target="build-deploy" />
-        <ant dir="weld/osgiweld" target="build-deploy" />
-        <ant dir="weld/extensions" target="build-deploy" />
+
+        <run-quicklook-test path="amx" target="build" />
+        <run-quicklook-test path="admin" target="build" />
+        <run-quicklook-test path="admincli" target="build" />
+        <run-quicklook-test path="adminconsole" target="build" />
+        <run-quicklook-test path="rest" target="build" />
+        <!--<run-quicklook-test path="osgitest/basicosgi" target="build"/>-->
+        <run-quicklook-test path="web/helloworld" target="build-deploy" />
+        <run-quicklook-test path="web/jsfastrologer" target="build-deploy" />
+        <run-quicklook-test path="web/jsfinjection" target="build-deploy" />
+        <run-quicklook-test path="jdbc/jdbcusertx" target="build-deploy" />
+        <run-quicklook-test path="persistence/jpainjectemf" target="build-deploy" />
+        <run-quicklook-test path="persistence/jpavalidation" target="build-deploy" />
+        <run-quicklook-test path="security/helloworld" target="build-deploy" />
+        <run-quicklook-test path="security/basicauth" target="build-deploy" />
+        <run-quicklook-test path="ejb/slsbnicmt" target="build-deploy" />
+        <run-quicklook-test path="ejb/sfulnoi" target="build-deploy" />
+        <run-quicklook-test path="bean-validator/simple-bv-servlet" target="build-deploy" />
+        <run-quicklook-test path="weld/numberguess" target="build-deploy" />
+        <run-quicklook-test path="weld/osgiweld" target="build-deploy" />
+        <run-quicklook-test path="weld/extensions" target="build-deploy" />
+
         <record name="${basedir}/build.output" action="stop" />
     </target>
 
@@ -269,6 +440,75 @@
         <record name="${basedir}/undeploy.output" action="stop" />
     </target>
 
+
+
+    <!--  R U N    T E S T S -->
+
+
+    <!-- Target is re-definted here as didn't want to specify ws.root property -->
+    <target name="runtest" depends="initprops,setOSConditions,asenv-unix,asenv-windows">
+        <record name="${basedir}/runtestng.output" action="start" />
+
+        <echo message="${line.separator}${line.separator}" />
+        <echo message="=============================================================================" />
+        <echo message="=                                                                           =" />
+        <echo message="=         S t a r t i n g   TestNG   f u n c t i o n a l    t e s t s       =" />
+        <echo message="=                                                                           =" />
+        <echo message="= TEST FILE = ${testng.xml}                                                 =" />
+        <echo message="= BASEDIR   = ${basedir}                                                    =" />
+        <echo message="=                                                                           =" />
+        <echo message="=============================================================================" />
+        <echo message="${line.separator}${line.separator}" />
+
+        <property name="hasTestNGXML" value="true" />
+        <loadfile property="tests" srcfile="${testng.xml}">
+            <filterchain>
+                <linecontainsregexp>
+                    <regexp pattern="test name"/>
+                </linecontainsregexp>
+            </filterchain>
+        </loadfile>
+        
+        <echo message="${line.separator}${line.separator}" />
+        <echo message="=============================================================================" />
+        <echo message="=  R u n n i n g   t h e   f o l l o w i n g    t e s t s:                  =" />
+        <echo message="= From TEST FILE = ${testng.xml}                                                 =" />
+        <echo message="${tests}" />
+        <echo message="=============================================================================" />
+
+        <mkdir dir="${test.report}" />
+        <testng outputdir="${test.report}" classpathref="run.testng.classpath">
+            <jvmarg value="-Djava.compiler=NONE" />
+            <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
+            <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
+            <jvmarg value="-DASADMIN=${ASADMIN}" />
+            <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
+            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+            <sysproperty key="glassfish.home" value="${glassfish.home}" />
+            <sysproperty key="BASEDIR" value="${basedir}" />
+            <xmlfileset dir="." includes="${testng.xml}" />
+        </testng>
+
+        <record name="${basedir}/runtestng.output" action="stop" />
+    </target>
+
+    <target name="runtest-embedded" depends="initprops">
+        <record name="${basedir}/runtestng.output" action="start" />
+        <mkdir dir="${test.report}" />
+        <testng outputdir="${test.report}" classpathref="embedded.testng.classpath">
+            <jvmarg value="-Djava.compiler=NONE" />
+            <sysproperty key="glassfish.home" value="${glassfish.home}" />
+            <sysproperty key="BASEDIR" value="${basedir}" />
+            <xmlfileset dir="." includes="${testng.xml}" />
+        </testng>
+        <record name="${basedir}/runtestng.output" action="stop" />
+    </target>
+
+
+
+
+    <!--  U N D E P L O Y    T E S T    A R C H I V E S  -->
+
     <target name="undeploy-gd">
         <ant dir="ejb/singleton" target="undeploy" />
         <ant dir="ejb/remoteview" target="undeploy" />
@@ -293,44 +533,12 @@
         </delete>
     </target>
 
-    <taskdef name="testng" classname="org.testng.TestNGAntTask">
-        <classpath>
-            <pathelement path="${plugin_classpath}" />
-        </classpath>
-    </taskdef>
 
-    <!-- Target is re-definted here as didn't want to specify ws.root property -->
-    <target name="runtest" depends="initprops,setOSConditions,asenv-unix,asenv-windows">
-        <record name="${basedir}/runtestng.output" action="start" />
-        <echo message="=============Starting TestNG functional tests from ${testng.xml} ============" />
-        <property name="hasTestNGXML" value="true" />
 
-        <mkdir dir="${test.report}" />
-        <testng outputdir="${test.report}" classpathref="run.testng.classpath">
-            <jvmarg value="-Djava.compiler=NONE" />
-            <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
-            <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-            <jvmarg value="-DASADMIN=${ASADMIN}" />
-            <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
-            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-            <sysproperty key="glassfish.home" value="${glassfish.home}" />
-            <sysproperty key="BASEDIR" value="${basedir}" />
-            <xmlfileset dir="." includes="${testng.xml}" />
-        </testng>
-        <record name="${basedir}/runtestng.output" action="stop" />
-    </target>
 
-    <target name="runtest-embedded" depends="initprops">
-        <record name="${basedir}/runtestng.output" action="start" />
-        <mkdir dir="${test.report}" />
-        <testng outputdir="${test.report}" classpathref="embedded.testng.classpath">
-            <jvmarg value="-Djava.compiler=NONE" />
-            <sysproperty key="glassfish.home" value="${glassfish.home}" />
-            <sysproperty key="BASEDIR" value="${basedir}" />
-            <xmlfileset dir="." includes="${testng.xml}" />
-        </testng>
-        <record name="${basedir}/runtestng.output" action="stop" />
-    </target>
+    <!-- S U M M A R Y -->
+
+
 
     <!-- Generate the TestNG report -->
     <target name="report" depends="initprops">
@@ -368,39 +576,6 @@
                 </sequential>
             </then>
         </if>
-    </target>
-
-    <target name="initprops">
-        <property name="build.class.dir" value="${basedir}/classes/test" />
-        <property name="Java_SE" value="${basedir}/classes/EJB_remoteview/app" />
-        <property name="test.report" value="${basedir}/test-output" />
-        <mkdir dir="${test.report}" />
-        <path id="junit.path">
-            <pathelement path="${plugin_classpath}" />
-        </path>
-        <typedef name="junitreport" classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" classpathref="junit.path" />
-        <path id="run.testng.classpath">
-            <fileset dir="${glassfish.home}/modules">
-                <include name="**/hk2*.jar" />
-                <include name="**/glassfish-api.jar" />
-                <include name="**/amx-core.jar" />
-                <include name="**/amx-javaee.jar" />
-                <include name="**/management-api.jar" />
-            </fileset>
-            <fileset dir="${glassfish.home}/lib">
-                <include name="**/gf-client.jar" />
-            </fileset>
-            <pathelement path="${plugin_classpath}" />
-            <pathelement location="${Java_SE}" />
-            <pathelement location="${build.class.dir}" />
-        </path>
-        <path id="embedded.testng.classpath">
-            <fileset dir="${glassfish.home}/lib/embedded">
-                <include name="**/glassfish-embedded-static-shell.jar" />
-            </fileset>
-            <pathelement location="${build.class.dir}" />
-            <pathelement location="${build.class.dir}/../EJB_Embedded/app" />
-        </path>
     </target>
 
     <!-- added few messages in order to show testng summary of wsit related tests along with final summary as wsit tests are ran seperately as a workaround for GLASSFISH-21672 -->
@@ -557,66 +732,7 @@
         <property name="APPCLIENT" value="${glassfish.home}\bin\appclient.bat" />
     </target>
 
-    <target name="start-server-hk2" depends="setOSConditions">
 
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>| S T A R T I N G   GLASSFISH |</echo>
-        <echo>|       in HK2 mode           |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
-
-        <antcall target="start-server-hk2-unix" />
-        <antcall target="start-server-hk2-windows" />
-    </target>
-
-    <target name="start-server-hk2-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <env key="GlassFish_Platform" value="HK2" />
-            <arg value="/c" />
-            <arg value="${glassfish.home}\bin\asadmin.bat" />
-            <arg value="start-domain" />
-        </exec>
-    </target>
-
-    <target name="start-server-hk2-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <env key="GlassFish_Platform" value="HK2" />
-            <arg value="start-domain" />
-        </exec>
-    </target>
-
-    <target name="start-server-felix" depends="setOSConditions">
-
-        <echo>+-----------------------------+</echo>
-        <echo>|                             |</echo>
-        <echo>| S T A R T I N G   GLASSFISH |</echo>
-        <echo>|       in Felix mode         |</echo>
-        <echo>|                             |</echo>
-        <echo>+-----------------------------+</echo>
-
-        <antcall target="start-server-felix-unix" />
-        <antcall target="start-server-felix-windows" />
-    </target>
-
-    <target name="start-server-felix-windows" if="isWindows">
-        <exec executable="cmd" spawn="true">
-            <arg value="/c" />
-            <arg value="${glassfish.home}\bin\asadmin.bat" />
-            <arg value="start-domain" />
-            <arg value="domain1" />
-        </exec>
-        <waitfor maxwait="30" maxwaitunit="second" checkevery="500">
-            <http url="http://localhost:4848/" />
-        </waitfor>
-    </target>
-
-    <target name="start-server-felix-unix" if="isUnix">
-        <exec executable="${glassfish.home}/bin/asadmin">
-            <arg value="start-domain" />
-            <arg value="domain1" />
-        </exec>
-    </target>
 
     <target name="build-version" depends="setOSConditions">
         <antcall target="build-version-unix" />
@@ -676,5 +792,48 @@
             <arg value="verify-domain-xml" />
         </exec>
     </target>
+
+
+
+
+    <!-- D E F S -->
+
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
+
+    <taskdef name="testng" classname="org.testng.TestNGAntTask">
+        <classpath>
+            <pathelement path="${plugin_classpath}" />
+        </classpath>
+    </taskdef>
+
+    <macrodef name="run-quicklook-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <attribute name="target" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.cdi_all}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.cdi_all" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator}" />
+                <echo message=" *************************" />
+                <echo message=" * @{target} @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" *************************" />
+                <echo message="${line.separator}" />
+                <ant dir="@{path}" target="@{target}"/>
+            </sequential>
+        </sequential>
+    </macrodef>
 
 </project>

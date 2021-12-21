@@ -25,7 +25,6 @@
         <version>7.0.0-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
-    <groupId>org.glassfish.docs</groupId>
     <artifactId>quick-start-guide</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Server Quick Start Guide, Release 7</name>

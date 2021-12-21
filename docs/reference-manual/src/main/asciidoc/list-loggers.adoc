@@ -1,0 +1,88 @@
+type=page
+status=published
+title=list-loggers
+next=list-log-levels.html
+prev=list-log-attributes.html
+~~~~~~
+
+= list-loggers
+
+[[list-loggers-1]][[GSRFM869]][[list-loggers]]
+
+== list-loggers
+
+Lists existing loggers
+
+[[sthref1638]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-loggers [--help]
+----
+
+[[sthref1639]]
+
+=== Description
+
+The `list-loggers` subcommand lists the existing {productName}
+loggers. Internal loggers are not listed. The `list-loggers` subcommand
+lists the logger name, subsystem, and description.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1640]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1641]]
+
+=== Examples
+
+[[GSRFM870]][[sthref1642]]
+
+==== Example 1   Listing the Loggers
+
+This example lists the logger name, subsystem, and description for each
+logger. Some lines of output are omitted from this example for readability.
+
+[source]
+----
+asadmin> list-loggers
+Logger Name                            Subsystem         Logger Description
+...
+jakarta.enterprise.monitoring            Monitoring        Monitoring Logger
+jakarta.enterprise.system.core.ee        AS-CORE           Jakarta EE Core Kernel
+jakarta.enterprise.system.jmx            JMX               JMX System Logger
+jakarta.enterprise.system.tools.admin    ADMIN             Administration Services
+...
+Command list-loggers executed successfully.
+----
+
+[[sthref1643]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1644]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
+link:set-log-file-format.html#set-log-file-format-1[`set-log-file-format`(1)]
+
+

@@ -1,0 +1,104 @@
+type=page
+status=published
+title=list-resource-refs
+next=list-secure-admin-internal-users.html
+prev=list-resource-adapter-configs.html
+~~~~~~
+
+= list-resource-refs
+
+[[list-resource-refs-1]][[GSRFM00197]][[list-resource-refs]]
+
+== list-resource-refs
+
+Lists existing resource references
+
+[[sthref1779]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-resource-refs [--help]
+[target]
+----
+
+[[sthref1780]]
+
+=== Description
+
+The `list-resource-refs` subcommand lists all resource references in a
+cluster or an unclustered server instance. This effectively lists all
+the resources (for example, JDBC resources) available in the JNDI tree
+of the specified target.
+
+The target instance or instances in the cluster need not be running or
+available for this subcommand to succeed.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1781]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1782]]
+
+=== Operands
+
+target::
+  The target for which you are listing the resource references. Valid
+  targets are as follows:
+
+  `server`;;
+    Lists the resource references for the default server instance and is
+    the default target.
+  cluster_name;;
+    Lists the resource references for every server instance in the
+    cluster.
+  instance_name;;
+    Lists the resource references for the named unclustered server
+    instance.
+
+[[sthref1783]]
+
+=== Examples
+
+[[GSRFM707]][[sthref1784]]
+
+==== Example 1   Listing Resource References for a Cluster
+
+This example lists resource references for the cluster `cluster1`.
+
+[source]
+----
+asadmin> list-resource-refs cluster1
+jms/Topic
+Command list-resource-refs executed successfully.
+----
+
+[[sthref1785]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1786]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
+link:delete-resource-ref.html#delete-resource-ref-1[`delete-resource-ref`(1)]
+
+

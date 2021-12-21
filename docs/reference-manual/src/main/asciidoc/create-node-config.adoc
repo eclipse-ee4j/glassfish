@@ -1,0 +1,167 @@
+type=page
+status=published
+title=create-node-config
+next=create-node-dcom.html
+prev=create-network-listener.html
+~~~~~~
+
+= create-node-config
+
+[[create-node-config-1]][[GSRFM00047]][[create-node-config]]
+
+== create-node-config
+
+Creates a node that is not enabled for remote communication
+
+[[sthref445]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] create-node-config [--help]
+[--nodehost node-host]
+[--installdir as-install-parent] [--nodedir node-dir] node-name
+----
+
+[[sthref446]]
+
+=== Description
+
+The `create-node-config` subcommand creates a node that is not enabled
+for remote communication. The `create-node-config` subcommand does not
+require the Distributed Component Object Model (DCOM) remote protocol or
+secure shell (SSH) to be configured to create the node.
+
+A node represents a host on which the {productName} software is
+installed. A node must exist for every host on which {productName}
+instances reside.
+
+
+[NOTE]
+====
+To represent the host where the DAS is running, {productName}
+provides the predefined node ``localhost-``domain. The predefined node
+``localhost-``domain is not enabled for remote communication.
+====
+
+
+All administration of instances on a node that is not enabled for remote
+communication must be performed on the host that the node represents.
+The domain administration server (DAS) on a remote host cannot contact
+the node. To administer instances on a node that represents a host that
+is remote from the DAS, you must use the following subcommands:
+
+* link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
+* link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)]
+* link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)]
+
+However, you may use
+link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+or link:stop-instance.html#stop-instance-1[`stop-instance`(1)] to stop
+the instances.
+
+This subcommand is supported in remote mode only.
+
+[[sthref447]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--nodehost`::
+  The name of the host that the node represents. If this option is
+  omitted, no host is specified for the node.
+`--installdir`::
+  The full path to the parent of the base installation directory of the
+  {productName} software on the host, for example,
+  `/export/glassfish7/`. If this option is omitted, no parent of the
+  base installation directory of the {productName} software is
+  specified for the node.
+`--nodedir`::
+  The path to the directory that is to contain {productName}
+  instances that are created on the node. If a relative path is
+  specified, the path is relative to the as-install directory. If this
+  option is omitted, no directory for instances is specified for the
+  node.
+
+[[sthref448]]
+
+=== Operands
+
+node-name::
+  The name of the node. +
+  The name must meet the following requirements:
+
+  * The name may contain only ASCII characters.
+  * The name must start with a letter, a number, or an underscore.
+  * The name may contain only the following characters:
+  ** Lowercase letters
+  ** Uppercase letters
+  ** Numbers
+  ** Hyphen
+  ** Period
+  ** Underscore
+  * The name must be unique in the domain and must not be the name of
+  another node, a cluster, a named configuration, or a {productName}
+  instance.
+  * The name must not be `domain`, `server`, or any other keyword that
+  is reserved by {productName}.
+
+[[sthref449]]
+
+=== Examples
+
+[[GSRFM509]][[sthref450]]
+
+==== Example 1   Creating a Node That Is Not Enabled for Remote Communication
+
+This example creates the node `sj03` for host `sj03.example.com`. The
+node is not enabled for remote communication.
+
+[source]
+----
+asadmin> create-node-config --nodehost sj03.example.com sj03
+
+Command create-node-config executed successfully.
+----
+
+[[sthref451]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref452]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
+link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
+link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
+link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
+link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)],
+link:install-node.html#install-node-1[`install-node`(1)],
+link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
+link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
+link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
+link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
+link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
+link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)],
+link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
+link:update-node-config.html#update-node-config-1[`update-node-config`(1)],
+link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
+link:update-node-ssh001.html#update-node-ssh-1[`update-node-ssh`(1)]
+
+

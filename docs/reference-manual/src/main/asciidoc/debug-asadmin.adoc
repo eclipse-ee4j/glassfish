@@ -1,0 +1,49 @@
+type=page
+status=published
+title=debug-asadmin
+next=capture-schema.html
+prev=asadmin.html
+~~~~~~
+
+= debug-asadmin
+
+The script content on this page is for navigation purposes only and does
+not alter the content in any way.
+
+[[debug-asadmin-1m]][[GSRFM00263]][[debug-asadmin]]
+
+== debug-asadmin
+
+Variant of the `asadmin` utility for performing administrative tasks for {productName}. This variant
+is useful for debugging local admin commands the launching of {productName}. It suspends immediately
+waiting for a debug connection to port 9008.
+
+[[sthref2364]]
+
+=== Synopsis
+
+[source]
+----
+debug-asadmin [--host host]
+[--port port]
+[--user admin-user]
+[--passwordfile filename]
+[--terse={true|false}]
+[--secure={false|true}]
+[--echo={true|false}]
+[--interactive={true|false}]
+[--detach={true|false}]
+[--help]
+[subcommand [options] [operands]]
+----
+
+[[sthref2365]]
+
+=== Description
+
+Use the `debug-asadmin` utility to debug local admin commands and the launching of the {productName}. See the `asadmin` command for full documentation.
+
+
+http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
+
+'''''

@@ -1,0 +1,133 @@
+type=page
+status=published
+title=delete-node-config
+next=delete-node-dcom.html
+prev=delete-network-listener.html
+~~~~~~
+
+= delete-node-config
+
+[[delete-node-config-1]][[GSRFM00099]][[delete-node-config]]
+
+== delete-node-config
+
+Deletes a node that is not enabled for remote communication
+
+[[sthref898]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-node-config [--help]
+node-name
+----
+
+[[sthref899]]
+
+=== Description
+
+The `delete-node-config` subcommand deletes a node that is not enabled
+for remote communication from the domain. This subcommand does not
+require the Distributed Component Object Model (DCOM) remote protocol or
+secure shell (SSH) to be configured.
+
+This subcommand can delete only a node that is not enabled for remote
+communication.
+The subcommand for deleting other types of nodes depends
+on the type of the node:
+
+* A node that is enabled for remote communication over DCOM must be
+  deleted by using the
+  link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)] subcommand.
+
+* A node that is enabled for remote communication over SSH must be
+  deleted by using the
+  link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)] subcommand.
+
+To determine whether a node is enabled for remote communication, use the
+link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
+
+No {productName} instances must reside on the node that is being deleted.
+Otherwise, the subcommand fails. Before running this
+subcommand, delete any instances that reside on the node by using, for
+example, the link:delete-instance.html#delete-instance-1[`delete-instance`(1)]
+subcommand or the
+link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)] subcommand.
+
+[NOTE]
+====
+The predefined node ``localhost-``domain cannot be deleted.
+====
+
+This subcommand is supported in remote mode only.
+
+[[sthref900]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref901]]
+
+=== Operands
+
+node-name::
+  The name of the node to delete. The node must not be enabled for
+  communication over DCOM or SSH. Otherwise, an error occurs.
+
+[[sthref902]]
+
+=== Examples
+
+[[GSRFM568]][[sthref903]]
+
+==== Example 1   Deleting a Node That Is Not Enabled for Remote Communication
+
+This example deletes the node `sj03`, which is not enabled for remote
+communication.
+
+[source]
+----
+asadmin> delete-node-config sj03
+
+Command delete-node-config executed successfully.
+----
+
+[[sthref904]]
+
+=== Exit Status
+
+`0`::
+  command executed successfully
+`1`::
+  error in executing the command
+
+[[sthref905]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
+link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
+link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
+link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
+link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],
+link:install-node.html#install-node-1[`install-node`(1)],
+link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
+link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
+link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
+link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
+link:update-node-config.html#update-node-config-1[`update-node-config`(1)],
+link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
+link:update-node-ssh001.html#update-node-ssh-1[`update-node-ssh`(1)]
+
+

@@ -1,0 +1,90 @@
+type=page
+status=published
+title=get-health
+next=import-sync-bundle.html
+prev=get-client-stubs.html
+~~~~~~
+
+= get-health
+
+[[get-health-1]][[GSRFM00141]][[get-health]]
+
+== get-health
+
+Provides information on the cluster health
+
+[[sthref1235]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] get-health [--help]
+cluster_name
+----
+
+[[sthref1236]]
+
+=== Description
+
+The `get-health` subcommand gets information about the health of the
+cluster. Note that if the group management service (GMS) is not enabled,
+the basic information about whether the server instances in this cluster
+are running or not running is not returned. For each server instance,
+one of the following states is reported: `not started`, `started`,
+`stopped`, `rejoined`, or `failed`. This subcommand is available in
+remote mode only.
+
+[[sthref1237]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1238]]
+
+=== Operands
+
+cluster_name::
+  The name of the cluster for which you want the health information.
+  This subcommand prompts you for the cluster name if you don't specify it.
+
+[[sthref1239]]
+
+=== Examples
+
+[[GSRFM623]][[sthref1240]]
+
+==== Example 1   Checking the health of server instances in a cluster
+
+[source]
+----
+asadmin> get-health cluster1
+instance1 started since Wed Sep 29 16:32:46 EDT 2010
+instance2 started since Wed Sep 29 16:32:45 EDT 2010
+Command get-health executed successfully.
+----
+
+[[sthref1241]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1242]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:validate-multicast.html#validate-multicast-1[`validate-multicast`(1)]
+
+

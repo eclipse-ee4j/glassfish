@@ -1,0 +1,98 @@
+type=page
+status=published
+title=list-jms-hosts
+next=list-jms-resources.html
+prev=list-jmsdest.html
+~~~~~~
+
+= list-jms-hosts
+
+[[list-jms-hosts-1]][[GSRFM00176]][[list-jms-hosts]]
+
+== list-jms-hosts
+
+Lists the existing JMS hosts
+
+[[sthref1568]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-jms-hosts [--help]
+[--target target]
+----
+
+[[sthref1569]]
+
+=== Description
+
+The `list-jms-hosts` subcommand lists the existing Java Message Service
+(JMS) hosts for the JMS service.
+
+This subcommand is supported in remote mode only. Remote `asadmin`
+subcommands require a running domain administration server (DAS).
+
+[[sthref1570]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Restricts the listing to JMS hosts for a specified target. Valid
+  values are as follows:
+
+  `server`;;
+    Lists the JMS hosts for the default server instance. This is the
+    default value.
+  configuration-name;;
+    Lists the JMS hosts for the specified configuration.
+  cluster-name;;
+    Lists the JMS hosts for all server instances in the specified
+    cluster.
+  instance-name;;
+    Lists the JMS hosts for the specified server instance.
+
+[[sthref1571]]
+
+=== Examples
+
+[[GSRFM674]][[sthref1572]]
+
+==== Example 1   Listing all JMS hosts
+
+The following subcommand lists the JMS hosts for the JMS service.
+
+[source]
+----
+asadmin> list-jms-hosts server-config
+default_JMS_host
+MyNewHost
+Command list-jms-hosts executed successfully.
+----
+
+[[sthref1573]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1574]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-jms-host.html#create-jms-host-1[`create-jms-host`(1)],
+link:delete-jms-host.html#delete-jms-host-1[`delete-jms-host`(1)],
+link:jms-ping.html#jms-ping-1[`jms-ping`(1)]
+
+

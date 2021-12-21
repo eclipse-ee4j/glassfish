@@ -1,0 +1,138 @@
+type=page
+status=published
+title=list-applications
+next=list-audit-modules.html
+prev=list-application-refs.html
+~~~~~~
+
+= list-applications
+
+[[list-applications-1]][[GSRFM00148]][[list-applications]]
+
+== list-applications
+
+Lists deployed applications
+
+[[sthref1308]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-applications [--help]
+[--long={false|true}] [--resources] [--subcomponents]
+[--type type] [target]
+----
+
+[[sthref1309]]
+
+=== Description
+
+The `list-applications` subcommand lists deployed Jakarta EE applications
+and the type of each application that is listed.
+
+If the `--type` option is not specified, all applications are listed. If
+the type option is specified, you must specify a type. The possible
+types are listed in the Options section of this help page.
+
+If multiple versions of a module or application are deployed, this
+subcommand lists all versions. To list which version is enabled, set the
+`--long` option to `true`. For more information about module and
+application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
+Versions]" in {productName} Application
+Deployment Guide.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1310]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--long`::
+  If `true`, displays whether each module or application listed is
+  enabled. The default is `false`.
+`--resources`::
+  Lists the application-scoped resources for each application. If the
+  `--subcomponents` option is also used, lists the application-scoped
+  resources for each component within the application.
+`--subcomponents`::
+  Lists the subcomponents of each application. The subcomponents listed
+  depend on the application type. For example, for a Jakarta EE application
+  (EAR file), modules are listed. For a web application, servlets and
+  JSP pages are listed. For an EJB module, EJB subcomponents are listed.
+`--type`::
+  Specifies the type of the applications that are to be listed. The
+  options are as follows:
+
+  * `application`
+  * `appclient`
+  * `connector`
+  * `ejb`
+  * `web`
+  * `webservice`
+
++
+If no type is specified, all applications are listed.
+
+[[sthref1311]]
+
+=== Operands
+
+`--target`::
+  This is the name of the target upon which the subcommand operates. The
+  valid values are as follows:
++
+  `server`;;
+    Lists the applications for the default server instance `server` and
+    is the default value.
+  `domain`;;
+    Lists the applications for the domain.
+  cluster_name;;
+    Lists the applications for the cluster.
+  instance_name;;
+    Lists the applications for a particular stand-alone server instance.
+
+[[sthref1312]]
+
+=== Examples
+
+[[GSRFM636]][[sthref1313]]
+
+==== Example 1   Listing the Web Applications
+
+[source]
+----
+asadmin> list-applications --type web
+hellojsp <web>
+Command list-applications executed successfully
+----
+
+[[sthref1314]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1315]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-components.html#list-components-1[`list-components`(1)],
+link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)],
+link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
+
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+Guide]
+
+

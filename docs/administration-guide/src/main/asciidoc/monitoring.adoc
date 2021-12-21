@@ -1,0 +1,2768 @@
+type=page
+status=published
+title=Administering the Monitoring Service
+next=lifecycle-modules.html
+prev=logging.html
+~~~~~~
+
+= Administering the Monitoring Service
+
+[[GSADG00011]][[ablur]]
+
+
+[[administering-the-monitoring-service]]
+== 8 Administering the Monitoring Service
+
+This chapter explains how to monitor the {productName} 7 components and services by using the `asadmin` command-line
+utility. Instructions for configuring JConsole to monitor {productName} resources are also provided.
+
+The following topics are addressed here:
+
+* link:#ablus[About Monitoring]
+* link:#ablvp[Configuring Monitoring]
+* link:#ablvs[Viewing Common Monitoring Data]
+* link:#ghmct[Viewing Comprehensive Monitoring Data]
+* link:#giwqm[Configuring JConsole to View {productName} Monitoring
+Data]
+
+Instructions for monitoring by using the Administration Console are
+contained in the Administration Console online help.
+
+For information on using REST interfaces for monitoring, see
+link:general-administration.html#gjipx[Using REST Interfaces to
+Administer {productName}].
+
+[[ablus]][[GSADG00557]][[about-monitoring]]
+
+=== About Monitoring
+
+Monitoring is the process of reviewing the statistics of a system to
+improve performance or solve problems. The monitoring service can track
+and display operational statistics, such as the number of requests per
+second, the average response time, and the throughput. By monitoring the
+state of various components and services deployed in {productName},
+you can identify performance bottlenecks, predict failures, perform root
+cause analysis, and ensure that everything is functioning as expected.
+Data gathered by monitoring can also be useful in performance tuning and
+capacity planning.
+
+For this release of {productName}, monitoring is exposed in a modular
+way so that many client modules can access and display the monitoring
+statistics. These clients include the Administration Console, the
+`asadmin` utility, AMX, and REST interfaces.
+
+The following topics are addressed here:
+
+* link:#ghbaz[How the Monitoring Tree Structure Works]
+* link:#gitkq[About Monitoring for Add-on Components]
+* link:#ghbfq[Tools for Monitoring {productName}]
+
+[[ghbaz]][[GSADG00727]][[how-the-monitoring-tree-structure-works]]
+
+==== How the Monitoring Tree Structure Works
+
+A monitorable object is a component, subcomponent, or service that can
+be monitored. {productName} uses a tree structure to track
+monitorable objects. Because the tree is dynamic, the tree changes as
+{productName} components are added or removed.
+
+In the tree, a monitorable object can have child objects (nodes) that
+represent exactly what can be monitored for that object. All child
+objects are addressed using the dot (.) character as a separator. These
+constructed names are referred to as dotted names. Detailed information
+on dotted names is available in the
+link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+
+The following command lists the monitorable child objects of the
+instance `server`:
+
+[source]
+----
+asadmin> list --monitor "server.*"
+
+server.applications
+server.connector-service
+server.http-service
+server.jms-service
+server.jvm
+server.network
+server.orb
+server.resources
+server.security
+server.thread-pool
+server.transaction-service
+server.web
+----
+
+Each object is represented by a dotted name. Dotted names can also
+address specific attributes in monitorable objects. For example, the
+`jvm` object has a `memory` attribute with a statistic called
+`maxheapsize`. The following dotted name addresses the attribute:
+
+[source]
+----
+server.jvm.memory.maxheapsize
+----
+
+Although an object is monitorable, it is not necessarily being actively
+monitored. For instructions on activating monitoring, see
+link:#ablvp[Configuring Monitoring].
+
+[[abluv]][[GSADG00647]][[tree-structure-of-monitorable-objects]]
+
+===== Tree Structure of Monitorable Objects
+
+Each monitorable object has a hierarchical tree structure. In the tree,
+a replaceable such as *statistics represents the name of the attribute
+that you can show statistics for.
+
+The following node tree hierarchies are addressed here:
+
+* link:#abluw[Applications Tree Hierarchy]
+* link:#abluz[Connector Service Tree Hierarchy]
+* link:#ghlin[HTTP Service Tree Hierarchy]
+* link:#ablva[JMS/Container Service Tree Hierarchy]
+* link:#ghlic[JVM Tree Hierarchy]
+* link:#giznj[Network Tree Hierarchy]
+* link:#ablvb[ORB Tree Hierarchy]
+* link:#giqdo[Resources Tree Hierarchy]
+* link:#gjios[Security Tree Hierarchy]
+* link:#ablvc[Thread Pool Tree Hierarchy]
+* link:#gitci[Transactions Service Tree Hierarchy]
+* link:#ghlff[Web Tree Hierarchy]
+
+[[abluw]][[GSADG00040]][[applications-tree-hierarchy]]
+
+Applications Tree Hierarchy
+
+The `applications` tree contains the following nodes:
+
+[source]
+----
+server.applications
+   |--- application1
+   |    |--- ejb-module-1
+   |    |        |--- ejb1 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |---method1 *
+   |    |                       |---method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |    |--- web-module-1
+   |    |        |--- virtual-server-1 *
+   |    |                       |---servlet1  *
+   |    |                       |---servlet2  *
+   |--- standalone-web-module-1
+   |    |        |----- virtual-server-2 *
+   |    |                       |---servlet3 *
+   |    |                       |---servlet4 *
+   |    |        |----- virtual-server-3 *
+   |    |                       |---servlet3 *(same servlet on different vs)
+   |    |                       |---servlet5 *
+   |--- standalone-ejb-module-1
+   |    |        |--- ejb2 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |--- method1 *
+   |    |                       |--- method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |--- jersey-application-1
+   |    |--- jersey
+   |    |        |--- resources
+                           resource-0
+                               hitcount
+                                    *statistic
+   |--- application2
+----
+
+An example dotted name might be:
+
+[source]
+----
+server.applications.hello.server.request.maxtime
+----
+
+An example dotted name under the EJB `method` node might be:
+
+[source]
+----
+server.applications.ejbsfapp1.ejbsfapp1ejbmod1\.jar.SFApp1EJB1
+----
+
+An example Jersey dotted name might be:
+
+[source]
+----
+server.applications.helloworld-webapp.jersey.resources.resource-0.hitcount.resourcehitcount-count
+----
+
+For available statistics, see link:#gjkbi[EJB Statistics],
+link:#gjjyb[Jersey Statistics], and link:#ablvf[Web Statistics].
+
+[[abluz]][[GSADG00041]][[connector-service-tree-hierarchy]]
+
+Connector Service Tree Hierarchy
+
+The `connector-service` tree holds monitorable attributes for pools such
+as the connector connection pool. The `connector-service` tree contains
+the following nodes:
+
+[source]
+----
+server.connector-service
+        resource-adapter-1
+             connection-pools
+                  pool-1
+             work-management
+----
+
+An example dotted name might be
+`server.connector-service.resource-adapter-1.connection-pools.pool-1`.
+For available statistics, see link:#ablvi[JMS/Connector Service
+Statistics].
+
+[[ghlin]][[GSADG00042]][[http-service-tree-hierarchy]]
+
+HTTP Service Tree Hierarchy
+
+The `http-service` tree contains the following nodes:
+
+[source]
+----
+server.http-service
+       virtual-server
+           request
+               *statistic
+       _asadmin
+           request
+               *statistic
+----
+
+An example dotted name under the virutal-server node might be
+`server.http-service.virtual-server1.request.requestcount`. For
+available statistics, see link:#ablvg[HTTP Service Statistics].
+
+[[ablva]][[GSADG00043]][[jmscontainer-service-tree-hierarchy]]
+
+JMS/Container Service Tree Hierarchy
+
+The `jms-service` tree holds monitorable attributes for connection
+factories (connection pools for resource adapters) and work management
+(for Message Queue resource adapters). The `jms-service` tree contains
+the following nodes:
+
+[source]
+----
+server.jms-service
+        connection-factories
+             connection-factory-1
+        work-management
+----
+
+An example dotted name under the `connection-factories` node might be
+`server.jms-service.connection-factories.connection-factory-1` which
+shows all the statistics for this connection factory. For available
+statistics, see link:#ablvi[JMS/Connector Service Statistics].
+
+[[ghlic]][[GSADG00044]][[jvm-tree-hierarchy]]
+
+JVM Tree Hierarchy
+
+The `jvm` tree contains the following nodes:
+
+[source]
+----
+server.jvm
+           class-loading-system
+           compilation-system
+           garbage-collectors
+           memory
+           operating-system
+           runtime
+----
+
+An example dotted name under the `memory` node might be
+`server.jvm.memory.maxheapsize`. For available statistics, see
+link:#ablvm[JVM Statistics].
+
+[[giznj]][[GSADG00045]][[network-tree-hierarchy]]
+
+Network Tree Hierarchy
+
+The network statistics apply to the network listener, such as
+`admin-listener`, `http-listener-1`, `ttp-listener-2`. The `network`
+tree contains the following nodes:
+
+[source]
+----
+server.network
+          type-of-listener
+              keep-alive
+                    *statistic
+              file-cache
+                    *statistic
+              thread-pool
+                    *statistic
+              connection-queue
+                     *statistic
+----
+
+An example dotted name under the `network` node might be
+`server.network.admin-listener.keep-alive.maxrequests-count`. For
+available statistics, see link:#gjipy[Network Statistics].
+
+[[ablvb]][[GSADG00046]][[orb-tree-hierarchy]]
+
+ORB Tree Hierarchy
+
+The `orb` tree holds monitorable attributes for connection managers. The
+`orb` tree contains the following nodes:
+
+[source]
+----
+server.orb
+    transport
+        connectioncache
+            inbound
+                *statistic
+            outbound
+                *statistic
+----
+
+An example dotted name might be
+`server.orb.transport.connectioncache.inbound.connectionsidle-count`.
+For available statistics, see link:#ablvj[ORB Statistics (Connection
+Manager)].
+
+[[giqdo]][[GSADG00047]][[resources-tree-hierarchy]]
+
+Resources Tree Hierarchy
+
+The `resources` tree holds monitorable attributes for pools such as the
+JDBC connection pool and connector connection pool. The `resources` tree
+contains the following nodes:
+
+[source]
+----
+server.resources
+       connection-pool
+           request
+               *statistic
+----
+
+An example dotted name might be
+`server.resources.jdbc-connection-pool1.numconnfree.count`. For
+available statistics, see link:#gipzv[Resource Statistics (Connection
+Pool)].
+
+[[gjios]][[GSADG00048]][[security-tree-hierarchy]]
+
+Security Tree Hierarchy
+
+The security tree contains the following nodes:
+
+[source]
+----
+server.security
+       ejb
+          *statistic
+       web
+          *statistic
+       realm
+          *statistic
+----
+
+An example dotted name might be
+`server.security.realm.realmcount-starttime`. For available statistics,
+see link:#gjiov[Security Statistics].
+
+[[ablvc]][[GSADG00049]][[thread-pool-tree-hierarchy]]
+
+Thread Pool Tree Hierarchy
+
+The `thread-pool` tree holds monitorable attributes for connection
+managers, and contains the following nodes:
+
+[source]
+----
+server.thread-pool
+                orb
+                    threadpool
+                            thread-pool-1
+                                *statistic
+----
+
+An example dotted name might be
+`server.thread-pool.orb.threadpool.thread-pool-1.averagetimeinqueue-current`.
+For available statistics, see link:#ablvk[Thread Pool Statistics].
+
+[[gitci]][[GSADG00050]][[transactions-service-tree-hierarchy]]
+
+Transactions Service Tree Hierarchy
+
+The `transaction-service` tree holds monitorable attributes for the
+transaction subsystem for the purpose of rolling back transactions. The
+`transaction-service` tree contains the following nodes:
+
+[source]
+----
+server.transaction-service
+         statistic
+----
+
+An example dotted name might be `server.tranaction-service.activeids`.
+For available statistics, see link:#ablvl[Transaction Service
+Statistics].
+
+[[ghlff]][[GSADG00051]][[web-tree-hierarchy]]
+
+Web Tree Hierarchy
+
+The `web` tree contains the following nodes:
+
+[source]
+----
+server.web
+           jsp
+              *statistic
+           servlet
+              *statistic
+           session
+              *statistic
+           request
+              *statistic
+----
+
+An example dotted name for the `servlet` node might be
+`server.web.servlet.activeservletsloadedcount`. For available
+statistics, see link:#ghljx[Web Module Common Statistics].
+
+[[gitkq]][[GSADG00728]][[about-monitoring-for-add-on-components]]
+
+==== About Monitoring for Add-on Components
+
+An add-on component typically generates statistics that {productName}
+can gather at runtime. Adding monitoring capabilities enables an add-on
+component to provide statistics to {productName} in the same way as
+components that are supplied in the {productName} distributions. As a
+result, you can use the same administrative interfaces to monitor
+statistics from any installed {productName} component, regardless of
+the origin of the component.
+
+[[ghbfq]][[GSADG00729]][[tools-for-monitoring-glassfish-server]]
+
+==== Tools for Monitoring {productName}
+
+The following `asadmin` subcommands are provided for monitoring the
+services and components of {productName}:
+
+* The `enable-monitoring`, `disable-monitoring`, or the `get` and `set`
+subcommands are used to turn monitoring on or off. For instructions, see
+link:#ablvp[Configuring Monitoring].
+* The `monitor` `type` subcommand is used to display basic data for a
+particular type of monitorable object. For instructions, see
+link:#ablvs[Viewing Common Monitoring Data].
+* The `list` `--monitor` subcommand is used to display the objects that
+can be monitored with the `monitor` subcommand. For guidelines and
+instructions, see link:#ablwh[Guidelines for Using the `list` and `get`
+Subcommands for Monitoring].
+* The `get` subcommand is used to display comprehensive data, such as
+the attributes and values for a dotted name. The `get` subcommand used
+with a wildcard parameter displays all available attributes for any
+monitorable object. For additional information, see
+link:#ablwh[Guidelines for Using the `list` and `get` Subcommands for
+Monitoring].
+
+[[ablvp]][[GSADG00558]][[configuring-monitoring]]
+
+=== Configuring Monitoring
+
+By default, the monitoring service is enabled for {productName}, but
+monitoring for the individual modules is not. To enable monitoring for a
+module, you change the monitoring level for that module to LOW or HIGH,
+You can choose to leave monitoring OFF for objects that do not need to
+be monitored.
+
+* LOW. Simple statistics, such as create count, byte count, and so on
+* HIGH. Simple statistics plus method statistics, such as method count,
+duration, and so on
+* OFF. No monitoring, no impact on performance
+
+The following tasks are addressed here:
+
+* link:#ablvr[To Enable Monitoring]
+* link:#gglcu[To Disable Monitoring]
+
+[[ablvr]][[GSADG00386]][[to-enable-monitoring]]
+
+==== To Enable Monitoring
+
+Use the `enable-monitoring` subcommand to enable the monitoring service
+itself, or to enable monitoring for individual modules. Monitoring is
+immediately activated, without restarting {productName}.
+
+You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to enable
+monitoring for a module. Using the `set` command is not a dynamic
+procedure, so you need to restart {productName} for your changes to
+take effect.
+
+1. Determine which services and components are currently enabled for
+monitoring.
++
+[source]
+----
+asadmin> get server.monitoring-service.module-monitoring-levels.*
+----
+This example output shows that the HTTP service is not enabled (OFF for
+monitoring), but other objects are enabled:
++
+[source]
+----
+configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
+       configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=OFF
+           configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
+----
+2. Enable monitoring by using the olink:GSRFM00128[`enable-monitoring`]
+subcommand.
++
+Server restart is not required.
+
+[[GSADG00188]][[gixri]]
+Example 8-1 Enabling the Monitoring Service Dynamically
+
+This example enables the monitoring service without affecting monitoring
+for individual modules.
+
+[source]
+----
+asadmin> enable-monitoring
+Command enable-monitoring executed successfully
+----
+
+[[GSADG00189]][[gixre]]
+Example 8-2 Enabling Monitoring for Modules Dynamically
+
+This example enables monitoring for the `ejb-container` module.
+
+[source]
+----
+asadmin> enable-monitoring --level ejb-container=HIGH
+Command enable-monitoring executed successfully
+----
+
+[[GSADG00190]][[gjcmm]]
+Example 8-3 Enabling Monitoring for Modules by Using the `set`
+Subcommand
+
+This example enables monitoring for the HTTP service by setting the
+monitoring level to HIGH (you must restart the server for changes to
+take effect).
+
+[source]
+----
+asadmin> set server.monitoring-service.module-monitoring-levels.http-service=HIGH
+Command set executed successfully
+----
+
+[[GSADG875]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help enable-monitoring` at the command line.
+
+[[gglcu]][[GSADG00387]][[to-disable-monitoring]]
+
+==== To Disable Monitoring
+
+Use the `disable-monitoring` subcommand to disable the monitoring
+service itself, or to disable monitoring for individual modules.
+Monitoring is immediately stopped, without restarting {productName}.
+
+You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to disable
+monitoring for a module. Using the `set` command is not a dynamic
+procedure, so you need to restart {productName} for your changes to
+take effect.
+
+1. Determine which services and components currently are enabled for
+monitoring.
++
+[source]
+----
+asadmin get server.monitoring-service.module-monitoring-levels.*
+----
+This example output shows that monitoring is enabled for
+`web-container`, `http-service`, and `jvm`:
++
+[source]
+----
+configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
+       configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
+              configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
+----
+2. Disable monitoring for a service or module by using the
+link:../reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`] subcommand.
++
+Server restart is not required.
+
+[[GSADG00191]][[gixsc]]
+Example 8-4 Disabling the Monitoring Service Dynamically
+
+This example disables the monitoring service without changing the
+monitoring levels for individual modules.
+
+[source]
+----
+asadmin> disable-monitoring
+Command disable-monitoring executed successfully
+----
+
+[[GSADG00192]][[gjcnw]]
+Example 8-5 Disabling Monitoring for Modules Dynamically
+
+This example disables monitoring for specific modules. Their monitoring
+levels are set to OFF.
+
+[source]
+----
+asadmin> disable-monitoring --modules web-container,ejb-container
+Command disable-monitoring executed successfully
+----
+
+[[GSADG00193]][[gixpg]]
+Example 8-6 Disabling Monitoring by Using the `set` Subcommand
+
+This example disables monitoring for the HTTP service (you must restart
+the server for changes to take effect).
+
+[source]
+----
+asadmin> set server.monitoring-service.module-monitoring-levels.http-service=OFF
+Command set executed successfully
+----
+
+[[GSADG876]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help disable-monitoring` at the command line.
+
+[[ablvs]][[GSADG00559]][[viewing-common-monitoring-data]]
+
+=== Viewing Common Monitoring Data
+
+Use the `monitor` subcommand to display basic data on commonly-monitored
+objects.
+
+* link:#gelol[To View Common Monitoring Data]
+* link:#ghmdc[Common Monitoring Statistics]
+
+[[gelol]][[GSADG00388]][[to-view-common-monitoring-data]]
+
+==== To View Common Monitoring Data
+
+Use the `--type` option of the `monitor` subcommand to specify the
+object for which you want to display data, such as `httplistener`,
+`jvm`, `webmodule`. If you use the `monitor` subcommand without
+specifying a type, an error message is displayed.
+
+Output from the subcommand is displayed continuously in a tabular
+format. The `--interval` option can be used to display output at a
+particular interval (the default is 30 seconds).
+
+[[GSADG877]]
+
+Before You Begin
+
+A monitorable object must be configured for monitoring before you can
+display data on the object. See link:#ablvr[To Enable Monitoring].
+
+1. Determine which type of monitorable object you want to monitor.
++
+Your choices for 5.0 are `jvm`, `httplistener`, and `webmodule`.
+2. Request the monitoring data by using the link:../reference-manual/monitor.html#GSRFM00212[`monitor`]
+subcommand.
+
+[[GSADG00194]][[ghljw]]
+Example 8-7 Viewing Common Monitoring Data
+
+This example requests common data for type `jvm` on instance `server`.
+
+[source]
+----
+asadmin> monitor --type jvm server
+
+UpTime(ms)                          Heap and NonHeap Memory(bytes)
+current                   min        max        low        high       count
+
+9437266                   8585216    619642880  0          0          93093888
+9467250                   8585216    619642880  0          0          93093888
+----
+
+[[GSADG878]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help monitor` at the command line.
+
+[[ghmdc]][[GSADG00730]][[common-monitoring-statistics]]
+
+==== Common Monitoring Statistics
+
+Common monitoring statistics are described in the following sections:
+
+* link:#ghltk[HTTP Listener Common Statistics]
+* link:#ghlvm[JVM Common Statistics]
+* link:#ghljx[Web Module Common Statistics]
+
+[[ghltk]][[GSADG00648]][[http-listener-common-statistics]]
+
+===== HTTP Listener Common Statistics
+
+The statistics available for the `httplistener` type are shown in the
+following table.
+
+[[GSADG879]][[sthref28]][[ghlta]]
+
+
+Table 8-1 HTTP Listener Common Monitoring Statistics
+
+[width="100%",cols="17%,83%",options="header",]
+|===
+|Statistic |Description
+|`ec` |Error count. Cumulative value of the error count
+
+|`mt` |Maximum time. Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times
+
+|`pt` |Processing time. Cumulative value of the times taken to process
+each request, with processing time being the average of request
+processing times over request
+
+|`rc` |Request count. Cumulative number of requests processed so far
+|===
+
+
+[[ghlvm]][[GSADG00649]][[jvm-common-statistics]]
+
+===== JVM Common Statistics
+
+The statistics available for the `jvm` type are shown in the following
+table.
+
+[[GSADG880]][[sthref29]][[ghlsl]]
+
+
+Table 8-2 JVM Common Monitoring Statistics
+
+[width="100%",cols="19%,81%",options="header",]
+|===
+|Statistic |Description
+|`count` |Amount of memory (in bytes) that is guaranteed to be available
+for use by the JVM machine
+
+|`high` |Retained for compatibility with other releases
+
+|`low` |Retained for compatibility with other releases
+
+|`max` |The maximum amount of memory that can be used for memory
+management.
+
+|`min` |Initial amount of memory (in bytes) that the JVM machine
+requests from the operating system for memory management during startup
+
+|`UpTime` |Number of milliseconds that the JVM machine has been running
+since it was last started
+|===
+
+
+[[ghljx]][[GSADG00650]][[web-module-common-statistics]]
+
+===== Web Module Common Statistics
+
+The statistics available for the `webmodule` type are shown in the
+following table.
+
+[[GSADG881]][[sthref30]][[ghqly]]
+
+
+Table 8-3 Web Module Common Monitoring Statistics
+
+[width="100%",cols="18%,82%",options="header",]
+|===
+|Statistic |Description
+|`ajlc` |Number of active JavaServer Pages (JSP) technology pages that
+are loaded
+
+|`asc` |Current active sessions
+
+|`aslc` |Number of active servlets that are loaded
+
+|`ast` |Total active sessions
+
+|`mjlc` |Maximum number of JSP pages that are loaded
+
+|`mslc` |Maximum number of servlets that are loaded
+
+|`rst` |Total rejected sessions
+
+|`st` |Total sessions
+
+|`tjlc` |Total number of JSP pages that are loaded
+
+|`tslc` |Total number of servlets that are loaded
+|===
+
+
+[[ghmct]][[GSADG00560]][[viewing-comprehensive-monitoring-data]]
+
+=== Viewing Comprehensive Monitoring Data
+
+By applying the `list` and `get` subcommands against the tree structure
+using dotted names, you can display more comprehensive monitoring data,
+such as a description of each of the statistics and its unit of
+measurement.
+
+The following topics are addressed here:
+
+* link:#ablwh[Guidelines for Using the `list` and `get` Subcommands for
+Monitoring]
+* link:#ablvv[To View Comprehensive Monitoring Data]
+* link:#ghmcn[Comprehensive Monitoring Statistics]
+
+[[ablwh]][[GSADG00731]][[guidelines-for-using-the-list-and-get-subcommands-for-monitoring]]
+
+==== Guidelines for Using the `list` and `get` Subcommands for Monitoring
+
+The underlying assumptions for using the `list` and `get` subcommands
+with dotted names are:
+
+* A `list` subcommand that specifies a dotted name that is not followed
+by a wildcard (`*`) lists the current node's immediate children. For
+example, the following subcommand lists all immediate children belonging
+to the `server` node:
++
+[source]
+----
+list --monitor server
+----
+* A `list` subcommand that specifies a dotted name followed by a
+wildcard of the form `.*` lists a hierarchical tree of child nodes from
+the specified node. For example, the following subcommand lists all
+children of the `applications` node, their subsequent child nodes, and
+so on:
++
+[source]
+----
+list --monitor server.applications.*
+----
+* A `list` subcommand that specifies a dotted name preceded or followed
+by a wildcard of the form *dottedname or dotted * name or dottedname *
+lists all nodes and their children that match the regular expression
+created by the specified matching pattern.
+* A `get` subcommand followed by a `.*` or a `*` gets the set of
+attributes and their values that belong to the node specified.
+
+For example, the following table explains the output of the `list` and
+`get` subcommands used with the dotted name for the `resources` node.
+
+[[GSADG882]][[sthref31]][[ggnpb]]
+
+
+Table 8-4 Example Resources Level Dotted Names
+
+[width="100%",cols="23%,41%,36%",options="header",]
+|===
+|Subcommand |Dotted Name |Output
+|`list --monitor` |`server.resources` |List of pool names.
+
+|`list --monitor` |`server.resources.``connection-pool1` |No attributes,
+but a message saying "Use `get` subcommand with the `--monitor` option
+to view this node's attributes and values."
+
+|`get --monitor` |`server.resources.``connection-pool1.*` |List of
+attributes and values corresponding to connection pool attributes.
+|===
+
+
+For detailed information on dotted names, see the
+link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+
+[[ablvv]][[GSADG00389]][[to-view-comprehensive-monitoring-data]]
+
+==== To View Comprehensive Monitoring Data
+
+Although the `monitor` subcommand is useful in many situations, it does
+not offer the complete list of all monitorable objects. To work with
+comprehensive data for an object type, use the `list` `monitor` and the
+`get` `monitor` subcommands followed by the dotted name of a monitorable
+object.
+
+[[GSADG883]]
+
+Before You Begin
+
+A monitorable object must be configured for monitoring before you can
+display information about the object. See link:#ablvr[To Enable
+Monitoring] if needed.
+
+1. List the objects that are enabled for monitoring by using the
+link:../reference-manual/list.html#GSRFM00145[`list`] subcommand.
++
+For example, the following subcommand lists all components and services
+that have monitoring enabled for instance `server`.
++
+[source]
+----
+asadmin> list --monitor "*"
+server.web
+server.connector-service
+server.orb
+server.jms-serviceserver.jvm
+server.applications
+server.http-service
+server.thread-pools
+----
+2. Get data for a monitored component or service by using the
+link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
+
+[[GSADG00195]][[ghlre]]
+Example 8-8 Viewing Attributes for a Specific Type
+
+This example gets information about all the attributes for object type
+`jvm` on instance `server`.
+
+[source]
+----
+asadmin> get --monitor server.jvm.*
+server.jvm.class-loading-system.loadedclasscount = 3715
+server.jvm.class-loading-system.totalloadedclasscount = 3731
+server.jvm.class-loading-system.unloadedclasscount = 16
+server.jvm.compilation-system.name-current = HotSpot Client Compiler
+server.jvm.compilation-system.totalcompilationtime = 769
+server.jvm.garbage-collectors.Copy.collectioncount = 285
+server.jvm.garbage-collectors.Copy.collectiontime = 980
+server.jvm.garbage-collectors.MarkSweepCompact.collectioncount = 2
+server.jvm.garbage-collectors.MarkSweepCompact.collectiontime = 383
+server.jvm.memory.committedheapsize = 23498752
+server.jvm.memory.committednonheapsize = 13598720
+server.jvm.memory.initheapsize = 0
+server.jvm.memory.initnonheapsize = 8585216
+server.jvm.memory.maxheapsize = 66650112
+server.jvm.memory.maxnonheapsize = 100663296
+server.jvm.memory.objectpendingfinalizationcount = 0
+server.jvm.memory.usedheapsize = 19741184
+server.jvm.memory.usednonheapsize = 13398352
+server.jvm.operating-system.arch-current = x86
+server.jvm.operating-system.availableprocessors = 2
+server.jvm.operating-system.name-current = Windows XP
+server.jvm.operating-system.version-current = 5.1
+server.jvm.runtime.classpath-current = glassfish.jar
+server.jvm.runtime.inputarguments-current = []
+server.jvm.runtime.managementspecversion-current = 1.0
+server.jvm.runtime.name-current = 4372@ABBAGANI_WORK
+server.jvm.runtime.specname-current = Java Virtual Machine Specification
+server.jvm.runtime.specvendor-current = Sun Microsystems Inc.
+server.jvm.runtime.specversion-current = 1.0
+server.jvm.runtime.uptime = 84813
+server.jvm.runtime.vmname-current = Java HotSpot(TM) Client VM
+server.jvm.runtime.vmvendor-current = Sun Microsystems Inc.
+server.jvm.runtime.vmversion-current = 1.5.0_11-b03
+----
+
+[[GSADG00196]][[ghbgv]]
+Example 8-9 Viewing Monitorable Applications
+
+This example lists all the monitorable applications for instance
+`server`.
+
+[source]
+----
+asadmin> list --monitor server.applications.*
+server.applications.app1
+server.applications.app2
+server.applications.app1.virtual-server1
+server.applications.app2.virtual-server1
+----
+
+[[GSADG00197]][[ghbfj]]
+Example 8-10 Viewing Attributes for an Application
+
+This example gets information about all the attributes for application
+`hello`.
+
+[source]
+----
+asadmin> get --monitor server.applications.hello.*
+server.applications.hello.server.activatedsessionstotal = 0
+server.applications.hello.server.activejspsloadedcount = 1
+server.applications.hello.server.activeservletsloadedcount = 1
+server.applications.hello.server.activesessionscurrent = 1
+server.applications.hello.server.activesessionshigh = 1
+server.applications.hello.server.errorcount = 0
+server.applications.hello.server.expiredsessionstotal = 0
+server.applications.hello.server.maxjspsloadedcount = 1
+server.applications.hello.server.maxservletsloadedcount = 0
+server.applications.hello.server.maxtime = 0
+server.applications.hello.server.passivatedsessionstotal = 0
+server.applications.hello.server.persistedsessionstotal = 0
+server.applications.hello.server.processingtime = 0.0
+server.applications.hello.server.rejectedsessionstotal = 0
+server.applications.hello.server.requestcount = 0
+server.applications.hello.server.sessionstotal =
+server.applications.hello.server.totaljspsloadedcount = 0
+server.applications.hello.server.totalservletsloadedcount = 0
+----
+
+[[GSADG00198]][[ghbge]]
+Example 8-11 Viewing a Specific Attribute
+
+This example gets information about the `jvm` attribute
+`runtime.vmversion-current` on instance `server`.
+
+[source]
+----
+asadmin> get --monitor server.jvm.runtime.vmversion-current
+server.jvm.runtime.vmversion-current = 10.0-b23
+----
+
+[[ghmcn]][[GSADG00732]][[comprehensive-monitoring-statistics]]
+
+==== Comprehensive Monitoring Statistics
+
+You can get comprehensive monitoring statistics by forming a dotted name
+that specifies the statistic you are looking for. For example, the
+following dotted name will display the cumulative number of requests for
+the HTTP service on `virtual-server1`:
+
+`server.http-service.virtual-server1.request.requestcount`
+
+The tables in the following sections list the statistics that are
+available for each monitorable object:
+
+* link:#gjkbi[EJB Statistics]
+* link:#ablvg[HTTP Service Statistics]
+* link:#gjjyb[Jersey Statistics]
+* link:#ablvi[JMS/Connector Service Statistics]
+* link:#ablvm[JVM Statistics]
+* link:#gjipy[Network Statistics]
+* link:#ablvj[ORB Statistics (Connection Manager)]
+* link:#gipzv[Resource Statistics (Connection Pool)]
+* link:#gjiov[Security Statistics]
+* link:#ablvk[Thread Pool Statistics]
+* link:#ablvl[Transaction Service Statistics]
+* link:#ablvf[Web Statistics]
+
+[[gjkbi]][[GSADG00651]][[ejb-statistics]]
+
+===== EJB Statistics
+
+EJBs fit into the tree of objects as shown in link:#abluw[Applications
+Tree Hierarchy]. Use the following dotted name pattern to get EJB
+statistics for an application:
+
+[source]
+----
+server.applications.appname.ejbmodulename.ejbname.bean-cache.statistic
+----
+
+
+[NOTE]
+====
+EJB statistics for an application are available after the application is
+executed. If the application is deployed but has not yet been executed,
+all counts will show default values. When the application is undeployed,
+all its monitoring data is lost.
+====
+
+
+Statistics available for applications are shown in the following
+sections:
+
+* link:#gisyw[EJB Cache Statistics]
+* link:#giszu[EJB Container Statistics]
+* link:#gisyx[EJB Method Statistics]
+* link:#gisza[EJB Pool Statistics]
+* link:#gisyr[Timer Statistics]
+
+[[gisyw]][[GSADG00052]][[ejb-cache-statistics]]
+
+EJB Cache Statistics
+
+Use the following dotted name pattern for EJB cache statistics:
+
+[source]
+----
+server.applications.appname.ejbmodulename.bean-cache.ejbname.statistic
+----
+
+The statistics available for EJB caches are listed in the following
+table.
+
+[[GSADG884]][[sthref32]][[gelod]]
+
+
+Table 8-5 EJB Cache Monitoring Statistics
+
+[width="100%",cols="37%,16%,47%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`cachemisses` |RangeStatistic |The number of times a user request does
+not find a bean in the cache.
+
+|`cachehits` |RangeStatistic |The number of times a user request found
+an entry in the cache.
+
+|`numbeansincache` |RangeStatistic |The number of beans in the cache.
+This is the current size of the cache.
+
+|`numpassivations` |CountStatistic |Number of passivated beans. Applies
+only to stateful session beans.
+
+|`numpassivationerrors` |CountStatistic |Number of errors during
+passivation. Applies only to stateful session beans.
+
+|`numexpiredsessionsremoved` |CountStatistic |Number of expired sessions
+removed by the cleanup thread. Applies only to stateful session beans.
+
+|`numpassivationsuccess` |CountStatistic |Number of times passivation
+completed successfully. Applies only to stateful session beans.
+|===
+
+
+[[giszu]][[GSADG00053]][[ejb-container-statistics]]
+
+EJB Container Statistics
+
+Use the following dotted name pattern for EJB container statistics:
+
+[source]
+----
+server.applications.appname.ejbmodulename.container.ejbname
+----
+
+The statistics available for EJB containers are listed in the following
+table.
+
+[[GSADG885]][[sthref33]][[gelns]]
+
+
+Table 8-6 EJB Container Monitoring Statistics
+
+[width="100%",cols="24%,16%,60%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`createcount` |CountStatistic |Number of times an EJB's `create` method
+is called.
+
+|`messagecount` |CountStatistic |Number of messages received for a
+message-driven bean.
+
+|`methodreadycount` |RangeStatistic |Number of stateful or stateless
+session beans that are in the `MethodReady` state.
+
+|`passivecount` |RangeStatistic |Number of stateful session beans that
+are in `Passive` state.
+
+|`pooledcount` |RangeStatistic |Number of entity beans in pooled state.
+
+|`readycount` |RangeStatistic |Number of entity beans in ready state.
+
+|`removecount` |CountStatistic |Number of times an EJB's `remove` method
+is called.
+|===
+
+
+[[gisyx]][[GSADG00054]][[ejb-method-statistics]]
+
+EJB Method Statistics
+
+Use the following dotted name pattern for EJB method statistics:
+
+[source]
+----
+server.applications.appname.ejbmodulename.bean-methods.ejbname.statistic
+----
+
+The statistics available for EJB method invocations are listed in the
+following table.
+
+[[GSADG886]][[sthref34]][[gelnu]]
+
+
+Table 8-7 EJB Method Monitoring Statistics
+
+[width="100%",cols="23%,16%,61%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`executiontime` |CountStatistic |Time, in milliseconds, spent executing
+the method for the last successful/unsuccessful attempt to run the
+operation. This is collected for stateless and stateful session beans
+and entity beans if monitoring is enabled on the EJB container.
+
+|`methodstatistic` |TimeStatistic |Number of times an operation is
+called; the total time that is spent during the invocation, and so on.
+
+|`totalnumerrors` |CountStatistic |Number of times the method execution
+resulted in an exception. This is collected for stateless and stateful
+session beans and entity beans if monitoring is enabled for the EJB
+container.
+
+|`totalnumsuccess` |CountStatistic |Number of times the method
+successfully executed. This is collected for stateless and stateful
+session beans and entity beans if monitoring enabled is true for EJB
+container.
+|===
+
+
+[[gisza]][[GSADG00055]][[ejb-pool-statistics]]
+
+EJB Pool Statistics
+
+Use the following dotted name pattern for EJB pool statistics:
+
+[source]
+----
+server.applications.appname.ejbmodulename.bean-pool.ejbname.statistic
+----
+
+The statistics available for EJB pools are listed in the following
+table.
+
+[[GSADG887]][[sthref35]][[gelpe]]
+
+
+Table 8-8 EJB Pool Monitoring Statistics
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`jmsmaxmessagesload` |CountStatistic |The maximum number of messages to
+load into a JMS session at one time for a message-driven bean to serve.
+Default is 1. Applies only to pools for message driven beans.
+
+|`numbeansinpool` |RangeStatistic |Number of EJBs in the associated
+pool, providing information about how the pool is changing.
+
+|`numthreadswaiting` |RangeStatistic |Number of threads waiting for free
+beans, giving an indication of possible congestion of requests.
+
+|`totalbeanscreated` |CountStatistic |Number of beans created in
+associated pool since the gathering of data started.
+
+|`totalbeansdestroyed` |CountStatistic |Number of beans destroyed from
+associated pool since the gathering of data started.
+|===
+
+
+[[gisyr]][[GSADG00057]][[timer-statistics]]
+
+Timer Statistics
+
+Use the following dotted name pattern for timer statistics:
+
+[source]
+----
+server.applications.appname.ejbmodulename.timers.ejbname.statistic
+----
+
+The statistics available for timers are listed in the following table.
+
+[[GSADG889]][[sthref36]][[gelob]]
+
+
+Table 8-9 Timer Monitoring Statistics
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`numtimerscreated` |CountStatistic |Number of timers created in the
+system.
+
+|`numtimersdelivered` |CountStatistic |Number of timers delivered by the
+system.
+
+|`numtimersremoved` |CountStatistic |Number of timers removed from the
+system.
+|===
+
+
+[[ablvg]][[GSADG00652]][[http-service-statistics]]
+
+===== HTTP Service Statistics
+
+The HTTP service fits into the tree of objects as shown in
+link:#ghlin[HTTP Service Tree Hierarchy].
+
+[[ghqdi]][[GSADG00059]][[http-service-virtual-server-statistics]]
+
+HTTP Service Virtual Server Statistics
+
+Use the following dotted name pattern for HTTP service virtual server
+statistics:
+
+[source]
+----
+server.http-service.virtual-server.request.statistic
+----
+
+The HTTP service statistics for virtual servers are shown in the
+following table.
+
+[[GSADG891]][[sthref37]][[gelnm]]
+
+
+Table 8-10 HTTP Service Virtual Server Monitoring Statistics
+
+[width="100%",cols="21%,16%,63%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`count200` |CountStatistic |Number of responses with a status code
+equal to 200
+
+|`count2xx` |CountStatistic |Number of responses with a status code in
+the 2xx range
+
+|`count302` |CountStatistic |Number of responses with a status code
+equal to 302
+
+|`count304` |CountStatistic |Number of responses with a status code
+equal to 304
+
+|`count3xx` |CountStatistic |Number of responses with a status code
+equal in the 3xx range
+
+|`count400` |CountStatistic |Number of responses with a status code
+equal to 400
+
+|`count401` |CountStatistic |Number of responses with a status code
+equal to 401
+
+|`count403` |CountStatistic |Number of responses with a status code
+equal to 403
+
+|`count404` |CountStatistic |Number of responses with a status code
+equal to 404
+
+|`count4xx` |CountStatistic |Number of responses with a status code
+equal in the 4xx range
+
+|`count503` |CountStatistic |Number of responses with a status code
+equal to 503
+
+|`count5xx` |CountStatistic |Number of responses with a status code
+equal in the 5xx range
+
+|`countother` |CountStatistic |Number of responses with a status code
+outside the 2xx, 3xx, 4xx, and 5xx range
+
+|`errorcount` |CountStatistic |Cumulative value of the error count, with
+error count representing the number of cases where the response code was
+greater than or equal to 400
+
+|`hosts` |StringStatistic |The host (alias) names of the virtual server
+
+|`maxtime` |CountStatistic |Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times
+
+|`processingtime` |CountStatistic |Cumulative value of the times taken
+to process each request, with processing time being the average of
+request processing times over the request count
+
+|`requestcount` |CountStatistic |Cumulative number of requests processed
+so far
+
+|`state` |StringStatistic |The state of the virtual server
+|===
+
+
+[[gjjyb]][[GSADG00653]][[jersey-statistics]]
+
+===== Jersey Statistics
+
+Jersey fits into the tree of objects as shown in
+link:#abluw[Applications Tree Hierarchy].
+
+Use the following dotted name pattern for Jersey statistics:
+
+[source]
+----
+server.applications.jersey-application.jersey.resources.resource-0.hitcount.statistic
+----
+
+The statistics available for Jersey are shown in the following table.
+
+[[GSADG892]][[sthref38]][[gjjys]]
+
+
+Table 8-11 Jersey Statistics
+
+[width="100%",cols="33%,21%,46%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`resourcehitcount` |CountStatistic |Number of hits on this resource
+class
+
+|`rootresourcehitcount` |CountStatistic |Number of hits on this root
+resource class
+|===
+
+
+[[ablvi]][[GSADG00654]][[jmsconnector-service-statistics]]
+
+===== JMS/Connector Service Statistics
+
+The JMS/Connector Service fits into the tree of objects as shown in
+link:#ablva[JMS/Container Service Tree Hierarchy].
+
+JMS/Connector Service statistics are shown in the following sections:
+
+* link:#giszy[Connector Connection Pool Statistics (JMS)]
+* link:#giszh[Connector Work Management Statistics (JMS)]
+
+[[giszy]][[GSADG00060]][[connector-connection-pool-statistics-jms]]
+
+Connector Connection Pool Statistics (JMS)
+
+Use the following dotted name pattern for JMS/Connector Service
+connection pool statistics:
+
+[source]
+----
+server.connector-service.resource-adapter-1.connection-pool.statistic
+----
+
+JMS/Connector Service statistics available for the connector connection
+pools are shown in the following table.
+
+
+[NOTE]
+====
+In order to improve system performance, connection pools are initialized
+lazily; that is, a pool is not initialized until an application first
+uses the pool or the pool is explicitly pinged. Monitoring statistics
+for a connection pool are not available until the pool is initialized.
+====
+
+
+[[GSADG893]][[sthref39]][[gelot]]
+
+
+Table 8-12 Connector Connection Pool Monitoring Statistics (JMS)
+
+[width="100%",cols="37%,16%,47%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`averageconnwaittime` |CountStatistic |Average wait time of connections
+before they are serviced by the connection pool.
+
+|`connectionrequestwaittime` |RangeStatistic |The longest and shortest
+wait times of connection requests. The current value indicates the wait
+time of the last request that was serviced by the pool.
+
+|`numconnfailedvalidation` |CountStatistic |Total number of connections
+in the connection pool that failed validation from the start time until
+the last sample time.
+
+|`numconnused` |RangeStatistic |Total number of connections that are
+currently being used, as well as information about the maximum number of
+connections that were used (the high water mark).
+
+|`numconnfree` |RangeStatistic |Total number of free connections in the
+pool as of the last sampling.
+
+|`numconntimedout` |CountStatistic |Total number of connections in the
+pool that timed out between the start time and the last sample time.
+
+|`numconncreated` |CountStatistic |Number of physical connections, in
+milliseconds, that were created since the last reset.
+
+|`numconndestroyed` |CountStatistic |Number of physical connections that
+were destroyed since the last reset.
+
+|`numconnacquired` |CountStatistic |Number of logical connections
+acquired from the pool.
+
+|`numconnreleased` |CountStatistic |Number of logical connections
+released to the pool.
+
+|`waitqueuelenght` |CountStatistic |Number of connection requests in the
+queue waiting to be serviced.
+|===
+
+
+[[giszh]][[GSADG00061]][[connector-work-management-statistics-jms]]
+
+Connector Work Management Statistics (JMS)
+
+Use the following dotted name pattern for JMS/Connector Service work
+management statistics:
+
+[source]
+----
+server.connector-service.resource-adapter-1.work-management.statistic
+----
+
+JMS/Connector Service statistics available for connector work management
+are listed in the following table.
+
+[[GSADG894]][[sthref40]][[gelnz]]
+
+
+Table 8-13 Connector Work Management Monitoring Statistics (JMS)
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`activeworkcount` |RangeStatistic |Number of work objects executed by
+the connector.
+
+|`completedworkcount` |CountStatistic |Number of work objects that were
+completed.
+
+|`rejectedworkcount` |CountStatistic |Number of work objects rejected by
+the {productName}.
+
+|`submittedworkcount` |CountStatistic |Number of work objects submitted
+by a connector module.
+
+|`waitqueuelength` |RangeStatistic |Number of work objects waiting in
+the queue before executing.
+
+|`workrequestwaittime` |RangeStatistic |Longest and shortest wait of a
+work object before it gets executed.
+|===
+
+
+[[ablvm]][[GSADG00655]][[jvm-statistics]]
+
+===== JVM Statistics
+
+The JVM fits into the tree of objects as show in link:#ghlic[JVM Tree
+Hierarchy].
+
+The statistics that are available for the Virtual Machine for Java
+platform (Java Virtual Machine) or JVM machine are shown in the
+following sections:
+
+* link:#ablvn[JVM Class Loading System Statistics]
+* link:#ghqfh[JVM Compilation System Statistics]
+* link:#ghqea[JVM Garbage Collectors Statistics]
+* link:#ghqdn[JVM Memory Statistics]
+* link:#ghqec[JVM Operating System Statistics]
+* link:#ghqby[JVM Runtime Statistics]
+
+[[ablvn]][[GSADG00062]][[jvm-class-loading-system-statistics]]
+
+JVM Class Loading System Statistics
+
+Use the following dotted name pattern for JVM class loading system
+statistics:
+
+[source]
+----
+server.jvm.class-loading-system.statistic
+----
+
+With Java SE, additional monitoring information can be obtained from the
+JVM. Set the monitoring level to LOW to enable the display of this
+additional information. Set the monitoring level to HIGH to also view
+information pertaining to each live thread in the system. More
+information about the additional monitoring features for Java SE is
+available in
+http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/technotes/guides/management/[Monitoring
+and Management for the Java Platform] .
+
+The Java SE monitoring tools are discussed at
+`http://docs.oracle.com/javase/8/docs/technotes/tools/`.
+
+The statistics that are available for class loading in the JVM for Java
+SE are shown in the following table.
+
+[[GSADG895]][[sthref41]][[gelow]]
+
+
+Table 8-14 JVM Monitoring Statistics for Java SE Class Loading
+
+[width="100%",cols="31%,16%,53%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`loadedclasscount` |CountStatistic |Number of classes that are
+currently loaded in the JVM
+
+|`totalloadedclasscount` |CountStatistic |Total number of classes that
+have been loaded since the JVM began execution
+
+|`unloadedclasscount` |CountStatistic |Number of classes that have been
+unloaded from the JVM since the JVM began execution
+|===
+
+
+The statistics available for threads in the JVM in Java SE are shown in
+the following table.
+
+[[GSADG896]][[sthref42]][[geloa]]
+
+
+Table 8-15 JVM Monitoring Statistics for Java SE - Threads
+
+[width="100%",cols="35%,16%,49%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`allthreadids` |StringStatistic |List of all live thread ids.
+
+|`currentthreadcputime` |CountStatistic |CPU time for the current thread
+(in nanoseconds) if CPU time measurement is enabled. If CPU time
+measurement is disabled, returns -1.
+
+|`daemonthreadcount` |CountStatistic |Current number of live daemon
+threads.
+
+|`monitordeadlockedthreads` |StringStatistic |List of thread ids that
+are monitor deadlocked.
+
+|`peakthreadcount` |CountStatistic |Peak live thread count since the JVM
+started or the peak was reset.
+
+|`threadcount` |CountStatistic |Current number of live daemon and
+non-daemon threads.
+
+|`totalstartedthreadcount` |CountStatistic |Total number of threads
+created and/or started since the JVM started.
+|===
+
+
+[[ghqfh]][[GSADG00063]][[jvm-compilation-system-statistics]]
+
+JVM Compilation System Statistics
+
+Use the following dotted name pattern for JVM compilation system
+statistics:
+
+[source]
+----
+server.jvm.compilation-system.statistic
+----
+
+The statistics that are available for compilation in the JVM for Java SE
+are shown in the following table.
+
+[[GSADG897]][[sthref43]][[gelnt]]
+
+
+Table 8-16 JVM Monitoring Statistics for Java SE Compilation
+
+[width="100%",cols="34%,20%,46%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`name-current` |StringStatistic |Name of the current compiler
+
+|`totalcompilationtime` |CountStatistic |Accumulated time (in
+milliseconds) spent in compilation
+|===
+
+
+[[ghqea]][[GSADG00064]][[jvm-garbage-collectors-statistics]]
+
+JVM Garbage Collectors Statistics
+
+Use the following dotted name pattern for JVM garbage collectors
+statistics:
+
+[source]
+----
+server.jvm.garbage-collectors.statistic
+----
+
+The statistics that are available for garbage collection in the JVM for
+Java SE are shown in the following table.
+
+[[GSADG898]][[sthref44]][[gelox]]
+
+
+Table 8-17 JVM Monitoring Statistics for Java SE Garbage Collectors
+
+[width="100%",cols="23%,16%,61%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`collectioncount` |CountStatistic |Total number of collections that
+have occurred
+
+|`collectiontime` |CountStatistic |Accumulated time (in milliseconds)
+spent in collection
+|===
+
+
+[[ghqdn]][[GSADG00065]][[jvm-memory-statistics]]
+
+JVM Memory Statistics
+
+Use the following dotted name pattern for JVM memory statistics:
+
+[source]
+----
+server.jvm.memory.statistic
+----
+
+The statistics that are available for memory in the JVM for Java SE are
+shown in the following table.
+
+[[GSADG899]][[sthref45]][[gelnx]]
+
+
+Table 8-18 JVM Monitoring Statistics for Java SE Memory
+
+[width="100%",cols="44%,16%,40%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`committedheapsize` |CountStatistic |Amount of heap memory (in bytes)
+that is committed for the JVM to use
+
+|`committednonheapsize` |CountStatistic |Amount of non-heap memory (in
+bytes) that is committed for the JVM to use
+
+|`initheapsize` |CountStatistic |Size of the heap initially requested by
+the JVM
+
+|`initnonheapsize` |CountStatistic |Size of the non-heap area initially
+requested by the JVM
+
+|`maxheapsize` |CountStatistic |Maximum amount of heap memory (in bytes)
+that can be used for memory management
+
+|`maxnonheapsize` |CountStatistic |Maximum amount of non-heap memory (in
+bytes) that can be used for memory management
+
+|`objectpendingfinalizationcount` |CountStatistic |Approximate number of
+objects that are pending finalization
+
+|`usedheapsize` |CountStatistic |Size of the heap currently in use
+
+|`usednonheapsize` |CountStatistic |Size of the non-heap area currently
+in use
+|===
+
+
+[[ghqec]][[GSADG00066]][[jvm-operating-system-statistics]]
+
+JVM Operating System Statistics
+
+Use the following dotted name pattern for JVM operating system
+statistics:
+
+[source]
+----
+server.jvm.operating-system.statistic
+----
+
+The statistics that are available for the operating system for the JVM
+machine in Java SE are shown in the following table.
+
+[[GSADG900]][[sthref46]][[gelog]]
+
+
+Table 8-19 JVM Statistics for the Java SE Operating System
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`arch-current` |StringStatistic |Operating system architecture
+
+|`availableprocessors` |CountStatistic |Number of processors available
+to the JVM
+
+|`name-current` |StringStatistic |Operating system name
+
+|`version-current` |StringStatistic |Operating system version
+|===
+
+
+[[ghqby]][[GSADG00067]][[jvm-runtime-statistics]]
+
+JVM Runtime Statistics
+
+Use the following dotted name pattern for JVM runtime statistics:
+
+[source]
+----
+server.jvm.runtime.statistic
+----
+
+The statistics that are available for the runtime in the JVM runtime for
+Java SE are shown in the following table.
+
+[[GSADG901]][[sthref47]][[gelop]]
+
+
+Table 8-20 JVM Monitoring Statistics for Java SE Runtime
+
+[width="100%",cols="42%,16%,42%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`classpath-current` |StringStatistic |Classpath that is used by the
+system class loader to search for class files
+
+|`inputarguments-current` |StringStatistic |Input arguments passed to
+the JVM; not including arguments to the `main` method
+
+|`managementspecversion-current` |StringStatistic |Management
+specification version implemented by the JVM
+
+|`name-current` |StringStatistic |Name representing the running JVM
+
+|`specname-current` |StringStatistic |JVM specification name
+
+|`specvendor-current` |StringStatistic |JVM specification vendor
+
+|`specversion-current` |StringStatistic |JVM specification version
+
+|`uptime` |CountStatistic |Uptime of the JVM (in milliseconds)
+
+|`vmname-current` |StringStatistic |JVM implementation name
+
+|`vmvendor-current` |StringStatistic |JVM implementation vendor
+
+|`vmversion-current` |StringStatistic |JVM implementation version
+
+| | |
+
+| | |
+|===
+
+
+[[gjipy]][[GSADG00656]][[network-statistics]]
+
+===== Network Statistics
+
+Network fits into the tree of objects as shown in link:#giznj[Network
+Tree Hierarchy].
+
+Network statistics are described in the following sections:
+
+* link:#gjiqu[Network Keep Alive Statistics]
+* link:#gjjom[Network Connection Queue Statistics]
+* link:#gjjpi[Network File Cache Statistics]
+* link:#gjjpp[Network Thread Pool Statistics]
+
+[[gjiqu]][[GSADG00068]][[network-keep-alive-statistics]]
+
+Network Keep Alive Statistics
+
+Use the following dotted name pattern for network keep alive statistics:
+
+[source]
+----
+server.network.type-of-listener.keep-alive.statistic
+----
+
+Statistics available for network keep alive are shown in the following
+table.
+
+[[GSADG902]][[sthref48]][[gjirp]]
+
+
+Table 8-21 Network Keep Alive Statistics
+
+[width="100%",cols="25%,16%,59%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`countconnections` |CountStatistic |Number of connections in keep-alive
+mode.
+
+|`counttimeouts` |CountStatistic |Number of keep-alive connections that
+timed out.
+
+|`secondstimeouts` |CountStatistic |Keep-alive timeout value in seconds.
+
+|`maxrequests` |CountStatistic |Maximum number of requests allowed on a
+single keep-alive connection.
+
+|`countflushes` |CountStatistic |Number of keep-alive connections that
+were closed.
+
+|`counthits` |CountStatistic |Number of requests received by connections
+in keep-alive mode.
+
+|`countrefusals` |CountStatistic |Number of keep-alive connections that
+were rejected.
+|===
+
+
+[[gjjom]][[GSADG00069]][[network-connection-queue-statistics]]
+
+Network Connection Queue Statistics
+
+Use the following dotted name pattern for network connection queue
+statistics:
+
+[source]
+----
+server.network.type-of-listener.connection-queue.statistic
+----
+
+Statistics available for network connection queue are shown in the
+following table.
+
+[[GSADG903]][[sthref49]][[gjjxc]]
+
+
+Table 8-22 Network Connection Queue Statistics
+
+[width="100%",cols="40%,16%,44%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`countopenconnections` |CountStatistic |The number of open/active
+connections
+
+|`countoverflows` |CountStatistic |Number of times the queue has been
+too full to accommodate a connection
+
+|`countqueued` |CountStatistic |Number of connections currently in the
+queue
+
+|`countqueued15minutesaverage` |CountStatistic |Average number of
+connections queued in the last 15 minutes
+
+|`countqueued1minuteaverage` |CountStatistic |Average number of
+connections queued in the last 1 minute
+
+|`countqueued5minutesaverage` |CountStatistic |Average number of
+connections queued in the last 5 minutes
+
+|`counttotalconnections` |CountStatistic |Total number of connections
+that have been accepted
+
+|`counttotalqueued` |CountStatistic |Total number of connections that
+have been queued
+
+|`maxqueued` |CountStatistic |Maximum size of the connection queue
+
+|`peakqueued` |CountStatistic |Largest number of connections that were
+in the queue simultaneously
+
+|`tickstotalqueued` |CountStatistic |(Unsupported) Total number of ticks
+that connections have spent in the queue
+|===
+
+
+[[gjjpi]][[GSADG00070]][[network-file-cache-statistics]]
+
+Network File Cache Statistics
+
+Use the following dotted name pattern for network file cache statistics:
+
+[source]
+----
+server.network.type-of-listener.file-cache.statistic
+----
+
+Statistics available for network file cache are shown in the following
+table.
+
+[[GSADG904]][[sthref50]][[gjjpd]]
+
+
+Table 8-23 Network File Cache Statistics
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`contenthits` |CountStatistic |Number of hits on cached file content
+
+|`contentmisses` |CountStatistic |Number of misses on cached file
+content
+
+|`heapsize` |CountStatistic |Current cache size in bytes
+
+|`hits` |CountStatistic |Number of cache lookup hits
+
+|`infohits` |CountStatistic |Number of hits on cached file info
+
+|`infomisses` |CountStatistic |Number of misses on cached file info
+
+|`mappedmemorysize` |CountStatistic |Size of mapped memory used for
+caching in bytes
+
+|`maxheapsize` |CountStatistic |Maximum heap space used for cache in
+bytes
+
+|`maxmappedmemorysize` |CountStatistic |Maximum memory map size used for
+caching in bytes
+
+|`misses` |CountStatistic |Number of cache lookup misses data type
+
+|`opencacheentries` |CountStatistic |Number of current open cache
+entries
+|===
+
+
+[[gjjpp]][[GSADG00071]][[network-thread-pool-statistics]]
+
+Network Thread Pool Statistics
+
+Use the following dotted name pattern for network thread pool
+statistics:
+
+[source]
+----
+server.network.type-of-listener.thread-pool.statistic
+----
+
+Statistics available for network thread pool are shown in the following
+table.
+
+[[GSADG905]][[sthref51]][[gjjov]]
+
+
+Table 8-24 Network Thread Pool Statistics
+
+[width="100%",cols="28%,16%,56%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`corethreads` |CountStatistic |Core number of threads in the thread
+pool
+
+|`currentthreadcount` |CountStatistic |Provides the number of request
+processing threads currently in the listener thread pool
+
+|`currentthreadsbusy` |CountStatistic |Provides the number of request
+processing threads currently in use in the listener thread pool serving
+requests
+
+|`maxthreads` |CountStatistic |Maximum number of threads allowed in the
+thread pool
+
+|`totalexecutedtasks` |CountStatistic |Provides the total number of
+tasks, which were executed by the thread pool
+|===
+
+
+[[ablvj]][[GSADG00657]][[orb-statistics-connection-manager]]
+
+===== ORB Statistics (Connection Manager)
+
+The ORB fits into the tree of objects as shown in link:#ablvb[ORB Tree
+Hierarchy].
+
+Use the following dotted name patterns for ORB statistics:
+
+[source]
+----
+server.orb.transport.connectioncache.inbound.statistic
+server.orb.transport.connectioncache.outbound.statistic
+----
+
+The statistics available for the connection manager in an ORB are listed
+in the following table.
+
+[[GSADG906]][[sthref52]][[gelqw]]
+
+
+Table 8-25 ORB Monitoring Statistics (Connection Manager)
+
+[width="100%",cols="24%,26%,50%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`connectionsidle` |CountStatistic |Total number of connections that are
+idle to the ORB
+
+|`connectionsinuse` |CountStatistic |Total number of connections in use
+to the ORB
+
+|`totalconnections` |BoundedRangeStatistic |Total number of connections
+to the ORB
+|===
+
+
+[[gipzv]][[GSADG00658]][[resource-statistics-connection-pool]]
+
+===== Resource Statistics (Connection Pool)
+
+By monitoring connection pool resources you can measure performance and
+capture resource usage at runtime. Connections are expensive and
+frequently cause performance bottlenecks in applications. It is
+important to monitor how a connection pool is releasing and creating new
+connections and how many threads are waiting to retrieve a connection
+from a particular pool.
+
+The connection pool resources fit into the tree of objects as shown in
+link:#giqdo[Resources Tree Hierarchy].
+
+Use the following dotted name pattern for general connection pool
+statistics:
+
+[source]
+----
+server.resources.pool-name.statistic
+----
+
+Use the following dotted name pattern for application-scoped connection
+pool statistics:
+
+[source]
+----
+server.applications.application-name.resources.pool-name.statistic
+----
+
+Use the following dotted name pattern for module-scoped connection pool
+statistics:
+
+[source]
+----
+server.applications.application-name.module-name.resources.pool-name.statistic
+----
+
+The connection pool statistics are shown in the following tables.
+
+
+[NOTE]
+====
+In order to improve system performance, connection pools are initialized
+lazily; that is, a pool is not initialized until an application first
+uses the pool or the pool is explicitly pinged. Monitoring statistics
+for a connection pool are not available until the pool is initialized.
+====
+
+
+[[GSADG907]][[sthref53]][[gelqa]]
+
+
+Table 8-26 General Resource Monitoring Statistics (Connection Pool)
+
+[width="100%",cols="43%,16%,41%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`averageconnwaittime` |CountStatistic |Average wait-time-duration per
+successful connection request
+
+|`connrequestwaittime` |RangeStatistic |Longest and shortest wait times,
+in milliseconds, of connection requests since the last sampling. current
+value indicates the wait time of the last request that was serviced by
+the pool
+
+|`numconnacquired` |CountStatistic |Number of logical connections
+acquired from the pool since the last sampling
+
+|`numconncreated` |CountStatistic |Number of physical connections that
+were created by the pool since the last reset
+
+|`numconndestroyed` |CountStatistic |Number of physical connections that
+were destroyed since the last reset
+
+|`numconnfailedvalidation` |CountStatistic |Number of connections in the
+connection pool that failed validation from the start time until the
+last sampling time
+
+|`numconnfree` |RangeStatistic |Number of free connections in the pool
+as of the last sampling
+
+|`numconnnotsuccessfullymatched` |CountStatistic |Number of connections
+rejected during matching
+
+|`numconnreleased` |CountStatistic |Number of connections released back
+to the pool since the last sampling
+
+|`numconnsuccessfullymatched` |CountStatistic |Number of connections
+successfully matched
+
+|`numconntimedout` |CountStatistic |Number of connections in the pool
+that timed out between the start time and the last sampling time
+
+|`numconnused` |RangeStatistic |Number of connections that are currently
+being used, as well as information about the maximum number of
+connections that were used (high water mark)
+
+|`frequsedsqlqueries` |StringStatistic |List of the most frequently used
+SQL queries (Available only when SQL Tracing is enabled)
+
+|`numpotentialconnleak` |CountStatistic |Number of potential connection
+leaks
+
+|`numpotentialstatementleak` |CountStatistic |Number of potential
+statement leaks (Available only when Statement Leak Dectection is
+enabled)
+
+|`numstatementcachehit` |CountStatistic |Number of statements that were
+found in the statement cache (Available only when the Statement Cache is
+enabled)
+
+|`numstatementcachemiss` |CountStatistic |Number of statements that were
+not found in the statement cache (Available only when the Statement
+Cache is enabled)
+
+|`waitqueuelength` |CountStatistic |Number of connection requests in the
+queue waiting to be serviced
+|===
+
+
+[[GSADG908]][[sthref54]][[gktcp]]
+
+
+Table 8-27 Application Specific Resource Monitoring Statistics
+(Connection Pool)
+
+[width="100%",cols="23%,16%,61%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`numconnacquired` |CountStatistic |Number of logical connections
+acquired from the pool since the last sampling
+
+|`numconnreleased` |CountStatistic |Number of connections released back
+to the pool since the last sampling
+
+|`numconnused` |RangeStatistic |Number of connections that are currently
+being used, as well as information about the maximum number of
+connections that were used (high water mark)
+|===
+
+
+[[gjiov]][[GSADG00659]][[security-statistics]]
+
+===== Security Statistics
+
+Security fits into the tree of objects as shown in link:#gjios[Security
+Tree Hierarchy].
+
+Statistics available for security are shown in the following sections:
+
+* link:#gjira[EJB Security Statistics]
+* link:#gjirn[Web Security Statistics]
+* link:#gjirj[Realm Security Statistics]
+
+[[gjira]][[GSADG00072]][[ejb-security-statistics]]
+
+EJB Security Statistics
+
+Use the following dotted name pattern for EJB security statistics:
+
+[source]
+----
+server.security.ejb.statistic
+----
+
+The statistics available for EJB security are listed in the following
+table.
+
+[[GSADG909]][[sthref55]][[gjirc]]
+
+
+Table 8-28 EJB Security Monitoring Statistics
+
+[width="100%",cols="40%,18%,42%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`policyconfigurationcount` |CountStatistic |Number of policy
+configuration
+
+|`securitymanagercount` |CountStatistic |Number of EJB security managers
+|===
+
+
+[[gjirn]][[GSADG00073]][[web-security-statistics]]
+
+Web Security Statistics
+
+Use the following dotted name pattern for web security statistics:
+
+[source]
+----
+server.security.web.statistic
+----
+
+The statistics available for web security are listed in the following
+table.
+
+[[GSADG910]][[sthref56]][[gjiqv]]
+
+
+Table 8-29 Web Security Monitoring Statistics
+
+[width="100%",cols="40%,16%,44%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`websecuritymanagercount` |CountStatistic |Number of security managers
+
+|`webpolicyconfigurationcount` |CountStatistic |Number of policy
+configuration objects
+|===
+
+
+[[gjirj]][[GSADG00074]][[realm-security-statistics]]
+
+Realm Security Statistics
+
+Use the following dotted name pattern for realm security statistics:
+
+[source]
+----
+server.security.realm.statistic
+----
+
+The statistics available for realm security are listed in the following
+table.
+
+[[GSADG911]][[sthref57]][[gjirq]]
+
+
+Table 8-30 Realm Security Monitoring Statistics
+
+[width="100%",cols="32%,22%,46%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`realmcount` |CountStatistic |Number of realms
+|===
+
+
+[[ablvk]][[GSADG00660]][[thread-pool-statistics]]
+
+===== Thread Pool Statistics
+
+The thread pool fits into the tree of objects as shown in
+link:#ablvc[Thread Pool Tree Hierarchy].
+
+The statistics available for thread pools are shown in the following
+sections:
+
+* link:#gitct[Thread Pool Monitoring Statistics]
+* link:#gitce[JVM Statistics for Java SE-Thread Information]
+
+[[gitct]][[GSADG00075]][[thread-pool-monitoring-statistics]]
+
+Thread Pool Monitoring Statistics
+
+Use the following dotted name pattern for thread pool statistics:
+
+[source]
+----
+server.thread-pool.thread-pool.statistic
+----
+
+The statistics available for the thread pool are shown in the following
+table.
+
+[[GSADG912]][[sthref58]][[gelqt]]
+
+
+Table 8-31 Thread Pool Monitoring Statistics
+
+[width="100%",cols="37%,26%,37%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`averagetimeinqueue` |BoundedRangeStatistic |Average amount of time (in
+milliseconds) a request waited in the queue before being processed
+
+|`averageworkcompletiontime` |BoundedRangeStatistic |Average amount of
+time (in milliseconds) taken to complete an assignment
+
+|`currentbusythreads` |CountStatistic |Number of busy threads
+
+|`currentnumberofthreads` |BoundedRangeStatistic |Current number of
+request processing threads
+
+|`numberofavailablethreads` |CountStatistic |Number of available threads
+
+|`numberofworkitemsinqueue` |BoundedRangeStatistic |Current number of
+work items waiting in queue
+
+|`totalworkitemsadded` |CountStatistic |Total number of work items added
+to the work queue as of last sampling
+|===
+
+
+[[gitce]][[GSADG00076]][[jvm-statistics-for-java-se-thread-information]]
+
+JVM Statistics for Java SE - Thread Information
+
+The statistics available for `ThreadInfo` in the JVM in Java SE are
+shown in the following table.
+
+[[GSADG913]][[sthref59]][[geloy]]
+
+
+Table 8-32 JVM Monitoring Statistics for Java SE - Thread Info
+
+[width="100%",cols="20%,16%,64%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`blockedcount` |CountStatistic |Total number of times that the thread
+entered the `BLOCKED` state.
+
+|`blockedtime` |CountStatistic |Time elapsed (in milliseconds) since the
+thread entered the `BLOCKED` state. Returns -1 if thread contention
+monitoring is disabled.
+
+|`lockname` |StringStatistic |String representation of the monitor lock
+that the thread is blocked to enter or waiting to be notified through
+the `Object.wait` method.
+
+|`lockownerid` |CountStatistic |ID of the thread that holds the monitor
+lock of an object on which this thread is blocking.
+
+|`lockownername` |StringStatistic |Name of the thread that holds the
+monitor lock of the object this thread is blocking on.
+
+|`stacktrace` |StringStatistic |Stack trace associated with this thread.
+
+|`threadid` |CountStatistic |ID of the thread.
+
+|`threadname` |StringStatistic |Name of the thread.
+
+|`threadstate` |StringStatistic |State of the thread.
+
+|`waitedtime` |CountStatistic |Elapsed time (in milliseconds) that the
+thread has been in a `WAITING` state. Returns -1 if thread contention
+monitoring is disabled.
+
+|`waitedcount` |CountStatistic |Total number of times the thread was in
+`WAITING` or `TIMED_WAITING` states.
+|===
+
+
+[[ablvl]][[GSADG00661]][[transaction-service-statistics]]
+
+===== Transaction Service Statistics
+
+The transaction service allows the client to freeze the transaction
+subsystem in order to roll back transactions and determine which
+transactions are in process at the time of the freeze. The transaction
+service fits into the tree of objects as shown in
+link:#gitci[Transactions Service Tree Hierarchy].
+
+Use the following dotted name pattern for transaction service
+statistics:
+
+[source]
+----
+server.transaction-service.statistic
+----
+
+The statistics available for the transaction service are shown in the
+following table.
+
+[[GSADG914]][[sthref60]][[gelpl]]
+
+
+Table 8-33 Transaction Service Monitoring Statistics
+
+[width="100%",cols="23%,16%,61%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`activecount` |CountStatistic |Number of transactions currently active.
+
+|`activeids` |StringStatistic |The ID's of the transactions that are
+currently active. Every such transaction can be rolled back after
+freezing the transaction service.
+
+|`committedcount` |CountStatistic |Number of transactions that have been
+committed.
+
+|`rolledbackcount` |CountStatistic |Number of transactions that have
+been rolled back.
+
+|`state` |StringStatistic |Indicates whether or not the transaction has
+been frozen.
+|===
+
+
+[[ablvf]][[GSADG00662]][[web-statistics]]
+
+===== Web Statistics
+
+The web module fits into the tree of objects as shown in link:#ghlff[Web
+Tree Hierarchy].
+
+The available web statistics shown in the following sections:
+
+* link:#gjkaz[Web Module Servlet Statistics]
+* link:#ghqge[Web JSP Statistics]
+* link:#ghqga[Web Request Statistics]
+* link:#ghqfu[Web Servlet Statistics]
+* link:#ghqfr[Web Session Statistics]
+
+[[gjkaz]][[GSADG00077]][[web-module-servlet-statistics]]
+
+Web Module Servlet Statistics
+
+Use the following dotted name pattern for web module servlet statistics:
+
+[source]
+----
+server.applications.web-module.virtual-server.servlet.statistic
+server.applications.application.web-module.virtual-server.servlet.statistic
+----
+
+The available web module servlet statistics are shown in the following
+table.
+
+[[GSADG915]][[sthref61]][[gjkba]]
+
+
+Table 8-34 Web Module Servlet Statistics
+
+[width="100%",cols="21%,16%,63%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`errorcount` |CountStatistic |Cumulative number of cases where the
+response code is greater than or equal to 400.
+
+|`maxtime` |CountStatistic |Maximum amount of time the web container
+waits for requests.
+
+|`processingtime` |CountStatistic |Cumulative value of the amount of
+time required to process each request. The processing time is the
+average of request processing times divided by the request count.
+
+|`requestcount` |CountStatistic |The total number of requests processed
+so far.
+
+|`servicetime` |CountStatistic |Aggregate response time in milliseconds.
+|===
+
+
+[[ghqge]][[GSADG00079]][[web-jsp-statistics]]
+
+Web JSP Statistics
+
+Use the following dotted name pattern for web JSP statistics:
+
+[source]
+----
+server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic
+----
+
+The available web JSP statistics are shown in the following table.
+
+[[GSADG917]][[sthref62]][[givgh]]
+
+
+Table 8-35 Web JSP Monitoring Statistics
+
+[width="100%",cols="24%,16%,60%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`jspcount-current` |RangeStatistic |Number of active JSP pages
+
+|`jsperrorcount` |CountStatistic |Total number of errors triggered by
+JSP page invocations
+
+|`jspreloadedcount` |CountStatistic |Total number of JSP pages that were
+reloaded
+
+|`totaljspcount` |CountStatistic |Total number of JSP pages ever loaded
+|===
+
+
+[[ghqga]][[GSADG00080]][[web-request-statistics]]
+
+Web Request Statistics
+
+Use the following dotted name pattern for web request statistics:
+
+[source]
+----
+server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic
+----
+
+The available web request statistics are shown in the following table.
+
+[[GSADG918]][[sthref63]][[gjisw]]
+
+
+Table 8-36 Web Request Monitoring Statistics
+
+[width="100%",cols="21%,16%,63%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`errorcount` |CountStatistic |Cumulative value of the error count, with
+error count representing the number of cases where the response code was
+greater than or equal to 400
+
+|`maxtime` |CountStatistic |Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times
+
+|`processingtime` |CountStatistic |Average request processing time, in
+milliseconds
+
+|`requestcount` |CountStatistic |Cumulative number of the requests
+processed so far
+|===
+
+
+[[ghqfu]][[GSADG00081]][[web-servlet-statistics]]
+
+Web Servlet Statistics
+
+Use the following dotted name pattern for web servlet statistics:
+
+[source]
+----
+server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic
+----
+
+The available web servlet statistics are shown in the following table.
+
+[[GSADG919]][[sthref64]][[ghqiu]]
+
+
+Table 8-37 Web Servlet Monitoring Statistics
+
+[width="100%",cols="37%,16%,47%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`activeservletsloadedcount` |RangeStatistic |Number of currently loaded
+servlets
+
+|`servletprocessingtimes` |CountStatistic |Cumulative servlet processing
+times , in milliseconds
+
+|`totalservletsloadedcount` |CountStatistic |Cumulative number of
+servlets that have been loaded into the web module
+|===
+
+
+[[ghqfr]][[GSADG00082]][[web-session-statistics]]
+
+Web Session Statistics
+
+Use the following dotted name pattern for web session statistics:
+
+[source]
+----
+server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic
+----
+
+The available web session statistics are shown in the following table.
+
+[[GSADG920]][[sthref65]][[gellc]]
+
+
+Table 8-38 Web Session Monitoring Statistics
+
+[width="100%",cols="34%,16%,50%",options="header",]
+|===
+|Statistic |Data Type |Description
+|`activatedsessionstotal` |CountStatistic |Total number of activated
+sessions
+
+|`activesessionscurrent` |RangeStatistic |Number of currently active
+sessions
+
+|`activesessionshigh` |CountStatistic |Maximum number of concurrently
+active sessions
+
+|`expiredsessionstotal` |CountStatistic |Total number of expired
+sessions
+
+|`passivatedsessionstotal` |CountStatistic |Total number of passivated
+sessions
+
+|`persistedsessionstotal` |CountStatistic |Total number of persisted
+sessions
+
+|`rejectedsessionstotal` |CountStatistic |Total number of rejected
+sessions
+
+|`sessionstotal` |CountStatistic |Total number of sessions created
+|===
+
+
+[[giwqm]][[GSADG00561]][[configuring-jconsole-to-view-glassfish-server-monitoring-data]]
+
+=== Configuring JConsole to View {productName} Monitoring Data
+
+Java SE provides tools to connect to an MBean Server and view the MBeans
+registered with the server. JConsole is one such popular JMX Connector
+Client and is available as part of the standard Java SE distribution.
+When you configure JConsole for use with {productName}, {productName} becomes the JMX Connector's server end and JConsole becomes the
+JMX connector's client end.
+
+[[ggpfh]][[GSADG00390]][[to-connect-jconsole-to-glassfish-server]]
+
+==== To Connect JConsole to {productName}
+
+Java SE 6 enhanced management and monitoring of the virtual machine by
+including a Platform MBean Server and by including managed beans
+(MBeans) to configure the virtual machine.
+
+To view all MBeans, {productName} provides a configuration of the
+standard JMX connector server called System JMX Connector Server. As
+part of {productName} startup, an instance of this JMX Connector
+Server is started. Any compliant JMX connector client can connect to the
+server using the JMX Connector Server.
+
+By default, {productName} is configured with a non-secure System JMX
+Connector Server. If this is an issue, the JMX connector can be removed.
+However, access can be restricted to a specific IP address (for example,
+the loopback address) by setting `address` to `locahost`.
+
+1. Start the domain.
++
+For instructions, see link:domains.html#ggoda[To Start a Domain].
+2. Start JConsole using this format: JDK_HOME``/bin/jconsole``
++
+For example:
++
+[source]
+----
+/usr/java/bin/jconsole
+----
+The JConsole Connect to Agent window is displayed.
+3. Click the Remote tab and type the host name and port.
++
+Always connect remotely with JConsole, otherwise MBeans will not load
+automatically.
+4. Click Connect.
+5. In the Remote Process text box, specify the JMX Service URL.
++
+For example:
++
+[source]
+----
+service:jmx:rmi:///jndi/rmi://localhost:8686/jmxrmi
+----
+The JMX Service URL is emitted by the server at startup, looking
+something like this:
++
+[source]
+----
+[#|2009-12-03T10:25:17.737-0800|INFO|glassfish7.0|
+x..system.tools.admin.org.glassfish.server|_ThreadID=20;
+_ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
+URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]
+----
+However, in most cases, simply entering `host:port` is fine, such as,
+192.168.1.150:8686. The long Service URL is not needed.
++
+
+[NOTE]
+====
+Another host name can be substituted for `localhost`. The default port
+number (8686) could change if the `jmx-connector` configuration has been
+modified.
+====
+
+6. Click Connect.
++
+In the JConsole window you will see all your MBeans, JVM information,
+and so on, in various tabs. Most of the useful MBeans are to be found in
+the `amx` and `java.lang` domains.
+
+[[GSADG921]]
+
+See Also
+
+For more information about JConsole, see
+`http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html`.
+
+

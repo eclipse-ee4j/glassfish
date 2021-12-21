@@ -1,0 +1,124 @@
+type=page
+status=published
+title=delete-message-security-provider
+next=delete-module-config.html
+prev=delete-managed-thread-factory.html
+~~~~~~
+
+= delete-message-security-provider
+
+[[delete-message-security-provider-1]][[GSRFM00097]][[delete-message-security-provider]]
+
+== delete-message-security-provider
+
+Enables administrators to delete a message security provider
+
+[[sthref874]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-message-security-provider [--help]
+[--target target]
+--layer message_layer
+provider_name
+----
+
+[[sthref875]]
+
+=== Description
+
+The `delete-message-security-provider` subcommand enables administrators
+to delete a message security provider.
+
+In terms of what happens when this subcommand is run, the
+`provider-config` sub-element for the given message layer
+(`message-security-config` element of `domain.xml` is deleted. The
+`domain.xml` file specifies parameters and properties to the
+{productName}). The options specified in the list below apply to
+attributes within the `message-security-config` and `provider-config`
+sub-elements of the `domain.xml` file.
+
+If the message-layer (`message-security-config` attribute) does not
+exist, it is created, and then the `provider-config` is created under
+it.
+
+This command is supported in remote mode only.
+
+[[sthref876]]
+
+=== Options
+
+If an option has a short option name, then the short option precedes the
+long option name. Short options have one dash whereas long options have
+two dashes.
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Specifies the target from which you are deleting the message security
+  provider. Valid values are
+
+  `server`;;
+    Deletes the message security provider from the default server
+    instance `server` and is the default value
+  `domain`;;
+    Deletes the message security provider from the domain.
+  cluster_name;;
+    Deletes the message security provider from every server instance in the cluster.
+  instance_name;;
+    Deletes the message security provider from a particular sever instance.
+
+`--layer`::
+  The message-layer from which the provider has to be deleted. The
+  default value is `HttpServlet`.
+
+[[sthref877]]
+
+=== Operands
+
+provider_name::
+  The name of the provider used to reference the `provider-config`
+  element.
+
+[[sthref878]]
+
+=== Examples
+
+[[GSRFM566]][[sthref879]]
+
+==== Example 1   Deleting a message security provider
+
+The following example shows how to delete a message security provider
+for a client.
+
+[source]
+----
+asadmin> delete-message-security-provider
+--layer SOAP mySecurityProvider
+----
+
+[[sthref880]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref881]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-message-security-provider.html#create-message-security-provider-1[`create-message-security-provider`(1)],
+link:list-message-security-providers.html#list-message-security-providers-1[`list-message-security-providers`(1)]
+
+

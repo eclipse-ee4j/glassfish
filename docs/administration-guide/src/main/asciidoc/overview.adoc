@@ -1,0 +1,1037 @@
+type=page
+status=published
+title=Overview of {productName} Administration
+next=part-runtime-admin.html
+prev=preface.html
+~~~~~~
+
+= Overview of {productName} Administration
+
+[[GSADG00004]][[ablaq]]
+
+
+[[overview-of-glassfish-server-administration]]
+== 1 Overview of {productName} Administration
+
+{productName} provides a server for developing
+and deploying Java Platform Enterprise Edition (Jakarta EE) applications
+and web Java Web Services.
+
+As an administrator of{productName}, your main responsibilities are
+to establish a secure {productName} environment and to oversee the
+services, resources, and users that participate in that environment.
+Your key tasks include configuring resources and services, managing
+{productName} at runtime, and fixing problems that are associated
+with the server. You might also be involved in installing software,
+integrating add-on components, and deploying applications.
+
+The following topics are addressed here:
+
+* link:#giubb[Default Settings and Locations]
+* link:#ghrcy[Configuration Tasks]
+* link:#ggjxp[Administration Tools]
+* link:#giudo[Instructions for Administering {productName}]
+
+[[giubb]][[GSADG00526]][[default-settings-and-locations]]
+
+=== Default Settings and Locations
+
+After installation, you might need to perform some immediate
+configuration tasks to make your installation function as intended. If
+configuration defaults have been accepted, some features are enabled and
+some not. For an overview of initial configuration tasks for {productName} services and resources, see link:#gitwr[Initial Configuration
+Tasks].
+
+In addition, you might want to reset default passwords, change names or
+locations of files, and so on. The following tables list the default
+administration values.
+
+
+[NOTE]
+====
+For the zip bundle of {productName} 7, the default administrator
+login is `admin`, with no password, which means that no login is
+required.
+====
+
+
+[[GSADG793]][[sthref3]][[giuad]]
+
+
+Table 1-1 Default Administration Values
+
+[width="100%",cols="43%,57%",options="header",]
+|===
+|Item |Default
+|Domain Name |`domain1`
+|Master Password |`changeit`
+|Administration User |`admin`
+|Administration Server Port |4848
+|HTTP Port |8080
+|HTTPS Port |8181
+|Pure JMX Clients Port |8686
+|Message Queue Port |7676
+|IIOP Port |3700
+|IIOP/SSL Port |3820
+|IIOP/SSL Port With Mutual Authentication |3920
+|===
+
+
+[[GSADG794]][[sthref4]][[gjhfv]]
+
+
+Table 1-2 Default Locations
+
+[width="100%",cols="43%,57%",options="header",]
+|===
+|Item |Default
+|Command-line Utility (`asadmin`) |as-install``/bin``
+|Configuration Files |domain-dir``/config``
+|Log Files |domain-dir``/logs``
+|Upgrade Tool (`asupgrade` Command) |as-install``/bin``
+|===
+
+
+For information about replaceable items and default paths and files, see
+link:preface.html#ghpfg[Default Paths and File Names].
+
+[[ghrcy]][[GSADG00527]][[configuration-tasks]]
+
+=== Configuration Tasks
+
+Some configuration tasks must be performed directly after installation
+for your {productName} environment to work as intended. For example,
+if you are using a database with {productName}, you need to set up
+database connectivity right away.
+
+Some configuration situations are ongoing and will require you to make
+changes many times during the life of your installation. You can use
+either the Administration Console or the `asadmin` utility to modify the
+configuration. Changes are automatically applied to the appropriate
+configuration file.
+
+The following topics are addressed here:
+
+* link:#gitwr[Initial Configuration Tasks]
+* link:#giusb[How Dotted Names Work for Configuration]
+* link:#gjjrl[Configuration Files]
+* link:#gitzw[Impact of Configuration Changes]
+
+[[gitwr]][[GSADG00694]][[initial-configuration-tasks]]
+
+==== Initial Configuration Tasks
+
+This section maps the common configuration tasks to the command-line
+procedures in this guide. In some situations, the resource or service is
+automatically enabled and your configuration tasks involve adjusting or
+changing the default settings to suit your specific needs.
+
+The following resources and services frequently require configuration
+immediately after installation:
+
+System Properties::
+  See link:general-administration.html#ghcjc[Administering System
+  Properties].
+Domains::
+  The initial `domain1` is created during installation. Additional
+  configuration tasks might include such tasks as configuring additional
+  domains or setting up automatic restart. See
+  link:domains.html#ggnop[Administering Domains].
+JVM::
+  The initial tasks for configuring the JVM include creating JVM options
+  and profilers. See link:jvm.html#ablwj[Administering the Virtual
+  Machine for the Java Platform].
+Logging::
+  By default, logging is enabled, so basic logging works without
+  additional configuration. However, you might want to change log
+  levels, property values, or the location of log files. See
+  link:logging.html#abluj[Administering the Logging Service].
+Monitoring::
+  By default, the monitoring service is enabled. However, monitoring for
+  the individual modules is not enabled, so your first monitoring task
+  is to enable monitoring for the modules that you want to monitor. See
+  link:monitoring.html#ablur[Administering the Monitoring Service].
+Life Cycle Modules::
+  See link:lifecycle-modules.html#giury[Administering Life Cycle
+  Modules].
+Security::
+  * System Security. Initial configuration tasks might include setting
+  up passwords, audit modules, and certificates. See
+  "link:../security-guide/system-security.html#GSSCG00035[Administering System Security]" in {productName} Security Guide.
+  * User Security. Initial configuration tasks might include creating
+  authentication realms and file users. See
+  "link:../security-guide/user-security.html#GSSCG00036[Administering User Security]" in {productName} Security Guide.
+  * Message Security. Initial configuration tasks might include
+  configuring a Java Cryptography Extension (JCE) provider, enabling
+  default and non-default security providers, and configuring message
+  protection policies. See "link:../security-guide/message-security.html#GSSCG00037[Administering Message
+  Security]" in {productName} Security Guide.
+Database Connectivity::
+  The initial tasks involved in configuring {productName} to connect
+  to the Apache Derby database include creating a Java Database
+  Connectivity (JDBC) connection pool, creating a JDBC resource, and
+  integrating a JDBC driver. See link:jdbc.html#ablih[Administering
+  Database Connectivity].
+EIS Connectivity::
+  The initial tasks involved in configuring {productName} to connect
+  to an enterprise information system (EIS) include creating a connector
+  connection pool, creating a connector resource, editing a resource
+  adapter configuration, creating a connector security map, creating a
+  connector work security map, and creating an administered object (if
+  needed). See link:connectors.html#abllp[Administering EIS
+  Connectivity].
+Internet Connectivity::
+  The initial tasks involved in making deployed web applications
+  accessible by internet clients include creating HTTP network listeners
+  and virtual servers, and configuring the HTTP listeners for SSL (if
+  needed). See link:http_https.html#ablsw[Administering Internet
+  Connectivity].
+Object Request Broker (ORB)::
+  An initial configuration task might involve creating an IIOP listener.
+  See link:orb.html#abltr[Administering the Object Request Broker (ORB)].
+JavaMail Service::
+  An initial configuration task might involve creating a JavaMail
+  resource. See link:javamail.html#ablkr[Administering the JavaMail
+  Service].
+Java Message Service (JMS)::
+  Initial configuration tasks might include creating a physical
+  destination, creating connection factories or destination resources,
+  creating a JMS host (if the default JMS host is not adequate),
+  adjusting connection pool settings (if needed), and configuring
+  resource adapters for JMS. See link:jms.html#abljw[Administering the
+  Java Message Service (JMS)].
+JNDI Service::
+  An initial configuration task might involve creating a JNDI resource.
+  See link:jndi.html#ablky[Administering the Java Naming and Directory
+  Interface (JNDI) Service].
+
+Information and instructions for accomplishing the tasks by using the
+Administration Console are contained in the Administration Console
+online help.
+
+[[giusb]][[GSADG00695]][[how-dotted-names-work-for-configuration]]
+
+==== How Dotted Names Work for Configuration
+
+After the initial configuration is working, you will continue to manage
+ongoing configuration for the life of your {productName}
+installation. You might need to adjust resources to improve
+productivity, or issues might arise that require settings to be modified
+or defaults to be reset. In some situations, an `asadmin` subcommand is
+provided for updating, such as the `update-connector-work-security-map`
+subcommand. However, most updating is done by using the `list`, `get`,
+and `set` subcommands with dotted names. For detailed information about
+dotted names, see the link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+
+
+[NOTE]
+====
+Dotted names also apply to monitoring, but the method is different. For
+information on using dotted names for monitoring, see
+link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works].
+====
+
+
+The general process for working with configuration changes on the
+command line is as follows:
+
+1. List the modules for the component of interest.
++
+The following single mode example uses the | (pipe) character and the
+`grep` command to narrow the search:
++
+[source]
+----
+asadmin list "*" | grep http | grep listener
+----
+Information similar to the following is returned:
++
+[source]
+----
+configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1
+configs.config.server-config.network-config.network-listeners.network-listener.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http
+configs.config.server-config.network-config.protocols.protocol.admin-listener.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-1
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.file-cache
+configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl
+----
+
+2. Get the attributes that apply to the module you are interested in.
++
+The following multimode example gets the attributes and values for
+`http-listener-1`:
++
+[source]
+----
+asadmin> get server-config.network-config.network-listeners.network-listener.http-listener-1.*
+----
+Information similar to the following is returned:
++
+[source]
+----
+server.http-service.http-listener.http-listener-1.acceptor-threads = 1
+server.http-service.http-listener.http-listener-1.address = 0.0.0.0
+server.http-service.http-listener.http-listener-1.blocking-enabled = false
+server.http-service.http-listener.http-listener-1.default-virtual-server = server
+server.http-service.http-listener.http-listener-1.enabled = true
+server.http-service.http-listener.http-listener-1.external-port =
+server.http-service.http-listener.http-listener-1.family = inet
+server.http-service.http-listener.http-listener-1.id = http-listener-1
+server.http-service.http-listener.http-listener-1.port = 8080
+server.http-service.http-listener.http-listener-1.redirect-port =
+server.http-service.http-listener.http-listener-1.security-enabled = false
+server.http-service.http-listener.http-listener-1.server-name =
+server.http-service.http-listener.http-listener-1.xpowered-by = true
+----
+
+3. Modify an attribute by using the `set` subcommand.
++
+This example sets the `security-enabled` attribute of `http-listener-1`
+to true:
++
+[source]
+----
+asadmin> set server.http-service.http-listener.http-listener-1.security-enabled = true
+----
+
+[[gjjrl]][[GSADG00696]][[configuration-files]]
+
+==== Configuration Files
+
+The bulk of the configuration information about {productName}
+resources, applications, and instances is stored in the `domain.xml`
+configuration file.
+This file is the central repository for a given
+administrative domain and contains an XML representation of the {productName} domain model.
+The default location for the `domain.xml` file is domain-dir``/config``.
+
+[NOTE]
+====
+{productName} maintains a backup of the `domain.xml` file that is
+named `domain.xml.bak`. The purpose of this file is solely to enable
+{productName} to start a domain if the `domain.xml` file cannot be
+read.
+Do not modify or delete the `domain.xml.bak` file and do not use this file for any other purpose.
+====
+
+The `logging.properties` file is used to configure logging levels for
+individual modules. The default `logging.properties` file is located in
+the same directory as the `domain.xml` file. For further information on
+the `logging.properties` file, see link:logging.html#gkkit[Logging
+Properties].
+
+The `asenv.conf` file is located in the as-install``/config`` directory.
+Its purpose is to store the {productName} environment variables, such
+as the installation location of the database, Message Queue, and so on.
+
+[NOTE]
+====
+Changes are automatically applied to the appropriate configuration file.
+Do not edit the configuration files directly.
+Manual editing is prone to error and can have unexpected results.
+====
+
+
+[[gitzw]][[GSADG00697]][[impact-of-configuration-changes]]
+
+==== Impact of Configuration Changes
+
+Some configuration changes require that you restart the DAS or {productName} instances for the changes to take effect. Other changes are
+applied dynamically without requiring that the DAS or instances be restarted.
+The procedures in this guide indicate when a restart is required.
+{productName} enables you to determine whether the DAS or
+an instance must be restarted to apply configuration changes.
+
+Some changes to resources or connection pools affect the applications
+that use the resources or connection pools. These changes do not require restart.
+However, any applications that use the resources or connection
+pools must be disabled and re-enabled or redeployed for the change to take effect.
+
+The following topics are addressed here:
+
+* link:#gkvaj[To Determine Whether the DAS or an Instance Requires Restart]
+* link:#ghciy[Configuration Changes That Require Restart]
+* link:#ghclm[Dynamic Configuration Changes]
+* link:#gkvas[Changes That Affect Applications]
+
+[[gkvaj]][[GSADG00300]][[to-determine-whether-the-das-or-an-instance-requires-restart]]
+
+===== To Determine Whether the DAS or an Instance Requires Restart
+
+1. Ensure that the DAS is running.
+To obtain information about the DAS or an instance, a running server is required.
+
+2. Do one of the following:
+* To determine if the DAS requires restart, list the domains in your {productName} installation.
+Use the link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
++
+[source]
+----
+asadmin> list-domains [--domaindir domain-root-dir]
+----
++
+The domain-root-dir is the directory that contains the directories in
+which individual domains' configuration is stored.
+The default is as-install``/domains``, where as-install is the base installation
+directory of the {productName} software.
+If the DAS requires restart, a statement that restart is required is displayed.
+
+* To determine if an instance requires restart, list information about the instance.
+Use the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose.
++
+[source]
+----
+asadmin> list-instances instance-name
+----
+The instance-name is the name of the instance for which you are listing
+information.
+If the instance requires restart, one of the following pieces of
+information is displayed: a statement that restart is required,
+or a list of configuration changes that are not yet applied to the instance.
+
+[[GSADG00093]][[gkvay]]
+Example 1-1 Determining if the DAS Requires Restart
+
+This example determines that the DAS for the domain `domain1` requires
+restart to apply configuration changes.
+
+[source]
+----
+asadmin> list-domains
+domain1 running, restart required to apply configuration changes
+Command list-domains executed successfully.
+----
+
+[[GSADG00094]][[gkvba]]
+Example 1-2 Determining if an Instance Requires Restart
+
+This example determines that the instance `pmd-i1` requires restart to
+apply configuration changes.
+
+[source]
+----
+asadmin> list-instances pmd-i1
+pmd-i1   running;  requires restart
+Command list-instances executed successfully.
+----
+
+[[GSADG795]]
+
+See Also
+
+* link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`(1)]
+* link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+
+You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.
+
+* `asadmin help list-domains`
+* `asadmin help list-instances`
+
+[[ghciy]][[GSADG00628]][[configuration-changes-that-require-restart]]
+
+===== Configuration Changes That Require Restart
+
+The following configuration changes require restart for the changes to
+take effect:
+
+* Changing JVM options
+* Changing port numbers
++
+
+[NOTE]
+====
+Changes to some port numbers, for example HTTP listener ports, do not
+require restart.
+====
+
+* Changing log handler elements
+* Configuring certificates
+* Managing HTTP, JMS, IIOP, JNDI services
+* Enabling or disabling secure administration as explained in
+"link:../security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in {productName} Security Guide
+
+[[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
+
+===== Dynamic Configuration Changes
+
+With dynamic configuration, changes take effect while the DAS or
+instance is running. The following configuration changes do not require
+restart:
+
+* Adding or deleting add-on components
+* Adding or removing JDBC, JMS, and connector resources and pools
+(Exception: Some connection pool properties affect applications.)
+* Changing a system property that is not referenced by a JVM option or a
+port
+* Adding file realm users
+* Changing logging levels
+* Enabling and disabling monitoring
+* Changing monitoring levels for modules
+* Enabling and disabling resources and applications
+* Deploying, undeploying, and redeploying applications
+
+[[gkvas]][[GSADG00630]][[changes-that-affect-applications]]
+
+===== Changes That Affect Applications
+
+Some changes to resources or connection pools affect the applications
+that use the resources or connection pools. These changes do not require
+restart. However, any applications that use the resources or connection
+pools must be disabled and re-enabled or redeployed for the change to
+take effect.
+
+
+[NOTE]
+====
+If you do not know which applications use the changed resources or
+connection pools, you can apply these changes by restarting the clusters
+or{productName} instances to which applications are deployed.
+However, to minimize the disruption to the services that your
+applications provide, avoid restarting clusters or instances to apply
+these changes if possible.
+====
+
+
+The following changes affect applications:
+
+* Creating or deleting resources (Exception: Changes to some JDBC, JMS,
+or connector resources do not affect applications.)
+* Modifying the following JDBC connection pool properties:
+
+** `datasource-classname`
+
+** `associate-with-thread`
+
+** `lazy-connection-association`
+
+** `lazy-connection-enlistment`
+
+** JDBC driver vendor-specific properties
+* Modifying the following connector connection pool properties:
+
+** `resource-adapter-name`
+
+** `connection-definition-name`
+
+** `transaction-support`
+
+** `associate-with-thread`
+
+** `lazy-connection-association`
+
+** `lazy-connection-enlistment`
+
+** Vendor-specific properties
+
+[[ggjxp]][[GSADG00528]][[administration-tools]]
+
+=== Administration Tools
+
+For the most part, you can perform the same tasks by using either the
+graphical Administration Console or the `asadmin` command-line utility,
+however, there are exceptions.
+
+The following {productName} administration tools are described here:
+
+* link:#ablav[Administration Console]
+* link:#gcocs[`asadmin` Utility]
+* link:#gjjok[REST Interfaces]
+* link:#gjjxt[OSGi Module Management Subsystem]
+* link:#ghcjl[`keytool` Utility]
+* link:#ghrfm[Java Monitoring and Management Console (JConsole)]
+
+[[ablav]][[GSADG00698]][[administration-console]]
+
+==== Administration Console
+
+The Administration Console is a browser-based utility that features an
+easy-to-navigate graphical interface that includes extensive online help
+for the administrative tasks.
+
+To use the Administration Console, the domain administration server
+(DAS) must be running. Each domain has its own DAS, which has a unique
+port number. When {productName} was installed, you chose a port
+number for the DAS, or used the default port of 4848. You also specified
+a user name and password if you did not accept the default login
+(`admin` with no password).
+
+When specifying the URL for the Administration Console, use the port
+number for the domain to be administered. The format for starting the
+Administration Console in a web browser is `http://`hostname`:`port. For
+example:
+
+[source]
+----
+http://kindness.example.com:4848
+----
+
+If the Administration Console is running on the host where {productName} was installed, specify `localhost` for the host name. For
+example:
+
+[source]
+----
+http://localhost:4848
+----
+
+If the Administration Console is run on a host different from the host
+where {productName} was installed, a secure connection (`https`
+instead of `http`) is used. Some browsers do not display pages on secure
+connections by default and must be configured to permit secure protocols
+(SSL and TLS).
+
+For Microsoft Windows, an alternate way to start the {productName}
+Administration Console is by using the Start menu.
+
+You can display the help material for a page in the Administration
+Console by clicking the Help button on the page. The initial help page
+describes the functions and fields of the page itself. Associated task
+instructions can be accessed on additional pages by clicking a link in
+the See Also list.
+
+
+[NOTE]
+====
+If you try to use the Administration Console from a system through a
+proxy server on another system back to the original system, while using
+the system's full host name (instead of `localhost` or `127.0.0.1`) you
+are denied access because the request is treated as a remote request,
+which requires that the secure administration feature (secure admin) be
+enabled.
+
+To avoid this situation, do one of the following:
+
+* Do not use a proxy server.
+* Use `localhost` or `127.0.0.1` as the host name.
+* Enable secure admin so that what {productName} interprets as a
+remote request is accepted as such.
+
+To enable secure admin, see "olink:GSSCG00039[Managing Administrative
+Security]" in {productName} Security Guide.
+====
+
+
+[[gcocs]][[GSADG00699]][[asadmin-utility]]
+
+==== `asadmin` Utility
+
+The `asadmin` utility is a command-line tool that runs subcommands for
+identifying the operation or task that you want to perform. You can run
+`asadmin` subcommands either from a command prompt or from a script.
+Running `asadmin` subcommands from a script is helpful for automating
+repetitive tasks. Basic information about how the `asadmin` utility
+works can be found in the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page. For
+instructions on using the `asadmin` utility, see
+link:general-administration.html#giobi[Using the `asadmin` Utility].
+
+To issue an `asadmin` subcommand in the standard command shell (single
+mode), go to the as-install``/bin`` directory and type the `asadmin`
+command followed by a subcommand. For example:
+
+[source]
+----
+asadmin list-jdbc-resources
+----
+
+You can invoke multiple command mode (multimode) by typing `asadmin` at
+the command prompt, after which the `asadmin>` prompt is presented. The
+`asadmin` utility continues to accept subcommands until you exit
+multimode and return to the standard command shell. For example:
+
+[source]
+----
+asadmin> list-jdbc-resources
+----
+
+You can display a help page for any `asadmin` subcommand by typing
+`help` before the subcommand name. For example:
+
+[source]
+----
+asadmin> help restart-domain
+----
+
+or
+
+[source]
+----
+asadmin help restart-domain
+----
+
+A collection of the `asadmin` help pages is available in HTML and PDF
+format in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
+Manual].
+
+[[gjjok]][[GSADG00700]][[rest-interfaces]]
+
+==== REST Interfaces
+
+{productName} provides representational state transfer (REST)
+interfaces to enable you to access monitoring and configuration data for
+{productName}, including data that is provided by newly installed
+add-on components. For more information, see
+link:general-administration.html#gjipx[Using REST Interfaces to
+Administer {productName}].
+
+[[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
+
+==== OSGi Module Management Subsystem
+
+The OSGi module management subsystem that is provided with {productName} is the http://felix.apache.org/[Apache Felix OSGi framework] . To
+administer this framework, use the either of the following tools:
+
+* http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html[Apache
+Felix Gogo] remote shell. This shell is provided with {productName}.
+The shell uses the Felix Gogo shell service to interact with the OSGi
+module management subsystem.
+* GlassFish OSGi Administration Console. This console is distributed as
+an add-on component for {productName} or as a set of files from the
+Maven GlassFish repository. In both distributions, the GlassFish OSGi
+Web Console is provided as an extension to the Administration Console
+and as a standalone web application. The GlassFish OSGi Administration
+Console is a customized version of the
+http://felix.apache.org/documentation/subprojects/apache-felix-web-console.html[Apache
+Felix Web Console].
+
+These tools enable you to perform administrative tasks on OSGi bundles
+such as:
+
+* Browsing installed OSGi bundles
+* Viewing the headers of installed OSGi bundles
+* Installing OSGi bundles
+* Controlling the life cycle of installed bundles
+
+[[glhdz]][[GSADG00302]][[to-enable-the-apache-felix-gogo-remote-shell]]
+
+===== To Enable the Apache Felix Gogo Remote Shell
+
+By default, the Apache Felix Gogo remote shell in {productName} is
+disabled. Before using the shell to administer OSGi bundles in {productName}, you must enable the shell.
+
+Enabling the Apache Felix Gogo remote shell in {productName} involves
+changing the value of the property `glassfish.osgi.start.level.final`.
+This property controls whether the OSGi start level service enables the
+shell when the DAS or a {productName} instance is started.
+
+1. Ensure that the DAS is running.
++
+[[CEGDBDBH]]
+2. Change the value of the `glassfish.osgi.start.level.final` property from 2 to 3.
+If the domain includes clustered or standalone instances on remote
+hosts, perform this step on each remote host. You can change this value either by creating a Java system property or
+by editing a file.
+* To change this value by creating a Java system property, create the
+Java system property `glassfish.osgi.start.level.final` with a value of 3.
++
+[source]
+----
+asadmin> create-jvm-options --target target -Dglassfish.osgi.start.level.final=3
+----
+target::
+  The target for which you are creating the property.
++
+  For the DAS, the target is `server`.
++
+  For a clustered or standalone instance, the target is the name of the
+  instance.
+* To change this value by editing a file, edit the plain-text file
+as-install``/config/osgi.properties`` to change the value of the
+`glassfish.osgi.start.level.final` property from 2 to 3.
+
+3. Restart the DAS.
+For instructions, see link:domains.html#ginqj[To Restart a Domain].
+
+[[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
+
+===== To Run Apache Felix Gogo Remote Shell Commands
+
+The Apache Felix Gogo remote shell is integrated with the {productName} `asadmin` command line utility. You can use the `asadmin`
+subcommands `osgi` and `osgi-shell` to access the remote shell and run
+OSGi shell commands.
+
+[[GSADG1051]]
+
+To Run Remote Shell Commands Using the `osgi` Subcommand
+
+The `osgi` subcommand delegates the command line to the Apache Felix
+Gogo remote shell for the execution of OSGi shell commands. Commands are
+executed by the remote shell and results are returned by the `asadmin`
+utility. The `osgi` subcommand is supported in remote mode only.
+
+1. Ensure that the server is running.
+Remote commands require a running server.
+2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi`]
+subcommand. For the full syntax and options for this subcommand, see `osgi`(1).
+
+[[GSADG1052]]
+
+To Run Remote Shell Commands Using the `osgi-shell` Subcommand
+
+The `osgi-shell` subcommand provides interactive access to the Apache
+Felix Gogo remote shell for the execution of OSGi shell commands. OSGi
+shell commands are executed on the server and results are printed on the client.
+You can run multiple commands from a file or run commands interactively.
+The `osgi-shell` subcommand is supported in local mode only.
+Unlike other local subcommands, however, the DAS and the server
+instance whose shell is being accessed must be running.
+
+1. Ensure that the server is running.
+2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
+subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
+
+[[GSADG1053]][[sthref5]]
+Example 1-3 Listing Apache Felix Gogo Remote Shell Commands
+
+This example lists Apache Felix Gogo remote shell commands. Some lines
+of output are omitted from this example for readability.
+
+[source]
+----
+asadmin> osgi help
+felix:bundlelevel
+felix:cd
+felix:frameworklevel
+gogo:cat
+gogo:each
+gogo:echo
+...
+asadmin> osgi-shell
+Use "exit" to exit and "help" for online help.
+gogo$ help
+felix:bundlelevel
+felix:cd
+felix:frameworklevel
+gogo:cat
+gogo:each
+gogo:echo
+----
+
+[[GSADG1054]][[sthref6]]
+Example 1-4 Running a Remote Shell Command
+
+This example runs the Felix Remote Shell Command `lb` without any
+arguments to list all installed OSGi bundles. Some lines of output are
+omitted from this example for readability.
+
+[source]
+----
+asadmin> osgi lb
+START LEVEL 2
+ID|State      |Level|Name
+ 0|Active     |    0|System Bundle
+ 1|Active     |    1|Metro Web Services API OSGi Bundle
+ 2|Active     |    1|jakarta.annotation API
+Command osgi executed successfully.
+...
+asadmin> osgi-shell
+Use "exit" to exit and "help" for online help.
+gogo$ lb
+START LEVEL 2
+ID|State      |Level|Name
+ 0|Active     |    0|System Bundle
+ 1|Active     |    1|Metro Web Services API OSGi Bundle
+ 2|Active     |    1|jakarta.annotation API
+gogo$
+----
+
+[[GSADG00097]][[gjkrh]]
+Example 1-5 Determining the Services That an OSGi Bundle Provides
+
+This example runs the Felix Remote Shell Command `inspect` with the
+`service` option and the `capability` option to determine the services
+that OSGi bundle 251 provides. Some lines of output are omitted from
+this example for readability.
+
+[source]
+----
+asadmin> osgi inspect service capability 251
+== GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
+objectClass = org.glassfish.osgijavaeebase.Extender
+service.id = 68
+-----
+objectClass = org.glassfish.osgijavaeebase.OSGiDeployer
+service.id = 69
+service.ranking = -2147483648
+Command osgi executed successfully.
+...
+asadmin> osgi -shell
+Use "exit" to exit and "help" for online help.
+gogo$ inspect service capability 251
+== GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
+objectClass = org.glassfish.osgijavaeebase.Extender
+service.id = 68
+...
+gogo$
+----
+
+[[gkwvx]][[GSADG00303]][[to-download-and-install-the-glassfish-osgi-web-console]]
+
+===== To Download and Install the GlassFish OSGi Web Console
+
+The GlassFish OSGi Web Console is distributed as follows:
+
+* As an add-on component for {productName}
+* As a set of files from the https://maven.java.net[GlassFish Maven
+repository]
+
+In both distributions, the GlassFish OSGi Web Console is provided as an
+extension to the Administration Console and as a standalone web
+application.
+
+1. Perform one of the following sets of steps, depending on how you are
+obtaining the GlassFish OSGi Web Console.
+* If you are obtaining the console as an add-on component, install the
+GlassFish OSGi Admin Console component.
+* If you are obtaining the console from the Maven repository, download
+and unzip the required files.
+2. Download the following files to the parent of the `glassfish7`
+directory of your {productName} installation.
+http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip[`glassfish-osgi-http-3.1.2.zip`]
++
+http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-gui/3.1.2/glassfish-osgi-gui-3.1.2.zip[`glassfish-osgi-gui-3.1.2.zip`]
+3. Unzip the files that you downloaded.
++
+The contents of the files are added to the
+as-install``/modules/autostart`` directory of your {productName}
+installation.
+4. Restart the DAS. For instructions, see link:domains.html#ginqj[To Restart a Domain].
+
+[[GSADG797]]
+
+Next Steps
+
+After downloading and installing the GlassFish OSGi Web Console, you can
+access the console as explained in the following sections:
+
+* link:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
+{productName} Administration Console]
+* link:#BABDJHAF[To Access the GlassFish OSGi Web Console as a Standalone Web Application]
+
+[[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
+
+===== To Access the GlassFish OSGi Web Console Through the {productName} Administration Console
+
+A tab for the GlassFish OSGi Web Console is provided for the DAS and for
+every {productName} instance in a domain.
+
+1. Ensure that the DAS and the instance for which you want to access
+the GlassFish OSGi Web Console are running.
+
+2. Start the {productName} Administration Console.
+For instructions, see link:#ablav[Administration Console].
+
+3. Open the Administration Console page for the DAS or instance for
+which you are accessing the GlassFish OSGi Web Console.
+* For the DAS, in the navigation tree, select the server (Admin Server) node.
+* For a standalone instance, perform these steps:
+.. In the navigation tree, expand the Standalone Instances node.
+.. Under the Standalone Instances node, select the instance.
+* For a clustered instance, perform these steps:
+.. In the navigation tree, expand the Clusters node.
+.. Under the Clusters node, select the cluster that contains the instance.
+   The General Information page for the cluster opens.
+.. In the General Information page for the cluster, click the Instances tab.
+   The Clustered Server Instances page for the cluster opens.
+.. In the Server Instances table on the Clustered Server Instances
+   page, select the instance.
+
+4. On the Administration Console page for the DAS or instance, click
+the OSGi Console tab. You are prompted for the user name and password of the administrative
+user of the GlassFish OSGi Web Console.
+
+5. In response to the prompt, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.
+The user name and password of this user are both preset to `admin`.
+The GlassFish OSGi Web Console page opens.
+
+[[BABDJHAF]][[GSADG799]][[to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application]]
+
+===== To Access the GlassFish OSGi Web Console as a Standalone Web Application
+
+1. Ensure that the DAS or the instance for which you want to access the
+GlassFish OSGi Web Console is running.
+
+2. In a web browser, open the following location:
++
+[source]
+----
+http://host:http-port/osgi/system/console/
+----
+host::
+  The host where the DAS or instance is running.
+http-port::
+  The port on which {productName} listens for HTTP requests.
+  The default is 8080.
+
++
+For example, if the DAS is running on the local host and {productName} listens
+  for HTTP requests on the default port, open the following location:
++
+[source]
+----
+http://localhost:8080/osgi/system/console/
+----
+
+3. When prompted, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.
++
+The user name and password of this user are both preset to `admin`.
+
+[[ghcjl]][[GSADG00703]][[keytool-utility]]
+
+==== `keytool` Utility
+
+The `keytool` utility is used to set up and work with Java Security
+Socket Extension (JSSE) digital certificates. See
+"link:../security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
+in {productName} Security Guide for instructions on using `keytool`.
+
+[[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
+
+==== Java Monitoring and Management Console (JConsole)
+
+Java SE provides tools to connect to an MBean server and view the MBeans
+that are registered with the server. JConsole is one such popular JMX
+Connector Client and is available as part of the standard Java SE
+distribution. For instructions on implementing JConsole in the {productName} environment,
+see link:monitoring.html#giwqm[Configuring JConsole to View {productName} Monitoring Data].
+
+[[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
+
+=== Instructions for Administering {productName}
+
+Information and instructions on performing most of the administration
+tasks from the command line are provided in this document and in the
+`asadmin` utility help pages. For instructions on accessing `asadmin`
+online help, see link:general-administration.html#givlw[To Display Help
+Information for the `asadmin` Utility or a Subcommand].
+
+Information and instructions for accomplishing the tasks by using the
+Administration Console are contained in the Administration Console
+online help.
+
+
+[NOTE]
+====
+Instructions written for the {productName} tools use standard UNIX
+forward slashes (/) for directory path separators in commands and file
+names. If you are running {productName} on a Microsoft Windows
+system, use backslashes (\) instead. For example:
+
+* UNIX: as-install``/bin/asadmin``
+* Windows: as-install``\bin\asadmin``
+
+====
+
+
+The following additional documents address specific administration areas:
+
+* Verifying and deploying applications
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide]
+
+

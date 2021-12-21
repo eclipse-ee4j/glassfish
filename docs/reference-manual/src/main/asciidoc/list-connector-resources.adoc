@@ -1,0 +1,99 @@
+type=page
+status=published
+title=list-connector-resources
+next=list-connector-security-maps.html
+prev=list-connector-connection-pools.html
+~~~~~~
+
+= list-connector-resources
+
+[[list-connector-resources-1]][[GSRFM00158]][[list-connector-resources]]
+
+== list-connector-resources
+
+Lists all connector resources
+
+[[sthref1414]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-connector-resources [--help]
+[target]
+----
+
+[[sthref1415]]
+
+=== Description
+
+The `list-connector-resources` subcommand lists all connector resources.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1416]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1417]]
+
+=== Operands
+
+target::
+  The target for which the connector resources are to be listed. Valid
+  values are as follows:
+
+  `server`;;
+    Lists the connector resources on the default server instance. This
+    is the default value.
+  `domain`;;
+    Lists the connector resources for the domain.
+  cluster-name;;
+    Lists the connector resources on all server instances in the
+    specified cluster.
+  instance-name;;
+    Lists the connector resources on a specified server instance.
+
+[[sthref1418]]
+
+=== Examples
+
+[[GSRFM650]][[sthref1419]]
+
+==== Example 1   Listing Connector Resources
+
+This example lists all existing connector resources.
+
+[source]
+----
+asadmin> list-connector-resources
+jms/qConnFactory
+Command list-connector-resources executed successfully.
+----
+
+[[sthref1420]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1421]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
+link:delete-connector-resource.html#delete-connector-resource-1[`delete-connector-resource`(1)]
+
+

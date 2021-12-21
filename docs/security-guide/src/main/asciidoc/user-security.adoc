@@ -1,0 +1,784 @@
+type=page
+status=published
+title=Administering User Security
+next=message-security.html
+prev=system-security.html
+~~~~~~
+
+= Administering User Security
+
+[[GSSCG00036]][[ggnqj]]
+
+
+[[administering-user-security]]
+== 2 Administering User Security
+
+This chapter provides instructions for administering user security in
+the {productName} environment by using the `asadmin`
+command-line utility. {productName} enforces its authentication and
+authorization policies upon realms, users, and groups. This chapter
+assumes that you are familiar with security features such as
+authentication, authorization, and certificates. If you are not, see
+link:system-security.html#ablnk[Administering System Security].
+
+The following topics are addressed here:
+
+* link:#ggkuk[Administering Authentication Realms]
+* link:#ggnxq[Administering File Users]
+
+Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.
+
+[NOTE]
+====
+JSR-375 defines the concept of an Identity Store, and an SPI interface
+for writing providers that can authenticate users against Identity
+Stores. It also provides two built-in providers. This mechanism is
+conceptually similar to Authentication Realms, but can be configured and
+managed by applications. See
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#working-with-identity-stores[
+Working with Identity Stores]
+in The Jakarta EE Tutorial for more information about Identity Stores.
+====
+
+[[ggkuk]][[GSSCG00151]][[administering-authentication-realms]]
+
+=== Administering Authentication Realms
+
+The following topics are addressed here:
+
+* link:#gkbiy[Overview of Authentication Realms]
+* link:#ggnca[To Create an Authentication Realm]
+* link:#ggngh[To List Authentication Realms]
+* link:#giwlt[To Update an Authentication Realm]
+* link:#ggngf[To Delete an Authentication Realm]
+* link:#ggmww[To Configure a JDBC or Digest Authentication Realm]
+* link:#gkbeo[To Configure LDAP Authentication with OID]
+* link:#gksgi[To Configure LDAP Authentication with OVD]
+* link:#gkbjp[To Enable LDAP Authentication on the {productName} DAS]
+
+[[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
+
+==== Overview of Authentication Realms
+
+An authentication realm, also called a security policy domain or
+security domain, is a scope over which the {productName} defines and
+enforces a common security policy. {productName} is preconfigured
+with the file, certificate, and administration realms. In addition, you
+can set up LDAP, JDBC, digest, Oracle Solaris, or custom realms. An
+application can specify which realm to use in its deployment descriptor.
+If the application does not specify a realm, {productName} uses its
+default realm (`file`).
+
+File realm::
+  {productName} stores user credentials locally in a file named
+  `keyfile`. The file realm is the initial default realm.
+Administration realm::
+  The administration realm is also a file realm and stores administrator
+  user credentials locally in a file named `admin-keyfile`.
+Certificate realm::
+  {productName} stores user credentials in a certificate database.
+  When using the certificate realm, the server uses certificates with
+  the HTTPS protocol to authenticate web clients.
+LDAP realm::
+  {productName} can get user credentials from a Lightweight Directory
+  Access Protocol (LDAP) server such as Oracle Virtual Directory (OVD)
+  (`http://www.oracle.com/technetwork/middleware/id-mgmt/overview/index.html`),
+  Oracle Internet Directory (OID)
+  (`http://www.oracle.com/technetwork/indexes/products/index.html`), and
+  Oracle Directory Server Enterprise Edition
+  (`http://www.oracle.com/us/products/middleware/identity-management/oracle-directory-services/index.html`).
+  LDAP is a protocol for enabling anyone to locate organizations,
+  individuals, and other resources such as files and devices in a
+  network, whether on the public Internet or on a corporate intranet. +
+  See link:#gkbeo[To Configure LDAP Authentication with OID] for
+  instructions on configuring {productName} to work with an OVD/OID
+  LDAP provider.
++
+[NOTE]
+====
+By default, {productName} performs LDAP group search. If you have
+not created any groups in LDAP, the search fails.
+
+To disable LDAP group search in LDAP user name search, set the
+`com.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH`
+Java system property to `true` in the required {productName}
+instance or cluster configurations:
+[source]
+----
+asadmin> create-jvm-options --target=target
+-Dcom.oracle.enterprise.security.auth.realm.ldap.DISABLEGROUP_SEARCH=true
+----
+where target is the {productName} instance or cluster for which you
+are disabling LDAP group search. For more information about the
+`create-jvm-options` subcommand, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+====
+
+JDBC realm::
+  {productName} gets user credentials from a database. The server
+  uses the database information and the enabled JDBC realm option in the
+  configuration file.
+Digest realm::
+  Digest Authentication authenticates a user based on a user name and a
+  password. However, the authentication is performed by transmitting the
+  password in an encrypted form.
+Oracle Solaris realm::
+  {productName} gets user credentials from the Oracle Solaris
+  operating system. This realm is supported on the Oracle Solaris 9 and
+  Oracle Solaris 10 operating systems. Consult your Oracle Solaris
+  documentation for information about managing users and groups in the
+  Oracle Solaris realm.
+PAM realm::
+  A Pluggable Authentication Module (PAM) realm allows applications
+  deployed on {productName} to authenticate users against a native
+  Unix (Solaris/Linux/Mac OS) users list. PAM realms use the class name
+  `com.sun.enterprise.security.auth.realm.pam.PamRealm` and the JAAS
+  Context `pamRealm`. +
+  This realm is supported on all Unix Operating Systems, including the
+  Oracle Solaris 9 and Oracle Solaris 10 operating systems
+Custom realm::
+  You can create other repositories for user credentials, such as a
+  relational database or third-party components. For more information
+  about custom realms, see the Administration Console online help. For
+  instructions on creating a custom realm, see
+  "link:../application-development-guide/securing-apps.html#GSDVG00367[
+  Creating a Custom Realm]" in
+  {productName} Application Development Guide.
+
+The {productName} authentication service can govern users in multiple realms.
+
+[[ggnca]][[GSSCG00110]][[to-create-an-authentication-realm]]
+
+==== To Create an Authentication Realm
+
+Use the `create-auth-realm` subcommand in remote mode to create an
+authentication realm.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a realm by using the
+link:../reference-manual/create-auth-realm.html#GSRFM00015[`create-auth-realm`] subcommand. +
+Information about properties for this subcommand is included in this help page.
+
+[[GSSCG00079]][[ggpjx]]
+Example 2-1 Creating a Realm
+
+This example creates a realm named `db`.
+
+[source]
+----
+asadmin> create-auth-realm --classname com.iplanet.ias.security.
+auth.realm.DB.Database --property defaultuser=admin:Password=admin db
+Command create-auth-realm executed successfully.
+----
+
+[[sthref21]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-auth-realm` at the command line.
+
+For information on creating a custom realm, see
+"link:../application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in {productName} Application Development Guide.
+
+[[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
+
+==== To List Authentication Realms
+
+Use the `list-auth-realms` subcommand in remote mode to list the
+existing authentication realms.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List realms by using the link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+subcommand.
+
+[[GSSCG00080]][[ggpkw]]
+Example 2-2 Listing Realms
+
+This example lists the authentication realms on `localhost`.
+
+[source]
+----
+asadmin> list-auth-realms
+db
+certificate
+file
+admin-realm
+Command list-auth-realms executed successfully.
+----
+
+[[sthref22]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-auth-realms` at the command line.
+
+[[giwlt]][[GSSCG00112]][[to-update-an-authentication-realm]]
+
+==== To Update an Authentication Realm
+
+Use the `set` subcommand to modify an existing authentication realm.
+
+
+[NOTE]
+====
+A custom realm does not require server restart.
+====
+
+
+1. List realms by using the link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+subcommand.
+2. Modify the values for the specified thread pool by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
+The thread pool is identified by its dotted name.
+3. To apply your changes, restart {productName}.
++
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+
+[[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
+
+==== To Delete an Authentication Realm
+
+Use the `delete-auth-realm` subcommand in remote mode to delete an
+existing authentication realm.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List realms by using the
+link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`] subcommand.
+3. If necessary, notify users that the realm is being deleted.
+4. Delete the realm by using the
+link:../reference-manual/delete-auth-realm.html#GSRFM00066[`delete-auth-realm`] subcommand.
+5. To apply your changes, restart {productName}. See
+"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+
+[[GSSCG00081]][[ggpjf]]
+Example 2-3 Deleting a Realm
+
+This example deletes an authentication realm named `db`.
+
+[source]
+----
+asadmin> delete-auth-realm db
+Command delete-auth-realm executed successfully.
+----
+
+[[sthref23]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-auth-realm` at the command line.
+
+[[ggmww]][[GSSCG00114]][[to-configure-a-jdbc-or-digest-authentication-realm]]
+
+==== To Configure a JDBC or Digest Authentication Realm
+
+{productName} enables you to specify a user's credentials (user name
+and password) in the JDBC realm instead of in the connection pool. Using
+the `jdbc` type realm instead of the connection pool prevents other
+applications from browsing the database tables for user credentials.
+
+
+[NOTE]
+====
+By default, storage of passwords as clear text is not supported in the
+JDBC realm. Under normal circumstances, passwords should not be stored
+as clear text.
+====
+
+
+1. [[ggmxh]]
+Create the database tables in which to store user credentials for the realm. +
+How you create the database tables depends on the database that you are using.
+
+2. Add user credentials to the database tables that you created. +
+How you add user credentials to the database tables depends on the
+database that you are using.
+
+3. Create a JDBC connection pool for the database. +
+See "link:../administration-guide/jdbc.html#GSADG00420[
+To Create a JDBC Connection Pool]" in {productName} Administration Guide.
+
+4. Create a JDBC resource for the database. +
+"link:../administration-guide/jdbc.html#GSADG00426[
+To Create a JDBC Resource]" in {productName} Administration Guide.
+
+5. [[ggmvo]]
+Create a realm. +
+For instructions, see link:#ggnca[To Create an Authentication Realm].
++
+[NOTE]
+====
+The JAAS context should be `jdbcDigestRealm` for digest authentication
+or `jdbcRealm` for other authentication types.
+====
+
+6. [[ggmtc]]
+Modify the deployment descriptor to specify the `jdbc` realm. +
+Modify the deployment descriptor that is associated with your application.
+* For an enterprise application in an Enterprise Archive (EAR) file,
+  modify the `sun-application.xml` file.
+* For a web application in a Web Application Archive (WAR) file, modify the `web.xml` file.
+* For an enterprise bean in an EJB JAR file, modify the `sun-ejb-jar.xml` file.
+
++
+For more information about how to specify a realm, see
+"link:../application-development-guide/securing-apps.html#GSDVG00365[
+How to Configure a Realm]" in {productName} Application Development Guide.
+
+7. Assign security roles to users in the realm. +
+To assign a security role to a user, add a `security-role-mapping`
+element to the deployment descriptor that you modified.
+
+8. Verify that the database is running. +
+If needed, see "link:../administration-guide/jdbc.html#GSADG00417[To Start the Database]"
+in {productName} Administration Guide.
+
+9. To apply the authentication, restart the server. +
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+in {productName} Administration Guide.
+
+[[GSSCG00082]][[ghysu]]
+Example 2-4 Assigning a Security Role
+
+This example shows a `security-role-mapping` element that assigns the
+security role `Employee` to user `Calvin`
+
+[source,xml]
+----
+<security-role-mapping>
+    <role-name>Employee</role-name>
+    <principal-name>Calvin</principal-name>
+  </security-role-mapping>
+----
+
+[[gkbeo]][[GSSCG00115]][[to-configure-ldap-authentication-with-oid]]
+
+==== To Configure LDAP Authentication with OID
+
+This procedure explains how to configure {productName} to use LDAP
+authentication with Oracle Internet Directory.
+
+1. Install Oracle Enterprise Manager 11g and the latest Enterprise
+Manager patches, if they are not installed already. +
+Instructions for installing Oracle Enterprise Manager are provided in
+the Oracle Enterprise Manager
+(`http://docs.oracle.com/cd/E11857_01/index.html`) documentation set.
+
+2. Install the Oracle Identity Management Suite (IDM) 11g and Patch Set 2 or later,
+if they are not installed already. +
+Instructions for installing the Oracle Identity Management suite are
+provided in Oracle Fusion Middleware Installation Guide for Oracle
+Identity Management
+(`http://docs.oracle.com/cd/E12839_01/install.1111/e12002/toc.html`).
+
+3. Configure SSL for Oracle Internet Directory (OID), if it is not
+configured already. Configure the OID instance in the server
+authentication mode and with the protocol version set to SSLv3 +
+Instructions for configuring SSL for OID are provided in the SSL chapter
+of Oracle Internet Directory Administrator's Guide
+(`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html`).
+
+4. Using Oracle Wallet Manager, export an SSL self-signed certificate
+you want to use with {productName}. +
+Instructions for using Oracle Wallet Manager to create and export SSL
+certificates are provided in the "Configure Oracle Internet Directory
+for SSL" (`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html#CHDCADIJ`)
+section of the SSL chapter in Oracle Internet Directory Administrator's
+Guide (`http://docs.oracle.com/cd/B14099_19/idmanage.1012/b14082/ssl.html`).
+
+5. On the {productName} side, use the `keytool` command import the
+certificate you exported with Oracle Wallet Manager. +
+The `keytool` command is available in the `$JAVA_HOME/bin` directory.
+Use the following syntax:
++
+[source]
+----
+keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+-file cert-name
+----
++
+where the variables are defined as follows:
++
+--
+alias-name::
+  Name of an alias to use for the certificate
+domain-dir::
+  Name of the domain for which the certificate is used
+cert-name::
+  Path to the certificate that you exported with Oracle Wallet Manager.
+--
++
+For example, to import a certificate named `oi.cer` for a {productName} domain in `/glassfish7/glassfish/domains/domain1`, using an
+alias called "OID self-signed certificate," you would use the following command:
++
+[source]
+----
+keytool -importcert -alias "OID self signed certificate" -keystore \
+/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
+----
+6. Restart the {productName} domain. +
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+in {productName} Administration Guide.
+7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
+Anonymous Bind for OID. +
+For example:
++
+[source]
+----
+ldapmodify -D cn=orcladmin -q -p portNum -h hostname -f ldifFile
+----
+In this example, the LDIF file might contain the following:
++
+[source]
+----
+dn: cn=oid1,cn=osdldapd,cn=subconfigsubentry
+changetype: modify
+replace: orclAnonymousBindsFlag
+orclAnonymousBindsFlag: 1
+----
+To disable all anonymous binds, you would use a similar LDIF file with
+the last line changed to:
++
+[source]
+----
+orclAnonymousBindsFlag: 0
+----
+See "Managing Anonymous Binds"
+(`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/authentication.html#CACJEJDA`)
+in Oracle Fusion Middleware Administrator's Guide for Oracle Internet Directory
+(`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/toc.html`) for
+complete instructions on the `ldapmodify` command.
+
+[[gksgi]][[GSSCG00116]][[to-configure-ldap-authentication-with-ovd]]
+
+==== To Configure LDAP Authentication with OVD
+
+This procedure explains how to configure {productName} to use LDAP
+authentication with Oracle Virtual Directory.
+
+1. Create the OVD adapter, as described in the "Creating and
+Configuring Oracle Virtual Directory Adapters"
+(`http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/basic_adapters.html#BABCBGJA`)
+chapter of Administrator's Guide for Oracle Virtual Directory
+(`http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/toc.html`).
+
+2. Configure SSL for Oracle Virtual Directory (OVD), if it is not
+configured already. For instructions on configuring SSL for OVD, see the
+section "Enable SSL for Oracle Virtual Directory Using Fusion Middleware
+Control" in SSL Configuration in Oracle Fusion Middleware
+(`http://docs.oracle.com/cd/E12839_01/core.1111/e10105/sslconfig.html#ASADM1800`).
++
+Also, configure the SSL for the OVD listener in server authentication mode.
+
+3. Export the certificate from JKS keystore you want to use with
+{productName}. See "Exporting a Keystore Using Fusion Middleware Control"
+(`http://docs.oracle.com/cd/E16764_01/core.1111/e10105/wallets.html#CIHECAIB`)
+for information.
+
+4. On the {productName} side, use the `keytool` command to import
+the certificate you exported from the JKS keystore. +
+The `keytool` command is available in the `$JAVA_HOME/bin` directory.
+Use the following syntax:
++
+[source]
+----
+keytool -importcert -alias "alias-name" -keystore domain-dir/config/cacerts.jks
+-file cert-name
+----
++
+where the variables are defined as follows:
++
+--
+alias-name::
+  Name of an alias to use for the certificate
+domain-dir::
+  Name of the domain for which the certificate is used
+cert-name::
+  Path to the certificate that you exported from the keystore.
+--
++
+For example, to import a certificate named `ovd.cer` for a {productName} domain in `/glassfish7/glassfish/domains/domain1`, using an
+alias called "OVD self-signed certificate," you would use the following command:
++
+[source]
+----
+keytool -importcert -alias "OVD self signed certificate" -keystore \
+/glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
+----
+5. Restart the {productName} domain. +
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+in {productName} Administration Guide.
+
+[[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
+
+==== To Enable LDAP Authentication on the {productName} DAS
+
+This procedure explains how to enable LDAP authentication for logins to
+the {productName} Domain Administration Server (DAS). Logging in to
+the DAS is typically only performed by {productName} administrators
+who want to use the {productName} Administration Console or `asadmin`
+command. See link:#gkbeo[To Configure LDAP Authentication with OID] for
+instructions on enabling general LDAP authentication for {productName}.
+
+[[sthref24]]
+
+Before you begin, ensure that you have followed the configuration instructions in
+link:#gkbeo[To Configure LDAP Authentication with OID]
+
+Use the `asadmin configure-ldap-for-admin` subcommand to enable user
+authentication to the {productName} DAS.
+
+Use the following syntax:
+
+[source]
+----
+asadmin configure-ldap-for-admin --basedn "dn-list" --url [ldap|ldaps]://ldap-url
+--ldap-group group-name
+----
+
+where the variables are defined as follows:
+
+dn-list::
+  basedn parameters
+ldap-url::
+  URL and port number for the LDAP server; can use standard (`ldap`) or
+  secure (`ldaps`) protocol
+group-name::
+  LDAP group name for allowed users, as defined on the LDAP server.
+
+For example:
+
+[source]
+----
+asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
+--url ldap://interopoel54-1:3060 --ldap-group sqestaticgroup
+
+asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
+--url ldaps://interopoel54-1:7501 --ldap-group sqestaticgroup
+----
+
+[[sthref25]]
+
+See Also
+
+See link:../reference-manual/configure-ldap-for-admin.html#GSRFM00010[`configure-ldap-for-admin`] for more information
+about the `configure-ldap-for-admin subcommand`.
+
+[[ggnxq]][[GSSCG00152]][[administering-file-users]]
+
+=== Administering File Users
+
+A user is an individual (or application program) identity that is
+defined in {productName}. A user who has been authenticated is
+sometimes called a principal.
+
+As the administrator, you are responsible for integrating users into the
+{productName} environment so that their credentials are securely
+established and they are provided with access to the applications and
+services that they are entitled to use.
+
+The following topics are addressed here:
+
+* link:#ggocf[To Create a File User]
+* link:#ggoab[To List File Users]
+* link:#ghlgs[To List File Groups]
+* link:#ggoaw[To Update a File User]
+* link:#ggoah[To Delete a File User]
+
+[[ggocf]][[GSSCG00118]][[to-create-a-file-user]]
+
+==== To Create a File User
+
+Use the `create-file-user` subcommand in remote mode to create a new
+user by adding a new entry to the `keyfile`. The entry includes the user
+name, password, and any groups for the user. Multiple groups can be
+specified by separating the groups with colons (:).
+
+[NOTE]
+====
+If secure administration is enabled as described in
+link:administrative-security.html#gkomz[Running Secure Admin], you cannot
+create an administrative user with a blank password.
+====
+
+Creating a new `file` realm user is a dynamic event and does not require
+server restart.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. If the user will belong to a particular group, see the current
+groups by using the
+link:../reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+3. Create a file user by using the
+link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
+
+[[GSSCG00083]][[ggpkq]]
+Example 2-5 Creating a User
+
+This example create user `Jennifer` on the default realm `file` (no groups are specified).
+
+The `asadmin` `--passwordfile` option specifies the name of a file that
+contains the password entries in a specific format. The entry for a
+password must have the `AS_ADMIN_` prefix followed by the password name
+in uppercase letters, an equals sign, and the password. See
+link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] for more information.
+
+[source]
+----
+asadmin> create-file-user --user admin
+--passwordfile=c:\tmp\asadminpassword.txt Jennifer
+Command create-file-user executed successfully.
+----
+
+[[sthref26]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-file-user` at the command line.
+
+[[ggoab]][[GSSCG00119]][[to-list-file-users]]
+
+==== To List File Users
+
+Use the `list-file-users` subcommand in remote mode to list the users
+that are in the `keyfile`.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List users by using the link:../reference-manual/list-file-users.html#GSRFM00165[`list-file-users`]
+subcommand.
+
+[[GSSCG00084]][[ggpgf]]
+Example 2-6 Listing File Users
+
+This example lists file users on the default `file` realm file.
+
+[source]
+----
+asadmin> list-file-users
+Jennifer
+Command list-file-users executed successfully.
+----
+
+[[sthref27]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-file-users` at the command line.
+
+[[ghlgs]][[GSSCG00120]][[to-list-file-groups]]
+
+==== To List File Groups
+
+A group is a category of users classified by common traits, such as job
+title or customer profile. For example, users of an e-commerce
+application might belong to the `customer` group, and the big spenders
+might also belong to the `preferred` group. Categorizing users into
+groups makes it easier to control the access of large numbers of users.
+A group is defined for an entire server and realm. A user can be
+associated with multiple groups of users.
+
+A group is different from a role in that a role defines a function in an
+application, while a group is a set of users who are related in some
+way. For example, in the personnel application there might be groups
+such as `full-time`, `part-time`, and `on-leave`. Users in these groups
+are all employees (the `employee` role). In addition, each user has its
+own designation that defines an additional level of employment.
+
+Use the `list-file-groups` subcommand in remote mode to list groups for
+a file user, or all file groups if the `--name` option is not specified.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List file groups by using the
+link:../reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+
+[[GSSCG00085]][[ghlgb]]
+Example 2-7 Listing Groups for a User
+
+This example lists the groups for user `joesmith`.
+
+[source]
+----
+asadmin> list-file-groups --name joesmith
+staff
+manager
+Command list-file-groups executed successfully
+----
+
+[[ggoaw]][[GSSCG00121]][[to-update-a-file-user]]
+
+==== To Update a File User
+
+Use the `update-file-user` subcommand in remote mode to modify the
+information in the `keyfile` for a specified user.
+
+[NOTE]
+====
+If secure administration is enabled as described in
+link:administrative-security.html#gkomz[Running Secure Admin], you cannot
+update an administrative user to have a blank password.
+====
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Update the user information by using the
+link:../reference-manual/update-file-user.html#GSRFM00254[`update-file-user`] subcommand.
+3. To apply your changes, restart {productName}. +
+See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+in {productName} Administration Guide.
+
+[[GSSCG00086]][[ggpgh]]
+Example 2-8 Updating a User
+
+The following subcommand updates the groups for user `Jennifer`.
+
+[source]
+----
+asadmin> update-file-user --passwordfile c:\tmp\asadminpassword.txt --groups
+staff:manager:engineer Jennifer
+Command update-file-user executed successfully.
+----
+
+[[sthref28]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help update-file-user` at the command line.
+
+[[ggoah]][[GSSCG00122]][[to-delete-a-file-user]]
+
+==== To Delete a File User
+
+Use the `delete-file-user` subcommand in remote mode to remove a user
+entry from the `keyfile` by specifying the user name. You cannot delete
+yourself, that is, the user you are logged in as cannot be deleted
+during your session.
+
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List users by using the
+link:../reference-manual/list-file-users.html#GSRFM00165[`list-file-users`] subcommand.
+3. Delete the user by using the
+link:../reference-manual/delete-file-user.html#GSRFM00076[`delete-file-user`] subcommand.
+
+[[GSSCG00087]][[ggpib]]
+Example 2-9 Deleting a User
+
+This example deletes user `Jennifer` from the default `file` realm.
+
+[source]
+----
+asadmin> delete-file-user Jennifer
+Command delete-file-user executed successfully.
+----
+
+[[sthref29]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-file-user` at the command line.
+
+

@@ -1,0 +1,280 @@
+type=page
+status=published
+title=Introduction to the Development Environment for {productName} Add-On Components
+next=writing-hk2-components.html
+prev=preface.html
+~~~~~~
+
+= Introduction to the Development Environment for {productName} Add-On Components
+
+[[GSACG00001]][[ghmlv]]
+
+
+[[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
+== Introduction to the Development Environment for {productName} Add-On Components
+
+{productName} enables an external vendor such as
+an independent software vendor (ISV), original equipment manufacturer
+(OEM), or system integrator to incorporate {productName} into a new
+product with the vendor's own brand name. External vendors can extend
+the functionality of {productName} by developing add-on components
+for {productName}. {productName} provides interfaces to enable
+add-on components to be configured, managed, and monitored through
+existing {productName} tools such as the Administration Console and
+the `asadmin` utility.
+
+The following topics are addressed here:
+
+* link:#ghmje[{productName} Modular Architecture and Add-On
+Components]
+* link:#ghmrf[OSGi Alliance Module Management Subsystem]
+* link:#ghmnq[Hundred-Kilobyte Kernel]
+* link:#ghmns[Overview of the Development Process for an Add-On
+Component]
+
+[[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
+
+=== {productName} Modular Architecture and Add-On Components
+
+{productName} has a modular architecture in which the features of
+{productName} are provided by a consistent set of components that
+interact with each other. Each component provides a small set of
+functionally related features.
+
+The modular architecture of {productName} enables users to download
+and install only the components that are required for the applications
+that are being deployed. As a result, start-up times, memory
+consumption, and disk space requirements are all minimized.
+
+The modular architecture of {productName} enables you to extend the
+basic functionality of {productName} by developing add-on components.
+An add-on component is an encapsulated definition of reusable code that
+has the following characteristics:
+
+* The component provides a set of Java classes.
+* The component offers services and public interfaces.
+* The component implements the public interfaces with a set of private
+classes.
+* The component depends on other components.
+
+Add-on components that you develop interact with {productName} in the
+same way as components that are supplied in {productName}
+distributions.
+
+You can create and offer new or updated add-on components at any time.
+{productName} administrators can install add-on components and update
+or remove installed components after {productName} is installed. For
+more information, see "link:../administration-guide/toc.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
+
+[[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
+
+=== OSGi Alliance Module Management Subsystem
+
+To enable components to be added when required, {productName}
+provides a lightweight and extensible kernel that uses the module
+management subsystem from the http://www.osgi.org/[OSGi Alliance]
+(`http://www.osgi.org/`). Any {productName} component that plugs in
+to this kernel must be implemented as an OSGi bundle. To enable an
+add-on component to plug in to the {productName} kernel in the same
+way as other components, package the component as an OSGi bundle. For
+more information, see
+link:packaging-integrating-delivering.html#ghpun[Packaging an Add-On
+Component].
+
+The default OSGi module management subsystem in {productName} is the
+Apache Felix http://felix.apache.org[OSGi framework]
+(`http://felix.apache.org`). However, the {productName} kernel uses
+only the http://www.osgi.org/Release4/HomePage[OSGi Service Platform
+Release 4] (`http://www.osgi.org/Release4/HomePage`) API. Therefore,
+{productName} supports other OSGi module management subsystems that
+are compatible with the OSGi Service Platform Release 4 API.
+
+[[ghmnq]][[GSACG00089]][[hundred-kilobyte-kernel]]
+
+=== Hundred-Kilobyte Kernel
+
+The https://github.com/eclipse-ee4j/glassfish-hk2[Hundred-Kilobyte Kernel (HK2)]
+(`https://github.com/eclipse-ee4j/glassfish-hk2`) is the lightweight and extensible kernel
+of {productName}. HK2 consists of the following technologies:
+
+* Module subsystem. The HK2 module subsystem provides isolation between
+components of the {productName}. The HK2 module subsystem is
+compatible with existing technologies such as the OSGi framework.
+* Component model. The HK2 component model eases the development of
+components that are also services. {productName} discovers these
+components automatically and dynamically. HK2 components use injection
+of dependencies to express dependencies on other components. {productName} provides two-way mappings between the services of an HK2
+component and OSGi services.
+
+For more information, see link:writing-hk2-components.html#ghmna[Writing
+HK2 Components].
+
+[[ghmns]][[GSACG00090]][[overview-of-the-development-process-for-an-add-on-component]]
+
+=== Overview of the Development Process for an Add-On Component
+
+To ensure that an add-on component behaves identically to components
+that are supplied in {productName} distributions, the component must
+meet the following requirements:
+
+* If the component generates management data, configuration data, or
+monitoring data, it must provide that data to other {productName}
+components in the same way as other {productName} components.
+* If the component generates management data, configuration data, or
+monitoring data, it must provide that data to users through {productName} administrative interfaces such as Administration Console and the
+`asadmin` utility.
+* The component must be packaged and delivered as an OSGi bundle.
+
+To develop add-on components that meet these requirements, follow the
+development process that is described in the following sections:
+
+* link:#ghpqc[Writing HK2 Components]
+* link:#ghokn[Extending the Administration Console]
+* link:#ghohx[Extending the `asadmin` Utility]
+* link:#ghojs[Adding Monitoring Capabilities]
+* link:#gkahs[Adding Configuration Data for a Component]
+* link:#ghojq[Adding Container Capabilities]
+* link:#gktld[Creating a Session Persistence Module]
+* link:#ghoiu[Packaging and Delivering an Add-On Component]
+
+[[ghpqc]][[GSACG00173]][[writing-hk2-components]]
+
+==== Writing HK2 Components
+
+The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
+kernel of {productName}. To interact with {productName}, add-on
+components plug in to this kernel. In the HK2 component model, the
+functions of an add-on component are declared through a contract-service
+implementation paradigm. An HK2 contract identifies and describes the
+building blocks or the extension points of an application. An HK2
+service implements an HK2 contract.
+
+For more information, see link:writing-hk2-components.html#ghmna[Writing
+HK2 Components].
+
+[[ghokn]][[GSACG00174]][[extending-the-administration-console]]
+
+==== Extending the Administration Console
+
+The Administration Console is a browser-based tool for administering
+{productName}. It features an easy-to-navigate interface and online
+help. Extending the Administration Console enables you to provide a
+graphical user interface for administering your add-on component. You
+can use any of the user interface features of the Administration
+Console, such as tree nodes, links on the Common Tasks page, tabs and
+sub-tabs, property sheets, and JavaServer Faces pages. Your add-on
+component implements a marker interface and provides a configuration
+file that describes how your customizations integrate with the
+Administration Console.
+
+For more information, see
+link:extending-the-admin-console.html#ghmrb[Extending the Administration
+Console].
+
+[[ghohx]][[GSACG00175]][[extending-the-asadmin-utility]]
+
+==== Extending the `asadmin` Utility
+
+The `asadmin` utility is a command-line tool for configuring and
+administering {productName}. Extending the `asadmin` utility enables
+you to provide administrative interfaces for an add-on component that
+are consistent with the interfaces of other {productName} components.
+A user can run `asadmin` subcommands either from a command prompt or
+from a script. For more information about the `asadmin` utility, see the
+link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
+
+For more information, see link:extending-asadmin.html#ghmrd[Extending the
+`asadmin` Utility].
+
+[[ghojs]][[GSACG00176]][[adding-monitoring-capabilities]]
+
+==== Adding Monitoring Capabilities
+
+Monitoring is the process of reviewing the statistics of a system to
+improve performance or solve problems. By monitoring the state of
+components and services that are deployed in the {productName},
+system administrators can identify performance bottlenecks, predict
+failures, perform root cause analysis, and ensure that everything is
+functioning as expected. Monitoring data can also be useful in
+performance tuning and capacity planning.
+
+An add-on component typically generates statistics that the {productName} can gather at run time. Adding monitoring capabilities enables an
+add-on component to provide statistics to {productName} in the same
+way as components that are supplied in {productName} distributions.
+As a result, system administrators can use the same administrative
+interfaces to monitor statistics from any installed {productName}
+component, regardless of the origin of the component.
+
+For more information, see
+link:adding-monitoring-capabilities.html#ghmos[Adding Monitoring
+Capabilities].
+
+[[gkahs]][[GSACG00177]][[adding-configuration-data-for-a-component]]
+
+==== Adding Configuration Data for a Component
+
+The configuration data of a component determines the characteristics and
+runtime behavior of a component. {productName} provides interfaces to
+enable an add-on component to store its configuration data in the same
+way as other {productName} components. These interfaces are similar
+to interfaces that are defined in
+https://jakarta.ee/specifications/xml-binding/3.0/[Jakarta XML Binding 3.0]
+(`https://jakarta.ee/specifications/xml-binding/3.0/`). By using these interfaces to
+store configuration data, you ensure that the add-on component is fully
+integrated with {productName}. As a result, administrators can
+configure an add-on component in the same way as they can configure
+other {productName} components.
+
+For more information, see
+link:adding-configuration-data.html#gjlpe[Adding Configuration Data for a
+Component].
+
+[[ghojq]][[GSACG00178]][[adding-container-capabilities]]
+
+==== Adding Container Capabilities
+
+Applications run on {productName} in containers. {productName}
+enables you to create containers that extend or replace the existing
+containers of {productName}. Adding container capabilities enables
+you to run new types of applications and to deploy new archive types in
+{productName}.
+
+For more information, see
+link:adding-container-capabilities.html#ghmon[Adding Container
+Capabilities].
+
+[[gktld]][[GSACG00179]][[creating-a-session-persistence-module]]
+
+==== Creating a Session Persistence Module
+
+{productName} enables you to create a session persistence module in
+the web container for high availability-related functionality by
+implementing the `PersistenceStrategyBuilder` interface . Using the
+`PersistenceStrategyBuilder` interface in an HK2 service makes the
+session manager extensible because you can implement a new persistence
+type without having to modify the web container code.
+
+For information about other high-availability, session persistence
+solutions, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+Persistence and Failover]" in {productName} High
+Availability Administration Guide.
+
+For more information, see
+link:session-persistence-modules.html#gkmhj[Creating a Session
+Persistence Module].
+
+[[ghoiu]][[GSACG00180]][[packaging-and-delivering-an-add-on-component]]
+
+==== Packaging and Delivering an Add-On Component
+
+Packaging an add-on component enables the component to interact with the
+{productName} kernel in the same way as other components. Integrating
+a component with {productName} enables {productName} to discover
+the component at runtime. If an add-on component is an extension or
+update to existing installations of {productName}, deliver the
+component through Update Tool.
+
+For more information, see
+link:packaging-integrating-delivering.html#ghmxp[Packaging, Integrating,
+and Delivering an Add-On Component].
+

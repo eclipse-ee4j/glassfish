@@ -1,0 +1,410 @@
+type=page
+status=published
+title=Writing HK2 Components
+next=extending-the-admin-console.html
+prev=introduction.html
+~~~~~~
+
+= Writing HK2 Components
+
+[[GSACG00002]][[ghmna]]
+
+
+[[writing-hk2-components]]
+== Writing HK2 Components
+
+The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
+kernel of {productName}. To interact with {productName}, add-on
+components plug in to this kernel. In the HK2 component model, the
+functions of an add-on component are declared through a contract-service
+implementation paradigm. An HK2 contract identifies and describes the
+building blocks or the extension points of an application. An HK2
+service implements an HK2 contract.
+
+The following topics are addressed here:
+
+* link:#ghokq[HK2 Component Model]
+* link:#ghojt[Services in the HK2 Component Model]
+* link:#ghokt[HK2 Runtime]
+* link:#ghojb[Inversion of Control]
+* link:#ghmoe[Identifying a Class as an Add-On Component]
+* link:#ghpvp[Using the Apache Maven Build System to Develop HK2 Components]
+
+[[ghokq]][[GSACG00091]][[hk2-component-model]]
+
+=== HK2 Component Model
+
+The Hundred-Kilobyte Kernel (HK2) provides a module system and component
+model for building complex software systems. HK2 forms the core of
+{productName}'s architecture.
+
+The module system is responsible for instantiating classes that
+constitute the application functionality. The HK2 runtime complements
+the module system by creating objects. It configures such objects by:
+
+* Injecting other objects that are needed by a newly instantiated object
+* Injecting configuration information needed for that object
+* Making newly created objects available, so that they can then be
+injected to other objects that need it
+
+[[ghojt]][[GSACG00092]][[services-in-the-hk2-component-model]]
+
+=== Services in the HK2 Component Model
+
+An HK2 service identifies the building blocks or the extension points of
+an application. A service is a plain-old Java object (POJO) with the
+following characteristics:
+
+* The object implements an interface.
+* The object is declared in a JAR file with the `META-INF/services`
+file.
+
+To clearly separate the contract interface and its implementation, the
+HK2 runtime requires the following information:
+
+* Which interfaces are contracts
+* Which implementations of such interfaces are services
+
+Interfaces that define a contract are identified by the
+`org.jvnet.hk2.annotations.Contract` annotation.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface Contract {
+}
+----
+
+Implementations of such contracts should be identified with an
+`org.jvnet.hk2.annotations.Service` annotation so that the HK2 runtime
+can recognize them as `@Contract` implementations.
+
+[source,java]
+----
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface Service {
+    ...
+}
+----
+
+For more information, see
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[`Service`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html`).
+
+[[ghokt]][[GSACG00093]][[hk2-runtime]]
+
+=== HK2 Runtime
+
+Once Services are defined, the HK2 runtime can be used to instantiate or
+retrieve instances of services. Each service instance has a scope,
+specified as singleton, per thread, per application, or a custom scope.
+
+[[ghoib]][[GSACG00181]][[scopes-of-services]]
+
+==== Scopes of Services
+
+You can specify the scope of a service by adding an
+`org.jvnet.hk2.annotations.Scoped` annotation to the class-level of your
+`@Service` implementation class. Scopes are also services, so they can
+be custom defined and added to the HK2 runtime before being used by
+other services. Each scope is responsible for storing the service
+instances to which it is tied; therefore, the HK2 runtime does not rely
+on predefined scopes (although it comes with a few predefined ones).
+
+[source,java]
+----
+@Contract
+public abstract class Scope {
+    public abstract ScopeInstance current();
+}
+----
+
+The following code fragment shows how to set the scope for a service to
+the predefined `Singleton` scope:
+
+[source,java]
+----
+@Service
+public Singleton implements Scope {
+    ...
+}
+
+@Scope(Singleton.class)
+@Service
+public class SingletonService implements RandomContract {
+    ...
+}
+----
+
+You can define a new `Scope` implementation and use that scope on your
+`@Service` implementations. You will see that the HK2 runtime uses the
+`Scope` instance to store and retrieve service instances tied to that
+scope.
+
+[[ghoky]][[GSACG00182]][[instantiation-of-components-in-hk2]]
+
+==== Instantiation of Components in HK2
+
+Do not call the `new` method to instantiate components. Instead,
+retrieve components by using the `Habitat` instance. The simplest way to
+use the `Habitat` instance is through a `getComponent(Class`T
+`contract)` call:
+
+[source,java]
+----
+public <T> T getComponent(Class<T> clazz) throws ComponentException;
+----
+
+More APIs are available at
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html[`Habitat`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html`).
+
+[[ghois]][[GSACG00183]][[hk2-lifecycle-interfaces]]
+
+==== HK2 Lifecycle Interfaces
+
+Components can attach behaviors to their construction and destruction
+events by implementing the
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html[`org.jvnet.hk2.component.PostConstruct`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html`)
+interface, the
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html[`org.jvnet.hk2.component.PreDestroy`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html`)
+interface, or both. These are interfaces rather than annotations for
+performance reasons.
+
+The `PostConstruct` interface defines a single method, `postConstruct`,
+which is called after a component has been initialized and all its
+dependencies have been injected.
+
+The `PreDestroy` interface defines a single method, `preDestroy`, which
+is called just before a component is removed from the system.
+
+[[GSACG00014]][[ghoqv]]
+Example 2-1 Example Implementation of `PostContruct` and `PreDestroy`
+
+[source,java]
+----
+@Service(name="com.example.container.MyContainer")
+public class MyContainer implements Container, PostConstruct, PreDestroy {
+    @Inject
+    Logger logger;
+    ...
+    public void postConstruct() {
+        logger.info("Starting up.");
+    }
+
+    public void preDestroy() {
+        logger.info("Shutting down.");
+    }
+}
+
+----
+
+[[ghojb]][[GSACG00094]][[inversion-of-control]]
+
+=== Inversion of Control
+
+Inversion of control (IoC) refers to a style of software architecture
+where the behavior of a system is determined by the runtime capabilities
+of the individual, discrete components that make up the system. This
+architecture is different from traditional styles of software
+architecture, where all the components of a system are specified at
+design-time. With IoC, discrete components respond to high-level events
+to perform actions. While performing these actions, the components
+typically rely on other components to provide other actions. In an IoC
+system, components use injection to gain access to other components.
+
+[[ghoiz]][[GSACG00184]][[injecting-hk2-components]]
+
+==== Injecting HK2 Components
+
+Services usually rely on other services to perform their tasks. The HK2
+runtime identifies the `@Contract` implementations required by a service
+by using the
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html[`org.jvnet.hk2.annotations.Inject`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html`)
+annotation. `Inject` can be placed on fields or setter methods of any
+service instantiated by the HK2 runtime. The target service is retrieved
+and injected during the calling service's instantiation by the component
+manager.
+
+The following example shows how to use `@Inject` at the field level:
+
+[source,java]
+----
+@Inject
+ConfigService config;
+----
+
+The following example shows how to use `@Inject` at the setter level:
+
+[source,java]
+----
+@Inject
+public void set(ConfigService svc) {...}
+----
+
+Injection can further qualify the intended injected service
+implementation by using a name and scope from which the service should
+be available:
+
+[source,java]
+----
+@Inject(Scope=Singleton.class, name="deploy")
+AdminCommand deployCommand;
+----
+
+[[ghoic]][[GSACG00186]][[instantiation-cascading-in-hk2]]
+
+==== Instantiation Cascading in HK2
+
+Injection of instances that have not been already instantiated triggers
+more instantiation. You can see this as a component instantiation
+cascade where some code requests for a high-level service will, by using
+the `@Inject` annotation, require more injection and instantiation of
+lower level services. This cascading feature keeps the implementation as
+private as possible while relying on interfaces and the separation of
+contracts and providers.
+
+[[GSACG00015]][[ghquz]]
+Example 2-2 Example of Instantiation Cascading
+
+The following example shows how the instantiation of `DeploymentService`
+as a `Startup` contract implementation will trigger the instantiation of
+the `ConfigService`.
+
+[source,java]
+----
+@Contract
+public interface Startup {...}
+
+Iterable<Startup> startups;
+startups = habitat.getComponents(Startup.class);
+
+@Service
+public class DeploymentService implements Startup {
+    @Inject
+    ConfigService config;
+}
+
+@Service
+public Class ConfigService implements ... {...}
+----
+
+[[ghmoe]][[GSACG00095]][[identifying-a-class-as-an-add-on-component]]
+
+=== Identifying a Class as an Add-On Component
+
+{productName} discovers add-on components by identifying Java
+programming language classes that are annotated with the
+`org.jvnet.hk2.annotation.Service` annotation.
+
+To identify a class as an implementation of an {productName} service,
+add the `org.jvnet.hk2.annotations.Service` annotation at the
+class-definition level of your Java programming language class.
+
+[source,java]
+----
+@Service
+public class SamplePlugin implements ConsoleProvider {
+...
+}
+----
+
+The `@Service` annotation has the following elements. All elements are
+optional.
+
+`name`::
+  The name of the service. The default value is an empty string.
+`scope`::
+  The scope to which this service implementation is tied. The default
+  value is `org.glassfish.hk2.scopes.PerLookup.class`.
+`factory`::
+  The factory class for the service implementation, if the service is
+  created by a factory class rather than by calling the default
+  constructor. If this element is specified, the factory component is
+  activated, and `Factory.getObject` is used instead of the default
+  constructor. The default value of the `factory` element is
+  `org.jvnet.hk2.component.Factory.class`.
+
+[[GSACG00016]][[ghoip]]
+Example 2-3 Example of the Optional Elements of the `@Service` Annotation
+
+The following example shows how to use the optional elements of the
+`@Service` annotation:
+
+[source,java]
+----
+@Service (name="MyService",
+    scope=com.example.PerRequest.class,
+    factory=com.example.MyCustomFactory)
+public class SamplePlugin implements ConsoleProvider {
+...
+}
+----
+
+[[ghpvp]][[GSACG00096]][[using-the-apache-maven-build-system-to-develop-hk2-components]]
+
+=== Using the Apache Maven Build System to Develop HK2 Components
+
+If you are using Maven 2 to build HK2 components, invoke the
+`auto-depends` plug-in for Maven so that the `META-INF/services` files
+are generated automatically during build time.
+
+[[GSACG00017]][[ghqsa]]
+Example 2-4 Example of the Maven Plug-In Configuration
+
+[source,xml]
+----
+<plugin>
+    <groupId>org.glassfish.hk2</groupId>
+    <artifactId>hk2-maven-plugin</artifactId>
+    <configuration>
+        <includes>
+            <include>com/example/**</include>
+        </includes>
+    </configuration>
+</plugin>
+----
+
+[[GSACG00018]][[ghoik]]
+Example 2-5 Example of `META-INF/services` File Generation
+
+This example shows how to use
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html[`@Contract`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html`)
+and
+http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[`@Service`]
+(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html`)
+and the resulting `META-INF/services` files.
+
+The interfaces and classes in this example are as follows:
+
+[source,java]
+----
+package com.example.wallaby.annotations;
+@Contract
+public interface Startup {...}
+
+package com.example.wombat;
+@Contract
+public interface RandomContract {...}
+
+package com.example.wallaby;
+@Service
+public class MyService implements Startup, RandomContract, PropertyChangeListener {
+    ...
+}
+----
+
+These interfaces and classes generate this `META-INF/services` file with
+the `MyService` content:
+
+[source]
+----
+com.example.wallaby.annotations.Startup
+com.example.wombat.RandomContract
+----

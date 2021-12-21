@@ -1,0 +1,128 @@
+type=page
+status=published
+title=delete-application-ref
+next=delete-audit-module.html
+prev=delete-admin-object.html
+~~~~~~
+
+= delete-application-ref
+
+[[delete-application-ref-1]][[GSRFM00064]][[delete-application-ref]]
+
+== delete-application-ref
+
+Removes a reference to an application
+
+[[sthref585]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-application-ref [--help]
+[--target target]
+[--cascade=false] reference_name
+----
+
+[[sthref586]]
+
+=== Description
+
+The `delete-application-ref` subcommand removes a reference from a
+cluster or an unclustered server instance to an application. This
+effectively results in the application element being undeployed and no
+longer available on the targeted instance or cluster.
+
+The target instance or instances making up the cluster need not be
+running or available for this subcommand to succeed. If one or more
+instances are not available, they will no longer load the application
+the next time they start.
+
+Removal of the reference does not result in removal of the application
+from the domain. The bits are removed only by the `undeploy` subcommand.
+
+This subcommand is supported in remote mode only.
+
+[[sthref587]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Specifies the target from which you are removing the application
+  reference. Valid values are
+
+  * `server` - Specifies the default server instance as the target. +
+  `server` is the name of the default server instance and is the default value.
+  * cluster_name - Specifies a certain cluster as the target.
+  * instance_name - Specifies a certain stand-alone server instance as
+  the target.
+`--cascade`::
+  For a connector module, indicates whether the resources dependent on
+  the module should also be recursively deleted. The default is `false`.
+  The connector module can be either a stand-alone RAR file or a module
+  within an EAR file.
+
+[[sthref588]]
+
+=== Operands
+
+reference_name::
+  The name of the application or module, which can be a Jakarta EE
+  application module, Web module, EJB module, connector module,
+  application client module, or lifecycle module. +
+  The name can include an optional version identifier, which follows the
+  name and is separated from the name by a colon (`:`). The version
+  identifier must begin with a letter or number. It can contain
+  alphanumeric characters plus underscore (`_`), dash (`-`), and period
+  (`.`) characters. To delete references to multiple versions, you can
+  use an asterisk (`*`) as a wildcard character. For more information
+  about module and application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module
+  and Application Versions]" in {productName}
+  Application Deployment Guide.
+
+[[sthref589]]
+
+=== Examples
+
+[[GSRFM531]][[sthref590]]
+
+==== Example 1   Deleting an Application Reference
+
+The following example removes a reference to the Web module `MyWebApp`
+from the unclustered server instance `NewServer`.
+
+[source]
+----
+asadmin> delete-application-ref --target NewServer MyWebApp
+Command delete-application-ref executed successfully.
+----
+
+[[sthref591]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref592]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
+link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)],
+link:undeploy.html#undeploy-1[`undeploy`(1)]
+
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+Guide]
+
+

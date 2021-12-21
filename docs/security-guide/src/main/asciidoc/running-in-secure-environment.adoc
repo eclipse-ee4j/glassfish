@@ -1,0 +1,547 @@
+type=page
+status=published
+title=Running in a Secure Environment
+prev=administrative-security.html
+~~~~~~
+
+= Running in a Secure Environment
+
+[[GSSCG00040]][[gkscr]]
+
+
+[[running-in-a-secure-environment]]
+== 6 Running in a Secure Environment
+
+This chapter describes important information about running {productName} in a secure environment.
+
+This chapter assumes that you are familiar with security features such
+as authentication, authorization, and certificates. If you are not, see
+link:system-security.html#ablnk[Administering System Security].
+
+Instructions for accomplishing the tasks specific to {productName} by
+using the Administration Console are contained in the Administration
+Console online help.
+
+The chapter describes the following topics:
+
+* link:#gksbk[Determining Your Security Needs]
+* link:#gksbw[Installing {productName} in a Secure Environment]
+* link:#gksby[Run on the Web Profile if Possible]
+* link:#gksct[Securing the {productName} Host]
+* link:#gksca[Securing {productName}]
+* link:#gksbf[Securing Applications]
+
+[[gksbk]][[GSSCG00169]][[determining-your-security-needs]]
+
+=== Determining Your Security Needs
+
+Before you deploy {productName} and your Jakarta EE applications into a
+production environment, determine your security needs and make sure that
+you take the appropriate security measures, as described in the
+following sections:
+
+* link:#gkscs[Understand Your Environment]
+* link:#gksce[Read Security Publications]
+
+[[gkscs]][[GSSCG00237]][[understand-your-environment]]
+
+==== Understand Your Environment
+
+To better understand your security needs, ask yourself the following
+questions:
+
+* Which resources am I protecting?
++
+Many resources in the production environment can be protected, including
+information in databases accessed by {productName} and the
+availability, performance, applications, and the integrity of the Web
+site. Consider the resources you want to protect when deciding the level
+of security you must provide.
+
+* From whom am I protecting the resources?
++
+For most Web sites, resources must be protected from everyone on the
+Internet. But should the Web site be protected from the employees on the
+intranet in your enterprise? Should your employees have access to all
+resources within the {productName} environment? Should the system
+administrators have access to all {productName} resources? Should the
+system administrators be able to access all data? You might consider
+giving access to highly confidential data or strategic resources to only
+a few well trusted system administrators. Perhaps it would be best to
+allow no system administrators access to the data or resources.
+
+* What will happen if the protections on strategic resources fail?
++
+In some cases, a fault in your security scheme is easily detected and
+considered nothing more than an inconvenience. In other cases, a fault
+might cause great damage to companies or individual clients that use the
+Web site. Understanding the security ramifications of each resource will
+help you protect it properly.
+
+See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
+
+[[GSSCG00239]][[read-security-publications]]
+
+==== Read Security Publications
+
+Read about security issues:
+
+* For the latest information about securing Web servers, Oracle
+recommends the "Security Practices & Evaluations" information available
+from the CERT Coordination Center operated by Carnegie Mellon University
+at `http://www.cert.org/`.
+
+[[gksbw]][[GSSCG00170]][[installing-glassfish-server-in-a-secure-environment]]
+
+=== Installing {productName} in a Secure Environment
+
+This section describes recommendations for installing {productName}
+in a secure environment. The link:#gkscn[Enable the Secure
+Administration Feature] topic is described.
+
+[[gkscn]][[GSSCG00240]][[enable-the-secure-administration-feature]]
+
+==== Enable the Secure Administration Feature
+
+The secure administration feature allows an administrator to secure all
+administrative communication between the domain administration server
+(DAS), any remote instances, and administration clients such as the
+asadmin utility, the administration console, and REST clients. In
+addition, secure administration helps to prevent DAS-to-DAS and
+instance-to-instance traffic, and carefully restricts
+administration-client-to-instance traffic.
+
+When you install {productName} or create a new domain, secure admin
+is disabled by default. {productName} does not encrypt administrative
+communication among the system components and does not accept
+administrative connections from remote hosts. Imposing a heightened
+level of security is optional.
+
+See link:administrative-security.html#gknqh[Managing Administrative
+Security] for information on enabling the secure administration feature.
+
+[[gksby]][[GSSCG00172]][[run-on-the-web-profile-if-possible]]
+
+=== Run on the Web Profile if Possible
+
+If your applications can run on the Web Profile, use that instead of the
+Full Platform.
+
+Starting in Jakarta EE 6, Jakarta EE introduced the concept of profiles. A
+profile is a collection of Jakarta EE technologies and APIs that address
+specific developer communities and application types.
+
+The following profiles are implemented through the distributions of
+{productName}:
+
+* Full Platform -The full Jakarta EE platform is designed for developers
+who require the full set of Jakarta EE APIs for enterprise application
+development, and is installed when you install {productName}.
+* Web Profile -This profile contains Web technologies that are a subset
+of the full Java platform, and is designed for developers who do not
+require the full set of Jakarta EE APIs.
+
+For the list of APIs in each profile, see
+"link:../release-notes/release-notes.html#GSRLN00136[
+Jakarta EE Standards Support]"
+in {productName} Release Notes.
+
+[[gksct]][[GSSCG00173]][[securing-the-glassfish-server-host]]
+
+=== Securing the {productName} Host
+
+A {productName} production environment is only as secure as the
+security of the machine on which it is running. It is important that you
+secure the physical machine, the operating system, and all other
+software that is installed on the host machine.
+
+The following are recommendations for securing a {productName} host
+in a production environment. Also check with the manufacturer of the
+machine and operating system for recommended security measures.
+
+
+[NOTE]
+====
+The domain and server configuration files should be accessible only by
+the operating system users who configure or execute {productName}.
+====
+
+
+[[sthref39]][[gksbt]]
+
+Table 6-1 Securing the {productName} Host
+
+[width="100%",cols="27%,73%",options="header",]
+|===
+|Security Action |Description
+|Physically secure the hardware. |Keep your hardware in a secured area
+to prevent unauthorized operating system users from tampering with the
+deployment machine or its network connections.
+
+|Log out of the Administration Console before navigating to a non-secure
+site. |If you are logged on to the Administration Console, be sure to
+log out completely before browsing to an unknown or non-secure Web site.
+
+|Secure networking services that the operating system provides. a|
+Have an expert review network services such as e-mail programs or
+directory services to ensure that a malicious attacker cannot access the
+operating system or system-level commands. The way you do this depends
+on the operating system you use.
+
+Sharing a file system with other machines in the enterprise network
+imposes risks of a remote attack on the file system. Be certain that the
+remote machines and the network are secure before sharing the file
+systems from the machine.
+
+|Use a file system that can prevent unauthorized access. |Make sure that
+the file system on each {productName}host can prevent unauthorized
+access to protected resources. For example, on a Windows computer, use
+only NTFS.
+
+|Set file access permissions for data stored on disk. a|
+Set operating system file access permissions to restrict access to data
+stored on disk. This data includes, but is not limited to, the
+following:
+
+The database files. {productName} includes Apache Derby database,
+however, you can use any JDBC-compliant database.
+
+The directory and filename location of a private keystore, such as
+keystore.jks
+
+The directory and filename location of a Root Certificate Authority (CA)
+keystore, such as cacerts.jks.
+
+For example, operating systems provide utilities such as umask and chmod
+to set the file access permissions. At a minimum, consider using "umask
+066", which denies read and write permission to Group and Others.
+
+|Set file access permission for the {productName} installation. a|
+The directory structure in which {productName} is located, including
+all files, should be protected from access by unprivileged users.
+
+Taking this step helps ensure that unprivileged users cannot insert code
+that can potentially be executed by {productName}.
+
+|Limit the number of user accounts on the host machine. a|
+Avoid creating more user accounts than you need on host machines, and
+limit the file access privileges granted to each account. On operating
+systems that allow more than one system administrator user, the host
+machine should have two user accounts with system administrator
+privileges and one user with sufficient privileges to run {productName}. Having two system administrator users provides a back up at all
+times. The {productName} user should be a restricted user, not a
+system administrator user. One of the system administrator users can
+always create a new {productName} user if needed.
+
+Important: Domain and server configuration files should be accessible
+only by the operating system users who configure or execute {productName}.
+
+Review active user accounts regularly and when personnel leave.
+
+Background Information: Configuration data and some URL (Web) resources,
+including Java Server Pages (JSPs) and HTML pages, are stored in clear
+text on the file system. A sophisticated user or intruder with read
+access to files and directories might be able to defeat any security
+mechanisms you establish with authentication and authorization schemes.
+
+|For your system administrator user accounts, choose names that are not
+obvious. |For additional security, avoid choosing an obvious name such
+as "system," "admin," or "administrator" for your system administrator
+user accounts.
+
+|Safeguard passwords. a|
+The passwords for user accounts on production machines should be
+difficult to guess and should be guarded carefully.
+
+Set a policy to expire passwords periodically.
+
+Never code passwords in client applications.
+
+Do not deploy an application that can be accessed with the default
+username admin and no password.
+
+|Safeguard password files a|
+The `-passwordfile` option of the `asadmin` command specifies the name
+of a file that contains password entries in a specific format. These
+password entries are stored in clear text in the password file, and rely
+on file system mechanisms for protection. Therefore, any password file
+created for use with the `-passwordfile` option should be protected with
+file system permissions. Additionally, any password file being used for
+a transient purpose, such as setting up SSH among nodes, should be
+deleted after it has served its purpose.
+
+To provide additional security, create a password alias.
+
+|Use a password alias a|
+A password alias stores a password in encrypted form in the domain
+keystore, providing a clear-text alias name to use instead of the
+password.
+
+To provide additional security, use the `create-password-alias`
+subcommand to create an alias for the password. The password for which
+the alias is created is stored in an encrypted form.
+
+Then, specify the alias in the entry for the password in the password
+file as follows:
+
+In password files and the domain configuration file, use the form
+$\{alias=alias-name} to refer to the encrypted password.
+
+|Do not run {productName} as root a|
+{productName} should run only as an unprivileged user, never as root.
+
+Taking this step helps ensure that code from other users cannot be
+executed by {productName}.
+
+|Consider use PAM Realm |The use of a PAM Realm requires {productName} to run as an account that has read-access to a shadow password
+file or the equivalent, and therefore may not be suitable in your
+environment.
+
+|Do not develop on a production machine. |Develop first on a development
+machine and then move code to the production machine when it is
+completed and tested. This process prevents bugs in the development
+environment from affecting the security of the production environment.
+
+|Do not install development or sample software on a production machine.
+|Do not install development tools on production machines. Keeping
+development tools off the production machine reduces the leverage
+intruders have should they get partial access to a production machine.
+
+|Enable security auditing. |If the operating system on which {productName} runs supports security auditing of file and directory access,
+Oracle recommends using audit logging to track any denied directory or
+file access violations. Administrators should ensure that sufficient
+disk space is available for the audit log.
+
+|Consider using additional software to secure your operating system.
+|Most operating systems can run additional software to secure a
+production environment. For example, an Intrusion Detection System (IDS)
+can detect attempts to modify the production environment. Refer to the
+vendor of your operating system for information about available
+software.
+
+|Apply operating system patch sets and security patches. |Refer to the
+vendor of your operating system for a list of recommended patch sets and
+security-related patches.
+
+|Apply the latest maintenance packs and critical patch updates. |Refer
+to the vendor of your operating system for a list of maintenance packs
+and critical patch updates.
+|===
+
+
+[[gksca]][[GSSCG00174]][[securing-glassfish-server]]
+
+=== Securing {productName}
+
+{productName} provides a powerful and flexible set of software tools
+for securing the subsystems and applications that run on a server
+instance. The following table provides a checklist of essential features
+that Oracle recommends you use to secure your production environment.
+
+[[sthref40]][[gkscz]]
+
+Table 6-2 Securing {productName}
+
+[width="100%",cols="25%,75%",options="header",]
+|===
+|Security Action |Description
+|Enable Secure Admin. a|
+The secure administration feature allows an administrator to secure all
+administrative communication between the domain administration server
+(DAS), any remote instances, and administration clients such as the
+`asadmin` utility, the administration console, and REST clients.
+
+In addition, secure administration helps to prevent DAS-to-DAS and
+instance-to-instance traffic, and carefully restricts
+administration-client-to-instance traffic.
+
+The secure administration feature provides a secure environment, in
+which you can be confident that rogue users or processes cannot
+intercept or corrupt administration traffic or impersonate legitimate
+{productName} components.
+
+See link:administrative-security.html#gknqh[Managing Administrative
+Security].
+
+|Protect the `.asadminpass` file a|
+If you create a domain with the `--savelogin` option, `create-domain`
+saves the administration user name and password in the `.asadminpass`
+file in the user's home directory.
+
+Make sure that this file remains protected. Information stored in this
+file will be used by `asadmin` commands to manage this domain.
+
+|Safeguard password files a|
+The `-passwordfile` option of the `asadmin` command specifies the name
+of a file that contains password entries in a specific format. These
+password entries are stored in clear text in the password file, and rely
+on file system mechanisms for protection. Therefore, any password file
+created for use with the `-passwordfile` option should be protected with
+file system permissions. Additionally, any password file being used for
+a transient purpose, such as setting up SSH among nodes, should be
+deleted after it has served its purpose.
+
+To provide additional security, create a password alias.
+
+|Deploy production-ready security providers to the security realm. a|
+Java Authorization Contract for Containers (JACC) is the part of the
+Jakarta EE specification that defines an interface for pluggable
+authorization providers. This enables you to set up third-party plug-in
+modules to perform authorization.
+
+By default, the {productName} provides a simple, file-based
+authorization engine that complies with the JACC specification. You can
+also specify additional third-party JACC providers.
+
+If you have purchased or written your own security providers, make sure
+that you have deployed and configured them properly.
+
+|Use SSL, but do not use the self-signed certificates in a production
+environment. a|
+To prevent sensitive data from being compromised, secure data transfers
+by using HTTPS.
+
+By default, {productName} uses self-signed certificates. The
+self-signed certificates that {productName} uses might not be trusted
+by clients by default because a certificate authority does not vouch for
+the authenticity of the certificate.
+
+You can instead use your own certificates, as described in
+link:administrative-security.html#gkped[Using Your Own Certificates].
+
+|Restrict the size and the time limit of requests on external channels
+to prevent Denial of Service attacks. a|
+To prevent some Denial of Service (DoS) attacks, restrict the size of a
+message as well as the maximum time it takes a message to arrive.
+
+The default setting for maximum post size is 2097152 bytes and 900
+seconds for the request timeout.
+
+|Enable authentication and authorization auditing. a|
+Auditing is the process of recording key security events in your
+{productName} environment. You use audit modules to develop an audit
+trail of all authentication and authorization decisions. To enable audit
+logging, two steps are required:
+
+1. On the Security page, select the Audit Logging Enabled checkbox to
+enable audit logging.
+2. Set the `auditOn` property for the active audit module to true.
+
+Review the auditing records periodically to detect security breaches and
+attempted breaches. Noting repeated failed logon attempts or a
+surprising pattern of security events can prevent serious problems.
+
+|Set logging for security and SSL messages. a|
+Consider setting module log levels for
+table.jakarta.enterprise.system.ssl.security and
+jakarta.enterprise.system.core.security. You can set a level from Severe
+to Finest (the default is Info), but be aware that the finer logging
+levels may produce a large log file.
+
+By default, {productName} logging messages are recorded in the server
+log, and you can set the file rotation limit, as described in
+link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`(1)]
+
+|Ensure that you have correctly assigned users to the correct groups.
+|Make sure you have assigned the desired set of users to the right
+groups. In particular, make sure that users assigned to the asadmin
+group need to be members of that group.
+
+|Create no fewer than two user accounts in the asadmin group. |The user
+admin is created when you install {productName}. For production
+environments, create at least one other account in the asadmin group in
+case one account password is compromised. When creating asadmin users
+give them unique names that cannot be easily guessed.
+
+|Assign a password to the admin account. |By default, {productName}
+includes a single account for user "admin" and an empty password. For
+production environments this default is inherently unsecure, and you
+should set a password for admin.
+|===
+
+
+[[gksbf]][[GSSCG00175]][[securing-applications]]
+
+=== Securing Applications
+
+Although much of the responsibility for securing the {productName}
+resources in a domain fall within the scope of the server, some security
+responsibilities lie within the scope of individual applications. For
+some security options, {productName} enables you to determine whether
+the server or individual applications are responsible. For each
+application that you deploy in a production environment, review the
+items in the following table to verify that you have secured its
+resources.
+
+[[sthref41]][[gkscv]]
+
+Table 6-3 Securing Applications
+
+[width="100%",cols="22%,78%",options="header",]
+|===
+|Security Action |Description
+|Use JSP comment tags instead of HTML comment tags. |Comments in JSP
+files that might contain sensitive data and or other comments that are
+not intended for the end user should use the JSP syntax of <%/* xxx */%>
+instead of the HTML syntax <!-- xxx -->. The JSP comments, unlike the
+HTML comments, are deleted when the JSP is compiled and therefore cannot
+be viewed in the browser.
+
+|Do not install uncompiled JSPs and other source code on the production
+machine. a|
+Always keep source code off of the production machine. Getting access to
+your source code allows an intruder to find security holes.
+
+Consider precompiling JSPs and installing only the compiled JSPs on the
+production machine. To do this, set the `deploy` subcommand
+`-precompilejsp` option to true for the component.
+
+When set to true, the `deploy` and `redeploy` subcommands
+`-precompilejsp` option compiles JSPs during deploy time. If set to
+false (the default), JSPs are compiled during runtime.
+
+|Configure your applications to use SSL. |Set the transport-guarantee to
+CONFIDENTIAL in the user-data-constraint element of the web.xml file
+whenever appropriate.
+
+|Examine applications for security. a|
+There are instances where an application can lead to a security
+vulnerability.
+
+Of particular concern is code that uses Java native interface (JNI)
+because Java positions native code outside of the scope of Java
+security. If Java native code behaves errantly, it is only constrained
+by the operating system. That is, the Java native code can do anything
+{productName} itself can do. This potential vulnerability is further
+complicated by the fact that buffer overflow errors are common in native
+code and can be used to run arbitrary code.
+
+|If your applications contain untrusted code, enable the Java security
+manager. |The Java security manager defines and enforces permissions for
+classes that run within a JVM. In many cases, where the threat model
+does not include malicious code being run in the JVM, the Java security
+manager is unnecessary. However, when third parties use {productName}
+and untrusted classes are being run, the Java security manager may be
+useful. See "link:../application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security
+Manager]" in {productName} Application
+Development Guide.
+
+|Replace HTML special characters when servlets or JSPs return
+user-supplied data. a|
+The ability to return user-supplied data can present a security
+vulnerability called cross-site scripting, which can be exploited to
+steal a user's security authorization. For a detailed description of
+cross-site scripting, refer to "Understanding Malicious Content
+Mitigation for Web Developers" (a CERT security advisory) at
+`http://www.cert.org/tech_tips/malicious_code_mitigation.html`.
+
+To remove the security vulnerability, before you return data that a user
+has supplied, scan the data for HTML special characters. If you find any
+such characters, replace them with their HTML entity or character
+reference. Replacing the characters prevents the browser from executing
+the user-supplied data as HTML.
+
+|===
+
+
+

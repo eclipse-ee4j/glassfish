@@ -1,0 +1,100 @@
+type=page
+status=published
+title=Preface
+next=manvol1.html
+prev=title.html
+~~~~~~
+
+= Preface
+
+[[GSRFM441]][[sthref2]]
+
+[[preface]]
+== Preface
+
+[NOTE]
+====
+This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Jakarta EE or Java
+Enterprise Edition should be considered references to Jakarta EE.
+
+Please see the Title page for additional license information.
+====
+
+Both novice users and those familiar with {productName} can use online man pages to obtain information about the product
+and its features. A man page is intended to answer concisely the
+question "What does it do?" The man pages in general comprise a
+reference manual. They are not intended to be a tutorial.
+
+[[GSRFM442]][[sthref3]]
+
+
+[[overview]]
+=== Overview
+
+The following contains a brief description of each man page section and
+the information it references:
+
+* Section 1 describes, in alphabetical order, the `asadmin` utility subcommands.
+* Section 1M describes {productName} utility commands.
+* Section 5ASC describes concepts that are related to {productName} administration.
+
+Below is a generic format for man pages. The man pages of each manual
+section generally follow this order, but include only needed headings.
+For example, if there are no bugs to report, there is no Bugs section.
+
+Name::
+  This section gives the names of the commands or functions documented,
+  followed by a brief description of what they do.
+Synopsis::
+  This section shows the syntax of commands or functions.
+  The following special characters are used in this section:
+
+  [ ];;
+    Brackets. The option or argument enclosed in these brackets is
+    optional. If the brackets are omitted, the argument must be
+    specified.
+  |;;
+    Separator. Only one of the arguments separated by this character can
+    be specified at a time.
+
+Description::
+  This section defines the functionality and behavior of the service.
+  Thus it describes concisely what the command does. It does not discuss
+  options or cite examples.
+Options::
+  This section lists the command options with a concise summary of what
+  each option does. The options are listed literally and in the order
+  they appear in the Synopsis section. Possible arguments to options are
+  discussed under the option, and where appropriate, default values are
+  supplied.
+Operands::
+  This section lists the command operands and describes how they affect
+  the actions of the command.
+Examples::
+  This section provides examples of usage or of how to use a command or
+  function. Wherever possible a complete example including command-line
+  entry and machine response is shown. Examples are followed by
+  explanations, variable substitution rules, or returned values. Most
+  examples illustrate concepts from the Synopsis, Description, Options,
+  and Usage sections.
+Exit Status::
+  This section lists the values the command returns to the calling
+  program or shell and the conditions that cause these values to be
+  returned. Usually, zero is returned for successful completion, and
+  values other than zero for various error conditions.
+See Also::
+  This section lists references to other man pages, in-house
+  documentation, and outside publications.
+Notes::
+  This section lists additional information that does not belong
+  anywhere else on the page. It takes the form of an aside to the user,
+  covering points of special interest. Critical information is never
+  covered here.
+Bugs::
+  This section describes known bugs and, wherever possible, suggests workarounds.
+

@@ -1,0 +1,88 @@
+type=page
+status=published
+title=delete-protocol-finder
+next=delete-resource-adapter-config.html
+prev=delete-protocol-filter.html
+~~~~~~
+
+= delete-protocol-finder
+
+[[delete-protocol-finder-1]][[GSRFM00105]][[delete-protocol-finder]]
+
+== delete-protocol-finder
+
+Removes a protocol finder
+
+[[sthref953]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-protocol-finder [--help]
+--protocol protocol-name
+[--target server]
+protocol-finder-name
+----
+
+[[sthref954]]
+
+=== Description
+
+The `delete-protocol-finder` subcommand removes the specified protocol
+finder. This subcommand is supported in remote mode only.
+
+[[sthref955]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--protocol-name`::
+  The name of the associated protocol.
+`--target`::
+  Deletes the protocol finder only from the specified target. Valid
+  values are as follows:
+
+  `server`;;
+    Deletes the protocol finder from the default server instance. This
+    is the default value.
+  configuration-name;;
+    Deletes the protocol finder from the specified configuration.
+  cluster-name;;
+    Deletes the protocol finder from all server instances in the
+    specified cluster.
+  standalone-instance-name;;
+    Deletes the protocol finder from the specified standalone server
+    instance.
+
+[[sthref956]]
+
+=== Operands
+
+protocol-finder-name::
+  The name of the protocol finder to be deleted.
+
+[[sthref957]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref958]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-protocol-finder.html#create-protocol-finder-1[`create-protocol-finder`(1)],
+link:list-protocol-finders.html#list-protocol-finders-1[`list-protocol-finders`(1)]
+
+

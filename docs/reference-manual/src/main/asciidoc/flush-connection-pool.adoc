@@ -1,0 +1,112 @@
+type=page
+status=published
+title=flush-connection-pool
+next=flush-jmsdest.html
+prev=export-sync-bundle.html
+~~~~~~
+
+= flush-connection-pool
+
+[[flush-connection-pool-1]][[GSRFM00135]][[flush-connection-pool]]
+
+== flush-connection-pool
+
+Reintializes all connections established in the specified connection
+pool
+
+[[sthref1178]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] flush-connection-pool [--help]
+[--appname application [--modulename module]
+pool_name
+----
+
+[[sthref1179]]
+
+=== Description
+
+The `flush-connection-pool` subcommand resets a JDBC connection pool or
+a connector connection pool to its initial state. Any existing live
+connections are destroyed, which means that the transactions associated
+with these connections are lost. The subcommand then recreates the
+initial connections for the pool, and restores the pool to its steady
+pool size.
+
+This subcommand is supported in remote mode only.
+
+Application Scoped Resources
+
+The `flush-connection-pool` subcommand can target resources that are
+scoped to a specific application or module, as defined in the
+`glassfish-resources.xml` for the GlassFish domain.
+
+* To reference the `jndi-name` for an application scoped resource,
+perform the lookup using the `java:app` prefix.
+* To reference the `jndi-name` for a module scoped resource, perform the
+lookup using the `java:module` prefix.
+
+The `jndi-name` for application-scoped-resources or
+module-scoped-resources are specified using the format
+``java:app/``jdbc/myDataSource or
+``java:module/``jdbc/myModuleLevelDataSource. This naming scope is defined
+in the Jakarta EE Specification
+(`https://jakarta.ee/specifications/platform/10/`).
+
+[[sthref1180]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--appname`::
+  Name of the application in which the application scoped resource is
+  defined.
+`--modulename`::
+  Name of the module in which the module scoped resource is defined.
+
+[[sthref1181]]
+
+=== Operands
+
+pool_name::
+  Name of the connection pool to be reinitialized.
+
+[[sthref1182]]
+
+Flushing a Connection Pool
+
+This example reinitializes the JDBC connection pool named `__TimerPool`.
+
+[source]
+----
+asadmin> flush-connection-pool __TimerPool
+Command flush-connection-pool executed successfully.
+----
+
+[[sthref1183]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1184]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-connector-connection-pools.html#list-connector-connection-pools-1[`list-connector-connection-pools`(1)],
+link:list-jdbc-connection-pools.html#list-jdbc-connection-pools-1[`list-jdbc-connection-pools`(1)]
+
+

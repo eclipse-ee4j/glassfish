@@ -1,0 +1,116 @@
+type=page
+status=published
+title=apply-http-lb-changes
+next=attach.html
+prev=add-resources.html
+~~~~~~
+
+= apply-http-lb-changes
+
+[[apply-http-lb-changes-1]][[GSRFM00002]][[apply-http-lb-changes]]
+
+== apply-http-lb-changes
+
+Applies load balancer configuration changes to the load balancer
+
+[[sthref23]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] apply-http-lb-changes [--help]
+lb-name
+----
+
+[[sthref24]]
+
+=== Description
+
+Use the `apply-http-lb-changes` subcommand to apply the changes in
+the load balancer configuration to the physical load balancer. The load
+balancer must already exist. To create a physical load balancer, use the
+`create-http-lb` subcommand.
+
+This subcommand is only applicable to {productName}. This
+subcommand is not applicable to {productName}.
+
+[[sthref25]]
+
+Context
+
+The Load Balancer distributes the workload among multiple {productName} instances , increasing the overall throughput of the
+system. The Load Balancer also enables requests to failover from one
+server instance to another. For HTTP session information to persist,
+configure HTTP session persistence.
+
+
+[NOTE]
+====
+The Load Balancer Plugin is only available with {productName},
+and is not available with {productName}. For
+{productName}, it is possible to use the `mod_jk`
+module to configure load balancing on the Apache HTTP server.
+====
+
+
+For more information about configuring load balancing with
+{productName}, refer to the online help in the {productName}
+Administration Console.
+
+[[sthref26]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref27]]
+
+=== Operands
+
+lb-name::
+  The name of the load balancer to which changes are applied. The load
+  balancer must already exist. You can create it with the
+  `create-http-lb` subcommand.
+
+[[sthref28]]
+
+=== Examples
+
+[[GSRFM446]][[sthref29]]
+
+==== Example 1   Using the `apply-http-lb-changes` subcommand
+
+This example applies configuration changes to a load balancer named
+`mylb`.
+
+[source]
+----
+asadmin> apply-http-lb-changes mylb
+Command apply-http-lb-changes executed successfully.
+----
+
+[[sthref30]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref31]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
+link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)]
+
+

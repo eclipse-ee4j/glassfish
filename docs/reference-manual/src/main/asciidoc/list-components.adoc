@@ -1,0 +1,145 @@
+type=page
+status=published
+title=list-components
+next=list-configs.html
+prev=list-commands.html
+~~~~~~
+
+= list-components
+
+[[list-components-1]][[GSRFM00155]][[list-components]]
+
+== list-components
+
+Lists deployed components
+
+[[sthref1391]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-components [--help]
+[--long={false|true}] [--resources] [--subcomponents]
+[--type type] [target]
+----
+
+[[sthref1392]]
+
+=== Description
+
+[NOTE]
+====
+The `list-components` subcommand is deprecated. Use the
+`list-applications` subcommand instead.
+====
+
+The `list-components` subcommand lists all deployed Jakarta EE components.
+
+If the `--type` option is not specified, all components are listed. If
+the type option is specified, you must specify a type. The possible
+types are listed in the Options section in this help page.
+
+If multiple versions of a module or application are deployed, this
+subcommand lists all versions. To list which version is enabled, set the
+`--long` option to `true`. For more information about module and
+application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
+Versions]" in {productName} Application
+Deployment Guide.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1393]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--long`::
+  If `true`, displays whether each module or application listed is
+  enabled. The default is `false`.
+`--resources`::
+  Lists the application-scoped resources for each component. If the
+  `--subcomponents` option is also used, lists the application-scoped
+  resources for each component within an application.
+`--subcomponents`::
+  Lists the subcomponents of each component. The subcomponents listed
+  depend on the component type. For example, for a Jakarta EE application
+  (EAR file), modules are listed. For a web application, servlets and
+  JSP pages are listed. For an EJB module, EJB subcomponents are listed.
+`--type`::
+  Specifies the type of the components that are to be listed. The
+  options are as follows:
+
+  * `application`
+  * `appclient`
+  * `connector`
+  * `ejb`
+  * `web`
+  * `webservice`
+
++
+If no type is specified, all components are listed.
+
+[[sthref1394]]
+
+=== Operands
+
+target::
+  This is the name of the target upon which the subcommand operates. The
+  valid values are:
++
+  `server`;;
+    Lists the components for the default server instance `server` and is
+    the default value.
+  `domain`;;
+    Lists the components for the domain.
+  cluster_name;;
+    Lists the components for the cluster.
+  instance_name;;
+    Lists the components for a particular stand-alone server instance.
+
+[[sthref1395]]
+
+=== Examples
+
+[[GSRFM647]][[sthref1396]]
+
+==== Example 1   Listing Components
+
+This example lists the connector components. (`cciblackbox-tx.rar` was
+deployed.)
+
+[source]
+----
+asadmin> list-components --type connector
+cciblackbox-tx <connector>
+Command list-components executed successfully
+----
+
+[[sthref1397]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1398]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-applications.html#list-applications-1[`list-applications`(1)],
+link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
+
+link:../application-deployment-guide/toc.html#GSDPG[
+{productName} Application Deployment Guide]
+
+

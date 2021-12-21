@@ -1,0 +1,44 @@
+type=page
+status=published
+title=List of Tables
+next=title.html
+prev=loe.html
+~~~~~~
+
+= List of Tables
+
+[[list-of-tables]]
+== List of Tables
+
+* link:class-loaders.html#fvxzq[2-1 {productName} Class
+Loaders]
+* link:securing-apps.html#sthref6[4-1 Predefined System Properties]
+* link:securing-apps.html#sthref8[4-2 Message Security Provider
+Properties]
+* link:jpa.html#gbwlr[6-1 The asadmin deploy and asadmin deploydir
+Generation Options]
+* link:jpa.html#gbwmm[6-2 The asadmin undeploy Generation Options]
+* link:webapps.html#fvygg[7-1 The cache Attributes]
+* link:webapps.html#fvyep[7-2 The flush Attributes]
+* link:webapps.html#fvyem[7-3 Object Types Supported for Jakarta EE Web
+Application Session State Failover]
+* link:webapps.html#gheoy[7-4 SSIServlet init-param Values]
+* link:webapps.html#ghern[7-5 CGIServlet init-param Values]
+* link:ejb.html#fvyed[8-1 Object Types Supported for Jakarta EE Stateful
+Session Bean State Failover]
+* link:container_managed-persistence.html#fvyaq[9-1 Java Type to JDBC
+Type Mappings for CMP]
+* link:container_managed-persistence.html#fvymp[9-2 Mappings of JDBC
+Types to Database Vendor Specific Types for CMP]
+* link:container_managed-persistence.html#fvymo[9-3 The
+glassfish-ejb-jar.xml Generation Elements]
+* link:container_managed-persistence.html#fvymn[9-4 The asadmin deploy
+and asadmin deploydir Generation Options for CMP]
+* link:container_managed-persistence.html#fvymt[9-5 The asadmin undeploy
+Generation Options for CMP]
+* link:java-clients.html#gkmbk[10-1 Owned JNLP File Content]
+* link:java-clients.html#gkmci[10-2 Defaulted JNLP File Content]
+* link:java-clients.html#gkmcc[10-3 Merged JNLP File Content]
+* link:transaction-service.html#fvyoi[15-1 Transaction Isolation Levels]
+
+

@@ -1,0 +1,50 @@
+type=page
+status=published
+title=Uninstalling {productName} 7
+prev=installing.html
+~~~~~~
+
+= Uninstalling GlassFish
+
+[[GSING00003]][[ghmlt]]
+
+
+[[uninstalling-glassfish]]
+== 2 Uninstalling GlassFish
+
+This chapter describes how to uninstall {productName}.
+
+[[gjxfv]][[GSING00028]][[removing-a-glassfish-server-installation]]
+
+=== Removing a {productName} Installation
+
+This procedure describes how to uninstall {productName} software that
+was installed using a ZIP file, as described in
+link:installing.html#ghmxb[Installing {productName} From a ZIP File].
+
+Before You Begin
+
+Stop all domains and other related processes, including command prompts
+using the installation directory or its subdirectories and any
+applications using Java SE files.
+
+To stop domains, use the `asadmin stop-domain` command. For more
+information about stopping a domain, see
+"link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+in {productName} Administration Guide.
+
+If orphaned processes remain, identify and terminate the processes as follows:
+
+* Solaris, Linux, and Mac OS X systems:
++
+Use the `ps -ef` command and terminate the processes using the `kill` command.
+* Windows systems:
++
+Use the Task Manager and terminate the processes.
+
+Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+in {productName} Release Notes for known issues related to uninstallation.
+
+1. Save any files in the installation directory that you may want to keep.
+2. Manually delete installation directory and all its contents.
+

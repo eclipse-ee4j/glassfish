@@ -1,0 +1,102 @@
+type=page
+status=published
+title=list-http-listeners
+next=list-iiop-listeners.html
+prev=list-http-lbs.html
+~~~~~~
+
+= list-http-listeners
+
+[[list-http-listeners-1]][[GSRFM00168]][[list-http-listeners]]
+
+== list-http-listeners
+
+Lists the existing network listeners
+
+[[sthref1501]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-http-listeners [--help]
+[target]
+----
+
+[[sthref1502]]
+
+=== Description
+
+The `list-http-listeners` subcommand lists the existing network listeners.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1503]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1504]]
+
+=== Operands
+
+target::
+  Restricts the listing to network listeners for a specified target.
+  Valid values are as follows:
+
+  `server`;;
+    Lists the netowork listeners for the default server instance. This
+    is the default value.
+  configuration-name;;
+    Lists the network listeners for the specified configuration.
+  cluster-name;;
+    Lists the network listeners for all server instances in the
+    specified cluster.
+  instance-name;;
+    Lists the network listeners for the specified server instance.
+
+[[sthref1505]]
+
+=== Examples
+
+[[GSRFM662]][[sthref1506]]
+
+==== Example 1   Listing Network Listeners
+
+The following command lists all the network listeners for the server
+instance:
+
+[source]
+----
+asadmin> list-http-listeners
+http-listener-1
+http-listener-2
+admin-listener
+Command list-http-listeners executed successfully.
+----
+
+[[sthref1507]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1508]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
+link:delete-http-listener.html#delete-http-listener-1[`delete-http-listener`(1)]
+
+

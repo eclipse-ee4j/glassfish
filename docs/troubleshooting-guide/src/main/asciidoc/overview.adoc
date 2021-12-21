@@ -1,0 +1,395 @@
+type=page
+status=published
+title=Overview of {productName} Troubleshooting
+next=specific-issues.html
+prev=preface.html
+~~~~~~
+
+= Overview of {productName} Troubleshooting
+
+[[GSTSG00002]][[abgap]]
+
+
+[[overview-of-glassfish-server-open-source-edition-troubleshooting]]
+== 1 Overview of {productName} Troubleshooting
+
+This chapter describes some of the tools, methods, and resources
+available for troubleshooting {productName}.
+Guidelines for evaluating and investigating a problem are provided.
+
+This chapter contains the following sections:
+
+* link:#abgar[Identifying the Problem]
+* link:#ghuvy[Troubleshooting Tools]
+* link:#ghuyv[Where to Go for More Information]
+
+[[abgar]][[GSTSG00039]][[identifying-the-problem]]
+
+=== Identifying the Problem
+
+Application servers are typically deployed in complex operating
+environments and involve many technologies, products, and tools.
+Understanding and diagnosing problems in enterprise software with many
+components performing many tasks can be a challenge. This section
+describes how to get started , and contains the following topics:
+
+* link:#ghvay[First Steps]
+* link:#ghuvf[Gathering Information]
+* link:#abgax[Examining Log Files]
+* link:#ghuvd[Monitoring the System]
+
+[[ghvay]][[GSTSG00171]][[first-steps]]
+
+==== First Steps
+
+Sometimes the most obvious solutions are overlooked. As you begin your
+investigation, try the following steps first.
+
+[[ghyku]][[GSTSG00077]][[verify-system-requirements-and-configuration]]
+
+===== Verify System Requirements and Configuration
+
+Ensure that your system meets the requirements listed in
+"link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+in {productName} Release Notes.
+Problems are likely to arise if you attempt to install on a platform that
+is not supported or on a system that in some other way does not meet release requirements.
+Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+in {productName} Release Notes for known issues related to installation.
+
+{productName} requires JDK release 6. The minimum
+(and certified) version of the JDK that is required for {productName} depends on the operating system:
+
+* For supported operating systems except Mac OS, the minimum required version is 1.6.0_17.
+* For the Mac OS X operating system, the minimum required version is 1.6.0_15.
+
+If necessary, download and install the required JDK software.
+
+On Solaris, Linux, and Windows systems, JDK software is available from the
+http://www.oracle.com/technetwork/java/javase/downloads/index.html[
+Java SE downloads page]
+(`http://www.oracle.com/technetwork/java/javase/downloads/index.html`).
+
+For Mac OS X systems, {productName} uses the JDK
+that is part of the Macintosh operating system. If necessary, obtain the
+required JDK version from the http://support.apple.com/downloads/[Mac OS
+X Updates site] (`http://support.apple.com/downloads/`).
+
+Also ensure that the `JAVA_HOME` environment variable on your system
+points to the JDK installation directory and not the Java Runtime
+Environment (JRE) software.
+
+Set `JAVA_HOME` and `$JAVA_HOME/bin` in the `PATH` to point to the
+supported JDK version.
+
+[[ghyml]][[GSTSG00078]][[review-known-issues]]
+
+===== Review Known Issues
+
+Your problem might be related to a known issue for the release. Refer to
+the link:../release-notes/toc.html#GSRLN[{productName} Release Notes] for
+the latest information regarding known issues and possible workarounds.
+Also search the GlassFish Issue Tracker at
+`http://java.net/jira/browse/GLASSFISH`.
+
+[[ghykl]][[GSTSG00079]][[search-the-product-documentation]]
+
+===== Search the Product Documentation
+
+{productName} includes complete product
+documentation. Search the documentation to see if your problem is
+addressed. See link:preface.html#ghpbz[{productName} Documentation
+Set] for the books in the documentation set and a description of their
+contents. Also see the Administration Console online help for detailed
+information about performing administrative tasks using the graphical
+interface.
+
+The following books will be especially helpful for troubleshooting:
+
+* link:../release-notes/toc.html#GSRLN[{productName} Release Notes],
+  which provides the latest information regarding known issues and possible workarounds.
+* link:../error-messages-reference/toc.html#GSEMR[
+  {productName} Error Message Reference],
+  which lists error messages you might encounter when using {productName}.
+
+Use the product documentation to learn more about {productName}. The more you know about the product the easier it might
+be to figure out why something isn't working.
+
+[[ghymp]][[GSTSG00080]][[search-the-glassfish-mailing-lists-and-forums]]
+
+===== Search the GlassFish Mailing Lists and Forums
+
+Lists and forums are extremely helpful resources, and are accessed as follows:
+
+* GlassFish mailing lists (start with users@glassfish.java.net and
+  search the archives): `http://java.net/projects/glassfish/lists/`
+* GlassFish user forum: `http://www.java.net/forums/glassfish/glassfish`
+
+[[ghuvf]][[GSTSG00172]][[gathering-information]]
+
+==== Gathering Information
+
+Troubleshooting and analysis require information. The more information
+you have the easier it is to classify a problem and search for its
+solution. Detailed information will also be necessary should you need to
+contact others for support, either through a community mailing list or
+through more formal Sun support channels.
+
+As you continue your investigation, consider the following questions.
+
+[[ghvar]][[GSTSG00081]][[when-does-the-problem-occur]]
+
+===== When Does the Problem Occur?
+
+* What do the logs show? What kind of error message are you getting? For
+more information about logs, see link:#abgax[Examining Log Files]. Logs
+are a good place to start your troubleshooting.
+* What are you trying to do when the problem occurs and how are you
+doing it? What is the sequence of events?
+* Does the problem occur every time you perform the same type of
+operation, or does it seem random? Can you reproduce the issue?
+* Have other events or problems occurred that could possibly be related,
+such as web sessions closing early, exceptions being thrown in your own
+application logic, components not being correctly deployed or
+undeployed?
+
+[[ghvbb]][[GSTSG00082]][[what-is-your-environment]]
+
+===== What Is Your Environment?
+
+* What version of {productName} are you using?
+What operating system and version? What JDK version? Many problems are
+caused simply because system requirements for the release are not met.
+Refer to the link:../release-notes/toc.html#GSRLN[{productName} Release
+Notes] for the latest information regarding system requirements, and
+make sure your system meets those requirements.
+* What resources does your system have, such as memory, disk, and swap
+space? If system memory is an issue, look for ways to optimize your
+configuration and consider taking other actions such as adding memory or
+decreasing system load.
+* Have any patches been applied? If so, what are the product and
+operating system patch numbers?
+* What other products and technologies are installed and being used in
+the installation?
+* How many application servers, web servers, and directory servers are
+installed? What are the products and versions?
+* How is the web server connected to {productName}? On the same system?
+* How is {productName} connected to the directory
+server?
+* What JDBC driver is being used to access the database?
+
+[[ghvce]][[GSTSG00083]][[what-is-your-system-configuration]]
+
+===== What Is Your System Configuration?
+
+* What are your settings?
+* On which port is {productName} configured — the
+default or something else?
+* What defaults were changed during installation and what are the
+values?
+* What other settings were changed from the defaults and what are their
+values?
+* What are the parameters related to JVM heap, stack, and garbage
+collection set to?
+* What are the JVM options?
+* What is the permgen size? `OutOfMemoryError:PermGen space` errors are
+common and indicate that you need to increase the permanent generation
+space available.
+* Is SSL enabled?
+* What are your network settings (proxy, firewall, and so on)? What
+happens if you disable your firewall and attempt the task?
+
+[[ghvcr]][[GSTSG00084]][[what-is-different]]
+
+===== What Is Different?
+
+* What is different that could have provoked the problem or triggered
+the event? Was something new added or changed? Have any new applications
+been deployed? If changes have been made recently, consider backing them
+out and seeing what happens — does the problem still occur?
+* Was the feature or functionality working correctly at one time? If so,
+what changed or happened between then and now?
+* Is this working on another system? If so, what is different about that
+environment?
+
+[[abgax]][[GSTSG00173]][[examining-log-files]]
+
+==== Examining Log Files
+
+Logging is one of your most important troubleshooting tools. It is the
+process by which {productName} captures data
+about events that occur during server operation, such as configuration
+errors, security failures, or server malfunction. This data is recorded
+in log files, and is usually your first source of information when
+Enterprise Server problems occur. The primary purpose of log files is to
+provide troubleshooting information. Analyzing the log files can help
+determine the health of the server and identify problem areas.
+
+By default, log information for each {productName} server instance is captured in a `server.log` file. That is,
+each instance, including the domain administration server (DAS), has an
+individual log file. By default, the log file for the DAS is located in
+domain-dir``/logs``, and the log file for each instance is located in
+instance-dir``/logs`.
+
+In addition, for domains that use clustering, {productName} captures log information for each cluster instance in a
+`cluster.log` file. By default, the `cluster.log` file is also located
+in instance-dir``/logs``.
+
+Oracle recommends using the Administration Console to view logging
+information. However, you can open a log file in a text editor and
+search for the module or message in which you are interested. {productName} also lets you collect log files into a ZIP
+file, which provides a convenient means to collect and view the log
+files for an instance or a domain even when it is not running.
+
+You configure the Logging Service by setting attributes in the
+`logging.properties` file. Each server, configuration, instance, and
+cluster in the {productName} domain has an
+individual `logging.properties` file. The root directory in which these
+`logging.properties` files are located is the same directory as for the
+`domain.xml` file, typically domain-dir/`config`. The default target
+when configuring logging attributes is the DAS. However, you can
+optionally target a specific server, instance, or cluster. You can also
+target a configuration that is shared by one or more instances or
+clusters. The Logging Service can also be configured using the
+Administration Console.
+
+Log levels such as `SEVERE`, `WARNING`, `INFO`, `CONFIG`, and others can
+be set to provide different types and amounts of information. The
+default setting is `INFO`. Each {productName}
+module has its own logger, and each logger has its own namespace. Log
+levels can be set globally for all loggers, or individually for
+module-specific loggers.
+
+For information about using the Administration Console log viewer and
+logging functions, see the Administration Console online help. For
+information about using the command line for logging functions, see
+"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide.
+
+[[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
+
+==== Monitoring the System
+
+Monitoring is another helpful tool. It is the process of reviewing the
+statistics of a system to improve performance or solve problems. By
+monitoring the state of various components and services deployed in
+{productName} you can identify performance
+bottlenecks, predict failures, perform root cause analysis, and ensure
+that everything is functioning as expected. For more information about
+monitoring, including JConsole information, see
+"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
+
+[[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
+
+=== Troubleshooting Tools
+
+Several tools are available that can be used to collect information for
+troubleshooting purposes. This section provides basic information about
+some of them, and includes the following:
+
+* link:#ghvcm[Operating System Utilities]
+* link:#ghvbo[Stack Traces and Thread Dumps]
+* link:#ghyjq[VisualVM]
+* link:#gjjjl[JVM Command-Line Tools]
+
+[[ghvcm]][[GSTSG00175]][[operating-system-utilities]]
+
+==== Operating System Utilities
+
+Operating system utilities, such as `pkginfo` and `showrev` on Solaris
+and `rpm` on Linux, are helpful in gathering system information.
+
+The `ps -ef` command provides helpful information about processes that
+are running, including their process identification numbers (PIDs).
+
+[[ghvbo]][[GSTSG00176]][[stack-traces-and-thread-dumps]]
+
+==== Stack Traces and Thread Dumps
+
+A stack trace is a user-friendly snapshot of the threads and monitors in
+a Virtual Machine for the Java platform (Java Virtual Machine or JVM
+machine). A thread dump shows what every thread in a JVM is doing at a
+given time and is useful in debugging. When the application server
+freezes, hangs, or becomes sluggish for no apparent reason, you should
+generate and analyze a thread dump.
+
+This section explains how to obtain a thread dump for {productName}. More information about analyzing the information
+contained in a thread dump can be found in
+"http://java.sun.com/developer/technicalArticles/Programming/Stacktrace[An
+Introduction to Java Stack Traces]"
+(`http://java.sun.com/developer/technicalArticles/Programming/Stacktrace`).
+
+[[ghykr]][[GSTSG00023]][[to-obtain-a-server-thread-dump]]
+
+===== To Obtain a Server Thread Dump
+
+Type the following command:
+
+[source]
+----
+asadmin generate-jvm-report --type=thread
+----
+
+[[sthref3]]
+
+See Also
+
+link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+
+[[ghyjq]][[GSTSG00177]][[visualvm]]
+
+==== VisualVM
+
+VisualVM is a Java troubleshooting tool that uses various technologies
+such as `jvmstat`, JMX, and Attach API to access monitored applications.
+VisualVM is a tool for visualizing data sources and by default
+visualizes the following types: applications, hosts, snapshots, core
+dumps, heap dumps, and thread dumps. These data sources are visualized
+in VisualVM so that they can be monitored for the purposes of analysis,
+management, and troubleshooting. VisualVM is commonly used to detect
+memory leaks.
+
+VisualVM has a GlassFish plugin that enhances monitoring of hosted
+applications by adding specialized overview, a tab for monitoring the
+HTTP Service, and the ability to visually select and monitor any of the
+deployed web applications. You can experiment with VisualVM
+troubleshooting capabilities, but note that various features depend on
+the Java versions used in the client and server. Depending on your
+configuration, you might only get parts of the VisualVM features. For
+more information about VisualVM, see `http://visualvm.java.net`.
+
+[[gjjjl]][[GSTSG00178]][[jvm-command-line-tools]]
+
+==== JVM Command-Line Tools
+
+JVM command-line tools can be used to provide valuable information about
+hung Java processes or Java core dumps. These tools include the
+following:
+
+* `jstack`: Prints Java stack traces of Java threads for a given Java
+process or core file or a remote debug server.
+* `jinfo`: Prints Java configuration information for a given Java
+process or core file or a remote debug server.
+* `jmap`: Prints shared object memory maps or heap memory details for a
+given process or core file or a remote debug server.
+* `jsadebugd`: Attaches to a Java process or core file and acts as a
+debug server. Remote clients such as `jstack`, `jmap`, and `jinfo` can
+attach to the server using Java Remote Invocation Method (RMI).
+* `jhat`: Enables Java heap dumps to be browsed using a web browser.
+* `jstat`: Displays performance statistics for an instrumented HotSpot JVM.
+* `jps`: Lists the instrumented HotSpot JVMs on the target system
+
+[[ghuyv]][[GSTSG00041]][[where-to-go-for-more-information]]
+
+=== Where to Go for More Information
+
+These resources were mentioned throughout this chapter and are provided
+again here for easy reference.
+
+* Release Notes: link:../release-notes/toc.html#GSRLN[{productName}
+Release Notes]
+* Error messages: link:../error-messages-reference/toc.html#GSEMR[{productName} Error
+Message Reference]
+* Mailing lists and forums: See link:#ghymp[Search the GlassFish Mailing
+Lists and Forums] for details about accessing lists and forums.
+* GlassFish community site: `http://glassfish.java.net/`
+

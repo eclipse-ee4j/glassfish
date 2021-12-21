@@ -1,0 +1,1075 @@
+type=page
+status=published
+title={productName} Upgrade Compatibility Issues
+next=upgrading-legacy-installation.html
+prev=preface.html
+~~~~~~
+
+= {productName} Upgrade Compatibility Issues
+
+[[GSUPG00002]][[abmaq]]
+
+
+[[glassfish-server-upgrade-compatibility-issues]]
+== 1 {productName} Upgrade Compatibility Issues
+
+This section describes some compatibility issues between {productName} 7 and earlier product releases. This section also describes
+some compatibility issues that affect Java applications that run on
+earlier product releases with which {productName} 7 is
+binary-compatible. When you upgrade to {productName} 7, you must
+address these issues.
+
+The following topics are addressed here:
+
+* link:#gjwpd[Binary-Compatible Releases For {productName} 7]
+* link:#gkric[New Default Installation Directory]
+* link:#gklhr[Changes to Group Management Service Settings]
+* link:#geyyk[Application Client Interoperability]
+* link:#gktad[Node Agent Support]
+* link:#gkrjm[HADB and `hadbm` Command Support]
+* link:#abmbc[Command Line Interface: The `asadmin` Command]
+* link:#gflnv[Applications That Use Java DB]
+* link:#gjizi[Applications That Use Persistence]
+* link:#gjiqj[HTTP Service to Network Service Changes]
+* link:#gktkt[NSS Cryptographic Token Support]
+
+[[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
+
+=== Binary-Compatible Releases For {productName} 7
+
+{productName} 7 is NOT binary-compatible with the earlier releases of the software:
+
+* Sun GlassFish Enterprise Server v2.1.1 (Enterprise and Developer Profiles)
+* Sun GlassFish Enterprise Server v3
+* GlassFish Server Open Source Edition 3.0.1
+* GlassFish Server Open Source Edition 3.1
+* GlassFish Server Open Source Edition 3.1.1
+* GlassFish Server Open Source Edition 4.x
+* GlassFish Server Open Source Edition 5.x
+* Eclipse GlassFish 6.x
+
+Java applications that run on these releases also work on {productName} 7 except for the compatibility issues that
+are listed in the remainder of this chapter.
+
+
+[NOTE]
+====
+The compatibility issues that are listed in the remainder of this
+chapter do not affect Java applications that run on Sun GlassFish
+Enterprise Server v3 and {productName} 3.0.1. The differences between
+{productName} 7 and the Enterprise Server v3 releases do not affect
+applications and data.
+====
+
+
+[[gkric]][[GSUPG00029]][[new-default-installation-directory]]
+
+=== New Default Installation Directory
+
+The default {productName} 7 installation directories are as follows:
+
+Solaris, Linux, and Mac OS X systems::
+[source]
+----
+user-home-directory/glassfish7
+----
+Windows systems::
+[source]
+----
+SystemDrive\glassfish7
+----
+
+In {productName} 3.0.1 and Enterprise Server v3, the default
+installation root directory was `glassfish7`.
+
+[[gklhr]][[GSUPG00030]][[changes-to-group-management-service-settings]]
+
+=== Changes to Group Management Service Settings
+
+The functionality of the Group Management Service (GMS) has not changed
+since Sun GlassFish Enterprise Server v2.1.1, but the names of GMS
+settings have been changed in the Administration Console to make them
+more understandable. These changes are made automatically during the
+upgrade process.
+
+Changes to settings on the Edit Group Management Service page in the
+Administration Console are summarized in the following table.
+
+[[sthref3]][[gklho]]
+
+Table 1-1 GMS Administration Console Settings Changes from 2.1.1 to 4.0
+
+[width="100%",cols="<50%,<50%",options="header",]
+|===
+|Old Setting Name |New Setting Name
+|Protocol Maximum Trial |Maximum Missed Heartbeats
+|Protocol Timeout |Heartbeat Frequency
+|Ping Timeout |Group Discovery Timeout
+|Verified Timeout |Failure Verification Wait Time
+|===
+
+
+The Merge Protocol settings from Sun GlassFish Enterprise Server v2.1.1
+are not supported and have been removed.
+
+[[geyyk]][[GSUPG00031]][[application-client-interoperability]]
+
+=== Application Client Interoperability
+
+The Jakarta EE 6 platform specification imposes stricter requirements than
+Jakarta EE 5 did on which JAR files can be visible to various modules
+within an EAR file. In particular, application clients must not have
+access to EJB JAR files or other JAR files in the EAR file unless they
+use a `Class-Path` header in the manifest file, or unless references use
+the standard Java SE mechanisms (extensions, for example), or use the
+Jakarta EE `library-directory` mechanism. Deployed Jakarta EE 5 applications
+that are upgraded to {productName} 7 will have the `compatibility`
+property set to `v2` and will run without change on {productName} 7.
+You may, however, want to consider modifying the applications to
+conform to Jakarta EE 6 requirements.
+
+If your upgrade includes a deployed application with an application
+client, you will need to retrieve the client stubs using {productName} 7 in order to run the client. Use the
+`asadmin get-client-stubs` command.
+
+If you try to run the application client before retrieving the client
+stubs, you will see the following error message:
+
+[source]
+----
+Invalid or corrupt jarfile jar-file-name
+----
+
+If you commonly distribute application clients to remote systems from
+which users will run them, you must not only retrieve the client stubs,
+but you must also run the `package-appclient` utility for {productName} 7 to upgrade the {productName} system files. This utility
+creates a JAR file, which you can then expand on the remote systems.
+
+Application clients use EJBs, web services, or other enterprise
+components that are in the application server (on the server side). The
+application client and the application server must use the same version
+and implementation of the RMI-IIOP protocol. {productName} 7 does
+not support communication between different versions of the protocol
+implementation. You cannot run application clients with one version of
+the application server runtime with a server that has a different
+version. Most often, this would happen if you upgraded the server but
+had not upgraded all the application client installations. If you run
+the `package-appclient` utility, this issue will not arise.
+
+You can use the Java Web Start support to distribute and launch the
+application client. If the runtime on the server has changed since the
+end-user last used the application client, Java Web Start automatically
+retrieves the updated runtime. Java Web Start enables you to keep the
+clients and servers synchronized and using the same runtime.
+
+[[gktad]][[GSUPG00032]][[node-agent-support]]
+
+=== Node Agent Support
+
+{productName} 7 does not support node agents. When updating from
+installations of earlier product versions in which node agents were
+configured, the cluster definitions will be migrated, but the clustered
+instances themselves must be manually re-created. See
+link:upgrading-legacy-installation.html#gfybw[Upgrading Clusters and Node
+Agent Configurations] for more information.
+
+[[gkrjm]][[GSUPG00033]][[hadb-and-hadbm-command-support]]
+
+=== HADB and `hadbm` Command Support
+
+{productName} 7 does not support HADB or the `hadbm` management command.
+
+Instead of HADB, {productName} 7 supports high availability
+clustering by means of in-memory session state replication and
+ActiveCache for GlassFish.
+See "link:../ha-administration-guide/overview.html#GSHAG00002[
+High Availability in {productName}]" in
+{productName} High Availability Administration Guide
+for more information.
+
+[[abmbc]][[GSUPG00034]][[command-line-interface-the-asadmin-command]]
+
+=== Command Line Interface: The `asadmin` Command
+
+The following sections describe changes to the command line utility `asadmin`:
+
+* link:#abmbd[Deprecated `asadmin` Subcommands]
+* link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
+
+For more information about `asadmin` and its subcommands, see the
+link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+
+[[abmbd]][[GSUPG00053]][[deprecated-asadmin-subcommands]]
+
+==== Deprecated `asadmin` Subcommands
+
+In {productName} 7, it is recommended that utility options of the
+`asadmin` command precede the subcommand. Utility options are options
+that control the behavior of the `asadmin` utility, as distinguished
+from subcommand options. Use of the following options after the
+subcommand is deprecated.
+
+* `--host`
+* `--port`
+* `--user`
+* `--passwordfile`
+* `--terse`
+* `--secure`
+* `--echo`
+* `--interactive`
+
+[[abmbf]][[GSUPG00054]][[deprecated-unsupported-and-obsolete-options]]
+
+==== Deprecated, Unsupported, and Obsolete Options
+
+Options in link:#gaeki[Table 1-2] are deprecated or no longer supported,
+or are obsolete and are ignored.
+
+[[sthref4]][[gaeki]]
+
+Table 1-2 Deprecated, Unsupported, and Obsolete Options for `asadmin`
+and Subcommands
+
+[width="100%",cols="<33%,<67%",options="header",]
+|===
+|Option |Affected Subcommands
+
+|`--acceptlang`
+|Unsupported for the `create-virtual-server` subcommand.
+
+|`--acls`
+|Unsupported for the `create-virtual-server` subcommand.
+
+|`--adminpassword`
+|Unsupported for all relevant subcommands. Use `--passwordfile` instead.
+
+|`--autoapplyenabled`
+|Obsolete for the `create-http-lb` subcommand.
+
+|`--autohadb`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--autohadboverride`
+|Obsolete for the `start-cluster` subcommand and the `stop-cluster` subcommand
+
+|`--blockingenabled`
+|Unsupported for the `create-http-listener` subcommand.
+
+|`--configfile`
+|Unsupported for the `create-virtual-server` subcommand.
+
+|`--defaultobj`
+|Unsupported for the `create-virtual-server` subcommand.
+
+|`--defaultvs`
+|Deprecated for the `create-http-listener` subcommand. Use `--default-virtual-server` instead.
+
+|`--description`
+|Obsolete for the `restore-domain` subcommand.
+
+|`--devicesize`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--haadminpassword`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--haadminpasswordfile`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--haagentport`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--haproperty`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--heartbeataddress`
+|Deprecated for the `create-cluster` subcommand. Use `--multicastaddress` instead.
+
+|`--heartbeatport`
+|Deprecated for the `create-cluster` subcommand. Use `--multicastport` instead.
+
+|`--hosts`
+|Obsolete for the `create-cluster` subcommand.
+
+|`--ignoreDescriptorItem`
+|Replaced by the all lowercase option `--ignoredescriptoritem`
+in the `set-web-context-param` subcommand and the `set-web-env-entry` subcommand.
+
+|`--mime`
+|Unsupported for the `create-virtual-server` subcommand.
+
+|`--password`
+|Unsupported for all remote subcommands. Use `--passwordfile` instead.
+
+|`--path`
+|Unsupported for the `create-domain` subcommand. Use `--domaindir` instead.
+
+|`--portbase`
+|Obsolete only for the `create-cluster` subcommand.
+This option is still valid in other subcommands such as `create-domain`,
+`create-instance`, and `create-local-instance`.
+
+|`--resourcetype`
+|Unsupported for all relevant subcommands. Use `--restype` instead.
+
+|`--retrievefile`
+|Obsolete for the `export-http-lb-config` subcommand.
+
+|`--setenv`
+|Obsolete for the `start-instance` subcommand.
+
+|`--target`
+a|Obsolete only for the following subcommands:
+
+* `create-connector-connection-pool`
+* `create-resource-adapter-config`
+* `delete-connector-connection-pool`
+* `delete-connector-security-map`
+* `delete-jdbc-connection-pool`
+* `delete-resource-ref`
+
+Replaced by an operand in the `list-custom-resources` subcommand and the
+`list-jndi-entries` subcommand.
+|===
+
+
+[[gflnv]][[GSUPG00035]][[applications-that-use-java-db]]
+
+=== Applications That Use Java DB
+
+The directory location of Java DB in {productName} 7 has changed
+from its location in previous installations. Suppose that you have
+deployed applications that use Java DB databases in your previous server
+installation, and you upgrade your existing installation to {productName} 7. If you run the `asadmin start-database` command and
+successfully start Java DB, you could run into problems while trying to
+run applications that were deployed on your previous server
+installation.
+
+To solve this problem, you can copy the `databases` directory from your
+previous installation to as-install``/databases``. Make sure the database
+is not running when you do this.
+
+Alternatively, you can perform these steps:
+
+1. Use the `asadmin start-database` command with the `--dbhome` option
+pointing to the `databases` directory in the older version of Java DB.
+For example:
++
+[source]
+----
+asadmin start-database --dbhome c:\glassfish\databases
+----
+2. After upgrade, start {productName} 7.
+
+[[gjizi]][[GSUPG00036]][[applications-that-use-persistence]]
+
+=== Applications That Use Persistence
+
+{productName} 7 and 3.0.1, and Sun GlassFish Enterprise Server v3
+use the persistence provider EclipseLink, while earlier versions used
+TopLink Essentials.
+
+An application that uses the container to create an `EntityManager` or
+`EntityManagerFactory` and that used Toplink Essentials as its provider
+will work in {productName} 7. The container creates an
+`EntityManager` if the application uses the `@PersistenceContext`
+annotation to inject an `EntityManager`, as in the following example:
+
+[source,java]
+----
+@PersistenceContext
+EntityManager em;
+----
+
+The container creates an `EntityManagerFactory` if the application uses
+the `@PersistenceUnit` annotation to inject an `EntityManagerFactory`,
+as in the following example:
+
+[source,java]
+----
+@PersistenceUnit
+EntityManagerFactory emf;
+
+EntityManager em = emf.createEntityManager();
+----
+
+When the application is loaded, {productName} 7 will translate the
+provider to EclipseLink and will also translate `toplink.*` properties
+in the `persistence.xml` to corresponding EclipseLink properties. (The
+actual `persistence.xml` file remains unchanged.)
+
+Under certain circumstances, however, you may have to modify the
+`persistence.xml` file or your code:
+
+* If your application uses Java SE code to create the
+`EntityManagerFactory`, you will need to change your `persistence.xml`
+file for both the `provider` element and for any `toplink.*` properties
+to use the EclipseLink equivalents. An application uses Java SE code if
+it uses the `javax.persistence.Persistence` class to create the
+`EntityManagerFactory`, as in the following example:
++
+[source,java]
+----
+EntityManagerFactory emf =
+    javax.persistence.Persistence.createEntityManagerFactory("Order");
+EntityManager em = emf.createEntityManager();
+----
+In this case, change the `provider` element to specify the following:
++
+[source,xml]
+----
+<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+----
+* If the application itself contains any TopLink Essentials-specific
+code and therefore contains casts to `oracle.toplink.\*`, you must change
+the code to cast to `org.eclipse.persistence.*`. You can use the package
+renamer tool described on the
+http://wiki.eclipse.org/EclipseLink/Examples/MigratingFromOracleTopLink#Rename_Packages[
+Eclipse wiki]
+to do this. This tool is not provided with {productName} 7,
+however, so you must obtain it from the EclipseLink project download site.
+
+[[gjiqj]][[GSUPG00037]][[http-service-to-network-service-changes]]
+
+=== HTTP Service to Network Service Changes
+
+In {productName} 7, most HTTP Service settings are defined in the
+Network Service configuration that was introduced in Sun GlassFish
+Enterprise Server v3.
+
+The changes are described in the following sections.
+
+* link:#gipsa[Changes to Dotted Names]
+* link:#giprg[Changes to `asadmin` Subcommands]
+* link:#gipfo[Remapping of HTTP Service Attributes and Properties]
+* link:#gipcg[New Network Service Elements and Attributes]
+
+[[gipsa]][[GSUPG00055]][[changes-to-dotted-names]]
+
+==== Changes to Dotted Names
+
+The dotted name hierarchy for the HTTP Service configuration in
+{productName} 7 is shown below. Elements that are no longer
+supported are `request-processing`, `keep-alive`, `connection-pool`,
+`http-protocol`, `http-file-cache`, and `http-listener`. During the
+upgrade process, these discontinued elements are remapped to the new
+configuration automatically and then deleted.
+
+[source]
+----
+config
+    http-service
+        access-log
+        request-processing
+        keep-alive
+        connection-pool
+        http-protocol
+        http-file-cache
+        http-listener
+            ssl
+            property
+        virtual-server
+            http-access-log
+            property
+        property
+    thread-pools
+        thread-pool
+----
+
+The dotted name hierarchy for the {productName} 7 Network Service
+and HTTP Service configurations is shown below. The `network-config`
+element and all its children are new except for `ssl`.
+
+[source]
+----
+config
+    network-config
+        transports
+            selection-key-handler
+            transport
+        protocols
+            protocol
+                http
+                    file-cache
+                port-unification
+                    protocol-finder
+                protocol-chain-instance-handler
+                    protocol-chain
+                protocol-filter
+                ssl
+        network-listeners
+            network-listener
+    http-service
+        access-log
+        virtual-server
+            http-access-log
+            property
+        property
+    thread-pools
+        thread-pool
+----
+
+The following example compares the commands for setting a listener port
+for Sun GlassFish Enterprise Server v3 and {productName} 7. Note
+that the configuration for Enterprise Server v3 also applies to all
+earlier Enterprise Server 2.x releases.
+
+* Command for Sun GlassFish Enterprise Server v3 and earlier:
++
+[source]
+----
+asadmin set server-config.http-service.http-listener.http-1.listenerport=4321
+----
+* Command for {productName} 7:
++
+[source]
+----
+asadmin set server-config.network-config.network-listeners.network-\
+listener.http-1.listenerport=4321
+----
+
+[[giprg]][[GSUPG00056]][[changes-to-asadmin-subcommands]]
+
+==== Changes to `asadmin` Subcommands
+
+To accommodate the move of HTTP Service into the new Network Service
+configuration, link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommands are changed as
+follows:
+
+* The link:../reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand has a new `--type`
+parameter value, `network-listener`.
+* The link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] SUBcommand has a new
+parameter, `--networklisteners`.
+* The link:../reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand adds a
+`network-listener` element to the domain configuration. The syntax and
+options of this commands are unchanged.
+
+[[gipfo]][[GSUPG00057]][[remapping-of-http-service-attributes-and-properties]]
+
+==== Remapping of HTTP Service Attributes and Properties
+
+The following tables describe how attributes and properties in the HTTP
+Service configuration for {productName} 7 are remapped to
+attributes in the Network Service configuration for older product
+releases. If you use a configuration from a Sun GlassFish Enterprise
+Server v2 or v3 release, this remapping happens automatically and then
+discontinued elements are deleted.
+
+[[sthref5]][[gipfy]]
+
+Table 1-3 `com.sun.grizzly` Property Remapping
+
+[width="100%",cols="<33%,<26%,<41%",options="header",]
+|===
+|`com.sun.grizzly` Property |New Owning Element |New Attribute Name
+|`selector.timeout` |`transport` |`selector-poll-timeout-millis`
+|`displayConfiguration` |`transport` |`display-configuration`
+|`enableSnoop` |`transport` |`snoop-enabled`
+|`readTimeout` |`transport` |`read-timeout-millis`
+|`writeTimeout` |`transport` |`write-timeout-millis`
+|===
+
+
+[[sthref6]][[gipfn]]
+
+Table 1-4 `connection-pool` Attribute Remapping
+
+[width="100%",cols="<41%,<19%,<40%",options="header",]
+|===
+|`connection-pool` Attribute |New Owning Element |New Attribute Name
+|`queue-size-in-bytes` |`thread-pool` |`max-queue-size`
+
+|`max-pending-count` |`transport` |`max-connections-count`
+
+|`receive-buffer-size-in-` `bytes` |`http` |`request-body-buffer-size-`
+`bytes`
+
+|`send-buffer-size-in-bytes` |`http` |`send-buffer-size-bytes`
+|===
+
+
+[[sthref7]][[gipcv]]
+
+Table 1-5 `http-file-cache` Attribute Remapping
+
+[width="100%",cols="<50%,<17%,<33%",options="header",]
+|===
+|`http-file-cache` Attribute |New Owning Element |New Attribute Name
+|`file-caching-enabled` |`file-cache` |`enabled`
+|`max-age-in-seconds` |`file-cache` |`max-age-seconds`
+|`medium-file-space-in-bytes` |`file-cache` |`max-cache-size-bytes`
+|`max-files-count` |`file-cache` |`max-files-count`
+|`globally-enabled` |none |not supported
+|`medium-file-size-limit-in-bytes` |none |not supported
+|`small-file-size-limit-in-bytes` |none |not supported
+|`small-file-space-in-bytes` |none |not supported
+|`file-transmission-enabled` |none |not supported
+|`hash-init-size` |none |not supported
+|===
+
+
+[[sthref8]][[gipev]]
+
+Table 1-6 `http-listener` Attribute Remapping
+
+[width="100%",cols="<37%,<27%,<36%",options="header",]
+|===
+|`http-listener` Attribute |New Owning Element |New Attribute Name
+|`id` |`network-listener` |`name`
+|`address` |`network-listener` |`address`
+|`port` |`network-listener` |`port`
+|`enabled` |`network-listener` |`enabled`
+|`acceptor-threads` |`transport` |`acceptor-threads`
+|`security-enabled` |`protocol` |`security-enabled`
+|`default-virtual-server` |`http` |`default-virtual-server`
+|`server-name` |`http` |`server-name`
+|`redirect-port` |`http` |`redirect-port`
+|`xpowered-by` |`http` |`xpowered-by`
+|`external-port` |none |not supported
+|`family` |none |not supported
+|`blocking-enabled` |none |not supported
+|===
+
+
+[[sthref9]][[gipdo]]
+
+Table 1-7 `http-listener` Property Remapping
+
+[width="100%",cols="<43%,<15%,<42%",options="header",]
+|===
+|`http-listener` Property |New Owning Element |New Attribute Name
+|`maxKeepAliveRequests` |`http` |`max-connections`
+
+|`authPassthroughEnabled` |`http` |`auth-pass-through-enabled`
+
+|`compression` |`http` |`compression`
+
+|`compressableMimeType` |`http` |`compressable-mime-type`
+
+|`noCompressionUserAgents` |`http` |`no-compression-user-agents`
+
+|`compressionMinSize` |`http` |`compression-min-size-bytes`
+
+|`restrictedUserAgents` |`http` |`restricted-user-agents`
+
+|`cometSupport` |`http` |`comet-support-enabled`
+
+|`connectionUploadTimeout` |`http` |`connection-upload-timeout-`
+`millis`
+
+|`disableUploadTimeout` |`http` |`upload-timeout-enabled`
+
+|`chunkingDisabled` |`http` |`chunking-enabled`
+
+|`uriEncoding` |`http` |`uri-encoding`
+
+|`traceEnabled` |`http` |`trace-enabled`
+
+|`rcmSupport` |`http` |`rcm-support-enabled`
+
+|`jkEnabled` |`network-` `listener` |`jk-enabled`
+
+|`crlFile` |`ssl` |`crl-file`
+
+|`trustAlgorithm` |`ssl` |`trust-algorithm`
+
+|`trustMaxCertLength` |`ssl` |`trust-max-cert-length-bytes`
+
+|`tcpNoDelay` |`transport` |`tcp-no-delay`
+
+|`bufferSize` |`transport` |`buffer-size-bytes`
+
+|`use-nio-direct-bytebuffer` |`transport` |`byte-buffer-type`
+
+|`proxyHandler` |none |not supported
+
+|`proxiedProtocols` |none |not supported
+
+|`recycle-objects` |none |not supported
+
+|`reader-threads` |none |not supported
+
+|`acceptor-queue-length` |none |not supported
+
+|`reader-queue-length` |none |not supported
+
+|`connectionTimeout` |none |not supported
+
+|`monitoring-cache-enabled` |none |not supported
+
+|`monitoring-cache-refresh-in-` `millis` |none |not supported
+
+|`ssl-cache-entries` |none |not supported
+
+|`ssl3-session-timeout` |none |not supported
+
+|`ssl-session-timeout` |none |not supported
+|===
+
+
+[[sthref10]][[gipel]]
+
+Table 1-8 `http-protocol` Attribute Remapping
+
+[width="100%",cols="<34%,<33%,<33%",options="header",]
+|===
+|`http-protocol` Attribute |New Owning Element |New Attribute Name
+|`version` |`http` |`version`
+|`forced-response-type` |`http` |`forced-response-type`
+|`default-response-type` |`http` |`default-response-type`
+|`dns-lookup-enabled` |none |not supported
+|`ssl-enabled` |none |not supported
+|===
+
+
+[[sthref11]][[gipfa]]
+
+Table 1-9 `http-service` Property Remapping
+
+[width="100%",cols="<34%,<33%,<33%",options="header",]
+|===
+|`http-service` Property |New Owning Element |New Attribute or Property
+Name
+|`accessLoggingEnabled` |`http-service`, `virtual-server`
+|`access-logging-enabled` attribute
+
+|`ssl-cache-entries` |`http-service` |unchanged property
+
+|`ssl3-session-timeout` |`http-service` |unchanged property
+
+|`ssl-session-timeout` |`http-service` |unchanged property
+
+|`proxyHandler` |`http-service` |unchanged property
+
+|`connectionTimeout` |`http-service` |unchanged property
+
+|all other properties |none |not supported
+|===
+
+
+[[sthref12]][[gipea]]
+
+Table 1-10 `keep-alive` Attribute Remapping
+
+[width="100%",cols="<34%,<33%,<33%",options="header",]
+|===
+|`keep-alive` Attribute |New Owning Element |New Attribute Name
+|`max-connections` |`http` |`max-connections`
+|`timeout-in-seconds` |`http` |`timeout-seconds`
+|`thread-count` |none |not supported
+|===
+
+
+[[sthref13]][[gipdh]]
+
+Table 1-11 `request-processing` Attribute Remapping
+
+[width="100%",cols="<43%,<18%,<39%",options="header",]
+|===
+|`request-processing` Attribute |New Owning Element |New Attribute Name
+|`thread-count` |`thread-pool` |`max-thread-pool-size`
+|`initial-thread-count` |`thread-pool` |`min-thread-pool-size`
+|`header-buffer-length-in-bytes` |`http` |`header-buffer-length-bytes`
+|`request-timeout-in-seconds` |`http` |`request-timeout-seconds`
+|`thread-increment` |none |not supported
+|===
+
+
+[[sthref14]][[gipdv]]
+
+Table 1-12 `ssl` Attribute Changes
+
+[width="100%",cols="<34%,<22%,<44%",options="header",]
+|===
+|Previous Attribute or Property |Previous Owning Element |New `ssl`
+Attribute
+|none |none |`key-store`
+
+|none |none |`trust-store`
+
+|`crlFile` property |`http-listener` |`crl-file`
+
+|`trustAlgorithm` property |`http-listener` |`trust-algorithm`
+
+|`trustMaxCertLength` property |`http-listener`
+|`trust-max-cert-length-bytes`
+
+|all other `ssl` attributes |`ssl` |unchanged
+|===
+
+
+[[sthref15]][[gipcj]]
+
+Table 1-13 `thread-pool` Attribute Changes
+
+[width="100%",cols="<44%,<17%,<39%",options="header",]
+|===
+|Previous Attribute |Previous Owning Element |New `thread-pool`
+Attribute
+|none |none |`classname`
+
+|none |none |`max-queue-size`
+
+|`thread-pool-id` |`thread-pool` |`name`
+
+|`idle-thread-timeout-in-seconds` |`thread-pool`
+|`idle-thread-timeout-seconds`
+
+|`num-work-queues` |`thread-pool` |not supported
+
+|all other `thread-pool` attributes |`thread-pool` |unchanged
+|===
+
+
+[[sthref16]][[gipep]]
+
+Table 1-14 `virtual-server` Attribute Changes
+
+[width="100%",cols="<39%,<24%,<37%",options="header",]
+|===
+|Previous Attribute or Property |Previous Owning Element |New
+`virtual-server` Attribute
+|`http-listeners` attribute |`virtual-server` |`network-listeners`
+
+|`accessLoggingEnabled` property |`http-service`
+|`access-logging-enabled`
+
+|`sso-enabled` property |`virtual-server` |`sso-enabled`
+
+|`ssoCookieSecure` property |`virtual-server` |`sso-cookie-secure`
+
+|all other `virtual-server` attributes |`virtual-server` |unchanged
+
+|all other `virtual-server` properties |`virtual-server` |unchanged,
+still properties
+|===
+
+
+[[gipcg]][[GSUPG00058]][[new-network-service-elements-and-attributes]]
+
+==== New Network Service Elements and Attributes
+
+The following tables describe the Network Service elements and
+attributes that were introduced in Sun GlassFish Enterprise Server v3.
+For attributes and properties remapped from discontinued elements to new
+elements, see link:#gipfo[Remapping of HTTP Service Attributes and
+Properties].
+
+The new `file-cache` element has no new attributes. All of its
+attributes are remapped from the `http-file-cache` element. For details,
+see link:#gipcv[Table 1-5].
+
+[[sthref17]][[gipds]]
+
+Table 1-15 New `http` Attributes
+
+[width="100%",cols="<28%,<32%,<40%",options="header",]
+|===
+|Attribute |Default |Description
+|`adapter` |`com.sun.grizzly.tcp. StaticResourcesAdapter` |(Optional)
+Specifies the class name of the static resources adapter.
+
+|`max-post-size-bytes` |`2097152` |(Optional) Specifies the maximum size
+of `POST` actions.
+|===
+
+
+For remapped `http` attributes, see link:#gipfn[Table 1-4],
+link:#gipev[Table 1-6], link:#gipdo[Table 1-7], link:#gipel[Table 1-8],
+link:#gipea[Table 1-10], and link:#gipdh[Table 1-11].
+
+[[sthref18]][[gipey]]
+
+Table 1-16 New `network-listener` Attributes
+
+[width="100%",cols="<18%,<11%,<71%",options="header",]
+|===
+|Attribute |Default |Description
+|`protocol` |none |Specifies the `name` of the `protocol` associated
+with this `network-listener`. Although this attribute is required, a
+`protocol` is automatically created with the same `name` as the
+`network-listener` when you use `asadmin create-http-listener` to create
+a `network-listener`.
+
+|`thread-pool` |none |(Optional) Specifies the `name` of the
+`thread-pool` associated with this `network-listener`.
+
+|`transport` |none |Specifies the `name` of the `transport` associated
+with this `network-listener`. Although this attribute is required, the
+default `transport` is used when you use `asadmin create-http-listener`
+to create a `network-listener`.
+|===
+
+
+For remapped `network-listener` attributes, see link:#gipev[Table 1-6].
+
+[[sthref19]][[gipfg]]
+
+Table 1-17 New `port-unification` Attributes
+
+[width="100%",cols="<19%,<16%,<65%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `port-unification`.
+
+|`classname` |none |Specifies the class name of the `port-unification`
+implementation.
+|===
+
+
+[[sthref20]][[gipdj]]
+
+Table 1-18 New `protocol` Attributes
+
+[width="100%",cols="<18%,<17%,<65%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `protocol`.
+|===
+
+
+For remapped `protocol` attributes, see link:#gipev[Table 1-6].
+
+[[sthref21]][[gipcr]]
+
+Table 1-19 New `protocol-chain` Attributes
+
+[width="100%",cols="<19%,<17%,<64%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `protocol-chain`.
+
+|`classname` |none |Specifies the class name of the `protocol-chain`
+implementation.
+
+|`type` |`STATELESS` |Specifies the type of protocol chain.
+|===
+
+
+[[sthref22]][[gipfq]]
+
+Table 1-20 New `protocol-chain-instance-handler` Attributes
+
+[width="100%",cols="<19%,<17%,<64%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the
+`protocol-chain-instance-handler`.
+
+|`classname` |none |Specifies the class name of the
+`protocol-chain-instance-handler` implementation.
+|===
+
+
+[[sthref23]][[gipeq]]
+
+Table 1-21 New `protocol-filter` Attributes
+
+[width="100%",cols="<19%,<17%,<64%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `protocol-filter`.
+
+|`classname` |none |Specifies the class name of the `protocol-filter`
+implementation.
+|===
+
+
+[[sthref24]][[gipfd]]
+
+Table 1-22 New `protocol-finder` Attributes
+
+[width="100%",cols="<19%,<17%,<64%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `protocol-finder`.
+
+|`classname` |none |Specifies the class name of the `protocol-finder`
+implementation.
+
+|`protocol` |none |Specifies the `name` of the `protocol` associated
+with this `protocol-finder`.
+|===
+
+
+[[sthref25]][[gipft]]
+
+Table 1-23 New `selection-key-handler` Attributes
+
+[width="100%",cols="<19%,<16%,<65%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `selection-key-handler`.
+
+|`classname` |none |Specifies the class name of the
+`selection-key-handler` implementation.
+|===
+
+
+[[sthref26]][[gipfi]]
+
+Table 1-24 New `ssl` Attributes
+
+[width="100%",cols="<19%,<17%,<64%",options="header",]
+|===
+|Attribute |Default |Description
+|`key-store` |none |(Optional) Specifies a key store.
+|`trust-store` |none |(Optional) Specifies a trust store.
+|===
+
+
+For remapped `ssl` attributes, see link:#gipdv[Table 1-12].
+
+[[sthref27]][[gipcc]]
+
+Table 1-25 New `thread-pool` Attributes
+
+[width="100%",cols="<21%,<32%,<47%",options="header",]
+|===
+|Attribute |Default |Description
+|`classname` |`com.sun.grizzly.http.StatsThreadPool` |(Optional)
+Specifies the class name of the `thread-pool` implementation.
+
+|`max-queue-size` |`-1` |(Optional) Specifies the maximum number of
+messages that can be queued until threads are available to process them.
+A value of `-1` specifies no limit.
+|===
+
+
+For remapped `thread-pool` attributes, see link:#gipfn[Table 1-4],
+link:#gipdh[Table 1-11], and link:#gipcj[Table 1-13].
+
+[[sthref28]][[gipem]]
+
+Table 1-26 New `transport` Attributes
+
+[width="100%",cols="<35%,<27%,<38%",options="header",]
+|===
+|Attribute |Default |Description
+|`name` |none |Specifies a unique name for the `transport`.
+
+|`classname` |`com.sun.grizzly. TCPSelectorHandler` |(Optional)
+Specifies the class name of the `transport` implementation.
+
+|`selection-key-handler` |none |(Optional) Specifies the `name` of the
+`selection-key-handler` associated with this `transport`.
+
+|`idle-key-timeout-seconds` |`30` |(Optional) Specifies the idle key
+timeout.
+|===
+
+
+For remapped `transport` attributes, see link:#gipfy[Table 1-3],
+link:#gipfn[Table 1-4], link:#gipev[Table 1-6], and link:#gipdo[Table
+1-7].
+
+[[gktkt]][[GSUPG00038]][[nss-cryptographic-token-support]]
+
+=== NSS Cryptographic Token Support
+
+{productName} 7 does not support Network Security Services (NSS)
+cryptographic tokens. When upgrading to {productName} 7 from
+Enterprise Server v2.x, additional manual configuration steps must be
+performed. These steps are explained later in this guide, in
+link:upgrading-legacy-installation.html#gktnh[Upgrading Installations
+That Use NSS Cryptographic Tokens].

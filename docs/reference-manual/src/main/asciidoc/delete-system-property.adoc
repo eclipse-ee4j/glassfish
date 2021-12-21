@@ -1,0 +1,95 @@
+type=page
+status=published
+title=delete-system-property
+next=delete-threadpool.html
+prev=delete-ssl.html
+~~~~~~
+
+= delete-system-property
+
+[[delete-system-property-1]][[GSRFM00110]][[delete-system-property]]
+
+== delete-system-property
+
+Removes a system property of the domain, configuration, cluster, or
+server instance, one at a time
+
+[[sthref983]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-system-property [--help]
+[--target target_name ]
+[property_name]
+----
+
+[[sthref984]]
+
+=== Description
+
+The `delete-system-property` subcommand deletes a system property of a
+domain, configuration, cluster, or server instance. Make sure that the
+system property is not referenced elsewhere in the configuration before
+deleting it.
+
+This subcommand is supported in remote mode only.
+
+[[sthref985]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This option specifies the target on which you are deleting the system
+  properties. The valid targets for this subcommand are instance,
+  cluster, configuration, domain, and server. Server is the default option.
+
+[[sthref986]]
+
+=== Operands
+
+property_name::
+  The name of the system property to remove.
+
+[[sthref987]]
+
+=== Examples
+
+[[GSRFM580]][[sthref988]]
+
+==== Example 1   Deleting a System Property
+
+This example deletes the system property named `http-listener-port`.
+
+[source]
+----
+asadmin> delete-system-property http-listener-port
+Command delete-system-property executed successfully.
+----
+
+[[sthref989]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref990]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
+link:list-system-properties.html#list-system-properties-1[`list-system-properties`(1)]
+
+

@@ -1,0 +1,110 @@
+type=page
+status=published
+title=get-client-stubs
+next=get-health.html
+prev=get-active-module-config.html
+~~~~~~
+
+= get-client-stubs
+
+[[get-client-stubs-1]][[GSRFM00140]][[get-client-stubs]]
+
+== get-client-stubs
+
+Retrieves the application JAR files needed to launch the application
+client.
+
+[[sthref1227]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] get-client-stubs [--help]
+--appname application_name
+local_directory_path
+----
+
+[[sthref1228]]
+
+=== Description
+
+The `get-client-stubs` subcommand copies the required JAR files for an
+`AppClient` standalone module or each `AppClient` module in an
+application from the server machine to the local directory. Each
+client's generated JAR file is retrieved, along with any required
+supporting JAR files . The client JAR file name is of the form
+app-name`Client.jar`. Before executing the `get-client-stubs`
+subcommand, you must deploy the application or module. The generated
+client JAR file is useful for running the application using the
+`appclient` utility. This subcommand is supported in remote mode only.
+
+[[sthref1229]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--appname`::
+  The name of the application or stand-alone client module. +
+  The name can include an optional version identifier, which follows the
+  name and is separated from the name by a colon (`:`). The version
+  identifier must begin with a letter or number. It can contain
+  alphanumeric characters plus underscore (`_`), dash (`-`), and period
+  (`.`) characters. For more information about module and application
+  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
+  {productName} Application Deployment Guide.
+
+[[sthref1230]]
+
+=== Operands
+
+local_directory_path::
+  The path to the local directory where the client stub JAR file should
+  be stored.
+
+[[sthref1231]]
+
+=== Examples
+
+[[GSRFM622]][[sthref1232]]
+
+==== Example 1   Using get-client-stubs
+
+[source]
+----
+asadmin> get-client-stubs --appname myapplication /sample/example
+Command get-client-stubs executed successfully
+----
+
+[[sthref1233]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1234]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:deploy.html#deploy-1[`deploy`(1)],
+link:redeploy.html#redeploy-1[`redeploy`(1)],
+link:undeploy.html#undeploy-1[`undeploy`(1)]
+
+link:appclient.html#appclient-1m[`appclient`(1M)],
+link:package-appclient.html#package-appclient-1m[`package-appclient`(1M)]
+
+link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+Guide]
+
+

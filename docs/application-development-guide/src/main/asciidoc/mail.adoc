@@ -1,0 +1,249 @@
+type=page
+status=published
+title=Using the Jakarta Mail API
+prev=jms.html
+~~~~~~
+
+= Using the Jakarta Mail API
+
+[[GSDVG00021]][[beaow]]
+
+
+[[using-the-jakarta-mail-api]]
+== 18 Using the Jakarta Mail API
+
+This chapter describes how to use the Jakarta Mail API, which provides a set
+of abstract classes defining objects that comprise a mail system.
+
+The following topics are addressed here:
+
+* link:#beaox[Introducing Jakarta Mail]
+* link:#beaoy[Creating a Jakarta Mail Session]
+* link:#beaoz[Jakarta Mail Session Properties]
+* link:#beapa[Looking Up a Jakarta Mail Session]
+* link:#fwfiy[Sending and Reading Messages Using Jakarta Mail]
+* link:#gkpfg[Using Application-Scoped Jakarta Mail Resources]
+
+
+[NOTE]
+====
+Jakarta Mail resources are supported only in the full {productName}, not in the Web Profile.
+====
+
+
+[[beaox]][[GSDVG00200]][[introducing-jakarta-mail]]
+
+=== Introducing Jakarta Mail
+
+The Jakarta Mail API defines classes such as `Message`, `Store`, and
+`Transport`. The API can be extended and can be subclassed to provide
+new protocols and to add functionality when necessary. In addition, the
+API provides concrete subclasses of the abstract classes. These
+subclasses, including `MimeMessage` and `MimeBodyPart`, implement widely
+used Internet mail protocols and conform to the RFC822 and RFC2045
+specifications. The Jakarta Mail API includes support for the IMAP4, POP3,
+and SMTP protocols.
+
+The Jakarta Mail architectural components are as follows:
+
+* The abstract layer declares classes, interfaces, and abstract methods
+intended to support mail handling functions that all mail systems
+support.
+* The internet implementation layer implements part of the abstract
+layer using the RFC822 and MIME internet standards.
+* Jakarta Mail uses the JavaBeans Activation Framework (JAF) to encapsulate
+message data and to handle commands intended to interact with that data.
+
+For more information, see
+"link:../administration-guide/mail.html#GSADG00019[Administering the Jakarta Mail Service]"
+in {productName} Administration Guide
+and the Jakarta Mail specification at
+`https://jakarta.ee/specifications/mail`.
+
+[[beaoy]][[GSDVG00201]][[creating-a-jakarta-mail-session]]
+
+=== Creating a Jakarta Mail Session
+
+You can create a Jakarta Mail session in the following ways:
+
+* In the Administration Console, open the Resources component and select
+Jakarta Mail Sessions. For details, click the Help button in the
+Administration Console.
+* Use the `asadmin create-mail-resource` command. For details, see
+the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+
+[[beaoz]][[GSDVG00202]][[jakarta-mail-session-properties]]
+
+=== Jakarta Mail Session Properties
+
+You can set properties for a Jakarta Mail `Session` object. Every property
+name must start with a `mail-` prefix. The {productName} changes the
+dash (`-`) character to a period (`.`) in the name of the property and
+saves the property to the `MailConfiguration` and Jakarta Mail `Session`
+objects. If the name of the property doesn't start with `mail-`, the
+property is ignored.
+
+For example, if you want to define the property `mail.from` in a
+Jakarta Mail `Session` object, first define the property as follows:
+
+* Name - `mail-from`
+* Value - `john.doe@sun.com`
+
+[[beapa]][[GSDVG00203]][[looking-up-a-jakarta-mail-session]]
+
+=== Looking Up a Jakarta Mail Session
+
+The standard Java Naming and Directory Interface (JNDI) subcontext for
+Jakarta Mail sessions is `java:comp/env/mail`.
+
+Registering Jakarta Mail sessions in the `mail` naming subcontext of a JNDI
+namespace, or in one of its child subcontexts, is standard. The JNDI
+namespace is hierarchical, like a file system's directory structure, so
+it is easy to find and nest references. A Jakarta Mail session is bound to a
+logical JNDI name. The name identifies a subcontext, `mail`, of the root
+context, and a logical name. To change the Jakarta Mail session, you can
+change its entry in the JNDI namespace without having to modify the
+application.
+
+The resource lookup in the application code looks like this:
+
+[source,java]
+----
+InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);
+----
+
+For more information about the JNDI API, see link:jndi.html#beanr[Using
+the Java Naming and Directory Interface].
+
+[[fwfiy]][[GSDVG00204]][[sending-and-reading-messages-using-jakarta-mail]]
+
+=== Sending and Reading Messages Using Jakarta Mail
+
+The following topics are addressed here:
+
+* link:#beapb[To Send a Message Using Jakarta Mail]
+* link:#beapc[To Read a Message Using Jakarta Mail]
+
+[[beapb]][[GSDVG00079]][[to-send-a-message-using-jakarta-mail]]
+
+==== To Send a Message Using Jakarta Mail
+
+1. Import the packages that you need.
++
+[source,java]
+----
+import java.util.*;
+import jakarta.activation.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import javax.naming.*;
+----
+2. Look up the Jakarta Mail session.
++
+[source,java]
+----
+InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);
+----
+For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+3. Override the Jakarta Mail session properties if necessary.
++
+For example:
++
+[source,java]
+----
+Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");
+----
+4. Create a `MimeMessage`.
++
+The msgRecipient, msgSubject, and msgTxt variables in the following
+example contain input from the user:
++
+[source,java]
+----
+Message msg = new MimeMessage(session);
+msg.setSubject(msgSubject);
+msg.setSentDate(new Date());
+msg.setFrom();
+msg.setRecipients(Message.RecipientType.TO,
+   InternetAddress.parse(msgRecipient, false));
+msg.setText(msgTxt);
+----
+5. Send the message.
++
+[source,java]
+----
+Transport.send(msg);
+----
+
+[[beapc]][[GSDVG00080]][[to-read-a-message-using-jakarta-mail]]
+
+==== To Read a Message Using Jakarta Mail
+
+1. Import the packages that you need.
++
+[source,java]
+----
+import java.util.*;
+import jakarta.activation.*;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import javax.naming.*;
+----
+2. Look up the Jakarta Mail session.
++
+[source,java]
+----
+InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (jakarta.mail.Session)ic.lookup(snName);
+----
+For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+3. Override the Jakarta Mail session properties if necessary.
++
+For example:
++
+[source,java]
+----
+Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");
+----
+4. Get a `Store` object from the `Session`, then connect to the mail
+server using the Store object's `connect` method.
++
+You must supply a mail server name, a mail user name, and a password.
++
+[source,java]
+----
+Store store = session.getStore();
+store.connect("MailServer", "MailUser", "secret");
+----
+5. Get the INBOX folder.
++
+[source,java]
+----
+Folder folder = store.getFolder("INBOX");
+----
+6. It is efficient to read the `Message` objects (which represent
+messages on the server) into an array.
++
+[source,java]
+----
+Message[] messages = folder.getMessages();
+----
+
+[[gkpfg]][[GSDVG00205]][[using-application-scoped-jakarta-mail-resources]]
+
+=== Using Application-Scoped Jakarta Mail Resources
+
+You can define an application-scoped Jakarta Mail or other resource for an
+enterprise application, web module, EJB module, connector module, or
+application client module by supplying a `glassfish-resources.xml`
+deployment descriptor file. For details, see
+"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+
+

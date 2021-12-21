@@ -30,17 +30,18 @@
     <name>Eclipse GlassFish Documentation parent pom</name>
 
     <properties>
-        <site.output.dir>${project.build.directory}/staging/${project.artifactId}</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <asciidoctor.maven.plugin.version>1.5.7.1</asciidoctor.maven.plugin.version>
-        <!-- XXX - jbake needs an older version than this -->
-        <asciidoctorj.version>1.6.2</asciidoctorj.version>
-        <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
-        <jruby.version>9.2.6.0</jruby.version>
+        <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>2.5.2</asciidoctorj.version>
+        <asciidoctorj.pdf.version>1.6.0</asciidoctorj.pdf.version>
+        <jruby.version>9.3.2.0</jruby.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
-        <doc.pdf>${project.artifactId}.pdf</doc.pdf>
+        <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
+        <pdf.toclevels>2</pdf.toclevels>
+        <productName>Eclipse GlassFish</productName>
+        <bookDirectory>${project.build.directory}/book</bookDirectory>
     </properties>
 
     <build>
@@ -48,20 +49,11 @@
             <plugin>
                 <groupId>org.glassfish.doc</groupId>
                 <artifactId>glassfish-doc-maven-plugin</artifactId>
+                <configuration>
+                    <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                </configuration>
                 <executions>
-                    <execution>
-                        <id>generate-toc</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>toc</goal>
-                        </goals>
-                        <configuration>
-                            <chapterPatterns>
-                                [0-9]+\s.*,Preface.*,Part\s.*
-                            </chapterPatterns>
-                            <ignoreTagPatterns>JEET.*</ignoreTagPatterns>
-                        </configuration>
-                    </execution>
+                    <!-- Filtering - uses properties directly -->
                     <execution>
                         <id>generate-book</id>
                         <phase>generate-resources</phase>
@@ -71,38 +63,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.blazebit</groupId>
-                <artifactId>jbake-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <outputDirectory>${site.output.dir}</outputDirectory>
-                    <properties>
-                        <status>${status}</status>
-                    </properties>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>build-site</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj</artifactId>
-                        <version>1.5.5</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
@@ -125,40 +86,67 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <sourceDirectory>${project.build.directory}/book</sourceDirectory>
-                    <sourceDocumentName>book.adoc</sourceDocumentName>
-                    <!-- XXX - below depends on running jbake first -->
-                    <imagesDir>${project.build.directory}/staging/${project.artifactId}/</imagesDir>
-                    <backend>pdf</backend>
-                    <outputFile>${doc.pdf}</outputFile>
                     <attributes>
-                        <!-- XXX - a kludge to allow theme to be shared -->
-                        <pdf-stylesdir>${project.basedir}/../parent/src/theme</pdf-stylesdir>
-                        <pdf-style>glassfish</pdf-style>
-                        <doctype>book</doctype>
                         <status>${status}</status>
                         <data-uri />
                         <icons>font</icons>
+                        <source-highlighter>coderay</source-highlighter>
                         <pagenums />
-                        <toc />
-                        <icons>font</icons>
                         <sectanchors>true</sectanchors>
                         <idprefix />
                         <idseparator>-</idseparator>
                         <docinfo1>true</docinfo1>
-                        <embedAssets>true</embedAssets>
+                        <imagesDir>${basedir}/src/main/asciidoc</imagesDir>
+                        <productName>${productName}</productName>
                     </attributes>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate-pdf-doc</id>
-                        <phase>generate-resources</phase>
+                        <id>generate-html-doc</id>
+                        <phase>compile</phase>
                         <goals>
-                                <goal>process-asciidoc</goal>
+                            <goal>process-asciidoc</goal>
                         </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <sourceDirectory>${bookDirectory}</sourceDirectory>
+                            <sourceDocumentName>book.adoc</sourceDocumentName>
+                            <outputDirectory>${project.build.directory}/html</outputDirectory>
+                            <outputFile>${project.artifactId}.html</outputFile>
+                            <attributes>
+                                <linkcss>true</linkcss>
+                                <toc>left</toc>
+                                <toclevels>1</toclevels>
+                                <embedAssets>false</embedAssets>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <sourceDirectory>${bookDirectory}</sourceDirectory>
+                            <sourceDocumentName>book.adoc</sourceDocumentName>
+                            <outputDirectory>${project.build.directory}/pdf</outputDirectory>
+                            <outputFile>${pdf.fileName}</outputFile>
+                            <attributes>
+                                 <!-- TODO - sharing themes and other files should be done as a dependency -->
+                                <pdf-stylesdir>${project.basedir}/../parent/src/theme</pdf-stylesdir>
+                                <pdf-style>glassfish</pdf-style>
+                                <doctype>book</doctype>
+                                <toc>preamble</toc>
+                                <toclevels>${pdf.toclevels}</toclevels>
+                                <embedAssets>true</embedAssets>
+                            </attributes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -172,7 +160,7 @@
                         <configuration>
                             <artifacts>
                                 <artifact>
-                                    <file>${project.build.directory}/generated-docs/${doc.pdf}</file>
+                                    <file>${project.build.directory}/pdf/${pdf.fileName}</file>
                                     <type>pdf</type>
                                 </artifact>
                             </artifacts>
@@ -183,8 +171,7 @@
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <finalName>${project.artifactId}</finalName>
-                    <classesDirectory>${project.build.directory}/staging</classesDirectory>
+                    <classesDirectory>${project.build.directory}/html</classesDirectory>
                 </configuration>
             </plugin>
         </plugins>

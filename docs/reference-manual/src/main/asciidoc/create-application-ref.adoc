@@ -94,7 +94,7 @@ reference_name::
   create references to multiple disabled versions by using an asterisk
   (`*`) as a wildcard character. For more information about module and
   application versions, see
-  "link:../application-deployment-guide/overview.html#GSDPG00324[
+  "link:application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]"
   in {productName} Application Deployment Guide.
 
@@ -133,7 +133,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)],
 link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

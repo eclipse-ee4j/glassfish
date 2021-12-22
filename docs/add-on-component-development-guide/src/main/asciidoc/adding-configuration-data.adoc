@@ -563,10 +563,10 @@ element.
 
 Creating a transaction to update configuration data enables the data to
 be updated without the need to specify a dotted name in the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. You can make the transaction
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand. You can make the transaction
 available to system administrators in the following ways:
 
-* By adding an link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommand. If you are adding
+* By adding an link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommand. If you are adding
 an `asadmin` subcommand, include the code for the transaction in the
 body of the subcommand's `execute` method. For more information, see
 link:extending-asadmin.html#ghmrd[Extending the `asadmin` Utility].
@@ -651,8 +651,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 === Dotted Names and REST URLs of Configuration Attributes
 
-The {productName} administrative subcommands link:../reference-manual/get.html#GSRFM00139[`get`],
-link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
+The {productName} administrative subcommands link:reference-manual/get.html#GSRFM00139[`get`],
+link:reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:
 

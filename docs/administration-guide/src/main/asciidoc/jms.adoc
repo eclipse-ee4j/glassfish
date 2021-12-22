@@ -105,7 +105,7 @@ JMS Physical Destinations::
 Just as {productName} supports clusters of instances to provide high
 availability, Message Queue supports clusters of brokers to provide
 service availability or service and data availability, depending on the
-type of broker cluster, as described in "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
+type of broker cluster, as described in "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
 Clusters]" in Open Message Queue Technical Overview.
 
 The JMS service takes advantage of this Message Queue capability and
@@ -115,7 +115,7 @@ hosts. Additionally, both GlassFish clusters and standalone instances
 can use Message Queue broker clusters as Remote type JMS hosts.
 
 For information about how the JMS service supports GlassFish clusters
-and Message Queue broker clusters, see "link:../ha-administration-guide/jms.html#GSHAG00012[Configuring
+and Message Queue broker clusters, see "link:ha-administration-guide/jms.html#GSHAG00012[Configuring
 Java Message Service High Availability]" in {productName} High Availability Administration Guide.
 
 [[beaof]][[GSADG00596]][[updating-the-jms-service-configuration]]
@@ -147,7 +147,7 @@ The attributes you can set are:
   A list of arguments the JMS service passes to Embedded and Local type
   JMS hosts on startup. Permissible arguments are the options supported
   by the Message Queue `imqbrokerd` command, as described in
-  "link:../../openmq/mq-admin-guide/command-line-reference.html#GMADG00280[Broker Utility]" in Open Message Queue
+  "link:../openmq/mq-admin-guide/command-line-reference.html#GMADG00280[Broker Utility]" in Open Message Queue
   Administration Guide.
 `default-jms-host`::
   The name of the default JMS host.
@@ -186,7 +186,7 @@ The attributes you can set are:
 `mq-service`::
   The Message Queue address scheme name and connection service name to
   use for the AddressList if a non-default scheme or service is to be
-  used. See "link:../../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622[Connection Handling]" in Open Message
+  used. See "link:../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622[Connection Handling]" in Open Message
   Queue Administration Guide for syntax information.
 
 
@@ -248,7 +248,7 @@ The following topics are addressed here:
 * link:#gipbv[To Delete a JMS Host]
 
 For information about administering JMS hosts that are servicing
-GlassFish clusters, see "link:../ha-administration-guide/jms.html#GSHAG00312[Configuring GlassFish Clusters
+GlassFish clusters, see "link:ha-administration-guide/jms.html#GSHAG00312[Configuring GlassFish Clusters
 to Use Message Queue Broker Clusters]" in {productName} High Availability Administration Guide.
 
 [[giplw]][[GSADG00775]][[about-jms-host-types]]
@@ -267,7 +267,7 @@ Embedded Type::
   broker when the first JMS operation is requested instead of
   immediately when the GlassFish instance is started. If necessary, you
   can force startup of the broker by using the
-  link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] command. +
+  link:reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] command. +
   Additionally, if the GlassFish instance is a standalone instance (not
   a clustered instance), JMS operations use a Message Queue feature
   called direct mode to bypass the networking stack, leading to
@@ -291,7 +291,7 @@ Remote Type::
   JMS service uses the information defined by the default JMS host to
   communicate with an MQ broker or broker cluster that has been
   configured and started using Message Queue tools, as described in the
-  link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message Queue Administration Guide]. Ongoing
+  link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]. Ongoing
   administration and tuning of the broker or broker cluster are also
   performed using Message Queue tools.
 
@@ -354,7 +354,7 @@ remote `asadmin` mode to create an additional JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. Create the JMS host by using the link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`]
+2. Create the JMS host by using the link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`]
 subcommand:
 +
 [source]
@@ -373,7 +373,7 @@ asadmin> create-jms-host --mqhost hostName --mqport portNumber
   The password of the administrative user of the Message Queue broker.
 `--target`::
   The {productName} object for which the JMS host is being created.
-  For details, see link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
+  For details, see link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
 `--property`::
   A list of one or more Message Queue broker properties to configure the
   broker. The list is colon-separated (`:`) and has the form:
@@ -431,7 +431,7 @@ existing JMS hosts.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. List the JMS hosts by using the link:../reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
+2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
 subcommand.
 
 [[GSADG00272]][[gipdw]]
@@ -457,7 +457,7 @@ JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. Use the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand to list the current
+2. Use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to list the current
 attribute values of the desired JMS host:
 +
 [source]
@@ -465,8 +465,8 @@ attribute values of the desired JMS host:
 asadmin> get configs.config.config-name.jms-service.jms-host.jms-host-name.*
 ----
 For information about JMS host attributes, see
-link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
-3. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a JMS host
+link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
+3. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a JMS host
 attribute:
 +
 [source]
@@ -523,9 +523,9 @@ JMS service will not be able to start until you create a new JMS host.
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
-2. List the JMS hosts by using the link:../reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
+2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
 subcommand.
-3. Delete a JMS host by using the link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`]
+3. Delete a JMS host by using the link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`]
 subcommand.
 
 [[GSADG00274]][[gipbj]]
@@ -601,7 +601,7 @@ The following topics are addressed here:
 The subcommands in this section can be used to administer both the
 connection factory resources and the destination resources. For
 information on JMS service support of connection pooling and failover,
-see "link:../ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
+see "link:ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
 on administering physical destinations, see link:#ablkj[Administering
 JMS Physical Destinations].
 
@@ -642,7 +642,7 @@ Object].
 +
 Remote `asadmin` subcommands require a running server.
 2. Create a JMS resource by using the
-link:../reference-manual/create-jms-resource.html#GSRFM00040[`create-jms-resource`] command.
+link:reference-manual/create-jms-resource.html#GSRFM00040[`create-jms-resource`] command.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -702,7 +702,7 @@ the existing connection factory and destination resources.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS resources by using the
-link:../reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
+link:reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
 
 [[GSADG00277]][[giovz]]
 Example 17-7 Listing All JMS Resources
@@ -758,9 +758,9 @@ before running this subcommand.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS resources by using the
-link:../reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
+link:reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
 3. Delete the JMS resource by using the
-link:../reference-manual/delete-jms-resource.html#GSRFM00092[`delete-jms-resource`] subcommand.
+link:reference-manual/delete-jms-resource.html#GSRFM00092[`delete-jms-resource`] subcommand.
 
 [[GSADG00279]][[giovi]]
 Example 17-9 Deleting a JMS Resource
@@ -824,13 +824,13 @@ physical destination.
 Because a physical destination is actually a Message Queue object rather
 than a server object, you use Message Queue broker commands to update
 properties. For information on Message Queue properties, see the
-link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message Queue Administration Guide].
+link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide].
 
 1. Ensure that the server is running.
 +
 Remote `asadmin` subcommands require a running server.
 2. Create a JMS physical destination by using the
-link:../reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`] subcommand.
+link:reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`] subcommand.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -871,7 +871,7 @@ existing JMS physical destinations.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS physical destinations by using the
-link:../reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
+link:reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
 
 [[GSADG00281]][[gioxo]]
 Example 17-11 Listing JMS Physical Destinations
@@ -906,7 +906,7 @@ service configuration.
 +
 Remote `asadmin` subcommands require a running server.
 2. Purge messages from the a JMS physical destination by using the
-link:../reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`] subcommand.
+link:reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`] subcommand.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
@@ -943,9 +943,9 @@ the specified JMS physical destination.
 +
 Remote `asadmin` subcommands require a running server.
 2. List the existing JMS physical destinations by using the
-link:../reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
+link:reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
 3. Delete the physical resource by using the
-link:../reference-manual/delete-jmsdest.html#GSRFM00090[`delete-jmsdest`] subcommand.
+link:reference-manual/delete-jmsdest.html#GSRFM00090[`delete-jmsdest`] subcommand.
 
 [[GSADG00283]][[gioxx]]
 Example 17-13 Deleting a Physical Destination
@@ -1020,7 +1020,7 @@ Virtual Directory (OVD) User Respository::
 
 If you encounter problems, consider the following:
 
-* Use the link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] subcommand to confirm that the
+* Use the link:reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] subcommand to confirm that the
 Message Queue broker is running.
 * View the {productName} log file. For `server`, the Domain
 Administrations Server (DAS), the log is available at
@@ -1108,7 +1108,7 @@ libraries must be made available to any {productName} JVMs.
 2. Deploy GenericJMSRA the same way you would deploy a connector
 module.
 +
-See "link:../application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in {productName} Application Deployment Guide.
+See "link:application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in {productName} Application Deployment Guide.
 3. Configure the resource adapter's properties.
 +
 See link:#gbtvu[GenericJMSRA Configuration Properties].
@@ -1418,7 +1418,7 @@ MW_HOME``/server/lib``.
 * It is also possible to deploy the Thin T3 client in a less global
 manner, so that it is specific to an individual application. For
 information on how to do this, see
-"link:../application-development-guide/class-loaders.html#GSDVG00099[Application-Specific Class Loading]" in {productName} Application Development Guide.
+"link:application-development-guide/class-loaders.html#GSDVG00099[Application-Specific Class Loading]" in {productName} Application Development Guide.
 
 [[gkmek]][[GSADG00679]][[configure-weblogic-jms-resources-for-integration]]
 

@@ -95,7 +95,7 @@ the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
-transaction demarcation. For more information, see "link:../application-development-guide/transaction-service.html#GSDVG00191[The
+transaction demarcation. For more information, see "link:application-development-guide/transaction-service.html#GSDVG00191[The
 Transaction Manager, the Transaction Synchronization Registry, and
 UserTransaction]" in {productName} Application
 Development Guide.
@@ -113,13 +113,13 @@ There are three types of transaction resource managers:
 
 * Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
-JDBC transaction isolation levels, see "link:../application-development-guide/transaction-service.html#GSDVG00511[Using JDBC
+JDBC transaction isolation levels, see "link:application-development-guide/transaction-service.html#GSDVG00511[Using JDBC
 Transaction Isolation Levels]" in {productName}
 Application Development Guide.
 +
 The {productName} supports a variety of JDBC XA drivers. For a list
 of the JDBC drivers currently supported by the {productName}, see the
-link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For
+link:release-notes.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 link:jdbc.html#beamw[Configuration Specifics for JDBC Drivers].
 * Java Message Service (JMS) Providers - Use of transactions ensures
@@ -188,7 +188,7 @@ following ways:
 * To configure the transaction service using the Administration Console,
 open the Transaction Service component under the relevant configuration.
 For details, click the Help button in the Administration Console.
-* To configure the transaction service, use the link:../reference-manual/set.html#GSRFM00226[`set`]
+* To configure the transaction service, use the link:reference-manual/set.html#GSRFM00226[`set`]
 subcommand to set the following attributes.
 +
 The following examples show the `server-config` configuration, but
@@ -249,9 +249,9 @@ empty value, the value used is `jdbc/TxnDS`.
 ** The `xa-servername` property does not have a default value. Use this
 property to override server names that can cause errors.
 +
-You can use the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand to list all the
+You can use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
-For details, see the link:../reference-manual/toc.html#GSRFM[{productName}
+For details, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 +
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
@@ -300,7 +300,7 @@ by using the `unfreeze-transaction-service` subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Stop the transaction service by using the
-link:../reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`] subcommand.
+link:reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`] subcommand.
 
 [[GSADG00293]][[giufq]]
 Example 19-1 Stopping the Transaction Service
@@ -351,7 +351,7 @@ Statistics]. For example:
 asadmin> get --monitor instance1.server.transaction-service.activeids-current
 ----
 5. Roll back the transaction by using the
-link:../reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`] subcommand.
+link:reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`] subcommand.
 +
 The transaction is not rolled back at the time of this command's
 execution, but only marked for rollback. The transaction is rolled back
@@ -386,7 +386,7 @@ restart the transaction service after it has been frozen.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Restart the suspended transaction service by using the
-link:../reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`] subcommand.
+link:reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`] subcommand.
 
 [[GSADG00295]][[giuef]]
 Example 19-3 Restarting the Transaction Service
@@ -422,7 +422,7 @@ To explicitly specify whether {productName} commits or rolls back
 non-XA transactions at server shutdown, set the
 `com.sun.enterprise.in-progress-local-transaction.completion-mode` JVM
 option to either `commit` or `rollback` using the
-link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand. For example:
+link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand. For example:
 
 [source]
 ----
@@ -498,7 +498,7 @@ following conditions must be met:
 resource is restarted.
 * Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
-information, see "link:../performance-tuning-guide/tuning-glassfish.html#GSPTG00030[Connection Validation Settings]" in
+information, see "link:performance-tuning-guide/tuning-glassfish.html#GSPTG00030[Connection Validation Settings]" in
 {productName} Performance Tuning Guide.
 
 If commit fails during recovery, a message is written to the server log.
@@ -517,7 +517,7 @@ Administration Guide.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Manually recover transactions by using the
-link:../reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`] subcommand.
+link:reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`] subcommand.
 
 [[GSADG00296]][[giugn]]
 Example 19-4 Manually Recovering Transactions
@@ -803,7 +803,7 @@ See Also
 For information about JDBC connection pools and resources, see
 link:jdbc.html#ablih[Administering Database Connectivity]. For more
 information about the `asadmin set` and `asadmin create-jvm-options`
-commands, see the link:../reference-manual/toc.html#GSRFM[{productName}
+commands, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual]. For databases with which transaction logging has been
 tested, see the {productName} Release Notes.
 

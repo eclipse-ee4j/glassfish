@@ -28,7 +28,7 @@ Administration Console are contained in the Administration Console
 online help.
 
 Information on application security is contained in
-"link:../application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
+"link:application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
 in {productName} Application Development Guide.
 
 [[ggktf]][[GSSCG00143]][[about-system-security-in-glassfish-server]]
@@ -832,7 +832,7 @@ To use SSL, {productName} must have a certificate for each external
 interface or IP address that accepts secure connections. The HTTPS
 service of most web servers will not run unless a certificate has been
 installed. For instructions on applying SSL to HTTP listeners, see
-"link:../administration-guide/http_https.html#GSADG00469[
+"link:administration-guide/http_https.html#GSADG00469[
 To Configure an HTTP Listener for SSL]" in {productName} Administration Guide.
 
 [[ablon]][[GSSCG00052]][[ciphers]]
@@ -1028,14 +1028,14 @@ Administration Console::
   certificates, users, groups, and realms, and performing other
   system-wide security tasks. For a general introduction to the
   Administration Console, see
-  "link:../administration-guide/overview.html#GSADG00698[Administration Console]"
+  "link:administration-guide/overview.html#GSADG00698[Administration Console]"
   in {productName} Administration Guide.
 The `asadmin` utility::
   The `asadmin` command-line utility performs many of the same tasks as
   the Administration Console. You might be able to do some things with
   the `asadmin` utility that you cannot do with the Administration
   Console. For a general introduction to `asadmin`, see
-  "link:../administration-guide/overview.html#GSADG00699[asadmin Utility]"
+  "link:administration-guide/overview.html#GSADG00699[asadmin Utility]"
   in {productName} Administration Guide.
 The `keytool` utility::
   The `keytool` Java Platform, Standard Edition (Java SE) command-line
@@ -1107,15 +1107,15 @@ This subcommand will not work unless the domain is stopped.
 
 1. Stop the domain whose password you are changing.
 +
-See "link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+See "link:administration-guide/domains.html#GSADG00336[To Stop a Domain]"
 in {productName} Administration Guide.
 2. Change the master password for the domain by using the
-link:../reference-manual/change-master-password.html#GSRFM00006[`change-master-password`] subcommand.
+link:reference-manual/change-master-password.html#GSRFM00006[`change-master-password`] subcommand.
 +
 You are prompted for the old and new passwords. All dependent items are re-encrypted.
 3. Start the domain.
 +
-See "link:../administration-guide/domains.html#GSADG00335[To Start a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#GSADG00335[To Start a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00061]][[givil]]
 Example 1-2 Changing the Master Password
@@ -1130,7 +1130,7 @@ asadmin> change-master-password domain44ps
 ----
 
 If you have already logged into the domain using the
-link:../reference-manual/login.html#GSRFM00210[`login`] subcommand, you are prompted for the new
+link:reference-manual/login.html#GSRFM00210[`login`] subcommand, you are prompted for the new
 master password:
 
 [source]
@@ -1300,10 +1300,10 @@ change an administration password to a blank value.
 Encrypting the admin password is strongly encouraged.
 
 1. Change the admin password by using the
-link:../reference-manual/change-admin-password.html#GSRFM00004[`change-admin-password`] subcommand.
+link:reference-manual/change-admin-password.html#GSRFM00004[`change-admin-password`] subcommand.
 2. Enter the old and new admin passwords when prompted.
 3. Restart {productName}. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00062]][[ghlac]]
 Example 1-3 Changing the Admin Password
@@ -1360,7 +1360,7 @@ deleted after it has served its purpose.
 ====
 
 For a list of the types of passwords that can be specified, see the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
 [source]
 ----
@@ -1430,7 +1430,7 @@ both a secure interactive form, in which users are prompted for all
 information, and a more script-friendly form, in which the password is
 propagated on the command line.
 
-You can also use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to remove and
+You can also use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to remove and
 replace the password in the configuration file. For example:
 
 [source]
@@ -1443,18 +1443,18 @@ admin-password='${ALIAS=jms-password}'
 2. Go to the directory where the configuration file resides. +
 By default, the configuration file is located in domain-dir``/config``.
 3. Create the password alias by using the
-link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`] subcommand.
+link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`] subcommand.
 4. Type the password for the alias when prompted.
 5. Add the alias to a password file. +
 For example, assume the use of a password file such as `passwords.txt`.
 Assume further that you want to add an alias for the
 `AS_ADMIN_USERPASSWORD` entry that is read by the
-link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
+link:reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
 You would add the following line to the password file:
 `AS_ADMIN_USERPASSWORD=${ALIAS=user-password-alias}`, where
 user-password-alias is the new password alias.
 6. To continue the example of the previous step, you would then run the
-link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand. +
+link:reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand. +
 You could use this method to create several users (user1, user2, and so forth),
 all with the same password. +
 `asadmin>` `--passwordfile``passwords.txt create-file-user` user1
@@ -1494,7 +1494,7 @@ existing the password aliases.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List password aliases by using the
-link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
+link:reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
 
 [[GSSCG00064]][[ginsk]]
 Example 1-5 Listing Password Aliases
@@ -1524,9 +1524,9 @@ existing password alias.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List all aliases by using the
-link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
+link:reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
 3. Delete a password alias by using the
-link:../reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
+link:reference-manual/list-password-aliases.html#GSRFM00190[`list-password-aliases`] subcommand.
 
 [[GSSCG00065]][[ginul]]
 Example 1-6 Deleting a Password Alias
@@ -1558,7 +1558,7 @@ the password is propagated on the command line.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update an alias by using the
-link:../reference-manual/update-password-alias.html#GSRFM00257[`update-password-alias`] subcommand.
+link:reference-manual/update-password-alias.html#GSRFM00257[`update-password-alias`] subcommand.
 3. Type the password when prompted.
 
 [[GSSCG00066]][[giodl]]
@@ -1607,7 +1607,7 @@ capabilities.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an audit module by using the
-link:../reference-manual/create-audit-module.html#GSRFM00014[`create-audit-module`] subcommand.
+link:reference-manual/create-audit-module.html#GSRFM00014[`create-audit-module`] subcommand.
 +
 Information about properties for this subcommand is included in this
 help page.
@@ -1645,7 +1645,7 @@ modules on one of the following targets:
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the audit modules by using the
-link:../reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
+link:reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
 
 [[GSSCG00068]][[ghjmy]]
 Example 1-9 Listing Audit Modules
@@ -1676,9 +1676,9 @@ existing audit module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the audit modules by using the
-link:../reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
+link:reference-manual/list-audit-modules.html#GSRFM00149[`list-audit-modules`] subcommand.
 3. Delete an audit module by using the
-link:../reference-manual/delete-audit-module.html#GSRFM00065[`delete-audit-module`] subcommand.
+link:reference-manual/delete-audit-module.html#GSRFM00065[`delete-audit-module`] subcommand.
 
 [[GSSCG00070]][[ghjhm]]
 Example 1-10 Deleting an Audit Module
@@ -1782,7 +1782,7 @@ Certificate was added to keystore
 [Saving cacerts.jks]
 ----
 7. To apply your changes, restart {productName}. See
-"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00071]][[ghlii]]
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
@@ -1952,7 +1952,7 @@ Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
 ----
 8. To apply your changes, restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00075]][[ghlhu]]
 Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS

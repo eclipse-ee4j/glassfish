@@ -62,7 +62,7 @@ asadmin-options::
 --
 +
 For more information about these directories, see
-  "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
+  "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
 
 [[sthref1618]]
 
@@ -103,6 +103,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:add-library.html#add-library-1[`add-library`(1)],
 link:remove-library.html#remove-library-1[`remove-library`(1)]
 
-"link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
 
 

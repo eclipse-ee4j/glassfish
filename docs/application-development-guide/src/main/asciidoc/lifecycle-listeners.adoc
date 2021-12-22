@@ -147,9 +147,9 @@ initial context to which all the resources are bound.
 === Deploying a Lifecycle Module
 
 For instructions on how to deploy a lifecycle module, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide], or see the `asadmin create-lifecycle-module` command in the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 You do not need to specify a classpath for the lifecycle module if you
 place it in the domain-dir``/lib`` or domain-dir`/lib/classes` directory

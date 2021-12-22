@@ -55,6 +55,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
 
-"link:../administration-guide/overview.html#GSADG00527[Configuration Tasks]" in {productName} Administration Guide
+"link:administration-guide/overview.html#GSADG00527[Configuration Tasks]" in {productName} Administration Guide
 
 

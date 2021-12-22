@@ -106,7 +106,7 @@ The following topics are addressed here:
 
 1. Install a supported database product.
 +
-To see the current list of database products supported by {productName}, refer to the link:../release-notes/toc.html#GSRLN[{productName} Release Notes].
+To see the current list of database products supported by {productName}, refer to the link:release-notes.html#GSRLN[{productName} Release Notes].
 
 2. Install a supported JDBC driver for the database product.
 +
@@ -144,7 +144,7 @@ is not started automatically when you start {productName}, so if you
 have applications that require a database, you need to start Apache
 Derby database manually by using the local `start-database` subcommand.
 
-Start the database by using the link:../reference-manual/start-database.html#GSRFM00234[`start-database`]
+Start the database by using the link:reference-manual/start-database.html#GSRFM00234[`start-database`]
 subcommand.
 
 When the database server starts, or a client connects to it
@@ -183,7 +183,7 @@ database on a specified port. A single host can have multiple database
 server processes running on different ports.
 
 1. If necessary, notify users that the database is being stopped.
-2. Stop the database by using the link:../reference-manual/stop-database.html#GSRFM00239[`stop-database`]
+2. Stop the database by using the link:reference-manual/stop-database.html#GSRFM00239[`stop-database`]
 subcommand.
 
 [[GSADG00213]][[ggorc]]
@@ -296,7 +296,7 @@ from the pool. When an application closes a connection, the connection
 is returned to the pool. JDBC connection pools can be globally
 accessible or be scoped to an enterprise application, web module, EJB
 module, connector module or application client module, as described in
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 A JDBC resource is created by specifying the connection pool with which
 the resource is associated. Multiple JDBC resources can specify a single
@@ -355,7 +355,7 @@ see link:#ggkon[Setting Up the Database].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the JDBC connection pool by using the
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`] subcommand.
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`] subcommand.
 3. If needed, restart the server.
 +
 Some parameters require server restart. See
@@ -394,7 +394,7 @@ all existing JDBC connection pools.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JDBC connection pools by using the
-link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
+link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
 
 [[GSADG00215]][[ggpcf]]
 Example 11-4 Listing JDBC Connection Pools
@@ -439,7 +439,7 @@ created with authentication, and the server or database must be running.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Ping a connection pool by using the
-link:../reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`] subcommand.
+link:reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`] subcommand.
 
 [[GSADG00216]][[ggpcs]]
 Example 11-5 Contacting a Connection Pool
@@ -510,7 +510,7 @@ Use the `get` and `set` subcommands to view and change the values of the
 JDBC connection pool properties.
 
 1. List the JDBC connection pools by using the
-link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
+link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
 2. View the attributes of the JDBC connection pool by using the get
 subcommand.
 +
@@ -539,7 +539,7 @@ link:overview.html#ghciy[Configuration Changes That Require Restart].
 See Also
 
 For information about how to tune a connection pool, see the
-link:../performance-tuning-guide/toc.html#GSPTG[{productName} Performance Tuning
+link:performance-tuning-guide.html#GSPTG[{productName} Performance Tuning
 Guide].
 
 [[ggngb]][[GSADG00425]][[to-delete-a-jdbc-connection-pool]]
@@ -559,11 +559,11 @@ must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JDBC connection pools by using the
-link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
+link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`] subcommand.
 3. If necessary, notify users that the JDBC connection pool is being
 deleted.
 4. Delete the connection pool by using the
-link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-jdbc-connection-pool`] subcommand.
+link:reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-jdbc-connection-pool`] subcommand.
 
 [[GSADG00218]][[ggpis]]
 Example 11-7 Deleting a JDBC Connection Pool
@@ -624,7 +624,7 @@ in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Set it using the `set` subcommand. For example:
 +
 [source]
@@ -653,7 +653,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--initsql` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `init-sql` option in the `asadmin set` command. For
 example:
 +
@@ -682,7 +682,7 @@ Attributes page in the Administration Console. For more information,
 click the Help button in the Administration Console.
 * Specify the `--statementtimeout` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 
 [[gktec]][[GSADG00088]][[statement-leak-detection-and-leaked-statement-reclamation]]
 
@@ -700,7 +700,7 @@ of the following ways:
 
 * Specify the `--statementleaktimeout` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
 subcommand. For example:
 +
@@ -723,7 +723,7 @@ pool to a `true` value in one of the following ways:
 
 * Specify the `--statementleakreclaim=true` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
 For example:
 +
@@ -751,7 +751,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--statementcachesize` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-cache-size` option in the `asadmin set`
 command. For example:
 +
@@ -780,7 +780,7 @@ Advanced Attributes page in the Administration Console. For more
 information, click the Help button in the Administration Console.
 * Specify the `--sqltracelisteners` option in the
 `asadmin create-jdbc-connection-pool` command. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `sql-trace-listeners` option in the `asadmin set` command.
 For example:
 +
@@ -834,7 +834,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Set them using the `set` subcommand. For example:
 +
 [source]
@@ -852,7 +852,7 @@ resource for each database that is accessed by the applications deployed
 in a domain. Multiple JDBC resources can be specified for a database.
 JDBC resources can be globally accessible or be scoped to an enterprise
 application, web module, EJB module, connector module or application
-client module, as described in "link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped
+client module, as described in "link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped
 Resources]" in {productName} Application
 Deployment Guide.
 
@@ -901,7 +901,7 @@ Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a JDBC resource by using the
-link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-jdbc-resource`] subcommand.
+link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-jdbc-resource`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -934,7 +934,7 @@ existing JDBC resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List JDBC resources by using the
-link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
+link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
 
 [[GSADG00220]][[ggpgi]]
 Example 11-9 Listing JDBC Resources
@@ -966,9 +966,9 @@ You can enable or disable a JDBC resource by using the `set` subcommand.
 The JDBC resource is identified by its dotted name.
 
 1. List JDBC resources by using the
-link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
+link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
 2. Modify the values for the specified JDBC resource by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 For example:
 
@@ -999,10 +999,10 @@ must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List JDBC resources by using the
-link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
+link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`] subcommand.
 3. If necessary, notify users that the JDBC resource is being deleted.
 4. Delete a JDBC resource by using the
-link:../reference-manual/delete-jdbc-resource.html#GSRFM00089[`delete-jdbc-resource`] subcommand.
+link:reference-manual/delete-jdbc-resource.html#GSRFM00089[`delete-jdbc-resource`] subcommand.
 
 [[GSADG00222]][[ggpga]]
 Example 11-11 Deleting a JDBC Resource
@@ -1080,7 +1080,7 @@ these topics:
 ===== Supported Database Drivers
 
 Supported JDBC drivers are those that have been fully tested by Oracle.
-For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 link:#beamw[Configuration Specifics for JDBC Drivers].
 
@@ -1102,12 +1102,12 @@ To integrate the JDBC driver into a {productName} domain, copy the
 JAR files into the domain-dir``/lib`` directory, then restart the server.
 This makes classes accessible to all applications or modules deployed on
 servers that share the same configuration. For more information about
-{productName} class loaders, see "link:../application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in
+{productName} class loaders, see "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in
 {productName} Application Development Guide.
 
 If you are using an Oracle database with EclipseLink extensions, copy
 the JAR files into the domain-dir``/lib/ext`` directory, then restart the
-server. For details, see "link:../application-development-guide/jpa.html#GSDVG00390[Oracle Database
+server. For details, see "link:application-development-guide/jpa.html#GSDVG00390[Oracle Database
 Enhancements]" in {productName} Application
 Development Guide.
 

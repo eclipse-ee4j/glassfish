@@ -157,14 +157,14 @@ Life Cycle Modules::
 Security::
   * System Security. Initial configuration tasks might include setting
   up passwords, audit modules, and certificates. See
-  "link:../security-guide/system-security.html#GSSCG00035[Administering System Security]" in {productName} Security Guide.
+  "link:security-guide/system-security.html#GSSCG00035[Administering System Security]" in {productName} Security Guide.
   * User Security. Initial configuration tasks might include creating
   authentication realms and file users. See
-  "link:../security-guide/user-security.html#GSSCG00036[Administering User Security]" in {productName} Security Guide.
+  "link:security-guide/user-security.html#GSSCG00036[Administering User Security]" in {productName} Security Guide.
   * Message Security. Initial configuration tasks might include
   configuring a Java Cryptography Extension (JCE) provider, enabling
   default and non-default security providers, and configuring message
-  protection policies. See "link:../security-guide/message-security.html#GSSCG00037[Administering Message
+  protection policies. See "link:security-guide/message-security.html#GSSCG00037[Administering Message
   Security]" in {productName} Security Guide.
 Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -221,7 +221,7 @@ or defaults to be reset. In some situations, an `asadmin` subcommand is
 provided for updating, such as the `update-connector-work-security-map`
 subcommand. However, most updating is done by using the `list`, `get`,
 and `set` subcommands with dotted names. For detailed information about
-dotted names, see the link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+dotted names, see the link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
@@ -368,7 +368,7 @@ To obtain information about the DAS or an instance, a running server is required
 
 2. Do one of the following:
 * To determine if the DAS requires restart, list the domains in your {productName} installation.
-Use the link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
+Use the link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
 +
 [source]
 ----
@@ -382,7 +382,7 @@ directory of the {productName} software.
 If the DAS requires restart, a statement that restart is required is displayed.
 
 * To determine if an instance requires restart, list information about the instance.
-Use the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose.
+Use the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose.
 +
 [source]
 ----
@@ -424,8 +424,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`(1)]
-* link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/list-domains.html#GSRFM00163[`list-domains`(1)]
+* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -454,7 +454,7 @@ require restart.
 * Configuring certificates
 * Managing HTTP, JMS, IIOP, JNDI services
 * Enabling or disabling secure administration as explained in
-"link:../security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in {productName} Security Guide
+"link:security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in {productName} Security Guide
 
 [[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
 
@@ -625,7 +625,7 @@ identifying the operation or task that you want to perform. You can run
 `asadmin` subcommands either from a command prompt or from a script.
 Running `asadmin` subcommands from a script is helpful for automating
 repetitive tasks. Basic information about how the `asadmin` utility
-works can be found in the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page. For
+works can be found in the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page. For
 instructions on using the `asadmin` utility, see
 link:general-administration.html#giobi[Using the `asadmin` Utility].
 
@@ -664,7 +664,7 @@ asadmin help restart-domain
 ----
 
 A collection of the `asadmin` help pages is available in HTML and PDF
-format in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
+format in the link:reference-manual.html#GSRFM[{productName} Reference
 Manual].
 
 [[gjjok]][[GSADG00700]][[rest-interfaces]]
@@ -765,7 +765,7 @@ utility. The `osgi` subcommand is supported in remote mode only.
 
 1. Ensure that the server is running.
 Remote commands require a running server.
-2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi`]
+2. Access the remote shell by using the link:reference-manual/redeploy.html#GSRFM00217[`osgi`]
 subcommand. For the full syntax and options for this subcommand, see `osgi`(1).
 
 [[GSADG1052]]
@@ -781,7 +781,7 @@ Unlike other local subcommands, however, the DAS and the server
 instance whose shell is being accessed must be running.
 
 1. Ensure that the server is running.
-2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
+2. Access the remote shell by using the link:reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
 subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
 
 [[GSADG1053]][[sthref5]]
@@ -988,7 +988,7 @@ The user name and password of this user are both preset to `admin`.
 
 The `keytool` utility is used to set up and work with Java Security
 Socket Extension (JSSE) digital certificates. See
-"link:../security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
+"link:security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
 in {productName} Security Guide for instructions on using `keytool`.
 
 [[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
@@ -1032,6 +1032,6 @@ system, use backslashes (\) instead. For example:
 The following additional documents address specific administration areas:
 
 * Verifying and deploying applications
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide]
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide]
 
 

@@ -133,7 +133,7 @@ link:freeze-transaction-service.html#freeze-transaction-service-1[`freeze-transa
 link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)],
 link:unfreeze-transaction-service.html#unfreeze-transaction-service-1[`unfreeze-transaction-service`(1)]
 
-"link:../administration-guide/transactions.html#GSADG00022[Administering Transactions]"
+"link:administration-guide/transactions.html#GSADG00022[Administering Transactions]"
 in {productName} Administration Guide
 
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"

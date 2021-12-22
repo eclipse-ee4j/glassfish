@@ -82,7 +82,7 @@ reference_name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete references to multiple versions, you can
   use an asterisk (`*`) as a wildcard character. For more information
-  about module and application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module
+  about module and application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module
   and Application Versions]" in {productName}
   Application Deployment Guide.
 
@@ -122,7 +122,7 @@ link:create-application-ref.html#create-application-ref-1[`create-application-re
 link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

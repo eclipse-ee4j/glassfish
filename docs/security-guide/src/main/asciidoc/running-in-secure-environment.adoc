@@ -142,7 +142,7 @@ of the full Java platform, and is designed for developers who do not
 require the full set of Jakarta EE APIs.
 
 For the list of APIs in each profile, see
-"link:../release-notes/release-notes.html#GSRLN00136[
+"link:release-notes/release-notes.html#GSRLN00136[
 Jakarta EE Standards Support]"
 in {productName} Release Notes.
 
@@ -440,7 +440,7 @@ levels may produce a large log file.
 
 By default, {productName} logging messages are recorded in the server
 log, and you can set the file rotation limit, as described in
-link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`(1)]
+link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`(1)]
 
 |Ensure that you have correctly assigned users to the correct groups.
 |Make sure you have assigned the desired set of users to the right
@@ -522,7 +522,7 @@ classes that run within a JVM. In many cases, where the threat model
 does not include malicious code being run in the JVM, the Java security
 manager is unnecessary. However, when third parties use {productName}
 and untrusted classes are being run, the Java security manager may be
-useful. See "link:../application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security
+useful. See "link:application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security
 Manager]" in {productName} Application
 Development Guide.
 

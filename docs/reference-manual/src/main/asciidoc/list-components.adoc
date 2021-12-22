@@ -43,7 +43,7 @@ types are listed in the Options section in this help page.
 If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
-application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
+application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
 Versions]" in {productName} Application
 Deployment Guide.
 
@@ -139,7 +139,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:list-applications.html#list-applications-1[`list-applications`(1)],
 link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[
+link:application-deployment-guide.html#GSDPG[
 {productName} Application Deployment Guide]
 
 

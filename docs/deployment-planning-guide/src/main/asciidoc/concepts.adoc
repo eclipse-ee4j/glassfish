@@ -264,7 +264,7 @@ configuration and applications. With the standard backup and restore
 procedures, you can quickly restore working configurations. If the DAS
 host fails, you must create a new DAS installation to restore the
 previous domain configuration. For instructions, see
-"link:../administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
 
 [[abfbc]][[GSPLG00048]][[clusters]]
 
@@ -371,7 +371,7 @@ balancer configuration file to your web server `config` directory. An
 administrator can create a script to automate this entire process.
 
 For more details and complete configuration instructions, see
-"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 [[abfbg]][[GSPLG00051]][[session-persistence]]
 
@@ -417,8 +417,8 @@ Checking an SFSB's state for changes that need to be saved is called
 checkpointing. When enabled, checkpointing generally occurs after any
 transaction involving the SFSB is completed, even if the transaction
 rolls back. For more information on developing stateful session beans,
-see "link:../application-development-guide/ejb.html#GSDVG00147[Using Session Beans]" in {productName} Application Development Guide. For more information on
-enabling SFSB failover, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00211[Stateful Session Bean
+see "link:application-development-guide/ejb.html#GSDVG00147[Using Session Beans]" in {productName} Application Development Guide. For more information on
+enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00211[Stateful Session Bean
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -427,7 +427,7 @@ session persistence configuration settings also affect the session
 information in each request.
 
 For more information on configuring session persistence, see
-"link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session Persistence and
+"link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session Persistence and
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -498,7 +498,7 @@ Administration Console and `asadmin` command-line utility.
 
 For advanced tasks, including administering a Message Queue cluster, use
 the tools provided in the as-install``/mq/bin`` directory. For details
-about administering Message Queue, see the link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message
+about administering Message Queue, see the link:../openmq/mq-admin-guide.html#GMADG[Open Message
 Queue Administration Guide].
 
 For information on deploying JMS applications and Message Queue
@@ -527,44 +527,44 @@ For more information, see link:planning.html#abfdg[Design Decisions].
 
 3. Install {productName} and related subcomponents such as a web server. +
 For more information, see the following documentation:
-* link:../installation-guide/toc.html#GSING[{productName} Installation Guide]
+* link:installation-guide.html#GSING[{productName} Installation Guide]
 * Installation guides for related subcomponents, for example, Oracle
 iPlanet Web Server 7.0.9 Installation and Migration Guide
 (`http://docs.oracle.com/cd/E19146-01/821-1832/index.html`)
 
 4. If you plan to administer your clusters centrally, set up secure
 shell (SSH) for centralized administration. +
-For more information, see "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
+For more information, see "link:ha-administration-guide/ssh-setup.html#GSHAG00003[
 Setting Up SSH for Centralized Administration]" in {productName}
 High Availability Administration Guide.
 
 5. Configure domains, nodes, clusters, {productName} instances, and
 virtual servers as required. +
 For more information, see the following documentation:
-* "link:../administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide
-* "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
+* "link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide
+* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
+* "link:ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
-* "link:../administration-guide/http_https.html#GSADG00589[Administering Virtual Servers]" in {productName} Administration Guide
+* "link:administration-guide/http_https.html#GSADG00589[Administering Virtual Servers]" in {productName} Administration Guide
 
 6. Configure your load balancer. +
-For more information, see "link:../administration-guide/webapps.html#GSADG00552[Administering mod_jk]" in
+For more information, see "link:administration-guide/webapps.html#GSADG00552[Administering mod_jk]" in
 {productName} Administration Guide.
 
 7. Configure the web container and EJB container for replicated session persistence. +
-For more information, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
+For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 8. If you are using messaging extensively, configure Java Message
 Service (JMS) clusters for failover . +
 For more information, see the following documentation:
 * link:planning.html#abfdn[Planning Message Queue Broker Deployment]
-* "link:../ha-administration-guide/jms.html#GSHAG00012[Configuring Java Message Service High Availability]"
+* "link:ha-administration-guide/jms.html#GSHAG00012[Configuring Java Message Service High Availability]"
 in {productName} High Availability Administration
 Guide
-* link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message Queue Administration Guide]
+* link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]
 
 9. Deploy applications and configure them for high availability and session failover. +
-For more information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].

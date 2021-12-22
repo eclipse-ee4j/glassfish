@@ -62,7 +62,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--resources`::
@@ -79,7 +79,7 @@ modulename::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
   {productName} Application Deployment Guide.
 
 [[sthref1807]]
@@ -119,7 +119,7 @@ link:disable.html#disable-1[`disable`(1)],
 link:enable.html#enable-1[`enable`(1)],
 link:list-components.html#list-components-1[`list-components`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

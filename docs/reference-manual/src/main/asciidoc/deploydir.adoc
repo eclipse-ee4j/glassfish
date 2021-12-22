@@ -119,7 +119,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--retrieve`::
@@ -427,7 +427,7 @@ link:redeploy.html#redeploy-1[`redeploy`(1)],
 link:set.html#set-1[`set`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

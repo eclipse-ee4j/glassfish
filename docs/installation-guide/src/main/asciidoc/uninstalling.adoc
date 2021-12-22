@@ -30,7 +30,7 @@ applications using Java SE files.
 
 To stop domains, use the `asadmin stop-domain` command. For more
 information about stopping a domain, see
-"link:../administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+"link:administration-guide/domains.html#GSADG00336[To Stop a Domain]"
 in {productName} Administration Guide.
 
 If orphaned processes remain, identify and terminate the processes as follows:
@@ -42,7 +42,7 @@ Use the `ps -ef` command and terminate the processes using the `kill` command.
 +
 Use the Task Manager and terminate the processes.
 
-Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to uninstallation.
 
 1. Save any files in the installation directory that you may want to keep.

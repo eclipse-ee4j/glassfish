@@ -333,7 +333,7 @@ JAAS is available on the ACC. Defines the optional configuration for a
 JAAS authentication realm. Authentication realms require
 provider-specific properties, which vary depending on what a particular
 implementation needs. For more information about how to define realms,
-see "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+see "link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvyot]][[GSDPG00349]][[superelements-8]]
 
@@ -400,7 +400,7 @@ Here is an example of the default file realm:
 Which properties an `auth-realm` element uses depends on the value of
 the `auth-realm` element's `name` attribute. The file realm uses `file`
 and `jaas-context` properties. Other realms use different properties.
-See "link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+See "link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[giyjv]][[GSDPG00094]][[backend-principal]]
 
@@ -1618,7 +1618,7 @@ link:#beatc[`fetched-with`]
 === `cmp-resource`
 
 Specifies the database to be used for storing CMP beans. For more
-information about this element, see "link:../application-development-guide/container_managed-persistence.html#GSDVG00154[Configuring the
+information about this element, see "link:application-development-guide/container_managed-persistence.html#GSDVG00154[Configuring the
 CMP Resource]" in {productName} Application
 Development Guide.
 
@@ -2138,7 +2138,7 @@ All but the last four properties in the following table are
 `connector-connection-pool` properties of `jmsra`, the resource adapter
 used to communicate with the Open Message Queue software. For a complete
 list of the available properties (called administered object attributes
-in the Message Queue software), see the link:../../openmq/mq-admin-guide/toc.html#GMADG[Open Message Queue
+in the Message Queue software), see the link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue
 Administration Guide].
 
 Changes to `connector-connection-pool` properties require a server
@@ -2511,7 +2511,7 @@ module. If none is specified, a default is generated; see
 link:#gauax[`java-web-start-access`].
 
 If you are setting up load balancing, web module context roots must be
-unique within a server instance. See the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide] for more
+unique within a server instance. See the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide] for more
 information about load balancing.
 
 [[fvysx]][[GSDPG00429]][[superelements-44]]
@@ -2620,7 +2620,7 @@ the request that initiated the session.
 
 To set the `Secure` attribute of a `JSESSIONIDSSO` cookie, use the
 `ssoCookieSecure` `virtual-server` property. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 |`cookieHttpOnly` |none |Specifies that the cookie is marked HTTP only.
 Allowed values are `true` or `false`.
@@ -2637,7 +2637,7 @@ the database. If `false` (the default if this element is not present),
 does not create tables.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytc]][[GSDPG00434]][[superelements-46]]
 
@@ -2753,7 +2753,7 @@ read. If the connection cannot be established, or if the value is not
 recognized, SQL-92 compliance is presumed.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytf]][[GSDPG00436]][[superelements-48]]
 
@@ -2866,7 +2866,7 @@ engine looks in the `ServletContext` for an attribute with a name equal
 to the value specified for this property to determine whether a
 customized CacheKeyGenerator implementation is used. An application can
 provide a customized key generator rather than using the `default`
-helper. See "link:../application-development-guide/webapps.html#GSDVG00254[The CacheKeyGenerator Interface]" in
+helper. See "link:application-development-guide/webapps.html#GSDVG00254[The CacheKeyGenerator Interface]" in
 {productName} Application Development Guide.
 |===
 
@@ -2880,7 +2880,7 @@ Specifies the default principal (user) for the resource.
 If this element is used in conjunction with a JMS Connection Factory
 resource, the `name` and `password` subelements must be valid entries in
 the Open Message Queue broker user repository. See
-"link:../../openmq/mq-admin-guide/security-services.html#GMADG00040[Configuring and Managing Security Services]" in Open
+"link:../openmq/mq-admin-guide/security-services.html#GMADG00040[Configuring and Managing Security Services]" in Open
 Message Queue Administration Guide for details.
 
 [[fvytl]][[GSDPG00445]][[superelements-52]]
@@ -3005,7 +3005,7 @@ undeployed. If `true`, drops tables from the database. If `false` (the
 default if this element is not present), does not drop tables.
 
 This element can be overridden during deployment. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytu]][[GSDPG00453]][[superelements-56]]
 
@@ -3775,7 +3775,7 @@ resource.
 Specifies the fully qualified name of the factory class, which
 implements javax.naming.spi.InitialContextFactory .
 
-For more information about JNDI, see the link:../application-development-guide/toc.html#GSDVG[{productName} Application Development Guide].
+For more information about JNDI, see the link:application-development-guide.html#GSDVG[{productName} Application Development Guide].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:
@@ -3830,7 +3830,7 @@ subelement. The default subelement is as follows:
 Managed fields are multiple CMP or CMR fields that are mapped to the
 same column. A managed field can have any `fetched-with` subelement
 except `<default/>`. For additional information, see
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00306[Managed Fields]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#GSDVG00306[Managed Fields]" in {productName} Application Development Guide.
 
 [[fvyuw]][[GSDPG00479]][[superelements-68]]
 
@@ -4565,7 +4565,7 @@ If `true`, resources in this web application that are symbolic links are
 served. You can also define this property for a virtual server. Web
 applications on the virtual server that do not define this property use
 the virtual server's value. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 Caution: Setting this property to `true` on Windows systems exposes JSP
 source code.
@@ -4609,7 +4609,7 @@ location (directory). Spaces are allowed in the `dir` component.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 |`valve_n` |none a|
 This property is deprecated. Use the link:#gikqk[`valve`] subelement
@@ -4630,7 +4630,7 @@ org.glassfish.web.valve.GlassFishValve interface from the current
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 |`listener_n` |none a|
 Specifies a fully qualified class name of a custom Catalina listener,
@@ -4648,7 +4648,7 @@ org.apache.catalina.InstanceListener interface. For example:
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 |`crossContextAllowed` |`true` |If `true`, allows this web application
 to access the contexts of other web applications using the
@@ -4668,7 +4668,7 @@ file downloads using SSL work properly in Internet Explorer.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 |`singleThreadedServletPoolSize` |`5` |Specifies the maximum number of
 servlet instances allocated for each `SingleThreadModel` servlet in the
@@ -5653,7 +5653,7 @@ from which the message-driven bean consumes JMS messages. This
 information is alternatively specified within the
 link:#beaqs[`activation-config`] subelement of the
 link:#beaus[`mdb-resource-adapter`] element. For more information about
-JMS resources, see "link:../application-development-guide/jms.html#GSDVG00020[Using the Java Message Service]" in
+JMS resources, see "link:application-development-guide/jms.html#GSDVG00020[Using the Java Message Service]" in
 {productName} Application Development Guide.
 
 [[fvyyy]][[GSDPG00523]][[superelements-92]]
@@ -5713,7 +5713,7 @@ the JAR from the path in the JAR:
 ----
 
 For information about the allowed contents of a custom JNLP file, see
-"link:../application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in {productName} Application Development Guide.
+"link:application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in {productName} Application Development Guide.
 
 [[gkhuj]][[GSDPG00525]][[superelements-93]]
 
@@ -5929,7 +5929,7 @@ header is added by the generated servlet.
 
 If set to `true`, retains web sessions, stateful session bean instances,
 and persistently created EJB timers across redeployments. The
-`--keepstate` option of the link:../reference-manual/redeploy.html#GSRFM00217[`redeploy`] subcommand
+`--keepstate` option of the link:reference-manual/redeploy.html#GSRFM00217[`redeploy`] subcommand
 takes precedence. The default for both is `false`.
 
 Some changes to an application between redeployments prevent this
@@ -8348,7 +8348,7 @@ Specifies the name of the realm used to process all authentication
 requests associated with this application. If this element is not
 specified or does not match the name of a configured realm, the default
 realm is used. For more information about realms, see
-"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvzaa]][[GSDPG00658]][[superelements-155]]
 
@@ -9237,7 +9237,7 @@ element is empty, the database schema file is automatically generated at
 deployment time. Otherwise, the `schema` element names a `.dbschema`
 file with a pathname relative to the directory containing the
 `sun-cmp-mappings.xml` file, but without the `.dbschema` extension. See
-"link:../application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema Capture]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema Capture]" in {productName} Application Development Guide.
 
 [[fvzfa]][[GSDPG00703]][[superelements-176]]
 
@@ -9314,7 +9314,7 @@ Table C-131 `schema-generator-properties` Properties
 |Property |Default |Description
 |`use-unique-table-names` |`false` |Specifies that generated table names
 are unique within each {productName} domain. This property can be
-overridden during deployment. See "link:../application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options
+overridden during deployment. See "link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options
 for CMP]" in {productName} Application
 Development Guide.
 
@@ -9545,7 +9545,7 @@ Table C-136 `security-map` Attributes
 === `security-role-mapping`
 
 Maps roles to users or groups in the currently active realm. See
-"link:../application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
 
 The role mapping element maps a role, as specified in the EJB JAR
 `role-name` entries, to a environment-specific user or group. If it maps
@@ -10416,7 +10416,7 @@ link:#beaxy[`sun-cmp-mapping`]
 === `table-name`
 
 Specifies the name of a database table. The table must be present in the
-database schema file. See "link:../application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema
+database schema file. See "link:application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema
 Capture]" in {productName} Application
 Development Guide.
 
@@ -10782,7 +10782,7 @@ none - contains data
 
 Specifies a custom valve for this web application. You can define a
 valve for all the web applications on a specific virtual server. For
-details, see link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+details, see link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 
 [[giksf]][[GSDPG00778]][[superelements-210]]
 

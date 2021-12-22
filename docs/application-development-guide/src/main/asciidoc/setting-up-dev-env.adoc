@@ -31,7 +31,7 @@ The following topics are addressed here:
 === Installing and Preparing the Server for Development
 
 For more information about {productName} installation, see the
-link:../installation-guide/toc.html#GSING[
+link:installation-guide.html#GSING[
 {productName} Installation Guide].
 
 The following components are included in the full installation.
@@ -61,7 +61,7 @@ link:class-loaders.html#beadj[Using the Common Class Loader].
 * Set up debugging. For more information, see
 link:debugging-apps.html#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:../administration-guide/jvm.html#GSADG00007[
+For more information, see "link:administration-guide/jvm.html#GSADG00007[
 Administering the Virtual Machine for the Java Platform]"
 in {productName} Administration Guide.
 
@@ -70,7 +70,7 @@ in {productName} Administration Guide.
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide]. This book describes the
+are discussed in detail in the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
@@ -109,7 +109,7 @@ The following third-party tools might also be useful:
 The `asadmin` command allows you to configure a local or remote server
 and perform both administrative and development tasks at the command
 line. For general information about `asadmin`, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 The `asadmin` command is located in the as-install``/bin`` directory. Type
 `asadmin help` for a list of subcommands.

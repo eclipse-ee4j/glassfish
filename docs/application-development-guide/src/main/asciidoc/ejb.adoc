@@ -108,7 +108,7 @@ The `pass-by-reference` element in the `glassfish-ejb-jar.xml` file
 allows you to specify the parameter passing semantics for colocated
 remote EJB invocations. This is an opportunity to improve performance.
 However, use of this feature results in non-portable applications. See
-"link:../application-deployment-guide/dd-elements.html#GSDPG00219[pass-by-reference]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00219[pass-by-reference]" in {productName} Application Deployment Guide.
 
 [[beahq]][[GSDVG00422]][[pooling-and-caching]]
 
@@ -141,7 +141,7 @@ each cache can be controlled using the cache-related properties in the
 EJB container or the `glassfish-ejb-jar.xml` file.
 
 Pooling and caching parameters for the `glassfish-ejb-jar.xml` file are
-described in "link:../application-deployment-guide/dd-elements.html#GSDPG00095[bean-cache]" in {productName} Application Deployment Guide.
+described in "link:application-deployment-guide/dd-elements.html#GSDPG00095[bean-cache]" in {productName} Application Deployment Guide.
 
 [[beahr]][[GSDVG00285]][[pooling-parameters]]
 
@@ -218,7 +218,7 @@ execution, use the `flush-at-end-of-method` element in the
 `glassfish-ejb-jar.xml` file. Only non-finder methods in an entity bean
 can be flush-enabled. (For an EJB 2.1 bean, these methods must be in the
 Local, Local Home, Remote, or Remote Home interface.) See
-"link:../application-deployment-guide/dd-elements.html#GSDPG00156[flush-at-end-of-method]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00156[flush-at-end-of-method]" in {productName} Application Deployment Guide.
 
 Upon completion of the method, the EJB container updates the database.
 Any exception thrown by the underlying data store is wrapped as follows:
@@ -244,8 +244,8 @@ preconfigured to use an embedded version of the Apache Derby database.
 The EJB Timer Service configuration can store persistent timer
 information in any database supported by the {productName} for
 persistence. For a list of the JDBC drivers currently supported by the
-{productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For configurations of supported and other
-drivers, see "link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC
+{productName}, see the link:release-notes.html#GSRLN[{productName} Release Notes]. For configurations of supported and other
+drivers, see "link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC
 Drivers]" in {productName} Administration Guide.
 
 The timer service is automatically enabled when you deploy an
@@ -297,14 +297,14 @@ Do not use the `jdbc/\__TimerPool` resource for timers in clustered
 You must instead use a custom JDBC resource or the `jdbc/__default` resource.
 See the instructions below, in link:#gktqo[To Deploy an EJB Timer to a Cluster].
 Also refer to
-"link:../administration-guide/jdbc.html#GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
+"link:administration-guide/jdbc.html#GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
 in {productName} Administration Guide.
 ====
 
 
 For information about the `asadmin list-timers` and
-`asadmin migrate-timers` subcommands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual]. For information about
-migrating EJB timers, see "link:../ha-administration-guide/instances.html#GSHAG00190[Migrating EJB Timers]" in
+`asadmin migrate-timers` subcommands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual]. For information about
+migrating EJB timers, see "link:ha-administration-guide/instances.html#GSHAG00190[Migrating EJB Timers]" in
 {productName} High Availability Administration
 Guide.
 
@@ -325,7 +325,7 @@ the newly redeployed application retrieves the EJB timers that
 correspond to these IDs from the timer database.
 
 For more information about the `asadmin redeploy` command, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[gktqo]][[GSDVG00070]][[to-deploy-an-ejb-timer-to-a-cluster]]
 
@@ -458,11 +458,11 @@ The {productName} specific deployment descriptor file,
 * `pool-idle-timeout-in-seconds`
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a stateless session bean.
-For more information about these tools, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+For more information about these tools, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[beaia]][[GSDVG00288]][[stateful-container]]
 
@@ -493,7 +493,7 @@ directory in which the file is created is obtained from the EJB
 container using the configuration APIs.
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 The passivated beans are stored on the file system. The Session Store
 Location setting in the EJB container allows the administrator to
@@ -601,7 +601,7 @@ For more information about the `InitialContext`, see
 link:jndi.html#beans[Accessing the Naming Context]. For more information
 about transaction recovery, see link:transaction-service.html#beanm[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:../administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
+Objects, see "link:administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 
@@ -670,7 +670,7 @@ Service box. All instances in an {productName} cluster should have
 the same availability settings to ensure consistent behavior.
 
 For more information about SFSB state persistence, see the
-link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability
+link:ha-administration-guide.html#GSHAG[{productName} High Availability
 Administration Guide].
 
 [[gkpdg]][[GSDVG00033]][[using-the---keepstate-option]]
@@ -698,7 +698,7 @@ saves it in memory. To restore the data, the class loader of the newly
 redeployed application deserializes the data that was previously saved.
 
 For more information about the `asadmin redeploy` command, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[gkpef]][[GSDVG00034]][[using-the---asyncreplication-option]]
 
@@ -715,7 +715,7 @@ availability is guaranteed. States are not buffered but immediately
 transmitted to other instances in the cluster.
 
 For more information about the `asadmin deploy` command, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[beaid]][[GSDVG00290]][[enabling-checkpointing]]
 
@@ -741,7 +741,7 @@ Application and EJB Module Levels
 To enable SFSB checkpointing at the application or EJB module level
 during deployment, use the `asadmin deploy` or `asadmin deploydir`
 command with the `--availabilityenabled` option set to `true`. For
-details, see the link:../reference-manual/toc.html#GSRFM[{productName}
+details, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 
 [[beaig]][[GSDVG00037]][[sfsb-level]]
@@ -800,7 +800,7 @@ For example:
 </glassfish-ejb-jar>
 ----
 
-For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00108[checkpoint-at-end-of-method]" in
+For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00108[checkpoint-at-end-of-method]" in
 {productName} Application Deployment Guide.
 
 The non-transactional methods in the `checkpoint-at-end-of-method`
@@ -1096,7 +1096,7 @@ either `true` (to allow concurrent accesses) or `false` (to serialize
 concurrent access to the same read-only bean). The default is `false`.
 
 For further information on these elements, refer to
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 [[beait]][[GSDVG00149]][[using-message-driven-beans]]
 
@@ -1159,7 +1159,7 @@ element):
 * `pool-idle-timeout-in-seconds`
 
 For more information about `glassfish-ejb-jar.xml`, see
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 
 [[beaix]][[GSDVG00300]][[domain-level-settings]]
 
@@ -1236,7 +1236,7 @@ Message Queue flow control related properties for connection factory in
 situations where the message incoming rate is much higher than
 `max-pool-size` can handle.
 
-Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information on how to get message-driven bean pool statistics.
 
@@ -1279,7 +1279,7 @@ asadmin set server-config.mdb-container.property.cmt-max-runtime-exceptions="5"
 ----
 
 For more information about the `asadmin set` command, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 The `cmt-max-runtime-exceptions` property specifies the maximum number
 of runtime exceptions allowed from a message-driven bean's `onMessage`

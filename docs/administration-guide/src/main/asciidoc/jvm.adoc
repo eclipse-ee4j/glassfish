@@ -55,7 +55,7 @@ options are used to record the settings that initiate the profiler.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create JVM options by using the
-link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand.
+link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand.
 +
 To create more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon (:), use the
@@ -96,7 +96,7 @@ Use the `list-jvm-options` subcommand in remote mode to list the
 existing JVM options.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+2. List JVM options by using the link:reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
 subcommand.
 
 [[GSADG00155]][[ggphx]]
@@ -142,11 +142,11 @@ options from the Java configuration or profiler elements of the
 `domain.xml` file.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+2. List JVM options by using the link:reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
 subcommand.
 3. If necessary, notify users that the JVM option is being deleted.
 4. Delete JVM options by using the
-link:../reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`] subcommand.
+link:reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`] subcommand.
 +
 To remove more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon, use the backslash
@@ -198,7 +198,7 @@ reports: summary (default), class, thread, log.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Generate the report by using the
-link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`] subcommand.
+link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`] subcommand.
 
 [[GSADG00158]][[ghhkr]]
 Example 4-5 Generating a JVM Report
@@ -262,7 +262,7 @@ an error message that directs you to delete the existing profiler before
 creating a new one.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Create a profiler by using the link:../reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]
+2. Create a profiler by using the link:reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]
 subcommand.
 +
 Information about properties for the subcommand is included in this help
@@ -299,7 +299,7 @@ profiler element from the Java configuration. You can then create a new
 profiler.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Delete the profiler by using the link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
+2. Delete the profiler by using the link:reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
 subcommand.
 3. To apply your changes, restart {productName}.
 +

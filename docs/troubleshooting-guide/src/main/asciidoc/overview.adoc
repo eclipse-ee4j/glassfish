@@ -50,11 +50,11 @@ investigation, try the following steps first.
 ===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
-"link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+"link:release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
 in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
-Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]"
+Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to installation.
 
 {productName} requires JDK release 6. The minimum
@@ -87,7 +87,7 @@ supported JDK version.
 ===== Review Known Issues
 
 Your problem might be related to a known issue for the release. Refer to
-the link:../release-notes/toc.html#GSRLN[{productName} Release Notes] for
+the link:release-notes.html#GSRLN[{productName} Release Notes] for
 the latest information regarding known issues and possible workarounds.
 Also search the GlassFish Issue Tracker at
 `http://java.net/jira/browse/GLASSFISH`.
@@ -106,9 +106,9 @@ interface.
 
 The following books will be especially helpful for troubleshooting:
 
-* link:../release-notes/toc.html#GSRLN[{productName} Release Notes],
+* link:release-notes.html#GSRLN[{productName} Release Notes],
   which provides the latest information regarding known issues and possible workarounds.
-* link:../error-messages-reference/toc.html#GSEMR[
+* link:error-messages-reference.html#GSEMR[
   {productName} Error Message Reference],
   which lists error messages you might encounter when using {productName}.
 
@@ -160,7 +160,7 @@ undeployed?
 * What version of {productName} are you using?
 What operating system and version? What JDK version? Many problems are
 caused simply because system requirements for the release are not met.
-Refer to the link:../release-notes/toc.html#GSRLN[{productName} Release
+Refer to the link:release-notes.html#GSRLN[{productName} Release
 Notes] for the latest information regarding system requirements, and
 make sure your system meets those requirements.
 * What resources does your system have, such as memory, disk, and swap
@@ -263,7 +263,7 @@ module-specific loggers.
 For information about using the Administration Console log viewer and
 logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
-"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide.
+"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide.
 
 [[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
 
@@ -276,7 +276,7 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
 
@@ -333,7 +333,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
 
 [[ghyjq]][[GSTSG00177]][[visualvm]]
 
@@ -385,9 +385,9 @@ attach to the server using Java Remote Invocation Method (RMI).
 These resources were mentioned throughout this chapter and are provided
 again here for easy reference.
 
-* Release Notes: link:../release-notes/toc.html#GSRLN[{productName}
+* Release Notes: link:release-notes.html#GSRLN[{productName}
 Release Notes]
-* Error messages: link:../error-messages-reference/toc.html#GSEMR[{productName} Error
+* Error messages: link:error-messages-reference.html#GSEMR[{productName} Error
 Message Reference]
 * Mailing lists and forums: See link:#ghymp[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.

@@ -88,7 +88,7 @@ IIOP listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an IIOP listener by using the
-link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`] subcommand.
+link:reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`] subcommand.
 +
 Information about the properties for the subcommand is included in this
 help page.
@@ -124,7 +124,7 @@ existing IIOP listeners.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the IIOP listeners by using the
-link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
+link:reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
 
 [[GSADG00264]][[gipcm]]
 Example 15-2 Listing IIOP Listeners
@@ -153,9 +153,9 @@ typing `asadmin help list-iiop-listeners` at the command line.
 ==== To Update an IIOP Listener
 
 1. List the IIOP listeners by using the
-link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
+link:reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
 2. Modify the values for the specified IIOP listener by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The listener is identified by its dotted name.
 
@@ -180,9 +180,9 @@ IIOP listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the IIOP listeners by using the
-link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
+link:reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
 3. Delete an IIOP listener by using the
-link:../reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`] subcommand.
+link:reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`] subcommand.
 4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].

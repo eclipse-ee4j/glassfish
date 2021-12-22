@@ -108,7 +108,7 @@ the subcommand are deprecated. All `asadmin` utility options must either
 precede or follow the subcommand. If `asadmin` utility options are
 specified both before and after the subcommand, an error occurs. For a
 description of the `asadmin` utility options, see the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 * Subcommand Options. These options control the behavior of the
 subcommand, not the `asadmin` utility. Subcommand options must follow
 the subcommand. For a description of a subcommand's options, see the
@@ -173,7 +173,7 @@ subcommand options, and operands.
 [[GSADG00098]][[giwdr]]
 Example 2-1 Running an `asadmin` Utility Subcommand in Single Mode
 
-This example runs the link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand
+This example runs the link:reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand
 in single mode. In this example, the default values for all options are
 used.
 
@@ -234,7 +234,7 @@ Command list-applications executed successfully.
 {productName} provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
 information is written in the style of UNIX platform man pages. This
-help information is also available in the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+help information is also available in the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 1. If you are displaying help information for a remote subcommand,
 ensure that the server is running.
@@ -273,7 +273,7 @@ asadmin help create-jdbc-resource
 See Also
 
 To display the available subcommands, use the
-link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand. Local subcommands are
+link:reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand. Local subcommands are
 displayed before remote subcommands. If the server is not running, only
 local subcommands are displayed.
 
@@ -297,7 +297,7 @@ Starting a multimode session does not require a running DAS.
 
 1. Do one of the following:
 * Run the `asadmin` utility without a subcommand.
-* Use the link:../reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand.
+* Use the link:reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand.
 2. If necessary, also specify any `asadmin` utility options that will
 apply throughout the multimode session.
 3. In a multimode session, the `asadmin>` prompt is displayed on the
@@ -396,7 +396,7 @@ automate repetitive tasks.
 
 1. Create a plain text file that contains the sequence of subcommands
 that you want to run.
-2. Run the link:../reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand, specifying the
+2. Run the link:reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand, specifying the
 file that you created.
 +
 If necessary, also specify any `asadmin` utility options that are
@@ -448,12 +448,12 @@ See Also
 For more information about the subcommands in the preceding example, see
 the following help pages:
 
-* link:../reference-manual/create-domain.html#GSRFM00023[`create-domain`(1)]
-* link:../reference-manual/delete-domain.html#GSRFM00075[`delete-domain`(1)]
-* link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`(1)]
-* link:../reference-manual/multimode.html#GSRFM00213[`multimode`(1)]
-* link:../reference-manual/start-domain.html#GSRFM00235[`start-domain`(1)]
-* link:../reference-manual/stop-domain.html#GSRFM00240[`stop-domain`(1)]
+* link:reference-manual/create-domain.html#GSRFM00023[`create-domain`(1)]
+* link:reference-manual/delete-domain.html#GSRFM00075[`delete-domain`(1)]
+* link:reference-manual/list-commands.html#GSRFM00154[`list-commands`(1)]
+* link:reference-manual/multimode.html#GSRFM00213[`multimode`(1)]
+* link:reference-manual/start-domain.html#GSRFM00235[`start-domain`(1)]
+* link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`(1)]
 
 [[CACDDHBA]][[GSADG1055]][[to-run-asadmin-subcommands-in---detach-mode]]
 
@@ -551,9 +551,9 @@ See Also
 For the full syntax and options of the subcommands in the preceding
 examples, see the following help pages:
 
-* link:../reference-manual/attach.html#GSRFM825[`attach`(1)]
-* link:../reference-manual/configure-managed-jobs.html#GSRFM836[`configure-managed-jobs`(1)]
-* link:../reference-manual/list-jobs.html#GSRFM867[`list-jobs`(1)]
+* link:reference-manual/attach.html#GSRFM825[`attach`(1)]
+* link:reference-manual/configure-managed-jobs.html#GSRFM836[`configure-managed-jobs`(1)]
+* link:reference-manual/list-jobs.html#GSRFM867[`list-jobs`(1)]
 
 [[ghcjc]][[GSADG00531]][[administering-system-properties]]
 
@@ -580,7 +580,7 @@ of the corresponding name.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create system properties by using the
-link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand.
+link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -614,7 +614,7 @@ configuration.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List system properties by using the
-link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
+link:reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
 +
 The existing system properties are displayed, including predefined
 properties such as `HTTP_LISTENER_PORT` and `HTTP_SSL_LISTENER_PORT`.
@@ -647,9 +647,9 @@ system properties.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing system properties by using the
-link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
+link:reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
 3. Delete the system property by using the
-link:../reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`] subcommand.
+link:reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`] subcommand.
 4. If necessary, notify users that the system property has been
 deleted.
 
@@ -699,7 +699,7 @@ configuration of a module to `domain.xml`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Add the default configuration of a module to `domain.xml` by using
-the link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-module-config`] subcommand.
+the link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-module-config`] subcommand.
 
 [[GSADG1098]][[sthref12]]
 Example 2-18 Adding Module Configuration to `domain.xml`
@@ -731,7 +731,7 @@ configuration included in the module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Remove the configuration of a module from `domain.xml` by using the
-link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`delete-module-config`] subcommand.
+link:reference-manual/create-jdbc-resource.html#GSRFM00037[`delete-module-config`] subcommand.
 
 [[GSADG1101]][[sthref13]]
 Example 2-19 Removing Module Configuration From `domain.xml`
@@ -761,7 +761,7 @@ active configuration of a module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Display the current active configuration of a module by using the
-link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`get-active-module-config`] subcommand.
+link:reference-manual/create-jdbc-resource.html#GSRFM00037[`get-active-module-config`] subcommand.
 
 [[GSADG1104]][[sthref14]]
 Example 2-20 Displaying the Current Active Configuration of a Module
@@ -810,7 +810,7 @@ subcommand will prepend domain-dir``/config`` to this operand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Add resources from an XML file by using the
-link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcommand.
+link:reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -864,7 +864,7 @@ cannot communicate with the server by using the specified login
 version is displayed along with a warning message.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Display the version by using the link:../reference-manual/version.html#GSRFM00261[`version`]
+2. Display the version by using the link:reference-manual/version.html#GSRFM00261[`version`]
 subcommand.
 
 [[GSADG00114]][[ghjnb]]
@@ -895,7 +895,7 @@ deployed Java applications. If the `--type` option is not specified, all
 applications are listed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List applications by using the link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`]
+2. List applications by using the link:reference-manual/list-applications.html#GSRFM00148[`list-applications`]
 subcommand.
 
 [[GSADG00115]][[ggouk]]
@@ -925,7 +925,7 @@ Use the `list-containers` subcommand in remote mode to list application
 containers.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List containers by using the link:../reference-manual/list-containers.html#GSRFM00161[`list-containers`]
+2. List containers by using the link:reference-manual/list-containers.html#GSRFM00161[`list-containers`]
 subcommand.
 
 [[GSADG00116]][[ggown]]
@@ -966,7 +966,7 @@ that are accessible to the {productName} module subsystem. The status
 of each module is included. Possible statuses include NEW and READY.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List modules by using the link:../reference-manual/list-modules.html#GSRFM00185[`list-modules`]
+2. List modules by using the link:reference-manual/list-modules.html#GSRFM00185[`list-modules`]
 subcommand.
 
 [[GSADG00117]][[ghlfw]]
@@ -1025,7 +1025,7 @@ only local subcommands are listed. By default, this subcommand displays
 a list of local subcommands followed by a list of remote subcommands.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List subcommands by using the link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`]
+2. List subcommands by using the link:reference-manual/list-commands.html#GSRFM00154[`list-commands`]
 subcommand.
 
 [[GSADG00118]][[ggpdl]]
@@ -1074,7 +1074,7 @@ to decide whether to do a timer migration, or to verify that a migration
 has been completed successfully.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List timers by using the link:../reference-manual/list-timers.html#GSRFM00205[`list-timers`] subcommand.
+2. List timers by using the link:reference-manual/list-timers.html#GSRFM00205[`list-timers`] subcommand.
 
 [[GSADG00119]][[giojj]]
 Example 2-27 Listing Timers
@@ -1098,7 +1098,7 @@ status (either enabled or disabled) of the specified deployed component.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Show component status by using the
-link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
+link:reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
 
 [[GSADG00120]][[gjhkk]]
 Example 2-28 Showing Status of a Component
@@ -1197,7 +1197,7 @@ For the DAS, instance-name is `server` and the path is `servers/server/server`.
 
 For more information, see the following documentation:
 
-* The link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page
+* The link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page
 * link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
 * link:overview.html#giusb[How Dotted Names Work for Configuration]
 
@@ -1893,8 +1893,8 @@ tasks:
 For information about how to perform these tasks from the command line,
 see the following documentation:
 
-* "link:../security-guide/user-security.html#GSSCG00110[To Create an Authentication Realm]" in {productName} Security Guide
-* "link:../security-guide/user-security.html#GSSCG00118[To Create a File User]" in {productName} Security Guide
+* "link:security-guide/user-security.html#GSSCG00110[To Create an Authentication Realm]" in {productName} Security Guide
+* "link:security-guide/user-security.html#GSSCG00118[To Create a File User]" in {productName} Security Guide
 * link:http_https.html#ggnbj[To Configure an HTTP Listener for SSL]
 
 For information about how to perform these tasks by using the
@@ -3037,7 +3037,7 @@ message-id::
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
   identifier. For more information, see the
-  link:../error-messages-reference/toc.html#GSEMR[
+  link:error-messages-reference.html#GSEMR[
   {productName} Error Message Reference].
 message-text::
   The text of the log message.
@@ -3141,7 +3141,7 @@ message-id::
   A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
-  identifier. For more information, see the link:../error-messages-reference/toc.html#GSEMR[{productName} Error Message Reference].
+  identifier. For more information, see the link:error-messages-reference.html#GSEMR[{productName} Error Message Reference].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::

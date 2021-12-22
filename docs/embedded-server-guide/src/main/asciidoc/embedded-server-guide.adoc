@@ -68,7 +68,7 @@ can run unit tests automatically in every build.
 [NOTE]
 ====
 For information on how to embed {productName} in an OSGi environment,
-see the link:../add-on-component-development-guide/toc.html#GSACG[{productName} Add-On
+see the link:add-on-component-development-guide.html#GSACG[{productName} Add-On
 Component Development Guide].
 ====
 
@@ -498,7 +498,7 @@ The following topics are addressed here:
 * link:#gjrcs[Creating a Scattered Archive]
 * link:#gkvgc[Creating a Scattered Enterprise Archive]
 
-For general information about deploying applications in {productName}, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
+For general information about deploying applications in {productName}, see the link:application-deployment-guide.html#GSDPG[{productName}
 Application Deployment Guide].
 
 [[gilrf]][[GSESG00021]][[to-deploy-an-application-from-an-archive-file-or-a-directory]]
@@ -509,7 +509,7 @@ An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
 the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide.
 
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive
@@ -517,7 +517,7 @@ file. The contents of the directory must match the contents of the
 expanded Jakarta EE archive file as laid out by the {productName}. The
 directory must be accessible to the machine on which the deploying
 application runs. For more information about the requirements for
-deploying an application from a directory, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00043[To
+deploying an application from a directory, see "link:application-deployment-guide/deploying-applications.html#GSDPG00043[To
 Deploy an Application or Module in a Directory Format]" in {productName} Application Deployment Guide.
 
 If some of the resources needed by an application are not under the
@@ -534,7 +534,7 @@ Specify the `java.io.File` class instance you created previously as the
 first method parameter. +
 For information about optional parameters you can set, see the
 descriptions of the
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] subcommand parameters.
+link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] subcommand parameters.
 Simply quote each parameter in the method, for example `"--force=true"`.
 
 [[GSESG00010]][[gioph]]
@@ -592,7 +592,7 @@ is deployed.
 
 For information about optional parameters you can set, see the
 descriptions of the
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] command parameters.
+link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] command parameters.
 Simply quote each parameter in the method, for example
 `"--cascade=true"`.
 
@@ -888,16 +888,16 @@ import org.glassfish.embeddable.*;
 Running `asadmin` Commands Using the {productName} Embedded Server
 ==== API
 
-Running link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] commands from an application enables
+Running link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] commands from an application enables
 the application to configure the embedded {productName} to suit the
 application's requirements. For example, an application can run the
 required `asadmin` commands to create a JDBC technology connection to a
 database.
 
 For more information about configuring embedded {productName}, see
-the link:../administration-guide/toc.html#GSADG[{productName} Administration
+the link:administration-guide.html#GSADG[{productName} Administration
 Guide]. For detailed information about `asadmin` commands, see Section 1
-of the link:../reference-manual/toc.html#GSRFM[{productName} Reference
+of the link:reference-manual.html#GSRFM[{productName} Reference
 Manual].
 
 
@@ -1387,7 +1387,7 @@ In order of precedence:
 * The `application-name` or `module-name` in the deployment descriptor.
 * The name of the archive file without the extension or the directory name.
 
-For more information, see "link:../application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
+For more information, see "link:application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.
@@ -1501,7 +1501,7 @@ In order of precedence:
 * The name of the archive file without the extension or the directory
 name.
 
-For more information, see "link:../application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
+For more information, see "link:application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.
@@ -1600,7 +1600,7 @@ Table 1-9 `embedded-glassfish:stop` Parameters
 This goal runs a {productName} administration command. You must use
 either the command and commandParameters parameters in combination or
 the commandLine parameter. For more information about administration
-commands, see the link:../reference-manual/toc.html#GSRFM[{productName}
+commands, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual]. You can set the parameters described in the following
 table.
 
@@ -1690,7 +1690,7 @@ See link:#giide[Setting the Class Path] and Section 22.3.3 of the EJB
 2. Configure any required resources.
 +
 For more information about configuring resources, see the Administration
-Console Online Help or "link:../administration-guide/toc.html#GSADG00298[Resources and Services
+Console Online Help or "link:administration-guide.html#GSADG00298[Resources and Services
 Administration]" in {productName} Administration
 Guide. The `jdbc/__default` Java DB database is preconfigured with all
 distributions of {productName}. However, if you are using
@@ -1854,7 +1854,7 @@ directory before running the `mvn clean verify` command.
 To change log levels in Embedded {productName}, you can follow the
 steps in this section or you can use the Embedded Server API as shown in
 link:#gjlfm[Example 1-11]. For more information about {productName}
-logging, see "link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
+logging, see "link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
 {productName} Administration Guide.
 
 You can change log levels in Embedded {productName} in either of the
@@ -1864,7 +1864,7 @@ following ways:
 * Creating a custom logging configuration file
 
 Both these ways use logger names. For a list of logger names, use the
-link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
+link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 [[GSESG00019]][[gkrhh]]
 Example 1-15 Using the {productName} Embedded Server API

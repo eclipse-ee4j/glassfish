@@ -92,7 +92,7 @@ Grid.
 For information about developing, deploying, and configuring Oracle
 TopLink, EclipseLink, and TopLink Grid applications, see the following:
 
-* http://docs.oracle.com/html/E25034_01/toc.html[Oracle Fusion Middleware
+* http://docs.oracle.com/html/E25034_01.html[Oracle Fusion Middleware
 Solution Guide for Oracle TopLink]
 * EclipseLink project home at `http://wiki.eclipse.org/EclipseLink`
 * EclipseLink Documentation Center at
@@ -100,9 +100,9 @@ Solution Guide for Oracle TopLink]
 * Java API Reference for EclipseLink at
 `http://www.eclipse.org/eclipselink/api/latest/index.html`
 * EclipseLink examples at `http://wiki.eclipse.org/EclipseLink/Examples`
-* http://docs.oracle.com/cd/E18686_01/coh.37/e18677/toc.html[Oracle
+* http://docs.oracle.com/cd/E18686_01/coh.37/e18677.html[Oracle
 Coherence Developer's Guide]
-* http://docs.oracle.com/cd/E17904_01/doc.1111/e16596/toc.html[Oracle
+* http://docs.oracle.com/cd/E17904_01/doc.1111/e16596.html[Oracle
 Fusion Middleware Integration Guide for Oracle TopLink with Coherence
 Grid]
 
@@ -118,7 +118,7 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1. Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[
+1. Set up the datasource. See "link:administration-guide/jdbc.html#GSADG00015[
 Administering Database Connectivity]"
 in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
@@ -138,7 +138,7 @@ Manager].
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7. Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[
+7. Monitor the application. See "link:administration-guide/monitoring.html#GSADG00011[
 Administering the Monitoring Service]"
 in {productName} Administration Guide.
 
@@ -242,9 +242,9 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
     </persistence>
 ----
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 [[gdkwf]][[GSDVG00138]][[specifying-the-persistence-provider-for-an-application]]
@@ -483,7 +483,7 @@ If not specified, tables are dropped only if the
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 When `asadmin` deployment options and `persistence.xml` options are both
 specified, the `asadmin` deployment options take precedence.

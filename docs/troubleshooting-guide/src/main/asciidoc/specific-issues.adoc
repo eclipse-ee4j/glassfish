@@ -63,7 +63,7 @@ If startup was successful, the expected message is similar to that on
 the console, and appears at the end of the log file.
 
 For more information about starting a domain, see
-"link:../administration-guide/domains.html#GSADG00537[
+"link:administration-guide/domains.html#GSADG00537[
 Starting and Stopping a Domain]"
 in {productName} Administration Guide.
 To easily determine if a domain is running, use the `asadmin list-domains` command.
@@ -216,7 +216,7 @@ accessible, check the following:
 Port?]
 
 For more information about the Administration Console, see
-"link:../administration-guide/overview.html#GSADG00698[Administration Console]" in {productName} Administration Guide.
+"link:administration-guide/overview.html#GSADG00698[Administration Console]" in {productName} Administration Guide.
 
 [[abgcn]][[GSTSG00184]][[is-the-application-server-running]]
 
@@ -315,7 +315,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+"link:application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[gjjoz]][[GSTSG00047]][[administrator-user-name-or-password-not-known]]
@@ -505,7 +505,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
 
 [[ghvgk]][[GSTSG00053]][[issues-related-to-applications]]
 
@@ -691,9 +691,9 @@ Installation hangs more than five minutes during Update Tool configuration.
 Cancel the installation and run the installation program again, but this
 time deselect the Install Update Tool check box. Update Tool can be
 installed later from as-install``/bin/``. For more information about
-Update Tool, see "link:../administration-guide/toc.html#GSADG00701[Update Tool]"
+Update Tool, see "link:administration-guide.html#GSADG00701[Update Tool]"
 in {productName} Administration Guide. For general information about
-{productName}installation, see the link:../installation-guide/toc.html#GSING[
+{productName}installation, see the link:installation-guide.html#GSING[
 {productName} Installation Guide].
 
 
@@ -703,7 +703,7 @@ Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
 {productName} to the current version.
 For more information about Upgrade Tool and upgrading, see the
-link:../upgrade-guide/toc.html#GSUPG[{productName} Upgrade Guide].
+link:upgrade-guide.html#GSUPG[{productName} Upgrade Guide].
 ====
 
 
@@ -729,7 +729,7 @@ It is safe to remove uninstallation and installation log files after you
 have examined them.
 
 For information related to uninstallation, see
-"link:../installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
+"link:installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
 in {productName} Installation Guide.
 
 [[ghvrh]][[GSTSG00056]][[issues-related-to-security]]

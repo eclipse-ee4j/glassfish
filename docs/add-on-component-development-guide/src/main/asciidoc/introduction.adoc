@@ -64,7 +64,7 @@ distributions.
 You can create and offer new or updated add-on components at any time.
 {productName} administrators can install add-on components and update
 or remove installed components after {productName} is installed. For
-more information, see "link:../administration-guide/toc.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
+more information, see "link:administration-guide.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
 
 [[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
 
@@ -181,7 +181,7 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
 
 For more information, see link:extending-asadmin.html#ghmrd[Extending the
 `asadmin` Utility].
@@ -255,7 +255,7 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 

@@ -168,7 +168,7 @@ For more information, see the following sections:
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-named configuration, see the link:../reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+named configuration, see the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
 help page.
 ====
 +
@@ -204,7 +204,7 @@ See Also
 * link:clusters.html#gkqdm[To Create a Cluster]
 * link:instances.html#gkqch[To Create an Instance Centrally]
 * link:instances.html#gkqbl[To Create an Instance Locally]
-* link:../reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+* link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help copy-config` at the command line.
@@ -217,7 +217,7 @@ Use the `list-configs` subcommand in remote mode to list existing named
 configurations in a domain.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:../reference-manual/list-configs.html#GSRFM00156[`list-configs`] subcommand.
+2. Run the link:reference-manual/list-configs.html#GSRFM00156[`list-configs`] subcommand.
 +
 [source]
 ----
@@ -243,7 +243,7 @@ Command list-configs executed successfully.
 
 See Also
 
-link:../reference-manual/list-configs.html#GSRFM00156[`list-configs`(1)]
+link:reference-manual/list-configs.html#GSRFM00156[`list-configs`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-configs` at the command line.
@@ -299,8 +299,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:../reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -360,7 +360,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration that you are deleting.
 
-4. Run the link:../reference-manual/delete-config.html#GSRFM00069[`delete-config`] subcommand.
+4. Run the link:reference-manual/delete-config.html#GSRFM00069[`delete-config`] subcommand.
 +
 [source]
 ----
@@ -395,9 +395,9 @@ See Also
 * link:instances.html#gkqcw[To Delete an Instance Centrally]
 * link:instances.html#gkqed[To Delete an Instance Locally]
 * link:clusters.html#gkqcp[To Delete a Cluster]
-* link:../reference-manual/delete-config.html#GSRFM00069[`delete-config`(1)]
-* link:../reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/delete-config.html#GSRFM00069[`delete-config`(1)]
+* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -435,8 +435,8 @@ the instance.
 
 You can create additional system properties for a configuration either
 by specifying the `--systemproperties` option of the
-link:../reference-manual/copy-config.html#GSRFM00011[`copy-config`] subcommand or by using the
-link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand. To reference a
+link:reference-manual/copy-config.html#GSRFM00011[`copy-config`] subcommand or by using the
+link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand. To reference a
 system property from the configuration, use the `${`prop-name`}`
 notation, where prop-name is the name of the system property.
 
@@ -573,8 +573,8 @@ Command set executed successfully.
 
 See Also
 
-* link:../reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:../reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#GSRFM00139[`get`(1)]
+* link:reference-manual/set.html#GSRFM00226[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -663,8 +663,8 @@ Command set executed successfully.
 
 See Also
 
-* link:../reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:../reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#GSRFM00139[`get`(1)]
+* link:reference-manual/set.html#GSRFM00226[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

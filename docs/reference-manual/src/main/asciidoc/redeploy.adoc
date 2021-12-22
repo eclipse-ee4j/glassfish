@@ -92,7 +92,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
@@ -460,7 +460,7 @@ link:deploy.html#deploy-1[`deploy`(1)], link:get.html#get-1[`get`(1)],
 link:list-components.html#list-components-1[`list-components`(1)],
 link:undeploy.html#undeploy-1[`undeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

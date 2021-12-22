@@ -301,25 +301,25 @@ any of these subcommands, the default target is the DAS.
 [width="100%",cols="27%,47%,26%",options="header",]
 |===
 |Subcommand |Description |Target Specification
-|link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] |Collects all available log files
+|link:reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] |Collects all available log files
 into a ZIP archive. |`--target``=`target-name
 
-|link:../reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`] |Lists logging attributes in
+|link:reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`] |Lists logging attributes in
 the logging properties file. |target-name operand
 
-|link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] |Lists the loggers in the logging
+|link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] |Lists the loggers in the logging
 properties file and their log levels. |target-name operand
 
-|link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`] |Rotates the log file by renaming it and
+|link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`] |Rotates the log file by renaming it and
 creating a new log file to store new messages. |`--target``=`target-name
 
-|link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] |Sets the specified logging
+|link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] |Sets the specified logging
 attributes in the logging properties file. |`--target``=`target-name
 
-|link:../reference-manual/set-log-file-format.html#GSRFM879[`set-log-file-format`] |Sets the log file formatter.
+|link:reference-manual/set-log-file-format.html#GSRFM879[`set-log-file-format`] |Sets the log file formatter.
 |`--target``=`target-name
 
-|link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] |Sets the log level for one or more
+|link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] |Sets the log level for one or more
 loggers listed in the logging properties file. |`--target``=`target-name
 |===
 
@@ -404,7 +404,7 @@ optionally specify one of the following targets:
 1. Ensure that the target server or cluster is running.
 Remote subcommands require a running server.
 
-2. Use the link:../reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]
+2. Use the link:reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]
 subcommand in remote mode to obtain the current log attribute settings.
 The name and location of the log file is set with the
 `com.sun.enterprise.server.logging.GFFileHandler.file` attribute of the
@@ -412,7 +412,7 @@ logging properties file.
 Optionally you can target a configuration, server, instance, or cluster.
 If you do not specify a target, the log attribute settings for the DAS are displayed.
 
-3. Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+3. Use the link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
 subcommand in remote mode to define a custom name or location of the log file.
 If you do not specify a target, the log file for the DAS is targeted by default.
 If you target a cluster, the name of the cluster log file for
@@ -560,7 +560,7 @@ targets:
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 2. List the existing module loggers and log levels by using the
-link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
+link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 [[GSADG00176]][[gjiti]]
 Example 7-3 Listing Logger Levels for Modules
@@ -632,7 +632,7 @@ option:
 
 1. Ensure that the target server or cluster is running.
 2. Set the global log level by using the
-link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand, specifying the log level
+link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand, specifying the log level
 of the `java.util.logging.ConsoleHandler` logger.
 The `ConsoleHandler` has a separate log level setting that limits the
 messages that are displayed. For example:
@@ -694,10 +694,10 @@ restart {productName} for changes to take effect.
 1. Ensure that the target server or cluster is running. Remote subcommands require a running server.
 
 2. List the existing module loggers and their log levels by using the
-link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
+link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 3. Set the log level for a module by using the
-link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand.
+link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand.
 Your choices are `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`,
 `CONFIG`, `FINE`, `FINER`, and `FINEST`.
 
@@ -776,7 +776,7 @@ same file.
 
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
 2. Set the formatter by using the
-link:../reference-manual/redeploy.html#GSRFM00217[`set-log-file-format`] subcommand.
+link:reference-manual/redeploy.html#GSRFM00217[`set-log-file-format`] subcommand.
 3. To apply your change, restart {productName}.
 
 [[GSADG1064]][[sthref23]]
@@ -833,7 +833,7 @@ following fields can be excluded:
 
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
 
-2. Exclude fields by using the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+2. Exclude fields by using the link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
 subcommand, specifying the following attribute and the fields to exclude:
 +
 [source]
@@ -879,7 +879,7 @@ message starts on a new line after the message header and is indented.
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
 
 2. Set multiline mode by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
+link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
 following attribute and its value (`true` or `false`):
 +
 [source]
@@ -953,7 +953,7 @@ cluster. The minimum size that can be set is 500 KB.
 1. Ensure that the target server or cluster is running.
 
 2. Change the rotation file size limit by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
 specifying the following attribute and the desired limit in bytes:
 +
 [source]
@@ -1003,7 +1003,7 @@ instance, or cluster. The default value is `0`.
 1. Ensure that the target server or cluster is running.
 
 2. Change the rotation time limit by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
 specifying the following attribute and the desired limit in minutes:
 +
 [source]
@@ -1060,7 +1060,7 @@ placed on the number of rotated log files that are retained.
 
 1. Ensure that the target server or cluster is running.
 2. Change the limit number of retained log files by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
 specifying the following attribute and the desired file limit number:
 +
 [source]
@@ -1117,7 +1117,7 @@ Because log rotation is a dynamic operation, you do not need to restart
 {productName} for changes to take effect.
 
 1. Ensure that the target server or cluster is running.
-2. Rotate log files by using the link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]
+2. Rotate log files by using the link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]
 subcommand.
 
 [[GSADG00184]][[gkmav]]
@@ -1196,7 +1196,7 @@ be in the server classpath.
 1. Ensure that the target server or cluster is running.
 +
 Remote subcommands require a running server.
-2. Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand to add the
+2. Use the link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand to add the
 handler to the `handlers` attribute.
 +
 The default target of this subcommand is the DAS. Optionally you can
@@ -1256,7 +1256,7 @@ cluster.
 1. Ensure that the target server or cluster is running.
 +
 Remote subcommands require a running server.
-2. Use the link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] subcommand to create
+2. Use the link:reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] subcommand to create
 the ZIP archive.
 +
 The default location in which the ZIP archive is created is the
@@ -1325,7 +1325,7 @@ name, subsystem, and description of loggers in your distribution of
 {productName}. Internal loggers are not listed.
 
 1. Ensure that the target server or cluster is running. Remote commands require a running server.
-2. List loggers by using the link:../reference-manual/redeploy.html#GSRFM00217[`list-loggers`]
+2. List loggers by using the link:reference-manual/redeploy.html#GSRFM00217[`list-loggers`]
 subcommand.
 
 [[GSADG1075]][[sthref27]]

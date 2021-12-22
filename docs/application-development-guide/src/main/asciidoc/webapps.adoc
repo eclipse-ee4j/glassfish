@@ -60,7 +60,7 @@ using the Java Servlet API, see the documentation at
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a servlet. For more
-information about these tools, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+information about these tools, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 This section describes how to create effective servlets to control
 application interactions running on a {productName}, including
@@ -153,7 +153,7 @@ clears the cache during dynamic deployment or reloading of classes.
 * Results produced by resources that are the target of a
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 cached if caching has been enabled for those resources. For details, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00101[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#GSDPG00140[dispatcher]"
+"link:application-deployment-guide/dd-elements.html#GSDPG00101[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#GSDPG00140[dispatcher]"
 in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 
@@ -232,7 +232,7 @@ Here is an example cache element in the `glassfish-web.xml` file:
 ----
 
 For more information about the `glassfish-web.xml` caching settings, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00097[cache]" in {productName}
+"link:application-deployment-guide/dd-elements.html#GSDPG00097[cache]" in {productName}
 Application Deployment Guide.
 
 [[beagq]][[GSDVG00254]][[the-cachekeygenerator-interface]]
@@ -247,7 +247,7 @@ attribute in the `ServletContext`.
 The name of the context attribute is configurable as the `value` of the
 `cacheKeyGeneratorAttrName` property in the `default-helper` element of
 the `glassfish-web.xml` deployment descriptor. For more information, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00136[default-helper]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00136[default-helper]" in {productName} Application Deployment Guide.
 
 [[beagr]][[GSDVG00398]][[about-the-servlet-engine]]
 
@@ -384,7 +384,7 @@ asadmin set server-config.web-container.property.jspCachingEnabled="true"
 ----
 
 For more information about the `asadmin set` command, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 To enable JSP caching for a single web application, follow these steps:
 
@@ -596,10 +596,10 @@ files into servlets:
 
 * JSP files are automatically compiled at runtime.
 * The `asadmin deploy` command has a `--precompilejsp` option. For
-details, see the link:../reference-manual/toc.html#GSRFM[{productName}
+details, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 * The `jspc` command line tool allows you to precompile JSP files at the
-command line. For details, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+command line. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[beaha]][[GSDVG00142]][[creating-and-managing-sessions]]
 
@@ -634,12 +634,12 @@ To configure whether and how HTTP sessions use cookies and URL
 rewriting, edit the `session-properties` and `cookie-properties`
 elements in the `glassfish-web.xml` file for an individual web
 application. For more about the properties you can configure, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00276[session-properties]" in {productName} Application Deployment Guide and
-"link:../application-deployment-guide/dd-elements.html#GSDPG00130[cookie-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00276[session-properties]" in {productName} Application Deployment Guide and
+"link:application-deployment-guide/dd-elements.html#GSDPG00130[cookie-properties]" in {productName} Application Deployment Guide.
 
 For information about configuring default session properties for the
 entire web container, see link:#beagc[Using the `default-web.xml` File]
-and the link:../ha-administration-guide/toc.html#GSHAG[{productName} High
+and the link:ha-administration-guide.html#GSHAG[{productName} High
 Availability Administration Guide].
 
 [[beahd]][[GSDVG00262]][[coordinating-session-access]]
@@ -675,7 +675,7 @@ become invalid unless you use the `--keepstate=true` option of the
 asadmin redeploy --keepstate=true --name hello.war
 ----
 
-For details, see the link:../reference-manual/toc.html#GSRFM[{productName}
+For details, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 
 The default for `--keepstate` is false. This option is supported only on
@@ -731,7 +731,7 @@ session persistence type reverts to `memory`. See link:#gdshu[The
 listed in link:#fvyem[Table 7-3].
 * The web application must be deployed using the `deploy` or `deploydir`
 command with the `--availabilityenabled` option set to `true`. See the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
@@ -754,7 +754,7 @@ list of the types of references that `HTTPSession` failover supports.
 * References to open files or network connections are lost.
 
 For information about how to work around these limitations, see the
-link:../deployment-planning-guide/toc.html#GSPLG[{productName} Deployment Planning
+link:deployment-planning-guide.html#GSPLG[{productName} Deployment Planning
 Guide].
 
 In the following table, No indicates that failover for the object type
@@ -767,7 +767,7 @@ For more information about the `InitialContext`, see
 link:jndi.html#beans[Accessing the Naming Context]. For more information
 about transaction recovery, see link:transaction-service.html#beanm[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:../administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
+Objects, see "link:administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 [[GSDVG543]][[sthref15]][[fvyem]]
@@ -834,7 +834,7 @@ used.
 ====
 
 
-For more information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00275[session-manager]" in
+For more information, see "link:application-deployment-guide/dd-elements.html#GSDPG00275[session-manager]" in
 {productName} Application Deployment Guide.
 
 [[beahg]][[GSDVG00266]][[the-memory-persistence-type]]
@@ -871,14 +871,14 @@ web application.
 
 The only manager property that the `memory` persistence type supports is
 `sessionFilename`, which is listed under
-"link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
+"link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
 specifies the name of the file where sessions are serialized and
 persisted if the web application or the server is stopped. To disable
 this behavior, specify an empty string as the value of
 `sessionFilename`. The default value is an empty string.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
 [[beahh]][[GSDVG00267]][[the-file-persistence-type]]
@@ -926,12 +926,12 @@ container availability settings for the web application.
 ----
 
 The `file` persistence type supports all the manager properties listed
-under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
+under "link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
 and supports the `directory` store property listed under
-"link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
 [[gdshu]][[GSDVG00268]][[the-replicated-persistence-type]]
@@ -954,7 +954,7 @@ Service box. To enable availability for the web container, select the
 Web Container Availability tab, then check the Availability Service box.
 All instances in an {productName} cluster should have the same
 availability settings to ensure consistent behavior. For details, see
-the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability
+the link:ha-administration-guide.html#GSHAG[{productName} High Availability
 Administration Guide].
 
 To change settings such as persistence frequency and persistence scope
@@ -970,7 +970,7 @@ server-config.availability-service.web-container-availability.persistence-freque
 ----
 
 For more information, see the description of the `asadmin set` command
-in the link:../reference-manual/toc.html#GSRFM[{productName} Reference
+in the link:reference-manual.html#GSRFM[{productName} Reference
 Manual].
 
 To specify the `replicated` persistence type for a specific web
@@ -999,12 +999,12 @@ application.
 ----
 
 The `replicated` persistence type supports all the manager properties
-listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except
+listed under "link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except
 `sessionFilename`, and supports the `persistenceScope` store property
-listed under "link:../application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
+listed under "link:application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
 To specify that web sessions for which high availability is enabled are
@@ -1368,7 +1368,7 @@ http://localhost:8080/cometd/index.html
 See Also
 
 For more information about deployment in the {productName}, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
 For more information about the Bayeux protocol, see
@@ -1443,7 +1443,7 @@ the `glassfish-web.xml` file
 * The default, which is `ISO-8859-1`
 
 For details about the `parameter-encoding` element, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00218[parameter-encoding]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00218[parameter-encoding]" in {productName} Application Deployment Guide.
 
 [[beafy]][[GSDVG00032]][[servlet-response]]
 
@@ -1471,7 +1471,7 @@ You can set virtual server properties in the following ways:
 asadmin create-virtual-server --hosts localhost --property authRealm=ldap MyVS
 ----
 For details and a complete list of virtual server properties, see
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 * You can define virtual server properties using the `asadmin set`
 command. For example:
 +
@@ -1479,7 +1479,7 @@ command. For example:
 ----
 asadmin set server-config.http-service.virtual-server.MyVS.property.authRealm="ldap"
 ----
-For details, see link:../reference-manual/set.html#GSRFM00226[`set`(1)].
+For details, see link:reference-manual/set.html#GSRFM00226[`set`(1)].
 * You can define virtual server properties using the Administration
 Console. Select the HTTP Service component under the relevant
 configuration, select Virtual Servers, and select the desired virtual
@@ -1489,7 +1489,7 @@ virtual server properties, click the Help button in the Administration
 Console.
 
 Some virtual server properties can be set for a specific web
-application. For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
+application. For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
 [[beagb]][[GSDVG00409]][[class-loader-delegation]]
@@ -1507,7 +1507,7 @@ The default value is `delegate="true"`, which causes the web application
 class loader to delegate in the same manner as the other class loaders.
 Use `delegate="true"` for a web application that accesses EJB components
 or that acts as a web service client or endpoint. For details about
-`glassfish-web.xml`, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
+`glassfish-web.xml`, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
 
 For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
@@ -1614,7 +1614,7 @@ safely retried in `idempotent-url-pattern` elements in the
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
 
-For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00164[idempotent-url-pattern]" in {productName} Application Deployment Guide.
+For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00164[idempotent-url-pattern]" in {productName} Application Deployment Guide.
 
 If none of the server instances can successfully serve the request, an
 error page is returned.
@@ -1711,7 +1711,7 @@ server, use the `alternatedocroot_n` property, where n is a positive
 integer that allows specification of more than one. This property can be
 a subelement of a `glassfish-web-app` element in the `glassfish-web.xml`
 file or a virtual server property. For more information about these
-elements, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
+elements, see "link:application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
 
 A virtual server's alternate docroots are considered only if a request
 does not map to any of the web modules deployed on that virtual server.
@@ -2120,7 +2120,7 @@ To work with a native executable, do the following:
 3. Use directory deployment to deploy the web module. Do not deploy it
 as a WAR file, because the executable bit information is lost during the
 process of `jar` and `unjar`. For more information about directory
-deployment, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
+deployment, see the link:application-deployment-guide.html#GSDPG[{productName}
 Application Deployment Guide].
 
 

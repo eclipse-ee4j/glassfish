@@ -27,12 +27,12 @@ The following topics are addressed here:
 === Installation Requirements
 
 Before installing {productName} 7, ensure that
-your system meets the requirements listed in "link:../release-notes/release-notes.html#GSRLN00131[Hardware
+your system meets the requirements listed in "link:release-notes/release-notes.html#GSRLN00131[Hardware
 and Software Requirements]" in {productName}
 Release Notes. If necessary, download and install the required JDK
 software. Problems are likely to arise if you attempt to install on a
 platform that is not supported or on a system that in some other way
-does not meet release requirements. Also see "link:../release-notes/release-notes.html#GSRLN00253[Known
+does not meet release requirements. Also see "link:release-notes/release-notes.html#GSRLN00253[Known
 Issues]" in {productName} Release Notes for known
 issues related to installation.
 
@@ -807,10 +807,10 @@ after installation.
 Before You Begin
 
 Ensure that your system meets the requirements listed in
-"link:../release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+"link:release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
 in {productName} Release Notes.
 
-Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
+Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
 
 1. Download the desired {productName} 7 ZIP file. +
 See link:#gkbaj[{productName} Download Locations] for a list of
@@ -842,7 +842,7 @@ under your current directory. This `glassfish7` directory is referred to
 throughout the {productName} documentation set as as-install-parent.
 
 4. Start {productName} using the instructions in the
-link:../quick-start-guide/toc.html#GSQSG[{productName} Quick Start Guide].
+link:quick-start-guide.html#GSQSG[{productName} Quick Start Guide].
 +
 The guide explains how to perform basic tasks such as starting the
 server, accessing the Administration Console, and deploying a sample application.

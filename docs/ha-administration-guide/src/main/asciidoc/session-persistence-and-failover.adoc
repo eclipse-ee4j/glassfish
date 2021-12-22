@@ -92,8 +92,8 @@ session persistence, the server writes an error to the log file.
 
 * The web application must be deployed using the `deploy` or `deploydir`
 subcommand with the `--availabilityenabled` option set to `true`. For
-more information on these subcommands, see link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)]
-and link:../reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
+more information on these subcommands, see link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)]
+and link:reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
 
 [[abdlc]][[GSHAG00301]][[restrictions]]
 
@@ -112,7 +112,7 @@ with dynamic deployment, dynamic reloading, and autodeployment. These
 features are for development, not production environments, so you must
 disable them before enabling the session persistence service.
 For information about how to disable these features, see the
-link:../application-deployment-guide/toc.html#GSDPG[
+link:application-deployment-guide.html#GSDPG[
 {productName} Application Deployment Guide].
 
 * {productName} 7 does not support High Availability Database
@@ -296,7 +296,7 @@ For more information, see link:#abdlu[Configuring Availability for an Individual
 
 7. Make each web module distributable if you want it to be highly available.
 +
-For more information, see "link:../application-deployment-guide/deploying-applications.html#GSDPG00067[Web Module Deployment
+For more information, see "link:application-deployment-guide/deploying-applications.html#GSDPG00067[Web Module Deployment
 Guidelines]" in {productName} Application Deployment Guide.
 
 8. Enable availability for individual applications, web modules, or EJB
@@ -583,8 +583,8 @@ module during deployment:
 Availability Enabled checkbox.
 * If you are deploying using use the `asadmin deploy` or
 `asadmin deploydir` commands, set the `--availabilityenabled` option to
-`true`. For more information, see link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] and
-link:../reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
+`true`. For more information, see link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] and
+link:reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
 
 [[abdlu]][[GSHAG00309]][[configuring-availability-for-an-individual-bean]]
 

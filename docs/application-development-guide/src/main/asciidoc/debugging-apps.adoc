@@ -126,7 +126,7 @@ To generate a Java stack trace for debugging, use the
 `asadmin generate-jvm-report --type=thread` command. The stack trace
 goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
-`asadmin generate-jvm-report` command, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+`asadmin generate-jvm-report` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[gekvq]][[GSDVG00104]][[application-client-debugging]]
 
@@ -152,7 +152,7 @@ debugging both concurrently. For details about setting the port, see
 link:#beafe[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
-information about the `appclient` script, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+information about the `appclient` script, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
@@ -170,7 +170,7 @@ Open Message Queue has a broker logger, which can be useful for
 debugging Java Message Service (JMS) applications, including
 message-driven bean applications. You can adjust the logger's verbosity,
 and you can send the logger output to the broker's console using the
-broker's `-tty` option. For more information, see the link:../../openmq/mq-admin-guide/toc.html#GMADG[Open
+broker's `-tty` option. For more information, see the link:../openmq/mq-admin-guide.html#GMADG[Open
 Message Queue Administration Guide].
 
 

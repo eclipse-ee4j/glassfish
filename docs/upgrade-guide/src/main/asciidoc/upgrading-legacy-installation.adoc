@@ -217,7 +217,7 @@ must use the Upgrade Tool, described in link:#gktcz[Upgrade Tool].
 See link:#gktcl[Summary of Procedure for Upgrading With Update Tool] for
 an overview of the general procedure for performing an upgrade with
 Update Tool. For more information about Update Tool in general, see
-"link:../administration-guide/toc.html#GSADG00701[Update Tool]"
+"link:administration-guide.html#GSADG00701[Update Tool]"
 in {productName} Administration Guide.
 
 [[gkuff]][[GSUPG00006]][[software-update-notifier]]
@@ -250,7 +250,7 @@ The general procedure for using Upgrade Tool to perform an upgrade to
 {productName} 7 from any compatible older version of {productName} or Enterprise Server comprises the following steps:
 
 1. Download {productName} 7 and perform a Standard Installation,
-as described in "link:../installation-guide/toc.html#GSING00007[
+as described in "link:installation-guide.html#GSING00007[
 To Install {productName} Using the Self-Extracting File]"
 in {productName} Installation Guide.
 2. Copy any custom or third-party libraries from the older installation
@@ -378,7 +378,7 @@ guide to complete the upgrade to {productName} 7.
 
 For instructions on upgrading a {productName} installation in an
 environment where Internet access is not available, see
-"link:../administration-guide/toc.html#GSADG00575[
+"link:administration-guide.html#GSADG00575[
 Extending and Updating {productName} Inside a Closed Network]"
 in {productName} Administration Guide.
 
@@ -514,7 +514,7 @@ upgrading are stopped before proceeding.
 
 1. Download and install {productName} 7 using the Typical
 Installation path. +
-See "link:../installation-guide/toc.html#GSING00025[
+See "link:installation-guide.html#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -692,7 +692,7 @@ Ensure that the source domains from which you are upgrading are stopped
 before proceeding.
 
 1. Download and install {productName} 7 using the Typical Installation path. +
-See "link:../installation-guide/toc.html#GSING00025[
+See "link:installation-guide.html#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -1047,7 +1047,7 @@ This procedure explains how to prepare for modifying an NSS-based
 Ensure that you install the new {productName} 7 product in a
 directory that is different than the one used for the older installation
 from which you are upgrading. +
-See "link:../installation-guide/toc.html#GSING00025[
+See "link:installation-guide.html#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -1351,7 +1351,7 @@ described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 2. Perform new (not upgrade) {productName} 7 installations on each
 node host. {productName} 7 installation instructions are provided
-in the link:../installation-guide/toc.html#GSING[
+in the link:installation-guide.html#GSING[
 {productName} Installation Guide].
 
 3. Correct the node configuration on the upgraded DAS, if necessary.
@@ -1404,7 +1404,7 @@ must also change the type of the node to `SSH` to enable the node for
 remote communication.
 
 For more information about {productName} nodes, see
-"link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
 
 [[sthref39]]
 
@@ -1418,7 +1418,7 @@ information, see link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool
 * If you are changing the type of the node to `SSH`, ensure that SSH is
 configured on the host where the DAS is running and on the host that the
 node represents. For more information, see
-"link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
+"link:ha-administration-guide/ssh-setup.html#GSHAG00003[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide.
 
@@ -1436,8 +1436,8 @@ directories and, if necessary, change the type of the node.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for changing the node's
-configuration data, see the link:../reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)] help
-page or the link:../reference-manual/update-node-config.html#GSRFM00255[`update-node-config`(1)] help page.
+configuration data, see the link:reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)] help
+page or the link:reference-manual/update-node-config.html#GSRFM00255[`update-node-config`(1)] help page.
 ====
 
 [source]
@@ -1493,13 +1493,13 @@ link:#gktkx[To Re-Create a Cluster].
 
 See Also
 
-* "link:../ha-administration-guide/ssh-setup.html#GSHAG00003[
+* "link:ha-administration-guide/ssh-setup.html#GSHAG00003[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]"
+* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]"
 in {productName} High Availability Administration Guide
-* link:../reference-manual/update-node-config.html#GSRFM00255[`update-node-config`(1)]
-* link:../reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)]
+* link:reference-manual/update-node-config.html#GSRFM00255[`update-node-config`(1)]
+* link:reference-manual/update-node-ssh001.html#GSRFM00256[`update-node-ssh`(1)]
 
 [[gktkx]][[GSUPG00019]][[to-re-create-a-cluster]]
 
@@ -1517,7 +1517,7 @@ completed the following procedures:
 described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 * Perform a new (not upgrade) installation of {productName} 7 on
-each node host. See the link:../installation-guide/toc.html#GSING[
+each node host. See the link:installation-guide.html#GSING[
 {productName} Installation Guide] for instructions.
 
 * Correct the upgraded node configuration, if necessary, as described
@@ -1555,7 +1555,7 @@ The specific commands to use depend on your configuration.
 
 * If remote hosts cannot contact the DAS, export and import the
 instances' configuration data, as explained in
-"link:../ha-administration-guide/instances.html#GSHAG00125[
+"link:ha-administration-guide/instances.html#GSHAG00125[
 To Resynchronize an Instance and the DAS Offline]"
 in {productName} High Availability Administration Guide.
 
@@ -1563,11 +1563,11 @@ in {productName} High Availability Administration Guide.
 and resynchronize the instance with the DAS, as explained in the
 following sections:
 
-** "link:../ha-administration-guide/instances.html#GSHAG00114[
+** "link:ha-administration-guide/instances.html#GSHAG00114[
 To Create an Instance Locally]"
 in {productName} High Availability Administration Guide
 
-** "link:../ha-administration-guide/instances.html#GSHAG00119[
+** "link:ha-administration-guide/instances.html#GSHAG00119[
 To Resynchronize an Instance and the DAS Online]"
 in {productName} High Availability Administration Guide +
 Note that the node name matches that used for the node agent in the 2.x

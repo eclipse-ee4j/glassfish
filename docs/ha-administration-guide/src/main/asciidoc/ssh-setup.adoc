@@ -190,7 +190,7 @@ running the DAS.
 
 The environment of the SSH user on any remote host to which the user
 will connect must meet the requirements that are stated in
-"link:../release-notes/release-notes.html#GSRLN00252[Paths and Environment Settings for the JDK Software]"
+"link:release-notes/release-notes.html#GSRLN00252[Paths and Environment Settings for the JDK Software]"
 in {productName} Release Notes.
 
 The SSH user's environment on a host is set by the environment set-up
@@ -346,7 +346,7 @@ When a {productName} subcommand uses DCOM to log in to a remote host,
 the Windows user. To provide this password securely to {productName},
 create a {productName} password alias to represent the password and
 store this alias in a password file that is passed to the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
 
 [[GSHAG453]]
 
@@ -372,7 +372,7 @@ Create an alias for the Windows user's password.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for creating a password
-alias, see the link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
+alias, see the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
 ====
 +
 [source]
@@ -436,8 +436,8 @@ AS_ADMIN_WINDOWSPASSWORD=${ALIAS=winuser-password}
 
 See Also
 
-* link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
-* link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
+* link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
+* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
@@ -498,7 +498,7 @@ Authentication for the Windows User].
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-node, see the link:../reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)] help page.
+node, see the link:reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)] help page.
 ====
 
 [source]
@@ -527,8 +527,8 @@ Command validate-dcom executed successfully.
 
 See Also
 
-* link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
-* link:../reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)]
+* link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
+* link:reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)]
 * link:#CEGDAFHD[Windows Operating System Settings]
 * link:#CEGCJGCF[To Enable the Windows User to Run Scripts on a Remote Host]
 * link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
@@ -1262,7 +1262,7 @@ hosts where you are setting up public key authentication.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for setting up an SSH
-key, see the link:../reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)] help page.
+key, see the link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1341,7 +1341,7 @@ See Also
 * link:#gksiy[Setting Up Cygwin SSH on Windows]
 * link:#gkskf[Setting Up the MKS Toolkit on Windows]
 * link:#gksja[Setting Up SSH on UNIX and Linux Systems]
-* link:../reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
+* link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help setup-ssh` at the command line.
@@ -1362,7 +1362,7 @@ To use the encrypted key file, {productName} requires the passphrase
 with which the key file was encrypted. To provide this passphrase
 securely to {productName}, create a {productName} password alias
 to represent the passphrase and store this alias in a password file that
-is passed to the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
+is passed to the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
 
 
 [NOTE]
@@ -1428,7 +1428,7 @@ In response to the prompt, type the passphrase that you set in Step link:#gktbh
 5. Distribute the public key file to the hosts where you are setting up
 public key authentication.
 +
-Use the link:../reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`]
+Use the link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`]
 `asadmin` subcommand for this purpose.
 +
 [source]
@@ -1458,7 +1458,7 @@ in Step link:#gktbh[3].
 [arabic]
 .. Ensure that the DAS is running. +
 Remote subcommands require a running server.
-.. Run the link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`]
+.. Run the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`]
 `asadmin` subcommand.
 +
 [source]
@@ -1562,9 +1562,9 @@ See Also
 * link:#gksiy[Setting Up Cygwin SSH on Windows]
 * link:#gkskf[Setting Up the MKS Toolkit on Windows]
 * link:#gksja[Setting Up SSH on UNIX and Linux Systems]
-* link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
-* link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
-* link:../reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
+* link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
+* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
+* link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
 * http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)]
 
 You can also view the full syntax and options of the subcommands by
@@ -1581,7 +1581,7 @@ To use SSH to log in to a remote host, {productName} requires the SSH
 user's password. To provide this password securely to {productName},
 create a {productName} password alias to represent the password and
 store this alias in a password file that is passed to the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility.
 
 [[GSHAG339]]
 
@@ -1604,7 +1604,7 @@ Create an alias for the SSH user's password.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for creating a password
-alias, see the link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
+alias, see the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
 ====
 +
 [source]
@@ -1665,8 +1665,8 @@ See Also
 * link:#gksiy[Setting Up Cygwin SSH on Windows]
 * link:#gkskf[Setting Up the MKS Toolkit on Windows]
 * link:#gksja[Setting Up SSH on UNIX and Linux Systems]
-* link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
-* link:../reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
+* link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
+* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
@@ -1681,7 +1681,7 @@ installation on each host.
 
 * If you require complete control over the installation on each host,
 install the software from a {productName} distribution on each host
-individually. For more information, see link:../installation-guide/toc.html#GSING[{productName} Installation Guide].
+individually. For more information, see link:installation-guide.html#GSING[{productName} Installation Guide].
 * If the same set up on each host is acceptable, copy an existing
 {productName} installation to the hosts. For more information, see
 link:#gksil[To Copy a {productName} Installation to Multiple Hosts].
@@ -1722,7 +1722,7 @@ communication between the hosts.
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for copying an
 installation of {productName} software, see the
-link:../reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)] help page.
+link:reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -1740,7 +1740,7 @@ host-list::
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for copying an
 installation of {productName} software, see the
-link:../reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)] help page.
+link:reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1822,8 +1822,8 @@ Command install-node-ssh executed successfully
 
 See Also
 
-* link:../reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)]
-* link:../reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)]
+* link:reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)]
+* link:reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1878,7 +1878,7 @@ communication between the hosts.
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for removing {productName} software, see the
-link:../reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)] help page.
+link:reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -1895,7 +1895,7 @@ host-list::
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for removing {productName} software, see the
-link:../reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)] help page.
+link:reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1940,8 +1940,8 @@ Command uninstall-node-ssh executed successfully.
 
 See Also
 
-* link:../reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)]
-* link:../reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)]
+* link:reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)]
+* link:reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

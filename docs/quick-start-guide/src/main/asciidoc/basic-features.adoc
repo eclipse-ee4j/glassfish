@@ -63,7 +63,7 @@ information about {productName} and other entities mentioned in this
 guide, see link:#ggkzh[For More Information].
 
 To review additional details about this release before you begin using
-the software, see the link:../release-notes/toc.html#GSRLN[{productName}
+the software, see the link:release-notes.html#GSRLN[{productName}
 Release Notes]. The Release Notes provide important information about
 the {productName} 7 release, including details about new features,
 information about known issues and possible workarounds, and tips for
@@ -172,7 +172,7 @@ When you install {productName}, a default domain named `domain1` is
 created. The following procedures describe how to start and stop
 `domain1` when it is the only domain. For information about starting and
 stopping a domain when there are multiple domains, see
-"link:../administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
 
 [[ggmpd]][[GSQSG00005]][[to-start-the-default-domain]]
 
@@ -404,10 +404,10 @@ The application displays a customized response, giving you a personal
 See Also
 
 For more information about the `deploy` subcommand, see
-link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)].
+link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)].
 
 For more information about deploying applications from the command line,
-see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application
+see the link:application-deployment-guide.html#GSDPG[{productName} Application
 Deployment Guide].
 
 [[ggnco]][[GSQSG00012]][[to-list-deployed-applications-from-the-command-line]]
@@ -448,7 +448,7 @@ as-install/bin/asadmin undeploy hello
 See Also
 
 For more information about the `undeploy` subcommand, see
-link:../reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
+link:reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
 
 [[gkpau]][[GSQSG00045]][[deploying-and-undeploying-applications-by-using-the-administration-console]]
 
@@ -679,10 +679,10 @@ that defines the host where the instance resides.
 
 For more information, see the following documentation:
 
-* "link:../ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
+* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
+* "link:ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
 
 [[gktpt]][[GSQSG00048]][[session-persistence-and-failover]]
@@ -695,7 +695,7 @@ state enables the session to continue without loss of information.
 {productName} supports in-memory session replication on other servers
 in the cluster for maintaining HTTP session and stateful session bean data.
 
-For more information, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
+For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 [[gksbz]][[GSQSG00049]][[load-balancing-for-clustered-configurations]]
@@ -720,10 +720,10 @@ on the needs of your enterprise. For complete information about
 configuring load balancing in {productName}, see the following
 documentation:
 
-* "link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[
+* "link:ha-administration-guide/http-load-balancing.html#GSHAG00009[
 Configuring HTTP Load Balancing]" in
 {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[
+* "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[
 RMI-IIOP Load Balancing and Failover]" in
 {productName} High Availability Administration Guide
 
@@ -747,7 +747,7 @@ The following resources are described here:
 Comprehensive product documentation is available and includes the
 following.
 
-* link:../release-notes/toc.html#GSRLN[{productName} Release Notes]:
+* link:release-notes.html#GSRLN[{productName} Release Notes]:
 Latest details about new features, known issues, and tips for installing
 and working with {productName} software.
 * https://glassfish.org/docs/[{productName}]

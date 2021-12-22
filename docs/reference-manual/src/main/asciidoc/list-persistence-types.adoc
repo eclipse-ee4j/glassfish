@@ -33,7 +33,7 @@ built-in persistence types are `memory`, `file`, and `replicated`. The
 `memory` type does not apply to SFSB instances.
 
 Other persistence types can be added using the `StrategyBuilder` class.
-For more information, see the link:../add-on-component-development-guide/toc.html#GSACG[{productName} Add-On Component Development Guide].
+For more information, see the link:add-on-component-development-guide.html#GSACG[{productName} Add-On Component Development Guide].
 
 To set the persistence type for HTTP sessions, use the `set` subcommand
 to set the `persistence-type` attribute. For example:
@@ -119,7 +119,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],
 link:set.html#set-1[`set`(1)]
 
-link:../add-on-component-development-guide/toc.html#GSACG[{productName} Add-On Component
+link:add-on-component-development-guide.html#GSACG[{productName} Add-On Component
 Development Guide]
 
 

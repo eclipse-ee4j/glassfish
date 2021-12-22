@@ -67,7 +67,7 @@ attribute-name::
 attribute-value::
   The value to apply to the specified attribute. +
   The attribute values that can be specified include the following.
-  Refer to "link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
+  Refer to "link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
   {productName} Administration Guide for complete
   explanations of each of these values.
 
@@ -152,6 +152,6 @@ link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
 link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
 link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
 
-"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
 
 

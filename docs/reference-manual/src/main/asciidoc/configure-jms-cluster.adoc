@@ -40,7 +40,7 @@ providing JMS services to a {productName} cluster.
 
 This subcommand should be used before the {productName} cluster is
 started for the first time. Otherwise, follow the instructions in
-"link:../administration-guide/jms.html#GSADG00020[Administering the Java Message Service (JMS)]" in
+"link:administration-guide/jms.html#GSADG00020[Administering the Java Message Service (JMS)]" in
 {productName} Administration Guide.
 
 This subcommand is supported in remote mode only. Remote `asadmin`
@@ -61,7 +61,7 @@ asadmin-options::
   `conventional` specifies a conventional cluster, and the value
   `enhanced` specifies an enhanced, high-availability cluster. For
   information about these cluster types of Message Queue clusters, see
-  "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker Clusters]"
+  "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker Clusters]"
   in Open Message Queue Technical Overview. +
   The default value is `conventional`. +
   If `enhanced` is specified, the `configstoretype` and
@@ -92,7 +92,7 @@ asadmin-options::
   * When `messagestoretype` is set to `jdbc`
 --
   For information about supported vendors and the formats of access urls
-  for each vendor, see "link:../../openmq/mq-admin-guide/persistence-services.html#GMADG00244[JDBC-Based Persistence]" in
+  for each vendor, see "link:../openmq/mq-admin-guide/persistence-services.html#GMADG00244[JDBC-Based Persistence]" in
   Open Message Queue Administration Guide.
 +
 [NOTE]

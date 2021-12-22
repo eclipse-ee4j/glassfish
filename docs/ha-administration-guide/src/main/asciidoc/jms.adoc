@@ -54,7 +54,7 @@ Cluster]
 ==== About Message Queue Broker Clusters
 
 The following discussion provides a brief overview of Message Queue
-broker clusters. For complete information, see "link:../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
+broker clusters. For complete information, see "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
 Clusters]" in Open Message Queue Technical Overview.
 
 Message Queue supports two clustering models both of which provide a
@@ -109,7 +109,7 @@ It is the responsibility of the messaging application (both producers
 and consumers) to respond to JMS exceptions appropriately.
 For information about the kinds of exceptions that can occur and how to
 respond to them,
-see "link:../../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover Occurs]"
+see "link:../openmq/mq-dev-guide-java/client-design-and-features.html#GMJVG00229[Handling Exceptions When Failover Occurs]"
 in Open Message Queue Developer's Guide for Java Clients.
 ====
 
@@ -200,7 +200,7 @@ Remote `asadmin` subcommands require a running server.
 
 2. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -251,7 +251,7 @@ Remote `asadmin` subcommands require a running server.
 2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
 3. Place a copy of, or a link to, the database's JDBC driver `.jar`
 file in the appropriate directory, depending on the JMS host type, on
@@ -261,7 +261,7 @@ each host where a {productName} cluster instance is to run:
 
 4. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -304,7 +304,7 @@ broker.
 Remote `asadmin` subcommands require a running server.
 
 2. Change the master broker by using the
-link:../reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`]
+link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`]
 subcommand:
 +
 [source]
@@ -325,7 +325,7 @@ typing `asadmin help change-master-broker` at the command line.
 
 If the need arises to convert from a conventional broker cluster with
 master broker to a conventional broker cluster of peer brokers, or the
-reverse, follow the instructions in "link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00563[Managing
+reverse, follow the instructions in "link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00563[Managing
 Conventional Clusters]" in Open Message Queue Administration Guide.
 
 [[gktfl]][[GSHAG00159]][[to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster]]
@@ -349,7 +349,7 @@ the cluster.
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate from a conventional broker
 cluster to an enhanced broker cluster, as described in
-"link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00565[Converting a Conventional Cluster to an Enhanced
+"link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00565[Converting a Conventional Cluster to an Enhanced
 Cluster]" in Open Message Queue Administration Guide. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
@@ -362,7 +362,7 @@ Remote `asadmin` subcommands require a running server.
 2. Create a password file with the entry `AS_ADMIN_JMSDBPASSWORD`
 specifying the password of the database user. +
 For information about password file entries, see the
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
 
 3. Place a copy of, or a link to, the database's JDBC driver `.jar`
 file in the as-install-parent``/mq/lib/ext`` directory on each host where
@@ -370,7 +370,7 @@ a {productName} cluster instance is to run.
 
 4. Configure the {productName} cluster to use a Message Queue
 enhanced broker cluster by using the
-link:../reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -406,7 +406,7 @@ for the cluster.
 The remote subcommands used in this procedure require a running server.
 
 2. Delete the `default_JMS_host` JMS host by using the
-link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcommand:
+link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcommand:
 +
 [source]
 ----
@@ -414,7 +414,7 @@ link:../reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subc
 ----
 
 3. Create a JMS host for each broker in the broker cluster by using the
-link:../reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`] subcommand. +
+link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`] subcommand. +
 For each broker, use an `asadmin create-jms-host` of the form:
 +
 [source]
@@ -426,7 +426,7 @@ jms-host-name-for-broker
 
 4. Start the brokers in the cluster by using the Message Queue
 `imqbrokerd` command, as described in
-"link:../../openmq/mq-admin-guide/broker-clusters.html#GMADG00254[Managing Broker Clusters]"
+"link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00254[Managing Broker Clusters]"
 in Open Message Queue Administration Guide.
 
 5. Create instances in the {productName} cluster, as described in
@@ -461,7 +461,7 @@ Behavior and Address List Iterations fields are ignored.
 
 For more information on connection failover, including how failover on
 conventional clusters differs from failover on enhanced clusters, see
-"link:../../openmq/mq-admin-guide/administered-objects.html#GMADG00087[Automatic Reconnection]" in Open Message Queue
+"link:../openmq/mq-admin-guide/administered-objects.html#GMADG00087[Automatic Reconnection]" in Open Message Queue
 Administration Guide.
 
 Reconnect::
@@ -518,7 +518,7 @@ Address List Iterations::
   is not used when performing reconnection.
 
 You can override these settings using JMS connection factory settings.
-For details, see "link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection
+For details, see "link:administration-guide/jms.html#GSADG00598[Administering JMS Connection
 Factories and Destinations]" in {productName}
 Administration Guide.
 
@@ -535,6 +535,6 @@ non-durable subscription on a topic, then only one MDB instance across
 the whole GlassFish cluster will receive each message.
 
 For more information about these features, see
-"link:../../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300[
+"link:../openmq/mq-admin-guide/jmsra-properties.html#GMADG00300[
 About Shared Topic Subscriptions for Clustered Containers]"
 in Open Message Queue Administration Guide.

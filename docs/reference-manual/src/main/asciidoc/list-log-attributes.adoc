@@ -114,6 +114,6 @@ link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
 link:set-log-attributes.html#set-log-attributes-1[`set-log-attributes`(1)],
 link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
 
-"link:../administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
 
 

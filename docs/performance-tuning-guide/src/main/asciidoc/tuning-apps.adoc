@@ -285,7 +285,7 @@ the server `CLASSPATH`. Put application-related classes into JAR files.
 the HTTP server is tuned in general. For more information, see
 link:tuning-glassfish.html#abeet[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
-"link:../application-development-guide/webapps.html#GSDVG00009[Developing Web Applications]" in {productName} Application Development Guide.
+"link:application-development-guide/webapps.html#GSDVG00009[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
 application as a WAR file, not an EAR file.
 
@@ -327,7 +327,7 @@ with the `server.policy` file. If you are sure that no malicious code
 will be run on the server and you do not use authentication within your
 application, then you can disable the security manager.
 
-See "link:../application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security Manager]" in
+See "link:application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security Manager]" in
 {productName} Application Development Guide for
 instructions on enabling or disabling the security manager. If using the
 {productName} Administration Console, navigate to the
@@ -517,10 +517,10 @@ asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 ----
 
 For more information about administering the monitoring service in
-general, see "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+general, see "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
 {productName} Administration Guide. For
 information about viewing comprehensive EJB monitoring statistics, see
-"link:../administration-guide/monitoring.html#GSADG00651[EJB Statistics]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#GSADG00651[EJB Statistics]" in {productName} Administration Guide.
 
 To configure EJB monitoring using the {productName} Administration
 Console, navigate to the Configurations>configuration-name>Monitoring
@@ -530,7 +530,7 @@ Monitor tab. Refer to the Administration Console online help for
 instructions on each of these procedures.
 
 Alternatively, to list EJB statistics, use the `asadmin list`
-subcommand. For more information, see link:../reference-manual/list.html#GSRFM00145[`list`(1)].
+subcommand. For more information, see link:reference-manual/list.html#GSRFM00145[`list`(1)].
 
 For statistics on stateful session bean passivations, use this command:
 
@@ -574,7 +574,7 @@ read-only
 6. BMP beans
 
 For more information about configuring high availability session
-persistence, see "link:../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide. To configure EJB beans using the
 {productName} Administration Console, navigate to the
@@ -611,7 +611,7 @@ option, which can speed up deployment.
 If you have a legacy rich-client application that directly uses the
 CosNaming service (not a recommended configuration), then you must
 generate the stubs for your application explicitly using RMIC. For more
-information, see the link:../troubleshooting-guide/toc.html#GSTSG[{productName}
+information, see the link:troubleshooting-guide.html#GSTSG[{productName}
 Troubleshooting Guide] for more details.
 
 [[abece]][[GSPTG00090]][[remove-unneeded-stateful-session-beans]]
@@ -713,7 +713,7 @@ or a single EJB component. When specified at the application level, all
 beans in the application use pass-by-reference semantics when passing
 arguments to their remote interfaces. When specified at the bean level,
 all calls to the remote interface of the bean use pass-by-reference
-semantics. See "link:../application-development-guide/ejb.html#GSDVG00145[Value Added Features]" in {productName} Application Development Guide for more
+semantics. See "link:application-development-guide/ejb.html#GSDVG00145[Value Added Features]" in {productName} Application Development Guide for more
 details about the pass-by-reference flag.
 
 To specify that an EJB component will use pass by reference semantics,
@@ -976,7 +976,7 @@ Using the {productName} Administration Console, navigate to the
 Configurations>configuration-name>Thread Pools node.
 Refer to the Administration Console online help for more information.
 Alternatively, you can follow the instructions in
-"link:../administration-guide/threadpools.html#GSADG00008[
+"link:administration-guide/threadpools.html#GSADG00008[
 Administering Thread Pools]" in {productName} Administration Guide.
 +
 Configure the threadpools as follows:
@@ -1032,7 +1032,7 @@ This section provides tips for tuning various specific types of EJB components:
 These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
-following the instructions in "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[
+following the instructions in "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[
 RMI-IIOP Load Balancing and Failover]"
 in {productName} High Availability Administration Guide.
 
@@ -1321,7 +1321,7 @@ carefully analyzing the database table usage patterns.
 To set the database transaction isolation level using the {productName} Administration Console, navigate to the Resources>JDBC>JDBC
 Connection Pools>pool-name node. Refer to the Administration Console
 online help for complete instructions. Alternatively, follow the
-instructions in "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]"
+instructions in "link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]"
 in {productName} Administration Guide. For more
 information on tuning JDBC connection pools, see
 link:tuning-glassfish.html#abehq[JDBC Connection Pool Settings].

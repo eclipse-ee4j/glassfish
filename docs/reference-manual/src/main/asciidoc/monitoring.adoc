@@ -68,6 +68,6 @@ link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
-"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

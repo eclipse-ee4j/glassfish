@@ -35,7 +35,7 @@ applications, Web modules, and enterprise bean modules).
 If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
-application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application
+application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
 Versions]" in {productName} Application
 Deployment Guide.
 
@@ -109,7 +109,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
 link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

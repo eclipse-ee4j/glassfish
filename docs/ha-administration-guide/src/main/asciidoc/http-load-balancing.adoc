@@ -111,7 +111,7 @@ JkMount /examples/* worker1
 3. Start Apache HTTP Server.
 
 4. Create a jk-enabled network listener by using the
-link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
+link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
 +
 [source]
 ----

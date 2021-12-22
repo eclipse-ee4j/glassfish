@@ -119,10 +119,10 @@ beans. For a detailed description, see the Enterprise JavaBeans
 Specification, v2.1.
 * `glassfish-ejb-jar.xml` - The {productName} standard file for
 assembling enterprise beans. For a detailed description, see
-"link:../application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File]" in {productName} Application Deployment Guide.
 * `sun-cmp-mappings.xml` - The mapping deployment descriptor file, which
 describes the mapping of CMP beans to tables in a database. For a
-detailed description, see "link:../application-deployment-guide/dd-files.html#GSDPG00080[The sun-cmp-mappings.xml
+detailed description, see "link:application-deployment-guide/dd-files.html#GSDPG00080[The sun-cmp-mappings.xml
 File]" in {productName} Application Deployment
 Guide.
 
@@ -237,7 +237,7 @@ A managed field can have any `fetched-with` subelement. If the
 `fetched-with` subelement is `<default/>`, the
 `-DAllowManagedFieldsInDefaultFetchGroup` flag must be set to `true`.
 See link:#gemln[Default Fetch Group Flags] and
-"link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName}
+"link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName}
 Application Deployment Guide.
 
 [[beajt]][[GSDVG00307]][[blob-support]]
@@ -264,9 +264,9 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default BLOB column
@@ -305,9 +305,9 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default CLOB column
@@ -430,9 +430,9 @@ type (or a collection of such) can be the type of a CMR field.
 The following table contains the mappings of JDBC types to database
 vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the {productName}, see the
-link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For
+link:release-notes.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 [[GSDVG551]][[sthref20]][[fvymp]]
@@ -512,7 +512,7 @@ link:#beakj[Version Column Consistency Checking].
 The following optional data subelements of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file control the automatic creation of
 database tables at deployment. For more information about the
-`cmp-resource` element, see "link:../application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
+`cmp-resource` element, see "link:application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
 {productName} Application Deployment Guide and
 link:#beakb[Configuring the CMP Resource].
 
@@ -524,17 +524,17 @@ Table 9-3 The `glassfish-ejb-jar.xml` Generation Elements
 [width="172%",cols="20%,46%,34%",options="header",]
 |===
 |Element |Default |Description
-|link:../application-deployment-guide/dd-elements.html#GSDPG00131[`create-tables-at-deploy`] |`false` |If `true`, causes
+|link:application-deployment-guide/dd-elements.html#GSDPG00131[`create-tables-at-deploy`] |`false` |If `true`, causes
 database tables to be created for beans that are automatically mapped by
 the EJB container. No unique constraints are created. If `false`, does
 not create tables.
 
-|link:../application-deployment-guide/dd-elements.html#GSDPG00141[`drop-tables-at-undeploy`] |`false` |If `true`, causes
+|link:application-deployment-guide/dd-elements.html#GSDPG00141[`drop-tables-at-undeploy`] |`false` |If `true`, causes
 database tables that were automatically created when the bean(s) were
 last deployed to be dropped when the bean(s) are undeployed. If `false`,
 does not drop tables.
 
-|link:../application-deployment-guide/dd-elements.html#GSDPG00133[`database-vendor-name`] |none a|
+|link:application-deployment-guide/dd-elements.html#GSDPG00133[`database-vendor-name`] |none a|
 Specifies the name of the database vendor for which tables are created.
 Allowed values are `javadb`, `db2`, `mssql`, `mysql`, `oracle`,
 `postgresql`, `pointbase`, `derby` (also for CloudScape), and `sybase`,
@@ -546,7 +546,7 @@ by the `jndi-name` subelement of the `cmp-resource` element in the
 the connection cannot be established, or if the value is not recognized,
 SQL-92 compliance is presumed.
 
-|link:../application-deployment-guide/dd-elements.html#GSDPG00261[`schema-generator-properties`] |none a|
+|link:application-deployment-guide/dd-elements.html#GSDPG00261[`schema-generator-properties`] |none a|
 Specifies field-specific column attributes in `property` subelements.
 Each property name is of the following format:
 
@@ -561,7 +561,7 @@ this property specifies that generated table names are unique within
 each {productName} domain. The default is `false`.
 
 For further information and an example, see
-"link:../application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in {productName} Application Deployment Guide.
 
 |===
 
@@ -649,7 +649,7 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
@@ -689,7 +689,7 @@ Resource].
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about
@@ -721,16 +721,16 @@ An EJB module that contains CMP beans requires the JNDI name of a JDBC
 resource in the `jndi-name` subelement of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file. Set `PersistenceManagerFactory`
 properties as properties of the `cmp-resource` element in the
-`glassfish-ejb-jar.xml` file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
+`glassfish-ejb-jar.xml` file. See "link:application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
 {productName} Application Deployment Guide.
 
 In the Administration Console, open the Resources component, then select
 JDBC. Click the Help button in the Administration Console for
 information on creating a new JDBC resource.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:../release-notes/toc.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For example, if the JDBC resource has the JNDI name `jdbc/MyDatabase`,
@@ -788,7 +788,7 @@ specified row.
 4. Specify the version column. +
 This is specified in the `check-version-of-accessed-instances`
 subelement of the `consistency` element in the `sun-cmp-mappings.xml`
-file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
+file. See "link:application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
 5. Map the CMP bean to an existing schema.
 +
 Automatic schema generation is not supported for beans with version
@@ -811,11 +811,11 @@ file. By default, these CMR fields are prefetched whenever
 `findByPrimaryKey` or a custom finder is executed for the entity, or
 when the entity is navigated to from a relationship. (Recursive
 prefetching is not supported, because it does not usually enhance
-performance.) See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
+performance.) See "link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:../application-deployment-guide/dd-elements.html#GSDPG00226[prefetch-disabled]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#GSDPG00226[prefetch-disabled]" in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following
@@ -881,7 +881,7 @@ is loaded into memory. These could be multiple fields mapped to the same
 column in the database table, for example, an instance field and a CMR.
 By default this flag is set to `false`.
 
-For additional information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00181[level]" in {productName} Application Deployment Guide.
+For additional information, see "link:application-deployment-guide/dd-elements.html#GSDPG00181[level]" in {productName} Application Deployment Guide.
 
 Setting `-DAllowMediatedWriteInDefaultFetchGroup` specifies how updated
 CMP fields are written back to the database. If the flag is `false`, all
@@ -1215,7 +1215,7 @@ optimal for entity objects with large state if most business methods
 require access to only parts of the state.
 
 Use the `fetched-with` element in `sun-cmp-mappings.xml` for fields that
-are used infrequently. See "link:../application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
+are used infrequently. See "link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
 
 [[beako]][[GSDVG00452]][[restrictions-on-remote-interfaces]]
 
@@ -1262,7 +1262,7 @@ implemented by placing update locks on the data corresponding to a bean
 when the data is loaded from the database. There is no suitable
 mechanism available on Sybase databases to implement this feature.
 Therefore, the `lock-when-loaded` consistency level is not supported on
-Sybase databases. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
+Sybase databases. See "link:application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
 
 [[beakp]][[GSDVG00455]][[sybase-finder-limitation]]
 

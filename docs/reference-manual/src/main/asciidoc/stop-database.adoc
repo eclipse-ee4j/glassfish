@@ -103,6 +103,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:start-database.html#start-database-1[`start-database`(1)]
 
-"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
+"link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
 
 

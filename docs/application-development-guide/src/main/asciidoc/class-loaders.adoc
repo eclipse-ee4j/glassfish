@@ -122,7 +122,7 @@ The `classpath-prefix` was typically used to substitute another package
 for one of the {productName} packages, for example if a newer one was
 available. This same result can be achieved on a per-application basis with the
 `--libraries` option for the `deploy` subcommand. For more information,
-see the link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] help page.
+see the link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] help page.
 The Java Optional Package Mechanism does what `classpath-suffix` used to do. For more
 information, see link:#beadk[Using the Java Optional Package Mechanism].
 
@@ -145,13 +145,13 @@ You can make this class loader follow the delegation inversion model in
 the Servlet specification by setting `delegate="false"` in the
 `class-loader` element of the `glassfish-web.xml` file. It is safe to do
 this only for a web module that does not interact with any other
-modules. For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00110[class-loader]" in {productName} Application Deployment Guide.
+modules. For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00110[class-loader]" in {productName} Application Deployment Guide.
 
 The default value is `delegate="true"`, which causes a web module's
 class loader to delegate in the same manner as the other class loaders.
 You must use `delegate="true"` for a web application that accesses EJB
 components or that acts as a web service client or endpoint. For details
-about `glassfish-web.xml`, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
+about `glassfish-web.xml`, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
 
 For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
@@ -241,9 +241,9 @@ button. Type the comma-separated paths in the Libraries field. For
 details, click the Help button in the Administration Console.
 * Use the `asadmin deploy` command with the `--libraries` option and
 specify comma-separated paths. For details, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 * Use the `asadmin add-library` command with the `--type app` option,
-then restart the server. For details, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+then restart the server. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
@@ -286,7 +286,7 @@ link:#beadh[Circumventing Class Loader Isolation].
 One library cannot reference classes from another library.
 
 For general information about deployment, including dynamic reloading,
-see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application
+see the link:application-deployment-guide.html#GSDPG[{productName} Application
 Deployment Guide].
 
 
@@ -337,9 +337,9 @@ link:java-clients.html#gjpjt[Using Libraries with Application Clients].
 For example, using the Common class loader is the recommended way of
 adding JDBC drivers to the {productName}. For a list of the JDBC
 drivers currently supported by the {productName}, see the
-link:../release-notes/toc.html#GSRLN[{productName} Release Notes]. For
+link:release-notes.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:../administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 To activate custom login modules and realms, place the JAR files in the

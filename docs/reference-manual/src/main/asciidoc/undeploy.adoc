@@ -85,7 +85,7 @@ name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:../application-deployment-guide/overview.html#GSDPG00324[
+  application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
   Module and Application Versions]" in {productName} Application
   Deployment Guide.
 
@@ -151,7 +151,7 @@ link:deploy.html#deploy-1[`deploy`(1)],
 link:list-components.html#list-components-1[`list-components`(1)],
 link:redeploy.html#redeploy-1[`redeploy`(1)]
 
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]
 
 

@@ -21,7 +21,7 @@ while new users transparently get the new version of the application.
 With a rolling upgrade, users are unaware that the upgrade occurs.
 
 For more information about application versions and how they are
-identified, see "link:../application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+identified, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
 {productName} Application Deployment Guide.
 
 In a clustered environment, a rolling upgrade redeploys an application

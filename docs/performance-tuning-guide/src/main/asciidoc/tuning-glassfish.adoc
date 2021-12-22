@@ -101,7 +101,7 @@ performance impact.
 To enable or disable auto-deployment from the {productName}
 Administration Console, navigate to the Domain node and then click the
 Applications Configuration tab. Refer to the Administration Console for
-further instructions. Alternatively, refer to "link:../application-deployment-guide/deploying-applications.html#GSDPG00041[To
+further instructions. Alternatively, refer to "link:application-deployment-guide/deploying-applications.html#GSDPG00041[To
 Deploy an Application or Module Automatically]" in {productName} Application Deployment Guide for instructions on enabling
 or disabling auto-deployment.
 
@@ -164,7 +164,7 @@ performance.
 Set the log level for the server and its subsystems in the {productName} Administration Console. Navigate to the
 Configurations>configuration-name>Logger Settings page, and follow the
 instructions in the online help. Alternatively, you can configure
-logging by following the instructions in "link:../administration-guide/logging.html#GSADG00010[Administering
+logging by following the instructions in "link:administration-guide/logging.html#GSADG00010[Administering
 the Logging Service]" in {productName}
 Administration Guide.
 
@@ -176,7 +176,7 @@ Set Web container settings in the {productName} Administration
 Console by navigating to the Configurations>configuration-name>Web
 Container node. Follow the instructions in the online help for more
 information. Alternatively, you can configure Web container settings by
-following the instructions in "link:../administration-guide/webapps.html#GSADG00009[Administering Web
+following the instructions in "link:administration-guide/webapps.html#GSADG00009[Administering Web
 Applications]" in {productName} Administration
 Guide.
 
@@ -579,7 +579,7 @@ The Type attribute that determines whether the Java Message Service
 performance is better than remote JMS performance. However, a remote
 cluster can provide failover capabilities and can be administrated
 together, so there may be other advantages of using remote JMS. For more
-information on using JMS, see "link:../administration-guide/jms.html#GSADG00020[Administering the Java
+information on using JMS, see "link:administration-guide/jms.html#GSADG00020[Administering the Java
 Message Service (JMS)]" in {productName}
 Administration Guide.
 
@@ -645,7 +645,7 @@ Most Transaction Service tuning tasks can be performed through the
 {productName} Administration Console by navigating to the
 Configurations>configuration-name>Transaction Service node and then
 following the instructions in the online help. Alternatively, you can
-follow the instructions in "link:../administration-guide/transactions.html#GSADG00022[Administering
+follow the instructions in "link:administration-guide/transactions.html#GSADG00022[Administering
 Transactions]" in {productName} Administration
 Guide.
 
@@ -731,7 +731,7 @@ Disabling the collection of monitoring statistics can increase overall
 statistics collection for the HTTP service using either the
 Administration Console or `asadmin` subcommands.
 
-Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
 {productName} Administration Guide for complete
 instructions on configuring the monitoring service using `asadmin`
 subcommands.
@@ -743,7 +743,7 @@ components. Refer to the Administration Console online help for complete
 instructions.
 
 For instructions on viewing comprehensive monitoring statistics using
-`asadmin` subcommands, see "link:../administration-guide/monitoring.html#GSADG00560[Viewing Comprehensive
+`asadmin` subcommands, see "link:administration-guide/monitoring.html#GSADG00560[Viewing Comprehensive
 Monitoring Data]" in {productName} Administration
 Guide. If using the Administration Console, you can view monitoring
 statistics by navigating to the server (Admin Server) node, and then
@@ -937,7 +937,7 @@ request.
 ==== HTTP Service Access Logging
 
 Accessing Logging can be tuned using several `asadmin` subcommands.
-Refer to "link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information about using these subcommands.
 
@@ -958,7 +958,7 @@ Rotation to ensure that the logs do not run out of disk space.
 === Network Listener Settings
 
 You can tune Network Listener settings from the command line by using
-the instructions in "link:../administration-guide/http_https.html#GSADG00588[Administering HTTP Network
+the instructions in "link:administration-guide/http_https.html#GSADG00588[Administering HTTP Network
 Listeners]" in {productName} Administration
 Guide.
 
@@ -1146,7 +1146,7 @@ connections and put them onto a connection queue. Session threads then
 pick up connections from the queue and service the requests. The server
 posts more session threads if required at the end of the request.
 
-See "link:../administration-guide/http_https.html#GSADG00771[Administering HTTP Network Listeners]" in
+See "link:administration-guide/http_https.html#GSADG00771[Administering HTTP Network Listeners]" in
 {productName} Administration Guide for
 instructions on modifying the Acceptor Threads property. If using the
 Administration Console, the Acceptor Threads property is available on
@@ -1158,7 +1158,7 @@ page.
 === Thread Pool Settings
 
 You can tune thread pool settings by following the instructions in
-"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration Console
+"link:administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration Console
 Thread Pool settings are available on the
 Configurations>configuration-name>Thread Pools>thread-pool-name page.
 
@@ -1226,9 +1226,9 @@ Object Request Broker (ORB). The ORB is the foundation of the EJB
 Container on the server.
 
 For complete instructions on configuring ORB settings, refer to
-"link:../administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
+"link:administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
 {productName} Administration Guide. Also refer to
-"link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
+"link:ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
 can also configure most ORB settings through the {productName}
 Administration Console by navigating to the
 Configurations>configuration-name> ORB node and then following the
@@ -1367,7 +1367,7 @@ The following topics are addressed here:
 ===== Tunable ORB Parameters
 
 You can tune ORB parameters using the instructions in
-"link:../administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
+"link:administration-guide/orb.html#GSADG00018[Administering the Object Request Broker (ORB)]" in
 {productName} Administration Guide. If using the
 Administration Console, navigate to the
 Configurations>configuration-name>ORB node and refer to the online help.
@@ -1419,7 +1419,7 @@ set the size of the threadpool to facilitate cleaning up the EJB pools
 and caches.
 
 You can set ORB thread pool attributes using the instructions in
-"link:../administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration
+"link:administration-guide/threadpools.html#GSADG00008[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration
 Console, navigate to Configurations>configuration-name> Thread
 Pools>thread-pool-name, where thread-pool-name is the thread pool ID
 selected for the ORB. Thread pools have the following attributes that
@@ -1517,10 +1517,10 @@ Command set executed successfully.
 Load Balancing
 
 For information on how to configure HTTP load balancing, see
-"link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 For information on how to configure RMI/IIOP for multiple application
-server instances in a cluster, "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing
+server instances in a cluster, "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing
 and Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -1639,7 +1639,7 @@ maintained by the JDBC Connection Pool. More than one JDBC Resource is
 allowed to refer to the same JDBC Connection Pool. In such a case, the
 physical connection pool is shared by all the resources.
 
-Refer to "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
+Refer to "link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
 {productName} Administration Guide for more
 information about managing JDBC connection pools.
 
@@ -1654,7 +1654,7 @@ The following topics are addressed here:
 
 Statistics-gathering is disabled by default for JDBC Connection Pools.
 Refer to for instructions on enabling JDBC monitoring in
-"link:../administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide. If using the
+"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide. If using the
 Administration Console, JDBC monitoring can be enabled on the
 Configurations>configuration-name>Monitoring page.
 
@@ -1685,7 +1685,7 @@ instructions.
 
 ===== Tuning JDBC Connection Pools
 
-Refer to "link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
+Refer to "link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in
 {productName} Administration Guide for
 instructions on configuring JDBC connection pools. If using the
 {productName} Administration Console by navigating to the
@@ -1900,5 +1900,5 @@ Performance Tuning Guide. For complete information about configuring
 load balancing in {productName}, refer to the following
 documentation:
 
-* "link:../ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
-* "link:../ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide

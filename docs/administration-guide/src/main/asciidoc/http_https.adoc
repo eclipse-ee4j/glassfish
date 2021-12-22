@@ -37,7 +37,7 @@ either in a single application server instance or in a cluster of
 multiple server instances. HTTP services are provided by two kinds of
 related objects: listeners and virtual servers.
 
-For more information about clusters, see the link:../ha-administration-guide/toc.html#GSHAG[{productName} High Availability Administration Guide].
+For more information about clusters, see the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide].
 
 The following topics are addressed here:
 
@@ -182,22 +182,22 @@ link:#gjimx[To Create an HTTP Network Listener].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an HTTP or HTTPS protocol by using the
-link:../reference-manual/create-protocol.html#GSRFM00051[`create-protocol`] subcommand with the
+link:reference-manual/create-protocol.html#GSRFM00051[`create-protocol`] subcommand with the
 `--securityenabled` option.
 To use the built-in `http-listener-1` HTTP protocol,
 or `http-listener-2` HTTPS protocol, skip this step.
 3. Create an HTTP configuration by using the
-link:../reference-manual/create-http.html#GSRFM00025[`create-http`] subcommand.
+link:reference-manual/create-http.html#GSRFM00025[`create-http`] subcommand.
 To use a built-in protocol, skip this step.
-4. Create a transport by using the link:../reference-manual/create-transport.html#GSRFM00061[`create-transport`]
+4. Create a transport by using the link:reference-manual/create-transport.html#GSRFM00061[`create-transport`]
 subcommand. To use the built-in `tcp` transport, skip this step.
 5. Create a thread pool by using the
-link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] subcommand.
+link:reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] subcommand.
 To avoid using a thread pool, or to use the built-in `http-thread-pool`
 thread pool, skip this step.
 For additional thread pool information, see link:threadpools.html#abluc[Administering Thread Pools].
 6. Create an HTTP listener by using the
-link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
+link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
 Specify a protocol and transport, optionally a thread pool.
 7. To apply your changes, restart {productName}. See link:domains.html#ginqj[To Restart a Domain].
 
@@ -232,7 +232,7 @@ Use the `create-protocol` subcommand in remote mode to create a
 protocol.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Create a protocol by using the link:../reference-manual/create-protocol.html#GSRFM00051[`create-protocol`]
+2. Create a protocol by using the link:reference-manual/create-protocol.html#GSRFM00051[`create-protocol`]
 +
 Information about options and properties for the subcommand are included
 in this help page.
@@ -264,7 +264,7 @@ HTTP protocols.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing protocols by using the
-link:../reference-manual/list-protocols.html#GSRFM00195[`list-protocols`] subcommand.
+link:reference-manual/list-protocols.html#GSRFM00195[`list-protocols`] subcommand.
 
 [[GSADG00246]][[gjhqg]]
 Example 13-2 Listing the Protocols
@@ -296,7 +296,7 @@ Use the `delete-protocol` subcommand in remote mode to remove a
 protocol.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Delete a protocol by using the link:../reference-manual/delete-protocol.html#GSRFM00103[`delete-protocol`]
+2. Delete a protocol by using the link:reference-manual/delete-protocol.html#GSRFM00103[`delete-protocol`]
 subcommand
 
 [[GSADG00247]][[gjhop]]
@@ -341,7 +341,7 @@ network listeners,
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an HTTP configuration by using the
-link:../reference-manual/create-http.html#GSRFM00025[`create-http`] subcommand.
+link:reference-manual/create-http.html#GSRFM00025[`create-http`] subcommand.
 Information about options and properties for the subcommand are included
 in this help page.
 
@@ -373,7 +373,7 @@ parameters from a protocol.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Delete the HTTP parameters from a protocol by using the
-link:../reference-manual/delete-http.html#GSRFM00077[`delete-http`] subcommand.
+link:reference-manual/delete-http.html#GSRFM00077[`delete-http`] subcommand.
 
 [[GSADG00249]][[gjhov]]
 Example 13-5 Deleting an HTTP Configuration
@@ -416,7 +416,7 @@ Use the `create-transport` subcommand in remote mode to create a
 transport for a network listener,
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Create a transport by using the link:../reference-manual/create-transport.html#GSRFM00061[`create-transport`]
+2. Create a transport by using the link:reference-manual/create-transport.html#GSRFM00061[`create-transport`]
 subcommand.
 Information about options and properties for the subcommand are included in this help page.
 
@@ -448,7 +448,7 @@ HTTP transports.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing transports by using the
-link:../reference-manual/list-transports.html#GSRFM00206[`list-transports`] subcommand.
+link:reference-manual/list-transports.html#GSRFM00206[`list-transports`] subcommand.
 
 [[GSADG00251]][[gjhqj]]
 Example 13-7 Listing HTTP Transports
@@ -478,7 +478,7 @@ Use the `delete-transport` subcommand in remote mode to remove a
 transport.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Delete a transport by using the link:../reference-manual/delete-transport.html#GSRFM00112[`delete-transport`]
+2. Delete a transport by using the link:reference-manual/delete-transport.html#GSRFM00112[`delete-transport`]
 subcommand.
 
 [[GSADG00252]][[gjhoh]]
@@ -532,8 +532,8 @@ Connection].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an HTTP network listener by using the
-link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand or the
-link:../reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand.
+link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand or the
+link:reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand.
 3. If needed, restart the server.
 +
 If you edit the special HTTP network listener named `admin-listener`,
@@ -586,8 +586,8 @@ subcommand in remote mode to list the existing HTTP listeners.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List HTTP listeners by using the
-link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] or
-link:../reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`] subcommand.
+link:reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] or
+link:reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`] subcommand.
 
 [[GSADG00255]][[ggpgw]]
 Example 13-11 Listing HTTP Listeners
@@ -617,10 +617,10 @@ typing `asadmin help list-http-listeners` or
 ===== To Update an HTTP Network Listener
 
 1. List HTTP listeners by using the
-link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] or
-link:../reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`] subcommand.
+link:reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] or
+link:reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`] subcommand.
 2. Modify the values for the specified listener by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The listener is identified by its dotted name.
 
@@ -646,10 +646,10 @@ listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List HTTP listeners by using the
-link:../reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] subcommand.
+link:reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`] subcommand.
 3. Delete an HTTP listener by using the
-link:../reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener`] or
-link:../reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`] subcommand.
+link:reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener`] or
+link:reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`] subcommand.
 4. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
@@ -683,7 +683,7 @@ communication for the listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Configure an HTTP listener by using the
-link:../reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand.
+link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand.
 3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
@@ -751,7 +751,7 @@ listener.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Delete SSL from an HTTP listener by using the
-link:../reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`] subcommand.
+link:reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`] subcommand.
 3. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
@@ -816,7 +816,7 @@ web application and don't specify any assigned virtual servers, the web
 application is assigned to all currently defined virtual servers. If you
 then create additional virtual servers and want to assign existing web
 applications to them, you must redeploy the web applications. For more
-information about deployment, see the link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment Guide].
+information about deployment, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
 
 You can define virtual server properties using the `asadmin set`
 command. For example:
@@ -827,7 +827,7 @@ asadmin> set server-config.http-service.virtual-server.MyVS.property.sso-enabled
 ----
 
 Some virtual server properties can be set for a specific web
-application. For details, see "link:../application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
+application. For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
 The following topics are addressed here:
@@ -876,7 +876,7 @@ creating a new virtual server.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a virtual server by using the
-link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] subcommand.
+link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] subcommand.
 +
 Information about properties for this subcommand is included in this
 help page.
@@ -912,7 +912,7 @@ existing virtual servers.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List virtual servers by using the
-link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
+link:reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
 
 [[GSADG00261]][[ggpgr]]
 Example 13-17 Listing Virtual Servers
@@ -941,9 +941,9 @@ typing `asadmin help list-virutal-servers` at the command line.
 ==== To Update a Virtual Server
 
 1. List virtual servers by using the
-link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
+link:reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
 2. Modify the values for the specified virtual server by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The virtual server is identified by its dotted name.
 
@@ -956,10 +956,10 @@ existing virtual server.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List virtual servers by using the
-link:../reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
+link:reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`] subcommand.
 3. If necessary, notify users that the virtual server is being deleted.
 4. Delete a virtual server by using the
-link:../reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`] subcommand.
+link:reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`] subcommand.
 5. To apply your changes, restart {productName}.
 +
 See link:domains.html#ginqj[To Restart a Domain].
@@ -1021,7 +1021,7 @@ You can assign a virtual server to a deployed application or web module.
 Before You Begin
 
 The application or module must already be deployed. For more
-information, see the link:../application-deployment-guide/toc.html#GSDPG[{productName}
+information, see the link:application-deployment-guide.html#GSDPG[{productName}
 Application Deployment Guide].
 
 1. In the Administration Console, open the HTTP Service component under
@@ -1044,7 +1044,7 @@ attributes to set the `HttpOnly` and `Secure` attributes of any
 `JSESSIONIDSSO` cookies associated with web applications deployed to the
 virtual server.
 
-Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to set the value of the
+Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to set the value of the
 `sso-cookie-http-only` and `sso-cookie-secure` virtual server
 attributes.
 

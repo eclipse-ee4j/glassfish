@@ -59,93 +59,93 @@ the books in the order in which they are listed in the following table.
 [width="100%",cols="<30%,<70%",options="header",]
 |===
 |Book Title |Description
-|link:../release-notes/toc.html#GSRLN[Release Notes] |Provides late-breaking information about
+|link:release-notes.html#GSRLN[Release Notes] |Provides late-breaking information about
 the software and the documentation and includes a comprehensive,
 table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
-|link:../quick-start-guide/toc.html#GSQSG[Quick Start Guide]
+|link:quick-start-guide.html#GSQSG[Quick Start Guide]
 |Explains how to get started with the {productName} product.
 
-|link:../installation-guide/toc.html#GSING[Installation Guide]
+|link:installation-guide.html#GSING[Installation Guide]
 |Explains how to install the software and its components.
 
-|link:../upgrade-guide/toc.html#GSUPG[Upgrade Guide]
+|link:upgrade-guide.html#GSUPG[Upgrade Guide]
 |Explains how to upgrade to the latest version of {productName}.
 This guide also describes differences between adjacent product releases and configuration
 options that can result in incompatibility with the product specifications.
 
-|link:../deployment-planning-guide/toc.html#GSPLG[Deployment Planning Guide]
+|link:deployment-planning-guide.html#GSPLG[Deployment Planning Guide]
 |Explains how to build a production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
-|link:../administration-guide/toc.html#GSADG[Administration Guide]
+|link:administration-guide.html#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
+from the command line by using the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
-|link:../security-guide/toc.html#GSSCG[Security Guide]
+|link:security-guide.html#GSSCG[Security Guide]
 |Provides instructions for configuring and administering {productName} security.
 
-|link:../application-deployment-guide/toc.html#GSDPG[Application Deployment Guide]
+|link:application-deployment-guide.html#GSDPG[Application Deployment Guide]
 |Explains how to assemble and deploy applications to the {productName} and provides information
 about deployment descriptors.
 
-|link:../application-development-guide/toc.html#GSDVG[Application Development Guide]
+|link:application-development-guide.html#GSDVG[Application Development Guide]
 |Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the {productName}.
 These applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs).
 This guide provides information about developer tools, security, and debugging.
 
-|link:../add-on-component-development-guide/toc.html#GSACG[Add-On Component Development Guide]
+|link:add-on-component-development-guide.html#GSACG[Add-On Component Development Guide]
 |Explains how to use published interfaces of {productName} to develop add-on components
 for {productName}.
 This document explains how to perform only those tasks that ensure that the add-on component
 is suitable for {productName}.
 
-|link:../embedded-server-guide/toc.html#GSESG[Embedded Server Guide]
+|link:embedded-server-guide.html#GSESG[Embedded Server Guide]
 |Explains how to run applications in embedded {productName} and to develop applications
 in which {productName} is embedded.
 
-|link:../ha-administration-guide/toc.html#GSHAG[High Availability Administration Guide]
+|link:ha-administration-guide.html#GSHAG[High Availability Administration Guide]
 |Explains how to configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
-|link:../performance-tuning-guide/toc.html#GSPTG[Performance Tuning Guide]
+|link:performance-tuning-guide.html#GSPTG[Performance Tuning Guide]
 |Explains how to optimize the performance of {productName}.
 
-|link:../troubleshooting-guide/toc.html#GSTSG[Troubleshooting Guide]
+|link:troubleshooting-guide.html#GSTSG[Troubleshooting Guide]
 |Describes common problems that you might encounter when using {productName} and explains how to solve them.
 
-|link:../error-messages-reference/toc.html#GSEMR[Error Message Reference]
+|link:error-messages-reference.html#GSEMR[Error Message Reference]
 |Describes error messages that you might encounter when using {productName}.
 
-|link:../reference-manual/toc.html#GSRFM[Reference Manual]
+|link:reference-manual.html#GSRFM[Reference Manual]
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 
-|link:../../openmq/mq-release-notes/toc.html#GMRLN[Message Queue Release Notes]
+|link:../openmq/mq-release-notes.html#GMRLN[Message Queue Release Notes]
 |Describes new features, compatibility issues, and existing bugs for Open Message Queue.
 
-|link:../../openmq/mq-tech-over/toc.html#GMTOV[Message Queue Technical Overview]
+|link:../openmq/mq-tech-over.html#GMTOV[Message Queue Technical Overview]
 |Provides an introduction to the technology, concepts, architecture, capabilities, and features of
 the Message Queue messaging service.
 
-|link:../../openmq/mq-admin-guide/toc.html#GMADG[Message Queue Administration Guide]
+|link:../openmq/mq-admin-guide.html#GMADG[Message Queue Administration Guide]
 |Explains how to set up and manage a Message Queue messaging system.
 
-|link:../../openmq/mq-dev-guide-jmx/toc.html#GMJMG[Message Queue Developer's Guide for JMX Clients]
+|link:../openmq/mq-dev-guide-jmx.html#GMJMG[Message Queue Developer's Guide for JMX Clients]
 |Describes the application programming interface in Message Queue for
 programmatically configuring and monitoring Message Queue resources in
 conformance with the Java Management Extensions (JMX).
 
-|link:../../openmq/mq-dev-guide-java/toc.html#GMJVG[Message Queue Developer's Guide for Java Clients]
+|link:../openmq/mq-dev-guide-java.html#GMJVG[Message Queue Developer's Guide for Java Clients]
 |Provides information about concepts and procedures for developing Java messaging
 applications (Java clients) that work with {productName}.
 
-|link:../../openmq/mq-dev-guide-c/toc.html#GMCCG[Message Queue Developer's Guide for C Clients]
+|link:../openmq/mq-dev-guide-c.html#GMCCG[Message Queue Developer's Guide for C Clients]
 |Provides programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue messages.

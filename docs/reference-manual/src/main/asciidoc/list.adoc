@@ -226,6 +226,6 @@ link:get.html#get-1[`get`(1)], link:set.html#set-1[`set`(1)]
 
 link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
 
-link:../administration-guide/toc.html#GSADG[{productName} Administration Guide]
+link:administration-guide.html#GSADG[{productName} Administration Guide]
 
 

@@ -164,7 +164,7 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:stop-database.html#stop-database-1[`stop-database`(1)]
 
-"link:../administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
+"link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

@@ -136,7 +136,7 @@ without having those changes take effect immediately.
 
 === Understanding Synchronization
 
-As described in "link:../ha-administration-guide/instances.html#GSHAG00189[
+As described in "link:ha-administration-guide/instances.html#GSHAG00189[
 Resynchronizing {productName} Instances and the DAS]"
 in {productName} High
 Availability Administration Guide, configuration data for a {productName} instance is stored in the repository of the DAS and in a cache on
@@ -144,7 +144,7 @@ the host that is local to the instance. The configuration data in these
 locations must be synchronized. The cache is synchronized only when a
 user uses the administration tools to start or restart an instance.
 
-See "link:../ha-administration-guide/instances.html#GSHAG00189[
+See "link:ha-administration-guide/instances.html#GSHAG00189[
 Resynchronizing {productName} Instances and the DAS]"
 in {productName} High Availability
 Administration Guide for information about default synchronization for

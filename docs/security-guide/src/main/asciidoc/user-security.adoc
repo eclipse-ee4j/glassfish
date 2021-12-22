@@ -111,7 +111,7 @@ asadmin> create-jvm-options --target=target
 ----
 where target is the {productName} instance or cluster for which you
 are disabling LDAP group search. For more information about the
-`create-jvm-options` subcommand, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+`create-jvm-options` subcommand, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 ====
 
 JDBC realm::
@@ -141,7 +141,7 @@ Custom realm::
   relational database or third-party components. For more information
   about custom realms, see the Administration Console online help. For
   instructions on creating a custom realm, see
-  "link:../application-development-guide/securing-apps.html#GSDVG00367[
+  "link:application-development-guide/securing-apps.html#GSDVG00367[
   Creating a Custom Realm]" in
   {productName} Application Development Guide.
 
@@ -156,7 +156,7 @@ authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a realm by using the
-link:../reference-manual/create-auth-realm.html#GSRFM00015[`create-auth-realm`] subcommand. +
+link:reference-manual/create-auth-realm.html#GSRFM00015[`create-auth-realm`] subcommand. +
 Information about properties for this subcommand is included in this help page.
 
 [[GSSCG00079]][[ggpjx]]
@@ -179,7 +179,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-auth-realm` at the command line.
 
 For information on creating a custom realm, see
-"link:../application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in {productName} Application Development Guide.
 
 [[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
 
@@ -189,7 +189,7 @@ Use the `list-auth-realms` subcommand in remote mode to list the
 existing authentication realms.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List realms by using the link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+2. List realms by using the link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
 subcommand.
 
 [[GSSCG00080]][[ggpkw]]
@@ -227,15 +227,15 @@ A custom realm does not require server restart.
 ====
 
 
-1. List realms by using the link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+1. List realms by using the link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
 subcommand.
 2. Modify the values for the specified thread pool by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
 +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
 
@@ -246,12 +246,12 @@ existing authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List realms by using the
-link:../reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`] subcommand.
+link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`] subcommand.
 3. If necessary, notify users that the realm is being deleted.
 4. Delete the realm by using the
-link:../reference-manual/delete-auth-realm.html#GSRFM00066[`delete-auth-realm`] subcommand.
+link:reference-manual/delete-auth-realm.html#GSRFM00066[`delete-auth-realm`] subcommand.
 5. To apply your changes, restart {productName}. See
-"link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00081]][[ggpjf]]
 Example 2-3 Deleting a Realm
@@ -298,11 +298,11 @@ How you add user credentials to the database tables depends on the
 database that you are using.
 
 3. Create a JDBC connection pool for the database. +
-See "link:../administration-guide/jdbc.html#GSADG00420[
+See "link:administration-guide/jdbc.html#GSADG00420[
 To Create a JDBC Connection Pool]" in {productName} Administration Guide.
 
 4. Create a JDBC resource for the database. +
-"link:../administration-guide/jdbc.html#GSADG00426[
+"link:administration-guide/jdbc.html#GSADG00426[
 To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
@@ -325,7 +325,7 @@ Modify the deployment descriptor that is associated with your application.
 
 +
 For more information about how to specify a realm, see
-"link:../application-development-guide/securing-apps.html#GSDVG00365[
+"link:application-development-guide/securing-apps.html#GSDVG00365[
 How to Configure a Realm]" in {productName} Application Development Guide.
 
 7. Assign security roles to users in the realm. +
@@ -333,11 +333,11 @@ To assign a security role to a user, add a `security-role-mapping`
 element to the deployment descriptor that you modified.
 
 8. Verify that the database is running. +
-If needed, see "link:../administration-guide/jdbc.html#GSADG00417[To Start the Database]"
+If needed, see "link:administration-guide/jdbc.html#GSADG00417[To Start the Database]"
 in {productName} Administration Guide.
 
 9. To apply the authentication, restart the server. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[GSSCG00082]][[ghysu]]
@@ -372,7 +372,7 @@ if they are not installed already. +
 Instructions for installing the Oracle Identity Management suite are
 provided in Oracle Fusion Middleware Installation Guide for Oracle
 Identity Management
-(`http://docs.oracle.com/cd/E12839_01/install.1111/e12002/toc.html`).
+(`http://docs.oracle.com/cd/E12839_01/install.1111/e12002.html`).
 
 3. Configure SSL for Oracle Internet Directory (OID), if it is not
 configured already. Configure the OID instance in the server
@@ -420,7 +420,7 @@ keytool -importcert -alias "OID self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
 ----
 6. Restart the {productName} domain. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
 in {productName} Administration Guide.
 7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
 Anonymous Bind for OID. +
@@ -449,7 +449,7 @@ orclAnonymousBindsFlag: 0
 See "Managing Anonymous Binds"
 (`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/authentication.html#CACJEJDA`)
 in Oracle Fusion Middleware Administrator's Guide for Oracle Internet Directory
-(`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029/toc.html`) for
+(`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029.html`) for
 complete instructions on the `ldapmodify` command.
 
 [[gksgi]][[GSSCG00116]][[to-configure-ldap-authentication-with-ovd]]
@@ -463,7 +463,7 @@ authentication with Oracle Virtual Directory.
 Configuring Oracle Virtual Directory Adapters"
 (`http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/basic_adapters.html#BABCBGJA`)
 chapter of Administrator's Guide for Oracle Virtual Directory
-(`http://docs.oracle.com/cd/E12839_01/oid.1111/e10046/toc.html`).
+(`http://docs.oracle.com/cd/E12839_01/oid.1111/e10046.html`).
 
 2. Configure SSL for Oracle Virtual Directory (OVD), if it is not
 configured already. For instructions on configuring SSL for OVD, see the
@@ -509,7 +509,7 @@ keytool -importcert -alias "OVD self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
 ----
 5. Restart the {productName} domain. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
@@ -564,7 +564,7 @@ asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
 
 See Also
 
-See link:../reference-manual/configure-ldap-for-admin.html#GSRFM00010[`configure-ldap-for-admin`] for more information
+See link:reference-manual/configure-ldap-for-admin.html#GSRFM00010[`configure-ldap-for-admin`] for more information
 about the `configure-ldap-for-admin subcommand`.
 
 [[ggnxq]][[GSSCG00152]][[administering-file-users]]
@@ -610,9 +610,9 @@ server restart.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. If the user will belong to a particular group, see the current
 groups by using the
-link:../reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+link:reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
 3. Create a file user by using the
-link:../reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
+link:reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
 
 [[GSSCG00083]][[ggpkq]]
 Example 2-5 Creating a User
@@ -623,7 +623,7 @@ The `asadmin` `--passwordfile` option specifies the name of a file that
 contains the password entries in a specific format. The entry for a
 password must have the `AS_ADMIN_` prefix followed by the password name
 in uppercase letters, an equals sign, and the password. See
-link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] for more information.
+link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] for more information.
 
 [source]
 ----
@@ -647,7 +647,7 @@ Use the `list-file-users` subcommand in remote mode to list the users
 that are in the `keyfile`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List users by using the link:../reference-manual/list-file-users.html#GSRFM00165[`list-file-users`]
+2. List users by using the link:reference-manual/list-file-users.html#GSRFM00165[`list-file-users`]
 subcommand.
 
 [[GSSCG00084]][[ggpgf]]
@@ -693,7 +693,7 @@ a file user, or all file groups if the `--name` option is not specified.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List file groups by using the
-link:../reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+link:reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
 
 [[GSSCG00085]][[ghlgb]]
 Example 2-7 Listing Groups for a User
@@ -724,9 +724,9 @@ update an administrative user to have a blank password.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update the user information by using the
-link:../reference-manual/update-file-user.html#GSRFM00254[`update-file-user`] subcommand.
+link:reference-manual/update-file-user.html#GSRFM00254[`update-file-user`] subcommand.
 3. To apply your changes, restart {productName}. +
-See "link:../administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[GSSCG00086]][[ggpgh]]
@@ -759,9 +759,9 @@ during your session.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List users by using the
-link:../reference-manual/list-file-users.html#GSRFM00165[`list-file-users`] subcommand.
+link:reference-manual/list-file-users.html#GSRFM00165[`list-file-users`] subcommand.
 3. Delete the user by using the
-link:../reference-manual/delete-file-user.html#GSRFM00076[`delete-file-user`] subcommand.
+link:reference-manual/delete-file-user.html#GSRFM00076[`delete-file-user`] subcommand.
 
 [[GSSCG00087]][[ggpib]]
 Example 2-9 Deleting a User

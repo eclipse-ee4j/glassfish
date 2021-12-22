@@ -44,17 +44,17 @@ Table 1-1 Performance Tuning Roadmap
 |Step |Description of Task |Location of Instructions
 |1
 |Design: Decide on the high-availability topology and set up {productName}.
-a|link:../deployment-planning-guide/toc.html#GSPLG[
+a|link:deployment-planning-guide.html#GSPLG[
 {productName} Deployment Planning Guide]
 
 |2
 |Capacity Planning: Make sure the systems have sufficient resources to perform well.
-a|link:../deployment-planning-guide/toc.html#GSPLG[
+a|link:deployment-planning-guide.html#GSPLG[
 {productName} Deployment Planning Guide]
 
 |3
 |Installation: Configure your DAS, clusters, and clustered server instances.
-a|link:../installation-guide/toc.html#GSING[
+a|link:installation-guide.html#GSING[
 {productName} Installation Guide]
 
 |4
@@ -62,15 +62,15 @@ a|link:../installation-guide/toc.html#GSING[
 Familiarize yourself with how to configure and administer the {productName}.
 a|The following books:
 
-* link:../application-deployment-guide/toc.html#GSDPG[
+* link:application-deployment-guide.html#GSDPG[
 {productName} Application Deployment Guide]
-* link:../administration-guide/toc.html#GSADG[
+* link:administration-guide.html#GSADG[
 {productName} Administration Guide]
 
 |5
 |High Availability Configuration: Configuring your DAS, clusters, and
 clustered server instances for high availability and failover
-a|link:../ha-administration-guide/toc.html#GSHAG[
+a|link:ha-administration-guide.html#GSHAG[
 {productName} High Availability Administration Guide]
 
 |6
@@ -183,7 +183,7 @@ already use a directory server may find it advantageous to leverage
 investment in Solaris security infrastructure.
 
 For more information on security realms, see
-"link:../security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in {productName} Security Guide.
+"link:security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in {productName} Security Guide.
 
 The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
@@ -252,7 +252,7 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and {productName}, see "link:../security-guide/message-security.html#GSSCG00037[Administering Message
+and {productName}, see "link:security-guide/message-security.html#GSSCG00037[Administering Message
 Security]" in {productName} Security Guide.
 
 [[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
@@ -282,7 +282,7 @@ minimum application downtime and enhanced transactional security.
 See link:tuning-java.html#glaat[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
-See the link:../ha-administration-guide/toc.html#GSHAG[{productName} High
+See the link:ha-administration-guide.html#GSHAG[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
 features in {productName} 7.
@@ -342,7 +342,7 @@ can host different URL domains on a single {productName} process for
 efficient administration.
 
 For detailed information on administration, see the
-link:../administration-guide/toc.html#GSADG[{productName} Administration Guide].
+link:administration-guide.html#GSADG[{productName} Administration Guide].
 
 [[abeba]][[GSPTG00050]][[general-tuning-concepts]]
 
@@ -515,7 +515,7 @@ http://java.sun.com/docs/performance[Java Performance Documentation]
 http://java.sun.com/blueprints/performance/index.html[Java Performance
 BluePrints] (`http://java.sun.com/blueprints/performance/index.html`).
 * For more information about performance tuning for high availability
-configurations, see the link:../ha-administration-guide/toc.html#GSHAG[{productName}
+configurations, see the link:ha-administration-guide.html#GSHAG[{productName}
 High Availability Administration Guide].
 * For complete information about using the Performance Tuning features
 available through the {productName} Administration Console, refer to
@@ -525,7 +525,7 @@ http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/[Seven
 Rules for Optimizing Entity Beans]
 (`http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/`)
 * For details on profiling,
-see "link:../application-development-guide/setting-up-dev-env.html#GSDVG00341[
+see "link:application-development-guide/setting-up-dev-env.html#GSDVG00341[
 Profiling Tools]" in {productName} Application Development Guide.
 * To view a demonstration video showing how to use the {productName} Performance Tuner,
 see the http://www.youtube.com/watch?v=FavsE2pzAjc[

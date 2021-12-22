@@ -202,7 +202,7 @@ asadmin> create-jvm-options -Djava.naming.factory.initial=org.glassfish.jndi.cos
 ----
 
 For details about `asadmin create-jvm-options`, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 Or you can set this property in the code, as follows:
 
@@ -333,7 +333,7 @@ External Resources. For details, click the Help button in the
 Administration Console.
 * To create an external JNDI resource, use the
 `asadmin create-jndi-resource` command. For details, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[beanz]][[GSDVG00524]][[custom-resources]]
 
@@ -351,7 +351,7 @@ Resources component, open the JNDI component, and select Custom
 Resources. For details, click the Help button in the Administration
 Console.
 * To create a custom resource, use the `asadmin create-custom-resource`
-command. For details, see the link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+command. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[giyvw]][[GSDVG00525]][[built-in-factories-for-custom-resources]]
 
@@ -369,7 +369,7 @@ Template `glassfish-resources.xml` files for these built-in factories
 and a `README` file are available at
 as-install``/lib/install/templates/resources/custom/``. For more
 information about the `glassfish-resources.xml` file, see the
-link:../application-deployment-guide/toc.html#GSDPG[{productName} Application Deployment
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
 [[giywi]][[GSDVG00329]][[javabeanfactory]]
@@ -475,7 +475,7 @@ You can define an application-scoped JNDI or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:../application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[gcpge]][[GSDVG00194]][[using-a-custom-jndi.properties-file]]
 
@@ -518,7 +518,7 @@ These elements are part of the `glassfish-web.xml`,
 `glassfish-application-client.xml`, `glassfish-ejb-jar.xml`, and
 `glassfish-application.xml` deployment descriptor files. For more
 information about how these elements behave in each of the deployment
-descriptor files, see "link:../application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName}
+descriptor files, see "link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName}
 Deployment Descriptors]" in {productName}
 Application Deployment Guide.
 

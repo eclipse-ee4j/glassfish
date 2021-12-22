@@ -182,7 +182,7 @@ Agent Configurations] for more information.
 Instead of HADB, {productName} 7 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
-See "link:../ha-administration-guide/overview.html#GSHAG00002[
+See "link:ha-administration-guide/overview.html#GSHAG00002[
 High Availability in {productName}]" in
 {productName} High Availability Administration Guide
 for more information.
@@ -197,7 +197,7 @@ The following sections describe changes to the command line utility `asadmin`:
 * link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
 
 For more information about `asadmin` and its subcommands, see the
-link:../reference-manual/toc.html#GSRFM[{productName} Reference Manual].
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 [[abmbd]][[GSUPG00053]][[deprecated-asadmin-subcommands]]
 
@@ -533,14 +533,14 @@ listener.http-1.listenerport=4321
 ==== Changes to `asadmin` Subcommands
 
 To accommodate the move of HTTP Service into the new Network Service
-configuration, link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommands are changed as
+configuration, link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommands are changed as
 follows:
 
-* The link:../reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand has a new `--type`
+* The link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand has a new `--type`
 parameter value, `network-listener`.
-* The link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] SUBcommand has a new
+* The link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] SUBcommand has a new
 parameter, `--networklisteners`.
-* The link:../reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand adds a
+* The link:reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand adds a
 `network-listener` element to the domain configuration. The syntax and
 options of this commands are unchanged.
 

@@ -35,7 +35,7 @@ run. The DCOM remote protocol is available only on Windows systems.
 This subcommand must be run by the operating-system-level administrator
 user on the host where DCOM is being set up. Before running this
 command, ensure that items in the Windows operating system are set as
-described in "link:../ha-administration-guide/ssh-setup.html#GSHAG449[
+described in "link:ha-administration-guide/ssh-setup.html#GSHAG449[
 Windows Operating System Settings]" in
 {productName} High Availability Administration Guide.
 
@@ -146,6 +146,6 @@ Command setup-local-dcom executed successfully.
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
-"link:../ha-administration-guide/ssh-setup.html#GSHAG449[Windows Operating System Settings]" in {productName} High Availability Administration Guide
+"link:ha-administration-guide/ssh-setup.html#GSHAG449[Windows Operating System Settings]" in {productName} High Availability Administration Guide
 
 

@@ -116,7 +116,7 @@ the following conditions must be met:
 * The DAS host and all hosts for the instances must be on the same subnet.
 * UDP multicast must be enabled for the network.
 To test whether multicast is enabled, use the
-link:../reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`(1)]
+link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`(1)]
 subcommand.
 
 If GMS should use TCP without multicast, you must configure GMS to
@@ -214,7 +214,7 @@ Configuration Settings].
 
 ==== Dotted Names for GMS Settings
 
-Below are sample link:../reference-manual/get.html#GSRFM00139[`get`] subcommands to get all the GMS
+Below are sample link:reference-manual/get.html#GSRFM00139[`get`] subcommands to get all the GMS
 configuration settings (attributes associated with the referenced
 `mycfg` configuration) and GMS cluster settings (attributes and
 properties associated with a cluster named `mycluster`).
@@ -258,7 +258,7 @@ Settings After Cluster Creation].
 You can preconfigure GMS with values different than the defaults without
 requiring a restart of the DAS and the cluster.
 
-1. Create a configuration using the link:../reference-manual/copy-config.html#GSRFM00011[`copy-config`]
+1. Create a configuration using the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`]
 subcommand.
 +
 For example:
@@ -336,7 +336,7 @@ restart as explained here.
 1. Ensure that the DAS and cluster are running.
 +
 Remote subcommands require a running server.
-2. Use the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand to determine the settings
+2. Use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to determine the settings
 to change.
 +
 For example:
@@ -352,7 +352,7 @@ configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=
 ----
 For a complete list of the dotted names for these settings, see
 link:#gjfog[Dotted Names for GMS Settings].
-3. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to change the settings.
+3. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to change the settings.
 +
 For example:
 +
@@ -407,7 +407,7 @@ cluster is properly operating; that is, all members of the cluster are
 running and visible to DAS.
 
 If multicast is not enabled for the network, all instances could be
-running (as shown by the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand),
+running (as shown by the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand),
 yet isolated from each other. The `get-health` subcommand does not show
 the instances if they are running but cannot discover each other due to
 multicast not being configured properly. See link:#gklhd[To Validate
@@ -417,7 +417,7 @@ That Multicast Transport Is Available for a Cluster].
 +
 Remote subcommands require a running server.
 2. Check whether server instances in a cluster are running by using the
-link:../reference-manual/get-health.html#GSRFM00141[`get-health`] subcommand.
+link:reference-manual/get-health.html#GSRFM00141[`get-health`] subcommand.
 
 [[GSHAG00032]][[gklgw]]
 Example 4-1 Checking the Health of Instances in a Cluster
@@ -491,7 +491,7 @@ received between the machines.
 
 
 Check whether multicast transport is available for a cluster by using
-the link:../reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`] subcommand.
+the link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`] subcommand.
 
 [[GSHAG00033]][[gklhv]]
 Example 4-2 Validating That Multicast Transport Is Available for a
@@ -602,7 +602,7 @@ locate a {productName} instance or the DAS in the cluster.
 2. Create a system property to represent the port number of the port on
 which the DAS listens for messages from GMS for the cluster.
 +
-Use the link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand for this
+Use the link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand for this
 purpose.
 +
 [source]
@@ -752,7 +752,7 @@ Command create-local-instance executed successfully.
 
 See Also
 
-* link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
+* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
 * link:#gkqdm[To Create a Cluster]
 * link:instances.html#gkqch[To Create an Instance Centrally]
 * link:instances.html#gkqbl[To Create an Instance Locally]
@@ -1036,7 +1036,7 @@ Run the `create-cluster` subcommand.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-cluster, see the link:../reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)] help page.
+cluster, see the link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)] help page.
 ====
 * If multicast transport is available, run the `create-cluster`
 subcommand as follows:
@@ -1160,8 +1160,8 @@ See Also
 * link:named-configurations.html#abdjr[To Create a Named Configuration]
 * link:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
 * link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}]
-* link:../reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)]
-* link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
+* link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)]
+* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1179,7 +1179,7 @@ about existing clusters in a domain.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:../reference-manual/list-clusters.html#GSRFM00153[`list-clusters`] subcommand.
+2. Run the link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`] subcommand.
 +
 [source]
 ----
@@ -1216,7 +1216,7 @@ Command list-clusters executed successfully.
 
 See Also
 
-link:../reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-clusters` at the command line.
@@ -1267,7 +1267,7 @@ asadmin> list-instances cluster-name
 ----
 cluster-name::
   The name of the cluster that you are deleting.
-4. Run the link:../reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`] subcommand.
+4. Run the link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`] subcommand.
 +
 [source]
 ----
@@ -1301,9 +1301,9 @@ See Also
 * link:instances.html#gkqcl[To Stop a Cluster]
 * link:instances.html#gkqcw[To Delete an Instance Centrally]
 * link:instances.html#gkqed[To Delete an Instance Locally]
-* link:../reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`(1)]
-* link:../reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`(1)]
+* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

@@ -160,7 +160,7 @@ If this property is not set or `null` and XML validation is enabled,
 
 +
 To modify the value of these properties, you can use the
-  as-install``/mq/bin/imqcmd`` command. See "link:../../openmq/mq-admin-guide/physical-destination-properties.html#GMADG00049[Physical
+  as-install``/mq/bin/imqcmd`` command. See "link:../openmq/mq-admin-guide/physical-destination-properties.html#GMADG00049[Physical
   Destination Property Reference]" in Open Message Queue Administration
   Guide for more information.
 `--target`::

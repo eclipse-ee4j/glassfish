@@ -1394,6 +1394,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Provides conflicting JAXB provider.
+             See https://github.com/eclipse-ee4j/eclipselink/issues/1380
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
@@ -1404,6 +1406,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.dbws</artifactId>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +27,10 @@ import jakarta.ejb.EJBException;
 
 import jakarta.inject.Inject;
 
-public class InterceptorB implements Serializable{
+public class InterceptorB implements Serializable {
 
-    @EJB StatelessLocal sbean;
+    @EJB
+    StatelessLocal sbean;
 
     @AroundInvoke
     public Object around(InvocationContext ctx) throws Exception {
@@ -42,7 +44,7 @@ public class InterceptorB implements Serializable{
     public void init(InvocationContext ctx) {
         System.out.println("In InterceptorB::init()");
 
-        if( sbean == null ) {
+        if (sbean == null) {
             throw new EJBException("null sbean");
         }
 
@@ -50,7 +52,8 @@ public class InterceptorB implements Serializable{
 
         try {
             ctx.proceed();
-        } catch (Exception ignore ) {}
+        } catch (Exception ignore) {
+        }
     }
 
     @PreDestroy
@@ -58,7 +61,8 @@ public class InterceptorB implements Serializable{
         System.out.println("In InterceptorB::destroy()");
         try {
             ctx.proceed();
-        } catch (Exception ignore ) {}
+        } catch (Exception ignore) {
+        }
     }
 
 }

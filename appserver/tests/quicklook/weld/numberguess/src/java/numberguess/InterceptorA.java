@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,14 +30,13 @@ public class InterceptorA implements Serializable {
     @EJB
     private StatelessLocal statelessLocal;
 
-    @Inject Foo foo;
+    @Inject
+    Foo foo;
 
     @AroundInvoke
     public Object around(InvocationContext ctx) throws Exception {
-
         System.out.println("In InterceptorA::around");
         return ctx.proceed();
-
     }
 
     @PostConstruct
@@ -48,7 +48,8 @@ public class InterceptorA implements Serializable {
 
         try {
             ctx.proceed();
-        } catch (Exception ignore ) {}
+        } catch (Exception ignore) {
+        }
     }
 
     @PreDestroy
@@ -56,7 +57,8 @@ public class InterceptorA implements Serializable {
         System.out.println("In InterceptorA::destroy()");
         try {
             ctx.proceed();
-        } catch (Exception ignore ) {}
+        } catch (Exception ignore) {
+        }
     }
 
 }

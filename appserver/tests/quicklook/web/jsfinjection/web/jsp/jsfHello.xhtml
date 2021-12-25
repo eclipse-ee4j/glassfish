@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html>
 <!--
 
     Copyright (c) 2021 Contributors to Eclipse Foundation.
@@ -17,22 +17,26 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
+<html xmlns:h="jakarta.faces.html">
+	<h:head>
+		<title>Faces Hello</title>
+	</h:head>
+	<h:body>
+		<h1>Welcome to jAstrologer</h1>
+	
+		<h:form id="form">
+			<h3>
+				Hello, and welcome<br/>
+				<h:outputText
+					value="If injection worked, this sentence should be followed by the injected words -> #{testBean.entry} " />
+				<br/>
+				<h:outputText
+					value="If second injection worked, this sentence should be followed by 'a non-negative number' === #{testBean.number} ===" />
+				<br/>
+				<h:outputText
+					value="If @Postconstruct worked, this sentence should be followed by #{testBean.init} " />
+			</h3>
+		</h:form>
+	</h:body>
+</html>
 
-<!DOCTYPE faces-config PUBLIC
-  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
-  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
-
-<!-- =========== FULL CONFIGURATION FILE ================================== -->
-
-<faces-config>
-    <navigation-rule>
-        <description>
-            handle user input
-        </description>
-        <from-view-id>/greetings.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>submit</from-outcome>
-            <to-view-id>/success.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
-</faces-config>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,15 +18,15 @@
 
 -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-    version="2.5">
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+    version="5.0">
+    
     <filter>
         <filter-name>FilterTest</filter-name>
         <filter-class>jsfinjection.FilterTest</filter-class>
     </filter>
-
     <filter-mapping>
         <filter-name>FilterTest</filter-name>
         <url-pattern>/jsfHello.jsf</url-pattern>
@@ -42,22 +43,13 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
-  <env-entry>
-    <env-entry-name>entry</env-entry-name>
-    <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>Injected entry</env-entry-value>
-  </env-entry>
-
-  <jsp-config>
-    <jsp-property-group>
-      <url-pattern>/jetty.jsp</url-pattern>
-      <page-encoding>UTF-8</page-encoding>
-      <include-prelude>/jinclude.jsp</include-prelude>
-    </jsp-property-group>
-  </jsp-config>
-
+    <env-entry>
+        <env-entry-name>entry</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>Injected entry</env-entry-value>
+    </env-entry>
 
 </web-app>

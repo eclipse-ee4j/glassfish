@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -101,7 +102,7 @@
         <echo>|                             |</echo>
         <echo>|        R u n n i n g        |</echo>
         <echo>|            all_wd           |</echo>
-        <echo>|                             |</echo>
+        <echo>|          Web Profile        |</echo>
         <echo>+-----------------------------+</echo>
 
         <property name="env.security_manager" value="OFF" />
@@ -111,7 +112,7 @@
         <antcall target="build-deploy" />
 
         <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_wd.xml" />
+            <param name="testng.xml" value="testng/testng_web_profile.xml" />
         </antcall>
 
         <antcall target="undeploy" />
@@ -132,7 +133,7 @@
         <echo>|                             |</echo>
         <echo>|        R u n n i n g        |</echo>
         <echo>|       all_wd_security       |</echo>
-        <echo>|                             |</echo>
+        <echo>|         Web Profile         |</echo>
         <echo>+-----------------------------+</echo>
 
         <antcall target="add-quicklook-policy-grants" />
@@ -142,7 +143,7 @@
         <antcall target="build-deploy" />
 
         <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_wd.xml" />
+            <param name="testng.xml" value="testng/testng_web_profile.xml" />
         </antcall>
 
         <antcall target="undeploy" />
@@ -178,7 +179,7 @@
         <antcall target="build-cluster" />
 
         <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_gd.xml" />
+            <param name="testng.xml" value="testng/testng_full_profile.xml" />
         </antcall>
 
         <antcall target="undeploy" />
@@ -236,7 +237,7 @@
         <echo>|                             |</echo>
         <echo>|        R u n n i n g        |</echo>
         <echo>|       all_gd_security       |</echo>
-        <echo>|     glassfish distribution  |</echo>
+        <echo>|         Full Profile        |</echo>
         <echo>+-----------------------------+</echo>
 
 
@@ -252,7 +253,7 @@
         <antcall target="build-deploy-gd" />
 
         <antcall target="runtest">
-            <param name="testng.xml" value="testng/testng_gd.xml" />
+            <param name="testng.xml" value="testng/testng_full_profile.xml" />
         </antcall>
 
         <antcall target="undeploy" />
@@ -276,7 +277,7 @@
         <echo>|                             |</echo>
         <echo>|        R u n n i n g        |</echo>
         <echo>|           dev_debug         |</echo>
-        <echo>|     glassfish distribution  |</echo>
+        <echo>|         Full Profile        |</echo>
         <echo>+-----------------------------+</echo>
 
         <antcall target="verify-xml" />
@@ -387,7 +388,9 @@
         <run-quicklook-test path="amx" target="build" />
         <run-quicklook-test path="admin" target="build" />
         <run-quicklook-test path="admincli" target="build" />
+        <!-- For now GlassFish 7 doesn't have an admin console
         <run-quicklook-test path="adminconsole" target="build" />
+        -->
         <run-quicklook-test path="rest" target="build" />
         <!--<run-quicklook-test path="osgitest/basicosgi" target="build"/>-->
         <run-quicklook-test path="web/helloworld" target="build-deploy" />
@@ -409,35 +412,15 @@
     </target>
 
     <target name="build-deploy-gd">
-        <echo message="Glassfish Distribution Build Deploy" />
-        <ant dir="ejb/remoteview" target="build-deploy" />
-        <ant dir="ejb/singleton" target="build-deploy" />
-        <ant dir="ejb/cmp" target="build-deploy" />
-        <ant dir="ejb/mdb" target="build" />
-        <ant dir="jms/injection" target="build-deploy" />
-        <ant dir="wsit/JaxwsFromWsdl" target="build-deploy" />
-        <ant dir="wsit/jsr109tester" target="build-deploy" />
-        <ant dir="security/appperms" target="build-deploy" />
-    </target>
-
-    <target name="undeploy">
-        <record name="${basedir}/undeploy.output" action="start" />
-        <ant dir="web/helloworld" target="undeploy" />
-        <ant dir="web/jsfastrologer" target="undeploy" />
-        <ant dir="web/jsfinjection" target="undeploy" />
-        <ant dir="jdbc/jdbcusertx" target="undeploy" />
-        <ant dir="persistence/jpainjectemf" target="undeploy" />
-        <ant dir="persistence/jpavalidation" target="undeploy" />
-        <ant dir="security/helloworld" target="undeploy" />
-        <ant dir="security/basicauth" target="undeploy" />
-        <ant dir="ejb/slsbnicmt" target="undeploy" />
-        <ant dir="ejb/sfulnoi" target="undeploy" />
-        <ant dir="bean-validator/simple-bv-servlet" target="undeploy" />
-        <ant dir="weld/numberguess" target="undeploy" />
-        <ant dir="weld/osgiweld" target="undeploy" />
-        <ant dir="weld/extensions" target="undeploy" />
-        <ant dir="jms/injection" target="undeploy" />
-        <record name="${basedir}/undeploy.output" action="stop" />
+        <echo message="Glassfish Full Profile Build Deploy" />
+        <run-quicklook-test path="ejb/remoteview" target="build-deploy" />
+        <run-quicklook-test path="ejb/singleton" target="build-deploy" />
+        <run-quicklook-test path="ejb/cmp" target="build-deploy" />
+        <run-quicklook-test path="ejb/mdb" target="build" />
+        <run-quicklook-test path="jms/injection" target="build-deploy" />
+        <run-quicklook-test path="wsit/JaxwsFromWsdl" target="build-deploy" />
+        <run-quicklook-test path="wsit/jsr109tester" target="build-deploy" />
+        <run-quicklook-test path="security/appperms" target="build-deploy" />
     </target>
 
 
@@ -508,17 +491,39 @@
 
 
     <!--  U N D E P L O Y    T E S T    A R C H I V E S  -->
+    
+    <target name="undeploy">
+         <record name="${basedir}/undeploy.output" action="start" />
+         
+         <run-quicklook-test path="web/helloworld" target="undeploy" />
+         <run-quicklook-test path="web/jsfastrologer" target="undeploy" />
+         <run-quicklook-test path="web/jsfinjection" target="undeploy" />
+         <run-quicklook-test path="jdbc/jdbcusertx" target="undeploy" />
+         <run-quicklook-test path="persistence/jpainjectemf" target="undeploy" />
+         <run-quicklook-test path="persistence/jpavalidation" target="undeploy" />
+         <run-quicklook-test path="security/helloworld" target="undeploy" />
+         <run-quicklook-test path="security/basicauth" target="undeploy" />
+         <run-quicklook-test path="ejb/slsbnicmt" target="undeploy" />
+         <run-quicklook-test path="ejb/sfulnoi" target="undeploy" />
+         <run-quicklook-test path="bean-validator/simple-bv-servlet" target="undeploy" />
+         <run-quicklook-test path="weld/numberguess" target="undeploy" />
+         <run-quicklook-test path="weld/osgiweld" target="undeploy" />
+         <run-quicklook-test path="weld/extensions" target="undeploy" />
+         <run-quicklook-test path="jms/injection" target="undeploy" />
+         
+         <record name="${basedir}/undeploy.output" action="stop" />
+     </target>
 
     <target name="undeploy-gd">
-        <ant dir="ejb/singleton" target="undeploy" />
-        <ant dir="ejb/remoteview" target="undeploy" />
-        <ant dir="ejb/cmp" target="undeploy" />
+        <run-quicklook-test path="ejb/singleton" target="undeploy" />
+        <run-quicklook-test path="ejb/remoteview" target="undeploy" />
+        <run-quicklook-test path="ejb/cmp" target="undeploy" />
         <!-- <ant dir="wsit/JaxwsFromWsdl" target="undeploy"/>
         <ant dir="wsit/jsr109tester" target="undeploy"/>-->
-        <ant dir="security/appperms" target="undeploy" />
+        <run-quicklook-test path="security/appperms" target="undeploy" />
     </target>
 
-    <!-- Target is re-defined here as someone didn't want to specify ws.root property -->
+    <!-- Target is re-defined here as someone (who?) didn't want to specify ws.root property -->
     <target name="clean">
         <delete dir="${basedir}/classes" />
         <delete verbose="true" includeemptydirs="true">
@@ -815,9 +820,9 @@
             <local name="do-run-test" />
             <condition property="do-run-test" else="false">
                 <or>
-                    <equals arg1="${env.cdi_all}" arg2="@{path}" />
+                    <equals arg1="${env.quicklook}" arg2="@{path}" />
                     <not>
-                        <isset property="env.cdi_all" />
+                        <isset property="env.quicklook" />
                     </not>
                 </or>
             </condition>

@@ -37,7 +37,7 @@ public final class nullErrorPage_jsp extends org.glassfish.wasp.runtime.HttpJspB
       response.setContentType("text/html");
       response.setHeader("X-Powered-By", "JSP/3.0");
       pageContext = _jspxFactory.getPageContext(this, request, response,
-      			null, true, 8192, true);
+                  null, true, 8192, true);
       _jspx_page_context = pageContext;
       application = pageContext.getServletContext();
       config = pageContext.getServletConfig();

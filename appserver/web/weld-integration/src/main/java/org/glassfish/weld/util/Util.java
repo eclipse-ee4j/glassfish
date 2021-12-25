@@ -36,9 +36,7 @@ public class Util {
         try {
             if (Thread.currentThread().getContextClassLoader() != null) {
                 Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(name);
-                @SuppressWarnings("unchecked")
-                Class<T> clazz = (Class<T>) c;
-                return clazz;
+                return (Class<T>) c;
             }
             Class<?> c = Class.forName(name);
             return (Class<T>) c;

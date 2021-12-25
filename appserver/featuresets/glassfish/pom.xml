@@ -385,7 +385,7 @@
 
         
         <!-- Jakarta XML Web Services -->
-        <dependency> <!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
+        <dependency><!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-api-osgi</artifactId>
             <exclusions>
@@ -395,7 +395,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency> <!-- This is actually Metro -->
+        <dependency><!-- This is actually Metro -->
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-osgi</artifactId>
             <exclusions>
@@ -405,7 +405,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency> <!-- Repackaged Apache Santuario -->
+        <dependency><!-- Repackaged Apache Santuario -->
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-extra-xmlsec</artifactId>
             <exclusions>
@@ -437,9 +437,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency> <!-- webservices-osgi depends on ant -->
+        <dependency><!-- webservices-osgi depends on ant -->
             <groupId>org.glassfish.external</groupId>
-            <artifactId>ant</artifactId> 
+            <artifactId>ant</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

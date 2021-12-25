@@ -35,7 +35,7 @@ import jakarta.jms.JMSSessionMode;
  * Serializable object which holds the information about the JMSContext that was specified at the injection point.
  */
 public class JMSContextMetadata implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(InjectableJMSContext.JMS_INJECTION_LOGGER);
     private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JMSContextMetadata.class);
@@ -146,7 +146,7 @@ public class JMSContextMetadata implements Serializable {
         if (password != null && password.startsWith("${ALIAS=")) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -165,7 +165,7 @@ public class JMSContextMetadata implements Serializable {
                 }
             }
         }
-        
+
         return password;
     }
 }

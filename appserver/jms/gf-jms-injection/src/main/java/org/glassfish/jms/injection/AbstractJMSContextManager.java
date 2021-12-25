@@ -41,7 +41,7 @@ import jakarta.jms.JMSContext;
  * instance in a request/transaction.
  */
 public abstract class AbstractJMSContextManager implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(InjectableJMSContext.JMS_INJECTION_LOGGER);
     private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AbstractJMSContextManager.class);

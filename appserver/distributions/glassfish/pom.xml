@@ -31,7 +31,7 @@
     <packaging>glassfish-distribution</packaging>
 
     <name>Glassfish Distribution</name>
-    
+
     <properties>
         <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
         <patches>${basedir}/src/main/patches</patches>

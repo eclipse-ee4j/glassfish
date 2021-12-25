@@ -23,7 +23,7 @@ package org.glassfish.sse.api;
  * <p>
  * {@code new ServerSentEventData().data("YHOO").data("+2").data("10)} would send the following event (followed by blank
  * line):
- * 
+ *
  * <pre>
  * data:YHOO
  * data:+2
@@ -33,7 +33,7 @@ package org.glassfish.sse.api;
  *
  * <p>
  * {@code new ServerSentEventData().comment("test stream")} would send the following event (followed by blank line):
- * 
+ *
  * <pre>
  * :test stream
  *
@@ -42,7 +42,7 @@ package org.glassfish.sse.api;
  * <p>
  * {@code new ServerSentEventData().data("first event").id("1")} would send the following event (followed by blank
  * line):
- * 
+ *
  * <pre>
  * data:first event
  * id:1
@@ -51,7 +51,7 @@ package org.glassfish.sse.api;
  * <p>
  * {@code new ServerSentEventData().event("add").data("73857293")} would send the following event (followed by blank
  * line):
- * 
+ *
  * <pre>
  * event:add
  * data:73857293

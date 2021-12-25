@@ -24,9 +24,9 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import jakarta.jms.JMSContext;
 
 public class JMSContextEntry implements Serializable {
-    
+
     private static final long serialVersionUID = 5250371279470306316L;
-    
+
     private final String injectionPointId;
     private final JMSContext jmsContext;
     private final transient ComponentInvocation componentInvocation;

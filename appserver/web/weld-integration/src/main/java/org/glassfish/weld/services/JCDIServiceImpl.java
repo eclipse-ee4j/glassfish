@@ -87,7 +87,7 @@ public class JCDIServiceImpl implements JCDIService {
 
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
-    
+
     @LoggerInfo(subsystem = "AS-WELD", description = "WELD", publish = true)
     public static final String WELD_LOGGER_SUBSYSTEM_NAME = "jakarta.enterprise.resource.weld";
 
@@ -117,7 +117,7 @@ public class JCDIServiceImpl implements JCDIService {
     @Inject
     private InvocationManager invocationManager;
 
- 
+
     @Override
     public boolean isCurrentModuleJCDIEnabled() {
         BundleDescriptor bundle = null;
@@ -447,13 +447,13 @@ public class JCDIServiceImpl implements JCDIService {
 
         return new JCDIInjectionContextImpl(it, cc, managedObject);
     }
-    
+
     private BeanManager getBeanManagerFromBundle(BundleDescriptor bundle) {
         BundleDescriptor topLevelBundleDesc = (BundleDescriptor) bundle.getModuleDescriptor().getDescriptor();
 
         // First get BeanDeploymentArchive for this Enterprise Bean
         BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(topLevelBundleDesc);
-        
+
         return weldDeployer.getBootstrapForApp(bundle.getApplication())
                           .getManager(beanDeploymentArchive);
     }

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * <p>
  * Server component class needs to have {@code ServerSentEvent} annotation and provides the implementation of
  * {@code ServerSentEventHandler}. For example:
- * 
+ *
  * <pre>
  * <code>
  *     &#64;ServerSentEvent("/foo")

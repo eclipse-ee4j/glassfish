@@ -141,7 +141,7 @@ public class InjectionPointHelper {
         if (methodName.length() <= 3 || !methodName.startsWith("set")) {
             throw new IllegalArgumentException("Illegal env dependency setter name" + method.getName());
         }
-        
+
         return methodName.substring(3, 4).toLowerCase(ENGLISH) + methodName.substring(4);
     }
 
@@ -150,10 +150,10 @@ public class InjectionPointHelper {
 
         for (Annotation next : annotations) {
             String className = next.annotationType().getName();
-            if (className.equals("jakarta.ejb.EJB") || 
-               className.equals("jakarta.annotation.Resource") || 
-               className.equals("jakarta.persistence.PersistenceContext") || 
-               className.equals("jakarta.persistence.PersistenceUnit") || 
+            if (className.equals("jakarta.ejb.EJB") ||
+               className.equals("jakarta.annotation.Resource") ||
+               className.equals("jakarta.persistence.PersistenceContext") ||
+               className.equals("jakarta.persistence.PersistenceUnit") ||
                className.equals("jakarta.xml.ws.WebServiceRef")) {
                 envAnnotation = next;
                 break;

@@ -168,7 +168,7 @@ public class ServerSentEventCdiExtension implements Extension {
         for (Map.Entry<String, ServerSentEventApplication> entry : applicationMap.entrySet()) {
             bbd.addBean(
                 new ServerSentEventHandlerContextBean(
-                    entry.getKey(), 
+                    entry.getKey(),
                     entry.getValue().getHandlerContext(),
                     entry.getValue().getHandlerClass()));
         }
@@ -186,7 +186,7 @@ public class ServerSentEventCdiExtension implements Extension {
                 if (!ServerSentEventHandler.class.isAssignableFrom(clazz)) {
                     throw new RuntimeException("Invalid base class '" + clazz.getName() + "' for handler.");
                 }
-                
+
                 ServerSentEvent serverSentEvent = (ServerSentEvent) annotation;
                 String path = normalizePath(serverSentEvent.value());
                 ServerSentEventApplication app = applicationMap.get(path);

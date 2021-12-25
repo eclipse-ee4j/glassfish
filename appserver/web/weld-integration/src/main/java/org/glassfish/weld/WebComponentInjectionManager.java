@@ -56,12 +56,12 @@ public class WebComponentInjectionManager<T> implements WebComponentDecorator<T>
                                                               .iterator().next());
 
             Class<T> beanClass = (Class<T>) webComponent.getClass();
-            
+
             // PENDING : Not available in this Web Beans Release
             CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
-            AnnotatedType<T> annotatedType = (AnnotatedType<T>) beanManager.createAnnotatedType(beanClass);
+            AnnotatedType<T> annotatedType = beanManager.createAnnotatedType(beanClass);
             InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
-            
+
             injectionTargetFactory.createInjectionTarget(null).inject(webComponent, creationalContext);
         }
     }

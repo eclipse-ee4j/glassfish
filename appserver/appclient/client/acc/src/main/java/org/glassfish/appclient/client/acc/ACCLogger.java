@@ -36,12 +36,12 @@ import org.glassfish.appclient.client.acc.config.LogService;
 /**
  * Logger that conforms to the glassfish-acc.xml config file settings for logging while, in some cases, also adjusting
  * other loggers.
- * 
+ *
  * <p>
  * Historically the logging level specified in the glassfish-acc.xml is used to set the level for all loggers. Beginning
  * with v3, which supports conventional log settings via logging.properties as well, we make sure that each logger's
  * level is at least as detailed as the setting in the config file.
- * 
+ *
  * <p>
  * Also, in prior versions if the user specified a logging file in the glassfish-acc.xml config file then all
  * pre-existing handlers would be removed, essentially replaced with a single handler to send output to the

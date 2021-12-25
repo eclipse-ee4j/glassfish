@@ -1,0 +1,98 @@
+type=page
+status=published
+title=list-jdbc-resources
+next=list-jmsdest.html
+prev=list-jdbc-connection-pools.html
+~~~~~~
+
+= list-jdbc-resources
+
+[[list-jdbc-resources-1]][[GSRFM00174]][[list-jdbc-resources]]
+
+== list-jdbc-resources
+
+Lists all JDBC resources
+
+[[sthref1551]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-jdbc-resources [--help]
+[target target]
+----
+
+[[sthref1552]]
+
+=== Description
+
+The `list-jdbc-resources` subcommand displays a list of the existing
+JDBC resources.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1553]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1554]]
+
+=== Operands
+
+`--target`::
+  This operand specifies which JDBC resources you can list. Usage of
+  this operand is optional. Valid values are:
+
+  `server`;;
+    Lists the JDBC resources in the current server and is the default.
+  `domain`;;
+    Lists the JDBC resources in the current domain.
+  cluster_name;;
+    Lists the JDBC resources in a cluster.
+  instance_name;;
+    Lists the JDBC resources for a particular instance.
+
+[[sthref1555]]
+
+=== Examples
+
+[[GSRFM671]][[sthref1556]]
+
+==== Example 1   Listing the JDBC Resources
+
+This example lists the current JDBC resources.
+
+[source]
+----
+asadmin> list-jdbc-resources
+jdbc/DerbyPool
+Command list-jdbc-resources executed successfully.
+----
+
+[[sthref1557]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1558]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
+link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)]
+
+

@@ -3069,15 +3069,19 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         this.interceptorManager = new InterceptorManager(_logger, this, lifecycleCallbackAnnotationClasses, getPre30LifecycleMethodNames());
     }
 
-    void registerSystemInterceptor(Object o) {
-
+    /**
+     * Can be called after original interceptor initialization.
+     * Install the given interceptor class instance before any application level interceptors.
+     *
+     * @param interceptor optionally specified delegate to be set on SystemInterceptorProxy
+     */
+    public void registerSystemInterceptor(Object interceptor) {
         if (needSystemInterceptorProxy()) {
-            interceptorManager.registerRuntimeInterceptor(o);
+            interceptorManager.registerRuntimeInterceptor(interceptor);
         }
     }
 
     private boolean needSystemInterceptorProxy() {
-
         // TODO only really needed if JAX-RS needs to dynamically register an
         // interceptor during web application init.  Can optimize this out
         // by checking for the existence of any JAX-RS resources in module.

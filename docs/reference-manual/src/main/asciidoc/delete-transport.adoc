@@ -1,0 +1,100 @@
+type=page
+status=published
+title=delete-transport
+next=delete-virtual-server.html
+prev=delete-threadpool.html
+~~~~~~
+
+= delete-transport
+
+[[delete-transport-1]][[GSRFM00112]][[delete-transport]]
+
+== delete-transport
+
+Removes a transport
+
+[[sthref999]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-transport [--help]
+[--target target]
+transport-name
+----
+
+[[sthref1000]]
+
+=== Description
+
+The `delete-transport` subcommand removes the specified transport. This
+subcommand is supported in remote mode only.
+
+[[sthref1001]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Deletes the transport only from the specified target. Valid values are
+  as follows:
+
+  `server`;;
+    Deletes the transport from the default server instance. This is the
+    default value.
+  configuration-name;;
+    Deletes the transport from the specified configuration.
+  cluster-name;;
+    Deletes the transport from all server instances in the specified
+    cluster.
+  standalone-instance-name;;
+    Deletes the transport from the specified standalone server instance.
+
+[[sthref1002]]
+
+=== Operands
+
+transport-name::
+  The name of the transport to be deleted.
+
+[[sthref1003]]
+
+=== Examples
+
+[[GSRFM582]][[sthref1004]]
+
+==== Example 1   Deleting a Transport
+
+The following command deletes the transport named `http1-trans`:
+
+[source]
+----
+asadmin> delete-transport http1-trans
+Command delete-transport executed successfully.
+----
+
+[[sthref1005]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1006]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-transport.html#create-transport-1[`create-transport`(1)],
+link:list-transports.html#list-transports-1[`list-transports`(1)]
+
+

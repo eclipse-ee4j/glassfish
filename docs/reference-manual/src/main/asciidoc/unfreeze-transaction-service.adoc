@@ -1,0 +1,99 @@
+type=page
+status=published
+title=unfreeze-transaction-service
+next=uninstall-node.html
+prev=undeploy.html
+~~~~~~
+
+= unfreeze-transaction-service
+
+[[unfreeze-transaction-service-1]][[GSRFM00245]][[unfreeze-transaction-service]]
+
+== unfreeze-transaction-service
+
+Resumes all suspended transactions
+
+[[sthref2199]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] unfreeze-transaction-service [--help]
+[--target target]
+----
+
+[[sthref2200]]
+
+=== Description
+
+The `unfreeze-transaction-service` subcommand restarts the transaction
+subsystem and resumes all in-flight transactions. Invoke this subcommand
+on an already frozen transaction subsystem. This subcommand is supported
+in remote mode only.
+
+[[sthref2201]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  This option specifies the target on which you are unfreezing the
+  transaction service. Valid values are:
+
+  `server`;;
+    Unfreezes the transaction service for the default server instance
+    `server` and is the default value.
+  configuration_name;;
+    Unfreezes the transaction service for all server instances that use
+    the named configuration.
+  cluster_name;;
+    Unfreezes the transaction service for every server instance in the
+    cluster.
+  instance_name;;
+    Unfreezes the transaction service for a particular server instance.
+
+[[sthref2202]]
+
+=== Examples
+
+[[GSRFM772]][[sthref2203]]
+
+==== Example 1   Using unfreeze-transaction-service
+
+[source]
+----
+% asadmin unfreeze-transaction-service
+Command unfreeze-transaction-service executed successfully
+----
+
+[[sthref2204]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref2205]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:freeze-transaction-service.html#freeze-transaction-service-1[`freeze-transaction-service`(1)],
+link:recover-transactions.html#recover-transactions-1[`recover-transactions`(1)],
+link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)]
+
+"link:administration-guide/transactions.html#GSADG00022[Administering Transactions]" in {productName} Administration Guide
+
+"https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
+in The Jakarta EE Tutorial
+
+

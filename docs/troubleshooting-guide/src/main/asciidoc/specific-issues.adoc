@@ -1,0 +1,811 @@
+type=page
+status=published
+title=Specific Issues
+next=faqs.html
+prev=overview.html
+~~~~~~
+
+= Specific Issues
+
+[[GSTSG00003]][[abgbj]]
+
+
+[[specific-issues]]
+== 2 Specific Issues
+
+This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
+
+* link:#abgca[Cannot Access Local Server (`http://localhost:8080`)]
+* link:#abgcf[Cannot Access Remote Server]
+* link:#abgcm[Cannot Access the Administration Console]
+* link:#abgcw[Cannot Access a Server Application]
+* link:#gjjoz[Administrator User Name or Password Not Known]
+* link:#gjjpj[Experience Issues Related to the JDK]
+* link:#abgdi[Server Will Not Start on Windows (Port Conflict)]
+* link:#gkvcs[{productName} Fails to Start in an OpenSolaris Zone]
+* link:#abgdr[Two Server Instances Bind to Same Port on Windows]
+* link:#abgel[Cannot Produce a JVM Thread Dump After Server Crash]
+* link:#ghvgk[Issues Related to Applications]
+* link:#ghvhy[Issues Related to `asadmin`]
+* link:#ghvgu[Issues Related to Installation]
+* link:#ghvrh[Issues Related to Security]
+
+[[abgca]][[GSTSG00043]][[cannot-access-local-server-httplocalhost8080]]
+
+=== Cannot Access Local Server (`http://localhost:8080`)
+
+When this error occurs, check the following:
+
+* link:#abgcb[Did the Server Start?]
+* link:#abgcd[Was the Server Started at the Expected Port?]
+* link:#gjjpn[Is a Personal Firewall Enabled?]
+
+[[abgcb]][[GSTSG00179]][[did-the-server-start]]
+
+==== Did the Server Start?
+
+[[abgcc]][[GSTSG00085]][[description]]
+
+===== Description
+
+If the console window is still open, the expected message indicates that
+the default domain was started successfully.
+
+If the console window is already closed, check for messages in the log
+file. This is the default location:
+
+[source]
+----
+domain-dir/logs/server.log
+----
+
+If startup was successful, the expected message is similar to that on
+the console, and appears at the end of the log file.
+
+For more information about starting a domain, see
+"link:administration-guide/domains.html#GSADG00537[
+Starting and Stopping a Domain]"
+in {productName} Administration Guide.
+To easily determine if a domain is running, use the `asadmin list-domains` command.
+
+[[abgcd]][[GSTSG00180]][[was-the-server-started-at-the-expected-port]]
+
+==== Was the Server Started at the Expected Port?
+
+[[abgce]][[GSTSG00086]][[description-1]]
+
+===== Description
+
+The server might be running at a different port number than expected,
+either because it was intentionally installed there, or because another
+server was already running on the default port when the server was
+installed.
+
+[[fxxov]][[GSTSG00024]][[to-determine-which-port-number-the-server-is-using]]
+
+To Determine Which Port Number the Server Is Using
+
+Follow this procedure.
+
+1. Examine the server's configuration file:
++
+[source]
+----
+domain-dir/config/domain.xml
+----
+2. Find the `network-listener` element.
+3. Inspect the value of the `port` attribute.
++
+Be sure to enter the correct port number when invoking the server.
++
+[NOTE]
+====
+The server's default port number is `8080`, however, there are a number
+of ways in which the expected value can change:
+
+* A different port number was specified during installation.
+* A previous installation exists.
+====
+
+
+[[gjjpn]][[GSTSG00181]][[is-a-personal-firewall-enabled]]
+
+==== Is a Personal Firewall Enabled?
+
+Issues might result when personal firewalls are enabled. Disable your
+personal firewall and see if the server access problem still exists.
+
+[[abgcf]][[GSTSG00044]][[cannot-access-remote-server]]
+
+=== Cannot Access Remote Server
+
+When attempting to open the start page of {productName}, the initial
+screen does not appear.
+
+When this error occurs, check the following:
+
+* link:#abgcg[Is the Server Available Locally?]
+* link:#abgcj[Is the Proxy Setting Causing a Problem?]
+
+[[abgcg]][[GSTSG00182]][[is-the-server-available-locally]]
+
+==== Is the Server Available Locally?
+
+[[abgch]][[GSTSG00087]][[description-2]]
+
+===== Description
+
+If the server cannot be accessed from the web, but it is running
+locally, then the server is actually running.
+
+[[abgci]][[GSTSG00088]][[solution]]
+
+===== Solution
+
+Verify that the server is running locally.
+
+[[fxxod]][[GSTSG00025]][[to-verify-that-the-server-is-running-locally]]
+
+To Verify That the Server Is Running Locally
+
+Follow this procedure.
+
+1. Log on to the host where the server is running.
+2. Go to the local web page. For example, if `8080` is the default port, go to:
++
+[source]
+----
+http://localhost:8080/
+----
+If the start page does appear, the web connection is encountering a
+problem that prevents accessing the server remotely. If the start page
+does not appear, see link:#abgcb[Did the Server Start?].
+
+[[abgcj]][[GSTSG00183]][[is-the-proxy-setting-causing-a-problem]]
+
+==== Is the Proxy Setting Causing a Problem?
+
+[[abgck]][[GSTSG00089]][[description-3]]
+
+===== Description
+
+The server should be accessible directly from the host on which it is
+running (`localhost`); for example, using the default port `8080`:
+
+[source]
+----
+http://localhost:8080/
+----
+
+[[abgcl]][[GSTSG00090]][[solution-1]]
+
+===== Solution
+
+A server instance running on `localhost` might not be accessible if the
+server host machine is connected to the web through a proxy. To solve
+this problem, do one of the following:
+
+* Set the browser to bypass the proxy server when accessing `localhost`.
+Refer to the browser's help system for information about how to do this.
+* Use the fully-qualified host name or IP address of your system; for example:
++
+[source]
+----
+http://myhost.mydomain.com:8080/
+----
+* Create an entry in the system's hosts file (for example, pointing
+`127.0.0.1` to `localhost`; `127.0.0.1` is not proxied).
+
+
+[NOTE]
+====
+To determine the host name for the `localhost` machine, type `hostname` at the command prompt.
+====
+
+
+[[abgcm]][[GSTSG00045]][[cannot-access-the-administration-console]]
+
+=== Cannot Access the Administration Console
+
+The Administration Console provides a graphical interface for
+administrative functions. If the Administration Console is not
+accessible, check the following:
+
+* link:#abgcn[Is the Application Server Running?]
+* link:#abgcq[Is the Administration Console Running on the Expected
+Port?]
+
+For more information about the Administration Console, see
+"link:administration-guide/overview.html#GSADG00698[Administration Console]" in {productName} Administration Guide.
+
+[[abgcn]][[GSTSG00184]][[is-the-application-server-running]]
+
+==== Is the Application Server Running?
+
+[[abgco]][[GSTSG00091]][[description-4]]
+
+===== Description
+
+The server must be running before the Administration Console can be
+accessed.
+
+[[abgcp]][[GSTSG00092]][[solution-2]]
+
+===== Solution
+
+Review the information in link:#abgcb[Did the Server Start?] to
+determine if the server is running.
+
+[[abgcq]][[GSTSG00185]][[is-the-administration-console-running-on-the-expected-port]]
+
+==== Is the Administration Console Running on the Expected Port?
+
+[[abgcr]][[GSTSG00093]][[description-5]]
+
+===== Description
+
+The default port number for the Administration Console is `4848`.
+However, it could be running on a different port number than expected,
+either because it was intentionally installed there, or because that
+port was in use when the server was started.
+
+[[abgcs]][[GSTSG00094]][[solution-3]]
+
+===== Solution
+
+Refer to link:#abgcd[Was the Server Started at the Expected Port?] for
+guidelines on verifying the port on which the Administration Console is
+running. Be sure to enter the correct port number and HTTP protocol when
+invoking the Administration Console.
+
+[[abgcw]][[GSTSG00046]][[cannot-access-a-server-application]]
+
+=== Cannot Access a Server Application
+
+If a particular application cannot be accessed through {productName},
+check the following:
+
+* link:#abgcx[Is the Application Server Running?]
+* link:#abgda[Was Application Deployment Successful?]
+
+[[abgcx]][[GSTSG00186]][[is-the-application-server-running-1]]
+
+==== Is the Application Server Running?
+
+[[abgcy]][[GSTSG00095]][[description-6]]
+
+===== Description
+
+If {productName} is not running, applications are not accessible.
+
+[[abgcz]][[GSTSG00096]][[solution-4]]
+
+===== Solution
+
+Review the information in link:#abgcb[Did the Server Start?] to
+determine if the server is running. The server must be running before a
+server application can be accessed.
+
+[[abgda]][[GSTSG00187]][[was-application-deployment-successful]]
+
+==== Was Application Deployment Successful?
+
+[[abgdb]][[GSTSG00097]][[description-7]]
+
+===== Description
+
+An application must be successfully deployed before it can be accessed.
+
+[[abgdc]][[GSTSG00098]][[solution-5]]
+
+===== Solution
+
+Verify that the application was successfully deployed. There are several
+ways to do this:
+
+* Check the server's log file for related entries:
++
+[source]
+----
+domain-dir/server.log
+----
+* Use the `asadmin list-applications` command to determine which
+applications are deployed.
+* View the Applications page in the Administration Console, accessed by
+clicking the Applications node.
+
+For more information about deploying applications, see
+"link:application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+Console online help.
+
+[[gjjoz]][[GSTSG00047]][[administrator-user-name-or-password-not-known]]
+
+=== Administrator User Name or Password Not Known
+
+If you have forgotten the administrator user name, you can find it by
+inspecting the domain-dir`/config/admin-keyfile` file, where domain-dir
+is the directory for the domain. In the default domain, `domain1`, the
+file to inspect is domain-dir`/config/admin-keyfile`. For a different
+domain, substitute its name in the path.
+
+If you have forgotten the administrator password, one solution is to
+create a new domain with the admin username and password that you want,
+then copy the entry from the `config/admin-keyfile` file in that new
+domain to the other domain.
+
+[[gjjpj]][[GSTSG00048]][[experience-issues-related-to-the-jdk]]
+
+=== Experience Issues Related to the JDK
+
+[[gjjpl]][[GSTSG00188]][[description-8]]
+
+==== Description
+
+You experience JDK-related issues in a variety of circumstances.
+
+[[gjjop]][[GSTSG00189]][[solution-6]]
+
+==== Solution
+
+{productName} 7 requires JDK 11, so check your system for that dependency.
+
+Ensure that the required JDK software is installed and that the
+`JAVA_HOME` environment variable points to the JDK installation
+directory, not the Java Runtime Environment (JRE) software.
+
+Set `JAVA_HOME` and `$JAVA_HOME/bin` in the `PATH` to point to the
+supported JDK version.
+
+[[abgdi]][[GSTSG00049]][[server-will-not-start-on-windows-port-conflict]]
+
+=== Server Will Not Start on Windows (Port Conflict)
+
+If a message similar to the following is displayed when starting
+{productName} on Microsoft Windows, a server port conflict has
+occurred:
+
+[source]
+----
+Address already in use
+----
+
+This error occurs when another application is running on the {productName} port (default `8080`), or because a previous instance of
+{productName} did not shut down cleanly.
+
+You might also check the following:
+
+* link:#abgdj[Is Another Application Running on the Server's Port?]
+* link:#abgdk[Has an Ungraceful Shutdown Occurred on a Previously Running Server?]
+
+[[abgdj]][[GSTSG00190]][[is-another-application-running-on-the-servers-port]]
+
+==== Is Another Application Running on the Server's Port?
+
+If another application is using the server's port, stop the other
+application, then restart {productName}.
+
+[[abgdk]][[GSTSG00191]][[has-an-ungraceful-shutdown-occurred-on-a-previously-running-server]]
+
+==== Has an Ungraceful Shutdown Occurred on a Previously Running Server?
+
+Use the `asadmin stop-domain` command to stop the server, or explicitly
+kill the Java process and then restart {productName}.
+
+[[gkvcs]][[GSTSG00050]][[glassfish-server-fails-to-start-in-an-opensolaris-zone]]
+
+=== {productName} Fails to Start in an OpenSolaris Zone
+
+[[gkvcx]][[GSTSG00192]][[description-9]]
+
+==== Description
+
+If {productName} is installed in an OpenSolaris zone, an attempt to
+start a domain might fail with the following error message:
+
+[source]
+----
+Waiting for DAS to start ..Error starting domain: domain.
+The server exited prematurely with exit code 6.
+Before it died, it produced the following output:
+
+UTF ERROR ["../../../src/solaris/instrument/EncodingSupport_md.c":66]:
+Failed to complete iconv_open() setup
+----
+
+The failure occurs because, by default, an OpenSolaris zone is installed
+without language and encoding support, which {productName} requires.
+
+[[gkvdf]][[GSTSG00026]][[resolution-to-enable-glassfish-server-to-run-in-an-opensolaris-zone]]
+
+==== Resolution: To Enable {productName} to Run in an OpenSolaris Zone
+
+1. Install the package that provides language and encoding support for
+your locale.
++
+[source]
+----
+$ pkg install package-name
+----
+package-name::
+  The name of the package that provides language and encoding support
+  for your locale. For example, the name of the package that provides
+  language and encoding support for the US English locale is
+  `SUNWlang-enUS`.
+2. Set the `LANG` environment variable to the code for your locale.
++
+For example, if your locale is US English, set the `LANG` environment
+variable to `en_US.UTF-8`.
+
+[[abgdr]][[GSTSG00051]][[two-server-instances-bind-to-same-port-on-windows]]
+
+=== Two Server Instances Bind to Same Port on Windows
+
+[[abgds]][[GSTSG00193]][[description-10]]
+
+==== Description
+
+This problem occurs on Windows XP systems with {productName}
+software, and is due to a known Windows security flaw rather than a
+problem with {productName} itself.
+
+The problem occurs when two or more instances of {productName} are
+created using the same port number for the `instanceport` option; for
+example:
+
+[source]
+----
+asadmin create-domain -adminport 5001 options -instanceport 6001 domain
+asadmin create-domain -adminport 5002 options -instanceport 6001 domain
+----
+
+When the two domains are started on a UNIX or Linux system, a port
+conflict error is thrown and the second instance fails to start.
+However, when the two domains are started on Windows XP, no error is
+thrown, both server instances start, but only the first instance is
+accessible at the specified port. When that first server instance is
+subsequently shut down, the second instance then becomes accessible.
+Moreover, when both instances are running, the Windows `netstat` command
+only reports the first instance.
+
+[[fxxyd]][[GSTSG00194]][[solution-7]]
+
+==== Solution
+
+Be sure to use unique port numbers for all server instances on Windows
+systems.
+
+[[abgel]][[GSTSG00052]][[cannot-produce-a-jvm-thread-dump-after-server-crash]]
+
+=== Cannot Produce a JVM Thread Dump After Server Crash
+
+[[abgem]][[GSTSG00195]][[description-11]]
+
+==== Description
+
+If {productName} crashes, the server dumps a core file and, by
+default, restarts with the `-Xrs` flag, which prevents the dump of a JVM
+thread dump.
+
+[[fxxyw]][[GSTSG00196]][[solution-8]]
+
+==== Solution
+
+[[ghylc]][[GSTSG00027]][[to-obtain-a-server-thread-dump-specific-issues]]
+
+===== To Obtain a Server Thread Dump
+
+Type the following command:
+
+[source]
+----
+asadmin generate-jvm-report --type=thread
+----
+
+[[sthref4]]
+
+See Also
+
+link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+
+[[ghvgk]][[GSTSG00053]][[issues-related-to-applications]]
+
+=== Issues Related to Applications
+
+[[abgee]][[GSTSG00197]][[cannot-undeploy-or-redeploy-application-with-open-streams-to-jar-files-windows]]
+
+==== Cannot Undeploy or Redeploy Application With Open Streams to `jar` Files (Windows)
+
+[[abgef]][[GSTSG00099]][[description-12]]
+
+===== Description
+
+On Windows systems, after running an application, subsequent attempts to
+undeploy it or redeploy it throw exceptions about the server being
+unable to delete a file or rename a directory.
+
+On Windows systems, an application may use `getClass().getResource` or
+`getResourceAsStream` methods to locate a resource inside the
+application, particularly in `jar` files that are in the application or
+accessible to it. If the streams remain open, subsequent attempts to
+redeploy or undeploy the application can fail. In addition, the Java
+runtime by default caches streams to `jar` files for performance
+reasons.
+
+[[fxxyr]][[GSTSG00100]][[solution-9]]
+
+===== Solution
+
+Be sure to close streams opened by your applications. Also, if an
+application needs to be redeployed or undeployed repeatedly, and also
+needs to obtain a resource from a `jar` file using `getResource` or
+`getResourceAsStream`, consider using `getClass().getResource`, which
+returns a URL object, then invoke the `url.setUseCaches` method to turn
+off caching for that `jar` file, and use `url.getInputStream()` to
+obtain the stream.
+
+Although turning off caching for access to the `jar` file can slow
+performance, this approach does allow the application to be undeployed
+or redeployed. Note also that if the `getClass().getResourceAsStream`
+method is used instead, then the `jar` file in which the resource is
+located is cached (this is the default Java runtime setting) and remains
+open until the server is stopped.
+
+[[gldbk]][[GSTSG00198]][[maxpermgen-exception]]
+
+==== `MaxPermGen` Exception
+
+[[gldbn]][[GSTSG00101]][[description-13]]
+
+===== Description
+
+Application servers such as {productName} allow you to redeploy an
+application without restarting the server. Simply make the change in
+your source code, compile the source, and redeploy the application.
+
+Each application is loaded using its own classloader. When you undeploy
+an application, its classloader is discarded with all the classes it
+loaded and is garbage collected sooner or later. However, if there's a
+reference from outside an application to an object in the application
+loaded by the application's classloader, that object can't be garbage
+collected. The reference holds the object in memory.
+
+The memory in the Virtual Machine is divided into a number of regions.
+One of these regions is `PermGen`. It's an area of memory used to (among
+other things) load class files. The size of this memory region is fixed;
+it does not change when the VM is running. You can specify the size of
+this region with a command line switch: `-XX:MaxPermSize`. Setting the
+`-Xmx` parameter does not help: this parameter only specifies the total
+heap size and does not affect the size of the `PermGen` region.
+
+If you keep loading new classes that can't be garbage collected because
+of references to them from outside the application, the VM runs out of
+space in the `PermGen` region, even if there's plenty of memory
+available. This is called a classloader leak. The resulting exception is
+`java.lang.OutOfMemoryError: PermGen space`.
+
+The `java.lang.String.intern()` method also allocates memory in the
+`PermGen` region. If your application uses this method with strings and
+holds references to these strings, thereby making garbage collection
+impossible, your application may cause the same `PermGen space`
+exception.
+
+[[gldbw]][[GSTSG00102]][[solution-10]]
+
+===== Solution
+
+Classloader leaks are difficult to diagnose. Most profilers list leaked
+objects but don't highlight the ones causing classloader leaks. Most
+profilers also stop tracing as soon as they reach a class object or
+classloader.
+
+One diagnostic approach involves undeploying the application and
+triggering a memory dump using the JDK 11 `jcmd` tool.
+The simplest analysis is to list all instances of `java.lang.Class`
+and look for class objects that have many instances.
+This is a sign that the class has been loaded
+multiple times without being garbage collected.
+
+See https://www.eclipse.org/openj9/docs/tool_jcmd/ for more information.
+
+
+[[ghvhy]][[GSTSG00054]][[issues-related-to-asadmin]]
+
+=== Issues Related to `asadmin`
+
+[[ghvhi]][[GSTSG00199]][[asadmin-start-domain-command-fails]]
+
+==== `asadmin` `start-domain` Command Fails
+
+The command `asadmin start-domain` fails with the following error:
+
+[source]
+----
+There is more than one domain...
+----
+
+[[gjkph]][[GSTSG00103]][[description-14]]
+
+===== Description
+
+When issued with no arguments, the command `asadmin start-domain` fails.
+
+This error occurs when there is more than one domain in the domains
+directory, none of them is named `domain1,` and no domain is specified
+with the `start-domain` command.
+
+[[gjkoy]][[GSTSG00104]][[solution-11]]
+
+===== Solution
+
+Specify the domain when issuing the `start-domain` command:
+
+[source]
+----
+asadmin start-domain domain-name
+----
+
+For example:
+
+[source]
+----
+asadmin start-domain mycustomdomain
+----
+
+[[ghvhx]][[GSTSG00200]][[cannot-stop-domain-using-asadmin-stop-domain]]
+
+==== Cannot Stop Domain Using `asadmin` `stop-domain`
+
+[[ghvhl]][[GSTSG00105]][[description-15]]
+
+===== Description
+
+You cannot stop the domain using the `asadmin` `stop-domain` command.
+
+[[ghvha]][[GSTSG00106]][[solution-12]]
+
+===== Solution
+
+Look for error messages that display in the console when you issue the command.
+
+Search the `server.log` file for error messages related to your
+inability to stop the domain.
+
+[[ghvgu]][[GSTSG00055]][[issues-related-to-installation]]
+
+=== Issues Related to Installation
+
+[[gjjnu]][[GSTSG00201]][[installation-hangs-during-update-tool-configuration]]
+
+==== Installation Hangs During Update Tool Configuration
+
+[[giqjt]][[GSTSG00107]][[description-16]]
+
+===== Description
+
+Installation hangs more than five minutes during Update Tool configuration.
+
+[[giqle]][[GSTSG00108]][[solution-13]]
+
+===== Solution
+
+Cancel the installation and run the installation program again, but this
+time deselect the Install Update Tool check box. Update Tool can be
+installed later from as-install``/bin/``. For more information about
+Update Tool, see "link:administration-guide.html#GSADG00701[Update Tool]"
+in {productName} Administration Guide. For general information about
+{productName}installation, see the link:installation-guide.html#GSING[
+{productName} Installation Guide].
+
+
+[NOTE]
+====
+Update Tool differs from Upgrade Tool, which is used to migrate the
+configuration and deployed applications from an earlier version of
+{productName} to the current version.
+For more information about Upgrade Tool and upgrading, see the
+link:upgrade-guide.html#GSUPG[{productName} Upgrade Guide].
+====
+
+
+[[gjjob]][[GSTSG00202]][[glassfish-server-components-not-removed-during-uninstallation]]
+
+==== {productName} Components Not Removed During Uninstallation
+
+[[gjjoh]][[GSTSG00109]][[description-17]]
+
+===== Description
+
+Not all {productName} directories are automatically removed by the
+uninstallation program. Some directories and files remain after
+uninstalling.
+
+[[gjjnk]][[GSTSG00110]][[solution-14]]
+
+===== Solution
+
+Examine the remaining directories and remove any files or directories
+that you do not want, including hidden directories prefixed with a dot.
+It is safe to remove uninstallation and installation log files after you
+have examined them.
+
+For information related to uninstallation, see
+"link:installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
+in {productName} Installation Guide.
+
+[[ghvrh]][[GSTSG00056]][[issues-related-to-security]]
+
+=== Issues Related to Security
+
+[[abgjt]][[GSTSG00203]][[java.security.accesscontrolexception-access-denied-error]]
+
+==== `java.security.AccessControlException`: Access Denied Error
+
+[[abgju]][[GSTSG00111]][[description-18]]
+
+===== Description
+
+The following error occurs from an application client, or appears in the
+`server.log` file:
+
+[source]
+----
+java.security.AccessControlException: access denied
+(java.util.PropertyPermission name write...)
+----
+
+There is a permissions issue in the policy files. Either the
+`client.policy` file for the application client or the `server.policy`
+file for server side components does not have permission to set the
+property.
+
+[[fxxzk]][[GSTSG00112]][[solution-15]]
+
+===== Solution
+
+Add the permission in `client.policy` (for the application client), or
+in `server.policy` (for web modules) for the application that needs to
+set the property. By default, applications only have read permission for
+properties.
+
+For example, to grant read/write permission for all files in the
+codebase directory, add or append the following to `client.policy` or
+`server.policy`:
+
+[source]
+----
+grant codeBase "file:/.../build/sparc_SunOS/sec/-" {
+   permission java.util.PropertyPermission "*", "read,write";
+ };
+----
+
+[[abgka]][[GSTSG00204]][[mutual-authentication-not-working-with-the-application-client]]
+
+==== Mutual Authentication Not Working With the Application Client
+
+[[abgkb]][[GSTSG00113]][[description-19]]
+
+===== Description
+
+This failure can occur when the keystore and truststore properties are
+not set properly.
+
+[[fxxzu]][[GSTSG00114]][[solution-16]]
+
+===== Solution
+
+Set the following properties on the JVM:
+
+[source]
+----
+javax.net.ssl.keyStore=
+<keystore-file-path>;javax.net.ssl.trustStore=<truststore-file-path>
+----
+
+To use the application client, set the environment variable `VMARGS` to
+the following value:
+
+[source]
+----
+-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks
+-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks
+----

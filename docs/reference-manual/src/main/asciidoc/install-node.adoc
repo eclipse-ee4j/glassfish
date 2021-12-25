@@ -1,0 +1,227 @@
+type=page
+status=published
+title=install-node
+next=install-node-dcom.html
+prev=import-sync-bundle.html
+~~~~~~
+
+= install-node
+
+[[install-node-1]][[GSRFM00143]][[install-node]]
+
+== install-node
+
+Installs {productName} software on specified SSH-enabled hosts
+
+[[sthref1251]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] install-node [--help]
+[--archive archive]
+[--create={false|true}] [--save[={false|true}]
+[--installdir as-install-parent]
+[--sshport ssh-port] [--sshuser ssh-user]
+[--sshkeyfile ssh-keyfile]
+[--force={false|true}]
+host-list
+----
+
+[[sthref1252]]
+
+=== Description
+
+The `install-node` subcommand installs {productName} software on the
+hosts that are specified as the operand of the subcommand. This
+subcommand requires secure shell (SSH) to be configured on the host
+where the subcommand is run and on each host where the {productName}
+software is being installed.
+
+[NOTE]
+====
+This subcommand is equivalent to the
+link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)]
+subcommand. To install {productName} software on hosts that use the
+Distributed Component Object Model (DCOM) remote protocol, use the
+link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)]
+subcommand.
+====
+
+If necessary, the subcommand creates a ZIP archive of the
+{productName} software from the installation where this subcommand
+is run. The archive does not contain the `domains` directory or the
+`nodes` directory. These directories are synchronized from the domain
+administration server (DAS) when instances on nodes that represent the
+hosts are created and started. The subcommand does not delete the
+archive after installing the {productName} software from the archive
+on the specified hosts. +
+If multiple hosts are specified, the configuration of the following
+items is the same on all hosts:
+
+* Base installation directory
+* SSH port
+* SSH user
+* SSH key file
++
+If the SSH key file does not exist on a host where the {productName}
+software is to be installed, the subcommand runs interactively and
+prompts for a password. To enable the subcommand to run
+noninteractively, the following conditions must be met:
+
+* The `--interactive` option of the
+  link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility must be `false`.
+* The `--passwordfile` option of the `asadmin` utility must specify a
+  password file.
+* The password file must contain the `AS_ADMIN_SSHPASSWORD` entry.
+
+The subcommand does not modify the configuration of the DAS.
+
+This subcommand is supported in local mode only.
+
+[[sthref1253]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--archive`::
+  The absolute path to the archive file of the {productName}
+  software that is to be installed. If no archive file is specified, the
+  subcommand creates an archive from the installation of
+  {productName} software from which the subcommand is run. This
+  archive is created in the home directory of the user that is running
+  the command.
+`--create`::
+  Specifies whether the subcommand should create an archive file of the
+  {productName} software to install.
++
+  `false`;;
+    No archive file is created. The subcommand installs the software
+    from the existing archive file that the `--archive` option specifies
+    (default).
+  `true`;;
+    The subcommand creates an archive file from the installation of
+    {productName} software from which the subcommand is run.
+`--save`::
+  Specifies whether the archive file from which the software is
+  installed is saved after installation.
++
+  `false`;;
+    The archive file is not saved. The subcommand deletes the file after
+    installing the software (default).
+  `true`;;
+    The archive file is saved.
+`--installdir`::
+  The absolute path to the parent of the base installation directory
+  where the {productName} software is to be installed on each host,
+  for example, `/export/glassfish7/`. If the directory does not exist,
+  the subcommand creates the directory. +
+  The user that is running this subcommand must have write access to the
+  specified directory. Otherwise, an error occurs. +
+  To overwrite an existing an installation of the {productName}
+  software, set the `--force` option to `true`. If the directory already
+  contains an installation and the `--force` option is `false`, an error occurs. +
+  The default is the parent of the base installation directory of the
+  {productName} software on the host where this subcommand is run.
+`--sshport`::
+  The port to use for SSH connections to the host where the
+  {productName} software is to be installed. The default is 22.
+`--sshuser`::
+  The user on the host where the {productName} software is to be
+  installed that is to run the process for connecting through SSH to the
+  host. The default is the user that is running this subcommand. To
+  ensure that the DAS can read this user's SSH private key file, specify
+  the user that is running the DAS process.
+`--sshkeyfile`::
+  The absolute path to the SSH private key file for user that the
+  `--sshuser` option specifies. This file is used for authentication to
+  the `sshd` daemon on the host. +
+  The user that is running this subcommand must be able to reach the
+  path to the key file and read the key file. +
+  The default is a key file in the user's `.ssh` directory. If multiple
+  key files are found, the subcommand uses the following order of
+  preference:
+
+  1. `id_rsa`
+  2. `id_dsa`
+  3. `identity`
+
+`--force`::
+  Specifies whether the subcommand overwrites an existing installation
+  of the {productName} software in the directory that the
+  `--installdir` option specifies. Possible values are as follows:
+
+  `false`;;
+    The existing installation is not overwritten (default).
+  `true`;;
+    The existing installation is overwritten.
+
+[[sthref1254]]
+
+=== Operands
+
+host-list::
+  A space-separated list of the names of the hosts where the
+  {productName} software is to be installed.
+
+[[sthref1255]]
+
+=== Examples
+
+[[GSRFM625]][[sthref1256]]
+
+==== Example 1   Installing {productName} Software at the Default
+Location
+
+This example installs {productName} software on the hosts
+`sj03.example.com` and `sj04.example.com` at the default location.
+
+[source]
+----
+asadmin> install-node sj03.example.com sj04.example.com
+Created installation zip /home/gfuser/glassfish2339538623689073993.zip
+Successfully connected to gfuser@sj03.example.com using keyfile /home/gfuser
+/.ssh/id_rsa
+Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
+sj03.example.com:/export/glassfish7
+Installing glassfish2339538623689073993.zip into sj03.example.com:/export/glassfish7
+Removing sj03.example.com:/export/glassfish7/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj03.example.com:/export/glassfish7/bin
+Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
+/.ssh/id_rsa
+Copying /home/gfuser/glassfish2339538623689073993.zip (81395008 bytes) to
+sj04.example.com:/export/glassfish7
+Installing glassfish2339538623689073993.zip into sj04.example.com:/export/glassfish7
+Removing sj04.example.com:/export/glassfish7/glassfish2339538623689073993.zip
+Fixing file permissions of all files under sj04.example.com:/export/glassfish7/bin
+Command install-node executed successfully
+----
+
+[[sthref1257]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1258]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
+link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
+link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
+
+

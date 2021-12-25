@@ -1,0 +1,107 @@
+type=page
+status=published
+title=list-system-properties
+next=list-threadpools.html
+prev=list-supported-cipher-suites.html
+~~~~~~
+
+= list-system-properties
+
+[[list-system-properties-1]][[GSRFM00203]][[list-system-properties]]
+
+== list-system-properties
+
+Lists the system properties of the domain, configuration, cluster, or
+server instance
+
+[[sthref1818]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-system-properties [--help]
+[target]
+----
+
+[[sthref1819]]
+
+=== Description
+
+Shared or clustered server instances will often need to override
+attributes defined in their referenced configuration. Any configuration
+attribute in a server instance can be overridden through a system
+property of the corresponding name. This list-system-properties
+subcommand lists the system properties of a domain, configuration,
+cluster, or server instance.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1820]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1821]]
+
+=== Operands
+
+target::
+  This restricts the listing to system properties for a specific target.
+  Valid values are:
+
+  domain;;
+    Lists the system properties defined for the domain.
+  configuration_name;;
+    Lists the system properties for the named configuration as well as
+    those the cluster inherits from the domain.
+  cluster_name;;
+    Lists the system properties defined for the named cluster as well as
+    those the cluster. inherits from its configuration and the domain.
+  instance_name;;
+    Lists the system properties defined for the named server instance as
+    well as those the server inherits from its cluster (if the instance
+    is clustered), its configuration, and the domain.
+
+[[sthref1822]]
+
+=== Examples
+
+[[GSRFM713]][[sthref1823]]
+
+==== Example 1   Listing System Properties
+
+This example lists the system properties on `localhost`.
+
+[source]
+----
+asadmin> list-system-properties
+http-listener-port=1088
+Command list-system-properties executed successfully.
+----
+
+[[sthref1824]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1825]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
+link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+
+

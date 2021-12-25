@@ -1,0 +1,99 @@
+type=page
+status=published
+title=delete-auth-realm
+next=delete-cluster.html
+prev=delete-audit-module.html
+~~~~~~
+
+= delete-auth-realm
+
+[[delete-auth-realm-1]][[GSRFM00066]][[delete-auth-realm]]
+
+== delete-auth-realm
+
+Removes the named authentication realm
+
+[[sthref601]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] delete-auth-realm [--help]
+[--target target]
+auth_realm-name
+----
+
+[[sthref602]]
+
+=== Description
+
+The `delete-auth-realm` subcommand removes the named authentication
+realm. This subcommand is supported in remote mode only.
+
+[[sthref603]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--target`::
+  Specifies the target on which you are deleting the authentication
+  realm. Valid values are
+
+  `server`;;
+    Deletes the realm for the default server instance `server` and is
+    the default value.
+  configuration_name;;
+    Deletes the realm for the named configuration.
+  cluster_name;;
+    Deletes the realm for every server instance in the cluster.
+  instance_name;;
+    Deletes the realm for a particular server instance.
+
+[[sthref604]]
+
+=== Operands
+
+auth_realm_name::
+  Name of the realm to be deleted.
+
+[[sthref605]]
+
+=== Examples
+
+[[GSRFM533]][[sthref606]]
+
+==== Example 1   Deleting an Authentication Realm
+
+This example deletes the authentication realm `db`.
+
+[source]
+----
+asadmin> delete-auth-realm db
+Command delete-auth-realm executed successfully
+----
+
+[[sthref607]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref608]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
+link:list-auth-realms.html#list-auth-realms-1[`list-auth-realms`(1)]
+
+

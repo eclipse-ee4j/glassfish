@@ -1,0 +1,2655 @@
+type=page
+status=published
+title=Administering the Java Message Service (JMS)
+next=jndi.html
+prev=javamail.html
+~~~~~~
+
+= Administering the Java Message Service (JMS)
+
+[[GSADG00020]][[abljw]]
+
+
+[[administering-the-java-message-service-jms]]
+== 17 Administering the Java Message Service (JMS)
+
+The Java Message Service (JMS) API is a messaging standard that allows
+Jakarta EE applications and components, including message-driven beans
+(MDBs), to create, send, receive, and read messages. It enables
+distributed communication that is loosely coupled, reliable, and
+asynchronous.
+
+{productName} supports JMS messaging by communicating with a JMS
+provider through a Jakarta EE Connector resource adapter. By default,
+{productName} provides JMS messaging through its built-in jmsra
+resource adapter communicating with Open Message Queue, which is
+included with {productName}. This combination, known as the JMS
+Service, is tightly integrated with {productName}, providing a rich
+set of `asadmin` subcommands and Administration Console pages to
+simplify JMS messaging administration tasks.
+
+{productName} also supports the Generic Resource Adapter for JMS
+(GenericJMSRA) for use as a resource adapter to connect to other JMS
+providers. The last section in this chapter, link:#gbtvg[Using the
+Generic Resource Adapter for JMS to Integrate Supported External JMS
+Providers], describes the GenericJMSRA and provides instructions for
+using it to make other supported JMS providers available to {productName}.
+
+The following topics are addressed here:
+
+* link:#gipit[About the JMS Service]
+* link:#beaof[Updating the JMS Service Configuration]
+* link:#gipbg[Administering JMS Hosts]
+* link:#ablkb[Administering JMS Connection Factories and Destinations]
+* link:#ablkj[Administering JMS Physical Destinations]
+* link:#gkxgk[Special Situations When Using the JMS Service]
+* link:#gipnh[Troubleshooting the JMS Service]
+* link:#gbtvg[Using the Generic Resource Adapter for JMS to Integrate
+Supported External JMS Providers]
+
+Instructions for accomplishing the task in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.
+
+[[gipit]][[GSADG00595]][[about-the-jms-service]]
+
+=== About the JMS Service
+
+To support JMS messaging, the JMS Service provides the following
+administrative objects:
+
+JMS Service Configuration::
+  The JMS service configuration is part of the overall configuration for
+  a GlassFish standalone instance or cluster. It specifies how the JMS
+  Service is to create and maintain connections with JMS Hosts.
+JMS Hosts::
+  JMS hosts are the message servers that host destinations, store
+  messages, and interact with applications to send and receive messages
+  across connections. In Message Queue, JMS hosts are called brokers. +
+  The JMS service supports these types of JMS hosts:
+
+  * Embedded type, in which the JMS host runs in the same JVM as the
+    GlassFish instance; its configuration and lifecycle are managed by the JMS service.
+  * Local type, in which the JMS host runs separately on the same host
+    as the GlassFish instance; its configuration and lifecycle are managed by the JMS service.
+  * Remote type, in which the JMS host represents a Message Queue broker
+    or broker cluster that is external to the JMS service; its operation
+    is managed using Message Queue administrative tools.
+
++
+For more information about JMS host types, see link:#giplw[About JMS Host Types].
+JMS Connection Factory Resources::
+  JMS connection factory resources house the information that
+  applications use to connect to a JMS provider. For each JMS connection
+  factory, the JMS service automatically maintains a GlassFish connector
+  resource and a GlassFish connector connection pool in order to support
+  connection pooling and failover.
+JMS Destination Resources::
+  JMS destination resources house the information that applications use
+  to specify the target destination of messages they produce and the
+  source destination of messages they consume. For each JMS destination
+  resource, the JMS service automatically maintains a GlassFish
+  administered object.
+JMS Physical Destinations::
+  JMS physical destinations provide a means to create and manage JMS
+  destinations administratively instead of having them created
+  dynamically when needed by an application. While dynamic creation of
+  destinations is often sufficient during application development,
+  administratively created physical destinations are more suitable for
+  production environments.
+
+[[gavqn]][[GSADG00773]][[jms-service-high-availability]]
+
+==== JMS Service High Availability
+
+Just as {productName} supports clusters of instances to provide high
+availability, Message Queue supports clusters of brokers to provide
+service availability or service and data availability, depending on the
+type of broker cluster, as described in "link:../openmq/mq-tech-over/broker-clusters.html#GMTOV00028[Broker
+Clusters]" in Open Message Queue Technical Overview.
+
+The JMS service takes advantage of this Message Queue capability and
+automatically creates and manages a Message Queue broker cluster when a
+GlassFish cluster's configuration specifies Embedded or Local type JMS
+hosts. Additionally, both GlassFish clusters and standalone instances
+can use Message Queue broker clusters as Remote type JMS hosts.
+
+For information about how the JMS service supports GlassFish clusters
+and Message Queue broker clusters, see "link:ha-administration-guide/jms.html#GSHAG00012[Configuring
+Java Message Service High Availability]" in {productName} High Availability Administration Guide.
+
+[[beaof]][[GSADG00596]][[updating-the-jms-service-configuration]]
+
+=== Updating the JMS Service Configuration
+
+Because the JMS service configuration is part of the overall
+configuration for a standalone instance or cluster, it is created when
+the standalone instance or cluster is created. You can then update the
+JMS service configuration by using the Java Message Service page for the
+configuration in the Administration Console, or by using a `set`
+subcommand of the following form:
+
+[source]
+----
+set configs.config.config-name.jms-service.attribute-name=attribute-value
+----
+
+The attributes you can set are:
+
+`type`::
+  The JMS host type the service is to use. Available choices are
+  `EMBEDDED`, `LOCAL` and `REMOTE`. See link:#giplw[About JMS Host
+  Types] for more information.
+`init-timeout-in-seconds`::
+  The number of seconds {productName} waits for the JMS service to
+  start before aborting the startup.
+`start-args`::
+  A list of arguments the JMS service passes to Embedded and Local type
+  JMS hosts on startup. Permissible arguments are the options supported
+  by the Message Queue `imqbrokerd` command, as described in
+  "link:../openmq/mq-admin-guide/command-line-reference.html#GMADG00280[Broker Utility]" in Open Message Queue
+  Administration Guide.
+`default-jms-host`::
+  The name of the default JMS host.
+`reconnect-enabled`::
+  When set to `true`, the JMS service attempts to reconnect to a JMS
+  host (or one of the JMS hosts in the AddressList) when a connection is
+  lost.
+`reconnect-attempts`::
+  The number of attempts to connect (or reconnect) for each JMS host in
+  the AddressList before the JMS service tries the next address in the
+  list. A value of -1 indicates that the number of reconnect attempts is
+  unlimited (the JMS service attempts to connect to the first address
+  until it succeeds).
+`reconnect-interval-in-seconds`::
+  The number of seconds between reconnect attempts. This interval
+  applies for attempts on each JMS host in the AddressList and for
+  successive addresses in the list. If it is too short, this time
+  interval does not give a JMS host time to recover. If it is too long,
+  the reconnect might represent an unacceptable delay.
+`addresslist-behavior`::
+  The order of connection attempts. Available choices are:
++
+  `random`;;
+    Select a JMS host from the AddressList randomly. If there are many
+    clients attempting a connection using the same connection factory,
+    specify `random` to prevent them from all being connected to the
+    same JMS host.
+  `priority`;;
+    Always try to connect to the first JMS host in the AddressList and
+    use another one only if the first one is not available.
+`addresslist-iterations`::
+  The number of times the JMS service iterates through the AddressList
+  in an effort to establish (or reestablish) a connection. A value of -1
+  indicates that the number of attempts is unlimited.
+`mq-scheme`::
+`mq-service`::
+  The Message Queue address scheme name and connection service name to
+  use for the AddressList if a non-default scheme or service is to be
+  used. See "link:../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622[Connection Handling]" in Open Message
+  Queue Administration Guide for syntax information.
+
+
+[NOTE]
+====
+After making changes to the JMS service configuration, {productName}
+instances that use the configuration must be restarted in order for the
+changes to be propagated.
+====
+
+
+[[gkxgf]][[GSADG00774]][[setting-message-queue-broker-properties-in-the-jms-service-configuration]]
+
+==== Setting Message Queue Broker Properties in the JMS Service Configuration
+
+You can specify any Message Queue broker property in the JMS service
+configuration by adding it by name to the Additional Properties table on
+the Java Message Service page for the configuration in the
+Administration Console, or by using a `set` subcommand of the following
+form:
+
+[source]
+----
+set configs.config.config-name.jms-service.property.broker-property-name=value
+----
+
+If the broker property name includes dots, preface the dots with two
+backslashes (`\\`); for example, to set the `imq.system.max_count`
+property, specify `imq\\.system\\.max_count` in the `set` subcommand.
+
+
+[NOTE]
+====
+You can also set broker properties in the JMS host. If you set the same
+broker property in both the JMS service configuration and the JMS host,
+the value specified in the JMS host is used.
+====
+
+
+[[gipbg]][[GSADG00597]][[administering-jms-hosts]]
+
+=== Administering JMS Hosts
+
+A JMS host represents a Message Queue broker. JMS contains a JMS hosts
+list (the `AddressList` property) that contains all the JMS hosts that
+are used by {productName}. The JMS hosts list is populated with the
+hosts and ports of the specified Message Queue brokers and is updated
+whenever a JMS host configuration changes. When you create JMS resources
+or deploy message driven beans, the resources or beans inherit the JMS
+hosts list.
+
+The following topics are addressed here:
+
+* link:#giplw[About JMS Host Types]
+* link:#gktfb[Configuring Embedded and Local JMS Hosts]
+* link:#gipbh[To Create a JMS Host]
+* link:#gipbz[To List JMS Hosts]
+* link:#givno[To Update a JMS Host]
+* link:#gipbv[To Delete a JMS Host]
+
+For information about administering JMS hosts that are servicing
+GlassFish clusters, see "link:ha-administration-guide/jms.html#GSHAG00312[Configuring GlassFish Clusters
+to Use Message Queue Broker Clusters]" in {productName} High Availability Administration Guide.
+
+[[giplw]][[GSADG00775]][[about-jms-host-types]]
+
+==== About JMS Host Types
+
+The JMS service uses Message Queue (MQ) brokers as JMS hosts,
+integrating them in three ways:
+
+Embedded Type::
+  When the JMS service configuration's `type` attribute is `EMBEDDED`,
+  the MQ broker is co-located in the same JVM as the {productName}
+  instance it services. The JMS service starts it in-process and manages
+  its configuration and lifecycle. +
+  For this type, the JMS service uses lazy initialization to start the
+  broker when the first JMS operation is requested instead of
+  immediately when the GlassFish instance is started. If necessary, you
+  can force startup of the broker by using the
+  link:reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] command. +
+  Additionally, if the GlassFish instance is a standalone instance (not
+  a clustered instance), JMS operations use a Message Queue feature
+  called direct mode to bypass the networking stack, leading to
+  performance optimization.
+Local Type::
+  When the JMS service configuration's `type` attribute is `LOCAL`, the
+  JMS service starts the MQ broker specified in the configuration as the
+  default JMS host in a separate process on the same host as the
+  {productName} instance. The JMS service manages its configuration
+  and lifecycle. +
+  For this type, the JMS service starts the broker immediately when the
+  GlassFish instance is started. +
+  The JMS service provides the Message Queue broker an additional port
+  to start the RMI registry. This port number is equal to the broker's
+  JMS port plus 100. For example, if the JMS port number is 37676, then
+  the additional port's number will be 37776. Additionally, the
+  `start-args` property of the JMS service configuration can be used to
+  specify Message Queue broker startup options.
+Remote Type::
+  When the JMS service configuration's `type` attribute is `REMOTE`, the
+  JMS service uses the information defined by the default JMS host to
+  communicate with an MQ broker or broker cluster that has been
+  configured and started using Message Queue tools, as described in the
+  link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]. Ongoing
+  administration and tuning of the broker or broker cluster are also
+  performed using Message Queue tools.
+
+[[gktfb]][[GSADG00776]][[configuring-embedded-and-local-jms-hosts]]
+
+==== Configuring Embedded and Local JMS Hosts
+
+Because the JMS service, not Message Queue, manages Embedded and Local
+JMS hosts automatically, you should avoid using Message Queue utilities
+to configure them. Instead, specify broker properties in the JMS service
+configuration or in the JMS host.
+
+Should the need to use Message Queue utilities arise, you must use the
+`-varhome` option when running certain Message Queue utilities to
+specify the `IMQ_VARHOME` location of the Embedded or Local JMS host.
+This location depends on which GlassFish instance the JMS host is
+servicing:
+
+* For `server`, the Domain Administration Server (DAS), the
+`IMQ_VARHOME` location is:
++
+[source]
+----
+domain-root-dir/domain-dir/imq
+----
+* For any other GlassFish instance, the `IMQ_VARHOME` location is:
++
+[source]
+----
+as-install/nodes/node-name/instance-name/imq
+----
+
+For example, the broker log file for an Embedded or Local JMS host
+servicing the DAS is available at
+domain-root-dir``/``domain-dir``/imq/instances/imqbroker/log/log.txt``, and
+the broker log file for an Embedded or Local JMS host servicing any
+other GlassFish instance is available at
+as-install``/nodes/``node-name``/``instance-name`/imq/instances/``mq-instance-name``/log/log.txt``.
+
+
+[NOTE]
+====
+When using Message Queue utilities on the Windows platform, you must
+explicitly use the Windows executable (`.exe`) versions of the
+utilities, even when running command shells such as Cygwin. For example,
+instead of running `imqcmd`, you must run `imqcmd.exe`.
+====
+
+
+[[gipbh]][[GSADG00486]][[to-create-a-jms-host]]
+
+==== To Create a JMS Host
+
+The default JMS service configuration includes a JMS host,
+`default_JMS_host`. For most situations, this host is sufficient, so
+replacing it or creating additional JMS hosts is not often necessary and
+is a task for advanced users. Use the `create-jms-host` subcommand in
+remote `asadmin` mode to create an additional JMS host.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. Create the JMS host by using the link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`]
+subcommand:
++
+[source]
+----
+asadmin> create-jms-host --mqhost hostName --mqport portNumber
+--mquser adminUser --mqpassword adminPassword --target glassfishTarget
+--property mqBrokerPropList --force trueFalse jms-host-name
+----
+`--mqhost`::
+  The host name of the Message Queue broker.
+`--mqport`::
+  The port number of the Message Queue broker.
+`--mquser`::
+  The user name of the administrative user of the Message Queue broker.
+`--mqpassword`::
+  The password of the administrative user of the Message Queue broker.
+`--target`::
+  The {productName} object for which the JMS host is being created.
+  For details, see link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
+`--property`::
+  A list of one or more Message Queue broker properties to configure the
+  broker. The list is colon-separated (`:`) and has the form:
++
+[source]
+----
+prop1Name=prop1Value:prop2Name=prop2Value:...
+----
+  If a broker property name includes dots, preface the dots with two
+  backslashes (`\\`); for example, to include the `imq.system.max_count`
+  property, specify `imq\\.system\\.max_count` in the `--property`
+  option.
++
+
+[NOTE]
+====
+You can also set broker properties in the JMS service configuration.
+If you set the same broker property in both the JMS host and the JMS
+service configuration, the value specified in the JMS host is used.
+====
+
+`--force`::
+  Specifies whether the subcommand overwrites the existing JMS host of
+  the same name. The default value is `false`.
+jms-host-name::
+  The unique name of the JMS host.
+
+[[GSADG00271]][[gipbb]]
+Example 17-1 Creating a JMS Host
+
+This example creates a JMS host named `MyNewHost`.
+
+[source]
+----
+asadmin> create-jms-host --mqhost pigeon --mqport 7677
+--mquser admin --mqpassword admin MyNewHost
+Jms Host MyNewHost created.
+Command create-jms-host executed successfully.
+----
+
+[[GSADG1018]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-jms-host` at the command line.
+
+[[gipbz]][[GSADG00487]][[to-list-jms-hosts]]
+
+==== To List JMS Hosts
+
+Use the `list-jms-hosts` subcommand in remote `asadmin` mode to list the
+existing JMS hosts.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
+subcommand.
+
+[[GSADG00272]][[gipdw]]
+Example 17-2 Listing JMS Hosts
+
+The following subcommand lists the existing JMS hosts.
+
+[source]
+----
+asadmin> list-jms-hosts
+default_JMS_host
+MyNewHost
+Command list-jmsdest executed successfully
+----
+
+[[givno]][[GSADG00488]][[to-update-a-jms-host]]
+
+==== To Update a JMS Host
+
+Use the `set` subcommand in remote `asadmin` mode to update an existing
+JMS host.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. Use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to list the current
+attribute values of the desired JMS host:
++
+[source]
+----
+asadmin> get configs.config.config-name.jms-service.jms-host.jms-host-name.*
+----
+For information about JMS host attributes, see
+link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`(1)].
+3. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a JMS host
+attribute:
++
+[source]
+----
+asadmin> set configs.config.config-name.jms-service.jmshost.
+jms-host-name.attribute-name=attribute-value
+----
+The attributes you can set are:::
+`host`::
+  The host name of the Message Queue broker.
+`port`::
+  The port number of the Message Queue broker.
+`admin-user-name`::
+  The user name of the administrative user of the Message Queue broker.
+`admin-password`::
+  The password of the administrative user of the Message Queue broker.
+`property.`broker-property-name::
+  A Message Queue broker property. The property, and the value assigned
+  to it, are used to configure the Message Queue broker.
++
+  If the broker property name includes dots, preface the dots with two
+  backslashes (`\\`); for example, to include the `imq.system.max_count`
+  property, specify `imq\\.system\\.max_count` in the `set` subcommand.
++
+
+[NOTE]
+====
+You can also set broker properties in the JMS service configuration.
+If you set the same broker property in both the JMS host and the JMS
+service configuration, the value specified in the JMS host is used.
+====
+
+
+[[GSADG00273]][[givlz]]
+Example 17-3 Updating a JMS Host
+
+This example changes the value of the `host` attribute of the JMS host
+`default_JMS_Host`. By default this value is `localhost`.
+
+[source]
+----
+asadmin> set configs.config.server-config.jms-service.jms-host.default_JMS_host.host=
+"server1.middleware.example.com"
+----
+
+[[gipbv]][[GSADG00489]][[to-delete-a-jms-host]]
+
+==== To Delete a JMS Host
+
+Use the `delete-jms-host` subcommand in remote `asadmin` mode to delete
+a JMS host from the JMS service. If you delete the only JMS host, the
+JMS service will not be able to start until you create a new JMS host.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the JMS hosts by using the link:reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]
+subcommand.
+3. Delete a JMS host by using the link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`]
+subcommand.
+
+[[GSADG00274]][[gipbj]]
+Example 17-4 Deleting a JMS Host
+
+This example deletes a JMS host named `MyNewHost`.
+
+[source]
+----
+asadmin> delete-jms-host MyNewHost
+Command delete-jms-host executed successfully.
+----
+
+[[GSADG1019]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-jms-host` at the command line.
+
+[[ablkb]][[GSADG00598]][[administering-jms-connection-factories-and-destinations]]
+
+=== Administering JMS Connection Factories and Destinations
+
+The JMS API uses two kinds of administered objects. Connection factory
+objects allow an application to create other JMS objects
+programmatically. Destination objects serve as repositories for
+messages. How these objects are created is specific to each
+implementation of JMS. In {productName}, JMS is implemented by
+performing the following tasks:
+
+* Creating a connection factory
+* Creating a destination, which requires creating a physical destination
+and a destination resource that refers to the physical destination
+
+JMS applications use the Java Naming and Directory Interface (JNDI) API
+to access the connection factory and destination resources. A JMS
+application normally uses at least one connection factory and at least
+one destination. By studying the application or consulting with the
+application developer, you can determine what resources must be created.
+The order in which the resources are created does not matter.
+
+The Jakarta EE standard specifies that certain default resources be made
+available to applications, and defines specific JNDI names for these
+default resources. {productName} makes these names available through
+the use of logical JNDI names, which map Jakarta EE standard JNDI names to
+specific {productName} resources. For JMS connection factory
+resources, the Jakarta EE standard name
+`java:comp/DefaultJMSConnectionFactory` is mapped to the
+`jms/__defaultConnectionFactory` resource.
+
+{productName} provides the following types of connection factory
+objects:
+
+* `QueueConnectionFactory` objects, used for point-to-point
+communication
+* `TopicConnectionFactory` objects, used for publish-subscribe
+communication
+* `ConnectionFactory` objects, which can be used for both point-to-point
+and publish-subscribe communications (recommended for new applications)
+
+{productName} provides the following types of destination objects:
+
+* `Queue` objects, used for point-to-point communication
+* `Topic` objects, used for publish-subscribe communication
+
+The following topics are addressed here:
+
+* link:#giotd[To Create a Connection Factory or Destination Resource]
+* link:#giosx[To List JMS Resources]
+* link:#giouw[To Delete a Connection Factory or Destination Resource]
+
+The subcommands in this section can be used to administer both the
+connection factory resources and the destination resources. For
+information on JMS service support of connection pooling and failover,
+see "link:ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
+on administering physical destinations, see link:#ablkj[Administering
+JMS Physical Destinations].
+
+[[giotd]][[GSADG00490]][[to-create-a-connection-factory-or-destination-resource]]
+
+==== To Create a Connection Factory or Destination Resource
+
+For each JMS connection factory that you create, {productName}
+creates a connector connection pool and connector resource. For each JMS
+destination that you create, {productName} creates a connector admin
+object resource. If you delete a JMS resource, {productName}
+automatically deletes the connector resources.
+
+Use the `create-jms-resource` command in remote `asadmin` mode to create
+a JMS connection factory resource or a destination resource.
+
+
+[TIP]
+====
+To specify the `addresslist` property (in the format
+`host:mqport,host2:mqport,host3:mqport`) for the
+`asadmin create-jms-resource` command, escape the : by using `\\`. For
+example, `host1\\:mqport,host2\\:mqport,host3\\:mpqport`. For more
+information about using escape characters, see the
+olink:GSRFM00263[`asadmin`(1M)] help page.
+====
+
+
+To update a JMS connection factory, use the `set` subcommand for the
+underlying connector connection pool, See link:connectors.html#gioti[To
+Update a Connector Connection Pool].
+
+To update a destination, use the `set` subcommand for the admin object
+resource. See link:connectors.html#giots[To Update an Administered
+Object].
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. Create a JMS resource by using the
+link:reference-manual/create-jms-resource.html#GSRFM00040[`create-jms-resource`] command.
++
+Information about the properties for the subcommand is included in this
+help page.
+3. If needed, restart the server.
++
+Some properties require server restart. See
+link:overview.html#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see link:domains.html#ginqj[To Restart
+a Domain].
+
+[[GSADG00275]][[giovy]]
+Example 17-5 Creating a JMS Connection Factory
+
+This example creates a connection factory resource of type
+`jakarta.jms.ConnectionFactory` whose JNDI name is
+`jms/DurableConnectionFactory`. The `ClientId` property sets a client ID
+on the connection factory so that it can be used for durable
+subscriptions. The JNDI name for a JMS resource customarily includes the
+`jms/` naming subcontext.
+
+[source]
+----
+asadmin> create-jms-resource --restype jakarta.jms.ConnectionFactory
+--description "connection factory for durable subscriptions"
+--property ClientId=MyID jms/DurableConnectionFactory
+Command create-jms-resource executed successfully.
+----
+
+[[GSADG00276]][[giovn]]
+Example 17-6 Creating a JMS Destination
+
+This example creates a destination resource whose JNDI name is
+`jms/MyQueue`.
+
+[source]
+----
+asadmin> create-jms-resource --restype jakarta.jms.Queue
+--property Name=PhysicalQueue jms/MyQueue
+Command create-jms-resource executed successfully.
+----
+
+[[GSADG1020]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-jms-resource` at the command line.
+
+[[giosx]][[GSADG00491]][[to-list-jms-resources]]
+
+==== To List JMS Resources
+
+Use the `list-jms-resources` subcommand in remote `asadmin` mode to list
+the existing connection factory and destination resources.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the existing JMS resources by using the
+link:reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
+
+[[GSADG00277]][[giovz]]
+Example 17-7 Listing All JMS Resources
+
+This example lists all the existing JMS connection factory and
+destination resources.
+
+[source]
+----
+asadmin> list-jms-resources
+jms/Queue
+jms/ConnectionFactory
+jms/DurableConnectionFactory
+jms/Topic
+Command list-jms-resources executed successfully
+----
+
+[[GSADG00278]][[giovq]]
+Example 17-8 Listing a JMS Resources of a Specific Type
+
+This example lists the resources for the resource type `javax`.
+
+[source]
+----
+asadmin> list-jms-resources --restype jakarta.jms.TopicConnectionFactory
+jms/DurableTopicConnectionFactory
+jms/TopicConnectionFactory
+Command list-jms-resources executed successfully.
+----
+
+[[GSADG1021]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-jms-resources` at the command line.
+
+[[giouw]][[GSADG00492]][[to-delete-a-connection-factory-or-destination-resource]]
+
+==== To Delete a Connection Factory or Destination Resource
+
+Use the `delete-jms-resource` subcommand in remote `asadmin` mode to
+remove the specified connection factory or destination resource.
+
+[[GSADG1022]]
+
+Before You Begin
+
+Ensure that you remove all references to the specified JMS resource
+before running this subcommand.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the existing JMS resources by using the
+link:reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`] subcommand.
+3. Delete the JMS resource by using the
+link:reference-manual/delete-jms-resource.html#GSRFM00092[`delete-jms-resource`] subcommand.
+
+[[GSADG00279]][[giovi]]
+Example 17-9 Deleting a JMS Resource
+
+This example deletes the `jms/Queue` resource.
+
+[source]
+----
+asadmin> delete-jms-resource jms/Queue
+Command delete-jms-resource executed successfully
+----
+
+[[GSADG1023]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-jms-resource` at the command line.
+
+[[ablkj]][[GSADG00599]][[administering-jms-physical-destinations]]
+
+=== Administering JMS Physical Destinations
+
+Messages are delivered for routing and delivery to consumers by using
+physical destinations in the JMS provider. A physical destination is
+identified and encapsulated by an administered object (such as a `Topic`
+or `Queue` destination resource) that an application component uses to
+specify the destination of messages it is producing and the source of
+messages it is consuming. For instructions on configuring a destination
+resource, see link:#giotd[To Create a Connection Factory or Destination
+Resource].
+
+If a message-driven bean is deployed and the physical destination it
+listens to does not exist, {productName} automatically creates the
+physical destination and sets the value of the `maxNumActiveConsumers`
+property to `-1`. However, it is good practice to create the physical
+destination beforehand. The first time that an application accesses a
+destination resource, Message Queue automatically creates the physical
+destination specified by the Name property of the destination resource.
+This automatically created physical destination is temporary and expires
+after a period specified by a Message Queue configuration property,
+provided that there are no messages in it and no message producers or
+consumers connected to it.
+
+The following topics are addressed here:
+
+* link:#gioue[To Create a JMS Physical Destination]
+* link:#gioyp[To List JMS Physical Destinations]
+* link:#giowx[To Purge Messages From a Physical Destination]
+* link:#giouv[To Delete a JMS Physical Destination]
+
+[[gioue]][[GSADG00493]][[to-create-a-jms-physical-destination]]
+
+==== To Create a JMS Physical Destination
+
+For production purposes, always create physical destinations. During the
+development and testing phase, however, this step is not required. Use
+the `create-jmsdest` subcommand in remote `asadmin` mode to create a
+physical destination.
+
+Because a physical destination is actually a Message Queue object rather
+than a server object, you use Message Queue broker commands to update
+properties. For information on Message Queue properties, see the
+link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide].
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. Create a JMS physical destination by using the
+link:reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`] subcommand.
++
+Information about the properties for the subcommand is included in this
+help page.
+3. If needed, restart the server.
++
+Some properties require server restart. See
+link:overview.html#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see link:domains.html#ginqj[To Restart
+a Domain].
+
+[[GSADG00280]][[gioxt]]
+Example 17-10 Creating a JMS Physical Destination
+
+This example creates a queue named `PhysicalQueue`.
+
+[source]
+----
+asadmin> create-jmsdest --desttype queue --property
+User=public:Password=public PhysicalQueue
+Command create-jmsdest executed successfully.
+----
+
+[[GSADG1024]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help create-jmsdest` at the command line.
+
+[[gioyp]][[GSADG00494]][[to-list-jms-physical-destinations]]
+
+==== To List JMS Physical Destinations
+
+Use the `list-jmsdest` subcommand in remote `asadmin` mode to list the
+existing JMS physical destinations.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the existing JMS physical destinations by using the
+link:reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
+
+[[GSADG00281]][[gioxo]]
+Example 17-11 Listing JMS Physical Destinations
+
+This example lists the physical destinations for the default server
+instance.
+
+[source]
+----
+asadmin> list-jmsdest
+PhysicalQueue queue {}
+PhysicalTopic topic {}
+Command list-jmsdest executed successfully.
+----
+
+[[GSADG1025]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-jmsdest` at the command line.
+
+[[giowx]][[GSADG00495]][[to-purge-messages-from-a-physical-destination]]
+
+==== To Purge Messages From a Physical Destination
+
+Use the `flush-jmsdest` subcommand in remote `asadmin` mode to purge the
+messages from a physical destination in the specified target's JMS
+service configuration.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. Purge messages from the a JMS physical destination by using the
+link:reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`] subcommand.
+3. If needed, restart the server.
++
+Some properties require server restart. See
+link:overview.html#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see link:domains.html#ginqj[To Restart
+a Domain].
+
+[[GSADG00282]][[giows]]
+Example 17-12 Flushing Messages From a JMS Physical Destination
+
+This example purges messages from the queue named `PhysicalQueue`.
+
+[source]
+----
+asadmin> flush-jmsdest --desttype queue PhysicalQueue
+Command flush-jmsdest executed successfully
+----
+
+[[GSADG1026]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help flush-jmsdest` at the command line.
+
+[[giouv]][[GSADG00496]][[to-delete-a-jms-physical-destination]]
+
+==== To Delete a JMS Physical Destination
+
+Use the `delete-jmsdest` subcommand in remote `asadmin` mode to remove
+the specified JMS physical destination.
+
+1. Ensure that the server is running.
++
+Remote `asadmin` subcommands require a running server.
+2. List the existing JMS physical destinations by using the
+link:reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`] subcommand.
+3. Delete the physical resource by using the
+link:reference-manual/delete-jmsdest.html#GSRFM00090[`delete-jmsdest`] subcommand.
+
+[[GSADG00283]][[gioxx]]
+Example 17-13 Deleting a Physical Destination
+
+This example deletes the queue named `PhysicalQueue`.
+
+[source]
+----
+asadmin> delete-jmsdest --desttype queue PhysicalQueue
+Command delete-jmsdest executed successfully
+----
+
+[[GSADG1027]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help delete-jmsdest` at the command line.
+
+[[gkxgk]][[GSADG00600]][[special-situations-when-using-the-jms-service]]
+
+=== Special Situations When Using the JMS Service
+
+As mentioned earlier, Message Queue, through the built-in `jmsra`
+resource adapter, is tightly integrated with {productName} to provide
+JMS messaging managed through a rich set of `asadmin` subcommands and
+Administration Console pages to simplify JMS messaging administration
+tasks. In most instances, this tight integration is transparent and
+automatic, requiring no special effort on the part of an administrator.
+In certain special situations, though, an administrator must perform a
+task such a setting a Message Queue broker property or a GlassFish
+object attribute to enable or disable a capability of the integration.
+The topics in this section describe these situations.
+
+Restarting an Embedded or Local Broker That Has Failed::
+  Because the JMS service, not Message Queue, manages the lifecycle of
+  brokers acting as Embedded and Local JMS hosts, do not use the
+  `imqbrokerd` Message Queue utility to start such a broker that has
+  failed. Instead, restart the GlassFish instance that the broker is
+  servicing.
+Changing the Admin User Password for an Embedded or Local Broker::
+  Follow these steps to change the `admin` user password for an Embedded
+  or Local broker:
+  1. [[CHDDHDIE]]
+  Make sure the broker is running.
+
+  2. [[CHDHDFAH]]
+  Use the `imqusermgr` Message Queue utility to change the password of
+  the `admin` user.
+
+  3. [[CHDCJEFG]]
+  Edit the configuration of the JMS host, changing the password of the
+  `admin` user to the new password.
+
+  4. [[CHDFJECE]]
+  Restart the GlassFish instance that the broker is servicing. +
+  When changing the password for the brokers in a broker cluster, first
+  perform steps link:#CHDDHDIE[1] and link:#CHDHDFAH[2] on each broker.
+  Then, perform step link:#CHDCJEFG[3]. Finally, perform
+  step link:#CHDFJECE[4] on each broker.
+
+Using SSL to Connect to an Oracle Internet Directory (OID) or Oracle
+Virtual Directory (OVD) User Respository::
+  When using SSL to connect to an OID or OVD user repository, you must
+  set the `imq.user_repository.ldap.ssl.socketfactory` Message Queue
+  broker property to
+  `com.sun.enterprise.security.auth.realm.ldap.CustomSocketFactory`.
+
+[[gipnh]][[GSADG00601]][[troubleshooting-the-jms-service]]
+
+=== Troubleshooting the JMS Service
+
+If you encounter problems, consider the following:
+
+* Use the link:reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] subcommand to confirm that the
+Message Queue broker is running.
+* View the {productName} log file. For `server`, the Domain
+Administrations Server (DAS), the log is available at
+domain-dir``/logs/server.log``; for other GlassFish instances, the log is
+available at
+as-install``/nodes/``node-name``/``instance-name``/logs/server.log``.
++
+If the log file indicates that a Message Queue broker acting as a Remote
+JMS host did not respond to a message, stop the broker and then restart
+it.
+* View the broker log. For a broker associated with the Domain
+Administration Server (DAS), the log is available at
+domain-dir`/imq/instances/imqbroker/log/log.txt`; for brokers associated
+with other GlassFish instances, the log is available at
+as-install``/nodes/``node-name``/``instance-name`/imq/instances/``mq-instance-name``/log/log.txt``.
+* For Remote type JMS hosts, be sure to start Message Queue brokers
+first, then {productName} instances.
+* If all Message Queue brokers are down, it can take up to 30 minutes
+for {productName} to go down or up when you are using the default
+values in JMS. You can change the default values for this timeout. For
+example:
++
+[source]
+----
+asadmin set domain1.jms-service.reconnect-interval-in-seconds=5
+----
+
+[[gbtvg]][[GSADG00602]][[using-the-generic-resource-adapter-for-jms-to-integrate-supported-external-jms-providers]]
+
+=== Using the Generic Resource Adapter for JMS to Integrate Supported External JMS Providers
+
+{productName} supports the integration and use of Oracle WebLogic JMS
+and IBM WebSphere MQ JMS providers through the use of the Generic
+Resource Adapter for JMS (GenericJMSRA). This Jakarta EE connector 1.5
+resource adapter can wrap the JMS client library of Oracle WebLogic JMS
+and IBM WebSphere MQ and make it available for use by GlassFish. The
+adapter is a `.rar` archive that can be deployed and configured using
+{productName} administration tools.
+
+The following topics are addressed here:
+
+* link:#gkkvc[Configuring GenericJMSRA for Supported External JMS
+Providers]
+* link:#gkkuy[Using GenericJMSRA with WebLogic JMS]
+* link:#gkslb[Using GenericJMSRA with IBM WebSphere MQ]
+
+[[gkkvc]][[GSADG00777]][[configuring-genericjmsra-for-supported-external-jms-providers]]
+
+==== Configuring GenericJMSRA for Supported External JMS Providers
+
+GenericJMSRA has three main properties that need to be configured:
+`SupportXA`, `DeliveryType`, and `ProviderIntegrationMode`. The values
+that need to be set for them depends on the capabilities of the JMS
+provider being used, as follows:
+
+* `SupportXA` — indicates whether the JMS provider supports XA or not.
+* `DeliveryType` — indicates whether an MDB should use a
+`ConnectionConsumer` or `Consumer.receive()` when consuming messages.
+* `ProviderIntegrationMode` — indicates what mode of integration is
+required. The available integration modes are jndi and javabean. Some
+JMS providers support only one integration mode while others may offer
+the choice of both
+
+** If jndi is specified, then the resource adapter will obtain JMS
+connection factories and destinations from the JMS provider's JNDI
+repository.
+
+** If javabean is specified then the resource adapter will obtain JMS
+connection factories and destinations by instantiating the appropriate
+classes directly.
++
+Which option is specified determines which other properties need to be
+set.
+
+[[giosy]][[GSADG00497]][[to-deploy-and-configure-genericjmsra]]
+
+===== To Deploy and Configure GenericJMSRA
+
+Before deploying GenericJMSRA, JMS client libraries must be made
+available to {productName}. For some JMS providers, client libraries
+might also include native libraries. In such cases, these native
+libraries must be made available to any {productName} JVMs.
+
+1. Download the `genericra.rar` archive.
+2. Deploy GenericJMSRA the same way you would deploy a connector
+module.
++
+See "link:application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in {productName} Application Deployment Guide.
+3. Configure the resource adapter's properties.
++
+See link:#gbtvu[GenericJMSRA Configuration Properties].
+4. Create a connector connection pool.
++
+See link:connectors.html#gioce[To Create a Connector Connection Pool].
+5. Create a connector resource.
++
+See link:connectors.html#giogt[To Create a Connector Resource].
+6. Create an administered object resource.
++
+See link:connectors.html#giolr[To Create an Administered Object].
+
+[[gbtvu]][[GSADG00674]][[genericjmsra-configuration-properties]]
+
+===== GenericJMSRA Configuration Properties
+
+The following table describes the properties that can be set to when
+configuring the resource adapter.
+
+[width="100%",cols="28%,19%,14%,39%",options="header",]
+|===
+|Property Name |Valid Values |Default Value |Description
+|`SupportsXA` |`true/false` |false |Specifies whether the JMS client
+supports XA transactions.
+
+|`DeliveryType` a|
+`Synchronous/`
+
+`Asynchronous`
+
+ |Asynchronous |Specifies whether an MDB should use a
+`ConnectionConsumer` (Asynchronous) or `consumer.receive()`
+(Synchronous) when consuming messages.
+
+|`QueueConnectionFactoryClassName` |A valid class name |None |Class name
+of `jakarta.jms.QueueConnectionFactory` implementation of the JMS client.
+This class must be made available on the application server classpath.
+Used if `ProviderIntegrationMode` is `javabean`.
+
+|`TopicConnectionFactoryClassName` |A valid class name |None |Class name
+of `jakarta.jms.TopicConnectionFactory` implementation of the JMS client.
+This class must be made available on the application server classpath.
+Used if `ProviderIntegrationMode` is specified as `javabean`.
+
+|`XAConnectionFactoryClassName` |A valid class name |None |Class name of
+`jakarta.jms.ConnectionFactory` implementation of the JMS client. This
+class must be made available on the application server classpath. Used
+if `ProviderIntegrationMode` is specified as `javabean`.
+
+|`XAQueueConnectionFactoryClassName` |A valid class name |None |Class
+name of `jakarta.jms.``XAQueueConnectionFactory` implementation of the JMS
+client. This class must be made available on the application server
+classpath. Used if `ProviderIntegrationMode` is specified as `javabean`.
+
+|`XATopicConnectionFactoryClassName` |A valid class name |None |Class
+name of `jakarta.jms.``XATopicConnectionFactory` implementation of the JMS
+client. This class must be made available on the application server
+classpath. Used if `ProviderIntegrationMode` is `javabean`.
+
+|`TopicClassName` |A valid class name |None |Class Name of
+`jakarta.jms.Topic` implementation of the JMS client. This class must be
+made available on the application server classpath. Used if
+`ProviderIntegrationMode` is `javabean`.
+
+|`QueueClassName` |A valid class name |None |Class Name of
+`jakarta.jms.Queue` implementation of the JMS client. This class must be
+made available on the application server classpath. Used if
+`ProviderIntegrationMode` is specified as a `javabean`.
+
+|`ConnectionFactoryProperties` |Name value pairs separated by comma
+|None |Specifies the `javabean` property names and values of the
+`ConnectionFactory` of the JMS client. Required only if
+`ProviderIntegrationMode` is `javabean`.
+
+|`JndiProperties` |Name value pairs separated by comma |None |Specifies
+the JNDI provider properties to be used for connecting to the JMS
+provider's JNDI. Used only if `ProviderIntegrationMode` is `jndi`.
+
+|`CommonSetterMethodName` |Method name |None |Specifies the common
+setter method name that some JMS vendors use to set the properties on
+their administered objects. Used only if `ProviderIntegrationMode` is
+`javabean`. For example, in the case of Message Queue, this would be
+`setProperty`.
+
+|`UserName` |Name of the JMS user |None |User name to connect to the JMS
+Provider.
+
+|`Password` |Password for the JMS user |None |Password to connect to the
+JMS provider.
+
+|`RMPolicy` |`ProviderManaged` or `OnePerPhysicalConnection`
+|`Provider``Managed` a|
+The `isSameRM` method on an `XAResource` is used by the Transaction
+Manager to determine if the Resource Manager instance represented by two
+`XAResources` are the same. When `RMPolicy` is set to `ProviderManaged`
+(the default value), the JMS provider is responsible for determining the
+`RMPolicy` and the `XAResource` wrappers in GenericJMSRA merely delegate
+the `isSameRM` call to the JMS provider's XA resource implementations.
+This should ideally work for most JMS providers.
+
+Some `XAResource` implementations such as WebSphere MQ rely on a
+resource manager per physical connection and this causes issues when
+there is inbound and outbound communication to the same queue manager in
+a single transaction (for example, when an MDB sends a response to a
+destination). When `RMPolicy` is set to `OnePerPhysicalConnection`, the
+XAResource wrapper implementation's `isSameRM` in GenericJMSRA would
+check if both the `XAResources` use the same physical connection, before
+delegating to the wrapped objects.
+
+|===
+
+
+[[gbtwu]][[GSADG00675]][[connection-factory-properties]]
+
+===== Connection Factory Properties
+
+`ManagedConnectionFactory` properties are specified when a
+`connector-connection-pool` is created. All the properties specified
+while creating the resource adapter can be overridden in a
+`ManagedConnectionFactory`. Additional properties available only in
+`ManagedConnectionFactory` are given below.
+
+[width="181%",cols="20%,8%,49%,23%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`ClientId` |A valid client ID |None |`ClientID` as specified by JMS 1.1
+specification.
+
+|`ConnectionFactoryJndiName` |JNDI Name |None |JNDI name of the
+connection factory bound in the JNDI tree of the JMS provider. The
+administrator should provide all connection factory properties (except
+`clientID`) in the JMS provider itself. This property name will be used
+only if `ProviderIntegratinMode` is `jndi`.
+
+|`ConnectionValidationEnabled` |true/false |false |If set to true, the
+resource adapter will use an exception listener to catch any connection
+exception and will send a `CONNECTION_ERROR_OCCURED` event to
+application server.
+|===
+
+
+[[gbtxa]][[GSADG00676]][[destination-properties]]
+
+===== Destination Properties
+
+Properties in this section are specified when a destination (queue or
+topic) is created. All the resource adapter properties can be overridden
+in a destination. Additional properties available only in the
+destination are given below.
+
+[width="100%",cols="31%,14%,11%,44%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`DestinationJndiName` |JNDI Name |None |JNDI name of the destination
+bound in the JNDI tree of the JMS provider. The Administrator should
+provide all properties in the JMS provider itself. This property name
+will be used only if `ProviderIntegrationMode` is `jndi`.
+
+|`DestinationProperties` |Name value pairs separated by a comma |None
+|Specifies the `javabean` property names and values of the destination
+of the JMS client. Required only if `ProviderIntegrationMode` is
+`javabean`.
+|===
+
+
+[[gbtvf]][[GSADG00677]][[activation-spec-properties]]
+
+===== Activation Spec Properties
+
+Properties in this section are specified in the {productName}
+`glassfish-ejb-jar.xml` deployment descriptor of an MDB as
+`activation-config-properties`. All the resource adapter properties can
+be overridden in an Activation Spec. Additional properties available
+only in ActivationSpec are given below.
+
+[width="100%",cols="43%,14%,13%,30%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`MaxPoolSize` |An integer |8 |Maximum size of server session pool
+internally created by the resource adapter for achieving concurrent
+message delivery. This should be equal to the maximum pool size of MDB
+objects.
+
+|`MaxWaitTime` |An integer |3 |The resource adapter will wait for the
+time in seconds specified by this property to obtain a server session
+from its internal pool. If this limit is exceeded, message delivery will
+fail.
+
+|`SubscriptionDurability` |Durable or Non-Durable |Non-Durable
+|`SubscriptionDurability` as specified by JMS 1.1 specification.
+
+|`SubscriptionName` | + |None |`SubscriptionName` as specified by JMS
+1.1 specification.
+
+|`MessageSelector` |A valid message selector |None |`MessageSelector` as
+specified by JMS 1.1 specification.
+
+|`ClientID` |A valid client ID |None |`ClientID` as specified by JMS 1.1
+specification.
+
+|`ConnectionFactoryJndiName` |A valid JNDI Name |None |JNDI name of
+connection factory created in JMS provider. This connection factory will
+be used by resource adapter to create a connection to receive messages.
+Used only if `ProviderIntegrationMode` is configured as `jndi`.
+
+|`DestinationJndiName` |A valid JNDI Name |None |JNDI name of
+destination created in JMS provider. This destination will be used by
+resource adapter to create a connection to receive messages from. Used
+only if `ProviderIntegrationMode` is configured as `jndi`.
+
+|`DestinationType` |`jakarta.jms.Queue` or `jakarta.jms.Topic` |Null |Type
+of the destination the MDB will listen to.
+
+|`DestinationProperties` |Name-value pairs separated by comma |None
+|Specifies the `javabean` property names and values of the destination
+of the JMS client. Required only if `ProviderIntegrationMode` is
+`javabean`.
+
+|`RedeliveryAttempts` |integer | + |Number of times a message will be
+delivered if a message causes a runtime exception in the MDB.
+
+|`Redelivery``Interval` |time in seconds | + |Interval between repeated
+deliveries, if a message causes a runtime exception in the MDB.
+
+|`SendBadMessagesToDMD` |true/false |False |Indicates whether the
+resource adapter should send the messages to a dead message destination,
+if the number of delivery attempts is exceeded.
+
+|`DeadMessageDestinationJndiName` |a valid JNDI name. |None |JNDI name
+of the destination created in the JMS provider. This is the target
+destination for dead messages. This is used only if
+`ProviderIntegrationMode` is `jndi`.
+
+|`DeadMessageDestinationClassName` |class name of destination object.
+|None |Used if `ProviderIntegrationMode` is `javabean`.
+
+|`DeadMessageDestinationProperties` |Name Value Pairs separated by comma
+|None |Specifies the `javabean` property names and values of the
+destination of the JMS client. This is required only if
+`ProviderIntegrationMode` is `javabean`.
+
+|`DeadMessageConnectionFactoryJndiName` |a valid JNDI name |None |JNDI
+name of the connection factory created in the JMS provider. This is the
+target connection factory for dead messages. This is used only if
+`ProviderIntegrationMode` is `jndi`.
+
+|`DeadMessageDestinationType` |queue or topic destination |None |The
+destination type for dead messages.
+
+|`ReconnectAttempts` |integer |0 |Number of times a reconnect will be
+attempted in case exception listener catches an error on connection.
+
+|`ReconnectInterval` |time in seconds |0 |Interval between reconnects.
+|===
+
+
+[[gkkuy]][[GSADG00778]][[using-genericjmsra-with-weblogic-jms]]
+
+==== Using GenericJMSRA with WebLogic JMS
+
+You can configure GenericJMSRA to enable applications running in
+{productName} to send messages to, and receive messages from, Oracle
+WebLogic JMS.
+
+GenericJMSRA should be used in conjunction with the WebLogic Server Thin
+T3 Client. Due to the nature of this client, messages exchanged between
+{productName} and WebLogic Server cannot be sent or received in XA
+transactions. There is also only limited support for asynchronous
+receipt of messages in an MDB, as described in detail in
+link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+
+The following topics are addressed here:
+
+* link:#gkmeb[Deploy the WebLogic Thin T3 Client JAR in {productName}]
+* link:#gkmek[Configure WebLogic JMS Resources for Integration]
+* link:#gkmee[Create a Resource Adapter Configuration for GenericJMSRA
+to Work With WebLogic JMS]
+* link:#gkkxz[Deploy the GenericJMSRA Resource Archive]
+* link:#gkkwq[Configuring an MDB to Receive Messages from WebLogic JMS]
+* link:#gknjj[Accessing Connections and Destinations Directly]
+* link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS]
+* link:#gktfi[Configuration Reference of GenericJMSRA Properties for
+WebLogic JMS]
+
+[[gkmeb]][[GSADG00678]][[deploy-the-weblogic-thin-t3-client-jar-in-glassfish-server]]
+
+===== Deploy the WebLogic Thin T3 Client JAR in {productName}
+
+WebLogic Server provides several different clients for use by standalone
+applications that run outside of WebLogic Server. These client are
+summarized in
+"http://www.oracle.com/pls/as1111/lookup?id=SACLT117[Overview of
+Stand-alone Clients"] in Programming Stand-alone Clients for Oracle
+WebLogic Server. When connecting from {productName} to WebLogic JMS
+resources you must use the WebLogic Thin T3 client,
+`wlthint3client.jar`.
+
+There are a couple of methods to deploy the WebLogic Thin T3 client in
+{productName} and make it available to GenericJMSRA:
+
+* To make the Thin T3 client available to all applications, copy the
+`wlthint3client.jar` to the as-install``/lib`` directory under your
+{productName} installation. The Thin T3 client can be found in a
+WebLogic Server installation in a directory similar to
+MW_HOME``/server/lib``.
+* It is also possible to deploy the Thin T3 client in a less global
+manner, so that it is specific to an individual application. For
+information on how to do this, see
+"link:application-development-guide/class-loaders.html#GSDVG00099[Application-Specific Class Loading]" in {productName} Application Development Guide.
+
+[[gkmek]][[GSADG00679]][[configure-weblogic-jms-resources-for-integration]]
+
+===== Configure WebLogic JMS Resources for Integration
+
+If you need to configure the necessary WebLogic JMS resources on the
+WebLogic Server from which you want to access messages using {productName}, then follow the instructions in the WebLogic Server
+documentation for configuring the necessary resources, such as
+destinations, and connection factories.
+
+* JMS System Module Configuration
+* Queue and Topic Destination Configuration
+* Connection Factory Configuration
+
+The example code snippets in this section refer to a WebLogic JMS
+connection factory named `WLoutboundQueueFactory` and queue destination
+named `WLoutboundQueue`. For conceptual overviews on configuring
+WebLogic JMS resources, refer to
+"http://www.oracle.com/pls/as1111/lookup?id=JMSAD123[Understanding JMS
+Resource Configuration]" in Configuring and Managing JMS for Oracle
+WebLogic Server. For detailed instructions on configuring WebLogic JMS
+resources, refer to
+"http://www.oracle.com/pls/as1111/lookup?id=WLACH01854[Configure JMS
+system modules and add JMS resources]" in the WebLogic Administration
+Console Online Help.
+
+[[gkmee]][[GSADG00680]][[create-a-resource-adapter-configuration-for-genericjmsra-to-work-with-weblogic-jms]]
+
+===== Create a Resource Adapter Configuration for GenericJMSRA to Work With WebLogic JMS
+
+When you deploy GenericJMSRA, you also need to create a resource adapter
+configuration in {productName}. You can do this using either the
+Administration Console or the `asadmin` command. If you use
+theAdministration Console then you need deploy the GenericJMSRA resource
+archive first. Here's an example using `asadmin`:
+
+[source]
+----
+asadmin create-resource-adapter-config --host localhost --port 4848 --property
+SupportsXA=false:DeliveryType=Synchronous:ProviderIntegrationMode
+                          =jndi:JndiProperties=java.naming.factory.initial\
+                          =weblogic.jndi.WLInitialContextFactory,java.naming.provider.url\
+                          =t3\://localhost\:7001,java.naming.factory.url.pkgs\
+                          =weblogic.corba.client.naming genericra
+----
+
+This creates a resource adapter configuration with the name `genericra`,
+and Oracle recommends not changing the default name. The resource
+adapter configuration is configured with the properties specified using
+the `--properties` argument; multiple properties are configured as a
+colon-separated list of name-value pairs that are entered as a single
+line. You will also need to change the host and port that WebLogic
+Server is running on to suit your installation.
+
+In this example, the following properties are configured:
+
+[width="100%",cols="28%,72%",options="header",]
+|===
+|Property |Value
+|`SupportsXA` |`false`
+|`DeliveryType` |`Synchronous`
+|`ProviderIntegrationMode` |`jndi`
+|`JndiProperties` a|
+[source]
+----
+java.naming.factory.initial
+=weblogic.jndi.WLInitialContextFactory,java.naming.provider.url
+=t3://localhost:7001,java.naming.factory.url.pkgs
+=weblogic.corba.client.naming
+
+(replace "localhost:7001" with the host:port of WebLogic Server)
+----
+
+|===
+
+
+You must use the same values for `SupportsXA`, `DeliveryType` and
+`ProviderIntegrationMode` as the required values that are used in this
+table. The `JndiProperties` value must be set to a list of JNDI
+properties needed for connecting to WebLogic JNDI.
+
+
+[NOTE]
+====
+When using `asadmin` you need to escape each `=` and any `:` characters
+by prepending a backward slash `\`. The escape sequence is not necessary
+if the configuration is performed through the Administration Console.
+====
+
+
+For a description of all the resource adapter properties that are
+relevant for WebLogic JMS, see the link:#gktfi[Configuration Reference
+of GenericJMSRA Properties for WebLogic JMS].
+
+[[gkkxz]][[GSADG00498]][[deploy-the-genericjmsra-resource-archive]]
+
+===== Deploy the GenericJMSRA Resource Archive
+
+1. Download the GenericJMSRA resource archive (genericra.rar).
+2. Deploy the resource adapter. You can do this using either the
+Administration Console or the `asadmin` deploy command. Here's an
+example using the `asadmin` deploy command:
++
+[source]
+----
+$ asadmin deploy --user admin --password adminadmin
+  <location of the generic resource adapter rar file>
+----
+If you deploy the resource adapter using the Administration Console,
+then after deployment you need to create a resource adapter
+configuration as described in link:#gkmee[Create a Resource Adapter
+Configuration for GenericJMSRA to Work With WebLogic JMS].
+
+[[gkkwq]][[GSADG00499]][[configuring-an-mdb-to-receive-messages-from-weblogic-jms]]
+
+===== Configuring an MDB to Receive Messages from WebLogic JMS
+
+In this example, all configuration information is defined in two
+deployment descriptor files: `ejb-jar.xml` and the {productName}
+`glassfish-ejb-jar.xml` file. To configure a MDB to receive messages
+from WebLogic JMS, you would configure these deployment descriptor files
+as follows:
+
+1. Configure the ejb-jar.xml deployment descriptor:
++
+[source,xml]
+----
+<ejb-jar>
+  <enterprise-beans>
+    <message-driven>
+      <ejb-name>SimpleMessageEJB</ejb-name>
+      <ejb-class>test.simple.queue.ejb.SimpleMessageBean</ejb-class>
+      <transaction-type>Container</transaction-type>
+    </message-driven>
+  </enterprise-beans>
+  <assembly-descriptor>
+    <container-transaction>
+      <method>
+        <ejb-name>SimpleMessageEJB</ejb-name>
+        <method-name>onMessage</method-name>
+        <method-params>
+          <method-param>jakarta.jms.Message</method-param>
+        </method-params>
+      </method>
+      <trans-attribute>NotSupported</trans-attribute>
+    </container-transaction>
+  </assembly-descriptor>
+</ejb-jar>
+----
++
+[NOTE]
+====
+If container-managed transactions are configured, then the transactional
+attribute must be set to `NotSupported`. For more information, see
+link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+====
+
+2. Configure the glassfish-ejb-jar.xml deployment descriptor:
++
+[source,xml]
+----
+<sun-ejb-jar>
+  <enterprise-beans>
+    <ejb>
+      <ejb-name>SimpleMessageEJB</ejb-name>
+      <mdb-resource-adapter>
+        <resource-adapter-mid>genericra</resource-adapter-mid>
+        <activation-config>
+          <activation-config-property>
+            <activation-config-property-name>
+              ConnectionFactoryJndiName
+            </activation-config-property-name>
+            <activation-config-property-value>
+              jms/WLInboundQueueFactory
+            </activation-config-property-value>
+          </activation-config-property>
+          <activation-config-property>
+            <activation-config-property-name>
+              DestinationJndiName
+            </activation-config-property-name>
+            <activation-config-property-value>
+              jms/WLInboundQueue
+            </activation-config-property-value>
+          </activation-config-property>
+        </activation-config>
+      </mdb-resource-adapter>
+    </ejb>
+  </enterprise-beans>
+</sun-ejb-jar>
+----
+where:
++
+The `<resource-adapter-mid>genericra</resource-adapter-mid>` element is
+used to specify the resource adapter and resource adapter configurations
+that was deployed in the link:#gkmee[Create a Resource Adapter
+Configuration for GenericJMSRA to Work With WebLogic JMS] instructions.
+It is recommended you stick to `genericra` as is used here.
++
+The `activation-config` element in `glassfish-ejb-jar.xml` is the one
+which defines how and where the MDB receives messages, as follows:
+* The `ConnectionFactoryJndiName` property must be set to the JNDI name
+of the connection factory in the WebLogic JNDI store that will be used
+to receive messages. Therefore, replace `jms/WLInboundQueueFactory` in
+the example above with the JNDI name used in your environment.
+* The `DestinationJndiName` property must be set to the JNDI name of the
+destination (the queue or topic from which messages will be consumed) in
+the WebLogic JNDI store. Therefore, replace `jms/WLInboundQueue` in the
+example above with the JNDI name used in your environment. +
+
+For a description of all the ActivationSpec properties that are relevant
+for WebLogic JMS, see the link:#gktfi[Configuration Reference of
+GenericJMSRA Properties for WebLogic JMS]. +
+
+Make sure to use the appropriate WebLogic administration tools, such as
+the WebLogic Administration Console or the WebLogic Scripting Tool (WLST).
+For more information, see
+"http://www.oracle.com/pls/as1111/lookup?id=WLACH01853[Configure
+Messaging]" in WebLogic Server Administration Console Online Help and
+http://www.oracle.com/pls/as1111/lookup?id=WLSTC112[WebLogic Server WLST
+Online and Offline Command Reference].
+
+[[gknjj]][[GSADG00500]][[accessing-connections-and-destinations-directly]]
+
+===== Accessing Connections and Destinations Directly
+
+When configuring a MDB to consume messages from WebLogic JMS your code
+does not need to access the WebLogic JMS connection factory and
+destination directly. You simply define them in the activation
+configuration, as shown in link:#gkkwq[Configuring an MDB to Receive
+Messages from WebLogic JMS]. However when configuring an MDB to send
+messages, or when configuring a EJB, Servlet, or application client to
+either send or receive messages, your code needs to obtain these objects
+using a JNDI lookup.
+
+
+[NOTE]
+====
+If you want configure connections and destination resources using the
+Administration Console, this is explained in the Administration Console
+online help. When using Administration Console, follow the instructions
+for creating a new Connector Connection Pool and Admin Object Resources,
+and not the instructions for creating a JMS Connection Pool and
+Destination Resources. For more information about using `asadmin` to
+create these resources, see link:connectors.html#gioce[To Create a
+Connector Connection Pool] and link:connectors.html#giogt[To Create a
+Connector Resource].
+====
+
+
+1. Looking up the connection factory and destination
++
+The following code looks up a connection factory with the JNDI name
+`jms/QCFactory` and a queue with the name `jms/outboundQueue` from the
+{productName} JNDI store:
++
+[source,java]
+----
+     Context initialContect  = new InitialContext();
+     QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory)
+          jndiContext.lookup("java:comp/env/jms/MyQCFactory");
+     Queue queue = (Queue) jndiContext.lookup("java:comp/env/jms/outboundQueue");
+----
+Note that the resources used are {productName} resources, not
+WebLogic JMS resources. For every connection factory or destination that
+you want to use in the WebLogic JMS JNDI store, you need to create a
+corresponding connection factory or destination in the {productName}
+JNDI store and configure the {productName} object to point to the
+corresponding WebLogic JMS object.
+2. Declaring the connection factory and destination
++
+In accordance with standard Jakarta EE requirements, these resources need
+to be declared in the deployment descriptor for the MDB, EJB or other
+component. For example, for a session bean, configure the `ejb-jar.xml`
+with `<resource-env-ref>` elements, as follows:
++
+[source,xml]
+----
+<ejb-jar>
+  <enterprise-beans>
+    <session>
+      . . .
+      <resource-env-ref>
+        <resource-env-ref-name>jms/QCFactory</resource-env-ref-name>
+        <resource-env-ref-type>jakarta.jms.QueueConnectionFactory</resource-env-ref-type>
+      </resource-env-ref>
+      <resource-env-ref>
+        <resource-env-ref-name>jms/outboundQueue</resource-env-ref-name>
+        <resource-env-ref-type>jakarta.jms.Queue</resource-env-ref-type>
+      </resource-env-ref>
+----
+3. Create a Connector Connection Pool and Connector Resource by
+entering the following `asadmin` commands, both all in one line:
++
+In order to configure a JMS Connection Factory using GenericJMSRA, a
+Connector connection pool and resource need to be created in {productName} using names that map to the corresponding connection factory in
+the WebLogic JNDI store.
++
+[source]
+----
+asadmin create-connector-connection-pool --host localhost --port 4848
+   --raname genericra --connectiondefinition jakarta.jms.QueueConnectionFactory
+   --target server --transactionsupport LocalTransaction
+   --property ConnectionFactoryJndiName=jms/WLOutboundQueueFactory
+     qcpool
+
+asadmin create-connector-resource --host localhost --port 4848
+    --poolname qcpool --target server jms/QCFactory
+----
+These `asadmin` commands together creates a connection factory in
+{productName} and its corresponding connection pool.
+* The connection pool has the JNDI name `jms/WLoutboundQueueFactory` and
+obtains connections from a connection pool named `qcpool`.
+* The connection pool `qcpool` uses the resource adapter `genericra` and
+contains objects of type `jakarta.jms.QueueConnectionFactory`.
+* The `transactionsupport` argument is set to `LocalTransaction`, which
+specifies that the connection will be used in local transactions only.
+You can also specify `NoTransaction`. However, the default setting of
+`XATransaction` cannot be used. For more information, see
+link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+* The connection pool is configured with the properties specified using
+the `properties` argument; multiple properties are configured as a
+colon-separated list of name-value pairs. Only one property is
+configured in this example, as follows:
++
+[source]
+----
+ConnectionFactoryJndiName=jms/WLOutboundQueueFactory
+----
+The `ConnectionFactoryJndiName` property must be set to the JNDI name of
+the corresponding connection factory in the WebLogic JMS JNDI store.
+Therefore, replace `jms/WLOutboundQueueFactory` in the example above
+with the JNDI name used in your environment.
+* For a description of the `ManagedConnectionFactory` properties that
+are relevant for WebLogic JMS, see the link:#gktfi[Configuration
+Reference of GenericJMSRA Properties for WebLogic JMS].
+4. Create a destination object that refers to a corresponding WebLogic
+JMS destination by entering the following `asadmin` command, all in one
+line:
++
+[source]
+----
+asadmin create-admin-object --host localhost --port 4848 --target server
+    --restype jakarta.jms.Queue --property DestinationJndiName=jms/WLOutboundQueue
+    --raname genericra jms/outboundQueue
+----
+This `asadmin` command creates a destination in {productName}.
+* The destination has the JNDI name `jms/outboundQueue`, uses the
+resource adapter `genericra`, and is of type `jakarta.jms.Queue`.
+* The destination is configured with the properties specified using the
+`properties` argument; multiple properties are configured as a
+colon-separated list of name-value pairs. Only one property is
+configured in this example, as follows:
++
+[source]
+----
+DestinationJndiName=jms/WLOutboundQueue
+----
+The `DestinationJndiName` property must be set to the JNDI name of the
+corresponding destination in the WebLogic JMS JNDI store. Therefore,
+replace `jms/WLOutboundQueue` in the example above with the JNDI name
+used in your environment.
+* For a description of the destination properties that are relevant for
+WebLogic JMS, see the link:#gktfi[Configuration Reference of
+GenericJMSRA Properties for WebLogic JMS].
+
+[[gkkvz]][[GSADG00681]][[limitations-when-using-genericjmsra-with-weblogic-jms]]
+
+===== Limitations When Using GenericJMSRA with WebLogic JMS
+
+Due to the nature of the WebLogic T3 Thin Client there are a number of
+limitations in the way in which it can be used with GenericJMSRA.
+
+[[gknho]][[GSADG00091]][[no-support-for-xa-transactions]]
+
+No Support for XA Transactions
+
+WebLogic JMS does not support the optional JMS "Chapter 8" interfaces
+for XA transactions in a form suitable for use outside of WebLogic
+Server. Therefore, the GenericJMSRA configuration must have the
+`SupportsXA` property set to `-false`. This has a number of implications
+for the way in which applications may be used, as described in this
+section.
+
+Using a MDB to Receive Messages: Container-managed Transactions (CMT)
+
+* If container-managed transactions are used, the transactional
+attribute of a MDB should be set to `NotSupported`. No transaction will
+be started. Messages will be received in a non-transacted session with
+an acknowledgeMode of `AUTO_ACKNOWLEDGE`.
+* A transactional `Required` attribute should not be used; otherwise,
+MDB activation will fail with an exception:
+`javax.resource.ResourceException: MDB is configured to use container managed transaction. But SupportsXA is configured to false in the resource adapter.`
+
+The remaining transactional attributes are normally considered
+inappropriate for use with a MDB. If used, the following behavior will
+occur:
+
+* If the transactional attribute is `RequiresNew`, then MDB activation
+will fail with an exception:
+`javax.resource.ResourceException: MDB is configured to use container managed transaction But SupportsXA is configured to false in the resource adapter.`
+* If the transactional attribute is `Mandatory`, the MDB can be
+activated but a `TransactionRequiredException` (or similar) will always
+be thrown by the server.
+* If the transactional attribute is `Supports`, then no transaction will
+be started and the MDB will work as if `NotSupported` had been used.
+* If the transactional attribute is `Never`, then no transaction will be
+started and the MDB will work as if `NotSupported` had been used.
+
+Using a MDB to Receive Messages: Bean-managed Transactions (BMT)
+
+* If bean-managed transactions are configured in accordance with the EJB
+specification any `UserTransaction` started by the bean will have no
+effect on the consumption of messages.
+* Messages will be received in a non-transacted session with an
+acknowledgeMode of `AUTO_ACKNOWLEDGE`.
+
+Accessing Connections and Destinations Directly - Container-managed
+Transactions (CMT)
+
+When accessing connections directly (such as when sending messages from
+a MDB or an EJB) and container-managed transactions are being used, the
+connection pool's `transaction-support` property should be set to either
+`LocalTransaction` or `NoTransaction`. If the default value of
+`XATransaction` is used, an exception will be thrown at runtime when
+`createConnection()` is called. This is the case irrespective of the
+transactional attribute of the MDB or EJB. Note that MDBs must have
+their transactional attribute set to `NotSupported` as specified above;
+whereas, an EJB can use any transactional attribute.
+
+If there is no transaction in progress within the bean method (for
+example, `notSupported` is being used) then it does not make any
+difference whether the connection pool's `transaction-support` property
+is set to `LocalTransaction` or `NoTransaction`; the transactional
+behavior will be determined by the arguments to `createSession()`. If
+you want the outbound message to be sent without a transaction, call
+`createSession(false, ...)`. If you want the outbound message to be sent
+in a local transaction call
+`createSession(true, Session.SESSION_TRANSACTED)`, remembering to call
+`session.commit()` or `session.rollback()`after the message is sent.
+
+If there is a transaction in progress within the bean method (which will
+only be possible for EJBs), then setting the connection pool's
+`transaction-support` property to `LocalTransaction` or `NoTransaction`
+gives different results:
+
+* If it is set to `NoTransaction` then a non-transacted session will be
+used.
+* If it is set to `LocalTransaction` then a (local, non-XA) transacted
+session will be used, which will be committed or rolled back when the
+`UserTransaction` is committed or rolled back. In this case, calling
+`session.commit()` or `session.rollback()` will cause an exception.
+
+No Support for Redelivery Limits and Dead Message Queue
+
+Due to the lack of XA support when using WebLogic JMS, there is no
+support for GenericJMSRA's dead message queue feature, in which a
+message that has been redelivered to a MDB a defined number of times is
+sent to a dead message queue.
+
+[[gknft]][[GSADG00092]][[limited-support-for-asynchronous-receipt-of-messages-in-a-mdb]]
+
+Limited Support for Asynchronous Receipt of Messages In a MDB
+
+WebLogic JMS does not support the optional JMS "Chapter 8" interfaces
+for "Concurrent Processing of a Subscription's Messages" (that is,
+`ServerSession`, `ServerSessionPool` and `ConnectionConsumer`) in a form
+suitable for use outside of WebLogic Server. Therefore, the generic
+JMSRA configuration must set the property `DeliveryType` to
+`Synchronous`.
+
+This affects the way in which MDBs consume messages from a queue or
+topic as follows:
+
+* When messages are being received from a queue, each MDB instance will
+have its own session and consumer, and it will consume messages by
+repeatedly calling `receive(timeout)`. This allows the use of a pool of
+MDBs to process messages from the queue.
+* When messages are being received from a topic, only one MDB instance
+will be used irrespective of the configured pool size. This means that a
+pool of multiple MDBs cannot be used to share the load of processing
+messages, which may reduce the rate at which messages can be received
+and processed.
++
+This restriction is a consequence of the semantics of synchronously
+consuming messages from topics in JMS: In the case of non-durable topic
+subscriptions, each consumer receives a copy of all the messages on the
+topic, so using multiple consumers would result in multiple copies of
+each message being received rather than allowing the load to be shared
+among the multiple MDBs. In the case of durable topic subscriptions,
+only one active consumer is allowed to exist at a time.
+
+[[gktfi]][[GSADG00682]][[configuration-reference-of-genericjmsra-properties-for-weblogic-jms]]
+
+===== Configuration Reference of GenericJMSRA Properties for WebLogic JMS
+
+The tables in this section list the properties that need to be set to
+configure the resource adapter and any activation specs, managed
+connections, and other administered objects that are relevant only when
+using GenericJMSRA to communicate with WebLogic JMS. For a complete list
+of properties, see the comprehensive table in link:#gbtvu[GenericJMSRA
+Configuration Properties]
+
+Resource Adapter Properties
+
+These properties are used to configure the resource adapter itself when
+it is deployed, and can be specified using the
+`create-resource-adapter-config` command.
+
+[width="100%",cols="28%,42%,30%",options="header",]
+|===
+|Property Name |Required Value |Description
+|`SupportsXA` |`false` a|
+Specifies whether the JMS client supports XA transactions.
+
+Set to `false` for WebLogic JMS.
+
+|`DeliveryType` |`Synchronous` a|
+Specifies whether an MDB should use a `ConnectionConsumer`
+(Asynchronous) or `consumer.receive()` (Synchronous) when consuming
+messages.
+
+Set to `Synchronous` for WebLogic JMS.
+
+|`ProviderIntegrationMode` |`jndi` a|
+Specifies that connection factories and destinations in GlassFish's JNDI
+store are configured to refer to connection factories and destinations
+in WebLogic's JNDI store.
+
+Set to `jndi` for WebLogic JMS.
+
+|`JndiProperties` a|
+[source]
+----
+java.naming.factory.initial=weblogic.jndi.WLInitialContextFactory,
+java.naming.provider.url=t3://localhost:7001,
+java.naming.factory.url.pkgs=weblogic.corba.client.naming
+(replace localhost:7001 with the host:port of WebLogic Server)
+----
+
+ |JNDI properties for connect to WebLogic JNDI, specified as
+comma-separated list of name=value pairs without spaces.
+
+|`UserName` |`Name of the WebLogic JMS user` |User name to connect to
+WebLogic JMS. The user name can be overridden in `ActivationSpec` and
+`ManagedConnection`. If no user name is specified anonymous connections
+will be used, if permitted.
+
+|`Password` |`Password for the WebLogic JMS user` |Password to connect
+to WebLogic JMS. The password can be overridden in `ActivationSpec` and
+`ManagedConnection`.
+
+|`LogLevel` |`Desired log level of JDK logger` |Used to specify the
+level of logging.
+|===
+
+
+Connection Factory Properties
+
+`ManagedConnectionFactory` objects are created in the {productName}
+JNDI store using the Administration Console or the
+`asadmin connector-connection-pool` command. All the properties that can
+be set on a resource adapter configuration can be overridden by setting
+them on a destination object. The properties specific to
+`ManagedConnectionFactory` objects are listed in the following table.
+
+[width="100%",cols="39%,14%,10%,37%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`ClientId` |A valid client ID |None |`ClientID` as specified by JMS 1.1
+specification.
+
+|`ConnectionFactoryJndiName` |A valid JNDI Name |None |JNDI name of
+connection factory in the {productName} JNDI store. This connection
+factory should be configured to refer to the physical connection factory
+in the WebLogic JNDI store.
+
+|`ConnectionValidationEnabled` |`true` or `false` |FALSE |If set to
+`true`, the resource adapter will use an exception listener to catch any
+connection exception and will send a `CONNECTION_ERROR_OCCURED` event to
+{productName}.
+|===
+
+
+Destination Properties
+
+Destination (queue or topic) objects are created in the {productName}
+JNDI store using the Administration Console or the
+`asadmin connector-admin-object` command. All the properties that can be
+set on a resource adapter configuration can be overridden by setting
+them on a destination object. The properties specific to destination
+objects are listed in the following table.
+
+[width="100%",cols="28%,14%,10%,48%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`DestinationJndiName` |A valid JNDI name |None |JNDI name of the
+destination object in the {productName} JNDI store. This destination
+object should be configured to refer to the corresponding physical
+destination in the WebLogic JNDI store.
+|===
+
+
+ActivationSpec Properties
+
+An ActivationSpec is a set of properties that configures a MDB. It is
+defined either in the MDB's {productName} deployment descriptor
+`glassfish-ejb-jar.xml` using `activation-config-property` elements or
+in the MDB itself using annotation. All the resource adapter properties
+listed in the table above can be overridden in an ActivationSpec.
+Additional properties available only to a ActivationSpec are given
+below.
+
+[width="100%",cols="30%,19%,14%,37%",options="header",]
+|===
+|Property Name |Valid Value |Default Value |Description
+|`MaxPoolSize` |An integer |8 a|
+Maximum size of server session pool internally created by the resource
+adapter for achieving concurrent message delivery. This should be equal
+to the maximum pool size of MDB objects.
+
+Only used for queues; ignored for topics, when a value of 1 is always
+used.
+
+|`SubscriptionDurability` |`Durable` or `Non-Durable` |`Non-Durable`
+|Only used for topics. Specifies whether the subscription is durable or
+non-durable.
+
+|`SubscriptionName` | |None |Only used for topics when
+`SubscriptionDurability` is `Durable`. Specifies the name of the durable
+subscription.
+
+|`MessageSelector` |A valid message selector |None |JMS message
+selector.
+
+|`ClientID` |A valid client ID |None |JMS ClientID.
+
+|`ConnectionFactoryJndiName` |A valid JNDI Name |None |JNDI name of
+connection factory in the {productName} JNDI store. This connection
+factory should be configured to refer to the physical connection factory
+in the WebLogic JNDI store.
+
+|`DestinationJndiName` |A valid JNDI Name |None |JNDI name of
+destination in the {productName} JNDI store. This destination should
+be configured to refer to the physical destination in the WebLogic JNDI
+store.
+
+|`DestinationType` |`jakarta.jms.Queue` or `jakarta.jms.Topic` |Null
+|Specifies whether the configured `DestinationJndiName` refers to a
+queue or topic.
+
+|`ReconnectAttempts` |integer |0 |Number of times a reconnect will be
+attempted in case exception listener catches an error on connection.
+
+|`ReconnectInterval` |time in seconds |0 |Interval between reconnection
+attempts.
+|===
+
+
+[[gkslb]][[GSADG00779]][[using-genericjmsra-with-ibm-websphere-mq]]
+
+==== Using GenericJMSRA with IBM WebSphere MQ
+
+You can configure GenericJMSRA to enable applications running in
+{productName} to send messages to, and receive messages from, IBM
+WebSphere MQ. {productName}only supports using GenericJMSRA with
+WebSphere MQ version 6.0 and WebSphere MQ version 7.0
+
+These instructions assume that the WebSphere MQ broker and {productName} are deployed and running on the same physical host/machine. If
+you have the WebSphere MQ broker running on a different machine and need
+to access it remotely, refer to the WebSphere MQ documentation for
+configuration details. The resource adapter configuration and other
+application server related configuration remains unchanged.
+
+The following topics are addressed here:
+
+* link:#gksiw[Preliminary Setup Procedures for WebSphere MQ Integration]
+* link:#gksli[Configure the WebSphere MQ Administered Objects]
+* link:#gksni[Create a Resource Adapter Configuration for GenericJMSRA
+to Work With WebSphere MQ]
+* link:#gksnh[Deploy the GenericJMSRA Archive]
+* link:#gkson[Create the Connection Factories and Administered Objects
+in {productName}]
+* link:#gktmn[Configuring an MDB to Receive Messages from WebSphere MQ]
+
+[[gksiw]][[GSADG00683]][[preliminary-setup-procedures-for-websphere-mq-integration]]
+
+===== Preliminary Setup Procedures for WebSphere MQ Integration
+
+Before you can configure WebSphere MQ to exchange messages with
+{productName}, you must complete the following tasks:
+
+* The following permissions must be added to the `server.policy` and the
+`client.policy` file to deploy GenericJMSRA and to run the client
+application.
+
+** Use a text editor to modify the `server.policy` file in the
+`${appserver-install-dir}/domains/domain1/config/`directory by adding
+the following line to the default grant block:
++
+[source]
+----
+permission java.util.logging.LoggingPermission "control";
+permission java.util.PropertyPermission "*", "read,write";
+----
+
+** If you use an application client in your application, edit the
+client's `client.policy` file in the
+`${appserver-install-dir}/lib/appclient/` directory by adding the
+following permission:
++
+[source]
+----
+permission javax.security.auth.PrivateCredentialPermission
+"javax.resource.spi.security.PasswordCredential * \"*\"","read";
+----
+* To integrate {productName}with WebSphere MQ 6.0 or 7.0, copy the
+necessary JAR files to the as-install``/lib`` directory:
+
+** For WebSphere MQ 6.0, copy these JAR files to the as-install``/lib``
+directory:
++
+[source]
+----
+/opt/mqm/java/lib/com.ibm.mq.jar
+/opt/mqm/java/lib/com.ibm.mq.jms.Nojndi.jar
+/opt/mqm/java/lib/com.ibm.mq.soap.jar
+/opt/mqm/java/lib/com.ibm.mqjms.jar
+/opt/mqm/java/lib/com.ibm.mqetclient.jar
+/opt/mqm/java/lib/commonservices.jar
+/opt/mqm/java/lib/dhbcore.jar
+/opt/mqm/java/lib/rmm.jar
+/opt/mqm/java/lib/providerutil.jar
+/opt/mqm/java/lib/CL3Export.jar
+/opt/mqm/java/lib/CL3Nonexport.jar
+----
+where `/opt/mqm` is the location of the WebSphere MQ 6.0 installation.
+
+** For WebSphere MQ 7.0, copy these JAR files to the as-install``/lib``
+directory:
++
+[source]
+----
+/opt/mqm/java/lib/com.ibm.mq.jar,
+/opt/mqm/java/lib/com.ibm.mq.jms.Nojndi.jar,
+/opt/mqm/java/lib/com.ibm.mq.soap.jar,
+/opt/mqm/java/lib/com.ibm.mqjms.jar,
+/opt/mqm/java/lib/com.ibm.mq.jmqi.jar,
+/opt/mqm/java/lib/com.ibm.mq.commonservices.jar,
+/opt/mqm/java/lib/dhbcore.jar,
+/opt/mqm/java/lib/rmm.jar,
+/opt/mqm/java/lib/providerutil.jar,
+/opt/mqm/java/lib/CL3Export.jar,
+/opt/mqm/java/lib/CL3Nonexport.jar
+----
+where `/opt/mqm` is the location of the WebSphere MQ 7.0 installation.
+* Set the `LD_LIBRARY_PATH` environment variable to the `java/lib`
+directory, and then restart {productName}. For example, in a
+UNIX—based system, with WebSphere MQ installed under `/opt/mqm`, you
+would enter:
++
+[source]
+----
+$ export LD_LIBRARY_PATH=/opt/mqm/java/lib
+----
+
+[[gksli]][[GSADG00501]][[configure-the-websphere-mq-administered-objects]]
+
+===== Configure the WebSphere MQ Administered Objects
+
+This section provides an example of how you could configure the
+necessary administered objects, such as destinations and connection
+factories, on the WebSphere MQ instance from which you want to access
+messages using {productName}. Therefore, you will need to change the
+administered object names to suit your installation.
+
+[[GSADG1028]]
+
+Before You Begin
+
+If WebSphere MQ created a user and a group named `mqm` during the
+installation, then you must specify a password for the `mqm` user using
+the `$ passwd mqm` command.
+
+image:img/websphere-mq.png[
+"This graphic represents all of the administered objects created in this
+example configuration."]
+
+
+1. Switch to the `mqm` user: +
+`$ su mqm`
+
+2. For Linux, set the following kernel version: +
+`$ export LD_ASSUME_KERNEL=2.2.5`
+
+3. Create a new MQ queue manager named "QM1": +
+`$ crtmqm QM1`
+
+4. Start the new MQ queue manager. +
+In the image above, `QM1` is associated with the IBM WebSphere MQ broker. +
+`$ strmqm QM1`
+
+5. Start the MQ listener: +
+`$ runmqlsr -t tcp -m QM1 -p 1414 &`
+
+6. Modify the default JMSAdmin console configuration as follows:
+[arabic]
+.. Edit the JMSAdmin script in the `/opt/mqm/java/bin` directory to
+   change the JVM to a location of a valid JVM your system.
+.. Set the relevant environment variable required for JMSAdmin by
+   sourcing the `setjmsenv` script located in the `/opt/mqm/java/bin` directory.
++
+[source]
+----
+$ cd /opt/mqm/java/bin
+$ source setjmsenv
+----
+where `/opt/mqm` is the location of the WebSphere MQ installation.
+.. Change the JMSAdmin.config file to indicate the Initial Context Factory
+   you will be using by setting the following name-value pairs and
+   commenting out the rest:
++
+[source]
+----
+INITIAL_CONTEXT_FACTORY=com.sun.jndi.fscontext.RefFSContextFactory
+PROVIDER_URL=file:/opt/tmp
+----
+
+7. Create WebSphere MQ queues using the runmqsc console and MQJMS_PSQ.mqsc script. +
+`$ runmqsc QM1 < MQJMS_PSQ.mqsc`
+
+8. Create user defined physical queue for your application using
+runmqsc console and an appropriate physical queue name. An example of
+how this could be done is shown below. +
+In the image above, `ORANGE.LOCAL.QUEUE` is associated with `QM1`.
++
+[source]
+----
+     $ runmqsc QM1
+             > DEFINE QLOCAL(ORANGE.LOCAL.QUEUE)
+             > end
+----
+
+9. Start the WebSphere MQ Broker: +
+`$ strmqbrk -m QM1`
+
+10. In the WebSphere MQ JMSAdmin console, use the following commands to
+create the connection factories, XA connection factories, and
+destinations for your application, as shown in the following sample,
+which lists each of the various JMS administered objects. +
+In the image above, `QCF` (for `QM1`) and `TQueue` (associated with
+`ORANGE.LOCAL.QUEUE`) are defined in the `FileSystem Naming Context`.
++
+[source]
+----
+$ ./JMSAdmin
+
+   InitCtx>def qcf<JNDI name to be given to the Queue Connection Factory>
+     hostname<IBM MQ server hostname> port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager<name of queue manager defined>
+
+     For example:
+     def qcf(QCF) hostname(localhost) port(1414) channel(SYSTEM.DEF.SVRCONN)
+      transport(CLIENT) qmanager(QM1)
+
+   InitCtx%def xaqcf<JNDI name to be given to the XA Queue Connection Factory>
+     hostname<IBM MQ server hostname> port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager<name of queue manager defined>
+
+     For example:
+     def xaqcf(XAQCF) hostname(localhost) port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager(QM1)
+
+   InitCtx%def q<JNDI Name to be given to the Queue> queue<physical queue name>
+     qmanager(name of queue manager defined )
+
+     For example: def q(TQueue) queue(ORANGE.LOCAL.QUEUE) qmanager(QM1)
+
+   InitCtx%def tcf<JNDI Name to be given to the Topic Connection Factory>
+     qmanager(name of queue manager defined )
+
+     For example: def tcf(TCF) qmanager(QM1)
+
+   InitCtx%def xatcf<JNDI Name to be given to the  XA Topic Connection Factory>
+     qmanager(name of queue manager defined )
+
+     For example: def xatcf(XATCF) qmanager(QM1)
+
+   InitCtx%def t<JNDI Name to be given to the Topic> topic<sample topic name>
+
+     For example: def t(TTopic) topic(topic)
+----
+
+[[gksni]][[GSADG00684]][[create-a-resource-adapter-configuration-for-genericjmsra-to-work-with-websphere-mq]]
+
+===== Create a Resource Adapter Configuration for GenericJMSRA to Work With WebSphere MQ
+
+Before deploying GenericJMSRA, you need to create a resource adapter
+configuration in {productName}. You can do this using either the
+Administration Console or the `asadmin` command. Use the following
+`asadmin` command to create a resource adapter configuration for
+`genericra` to configure it to work with WebSphere MQ.
+
+[source]
+----
+                     asadmin> create-resource-adapter-config
+                       --user <adminname> --password <admin password>
+                       --property SupportsXA=true:ProviderIntegrationMode
+                       =jndi:UserName=mqm:Password=###:RMPolicy
+                       =OnePerPhysicalConnection:JndiProperties
+                       =java.naming.factory.url.pkgs\\
+                       =com.ibm.mq.jms.naming,java.naming.factory.initial\\
+                       =com.sun.jndi.fscontext.RefFSContextFactory,java.naming.provider.url\\
+                       =file\\:\\/\\/opt\\/tmp:LogLevel=finest genericra
+----
+
+
+[NOTE]
+====
+When using `asadmin` you need to escape each `=` and any `:` characters
+by prepending a backward slash `\`. The escape sequence is not necessary
+if the configuration is performed through the Administration Console.
+Also , ensure that the provider URL is configured correctly depending on
+the platform. For example, on Windows systems it should be
+`file:/C:/opt/tmp` and on UNIX—based systems it is `file://opt/tmp`.
+====
+
+
+This creates a resource adapter configuration with the name `genericra`,
+and Oracle recommends not changing the default name. The resource
+adapter configuration is configured with the properties specified using
+the `--properties` argument; multiple properties are configured as a
+colon-separated list of name-value pairs that are entered as a single
+line.
+
+In this example, the following properties are configured:
+
+
+[NOTE]
+====
+The tables in this section describe the GenericJMSRA properties that are
+relevant only when integrating with WebSphere MQ. For a complete list of
+properties, see the comprehensive table in link:#gbtvu[GenericJMSRA
+Configuration Properties].
+====
+
+
+[width="100%",cols="25%,45%,30%",options="header",]
+|===
+|Property Name |Required Value |Description
+|`SupportsXA`
+|`true`
+|Set the supports distributed transactions attribute to `true`.
+The level of transactional support the adapter provides
+-- none, local, or XA -- depends on the capabilities of the
+Enterprise Information System (EIS) being adapted. If an adapter
+supports XA transactions and this attribute is XA, the application can
+use distributed transactions to coordinate the EIS resource with JDBC
+and JMS resources.
+
+|`ProviderIntegrationMode`
+|`jndi`
+|Specifies that connection factories
+and destinations in GlassFish's JNDI store are configured to refer to
+connection factories and destinations in WebSphere MQ's JNDI store.
+
+|`JndiProperties`
+a|
+[source]
+----
+JndiProperties=java.naming.factory.url.pkgs\\=com.ibm.mq.jms.naming,
+java.naming.factory.initial\\=com.sun.jndi.fscontext.RefFSContextFactory,
+java.naming.provider.url\\=file\\:\\/\\/opt\\/tmp:LogLevel=finest genericra
+----
+|JNDI properties for connecting to WebSphere MQ's JNDI, specified as
+comma-separated list of name=value pairs without spaces.
+
+|`UserName`
+|`Name of the WebSphere MQ user`
+a|
+User name to connect to WebSphere MQ.
+The user name can be overridden in `ActivationSpec` and
+`ManagedConnection`. If no user name is specified anonymous connections
+will be used, if permitted.
+
+|`Password`
+|`Password for the WebSphere MQ user`
+a|
+Password to connect to WebSphere MQ.
+The password can be overridden in `ActivationSpec` and
+`ManagedConnection`.
+
+|`RMIPolicy`
+|`OnePerPhysicalConnection`
+a|
+Some XAResource implementations, such as WebSphere MQ, rely on a
+Resource Manager per Physical Connection, and this causes issues when
+there is inbound and outbound communication to the same queue manager in
+a single transaction (for example, when an MDB sends a response to a
+destination).
+
+When RMPolicy is set to `OnePerPhysicalConnection`, the XAResource
+wrapper implementation's `isSameRM` in GenericJMSRA would check if both
+the XAResources use the same physical connection, before delegating to
+the wrapped objects. Therefore, ensure that this attribute is set to
+`OnePerPhysicalConnection` if the application uses XA.
+
+|`LogLevel`
+|`Desired log level of JDK logger`
+|Used to specify the level of logging.
+|===
+
+
+
+[NOTE]
+====
+You must use the values for `SupportsXA`, `RMPolicy` and
+`ProviderIntegrationMode` as the required values that are used in this
+table.
+====
+
+
+[[gksnh]][[GSADG00685]][[deploy-the-genericjmsra-archive]]
+
+===== Deploy the GenericJMSRA Archive
+
+For instructions on downloading and deploying GenericJMSRA, see
+link:#gkkxz[Deploy the GenericJMSRA Resource Archive].
+
+[[gkson]][[GSADG00686]][[create-the-connection-factories-and-administered-objects-in-glassfish-server]]
+
+===== Create the Connection Factories and Administered Objects in {productName}
+
+In order to configure a JMS Connection Factory using GenericJMSRA, a
+Connector Connection Pool and resource needs to be created in {productName}, as described in this section.
+
+Using the example WebSphere MQ configuration in link:#gksli[Configure
+the WebSphere MQ Administered Objects], you will see `mypool` (pointing
+to `GenericJMSRA` and `QCF`) and `jms/MyQCF` (for `mypool`) created in
+{productName}.
+
+
+[NOTE]
+====
+If you want configure connections and destination resources using the
+Administration Console, this is explained in the Administration Console
+online help. When using Administration Console, following the,
+instructions for creating a new Connector Connection Pool and Admin
+Object Resources, and not the instructions for creating a JMS Connection
+Pool and Destination Resources. For more information about using
+`asadmin` to create these resources, see link:connectors.html#gioce[To
+Create a Connector Connection Pool] and link:connectors.html#giogt[To
+Create a Connector Resource].
+====
+
+
+[[gksro]][[GSADG00502]][[creating-connections-and-destinations]]
+
+Creating Connections and Destinations
+
+In order to configure a JMS Connection Factory, using GenericJMSRA, a
+Connector Connection Pool and Destination resources need to be created
+in {productName} using names that map to the corresponding connection
+and destination resources in WebSphere MQ. The connections and
+destination name in these steps map to the example WebSphere MQ
+configuration in link:#gksli[Configure the WebSphere MQ Administered
+Objects].
+
+1. Create connection pools that point to the connection pools in
+WebSphere MQ.
++
+The following `asadmin` command creates a Connection Pool called
+`mypool` and points to the `XAQCF` created in WebSphere MQ:
++
+[source]
+----
+     asadmin create-connector-connection-pool -- raname genericra connectiondefinition
+            jakarta.jms.QueueConnectionFactory --transactionsupport  XATransaction
+            --property ConnectionFactoryJndiName=QCF mypool
+----
+The following `asadmin` command creates a Connection Pool called
+`mypool2` and points to the `XATCF` created in WebSphere MQ:
++
+[source]
+----
+     asadmin create-connector-connection-pool
+            -- raname genericra connectiondefinition jakarta.jms.TopicConnectionFactory
+            --transactionsupport  XATransaction
+            --property ConnectionFactoryJndiName=XATCF mypool2
+----
+2. Create the connector resources.
++
+The following `asadmin` command creates a connector resource named
+`jms/MyQCF` and binds this resource to JNDI for applications to use:
++
+[source]
+----
+     asadmin create-connector-resource --poolname mypool jms/MyQCF
+----
+The following `asadmin` command creates a connector resource named
+`jms/MyTCF` and binds this resource to JNDI for applications to use:
++
+[source]
+----
+     asadmin create-connector-resource --poolname mypool2 jms/MyTCF
+----
+3. Create the JMS destination resources as administered objects.
++
+In the image above, `jms/MyQueue` (pointing to `GenericJMSRA` and
+`TQueue`) is created in {productName}.
++
+The following `asadmin` command creates a `jakarta.jms.Queue` administered
+object and binds it to the {productName} JNDI tree at `jms/MyQueue`
+and points to the `jms/TQueue` created in WebSphere MQ.
++
+[source]
+----
+     asadmin create-admin-object --raname genericra --restype jakarta.jms.Queue
+            --property DestinationJndiName=TQueue jms/MyQueue
+----
+The following `asadmin` command creates a `jakarta.jms.Topic` administered
+object and binds it to the {productName} JNDI tree at `jms/MyTopic`
+and points to the `jms/TTopic` created in WebSphere MQ.
++
+[source]
+----
+     asadmin create-admin-object --raname genericra --restype jakarta.jms.Topic
+            --property DestinationJndiName=TTopic jms/MyTopic
+----
+
+[[gktmn]][[GSADG00687]][[configuring-an-mdb-to-receive-messages-from-websphere-mq]]
+
+===== Configuring an MDB to Receive Messages from WebSphere MQ
+
+The administered object names in the sample deployment descriptor below
+map to the example WebSphere MQ configuration in link:#gksli[Configure
+the WebSphere MQ Administered Objects]. The deployment descriptors need
+to take into account the resource adapter and the connection resources
+that have been created. A sample `sun-ejb-jar.xml` for a Message Driven
+Bean that listens to a destination called `TQueue` in WebSphere MQ, and
+publishes back reply messages to a destination resource named
+`jms/replyQueue` in {productName}, as shown below.
+
+[source,xml]
+----
+       <sun-ejb-jar>
+         <enterprise-beans>
+         <unique-id.1</unique-id>
+         <ejb>
+            <ejb-name>SimpleMessageEJB</ejb-name>
+            <jndi-name>jms/SampleQueue</jndi-name>
+             <!-- QCF used to publish reply messages -->
+            <resource-ref>
+               <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
+               <jndi-name>jms/MyQCF</jndi-name>
+               <default-resource-principal>
+                  <name>mqm</name>
+                  <password>mqm</password>
+               </default-resource-principal>
+            </resource-ref>
+            <!-- reply destination resource> Creating of this replyQueue destination resource is not
+                 shown above, but the steps are similar to creating the  "jms/MyQueue" resource -->
+            <resource-env-ref>
+               <resource-env-ref-name>jms/replyQueue</resource-env-ref-name>
+               <jndi-name>jms/replyQueue</jndi-name>
+            </resource-env-ref>
+
+            <!-- Activation related RA specific configuration for this MDB -->
+            <mdb-resource-adapter>
+            <!-- resource-adapter-mid points to the Generic Resource Adapter for JMS -->
+            <resource-adapter-mid>genericra</resource-adapter-mid>
+            <activation-config>
+               <activation-config-property>
+                  <activation-config-property-name>DestinationType</activation-config-property-name>
+                  <activation-config-property-value>javax>jms>Queue</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>ConnectionFactoryJndiName</activation-config-property-name>
+                  <activation-config-property-value>QCF</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>DestinationJndiName</activation-config-property-name>
+                  <activation-config-property-value>TQueue</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>MaxPoolSize</activation-config-property-name>
+                  <activation-config-property-value>32</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>RedeliveryAttempts</activation-config-property-name>
+                  <activation-config-property-value>0</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>ReconnectAttempts</activation-config-property-name>
+                  <activation-config-property-value>4</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>ReconnectInterval</activation-config-property-name>
+                  <activation-config-property-value>10</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>RedeliveryInterval</activation-config-property-name>
+                  <activation-config-property-value>1</activation-config-property-value>
+               </activation-config-property>
+               <activation-config-property>
+                  <activation-config-property-name>SendBadMessagesToDMD</activation-config-property-name>
+                  <activation-config-property-value>false</activation-config-property-value>
+               </activation-config-property>
+            </activation-config>
+          </mdb-resource-adapter>
+          </ejb>
+          </enterprise-beans>
+       </sun-ejb-jar>
+----
+
+The business logic encoded in Message Driven Bean could then lookup the
+configured `QueueConnectionFactory/Destination` resource to create a
+connection as shown below.
+
+[source,java]
+----
+             Context context = null;
+             ConnectionFactory connectionFactory = null;
+             logger.info("In PublisherBean>ejbCreate()");
+             try {
+                 context = new InitialContext();
+                 queue = (javax.jms.Queue) context.lookup ("java:comp/env/jms/replyQueue");
+                 connectionFactory = (ConnectionFactory) context>lookup("java:comp/env/jms/MyQueueConnectionFactory");
+                 connection = connectionFactory>createConnection();
+             } catch (Throwable t) {
+                 logger.severe("PublisherBean>ejbCreate:" + "Exception: " + t.toString());
+             }
+----
+
+

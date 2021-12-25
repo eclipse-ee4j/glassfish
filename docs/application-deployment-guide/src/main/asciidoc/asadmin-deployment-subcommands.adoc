@@ -1,0 +1,149 @@
+type=page
+status=published
+title=The asadmin Deployment Subcommands
+next=dd-files.html
+prev=deploying-applications.html
+~~~~~~
+
+= The asadmin Deployment Subcommands
+
+[[GSDPG00005]][[gihzw]]
+
+
+[[a-the-asadmin-deployment-subcommands]]
+== A The `asadmin` Deployment Subcommands
+
+This appendix lists the `asadmin` deployment subcommands that are
+included with this release of the {productName} software. For information on additional `asadmin` subcommands,
+see "link:administration-guide/asadmin-subcommands.html#GSADG00023[Subcommands for the `asadmin` Utility]" in
+{productName} Administration Guide or see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+link:reference-manual/add-library.html#GSRFM00818[`add-library`]::
+  Adds one or more library JAR files to {productName}. You can
+  specify whether the libraries are added to the Common class loader
+  directory, the Java optional package directory, or the
+  application-specific class loader directory.
+link:reference-manual/create-application-ref.html#GSRFM00013[`create-application-ref`]::
+  Creates a reference from a cluster or an unclustered server instance
+  to a previously deployed Jakarta EE application or module. This
+  effectively results in the application element being deployed and made
+  available on the targeted instance or cluster.
+link:reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`]::
+  Creates a lifecycle module. A lifecycle module provides a means of
+  running a short or long duration Java-based task at a specific stage
+  in the server life cycle.
+link:reference-manual/delete-application-ref.html#GSRFM00064[`delete-application-ref`]::
+  Removes a reference from a cluster or an unclustered server instance
+  to a previously deployed Jakarta EE application or module. This
+  effectively results in the application element being undeployed on the
+  targeted instance or cluster.
+link:reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`]::
+  Deletes a lifecycle module.
+link:reference-manual/deploy.html#GSRFM00114[`deploy`]::
+  Deploys an enterprise application, web application, EJB module,
+  connector module, or application client module. If the component is
+  already deployed or already exists, you can forcefully redeploy if you
+  set the `--force` option to `true`. A directory can also be deployed.
+  Supported in remote mode only. For usage instructions, see
+  link:deploying-applications.html#gijmq[To Deploy an Application or
+  Module].
+link:reference-manual/deploydir.html#GSRFM00115[`deploydir`]::
+  This subcommand is deprecated. Use the `deploy` subcommand instead.
+link:reference-manual/disable.html#GSRFM00116[`disable`]::
+  Immediately deactivates the named application or module. If the
+  component has not been deployed, an error message is returned.
+  Supported in remote mode only. For usage instructions,
+  seelink:deploying-applications.html#fvyje[To Disable an Application or
+  Module].
+link:reference-manual/enable.html#GSRFM00124[`enable`]::
+  Enables the specified application or module. If the component has not
+  been deployed, an error message is returned. If the component is
+  already enabled, then it is re-enabled. Supported in remote mode only.
+  For usage instructions, see link:deploying-applications.html#gijjy[To
+  Enable an Application or Module].
+link:reference-manual/get-client-stubs.html#GSRFM00140[`get-client-stubs`]::
+  Gets the client stubs JAR file for an application client module or an
+  application containing the application client module, from the server
+  machine to the local directory. For usage instructions, see
+  link:deploying-applications.html#beaek[EJB Module Deployment
+  Guidelines].
+link:reference-manual/list-applications.html#GSRFM00148[`list-applications`]::
+  Lists deployed Jakarta EE applications and modules. Optionally lists
+  subcomponents and scoped resources. If the `--type` option is not
+  specified, all applications and modules are listed. Supported in
+  remote mode only. For usage instructions, see
+  link:deploying-applications.html#giulr[To List Deployed Applications or
+  Modules].
+link:reference-manual/list-application-refs.html#GSRFM00147[`list-application-refs`]::
+  Lists Jakarta EE applications and modules deployed on the specified
+  target server instance or cluster.
+link:reference-manual/list-libraries.html#GSRFM00819[`list-libraries`]::
+  Lists library JAR files that have been added to {productName}. You
+  can specify whether to list libraries in the Common class loader
+  directory, the Java optional package directory, or the
+  application-specific class loader directory.
+link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`]::
+  Lists lifecycle modules.
+link:reference-manual/list-components.html#GSRFM00155[`list-components`]::
+  This subcommand is deprecated. Use the `list-applications` subcommand
+  instead.
+link:reference-manual/list-sub-components.html#GSRFM00201[`list-sub-components`]::
+  Lists EJBs or servlets in a deployed module or in a module of the
+  deployed application. If a module is not identified, all modules are
+  listed. To display a specific module in an application, you must
+  specify the module name and the `--appname` option. Supported in
+  remote mode only. For usage instructions, see
+  link:deploying-applications.html#giulr[To List Deployed Applications or
+  Modules].
+link:reference-manual/list-web-context-param.html#GSRFM00208[`list-web-context-param`]::
+  Lists servlet context-initialization parameters of a deployed web
+  application or module. Supported in remote mode only. For usage
+  instructions, see link:deploying-applications.html#giybo[To List Web
+  Context Parameters].
+link:reference-manual/list-web-env-entry.html#GSRFM00209[`list-web-env-entry`]::
+  Lists environment entries for a deployed web application or module.
+  Supported in remote mode only. For usage instructions, see
+  link:deploying-applications.html#giyip[To List Web Environment
+  Entries].
+link:reference-manual/redeploy.html#GSRFM00217[`redeploy`]::
+  Overwrites an application or module that is already deployed.
+  Supported in remote mode only. For usage instructions, see
+  link:deploying-applications.html#gijmb[To Redeploy an Application or
+  Module].
+link:reference-manual/remove-library.html#GSRFM00820[`remove-library`]::
+  Removes one or more library JAR files from {productName}. You can
+  specify whether the libraries are removed from the Common class loader
+  directory, the Java optional package directory, or the
+  application-specific class loader directory.
+link:reference-manual/set-web-context-param.html#GSRFM00230[`set-web-context-param`]::
+  Sets a servlet context-initialization parameter of a deployed web
+  application or module. Supported in remote mode only. For usage
+  instructions, see link:deploying-applications.html#giyce[To Set a Web
+  Context Parameter].
+link:reference-manual/set-web-env-entry.html#GSRFM00231[`set-web-env-entry`]::
+  Sets an environment entry for a deployed web application or module.
+  Supported in remote mode only. For usage instructions, see
+  link:deploying-applications.html#giyhc[To Set a Web Environment Entry].
+link:reference-manual/show-component-status.html#GSRFM00232[`show-component-status`]::
+  Shows the status of a deployed component. The possible statuses
+  include `enabled` or `disabled`. Supported in remote mode only. For
+  usage instructions, see link:deploying-applications.html#giulr[To List
+  Deployed Applications or Modules].
+link:reference-manual/undeploy.html#GSRFM00244[`undeploy`]::
+  Uninstalls the specified deployed application or module. Supported in
+  remote mode only. For usage instructions, see
+  link:deploying-applications.html#gijkl[To Undeploy an Application or
+  Module].
+link:reference-manual/unset-web-context-param.html#GSRFM00248[`unset-web-context-param`]::
+  Unsets a servlet context-initialization parameter of a deployed web
+  application or module. Supported in remote mode only. For usage
+  instructions, see link:deploying-applications.html#giycy[To Unset a Web
+  Context Parameter].
+link:reference-manual/unset-web-env-entry.html#GSRFM00249[`unset-web-env-entry`]::
+  Unsets an environment entry for a deployed web application or module.
+  Supported in remote mode only. For usage instructions, see
+  link:deploying-applications.html#giyjr[To Unset a Web Environment
+  Entry].
+
+

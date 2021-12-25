@@ -1,0 +1,2530 @@
+type=page
+status=published
+title=Securing Applications
+next=webservices.html
+prev=part-apps-and-app-comps.html
+~~~~~~
+
+= Securing Applications
+
+[[GSDVG00006]][[beabg]]
+
+
+[[securing-applications]]
+== 4 Securing Applications
+
+This chapter describes how to write secure Jakarta EE applications, which
+contain components that perform user authentication and access
+authorization for the business logic of Jakarta EE components.
+
+For information about administrative security for the {productName}, see the link:security-guide.html#GSSCG[{productName}
+Security Guide].
+
+For general information about Jakarta EE security, see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[Security]
+in The Jakarta EE Tutorial.
+
+The following topics are addressed here:
+
+* link:#beabh[Security Goals]
+* link:#beabi[{productName} Specific Security Features]
+* link:#beabj[Container Security]
+* link:#beacr[Roles, Principals, and Principal to Role Mapping]
+* link:#beabo[Realm Configuration]
+* link:#BACDEIHB[Jakarta EE Security API Support]
+* link:#beabt[JACC Support]
+* link:#beabu[Pluggable Audit Module Support]
+* link:#beabx[The `server.policy` File]
+* link:#beaca[Configuring Message Security for Web Services]
+* link:#beacm[Programmatic Login Using the ProgrammaticLogin Class]
+* link:#beacq[User Authentication for Single Sign-on]
+* link:#gizel[Adding Authentication Mechanisms to the Servlet Container]
+
+
+[NOTE]
+====
+The Web Profile of the {productName} supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full {productName} supports the entire EJB
+3.1 specification. For details, see
+http://jcp.org/en/jsr/detail?id=318[JSR 318]
+(`http://jcp.org/en/jsr/detail?id=318`).
+====
+
+
+[[beabh]][[GSDVG00114]][[security-goals]]
+
+=== Security Goals
+
+In an enterprise computing environment, there are many security risks.
+The goal of the {productName} is to provide highly secure,
+interoperable, and distributed component computing based on the Jakarta EE
+security model. Security goals include:
+
+* Full compliance with the Jakarta EE security model. This includes EJB and
+servlet role-based authorization.
+* Support for single sign-on across all {productName} applications
+within a single security domain.
+* Support for web services message security.
+* Security support for application clients.
+* Support for several underlying authentication realms, such as simple
+file and Lightweight Directory Access Protocol (LDAP). Certificate
+authentication is also supported for Secure Socket Layer (SSL) client
+authentication. For Solaris, OS platform authentication is supported in
+addition to these.
+* Support for declarative security through {productName} specific
+XML-based role mapping.
+* Support for Java Authorization Contract for Containers (JACC)
+pluggable authorization as included in the Jakarta EE specification and
+defined by http://www.jcp.org/en/jsr/detail?id=115[Java Specification
+Request (JSR) 115] (`http://www.jcp.org/en/jsr/detail?id=115`).
+* Support for Java Authentication Service Provider Interface for
+Containers as included in the Jakarta EE specification and defined by
+http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
+(`http://www.jcp.org/en/jsr/detail?id=196`).
+* Support for Web Services Interoperability Technologies (WSIT) as described in
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services-interoperability-and-jakarta-xml-web-services[
+Jakarta EE Tutorial].
+* Support for the Jakarta EE Security API as included in the Jakarta EE
+specification and defined by https://jcp.org/en/jsr/detail?id=375[JSR
+375] (`https://jcp.org/en/jsr/detail?id=375`)
+
+[[beabi]][[GSDVG00115]][[glassfish-server-specific-security-features]]
+
+=== {productName} Specific Security Features
+
+The {productName} supports the Jakarta EE security model, as well as the
+following features which are specific to the {productName}:
+
+* Message security; see link:#beaca[Configuring Message Security for Web
+Services]
+* Single sign-on across all {productName} applications within a
+single security domain; see link:#beacq[User Authentication for Single
+Sign-on]
+* Programmatic login; see link:#beacm[Programmatic Login Using the
+ProgrammaticLogin Class]
+
+[[beabj]][[GSDVG00116]][[container-security]]
+
+=== Container Security
+
+The component containers are responsible for providing Jakarta EE
+application security. The container provides two security forms:
+
+* link:#beabl[Declarative Security]
+* link:#beabk[Programmatic Security]
+
+Annotations (also called metadata) enable a declarative style of
+programming, and so encompass both the declarative and programmatic
+security concepts. Users can specify information about security within a
+class file using annotations. When the application is deployed, this
+information can either be used by or overridden by the application or
+module deployment descriptor.
+
+[[beabl]][[GSDVG00362]][[declarative-security]]
+
+==== Declarative Security
+
+Declarative security means that the security mechanism for an
+application is declared and handled externally to the application.
+Deployment descriptors describe the Jakarta EE application's security
+structure, including security roles, access control, and authentication
+requirements.
+
+The {productName} supports the deployment descriptors specified by
+Jakarta EE and has additional security elements included in its own
+deployment descriptors. Declarative security is the application
+deployer's responsibility. For more information about {productName}
+deployment descriptors, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+
+There are two levels of declarative security, as follows:
+
+* link:#beabm[Application Level Security]
+* link:#beabn[Component Level Security]
+
+[[beabm]][[GSDVG00239]][[application-level-security]]
+
+===== Application Level Security
+
+For an application, roles used by any application must be defined in
+`@DeclareRoles` annotations in the code or `role-name` elements in the
+application deployment descriptor (`application.xml`). Those role names
+are scoped to the EJB XML deployment descriptors (`ejb-jar.xml` and
+`glassfish-ejb-jar.xml` files) and to the servlet XML deployment
+descriptors (`web.xml` and `glassfish-web.xml` files). For an
+individually deployed web or EJB module, you define roles using
+`@DeclareRoles` annotations or `role-name` elements in the Jakarta EE
+deployment descriptor files `web.xml` or `ejb-jar.xml`.
+
+To map roles to principals and groups, define matching
+`security-role-mapping` elements in the `glassfish-application.xml`,
+`glassfish-ejb-jar.xml`, or `glassfish-web.xml` file for each
+`role-name` used by the application. By default, group principal names
+are mapped to roles of the same name. Accordingly, the Default Principal
+To Role Mapping setting is enabled by default on the Security page of
+the {productName} Administration Console. This default role mapping
+definition is in effect if you do not define your own mapping in the
+deployment descriptor for your application as described in this section.
+For more information, see link:#beacr[Roles, Principals, and Principal
+to Role Mapping].
+
+[[beabn]][[GSDVG00240]][[component-level-security]]
+
+===== Component Level Security
+
+Component level security encompasses web components and EJB components.
+
+A secure web container authenticates users and authorizes access to a
+servlet or JSP by using the security policy laid out in the servlet XML
+deployment descriptors (`web.xml` and `glassfish-web.xml` files).
+
+The EJB container is responsible for authorizing access to a bean method
+by using the security policy laid out in the EJB XML deployment
+descriptors (`ejb-jar.xml` and `glassfish-ejb-jar.xml` files).
+
+[[beabk]][[GSDVG00363]][[programmatic-security]]
+
+==== Programmatic Security
+
+Programmatic security involves an EJB component or servlet using method
+calls to the security API, as specified by the Jakarta EE security model,
+to make business logic decisions based on the caller or remote user's
+security role. Programmatic security should only be used when
+declarative security alone is insufficient to meet the application's
+security model.
+
+The API for programmatic security consists of methods of the Jakarta EE
+Security API `SecurityContext` interface, and methods of the EJB
+`EJBContext` interface and the servlet `HttpServletRequest` interface.
+The {productName} supports these interfaces as specified in the Java
+EE specification.
+
+There is also a proprietary Glassfish API for programmatic login. See
+link:#beacm[Programmatic Login Using the ProgrammaticLogin Class].
+
+For more information about programmatic security, see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-programmatic-security-with-web-applications[
+Using Programmatic Security] in the The Jakarta EE Tutorial.
+
+[[beacr]][[GSDVG00117]][[roles-principals-and-principal-to-role-mapping]]
+
+=== Roles, Principals, and Principal to Role Mapping
+
+By default, any groups that an authenticated user belongs to will be
+mapped to roles with the same names. Therefore, the Default Principal To
+Role Mapping setting is enabled by default on the Security page of the
+GlassFish Administration Console. To change the default mapping you can
+clear this setting. For applications, you define roles in
+`@DeclareRoles` annotations or the Jakarta EE deployment descriptor file
+`application.xml`. You define the corresponding role mappings in the
+{productName} deployment descriptor file `glassfish-application.xml`.
+For individually deployed web or EJB modules, you define roles in
+`@DeclareRoles` annotations or the Jakarta EE deployment descriptor files
+`web.xml` or `ejb-jar.xml`. You define the corresponding role mappings
+in the {productName} deployment descriptor files `glassfish-web.xml`
+or `glassfish-ejb-jar.xml`.
+
+For more information regarding Jakarta EE deployment descriptors, see the
+Jakarta EE Specification. For more information regarding {productName}
+deployment descriptors, see "link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment Descriptors]" in {productName}
+Application Deployment Guide.
+
+Each `security-role-mapping` element in the `glassfish-application.xml`,
+`glassfish-web.xml`, or `glassfish-ejb-jar.xml` file maps a role name
+permitted by the application or module to principals and groups. For
+example, a `glassfish-web.xml` file for an individually deployed web
+module might contain the following:
+
+[source,xml]
+----
+<glassfish-web-app>
+    <security-role-mapping>
+        <role-name>manager</role-name>
+        <principal-name>jgarcia</principal-name>
+        <principal-name>mwebster</principal-name>
+        <group-name>team-leads</group-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <role-name>administrator</role-name>
+        <principal-name>dsmith</principal-name>
+    </security-role-mapping>
+</glassfish-web-app>
+----
+
+A role can be mapped to either specific principals or to groups (or
+both). The principal or group names used must be valid principals or
+groups in the realm for the application or module. Note that the
+`role-name` in this example must match the `@DeclareRoles` annotations
+or the `role-name` in the `security-role` element of the corresponding
+`web.xml` file.
+
+You can also specify a custom principal implementation class. This
+provides more flexibility in how principals can be assigned to roles. A
+user's JAAS login module now can authenticate its custom principal, and
+the authenticated custom principal can further participate in the
+{productName} authorization process. For example:
+
+[source,xml]
+----
+<security-role-mapping>
+    <role-name>administrator</role-name>
+    <principal-name class-name="CustomPrincipalImplClass">
+        dsmith
+    </principal-name>
+</security-role-mapping>
+----
+
+You can specify a default principal and a default principal to role
+mapping, each of which applies to the entire {productName} instance.
+The default principal to role mapping maps group principals to the same
+named roles. Web modules that omit the `run-as` element in `web.xml` use
+the default principal. Applications and modules that omit the
+`security-role-mapping` element use the default principal to role
+mapping. These defaults are part of the Security Service, which you can
+access in the following ways:
+
+* In the Administration Console, select the Security component under the
+relevant configuration. For details, click the Help button in the
+Administration Console.
+* Use the `asadmin set` command. For details, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual]. For
+example, you can set the default principal as follows.
++
+[source]
+----
+asadmin set server-config.security-service.default-principal=dsmith
+asadmin set server-config.security-service.default-principal-password=secret
+----
+You can set the default principal to role mapping as follows.
++
+[source]
+----
+asadmin set server-config.security-service.activate-default-principal-to-role-mapping=true
+asadmin set server-config.security-service.mapped-principal-class=CustomPrincipalImplClass
+----
+Default principal to role mapping is enabled by default. To disable it,
+set the default principal to role mapping property to false.
+
+[[beabo]][[GSDVG00118]][[realm-configuration]]
+
+=== Realm Configuration
+
+The following topics are addressed here:
+
+* link:#beabp[Supported Realms]
+* link:#beabq[How to Configure a Realm]
+* link:#beabr[How to Set a Realm for an Application or Module]
+* link:#beabs[Creating a Custom Realm]
+
+[[beabp]][[GSDVG00364]][[supported-realms]]
+
+==== Supported Realms
+
+The following realms are supported in the current release of the
+{productName}:
+
+* `file` - Stores user information in a file. This is the default realm
+when you first install the {productName}.
+* `ldap` - Stores user information in an LDAP directory.
+* `jdbc` - Stores user information in a database.
++
+In the JDBC realm, the server gets user credentials from a database. The
+{productName} uses the database information and the enabled JDBC
+realm option in the configuration file. For digest authentication, a
+JDBC realm should be created with `jdbcDigestRealm` as the JAAS context.
+* `certificate` - Sets up the user identity in the {productName}
+security context, and populates it with user data obtained from
+cryptographically verified client certificates.
+* `solaris` - Allows authentication using Solaris `username+password`
+data. This realm is only supported on the Solaris operating system,
+version 9 and above.
+
+For information about configuring realms, see link:#beabq[How to
+Configure a Realm].
+
+[[beabq]][[GSDVG00365]][[how-to-configure-a-realm]]
+
+==== How to Configure a Realm
+
+You can configure a realm in one of these ways:
+
+* In the Administration Console, open the Security component under the
+relevant configuration and go to the Realms page. For details, click the
+Help button in the Administration Console.
+* Use the `asadmin create-auth-realm` command to configure realms on
+local servers. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[beabr]][[GSDVG00366]][[how-to-set-a-realm-for-an-application-or-module]]
+
+==== How to Set a Realm for an Application or Module
+
+The following deployment descriptor elements have optional `realm` or
+`realm-name` data subelements or attributes that override the domain's
+default realm:
+
+* `glassfish-application` element in `glassfish-application.xml`
+* `web-app` element in `web.xml`
+* `as-context` element in `glassfish-ejb-jar.xml`
+* `client-container` element in `sun-acc.xml`
+* `client-credential` element in `sun-acc.xml`
+
+If modules within an application specify realms, these are ignored. If
+present, the realm defined in `glassfish-application.xml` is used,
+otherwise the domain's default realm is used.
+
+For example, a realm is specified in `glassfish-application.xml` as
+follows:
+
+[source,xml]
+----
+<glassfish-application>
+    ...
+    <realm>ldap</realm>
+</glassfish-application>
+----
+
+For more information about the deployment descriptor files and elements,
+see "link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment
+Descriptors]" in {productName} Application
+Deployment Guide.
+
+[[beabs]][[GSDVG00367]][[creating-a-custom-realm]]
+
+==== Creating a Custom Realm
+
+You can create a custom realm by providing a custom Java Authentication
+and Authorization Service (JAAS) login module class and a custom realm
+class. Note that client-side JAAS login modules are not suitable for use
+with the {productName}.
+
+To activate the custom login modules and realms, place the JAR files in
+the domain-dir``/lib`` directory or the class files in the
+domain-dir`/lib/classes` directory. For more information about class
+loading in the {productName}, see link:class-loaders.html#beade[Class
+Loaders].
+
+JAAS is a set of APIs that enable services to authenticate and enforce
+access controls upon users. JAAS provides a pluggable and extensible
+framework for programmatic user authentication and authorization. JAAS
+is a core API and an underlying technology for Jakarta EE security
+mechanisms. For more information about JAAS, refer to the JAAS
+specification for Java SDK, available at
+`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html`.
+
+For general information about realms and login modules, see the section
+about working with realms, users, groups, and roles in
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
+Introduction to Security in the Jakarta EE Platform]
+in The Jakarta EE Tutorial.
+
+For Javadoc tool pages relevant to custom realms, see the
+`com.sun.appserv.security` package.
+
+Custom login modules must extend the
+`com.sun.appserv.security.AppservPasswordLoginModule` class. This class
+implements javax.security.auth.spi.LoginModule. Custom login modules
+must not implement LoginModule directly.
+
+Custom login modules must provide an implementation for one abstract
+method defined in `AppservPasswordLoginModule`:
+
+[source,java]
+----
+abstract protected void authenticateUser() throws LoginException
+----
+
+This method performs the actual authentication. The custom login module
+must not implement any of the other methods, such as `login`, `logout`,
+`abort`, `commit`, or `initialize`. Default implementations are provided
+in `AppservPasswordLoginModule` which hook into the {productName}
+infrastructure.
+
+The custom login module can access the following protected object
+fields, which it inherits from `AppservPasswordLoginModule`. These
+contain the user name and password of the user to be authenticated:
+
+[source,java]
+----
+protected String _username;
+protected String _password;
+----
+
+The `authenticateUser` method must end with the following sequence:
+
+[source,java]
+----
+String[] grpList;
+// populate grpList with the set of groups to which
+// _username belongs in this realm, if any
+commitUserAuthentication(grpList);
+----
+
+Custom realms must extend the `com.sun.appserv.security.AppservRealm`
+class and implement the following methods:
+
+[source,java]
+----
+public void init(Properties props) throws BadRealmException, NoSuchRealmException
+----
+
+This method is invoked during server startup when the realm is initially
+loaded. The `props` argument contains the properties defined for this
+realm. The realm can do any initialization it needs in this method. If
+the method returns without throwing an exception, the {productName}
+assumes that the realm is ready to service authentication requests. If
+an exception is thrown, the realm is disabled.
+
+[source,java]
+----
+public String getAuthType()
+----
+
+This method returns a descriptive string representing the type of
+authentication done by this realm.
+
+[source,java]
+----
+public abstract Enumeration getGroupNames(String username) throws
+    InvalidOperationException, NoSuchUserException
+----
+
+This method returns an `Enumeration` (of `String` objects) enumerating
+the groups (if any) to which the given `username` belongs in this realm.
+
+Custom realms that manage users must implement the following additional
+methods:
+
+[source,java]
+----
+public abstract boolean supportsUserManagement();
+----
+
+This method returns `true` if the realm supports user management.
+
+[source,java]
+----
+public abstract Enumeration getGroupNames() throws BadRealmException;
+----
+
+This method returns an `Enumeration` of all group names.
+
+[source,java]
+----
+public abstract Enumeration getUserNames() throws BadRealmException;
+----
+
+This method returns an `Enumeration` of all user names.
+
+[source,java]
+----
+public abstract void refresh() throws BadRealmException;
+----
+
+This method refreshes the realm data so that new users and groups are
+visible.
+
+[source,java]
+----
+public abstract void persist() throws BadRealmException;
+----
+
+This method persists the realm data to permanent storage.
+
+[source,java]
+----
+public abstract User getUser(String name) throws NoSuchUserException,
+BadRealmException;
+----
+
+This method returns the information recorded about a particular named
+user.
+
+[source,java]
+----
+public abstract void addUser(String name, String password, String[] groupList) throws
+BadRealmException, IASSecurityException;
+----
+
+This method adds a new user, who cannot already exist.
+
+[source,java]
+----
+public abstract void removeUser(String name) throws NoSuchUserException,
+BadRealmException;
+----
+
+This method removes a user, who must exist.
+
+[source,java]
+----
+public abstract void updateUser(String name, String newName, String password,
+String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException;
+----
+
+This method updates data for a user, who must exist.
+
+
+[NOTE]
+====
+The array passed to the `commitUseAuthentication` method should be newly
+created and otherwise unreferenced. This is because the group name array
+elements are set to null after authentication as part of cleanup. So the
+second time your custom realm executes it returns an array with null
+elements.
+
+Ideally, your custom realm should not return member variables from the
+`authenticate` method. It should return local variables as the default
+`JDBCRealm` does. Your custom realm can create a local `String` array in
+its `authenticate` method, copy the values from the member variables,
+and return the `String` array. Or it can use `clone` on the member
+variables.
+====
+
+
+[[BACDEIHB]][[GSDVG563]][[java-ee-security-api-support]]
+
+=== Jakarta EE Security API Support
+
+JSR-375 defines several authentication-related plugin SPIs, such as,
+`HttpAuthenticationMechanism` interface, the `IdentityStore` and
+`IdentityStoreHandler` interfaces:
+
+* `HttpAuthenticationMechanism`: An interface for modules that
+authenticate callers to a web application. An application can supply its
+own `HttpAuthenticationMechanism`, or use one of the default
+implementations provided by the container.
+* `IdentityStore`: This interface defines methods for validating a
+caller's credentials (such as user name and password) and returning
+group membership information. An application can provide its own
+IdentityStore, or use the built in LDAP or Database store.
+* `RememberMeIdentityStore`: This interface is a variation on the
+`IdentityStore` interface, intended to address cases where an
+authenticated user's identity should be remembered for an extended
+period of time, so that the caller can return to the application
+periodically without needing to present primary authentication
+credentials each time.
+
+In addition to these authentication plugin SPIs, the Jakarta EE Security
+API specification defines the `SecurityContext` API for use by
+application code to query and interact with the current security
+context. The `SecurityContext` interface defines methods that allow an
+application to access security information about a caller, authenticate
+a caller, and authorize a caller. These methods include
+`getCallerPrincipal()`, `getPrincipalsByType()`, `isCallerInRole()`,
+`authenticate()`, and `hasAccessToWebResource()`.
+
+[[beabt]][[GSDVG00119]][[jacc-support]]
+
+=== JACC Support
+
+JACC (Java Authorization Contract for Containers) is part of the Jakarta EE
+specification and defined by http://www.jcp.org/en/jsr/detail?id=115[JSR
+115] (`http://www.jcp.org/en/jsr/detail?id=115`). JACC defines an
+interface for pluggable authorization providers. Specifically, JACC is
+used to plug in the Java policy provider used by the container to
+perform Jakarta EE caller access decisions. The Java policy provider
+performs Java policy decisions during application execution. This
+provides third parties with a mechanism to develop and plug in modules
+that are responsible for answering authorization decisions during Java
+EE application execution. The interfaces and rules used for developing
+JACC providers are defined in the JACC 1.0 specification.
+
+The {productName} provides a simple file-based JACC-compliant
+authorization engine as a default JACC provider, named `default`. An
+alternate provider named `simple` is also provided. To configure an
+alternate provider using the Administration Console, open the Security
+component under the relevant configuration, and select the JACC
+Providers component. For details, click the Help button in the
+Administration Console.
+
+[[beabu]][[GSDVG00120]][[pluggable-audit-module-support]]
+
+=== Pluggable Audit Module Support
+
+Audit modules collect and store information on incoming requests
+(servlets, EJB components) and outgoing responses. You can create a
+custom audit module.
+
+The following topics are addressed here:
+
+* link:#beabv[Configuring an Audit Module]
+* link:#beabw[The `AuditModule` Class]
+
+[[beabv]][[GSDVG00368]][[configuring-an-audit-module]]
+
+==== Configuring an Audit Module
+
+To configure an audit module, you can perform one of the following
+tasks:
+
+* To specify an audit module using the Administration Console, open the
+Security component under the relevant configuration, and select the
+Audit Modules component. For details, click the Help button in the
+Administration Console.
+* You can use the `asadmin create-audit-module` command to configure an
+audit module. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[beabw]][[GSDVG00369]][[the-auditmodule-class]]
+
+==== The `AuditModule` Class
+
+You can create a custom audit module by implementing a class that
+extends `com.sun.enterprise.security.audit.AuditModule`.
+
+For Javadoc tool pages relevant to audit modules, see the
+`com.sun.enterprise.security.audit` package.
+
+The `AuditModule` class provides default "no-op" implementations for
+each of the following methods, which your custom class can override.
+
+[source,java]
+----
+public void init(Properties props)
+----
+
+The preceding method is invoked during server startup when the audit
+module is initially loaded. The `props` argument contains the properties
+defined for this module. The module can do any initialization it needs
+in this method. If the method returns without throwing an exception, the
+{productName} assumes the module realm is ready to service audit
+requests. If an exception is thrown, the module is disabled.
+
+[source,java]
+----
+public void authentication(String user, String realm, boolean success)
+----
+
+This method is invoked when an authentication request has been processed
+by a realm for the given user. The `success` flag indicates whether the
+authorization was granted or denied.
+
+[source,java]
+----
+public void webInvocation(String user, HttpServletRequest req, String type, boolean success)
+----
+
+This method is invoked when a web container call has been processed by
+authorization. The `success` flag indicates whether the authorization
+was granted or denied. The `req` object is the standard
+`HttpServletRequest` object for this request. The `type` string is one
+of `hasUserDataPermission` or `hasResourcePermission` (see
+http://www.jcp.org/en/jsr/detail?id=115[JSR 115]
+(`http://www.jcp.org/en/jsr/detail?id=115`)).
+
+[source,java]
+----
+public void ejbInvocation(String user, String ejb, String method, boolean success)
+----
+
+This method is invoked when an EJB container call has been processed by
+authorization. The `success` flag indicates whether the authorization
+was granted or denied. The `ejb` and `method` strings describe the EJB
+component and its method that is being invoked.
+
+[source,java]
+----
+public void webServiceInvocation(String uri, String endpoint, boolean success)
+----
+
+This method is invoked during validation of a web service request in
+which the endpoint is a servlet. The `uri` is the URL representation of
+the web service endpoint. The `endpoint` is the name of the endpoint
+representation. The `success` flag indicates whether the authorization
+was granted or denied.
+
+[source,java]
+----
+public void ejbAsWebServiceInvocation(String endpoint, boolean success)
+----
+
+This method is invoked during validation of a web service request in
+which the endpoint is a stateless session bean. The `endpoint` is the
+name of the endpoint representation. The `success` flag indicates
+whether the authorization was granted or denied.
+
+[[beabx]][[GSDVG00121]][[the-server.policy-file]]
+
+=== The `server.policy` File
+
+Each {productName} domain has its own global J2SE policy file,
+located in domain-dir``/config``. The file is named `server.policy`.
+
+The {productName} is a Jakarta EE compliant application server. As such,
+it follows the requirements of the Jakarta EE specification, including the
+presence of the security manager (the Java component that enforces the
+policy) and a limited permission set for Jakarta EE application code.
+
+The following topics are addressed here:
+
+* link:#beaby[Default Permissions]
+* link:#gilzz[System Properties]
+* link:#beabz[Changing Permissions for an Application]
+* link:#gbyah[Enabling and Disabling the Security Manager]
+
+[[beaby]][[GSDVG00370]][[default-permissions]]
+
+==== Default Permissions
+
+Internal server code is granted all permissions. These are covered by
+the `AllPermission` grant blocks to various parts of the server
+infrastructure code. Do not modify these entries.
+
+Application permissions are granted in the default grant block. These
+permissions apply to all code not part of the internal server code
+listed previously. The {productName} does not distinguish between EJB
+and web module permissions. All code is granted the minimal set of web
+component permissions (which is a superset of the EJB minimal set). Do
+not modify these entries.
+
+A few permissions above the minimal set are also granted in the default
+`server.policy` file. These are necessary due to various internal
+dependencies of the server implementation. Jakarta EE application
+developers must not rely on these additional permissions. In some cases,
+deleting these permissions might be appropriate. For example, one
+additional permission is granted specifically for using connectors. If
+connectors are not used in a particular domain, you should remove this
+permission, because it is not otherwise necessary.
+
+[[gilzz]][[GSDVG00371]][[system-properties]]
+
+==== System Properties
+
+The following predefined system properties, also called variables, are
+available for use in the `server.policy` file. The system property most
+frequently used in `server.policy` is `${com.sun.aas.instanceRoot}`. For
+more information about system properties, see the
+`asadmin create-system-properties` command in the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[GSDVG533]][[sthref5]][[sthref6]]
+
+
+Table 4-1 Predefined System Properties
+
+[width="100%",cols="29%,17%,54%",options="header",]
+|===
+|Property |Default |Description
+|`com.sun.aas.installRoot` |depends on operating system |Specifies the
+directory where the {productName} is installed.
+
+|`com.sun.aas.instanceRoot` |depends on operating system |Specifies the
+top level directory for a server instance.
+
+|`com.sun.aas.hostName` |none |Specifies the name of the host (machine).
+
+|`com.sun.aas.javaRoot` |depends on operating system |Specifies the
+installation directory for the Java runtime.
+
+|`com.sun.aas.imqLib` |depends on operating system |Specifies the
+library directory for the Open Message Queue software.
+
+|`com.sun.aas.configName` |`server-config` |Specifies the name of the
+configuration used by a server instance.
+
+|`com.sun.aas.instanceName` |`server1` |Specifies the name of the server
+instance. This property is not used in the default configuration, but
+can be used to customize configuration.
+
+|`com.sun.aas.clusterName` |`cluster1` |Specifies the name of the
+cluster. This property is only set on clustered server instances. This
+property is not used in the default configuration, but can be used to
+customize configuration.
+
+|`com.sun.aas.domainName` |`domain1` |Specifies the name of the domain.
+This property is not used in the default configuration, but can be used
+to customize configuration.
+|===
+
+
+[[beabz]][[GSDVG00372]][[changing-permissions-for-an-application]]
+
+==== Changing Permissions for an Application
+
+The default policy for each domain limits the permissions of Jakarta EE
+deployed applications to the minimal set of permissions required for
+these applications to operate correctly. Do not add extra permissions to
+the default set (the grant block with no codebase, which applies to all
+code). Instead, add a new grant block with a codebase specific to the
+applications requiring the extra permissions, and only add the minimally
+necessary permissions in that block.
+
+If you develop multiple applications that require more than this default
+set of permissions, you can add the custom permissions that your
+applications need. The `com.sun.aas.instanceRoot` variable refers to the
+domain-dir. For example:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/-" {
+...
+}
+----
+
+You can add permissions to stub code with the following grant block:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/generated/-" {
+...
+}
+----
+
+In general, you should add extra permissions only to the applications or
+modules that require them, not to all applications deployed to a domain.
+For example:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-" {
+...
+}
+----
+
+For a module:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyModule/-" {
+...
+}
+----
+
+
+[NOTE]
+====
+Deployment directories may change between {productName} releases.
+====
+
+
+An alternative way to add permissions to a specific application or
+module is to edit the `granted.policy` file for that application or
+module. The `granted.policy` file is located in the
+domain-dir`/generated/policy/`app-or-module-name directory. In this
+case, you add permissions to the default grant block. Do not delete
+permissions from this file.
+
+When the {productName} policy subsystem determines that a permission
+should not be granted, it logs a `server.policy` message specifying the
+permission that was not granted and the protection domains, with
+indicated code source and principals that failed the protection check.
+For example, here is the first part of a typical message:
+
+[source]
+----
+[#|2005-12-17T16:16:32.671-0200|INFO|sun-appserver-pe9.1|
+javax.enterprise.system.core.security|_ThreadID=14;_ThreadName=Thread-31;|
+JACC Policy Provider: PolicyWrapper.implies, context(null)-
+permission((java.util.PropertyPermission java.security.manager write))
+domain that failed(ProtectionDomain
+(file:/E:/glassfish/domains/domain1/applications/cejug-clfds/ ... )
+...
+----
+
+Granting the following permission eliminates the message:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/cejug-clfds/-" {
+    permission java.util.PropertyPermission "java.security.manager", "write";
+}
+----
+
+
+[NOTE]
+====
+Do not add `java.security.AllPermission` to the `server.policy` file for
+application code. Doing so completely defeats the purpose of the
+security manager, yet you still get the performance overhead associated
+with it.
+====
+
+
+As noted in the Jakarta EE specification, an application should provide
+documentation of the additional permissions it needs. If an application
+requires extra permissions but does not document the set it needs,
+contact the application author for details.
+
+As a last resort, you can iteratively determine the permission set an
+application needs by observing `AccessControlException` occurrences in
+the server log.
+
+If this is not sufficient, you can add the
+`-Djava.security.debug=failure` JVM option to the domain. Use the
+following `asadmin create-jvm-options` command, then restart the server:
+
+[source]
+----
+asadmin create-jvm-options -Djava.security.debug=failure
+----
+
+For more information about the `asadmin create-jvm-options` command, see
+the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+You can use the J2SE standard `policytool` or any text editor to edit
+the `server.policy` file. For more information, see
+`http://docs.oracle.com/javase/tutorial/security/tour2/index.html`.
+
+For detailed information about policy file syntax, see
+`http://docs.oracle.com/javase/8/docs/technotes/guides/security/PolicyFiles.html`.
+
+For information about using system properties in the `server.policy`
+file, see
+`http://docs.oracle.com/javase/8/docs/technotes/guides/security/PolicyFiles.html`.
+
+For detailed information about the permissions you can set in the
+`server.policy` file, see
+`http://docs.oracle.com/javase/8/docs/technotes/guides/security/permissions.html`.
+
+The Javadoc for the `Permission` class is at
+`http://docs.oracle.com/javase/8/docs/api/java/security/Permission.html`.
+
+[[gbyah]][[GSDVG00373]][[enabling-and-disabling-the-security-manager]]
+
+==== Enabling and Disabling the Security Manager
+
+The security manager is disabled by default.
+
+In a production environment, you may be able to safely disable the
+security manager if all of the following are true:
+
+* Performance is critical
+* Deployment to the production server is carefully controlled
+* Only trusted applications are deployed
+* Applications don't need policy enforcement
+
+Disabling the security manager may improve performance significantly for
+some types of applications.
+
+To enable the security manager, do one of the following:
+
+* To use the Administration Console, open the Security component under
+the relevant configuration, and check the Security Manager Enabled box.
+Then restart the server. For details, click the Help button in the
+Administration Console.
+* Use the following `asadmin create-jvm-options` command, then restart
+the server:
++
+[source]
+----
+asadmin create-jvm-options -Djava.security.manager
+----
+
+To disable the security manager, uncheck the Security Manager Enabled
+box or use the corresponding `asadmin delete-jvm-options` command. For
+more information about `create-jvm-options` and `delete-jvm-options`,
+see the link:reference-manual.html#GSRFM[{productName} Reference
+Manual].
+
+If the security manager is enabled and you are using the Java
+Persistence API by calling `Persistence.createEMF()`, the EclipseLink
+persistence provider requires that you set the
+`eclipselink.security.usedoprivileged` JVM option to `true` as follows:
+
+[source]
+----
+asadmin create-jvm-options -Declipselink.security.usedoprivileged=true
+----
+
+If the security manager is enabled and you are using the Java
+Persistence API by injecting or looking up an entity manager or entity
+manager factory, the EJB container sets this JVM option for you.
+
+You must grant additional permissions to CDI-enabled Jakarta EE
+applications that are deployed in a {productName} 7 domain or
+cluster for which security manager is enabled. These additional
+permissions are not required when security manager is disabled.
+
+To deploy CDI-enabled Jakarta EE applications in a {productName} 7
+domain or cluster for which security manager is enabled, add the
+following permissions to the applications:
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/[ApplicationName]" {
+ permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+----
+
+For example, for a CDI application named `foo.war`, add the following
+permissions to the `server.policy` file, restart the domain or cluster,
+and then deploy and use the application.
+
+[source]
+----
+grant codeBase "file:${com.sun.aas.instanceRoot}/applications/foo" {
+ permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+};
+----
+
+For more information about modifying application permissions, see
+link:#beabz[Changing Permissions for an Application].
+
+[[beaca]][[GSDVG00122]][[configuring-message-security-for-web-services]]
+
+=== Configuring Message Security for Web Services
+
+In message security, security information is applied at the message
+layer and travels along with the web services message. Web Services
+Security (WSS) is the use of XML Encryption and XML Digital Signatures
+to secure messages. WSS profiles the use of various security tokens
+including X.509 certificates, Security Assertion Markup Language (SAML)
+assertions, and username/password tokens to achieve this.
+
+Message layer security differs from transport layer security in that it
+can be used to decouple message protection from message transport so
+that messages remain protected after transmission, regardless of how
+many hops they travel.
+
+
+[NOTE]
+====
+Message security (JSR 196) is supported only in the full {productName}, not in the Web Profile.
+====
+
+
+
+[NOTE]
+====
+In this release of the {productName}, message layer annotations are
+not supported.
+====
+
+
+For more information about web services, see
+link:webservices.html#gaszn[Developing Web Services].
+
+For more information about message security, see the following:
+
+* "https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[Introduction to
+Security in the Jakarta EE Platform]" in The Jakarta EE Tutorial
+* link:security-guide.html#GSSCG[{productName} Security Guide]
+* http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
+(`http://www.jcp.org/en/jsr/detail?id=196`), Java Authentication Service
+Provider Interface for Containers
+* The Liberty Alliance Project specifications at
+`http://www.projectliberty.org/resources/specifications.php/?f=resources/specifications.php`
+* The Oasis Web Services Security (WSS) specification at
+`http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf`
+* The Web Services Interoperability Organization (WS-I) Basic Security
+Profile (BSP) specification at
+`http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html`
+* The XML and Web Services Security page at `http://xwss.java.net/`
+* The WSIT page at `http://wsit.java.net/`
+
+The following topics are addressed here:
+
+* link:#gbjxw[Message Security Providers]
+* link:#beacb[Message Security Responsibilities]
+* link:#beacf[Application-Specific Message Protection]
+* link:#beaci[Understanding and Running the Sample Application]
+
+[[gbjxw]][[GSDVG00374]][[message-security-providers]]
+
+==== Message Security Providers
+
+When you first install the {productName}, the providers
+`XWS_ClientProvider` and `XWS_ServerProvider` are configured but
+disabled. You can enable them in one of the following ways:
+
+* To enable the message security providers using the Administration
+Console, open the Security component under the relevant configuration,
+select the Message Security component, and select SOAP. Then select
+`XWS_ServerProvider` from the Default Provider list and
+`XWS_ClientProvider` from the Default Client Provider list. For details,
+click the Help button in the Administration Console.
+* You can enable the message security providers using the following
+commands.
++
+[source]
+----
+asadmin set
+server-config.security-service.message-security-config.SOAP.default_provider=XWS_ServerProvider
+asadmin set
+server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider
+----
+For more information about the `asadmin set` command, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+The example described in link:#beaci[Understanding and Running the
+Sample Application] uses the `ClientProvider` and `ServerProvider`
+providers, which are enabled when the Ant targets are run. You don't
+need to enable these on the {productName} prior to running the
+example.
+
+If you install the OpenSSO, you have these additional provider choices:
+
+* `AMClientProvider` and `AMServerProvider` - These providers secure web
+services and Simple Object Access Protocol (SOAP) messages using either
+WS-I BSP or Liberty ID-WSF tokens. These providers are used
+automatically if they are configured as the default providers. If you
+wish to override any provider settings, you can configure these
+providers in `message-security-binding` elements in the
+`glassfish-web.xml`, `glassfish-ejb-jar.xml`, and
+`glassfish-application-client.xml` deployment descriptor files.
+* `AMHttpProvider` - This provider handles the initial end user
+authentication for securing web services using Liberty ID-WSF tokens and
+redirects requests to the OpenSSO for single sign-on. To use this
+provider, specify it in the `httpservlet-security-provider` attribute of
+the `glassfish-web-app` element in the `glassfish-web.xml` file.
+
+Liberty specifications can be viewed at
+`http://www.projectliberty.org/resources/specifications.php/?f=resources/specifications.php`.
+The WS-I BSP specification can be viewed at
+`http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html`.
+
+For more information about the {productName} deployment descriptor
+files, see the link:application-deployment-guide.html#GSDPG[{productName}
+Application Deployment Guide].
+
+For information about configuring these providers in the {productName}, see the link:security-guide.html#GSSCG[{productName}
+Security Guide]. For additional information about overriding provider
+settings, see link:#beacf[Application-Specific Message Protection].
+
+You can create new message security providers in one of the following
+ways:
+
+* To create a message security provider using the Administration
+Console, open the Security component under the relevant configuration,
+and select the Message Security component. For details, click the Help
+button in the Administration Console.
+* You can use the `asadmin create-message-security-provider` command to
+create a message security provider. For details, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+In addition, you can set a few optional provider properties using the
+`asadmin set` command. For example:
+
+[source]
+----
+asadmin set server-config.security-service.message-security-config.provider-config.property.debug=true
+----
+
+The following table describes these message security provider
+properties.
+
+[[GSDVG534]][[sthref7]][[sthref8]]
+
+
+Table 4-2 Message Security Provider Properties
+
+[width="100%",cols="30%,24%,46%",options="header",]
+|===
+|Property |Default |Description
+|`security.config`
+|domain-dir`/``config/``wss-server-``config-1.0.xml`
+a|Specifies the location of the message security configuration file. To
+point to a configuration file in the domain-dir``/config`` directory, use
+the system property `${com.sun.aas.instanceRoot}/``config/`, for
+example:
+
+`${com.sun.aas.instanceRoot}/config/``wss-server-config-1.0.xml`
+
+See link:#gilzz[System Properties].
+
+|`debug`
+|`false`
+|If `true`, enables dumping of server provider debug messages to the server log.
+
+|`dynamic.username.password`
+|`false`
+|If `true`, signals the provider runtime to collect the user name and password from the `CallbackHandler`
+for each request.
+If `false`, the user name and password for `wsse:UsernameToken(s)` is collected once, during module initialization.
+This property is only applicable for a `ClientAuthModule`.
+
+|`encryption.key.alias`
+|`s1as`
+|Specifies the encryption key used by the provider. The key is identified by its `keystore` alias.
+
+|`signature.key.alias`
+|`s1as`
+|Specifies the signature key used by the provider. The key is identified by its `keystore` alias.
+|===
+
+
+[[beacb]][[GSDVG00375]][[message-security-responsibilities]]
+
+==== Message Security Responsibilities
+
+In the {productName}, the system administrator and application
+deployer roles are expected to take primary responsibility for
+configuring message security. In some situations, the application
+developer may also contribute, although in the typical case either of
+the other roles may secure an existing application without changing its
+implementation and without involving the developer.
+
+The following topics are addressed here:
+
+* link:#beacc[Application Developer Responsibilities]
+* link:#beacd[Application Deployer Responsibilities]
+* link:#beace[System Administrator Responsibilities]
+
+[[beacc]][[GSDVG00241]][[application-developer-responsibilities]]
+
+===== Application Developer Responsibilities
+
+The application developer can turn on message security, but is not
+responsible for doing so. Message security can be set up by the system
+administrator so that all web services are secured, or set up by the
+application deployer when the provider or protection policy bound to the
+application must be different from that bound to the container.
+
+The application developer is responsible for the following:
+
+* Determining if an application-specific message protection policy is
+required by the application. If so, ensuring that the required policy is
+specified at application assembly which may be accomplished by
+communicating with the application deployer.
+* Determining if message security is necessary at the {productName}
+level. If so, ensuring that this need is communicated to the system
+administrator, or taking care of implementing message security at the
+{productName} level.
+
+[[beacd]][[GSDVG00242]][[application-deployer-responsibilities]]
+
+===== Application Deployer Responsibilities
+
+The application deployer is responsible for the following:
+
+* Specifying (at application assembly) any required application-specific
+message protection policies if such policies have not already been
+specified by upstream roles (the developer or assembler)
+* Modifying {productName} deployment descriptors to specify
+application-specific message protection policies information
+(message-security-binding elements) to web service endpoint and service
+references
+
+These security tasks are discussed in link:#beacf[Application-Specific
+Message Protection]. A sample application using message security is
+discussed in link:#beaci[Understanding and Running the Sample
+Application].
+
+[[beace]][[GSDVG00243]][[system-administrator-responsibilities]]
+
+===== System Administrator Responsibilities
+
+The system administrator is responsible for the following:
+
+* Configuring message security providers on the {productName}.
+* Managing user databases.
+* Managing keystore and truststore files.
+* Installing the sample. This is only done if the `xms` sample
+application is used to demonstrate the use of message layer web services
+security.
+
+A system administrator uses the Administration Console to manage server
+security settings and uses a command line tool to manage certificate
+databases. Certificates and private keys are stored in key stores and
+are managed with `keytool`. If Network Security Services (NSS) is
+installed, certificates and private keys are stored in an NSS database,
+where they are managed using `certutil`. System administrator tasks are
+discussed in the link:security-guide.html#GSSCG[{productName}
+Security Guide].
+
+[[beacf]][[GSDVG00376]][[application-specific-message-protection]]
+
+==== Application-Specific Message Protection
+
+When the {productName} provided configuration is insufficient for
+your security needs, and you want to override the default protection,
+you can apply application-specific message security to a web service.
+
+Application-specific security is implemented by adding the message
+security binding to the web service endpoint, whether it is an EJB or
+servlet web service endpoint. Modify {productName} XML files to add
+the message binding information.
+
+Message security can also be specified using a WSIT security policy in
+the WSDL file. For details, see the WSIT page at
+`http://wsit.java.net/`.
+
+For more information about message security providers, see
+link:#gbjxw[Message Security Providers].
+
+For more details on message security binding for EJB web services,
+servlet web services, and clients, see the XML file descriptions in
+"link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment
+Descriptors]" in {productName} Application
+Deployment Guide.
+
+* For `glassfish-ejb-jar.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00079[The
+glassfish-ejb-jar.xml File]" in {productName}
+Application Deployment Guide.
+* For `glassfish-web.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00078[The glassfish-web.xml
+File]" in {productName} Application Deployment
+Guide.
+* For `glassfish-application-client.xml`, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
+
+The following topics are addressed here:
+
+* link:#beacg[Using a Signature to Enable Message Protection for All
+Methods]
+* link:#beach[Configuring Message Protection for a Specific Method Based
+on Digital Signatures]
+
+[[beacg]][[GSDVG00244]][[using-a-signature-to-enable-message-protection-for-all-methods]]
+
+===== Using a Signature to Enable Message Protection for All Methods
+
+To enable message protection for all methods using digital signature,
+update the `message-security-binding` element for the EJB web service
+endpoint in the application's `glassfish-ejb-jar.xml` file. In this
+file, add `request-protection` and `response-protection` elements, which
+are analogous to the `request-policy` and `response-policy` elements
+discussed in the link:security-guide.html#GSSCG[{productName}
+Security Guide]. To apply the same protection mechanisms for all
+methods, leave the method-name element blank. link:#beach[Configuring
+Message Protection for a Specific Method Based on Digital Signatures]
+discusses listing specific methods or using wildcard characters.
+
+This section uses the sample application discussed in
+link:#beaci[Understanding and Running the Sample Application] to apply
+application-level message security to show only the differences
+necessary for protecting web services using various mechanisms.
+
+[[fvyag]][[GSDVG00052]][[to-enable-message-protection-for-all-methods-using-digital-signature]]
+
+To Enable Message Protection for All Methods Using Digital Signature
+
+Follow this procedure.
+
+1. In a text editor, open the application's `glassfish-ejb-jar.xml`
+file.
++
+For the `xms` example, this file is located in the directory
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in link:#beacj[To
+Set Up the Sample Application].
+2. Modify the `glassfish-ejb-jar.xml` file by adding the
+`message-security-binding` element as shown:
++
+[source,xml]
+----
+<glassfish-ejb-jar>
+  <enterprise-beans>
+    <unique-id>1</unique-id>
+    <ejb>
+      <ejb-name>HelloWorld</ejb-name>
+      <jndi-name>HelloWorld</jndi-name>
+      <webservice-endpoint>
+        <port-component-name>HelloIF</port-component-name>
+        <endpoint-address-uri>service/HelloWorld</endpoint-address-uri>
+        <message-security-binding auth-layer="SOAP">
+          <message-security>
+            <request-protection auth-source="content" />
+            <response-protection auth-source="content"/>
+          </message-security>
+        </message-security-binding>
+      </webservice-endpoint>
+    </ejb>
+  </enterprise-beans>
+</glassfish-ejb-jar>
+----
+3. Compile, deploy, and run the application as described in
+link:#beack[To Run the Sample Application].
+
+[[beach]][[GSDVG00245]][[configuring-message-protection-for-a-specific-method-based-on-digital-signatures]]
+
+===== Configuring Message Protection for a Specific Method Based on Digital Signatures
+
+To enable message protection for a specific method, or for a set of
+methods that can be identified using a wildcard value, follow these
+steps. As in the example discussed in link:#beacg[Using a Signature to
+Enable Message Protection for All Methods], to enable message protection
+for a specific method, update the `message-security-binding` element for
+the EJB web service endpoint in the application's
+`glassfish-ejb-jar.xml` file. To this file, add `request-protection` and
+`response-protection` elements, which are analogous to the
+`request-policy` and `response-policy` elements discussed in the
+link:security-guide.html#GSSCG[{productName} Security Guide]. The
+administration guide includes a table listing the set and order of
+security operations for different request and response policy
+configurations.
+
+This section uses the sample application discussed in
+link:#beaci[Understanding and Running the Sample Application] to apply
+application-level message security to show only the differences
+necessary for protecting web services using various mechanisms.
+
+[[fvybb]][[GSDVG00053]][[to-enable-message-protection-for-a-particular-method-or-set-of-methods-using-digital-signature]]
+
+To Enable Message Protection for a Particular Method or Set of Methods
+Using Digital Signature
+
+Follow this procedure.
+
+1. In a text editor, open the application's `glassfish-ejb-jar.xml`
+file.
++
+For the `xms` example, this file is located in the directory
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in link:#beacj[To
+Set Up the Sample Application].
+2. Modify the `glassfish-ejb-jar.xml` file by adding the
+`message-security-binding` element as shown:
++
+[source,xml]
+----
+<glassfish-ejb-jar>
+  <enterprise-beans>
+  <unique-id>1</unique-id>
+    <ejb>
+      <ejb-name>HelloWorld</ejb-name>
+      <jndi-name>HelloWorld</jndi-name>
+      <webservice-endpoint>
+        <port-component-name>HelloIF</port-component-name>
+        <endpoint-address-uri>service/HelloWorld</endpoint-address-uri>
+        <message-security-binding auth-layer="SOAP">
+          <message-security>
+            <message>
+              <java-method>
+                <method-name>ejbCreate</method-name>
+              </java-method>
+            </message>
+            <message>
+              <java-method>
+                <method-name>sayHello</method-name>
+              </java-method>
+            </message>
+            <request-protection auth-source="content" />
+            <response-protection auth-source="content"/>
+          </message-security>
+        </message-security-binding>
+      </webservice-endpoint>
+    </ejb>
+  </enterprise-beans>
+</glassfish-ejb-jar>
+----
+3. Compile, deploy, and run the application as described in
+link:#beack[To Run the Sample Application].
+
+[[beaci]][[GSDVG00377]][[understanding-and-running-the-sample-application]]
+
+==== Understanding and Running the Sample Application
+
+This section discusses the WSS sample application. This sample
+application is installed on your system only if you installed the J2EE
+1.4 samples. If you have not installed these samples, see link:#beacj[To
+Set Up the Sample Application].
+
+The objective of this sample application is to demonstrate how a web
+service can be secured with WSS. The web service in the `xms` example is
+a simple web service implemented using a Jakarta EE EJB endpoint and a web
+service endpoint implemented using a servlet. In this example, a service
+endpoint interface is defined with one operation, `sayHello`, which
+takes a string then sends a response with `Hello` prefixed to the given
+string. You can view the WSDL file for the service endpoint interface at
+app-dir`/xms-ejb/src/``conf/HelloWorld.wsdl`, where app-dir is defined
+in link:#beacj[To Set Up the Sample Application].
+
+In this application, the client looks up the service using the JNDI name
+`java:comp/env/service/HelloWorld` and gets the port information using a
+static stub to invoke the operation using a given name. For the name
+Duke, the client gets the response `Hello Duke!`
+
+This example shows how to use message security for web services at the
+{productName} level. For information about using message security at
+the application level, see link:#beacf[Application-Specific Message
+Protection]. The WSS message security mechanisms implement message-level
+authentication (for example, XML digital signature and encryption) of
+SOAP web services invocations using the X.509 and username/password
+profiles of the OASIS WS-Security standard, which can be viewed from the
+following URL:
+`http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0.pdf`.
+
+The following topics are addressed here:
+
+* link:#beacj[To Set Up the Sample Application]
+* link:#beack[To Run the Sample Application]
+
+[[beacj]][[GSDVG00054]][[to-set-up-the-sample-application]]
+
+===== To Set Up the Sample Application
+
+[[GSDVG535]]
+
+Before You Begin
+
+To have access to this sample application, you must have previously
+installed the J2EE 1.4 samples. If the samples are not installed, follow
+the steps in the following section.
+
+After you follow these steps, the sample application is located in the
+directory
+as-install``/j2ee14-samples/samples/webservices/security/ejb/apps/xms/``
+or in a directory of your choice. For easy reference throughout the rest
+of this section, this directory is referred to as simply app-dir.
+
+1. Go to the
+http://www.oracle.com/technetwork/java/javaee/download-141771.html[J2EE
+1.4 download URL]
+(`http://www.oracle.com/technetwork/java/javaee/download-141771.html`)
+in your browser.
+2. Click on the Download button for the Samples Bundle.
+3. Click on Accept License Agreement.
+4. Click on the J2EE SDK Samples link.
+5. Choose a location for the `j2eesdk-1_4_03-samples.zip` file.
++
+Saving the file to as-install is recommended.
+6. Unzip the file.
++
+Unzipping to the as-install``/j2ee14-samples`` directory is recommended.
+For example, you can use the following command.
++
+[source]
+----
+unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples
+----
+
+[[beack]][[GSDVG00055]][[to-run-the-sample-application]]
+
+===== To Run the Sample Application
+
+1. Make sure that the {productName} is running. +
+Message security providers are set up when the Ant targets are run, so
+you do not need to configure these on the {productName} prior to
+running this example.
+
+2. If you are not running HTTP on the default port of 8080, change the
+WSDL file for the example to reflect the change, and change the
+`common.properties` file to reflect the change as well. +
+The WSDL file for this example is located at
+app-dir`/xms-ejb/``src/conf/HelloWorld.wsdl`. The port number is in the
+following section:
++
+[source,xml]
+----
+<service name="HelloWorld">
+  <port name="HelloIFPort" binding="tns:HelloIFBinding">
+    <soap:address location="http://localhost:8080/service/HelloWorld"/>
+  </port>
+</service>
+----
+Verify that the properties in the as-install``/samples/common.properties`
+file are set properly for your installation and environment. If you need
+a more detailed description of this file, refer to the "Configuration"
+section for the web services security applications at
+as-install``/j2ee14-samples/samples/webservices/security/docs/common.html#Logging`.
+
+3. Change to the app-dir directory.
+
+4. Run the following Ant targets to compile, deploy, and run the
+example application:
+[arabic]
+.. To compile samples: `ant`
+.. To deploy samples: `ant deploy`
+.. To run samples: `ant run`
+
++
+If the sample has compiled and deployed properly, you see the following
+response on your screen after the application has run: +
+`run:[echo] Running the xms program:[exec] Established message level security : Hello Duke!`
+
+5. To undeploy the sample, run the following Ant target:
++
+[source]
+----
+ant undeploy
+----
+
+All of the web services security examples use the same web service name
+(`HelloWorld`) and web service ports. These examples show only the
+differences necessary for protecting web services using various
+mechanisms. Make sure to undeploy an application when you have completed
+running it. If you do not, you receive an `Already in Use` error and
+deployment failures when you try to deploy another web services example
+application.
+
+[[beacm]][[GSDVG00123]][[programmatic-login-using-the-programmaticlogin-class]]
+
+=== Programmatic Login Using the ProgrammaticLogin Class
+
+Programmatic login allows a deployed Jakarta EE application or module to
+invoke a login method. If the login is successful, a `SecurityContext`
+is established as if the client had authenticated using any of the
+conventional Jakarta EE mechanisms. Programmatic login is supported for
+servlet and EJB components on the server side, and for stand-alone or
+application clients on the client side. Programmatic login is useful for
+an application having special needs that cannot be accommodated by any
+of the Jakarta EE standard authentication mechanisms.
+
+This section describes a proprietary GlassFish mechanism, but see also
+the standard security APIs in the Jakarta EE tutorial.
+
+
+[NOTE]
+====
+The `com.sun.appserv.security.ProgrammaticLogin` class in {productName} is not a Jakarta EE API; therefore, it is not portable to other
+application servers.
+====
+
+
+The following topics are addressed here:
+
+* link:#beacn[Programmatic Login Precautions]
+* link:#beaco[Granting Programmatic Login Permission]
+* link:#beacp[The `ProgrammaticLogin` Class]
+
+[[beacn]][[GSDVG00378]][[programmatic-login-precautions]]
+
+==== Programmatic Login Precautions
+
+The {productName} is not involved in how the login information
+(`user`, `password`) is obtained by the deployed application.
+Programmatic login places the burden on the application developer with
+respect to assuring that the resulting system meets security
+requirements. If the application code reads the authentication
+information across the network, the application determines whether to
+trust the user.
+
+Programmatic login allows the application developer to bypass the
+{productName}-supported authentication mechanisms and feed
+authentication data directly to the security service. While flexible,
+this capability should not be used without some understanding of
+security issues.
+
+Since this mechanism bypasses the container-managed authentication
+process and sequence, the application developer must be very careful in
+making sure that authentication is established before accessing any
+restricted resources or methods. It is also the application developer's
+responsibility to verify the status of the login attempt and to alter
+the behavior of the application accordingly.
+
+The programmatic login state does not necessarily persist in sessions or
+participate in single sign-on.
+
+Lazy authentication is not supported for programmatic login. If an
+access check is reached and the deployed application has not properly
+authenticated using the programmatic login method, access is denied
+immediately and the application might fail if not coded to account for
+this occurrence. One way to account for this occurrence is to catch the
+access control or security exception, perform a programmatic login, and
+repeat the request.
+
+[[beaco]][[GSDVG00379]][[granting-programmatic-login-permission]]
+
+==== Granting Programmatic Login Permission
+
+The `ProgrammaticLoginPermission` permission is required to invoke the
+programmatic login mechanism for an application if the security manager
+is enabled. For information about the security manager, see
+link:#beabx[The `server.policy` File]. This permission is not granted by
+default to deployed applications because this is not a standard Jakarta EE
+mechanism.
+
+To grant the required permission to the application, add the following
+to the domain-dir`/config/server.policy` file:
+
+[source]
+----
+grant codeBase "file:jar-file-path" {
+     permission com.sun.appserv.security.ProgrammaticLoginPermission
+     "login";
+ };
+----
+
+The jar-file-path is the path to the application's JAR file.
+
+[[beacp]][[GSDVG00380]][[the-programmaticlogin-class]]
+
+==== The `ProgrammaticLogin` Class
+
+The `com.sun.appserv.security.ProgrammaticLogin` class enables a user to
+perform login programmatically.
+
+For Javadoc tool pages relevant to programmatic login, see the
+`com.sun.appserv.security` package.
+
+The `ProgrammaticLogin` class has four `login` methods, two for servlets
+or JSP files and two for EJB components.
+
+The login methods for servlets or JSP files have the following
+signatures:
+
+[source,java]
+----
+public java.lang.Boolean login(String user, String password,
+    javax.servlet.http.HttpServletRequest request,
+    javax.servlet.http.HttpServletResponse response)
+
+public java.lang.Boolean login(String user, String password,
+    String realm, javax.servlet.http.HttpServletRequest request,
+    javax.servlet.http.HttpServletResponse response, boolean errors)
+    throws java.lang.Exception
+----
+
+The login methods for EJB components have the following signatures:
+
+[source,java]
+----
+public java.lang.Boolean login(String user, String password)
+
+public java.lang.Boolean login(String user, String password,
+    String realm, boolean errors) throws java.lang.Exception
+----
+
+All of these `login` methods accomplish the following:
+
+* Perform the authentication
+* Return `true` if login succeeded, `false` if login failed
+
+The login occurs on the realm specified unless it is null, in which case
+the domain's default realm is used. The methods with no realm parameter
+use the domain's default realm.
+
+If the errors flag is set to `true`, any exceptions encountered during
+the login are propagated to the caller. If set to `false`, exceptions
+are thrown.
+
+On the client side, realm and errors parameters are ignored and the
+actual login does not occur until a resource requiring a login is
+accessed. A `java.rmi.AccessException` with `COBRA NO_PERMISSION` occurs
+if the actual login fails.
+
+The logout methods for servlets or JSP files have the following
+signatures:
+
+[source,java]
+----
+public java.lang.Boolean logout(HttpServletRequest request,
+    HttpServletResponse response)
+
+public java.lang.Boolean logout(HttpServletRequest request,
+    HttpServletResponse response, boolean errors)
+    throws java.lang.Exception
+----
+
+The logout methods for EJB components have the following signatures:
+
+[source,java]
+----
+public java.lang.Boolean logout()
+
+public java.lang.Boolean logout(boolean errors)
+    throws java.lang.Exception
+----
+
+All of these `logout` methods return `true` if logout succeeded, `false`
+if logout failed.
+
+If the errors flag is set to `true`, any exceptions encountered during
+the logout are propagated to the caller. If set to `false`, exceptions
+are thrown.
+
+[[beacq]][[GSDVG00124]][[user-authentication-for-single-sign-on]]
+
+=== User Authentication for Single Sign-on
+
+The single sign-on feature of the {productName} allows multiple web
+applications deployed to the same virtual server to share the user
+authentication state. With single sign-on enabled, users who log in to
+one web application become implicitly logged into other web applications
+on the same virtual server that require the same authentication
+information. Otherwise, users would have to log in separately to each
+web application whose protected resources they tried to access.
+
+A sample application using the single sign-on scenario could be a
+consolidated airline booking service that searches all airlines and
+provides links to different airline web sites. After the user signs on
+to the consolidated booking service, the user information can be used by
+each individual airline site without requiring another sign-on.
+
+Single sign-on operates according to the following rules:
+
+* Single sign-on applies to web applications configured for the same
+realm and virtual server. The realm is defined by the `realm-name`
+element in the `web.xml` file. For information about virtual servers,
+see "link:administration-guide/http_https.html#GSADG00017[Administering Internet Connectivity]" in {productName} Administration Guide.
+* As long as users access only unprotected resources in any of the web
+applications on a virtual server, they are not challenged to
+authenticate themselves.
+* As soon as a user accesses a protected resource in any web application
+associated with a virtual server, the user is challenged to authenticate
+himself or herself, using the login method defined for the web
+application currently being accessed.
+* After authentication, the roles associated with this user are used for
+access control decisions across all associated web applications, without
+challenging the user to authenticate to each application individually.
+* When the user logs out of one web application (for example, by
+invalidating the corresponding session), the user's sessions in all web
+applications are invalidated. Any subsequent attempt to access a
+protected resource in any application requires the user to authenticate
+again.
+
+The single sign-on feature utilizes HTTP cookies to transmit a token
+that associates each request with the saved user identity, so it can
+only be used in client environments that support cookies.
+
+To configure single sign-on, set the following virtual server
+properties:
+
+* `sso-enabled` - If `false`, single sign-on is disabled for this
+virtual server, and users must authenticate separately to every
+application on the virtual server. The default is `false`.
+* `sso-max-inactive-seconds` - Specifies the time after which a user's
+single sign-on record becomes eligible for purging if no client activity
+is received. Since single sign-on applies across several applications on
+the same virtual server, access to any of the applications keeps the
+single sign-on record active. The default value is 5 minutes (`300`
+seconds). Higher values provide longer single sign-on persistence for
+the users at the expense of more memory use on the server.
+* `sso-reap-interval-seconds` - Specifies the interval between purges of
+expired single sign-on records. The default value is `60`.
+
+Here are example `asadmin set` commands with default values:
+
+[source]
+----
+asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-enabled="true"
+asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-max-inactive-seconds="300"
+asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-reap-interval-seconds="60"
+----
+
+For more information about the `asadmin set` command, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[gizel]][[GSDVG00125]][[adding-authentication-mechanisms-to-the-servlet-container]]
+
+=== Adding Authentication Mechanisms to the Servlet Container
+
+You can use JSR 196 in the web tier to facilitate the injection of
+pluggable authentication modules within the servlet constraint
+processing engine. The {productName} includes implementations of a
+number of HTTP layer authentication mechanisms such as basic, form, and
+digest authentication. You can add alternative implementations of the
+included mechanisms or implementations of new mechanisms such as HTTP
+Negotiate/SPNEGO, OpenID, or CAS.
+
+The following topics are addressed here:
+
+* link:#BACCFGBF[The {productName} and JSR-375]
+* link:#gizfz[The {productName} and JSR 196]
+* link:#gizdx[Writing a Server Authentication Module]
+* link:#gizeb[Sample Server Authentication Module]
+* link:#gizfa[Compiling and Installing a Server Authentication Module]
+* link:#gizfe[Configuring a Server Authentication Module]
+* link:#gizfm[Binding a Server Authentication Module to Your
+Application]
+
+[[BACCFGBF]][[GSDVG564]][[the-glassfish-server-and-jsr-375]]
+
+==== The {productName} and JSR-375
+
+The {productName} implements JSR-375 to provide built-in support for
+BASIC, FORM and Custom FORM authentication mechanisms. JSR-375 also
+defines plug-in interfaces for authentication and identity stores, that
+is, the `HttpAuthenticationMechanism` interface and the `IdentityStore`
+interface, respectively. Though `HttpAuthenticationMechanism`
+implementations can authenticate users in any manner they choose, the
+`IdentityStore` interface provides a convenient mechanism. A significant
+advantage of using `HttpAuthenticationMechanism` and `IdentityStore`
+over the declarative mechanisms defined by the Servlet specification is
+that it allows an application to control the identity stores that it
+authenticates against, in a standard, portable way. You can use the
+built-in implementations of these APIs, or define custom
+implementations.
+
+Jakarta EE Security API defines several annotations, with names that end
+with Definition, which when used makes the corresponding built-in
+mechanism available as a CDI bean. Jakarta EE Security API also supports
+the use of Expression Language 3.0 in these annotations to allow dynamic
+configuration.
+
+[[GSDVG565]][[sthref9]]
+
+
+[[built-in-authentication-mechanisms]]
+===== Built-in Authentication Mechanisms
+
+An application packages its own `HttpAuthenticationMechanism` by
+including in a bean archive that is a part of the application.
+Alternatively, it may select and configure one of the container's
+built-in mechanisms using the corresponding annotation, as listed below:
+
+* `BasicAuthenticationMechanismDefintion`—implements BASIC
+authentication that conforms to the behavior of the servlet container
+when BASIC <auth-method> is declared in web.xml.
+* `CustomFormAuthenticationMechanismDefinition`—implements FORM
+authentication that conforms to the behavior of the servlet container
+when the FORM <auth-method> is declared in web.xml.
+* `FormAuthenticationMechanismDefinition`—implements a modified version
+of FORM authentication in which custom handling replaces the POST to
+j_security_check.
+
+In {productName}, all built-in authentication mechanisms need to be
+authenticated using an identity store. The `IdentityStore` interface,
+included in the Jakarta EE Security API, defines an SPI for interacting
+with identity stores, which are directories or databases containing user
+account information. The `IdentityStore` interface has four methods:
+`validate(Credential)`, `getCallerGroups(CredentialValidationResult)`,
+`validationTypes()` and `priority()`.Developers can provide their own
+implementation of this interface, or use one of the built-in Identity
+Stores. The `RememberMeIdentityStore` interface, which is a variation on
+the IdentityStore interface, can be used when an application wants to
+"remember" a user's authenticated session for an extended period, so
+that the caller can return to the application periodically without
+needing to present primary authentication credentials each time.
+
+There are two built-in implementations of `IdentityStore`: an LDAP
+identity store, and a Database identity store. The following snippet
+shows the usage of `DatabaseIdentityStoreDefinition`, which makes
+`DatabaseIdentityStore` available as CDI bean.
+
+[source,java]
+----
+@DatabaseIdentityStoreDefinition(
+    callerQuery = "#{'select password from caller where name = ?'}",
+    groupsQuery = "select group_name from caller_groups where caller_name = ?",
+    hashAlgorithm = Pbkdf2PasswordHash.class,
+    priorityExpression = "#{100}",
+    hashAlgorithmParameters = {
+        "Pbkdf2PasswordHash.Iterations=3072",
+        "${applicationConfig.dyna}"
+    }
+)
+----
+
+Since Jakarta EE Security API provides support for Expression Langauge 3.0,
+regular expressions can be used to set value of annotation attributes.
+
+The {productName} provides out of the box implementation of
+`Pbkdf2PasswordHash` that supports PBKDF2 password hashing. It is
+suggested that you use `Pbkdf2PasswordHash` for generating and
+validating passwords, unless there are specific requirements which
+cannot be met any other way.
+
+[[GSDVG566]][[sthref10]]
+
+
+[[custom-authentication-mechanism]]
+===== Custom Authentication Mechanism
+
+An application provider can choose to provide its own custom
+authentication mechanism, apart from built-in authentication mechanism.
+
+A custom authentication mechanism implements the
+`HttpAuthenticationMechanism` interface, introduced in Jakarta EE Security
+API. This interface defines the following three methods.
+
+[source,java]
+----
+AuthenticationStatus validateRequest(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     HttpMessageContext httpMessageContext
+                                    ) throws AuthenticationException;
+
+AuthenticationStatus secureResponse(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    HttpMessageContext httpMessageContext
+                                    ) throws AuthenticationException;
+
+void cleanSubject(HttpServletRequest request,
+                  HttpServletResponse response,
+                  HttpMessageContext   httpMessageContext);
+----
+
+`HttpAuthenticationMechanism` returns `AuthenticationStatus` to indicate
+the status of authentication request. Internally, it gets translated to
+corresponding JASPIC `AuthStatus` as shown below:
+
+* `AuthenticationStatus.NOT_DONE` to `AuthStatus.SUCCESS`
+* `AuthenticationStatus.SEND_CONTINUE` to `AuthStatus.SEND_CONTINUE`
+* `AuthenticationStatus.SUCCESS` to `AuthStatus.SUCCESS`
+* `AuthenticationStatus.SEND_FAILURE` to `AuthStatus.SEND_FAILURE`
+
+Each method of the `HttpAuthenticationMechanism` interface performs the
+same function as the corresponding `ServerAuth` methods. Unlike JASPIC,
+`HttpAuthenticationMechanism` is specified for the servlet container
+only. Only the `validateRequest()` must be implemented, for other two
+methods, default behaviors are specified.
+
+`validateRequest` allows a caller to authenticate. The request gets
+inspected inside `validateRequest` to read credential or any other
+information, or it can write to standard response with status of the
+authentication request or redirect the caller to an OAuth provider. Once
+the credential is validated, the result of the validation is
+communicated to the container using the `HttpMessageContext` parameter.
+
+[[GSDVG567]]
+
+Sample Http Authentication Mechanism
+
+The class `MyAuthenticationMechanism.java` is a sample
+`HttpAuthenticationMechanism` implementation. Note that only
+`validateRequest` method has been implemented, since Jakarta EE Security
+API provides default implementation of other two methods. An application
+provider may choose to override the default implementation depending on
+the requirement.
+
+[source,java]
+----
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.security.enterprise.AuthenticationException;
+import javax.security.enterprise.AuthenticationStatus;
+import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
+import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import javax.security.enterprise.credential.UsernamePasswordCredential;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
+import javax.security.enterprise.identitystore.IdentityStoreHandler;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
+
+@RequestScoped
+public class MyAuthenticationMechanism implements HttpAuthenticationMechanism {
+
+    @Inject
+    private IdentityStoreHandler identityStoreHandler;
+
+    @Override
+    public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
+
+          // Get the (caller) name and password from the request
+        // NOTE: This is for the smallest possible example only. In practice
+        // putting the password in a request query parameter is highly
+        // insecure and is discouraged.
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+
+        if (name != null && password != null) {
+
+            // Delegate the {credentials in -> identity data out} function to
+            // the Identity Store
+            CredentialValidationResult result = identityStoreHandler.validate(
+                new UsernamePasswordCredential(name, password));
+
+            if (result.getStatus() == VALID) {
+                // Communicate the details of the authenticated user to the
+                // container.
+                response.addHeader("Authentication Mechanism", "MyAuthenticationMechanism");
+                return httpMessageContext.notifyContainerAboutLogin(
+                    result.getCallerPrincipal(), result.getCallerGroups());
+            } else {
+                return httpMessageContext.responseUnauthorized();
+            }
+        }
+
+        return httpMessageContext.doNothing();
+    }
+
+}
+----
+
+[[gizfz]][[GSDVG00381]][[the-glassfish-server-and-jsr-196]]
+
+==== The {productName} and JSR 196
+
+The {productName} implements the Servlet Container Profile of JSR
+196, Java Authentication Service Provider Interface for Containers. JSR
+196 defines a standard service provider interface (SPI) that extends the
+concepts of the Java Authentication and Authorization Service (JAAS) to
+enable pluggability of message authentication modules in message
+processing runtimes. The JSR 196 standard defines profiles that
+establish contracts for the use of the SPI in specific contexts. The
+Servlet Container Profile of JSR 196 defines the use of the SPI by a
+Servlet container such that:
+
+* The resulting container can be configured with new authentication
+mechanisms.
+* The container employs the configured mechanisms in its enforcement of
+the declarative servlet security model (declared in a `web.xml` file
+using `security-constraint` elements).
+
+The JSR 196 specification defines a simple message processing model
+composed of four interaction points:
+
+1. `secureRequest` on the client
+2. `validateRequest` on the server
+3. `secureResponse` on the server
+4. `validateResponse` on the client
+
+A message processing runtime uses the SPI at these interaction points to
+delegate the corresponding message security processing to authentication
+providers, also called authentication modules, integrated into the
+runtime by way of the SPI.
+
+A compatible server-side message processing runtime, such as the
+{productName} servlet container, supports the `validateRequest` and
+`secureResponse` interaction points of the message processing model. The
+servlet container uses the SPI at these interaction points to delegate
+the corresponding message security processing to a server authentication
+module (SAM), integrated by the SPI into the container.
+
+[[gizdx]][[GSDVG00382]][[writing-a-server-authentication-module]]
+
+==== Writing a Server Authentication Module
+
+A key step in adding an authentication mechanism to a compatible
+server-side message processing runtime such as the {productName}
+servlet container is acquiring a SAM that implements the desired
+authentication mechanism. One way to do that is to write the SAM
+yourself.
+
+A SAM implements the javax.security.auth.message.module.ServerAuthModule
+interface as defined by JSR 196. A SAM is invoked indirectly by the
+message processing runtime at the `validateRequest` and `secureResponse`
+interaction points. A SAM must implement the five methods of the
+ServerAuthModule interface:
+
+* `getSupportedMessageTypes` — An array of `Class` objects where each
+element defines a message type supported by the SAM. For a SAM to be
+compatible with the Servlet Container Profile, the returned array must
+include the `HttpServletRequest.class` and `HttpServletResponse.class`
+objects.
+* `initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler Map options)`
+— The container calls this method to provide the SAM with configuration
+values and with a `CallbackHandler`. The configuration values are
+returned in the policy arguments and in the options `Map`. The SAM uses
+`CallbackHandler` to access services, such as password validation,
+provided by the container.
+* `AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject)`
+— The container calls this method to process each received
+`HttpServletRequest`. The request and its associated
+`HttpServletResponse` are passed by the container to the SAM in the
+`messageInfo` argument. The SAM processes the request and may establish
+the response to be returned by the container. The SAM uses the provided
+`Subject` arguments to convey its authentication results. The SAM
+returns different status values to control the container's invocation
+processing. The status values and the circumstances under which they are
+returned are as follows:
+
+** `AuthStatus.SUCCESS` is returned when the application request message
+is successfully validated. The container responds to this status value
+by using the returned client `Subject` to invoke the target of the
+request. When this value is returned, the SAM (provided a custom
+`AuthConfigProvider` is not being used) must use its `CallbackHandler`
+to handle a `CallerPrincipalCallback` using the `clientSubject` as an
+argument to the callback.
+
+** `AuthStatus.SEND_CONTINUE` indicates that message validation is
+incomplete and that the SAM has established a preliminary response as
+the response message in `messageInfo`. The container responds to this
+status value by sending the response to the client.
+
+** `AuthStatus.SEND_FAILURE` indicates that message validation failed
+and that the SAM has established an appropriate failure response message
+in `messageInfo`. The container responds to this status value by sending
+the response to the client.
+
+** `AuthStatus.SEND_SUCCESS` is not typically returned. This status
+value indicates the end of a multi-message security dialog originating
+after the service interaction and during the processing of the
+application response. The container responds to this status value by
+sending the response to the client.
++
+The `validateRequest` method may also throw an `AuthException` to
+indicate that the message processing by the SAM failed without
+establishing a failure response message in `messageInfo`.
+* `secureResponse(MessageInfo messageInfo, Subject serviceSubject)` —
+The container calls this method before sending a response, resulting
+from an application invocation, to the client. The response is passed to
+the SAM in the `messageInfo` argument. In most cases, this method should
+just return the `SEND_SUCCESS` status.
+* `cleanSubject(MessageInfo messageInfo, Subject subject)` — This method
+removes the mechanism-specific principals, credentials, or both from the
+subject. This method is not currently called by the container. A
+legitimate implementation could remove all the principals from the
+argument subject.
+
+See the Servlet Container Profile section in the JSR 196 specification
+for additional background and details.
+
+[[gizeb]][[GSDVG00383]][[sample-server-authentication-module]]
+
+==== Sample Server Authentication Module
+
+The class `MySam.java` is a sample SAM implementation. Notice that the
+sample implements the five methods of the ServerAuthModule interface.
+This SAM implements an approximation of HTTP basic authentication.
+
+[source,java]
+----
+package tip.sam;
+
+   import java.io.IOException;
+   import java.util.Map;
+   import javax.security.auth.Subject;
+   import javax.security.auth.callback.Callback;
+   import javax.security.auth.callback.CallbackHandler;
+   import javax.security.auth.callback.UnsupportedCallbackException;
+   import javax.security.auth.message.AuthException;
+   import javax.security.auth.message.AuthStatus;
+   import javax.security.auth.message.MessageInfo;
+   import javax.security.auth.message.MessagePolicy;
+   import javax.security.auth.message.callback.CallerPrincipalCallback;
+   import javax.security.auth.message.callback.GroupPrincipalCallback;
+   import javax.security.auth.message.callback.PasswordValidationCallback;
+   import javax.security.auth.message.module.ServerAuthModule;
+   import javax.servlet.http.HttpServletRequest;
+   import javax.servlet.http.HttpServletResponse;
+   import org.apache.catalina.util.Base64;
+
+   public class MySam implements ServerAuthModule {
+
+      protected static final Class[]
+        supportedMessageTypes = new Class[]{
+          HttpServletRequest.class,
+          HttpServletResponse.class
+      };
+
+      private MessagePolicy requestPolicy;
+      private MessagePolicy responsePolicy;
+      private CallbackHandler handler;
+      private Map options;
+      private String realmName = null;
+      private String defaultGroup[] = null;
+      privte static final String REALM_PROPERTY_NAME =
+          "realm.name";
+      private static final String GROUP_PROPERTY_NAME =
+          "group.name";
+      private static final String BASIC = "Basic";
+      static final String AUTHORIZATION_HEADER =
+          "authorization";
+      static final String AUTHENTICATION_HEADER =
+          "WWW-Authenticate";
+
+      public void initialize(MessagePolicy reqPolicy,
+              MessagePolicy resPolicy,
+              CallbackHandler cBH, Map opts)
+              throws AuthException {
+          requestPolicy = reqPolicy;
+          responsePolicy = resPolicy;
+          handler = cBH;
+          options = opts;
+          if (options != null) {
+              realmName = (String)
+                  options.get(REALM_PROPERTY_NAME);
+              if (options.containsKey(GROUP_PROPERTY_NAME)) {
+                  defaultGroup = new String[]{(String)
+                      options.get(GROUP_PROPERTY_NAME)};
+              }
+          }
+      }
+
+      public Class[] getSupportedMessageTypes() {
+          return supportedMessageTypes;
+      }
+
+      public AuthStatus validateRequest(
+              MessageInfo msgInfo, Subject client,
+              Subject server) throws AuthException {
+          try {
+
+              String username =
+                  processAuthorizationToken(msgInfo, client);
+              if (username ==
+                  null && requestPolicy.isMandatory()) {
+                  return sendAuthenticateChallenge(msgInfo);
+              }
+
+             setAuthenticationResult(
+                 username, client, msgInfo);
+             return AuthStatus.SUCCESS;
+
+          } catch (Exception e) {
+              AuthException ae = new AuthException();
+              ae.initCause(e);
+              throw ae;
+          }
+      }
+
+      private String processAuthorizationToken(
+              MessageInfo msgInfo, Subject s)
+              throws AuthException {
+
+          HttpServletRequest request =
+                  (HttpServletRequest)
+                  msgInfo.getRequestMessage();
+
+          String token =
+                  request.getHeader(AUTHORIZATION_HEADER);
+
+          if (token != null && token.startsWith(BASIC + " ")) {
+
+              token = token.substring(6).trim();
+
+              // Decode and parse the authorization token
+              String decoded =
+                  new String(Base64.decode(token.getBytes()));
+
+              int colon = decoded.indexOf(':');
+              if (colon <= 0 || colon == decoded.length() - 1) {
+                  return (null);
+              }
+
+              String username = decoded.substring(0, colon);
+
+             // use the callback to ask the container to
+             // validate the password
+            PasswordValidationCallback pVC =
+                    new PasswordValidationCallback(s, username,
+                    decoded.substring(colon + 1).toCharArray());
+            try {
+                handler.handle(new Callback[]{pVC});
+                pVC.clearPassword();
+            } catch (Exception e) {
+                AuthException ae = new AuthException();
+                ae.initCause(e);
+                throw ae;
+            }
+
+            if (pVC.getResult()) {
+                return username;
+            }
+      }
+      return null;
+   }
+
+   private AuthStatus sendAuthenticateChallenge(
+           MessageInfo msgInfo) {
+
+       String realm = realmName;
+         // if the realm property is set use it,
+         // otherwise use the name of the server
+         // as the realm name.
+         if (realm == null) {
+
+          HttpServletRequest request =
+                  (HttpServletRequest)
+                  msgInfo.getRequestMessage();
+
+          realm = request.getServerName();
+        }
+
+       HttpServletResponse response =
+               (HttpServletResponse)
+               msgInfo.getResponseMessage();
+
+       String header = BASIC + " realm=\"" + realm + "\"";
+       response.setHeader(AUTHENTICATION_HEADER, header);
+       response.setStatus(
+               HttpServletResponse.SC_UNAUTHORIZED);
+       return AuthStatus.SEND_CONTINUE;
+   }
+
+   public AuthStatus secureResponse(
+           MessageInfo msgInfo, Subject service)
+           throws AuthException {
+       return AuthStatus.SEND_SUCCESS;
+   }
+
+   public void cleanSubject(MessageInfo msgInfo,
+           Subject subject)
+           throws AuthException {
+      if (subject != null) {
+          subject.getPrincipals().clear();
+      }
+   }
+
+   private static final String AUTH_TYPE_INFO_KEY =
+           "javax.servlet.http.authType";
+
+   // distinguish the caller principal
+   // and assign default groups
+   private void setAuthenticationResult(String name,
+           Subject s, MessageInfo m)
+           throws IOException,
+           UnsupportedCallbackException {
+       handler.handle(new Callback[]{
+           new CallerPrincipalCallback(s, name)
+       });
+       if (name != null) {
+         // add the default group if the property is set
+           if (defaultGroup != null) {
+               handler.handle(new Callback[]{
+                   new GroupPrincipalCallback(s, defaultGroup)
+               });
+           }
+           m.getMap().put(AUTH_TYPE_INFO_KEY, ""MySAM");
+       }
+   }
+  }
+----
+
+Note that the `initialize` method looks for the `group.name` and
+`realm.name` properties. The `group.name` property configures the
+default group assigned as a result of any successful authentication. The
+`realm.name` property defines the realm value sent back to the browser
+in the `WWW-Authenticate` challenge.
+
+[[gizfa]][[GSDVG00384]][[compiling-and-installing-a-server-authentication-module]]
+
+==== Compiling and Installing a Server Authentication Module
+
+Before you can use the sample SAM, you need to compile, install, and
+configure it. Then you can bind it to an application.
+
+To compile the SAM, include the SPI in your classpath. When the
+{productName} is installed, the JAR file containing the SPI,
+`jmac-api.jar`, is installed in the as-install``/lib`` directory. After
+you compile the SAM, install it by copying a JAR file containing the
+compiled SAM to the as-install``/lib`` directory.
+
+[[gizfe]][[GSDVG00385]][[configuring-a-server-authentication-module]]
+
+==== Configuring a Server Authentication Module
+
+You can configure a SAM in one of these ways:
+
+* In the Administration Console, open the Security component under the
+relevant configuration and go to the Message Security page. Set the
+following options:
+
+** Authentication Layer — `HttpServlet`
+
+** Provider Type — `server` or `client-server`
+
+** Provider ID — Specify a unique name for the SAM, for example `MySAM`
+
+** Class Name — Specify the fully qualified class name, for example
+`tip.sam.MySam`
+
+** Additional Property — Name: `group-name` Value: `user`
+
+** Additional Property — Name: `realm-name` Value: `Sam`
++
+For details, click the Help button in the Administration Console.
+* Use the `asadmin create-message-security-provider` command to
+configure a SAM. Set the following options:
+
+** `--layer HttpServlet`
+
+** `--providertype server` or `--providertype client-server`
+
+** `--classname tip.sam.MySam`
+
+** `--property group-name=user:realm-name=Sam`
+
+** Provider name operand — Specify a unique name for the SAM, for
+example `MySAM`
++
+For details, see the link:reference-manual.html#GSRFM[{productName}
+Reference Manual].
+
+[[gizfm]][[GSDVG00386]][[binding-a-server-authentication-module-to-your-application]]
+
+==== Binding a Server Authentication Module to Your Application
+
+After you install and configure the SAM, you can bind it for use by the
+container on behalf of one or more of your applications. You have two
+options in how you bind the SAM, depending on whether you are willing to
+repackage and redeploy your application:
+
+* If you are willing to repackage and redeploy, you can bind the SAM
+using the `glassfish-web.xml` file. Set the value of the
+`httpservlet-security-provider` attribute of the `glassfish-web-app`
+element to the SAM's configured provider ID, for example, `MySAM`. For
+more information about the `glassfish-web.xml` file, see the
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+Guide]. This option leverages the native `AuthConfigProvider`
+implementation that ships with the {productName}.
+* Another approach is to develop your own `AuthConfigProvider` and
+register it with the {productName} `AuthConfigFactory` for use on
+behalf of your applications. For example, a simple `AuthConfigProvider`
+can obtain, through its initialization properties, the classname of a
+SAM to configure on behalf of the applications for which the provider is
+registered. You can find a description of the functionality of an
+`AuthConfigProvider` and of the registration facilities provided by an
+`AuthConfigFactory` in the JSR 196 specification.
+
+

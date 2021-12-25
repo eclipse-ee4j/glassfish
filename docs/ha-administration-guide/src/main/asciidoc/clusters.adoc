@@ -1,0 +1,1313 @@
+type=page
+status=published
+title=Administering {productName} Clusters
+next=instances.html
+prev=nodes.html
+~~~~~~
+
+= Administering {productName} Clusters
+
+[[GSHAG00005]][[gjfom]]
+
+
+[[administering-glassfish-server-clusters]]
+== 4 Administering {productName} Clusters
+
+A cluster is a collection of {productName} instances that work
+together as one logical entity. A cluster provides a runtime environment
+for one or more Java Platform, Enterprise Edition (Jakarta EE)
+applications. A cluster provides high availability through failure
+protection, scalability, and load balancing.
+
+The Group Management Service (GMS) enables instances to participate in a
+cluster by detecting changes in cluster membership and notifying
+instances of the changes. To ensure that GMS can detect changes in
+cluster membership, a cluster's GMS settings must be configured
+correctly.
+
+The following topics are addressed here:
+
+* link:#gjfqp[About {productName} Clusters]
+* link:#gjfnl[Group Management Service]
+* link:#gkqdy[Creating, Listing, and Deleting Clusters]
+
+[[gjfqp]][[GSHAG00183]][[about-glassfish-server-clusters]]
+
+=== About {productName} Clusters
+
+A cluster is a named collection of {productName} instances that share
+the same applications, resources, and configuration information. For
+information about {productName} instances, see
+link:instances.html#gkrbv[Administering {productName} Instances].
+
+{productName} enables you to administer all the instances in a
+cluster as a single unit from a single host, regardless of whether the
+instances reside on the same host or different hosts. You can perform
+the same operations on a cluster that you can perform on an unclustered
+instance, for example, deploying applications and creating resources.
+
+A cluster provides high availability through failure protection,
+scalability, and load balancing.
+
+* Failure protection. If an instance or a host in a cluster fails,
+{productName} detects the failure and recovers the user session
+state. If a load balancer is configured for the cluster, the load
+balancer redirects requests from the failed instance to other instances
+in the cluster. Because the same applications and resources are on all
+instances in the cluster, an instance can fail over to any other
+instance in the cluster.
++
+To enable the user session state to be recovered, each instance in a
+cluster sends in-memory state data to another instance. As state data is
+updated in any instance, the data is replicated.
+* Scalability. If increased capacity is required, you can add instances
+to a cluster with no disruption in service. When an instance is added or
+removed, the changes are handled automatically.
+* Load balancing. If instances in a cluster are distributed among
+different hosts, the workload can be distributed among the hosts to
+increase overall system throughput.
+
+[[gjfnl]][[GSHAG00184]][[group-management-service]]
+
+=== Group Management Service
+
+The Group Management Service (GMS) is an infrastructure component that
+is enabled for the instances in a cluster. When GMS is enabled, if a
+clustered instance fails, the cluster and the Domain Administration
+Server (DAS) are aware of the failure and can take action when failure
+occurs. Many features of {productName} depend upon GMS. For example,
+GMS is used by the in-memory session replication, transaction service,
+and timer service features.
+
+GMS is a core service of the Shoal framework. For more information about
+Shoal, visit the http://shoal.dev.java.net/[Project Shoal home page]
+(`https://shoal.dev.java.net/`).
+
+The following topics are addressed here:
+
+* link:#CHDFEGAG[Protocols and Transports for GMS]
+* link:#gjfpd[GMS Configuration Settings]
+* link:#gjfog[Dotted Names for GMS Settings]
+* link:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
+* link:#gkqqo[To Change GMS Settings After Cluster Creation]
+* link:#gklhl[To Check the Health of Instances in a Cluster]
+* link:#gklhd[To Validate That Multicast Transport Is Available for a Cluster]
+* link:#CHDGAIBJ[Discovering a Cluster When Multicast Transport Is Unavailable]
+* link:#gjdlw[Using the Multi-Homing Feature With GMS]
+
+[[CHDFEGAG]][[GSHAG485]][[protocols-and-transports-for-gms]]
+
+==== Protocols and Transports for GMS
+
+You can specify that GMS should use one of the following combinations of
+protocol and transport for broadcasting messages:
+
+* User Datagram Protocol (UDP) multicast
+* Transmission Control Protocol (TCP) without multicast
+
+Even if GMS should use UDP multicast for broadcasting messages, you must
+ensure that TCP is enabled. On Windows systems, enabling TCP involves
+enabling a protocol and port for security when a firewall is enabled.
+
+If GMS should use UDP multicast for broadcasting messages and if
+{productName} instances in a cluster are located on different hosts,
+the following conditions must be met:
+
+* The DAS host and all hosts for the instances must be on the same subnet.
+* UDP multicast must be enabled for the network.
+To test whether multicast is enabled, use the
+link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`(1)]
+subcommand.
+
+If GMS should use TCP without multicast, you must configure GMS to
+locate the instances to use for discovering the cluster. For more
+information, see link:#CHDGAIBJ[Discovering a Cluster When Multicast
+Transport Is Unavailable].
+
+[NOTE]
+====
+If you do not configure GMS to locate the instances to use for
+discovering a cluster, GMS uses UDP multicast by default.
+====
+
+
+[[gjfpd]][[GSHAG00264]][[gms-configuration-settings]]
+
+==== GMS Configuration Settings
+
+{productName} has the following types of GMS settings:
+
+* GMS cluster settings — These are determined during cluster creation.
+For more information about these settings, see link:#gkqdm[To Create a Cluster].
+* GMS configuration settings — These are determined during configuration
+creation and are explained here.
+
+The following GMS configuration settings are used in GMS for group
+discovery and failure detection:
+
+`group-discovery-timeout-in-millis`::
+  Indicates the amount of time (in milliseconds) an instance's GMS
+  module will wait during instance startup for discovering other members
+  of the group.
++
+  The `group-discovery-timeout-in-millis` timeout value should be set to
+  the default or higher. The default is 5000.
+`max-missed-heartbeats`::
+  Indicates the maximum number of missed heartbeats that the health
+  monitor counts before the instance can be marked as a suspected
+  failure. GMS also tries to make a peer-to-peer connection with the
+  suspected member. If the maximum number of missed heartbeats is
+  exceeded and peer-to-peer connection fails, the member is marked as a
+  suspected failure. The default is 3.
+`heartbeat-frequency-in-millis`::
+  Indicates the frequency (in milliseconds) at which a heartbeat is sent
+  by each server instance to the cluster. +
+  The failure detection interval is the `max-missed-heartbeats`
+  multiplied by the `heartbeat-frequency-in-millis`. Therefore, the
+  combination of defaults, 3 multiplied by 2000 milliseconds, results in
+  a failure detection interval of 6 seconds. +
+  Lowering the value of `heartbeat-frequency-in-millis` below the
+  default would result in more frequent heartbeat messages being sent
+  out from each member. This could potentially result in more heartbeat
+  messages in the network than a system needs for triggering failure
+  detection protocols. The effect of this varies depending on how
+  quickly the deployment environment needs to have failure detection
+  performed. That is, the (lower) number of retries with a lower
+  heartbeat interval would make it quicker to detect failures. +
+  However, lowering this value could result in false positives because
+  you could potentially detect a member as failed when, in fact, the
+  member's heartbeat is reflecting the network load from other parts of
+  the server. Conversely, a higher timeout interval results in fewer
+  heartbeats in the system because the time interval between heartbeats
+  is longer. As a result, failure detection would take a longer. In
+  addition, a startup by a failed member during this time results in a
+  new join notification but no failure notification, because failure
+  detection and verification were not completed. +
+  The default is 2000.
+`verify-failure-waittime-in-millis`::
+  Indicates the verify suspect protocol's timeout used by the health
+  monitor. After a member is marked as suspect based on missed
+  heartbeats and a failed peer-to-peer connection check, the verify
+  suspect protocol is activated and waits for the specified timeout to
+  check for any further health state messages received in that time, and
+  to see if a peer-to-peer connection can be made with the suspect
+  member. If not, then the member is marked as failed and a failure
+  notification is sent. The default is 1500.
+`verify-failure-connect-timeout-in-millis`::
+  Indicates the time it takes for the GMS to detect a hardware or
+  network failure of a server instance. Be careful not to set this value
+  too low. The smaller this timeout value is, the greater the chance of
+  detecting false failures. That is, the instance has not failed but
+  doesn't respond within the short window of time. The default is 10000.
+
+The heartbeat frequency, maximum missed heartbeats, peer-to-peer
+connection-based failure detection, and the verify timeouts are all
+needed to ensure that failure detection is robust and reliable in
+{productName}.
+
+For the dotted names for each of these GMS configuration settings, see
+link:#gjfog[Dotted Names for GMS Settings]. For the steps to specify
+these settings, see link:#gkoac[To Preconfigure Nondefault GMS
+Configuration Settings].
+
+[[gjfog]][[GSHAG00265]][[dotted-names-for-gms-settings]]
+
+==== Dotted Names for GMS Settings
+
+Below are sample link:reference-manual/get.html#GSRFM00139[`get`] subcommands to get all the GMS
+configuration settings (attributes associated with the referenced
+`mycfg` configuration) and GMS cluster settings (attributes and
+properties associated with a cluster named `mycluster`).
+
+[source]
+----
+asadmin> get "configs.config.mycfg.group-management-service.*"
+configs.config.mycfg.group-management-service.failure-detection.heartbeat-frequency-in-millis=2000
+configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=3
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-connect-timeout-in-millis=10000
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-waittime-in-millis=1500
+configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=5000
+
+asadmin> get clusters.cluster.mycluster
+clusters.cluster.mycluster.config-ref=mycfg
+clusters.cluster.mycluster.gms-bind-interface-address=${GMS-BIND-INTERFACE-ADDRESS-mycluster}
+clusters.cluster.mycluster.gms-enabled=true
+clusters.cluster.mycluster.gms-multicast-address=228.9.245.47
+clusters.cluster.mycluster.gms-multicast-port=9833
+clusters.cluster.mycluster.name=mycluster
+
+asadmin> get "clusters.cluster.mycluster.property.*"
+clusters.cluster.mycluster.property.GMS_LISTENER_PORT=${GMS_LISTENER_PORT-mycluster}
+clusters.cluster.mycluster.property.GMS_MULTICAST_TIME_TO_LIVE=4
+clusters.cluster.mycluster.property.GMS_LOOPBACK=false
+clusters.cluster.mycluster.property.GMS_TCPSTARTPORT=9090
+clusters.cluster.mycluster.property.GMS_TCPENDPORT=9200
+----
+
+The last `get` subcommand displays only the properties that have been
+explicitly set.
+
+For the steps to specify these settings, see link:#gkoac[To Preconfigure
+Nondefault GMS Configuration Settings] and link:#gkqqo[To Change GMS
+Settings After Cluster Creation].
+
+[[gkoac]][[GSHAG00098]][[to-preconfigure-nondefault-gms-configuration-settings]]
+
+==== To Preconfigure Nondefault GMS Configuration Settings
+
+You can preconfigure GMS with values different than the defaults without
+requiring a restart of the DAS and the cluster.
+
+1. Create a configuration using the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`]
+subcommand.
++
+For example:
++
+[source]
+----
+asadmin> copy-config default-config mycfg
+----
+For more information, see link:named-configurations.html#abdjr[To Create
+a Named Configuration].
+2. Set the values for the new configuration's GMS configuration
+settings.
++
+For example:
++
+[source]
+----
+asadmin> set configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=8000
+asadmin> set configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=5
+----
+For a complete list of the dotted names for these settings, see
+link:#gjfog[Dotted Names for GMS Settings].
+3. Create the cluster so it uses the previously created configuration.
++
+For example:
++
+[source]
+----
+asadmin> create-cluster --config mycfg mycluster
+----
+You can also set GMS cluster settings during this step. For more
+information, see link:#gkqdm[To Create a Cluster].
+4. Create server instances for the cluster.
++
+For example:
++
+[source]
+----
+asadmin> create-instance --node localhost --cluster mycluster instance01
+
+asadmin> create-instance --node localhost --cluster mycluster instance02
+----
+5. Start the cluster.
++
+For example:
++
+[source]
+----
+asadmin> start-cluster mycluster
+----
+
+[[GSHAG367]]
+
+See Also
+
+You can also view the full syntax and options of a subcommand by typing
+`asadmin help` subcommand at the command line.
+
+[[gkqqo]][[GSHAG00099]][[to-change-gms-settings-after-cluster-creation]]
+
+==== To Change GMS Settings After Cluster Creation
+
+To avoid the need to restart the DAS and the cluster, configure GMS
+configuration settings before cluster creation as explained in
+link:#gkoac[To Preconfigure Nondefault GMS Configuration Settings].
+
+To avoid the need to restart the DAS and the cluster, configure the GMS
+cluster settings during cluster creation as explained in link:#gkqdm[To
+Create a Cluster].
+
+Changing any GMS settings using the `set` subcommand after cluster
+creation requires a domain administration server (DAS) and cluster
+restart as explained here.
+
+1. Ensure that the DAS and cluster are running.
++
+Remote subcommands require a running server.
+2. Use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to determine the settings
+to change.
++
+For example:
++
+[source]
+----
+asadmin> get "configs.config.mycfg.group-management-service.*"
+configs.config.mycfg.group-management-service.failure-detection.heartbeat-frequency-in-millis=2000
+configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=3
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-connect-timeout-in-millis=10000
+configs.config.mycfg.group-management-service.failure-detection.verify-failure-waittime-in-millis=1500
+configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=5000
+----
+For a complete list of the dotted names for these settings, see
+link:#gjfog[Dotted Names for GMS Settings].
+3. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to change the settings.
++
+For example:
++
+[source]
+----
+asadmin> set configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=6000
+----
+4. Use the `get` subcommand again to confirm that the changes were
+made.
++
+For example:
++
+[source]
+----
+asadmin> get configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis
+----
+5. Restart the DAS.
++
+For example:
++
+[source]
+----
+asadmin> stop-domain domain1
+
+asadmin> start-domain domain1
+----
+6. Restart the cluster.
++
+For example:
++
+[source]
+----
+asadmin> stop-cluster mycluster
+
+asadmin> start-cluster mycluster
+----
+
+[[GSHAG368]]
+
+See Also
+
+You can also view the full syntax and options of a subcommand by typing
+`asadmin help` subcommand at the command line.
+
+[[gklhl]][[GSHAG00100]][[to-check-the-health-of-instances-in-a-cluster]]
+
+==== To Check the Health of Instances in a Cluster
+
+The `get-health` subcommand only works when GMS is enabled. This is the
+quickest way to evaluate the health of a cluster and to detect if
+cluster is properly operating; that is, all members of the cluster are
+running and visible to DAS.
+
+If multicast is not enabled for the network, all instances could be
+running (as shown by the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand),
+yet isolated from each other. The `get-health` subcommand does not show
+the instances if they are running but cannot discover each other due to
+multicast not being configured properly. See link:#gklhd[To Validate
+That Multicast Transport Is Available for a Cluster].
+
+1. Ensure that the DAS and cluster are running.
++
+Remote subcommands require a running server.
+2. Check whether server instances in a cluster are running by using the
+link:reference-manual/get-health.html#GSRFM00141[`get-health`] subcommand.
+
+[[GSHAG00032]][[gklgw]]
+Example 4-1 Checking the Health of Instances in a Cluster
+
+This example checks the health of a cluster named `cluster1`.
+
+[source]
+----
+asadmin> get-health cluster1
+instance1 started since Wed Sep 29 16:32:46 EDT 2010
+instance2 started since Wed Sep 29 16:32:45 EDT 2010
+Command get-health executed successfully.
+----
+
+[[GSHAG369]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help get-health` at the command line.
+
+[[gklhd]][[GSHAG00101]][[to-validate-that-multicast-transport-is-available-for-a-cluster]]
+
+==== To Validate That Multicast Transport Is Available for a Cluster
+
+[[GSHAG370]]
+
+Before You Begin
+
+To test a specific multicast address, multicast port, or bind interface
+address, get this information beforehand using the `get` subcommand. Use
+the following subcommand to get the multicast address and port for a
+cluster named `c1`:
+
+[source]
+----
+asadmin> get clusters.cluster.c1
+clusters.cluster.c1.config-ref=mycfg
+clusters.cluster.c1.gms-bind-interface-address=${GMS-BIND-INTERFACE-ADDRESS-c1}
+clusters.cluster.c1.gms-enabled=true
+clusters.cluster.c1.gms-multicast-address=228.9.174.162
+clusters.cluster.c1.gms-multicast-port=5383
+clusters.cluster.c1.name=c1
+----
+
+Use the following subcommand to get the bind interface address of a
+server instance named `i1` that belongs to a cluster named `c1`, if this
+system property has been set:
+
+[source]
+----
+asadmin> get servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1
+servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1.name=GMS-BIND-INTERFACE-ADDRESS-c1
+servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1.value=10.12.152.30
+----
+
+For information on how to set this system property, see
+link:#gjdlw[Using the Multi-Homing Feature With GMS].
+
+
+[NOTE]
+====
+Do not run the `validate-multicast` subcommand using the DAS and
+cluster's multicast address and port values while the DAS and cluster
+are running. Doing so results in an error.
+
+The `validate-multicast` subcommand must be run at the same time on two
+or more machines to validate whether multicast messages are being
+received between the machines.
+====
+
+
+Check whether multicast transport is available for a cluster by using
+the link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`] subcommand.
+
+[[GSHAG00033]][[gklhv]]
+Example 4-2 Validating That Multicast Transport Is Available for a
+Cluster
+
+This example checks whether multicast transport is available for a
+cluster named `c1`.
+
+Run from host `sr1`:
+
+[source]
+----
+asadmin> validate-multicast
+Will use port 2048
+Will use address 228.9.3.1
+Will use bind interface null
+Will use wait period 2,000 (in milliseconds)
+
+Listening for data...
+Sending message with content "sr1" every 2,000 milliseconds
+Received data from sr1 (loopback)
+Received data from sr2
+Exiting after 20 seconds. To change this timeout, use the --timeout command line option.
+Command validate-multicast executed successfully.
+----
+
+Run from host `sr2`:
+
+[source]
+----
+asadmin> validate-multicast
+Will use port 2048
+Will use address 228.9.3.1
+Will use bind interface null
+Will use wait period 2,000 (in milliseconds)
+
+Listening for data...
+Sending message with content "sr2" every 2,000 milliseconds
+Received data from sr2 (loopback)
+Received data from sr1
+Exiting after 20 seconds. To change this timeout, use the --timeout command line option.
+Command validate-multicast executed successfully.
+----
+
+[[GSHAG371]]
+
+Next Steps
+
+As long as all machines see each other, multicast is validated to be
+working properly across the machines. If the machines are not seeing
+each other, set the `--bindaddress` option explicitly to ensure that all
+machines are using interface on same subnet, or increase the
+`--timetolive` option from the default of `4`. If these changes fail to
+resolve the multicast issues, ask the network administrator to verify
+that the network is configured so the multicast messages can be seen
+between all the machines used to run the cluster.
+
+[[GSHAG372]]
+
+See Also
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help get-health` at the command line.
+
+[[CHDGAIBJ]][[GSHAG00373]][[discovering-a-cluster-when-multicast-transport-is-unavailable]]
+
+==== Discovering a Cluster When Multicast Transport Is Unavailable
+
+When multicast transport is unavailable, {productName} instances that
+are joining a cluster cannot rely on broadcast messages from GMS to
+discover the cluster. Instead, an instance that is joining a cluster
+uses a running instance or the DAS in the cluster to discover the
+cluster.
+
+Therefore, when multicast transport is unavailable, you must provide the
+locations of instances in the cluster to use for discovering the
+cluster. You are not required to provide the locations of all instances
+in the cluster. However, for an instance to discover the cluster, at
+least one instance whose location you provide must be running. To
+increase the probability of finding a running instance, provide the
+locations of several instances.
+
+If the DAS will be left running after the cluster is started, provide
+the location of the DAS first in the list of instances. When a cluster
+is started, the DAS is running before any of the instances in the
+cluster are started.
+
+The locations of the instances to use for discovering a cluster are part
+of the configuration data that you provide when creating the cluster.
+How to provide this data depends on how instances are distributed, as
+explained in the following subsections:
+
+* link:#CHDCGIFF[To Discover a Cluster When Multiple Instances in a
+Cluster are Running on a Host]
+* link:#CHDIGFCG[To Discover a Cluster When Each Instance in a Cluster
+Is Running on a Different Host]
+
+[[CHDCGIFF]][[GSHAG486]][[to-discover-a-cluster-when-multiple-instances-in-a-cluster-are-running-on-a-host]]
+
+===== To Discover a Cluster When Multiple Instances in a Cluster are Running on a Host
+
+If multiple instances in the same cluster are running on a host, you
+must provide a list of uniform resource indicators (URIs). Each URI must
+locate a {productName} instance or the DAS in the cluster.
+
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+
+2. Create a system property to represent the port number of the port on
+which the DAS listens for messages from GMS for the cluster.
++
+Use the link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand for this
+purpose.
++
+[source]
+----
+asadmin> create-system-properties GMS_LISTENER_PORT-cluster-name=gms-port
+----
+cluster-name::
+  The name of the cluster to which the messages from GMS apply.
+gms-port::
+  The port number of the port on which the DAS listens for messages from
+  GMS.
+
+3. Restart the DAS.
+
+4. When creating the cluster, set the `GMS_DISCOVERY_URI_LIST` property
+to a comma-separated list of URIs that locate instances to use for
+discovering the cluster.
++
+[source]
+----
+asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=uri-list cluster-name
+----
+uri-list::
+  A comma-separated list of URIs that locate a {productName} instance
+  or the DAS in the cluster. +
+  The format of each URI in the list is as follows: +
+  scheme``://``host-name-or -IP-address``:``port
+
+  * scheme is the URI scheme, which is `tcp`.
+  * host-name-or -IP-address is the host name or IP address of the host
+  on which the instance is running.
+  * port is the port number of the port on which the instance will
+  listen for messages from GMS.
+cluster-name::
+  The name of the cluster that you are creating.
++
+[NOTE]
+====
+For complete instructions for creating a cluster, see link:#gkqdm[To Create a Cluster].
+====
+
+5. When you add each instance to the cluster, set the system property
+``GMS_LISTENER_PORT-``clustername for the instance.
+* To create the instance centrally, run the following command:
++
+[source]
+----
+asadmin> create-instance --node node-name
+--systemproperties GMS_LISTENER_PORT-cluster-name=gms-port --cluster  cluster-name instance-name
+----
+* To create the instance locally, run the following command:
++
+[source]
+----
+asadmin> create-local-instance
+--systemproperties GMS_LISTENER_PORT-cluster-name=gms-port --cluster  cluster-name instance-name
+----
+node-name::
+  The name of an existing {productName} node on which the instance is
+  to reside. For more information about nodes, see
+  link:nodes.html#gkrle[Administering {productName} Nodes].
+cluster-name::
+  The name of the cluster to which the you are adding the instance.
+gms-port::
+  The port number of the port on which the instance listens for messages
+  from GMS.
+instance-name::
+  The name of the instance that you are creating.
++
+[NOTE]
+====
+For full instructions for adding an instance to a cluster, see the
+following sections:
+
+* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:instances.html#gkqbl[To Create an Instance Locally]
+====
+
+
+[[GSHAG487]][[sthref19]]
+Example 4-3 Discovering a Cluster When Multiple Instances are Running on a Host
+
+This example creates a cluster that is named `tcpcluster` for which GMS
+is not using multicast for broadcasting messages.
+
+The cluster contains the instances `instance101` and `instance102`.
+These instances reside on the host whose IP address is `10.152.23.224`
+and listen for GMS events on ports 9091 and 9092. The DAS is also
+running on this host and listens for GMS events on port 9090.
+
+Instances that are joining the cluster will use the DAS and the
+instances `instance101` and `instance102` to discover the cluster.
+
+[source]
+----
+asadmin> create-system-properties GMS_LISTENER_PORT-tcpcluster=9090
+Command create-system-properties executed successfully.
+asadmin> restart-domain
+Successfully restarted the domain
+Command restart-domain executed successfully.
+asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=
+tcp'\\:'//10.152.23.224'\\:'9090,
+tcp'\\:'//10.152.23.224'\\:'9091,
+tcp'\\:'//10.152.23.224'\\:'9092 tcpcluster
+Command create-cluster executed successfully.
+asadmin> create-local-instance
+--systemproperties GMS_LISTENER_PORT-tcpcluster=9091 --cluster tcpcluster
+instance101
+Rendezvoused with DAS on localhost:4848.
+Port Assignments for server instance instance101:
+JMX_SYSTEM_CONNECTOR_PORT=28686
+JMS_PROVIDER_PORT=27676
+HTTP_LISTENER_PORT=28080
+ASADMIN_LISTENER_PORT=24848
+JAVA_DEBUGGER_PORT=29009
+IIOP_SSL_LISTENER_PORT=23820
+IIOP_LISTENER_PORT=23700
+OSGI_SHELL_TELNET_PORT=26666
+HTTP_SSL_LISTENER_PORT=28181
+IIOP_SSL_MUTUALAUTH_PORT=23920
+Command create-local-instance executed successfully.
+asadmin> create-local-instance
+--systemproperties GMS_LISTENER_PORT-tcpcluster=9092 --cluster tcpcluster
+instance102
+Rendezvoused with DAS on localhost:4848.
+Using DAS host localhost and port 4848 from existing das.properties for node
+localhost-domain1. To use a different DAS, create a new node using
+create-node-ssh or create-node-config. Create the instance with the new node and
+correct host and port:
+asadmin --host das_host --port das_port create-local-instance --node node_name
+instance_name.
+Port Assignments for server instance instance102:
+JMX_SYSTEM_CONNECTOR_PORT=28687
+JMS_PROVIDER_PORT=27677
+HTTP_LISTENER_PORT=28081
+ASADMIN_LISTENER_PORT=24849
+JAVA_DEBUGGER_PORT=29010
+IIOP_SSL_LISTENER_PORT=23821
+IIOP_LISTENER_PORT=23701
+OSGI_SHELL_TELNET_PORT=26667
+HTTP_SSL_LISTENER_PORT=28182
+IIOP_SSL_MUTUALAUTH_PORT=23921
+Command create-local-instance executed successfully.
+----
+
+[[GSHAG488]]
+
+See Also
+
+* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
+* link:#gkqdm[To Create a Cluster]
+* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:instances.html#gkqbl[To Create an Instance Locally]
+
+[[CHDIGFCG]][[GSHAG489]][[to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host]]
+
+===== To Discover a Cluster When Each Instance in a Cluster Is Running on a Different Host
+
+If all instances in a cluster and the DAS are running on different
+hosts, you can specify the locations of instances to use for discovering
+the cluster as follows:
+
+* By specifying a list of host names or Internet Protocol (IP)
+addresses. Each host name or IP address must locate a host on which the
+DAS or a {productName} instance in the cluster is running. Instances
+that are joining the cluster will use the DAS or the instances to
+discover the cluster.
+* By generating the list of locations automatically. The generated list
+contains the locations of the DAS and all instances in the cluster.
+
+Multiple instances on the same host cannot be members of the same
+cluster.
+
+1. Ensure that the DAS is running.
++
+Remote subcommands require a running server.
+2. When creating the cluster, set the properties of the cluster as
+follows:
+* Set the `GMS_DISCOVERY_URI_LIST` property to one of the following
+values:
+
+** A comma-separated list of IP addresses or host names on which the DAS
+or the instances to use for discovering the cluster are running.
++
+The list can contain a mixture of IP addresses and host names.
+
+** The keyword `generate`.
+* Set the `GMS_LISTENER_PORT` property to a port number that is unique
+for the cluster in the domain.
++
+If you are specifying a list of IP addresses or host names, type the
+following command:
++
+[source]
+----
+asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=host-list:
+GMS_LISTENER_PORT=gms-port cluster-name
+----
+If you are specifying the keyword `generate`, type the following
+command:
++
+[source]
+----
+asadmin> create-cluster --properties GMS_DISCOVERY_URI_LIST=generate:
+GMS_LISTENER_PORT=gms-port cluster-name
+----
+host-list::
+  A comma-separated list of IP addresses or host names on which the DAS
+  or the instances to use for discovering the cluster are running.
+gms-port::
+  The port number of the port on which the cluster listens for messages
+  from GMS.
+cluster-name::
+  The name of the cluster that you are creating.
++
+
+[NOTE]
+====
+For complete instructions for creating a cluster, see link:#gkqdm[To Create a Cluster].
+====
+
+
+[[GSHAG490]][[sthref20]]
+Example 4-4 Discovering a Cluster by Specifying a List of IP Addresses
+
+This example creates a cluster that is named `ipcluster` for which GMS
+is not using multicast for broadcasting messages. The instances to use
+for discovering the cluster are located through a list of IP addresses.
+In this example, one instance in the cluster is running on each host and
+the DAS is running on a separate host. The cluster listens for messages
+from GMS on port 9090.
+
+[source]
+----
+asadmin> create-cluster --properties 'GMS_DISCOVERY_URI_LIST=
+10.152.23.225,10.152.23.226,10.152.23.227,10.152.23.228:
+GMS_LISTENER_PORT=9090' ipcluster
+Command create-cluster executed successfully.
+----
+
+[[GSHAG491]][[sthref21]]
+Example 4-5 Discovering a Cluster by Generating a List of Locations of
+Instances
+
+This example creates a cluster that is named `gencluster` for which GMS
+is not using multicast for broadcasting messages. The list of locations
+of instances to use for discovering the cluster is generated
+automatically. In this example, one instance in the cluster is running
+on each host and the DAS is running on a separate host. The cluster
+listens for messages from GMS on port 9090.
+
+[source]
+----
+asadmin> create-cluster --properties 'GMS_DISCOVERY_URI_LIST=generate:
+GMS_LISTENER_PORT=9090' gencluster
+Command create-cluster executed successfully.
+----
+
+[[GSHAG492]]
+
+Next Steps
+
+After creating the cluster, add instances to the cluster as explained in
+the following sections:
+
+* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:instances.html#gkqbl[To Create an Instance Locally]
+
+[[GSHAG493]]
+
+See Also
+
+* link:#gkqdm[To Create a Cluster]
+* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:instances.html#gkqbl[To Create an Instance Locally]
+
+[[gjdlw]][[GSHAG00266]][[using-the-multi-homing-feature-with-gms]]
+
+==== Using the Multi-Homing Feature With GMS
+
+Multi-homing enables {productName} clusters to be used in an
+environment that uses multiple Network Interface Cards (NICs). A
+multi-homed host has multiple network connections, of which the
+connections may or may not be the on same network. Multi-homing provides
+the following benefits:
+
+* Provides redundant network connections within the same subnet. Having
+multiple NICs ensures that one or more network connections are available
+for communication.
+* Supports communication across two or more different subnets. The DAS
+and all server instances in the same cluster must be on the same subnet
+for GMS communication, however.
+* Binds to a specific IPv4 address and receives GMS messages in a system
+that has multiple IP addresses configured. The responses for GMS
+messages received on a particular interface will also go out through
+that interface.
+* Supports separation of external and internal traffic.
+
+[[gjdoo]][[GSHAG00224]][[traffic-separation-using-multi-homing]]
+
+===== Traffic Separation Using Multi-Homing
+
+You can separate the internal traffic resulting from GMS from the
+external traffic. Traffic separation enables you plan a network better
+and augment certain parts of the network, as required.
+
+Consider a simple cluster, `c1`, with three instances, `i101`, `i102`,
+and `i103`. Each instance runs on a different machine. In order to
+separate the traffic, the multi-homed machine should have at least two
+IP addresses belonging to different networks. The first IP as the
+external IP and the second one as internal IP. The objective is to
+expose the external IP to user requests, so that all the traffic from
+the user requests would be through them. The internal IP is used only by
+the cluster instances for internal communication through GMS. The
+following procedure describes how to set up traffic separation.
+
+To configure multi-homed machines for GMS without traffic separation,
+skip the steps or commands that configure the `EXTERNAL-ADDR` system
+property, but perform the others.
+
+To avoid having to restart the DAS or cluster, perform the following
+steps in the specified order.
+
+To set up traffic separation, follow these steps:
+
+1. Create the system properties `EXTERNAL-ADDR` and
+`GMS-BIND-INTERFACE-ADDRESS-c1` for the DAS.
+* `asadmin create-system-properties` `target`
+`server EXTERNAL-ADDR=192.155.35.4`
+* `asadmin create-system-properties` `target`
+`server GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.20`
+2. Create the cluster with the default settings.
++
+Use the following command:
++
+[source]
+----
+asadmin create-cluster c1
+----
+A reference to a system property for GMS traffic is already set up by
+default in the `gms-bind-interface-address` cluster setting. The default
+value of this setting is ``${GMS-BIND-INTERFACE-ADDRESS-``cluster-name``}``.
+3. When creating the clustered instances, configure the external and
+GMS IP addresses.
++
+Use the following commands:
+* `asadmin create-instance` `node` `localhost` `cluster` `c1`
+`systemproperties`
+`EXTERNAL-ADDR=192.155.35.5:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.30 i101`
+* `asadmin create-instance` `node` `localhost` `cluster` `c1`
+`systemproperties`
+`EXTERNAL-ADDR=192.155.35.6:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.40 i102`
+* `asadmin create-instance` `node` `localhost` `cluster` `c1`
+`systemproperties`
+`EXTERNAL-ADDR=192.155.35.7:GMS-BIND-INTERFACE-ADDRESS-c1=10.12.152.50 i103`
+4. Set the address attribute of HTTP listeners to refer to the
+`EXTERNAL-ADDR` system properties.
++
+Use the following commands:
++
+[source]
+----
+asadmin set c1-config.network-config.network-listeners.network-listener.http-1.address=\${EXTERNAL-ADDR}
+asadmin set c1-config.network-config.network-listeners.network-listener.http-2.address=\${EXTERNAL-ADDR}
+----
+
+[[gkqdy]][[GSHAG00185]][[creating-listing-and-deleting-clusters]]
+
+=== Creating, Listing, and Deleting Clusters
+
+{productName} enables you to create clusters, obtain information
+about clusters, and delete clusters that are no longer required.
+
+The following topics are addressed here:
+
+* link:#gkqdm[To Create a Cluster]
+* link:#gkqdn[To List All Clusters in a Domain]
+* link:#gkqcp[To Delete a Cluster]
+
+[[gkqdm]][[GSHAG00103]][[to-create-a-cluster]]
+
+==== To Create a Cluster
+
+Use the `create-cluster` subcommand in remote mode to create a cluster.
+
+To ensure that the GMS can detect changes in cluster membership, a
+cluster's GMS settings must be configured correctly. To avoid the need
+to restart the DAS and the cluster, configure a cluster's GMS settings
+when you create the cluster. If you change GMS settings for an existing
+cluster, the DAS and the cluster must be restarted to apply the changes.
+
+When you create a cluster, {productName} automatically creates a
+Message Queue cluster for the {productName} cluster. For more
+information about Message Queue clusters, see link:jms.html#abdbx[Using
+Message Queue Broker Clusters With {productName}].
+
+[[GSHAG374]]
+
+Before You Begin
+
+If the cluster is to reference an existing named configuration, ensure
+that the configuration exists. For more information, see
+link:named-configurations.html#abdjr[To Create a Named Configuration]. If
+you are using a named configuration to preconfigure GMS settings, ensure
+that these settings have the required values in the named configuration.
+For more information, see link:#gkoac[To Preconfigure Nondefault GMS
+Configuration Settings].
+
+If you are configuring the cluster's GMS settings when you create the
+cluster, ensure that you have the following information:
+
+* The address on which GMS listens for group events
+* The port number of the communication port on which GMS listens for
+group events
+* The maximum number of iterations or transmissions that a multicast
+message for GMS events can experience before the message is discarded
+* The lowest port number in the range of ports from which GMS selects a
+TCP port on which to listen
+* The highest port number in the range of ports from which GMS selects a
+TCP port on which to listen
+
+If the DAS is running on a multihome host, ensure that you have the
+Internet Protocol (IP) address of the network interface on the DAS host
+to which GMS binds.
+
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. [[gkrco]]
+Run the `create-cluster` subcommand.
++
+[NOTE]
+====
+Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+cluster, see the link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)] help page.
+====
+* If multicast transport is available, run the `create-cluster`
+subcommand as follows:
++
+[source]
+----
+asadmin> create-cluster --config configuration
+--multicastaddress multicast-address --multicastport multicast-port
+--properties GMS_MULTICAST_TIME_TO_LIVE=max-iterations:
+GMS_TCPSTARTPORT=start-port:GMS_TCPENDPORT=end-port cluster-name
+----
+* If multicast transport is not available, run the `create-cluster`
+subcommand as follows:
++
+[source]
+----
+asadmin> create-cluster --config configuration
+--properties GMS_DISCOVERY_URI_LIST=discovery-instances:
+GMS_LISTENER_PORT=gms-port
+cluster-name
+----
+
+configuration::
+  An existing named configuration that the cluster is to reference.
+multicast-address::
+  The address on which GMS listens for group events.
+multicast-port::
+  The port number of the communication port on which GMS listens for
+  group events.
+max-iterations::
+  The maximum number of iterations or transmissions that a multicast
+  message for GMS events can experience before the message is discarded.
+discovery-instances::
+  Instances to use for discovering the cluster. For more information,
+  see link:#CHDGAIBJ[Discovering a Cluster When Multicast Transport Is
+  Unavailable].
+gms-port::
+  The port number of the port on which the cluster listens for messages
+  from GMS.
+start-port::
+  The lowest port number in the range of ports from which GMS selects a
+  TCP port on which to listen. The default is 9090.
+end-port::
+  The highest port number in the range of ports from which GMS selects a
+  TCP port on which to listen. The default is 9200.
+cluster-name::
+  Your choice of name for the cluster that you are creating.
+3. If necessary, create a system property to represent the IP address
+of the network interface on the DAS host to which GMS binds.
++
+This step is necessary only if the DAS is running on a multihome host.
++
+[source]
+----
+asadmin> create-system-properties
+GMS-BIND-INTERFACE-ADDRESS-cluster-name=das-bind-address
+----
+cluster-name::
+  The name that you assigned to the cluster in Step link:#gkrco[2].
+das-bind-address::
+  The IP address of the network interface on the DAS host to which GMS
+  binds.
+
+[[GSHAG00034]][[gkqaz]]
+Example 4-6 Creating a Cluster for a Network in Which Multicast
+Transport Is Available
+
+This example creates a cluster that is named `ltscluster` for which port
+1169 is to be used for secure IIOP connections. Because the `--config`
+option is not specified, the cluster references a copy of the named
+configuration `default-config` that is named `ltscluster-config`. This
+example assumes that multicast transport is available.
+
+[source]
+----
+asadmin> create-cluster
+--systemproperties IIOP_SSL_LISTENER_PORT=1169
+ltscluster
+Command create-cluster executed successfully.
+----
+
+[[GSHAG00035]][[gkqiq]]
+Example 4-7 Creating a Cluster and Setting GMS Options for a Network in
+Which Multicast Transport Is Available
+
+This example creates a cluster that is named `pmdcluster`, which
+references the existing configuration `clusterpresets` and for which the
+cluster's GMS settings are configured as follows:
+
+* GMS listens for group events on address 228.9.3.1 and port 2048.
+* A multicast message for GMS events is discarded after 3 iterations or
+transmissions.
+* GMS selects a TCP port on which to listen from ports in the range
+10000-10100.
+
+This example assumes that multicast transport is available.
+
+[source]
+----
+asadmin> create-cluster --config clusterpresets
+--multicastaddress 228.9.3.1 --multicastport 2048
+--properties GMS_MULTICAST_TIME_TO_LIVE=3:
+GMS_TCPSTARTPORT=10000:GMS_TCPENDPORT=10100 pmdcluster
+Command create-cluster executed successfully.
+----
+
+[[GSHAG375]]
+
+Next Steps
+
+After creating a cluster, you can add {productName} instances to the
+cluster as explained in the following sections:
+
+* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:instances.html#gkqbl[To Create an Instance Locally]
+
+[[GSHAG376]]
+
+See Also
+
+* link:named-configurations.html#abdjr[To Create a Named Configuration]
+* link:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
+* link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}]
+* link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)]
+* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
+
+You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:
+
+* `asadmin help create-cluster`
+* `asadmin help create-system-properties`
+
+[[gkqdn]][[GSHAG00104]][[to-list-all-clusters-in-a-domain]]
+
+==== To List All Clusters in a Domain
+
+Use the `list-clusters` subcommand in remote mode to obtain information
+about existing clusters in a domain.
+
+1. Ensure that the DAS is running.
++
+Remote subcommands require a running server.
+2. Run the link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`] subcommand.
++
+[source]
+----
+asadmin> list-clusters
+----
+
+[[GSHAG00036]][[gksfc]]
+Example 4-8 Listing All Clusters in a Domain
+
+This example lists all clusters in the current domain.
+
+[source]
+----
+asadmin> list-clusters
+pmdclust not running
+ymlclust not running
+Command list-clusters executed successfully.
+----
+
+[[GSHAG00037]][[gkhsp]]
+Example 4-9 Listing All Clusters That Are Associated With a Node
+
+This example lists the clusters that contain an instance that resides on
+the node `sj01`.
+
+[source]
+----
+asadmin> list-clusters sj01
+ymlclust not running
+Command list-clusters executed successfully.
+----
+
+[[GSHAG377]]
+
+See Also
+
+link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+
+You can also view the full syntax and options of the subcommand by
+typing `asadmin help list-clusters` at the command line.
+
+[[gkqcp]][[GSHAG00105]][[to-delete-a-cluster]]
+
+==== To Delete a Cluster
+
+Use the `delete-cluster` subcommand in remote mode to remove a cluster
+from the DAS configuration.
+
+If the cluster's named configuration was created automatically for the
+cluster and no other clusters or unclustered instances refer to the
+configuration, the configuration is deleted when the cluster is deleted.
+
+[[GSHAG378]]
+
+Before You Begin
+
+Ensure that following prerequisites are met:
+
+* The cluster that you are deleting is stopped. For information about
+how to stop a cluster, see link:instances.html#gkqcl[To Stop a Cluster].
+* The cluster that you are deleting contains no {productName}
+instances. For information about how to remove instances from a cluster,
+see the following sections:
+
+** link:instances.html#gkqcw[To Delete an Instance Centrally]
+
+** link:instances.html#gkqed[To Delete an Instance Locally]
+
+1. Ensure that the DAS is running.
++
+Remote subcommands require a running server.
+2. Confirm that the cluster is stopped.
++
+[source]
+----
+asadmin> list-clusters cluster-name
+----
+cluster-name::
+  The name of the cluster that you are deleting.
+3. Confirm that the cluster contains no instances.
++
+[source]
+----
+asadmin> list-instances cluster-name
+----
+cluster-name::
+  The name of the cluster that you are deleting.
+4. Run the link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`] subcommand.
++
+[source]
+----
+asadmin> delete-cluster cluster-name
+----
+cluster-name::
+  The name of the cluster that you are deleting.
+
+[[GSHAG00038]][[gkqkr]]
+Example 4-10 Deleting a Cluster
+
+This example confirms that the cluster `adccluster` is stopped and
+contains no instances and deletes the cluster `adccluster`.
+
+[source]
+----
+asadmin> list-clusters adccluster
+adccluster not running
+Command list-clusters executed successfully.
+asadmin> list-instances adccluster
+Nothing to list.
+Command list-instances executed successfully.
+asadmin> delete-cluster adccluster
+Command delete-cluster executed successfully.
+----
+
+[[GSHAG379]]
+
+See Also
+
+* link:instances.html#gkqcl[To Stop a Cluster]
+* link:instances.html#gkqcw[To Delete an Instance Centrally]
+* link:instances.html#gkqed[To Delete an Instance Locally]
+* link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`(1)]
+* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+
+You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:
+
+* `asadmin help delete-cluster`
+* `asadmin help list-clusters`
+* `asadmin help list-instances`

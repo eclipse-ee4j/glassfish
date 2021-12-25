@@ -1,0 +1,128 @@
+type=page
+status=published
+title=create-jdbc-resource
+next=create-jmsdest.html
+prev=create-jdbc-connection-pool.html
+~~~~~~
+
+= create-jdbc-resource
+
+[[create-jdbc-resource-1]][[GSRFM00037]][[create-jdbc-resource]]
+
+== create-jdbc-resource
+
+Creates a JDBC resource with the specified JNDI name
+
+[[sthref328]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] create-jdbc-resource [--help]
+--connectionpoolid connectionpoolid
+[--enabled={false|true}]
+[--description description]
+[--property (property=value)[:name=value]*]
+[--target target]
+jndi_name
+----
+
+[[sthref329]]
+
+=== Description
+
+The `create-jdbc-resource` subcommand creates a new JDBC resource.
+
+This subcommand is supported in remote mode only.
+
+[[sthref330]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--connectionpoolid`::
+  The name of the JDBC connection pool. If two or more JDBC resource
+  elements point to the same connection pool element, they use the same
+  pool connection at runtime.
+`--enabled`::
+  Determines whether the JDBC resource is enabled at runtime. The
+  default value is true.
+`--description`::
+  Text providing descriptive details about the JDBC resource.
+`--property`::
+  Optional attribute name/value pairs for configuring the resource.
+`--target`::
+  This option helps specify the target to which you are deploying. Valid
+  values are:
+
+  `server`;;
+    Deploys the component to the default server instance. This is the
+    default value.
+  `domain`;;
+    Deploys the component to the domain.
+  cluster_name;;
+    Deploys the component to every server instance in the cluster.
+  instance_name;;
+    Deploys the component to a particular server instance.
+
+[NOTE]
+====
+The resource is always created for the domain as a whole, but the
+`resource-ref` for the resource is only created for the specified
+`--target`. This means that although the resource is defined at the
+domain level, it is only available at the specified target level. Use
+the `create-resource-ref` subcommand to refer to the resource in
+multiple targets if needed.
+====
+
+
+[[sthref331]]
+
+=== Operands
+
+jndi_name::
+  The JNDI name of this JDBC resource.
+
+[[sthref332]]
+
+=== Examples
+
+[[GSRFM494]][[sthref333]]
+
+==== Example 1   Creating a JDBC Resource
+
+This example creates a JDBC resource named `jdbc/DerbyPool`.
+
+[source]
+----
+asadmin> create-jdbc-resource
+--connectionpoolid sample_derby_pool jdbc/DerbyPool
+Command create-jdbc-resource executed successfully.
+----
+
+[[sthref334]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref335]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
+link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)],
+link:list-jdbc-resources.html#list-jdbc-resources-1[`list-jdbc-resources`(1)]
+
+

@@ -24,7 +24,6 @@
         <artifactId>docs</artifactId>
         <version>7.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.glassfish.docs</groupId>
     <artifactId>publish</artifactId>
     <packaging>jar</packaging>
     <name>Publish the Eclipse GlassFish Website</name>
@@ -43,7 +42,7 @@
         <!-- add a new property for each new release -->
         <dir.510>${site.output.dir}/docs/5.1.0</dir.510>
         <!-- the "latest" version; update when a new release is done -->
-        <docs.version>5.1.0</docs.version>
+        <docs.version>7.0.0</docs.version>
     </properties>
 
     <!--
@@ -192,6 +191,9 @@
                                     <scmBranch>gh-pages</scmBranch>
                                     <skipDeletedFiles>false</skipDeletedFiles>
                                     <checkinComment>Update docs</checkinComment>
+                                    <ignorePathsToDelete>
+                                        <ignorePathsToDelete>latest</ignorePathsToDelete>
+                                    </ignorePathsToDelete>
                                 </configuration>
                             </execution>
                         </executions>

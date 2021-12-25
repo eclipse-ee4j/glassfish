@@ -1,0 +1,110 @@
+type=page
+status=published
+title=backup-domain
+next=change-admin-password.html
+prev=attach.html
+~~~~~~
+
+= backup-domain
+
+[[backup-domain-1]][[GSRFM00003]][[backup-domain]]
+
+== backup-domain
+
+Performs a backup on the domain
+
+[[sthref39]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] backup-domain [--help]
+[--long[={false|true}]]
+[--description description-text]
+[--domaindir domain-root-dir]
+[--backupdir backup-directory]
+[--backupconfig backup-config-name]
+[domain_name]
+----
+
+[[sthref40]]
+
+=== Description
+
+The `backup-domain` subcommand backs up files under the named domain.
+
+This subcommand is supported in local mode only in {productName}, and is supported in local mode and remote mode in {productName}.
+
+In {productName}, the domain to be backed up must
+be stopped.
+
+In {productName}, the domain to be backed up must be stopped
+or be suspended using the `suspend-domain`(1) subcommand.
+
+[[sthref41]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--long`::
+`-l`::
+  Displays detailed information about the backup operation.
++
+  The default value is `false`.
+`--description`::
+  Specifies a description to store in the backup file. The description
+  is displayed as part of the information about a backup file. +
+  The default value has this form:
++
+[source]
+----
+domain-name backup created on YYYY_MM_DD by user user-name
+----
+`--domaindir`::
+  Specifies the domain root directory, the parent directory of the
+  domain to back up. +
+  The default value is as-install``/domains``.
+`--backupdir`::
+  Specifies the directory under which the backup file is to be stored. +
+  The default value is as-install``/domains/``domain-dir``/backups``.
+  If the domain is not in the default location, the location is
+  domain-dir``/backups``.
+`--backupconfig`::
+  (Supported only in {productName}.) The name of the domain
+  backup configuration in the backup directory under which the backup
+  file is to be stored.
+
+[[sthref42]]
+
+=== Operands
+
+domain-name::
+  Specifies the name of the domain to be backed up. +
+  This operand is optional if only one domain exists in the {productName} installation.
+
+[[sthref43]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref44]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-backups.html#list-backups-1[`list-backups`(1)],
+link:restore-domain.html#restore-domain-1[`restore-domain`(1)],
+`resume-domain`(1), `suspend-domain`(1)
+
+

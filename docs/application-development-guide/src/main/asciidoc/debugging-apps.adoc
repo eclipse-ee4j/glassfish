@@ -1,0 +1,439 @@
+type=page
+status=published
+title=Debugging Applications
+next=part-apps-and-app-comps.html
+prev=class-loaders.html
+~~~~~~
+
+= Debugging Applications
+
+[[GSDVG00004]][[beafc]]
+
+
+[[debugging-applications]]
+== 3 Debugging Applications
+
+This chapter gives guidelines for debugging applications in the {productName}.
+
+The following topics are addressed here:
+
+* link:#beafd[Enabling Debugging]
+* link:#beafe[JPDA Options]
+* link:#beaff[Generating a Stack Trace for Debugging]
+* link:#gekvq[Application Client Debugging]
+* link:#beafk[Open Message Queue Debugging]
+* link:#beafl[Enabling Verbose Mode]
+* link:#gkpdk[Class Loader Debugging]
+* link:#beafm[{productName} Logging]
+* link:#beafn[Profiling Tools]
+
+[[beafd]][[GSDVG00101]][[enabling-debugging]]
+
+=== Enabling Debugging
+
+When you enable debugging, you enable both local and remote debugging.
+To start the server in debug mode, use the `--debug` option as follows:
+
+[source]
+----
+asadmin start-domain --debug [domain-name]
+----
+
+You can then attach to the server from the Java Debugger (`jdb`) at its
+default Java Platform Debugger Architecture (JPDA) port, which is 9009.
+For example, for UNIX systems:
+
+[source]
+----
+jdb -attach 9009
+----
+
+For Windows:
+
+[source]
+----
+jdb -connect com.sun.jdi.SocketAttach:port=9009
+----
+
+For more information about the `jdb` debugger, see the following links:
+
+* Java Platform Debugger Architecture - The Java Debugger:
+`http://java.sun.com/javase/technologies/core/toolsapis/jpda/`
+* Java Platform Debugger Architecture - Connecting with JDB:
+`http://java.sun.com/javase/technologies/core/toolsapis/jpda/`
+
+{productName} debugging is based on the JPDA. For more information,
+see link:#beafe[JPDA Options].
+
+You can attach to the {productName} using any JPDA compliant
+debugger, including that of http://www.netbeans.org[NetBeans]
+(`http://www.netbeans.org`), Java Studio Enterprise, JBuilder, Eclipse,
+and so on.
+
+You can enable debugging even when the {productName} is started
+without the `--debug` option. This is useful if you start the {productName} from the Windows Start Menu, or if you want to make sure that
+debugging is always turned on.
+
+[[fvyit]][[GSDVG00049]][[to-set-the-server-to-automatically-start-up-in-debug-mode]]
+
+==== To Set the Server to Automatically Start Up in Debug Mode
+
+1. Use the Administration Console. Select the JVM Settings component
+under the relevant configuration.
+2. Check the Debug Enabled box.
+3. To specify a different port (from 9009, the default) to use when
+attaching the JVM software to a debugger, specify ``address=``port-number
+in the Debug Options field.
+4. To add JPDA options, add any desired JPDA debugging options in Debug
+Options. See link:#beafe[JPDA Options].
+
+[[GSDVG532]]
+
+See Also
+
+For details, click the Help button in the Administration Console from
+the JVM Settings page.
+
+[[beafe]][[GSDVG00102]][[jpda-options]]
+
+=== JPDA Options
+
+The default JPDA options in {productName} are as follows:
+
+[source]
+----
+-Xdebug -agentlib:transport=dt_socket,server=y,suspend=n,address=9009
+----
+
+For Windows, you can change `dt_socket` to `dt_shmem`.
+
+If you substitute `suspend=y`, the JVM software starts in suspended mode
+and stays suspended until a debugger attaches to it. This is helpful if
+you want to start debugging as soon as the JVM software starts.
+
+To specify a different port (from 9009, the default) to use when
+attaching the JVM software to a debugger, specify `address=`port-number.
+
+You can include additional options. A list of JPDA debugging options is
+available at
+`http://java.sun.com/javase/technologies/core/toolsapis/jpda/`.
+
+[[beaff]][[GSDVG00103]][[generating-a-stack-trace-for-debugging]]
+
+=== Generating a Stack Trace for Debugging
+
+To generate a Java stack trace for debugging, use the
+`asadmin generate-jvm-report --type=thread` command. The stack trace
+goes to the domain-dir`/logs/server.log` file and also appears on the
+command prompt screen. For more information about the
+`asadmin generate-jvm-report` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[gekvq]][[GSDVG00104]][[application-client-debugging]]
+
+=== Application Client Debugging
+
+When the `appclient` script executes the `java` command to run the
+Application Client Container (ACC), which in turn runs the client, it
+includes on the command line the value of the `VMARGS` environment
+variable. You can set this variable to any suitable value. For example:
+
+[source]
+----
+VMARGS=-agentlib:transport=dt_socket,server=y,suspend=y,address=8118
+----
+
+For debugging an application client, you should set suspend to `y` so
+you can connect the debugger to the client before any code has actually
+executed. Otherwise, the client may start running and execute past the
+point you want to examine.
+
+You should use different ports for the server and client if you are
+debugging both concurrently. For details about setting the port, see
+link:#beafe[JPDA Options].
+
+You can also include JVM options in the `appclient` script directly. For
+information about the `appclient` script, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+
+[NOTE]
+====
+The Application Client Container is supported only in the full {productName}, not in the Web Profile. See
+link:java-clients.html#beakt[Developing Java Clients].
+====
+
+
+[[beafk]][[GSDVG00105]][[open-message-queue-debugging]]
+
+=== Open Message Queue Debugging
+
+Open Message Queue has a broker logger, which can be useful for
+debugging Java Message Service (JMS) applications, including
+message-driven bean applications. You can adjust the logger's verbosity,
+and you can send the logger output to the broker's console using the
+broker's `-tty` option. For more information, see the link:../openmq/mq-admin-guide.html#GMADG[Open
+Message Queue Administration Guide].
+
+
+[NOTE]
+====
+JMS resources are supported only in the full {productName}, not in
+the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
+====
+
+
+[[beafl]][[GSDVG00106]][[enabling-verbose-mode]]
+
+=== Enabling Verbose Mode
+
+To have the server logs and messages printed to `System.out` on your
+command prompt screen, you can start the server in verbose mode. This
+makes it easy to do simple debugging using print statements, without
+having to view the `server.log` file every time.
+
+To start the server in verbose mode, use the `--verbose` option as
+follows:
+
+[source]
+----
+asadmin start-domain --verbose [domain-name]
+----
+
+When the server is in verbose mode, messages are logged to the console
+or terminal window in addition to the log file. In addition, pressing
+Ctrl-C stops the server and pressing Ctrl-\ (on UNIX platforms) or
+Ctrl-Break (on Windows platforms) prints a thread dump. On UNIX
+platforms, you can also print a thread dump using the `jstack` command
+(see
+`http://docs.oracle.com/javase/8/docs/technotes/tools/share/jstack.html`)
+or the command `kill -QUIT` process_id.
+
+[[gkpdk]][[GSDVG00107]][[class-loader-debugging]]
+
+=== Class Loader Debugging
+
+To generate class loading messages, use the following
+`asadmin create-jvm-options` command:
+
+[source]
+----
+asadmin create-jvm-options -verbose\:class
+----
+
+To send the JVM messages to a special JVM log file instead of `stdout`,
+use the following `asadmin create-jvm-options` commands:
+
+[source]
+----
+asadmin create-jvm-options -XX\:+LogVMOutput
+asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
+----
+
+
+[NOTE]
+====
+These `-XX` options are specific to the OpenJDK (or Hotspot) JVM and do
+not work with the JRockit JVM.
+====
+
+
+To send the {productName} messages to the Administration Console
+instead of `stderr`, start the domain in verbose mode as described in
+link:#beafl[Enabling Verbose Mode].
+
+[[beafm]][[GSDVG00108]][[glassfish-server-logging]]
+
+=== {productName} Logging
+
+You can use the {productName}'s log files to help debug your
+applications. Use the Administration Console. Select the Stand-Alone
+Instances component, select the instance from the table, then click the
+View Log Files button in the General Information page. Or select the
+Cluster component, select the cluster from the table, select the
+Instances tab, select the instance from the table, then click the View
+Log Files button in the General Information page.
+
+To change logging settings, select Logger Settings under the relevant configuration.
+
+For details about logging, click the Help button in the Administration Console.
+
+[[beafn]][[GSDVG00109]][[profiling-tools]]
+
+=== Profiling Tools
+
+You can use a profiler to perform remote profiling on the {productName} to discover bottlenecks in server-side performance. This section
+describes how to configure profilers for use with {productName}.
+
+The following topics are addressed here:
+
+* link:#gcicc[The NetBeans Profiler]
+* link:#beafo[The HPROF Profiler]
+* link:#beafr[The JProbe Profiler]
+
+Information about comprehensive monitoring and management support in the
+Java 2 Platform, Standard Edition ( J2SE platform) is available at
+`http://docs.oracle.com/javase/8/docs/technotes/guides/management/index.html`.
+
+[[gcicc]][[GSDVG00345]][[the-netbeans-profiler]]
+
+==== The NetBeans Profiler
+
+For information on how to use the NetBeans profiler, see
+`http://profiler.netbeans.org/index.html`.
+
+[[beafo]][[GSDVG00346]][[the-hprof-profiler]]
+
+==== The HPROF Profiler
+
+The Heap and CPU Profiling Agent (HPROF) is a simple profiler agent
+shipped with the Java 2 SDK. It is a dynamically linked library that
+interacts with the Java Virtual Machine Profiler Interface (JVMPI) and
+writes out profiling information either to a file or to a socket in
+ASCII or binary format.
+
+HPROF can monitor CPU usage, heap allocation statistics, and contention
+profiles. In addition, it can also report complete heap dumps and states
+of all the monitors and threads in the Java virtual machine. For more
+details on the HPROF profiler, see the technical article at
+`http://java.sun.com/developer/technicalArticles/Programming/HPROF.html`.
+
+After HPROF is enabled using the following instructions, its libraries
+are loaded into the server process.
+
+[[fvylg]][[GSDVG00050]][[to-use-hprof-profiling-on-unix]]
+
+===== To Use HPROF Profiling on UNIX
+
+1. Use the Administration Console. Select the JVM Settings component
+under the relevant configuration. Then select the Profiler tab.
+2. Edit the following fields:
+* Profiler Name - `hprof`
+* Profiler Enabled - `true`
+* Classpath - (leave blank)
+* Native Library Path - (leave blank)
+* JVM Option - Select Add, type the HPROF JVM option in the Value field,
+then check its box. The syntax of the HPROF JVM option is as follows:
++
+[source]
+----
+-Xrunhprof[:help]|[:param=value,param2=value2, ...]
+----
+Here is an example of params you can use:
++
+[source]
+----
+-Xrunhprof:file=log.txt,thread=y,depth=3
+----
+The file parameter determines where the stack dump is written.
++
+Using help lists parameters that can be passed to HPROF. The output is
+as follows:
++
+[source]
+----
+Hprof usage: -Xrunhprof[:help]|[:<option>=<value>, ...]
+
+== Option Name and Value   Description             Default   -----------             -------
+heap=dump|sites|all     heap profiling          all
+cpu=samples|old         CPU usage               off
+format=a|b              ascii or binary output  a
+file=<file>             write data to file      java.hprof
+                               (.txt for ascii)
+net=<host>:<port>       send data over a socket write to file
+depth=<size>            stack trace depth       4
+cutoff=<value>          output cutoff point     0.0001
+lineno=y|n              line number in traces?  y
+thread=y|n              thread in traces?       n
+doe=y|n                 dump on exit?           y
+----
++
+[NOTE]
+====
+Do not use help in the JVM Option field. This parameter prints text to
+the standard output and then exits.
+
+The help output refers to the parameters as options, but they are not
+the same thing as JVM options.
+====
+
+3. [[hprofstp2]]
+Restart the {productName}.
++
+This writes an HPROF stack dump to the file you specified using the file
+HPROF parameter.
+
+[[beafr]][[GSDVG00347]][[the-jprobe-profiler]]
+
+==== The JProbe Profiler
+
+Information about JProbe from Sitraka is available at
+`http://www.quest.com/jprobe/`.
+
+After JProbe is installed using the following instructions, its
+libraries are loaded into the server process.
+
+[[fvymj]][[GSDVG00051]][[to-enable-remote-profiling-with-jprobe]]
+
+===== To Enable Remote Profiling With JProbe
+
+1. Install JProbe 3.0.1.1. For details, see the JProbe documentation.
+
+2. Configure {productName} using the Administration Console:
+[arabic]
+.. Select the JVM Settings component under the relevant configuration.
+.. Then select the Profiler tab.
+.. Edit the following fields before selecting Save and restarting the server: +
+Profiler Name - `jprobe` +
+Profiler Enabled - `true` +
+Classpath - (leave blank) +
+Native Library Path - JProbe-dir``/profiler`` +
+JVM Option - For each of these options, select Add, type the option in
+the Value field, then check its box:
++
+[source]
+----
+    -Xbootclasspath/p:JProbe-dir/profiler/jpagent.jar
+    -Xrunjprobeagent
+    -Xnoclassgc
+----
++
+[NOTE]
+====
+If any of the configuration options are missing or incorrect, the
+profiler might experience problems that affect the performance of the
+{productName}.
+====
++
+When the server starts up with this configuration, you can attach the
+profiler.
+
+3. Set the following environment variable:
++
+[source]
+----
+JPROBE_ARGS_0=-jp_input=JPL-file-path
+----
+See Step link:#jprbstp6[6] for instructions on how to create the JPL
+file.
+4. Start the server instance.
+
+5. Launch the `jpprofiler` and attach to Remote Session.
+The default port is `4444`.
+
+6. [[jprbstp6]]
+Create the JPL file using the *JProbe Launch Pad*. Here are the required settings: +
+[arabic]
+.. Select Server Side for the type of application.
+.. On the Program tab, provide the following details: +
+Target Server - other-server +
+Server home Directory - as-install +
+Server class File - `com.sun.enterprise.server.J2EERunner` +
+Working Directory - as-install +
+Classpath - as-install``/lib/appserv-rt.jar`` +
+Source File Path - source-code-dir (in case you want to get the line level details) +
+Server class arguments - (optional) +
+Main Package - `com.sun.enterprise.server` +
+You must also set VM, Attach, and Coverage tabs appropriately. +
+For further details, see the JProbe documentation. +
+After you have created the JPL file, use this an input to `JPROBE_ARGS_0`.
+
+

@@ -1,0 +1,98 @@
+type=page
+status=published
+title=list-lifecycle-modules
+next=list-log-attributes.html
+prev=list-libraries.html
+~~~~~~
+
+= list-lifecycle-modules
+
+[[list-lifecycle-modules-1]][[GSRFM00181]][[list-lifecycle-modules]]
+
+== list-lifecycle-modules
+
+Lists the lifecycle modules
+
+[[sthref1622]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-lifecycle-modules [--help]
+[target]
+----
+
+[[sthref1623]]
+
+=== Description
+
+The `list-lifecycle-modules` subcommand lists lifecycle modules. A
+lifecycle module provides a means of running a short or long duration
+Java-based task at a specific stage in the server life cycle. This
+subcommand is supported in remote mode only.
+
+[[sthref1624]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1625]]
+
+=== Operands
+
+target::
+  Indicates the location where lifecycle modules are to be listed. Valid
+  values are
+
+  * `server`- Specifies the default server instance as the target for
+  listing lifecycle modules. `server` is the name of the default server
+  instance and is the default value for this operand.
+  * cluster_name - Specifies a particular cluster as the target for
+  listing lifecycle modules.
+  * instance_name - Specifies a particular server instance as the target
+  for listing lifecycle modules.
+
+[[sthref1626]]
+
+=== Examples
+
+[[GSRFM681]][[sthref1627]]
+
+==== Example 1   Listing Lifecycle Modules
+
+[source]
+----
+asadmin> list-lifecycle-modules
+WSTCPConnectorLCModule
+Command list-lifecycle-modules executed successfully
+----
+
+`WSTCPConnectorLCModule` is the only lifecycle module listed for the
+default target, `server`.
+
+[[sthref1628]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1629]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-lifecycle-module.html#create-lifecycle-module-1[`create-lifecycle-module`(1)],
+link:delete-lifecycle-module.html#delete-lifecycle-module-1[`delete-lifecycle-module`(1)]
+
+

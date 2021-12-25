@@ -1,0 +1,104 @@
+type=page
+status=published
+title=restore-domain
+next=rollback-transaction.html
+prev=restart-local-instance.html
+~~~~~~
+
+= restore-domain
+
+[[restore-domain-1]][[GSRFM00221]][[restore-domain]]
+
+== restore-domain
+
+Restores files from backup
+
+[[sthref2002]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] restore-domain [--help]
+[--long[={false|true}]]
+[--filename backup-filename]
+[--domaindir domain-root-dir]
+[--backupdirbackup-directory]
+[--backupconfigbackup-config-name]
+[--force[={false|true}]]
+[domain-name]
+----
+
+[[sthref2003]]
+
+=== Description
+
+This command restores files under the domain from a backup directory.
+
+The `restore-domain` command is supported in local mode only.
+
+[[sthref2004]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--long`::
+`-l`::
+  Displays detailed information about the restore operation. +
+  The default value is `false`.
+`--filename`::
+  Specifies the name of the backup file to use as the source.
+`--domaindir`::
+  Specifies the domain root directory, the parent directory of the
+  domain to restore.
+  The default value is as-install``/domains``.
+`--backupdir`::
+  Specifies the directory under which the backup file is stored. +
+  The default value is as-install``/domains/``domain-dir``/backups``.
+  If the domain is not in the default location, the location is
+  domain-dir``/backups``.
+`--backupconfig`::
+  (Supported only in {productName}.) The name of the domain
+  backup configuration in the backup directory under which the backup
+  file is stored.
+`--force`::
+  Causes the restore operation to continue even when the name of the
+  domain to restore does not match the name of the domain stored in the
+  backup file. +
+  The default value is `false`.
+
+[[sthref2005]]
+
+=== Operands
+
+domain-name::
+  Specifies the name of the domain to restore. +
+  This operand is optional if only one domain exists in the {productName} installation. +
+  If the specified domain name does not match the domain name stored in
+  the backup file, an error occurs unless the `--force` option is
+  specified.
+
+[[sthref2006]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref2007]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:backup-domain.html#backup-domain-1[`backup-domain`(1)],
+link:list-backups.html#list-backups-1[`list-backups`(1)]
+
+

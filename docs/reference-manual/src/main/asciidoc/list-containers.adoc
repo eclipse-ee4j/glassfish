@@ -1,0 +1,93 @@
+type=page
+status=published
+title=list-containers
+next=list-context-services.html
+prev=list-connector-work-security-maps.html
+~~~~~~
+
+= list-containers
+
+[[list-containers-1]][[GSRFM00161]][[list-containers]]
+
+== list-containers
+
+Lists application containers
+
+[[sthref1438]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-containers [--help]
+----
+
+[[sthref1439]]
+
+=== Description
+
+The `list-containers` subcommand displays a list of application
+containers.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1440]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+
+[[sthref1441]]
+
+=== Examples
+
+[[GSRFM653]][[sthref1442]]
+
+==== Example 1   Listing the Application Containers
+
+This example lists the current application containers.
+
+[source]
+----
+asadmin> list-containers
+List all known application containers
+Container : grizzly
+Container : ejb
+Container : webservices
+Container : ear
+Container : appclient
+Container : connector
+Container : jpa
+Container : web
+Container : osgi
+Container : security
+Container : webbeans
+
+Command list-containers executed successfully.
+----
+
+[[sthref1443]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1444]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:list-commands.html#list-commands-1[`list-commands`(1)],
+link:list-components.html#list-components-1[`list-components`(1)],
+link:list-modules.html#list-modules-1[`list-modules`(1)]
+
+

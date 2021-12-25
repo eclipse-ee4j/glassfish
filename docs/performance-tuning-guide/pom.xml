@@ -25,7 +25,6 @@
         <version>7.0.0-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
-    <groupId>org.glassfish.docs</groupId>
     <artifactId>performance-tuning-guide</artifactId>
     <packaging>jar</packaging>
     <name>Eclipse GlassFish Server Performance Tuning Guide, Release 7</name>

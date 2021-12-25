@@ -1,0 +1,115 @@
+type=page
+status=published
+title=disable-http-lb-server
+next=disable-monitoring.html
+prev=disable-http-lb-application.html
+~~~~~~
+
+= disable-http-lb-server
+
+[[disable-http-lb-server-1]][[GSRFM00119]][[disable-http-lb-server]]
+
+== disable-http-lb-server
+
+Disables a sever or cluster managed by a load balancer
+
+[[sthref1055]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] disable-http-lb-server [--help]
+[--timeout 30]
+target
+----
+
+[[sthref1056]]
+
+=== Description
+
+The `disable-http-lb-server` subcommand disables a standalone server or
+cluster of servers for load balancing. The disabled server instance or
+cluster goes offline for load balancing with a minimum impact to users.
+
+Once the target has been disabled and the changes have been applied to
+the load balancer, the load balancer stops assigning new requests to the
+target. Session requests with sessions created before disabling the
+target continue to be assigned to that target until the timeout is
+reached. This process is known as quiescing.
+
+Changes are applied the load balancer automatically. You can also
+manually export the configuration using `export-http-lb-config` and copy
+it to the load balancer.
+
+
+[NOTE]
+====
+This subcommand is only applicable to {productName}. This
+subcommand is not applicable to {productName}.
+====
+
+
+[[sthref1057]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--timeout`::
+  The timeout (in minutes) to wait before disabling the specified
+  target. This time allows for the graceful shutdown (quiescing) of the
+  specified target. The default value is 30 minutes. The minimum value
+  is 1 minute.
+
+[[sthref1058]]
+
+=== Operands
+
+target::
+  This operand specifies which server instances and clusters to disable.
+  Valid values are:
+
+  * cluster_name- The name of a target cluster.
+  * instance_name- The name of a target server instance.
+
+[[sthref1059]]
+
+=== Examples
+
+[[GSRFM593]][[sthref1060]]
+
+==== Example 1   Disabling a Cluster for Load Balancing
+
+This example disables load balancing for a cluster named `mycluster`.
+
+[source]
+----
+asadmin> disable-http-lb-server mycluster
+
+Command disable-http-lb-server executed successfully.
+----
+
+[[sthref1061]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1062]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
+link:enable-http-lb-server.html#enable-http-lb-server-1[`enable-http-lb-server`(1)]
+
+

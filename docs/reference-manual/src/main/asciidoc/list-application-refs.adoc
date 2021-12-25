@@ -1,0 +1,115 @@
+type=page
+status=published
+title=list-application-refs
+next=list-applications.html
+prev=list-admin-objects.html
+~~~~~~
+
+= list-application-refs
+
+[[list-application-refs-1]][[GSRFM00147]][[list-application-refs]]
+
+== list-application-refs
+
+Lists the existing application references
+
+[[sthref1300]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-application-refs [--help]
+[--long={false|true}] [target]
+----
+
+[[sthref1301]]
+
+=== Description
+
+The `list-application-refs` subcommand lists all application references
+in a cluster or an unclustered server instance. This effectively lists
+all the modules deployed on the specified target (for example, J2EE
+applications, Web modules, and enterprise bean modules).
+
+If multiple versions of a module or application are deployed, this
+subcommand lists all versions. To list which version is enabled, set the
+`--long` option to `true`. For more information about module and
+application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
+Versions]" in {productName} Application
+Deployment Guide.
+
+The target instance or instances making up the cluster need not be
+running or available for this subcommand to succeed.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1302]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--long`::
+  If `true`, displays whether each module or application listed is
+  enabled. The default is `false`.
+
+[[sthref1303]]
+
+=== Operands
+
+target::
+  The target for which you are listing the application references. Valid
+  values are
+
+  * `server`- Specifies the default server instance as the target.
+  `server` is the name of the default server instance and is the default value.
+  * cluster_name- Specifies a certain cluster as the target.
+  * instance_name- Specifies a certain server instance as the target.
+
+[[sthref1304]]
+
+=== Examples
+
+[[GSRFM635]][[sthref1305]]
+
+==== Example 1   Listing Application References
+
+The following example lists the application references for the
+unclustered server instance `NewServer`.
+
+[source]
+----
+asadmin> list-application-refs NewServer
+ClientSessionMDBApp
+MEjbApp
+__ejb_container_timer_app
+Command list-application-refs executed successfully.
+----
+
+[[sthref1306]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref1307]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
+link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)]
+
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+Guide]
+
+

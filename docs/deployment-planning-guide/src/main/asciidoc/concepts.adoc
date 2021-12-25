@@ -1,0 +1,570 @@
+type=page
+status=published
+title=Product Concepts
+next=planning.html
+prev=preface.html
+~~~~~~
+
+= Product Concepts
+
+[[GSPLG00001]][[abfaq]]
+
+
+[[product-concepts]]
+== 1 Product Concepts
+
+{productName} provides a robust platform for the
+development, deployment, and management of Jakarta EE applications. Key
+features include scalable transaction management, web services
+performance, clustering, security, and integration capabilities.
+
+The following topics are addressed here:
+
+* link:#abfar[Jakarta EE Platform Overview]
+* link:#abfay[{productName} Components]
+* link:#abfca[Configuration Roadmap for High Availability of {productName}]
+
+[[abfar]][[GSPLG00016]][[java-ee-platform-overview]]
+
+=== Jakarta EE Platform Overview
+
+{productName} implements Java platform, Enterprise Edition (Jakarta EE)
+7 technology. The Jakarta EE platform is a set of standard specifications
+that describe application components, APIs, and the runtime containers
+and services of an application server.
+
+[[abfas]][[GSPLG00040]][[java-ee-applications]]
+
+==== Jakarta EE Applications
+
+Jakarta EE applications are made up of components such as JavaServer Pages
+(JSP), Java servlets, and Enterprise JavaBeans (EJB) modules. These
+components enable software developers to build large-scale, distributed
+applications. Developers package Jakarta EE applications in Java Archive
+(JAR) files (similar to zip files), which can be distributed to
+production sites. Administrators install Jakarta EE applications onto
+{productName} by deploying Jakarta EE JAR files onto one or more server
+instances (or clusters of instances).
+
+[[abfat]][[GSPLG00041]][[containers]]
+
+==== Containers
+
+Each server instance includes two containers: web and EJB. A container
+is a runtime environment that provides services such as security and
+transaction management to Jakarta EE components. Web components, such as
+Java Server Pages and servlets, run within the web container. Enterprise
+JavaBeans run within the EJB container.
+
+[[abfau]][[GSPLG00042]][[java-ee-services]]
+
+==== Jakarta EE Services
+
+The Jakarta EE platform provides services for applications, including:
+
+* Naming - A naming and directory service binds objects to names. A Java
+EE application can locate an object by looking up its Java Naming and
+Directory Interface (JNDI) name.
+* Security - The Java Authorization Contract for Containers (JACC) is a
+set of security contracts defined for the Jakarta EE containers. Based on
+the client's identity, containers can restrict access to the container's
+resources and services.
+* Transaction management - A transaction is an indivisible unit of work.
+For example, transferring funds between bank accounts is a transaction.
+A transaction management service ensures that a transaction is either
+completed, or is rolled back.
+* Message Service - Applications hosted on separate systems can
+communicate with each other by exchanging messages using the Java
+Message Service (JMS). JMS is an integral part of the Jakarta EE platform
+and simplifies the task of integrating heterogeneous enterprise
+applications.
+
+[[abfav]][[GSPLG00043]][[web-services]]
+
+==== Web Services
+
+Clients can access a Jakarta EE application as a remote web service in
+addition to accessing it through HTTP, RMI/IIOP, and JMS. Web services
+are implemented using the Java API for XML-based web services (JAX-WS).
+A Jakarta EE application can also act as a client to web services, which
+would be typical in network applications.
+
+Web Services Description Language (WSDL) is an XML format that describes
+web service interfaces. Web service consumers can dynamically parse a
+WSDL document to determine the operations a web service provides and how
+to execute them. {productName} distributes web services interface
+descriptions using a registry that other applications can access through
+the Java API for XML Registries (JAXR).
+
+[[abfaw]][[GSPLG00044]][[client-access]]
+
+==== Client Access
+
+Clients can access Jakarta EE applications in several ways. Browser clients
+access web applications using hypertext transfer protocol (HTTP). For
+secure communication, browsers use the HTTP secure (HTTPS) protocol that
+uses secure sockets layer (SSL).
+
+Rich client applications running in the Application Client Container can
+directly lookup and access Enterprise JavaBeans using an Object Request
+Broker (ORB), Remote Method Invocation (RMI) and the internet inter-ORB
+protocol (IIOP), or IIOP/SSL (secure IIOP). They can access applications
+and web services using HTTP/HTTPS, JMS, and JAX-WS. They can use JMS to
+send messages to and receive messages from applications and
+message-driven beans.
+
+Clients that conform to the Web Services-Interoperability (WS-I) Basic
+Profile can access Jakarta EE web services. WS-I is an integral part of the
+Jakarta EE standard and defines interoperable web services. It enables
+clients written in any supporting language to access web services
+deployed to {productName}.
+
+The best access mechanism depends on the specific application and the
+anticipated volume of traffic. {productName} supports separately
+configurable listeners for HTTP, HTTPS, JMS, IIOP, and IIOP/SSL. You can
+set up multiple listeners for each protocol for increased scalability
+and reliability.
+
+Jakarta EE applications can also act as clients of Jakarta EE components such
+as Enterprise JavaBeans modules deployed on other servers, and can use
+any of these access mechanisms.
+
+[[abfax]][[GSPLG00045]][[external-systems-and-resources]]
+
+==== External Systems and Resources
+
+On the Jakarta EE platform, an external system is called a resource. For
+example, a database management system is a JDBC resource. Each resource
+is uniquely identified and by its Java Naming and Directory Interface
+(JNDI) name. Applications access external systems through the following
+APIs and components:
+
+* Java Database Connectivity (JDBC) - A database management system
+(DBMS) provides facilities for storing, organizing, and retrieving data.
+Most business applications store data in relational databases, which
+applications access via JDBC. {productName} includes the Java DB
+database for use sample applications and application development and
+prototyping, though it is not suitable for deployment. {productName}
+provides certified JDBC drivers for connecting to major relational
+databases. These drivers are suitable for deployment.
+* Java Message Service - Messaging is a method of communication between
+software components or applications. A messaging client sends messages
+to, and receives messages from, any other client via a messaging
+provider that implements the Java Messaging Service (JMS) API. {productName} includes a high-performance JMS broker, Open Message Queue.
+* Jakarta EE Connectors - The Jakarta EE Connector architecture enables
+integrating Jakarta EE applications and existing Enterprise Information
+Systems (EIS). An application accesses an EIS through a portable Jakarta EE
+component called a connector or resource adapter, analogous to using
+JDBC driver to access an RDBMS. Resource adapters are distributed as
+standalone Resource Adapter Archive (RAR) modules or included in Jakarta EE
+application archives. As RARs, they are deployed like other Jakarta EE
+components. {productName} includes evaluation resource adapters that
+integrate with popular EIS.
+* JavaMail - Through the JavaMail API, applications can connect to a
+Simple Mail Transport Protocol (SMTP) server to send email and to an
+IMAP or POP3 server to receive email.
+
+[[abfay]][[GSPLG00017]][[glassfish-server-components]]
+
+=== {productName} Components
+
+This section describes the components in {productName}.
+
+The following topics are addressed here:
+
+* link:#abfaz[Server Instances]
+* link:#abfba[Administrative Domains]
+* link:#abfbc[Clusters]
+* link:#abfbe[Named Configurations]
+* link:#abfbf[HTTP Load Balancer Plug-in]
+* link:#abfbh[IIOP Load Balancing in a Cluster]
+* link:#abfbi[Message Queue and JMS Resources]
+
+The administration tools, such as the browser-based Administration
+Console, communicate with the domain administration server (DAS), which
+in turn communicates with the server instances.
+
+[[abfaz]][[GSPLG00046]][[server-instances]]
+
+==== Server Instances
+
+A server instance is a {productName} running in a single
+Java Virtual Machine (JVM) process.
+{productName} is certified with Java platform, Standard Edition (Java SE) 11.
+
+It is usually sufficient to create a single server instance on a
+machine, since {productName} and accompanying JVM are both designed
+to scale to multiple processors. However, it can be beneficial to create
+multiple instances on one machine for application isolation and rolling
+upgrades. In some cases, a large server with multiple instances can be
+used in more than one administrative domain. The administration tools
+makes it easy to create, delete, and manage server instances across
+multiple machines.
+
+[[abfba]][[GSPLG00047]][[administrative-domains]]
+
+==== Administrative Domains
+
+An administrative domain (or simply domain) is a group of server
+instances that are administered together. A server instance belongs to a
+single administrative domain. The instances in a domain can run on
+different physical hosts.
+
+You can create multiple domains from one installation of {productName}. By grouping server instances into domains, different
+organizations and administrators can share a single {productName}
+installation. Each domain has its own configuration, log files, and
+application deployment areas that are independent of other domains.
+Changing the configuration of one domain does not affect the
+configurations of other domains. Likewise, deploying an application on
+one domain does not deploy it or make it visible to any other domain.
+
+
+[NOTE]
+====
+All hosts in a domain on which the DAS and {productName} instances
+are running must have the same operating system.
+====
+
+
+[[abfbb]][[GSPLG00024]][[domain-administration-server-das]]
+
+===== Domain Administration Server (DAS)
+
+A domain has one Domain Administration Server (DAS), a specially
+designated {productName} instance that hosts the administrative
+applications. The DAS authenticates the administrator, accepts requests
+from administration tools, and communicates with server instances in the
+domain to carry out the requests.
+
+The administration tools are the `asadmin` command-line tool and the
+browser-based Administration Console. {productName} also provides a
+RESTful API for server administration. The administrator can view and
+manage a single domain at a time, thus enforcing secure separation.
+
+The DAS is also sometimes referred to as the admin server or default
+server. It is referred to as the default server because it is the
+default target for some administrative operations.
+
+Since the DAS is a {productName} instance, it can also host Jakarta EE
+applications for testing purposes. However, do not use it to host
+production applications. You might want to deploy applications to the
+DAS, for example, if the clusters and instances that will host the
+production application have not yet been created.
+
+The DAS keeps a repository containing the configuration of its domain
+and all the deployed applications. If the DAS is inactive or down, there
+is no impact on the performance or availability of active server
+instances, however administrative changes cannot be made. In certain
+cases, for security purposes, it may be useful to intentionally stop the
+DAS process, for example to reboot the host operating system to install
+a kernel patch or a hardware upgrade.
+
+Administrative commands are provided to backup and restore the domain
+configuration and applications. With the standard backup and restore
+procedures, you can quickly restore working configurations. If the DAS
+host fails, you must create a new DAS installation to restore the
+previous domain configuration. For instructions, see
+"link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
+
+[[abfbc]][[GSPLG00048]][[clusters]]
+
+==== Clusters
+
+A cluster is a named collection of server instances that share the same
+applications, resources, and configuration information. You can group
+server instances on different machines into one logical cluster and
+administer them as one unit. You can easily control the lifecycle of a
+multi-machine cluster with the DAS.
+
+Clusters enable horizontal scalability, load balancing, and failover
+protection. By definition, all the instances in a cluster have the same
+resource and application configuration. When a server instance or a
+machine in a cluster fails, the load balancer detects the failure,
+redirects traffic from the failed instance to other instances in the
+cluster, and recovers the user session state. Since the same
+applications and resources are on all instances in the cluster, an
+instance can failover to any other instance in the cluster.
+
+
+[NOTE]
+====
+All hosts in a cluster on which the DAS and {productName} instances
+are running must have the same operating system.
+====
+
+
+Clusters, domains, and instances are related as follows:
+
+* An administrative domain can have zero or more clusters.
+* A cluster has one or more server instances.
+* A cluster belongs to a single domain.
+
+[[abfbe]][[GSPLG00049]][[named-configurations]]
+
+==== Named Configurations
+
+A named configuration is an abstraction that encapsulates {productName} property settings. Clusters and stand-alone server instances
+reference a named configuration to get their property settings. With
+named configurations, Jakarta EE containers' configurations are independent
+of the physical machine on which they reside, except for particulars
+such as IP address, port number, and amount of heap memory. Using named
+configurations provides power and flexibility to {productName}
+administration.
+
+To apply configuration changes, you simply change the property settings
+of the named configuration, and all the clusters and stand-alone
+instances that reference it pick up the changes. You can only delete a
+named configuration when all references to it have been removed. A
+domain can contain multiple named configurations.
+
+{productName} comes with a default configuration, called
+default-config. The default configuration is optimized for developer
+productivity.
+
+You can create your own named configuration based on the default
+configuration that you can customize for your own purposes. Use the
+Administration Console and `asadmin` command line utility to create and
+manage named configurations.
+
+[[abfbf]][[GSPLG00050]][[http-load-balancer-plug-in]]
+
+==== HTTP Load Balancer Plug-in
+
+The load balancer distributes the workload among multiple physical
+machines, thereby increasing the overall throughput of the system. The
+{productName} includes the load balancer plug-ins for Oracle iPlanet
+Web Server, Oracle HTTP Server, Apache Web Server, and Microsoft
+Internet Information Server.
+
+The load balancer plug-in accepts HTTP and HTTPS requests and forwards
+them to one of the {productName} instances in the cluster. Should an
+instance fail, become unavailable (due to network faults), or become
+unresponsive, requests are redirected to existing, available machines.
+The load balancer can also recognize when a failed instance has
+recovered and redistribute the load accordingly.
+
+For simple stateless applications, a load-balanced cluster may be
+sufficient. However, for mission-critical applications with session
+state, use load balanced clusters with replicated session persistence.
+
+To setup a system with load balancing, in addition to {productName},
+you must install a web server and the load-balancer plug-in. Then you
+must:
+
+* Create {productName} clusters that you want to participate in load
+balancing.
+* Deploy applications to these load-balanced clusters.
+
+Server instances and clusters participating in load balancing have a
+homogenous environment. Usually that means that the server instances
+reference the same server configuration, can access the same physical
+resources, and have the same applications deployed to them. Homogeneity
+enables configuration consistency, and improves the ability to support a
+production deployment.
+
+Use the `asadmin` command-line tool to create a load balancer
+configuration, add references to clusters and server instances to it,
+enable the clusters for reference by the load balancer, enable
+applications for load balancing, optionally create a health checker,
+generate the load balancer configuration file, and finally copy the load
+balancer configuration file to your web server `config` directory. An
+administrator can create a script to automate this entire process.
+
+For more details and complete configuration instructions, see
+"link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+
+[[abfbg]][[GSPLG00051]][[session-persistence]]
+
+==== Session Persistence
+
+Jakarta EE applications typically have significant amounts of session state
+data. A web shopping cart is the classic example of a session state.
+Also, an application can cache frequently-needed data in the session
+object. In fact, almost all applications with significant user
+interactions need to maintain a session state. Both HTTP sessions and
+stateful session beans (SFSBs) have session state data.
+
+While the session state is not as important as the transactional state
+stored in a database, preserving the session state across server
+failures can be important to end users. {productName} provides the
+capability to save, or persist, this session state in a repository. If
+the {productName} instance that is hosting the user session
+experiences a failure, the session state can be recovered. The session
+can continue without loss of information.
+
+{productName} supports the following session persistence types:
+
+* Memory
+* Replicated
+* File
+* Coherence
+* Web
+
+With memory persistence, the state is always kept in memory and does not
+survive failure. With replicated persistence, {productName} uses
+other server instances in the cluster as the persistence store for both
+HTTP and SFSB sessions. With file persistence, {productName}
+serializes session objects and stores them to the file system location
+specified by session manager properties. For SFSBs, if replicated
+persistence is not specified, {productName} stores state information
+in the session-store subdirectory of this location. For more information
+about Coherence*Web, see
+http://download.oracle.com/docs/cd/E18686_01/coh.37/e18690/glassfish.html[Using
+Coherence*Web with {productName}]
+(`http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html`).
+
+Checking an SFSB's state for changes that need to be saved is called
+checkpointing. When enabled, checkpointing generally occurs after any
+transaction involving the SFSB is completed, even if the transaction
+rolls back. For more information on developing stateful session beans,
+see "link:application-development-guide/ejb.html#GSDVG00147[Using Session Beans]" in {productName} Application Development Guide. For more information on
+enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00211[Stateful Session Bean
+Failover]" in {productName} High Availability
+Administration Guide.
+
+Apart from the number of requests being served by {productName}, the
+session persistence configuration settings also affect the session
+information in each request.
+
+For more information on configuring session persistence, see
+"link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session Persistence and
+Failover]" in {productName} High Availability
+Administration Guide.
+
+[[abfbh]][[GSPLG00052]][[iiop-load-balancing-in-a-cluster]]
+
+==== IIOP Load Balancing in a Cluster
+
+With IIOP load balancing, IIOP client requests are distributed to
+different server instances or name servers. The goal is to spread the
+load evenly across the cluster, thus providing scalability. IIOP load
+balancing combined with EJB clustering and availability features in
+{productName} provides not only load balancing but also EJB failover.
+
+There are two steps to IIOP failover and load balancing. The first step,
+bootstrapping, is the process by which the client sets up the initial
+naming context with one ORB in the cluster. The client attempts to
+connect to one of the IIOP endpoints. When launching an application
+client using the `appclient` script, you specify these endpoints using
+the `-targetserver` option on the command line or `target-server`
+elements in the `sun-acc.xml` configuration file. The client randomly
+chooses one of these endpoints and tries to connect to it, trying other
+endpoints if needed until one works.
+
+The second step concerns sending messages to a specific EJB. By default,
+all naming look-ups, and therefore all EJB accesses, use the cluster
+instance chosen during bootstrapping. The client exchanges messages with
+an EJB through the client ORB and server ORB. As this happens, the
+server ORB updates the client ORB as servers enter and leave the
+cluster. Later, if the client loses its connection to the server from
+the previous step, the client fails over to some other server using its
+list of currently active members. In particular, this cluster member
+might have joined the cluster after the client made the initial
+connection.
+
+When a client performs a JNDI lookup for an object, the Naming Service
+creates an `InitialContext` (IC) object associated with a particular
+server instance. From then on, all lookup requests made using that IC
+object are sent to the same server instance. All `EJBHome` objects
+looked up with that `InitialContext` are hosted on the same target
+server. Any bean references obtained henceforth are also created on the
+same target host. This effectively provides load balancing, since all
+clients randomize the list of live target servers when creating
+`InitialContext` objects. If the target server instance goes down, the
+lookup or EJB method invocation will failover to another server
+instance.
+
+Adding or deleting new instances to the cluster does not update the
+existing client's view of the cluster. You must manually update the
+endpoints list on the client side.
+
+[[abfbi]][[GSPLG00053]][[message-queue-and-jms-resources]]
+
+==== Message Queue and JMS Resources
+
+The Open Message Queue (Message Queue) provides reliable, asynchronous
+messaging for distributed applications. Message Queue is an enterprise
+messaging system that implements the Java Message Service (JMS)
+standard. Message Queue provides messaging for Jakarta EE application
+components such as message-driven beans (MDBs).
+
+{productName} implements the Java Message Service (JMS) API by
+integrating Message Queue into {productName}. {productName}
+includes the Enterprise version of Message Queue which has failover,
+clustering and load balancing features.
+
+For basic JMS administration tasks, use the {productName}
+Administration Console and `asadmin` command-line utility.
+
+For advanced tasks, including administering a Message Queue cluster, use
+the tools provided in the as-install``/mq/bin`` directory. For details
+about administering Message Queue, see the link:../openmq/mq-admin-guide.html#GMADG[Open Message
+Queue Administration Guide].
+
+For information on deploying JMS applications and Message Queue
+clustering for message failover, see link:planning.html#abfdn[Planning
+Message Queue Broker Deployment].
+
+[[abfca]][[GSPLG00018]][[configuration-roadmap-for-high-availability-of-glassfish-server]]
+
+=== Configuration Roadmap for High Availability of {productName}
+
+The following procedure lists the major tasks for configuring {productName} for high availability. The procedure also provides
+cross-references to detailed instructions for performing each task.
+
+[[sthref6]][[to-configure-glassfish-server-for-high-availability]]
+
+==== To Configure {productName} for High Availability
+
+1. Determine your requirements and goals for performance and QoS. +
+For more information, see the following documentation:
+* link:planning.html#abfcc[Establishing Performance Goals]
+* link:planning.html#abfcp[Planning the Network Configuration]
+* link:planning.html#abfcy[Planning for Availability]
+
+2. Size your system. +
+For more information, see link:planning.html#abfdg[Design Decisions].
+
+3. Install {productName} and related subcomponents such as a web server. +
+For more information, see the following documentation:
+* link:installation-guide.html#GSING[{productName} Installation Guide]
+* Installation guides for related subcomponents, for example, Oracle
+iPlanet Web Server 7.0.9 Installation and Migration Guide
+(`http://docs.oracle.com/cd/E19146-01/821-1832/index.html`)
+
+4. If you plan to administer your clusters centrally, set up secure
+shell (SSH) for centralized administration. +
+For more information, see "link:ha-administration-guide/ssh-setup.html#GSHAG00003[
+Setting Up SSH for Centralized Administration]" in {productName}
+High Availability Administration Guide.
+
+5. Configure domains, nodes, clusters, {productName} instances, and
+virtual servers as required. +
+For more information, see the following documentation:
+* "link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide
+* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
+{productName} High Availability Administration Guide
+* "link:ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
+{productName} High Availability Administration Guide
+* "link:administration-guide/http_https.html#GSADG00589[Administering Virtual Servers]" in {productName} Administration Guide
+
+6. Configure your load balancer. +
+For more information, see "link:administration-guide/webapps.html#GSADG00552[Administering mod_jk]" in
+{productName} Administration Guide.
+
+7. Configure the web container and EJB container for replicated session persistence. +
+For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
+Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
+
+8. If you are using messaging extensively, configure Java Message
+Service (JMS) clusters for failover . +
+For more information, see the following documentation:
+* link:planning.html#abfdn[Planning Message Queue Broker Deployment]
+* "link:ha-administration-guide/jms.html#GSHAG00012[Configuring Java Message Service High Availability]"
+in {productName} High Availability Administration
+Guide
+* link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]
+
+9. Deploy applications and configure them for high availability and session failover. +
+For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].

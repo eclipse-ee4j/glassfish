@@ -1,0 +1,138 @@
+type=page
+status=published
+title=stop-local-instance
+next=undeploy.html
+prev=stop-instance.html
+~~~~~~
+
+= stop-local-instance
+
+[[stop-local-instance-1]][[GSRFM00242]][[stop-local-instance]]
+
+== stop-local-instance
+
+Stops a {productName} instance on the machine where the subcommand is run
+
+[[sthref2181]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] stop-local-instance [--help]
+[--nodedir node-dir] [--node node]
+[--force={true|false}] [--kill={false|true}]
+[instance-name]
+----
+
+[[sthref2182]]
+
+=== Description
+
+The `stop-local-instance` subcommand stops a {productName} instance
+on the machine where the subcommand is run. This subcommand does not
+require secure shell (SSH) to be configured. You must run this command
+from the machine where the instance resides.
+
+The subcommand can stop any {productName} instance, regardless of
+how the instance was created. For example, this subcommand can stop an
+instance that was created by using the
+link:create-instance.html#create-instance-1[`create-instance`(1)] subcommand.
+
+The `stop-local-instance` subcommand does not contact the DAS to
+determine the node on which the instance resides. To determine the node
+on which the instance resides, the subcommand searches the directory
+that contains the node directories. If multiple node directories exist,
+the node must be specified as an option of the subcommand.
+
+This subcommand is supported in local mode.
+
+[[sthref2183]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--nodedir`::
+  Specifies the directory that contains the instance's node directory.
+  The instance's files are stored in the instance's node directory. The
+  default is as-install``/nodes``.
+`--node`::
+  Specifies the node on which the instance resides. This option may be
+  omitted only if the directory that the `--nodedir` option specifies
+  contains only one node directory. Otherwise, this option is required.
+`--force`::
+  Specifies whether the instance is forcibly stopped immediately. +
+  Possible values are as follows:
+
+  `true`;;
+    The instance is forcibly stopped immediately (default).
+  `false`;;
+    The subcommand waits until all threads that are associated with the
+    instance are exited before stopping the instance.
+
+`--kill`::
+  Specifies whether the instance is killed by using functionality of the
+  operating system to terminate the instance process. +
+  Possible values are as follows:
+
+  `false`;;
+    The instance is not killed. The subcommand uses functionality of the
+    Java platform to terminate the instance process (default).
+  `true`;;
+    The instance is killed. The subcommand uses functionality of the
+    operating system to terminate the instance process.
+
+[[sthref2184]]
+
+=== Operands
+
+instance-name::
+  The name of the instance to stop.
+
+[[sthref2185]]
+
+=== Examples
+
+[[GSRFM768]][[sthref2186]]
+
+==== Example 1   Stopping an Instance Locally
+
+This example stops the instance `yml-i-sj01` on the machine where the
+subcommand is run.
+
+[source]
+----
+asadmin> stop-local-instance --node sj01 yml-i-sj01
+Waiting for the instance to stop ...
+Command stop-local-instance executed successfully.
+----
+
+[[sthref2187]]
+
+=== Exit Status
+
+0::
+  command executed successfully
+1::
+  error in executing the command
+
+[[sthref2188]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:create-instance.html#create-instance-1[`create-instance`(1)],
+link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
+link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
+link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
+link:start-instance.html#start-instance-1[`start-instance`(1)],
+link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
+link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
+
+

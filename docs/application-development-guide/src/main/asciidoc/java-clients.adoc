@@ -1,0 +1,1651 @@
+type=page
+status=published
+title=Developing Java Clients
+next=connectors.html
+prev=container_managed-persistence.html
+~~~~~~
+
+= Developing Java Clients
+
+[[GSDVG00012]][[beakt]]
+
+
+[[developing-java-clients]]
+== 10 Developing Java Clients
+
+This chapter describes how to develop, assemble, and deploy Java
+clients.
+
+The following topics are addressed here:
+
+* link:#beaku[Introducing the Application Client Container]
+* link:#beakv[Developing Clients Using the ACC]
+* link:#gkusn[Developing Clients Without the ACC]
+
+
+[NOTE]
+====
+The Web Profile of the Oracle{productName} supports the EJB 3.1 Lite
+specification, which allows enterprise beans within web applications,
+among other features. The full {productName} supports the entire EJB
+3.1 specification. For details, see
+http://jcp.org/en/jsr/detail?id=318[JSR 318].
+
+Accordingly, the Application Client Container is supported only in the
+full {productName}, not in the Web Profile.
+
+JMS resources are supported only in the full {productName}, not in
+the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
+====
+
+
+[[beaku]][[GSDVG00159]][[introducing-the-application-client-container]]
+
+=== Introducing the Application Client Container
+
+The Application Client Container (ACC) includes a set of Java classes,
+libraries, and other files that are required for and distributed with
+Java client programs that execute in their own Java Virtual Machine
+(JVM). The ACC manages the execution of Jakarta EE application client
+components (application clients), which are used to access a variety of
+Jakarta EE services (such as JMS resources, EJB components, web services,
+security, and so on.) from a JVM outside the {productName}.
+
+The ACC communicates with the {productName} using RMI-IIOP protocol
+and manages the details of RMI-IIOP communication using the client ORB
+that is bundled with it. Compared to other Jakarta EE containers, the ACC
+is lightweight.
+
+For information about debugging application clients, see
+link:debugging-apps.html#gekvq[Application Client Debugging].
+
+
+[NOTE]
+====
+Interoperability between application clients and {productName}s
+running under different major versions is not supported.
+====
+
+
+[[fvymq]][[GSDVG00459]][[acc-security]]
+
+==== ACC Security
+
+The ACC determines when authentication is needed. This typically occurs
+when the client refers to an EJB component that requires authorization
+or when annotations in the client's `main` class trigger injection
+which, in turn, requires contact with the {productName}'s naming
+service. To authenticate the end user, the ACC prompts for any required
+information, such as a username and password. The ACC itself provides a
+very simple dialog box to prompt for and read these values.
+
+The ACC integrates with the {productName}'s authentication system. It
+also supports SSL (Secure Socket Layer)/IIOP if configured and when
+necessary; see link:#gckgn[Using RMI/IIOP Over SSL].
+
+You can provide an alternate implementation to gather authentication
+information, tailored to the needs of the application client. To do so,
+include the class to perform these duties in the application client and
+identify the fully-qualified name of this class in the
+`callback-handler` element of the `application-client.xml` descriptor
+for the client. The ACC uses this class instead of its default class for
+asking for and reading the authentication information. The class must
+implement the javax.security.auth.callback.CallbackHandler interface.
+See the Jakarta EE specification, section 9.2, Application Clients:
+Security, for more details.
+
+Application clients can use link:securing-apps.html#beacm[Programmatic
+Login Using the ProgrammaticLogin Class].
+
+[[fvymv]][[GSDVG00460]][[acc-naming]]
+
+==== ACC Naming
+
+The client container enables the application clients to use the Java
+Naming and Directory Interface (JNDI) to look up Jakarta EE services (such
+as JMS resources, EJB components, web services, security, and so on.)
+and to reference configurable parameters set at the time of deployment.
+
+[[gbgfe]][[GSDVG00461]][[application-client-annotation]]
+
+==== Application Client Annotation
+
+Annotation is supported for the main class and the optional callback
+handler class in application clients. For more information, see
+"link:application-deployment-guide/overview.html#GSDPG00320[Deployment Descriptors and Annotations]" in {productName} Application Deployment Guide.
+
+[[gavkg]][[GSDVG00462]][[java-web-start]]
+
+==== Java Web Start
+
+Java Web Start allows your application client to be easily launched and
+automatically downloaded and updated. It is enabled for all application
+clients by default. For more information, see link:#gavmf[Using Java Web
+Start].
+
+[[gipjj]][[GSDVG00463]][[application-client-jar-file]]
+
+==== Application Client JAR File
+
+In {productName} 7, the downloaded appclient JAR file is smaller
+than in previous releases, with dependent classes in separate JAR files.
+When copying the downloaded appclient to another location, make sure to
+include the JAR files containing the dependent classes as well. You can
+also use the `asadmin get-client-stubs` command to retrieve the
+appclient and all associated application JAR files and place them in
+another location.
+
+[[beakv]][[GSDVG00160]][[developing-clients-using-the-acc]]
+
+=== Developing Clients Using the ACC
+
+This section describes the procedure to develop, assemble, and deploy
+client applications using the ACC.
+
+The following topics are addressed here:
+
+* link:#beakw[To Access an EJB Component From an Application Client]
+* link:#beakx[To Access a JMS Resource From an Application Client]
+* link:#gavmf[Using Java Web Start]
+* link:#gipkt[Using the Embeddable ACC]
+* link:#beaky[Running an Application Client Using the `appclient`
+Script]
+* link:#beakz[Using the `package-appclient` Script]
+* link:#fvymy[The `client.policy` File]
+* link:#gckgn[Using RMI/IIOP Over SSL]
+* link:#ghbpc[Connecting to a Remote EJB Module Through a Firewall]
+* link:#gipkj[Specifying a Splash Screen]
+* link:#gjiec[Setting Login Retries]
+* link:#gjpjt[Using Libraries with Application Clients]
+
+[[beakw]][[GSDVG00072]][[to-access-an-ejb-component-from-an-application-client]]
+
+==== To Access an EJB Component From an Application Client
+
+1. In your client code, reference the EJB component by using an `@EJB`
+annotation or by looking up the JNDI name as defined in the `ejb-jar.xml` file. +
+For more information about naming and lookups, see
+link:jndi.html#beans[Accessing the Naming Context]. +
+If load balancing is enabled as in Step link:#accejb8[7] and the EJB
+components being accessed are in a different cluster, the endpoint list
+must be included in the lookup, as follows:
++
+[source]
+----
+corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
+----
+
+2. Define the `@EJB` annotations or the `ejb-ref` elements in the
+`application-client.xml` file. Define the corresponding `ejb-ref`
+elements in the `glassfish-application-client.xml` file. +
+For more information on the `glassfish-application-client.xml` file, see
+"link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
+{productName} Application Deployment Guide.
+For a general explanation of how to map JNDI names using reference elements,
+see link:jndi.html#beaoa[Mapping References].
+
+3. Deploy the application client and EJB component together in an application. +
+For more information on deployment, see the
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+To get the client JAR file, use the `--retrieve` option of the `asadmin deploy` command. +
+To retrieve the stubs and ties generated during deployment, use the
+`asadmin get-client-stubs` command. +
+For details, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+4. Ensure that the client JAR file includes the following files:
+* A Java class to access the bean.
+* `application-client.xml` - (optional) Jakarta EE application client
+deployment descriptor.
+* `glassfish-application-client.xml` - (optional) {productName}
+specific client deployment descriptor. For information on the
+`glassfish-application-client.xml` file, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
+* The `MANIFEST.MF` file. This file contains a reference to the `main`
+class, which states the complete package prefix and class name of the
+Java client.
+
+5. Prepare the client machine. +
+This step is not needed for Java Web Start. This step is not needed if
+the client and server machines are the same. +
+If you are using the `appclient` script, package the {productName}
+system files required to launch application clients on remote systems
+using the `package-appclient` script, then retrieve the application
+client itself using the `asadmin get-client-stubs` command. +
+For more information, see link:#beakz[Using the `package-appclient` Script]
+and the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+6. To access EJB components that are residing in a remote system, make
+the following changes to the `sun-acc.xml` file or the `appclient`
+script. This step is not needed for Java Web Start.
+* Define the `target-server` element's `address` and `port` attributes
+to reference the remote server machine and its ORB port. See
+"link:application-deployment-guide/dd-elements.html#GSDPG00284[target-server]" in {productName} Application Deployment Guide.
+* Use the `-targetserver` option of the appclient script to reference
+the remote server machine and its ORB port. For more information, see
+link:#beaky[Running an Application Client Using the `appclient` Script].
++
+To determine the ORB port on the remote server, use the `asadmin get` command. For example:
++
+[source]
+----
+asadmin --host rmtsrv get server-config.iiop-service.iiop-listener.iiop-listener1.port
+----
+For more information about the `asadmin get` command, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+7. [[accejb8]]
+To set up load balancing and failover of remote EJB references, define
+at least two `target-server` elements in the `sun-acc.xml` file or the
+`appclient` script. This step is not needed for Java Web Start. +
+If the {productName} instance on which the application client is
+deployed participates in a cluster, the ACC finds all currently active
+IIOP endpoints in the cluster automatically. However, a client should
+have at least two endpoints specified for bootstrapping purposes, in
+case one of the endpoints has failed. +
+The `target-server` elements in the `sun-acc.xml` file specify one or
+more IIOP endpoints used for load balancing. The `address` attribute is
+an IPv4 address or host name, and the `port` attribute specifies the
+port number. See "link:application-deployment-guide/dd-elements.html#GSDPG00111[client-container]" in {productName} Application Deployment Guide. +
+The `--targetserver` option of the appclient script specifies one or
+more IIOP endpoints used for load balancing. For more information, see
+link:#beaky[Running an Application Client Using the `appclient` Script].
+
+[[GSDVG555]]
+
+Next Steps
+
+* For instructions on running the application client, see
+link:#gavmf[Using Java Web Start] or link:#beaky[Running an Application
+Client Using the `appclient` Script].
+* For more information about RMI-IIOP load balancing and failover, see
+"link:ha-administration-guide/rmi-iiop.html#GSHAG00013[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
+
+[[beakx]][[GSDVG00073]][[to-access-a-jms-resource-from-an-application-client]]
+
+==== To Access a JMS Resource From an Application Client
+
+1. Create a JMS client.
++
+For detailed instructions on developing a JMS client, see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples[
+Java Message Service Examples]" in The Jakarta EE Tutorial.
+2. Next, configure a JMS resource on the {productName}.
++
+For information on configuring JMS resources, see
+"link:administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
+Destinations]" in {productName} Administration
+Guide.
+3. Define the `@Resource` or `@Resources` annotations or the
+`resource-ref` elements in the `application-client.xml` file. Define the
+corresponding `resource-ref` elements in the
+`glassfish-application-client.xml` file.
++
+For more information on the `glassfish-application-client.xml` file, see
+"link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
+{productName} Application Deployment Guide. For a
+general explanation of how to map JNDI names using reference elements,
+see link:jndi.html#beaoa[Mapping References].
+4. Ensure that the client JAR file includes the following files:
+* A Java class to access the resource.
+* `application-client.xml` - (optional) Jakarta EE application client
+deployment descriptor.
+* `glassfish-application-client.xml` - (optional) {productName}
+specific client deployment descriptor. For information on the
+`glassfish-application-client.xml` file, see "link:application-deployment-guide/dd-files.html#GSDPG00081[The
+glassfish-application-client.xml file]" in {productName} Application Deployment Guide.
+* The `MANIFEST.MF` file. This file contains a reference to the `main`
+class, which states the complete package prefix and class name of the
+Java client.
+5. Prepare the client machine.
++
+This step is not needed for Java Web Start. This step is not needed if
+the client and server machines are the same.
++
+If you are using the `appclient` script, package the {productName}
+system files required to launch application clients on remote systems
+using the `package-appclient` script, then retrieve the application
+client itself using the `asadmin get-client-stubs` command.
++
+For more information, see link:#beakz[Using the `package-appclient`
+Script] and the link:reference-manual.html#GSRFM[{productName}
+Reference Manual].
+6. Run the application client.
++
+See link:#gavmf[Using Java Web Start] or link:#beaky[Running an
+Application Client Using the `appclient` Script].
+
+[[gavmf]][[GSDVG00464]][[using-java-web-start]]
+
+==== Using Java Web Start
+
+Java Web Start allows your application client to be easily launched and
+automatically downloaded and updated. General information about Java Web
+Start is available at
+`http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136112.html`.
+
+The following topics are addressed here:
+
+* link:#gavqb[Enabling and Disabling Java Web Start]
+* link:#gavmk[Downloading and Launching an Application Client]
+* link:#gavor[The Application Client URL]
+* link:#gcjlg[Signing JAR Files Used in Java Web Start]
+* link:#geqxg[Error Handling]
+* link:#geqwd[Vendor Icon, Splash Screen, and Text]
+* link:#gkmbs[Creating a Custom JNLP File]
+
+[[gavqb]][[GSDVG00312]][[enabling-and-disabling-java-web-start]]
+
+===== Enabling and Disabling Java Web Start
+
+Java Web Start is enabled for all application clients by default.
+
+The application developer or deployer can specify that Java Web Start is
+always disabled for an application client by setting the value of the
+`eligible` element to `false` in the `glassfish-application-client.xml`
+file. See the link:application-deployment-guide.html#GSDPG[{productName}
+Application Deployment Guide].
+
+The {productName} administrator can disable Java Web Start for a
+previously deployed eligible application client using the `asadmin set`
+command.
+
+To disable Java Web Start for all eligible application clients in an
+application, use the following command:
+
+[source]
+----
+asadmin set applications.application.app-name.property.java-web-start-enabled="false"
+----
+
+To disable Java Web Start for a stand-alone eligible application client,
+use the following command:
+
+[source]
+----
+asadmin set applications.application.module-name.property.java-web-start-enabled="false"
+----
+
+Setting `java-web-start-enabled="true"` re-enables Java Web Start for an
+eligible application client. For more information about the
+`asadmin set` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[gavmk]][[GSDVG00313]][[downloading-and-launching-an-application-client]]
+
+===== Downloading and Launching an Application Client
+
+If Java Web Start is enabled for your deployed application client, you
+can launch it for testing. Simply click on the Launch button next to the
+application client or application's listing on the App Client Modules
+page in the Administration Console.
+
+On other machines, you can download and launch the application client
+using Java Web Start in the following ways:
+
+* Using a web browser, directly enter the URL for the application
+client. See link:#gavor[The Application Client URL].
+* Click on a link to the application client from a web page.
+* Use the Java Web Start command `javaws`, specifying the URL of the
+application client as a command line argument.
+* If the application has previously been downloaded using Java Web
+Start, you have additional alternatives.
+
+** Use the desktop icon that Java Web Start created for the application
+client. When Java Web Start downloads an application client for the
+first time it asks you if such an icon should be created.
+
+** Use the Java Web Start control panel to launch the application
+client.
+
+When you launch an application client, Java Web Start contacts the
+server to see if a newer client version is available. This means you can
+redeploy an application client without having to worry about whether
+client machines have the latest version.
+
+[[gavor]][[GSDVG00314]][[the-application-client-url]]
+
+===== The Application Client URL
+
+The default URL for an application or module generally is as follows:
+
+[source]
+----
+http://host:port/context-root
+----
+
+The default URL for a stand-alone application client module is as
+follows:
+
+[source]
+----
+http://host:port/appclient-module-id
+----
+
+The default URL for an application client module embedded within an
+application is as follows. Note that the relative path to the
+application client JAR file is included.
+
+[source]
+----
+http://host:port/application-id/appclient-path
+----
+
+If the context-root, appclient-module-id, or application-id is not
+specified during deployment, the name of the JAR or EAR file without the
+extension is used. If the application client module or application is
+not in JAR or EAR file format, an appclient-module-id or application-id
+is generated.
+
+Regardless of how the context-root or id is determined, it is written to
+the server log when you deploy the application. For details about
+naming, see "link:application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in {productName} Application Deployment Guide.
+
+To set a different URL for an application client, use the `context-root`
+subelement of the `java-web-start-access` element in the
+`glassfish-application-client.xml` file. This overrides the
+appclient-module-id or application-id. See the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+
+You can also pass arguments to the ACC or to the application client's
+`main` method as query parameters in the URL. If multiple application
+client arguments are specified, they are passed in the order specified.
+
+A question mark separates the context root from the arguments.
+Ampersands (`&`) separate the arguments and their values. Each argument
+and each value must begin with `arg=`. Here is an example URL with a
+`-color` argument for a stand-alone application client. The `-color`
+argument is passed to the application client's `main` method.
+
+[source]
+----
+http://localhost:8080/testClient?arg=-color&arg=red
+----
+
+
+[NOTE]
+====
+If you are using the `javaws` URL command to launch Java Web Start with
+a URL that contains arguments, enclose the URL in double quotes (`"`) to
+avoid breaking the URL at the ampersand (`&`) symbol.
+====
+
+
+Ideally, you should build your production application clients with
+user-friendly interfaces that collect information which might otherwise
+be gathered as command-line arguments. This minimizes the degree to
+which users must customize the URLs that launch application clients
+using Java Web Start. Command-line argument support is useful in a
+development environment and for existing application clients that depend
+on it.
+
+[[gcjlg]][[GSDVG00315]][[signing-jar-files-used-in-java-web-start]]
+
+===== Signing JAR Files Used in Java Web Start
+
+Java Web Start enforces a security sandbox. By default it grants any
+application, including application clients, only minimal privileges.
+Because Java Web Start applications can be so easily downloaded, Java
+Web Start provides protection from potentially harmful programs that
+might be accessible over the network. If an application requires a
+higher privilege level than the sandbox permits, the code that needs
+privileges must be in a JAR file that was signed.
+
+When Java Web Start downloads such a signed JAR file, it displays
+information about the certificate that was used to sign the JAR if that
+certificate is not trusted. It then asks you whether you want to trust
+that signed code. If you agree, the code receives elevated permissions
+and runs. If you reject the signed code, Java Web Start does not start
+the downloaded application.
+
+Your first Java Web Start launch of an application client is likely to
+involve this prompting because by default {productName} uses a
+self-signed certificate that is not linked to a trusted authority.
+
+The {productName} serves two types of signed JAR files in response to
+Java Web Start requests. One type is a JAR file installed as part of the
+{productName}, which starts an application client during a Java Web
+Start launch: as-install``/lib/gf-client.jar``.
+
+The other type is a generated application client JAR file. As part of
+deployment, the {productName} generates a new application client JAR
+file that contains classes, resources, and descriptors needed to run the
+application client on end-user systems. When you deploy an application
+with the `asadmin deploy` command's `--retrieve` option, use the
+`asadmin get-client-stubs` command, or select the Generate RMIStubs
+option from the EJB Modules deployment page in the Administration
+Console, this is one of the JAR files retrieved to your system. Because
+application clients need access beyond the minimal sandbox permissions
+to work in the Java Web Start environment, the generated application
+client JAR file must be signed before it can be downloaded to and
+executed on an end-user system.
+
+A JAR file can be signed automatically or manually.
+
+The following topics are addressed here:
+
+* link:#gcjmd[Automatically Signing JAR Files]
+* link:#gcjlr[Using the `jar-signing-alias` Deployment Property]
+
+[[gcjmd]][[GSDVG00038]][[automatically-signing-jar-files]]
+
+Automatically Signing JAR Files
+
+The {productName} automatically creates a signed version of the
+required JAR file if none exists. When a Java Web Start request for the
+`gf-client.jar` file arrives, the {productName} looks for
+domain-dir`/java-web-start/gf-client.jar`. When a request for an
+application's generated application client JAR file arrives, the
+{productName} looks in the directory
+domain-dir`/java-web-start/`app-name for a file with the same name as
+the generated JAR file created during deployment.
+
+In either case, if the requested signed JAR file is absent or older than
+its unsigned counterpart, the {productName} creates a signed version
+of the JAR file automatically and deposits it in the relevant directory.
+Whether the {productName} just signed the JAR file or not, it serves
+the file from the domain-dir`/java-web-start` directory tree in response
+to the Java Web Start request.
+
+To sign these JAR files, by default the {productName} uses its
+self-signed certificate. When you create a new domain, either by
+installing the {productName} or by using the `asadmin create-domain`
+command, the {productName} creates a self-signed certificate and adds
+it to the domain's key store.
+
+A self-signed certificate is generally untrustworthy because no
+certification authority vouches for its authenticity. The automatic
+signing feature uses the same certificate to create all required signed
+JAR files.
+
+Starting with Java SE 7 Update 21, stricter security is enforced for
+applications launched using Java Web Start. Application users will see
+various security messages, depending on their Java security settings. If
+Java security is set to Very High on their systems, users will not be
+able to launch application clients signed using the {productName}
+self-signed certificate.
+
+To minimize impacts to application users, all Java Web Start
+applications should be signed with a trusted certificate instead of the
+{productName} self-signed certificate. If you use the {productName} Java Web Start feature or deploy applications that provide their
+own Java Web Start applications, perform the following steps:
+
+1. Obtain a trusted certificate from a certification authority if your
+organization does not already have one.
+
+2. Stop {productName}.
+
+3. Replace the {productName} self-signed certificate with the
+trusted certificate by importing the trusted certificate into the
+{productName} keystore using the `s1as` alias. By default, the
+keystore is located at domain-dir`/config/keystore.jks`.
++
+For more information about importing a trusted certificate into the
+domain keystore, see "link:security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
+in {productName} Security Guide.
+
+4. Delete any signed JARs already generated by {productName}:
+.. At the command prompt, type: +
+``rm -rf`` domain-dir``/java_web_start``
+.. For each application that contains an application client launched
+using Java Web Start, type: +
+``rm -rf`` domain-dir``/generated/xml/``app-name``/signed``
+.. Restart {productName}.
+
+5. Ensure that the Java security setting on user systems is set to Very High.
+
+After you perform these steps, the first time a user launches an
+application client on their system, Java Web Start detects that the
+server's signed JARs are newer than those cached on the user's system
+and downloads them again. This happens on the first launch only,
+regardless of the client. Even though the application client is now
+signed using a trusted certificate, users will again be asked whether to
+trust the downloaded application and can choose to skip that prompt for
+future launches.
+
+[[gcjlr]][[GSDVG00039]][[using-the-jar-signing-alias-deployment-property]]
+
+Using the `jar-signing-alias` Deployment Property
+
+The `asadmin deploy` command property `jar-signing-alias` specifies the
+alias for the security certificate with which the application client
+container JAR file is signed.
+
+Java Web Start won't execute code requiring elevated permissions unless
+it resides in a JAR file signed with a certificate that the user's
+system trusts. For your convenience, {productName} signs the JAR file
+automatically using the self-signed certificate from the domain, `s1as`.
+Java Web Start then asks the user whether to trust the code and displays
+the {productName} certificate information.
+
+To sign this JAR file with a different certificate, first add the
+certificate to the domain keystore. You can use a certificate from a
+trusted authority, which avoids the Java Web Start prompt. To add a
+certificate to the domain keystore, see "link:security-guide/system-security.html#GSSCG00147[Administering
+JSSE Certificates]" in {productName} Security
+Guide.
+
+Next, deploy your application using the `jar-signing-alias` property.
+For example:
+
+[source]
+----
+asadmin deploy --property jar-signing-alias=MyAlias MyApp.ear
+----
+
+For more information about the `asadmin deploy` command, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[geqxg]][[GSDVG00316]][[error-handling]]
+
+===== Error Handling
+
+When an application client is launched using Java Web Start, any error
+that the application client logic does not catch and handle is written
+to `System.err` and displayed in a dialog box. This display appears if
+an error occurs even before the application client logic receives
+control. It also appears if the application client code does not catch
+and handle errors itself.
+
+[[geqwd]][[GSDVG00317]][[vendor-icon-splash-screen-and-text]]
+
+===== Vendor Icon, Splash Screen, and Text
+
+To specify a vendor-specific icon, splash screen, text string, or a
+combination of these for Java Web Start download and launch screens, use
+the `vendor` element in the `glassfish-application-client.xml` file. The
+complete format of this element's data is as follows:
+
+[source,xml]
+----
+<vendor>icon-image-URI::splash-screen-image-URI::vendor-text</vendor>
+----
+
+The following example vendor element contains an icon, a splash screen,
+and a text string:
+
+[source,xml]
+----
+<vendor>images/icon.jpg::otherDir/splash.jpg::MyCorp, Inc.</vendor>
+----
+
+The following example vendor element contains an icon and a text string:
+
+[source,xml]
+----
+<vendor>images/icon.jpg::MyCorp, Inc.</vendor>
+----
+
+The following example vendor element contains a splash screen and a text
+string; note the initial double colon:
+
+[source,xml]
+----
+<vendor>::otherDir/splash.jpg::MyCorp, Inc.</vendor>
+----
+
+The following example vendor element contains only a text string:
+
+[source,xml]
+----
+<vendor>MyCorp, Inc.</vendor>
+----
+
+The default value is the text string `Application Client`.
+
+For more information about the `glassfish-application-client.xml` file,
+see the link:application-deployment-guide.html#GSDPG[{productName} Application
+Deployment Guide].
+
+You can also specify a vendor-specific icon, splash screen, text string,
+or a combination by using a custom JNLP file; see link:#gkmbs[Creating a
+Custom JNLP File].
+
+[[gkmbs]][[GSDVG00318]][[creating-a-custom-jnlp-file]]
+
+===== Creating a Custom JNLP File
+
+You can partially customize the Java Network Launching Protocol (JNLP)
+file that {productName} uses for Java Web Start.
+
+The following topics are addressed here:
+
+* link:#gkmco[Specifying the JNLP File in the Deployment Descriptor]
+* link:#gkmbq[Referring to JAR Files from the JNLP File]
+* link:#gkmbt[Referring to Other JNLP Files]
+* link:#gkmbr[Combining Custom and Automatically Generated Content]
+
+For more information about JNLP, see the
+http://java.sun.com/javase/technologies/desktop/javawebstart/download-spec.html[Java
+Web Start Architecture JNLP Specification and API Documentation]
+(`http://java.sun.com/javase/technologies/desktop/javawebstart/download-spec.html`).
+
+[[gkmco]][[GSDVG00040]][[specifying-the-jnlp-file-in-the-deployment-descriptor]]
+
+Specifying the JNLP File in the Deployment Descriptor
+
+To specify a custom JNLP file for Java Web Start, use the `jnlp-doc`
+element in the `glassfish-application-client.xml` file. If none is
+specified, a default JNLP file is generated.
+
+The value of the `jnlp-doc` element is a relative path with the
+following format:
+
+[source]
+----
+[path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
+----
+
+The default path-to-JAR-in-EAR is the current application client JAR
+file. For example, if the JNLP file is in the application client JAR
+file at `custom/myInfo.jnlp`, the element value would look like this:
+
+[source,xml]
+----
+<java-web-start-access>
+   <jnlp-doc>custom/myInfo.jnlp</jnlp-doc>
+</java-web-start-access>
+----
+
+If the application client is inside an EAR file, you can place the
+custom JNLP file inside another JAR file in the EAR. For example, if the
+JNLP file is in a JAR file at `other/myLib.jar`, the element value would
+look like this, with an exclamation point (`!`) separating the path to
+the JAR from the path in the JAR:
+
+[source,xml]
+----
+<java-web-start-access>
+   <jnlp-doc>other/myLib.jar!custom/myInfo.jnlp</jnlp-doc>
+</java-web-start-access>
+----
+
+For more information about the `glassfish-application-client.xml` file,
+see the {productName} Application Deployment
+Guide.
+
+[[gkmbq]][[GSDVG00041]][[referring-to-jar-files-from-the-jnlp-file]]
+
+Referring to JAR Files from the JNLP File
+
+As with any JNLP document, the custom JNLP file can refer to JAR files
+the application client requires.
+
+Do not specify every JAR on which the client depends. {productName}
+automatically handles JAR files that the Jakarta EE specification requires
+to be available to the application client. This includes JAR files
+listed in the application client JAR file's manifest `Class-Path` and
+JAR files in the EAR file's library directory (if any) and their
+transitive closures. The custom JNLP file should specify only those JAR
+files the client needs that {productName} would not otherwise
+include.
+
+Package these JAR files in the EAR file, as with any JAR file required
+by an application client. Use relative URIs in the `<jar href="...">`
+and `<nativelib href="...">` elements to point to the JAR files. The
+codebase that {productName} assigns for the final client JNLP file
+corresponds to the top level of the EAR file. Therefore, relative `href`
+references correspond directly to the relative path to the JAR files
+within the EAR file.
+
+Neither the Jakarta EE specification nor {productName} supports
+packaging JAR files inside the application client JAR file itself.
+Nothing prevents this, but {productName} does no special processing
+of such JAR files. They do not appear in the runtime class path and they
+cannot be referenced from the custom JNLP file.
+
+[[gkmbt]][[GSDVG00042]][[referring-to-other-jnlp-files]]
+
+Referring to Other JNLP Files
+
+The JNLP file can also refer to other custom JNLP files using
+`<extension href="..."/>` elements. To be consistent with relative
+`href` references to JAR files, the relative `href` references to JNLP
+files are resolved within the EAR file. You can place these JNLP files
+directly in the EAR file or inside JAR files that the EAR file contains.
+Use one of these formats for these `href` references:
+
+[source]
+----
+[path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
+
+path-to-JNLP-in-EAR
+----
+
+Note that these formats are not equivalent to the format of the
+`jnlp-doc` element in the `glassfish-application-client.xml` file.
+
+These formats follow the standard entry-within-a-JAR URI syntax and
+semantics. Support for this syntax comes from the automated Java Web
+Start support in {productName}. This is not a feature of Java Web
+Start or the JNLP standard.
+
+[[gkmbr]][[GSDVG00043]][[combining-custom-and-automatically-generated-content]]
+
+Combining Custom and Automatically Generated Content
+
+{productName} recognizes these types of content in the JNLP file:
+
+* Owned — {productName} owns the content and ignores any custom
+content
+* Merged — Automatically generated content and custom content are merged
+* Defaulted — Custom content is used if present, otherwise default
+content is provided
+
+You can compose a complete JNLP file and package it with the application
+client. {productName} then combines it with its automatically
+generated JNLP file. You can also provide content that only adds to or
+replaces what {productName} generates. The custom content must
+conform to the general structure of the JNLP format so that {productName} can properly place it in the final JNLP file.
+
+For example, to specify a single native library to be included only for
+Windows systems, the new element to add might be as follows:
+
+[source,xml]
+----
+<nativelib href="windows/myLib.jar"/>
+----
+
+However, you must indicate where in the overall document this element
+belongs. The actual custom JNLP file should look like this:
+
+[source,xml]
+----
+<jnlp>
+   <resources os="Windows">
+      <nativelib href="windows/myLib.jar"/>
+   </resources>
+</jnlp>
+----
+
+{productName} provides default `<information>` and `<resources>`
+elements, without specifying attributes such as `os`, `arch`,
+`platform`, or `locale`. {productName} merges its own content within
+those elements with custom content under those elements. Further, you
+can provide your own `<information>` and `<resources>` elements (and
+fragments within them) that specify at least one of these attributes.
+
+In general, you can perform the following customizations:
+
+* Override the {productName} defaults for the child elements of
+`<information>` elements that have no attribute settings for `os`,
+`arch`, `platform`, and `locale`. Among these child elements are
+`<title>`, `<vendor>`, `<description>`, `<icon>`, and so on.
+* Add `<information>` elements with `os`, `arch`, `platform`, or
+`locale` settings. You can also add child elements.
+* Add child elements of `<resources>` elements that have no attribute
+settings for `os`, `arch`, or `locale`. Among these child elements are
+`<jar>`, `<property>`, `<nativelib>`, and so on. You can also customize
+attributes of the `<java>` child element.
+* Add `<resources>` elements that specify at least one of `os`, `arch`,
+or `locale`. You can also add child elements.
+
+This flexibility allows you to add JAR files to the application
+(including platform-specific native libraries) and set properties to
+control the behavior of your application clients.
+
+The following tables provide more detail about what parts of the JNLP
+file you can add to and modify.
+
+[[GSDVG556]][[sthref24]][[gkmbk]]
+
+
+Table 10-1 Owned JNLP File Content
+
+[width="100%",cols="32%,68%",options="header",]
+|===
+|JNLP File Fragment |Description
+a|
+[source,xml]
+----
+<jnlp codebase="xxx" ...>
+----
+
+ |{productName} controls this content for application clients
+packaged in EAR files. The developer controls this content for
+application clients packaged in WAR files.
+
+a|
+[source,xml]
+----
+<jnlp href="xxx" ...>
+----
+
+ |{productName} controls this content for application clients
+packaged in EAR files. The developer controls this content for
+application clients packaged in WAR files.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <security>
+----
+
+ |{productName} must control the permissions requested for each JNLP
+file. All permissions are needed for the main file, which launches the
+ACC. The permissions requested for other JNLP documents depend on
+whether the JAR files referenced in those documents are signed.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <application-desc>
+    <argument> ...
+----
+
+ |{productName} sets the `main-class` and the arguments to be passed
+to the client.
+|===
+
+
+[[GSDVG557]][[sthref25]][[gkmci]]
+
+
+Table 10-2 Defaulted JNLP File Content
+
+[width="100%",cols="39%,61%",options="header",]
+|===
+|JNLP File Fragment |Description
+a|
+[source,xml]
+----
+<jnlp spec="xxx" ...>
+----
+
+ |Specifies the JNLP specification version.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <information [no-attributes]>
+----
+
+ |Specifies the application title, vendor, home page, various
+description text values, icon images, and whether offline execution is
+allowed.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [no-attributes]>
+    <java version="xxx"
+        java-vm-args="yyy" ...>
+----
+
+ |Specifies the Java SE version or selected VM parameter settings.
+|===
+
+
+[[GSDVG558]][[sthref26]][[gkmcc]]
+
+
+Table 10-3 Merged JNLP File Content
+
+[width="100%",cols="37%,63%",options="header",]
+|===
+|JNLP File Fragment |Description
+a|
+[source,xml]
+----
+<jnlp>
+  <information [attributes]>
+----
+
+ |You can specify one or more of the `os`, `arch`, `platform`, and
+`locale` attributes for the `<information>` element. You can also
+specify child elements; {productName} provides no default children.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [attributes]>
+----
+
+ |You can specify one or more of the `os`, `arch`, `platform`, and
+`locale` attributes for the `<resources>` element. You can also specify
+child elements; {productName} provides no default children.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [no-attributes]>
+    <jar ...>
+----
+
+ |Adds JAR files to be included in the application to the JAR files
+provided by {productName}.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [no-attributes]>
+    <nativelib ...>
+----
+
+ |Adds native libraries to be included in the application. Each entry in
+a JAR listed in a `<nativelib>` element must be a native library for the
+correct platform. The full syntax of the `<nativelib>` element lets the
+developer specify the platform for that native library.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [no-attributes]>
+    <property ...>
+----
+
+ |Adds system properties to be included in the application to the system
+properties defined by {productName}.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <resources [no-attributes]>
+    <extension ...>
+----
+
+ |Specifies another custom JNLP file.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <component-desc ...>
+----
+
+ |Includes another custom JNLP file that specifies a component
+extension.
+
+a|
+[source,xml]
+----
+<jnlp>
+  <installer-desc ...>
+----
+
+ |Includes another custom JNLP file that specifies an installer
+extension.
+|===
+
+
+[[gipkt]][[GSDVG00465]][[using-the-embeddable-acc]]
+
+==== Using the Embeddable ACC
+
+You can embed the ACC into your application client. If you place the
+as-install``/lib/gf-client.jar`` file in your runtime classpath, your
+application creates the ACC after your application code has started,
+then requests that the ACC start the application client portion. The
+basic model for coding is as follows:
+
+1. Create a builder object.
+2. Operate on the builder to configure the ACC.
+3. Obtain a new ACC instance from the builder.
+4. Present a client archive or class to the ACC instance.
+5. Start the client running within the newly created ACC instance.
+
+Your code should follow this general pattern:
+
+[source,java]
+----
+// one TargetServer for each ORB endpoint for bootstrapping
+TargetServer[] servers = ...;
+
+// Get a builder to set up the ACC
+AppClientContainer.Builder builder = AppClientContainer.newBuilder(servers);
+
+// Fine-tune the ACC's configuration. Note ability to "chain" invocations.
+builder.callbackHandler("com.acme.MyHandler").authRealm("myRealm"); // Modify config
+
+// Get a container for a client.
+URI clientURI = ...; // URI to the client JAR
+AppClientContainer acc = builder.newContainer(clientURI);
+
+or
+
+Class mainClass = ...;
+AppClientContainer acc = builder.newContainer(mainClass);
+
+// In either case, start the client running.
+String[] appArgs = ...;
+acc.startClient(appArgs); // Start the client
+
+...
+
+acc.close(); // close the ACC(optional)
+----
+
+The ACC loads the application client's `main` class, performs any
+required injection, and transfers control to the `static main` method.
+The ACC's `run` method returns to the calling application as soon as the
+client's `main` method returns to the ACC.
+
+If the application client's `main` method starts any asynchronous
+activity, that work continues after the ACC returns. The ACC has no
+knowledge of whether the client's `main` method triggers asynchronous
+work. Therefore, if the client causes work on threads other than the
+calling thread, and if the embedding application needs to know when the
+client's asynchronous work completes, the embedding application and the
+client must agree on how this happens.
+
+The ACC's shutdown handling is invoked from the ACC's `close` method.
+The calling application can invoke `acc.close()` to close down any
+services started by the ACC. If the application client code started any
+asynchronous activity that might still depend on ACC services, invoking
+`close` before that asynchronous activity completes could cause
+unpredictable and undesirable results. The shutdown handling is also run
+automatically at VM shutdown if the code has not invoked `close` before
+then.
+
+The ACC does not prevent the calling application from creating or
+running more than one ACC instance during a single execution of the
+application either serially or concurrently. However, other services
+used by the ACC (transaction manager, security, ORB, and so on) might or
+might not support such serial or concurrent reuse.
+
+[[beaky]][[GSDVG00466]][[running-an-application-client-using-the-appclient-script]]
+
+==== Running an Application Client Using the `appclient` Script
+
+To run an application client, you can launch the ACC using the
+`appclient` script, whether or not Java Web Start is enabled. This is
+optional. This script is located in the as-install``/bin`` directory. For
+details, see the link:reference-manual.html#GSRFM[{productName}
+Reference Manual].
+
+[[beakz]][[GSDVG00467]][[using-the-package-appclient-script]]
+
+==== Using the `package-appclient` Script
+
+You can package the {productName} system files required to launch
+application clients on remote systems into a single JAR file using the
+`package-appclient` script. This is optional. This script is located in
+the as-install``/bin`` directory. For details, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[fvymy]][[GSDVG00468]][[the-client.policy-file]]
+
+==== The `client.policy` File
+
+The `client.policy` file is the J2SE policy file used by the application
+client. Each application client has a `client.policy` file. The default
+policy file limits the permissions of Jakarta EE deployed application
+clients to the minimal set of permissions required for these
+applications to operate correctly. If an application client requires
+more than this default set of permissions, edit the `client.policy` file
+to add the custom permissions that your application client needs. Use
+the J2SE standard policy tool or any text editor to edit this file.
+
+For more information on using the J2SE policy tool, see
+`http://docs.oracle.com/javase/tutorial/security/tour2/index.html`.
+
+For more information about the permissions you can set in the
+`client.policy` file, see
+`http://docs.oracle.com/javase/7/docs/technotes/guides/security/permissions.html`.
+
+[[gckgn]][[GSDVG00469]][[using-rmiiiop-over-ssl]]
+
+==== Using RMI/IIOP Over SSL
+
+You can configure RMI/IIOP over SSL in two ways: using a username and
+password, or using a client certificate.
+
+To use a username and password, configure the `ior-security-config`
+element in the `glassfish-ejb-jar.xml` file. The following configuration
+establishes SSL between an application client and an EJB component using
+a username and password. The user has to login to the ACC using either
+the `sun-acc.xml` mechanism or the
+link:securing-apps.html#beacm[Programmatic Login Using the
+ProgrammaticLogin Class] mechanism.
+
+[source,xml]
+----
+<ior-security-config>
+  <transport-config>
+    <integrity>required</integrity>
+    <confidentiality>required</confidentiality>
+    <establish-trust-in-target>supported</establish-trust-in-target>
+    <establish-trust-in-client>none</establish-trust-in-client>
+  </transport-config>
+  <as-context>
+    <auth-method>username_password</auth-method>
+    <realm>default</realm>
+    <required>true</required>
+  </as-context>
+ <sas-context>
+    <caller-propagation>none</caller-propagation>
+ </sas-context>
+</ior-security-config>
+----
+
+For more information about the `glassfish-ejb-jar.xml` and `sun-acc.xml`
+files, see the link:application-deployment-guide.html#GSDPG[{productName}
+Application Deployment Guide].
+
+To use a client certificate, configure the `ior-security-config` element
+in the `glassfish-ejb-jar.xml` file. The following configuration
+establishes SSL between an application client and an EJB component using
+a client certificate.
+
+[source,xml]
+----
+<ior-security-config>
+  <transport-config>
+    <integrity>required</integrity>
+    <confidentiality>required</confidentiality>
+    <establish-trust-in-target>supported</establish-trust-in-target>
+    <establish-trust-in-client>required</establish-trust-in-client>
+  </transport-config>
+  <as-context>
+    <auth-method>none</auth-method>
+    <realm>default</realm>
+    <required>false</required>
+  </as-context>
+  <sas-context>
+    <caller-propagation>none</caller-propagation>
+  </sas-context>
+</ior-security-config>
+----
+
+To use a client certificate, you must also specify the system properties
+for the keystore and truststore to be used in establishing SSL. To use
+SSL with the Application Client Container (ACC), you need to set these
+system properties in one of the following ways:
+
+* Use the new syntax of the `appclient` script and specify the system
+properties as JVM options. See link:#beaky[Running an Application Client
+Using the `appclient` Script].
+* Set the environment variable `VMARGS` in the shell. For example, in
+the `ksh` or `bash` shell, the command to set this environment variable
+would be as follows:
++
+[source]
+----
+export VMARGS="-Djavax.net.ssl.keyStore=${keystore.db.file}
+-Djavax.net.ssl.trustStore=${truststore.db.file}
+-Djavax.net.ssl.keyStorePass word=${ssl.password}
+-Djavax.net.ssl.trustStorePassword=${ssl.password}"
+----
+* Optionally, you can set the `env` element using Ant. For example:
++
+[source,xml]
+----
+<target name="runclient">
+  <exec executable="${S1AS_HOME}/bin/appclient">
+    <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${keystore.db.file}
+      -Djavax.net.ssl.trustStore=${truststore.db.file}
+      -Djavax.net.ssl.keyStorePasword=${ssl.password}
+      -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+    <arg value="-client"/>
+    <arg value="${appClient.jar}"/>
+  </exec>
+</target>
+----
+
+[[ghbpc]][[GSDVG00470]][[connecting-to-a-remote-ejb-module-through-a-firewall]]
+
+==== Connecting to a Remote EJB Module Through a Firewall
+
+To deploy and run an application client that connects to an EJB module
+on a {productName} instance that is behind a firewall, you must set
+ORB Virtual Address Agent Implementation (ORBVAA) options. Use the
+`asadmin create-jvm-options` command as follows:
+
+[source]
+----
+asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAHost=public-IP-adress
+asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAPort=public-port
+asadmin create-jvm-options
+-Dcom.sun.corba.ee.ORBUserConfigurators.com.sun.corba.ee.impl.plugin.hwlb.VirtualAddressAgentImpl=x
+----
+
+Set the `ORBVAAHost` and `ORBVAAPort` options to the host and port of
+the public address. The `ORBUserConfigurators` option tells the ORB to
+create an instance of the `VirtualAddressAgentImpl` class and invoke the
+`configure` method on the resulting object, which must implement the
+com.sun.corba.ee.spi.orb.ORBConfigurator interface. The
+`ORBUserConfigurators` value doesn't matter. Together, these options
+create an ORB that in turn creates `Object` references (the underlying
+implementation of remote EJB references) containing the public address,
+while the ORB listens on the private address specified for the IIOP port
+in the {productName} configuration.
+
+[[gipkj]][[GSDVG00471]][[specifying-a-splash-screen]]
+
+==== Specifying a Splash Screen
+
+Java SE 6 offers splash screen support, either through a Java
+command-line option or a manifest entry in the application's JAR file.
+To take advantage of this Java SE feature in your application client,
+you can do one of the following:
+
+* Create the appclient JAR file so that its manifest contains a
+`SplashScreen-Image` entry that specifies the path to the image in the
+client. The `java` command displays the splash screen before starting
+the ACC or your client, just as with any Java application.
+* Use the new `appclient ... -jar` launch format, using the `-splash`
+command-line option at runtime or the `SplashScreen-Image` manifest
+entry at development time. See link:#beaky[Running an Application Client
+Using the `appclient` Script].
+* In the environment that runs the `appclient` script, set the `VMOPTS`
+environment variable to include the `-splash` option before invoking the
+`appclient` script to launch the client.
+* Build an application client that uses the embeddable ACC feature and
+specify the splash screen image using one of the following:
+
+** The `-splash` option of the `java` command
+
+** `SplashScreen-Image` in the manifest for your program (not the
+manifest for the application client)
++
+See link:#gipkt[Using the Embeddable ACC].
+
+During application (EAR file) deployment, the {productName} generates
+façade JAR files, one for the application and one for each application
+client in the application. During application client module deployment,
+the {productName} generates a single facade JAR for the application
+client. The `appclient` script supports splash screens inside the
+application client JAR only if you launch an application client facade
+or appclient client JAR. If you launch the facade for an application or
+the undeployed application itself, the `appclient` script cannot take
+advantage of the Java SE 6 splash screen feature.
+
+[[gjiec]][[GSDVG00472]][[setting-login-retries]]
+
+==== Setting Login Retries
+
+You can set a JVM option using the `appclient` script that determines
+the number of login retries allowed. This option is
+`-Dorg.glassfish.appclient.acc.maxLoginRetries=`n where n is a positive
+integer. The default number of retries is 3.
+
+This retry loop happens when the ACC attempts to perform injection if
+you annotated the client's `main` class (for example, using
+`@Resource`). If instead of annotations your client uses the
+`InitialContext` explicitly to look up remote resources, the retry loop
+does not apply. In this case, you could write logic to catch an
+exception around the lookup and retry explicitly.
+
+For details about the `appclient` script syntax, see the
+link:reference-manual.html#GSRFM[{productName} Reference Manual].
+
+[[gjpjt]][[GSDVG00473]][[using-libraries-with-application-clients]]
+
+==== Using Libraries with Application Clients
+
+The Libraries field in the Administration Console's deployment page and
+the `--libraries` option of the `asadmin deploy` command do not apply to
+application clients. Neither do the as-install``/lib``, domain-dir``/lib``,
+and domain-dir`/lib/classes` directories comprising the Common Class
+Loader. These apply only to applications and modules deployed to the
+server. For more information, see link:class-loaders.html#beade[Class
+Loaders].
+
+To use libraries with an application client, package the application
+client in an application (EAR file). Then, either place the libraries in
+the ``/lib`` directory of the EAR file or specify their location in the
+application client JAR file's manifest `Class-Path`.
+
+[[gkusn]][[GSDVG00161]][[developing-clients-without-the-acc]]
+
+=== Developing Clients Without the ACC
+
+This section describes the procedure to create, assemble, and deploy a
+Java-based client that is not packaged using the Application Client
+Container (ACC).
+
+The following topics are addressed here:
+
+* link:#gkusp[To access an EJB component from a stand-alone client]
+* link:#gkutw[To access an EJB component from a server-side module]
+* link:#gkuqa[To access a JMS resource from a stand-alone client]
+
+For information about using the ACC, see link:#beakv[Developing Clients
+Using the ACC].
+
+[[gkusp]][[GSDVG00074]][[to-access-an-ejb-component-from-a-stand-alone-client]]
+
+==== To access an EJB component from a stand-alone client
+
+1. In your client code, instantiate the `InitialContext`:
++
+[source,java]
+----
+InitialContext ctx = new InitialContext();
+----
+It is not necessary to explicitly instantiate a naming context that
+points to the CosNaming service.
+2. In the client code, look up the home object by specifying the JNDI
+name of the home object.
++
+Here is an EJB 2.x example:
++
+[source,java]
+----
+Object ref = ctx.lookup("jndi-name");
+BeanAHome = (BeanAHome)PortableRemoteObject.narrow(ref,BeanAHome.class);
+----
+Here is an EJB 3.x example:
++
+[source,java]
+----
+BeanRemoteBusiness bean =(BeanRemoteBusiness) ctx.lookup("com.acme.BeanRemoteBusiness");
+----
+If load balancing is enabled as in Step link:#CIHJADHD[6] and the EJB
+components being accessed are in a different cluster, the endpoint list
+must be included in the lookup, as follows:
++
+[source]
+----
+corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
+----
+For more information about naming and lookups, see
+link:jndi.html#beans[Accessing the Naming Context].
+3. Deploy the EJB component to be accessed.
++
+For more information on deployment, see "link:application-deployment-guide/overview.html#GSDPG00063[About
+Deployment Tools]" in {productName} Application
+Deployment Guide.
+4. Copy the as-install``/lib/gf-client.jar`` file to the client machine
+and include it in the classpath on the client side.
++
+The `gf-client.jar` file references {productName} JAR files in its
+`MANIFEST.MF` file. If there is no {productName} installation on the
+client machine, you must also copy the as-install``/modules`` directory to
+the client machine and maintain its directory structure relative to the
+as-install``/lib/gf-client.jar`` file. Or you can use the
+`package-appclient` script; see link:#beakz[Using the
+`package-appclient` Script].
+5. To access EJB components that are residing in a remote system, set
+the following system properties for the Java Virtual Machine startup
+options:
++
+[source]
+----
+-Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
+-Dorg.omg.CORBA.ORBInitialPort=${ORBport}
+----
+Here ORBhost is the {productName} hostname and ORBport is the ORB
+port number (default is `3700` for the default server instance, named
+`server`).
++
+You can use the `asadmin get` command to get the IIOP port numbers. For
+example:
++
+[source]
+----
+asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
+----
+6. [[CIHJADHD]]
++
+To set up load balancing and remote EJB reference failover, define the
+`endpoints` property as follows:
++
+[source]
+----
+-Dcom.sun.appserv.iiop.endpoints=host1:port1,host2:port2,...
+----
+The `endpoints` property specifies a comma-separated list of one or more
+IIOP endpoints used for load balancing. An IIOP endpoint is in the form
+host`:`port, where the host is an IPv4 address or host name, and the
+port specifies the port number.
++
+If the `endpoints` list is changed dynamically in the code, the new list
+is used only if a new `InitialContext` is created.
+7. Make sure the `etc/hosts` file on the client machine maps the
+{productName} hostname and external IP address.
+8. Run the stand-alone client.
++
+As long as the client environment is set appropriately and the JVM is
+compatible, you merely need to run the `main` class.
+
+[[gkutw]][[GSDVG00075]][[to-access-an-ejb-component-from-a-server-side-module]]
+
+==== To access an EJB component from a server-side module
+
+A server-side module can be a servlet, another EJB component, or another
+type of module.
+
+1. [[CIHFIJDC]]
++
+In your module code, instantiate the `InitialContext`:
++
+[source,java]
+----
+InitialContext ctx = new InitialContext();
+----
+It is not necessary to explicitly instantiate a naming context that
+points to the CosNaming service.
++
+To set up load balancing and remote EJB reference failover, define the
+`endpoints` property as follows:
++
+[source,java]
+----
+Hashtable env = new Hashtable();
+env.put("com.sun.appserv.iiop.endpoints","host1:port1,host2:port2,...");
+InitialContext ctx = new InitialConext(env);
+----
+The `endpoints` property specifies a comma-separated list of one or more
+IIOP endpoints used for load balancing. An IIOP endpoint is in the form
+host`:`port, where the host is an IPv4 address or host name, and the
+port specifies the port number.
++
+You can use the `asadmin get` command to get the IIOP port numbers. For
+example:
++
+[source]
+----
+asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
+----
+If the `endpoints` list is changed dynamically in the code, the new list
+is used only if a new `InitialContext` is created.
+2. In the module code, look up the home object by specifying the JNDI
+name of the home object.
++
+Here is an EJB 2.x example:
++
+[source,java]
+----
+Object ref = ctx.lookup("jndi-name");
+BeanAHome = (BeanAHome)PortableRemoteObject.narrow(ref,BeanAHome.class);
+----
+Here is an EJB 3.x example:
++
+[source,java]
+----
+BeanRemoteBusiness bean =(BeanRemoteBusiness) ctx.lookup("com.acme.BeanRemoteBusiness");
+----
+If load balancing is enabled as in Step link:#CIHFIJDC[1] and the EJB
+components being accessed are in a different cluster, the endpoint list
+must be included in the lookup, as follows:
++
+[source]
+----
+corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
+----
+For more information about naming and lookups, see
+link:jndi.html#beans[Accessing the Naming Context].
+3. Deploy the EJB component to be accessed.
++
+For more information on deployment, see "link:application-deployment-guide/overview.html#GSDPG00063[About
+Deployment Tools]" in {productName} Application
+Deployment Guide.
+4. To access EJB components that are residing in a remote system, set
+the following system properties for the Java Virtual Machine startup
+options:
++
+[source]
+----
+-Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
+-Dorg.omg.CORBA.ORBInitialPort=${ORBport}
+----
+Here ORBhost is the Application Server hostname and ORBport is the ORB
+port number (default is `3700` for the default server instance, named `server`).
+5. Deploy the module.
++
+For more information on deployment, see "link:application-deployment-guide/overview.html#GSDPG00063[About
+Deployment Tools]" in {productName} Application
+Deployment Guide.
+
+[[gkuqa]][[GSDVG00076]][[to-access-a-jms-resource-from-a-stand-alone-client]]
+
+==== To access a JMS resource from a stand-alone client
+
+1. Create a JMS client.
++
+For detailed instructions on developing a JMS client, see
+https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-messaging-examples[
+Java Message Service Examples] in The Jakarta EE Tutorial.
+2. Configure a JMS resource on {productName}.
++
+For information on configuring JMS resources, see
+"link:administration-guide/jms.html#GSADG00598[
+Administering JMS Connection Factories and Destinations]"
+in {productName} Administration Guide.
+3. Copy the following JAR files to the client machine and include them
+in the classpath on the client side:
+* `gf-client.jar` - available at as-install``/lib``
+* `imqjmsra.jar` - available at
+as-install``/lib/install/aplications/jmsra``
++
+The `gf-client.jar` file references {productName} JAR files in its
+`MANIFEST.MF` file. If there is no {productName} installation on the
+client machine, you must also copy the as-install``/modules`` directory to
+the client machine and maintain its directory structure relative to the
+as-install``/lib/gf-client.jar`` file. Or you can use the
+`package-appclient` script; see link:#beakz[Using the
+`package-appclient` Script].
+4. To access EJB components that are residing in a remote system, set
+the following system properties for the Java Virtual Machine startup
+options:
++
+[source]
+----
+-Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
+-Dorg.omg.CORBA.ORBInitialPort=${ORBport}
+----
+Here ORBhost is the Application Server hostname and ORBport is the ORB
+port number (default is `3700` for the default server instance, named
+`server`).
++
+You can use the `asadmin get` command to get the IIOP port numbers. For
+example:
++
+[source]
+----
+asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
+----
+5. Run the stand-alone client.
++
+As long as the client environment is set appropriately and the JVM is
+compatible, you merely need to run the `main` class.
+
+

@@ -1,0 +1,125 @@
+type=page
+status=published
+title=list-sub-components
+next=list-supported-cipher-suites.html
+prev=list-secure-admin-principals.html
+~~~~~~
+
+= list-sub-components
+
+[[list-sub-components-1]][[GSRFM00201]][[list-sub-components]]
+
+== list-sub-components
+
+Lists EJB or servlet components in a deployed module or module of a
+deployed application
+
+[[sthref1803]]
+
+=== Synopsis
+
+[source]
+----
+asadmin [asadmin-options] list-sub-components [--help]
+[--type type]
+[--appname appname] [--resources]
+modulename
+----
+
+[[sthref1804]]
+
+=== Description
+
+The `list-sub-components` subcommand lists EJB or servlet components in
+a deployed module or in a module of a deployed application. If a module
+is not specified, all modules are listed. The `--appname` option
+functions only when the specified module is stand-alone. To display a
+specific module in an application, you must specify the module name with
+the `--appname` option.
+
+This subcommand is supported in remote mode only.
+
+[[sthref1805]]
+
+=== Options
+
+asadmin-options::
+  Options for the `asadmin` utility. For information about these
+  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+`--help`::
+`-?`::
+  Displays the help text for the subcommand.
+`--type`::
+  Specifies the type of component to be listed. The options are `ejbs`
+  and `servlets`. If nothing is specified, then all of the components
+  are listed.
+`--appname`::
+  Identifies the name of the application. This option is required when
+  the desired output is the subcomponents of an embedded module of a
+  deployed application. +
+  The name can include an optional version identifier, which follows the
+  name and is separated from the name by a colon (`:`). The version
+  identifier must begin with a letter or number. It can contain
+  alphanumeric characters plus underscore (`_`), dash (`-`), and period
+  (`.`) characters. For more information about module and application
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  Module and Application Versions]" in
+  {productName} Application Deployment Guide.
+`--resources`::
+  Lists the application-scoped resources for each subcomponent.
+
+[[sthref1806]]
+
+=== Operands
+
+modulename::
+  Specifies the name of the module containing the subcomponent. +
+  The name can include an optional version identifier, which follows the
+  name and is separated from the name by a colon (`:`). The version
+  identifier must begin with a letter or number. It can contain
+  alphanumeric characters plus underscore (`_`), dash (`-`), and period
+  (`.`) characters. For more information about module and application
+  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  {productName} Application Deployment Guide.
+
+[[sthref1807]]
+
+=== Examples
+
+[[GSRFM711]][[sthref1808]]
+
+==== Example 1   Listing Subcomponents
+
+This example lists the subcomponents of the `MEjbApp` application within
+the `mejb.jar` module.
+
+[source]
+----
+asadmin> list-sub-components --appname MEjbApp mejb.jar
+MEJBBean <StatelessSessionBean>
+Command list-sub-components executed successfully.
+----
+
+[[sthref1809]]
+
+=== Exit Status
+
+0::
+  subcommand executed successfully
+1::
+  error in executing the subcommand
+
+[[sthref1810]]
+
+=== See Also
+
+link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+
+link:disable.html#disable-1[`disable`(1)],
+link:enable.html#enable-1[`enable`(1)],
+link:list-components.html#list-components-1[`list-components`(1)]
+
+link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+Guide]
+
+

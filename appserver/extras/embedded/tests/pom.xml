@@ -27,6 +27,7 @@
     </parent>
 
     <artifactId>tests-embedded</artifactId>
+
     <name>GlassFish Embedded Modules - Tests</name>
 
     <dependencies>

@@ -21,19 +21,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-    <parent>
+   <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
         <version>7.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>glassfish-embedded-all</artifactId>
-    <packaging>jar</packaging>
+   <artifactId>glassfish-embedded-all</artifactId>
+   <packaging>jar</packaging>
 
-    <name>Embedded GlassFish All-In-One</name>
+   <name>Embedded GlassFish All-In-One</name>
 
-    <dependencies>
+   <properties>
+        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
+        <rar.directory>${project.build.directory}/rars</rar.directory>
+    </properties>
+
+   <dependencies>
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>antlr</artifactId>
@@ -1647,12 +1652,7 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
-        <rar.directory>${project.build.directory}/rars</rar.directory>
-    </properties>
-
-    <build>
+   <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>

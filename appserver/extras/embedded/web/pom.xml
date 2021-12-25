@@ -33,6 +33,11 @@
 
     <name>Embedded GlassFish Web</name>
 
+    <properties>
+        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
+        <rar.directory>${project.build.directory}/rars</rar.directory>
+    </properties>
+
     <dependencies>
         <!-- glassfish-hk2 -->
         <dependency>
@@ -1074,7 +1079,7 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.lang-model</artifactId>
-            <optional>true</optional>            
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
@@ -1323,11 +1328,6 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-    <properties>
-        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
-        <rar.directory>${project.build.directory}/rars</rar.directory>
-    </properties>
 
     <build>
         <defaultGoal>install</defaultGoal>

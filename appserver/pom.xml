@@ -90,7 +90,7 @@
         <install.dir.name>glassfish7</install.dir.name>
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.0.0-M2</jakarta.faces-api.version>
+        <jakarta.faces-api.version>4.0.0-SNAPSHOT</jakarta.faces-api.version>
         <mojarra.version>4.0.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->

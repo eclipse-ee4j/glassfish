@@ -51,6 +51,7 @@
                 </executions>
                 <configuration>
                     <url>${faces.url}</url>
+                    <skipCache>true</skipCache>
                     <unpack>true</unpack>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>

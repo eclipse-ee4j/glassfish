@@ -27,9 +27,9 @@
         <version>7.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tags-snapshot</artifactId>
+    <artifactId>jbatch-snapshot</artifactId>
     <packaging>pom</packaging>
-    <name>Tags master SNAPSHOT</name>
+    <name>jBatch master SNAPSHOT</name>
 
     <properties>
         <jbatch.url>https://github.com/WASdev/standards.jsr352.jbatch/archive/refs/heads/master.zip</jbatch.url>

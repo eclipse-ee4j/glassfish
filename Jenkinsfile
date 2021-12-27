@@ -30,6 +30,7 @@ def jobs = [
 
 def jobs_all = [
   "cdi_all",
+  "ql_gf_web_profile_all"
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
   "web_jsp",

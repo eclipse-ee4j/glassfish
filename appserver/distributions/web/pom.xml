@@ -29,7 +29,12 @@
     <artifactId>web</artifactId>
     <packaging>glassfish-distribution</packaging>
 
-    <name>Glassfish Web Distribution</name>
+    <name>Glassfish Web Profile Distribution</name>
+    
+    <properties>
+        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
+        <patches>${basedir}/src/main/patches</patches>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -80,6 +85,40 @@
                             <goal>exec</goal>
                         </goals>
                         <phase>process-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>do stuff</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <macrodef name="jarupdate">
+                                    <attribute name="basedir"/> 
+                                    <attribute name="includes"/>
+                                    <attribute name="destfile"/>
+                                    <sequential>
+                                        <zip destfile="@{destfile}.tmp">
+                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
+                                        </zip>
+                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
+                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
+                                    </sequential>
+                                </macrodef>
+                                
+                                <jarupdate 
+                                    basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/hibernate-validator.jar"
+                                />
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

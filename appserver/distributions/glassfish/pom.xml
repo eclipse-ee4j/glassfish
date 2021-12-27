@@ -30,7 +30,7 @@
     <artifactId>glassfish</artifactId>
     <packaging>glassfish-distribution</packaging>
 
-    <name>Glassfish Distribution</name>
+    <name>Glassfish Full Profile Distribution</name>
 
     <properties>
         <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>

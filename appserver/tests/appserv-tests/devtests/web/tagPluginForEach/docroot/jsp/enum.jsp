@@ -16,7 +16,7 @@
 
 --%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ page language="java" import="java.util.Vector" %>
 
 <% Vector v = new Vector();

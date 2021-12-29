@@ -20,20 +20,15 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * Unit test for Bugzilla 31171 ("ClassCastException in
- * org.apache.jasper.runtime.PageContextImpl.getException"), see
+ * org.glassfish.wasp.runtime.PageContextImpl.getException"), see
  * http://issues.apache.org/bugzilla/show_bug.cgi?id=31171
  */
 public class WebTest {
 
-    private static final String TEST_NAME
-        = "jsp-error-page-class-cast-exception";
+    private static final String TEST_NAME = "jsp-error-page-class-cast-exception";
+    private static final String EXPECTED = "jakarta.servlet.jsp.JspException: java.lang.Throwable: " + "The cake fell in the mud";
 
-    private static final String EXPECTED
-        = "jakarta.servlet.jsp.JspException: java.lang.Throwable: "
-            + "The cake fell in the mud";
-
-    private static SimpleReporterAdapter stat
-        = new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     private String host;
     private String port;
@@ -81,16 +76,20 @@ public class WebTest {
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
 
-        } catch( Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             stat.addStatus(TEST_NAME, stat.FAIL);
         } finally {
             try {
-                if (is != null) is.close();
-            } catch (IOException ex) {}
+                if (is != null)
+                    is.close();
+            } catch (IOException ex) {
+            }
             try {
-                if (bis != null) bis.close();
-            } catch (IOException ex) {}
+                if (bis != null)
+                    bis.close();
+            } catch (IOException ex) {
+            }
         }
     }
 

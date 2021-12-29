@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,10 +69,10 @@ public final class Constants {
     public static final String DEFAULT_WEB_MODULE_PREFIX = "__default-";
 
     /**
-     * The Apache Jasper JSP servlet class name.
+     * The Eclipse WASP Pages servlet class name.
      */
     public static final String APACHE_JSP_SERVLET_CLASS =
-        "org.apache.jasper.servlet.JspServlet";
+        "org.glassfish.wasp.servlet.JspServlet";
 
     public static final String JSP_URL_PATTERN="*.jsp";
 

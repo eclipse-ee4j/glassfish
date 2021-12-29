@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,8 +38,7 @@ public abstract class ServerSentEventConnection implements Closeable {
     /**
      * Event source's last event ID.
      *
-     * @return null if there is no HTTP header in the request
-     *         otherwise, last event ID
+     * @return null if there is no HTTP header in the request otherwise, last event ID
      */
     public String getLastEventID() {
         return getRequest().getHeader("Last-Event-ID");
@@ -56,13 +56,13 @@ public abstract class ServerSentEventConnection implements Closeable {
 
     /**
      * Sends the Server-Sent event to client
+     *
      * @param eventData Server-Sent event data
      * @throws IOException when there is an error in sending
      * @throws IllegalStateException when called after calling close method
      * @see ServerSentEventData
      */
-    public abstract void sendMessage(ServerSentEventData eventData)
-            throws IOException;
+    public abstract void sendMessage(ServerSentEventData eventData) throws IOException;
 
     /**
      * Closes the connection

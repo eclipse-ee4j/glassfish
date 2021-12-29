@@ -76,12 +76,12 @@ import java.util.logging.Logger;
  * the delegation model recommended in the specification. The system class
  * loader will be queried first, then the local repositories, and only then
  * delegation to the parent class loader will occur. This allows the web
- * application to override any shared class except the classes from J2SE.
+ * application to override any shared class except the classes from Java SE.
  * Special handling is provided from the JAXP XML parser interfaces, the JNDI
  * interfaces, and the classes from the servlet API, which are never loaded
  * from the webapp repository.
  * <p>
- * <strong>IMPLEMENTATION NOTE</strong> - Due to limitations in Jasper
+ * <strong>IMPLEMENTATION NOTE</strong> - Due to limitations in WaSP
  * compilation technology, any repository which contains classes from
  * the servlet API will be ignored by the class loader.
  * <p>
@@ -194,7 +194,7 @@ public class WebappClassLoader extends URLClassLoader
     protected URL[] repositoryURLs = null;
 
     /**
-     * Repositories translated as path in the work directory (for Jasper
+     * Repositories translated as path in the work directory (for WaSP
      * originally), but which is used to generate fake URLs should getURLs be
      * called.
      */
@@ -2400,7 +2400,7 @@ public class WebappClassLoader extends URLClassLoader
      * class loader or any class loader where this loader is a parent class
      * loader. Whilst {@link ResourceBundle#clearCache()} could be used there
      * are complications around the
-     * {@link org.apache.jasper.servlet.JasperLoader} that mean a reflection
+     * {@link org.glassfish.wasp.servlet.WaspLoader} that mean a reflection
      * based approach is more likely to be complete.
      *
      * The ResourceBundle is using WeakReferences so it shouldn't be pinning the

@@ -33,6 +33,10 @@
 
     <name>Distribution Module for JDBC Resource Adapter</name>
 
+    <properties>
+        <target.application.directory>${project.build.outputDirectory}/glassfish/lib/install/applications</target.application.directory>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
@@ -50,10 +54,6 @@
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <target.application.directory>${project.build.outputDirectory}/glassfish/lib/install/applications</target.application.directory>
-    </properties>
 
     <build>
         <plugins>

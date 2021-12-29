@@ -30,22 +30,87 @@
     <packaging>pom</packaging>
 
     <name>Glassfish Featureset</name>
-    <description>This pom defines the set of packages for GlassFish distribution</description>
+    <description>This pom defines the set of packages for the full GlassFish distribution</description>
 
     <dependencies>
-        <!-- pull web packages -->
+        <!-- Pull web packages -->
         <dependency>
             <groupId>org.glassfish.main.featuresets</groupId>
             <artifactId>web</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
-
-        <!-- glassfish-common-full -->
+      
+        
+        <!-- Jakarta Concurrency -->
         <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-javaee-full</artifactId>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.enterprise.concurrent</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-connector</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-impl</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        
+        <!-- Jakarta Batch -->
+        <dependency>
+            <groupId>jakarta.batch</groupId>
+            <artifactId>jakarta.batch-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.container</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.jbatch</groupId>
+            <artifactId>com.ibm.jbatch.spi</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -87,80 +152,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>jakarta.batch</groupId>
-            <artifactId>jakarta.batch-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.jbatch</groupId>
-            <artifactId>com.ibm.jbatch.container</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.ibm.jbatch</groupId>
-            <artifactId>com.ibm.jbatch.spi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-connector</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-impl</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.enterprise.concurrent</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- glassfish-ejb -->
+        
+        
+        <!-- Jakarta Enterprise Beans (features on top of Enterprise Beans Lite -->
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
             <artifactId>ejb-timer-databases</artifactId>
@@ -229,8 +223,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- glassfish-cmp -->
+        <!-- Jakarta Enterprise Beans - Container Managed Persistence (for compatibiliy, don't use) -->
         <dependency>
             <groupId>org.glassfish.main.persistence.cmp</groupId>
             <artifactId>cmp-ejb-mapping</artifactId>
@@ -352,15 +345,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- glassfish-entitybeans-container -->
+        <!-- Jakarta Enterprise Beans - glassfish-entitybeans-container -->
         <dependency>
            <groupId>org.glassfish.main.persistence</groupId>
            <artifactId>entitybean-container</artifactId>
            <version>${project.version}</version>
         </dependency>
-
-        <!-- glassfish-corba -->
+        <!-- Jakarta Enterprise Beans - CORBA -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>
             <artifactId>glassfish-corba-orb</artifactId>
@@ -392,8 +383,124 @@
             </exclusions>
         </dependency>
 
-        <!-- metro package -->
+        
+        <!-- Jakarta XML Web Services -->
+        <dependency><!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-api-osgi</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency><!-- This is actually Metro -->
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-osgi</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency><!-- Repackaged Apache Santuario -->
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-extra-xmlsec</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-extra-jdk-packages</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>wstx-services</artifactId>
+            <version>${webservices.version}</version>
+            <type>war</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency><!-- webservices-osgi depends on ant -->
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>ant</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>stax2-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>webservices.security</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.webservices</groupId>
+            <artifactId>webservices-scripts</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+         <dependency>
             <groupId>org.glassfish.main.webservices</groupId>
             <artifactId>metro-glue</artifactId>
             <version>${project.version}</version>
@@ -437,16 +544,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-osgi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+        
+        
+        <!-- Jakarta XML Binding -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -458,8 +558,21 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.woodstox</groupId>
-            <artifactId>woodstox-core</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        
+        <!-- Jakarta Activation -->
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -468,8 +581,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>webservices-osgi</artifactId>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-activation</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -477,52 +590,23 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- webservices-osgi depends on ant -->
+        
+        
+        <!-- Jakarta Messaging -->
         <dependency>
-            <groupId>org.glassfish.external</groupId>
-            <artifactId>ant</artifactId>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>webservices-extra-jdk-packages</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>webservices-api-osgi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.security</groupId>
-            <artifactId>webservices.security</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.webservices</groupId>
-            <artifactId>webservices-scripts</artifactId>
-            <version>${project.version}</version>
+       </dependency>
+       <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mq-distribution</artifactId>
+            <version>${mq.version}</version>
             <type>zip</type>
             <exclusions>
                 <exclusion>
@@ -532,10 +616,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.metro</groupId>
-            <artifactId>wstx-services</artifactId>
-            <version>${webservices.version}</version>
-            <type>war</type>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jms-core</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -544,8 +627,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>stax2-api</artifactId>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>gf-jms-injection</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -553,8 +637,54 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+           <groupId>org.glassfish.main.jms</groupId>
+           <artifactId>jms-admin</artifactId>
+           <version>${project.version}</version>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>org.glassfish.main.jms</groupId>
+           <artifactId>gf-jms-connector</artifactId>
+           <version>${project.version}</version>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>org.glassfish.main.connectors</groupId>
+           <artifactId>connectors-inbound-runtime</artifactId>
+           <version>${project.version}</version>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
+       <dependency>
+           <groupId>org.glassfish.main.jms</groupId>
+           <artifactId>jmsra</artifactId>
+           <version>${project.version}</version>
+           <type>zip</type>
+           <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+       </dependency>
+        
 
-        <!-- glassfish-appclient -->
+        <!-- GlassFish Application Client Container-->
         <dependency>
             <groupId>org.glassfish.main.appclient</groupId>
             <artifactId>gf-client</artifactId>
@@ -643,102 +773,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
+       
 
-        <!-- glassfish-jms -->
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>jms-core</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jms</groupId>
-            <artifactId>gf-jms-injection</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-           <groupId>org.glassfish.main.jms</groupId>
-           <artifactId>jms-admin</artifactId>
-           <version>${project.version}</version>
-           <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-       </dependency>
-       <dependency>
-           <groupId>org.glassfish.main.jms</groupId>
-           <artifactId>gf-jms-connector</artifactId>
-           <version>${project.version}</version>
-           <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-       </dependency>
-       <dependency>
-           <groupId>org.glassfish.main.connectors</groupId>
-           <artifactId>connectors-inbound-runtime</artifactId>
-           <version>${project.version}</version>
-           <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-       </dependency>
-       <dependency>
-           <groupId>org.glassfish.main.jms</groupId>
-           <artifactId>jmsra</artifactId>
-           <version>${project.version}</version>
-           <type>zip</type>
-           <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-       </dependency>
-
-       <dependency>
-            <groupId>jakarta.jms</groupId>
-            <artifactId>jakarta.jms-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-       </dependency>
-
-       <!-- mq package -->
-       <dependency>
-            <groupId>org.glassfish.mq</groupId>
-            <artifactId>mq-distribution</artifactId>
-            <version>${mq.version}</version>
-            <type>zip</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- glassfish-gui plugins -->
+        <!-- GlassFish Admin GUI -->
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>console-common-full-plugin</artifactId>
@@ -794,19 +831,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- glassfish-common-full -->
         <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.angus</groupId>
-            <artifactId>angus-activation</artifactId>
+            <groupId>org.glassfish.main.deployment</groupId>
+            <artifactId>deployment-javaee-full</artifactId>
+            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

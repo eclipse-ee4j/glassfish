@@ -45,6 +45,7 @@ import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
@@ -1019,6 +1020,7 @@ public class Request
      * Return an Iterator containing the String names of all notes bindings
      * that exist for this request.
      */
+    @Override
     public Iterator<String> getNoteNames() {
         return notes.keySet().iterator();
     }
@@ -1469,27 +1471,6 @@ public class Request
             reader = new CoyoteReader(inputBuffer);
         }
         return reader;
-    }
-
-    /**
-     * Return the real path of the specified virtual path.
-     *
-     * @param path Path to be translated
-     *
-     * @deprecated As of version 2.1 of the Java Servlet API, use
-     *  <code>ServletContext.getRealPath()</code>.
-     */
-    @Override
-    public String getRealPath(String path) {
-        if (servletContext == null) {
-            return null;
-        } else {
-            try {
-                return servletContext.getRealPath(path);
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
-        }
     }
 
     /**
@@ -2018,7 +1999,7 @@ public class Request
                             @Override
                             public Boolean run() {
                                 try {
-                                    return Boolean.valueOf(realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, (AuthenticatorBase) authBase, true));
+                                    return Boolean.valueOf(realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true));
                                 } catch (IOException ex) {
                                     throw new RuntimeException("Exception thrown while attempting to authenticate", ex);
                                 }
@@ -2026,7 +2007,7 @@ public class Request
                         });
                         return ret.booleanValue();
                     } else {
-                        return realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, (AuthenticatorBase) authBase, true);
+                        return realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true);
                     }
 
                 } catch (Exception ex) {
@@ -2771,18 +2752,6 @@ public class Request
             return false;
         }
 
-    }
-
-    /**
-     * Return <code>true</code> if the session identifier included in this
-     * request came from the request URI.
-     *
-     * @deprecated As of Version 2.1 of the Java Servlet API, use
-     *  <code>isRequestedSessionIdFromURL()</code> instead.
-     */
-    @Override
-    public boolean isRequestedSessionIdFromUrl() {
-        return isRequestedSessionIdFromURL();
     }
 
     /**
@@ -4529,6 +4498,24 @@ public class Request
         return context != null &&
             context.getManager() != null &&
             context.getManager().isSessionVersioningSupported();
+    }
+
+    @Override
+    public String getRequestId() {
+        // TODO Implement!
+        return null;
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        // TODO Implement!
+        return null;
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        // TODO Implement!
+        return null;
     }
 
     /**

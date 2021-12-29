@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -257,6 +258,7 @@
         </dependency>
 
         <!-- Jakarta MVC -->
+        <!-- TMP disable until EE 10 versions
         <dependency>
             <groupId>jakarta.mvc</groupId>
             <artifactId>jakarta.mvc-api</artifactId>
@@ -287,6 +289,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
 
         <!-- glassfish-grizzly-full -->
         <dependency>
@@ -598,6 +601,7 @@
         </dependency>
 
          <!-- Jakarta Security -->
+         <!-- TMP disable until EE 10 versions 
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
@@ -628,6 +632,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
+        
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>
@@ -1388,6 +1394,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- Provides conflicting JAXB provider.
+             See https://github.com/eclipse-ee4j/eclipselink/issues/1380
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
@@ -1398,6 +1406,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.dbws</artifactId>
@@ -1568,6 +1577,16 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.lang-model</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

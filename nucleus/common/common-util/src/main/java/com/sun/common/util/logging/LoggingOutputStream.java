@@ -170,7 +170,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
  * One option that was thought of to smooth this over was to see
  * if the caller of println is Throwable.[some set of methods].
  * Unfortunately, there are others who interpose on System.out and err
- * (like jasper) which makes that check untenable.
+ * (like WaSP) which makes that check untenable.
  * Hence the logic currently used is to see if there is a println(Throwable)
  * and do a printStackTrace and log the complete StackTrace ourselves.
  * If this is followed by a series of printlns, then we keep ignoring

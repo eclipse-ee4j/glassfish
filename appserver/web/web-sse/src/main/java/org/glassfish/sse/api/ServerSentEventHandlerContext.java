@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,8 +20,7 @@ package org.glassfish.sse.api;
 import java.util.Set;
 
 /**
- * A context class that gives access to all the active handlers for a
- * Server-Sent Event path.
+ * A context class that gives access to all the active handlers for a Server-Sent Event path.
  *
  * @author Santiago.PericasGeertsen@oracle.com
  */
@@ -31,13 +31,13 @@ public interface ServerSentEventHandlerContext<T extends ServerSentEventHandler>
      *
      * @return path for the Server-Sent event handlers
      */
-    public String getPath();
+    String getPath();
 
     /**
      * Returns all the active Server-Sent event handlers for a path
      *
      * @return all the active handlers
      */
-    public Set<T> getHandlers();
+    Set<T> getHandlers();
 
 }

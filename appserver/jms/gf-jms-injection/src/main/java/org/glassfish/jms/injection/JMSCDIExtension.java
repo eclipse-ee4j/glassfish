@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,13 +23,28 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import jakarta.enterprise.context.*;
+
+import jakarta.enterprise.context.Dependent;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.*;
-import jakarta.enterprise.util.AnnotationLiteral;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.AfterDeploymentValidation;
+import jakarta.enterprise.inject.spi.AnnotatedType;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.BeforeShutdown;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
+import jakarta.enterprise.inject.spi.ProcessInjectionTarget;
+import jakarta.enterprise.inject.spi.ProcessProducer;
 import jakarta.transaction.TransactionScoped;
 
 /*
@@ -36,22 +52,14 @@ import jakarta.transaction.TransactionScoped;
  * that can be injected into all applications.
  */
 public class JMSCDIExtension implements Extension {
-    public JMSCDIExtension() {
-    }
-
-    private Bean createLocalBean(BeanManager beanManager, Class beanClass) {
-        AnnotatedType annotatedType = beanManager.createAnnotatedType(beanClass);
-        LocalPassivationCapableBean localBean = new LocalPassivationCapableBean(beanClass);
-        InjectionTargetFactory injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
-        localBean.setInjectionTarget(injectionTargetFactory.createInjectionTarget(localBean));
-        return localBean;
-    }
 
     public void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscoveryEvent, BeanManager beanManager) {
         Bean requestManagerBean = createLocalBean(beanManager, RequestedJMSContextManager.class);
         afterBeanDiscoveryEvent.addBean(requestManagerBean);
+
         Bean transactionManagerBean = createLocalBean(beanManager, TransactedJMSContextManager.class);
         afterBeanDiscoveryEvent.addBean(transactionManagerBean);
+
         Bean contextBean = createLocalBean(beanManager, InjectableJMSContext.class);
         afterBeanDiscoveryEvent.addBean(contextBean);
     }
@@ -68,7 +76,7 @@ public class JMSCDIExtension implements Extension {
     public void beforeBeanDiscovery(@Observes BeforeBeanDiscovery event, BeanManager beanManager) {
     }
 
-    public  void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
+    public void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager beanManager) {
     }
 
     public void beforeShutdown(@Observes BeforeShutdown event, BeanManager beanManager) {
@@ -81,14 +89,6 @@ public class JMSCDIExtension implements Extension {
     }
 
     public <T, X> void processProducer(@Observes ProcessProducer<T, X> event) {
-    }
-
-    static AnnotationLiteral<Default> getDefaultAnnotationLiteral() {
-        return new AnnotationLiteral<Default>() {};
-    }
-
-    static AnnotationLiteral<Any> getAnyAnnotationLiteral() {
-        return new AnnotationLiteral<Any>() {};
     }
 
     public static class LocalPassivationCapableBean implements Bean, PassivationCapable {
@@ -126,20 +126,19 @@ public class JMSCDIExtension implements Extension {
 
         @Override
         public Set<Annotation> getQualifiers() {
-            Set<Annotation> qualifiers = new HashSet<Annotation>();
-            qualifiers.add(JMSCDIExtension.getDefaultAnnotationLiteral());
-            qualifiers.add(JMSCDIExtension.getAnyAnnotationLiteral());
-            return qualifiers;
+            return Set.of(Default.Literal.INSTANCE, Any.Literal.INSTANCE);
         }
 
         @Override
         public Class<? extends Annotation> getScope() {
-            if (beanClass.isAnnotationPresent(RequestScoped.class))
+            if (beanClass.isAnnotationPresent(RequestScoped.class)) {
                 return RequestScoped.class;
-            else if (beanClass.isAnnotationPresent(TransactionScoped.class))
+            }
+            if (beanClass.isAnnotationPresent(TransactionScoped.class)) {
                 return TransactionScoped.class;
-            else
-                return Dependent.class;
+            }
+
+            return Dependent.class;
         }
 
         @Override
@@ -149,7 +148,7 @@ public class JMSCDIExtension implements Extension {
 
         @Override
         public Set<Type> getTypes() {
-            Set<Type> types = new HashSet<Type>();
+            Set<Type> types = new HashSet<>();
             types.add(beanClass);
             boolean loop = true;
             Class clazz = beanClass;
@@ -175,11 +174,6 @@ public class JMSCDIExtension implements Extension {
         }
 
         @Override
-        public boolean isNullable() {
-            return false;
-        }
-
-        @Override
         public Object create(CreationalContext ctx) {
             Object instance = injectionTarget.produce(ctx);
             injectionTarget.inject(instance, ctx);
@@ -198,5 +192,14 @@ public class JMSCDIExtension implements Extension {
         public String getId() {
             return id;
         }
+    }
+
+    private Bean createLocalBean(BeanManager beanManager, Class beanClass) {
+        AnnotatedType annotatedType = beanManager.createAnnotatedType(beanClass);
+        LocalPassivationCapableBean localBean = new LocalPassivationCapableBean(beanClass);
+        InjectionTargetFactory injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        localBean.setInjectionTarget(injectionTargetFactory.createInjectionTarget(localBean));
+
+        return localBean;
     }
 }

@@ -16,11 +16,12 @@
 
 package org.glassfish.weld;
 
+import static java.util.Locale.ENGLISH;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 import javax.naming.NamingException;
 
@@ -136,27 +137,24 @@ public class InjectionPointHelper {
 
     private String getInjectionMethodPropertyName(Method method) {
         String methodName = method.getName();
-        String propertyName;
 
         if (methodName.length() <= 3 || !methodName.startsWith("set")) {
             throw new IllegalArgumentException("Illegal env dependency setter name" + method.getName());
         }
-        // Derive javabean property name.
-        propertyName = methodName.substring(3, 4).toLowerCase(Locale.ENGLISH) + methodName.substring(4);
 
-        return propertyName;
+        return methodName.substring(3, 4).toLowerCase(ENGLISH) + methodName.substring(4);
     }
 
     private Annotation getEnvAnnotation(Annotation[] annotations) {
-
         Annotation envAnnotation = null;
 
         for (Annotation next : annotations) {
-
             String className = next.annotationType().getName();
-            if (className.equals("jakarta.ejb.EJB") || className.equals("jakarta.annotation.Resource")
-                    || className.equals("jakarta.persistence.PersistenceContext") || className.equals("jakarta.persistence.PersistenceUnit")
-                    || className.equals("jakarta.xml.ws.WebServiceRef")) {
+            if (className.equals("jakarta.ejb.EJB") ||
+               className.equals("jakarta.annotation.Resource") ||
+               className.equals("jakarta.persistence.PersistenceContext") ||
+               className.equals("jakarta.persistence.PersistenceUnit") ||
+               className.equals("jakarta.xml.ws.WebServiceRef")) {
                 envAnnotation = next;
                 break;
             }

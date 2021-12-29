@@ -23,32 +23,31 @@ public class TestManagedBean {
     TestBean tb;
     boolean postConstructCalled = false;
 
-    //a ManagedBean needs to have a no-arg constructor
-    public TestManagedBean(){
+    // a ManagedBean needs to have a no-arg constructor
+    public TestManagedBean() {
     }
 
-    @jakarta.inject.Inject //Constructor based Injection
-    public TestManagedBean(TestBean tb){
+    @jakarta.inject.Inject // Constructor based Injection
+    public TestManagedBean(TestBean tb) {
         this.tb = tb;
     }
 
-
     @jakarta.annotation.PostConstruct
-    public void init(){
+    public void init() {
         System.out.println("In ManagedBean:: PostConstruct");
         postConstructCalled = true;
     }
 
     @Tester
-    public void foo(){
+    public void foo() {
         System.out.println("foo called");
     }
 
-    public boolean testPostConstructCalled(){
+    public boolean testPostConstructCalled() {
         return this.postConstructCalled;
     }
 
-    public boolean testInjection(){
+    public boolean testInjection() {
         System.out.println("In ManagedBean:: tb=" + tb);
         postConstructCalled = true;
         return this.tb != null;

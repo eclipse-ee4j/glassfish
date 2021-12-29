@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -25,7 +26,7 @@ public class Constants {
     public static final int MINOR_VERSION = 0;
 
     public static final String JSP_SERVLET_CLASS =
-        "org.apache.jasper.servlet.JspServlet";
+        "org.glassfish.wasp.servlet.JspServlet";
 
     public static final String JSP_SERVLET_NAME = "jsp";
 

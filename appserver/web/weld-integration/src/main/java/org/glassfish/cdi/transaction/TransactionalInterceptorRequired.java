@@ -24,13 +24,14 @@ import static java.util.logging.Level.INFO;
 import java.util.logging.Logger;
 
 import com.sun.enterprise.transaction.TransactionManagerHelper;
+
 import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
+import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
-import jakarta.transaction.TransactionManager;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type, ie

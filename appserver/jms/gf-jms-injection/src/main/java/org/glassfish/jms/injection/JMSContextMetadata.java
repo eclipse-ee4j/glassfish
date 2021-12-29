@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,18 +21,22 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.internal.api.RelativePathResolver;
+
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.jms.JMSConnectionFactory;
 import jakarta.jms.JMSContext;
 import jakarta.jms.JMSPasswordCredential;
 import jakarta.jms.JMSSessionMode;
-import org.glassfish.internal.api.RelativePathResolver;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
- * Serializable object which holds the information about the JMSContext
- * that was specified at the injection point.
+ * Serializable object which holds the information about the JMSContext that was specified at the injection point.
  */
 public class JMSContextMetadata implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(InjectableJMSContext.JMS_INJECTION_LOGGER);
     private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JMSContextMetadata.class);
     public final static String DEFAULT_CONNECTION_FACTORY = "java:comp/DefaultJMSConnectionFactory";
@@ -65,10 +70,10 @@ public class JMSContextMetadata implements Serializable {
     }
 
     public String getLookup() {
-       return lookup;
+        return lookup;
     }
 
-    public int getSessionMode(){
+    public int getSessionMode() {
         return sessionMode;
     }
 
@@ -88,10 +93,11 @@ public class JMSContextMetadata implements Serializable {
         sb.append(", sessionMode=").append(sessionMode);
         sb.append(", username=").append(userName);
         sb.append(", password=");
-        if (password != null)
+        if (password != null) {
             sb.append("xxxxxx");
-        else
+        } else {
             sb.append("null");
+        }
         sb.append(" [fingerPrint[").append(getFingerPrint());
         sb.append("]]");
         return sb.toString();
@@ -100,28 +106,32 @@ public class JMSContextMetadata implements Serializable {
     public String getFingerPrint() {
         if (fingerPrint == null) {
             try {
-                MessageDigest md = MessageDigest.getInstance("MD5");
+                MessageDigest messageDigest = MessageDigest.getInstance("MD5");
                 byte delimer = (byte) '|';
-                md.update(delimer);
+                messageDigest.update(delimer);
                 String cf = lookup;
-                if (lookup == null)
+                if (lookup == null) {
                     cf = DEFAULT_CONNECTION_FACTORY;
-                md.update(cf.getBytes("ISO-8859-1"));
-                md.update(delimer);
-                md.update((byte) sessionMode);
-                md.update(delimer);
-                if (userName != null)
-                    md.update(userName.getBytes("ISO-8859-1"));
-                md.update(delimer);
-                if (password != null)
-                    md.update(password.getBytes("ISO-8859-1"));
-                md.update(delimer);
-                byte[] result = md.digest();
+                }
+                messageDigest.update(cf.getBytes("ISO-8859-1"));
+                messageDigest.update(delimer);
+                messageDigest.update((byte) sessionMode);
+                messageDigest.update(delimer);
+                if (userName != null) {
+                    messageDigest.update(userName.getBytes("ISO-8859-1"));
+                }
+                messageDigest.update(delimer);
+                if (password != null) {
+                    messageDigest.update(password.getBytes("ISO-8859-1"));
+                }
+                messageDigest.update(delimer);
+                byte[] result = messageDigest.digest();
                 StringBuffer buff = new StringBuffer();
-                for(int i=0; i<result.length; i++) {
+                for (int i = 0; i < result.length; i++) {
                     String byteStr = Integer.toHexString(result[i] & 0xFF);
-                    if(byteStr.length() < 2)
+                    if (byteStr.length() < 2) {
                         buff.append('0');
+                    }
                     buff.append(byteStr);
                 }
                 fingerPrint = buff.toString();
@@ -132,9 +142,11 @@ public class JMSContextMetadata implements Serializable {
         return fingerPrint;
     }
 
-    private boolean isPasswordAlias(String password){
-        if (password != null && password.startsWith("${ALIAS="))
+    private boolean isPasswordAlias(String password) {
+        if (password != null && password.startsWith("${ALIAS=")) {
             return true;
+        }
+
         return false;
     }
 
@@ -142,15 +154,18 @@ public class JMSContextMetadata implements Serializable {
         if (password != null && isPasswordAlias(password)) {
             try {
                 String unalisedPwd = RelativePathResolver.getRealPasswordFromAlias(password);
-                if (unalisedPwd != null && !"".equals(unalisedPwd))
+                if (unalisedPwd != null && !"".equals(unalisedPwd)) {
                     return unalisedPwd;
+                }
             } catch (Exception e) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, localStrings.getLocalString("decrypt.password.fail",
-                               "Failed to unalias password for the reason: {0}."), e.toString());
+                    logger.log(Level.WARNING,
+                            localStrings.getLocalString("decrypt.password.fail", "Failed to unalias password for the reason: {0}."),
+                            e.toString());
                 }
             }
         }
+
         return password;
     }
 }

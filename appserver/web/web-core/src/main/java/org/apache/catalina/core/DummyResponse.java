@@ -117,6 +117,7 @@ public class DummyResponse
     public void sendAcknowledgement() throws IOException {}
     public void sendError(int status) throws IOException {}
     public void sendError(int status, String message) throws IOException {}
+    public void setError(int status, String message) {}
     public void sendRedirect(String location) throws IOException {}
     public void setDateHeader(String name, long value) {}
     public void setHeader(String name, String value) {}

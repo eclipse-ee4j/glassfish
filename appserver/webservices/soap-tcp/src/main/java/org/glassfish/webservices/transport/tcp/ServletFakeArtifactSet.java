@@ -16,7 +16,6 @@
 
 package org.glassfish.webservices.transport.tcp;
 
-import com.sun.xml.ws.api.DistributedPropertySet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,14 +25,25 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
+
+import com.sun.xml.ws.api.DistributedPropertySet;
+
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncListener;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.handler.MessageContext;
@@ -52,6 +62,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         model = parse(ServletFakeArtifactSet.class);
     }
 
+    @Override
     public DistributedPropertySet.PropertyMap getPropertyMap() {
         return model;
     }
@@ -90,102 +101,127 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             this.servletPath = servletPath;
         }
 
+        @Override
         public String getAuthType() {
             return null;
         }
 
+        @Override
         public Cookie[] getCookies() {
             return null;
         }
 
+        @Override
         public long getDateHeader(final String string) {
             return 0L;
         }
 
+        @Override
         public String getHeader(final String string) {
             return null;
         }
 
+        @Override
         public Enumeration<String> getHeaders(final String string) {
             return null;
         }
 
+        @Override
         public Enumeration<String> getHeaderNames() {
             return null;
         }
 
+        @Override
         public int getIntHeader(final String string) {
             return -1;
         }
 
+        @Override
         public String getMethod() {
             return "POST";
         }
 
+        @Override
         public String getPathInfo() {
             return null;
         }
 
+        @Override
         public String getPathTranslated() {
             return null;
         }
 
+        @Override
         public String getContextPath() {
             return null;
         }
 
+        @Override
         public String getQueryString() {
             return null;
         }
 
+        @Override
         public String getRemoteUser() {
             return null;
         }
 
+        @Override
         public boolean isUserInRole(final String string) {
             return true;
         }
 
+        @Override
         public Principal getUserPrincipal() {
             return null;
         }
 
+        @Override
         public String getRequestedSessionId() {
             return null;
         }
 
+        @Override
         public String getRequestURI() {
             return requestURI;
         }
 
+        @Override
         public StringBuffer getRequestURL() {
             return requestURL;
         }
 
+        @Override
         public String getServletPath() {
             return servletPath;
         }
 
+        @Override
         public HttpSession getSession(final boolean b) {
             return null;
         }
 
+        @Override
         public HttpSession getSession() {
             return null;
         }
 
+        @Override
         public String changeSessionId() {
             return null;
         }
 
+        @Override
         public boolean isRequestedSessionIdValid() {
             return true;
         }
 
+        @Override
         public boolean isRequestedSessionIdFromCookie() {
             return true;
         }
 
+        @Override
         public boolean isRequestedSessionIdFromURL() {
             return true;
         }
@@ -194,99 +230,124 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return true;
         }
 
+        @Override
         public Object getAttribute(final String string) {
             return null;
         }
 
-        public Enumeration getAttributeNames() {
+        @Override
+        public Enumeration<String> getAttributeNames() {
             return null;
         }
 
+        @Override
         public String getCharacterEncoding() {
             return null;
         }
 
+        @Override
         public void setCharacterEncoding(final String string) throws UnsupportedEncodingException {
         }
 
+        @Override
         public int getContentLength() {
             return 0;
         }
 
+        @Override
         public long getContentLengthLong() {
             return 0L;
         }
 
+        @Override
         public String getContentType() {
             return null;
         }
 
+        @Override
         public ServletInputStream getInputStream() throws IOException {
             return null;
         }
 
+        @Override
         public String getParameter(final String string) {
             return null;
         }
 
-        public Enumeration getParameterNames() {
+        @Override
+        public Enumeration<String> getParameterNames() {
             return null;
         }
 
+        @Override
         public String[] getParameterValues(final String string) {
             return null;
         }
 
+        @Override
         public Map getParameterMap() {
             return null;
         }
 
+        @Override
         public String getProtocol() {
             return null;
         }
 
+        @Override
         public String getScheme() {
             return null;
         }
 
+        @Override
         public String getServerName() {
             return null;
         }
 
+        @Override
         public int getServerPort() {
             return 0;
         }
 
+        @Override
         public BufferedReader getReader() throws IOException {
             return null;
         }
 
+        @Override
         public String getRemoteAddr() {
             return null;
         }
 
+        @Override
         public String getRemoteHost() {
             return null;
         }
 
+        @Override
         public void setAttribute(final String string, final Object object) {
         }
 
+        @Override
         public void removeAttribute(final String string) {
         }
 
+        @Override
         public Locale getLocale() {
             return null;
         }
 
-        public Enumeration getLocales() {
+        @Override
+        public Enumeration<Locale> getLocales() {
             return null;
         }
 
+        @Override
         public boolean isSecure() {
             return false;
         }
 
+        @Override
         public RequestDispatcher getRequestDispatcher(final String string) {
             return null;
         }
@@ -295,45 +356,56 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return null;
         }
 
+        @Override
         public int getRemotePort() {
             return 0;
         }
 
+        @Override
         public String getLocalName() {
             return null;
         }
 
+        @Override
         public String getLocalAddr() {
             return null;
         }
 
+        @Override
         public int getLocalPort() {
             return 0;
         }
 
-        public jakarta.servlet.http.Part getPart(String s) {
+        @Override
+        public Part getPart(String s) {
             return null;
         }
 
-        public Collection<jakarta.servlet.http.Part> getParts() {
+        @Override
+        public Collection<Part> getParts() {
             return null;
         }
 
+        @Override
         public void login(String s1, String s2) {
         }
 
+        @Override
         public void logout() {
         }
 
+        @Override
         public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) {
             return null;
         }
 
+        @Override
         public boolean authenticate(HttpServletResponse response) {
             return true;
         }
 
-        public jakarta.servlet.DispatcherType getDispatcherType() {
+        @Override
+        public DispatcherType getDispatcherType() {
             return null;
         }
 
@@ -344,49 +416,74 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         public void setAsyncTimeout(long timeout) {
         }
 
-        public void addAsyncListener(jakarta.servlet.AsyncListener listener) {
+        public void addAsyncListener(AsyncListener listener) {
         }
 
-        public void addAsyncListener(jakarta.servlet.AsyncListener listener, jakarta.servlet.ServletRequest request, jakarta.servlet.ServletResponse response) {
+        public void addAsyncListener(AsyncListener listener, ServletRequest request, ServletResponse response) {
         }
 
+        @Override
         public jakarta.servlet.AsyncContext getAsyncContext() {
             return null;
         }
 
+        @Override
         public boolean isAsyncSupported() {
             return false;
         }
 
+        @Override
         public boolean isAsyncStarted() {
             return false;
         }
 
-        public jakarta.servlet.AsyncContext startAsync() {
+        @Override
+        public AsyncContext startAsync() {
             return null;
         }
 
-        public jakarta.servlet.AsyncContext startAsync(jakarta.servlet.ServletRequest request, jakarta.servlet.ServletResponse response) {
+        @Override
+        public AsyncContext startAsync(ServletRequest request, ServletResponse response) {
             return null;
         }
 
-        public jakarta.servlet.ServletContext getServletContext() {
+        @Override
+        public ServletContext getServletContext() {
+            return null;
+        }
+
+        @Override
+        public String getRequestId() {
+            return null;
+        }
+
+        @Override
+        public String getProtocolRequestId() {
+            return null;
+        }
+
+        @Override
+        public ServletConnection getServletConnection() {
             return null;
         }
     }
 
     public static final class FakeServletHttpResponse implements HttpServletResponse {
+        @Override
         public void addCookie(final Cookie cookie) {
         }
 
+        @Override
         public boolean containsHeader(final String string) {
             return true;
         }
 
+        @Override
         public String encodeURL(final String string) {
             return null;
         }
 
+        @Override
         public String encodeRedirectURL(final String string) {
             return null;
         }
@@ -399,106 +496,136 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return null;
         }
 
+        @Override
         public void sendError(final int i, final String string) throws IOException {
         }
 
+        @Override
         public void sendError(final int i) throws IOException {
         }
 
+        @Override
         public void sendRedirect(final String string) throws IOException {
         }
 
+        @Override
         public void setDateHeader(final String string, final long l) {
         }
 
+        @Override
         public void addDateHeader(final String string, final long l) {
         }
 
+        @Override
         public void setHeader(final String string, final String string0) {
         }
 
+        @Override
         public void addHeader(final String string,final  String string0) {
         }
 
+        @Override
         public void setIntHeader(final String string, final int i) {
         }
 
+        @Override
         public void addIntHeader(final String string, final int i) {
         }
 
+        @Override
         public void setStatus(final int i) {
         }
 
         public void setStatus(final int i, final String string) {
         }
 
+        @Override
         public String getCharacterEncoding() {
             return null;
         }
 
+        @Override
         public String getContentType() {
             return null;
         }
 
+        @Override
         public ServletOutputStream getOutputStream() throws IOException {
             return null;
         }
 
+        @Override
         public PrintWriter getWriter() throws IOException {
             return null;
         }
 
+        @Override
         public void setCharacterEncoding(final String string) {
         }
 
+        @Override
         public void setContentLength(final int i) {
         }
 
+        @Override
         public void setContentLengthLong(final long l) {
         }
 
+        @Override
         public void setContentType(final String string) {
         }
 
+        @Override
         public void setBufferSize(final int i) {
         }
 
+        @Override
         public int getBufferSize() {
             return 0;
         }
 
+        @Override
         public void flushBuffer() throws IOException {
         }
 
+        @Override
         public void resetBuffer() {
         }
 
+        @Override
         public boolean isCommitted() {
             return true;
         }
 
+        @Override
         public void reset() {
         }
 
+        @Override
         public void setLocale(final Locale locale) {
         }
 
+        @Override
         public Locale getLocale() {
             return null;
         }
 
+        @Override
         public Collection<String> getHeaderNames() {
             return null;
         }
 
+        @Override
         public Collection<String> getHeaders(String s) {
             return null;
         }
 
+        @Override
         public String getHeader(String name) {
             return null;
         }
 
+        @Override
         public int getStatus() {
             return 200;
         }

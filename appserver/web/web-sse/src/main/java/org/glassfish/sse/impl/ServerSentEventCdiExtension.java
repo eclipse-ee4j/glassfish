@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,38 @@
 
 package org.glassfish.sse.impl;
 
-import org.glassfish.sse.api.*;
+import static java.util.logging.Level.FINE;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import org.glassfish.sse.api.ServerSentEvent;
+import org.glassfish.sse.api.ServerSentEventContext;
+import org.glassfish.sse.api.ServerSentEventHandler;
+import org.glassfish.sse.api.ServerSentEventHandlerContext;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.spi.*;
+import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
+import jakarta.enterprise.inject.spi.Extension;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.enterprise.inject.spi.ProcessAnnotatedType;
 import jakarta.enterprise.util.AnnotationLiteral;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * A CDI extension that creates ServerSentEventHandlerContext beans so that
- * they can be injected into other EE components
+ * A CDI extension that creates ServerSentEventHandlerContext beans so that they can be injected into other EE
+ * components
  *
  * @author Jitendra Kotamraju
  */
@@ -41,19 +57,16 @@ public class ServerSentEventCdiExtension implements Extension {
     private final Logger LOGGER = Logger.getLogger(ServerSentEventCdiExtension.class.getName());
 
     // path --> application
-    private final Map<String, ServerSentEventApplication> applicationMap
-        = new HashMap<String, ServerSentEventApplication>();
+    private final Map<String, ServerSentEventApplication> applicationMap = new HashMap<String, ServerSentEventApplication>();
 
     public Map<String, ServerSentEventApplication> getApplicationMap() {
         return applicationMap;
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd, BeanManager bm) {
         bbd.addQualifier(ServerSentEventContext.class);
     }
 
-    @SuppressWarnings("ClassExplicitlyAnnotation")
     static class WebHandlerContextAnnotationLiteral extends AnnotationLiteral<ServerSentEventContext> implements ServerSentEventContext {
         private final String path;
 
@@ -85,7 +98,7 @@ public class ServerSentEventCdiExtension implements Extension {
             types.add(new ParameterizedType() {
                 @Override
                 public Type[] getActualTypeArguments() {
-                    return new Type[] {handlerClass};
+                    return new Type[] { handlerClass };
                 }
 
                 @Override
@@ -134,11 +147,6 @@ public class ServerSentEventCdiExtension implements Extension {
         }
 
         @Override
-        public boolean isNullable() {
-            return false;
-        }
-
-        @Override
         public Set<InjectionPoint> getInjectionPoints() {
             return Collections.emptySet();
         }
@@ -154,36 +162,36 @@ public class ServerSentEventCdiExtension implements Extension {
 
     }
 
-    // For each ServerSentEvent hanlder, it creates a corresponding ServerSentHandlerContext
+    // For each ServerSentEvent handler, it creates a corresponding ServerSentHandlerContext
     // This context can be got anywhere from BeanManager
-    @SuppressWarnings("UnusedDeclaration")
     void afterBeanDiscovery(@Observes AfterBeanDiscovery bbd) {
-        for(Map.Entry<String, ServerSentEventApplication> entry : applicationMap.entrySet()) {
-            bbd.addBean(new ServerSentEventHandlerContextBean(entry.getKey(), entry.getValue().getHandlerContext(),
+        for (Map.Entry<String, ServerSentEventApplication> entry : applicationMap.entrySet()) {
+            bbd.addBean(
+                new ServerSentEventHandlerContextBean(
+                    entry.getKey(),
+                    entry.getValue().getHandlerContext(),
                     entry.getValue().getHandlerClass()));
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat,
-            BeanManager beanManager) {
-        if (LOGGER.isLoggable(Level.FINE)) {
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat, BeanManager beanManager) {
+        if (LOGGER.isLoggable(FINE)) {
             LOGGER.fine("scanning type: " + pat.getAnnotatedType().getJavaClass().getName());
         }
 
-        for (Annotation an : pat.getAnnotatedType().getAnnotations()) {
-            Class clazz = pat.getAnnotatedType().getJavaClass();
+        for (Annotation annotation : pat.getAnnotatedType().getAnnotations()) {
+            Class<?> clazz = pat.getAnnotatedType().getJavaClass();
 
-            if (an instanceof ServerSentEvent) {
+            if (annotation instanceof ServerSentEvent) {
                 if (!ServerSentEventHandler.class.isAssignableFrom(clazz)) {
-                    throw new RuntimeException("Invalid base class '"
-                            + clazz.getName() + "' for handler.");
+                    throw new RuntimeException("Invalid base class '" + clazz.getName() + "' for handler.");
                 }
-                ServerSentEvent wh = (ServerSentEvent) an;
-                String path = normalizePath(wh.value());
+
+                ServerSentEvent serverSentEvent = (ServerSentEvent) annotation;
+                String path = normalizePath(serverSentEvent.value());
                 ServerSentEventApplication app = applicationMap.get(path);
                 if (app != null) {
-                    throw new RuntimeException("Two ServerSentEvent handlers are mapped to same path="+path);
+                    throw new RuntimeException("Two ServerSentEvent handlers are mapped to same path=" + path);
                 }
                 app = new ServerSentEventApplication(clazz, path);
                 applicationMap.put(path, app);

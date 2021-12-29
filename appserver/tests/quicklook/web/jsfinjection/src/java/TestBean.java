@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,38 +16,45 @@
  */
 
 package jsfinjection;
+
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.annotation.*;
 import javax.sql.DataSource;
+import jakarta.inject.Named;
 
+@RequestScoped
+@Named
 public class TestBean {
 
-    @Resource(name="entry")
+    @Resource(name = "entry")
     private String entry;
 
-    @Resource(name="jdbc/__default")
+    @Resource(name = "jdbc/__default")
     private DataSource ds;
+    
+    private boolean initCalled;
+    
+    @PostConstruct
+    void init() {
+        initCalled = true;
+    }
 
     public String getEntry() {
         return entry;
     }
 
     public int getNumber() {
-        int tout = -3000;
+        int number = -3000;
         if (ds != null) {
             try {
-                tout = ds.getLoginTimeout();
-            } catch(Exception ex) {
+                number = ds.getLoginTimeout();
+            } catch (Exception ex) {
                 ex.printStackTrace();
-                tout = -1000;
+                number = -1000;
             }
         }
-        return tout;
-    }
-
-    private boolean initCalled;
-
-    @PostConstruct void init() {
-        initCalled = true;
+        
+        return number;
     }
 
     public boolean getInit() {

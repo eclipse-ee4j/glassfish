@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,34 @@
 
 package numberguess;
 
-
 import java.io.Serializable;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
 @ApplicationScoped
-public class Generator implements Serializable
-{
+public class Generator implements Serializable {
 
-   private static final long serialVersionUID = -7213673465118041882L;
+    private static final long serialVersionUID = -7213673465118041882L;
 
-   private java.util.Random random = new java.util.Random( System.currentTimeMillis() );
+    private java.util.Random random = new java.util.Random(System.currentTimeMillis());
 
-   private int maxNumber = 100;
+    private int maxNumber = 100;
 
-   java.util.Random getRandom()
-   {
-      return random;
-   }
+    java.util.Random getRandom() {
+        return random;
+    }
 
-   @Produces @Random int next() {
-      return getRandom().nextInt(maxNumber);
-   }
+    @Produces
+    @Random
+    int next() {
+        return getRandom().nextInt(maxNumber);
+    }
 
-   @Produces @MaxNumber int getMaxNumber()
-   {
-      return maxNumber;
-   }
+    @Produces
+    @MaxNumber
+    int getMaxNumber() {
+        return maxNumber;
+    }
 
 }

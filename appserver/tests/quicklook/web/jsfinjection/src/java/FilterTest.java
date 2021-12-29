@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,10 +23,10 @@ import jakarta.servlet.http.*;
 import javax.sql.DataSource;
 import javax.naming.*;
 
-public class FilterTest implements Filter{
+public class FilterTest implements Filter {
 
     private ServletContext context;
-    private @Resource(name="jdbc/__default") DataSource ds;
+    private @Resource(name = "jdbc/__default") DataSource ds;
 //    private DataSource ds;
 
     public void destroy() {
@@ -36,19 +37,11 @@ public class FilterTest implements Filter{
         System.out.println("[Filter.doFilter]");
 
         String msg = "PASS";
-/*
-        try {
-            InitialContext ic = new InitialContext();
-            ic.lookup("jdbc/__default");
-            msg += "=:iclookup";
-            System.out.println("XXX ic lookup DONE");
-        } catch(Exception ex) {
-        }
-*/
+        
         if (ds != null) {
             try {
                 msg = "PASS-:" + ds.getLoginTimeout();
-            } catch(Throwable ex) {
+            } catch (Throwable ex) {
                 msg = "FAIL-:" + ex.toString();
             }
         } else {
@@ -56,11 +49,10 @@ public class FilterTest implements Filter{
         }
         System.out.println("[Filter.doFilter.msg = " + msg + "]");
 
-        ((HttpServletRequest)request).getSession().setAttribute("FILTER", msg);
+        ((HttpServletRequest) request).getSession().setAttribute("FILTER", msg);
         filterChain.doFilter(request, response);
 
     }
-
 
     public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");

@@ -94,6 +94,13 @@ public interface HttpResponse
      */
     public void reset(int status, String message);
 
+    /**
+     * Alternative to sendError that doesn't suspend the response and doesn't reset the buffer.
+     * @param status
+     * @param message
+     */
+    public void setError(int status, String message);
+
 
     /**
      * Send an acknowledgment of a request.   An acknowledgment in this

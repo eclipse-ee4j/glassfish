@@ -21,8 +21,8 @@ import java.lang.annotation.*;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
 
-
 @InterceptorBinding
-@Target({METHOD, TYPE})
+@Target({ METHOD, TYPE })
 @Retention(RUNTIME)
-public @interface Tester {}
+public @interface Tester {
+}

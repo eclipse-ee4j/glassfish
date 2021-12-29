@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,27 +19,70 @@ package org.glassfish.common.util.admin;
 
 import jakarta.inject.Singleton;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.glassfish.hk2.api.ErrorInformation;
 import org.glassfish.hk2.api.ErrorService;
 import org.glassfish.hk2.api.MultiException;
 import org.jvnet.hk2.annotations.Service;
+import org.osgi.framework.BundleException;
+
+import com.sun.enterprise.util.FelixPrettyPrinter;
 
 /**
  * @author jwells
  *
  */
-@Service @Singleton
+@Service
+@Singleton
 public class GlassFishErrorServiceImpl implements ErrorService {
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.glassfish.hk2.api.ErrorService#onFailure(org.glassfish.hk2.api.ErrorInformation)
      */
     @Override
-    public void onFailure(ErrorInformation errorInformation)
-            throws MultiException {
+    public void onFailure(ErrorInformation errorInformation) throws MultiException {
         if (errorInformation.getAssociatedException() != null) {
+            MultiException multiException = errorInformation.getAssociatedException();
+
+            Set<String> bundleMessages = new HashSet<>();
+            Set<String> stateMessages = new HashSet<>();
+
+            for (Throwable throwable : multiException.getErrors()) { // throwable, error, exception, what's in a name?
+                String bundleText = findBundleExceptionText(throwable);
+                if (bundleText != null) {
+                    bundleMessages.add(bundleText);
+                }
+
+                if (throwable instanceof IllegalStateException) {
+                    stateMessages.add(throwable.getMessage());
+                }
+            }
+
+            for (String stateMessage : stateMessages) {
+                bundleMessages.remove(stateMessage);
+            }
+
+            for (String bundleMessage : bundleMessages) {
+                multiException.addError(new IllegalStateException(bundleMessage));
+            }
+
             throw errorInformation.getAssociatedException();
         }
+    }
 
+    String findBundleExceptionText(Throwable throwable) {
+        while (throwable != null) {
+            if (throwable instanceof BundleException) {
+                BundleException bundleException = (BundleException) throwable;
+                return FelixPrettyPrinter.prettyPrintExceptionMessage(bundleException.getMessage());
+            }
+            throwable = throwable.getCause();
+        }
+
+        return null;
     }
 
 }

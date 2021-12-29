@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -166,7 +167,6 @@ public class ACCClassLoader extends URLClassLoader {
 
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
-
 
     private ACCClassLoader(URL[] urls, ClassLoader parent, boolean shouldTransform) {
         this(urls, parent);

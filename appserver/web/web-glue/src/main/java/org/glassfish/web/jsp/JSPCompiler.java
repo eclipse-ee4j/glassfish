@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 /*
  * Indentation Information:
- * 0. Please (try to) preserve these settings.
- * 1. Tabs are preferred over spaces.
+ * 0. Please do not (try to) preserve these settings.
+ * 1. Tabs are not preferred over spaces.
  * 2. In vi/vim -
  *             :set tabstop=4 :set shiftwidth=4 :set softtabstop=4
  * 3. In S1 Studio -
@@ -32,11 +33,6 @@
 
 package org.glassfish.web.jsp;
 
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.web.InitializationParameter;
-import com.sun.enterprise.util.io.FileUtils;
-
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -45,14 +41,19 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.jasper.JspC;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.wasp.JspC;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.JspConfig;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
+
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.InitializationParameter;
+import com.sun.enterprise.util.io.FileUtils;
 
 public final class JSPCompiler {
 

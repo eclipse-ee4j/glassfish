@@ -16,6 +16,41 @@
 
 package com.sun.enterprise.web;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.WARNING;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+//import com.sun.enterprise.server.PersistenceUnitLoaderImpl;
+//import com.sun.enterprise.server.PersistenceUnitLoader;
+//import com.sun.enterprise.config.ConfigException;
+
+import javax.naming.NamingException;
+
+import org.apache.catalina.Globals;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleEvent;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Wrapper;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.web.TldProvider;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.deployment.runtime.SunWebAppImpl;
+import org.glassfish.web.deployment.runtime.WebProperty;
+import org.glassfish.web.deployment.util.WebValidatorWithCL;
+
 import com.sun.appserv.web.cache.CacheManager;
 import com.sun.enterprise.container.common.spi.JCDIService;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
@@ -25,31 +60,8 @@ import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.util.net.JarURIPattern;
 import com.sun.enterprise.web.jsp.JspProbeEmitterImpl;
 import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
-import org.apache.catalina.*;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.web.TldProvider;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.deployment.runtime.WebProperty;
-import org.glassfish.web.deployment.runtime.SunWebAppImpl;
-import org.glassfish.web.deployment.util.WebValidatorWithCL;
-import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.hk2.api.ServiceLocator;
 
-import javax.naming.NamingException;
 import jakarta.servlet.ServletContext;
-import java.net.URI;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.StringTokenizer;
-import java.util.regex.Pattern;
-//import com.sun.enterprise.server.PersistenceUnitLoaderImpl;
-//import com.sun.enterprise.server.PersistenceUnitLoader;
-//import com.sun.enterprise.config.ConfigException;
 
 /**
  * Startup event listener for a <b>Context</b> that configures the properties
@@ -90,6 +102,7 @@ final class WebModuleListener
      * Process the START event for an associated WebModule
      * @param event The lifecycle event that has occurred
      */
+    @Override
     public void lifecycleEvent(LifecycleEvent event) {
 
         // Identify the context we are associated with
@@ -97,7 +110,7 @@ final class WebModuleListener
         try {
             webModule = (WebModule) event.getLifecycle();
         } catch (ClassCastException e) {
-            _logger.log(Level.WARNING, LogFacade.CLASS_CAST_EXCEPTION, event.getLifecycle());
+            _logger.log(WARNING, LogFacade.CLASS_CAST_EXCEPTION, event.getLifecycle());
             return;
         }
 
@@ -137,7 +150,7 @@ final class WebModuleListener
 
         // Find tld URI and set it to ServletContext attribute
         List<URI> appLibUris = webModule.getDeployAppLibs();
-        Map<URI, List<String>> appLibTldMap = new HashMap<URI, List<String>>();
+        Map<URI, List<String>> appLibTldMap = new HashMap<>();
         if (appLibUris != null && appLibUris.size() > 0) {
             Pattern pattern = Pattern.compile("META-INF/.*\\.tld");
             for (URI uri : appLibUris) {
@@ -150,7 +163,7 @@ final class WebModuleListener
 
         Collection<TldProvider> tldProviders =
             webContainer.getTldProviders();
-        Map<URI, List<String>> tldMap = new HashMap<URI, List<String>>();
+        Map<URI, List<String>> tldMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
             // Skip any JSF related TLDs for non-JSF apps
             if ("jsfTld".equals(tldProvider.getName()) &&
@@ -172,7 +185,7 @@ final class WebModuleListener
          * ServletContext attribute
          */
         Map<URI, List<String>> tldListenerMap =
-            new HashMap<URI, List<String>>();
+            new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
             // Skip any JSF related TLDs for non-JSF apps
             if ("jsfTld".equals(tldProvider.getName()) &&
@@ -212,8 +225,8 @@ final class WebModuleListener
             for (int i = 0; i < props.length; i++) {
                 String pname = props[i].getAttributeValue("name");
                 String pvalue = props[i].getAttributeValue("value");
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE,
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE,
                             LogFacade.JSP_CONFIG_PROPERTY,
                             "[" + webModule.getID() + "] is [" + pname + "] = [" + pvalue + "]");
                 }
@@ -222,7 +235,7 @@ final class WebModuleListener
         }
 
         // Override any log setting with the container wide logging level
-        wrapper.addInitParameter("logVerbosityLevel",getJasperLogLevel());
+        wrapper.addInitParameter("logVerbosityLevel",getWaspLogLevel());
 
         ResourceInjectorImpl resourceInjector = new ResourceInjectorImpl(
             webModule);
@@ -232,7 +245,7 @@ final class WebModuleListener
 
         // START SJSAS 6311155
         String sysClassPath = ASClassLoaderUtil.getModuleClassPath(
-            (ServiceLocator) defaultServices,
+            defaultServices,
             webModule.getID(), null
         );
         // If the configuration flag usMyFaces is set, remove jakarta.faces.jar
@@ -248,8 +261,8 @@ final class WebModuleListener
         }
         // TODO: combine with classpath from
         // servletContext.getAttribute(("org.apache.catalina.jsp_classpath")
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, LogFacade.SYS_CLASSPATH, webModule.getID() + " is " + sysClassPath);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, LogFacade.SYS_CLASSPATH, webModule.getID() + " is " + sysClassPath);
         }
         if (sysClassPath.equals("")) {
             // In embedded mode, services returns SingleModulesRegistry and
@@ -295,7 +308,7 @@ final class WebModuleListener
             return;
         }
 
-        String includeJarsString = null;;
+        String includeJarsString = null;
         for (WebComponentDescriptor wcd: wbd.getWebComponentDescriptors()) {
             if ("jsp".equals(wcd.getCanonicalName())) {
                 InitializationParameter initp =
@@ -311,7 +324,7 @@ final class WebModuleListener
             includeJars = null;
             return;
         }
-        includeJars = new ArrayList<String>();
+        includeJars = new ArrayList<>();
         StringTokenizer tokenizer = new StringTokenizer(includeJarsString);
         while (tokenizer.hasMoreElements()) {
             includeJars.add(tokenizer.nextToken());
@@ -359,18 +372,25 @@ final class WebModuleListener
      * Determine the debug setting for JspServlet based on the iAS log
      * level.
      */
-    private String getJasperLogLevel() {
+    private String getWaspLogLevel() {
         Level level = _logger.getLevel();
-        if (level == null )
+        if (level == null ) {
             return "warning";
-        if (level.equals(Level.WARNING))
+        }
+
+        if (level.equals(WARNING)) {
             return "warning";
-        else if (level.equals(Level.FINE))
+        }
+
+        if (level.equals(FINE)) {
             return "information";
-        else if (level.equals(Level.FINER) || level.equals(Level.FINEST))
+        }
+
+        if (level.equals(FINER) || level.equals(Level.FINEST)) {
             return "debug";
-        else
-            return "warning";
+        }
+
+        return "warning";
     }
 
     private void startCacheManager(WebModule webModule) {
@@ -383,15 +403,15 @@ final class WebModuleListener
             try {
                 cm = CacheModule.configureResponseCache(webModule, bean);
             } catch (Exception ee) {
-                _logger.log(Level.WARNING, LogFacade.CACHE_MRG_EXCEPTION, ee);
+                _logger.log(WARNING, LogFacade.CACHE_MRG_EXCEPTION, ee);
             }
 
             if (cm != null) {
                 try {
                     // first start the CacheManager, if enabled
                     cm.start();
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, LogFacade.CACHE_MANAGER_STARTED);
+                    if (_logger.isLoggable(FINE)) {
+                        _logger.log(FINE, LogFacade.CACHE_MANAGER_STARTED);
                     }
                     // set this manager as a context attribute so that
                     // caching filters/tags can find it
@@ -399,7 +419,7 @@ final class WebModuleListener
                     ctxt.setAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME, cm);
 
                 } catch (LifecycleException ee) {
-                    _logger.log(Level.WARNING, ee.getMessage(),
+                    _logger.log(WARNING, ee.getMessage(),
                                                ee.getCause());
                 }
             }
@@ -413,12 +433,12 @@ final class WebModuleListener
         if (cm != null) {
             try {
                 cm.stop();
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, LogFacade.CACHE_MANAGER_STOPPED);
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, LogFacade.CACHE_MANAGER_STOPPED);
                 }
                 ctxt.removeAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME);
             } catch (LifecycleException ee) {
-                _logger.log(Level.WARNING, ee.getMessage(), ee.getCause());
+                _logger.log(WARNING, ee.getMessage(), ee.getCause());
             }
         }
     }

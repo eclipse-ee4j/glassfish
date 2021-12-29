@@ -269,7 +269,7 @@ class ApplicationDispatcherForward {
         String message = errorPage.getReason();
         if (message != null && !response.isCommitted()) {
             response.reset();
-            response.setStatus(statusCode, message);
+            response.sendError(statusCode, message);
         }
 
         try {

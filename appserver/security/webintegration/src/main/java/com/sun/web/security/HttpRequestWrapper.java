@@ -41,6 +41,7 @@ import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.ServletRequest;
@@ -187,6 +188,12 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
     public void setUserPrincipal(Principal principal) {
         httpRequest.setUserPrincipal(principal);
     }
+
+
+
+
+
+
 
     // ----- Request Methods -----
     @Override
@@ -413,8 +420,14 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
         httpRequest.unlockSession();
     }
 
+
+
+
+
     // ----- ServletRequest Methods -----
     // implementation of ServletRequest interface
+
+
     @Override
     public Object getAttribute(String name) {
         return servletRequest.getAttribute(name);
@@ -536,11 +549,6 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
     }
 
     @Override
-    public String getRealPath(String path) {
-        return servletRequest.getRealPath(path);
-    }
-
-    @Override
     public int getRemotePort() {
         return servletRequest.getRemotePort();
     }
@@ -598,6 +606,24 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
     @Override
     public long getContentLengthLong() {
         return servletRequest.getContentLengthLong();
+    }
+
+    @Override
+    public String getRequestId() {
+        // TODO Implement!
+        return null;
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        // TODO Implement!
+        return null;
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        // TODO Implement!
+        return null;
     }
 
 }

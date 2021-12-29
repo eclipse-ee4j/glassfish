@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,24 +18,31 @@
 
 -->
 
-<web-app version="2.4" mlns="http://java.sun.com/xml/ns/j2ee">
-  <display-name>JaxwsFromWsdl</display-name>
-  <description>JaxwsFromWsdl</description>
-  <listener>
-    <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
-  </listener>
-  <servlet>
-    <servlet-name>JaxwsFromWsdl</servlet-name>
+<web-app
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+    version="5.0"
+>
     <display-name>JaxwsFromWsdl</display-name>
-    <description>JAX-WS endpoint - jaxwsfromwsdl</description>
-    <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>JaxwsFromWsdl</servlet-name>
-    <url-pattern>/addnumbers</url-pattern>
-  </servlet-mapping>
-  <session-config>
-    <session-timeout>60</session-timeout>
-  </session-config>
+    <description>JaxwsFromWsdl</description>
+    
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener
+        </listener-class>
+    </listener>
+    
+    <servlet>
+        <servlet-name>JaxwsFromWsdl</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JaxwsFromWsdl</servlet-name>
+        <url-pattern>/addnumbers</url-pattern>
+    </servlet-mapping>
+    
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
 </web-app>

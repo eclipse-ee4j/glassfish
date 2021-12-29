@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,4 +30,5 @@ import java.lang.annotation.Inherited;
 @InterceptorBinding
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface SomeBindingType {}
+public @interface SomeBindingType {
+}

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,6 @@ import jakarta.ejb.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-
 @Singleton
 @Startup
 @ApplicationScoped
@@ -42,7 +42,7 @@ public class SingletonBean {
     public void init() {
         System.out.println("In SingletonBean::init()");
         System.out.println("sessionCtx = " + sessionCtx);
-        if( sessionCtx == null ) {
+        if (sessionCtx == null) {
             throw new EJBException("EE injection error");
         }
     }
@@ -56,7 +56,5 @@ public class SingletonBean {
     public void destroy() {
         System.out.println("In SingletonBean::destroy()");
     }
-
-
 
 }

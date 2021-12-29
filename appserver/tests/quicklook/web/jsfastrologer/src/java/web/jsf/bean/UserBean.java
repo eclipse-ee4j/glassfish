@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,20 +20,19 @@
  *
  * Created on December 4, 2007, 1:32 PM
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
  */
 
 package web.jsf.bean;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+
+@RequestScoped
+@Named
 public class UserBean {
 
     private String name;
     private String birthday;
-
-    /** Creates a new instance of UserBean */
-    public UserBean() {
-    }
 
     public String getName() {
         return name;

@@ -63,12 +63,11 @@ import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.security.SecurityServicesUtil;
 
 /**
- * This class is responsible for providing the Authentication support
- * needed by the admin console to both access the admin console pages
- * as well as invoke REST requests.
+ * This class is responsible for providing the Authentication support needed by the admin console to both access the
+ * admin console pages as well as invoke REST requests.
  */
 public class AdminConsoleAuthModule implements ServerAuthModule {
-    //public static final String TOKEN_ADMIN_LISTENER_PORT = "${ADMIN_LISTENER_PORT}";
+    // public static final String TOKEN_ADMIN_LISTENER_PORT = "${ADMIN_LISTENER_PORT}";
 
     private CallbackHandler handler = null;
 
@@ -78,7 +77,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
 
     private String loginErrorPage = null;
 
-    private static final Class[] SUPPORTED_MESSAGE_TYPES = new Class[]{HttpServletRequest.class, HttpServletResponse.class};
+    private static final Class[] SUPPORTED_MESSAGE_TYPES = new Class[] { HttpServletRequest.class, HttpServletResponse.class };
 
     private static final String SAVED_SUBJECT = "Saved_Subject";
 
@@ -106,8 +105,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
     private static final Logger logger = GuiUtil.getLogger();
 
     /**
-     * This method configures this AuthModule and makes sure all the
-     * information needed to continue is present.
+     * This method configures this AuthModule and makes sure all the information needed to continue is present.
      */
     @Override
     public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException {
@@ -115,25 +113,24 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         if (options != null) {
             this.loginPage = (String) options.get("loginPage");
             if (loginPage == null) {
-                throw new AuthException("'loginPage' "
-                        + "must be supplied as a property in the provider-config "
-                        + "in the domain.xml file!");
+                throw new AuthException(
+                        "'loginPage' " + "must be supplied as a property in the provider-config " + "in the domain.xml file!");
             }
             this.loginErrorPage = (String) options.get("loginErrorPage");
             if (loginErrorPage == null) {
-                throw new AuthException("'loginErrorPage' "
-                        + "must be supplied as a property in the provider-config "
-                        + "in the domain.xml file!");
+                throw new AuthException(
+                        "'loginErrorPage' " + "must be supplied as a property in the provider-config " + "in the domain.xml file!");
             }
             ServiceLocator habitat = SecurityServicesUtil.getInstance().getHabitat();
             Domain domain = habitat.getService(Domain.class);
-            NetworkListener adminListener = domain.getServerNamed("server").getConfig().getNetworkConfig().getNetworkListener("admin-listener");
+            NetworkListener adminListener = domain.getServerNamed("server").getConfig().getNetworkConfig()
+                    .getNetworkListener("admin-listener");
             SecureAdmin secureAdmin = habitat.getService(SecureAdmin.class);
 
             final String host = adminListener.getAddress();
             // Save the REST URL we need to authenticate the user.
-            this.restURL =  (SecureAdmin.Util.isEnabled(secureAdmin) ? "https://" : "http://") +
-                    (host.equals("0.0.0.0") ? "localhost" : host) + ":" + adminListener.getPort() + "/management/sessions";
+            this.restURL = (SecureAdmin.Util.isEnabled(secureAdmin) ? "https://" : "http://")
+                    + (host.equals("0.0.0.0") ? "localhost" : host) + ":" + adminListener.getPort() + "/management/sessions";
         }
     }
 
@@ -145,19 +142,15 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         return SUPPORTED_MESSAGE_TYPES;
     }
 
-
     /**
      * This is where the validation happens...
      */
     @Override
     public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
         // Make sure we need to check...
-        HttpServletRequest request =
-                (HttpServletRequest) messageInfo.getRequestMessage();
-        HttpServletResponse response =
-                (HttpServletResponse) messageInfo.getResponseMessage();
-        if (!isMandatory(messageInfo)
-                && !request.getRequestURI().endsWith("/j_security_check")) {
+        HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
+        HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
+        if (!isMandatory(messageInfo) && !request.getRequestURI().endsWith("/j_security_check")) {
             return AuthStatus.SUCCESS;
         }
 
@@ -167,7 +160,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             return AuthStatus.FAILURE;
         }
 
-        Subject savedClientSubject = (Subject) session.getValue(SAVED_SUBJECT);
+        Subject savedClientSubject = (Subject) session.getAttribute(SAVED_SUBJECT);
         if (savedClientSubject != null) {
             // Copy all principals...
             clientSubject.getPrincipals().addAll(savedClientSubject.getPrincipals());
@@ -177,23 +170,21 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         }
 
         // See if we've already calculated the serverName / serverPort
-        if (session.getValue(REST_SERVER_NAME) == null) {
+        if (session.getAttribute(REST_SERVER_NAME) == null) {
             // Save this for use later...
             URL url = null;
             try {
                 url = new URL(restURL);
             } catch (MalformedURLException ex) {
-                throw new IllegalArgumentException(
-                        "Unable to parse REST URL: (" + restURL + ")", ex);
+                throw new IllegalArgumentException("Unable to parse REST URL: (" + restURL + ")", ex);
             }
-            session.putValue(REST_SERVER_NAME, url.getHost());
-            session.putValue(REST_SERVER_PORT, url.getPort());
+            session.setAttribute(REST_SERVER_NAME, savedClientSubject);
+            session.setAttribute(REST_SERVER_PORT, url.getPort());
         }
 
         // See if the username / password has been passed in...
         String username = request.getParameter("j_username");
-        char[] password = request.getParameter("j_password") != null
-                ? request.getParameter("j_password").toCharArray() : null;
+        char[] password = request.getParameter("j_password") != null ? request.getParameter("j_password").toCharArray() : null;
         if ((username == null) || (password == null) || !request.getMethod().equalsIgnoreCase("post")) {
             // Not passed in, show the login page...
             String origPath = request.getRequestURI();
@@ -213,14 +204,6 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             return AuthStatus.SEND_CONTINUE;
         }
 
-// Don't use the PasswordValidationCallback... use REST authorization instead.
-//        char[] pwd = new char[password.length()];
-//        password.getChars(0, password.length(), pwd, 0);
-//        PasswordValidationCallback pwdCallback =
-//            new PasswordValidationCallback(clientSubject, username, pwd);
-
-        // Make REST Request
-
         Client client2 = RestUtil.initialize(ClientBuilder.newBuilder()).build();
         WebTarget target = client2.target(restURL);
         target.register(HttpAuthenticationFeature.basic(username, new String(password)));
@@ -233,10 +216,9 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         // Check to see if successful..
         if (restResp.isSuccess()) {
             // Username and Password sent in... validate them!
-            CallerPrincipalCallback cpCallback =
-                    new CallerPrincipalCallback(clientSubject, username);
+            CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
             try {
-                handler.handle(new Callback[]{ /*pwdCallback,*/cpCallback});
+                handler.handle(new Callback[] { /* pwdCallback, */cpCallback });
             } catch (Exception ex) {
                 AuthException ae = new AuthException();
                 ae.initCause(ex);
@@ -245,7 +227,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
 
             request.changeSessionId();
 
-                // Get the "extraProperties" section of the response...
+            // Get the "extraProperties" section of the response...
             Object obj = restResp.getResponse().get("data");
             Map extraProperties = null;
             if ((obj != null) && (obj instanceof Map)) {
@@ -257,18 +239,18 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
 
             // Save the Rest Token...
             if (extraProperties != null) {
-                session.putValue(REST_TOKEN, extraProperties.get("token"));
+                session.setAttribute(REST_TOKEN, extraProperties.get("token"));
             }
 
             // Save the Subject...
-            session.putValue(SAVED_SUBJECT, clientSubject);
+            session.setAttribute(SAVED_SUBJECT, clientSubject);
 
             // Save the userName
-            session.putValue(USER_NAME, username);
+            session.setAttribute(USER_NAME, username);
 
             try {
                 // Redirect...
-                String origRequest = (String)session.getAttribute(ORIG_REQUEST_PATH);
+                String origRequest = (String) session.getAttribute(ORIG_REQUEST_PATH);
                 // Explicitly test for favicon.ico, as Firefox seems to ask for this on
                 // every page
                 if ((origRequest == null) || "/favicon.ico".equals(origRequest)) {
@@ -276,10 +258,9 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
                 }
                 logger.log(Level.INFO, "Redirecting to {0}", neutralizeForLog(origRequest));
                 if (InputValidationUtil.validateStringforCRLF(origRequest)) {
-                    response.sendError(403,"Forbidden");
+                    response.sendError(403, "Forbidden");
                 }
-                response.sendRedirect(
-                        response.encodeRedirectURL(InputValidationUtil.removeLinearWhiteSpaces(origRequest)));
+                response.sendRedirect(response.encodeRedirectURL(InputValidationUtil.removeLinearWhiteSpaces(origRequest)));
             } catch (Exception ex) {
                 AuthException ae = new AuthException();
                 ae.initCause(ex);
@@ -294,6 +275,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
                 request.setAttribute("errorText", GuiUtil.getMessage("alert.ConfigurationError"));
                 request.setAttribute("messageText", GuiUtil.getMessage("alert.EnableSecureAdmin"));
             }
+
             RequestDispatcher rd = request.getRequestDispatcher(this.loginErrorPage);
             try {
                 rd.forward(request, response);
@@ -302,6 +284,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
                 ae.initCause(ex);
                 throw ae;
             }
+
             return AuthStatus.SEND_FAILURE;
         }
     }
@@ -317,7 +300,6 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
     }
 
     private boolean isMandatory(MessageInfo messageInfo) {
-        return Boolean.valueOf((String) messageInfo.getMap().get(
-                "jakarta.security.auth.message.MessagePolicy.isMandatory"));
+        return Boolean.valueOf((String) messageInfo.getMap().get("jakarta.security.auth.message.MessagePolicy.isMandatory"));
     }
 }

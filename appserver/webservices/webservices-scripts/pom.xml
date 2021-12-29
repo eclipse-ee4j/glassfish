@@ -49,5 +49,6 @@
       the transitive dependency handling in Maven.
     -->
     <packaging>distribution-fragment</packaging>
+
     <name>GlassFish webservices scripts</name>
 </project>

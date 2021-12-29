@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -30,22 +30,23 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
 import org.glassfish.appclient.client.acc.config.LogService;
 
 /**
- * Logger that conforms to the glassfish-acc.xml config file settings for logging
- * while, in some cases, also adjusting other loggers.
+ * Logger that conforms to the glassfish-acc.xml config file settings for logging while, in some cases, also adjusting
+ * other loggers.
+ *
  * <p>
- * Historically the logging level specified in the glassfish-acc.xml is used to set the level
- * for all loggers.  Beginning with v3, which supports conventional log settings
- * via logging.properties as well, we make sure that each logger's level is
- * at least as detailed as the setting in the config file.
+ * Historically the logging level specified in the glassfish-acc.xml is used to set the level for all loggers. Beginning
+ * with v3, which supports conventional log settings via logging.properties as well, we make sure that each logger's
+ * level is at least as detailed as the setting in the config file.
+ *
  * <p>
- * Also, in prior versions if the user specified a logging file in the
- * glassfish-acc.xml config file then all pre-existing handlers would be removed,
- * essentially replaced with a single handler to send output to the user-specified
- * file.  Beginning with v3 the ACC augments - rather than replaces - existing
- * handlers if the settings in glassfish-acc.xml specify a file.
+ * Also, in prior versions if the user specified a logging file in the glassfish-acc.xml config file then all
+ * pre-existing handlers would be removed, essentially replaced with a single handler to send output to the
+ * user-specified file. Beginning with v3 the ACC augments - rather than replaces - existing handlers if the settings in
+ * glassfish-acc.xml specify a file.
  *
  * @author tjquinn
  */
@@ -63,48 +64,41 @@ public class ACCLogger extends Logger {
     private void init(final LogService logService) throws IOException {
         final Level level = chooseLevel(logService);
         final Handler configuredFileHandler = createHandler(logService, level);
-        final ResourceBundle rb = ResourceBundle.getBundle(
-                ACCLogger.class.getPackage().getName() + ".LogStrings");
+        final ResourceBundle rb = ResourceBundle.getBundle(ACCLogger.class.getPackage().getName() + ".LogStrings");
 
         /*
          * Set existing loggers to at least the configured level.
          */
-        for (Enumeration<String> names =
-                LogManager.getLogManager().getLoggerNames();
-               names.hasMoreElements(); ) {
+        for (Enumeration<String> names = LogManager.getLogManager().getLoggerNames(); names.hasMoreElements();) {
             final String loggerName = names.nextElement();
             final Logger logger = LogManager.getLogManager().getLogger(loggerName);
             if (logger == null) {
-                final String msg = MessageFormat.format(
-                        rb.getString("appclient.nullLogger"),
-                        loggerName);
+                final String msg = MessageFormat.format(rb.getString("appclient.nullLogger"), loggerName);
                 if (level.intValue() <= Level.CONFIG.intValue()) {
                     System.err.println(msg);
                 }
             } else {
-                reviseLogger(
-                        logger,
-                        level,
-                        configuredFileHandler);
+                reviseLogger(logger, level, configuredFileHandler);
             }
         }
     }
 
     /**
-     * Returns the logging level to use, checking the configured log level and
-     * using the default if the configured value is absent or invalid.
+     * Returns the logging level to use, checking the configured log level and using the default if the configured value is
+     * absent or invalid.
+     *
      * @param configLevelText configured level name
      * @return log level to use for all logging in the ACC
      */
     private static Level chooseLevel(final LogService logService) {
         Level level = DEFAULT_ACC_LOG_LEVEL;
-        if (logService != null ) {
+        if (logService != null) {
             String configLevelText = logService.getLevel();
-            if (configLevelText!= null &&  ( ! configLevelText.equals(""))) {
+            if (configLevelText != null && (!configLevelText.equals(""))) {
                 try {
                     level = Level.parse(configLevelText);
                 } catch (IllegalArgumentException e) {
-                    //ignore - use the previously-assigned default - and log it !
+                    // ignore - use the previously-assigned default - and log it !
                     Logger.getLogger(ACCLogger.class.getName()).warning("Logger.Level = " + configLevelText + "??");
                 }
             }
@@ -113,8 +107,8 @@ public class ACCLogger extends Logger {
     }
 
     /**
-     * Creates a logging handler to send logging to the specified file, using
-     * the indicated level.
+     * Creates a logging handler to send logging to the specified file, using the indicated level.
+     *
      * @param filePath path to the log file to which to log
      * @param level level at which to log
      * @return logging Handler if filePath is specified and valid; null otherwise
@@ -133,20 +127,18 @@ public class ACCLogger extends Logger {
         return handler;
     }
 
-    private static void reviseLogger(final Logger logger,
-            final Level level,
-            final Handler handler) {
-            AccessController.doPrivileged(
-                    new PrivilegedAction() {
-                        public Object run() {
-                            if ( ! logger.isLoggable(level)) {
-                                logger.setLevel(level);
-                            }
-                            if (handler != null) {
-                                logger.addHandler(handler);
-                            }
-                            return null;
-                        }
-                    });
-        }
+    private static void reviseLogger(final Logger logger, final Level level, final Handler handler) {
+        AccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public Object run() {
+                if (!logger.isLoggable(level)) {
+                    logger.setLevel(level);
+                }
+                if (handler != null) {
+                    logger.addHandler(handler);
+                }
+                return null;
+            }
+        });
     }
+}

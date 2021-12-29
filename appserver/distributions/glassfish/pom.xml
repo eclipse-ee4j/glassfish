@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -29,7 +30,12 @@
     <artifactId>glassfish</artifactId>
     <packaging>glassfish-distribution</packaging>
 
-    <name>Glassfish Distribution</name>
+    <name>Glassfish Full Profile Distribution</name>
+
+    <properties>
+        <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
+        <patches>${basedir}/src/main/patches</patches>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -72,6 +78,46 @@
                             <goal>exec</goal>
                         </goals>
                         <phase>process-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            
+             <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>do stuff</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <macrodef name="jarupdate">
+                                    <attribute name="basedir"/> 
+                                    <attribute name="includes"/>
+                                    <attribute name="destfile"/>
+                                    <sequential>
+                                        <zip destfile="@{destfile}.tmp">
+                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
+                                        </zip>
+                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
+                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
+                                    </sequential>
+                                </macrodef>
+                            
+                                <jarupdate 
+                                    basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/webservices-osgi.jar"
+                                />
+                                
+                                <jarupdate 
+                                    basedir="${patches}/hibernate-validator" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/hibernate-validator.jar"
+                                />
+
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

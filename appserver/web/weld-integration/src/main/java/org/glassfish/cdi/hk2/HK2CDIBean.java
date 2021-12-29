@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,11 @@
 
 package org.glassfish.cdi.hk2;
 
+import static java.util.Collections.emptySet;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
@@ -29,6 +31,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 
@@ -77,11 +80,7 @@ public class HK2CDIBean<T> implements Bean<T> {
     @Override
     public Set<Annotation> getQualifiers() {
         if (descriptor.getQualifierAnnotations().isEmpty()) {
-            HashSet<Annotation> retVal = new HashSet<>();
-
-            retVal.add(new DefaultImpl());
-
-            return retVal;
+            return Set.of(Default.Literal.INSTANCE);
         }
 
         return descriptor.getQualifierAnnotations();
@@ -99,7 +98,7 @@ public class HK2CDIBean<T> implements Bean<T> {
 
     @Override
     public Set<Class<? extends Annotation>> getStereotypes() {
-        return Collections.emptySet();
+        return emptySet();
     }
 
     @Override
@@ -109,12 +108,6 @@ public class HK2CDIBean<T> implements Bean<T> {
 
     @Override
     public boolean isAlternative() {
-        return false;
-    }
-
-    @Override
-    public boolean isNullable() {
-        // TODO, some scoped DO support a null return
         return false;
     }
 

@@ -122,6 +122,10 @@
             </modules>
         </profile>
         <profile>
+            <id>oss-release</id>
+            <modules />
+        </profile>
+        <profile>
             <id>fastest</id>
             <modules />
         </profile>

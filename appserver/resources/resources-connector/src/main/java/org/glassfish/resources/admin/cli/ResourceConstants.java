@@ -224,6 +224,7 @@ public final class ResourceConstants {
     public static final String THREAD_PRIORITY = "thread-priority";
     public static final String LONG_RUNNING_TASKS = "long-runnings-tasks";
     public static final String HUNG_AFTER_SECONDS = "hung-after-seconds";
+    public static final String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";
     public static final String HUNG_LOGGER_INITIAL_DELAY_SECONDS = "hung-logger-initial-delay-seconds";
     public static final String HUNG_LOGGER_INTERVAL_SECONDS = "hung-logger-interval-seconds";
     public static final String CORE_POOL_SIZE = "core-pool-size";

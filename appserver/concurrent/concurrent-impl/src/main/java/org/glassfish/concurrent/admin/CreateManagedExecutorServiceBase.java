@@ -56,6 +56,9 @@ public class CreateManagedExecutorServiceBase {
     @Param(name="hungafterseconds", alias="hungAfterSeconds", defaultValue="0", optional=true)
     protected Integer hungafterseconds;
 
+    @Param(name="hungloggerprintonce", alias="hungLoggerPrintOnce", defaultValue="false", optional=true)
+    protected Boolean hungloggerprintonce;
+
     @Param(name = "hungloggerinitialdelayseconds", alias = "hungLoggerInitialDelaySeconds", defaultValue = "60", optional = true)
     protected Integer hungloggerinitialdelayseconds;
 
@@ -90,6 +93,8 @@ public class CreateManagedExecutorServiceBase {
             longrunningtasks.toString());
         attrList.put(ResourceConstants.HUNG_AFTER_SECONDS,
             hungafterseconds.toString());
+        attrList.put(ResourceConstants.HUNG_LOGGER_PRINT_ONCE,
+            hungloggerprintonce.toString());
         attrList.put(ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS, hungloggerinitialdelayseconds.toString());
         attrList.put(ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS, hungloggerintervalseconds.toString());
         attrList.put(ResourceConstants.CORE_POOL_SIZE,

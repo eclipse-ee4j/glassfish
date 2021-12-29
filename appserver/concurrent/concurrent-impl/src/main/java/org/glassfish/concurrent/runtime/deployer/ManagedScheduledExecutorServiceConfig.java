@@ -25,6 +25,7 @@ import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
 public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
 
     private int hungAfterSeconds;
+    private boolean hungLoggerPrintOnce;
     private long hungLoggerInitialDelaySeconds;
     private long hungLoggerIntervalSeconds;
     private boolean longRunningTasks;
@@ -36,6 +37,7 @@ public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
     public ManagedScheduledExecutorServiceConfig(ManagedScheduledExecutorService config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
+        hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());
         hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60);
         hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60);
         longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
@@ -47,6 +49,10 @@ public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
 
     public int getHungAfterSeconds() {
         return hungAfterSeconds;
+    }
+
+    public boolean isHungLoggerPrintOnce() {
+        return hungLoggerPrintOnce;
     }
 
     public long getHungLoggerInitialDelaySeconds() {

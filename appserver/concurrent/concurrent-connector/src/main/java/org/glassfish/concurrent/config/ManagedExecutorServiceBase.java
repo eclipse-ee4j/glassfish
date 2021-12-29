@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -86,6 +87,55 @@ public interface ManagedExecutorServiceBase extends ConfigBeanProxy,
      *              {@link String }
      */
     void setHungAfterSeconds(String value) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the hungLoggerPrintOnce property.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
+    @Attribute(defaultValue="false", dataType=Boolean.class)
+    String getHungLoggerPrintOnce();
+
+    /**
+     * Sets the value of the hungLoggerPrintOnce property.
+     *
+     * @param value allowed object is
+     *              {@link String }
+     */
+    void setHungLoggerPrintOnce(String value) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the hungLoggerInitialDelaySeconds property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "60", dataType = Long.class)
+    @Min(value = 0)
+    String getHungLoggerInitialDelaySeconds();
+
+    /**
+     * Sets the value of the hungLoggerInitialDelaySeconds property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setHungLoggerInitialDelaySeconds(String value) throws PropertyVetoException;
+
+    /**
+     * Gets the value of the hungLoggerIntervalSeconds property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "60", dataType = Long.class)
+    @Min(value = 1)
+    String getHungLoggerIntervalSeconds();
+
+    /**
+     * Sets the value of the hungLoggerIntervalSeconds property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setHungLoggerIntervalSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the corePoolSize property.

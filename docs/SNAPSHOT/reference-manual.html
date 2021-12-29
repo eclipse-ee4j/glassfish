@@ -11972,6 +11972,7 @@ Command create-local-instance executed successfully.</code></pre>
 [--threadpriority threadpriority]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
+[--hungloggerprintonce={false|true}]
 [--hungloggerinitialdelayseconds hungloggerinitialdelayseconds]
 [--hungloggerintervalseconds hungloggerintervalseconds]
 [--corepoolsize corepoolsize]
@@ -12045,6 +12046,12 @@ not reported as stuck.</p>
 <p>Specifies the number of seconds that a task can execute before it is
 considered unresponsive. The default value is 0, which means that
 tasks are never considered unresponsive.</p>
+</dd>
+<dt class="hdlist1"><code>--hungloggerprintonce</code></dt>
+<dd>
+<p>Specifies whether to print the warning message once or repeatedly.
+The default value is false. If set to true, the warning message is
+printed only once when detect a hung task exceeds "hungafterseconds".</p>
 </dd>
 <dt class="hdlist1"><code>--hungloggerinitialdelayseconds</code></dt>
 <dd>
@@ -12211,6 +12218,7 @@ Command create-managed-executor-service executed successfully.</code></pre>
 [--threadpriority threadpriority]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
+[--hungloggerprintonce={false|true}]
 [--hungloggerinitialdelayseconds hungloggerinitialdelayseconds]
 [--hungloggerintervalseconds hungloggerintervalseconds]
 [--corepoolsize corepoolsize]
@@ -12282,6 +12290,12 @@ not reported as stuck.</p>
 <p>Specifies the number of seconds that a task can execute before it is
 considered unresponsive. The default value is 0, which means that
 tasks are never considered unresponsive.</p>
+</dd>
+<dt class="hdlist1"><code>--hungloggerprintonce</code></dt>
+<dd>
+<p>Specifies whether to print the warning message once or repeatedly.
+The default value is false. If set to true, the warning message is
+printed only once when detect a hung task exceeds "hungafterseconds".</p>
 </dd>
 <dt class="hdlist1"><code>--hungloggerinitialdelayseconds</code></dt>
 <dd>
@@ -55600,7 +55614,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-12-22 13:27:33 UTC
+Last updated 2021-12-29 21:46:53 UTC
 </div>
 </div>
 </body>

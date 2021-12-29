@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.snapshots</groupId>
         <artifactId>snapshotsmodule</artifactId>
-        <version>7.0.0-M1</version>
+        <version>7.0.1</version>
     </parent>
 
     <artifactId>faces-snapshot</artifactId>

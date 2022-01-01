@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -20,19 +21,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-    <parent>
+   <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
         <version>7.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>glassfish-embedded-all</artifactId>
-    <packaging>jar</packaging>
+   <artifactId>glassfish-embedded-all</artifactId>
+   <packaging>jar</packaging>
 
-    <name>Embedded GlassFish All-In-One</name>
+   <name>Embedded GlassFish All-In-One</name>
 
-    <dependencies>
+   <properties>
+        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
+        <rar.directory>${project.build.directory}/rars</rar.directory>
+    </properties>
+
+   <dependencies>
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>antlr</artifactId>
@@ -1382,6 +1388,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
             <optional>true</optional>
@@ -1496,6 +1506,11 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.lang-model</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1637,12 +1652,7 @@
         </dependency>
     </dependencies>
 
-    <properties>
-        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
-        <rar.directory>${project.build.directory}/rars</rar.directory>
-    </properties>
-
-    <build>
+   <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>

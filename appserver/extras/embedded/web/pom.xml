@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -31,6 +32,11 @@
     <packaging>jar</packaging>
 
     <name>Embedded GlassFish Web</name>
+
+    <properties>
+        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
+        <rar.directory>${project.build.directory}/rars</rar.directory>
+    </properties>
 
     <dependencies>
         <!-- glassfish-hk2 -->
@@ -1064,10 +1070,15 @@
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- glassfish-jcdi -->
+        <!-- glassfish-cdi -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.lang-model</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1317,11 +1328,6 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-    <properties>
-        <artifact-collection.directory>${project.build.directory}/jars</artifact-collection.directory>
-        <rar.directory>${project.build.directory}/rars</rar.directory>
-    </properties>
 
     <build>
         <defaultGoal>install</defaultGoal>

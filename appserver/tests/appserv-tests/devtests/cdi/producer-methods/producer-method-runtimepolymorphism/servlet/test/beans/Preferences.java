@@ -19,7 +19,6 @@ package test.beans;
 import java.io.Serializable;
 
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.enterprise.inject.New;
 import jakarta.enterprise.inject.Produces;
 
 public class Preferences implements Serializable {
@@ -28,8 +27,8 @@ public class Preferences implements Serializable {
 
     @Produces
     @Preferred_CreatedProgrammatically
-    //In this producer method, we are manually creating the
-    //bean instance
+    // In this producer method, we are manually creating the
+    // bean instance
     public PaymentStrategy getPaymentStrategy() {
         if (true)
             paymentStrategy = PaymentStrategyType.CREDIT_CARD;
@@ -54,14 +53,12 @@ public class Preferences implements Serializable {
     // (which is RequestScoped)
     // we would incorrectly be promoting a request scoped object to a
     // session-scoped object
-    // so we use @New for CreditCardPaymentStrategy alone. The rest of the
+    // so we use @Dependent for CreditCardPaymentStrategy alone. The rest of the
     // payment
     // strategies are Dependent anyway as they are not scoped explicitly in
     // their
     // classes
-    public PaymentStrategy getPaymentStrategy(
-            @New CreditCardPaymentStrategy ccps, ChequePaymentStrategy cps,
-            PayPalPaymentStrategy pps) {
+    public PaymentStrategy getPaymentStrategy(CreditCardPaymentStrategy ccps, ChequePaymentStrategy cps, PayPalPaymentStrategy pps) {
         // set CREDIT_CARD as preferred always
         paymentStrategy = PaymentStrategyType.CREDIT_CARD;
 

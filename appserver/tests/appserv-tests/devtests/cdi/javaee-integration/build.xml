@@ -20,6 +20,54 @@
 <project name="javaee-int-test" default="usage" basedir=".">
 
     <property name="javaee-int-target" value="all" />
+    
+    <target name="usage">
+        <echo> Usage:
+                ant all (Executes all the javaee-int tests)
+                ant clean (cleans all the javaee-int tests)
+                ant build (builds all the javaee-int tests)
+                ant setup (sets up all resources for javaee-int tests)
+                ant deploy (deploys all the javaee-int apps)
+                ant run (Executes all the javaee-int tests)
+                ant undeploy (undeploys all the  javaee-int apps)
+                ant unsetup (unsets all resources for javaee-int tests)
+        </echo>
+    </target>
+    
+    <target name="javaee-int">
+        <record name="javaee-int.output" action="start" />
+        
+        <!--
+        
+            Not running until Hibernate Validation supports CDI 4.0. 
+            See https://hibernate.atlassian.net/browse/HV-1857
+        
+        <echo message="   ====  Running builtin-beans" />
+        <ant dir="builtin-beans" target="${javaee-int-target}" />
+        -->
+        
+        <echo message="   ====  Running servlet-context-injection-cdi" />
+        <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}" />
+        
+        <echo message="   ====  Running simple-managed-bean-interceptor-nonnull-package" />
+        <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${javaee-int-target}" />
+        
+        <echo message="   ====  Running no-interface-local-view-proxy-serializable" />
+        <ant dir="no-interface-local-view-proxy-serializable" target="${javaee-int-target}" />
+        
+        <echo message="   ====  Running normal-bean-injection-ear" />
+        <ant dir="normal-bean-injection-ear" target="${javaee-int-target}" />
+        <ant dir="programmatic-lookup-ear" target="${javaee-int-target}" />
+        <ant dir="bean-in-lib-dir-used-by-ejb-in-ear" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-javaee-injection" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering-reversed" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-extension-alternative" target="${javaee-int-target}" />
+        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib" target="${javaee-int-target}" />
+        <ant dir="embedded-resource-adapter-as-bean-archive" target="${javaee-int-target}" />
+
+        <record name="javaee-int.output" action="stop" />
+    </target>
 
     <target name="run-test">
         <antcall target="javaee-int">
@@ -75,36 +123,4 @@
         </antcall>
     </target>
 
-    <target name="javaee-int">
-        <record name="javaee-int.output" action="start" />
-
-        <ant dir="builtin-beans" target="${javaee-int-target}" />
-        <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}" />
-        <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${javaee-int-target}" />
-        <ant dir="no-interface-local-view-proxy-serializable" target="${javaee-int-target}" />
-        <ant dir="normal-bean-injection-ear" target="${javaee-int-target}" />
-        <ant dir="programmatic-lookup-ear" target="${javaee-int-target}" />
-        <ant dir="bean-in-lib-dir-used-by-ejb-in-ear" target="${javaee-int-target}" />
-        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-javaee-injection" target="${javaee-int-target}" />
-        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering" target="${javaee-int-target}" />
-        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-ordering-reversed" target="${javaee-int-target}" />
-        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib-extension-alternative" target="${javaee-int-target}" />
-        <ant dir="cdi-servlet-3.0-annotation-with-web-inf-lib" target="${javaee-int-target}" />
-        <ant dir="embedded-resource-adapter-as-bean-archive" target="${javaee-int-target}" />
-
-        <record name="javaee-int.output" action="stop" />
-    </target>
-
-    <target name="usage">
-        <echo> Usage:
-                ant all (Executes all the javaee-int tests)
-                ant clean (cleans all the javaee-int tests)
-                ant build (builds all the javaee-int tests)
-                ant setup (sets up all resources for javaee-int tests)
-                ant deploy (deploys all the javaee-int apps)
-                ant run (Executes all the javaee-int tests)
-                ant undeploy (undeploys all the  javaee-int apps)
-                ant unsetup (unsets all resources for javaee-int tests)
-        </echo>
-    </target>
 </project>

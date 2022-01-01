@@ -1,5 +1,6 @@
 <!--
 
+	Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -23,7 +24,7 @@
 
   <servlet>
     <servlet-name>jsp</servlet-name>
-    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+    <servlet-class>org.glassfish.wasp.servlet.JspServlet</servlet-class>
     <init-param>
       <param-name>ieClassId</param-name>
       <param-value>ABCD</param-value>

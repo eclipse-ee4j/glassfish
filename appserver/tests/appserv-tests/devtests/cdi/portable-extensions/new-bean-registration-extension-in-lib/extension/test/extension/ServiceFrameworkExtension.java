@@ -262,10 +262,6 @@ public class ServiceFrameworkExtension implements Extension{
             return false;
         }
 
-        @Override
-        public boolean isNullable() {
-            return false;
-        }
     }
 
     /*

@@ -21,66 +21,6 @@
 
     <property name="decorators-target" value="all"/>
 
-    <target name="run-test">
-        <antcall target="decorators">
-        <param name="decorators-target" value="run-test"/>
-        </antcall>
-    </target>
-
-    <target name="all">
-        <antcall target="decorators">
-        <param name="decorators-target" value="all"/>
-        </antcall>
-    </target>
-
-    <target name="clean">
-        <antcall target="decorators">
-        <param name="decorators-target" value="clean"/>
-        </antcall>
-    </target>
-
-    <target name="build">
-        <antcall target="decorators">
-        <param name="decorators-target" value="build"/>
-        </antcall>
-    </target>
-
-    <target name="setup">
-        <antcall target="decorators">
-        <param name="decorators-target" value="setup"/>
-        </antcall>
-    </target>
-
-    <target name="deploy">
-        <antcall target="decorators">
-        <param name="decorators-target" value="deploy"/>
-        </antcall>
-    </target>
-
-    <target name="undeploy">
-        <antcall target="decorators">
-        <param name="decorators-target" value="undeploy"/>
-        </antcall>
-    </target>
-
-    <target name="unsetup">
-        <antcall target="decorators">
-        <param name="decorators-target" value="unsetup"/>
-        </antcall>
-    </target>
-
-    <target name="run">
-        <antcall target="decorators">
-        <param name="decorators-target" value="run"/>
-        </antcall>
-    </target>
-
-    <target name="decorators">
-        <record name="decorators.output" action="start" />
-            <ant dir="simple-decorator" target="${decorators-target}"/>
-        <record name="decorators.output" action="stop" />
-    </target>
-
     <target name="usage">
         <echo> Usage:
                 ant all (Executes all the decorators tests)
@@ -93,4 +33,65 @@
                 ant unsetup (unsets all resources for decorators tests)
         </echo>
     </target>
+
+    <target name="decorators">
+        <record name="decorators.output" action="start" />
+        <ant dir="simple-decorator" target="${decorators-target}" />
+        <record name="decorators.output" action="stop" />
+    </target>
+
+    <target name="run-test">
+        <antcall target="decorators">
+            <param name="decorators-target" value="run-test"/>
+        </antcall>
+    </target>
+
+    <target name="all">
+        <antcall target="decorators">
+            <param name="decorators-target" value="all"/>
+        </antcall>
+    </target>
+
+    <target name="clean">
+        <antcall target="decorators">
+            <param name="decorators-target" value="clean"/>
+        </antcall>
+    </target>
+
+    <target name="build">
+        <antcall target="decorators">
+            <param name="decorators-target" value="build"/>
+        </antcall>
+    </target>
+
+    <target name="setup">
+        <antcall target="decorators">
+            <param name="decorators-target" value="setup"/>
+        </antcall>
+    </target>
+
+    <target name="deploy">
+        <antcall target="decorators">
+            <param name="decorators-target" value="deploy"/>
+        </antcall>
+    </target>
+
+    <target name="undeploy">
+        <antcall target="decorators">
+            <param name="decorators-target" value="undeploy"/>
+        </antcall>
+    </target>
+
+    <target name="unsetup">
+        <antcall target="decorators">
+            <param name="decorators-target" value="unsetup"/>
+        </antcall>
+    </target>
+
+    <target name="run">
+        <antcall target="decorators">
+            <param name="decorators-target" value="run"/>
+        </antcall>
+    </target>
+
 </project>

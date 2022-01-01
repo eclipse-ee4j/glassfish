@@ -20,20 +20,24 @@ import jakarta.interceptor.*;
 
 import test.beans.Tester;
 
-@Tester @Interceptor
+@Tester
+@Interceptor
 public class TestAroundInvokeInterceptor {
     public static int aroundInvokeCount = 0;
 
-    public static void reset(){
+    public static void reset() {
         aroundInvokeCount = 0;
     }
 
-   @AroundInvoke
-   public Object testMethod(InvocationContext ctx) throws Exception {
-        System.out.println("TestAroundInvokeIntercetpr:: aroundInvoke called - target:" + ctx.getTarget() + " , params:"+ ctx.getParameters());
-        aroundInvokeCount ++;
+    @AroundInvoke
+    public Object testMethod(InvocationContext ctx) throws Exception {
+        System.out.println(
+            "TestAroundInvokeIntercetpr:: aroundInvoke called - target:" + ctx.getTarget() + 
+            " , params:" + ctx.getParameters());
+        aroundInvokeCount++;
         ctx.proceed();
+        
         return null;
-   }
+    }
 
 }

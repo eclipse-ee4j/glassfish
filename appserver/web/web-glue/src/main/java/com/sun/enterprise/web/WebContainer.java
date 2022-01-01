@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,8 +61,8 @@ import org.apache.catalina.core.StandardEngine;
 import org.apache.catalina.startup.ContextConfig;
 import org.apache.catalina.util.RequestUtil;
 import org.apache.catalina.util.ServerInfo;
-import org.apache.jasper.runtime.JspFactoryImpl;
-import org.apache.jasper.xmlparser.ParserUtils;
+import org.glassfish.wasp.runtime.JspFactoryImpl;
+import org.glassfish.wasp.xmlparser.ParserUtils;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;

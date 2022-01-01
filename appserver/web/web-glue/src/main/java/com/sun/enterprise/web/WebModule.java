@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +41,7 @@ import org.apache.catalina.deploy.FilterMaps;
 import org.apache.catalina.loader.WebappLoader;
 import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.session.StandardManager;
-import org.apache.jasper.servlet.JspServlet;
+import org.glassfish.wasp.servlet.JspServlet;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.embeddable.web.Context;
 import org.glassfish.embeddable.web.config.FormLoginConfig;

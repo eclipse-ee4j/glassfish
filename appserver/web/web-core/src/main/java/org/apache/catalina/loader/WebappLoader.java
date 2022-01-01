@@ -1089,7 +1089,7 @@ public class WebappLoader
 
     /**
      * Set the appropriate context attribute for our class path.  This
-     * is required only because Jasper depends on it.
+     * is required only because WaSP depends on it.
      */
     private void setClassPath() {
 
@@ -1228,7 +1228,7 @@ public class WebappLoader
 
     /**
      * Copy a file to the specified temp directory. This is required only
-     * because Jasper depends on it.
+     * because WaSP depends on it.
      */
     private boolean copy(InputStream is, OutputStream os) {
 

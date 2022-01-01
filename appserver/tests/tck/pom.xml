@@ -29,6 +29,7 @@
     <groupId>org.glassfish.main.tests.tck</groupId>
     <artifactId>tck</artifactId>
     <packaging>pom</packaging>
+
     <name>TCK: Parent</name>
 
     <modules>

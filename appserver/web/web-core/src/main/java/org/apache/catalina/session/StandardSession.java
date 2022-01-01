@@ -132,11 +132,6 @@ public class StandardSession
     };
 
     /**
-     * The HTTP session context associated with this session.
-     */
-    protected static volatile HttpSessionContext sessionContext = null;
-
-    /**
      * Used for serialized format versioning.
      * 1 = first version where this is being tracked.
      *
@@ -300,6 +295,7 @@ public class StandardSession
      * Return the authentication type used to authenticate our cached
      * Principal, if any.
      */
+    @Override
     public String getAuthType() {
 
         return (this.authType);
@@ -313,6 +309,7 @@ public class StandardSession
      *
      * @param authType The new cached authentication type
      */
+    @Override
     public void setAuthType(String authType) {
 
         this.authType = authType;
@@ -325,6 +322,7 @@ public class StandardSession
      *
      * @param time The new creation time
      */
+    @Override
     public void setCreationTime(long time) {
 
         this.creationTime = time;
@@ -337,6 +335,7 @@ public class StandardSession
     /**
      * Return the session identifier for this session.
      */
+    @Override
     public String getId() {
 
         return getIdInternal();
@@ -347,6 +346,7 @@ public class StandardSession
     /**
      * Return the session identifier for this session.
      */
+    @Override
     public String getIdInternal() {
 
         return (this.id);
@@ -359,6 +359,7 @@ public class StandardSession
      *
      * @param id The new session identifier
      */
+    @Override
     public void setId(String id) {
 
         if ((this.id != null) && (manager != null))
@@ -498,6 +499,7 @@ public class StandardSession
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
 
         return (this.info);
@@ -511,6 +513,7 @@ public class StandardSession
      * GMT.  Actions that your application takes, such as getting or setting
      * a value associated with the session, do not affect the access time.
      */
+    @Override
     public long getLastAccessedTime() {
         if ( !isValid() ) {
             throw new IllegalStateException
@@ -548,6 +551,7 @@ public class StandardSession
     /**
      * Return the Manager within which this Session is valid.
      */
+    @Override
     public Manager getManager() {
 
         return (this.manager);
@@ -560,6 +564,7 @@ public class StandardSession
      *
      * @param manager The new Manager
      */
+    @Override
     public void setManager(Manager manager) {
         this.manager = manager;
         context = (StandardContext) manager.getContainer();
@@ -571,6 +576,7 @@ public class StandardSession
      * before the servlet container will invalidate the session.  A negative
      * time indicates that the session should never time out.
      */
+    @Override
     public int getMaxInactiveInterval() {
 
         return (this.maxInactiveInterval);
@@ -585,6 +591,7 @@ public class StandardSession
      *
      * @param interval The new maximum interval
      */
+    @Override
     public void setMaxInactiveInterval(int interval) {
 
         this.maxInactiveInterval = interval;
@@ -600,6 +607,7 @@ public class StandardSession
      *
      * @param isNew The new value for the <code>isNew</code> flag
      */
+    @Override
     public void setNew(boolean isNew) {
 
         this.isNew = isNew;
@@ -614,6 +622,7 @@ public class StandardSession
      * <code>Realm.authenticate()</code> calls on every request.  If there
      * is no current associated Principal, return <code>null</code>.
      */
+    @Override
     public Principal getPrincipal() {
 
         return (this.principal);
@@ -629,6 +638,7 @@ public class StandardSession
      *
      * @param principal The new Principal, or <code>null</code> if none
      */
+    @Override
     public void setPrincipal(Principal principal) {
 
         this.principal = principal;
@@ -639,6 +649,7 @@ public class StandardSession
      * Return the <code>HttpSession</code> for which this object
      * is the facade.
      */
+    @Override
     public HttpSession getSession() {
 
         if (facade == null){
@@ -646,6 +657,7 @@ public class StandardSession
                 final StandardSession fsession = this;
                 facade = AccessController.doPrivileged(
                         new PrivilegedAction<StandardSessionFacade>(){
+                    @Override
                     public StandardSessionFacade run(){
                         return new StandardSessionFacade(fsession);
                     }
@@ -662,6 +674,7 @@ public class StandardSession
     /**
      * Return the <code>isValid</code> flag for this session.
      */
+    @Override
     public boolean isValid() {
 
         if (this.expiring){
@@ -695,6 +708,7 @@ public class StandardSession
     }
 
     // START CR 6363689
+    @Override
     public boolean getIsValid() {
         return this.isValid;
     }
@@ -705,6 +719,7 @@ public class StandardSession
      *
      * @param isValid The new value for the <code>isValid</code> flag
      */
+    @Override
     public void setValid(boolean isValid) {
 
         this.isValid = isValid;
@@ -724,6 +739,7 @@ public class StandardSession
      * should be called by the context when a request comes in for a particular
      * session, even if the application does not reference it.
      */
+    @Override
     public void access() {
         this.lastAccessedTime = this.thisAccessedTime;
         this.thisAccessedTime = System.currentTimeMillis();
@@ -735,6 +751,7 @@ public class StandardSession
     /**
      * End the access.
      */
+    @Override
     public void endAccess() {
         isNew = false;
     }
@@ -743,6 +760,7 @@ public class StandardSession
     /**
      * Add a session event listener to this component.
      */
+    @Override
     public void addSessionListener(SessionListener listener) {
 
         synchronized (listeners) {
@@ -756,6 +774,7 @@ public class StandardSession
      * Perform the internal processing required to invalidate this session,
      * without triggering an exception if the session has already expired.
      */
+    @Override
     public void expire() {
 
         expire(true);
@@ -967,6 +986,7 @@ public class StandardSession
      *
      * @param name Name of the note to be returned
      */
+    @Override
     public Object getNote(String name) {
         return (notes.get(name));
     }
@@ -976,6 +996,7 @@ public class StandardSession
      * Return an Iterator containing the String names of all notes bindings
      * that exist for this session.
      */
+    @Override
     public Iterator<String> getNoteNames() {
         return (notes.keySet().iterator());
     }
@@ -985,6 +1006,7 @@ public class StandardSession
      * Release all object references, and initialize instance variables, in
      * preparation for reuse of this object.
      */
+    @Override
     public void recycle() {
 
         // Reset the instance variables associated with this Session
@@ -1013,6 +1035,7 @@ public class StandardSession
      *
      * @param name Name of the note to be removed
      */
+    @Override
     public void removeNote(String name) {
         notes.remove(name);
     }
@@ -1021,6 +1044,7 @@ public class StandardSession
     /**
      * Remove a session event listener from this component.
      */
+    @Override
     public void removeSessionListener(SessionListener listener) {
 
         synchronized (listeners) {
@@ -1037,6 +1061,7 @@ public class StandardSession
      * @param name Name to which the object should be bound
      * @param value Object to be bound to the specified name
      */
+    @Override
     public void setNote(String name, Object value) {
         notes.put(name, value);
     }
@@ -1048,6 +1073,7 @@ public class StandardSession
      *
      * @return true if this Session has expired, false otherwise
      */
+    @Override
     public boolean hasExpired() {
 
         if (maxInactiveInterval >= 0
@@ -1072,6 +1098,7 @@ public class StandardSession
     /**
      * Gets the version number
      */
+    @Override
     public long getVersion() {
         return version.get();
     }
@@ -1089,6 +1116,7 @@ public class StandardSession
      * Return the single sign on id.
      * It is null if there is no SSO.
      */
+    @Override
     public String getSsoId() {
         return ssoId;
     }
@@ -1097,6 +1125,7 @@ public class StandardSession
     /**
      * Set the single sign on id.
      */
+    @Override
     public void setSsoId(String ssoId) {
         this.ssoId = ssoId;
     }
@@ -1105,6 +1134,7 @@ public class StandardSession
     /**
      * Return the single sign on version.
      */
+    @Override
     public long getSsoVersion() {
         return ssoVersion;
     }
@@ -1113,6 +1143,7 @@ public class StandardSession
     /**
      * Set the single sign on version.
      */
+    @Override
     public void setSsoVersion(long value) {
         ssoVersion = value;
     }
@@ -1121,6 +1152,7 @@ public class StandardSession
     /**
      * Return a string representation of this object.
      */
+    @Override
     public String toString() {
 
         // STARTS S1AS
@@ -1216,6 +1248,7 @@ public class StandardSession
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public long getCreationTime() {
 
         if (!isValid())
@@ -1230,6 +1263,7 @@ public class StandardSession
     /**
      * Return the ServletContext to which this session belongs.
      */
+    @Override
     public ServletContext getServletContext() {
 
         if (manager == null)
@@ -1241,20 +1275,6 @@ public class StandardSession
 
     }
 
-
-    /**
-     * Return the session context with which this session is associated.
-     *
-     * @deprecated As of Version 2.1, this method is deprecated and has no
-     *  replacement.  It will be removed in a future version of the
-     *  Java Servlet API.
-     */
-    public HttpSessionContext getSessionContext() {
-        if (sessionContext == null)
-            sessionContext = new StandardSessionContext();
-        return (sessionContext);
-
-    }
 
 
     // ----------------------------------------------HttpSession Public Methods
@@ -1268,6 +1288,7 @@ public class StandardSession
      *                                                                                   * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public Object getAttribute(String name) {
 
         if (!isValid())
@@ -1291,6 +1312,7 @@ public class StandardSession
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public Enumeration<String> getAttributeNames() {
 
         if (!isValid())
@@ -1315,6 +1337,7 @@ public class StandardSession
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>getAttribute()</code>
      */
+    @Deprecated
     public Object getValue(String name) {
 
         return (getAttribute(name));
@@ -1332,6 +1355,7 @@ public class StandardSession
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>getAttributeNames()</code>
      */
+    @Deprecated
     public String[] getValueNames() {
 
         if (!isValid())
@@ -1355,7 +1379,7 @@ public class StandardSession
      */
     protected boolean getSessionLockForForeground() {
         boolean result = false;
-        StandardSession sess = (StandardSession) this;
+        StandardSession sess = this;
         //now lock the session
         //System.out.println("IN LOCK_SESSION_FOR_FOREGROUND: sess =" + sess);
         long pollTime = 200L;
@@ -1418,6 +1442,7 @@ public class StandardSession
      * lock the session for background
      * returns true if successful; false if unsuccessful
      */
+    @Override
     public boolean lockForeground() {
         //in this case we are not using locks
         //so just return true
@@ -1445,6 +1470,7 @@ public class StandardSession
     /**
      * unlock the session from foreground
      */
+    @Override
     public void unlockForeground() {
         //in this case we are not using locks
         //so just return true
@@ -1512,6 +1538,7 @@ public class StandardSession
      *  an invalidated session
      * HERCULES:modified method
      */
+    @Override
     public void invalidate() {
 
         if (!isValid)
@@ -1541,6 +1568,7 @@ public class StandardSession
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public boolean isNew() {
 
         if (!isValid())
@@ -1570,6 +1598,7 @@ public class StandardSession
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>setAttribute()</code>
      */
+    @Deprecated
     public void putValue(String name, Object value) {
 
         setAttribute(name, value);
@@ -1591,6 +1620,7 @@ public class StandardSession
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public void removeAttribute(String name) {
 
         removeAttribute(name, true, true);
@@ -1717,6 +1747,7 @@ public class StandardSession
      * @deprecated As of Version 2.2, this method is replaced by
      *  <code>removeAttribute()</code>
      */
+    @Deprecated
     public void removeValue(String name) {
 
         removeAttribute(name);
@@ -1741,6 +1772,7 @@ public class StandardSession
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
+    @Override
     public void setAttribute(String name, Object value) {
 
         // Name cannot be null
@@ -2330,49 +2362,3 @@ public class StandardSession
 }
 
 
-// ------------------------------------------------------------ Protected Class
-
-
-/**
- * This class is a dummy implementation of the <code>HttpSessionContext</code>
- * interface, to conform to the requirement that such an object be returned
- * when <code>HttpSession.getSessionContext()</code> is called.
- *
- * @author Craig R. McClanahan
- *
- * @deprecated As of Java Servlet API 2.1 with no replacement.  The
- *  interface will be removed in a future version of this API.
- */
-
-final class StandardSessionContext implements HttpSessionContext {
-
-
-    private HashMap<?, String> dummy = new HashMap<String, String>();
-
-    /**
-     * Return the session identifiers of all sessions defined
-     * within this context.
-     *
-     * @deprecated As of Java Servlet API 2.1 with no replacement.
-     *  This method must return an empty <code>Enumeration</code>
-     *  and will be removed in a future version of the API.
-     */
-    public Enumeration<String> getIds() {
-        return (new Enumerator<String>(dummy));
-    }
-
-
-    /**
-     * Return the <code>HttpSession</code> associated with the
-     * specified session identifier.
-     *
-     * @param id Session identifier for which to look up a session
-     *
-     * @deprecated As of Java Servlet API 2.1 with no replacement.
-     *  This method must return null and will be removed in a
-     *  future version of the API.
-     */
-    public HttpSession getSession(String id) {
-        return (null);
-    }
-}

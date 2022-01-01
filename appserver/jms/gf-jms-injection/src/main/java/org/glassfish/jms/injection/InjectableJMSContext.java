@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,20 @@ import java.io.Serializable;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.logging.annotation.LoggerInfo;
+
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.InjectionPoint;
 import jakarta.inject.Inject;
@@ -29,37 +43,31 @@ import jakarta.jms.JMSConnectionFactory;
 import jakarta.jms.JMSContext;
 import jakarta.jms.JMSPasswordCredential;
 import jakarta.jms.JMSSessionMode;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import jakarta.transaction.Transaction;
 import jakarta.transaction.SystemException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.logging.annotation.LoggerInfo;
-import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.transaction.Transaction;
 
 /**
- * This bean is the JMSContext wrapper which user gets by injection.
- * It can read metadata of injection point for it is dependent scoped.
- * It delegates all business methods of JMSContext interface to the
- * JMSContext API via request scopd JMSContextManager bean.
+ * This bean is the JMSContext wrapper which user gets by injection. It can read metadata of injection point for it is
+ * dependent scoped. It delegates all business methods of JMSContext interface to the JMSContext API via request scopd
+ * JMSContextManager bean.
  */
 public class InjectableJMSContext extends ForwardingJMSContext implements Serializable {
     // Note: since this bean is dependent-scoped, instances are liable to be passivated
     // All fields are therefore either serializable or transient
 
-    @LoggerInfo(subsystem="JMS_INJECTION", description="JMS Injection Logger", publish=true)
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    @LoggerInfo(subsystem = "JMS_INJECTION", description = "JMS Injection Logger", publish = true)
     public static final String JMS_INJECTION_LOGGER = "jakarta.enterprise.resource.jms.injection";
 
     private static final Logger logger = Logger.getLogger(JMS_INJECTION_LOGGER);
     private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InjectableJMSContext.class);
 
-    private final String ipId;  // id per injection point
-    private final String id;    // id per scope
+    private final String ipId; // id per injection point
+    private final String id; // id per scope
 
     // Make it transient for FindBugs
     @Inject
@@ -73,24 +81,24 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
     private final JMSContextMetadata metadata;
 
     /*
-     * We cache the ConnectionFactory here to avoid repeated JNDI lookup
-     * If the bean is passivated/activated the field will be set to null
-     * and re-initialised lazily. (Though as a ConnectionFactory is required
-     * to be Serializable this may not be needed)
+     * We cache the ConnectionFactory here to avoid repeated JNDI lookup If the bean is passivated/activated the field will
+     * be set to null and re-initialised lazily. (Though as a ConnectionFactory is required to be Serializable this may not
+     * be needed)
      */
     private transient ConnectionFactory connectionFactory;
     private transient ConnectionFactory connectionFactoryPM;
     private transient JavaEETransactionManager transactionManager;
 
-    private static final boolean usePMResourceInTransaction = Boolean.getBoolean("org.glassfish.jms.skip-resource-registration-in-transaction");
+    private static final boolean usePMResourceInTransaction = Boolean
+            .getBoolean("org.glassfish.jms.skip-resource-registration-in-transaction");
 
     @Inject
     public InjectableJMSContext(InjectionPoint ip, RequestedJMSContextManager rm) {
         getTransactionManager();
 
         JMSConnectionFactory jmsConnectionFactoryAnnot = ip.getAnnotated().getAnnotation(JMSConnectionFactory.class);
-        JMSSessionMode                sessionModeAnnot = ip.getAnnotated().getAnnotation(JMSSessionMode.class);
-        JMSPasswordCredential          credentialAnnot = ip.getAnnotated().getAnnotation(JMSPasswordCredential.class);
+        JMSSessionMode sessionModeAnnot = ip.getAnnotated().getAnnotation(JMSSessionMode.class);
+        JMSPasswordCredential credentialAnnot = ip.getAnnotated().getAnnotation(JMSPasswordCredential.class);
 
         ipId = UUID.randomUUID().toString();
         this.requestedManager = rm;
@@ -98,13 +106,14 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
         id = metadata.getFingerPrint();
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, localStrings.getLocalString("JMSContext.injection.initialization",
-                       "Injecting JMSContext wrapper with id {0} and metadata [{1}].", ipId, metadata));
+                    "Injecting JMSContext wrapper with id {0} and metadata [{1}].", ipId, metadata));
         }
     }
 
     private synchronized TransactedJMSContextManager getTransactedManager() {
-        if (transactedManager == null)
+        if (transactedManager == null) {
             transactedManager = tm.get();
+        }
         return transactedManager;
     }
 
@@ -112,18 +121,19 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
     protected JMSContext delegate() {
         AbstractJMSContextManager manager = requestedManager;
         boolean isInTransaction = isInTransaction();
-        if (isInTransaction)
+        if (isInTransaction) {
             manager = getTransactedManager();
+        }
 
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, localStrings.getLocalString("JMSContext.delegation.type",
-                       "JMSContext wrapper with id {0} is delegating to {1} instance.", ipId, manager.getType()));
+                    "JMSContext wrapper with id {0} is delegating to {1} instance.", ipId, manager.getType()));
         }
         try {
             return manager.getContext(ipId, id, metadata, getConnectionFactory(isInTransaction));
         } catch (ContextNotActiveException e) {
             String message = localStrings.getLocalString("ContextNotActiveException.msg",
-                             "An injected JMSContext cannot be used when there is neither a transaction or a valid request scope.");
+                    "An injected JMSContext cannot be used when there is neither a transaction or a valid request scope.");
             throw new RuntimeException(message, e);
         }
     }
@@ -137,12 +147,14 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
             if (isInTransaction) {
                 TransactedJMSContextManager manager = getTransactedManager();
                 tContext = manager.getContext(id);
-                if (tContext == null)
+                if (tContext == null) {
                     tContext = manager.getContext(ipId, id, metadata, getConnectionFactory(isInTransaction));
+                }
             } else {
                 rContext = requestedManager.getContext(id);
-                if (rContext == null)
+                if (rContext == null) {
                     rContext = requestedManager.getContext(ipId, id, metadata, getConnectionFactory(isInTransaction));
+                }
             }
         } catch (ContextNotActiveException cnae) {
             // if toString() is called in an env which doesn't have valid CDI request/transaction scope,
@@ -151,12 +163,13 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
 
         StringBuffer sb = new StringBuffer();
         sb.append("JMSContext Wrapper ").append(ipId).append(" with metadata [").append(metadata).append("]");
-        if (tContext != null)
+        if (tContext != null) {
             sb.append(", around ").append(getTransactedManager().getType()).append(" [").append(tContext).append("]");
-        else if (rContext != null)
+        } else if (rContext != null) {
             sb.append(", around ").append(requestedManager.getType()).append(" [").append(rContext).append("]");
-        else
+        } else {
             sb.append(", there is neither a transaction or a valid request scope.");
+        }
         return sb.toString();
     }
 
@@ -170,24 +183,27 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
         try {
             manager.cleanup();
             if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, localStrings.getLocalString("JMSContext.injection.cleanup",
-                           "Cleaning up {0} JMSContext wrapper with id {1} and metadata [{2}].",
-                           manager.getType(), ipId, metadata.getLookup()));
+                logger.log(Level.FINE,
+                        localStrings.getLocalString("JMSContext.injection.cleanup",
+                                "Cleaning up {0} JMSContext wrapper with id {1} and metadata [{2}].", manager.getType(), ipId,
+                                metadata.getLookup()));
             }
         } catch (ContextNotActiveException cnae) {
             // ignore the ContextNotActiveException when the application is undeployed.
         } catch (Throwable t) {
-            logger.log(Level.SEVERE, localStrings.getLocalString("JMSContext.injection.cleanup.failure",
-                       "Failed to cleaning up {0} JMSContext wrapper with id {1} and metadata [{2}]. Reason: {3}.",
-                        manager.getType(), ipId, metadata.getLookup(), t.toString()));
+            logger.log(Level.SEVERE,
+                    localStrings.getLocalString("JMSContext.injection.cleanup.failure",
+                            "Failed to cleaning up {0} JMSContext wrapper with id {1} and metadata [{2}]. Reason: {3}.", manager.getType(),
+                            ipId, metadata.getLookup(), t.toString()));
         }
     }
 
     private JavaEETransactionManager getTransactionManager() {
         if (transactionManager == null) {
             ServiceLocator serviceLocator = Globals.get(ServiceLocator.class);
-            if (serviceLocator != null)
+            if (serviceLocator != null) {
                 transactionManager = serviceLocator.getService(JavaEETransactionManager.class);
+            }
             if (transactionManager == null) {
                 throw new RuntimeException(localStrings.getLocalString("txn.mgr.failure", "Unable to retrieve transaction manager."));
             }
@@ -219,8 +235,8 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
             try {
                 initialContext = new InitialContext();
             } catch (NamingException ne) {
-                throw new RuntimeException(localStrings.getLocalString("initialContext.init.exception",
-                                           "Cannot create InitialContext."), ne);
+                throw new RuntimeException(localStrings.getLocalString("initialContext.init.exception", "Cannot create InitialContext."),
+                        ne);
             }
 
             try {
@@ -228,7 +244,7 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
                 boolean isPMName = jndiName.endsWith("__pm");
                 if (isPMName) {
                     int l = jndiName.length();
-                    jndiName = jndiName.substring(0, l-4);
+                    jndiName = jndiName.substring(0, l - 4);
                 }
                 cachedCF = (ConnectionFactory) initialContext.lookup(jndiName);
 
@@ -241,20 +257,21 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
                 }
             } catch (NamingException ne) {
                 throw new RuntimeException(localStrings.getLocalString("connectionFactory.not.found",
-                                           "ConnectionFactory not found with lookup {0}.",
-                                           jndiName), ne);
+                        "ConnectionFactory not found with lookup {0}.", jndiName), ne);
             } finally {
                 if (initialContext != null) {
                     try {
                         initialContext.close();
-                    } catch (NamingException ne) {}
+                    } catch (NamingException ne) {
+                    }
                 }
             }
 
-            if (usePMResource)
+            if (usePMResource) {
                 connectionFactoryPM = cachedCF;
-            else
+            } else {
                 connectionFactory = cachedCF;
+            }
         }
         return cachedCF;
     }
@@ -263,11 +280,12 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
         boolean isInTransaction = false;
         try {
             Transaction txn = getTransactionManager().getTransaction();
-            if (txn != null)
+            if (txn != null) {
                 isInTransaction = true;
+            }
         } catch (SystemException e) {
-            throw new RuntimeException(localStrings.getLocalString("txn.detection.failure",
-                                       "Failed to detect transaction status of current thread."), e);
+            throw new RuntimeException(
+                    localStrings.getLocalString("txn.detection.failure", "Failed to detect transaction status of current thread."), e);
         }
         return isInTransaction;
     }

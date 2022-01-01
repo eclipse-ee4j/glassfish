@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,18 @@
 
 package org.glassfish.appclient.client.acc;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import javax.naming.NamingException;
+
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.manager.api.WeldManager;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.enterprise.container.common.spi.InterceptorInvoker;
 import com.sun.enterprise.container.common.spi.JCDIService;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
@@ -24,19 +37,14 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.manager.api.WeldManager;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.inject.Inject;
-import javax.naming.NamingException;
 import jakarta.servlet.ServletContext;
-import java.util.*;
 
 /**
  * @author <a href="mailto:phil.zampino@oracle.com">Phil Zampino</a>
@@ -44,54 +52,46 @@ import java.util.*;
 @Service
 public class ACCJCDIServiceImpl implements JCDIService {
 
-    private WeldContainer weldContainer = null;
+    private WeldContainer weldContainer;
 
     @Inject
-    private InjectionManager injectionMgr;
-
-
+    private InjectionManager InjectionManager;
 
     @Override
     public boolean isCurrentModuleJCDIEnabled() {
         return hasBeansXML(Thread.currentThread().getContextClassLoader());
     }
 
-
     @Override
     public boolean isJCDIEnabled(BundleDescriptor bundle) {
         return hasBeansXML(bundle.getClassLoader());
     }
-
 
     @Override
     public boolean isCDIScoped(Class<?> clazz) {
         throw new UnsupportedOperationException("Application Client Container");
     }
 
-
     @Override
     public void setELResolver(ServletContext servletContext) throws NamingException {
         throw new UnsupportedOperationException("Application Client Container");
     }
-
 
     @Override
     public JCDIInjectionContext createManagedObject(Class managedClass, BundleDescriptor bundle) {
         return createManagedObject(managedClass, bundle, true);
     }
 
-
     private <T> T createEEManagedObject(ManagedBeanDescriptor desc) throws Exception {
-        JavaEEInterceptorBuilder interceptorBuilder =
-                                        (JavaEEInterceptorBuilder) desc.getInterceptorBuilder();
+        JavaEEInterceptorBuilder interceptorBuilder = (JavaEEInterceptorBuilder) desc.getInterceptorBuilder();
 
         InterceptorInvoker interceptorInvoker = interceptorBuilder.createInvoker(null);
 
         Object[] interceptorInstances = interceptorInvoker.getInterceptorInstances();
 
         // Inject interceptor instances
-        for(int i = 0; i < interceptorInstances.length; i++) {
-            injectionMgr.injectInstance(interceptorInstances[i], desc.getGlobalJndiName(), false);
+        for (int i = 0; i < interceptorInstances.length; i++) {
+            InjectionManager.injectInstance(interceptorInstances[i], desc.getGlobalJndiName(), false);
         }
 
         interceptorInvoker.invokeAroundConstruct();
@@ -99,7 +99,7 @@ public class ACCJCDIServiceImpl implements JCDIService {
         // This is the managed bean class instance
         T managedBean = (T) interceptorInvoker.getTargetInstance();
 
-        injectionMgr.injectInstance(managedBean, desc);
+        InjectionManager.injectInstance(managedBean, desc);
 
         interceptorInvoker.invokePostConstruct();
 
@@ -108,77 +108,68 @@ public class ACCJCDIServiceImpl implements JCDIService {
         return managedBean;
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
-    public JCDIInjectionContext createManagedObject(Class            managedClass,
-                                                    BundleDescriptor bundle,
-                                                    boolean          invokePostConstruct) {
-        JCDIInjectionContext context = null;
-
+    public JCDIInjectionContext createManagedObject(Class managedClass, BundleDescriptor bundle, boolean invokePostConstruct) {
         Object managedObject = null;
 
         try {
-            managedObject =
-                createEEManagedObject(bundle.getManagedBeanByBeanClass(managedClass.getName()));
+            managedObject = createEEManagedObject(bundle.getManagedBeanByBeanClass(managedClass.getName()));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        WeldContainer wc = getWeldContainer();
-        if (wc != null) {
-            BeanManager beanManager = wc.getBeanManager();
-
-            AnnotatedType annotatedType = beanManager.createAnnotatedType(managedClass);
-            InjectionTarget target = beanManager.createInjectionTarget(annotatedType);
-
-            CreationalContext cc = beanManager.createCreationalContext(null);
-
-            target.inject(managedObject, cc);
-
-            if( invokePostConstruct ) {
-                target.postConstruct(managedObject);
-            }
-
-            context = new JCDIInjectionContextImpl(target, cc, managedObject);
+        WeldContainer weldContainer = getWeldContainer();
+        if (weldContainer == null) {
+            return null;
         }
 
-        return context;
-    }
+        BeanManager beanManager = weldContainer.getBeanManager();
 
+        CreationalContext<Object> creationalContext = beanManager.createCreationalContext(null);
+        AnnotatedType<Object> annotatedType = beanManager.createAnnotatedType(managedClass);
+        InjectionTargetFactory<Object> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget<Object> target = injectionTargetFactory.createInjectionTarget(null);
+
+        target.inject(managedObject, creationalContext);
+
+        if (invokePostConstruct) {
+            target.postConstruct(managedObject);
+        }
+
+        return new JCDIInjectionContextImpl(target, creationalContext, managedObject);
+
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public void injectManagedObject(Object managedObject, BundleDescriptor bundle) {
-        WeldContainer wc = getWeldContainer();
-
-        if (wc != null) {
-            BeanManager beanManager = wc.getBeanManager();
-
-            AnnotatedType annotatedType = beanManager.createAnnotatedType(managedObject.getClass());
-            InjectionTarget target = beanManager.createInjectionTarget(annotatedType);
-
-            CreationalContext cc = beanManager.createCreationalContext(null);
-
-            target.inject(managedObject, cc);
+        WeldContainer weldContainer = getWeldContainer();
+        if (weldContainer == null) {
+            return;
         }
+
+        BeanManager beanManager = weldContainer.getBeanManager();
+
+        CreationalContext<Object> creationalContext = beanManager.createCreationalContext(null);
+        AnnotatedType<Object> annotatedType = (AnnotatedType<Object>) beanManager.createAnnotatedType(managedObject.getClass());
+        InjectionTargetFactory<Object> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+        InjectionTarget<Object> target = injectionTargetFactory.createInjectionTarget(null);
+
+        target.inject(managedObject, creationalContext);
     }
 
-
     @Override
-    public <T> T createInterceptorInstance( Class<T> interceptorClass,
-                                     EjbDescriptor ejbDesc,
-                                     JCDIService.JCDIInjectionContext ejbContext,
-                                     Set<EjbInterceptor> ejbInterceptors ) {
+    public <T> T createInterceptorInstance(Class<T> interceptorClass, EjbDescriptor ejbDesc, JCDIService.JCDIInjectionContext ejbContext, Set<EjbInterceptor> ejbInterceptors) {
         T interceptorInstance = null;
 
-        WeldContainer wc = getWeldContainer();
-        if (wc != null) {
-            BeanManager beanManager = wc.getBeanManager();
+        WeldContainer weldContainer = getWeldContainer();
+        if (weldContainer != null) {
+            BeanManager beanManager = weldContainer.getBeanManager();
 
             AnnotatedType annotatedType = beanManager.createAnnotatedType(interceptorClass);
-            InjectionTarget target =
-                ((WeldManager) beanManager).getInjectionTargetFactory(annotatedType).createInterceptorInjectionTarget();
+            InjectionTarget target = ((WeldManager) beanManager).getInjectionTargetFactory(annotatedType)
+                    .createInterceptorInjectionTarget();
 
             CreationalContext cc = beanManager.createCreationalContext(null);
 
@@ -189,12 +180,10 @@ public class ACCJCDIServiceImpl implements JCDIService {
         return interceptorInstance;
     }
 
-
     @Override
     public <T> JCDIInjectionContext<T> createJCDIInjectionContext(EjbDescriptor ejbDesc, Map<Class, Object> ejbInfo) {
         return createJCDIInjectionContext(ejbDesc, null, null);
     }
-
 
     @Override
     public <T> JCDIInjectionContext<T> createJCDIInjectionContext(EjbDescriptor ejbDesc, T instance, Map<Class, Object> ejbInfo) {
@@ -206,12 +195,10 @@ public class ACCJCDIServiceImpl implements JCDIService {
         return new JCDIInjectionContextImpl();
     }
 
-
     @Override
     public void injectEJBInstance(JCDIInjectionContext injectionCtx) {
         throw new UnsupportedOperationException("Application Client Container");
     }
-
 
     private WeldContainer getWeldContainer() {
         if (weldContainer == null) {
@@ -224,11 +211,9 @@ public class ACCJCDIServiceImpl implements JCDIService {
         return weldContainer;
     }
 
-
-    private boolean hasBeansXML(ClassLoader cl) {
-        return (cl.getResource("META-INF/beans.xml") != null);
+    private boolean hasBeansXML(ClassLoader classLoader) {
+        return classLoader.getResource("META-INF/beans.xml") != null;
     }
-
 
     private static class JCDIInjectionContextImpl implements JCDIInjectionContext {
 
@@ -245,6 +230,7 @@ public class ACCJCDIServiceImpl implements JCDIService {
             this.instance = i;
         }
 
+        @Override
         public Object getInstance() {
             return instance;
         }
@@ -254,10 +240,11 @@ public class ACCJCDIServiceImpl implements JCDIService {
             this.instance = instance;
         }
 
+        @Override
         @SuppressWarnings("unchecked")
         public void cleanup(boolean callPreDestroy) {
 
-            if( callPreDestroy ) {
+            if (callPreDestroy) {
                 it.preDestroy(instance);
             }
 
@@ -285,13 +272,14 @@ public class ACCJCDIServiceImpl implements JCDIService {
             this.cc = creationalContext;
         }
 
-        public void addDependentContext( JCDIInjectionContext dependentContext ) {
+        @Override
+        public void addDependentContext(JCDIInjectionContext dependentContext) {
             // nothing for now
         }
 
         @Override
         public Collection<JCDIInjectionContext> getDependentContexts() {
-            return new ArrayList<JCDIInjectionContext>();
+            return new ArrayList<>();
         }
 
         @Override
@@ -300,6 +288,5 @@ public class ACCJCDIServiceImpl implements JCDIService {
             return null;
         }
     }
-
 
 }

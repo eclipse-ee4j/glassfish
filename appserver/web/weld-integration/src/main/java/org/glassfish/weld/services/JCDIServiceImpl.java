@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,6 +75,7 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.Bean;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.enterprise.inject.spi.Interceptor;
 import jakarta.inject.Inject;
 import jakarta.inject.Scope;
@@ -85,6 +87,11 @@ public class JCDIServiceImpl implements JCDIService {
 
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.cdi.LogMessages";
+
+    @LoggerInfo(subsystem = "AS-WELD", description = "WELD", publish = true)
+    public static final String WELD_LOGGER_SUBSYSTEM_NAME = "jakarta.enterprise.resource.weld";
+
+    private static final Logger logger = Logger.getLogger(WELD_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     private static final Set<String> validScopes = new HashSet<>();
     static {
@@ -110,10 +117,6 @@ public class JCDIServiceImpl implements JCDIService {
     @Inject
     private InvocationManager invocationManager;
 
-    @LoggerInfo(subsystem = "AS-WELD", description = "WELD", publish = true)
-    public static final String WELD_LOGGER_SUBSYSTEM_NAME = "jakarta.enterprise.resource.weld";
-
-    private static final Logger logger = Logger.getLogger(WELD_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
     @Override
     public boolean isCurrentModuleJCDIEnabled() {
@@ -304,7 +307,7 @@ public class JCDIServiceImpl implements JCDIService {
     }
 
     /**
-     * Perform 299 style injection on the <code>managedObject</code> argument.
+     * Perform CDI style injection on the <code>managedObject</code> argument.
      *
      * @param managedObject the managed object
      * @param bundle the bundle descriptor
@@ -312,18 +315,14 @@ public class JCDIServiceImpl implements JCDIService {
     @Override
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public void injectManagedObject(Object managedObject, BundleDescriptor bundle) {
+        BeanManager beanManager = getBeanManagerFromBundle(bundle);
 
-        BundleDescriptor topLevelBundleDesc = (BundleDescriptor) bundle.getModuleDescriptor().getDescriptor();
-
-        // First get BeanDeploymentArchive for this ejb
-        BeanDeploymentArchive bda = weldDeployer.getBeanDeploymentArchiveForBundle(topLevelBundleDesc);
-        //BeanDeploymentArchive bda = getBDAForBeanClass(topLevelBundleDesc, managedObject.getClass().getName());
-        WeldBootstrap bootstrap = weldDeployer.getBootstrapForApp(bundle.getApplication());
-        BeanManager beanManager = bootstrap.getManager(bda);
+        CreationalContext creationalContext = beanManager.createCreationalContext(null);
         AnnotatedType annotatedType = beanManager.createAnnotatedType(managedObject.getClass());
-        InjectionTarget it = beanManager.createInjectionTarget(annotatedType);
-        CreationalContext cc = beanManager.createCreationalContext(null);
-        it.inject(managedObject, cc);
+        InjectionTargetFactory injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+
+        injectionTargetFactory.createInjectionTarget(null)
+                              .inject(managedObject, creationalContext);
     }
 
     private Interceptor findEjbInterceptor(Class interceptorClass, Set<EjbInterceptor> ejbInterceptors) {
@@ -447,7 +446,16 @@ public class JCDIServiceImpl implements JCDIService {
         }
 
         return new JCDIInjectionContextImpl(it, cc, managedObject);
+    }
 
+    private BeanManager getBeanManagerFromBundle(BundleDescriptor bundle) {
+        BundleDescriptor topLevelBundleDesc = (BundleDescriptor) bundle.getModuleDescriptor().getDescriptor();
+
+        // First get BeanDeploymentArchive for this Enterprise Bean
+        BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(topLevelBundleDesc);
+
+        return weldDeployer.getBootstrapForApp(bundle.getApplication())
+                          .getManager(beanDeploymentArchive);
     }
 
     /**

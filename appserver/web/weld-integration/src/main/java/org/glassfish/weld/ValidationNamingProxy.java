@@ -24,7 +24,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jvnet.hk2.annotations.Service;
 

@@ -30,8 +30,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  */
 public class WebTest {
 
-    private static SimpleReporterAdapter stat = new SimpleReporterAdapter(
-            "appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "javaee-integration-simple";
 
     private static final String EXPECTED_RESPONSE = "Hello from Servlet 3.0.";
@@ -67,8 +66,7 @@ public class WebTest {
 
         String url = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("opening connection to " + url);
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url))
-                .openConnection();
+        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {
@@ -102,8 +100,7 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {
-                System.out.println("Wrong response. Expected: "
-                        + EXPECTED_RESPONSE + ", received: " + line);
+                System.out.println("Wrong response. Expected: " + EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
         }

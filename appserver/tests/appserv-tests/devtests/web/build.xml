@@ -37,89 +37,94 @@
     <property name="xmlfile" value="${env.APS_HOME}/test_resultsValid.xml" />
     <property name="htmlfile" value="${env.APS_HOME}/test_results.html" />
 
-    <target name="jsp" depends="init-report">
-        <ant dir="emptyServletPathJspInclude" target="all"/>
-        <ant dir="jsp-security" target="all"/>
-        <ant dir="jspAllowErrorPageToSetResponseCharsetIfNoOutputWritten" target="all"/>
-        <ant dir="jspAnonymousClass" target="all"/>
-        <ant dir="jspAttributeNameWithColonOrDot" target="all"/>
-        <ant dir="jspBomInClassicSyntax" target="all"/>
-        <ant dir="jspBomInClassicSyntaxEncodingMismatchJspConfig" target="all"/>
-        <ant dir="jspBomInClassicSyntaxEncodingMismatchPageDir" target="all"/>
-        <ant dir="jspCacheTaglibPrecompile" target="all"/>
-        <ant dir="jspCachingInstanceLevel" target="all"/>
-        <ant dir="jspCallingELFuctionFromTagfileWithinSameTaglibInfiniteRecursion" target="all"/>
-        <ant dir="jspCommentedOutPageDirective" target="all"/>
-        <ant dir="jspCommentedOutPageDirective1" target="all"/>
-        <ant dir="jspConfigBuffer" target="all"/>
-        <ant dir="jspConfigDefaultContentType" target="all"/>
-        <ant dir="jspConfigGetServletPath" target="all"/>
-        <ant dir="jspConfigIncludeChain" target="all"/>
-        <ant dir="jspConfigJavacSource" target="build-publish-war"/>
-        <ant dir="jspConfigJspFile" target="all"/>
-        <ant dir="jspConfigModificationTestInterval" target="all"/>
-        <ant dir="jspConfigUndeclaredNS" target="all"/>
-        <ant dir="jspConfigUsePrecompiled" target="all"/>
-        <ant dir="jspConfigUsePrecompiled2" target="all"/>
-        <ant dir="jspConfigWelcomeFiles" target="all"/>
-        <ant dir="jspCustomTagAttributeOfArrayType" target="all"/>
-        <ant dir="jspCustomTaglibBundledAsJar" target="all"/>
-        <ant dir="jspCustomTaglibJarInsideEarWithManifestClassPath" target="all"/>
-        <ant dir="jspCustomTaglibJarInsideEarWithoutManifestClassPath" target="all"/>
-        <ant dir="jspELEnum" target="all"/>
-        <ant dir="jspErrorPageClassCastException" target="all"/>
-        <ant dir="jspErrorPageServletErrorException" target="all"/>
-        <ant dir="jspErrorPageStatusCode" target="all"/>
-        <ant dir="jspExceptionInTagBodyRestoreJspWriter" target="all"/>
-        <ant dir="jspForwardPreserveApplicationResponseWrapper" target="all"/>
-        <ant dir="jspForwardUnbuffered" target="all"/>
-        <ant dir="jspGetTagLibraryInfos" target="all"/>
-        <ant dir="jspInWebappWithBundledXercesImpl" target="all"/>
-        <ant dir="jspIncludeResourceNameWithPlusChar" target="all"/>
-        <ant dir="jspIncludedWelcomePage" target="all"/>
-        <ant dir="jspNestedScriptingTagExtraInfo" target="all"/>
-        <ant dir="jspNullFragment" target="all"/>
-        <ant dir="jspPoundSyntax" target="all"/>
-        <ant dir="jspPrecompileConsiderDomainLibJarFilesAndClasses" target="all"/>
-        <ant dir="jspPrecompileDeployDashDashLibraries" target="all"/>
-        <ant dir="jspPrecompileIgnoreFragmentErrors" target="all"/>
-        <ant dir="jspReloadGeneratedServletIfUpdated" target="all"/>
-        <ant dir="jspResourceInjectionContextListener" target="all"/>
-        <ant dir="jspResourceInjectionSimpleTagHandler" target="all"/>
-        <ant dir="jspResourceInjectionTagHandler" target="all"/>
-        <ant dir="jspResourceInjectionTagHandlerPoolingDisabled" target="all"/>
-        <ant dir="jspRuntimeCompileConsiderDomainLibJarFilesAndClasses" target="all"/>
-        <ant dir="jspRuntimeDeployDashDashLibraries" target="all"/>
-        <ant dir="jspScriptlessTagBodyJspDocument" target="all"/>
-        <ant dir="jspScriptletAfterScriptlessTag" target="all"/>
-        <ant dir="jspScriptletDeclNestedInCustomAction" target="all"/>
-        <ant dir="jspScriptletSyntaxErrorCorrectErrorMessage" target="all"/>
-        <ant dir="jspSelfReferencingErrorPage" target="all"/>
-        <ant dir="jspSelfReferencingErrorPageWithRelativePath" target="all"/>
-        <ant dir="jspServletOverride" target="all"/>
-        <ant dir="jspSessionInvalidated" target="all"/>
-        <ant dir="jspSimpleTagAnnotation" target="all"/>
-        <ant dir="jspStaticFileEncoding" target="all"/>
-        <ant dir="jspTagFileBomEncodingMismatchTagDir" target="all"/>
-        <ant dir="jspTagHandlerPostConstructElement" target="all"/>
-        <ant dir="jspTagHandlerPreDestroyAnnotation" target="all"/>
-        <ant dir="jspTagHandlerPreDestroyAnnotation" target="all"/>
-        <ant dir="jspTagLibraryValidatorXMLViewStaticInclude" target="all"/>
-        <ant dir="jspTagReleaseCalledWhenPoolingDisabled" target="all"/>
-        <ant dir="jspTagReleaseCalledWhenPoolingEnabled" target="all"/>
-        <ant dir="jspTagdependentXml" target="all"/>
-        <ant dir="jspTemplateTextEscapedEL" target="all"/>
-        <ant dir="jspThrowsFileNotFoundExpect500ResponseCode" target="all"/>
-        <ant dir="jspTrimDirectiveWhitespaces" target="all"/>
-        <ant dir="jspUrnJspTldWithoutUri" target="all"/>
-        <ant dir="jspUseBean" target="all"/>
-        <ant dir="jspWelcomePageWithoutAnyServletMappings" target="all"/>
-        <ant dir="jspXpoweredByDisabled" target="all"/>
-        <ant dir="jspXpoweredBySingleResponseHeader" target="all"/>
-        <ant dir="jspcConfigure" target="all"/>
-        <ant dir="jspconfig" target="all"/>
-        <ant dir="welcomePageSecurityConstraintExactMatch" target="all"/>
-        <ant dir="welcomePageSecurityConstraintJspExtension" target="all"/>
+    <target name="jsp" depends="init-report" xmlns:if="ant:if" xmlns:unless="ant:unless">
+
+        <echo message="@@## Running WEB JSP developer tests ##@@" />
+        <echo unless:set="env.web" message="@@## Set environment variable 'web' to name of single test dir to run only that one. ##@@${line.separator}" />
+        <echo if:set="env.web" message="@@## environment variable 'web' set. Running only ${env.web}  ##@@${line.separator}" />
+        
+        <run-web-test path="emptyServletPathJspInclude" />
+        <run-web-test path="jsp-security" />
+        <run-web-test path="jspAllowErrorPageToSetResponseCharsetIfNoOutputWritten" />
+        <run-web-test path="jspAnonymousClass" />
+        <run-web-test path="jspAttributeNameWithColonOrDot" />
+        <run-web-test path="jspBomInClassicSyntax" />
+        <run-web-test path="jspBomInClassicSyntaxEncodingMismatchJspConfig" />
+        <run-web-test path="jspBomInClassicSyntaxEncodingMismatchPageDir" />
+        <run-web-test path="jspCacheTaglibPrecompile" />
+        <run-web-test path="jspCachingInstanceLevel" />
+        <run-web-test path="jspCallingELFuctionFromTagfileWithinSameTaglibInfiniteRecursion" />
+        <run-web-test path="jspCommentedOutPageDirective" />
+        <run-web-test path="jspCommentedOutPageDirective1" />
+        <run-web-test path="jspConfigBuffer" />
+        <run-web-test path="jspConfigDefaultContentType" />
+        <run-web-test path="jspConfigGetServletPath" />
+        <run-web-test path="jspConfigIncludeChain" />
+        <run-web-test path="jspConfigJavacSource" target="build-publish-war"/>
+        <run-web-test path="jspConfigJspFile" />
+        <run-web-test path="jspConfigModificationTestInterval" />
+        <run-web-test path="jspConfigUndeclaredNS" />
+        <run-web-test path="jspConfigUsePrecompiled" />
+        <run-web-test path="jspConfigUsePrecompiled2" />
+        <run-web-test path="jspConfigWelcomeFiles" />
+        <run-web-test path="jspCustomTagAttributeOfArrayType" />
+        <run-web-test path="jspCustomTaglibBundledAsJar" />
+        <run-web-test path="jspCustomTaglibJarInsideEarWithManifestClassPath" />
+        <run-web-test path="jspCustomTaglibJarInsideEarWithoutManifestClassPath" />
+        <run-web-test path="jspELEnum" />
+        <run-web-test path="jspErrorPageClassCastException" />
+        <run-web-test path="jspErrorPageServletErrorException" />
+        <run-web-test path="jspErrorPageStatusCode" />
+        <run-web-test path="jspExceptionInTagBodyRestoreJspWriter" />
+        <run-web-test path="jspForwardPreserveApplicationResponseWrapper" />
+        <run-web-test path="jspForwardUnbuffered" />
+        <run-web-test path="jspGetTagLibraryInfos" />
+        <run-web-test path="jspInWebappWithBundledXercesImpl" />
+        <run-web-test path="jspIncludeResourceNameWithPlusChar" />
+        <run-web-test path="jspIncludedWelcomePage" />
+        <run-web-test path="jspNestedScriptingTagExtraInfo" />
+        <run-web-test path="jspNullFragment" />
+        <run-web-test path="jspPoundSyntax" />
+        <run-web-test path="jspPrecompileConsiderDomainLibJarFilesAndClasses" />
+        <run-web-test path="jspPrecompileDeployDashDashLibraries" />
+        <run-web-test path="jspPrecompileIgnoreFragmentErrors" />
+        <run-web-test path="jspReloadGeneratedServletIfUpdated" />
+        <run-web-test path="jspResourceInjectionContextListener" />
+        <run-web-test path="jspResourceInjectionSimpleTagHandler" />
+        <run-web-test path="jspResourceInjectionTagHandler" />
+        <run-web-test path="jspResourceInjectionTagHandlerPoolingDisabled" />
+        <run-web-test path="jspRuntimeCompileConsiderDomainLibJarFilesAndClasses" />
+        <run-web-test path="jspRuntimeDeployDashDashLibraries" />
+        <run-web-test path="jspScriptlessTagBodyJspDocument" />
+        <run-web-test path="jspScriptletAfterScriptlessTag" />
+        <run-web-test path="jspScriptletDeclNestedInCustomAction" />
+        <run-web-test path="jspScriptletSyntaxErrorCorrectErrorMessage" />
+        <run-web-test path="jspSelfReferencingErrorPage" />
+        <run-web-test path="jspSelfReferencingErrorPageWithRelativePath" />
+        <run-web-test path="jspServletOverride" />
+        <run-web-test path="jspSessionInvalidated" />
+        <run-web-test path="jspSimpleTagAnnotation" />
+        <run-web-test path="jspStaticFileEncoding" />
+        <run-web-test path="jspTagFileBomEncodingMismatchTagDir" />
+        <run-web-test path="jspTagHandlerPostConstructElement" />
+        <run-web-test path="jspTagHandlerPreDestroyAnnotation" />
+        <run-web-test path="jspTagHandlerPreDestroyAnnotation" />
+        <run-web-test path="jspTagLibraryValidatorXMLViewStaticInclude" />
+        <run-web-test path="jspTagReleaseCalledWhenPoolingDisabled" />
+        <run-web-test path="jspTagReleaseCalledWhenPoolingEnabled" />
+        <run-web-test path="jspTagdependentXml" />
+        <run-web-test path="jspTemplateTextEscapedEL" />
+        <run-web-test path="jspThrowsFileNotFoundExpect500ResponseCode" />
+        <run-web-test path="jspTrimDirectiveWhitespaces" />
+        <run-web-test path="jspUrnJspTldWithoutUri" />
+        <run-web-test path="jspUseBean" />
+        <run-web-test path="jspWelcomePageWithoutAnyServletMappings" />
+        <run-web-test path="jspXpoweredByDisabled" />
+        <run-web-test path="jspXpoweredBySingleResponseHeader" />
+        <run-web-test path="jspcConfigure" />
+        <run-web-test path="jspconfig" />
+        <run-web-test path="welcomePageSecurityConstraintExactMatch" />
+        <run-web-test path="welcomePageSecurityConstraintJspExtension" />
     </target>
 
     <target name="taglib" depends="init-report">
@@ -583,6 +588,7 @@
     </target>
 
     <target name="init-report" unless="report.inited">
+        <property environment="env" />
         <property name="report.inited" value="true"/>
         <record name="web.output" action="start" />
         <antcall target="startDomain"/>
@@ -627,4 +633,32 @@
     <target name="usage">
         <echo>Usage: ant web (Executes the web tests)</echo>
     </target>
+    
+    <macrodef name="run-web-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+            <attribute name="path" />
+            <attribute name="target" default="all"/>
+            <sequential>
+                <local name="do-run-test" />
+                <condition property="do-run-test" else="false">
+                    <or>
+                        <equals arg1="${env.web}" arg2="@{path}" />
+                        <not>
+                            <isset property="env.web" />
+                        </not>
+                    </or>
+                </condition>
+
+                <sequential if:true="${do-run-test}">
+                    <local name="absolute.path" />
+                    <property name="absolute.path" location="@{path}" />
+                    <echo message="${line.separator}" />
+                    <echo message=" *************************" />
+                    <echo message=" * Running @{path} " />
+                    <echo message=" * Path: ${absolute.path} " />
+                    <echo message=" *************************" />
+                    <echo message="${line.separator}" />
+                    <ant dir="@{path}" target="@{target}" />
+                </sequential>
+            </sequential>
+        </macrodef>
 </project>

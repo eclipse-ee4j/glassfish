@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,113 +32,83 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
 public class JSFWebTestNG {
 
-    private static final String TEST_NAME =
-        "jsf-webapp";
+    private static final String TEST_NAME = "jsf-webapp";
+    private static final String EXPECTED_RESPONSE = "JSP Page Test";
 
-    private static final String EXPECTED_RESPONSE =
-        "JSP Page Test";
-
-    private String strContextRoot="jsfastrologer";
-
+    private String strContextRoot = "jsfastrologer";
     static String result = "";
-    String m_host="";
-    String m_port="";
-    //HttpClient httpclient = new HttpClient();
+    String m_host = "";
+    String m_port = "";
 
-    //@Parameters({"host","port"})
     @BeforeMethod
-    public void beforeTest(){
-        m_host=System.getProperty("http.host");
-        m_port=System.getProperty("http.port");
+    public void beforeTest() {
+        m_host = System.getProperty("http.host");
+        m_port = System.getProperty("http.port");
     }
 
     /*
-     *If tw
-     o asserts are mentioned in one method, then last assert is taken in
-     *to account.
-     *Each method can act as one test within one test suite
+     * If two asserts are mentioned in one method, then last assert is taken in to account. Each method can act as one test
+     * within one test suite
      */
 
+    @Test(groups = { "pulse" }) // test method
+    public void jsfAppDeployedFirstPagetest() throws Exception {
+        try {
 
-    @Test(groups ={ "pulse"} ) // test method
-    //public void webtest(String host, String port, String contextroot) throws Exception{
-    public void jsfAppDeployedFirstPagetest() throws Exception{
+            HttpURLConnection connection = (HttpURLConnection) 
+                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/greetings.xhtml").openConnection();
+            connection.connect();
+            int responseCode = connection.getResponseCode();
 
-        try{
-        //System.out.println("Running TestMethod webtest");
+            BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-        String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/faces/greetings.jsp";
-        //System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
-        //echo("Connecting to: " + url.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.connect();
-        int responseCode = conn.getResponseCode();
+            String line = null;
+            boolean result = false;
+            String testLine = null;
+            while ((line = input.readLine()) != null) {
+                if (line.indexOf("Welcome to jAstrologer") != -1) {
+                    result = true;
+                    testLine = line;
 
-
-        InputStream is = conn.getInputStream();
-        BufferedReader input = new BufferedReader(new InputStreamReader(is));
-
-        String line = null;
-        boolean result=false;
-        String testLine = null;
-        while ((line = input.readLine()) != null) {
-            if(line.indexOf("Welcome to jAstrologer")!=-1){
-                result=true;
-                testLine = line;
+                }
 
             }
 
-        }
+            Assert.assertEquals(result, true, "Unexpected HTML");
 
-        Assert.assertEquals(result, true,"Unexpected HTML");
-
-
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e);
         }
 
     }
 
+    @Test(groups = { "pulse" }) // test method
+    public void jsfIndexPageBasicTest() throws Exception {
+        try {
 
-    @Test(groups ={ "pulse"} ) // test method
-    public void jsfIndexPageBasicTest() throws Exception{
-         try{
+            HttpURLConnection conn = (HttpURLConnection) 
+                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/index.xhtml").openConnection();
+            conn.connect();
+            int responseCode = conn.getResponseCode();
+            BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-             //System.out.println("Running TestMethod SimpleHTMLTest");
+            String line = null;
+            boolean result = false;
+            String testLine = null;
+            while ((line = input.readLine()) != null) {
+                if (line.indexOf("Jakarta Faces Greetings Page") != -1) {
+                    result = true;
+                    testLine = line;
+                }
 
-
-        String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
-        //System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
-        //echo("Connecting to: " + url.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.connect();
-        int responseCode = conn.getResponseCode();
-
-
-        InputStream is = conn.getInputStream();
-        BufferedReader input = new BufferedReader(new InputStreamReader(is));
-
-        String line = null;
-        boolean result=false;
-        String testLine = null;
-        while ((line = input.readLine()) != null) {
-            if(line.indexOf("JavaServer Faces Greetings Page")!=-1){
-                result=true;
-             testLine = line;
-           //System.out.println(testLine);
             }
 
-        }
+            Assert.assertEquals(result, true);
 
-        Assert.assertEquals(result, true);
-
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e);
         }
@@ -147,52 +118,5 @@ public class JSFWebTestNG {
     public static void echo(String msg) {
         System.out.println(msg);
     }
-
-
-/*
-    @Test(groups={"pulse"})
-    public void testRequestResponse() throws Exception{
-        try{
-            //System.out.println("Running method testRequestResponse");
-            String testurl = "http://" + m_host  + ":" + m_port +
-                    "/"+ strContextRoot + "/index.jsp";
-            String name="testuser";
-            String birthday="121212";
-            //System.out.println("URL is: "+testurl);
-            GetMethod httpget=null;
-            PostMethod post=null;
-            httpget = new GetMethod(testurl);
-            post=new PostMethod("http://localhost:8080/jsfastrologer/faces/greetings.jsp");
-
-
-            NameValuePair[] mydata = {
-                // new NameValuePair("loginID", itUser),
-                // new NameValuePair("password", itPwd), Not working for editing of bug
-
-                new NameValuePair("name",name),
-                new NameValuePair("birthday",birthday)
-            };
-
-            post.setRequestBody(mydata);
-            int statusCode = httpclient.executeMethod(post);
-            //System.out.println("print status ok "+statusCode);
-             Assert.assertEquals(statusCode, 200);
-
-            if (statusCode != HttpStatus.SC_OK) {
-                System.err.println("Method failed: " + post.getStatusLine());
-            }
-            post.getStatusLine();
-
-        String response=post.getResponseBodyAsString();
-        //System.out.println(response);
-
-
-        }catch(Exception e){
-            e.printStackTrace();
-            throw new Exception(e);
-        }
-
-    }
-*/
 
 }

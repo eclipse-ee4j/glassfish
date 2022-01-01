@@ -26,6 +26,7 @@ import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -92,7 +93,9 @@ public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
 
         // First: Constructor Injection Framework class
         CreationalContext ctx = bm.createCreationalContext(null);
-        InjectionTarget<TestFrameworkClassWithConstructorInjection> it = bm.createInjectionTarget(atfc);
+        InjectionTargetFactory<TestFrameworkClassWithConstructorInjection> injectionTargetFactory = bm.getInjectionTargetFactory(atfc);
+        InjectionTarget<TestFrameworkClassWithConstructorInjection> it = injectionTargetFactory.createInjectionTarget(null);
+        
         TestFrameworkClassWithConstructorInjection ctorInstance = it.produce(ctx);
 
         // Since this framework class needs to support constructor based injection
@@ -106,7 +109,8 @@ public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
 
         // Second: Setter and Field based Injection into a Framework class
         AnnotatedType<TestFrameworkClassWithSetterAndFieldInjection> atsfi = bm.createAnnotatedType(TestFrameworkClassWithSetterAndFieldInjection.class);
-        InjectionTarget<TestFrameworkClassWithSetterAndFieldInjection> it_set = bm.createInjectionTarget(atsfi);
+        InjectionTargetFactory<TestFrameworkClassWithSetterAndFieldInjection> ahdgf = bm.getInjectionTargetFactory(atsfi);
+        InjectionTarget<TestFrameworkClassWithSetterAndFieldInjection> it_set = ahdgf.createInjectionTarget(null);
         TestFrameworkClassWithSetterAndFieldInjection setterInstance = new TestFrameworkClassWithSetterAndFieldInjection("test");
         it_set.inject(setterInstance, ctx);
         it_set.postConstruct(setterInstance);

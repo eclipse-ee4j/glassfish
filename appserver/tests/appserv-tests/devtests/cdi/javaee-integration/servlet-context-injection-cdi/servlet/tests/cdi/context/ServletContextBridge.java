@@ -30,29 +30,26 @@ import tests.cdi.artifacts.Initialized;
 
 @WebListener
 public class ServletContextBridge implements ServletContextListener {
+    
     @Inject
     private BeanManager beanManager;
 
-    public ServletContextBridge() {
-    }
 
     /**
      * Servlet context initialized / destroyed events
      */
-
-    public void contextDestroyed(final ServletContextEvent e) {
-        fireEvent(e, DESTROYED);
-    }
-
     public void contextInitialized(final ServletContextEvent e) {
         fireEvent(e, INITIALIZED);
     }
 
-    private void fireEvent(final Object payload,
-            final Annotation... qualifiers) {
-        System.out.println("Firing event #0 with qualifiers #1" + payload
-                + qualifiers);
-        beanManager.fireEvent(payload, qualifiers);
+    public void contextDestroyed(final ServletContextEvent e) {
+        fireEvent(e, DESTROYED);
+    }
+   
+
+    private void fireEvent(final Object payload, final Annotation... qualifiers) {
+        System.out.println("Firing event #0 with qualifiers #1" + payload + qualifiers);
+        beanManager.getEvent().select(qualifiers).fire(payload);
     }
 
     private static final AnnotationLiteral<Destroyed> DESTROYED = new AnnotationLiteral<Destroyed>() {

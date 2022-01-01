@@ -22,7 +22,7 @@
 Testing tag plugins for &lt;c:if>, &lt;c:forEach>, and &lt;c:choose>
 <br/>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 <c:set var="count" value="1"/>
 

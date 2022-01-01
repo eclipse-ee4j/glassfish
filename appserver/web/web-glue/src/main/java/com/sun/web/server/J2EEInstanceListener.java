@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,33 @@
 
 package com.sun.web.server;
 
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.Policy;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+//END OF IASRI 4660742
+
+import org.apache.catalina.Context;
+import org.apache.catalina.InstanceEvent;
+import org.apache.catalina.InstanceListener;
+import org.apache.catalina.Realm;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.connector.RequestFacade;
+import org.apache.catalina.servlets.DefaultServlet;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.wasp.servlet.JspServlet;
+import org.glassfish.web.LogFacade;
+
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
@@ -24,16 +52,6 @@ import com.sun.enterprise.security.integration.SecurityConstants;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.web.WebComponentInvocation;
 import com.sun.enterprise.web.WebModule;
-import org.apache.catalina.*;
-import org.apache.catalina.connector.RequestFacade;
-import org.apache.catalina.servlets.DefaultServlet;
-import org.apache.jasper.servlet.JspServlet;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.web.LogFacade;
 
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletRequest;
@@ -41,12 +59,6 @@ import jakarta.servlet.ServletRequestWrapper;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.security.*;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-//END OF IASRI 4660742
 
 /**
  * This class implements the Tomcat InstanceListener interface and

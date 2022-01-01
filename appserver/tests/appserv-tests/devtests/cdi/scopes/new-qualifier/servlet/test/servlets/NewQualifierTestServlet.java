@@ -18,8 +18,7 @@ package test.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import jakarta.enterprise.inject.New;
+import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
@@ -40,19 +39,18 @@ public class NewQualifierTestServlet extends HttpServlet {
     TestRequestScopedBean anotherRefToRequestScopedBean;
 
     @Inject
-    @New
+    @Dependent
     TestRequestScopedBean newRequestScopedBean;
 
     @Inject
-    @New
-    Instance<TestRequestScopedBean> newRequestScopedBeanProgrammaticLookup;
+    @Dependent
+    Instance<TestRequestScopedBean>newRequestScopedBeanProgrammaticLookup;
 
     @Inject
-    @New(TestRequestScopedBean.class)
+    @Dependent
     Instance<TestRequestScopedBean> newRequestScopedBeanProgrammaticLookup2;
 
-    public void service(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
+    public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
@@ -75,10 +73,10 @@ public class NewQualifierTestServlet extends HttpServlet {
         if (!testIsClientProxy(trsb, TestRequestScopedBean.class))
             msg += "Request scoped beans must be injected as a client proxy";
 
-        if(newRequestScopedBeanProgrammaticLookup.get() == null)
+        if (newRequestScopedBeanProgrammaticLookup.get() == null)
             msg += "A new instance of Request Scoped Bean obtained through programmatic lookup failed";
 
-        if(newRequestScopedBeanProgrammaticLookup2.get() == null)
+        if (newRequestScopedBeanProgrammaticLookup2.get() == null)
             msg += "A new(complex type specification scenario) instance of Request Scoped Bean obtained through programmatic lookup failed";
 
         writer.write(msg + "\n");
@@ -91,13 +89,11 @@ public class NewQualifierTestServlet extends HttpServlet {
     // Tests if the bean instance is a client proxy
     private boolean testIsClientProxy(Object beanInstance, Class beanType) {
         boolean isSameClass = beanInstance.getClass().equals(beanType);
-        boolean isProxyAssignable = beanType.isAssignableFrom(beanInstance
-                .getClass());
-        System.out.println(beanInstance + "whose class is "
-                + beanInstance.getClass() + " is same class of " + beanType
-                + " = " + isSameClass);
-        System.out.println(beanType + " is assignable from " + beanInstance
-                + " = " + isProxyAssignable);
+        boolean isProxyAssignable = beanType.isAssignableFrom(beanInstance.getClass());
+        System.out.println(
+            beanInstance + "whose class is " + beanInstance.getClass() + 
+            " is same class of " + beanType + " = " + isSameClass);
+        System.out.println(beanType + " is assignable from " + beanInstance + " = " + isProxyAssignable);
         boolean isAClientProxy = !isSameClass && isProxyAssignable;
         return isAClientProxy;
     }

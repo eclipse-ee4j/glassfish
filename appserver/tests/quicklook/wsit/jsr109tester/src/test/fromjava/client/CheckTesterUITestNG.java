@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,8 +38,8 @@ public class CheckTesterUITestNG {
     public static final String URL_TESTER_PAGE = "http://localhost:8080/JaxwsFromJava/AddNumbersService?Tester";
     public static final String HEADER_TESTER_PAGE = "AddNumbersService Web Service Tester";
 
-    private Object port = null;
-    private Method method = null;
+    private Object port;
+    private Method method;
 
     @BeforeTest
     public void loadClass() throws Exception {
@@ -55,7 +56,7 @@ public class CheckTesterUITestNG {
         System.out.println("done for init");
     }
 
-    @Test(groups = {"functional"})
+    @Test(groups = { "functional" })
     public void testAddNumbers() throws Exception {
         int result = 0;
         try {
@@ -68,21 +69,22 @@ public class CheckTesterUITestNG {
             System.out.println("got unexpected exception.");
             throw new Exception(ex);
         }
+        
         Assert.assertTrue(result == 3);
     }
 
-    @Test(groups = {"functional"})
+    @Test(groups = { "functional" })
     public void testTesterUI() throws Exception {
         String testerPageHTML = wget(URL_TESTER_PAGE);
         System.out.println("Tester Page HTML = " + testerPageHTML);
+        
         Assert.assertTrue(testerPageHTML.contains(HEADER_TESTER_PAGE));
     }
 
     public static String wget(String url) throws Exception {
         BufferedReader in = null;
         try {
-            URLConnection connection = new URL(url).openConnection();
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(new URL(url).openConnection().getInputStream()));
             StringBuilder response = new StringBuilder();
 
             String inputLine;

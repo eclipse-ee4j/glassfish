@@ -39,6 +39,90 @@
         </classpath>
     </taskdef>
 
+    <target name="usage">
+        <echo> Usage:
+                  ant cdi (Executes the cdi tests)
+                  ant all (Executes all the cdi tests)
+                  ant clean (cleans all the cdi tests)
+                  ant build (builds all the cdi tests)
+                  ant setup (sets up all resources for cdi tests)
+                  ant deploy (deploys all the cdi apps)
+                  ant run (Executes all the cdi tests)
+                  ant undeploy (undeploys all the  cdi apps)
+                  ant unsetup (unsets all resources for cdi tests)
+          </echo>
+    </target>
+
+    <target name="cdi" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <record name="cdi.output" action="start" />
+        <property environment="env" />
+
+        <echo message="@@## Running all CDI developer tests ##@@" />
+        <echo unless:set="env.cdi_all" message="@@## Set environment variable 'cdi_all' to name of single test dir to run only that one. ##@@${line.separator}" />
+        <echo if:set="env.cdi_all" message="@@## environment variable 'cdi_all' set. Running only ${env.cdi_all}  ##@@${line.separator}" />
+
+        <run-cdi-test path="smoke-tests" />
+        <run-cdi-test path="qualifiers" />
+        <run-cdi-test path="events" />
+        <run-cdi-test path="injection-point" />
+        <run-cdi-test path="interceptors" />
+        <run-cdi-test path="javaee-component-resources" />
+        <run-cdi-test path="javaee-integration" />
+        <run-cdi-test path="managed-beans" />
+        <run-cdi-test path="portable-extensions" />
+        <run-cdi-test path="producer-methods" />
+        <run-cdi-test path="scopes" />
+        <run-cdi-test path="specialization" />
+        <run-cdi-test path="stereotypes" />
+        <run-cdi-test path="transactions" />
+        <run-cdi-test path="unproxyable-deps" />
+        <run-cdi-test path="unsatisfied-deps" />
+        <run-cdi-test path="implicit" />
+        <run-cdi-test path="decorators" />
+
+        <!--
+               Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
+               In 1.1.10.Final the test passes.
+               In 2.0 Beta it fails.
+               In 3.0 We never bothered to check anymore.
+               See email from Jozef 3/4/13
+               <ant dir="alternatives" target="${cdi-target}"/>
+               <ant dir="ambiguous-deps" target="${cdi-target}"/>
+       -->
+
+
+        <!--
+               Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
+               In 1.1.10.Final the test passes.
+               In 2.0 Beta it fails.
+               See email from Jozef 3/4/13
+               <ant dir="programmatic-lookup" target="${cdi-target}"/>
+       -->
+
+
+        <!--
+               Not running until figherfish is back (narrator: "it never came back")
+               
+               <if>
+                   <equals arg1="${test.embedded.mode}" arg2="true" />
+                   <then>
+                       <echo> Excluding testcase directory osgi-cdi for embedded mode</echo>
+                   </then>
+                   <else>
+                       <ant dir="osgi-cdi" target="${cdi-target}"/>
+                   </else>
+               </if>
+       -->
+
+
+        <echo message="***** DONE TESTING - GENERATING REPORT ******" />
+
+        <!-- now generate report -->
+        <antcall target="report" />
+
+        <record name="cdi.output" action="stop" />
+    </target>
+
     <target name="pe-all">
         <antcall target="backup-config-pe" />
         <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/pe-config.properties. The file will be reverted to its original state after the completion of these tests." />
@@ -167,118 +251,36 @@
         </antcall>
     </target>
 
-    <target name="cdi">
-        <record name="cdi.output" action="start" />
-        <echo message="@@## Running all CDI developer tests##@@" />
-
-        <echo message="Running smoke-tests" />
-        <ant dir="smoke-tests" target="${cdi-target}" />
-
-        <echo message="Running qualifiers" />
-        <ant dir="qualifiers" target="${cdi-target}" />
-
-        <!--
-                Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
-                In 1.1.10.Final the test passes.
-                In 2.0 Beta it fails.
-                See email from Jozef 3/4/13
-                <ant dir="alternatives" target="${cdi-target}"/>
-                <ant dir="ambiguous-deps" target="${cdi-target}"/>
-        -->
-
-        <echo message="Running events" />
-        <ant dir="events" target="${cdi-target}" />
-
-        <echo message="Running injection-point" />
-        <ant dir="injection-point" target="${cdi-target}" />
-
-        <echo message="Running interceptors" />
-        <ant dir="interceptors" target="${cdi-target}" />
-
-        <echo message="Running javaee-component-resources" />
-        <ant dir="javaee-component-resources" target="${cdi-target}" />
-
-        <echo message="Running javaee-integration" />
-        <ant dir="javaee-integration" target="${cdi-target}" />
-
-        <echo message="Running managed-beans" />
-        <ant dir="managed-beans" target="${cdi-target}" />
-
-        <echo message="Running portable-extensions" />
-        <ant dir="portable-extensions" target="${cdi-target}" />
-
-        <echo message="Running producer-methods" />
-        <ant dir="producer-methods" target="${cdi-target}" />
-
-        <!--
-                Not running until https://issues.jboss.org/browse/CDI-331 is sorted out.
-                In 1.1.10.Final the test passes.
-                In 2.0 Beta it fails.
-                See email from Jozef 3/4/13
-                <ant dir="programmatic-lookup" target="${cdi-target}"/>
-        -->
-
-        <echo message="Running scopes" />
-        <ant dir="scopes" target="${cdi-target}" />
-
-        <echo message="Running specialization" />
-        <ant dir="specialization" target="${cdi-target}" />
-
-        <echo message="Running stereotypes" />
-        <ant dir="stereotypes" target="${cdi-target}" />
-
-        <echo message="Running transactions" />
-        <ant dir="transactions" target="${cdi-target}" />
-
-        <echo message="Running unproxyable-deps" />
-        <ant dir="unproxyable-deps" target="${cdi-target}" />
-
-        <echo message="Running unsatisfied-deps" />
-        <ant dir="unsatisfied-deps" target="${cdi-target}" />
-
-        <echo message="Running implicit" />
-        <ant dir="implicit" target="${cdi-target}" />
-
-        <if>
-            <equals arg1="${test.embedded.mode}" arg2="true" />
-            <then>
-                <echo> Excluding testcase directory osgi-cdi for embedded mode</echo>
-            </then>
-            <else>
-                <!--
-                        Not running until figherfish is back
-                -->
-                <!--
-                <ant dir="osgi-cdi" target="${cdi-target}"/>
-                -->
-            </else>
-        </if>
-
-        <echo message="***** DONE TESTING - GENERATING REPORT ******" />
-
-        <!-- now generate report -->
-        <antcall target="report" />
-
-        <record name="cdi.output" action="stop" />
-    </target>
-
-    <target name="usage">
-        <echo> Usage:
-                ant cdi (Executes the cdi tests)
-                ant all (Executes all the cdi tests)
-                ant clean (cleans all the cdi tests)
-                ant build (builds all the cdi tests)
-                ant setup (sets up all resources for cdi tests)
-                ant deploy (deploys all the cdi apps)
-                ant run (Executes all the cdi tests)
-                ant undeploy (undeploys all the  cdi apps)
-                ant unsetup (unsets all resources for cdi tests)
-        </echo>
-    </target>
-
     <target name="report-local">
         <exec executable="sh">
             <arg value="./resultCount.sh" />
         </exec>
     </target>
+
+    <macrodef name="run-cdi-test" xmlns:if="ant:if" xmlns:unless="ant:unless">
+        <attribute name="path" />
+        <sequential>
+            <local name="do-run-test" />
+            <condition property="do-run-test" else="false">
+                <or>
+                    <equals arg1="${env.cdi_all}" arg2="@{path}" />
+                    <not>
+                        <isset property="env.cdi_all" />
+                    </not>
+                </or>
+            </condition>
+
+            <sequential if:true="${do-run-test}">
+                <local name="absolute.path" />
+                <property name="absolute.path" location="@{path}" />
+                <echo message="${line.separator}" />
+                <echo message=" *************************" />
+                <echo message=" * Running @{path} " />
+                <echo message=" * Path: ${absolute.path} " />
+                <echo message=" *************************" />
+                <echo message="${line.separator}" />
+                <ant dir="@{path}" target="${cdi-target}" />
+            </sequential>
+        </sequential>
+    </macrodef>
 </project>

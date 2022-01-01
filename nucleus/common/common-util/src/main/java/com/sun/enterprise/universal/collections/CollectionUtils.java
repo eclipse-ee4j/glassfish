@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,52 +17,63 @@
 
 package com.sun.enterprise.universal.collections;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * all-static methods for handling operations with Collections
+ *
  * @author bnevins
  */
 public class CollectionUtils {
+
+    private static final String EOL = System.getProperty("line.separator");
+
     private CollectionUtils() {
 
     }
+
     /**
-     * Convert a Properties object, which is a Map<Object,Object> into
-     * a Map<String,String>
+     * Convert a Properties object, which is a <code>Map&lt;Object,Object></code> into a <code<Map&lt;String,String></code>
+     *
      * @param p The Properties object to convert
      * @return The converted Map
      */
-    public static Map<String,String> propertiesToStringMap(Properties p)
-    {
-        Map<String,String> map = new HashMap<String,String>();
-        Set<Map.Entry<Object,Object>> entries = p.entrySet();
+    public static Map<String, String> propertiesToStringMap(Properties p) {
+        Map<String, String> map = new HashMap<>();
+        Set<Map.Entry<Object, Object>> entries = p.entrySet();
 
-        for(Map.Entry<Object,Object> entry : entries) {
+        for (Map.Entry<Object, Object> entry : entries) {
             Object name = entry.getKey();
             Object value = entry.getValue();
 
-            if(name == null)
-                continue; // impossible.  Ignore if I was wrong...
-            if(value == null)
+            if (name == null) {
+                continue; // impossible. Ignore if I was wrong...
+            }
+            if (value == null) {
                 map.put(name.toString(), null);
-            else
+            } else {
                 map.put(name.toString(), value.toString());
+            }
         }
+
         return map;
     }
 
     /**
-     * Tired of dumping a String representation of a Map?
-     * Then call me!
+     * Tired of dumping a String representation of a Map? Then call me!
+     *
      * @param map The map to turn into a printable String
      * @return The pretty String
      */
-    public static String toString(Map<String,String> map) {
+    public static String toString(Map<String, String> map) {
         String[] arr = toStringArray(map);
         StringBuilder sb = new StringBuilder();
 
-        for(String s : arr) {
+        for (String s : arr) {
             sb.append(s);
             sb.append(EOL);
         }
@@ -70,59 +82,65 @@ public class CollectionUtils {
 
     /**
      * Convert a String[] into a space-delimited String
+     *
      * @param arr The String array to convert
      * @return The pretty String
      */
     public static String toString(String[] arr) {
         StringBuilder sb = new StringBuilder();
-        for(String s : arr) {
+        for (String s : arr) {
             sb.append(s);
             sb.append(' ');
         }
         return sb.toString();
     }
+
     /**
      * Convert a String[] into a newline-delimited String
+     *
      * @param arr The String array to convert
      * @return The pretty String
      */
     public static String toStringLines(String[] arr) {
         StringBuilder sb = new StringBuilder();
-        for(String s : arr) {
+        for (String s : arr) {
             sb.append(s);
             sb.append('\n');
         }
         return sb.toString();
     }
+
     /**
      * Convert a List of String into a space-delimited String
+     *
      * @param arr The String array to convert
      * @return The pretty String
      */
     public static String toString(List<String> list) {
         StringBuilder sb = new StringBuilder();
-        for(String s : list) {
+        for (String s : list) {
             sb.append(s);
             sb.append(' ');
         }
         return sb.toString();
     }
 
-    public static String[] toStringArray(Map<String,String> map) {
+    public static String[] toStringArray(Map<String, String> map) {
         Set<String> set = map.keySet();
         String[] ss = new String[map.size()];
         int i = 0;
 
-        for(String name : set) {
+        for (String name : set) {
             String value = map.get(name);
             String s = name;
 
-            if(value != null) {
+            if (value != null) {
                 s += "=" + value;
             }
             ss[i++] = s;
         }
+
         return ss;
     }
-    private static final String EOL = System.getProperty("line.separator");
+
 }

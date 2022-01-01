@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,35 @@
 
 package org.glassfish.sse.api;
 
-import java.lang.annotation.ElementType;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code ServerSentEvent} indicates a server component that pushes
- * notifications to clients via a HTTP connection. Browser applications
- * typically use <a href="http://dev.w3.org/html5/eventsource/">EventSource</a>
- * API to connect to this source of server-sent events.
+ * {@code ServerSentEvent} indicates a server component that pushes notifications to clients via a HTTP connection.
+ * Browser applications typically use <a href="http://dev.w3.org/html5/eventsource/">EventSource</a> API to connect to
+ * this source of server-sent events.
  *
  * <p>
- * Server component class needs to have {@code ServerSentEvent} annotation and
- * provides the implementation of {@code ServerSentEventHandler}. For example:
- * <pre><code>
+ * Server component class needs to have {@code ServerSentEvent} annotation and provides the implementation of
+ * {@code ServerSentEventHandler}. For example:
+ *
+ * <pre>
+ * <code>
  *     &#64;ServerSentEvent("/foo")
  *     public class FooHandler extends ServerSentEventHandler {
  *         ...
  *     }
- * </code></pre>
+ * </code>
+ * </pre>
  *
  * @author Jitendra Kotamraju
  * @author Santiago.PericasGeertsen@oracle.com
  */
-@Target(value = {ElementType.TYPE})
-@Retention(value = RetentionPolicy.RUNTIME)
+@Target(TYPE)
+@Retention(RUNTIME)
 public @interface ServerSentEvent {
 
     /**
@@ -50,5 +54,3 @@ public @interface ServerSentEvent {
     public String value();
 
 }
-
-

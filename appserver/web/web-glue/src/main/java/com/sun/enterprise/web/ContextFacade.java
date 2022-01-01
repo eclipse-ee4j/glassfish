@@ -171,21 +171,6 @@ public class ContextFacade extends WebModule {
     }
 
     @Override
-    public Servlet getServlet(String name) {
-        return context.getServlet(name);
-    }
-
-    @Override
-    public Enumeration<Servlet> getServlets() {
-        return context.getServlets();
-    }
-
-    @Override
-    public Enumeration<String> getServletNames() {
-        return context.getServletNames();
-    }
-
-    @Override
     public void log(String msg) {
         context.log(msg);
     }
@@ -309,15 +294,18 @@ public class ContextFacade extends WebModule {
         return servletMappings;
     }
 
+    @Override
     protected ServletRegistrationImpl createServletRegistrationImpl(
             StandardWrapper wrapper) {
         return new ServletRegistrationImpl(wrapper, this);
     }
+    @Override
     protected ServletRegistrationImpl createDynamicServletRegistrationImpl(
             StandardWrapper wrapper) {
         return new DynamicServletRegistrationImpl(wrapper, this);
     }
 
+    @Override
     public ServletRegistration.Dynamic addServlet(String servletName,
             Class <? extends Servlet> servletClass) {
         if (context != null) {
@@ -327,6 +315,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public ServletRegistration.Dynamic addServlet(
             String servletName, Servlet servlet) {
         if (context != null) {
@@ -343,6 +332,7 @@ public class ContextFacade extends WebModule {
         return servletMappings.keySet();
     }
 
+    @Override
     public <T extends Servlet> T createServlet(Class<T> clazz)
             throws ServletException {
         if (context != null) {
@@ -357,10 +347,12 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public ServletRegistration getServletRegistration(String servletName) {
         return servletRegisMap.get(servletName);
     }
 
+    @Override
     public Map<String, ? extends ServletRegistration> getServletRegistrations() {
         return context.getServletRegistrations();
     }
@@ -417,6 +409,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public FilterRegistration.Dynamic addFilter(
             String filterName, Filter filter) {
         if (context != null) {
@@ -426,6 +419,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public FilterRegistration.Dynamic addFilter(String filterName,
             Class <? extends Filter> filterClass) {
         if (context != null) {
@@ -435,6 +429,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public <T extends Filter> T createFilter(Class<T> clazz)
             throws ServletException {
         if (context != null) {
@@ -449,30 +444,37 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public FilterRegistration getFilterRegistration(String filterName) {
         return filterRegisMap.get(filterName);
     }
 
+    @Override
     public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
         return context.getFilterRegistrations();
     }
 
+    @Override
     public SessionCookieConfig getSessionCookieConfig() {
         return context.getSessionCookieConfig();
     }
 
+    @Override
     public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
         context.setSessionTrackingModes(sessionTrackingModes);
     }
 
+    @Override
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
         return context.getDefaultSessionTrackingModes();
     }
 
+    @Override
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
         return context.getEffectiveSessionTrackingModes();
     }
 
+    @Override
     public void addListener(String className) {
         if (context != null) {
             context.addListener(className);
@@ -485,6 +487,7 @@ public class ContextFacade extends WebModule {
         return listenerNames;
     }
 
+    @Override
     public <T extends EventListener> void addListener(T t) {
         if (context != null) {
             context.addListener(t);
@@ -493,6 +496,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public void addListener(Class <? extends EventListener> listenerClass) {
         if (context != null) {
             context.addListener(listenerClass);
@@ -501,6 +505,7 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public <T extends EventListener> T createListener(Class<T> clazz)
             throws ServletException {
         if (context != null) {
@@ -525,10 +530,12 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public JspConfigDescriptor getJspConfigDescriptor() {
         return context.getJspConfigDescriptor();
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         if (classLoader != null) {
             return classLoader;
@@ -539,26 +546,32 @@ public class ContextFacade extends WebModule {
         }
     }
 
+    @Override
     public void declareRoles(String... roleNames) {
         context.declareRoles(roleNames);
     }
 
+    @Override
     public String getVirtualServerName() {
         return context.getVirtualServerName();
     }
 
+    @Override
     public String getPath() {
         return context.getPath();
     }
 
+    @Override
     public void setPath(String path) {
         context.setPath(path);
     }
 
+    @Override
     public String getDefaultWebXml() {
         return context.getDefaultWebXml();
     }
 
+    @Override
     public void setDefaultWebXml(String defaultWebXml) {
         context.setDefaultWebXml(defaultWebXml);
     }
@@ -582,10 +595,12 @@ public class ContextFacade extends WebModule {
     /**
      * Enables or disables directory listings on this <tt>Context</tt>.
      */
+    @Override
     public void setDirectoryListing(boolean directoryListing) {
         context.setDirectoryListing(directoryListing);
     }
 
+    @Override
     public boolean isDirectoryListing() {
         return context.isDirectoryListing();
     }
@@ -593,6 +608,7 @@ public class ContextFacade extends WebModule {
     /**
      * Set the security related configuration for this context
      */
+    @Override
     public void setSecurityConfig(SecurityConfig config) {
         this.config = config;
         if (config == null) {
@@ -605,6 +621,7 @@ public class ContextFacade extends WebModule {
     /**
      * Gets the security related configuration for this context
      */
+    @Override
     public SecurityConfig getSecurityConfig() {
         return config;
     }

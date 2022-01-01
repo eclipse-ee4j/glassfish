@@ -22,14 +22,14 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd"
     version="2.0">
 
-  <tlib-version>1.0</tlib-version>
-  <uri>http://java.sun.com/test-taglib</uri>
+    <tlib-version>1.0</tlib-version>
+    <uri>http://java.sun.com/test-taglib</uri>
 
-  <tag>
-    <name>mySimpleTag</name>
-    <tag-class>taglib.MySimpleTag</tag-class>
-    <body-content>empty</body-content>
-  </tag>
+    <tag>
+        <name>mySimpleTag</name>
+        <tag-class>taglib.MySimpleTag</tag-class>
+        <body-content>empty</body-content>
+    </tag>
 
 </taglib>
 

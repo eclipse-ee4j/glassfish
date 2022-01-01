@@ -25,18 +25,11 @@
 
 package org.glassfish.admingui.common.handlers;
 
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.jsftemplating.annotation.Handler;
-import com.sun.jsftemplating.annotation.HandlerInput;
-import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.el.PageSessionResolver;
-import com.sun.jsftemplating.handlers.NavigationHandlers;
-import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
-import com.sun.jsftemplating.util.Util;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,20 +37,26 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
+import org.glassfish.admingui.common.tree.FilterTreeEvent;
+import org.glassfish.admingui.common.util.GuiUtil;
+import org.glassfish.admingui.common.util.MiscUtil;
+import org.glassfish.admingui.common.util.RestUtil;
+import org.glassfish.admingui.common.util.TargetUtil;
+
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.jsftemplating.annotation.Handler;
+import com.sun.jsftemplating.annotation.HandlerInput;
+import com.sun.jsftemplating.annotation.HandlerOutput;
+import com.sun.jsftemplating.handlers.NavigationHandlers;
+import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+import com.sun.jsftemplating.util.Util;
 
 import jakarta.faces.component.UIComponent;
 import jakarta.faces.component.UIInput;
 import jakarta.faces.component.UIViewRoot;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.http.HttpServletResponse;
-import org.glassfish.admingui.common.tree.FilterTreeEvent;
-
-import org.glassfish.admingui.common.util.GuiUtil;
-import org.glassfish.admingui.common.util.MiscUtil;
-import org.glassfish.admingui.common.util.RestUtil;
-import org.glassfish.admingui.common.util.TargetUtil;
 
 
 public class CommonHandlers {
@@ -826,10 +825,9 @@ public class CommonHandlers {
     private static String handleBareAttribute(FacesContext ctx, String url) {
         // Get Page Session...
         UIViewRoot root = ctx.getViewRoot();
-        Map<String, Serializable> pageSession =
-            PageSessionResolver.getPageSession(ctx, root);
+        Map<String, Serializable> pageSession = null; // PageSessionResolver.getPageSession(ctx, root);
         if (pageSession == null) {
-            pageSession = PageSessionResolver.createPageSession(ctx, root);
+            pageSession = createPageSession(ctx, root); // PageSessionResolver.createPageSession(ctx, root);
         }
         String request = ctx.getExternalContext().getRequestParameterMap().get("bare");
         if (request != null) {
@@ -851,6 +849,26 @@ public class CommonHandlers {
             }
         }
         return url;
+    }
+
+    /**
+     * <p>
+     * This method will create a new "page session" <code>Map</code>. It will overwrite any existing "page session"
+     * <code>Map</code>, so be careful.
+     * </p>
+     */
+    public static Map<String, Serializable> createPageSession(FacesContext ctx, UIViewRoot root) {
+        if (root == null) {
+            root = ctx.getViewRoot();
+        }
+        // Create it...
+        Map<String, Serializable> map = new HashMap<>(4);
+
+        // Store it...
+        root.getAttributes().put("_ps", map);
+
+        // Return it...
+        return map;
     }
 
     /**

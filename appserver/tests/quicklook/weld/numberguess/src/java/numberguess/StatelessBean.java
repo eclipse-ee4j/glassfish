@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,7 +28,6 @@ public class StatelessBean implements StatelessLocal {
     @EJB
     private SingletonBean singleton;
 
-
     @PostConstruct
     public void init() {
         System.out.println("In StatelessBean::init()");
@@ -42,7 +42,5 @@ public class StatelessBean implements StatelessLocal {
     public void destroy() {
         System.out.println("In StatelessBean::destroy()");
     }
-
-
 
 }

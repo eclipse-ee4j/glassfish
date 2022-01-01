@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
 
+    Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,23 +25,14 @@
 <!-- =========== FULL CONFIGURATION FILE ================================== -->
 
 <faces-config>
- <navigation-rule>
+    <navigation-rule>
         <description>
             handle user input
         </description>
-        <from-view-id>/greetings.jsp</from-view-id>
+        <from-view-id>/greetings.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>submit</from-outcome>
-            <to-view-id>/success.jsp</to-view-id>
+            <to-view-id>/success.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-    <managed-bean>
-        <description>
-            Managed User Bean
-        </description>
-        <managed-bean-name>UserBean</managed-bean-name>
-        <managed-bean-class>web.jsf.bean.UserBean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
-
 </faces-config>

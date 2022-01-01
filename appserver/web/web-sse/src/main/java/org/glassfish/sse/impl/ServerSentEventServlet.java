@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,21 +38,20 @@ import java.util.Map;
  *
  * @author Jitendra Kotamraju
  */
-@WebServlet(asyncSupported=true)
+@WebServlet(asyncSupported = true)
 public final class ServerSentEventServlet extends HttpServlet {
 
-    @SuppressWarnings("UnusedDeclaration")
+    private static final long serialVersionUID = -2281462213280496518L;
+
     @Inject
     private transient ServerSentEventCdiExtension extension;
 
-    @SuppressWarnings("UnusedDeclaration")
     @Inject
-    private transient BeanManager bm;
+    private transient BeanManager beanManager;
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-                throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // TODO CDI is not strictly required unless ServerSentEventHandlerContext
         // TODO needs to be injected
@@ -60,40 +60,42 @@ public final class ServerSentEventServlet extends HttpServlet {
         }
 
         Map<String, ServerSentEventApplication> applicationMap = extension.getApplicationMap();
-        ServerSentEventApplication sseApp = applicationMap.get(req.getServletPath());
+        ServerSentEventApplication sseApp = applicationMap.get(request.getServletPath());
         Class<?> clazz = sseApp.getHandlerClass();
-        ServerSentEventHandler sseh;
-        CreationalContext cc;
+        ServerSentEventHandler serverSentEventHandler;
+        CreationalContext creationalContext;
 
         // Check if SSE handler can be instantiated via CDI
-        Iterator<Bean<?>> it = bm.getBeans(clazz).iterator();
+        Iterator<Bean<?>> it = beanManager.getBeans(clazz).iterator();
         if (it.hasNext()) {
             Bean bean = it.next();
-            cc = bm.createCreationalContext(bean);
-            sseh = (ServerSentEventHandler) bean.create(cc);
+            creationalContext = beanManager.createCreationalContext(bean);
+            serverSentEventHandler = (ServerSentEventHandler) bean.create(creationalContext);
         } else {
             throw new RuntimeException("Cannot create ServerSentEventHandler using CDI");
         }
 
-        ServerSentEventHandler.Status status = sseh.onConnecting(req);
+        ServerSentEventHandler.Status status = serverSentEventHandler.onConnecting(request);
         if (status == ServerSentEventHandler.Status.DONT_RECONNECT) {
-            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            cc.release();
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            creationalContext.release();
             return;
         }
 
         if (status != ServerSentEventHandler.Status.OK) {
-            throw new RuntimeException("Internal Error: need to handle status "+status);
+            throw new RuntimeException("Internal Error: need to handle status " + status);
         }
 
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.setContentType("text/event-stream");
-        resp.flushBuffer();    // writes status code and headers
-        AsyncContext ac = req.startAsync(req, resp);
-        ac.setTimeout(0);    // no timeout. need config ?
-        ServerSentEventConnectionImpl con = sseApp.createConnection(req, sseh, cc, ac);
-        ac.addListener(con);
-        con.init();
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("text/event-stream");
+        response.flushBuffer(); // writes status code and headers
+
+        AsyncContext asyncContext = request.startAsync(request, response);
+        asyncContext.setTimeout(0); // no timeout. need config ?
+        ServerSentEventConnectionImpl sseConnection = sseApp.createConnection(request, serverSentEventHandler, creationalContext,
+                asyncContext);
+        asyncContext.addListener(sseConnection);
+        sseConnection.init();
     }
 
 }

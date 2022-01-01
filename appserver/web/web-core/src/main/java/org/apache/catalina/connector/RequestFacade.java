@@ -60,6 +60,7 @@ public class RequestFacade
     private final class GetAttributePrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getAttributeNames();
         }
@@ -69,6 +70,7 @@ public class RequestFacade
     private final class GetParameterMapPrivilegedAction
             implements PrivilegedAction<Map<String, String[]>> {
 
+        @Override
         public Map<String, String[]> run() {
             return request.getParameterMap();
         }
@@ -84,6 +86,7 @@ public class RequestFacade
             this.path = path;
         }
 
+        @Override
         public RequestDispatcher run() {
             return request.getRequestDispatcher(path);
         }
@@ -99,6 +102,7 @@ public class RequestFacade
             this.name = name;
         }
 
+        @Override
         public String run() {
             return request.getParameter(name);
         }
@@ -108,6 +112,7 @@ public class RequestFacade
     private final class GetParameterNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getParameterNames();
         }
@@ -123,6 +128,7 @@ public class RequestFacade
             this.name = name;
         }
 
+        @Override
         public String[] run() {
             return request.getParameterValues(name);
         }
@@ -132,6 +138,7 @@ public class RequestFacade
     private final class GetCookiesPrivilegedAction
             implements PrivilegedAction<Cookie[]> {
 
+        @Override
         public Cookie[] run() {
             return request.getCookies();
         }
@@ -141,6 +148,7 @@ public class RequestFacade
     private final class GetCharacterEncodingPrivilegedAction
             implements PrivilegedAction<String> {
 
+        @Override
         public String run() {
             return request.getCharacterEncoding();
         }
@@ -156,6 +164,7 @@ public class RequestFacade
             this.name = name;
         }
 
+        @Override
         public Enumeration<String> run() {
             return request.getHeaders(name);
         }
@@ -165,6 +174,7 @@ public class RequestFacade
     private final class GetHeaderNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getHeaderNames();
         }
@@ -174,6 +184,7 @@ public class RequestFacade
     private final class GetLocalePrivilegedAction
             implements PrivilegedAction<Locale> {
 
+        @Override
         public Locale run() {
             return request.getLocale();
         }
@@ -183,6 +194,7 @@ public class RequestFacade
     private final class GetLocalesPrivilegedAction
             implements PrivilegedAction<Enumeration<Locale>> {
 
+        @Override
         public Enumeration<Locale> run() {
             return request.getLocales();
         }
@@ -197,6 +209,7 @@ public class RequestFacade
             this.create = create;
         }
 
+        @Override
         public HttpSession run() {
             return request.getSession(create);
         }
@@ -205,6 +218,7 @@ public class RequestFacade
     private final class ChangeSessionIdPrivilegedAction
             implements PrivilegedAction<String> {
 
+        @Override
         public String run() {
             return request.changeSessionId();
         }
@@ -276,6 +290,7 @@ public class RequestFacade
     /**
     * Prevent cloning the facade.
     */
+    @Override
     protected Object clone()
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
@@ -392,6 +407,7 @@ public class RequestFacade
         return request.getInputStream();
     }
 
+    @Override
     public HttpServletMapping getHttpServletMapping() {
 
         if (request == null) {
@@ -401,6 +417,7 @@ public class RequestFacade
         return request.getHttpServletMapping();
     }
 
+    @Override
     public String getParameter(String name) {
 
         if (request == null) {
@@ -447,7 +464,7 @@ public class RequestFacade
             ret = AccessController.doPrivileged(
                 new GetParameterValuePrivilegedAction(name));
             if (ret != null) {
-                ret = (String[]) ret.clone();
+                ret = ret.clone();
             }
         } else {
             ret = request.getParameterValues(name);
@@ -617,16 +634,6 @@ public class RequestFacade
     }
 
     @Override
-    public String getRealPath(String path) {
-
-        if (request == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
-        }
-
-        return request.getRealPath(path);
-    }
-
-    @Override
     public String getAuthType() {
 
         if (request == null) {
@@ -653,7 +660,7 @@ public class RequestFacade
             ret = AccessController.doPrivileged(
                 new GetCookiesPrivilegedAction());
             if (ret != null) {
-                ret = (Cookie[]) ret.clone();
+                ret = ret.clone();
             }
         } else {
             ret = request.getCookies();
@@ -950,16 +957,6 @@ public class RequestFacade
     }
 
     @Override
-    public boolean isRequestedSessionIdFromUrl() {
-
-        if (request == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
-        }
-
-        return request.isRequestedSessionIdFromURL();
-    }
-
-    @Override
     public String getLocalAddr() {
 
         if (request == null) {
@@ -1144,4 +1141,25 @@ public class RequestFacade
         return request;
     }
     //END S1AS 4703023
+
+
+    @Override
+    public String getRequestId() {
+        // TODO Implement!
+        return null;
+    }
+
+
+    @Override
+    public String getProtocolRequestId() {
+        // // TODO Implement!
+        return null;
+    }
+
+
+    @Override
+    public ServletConnection getServletConnection() {
+        // // TODO Implement!
+        return null;
+    }
 }

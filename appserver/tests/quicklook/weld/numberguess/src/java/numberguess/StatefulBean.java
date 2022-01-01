@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,23 +39,21 @@ public class StatefulBean {
 
     @PostConstruct
     public void init() {
-    System.out.println("In StatefulBean::init()");
-    System.out.println("sessionCtx = " + sessionCtx);
-    if( sessionCtx == null ) {
-        throw new EJBException("EE injection error");
-    }
-    singleton.hello();
+        System.out.println("In StatefulBean::init()");
+        System.out.println("sessionCtx = " + sessionCtx);
+        if (sessionCtx == null) {
+            throw new EJBException("EE injection error");
+        }
+        singleton.hello();
     }
 
     public void hello() {
-    System.out.println("In StatefulBean::hello()");
+        System.out.println("In StatefulBean::hello()");
     }
 
     @PreDestroy
     public void destroy() {
-    System.out.println("In StatefulBean::destroy()");
+        System.out.println("In StatefulBean::destroy()");
     }
-
-
 
 }

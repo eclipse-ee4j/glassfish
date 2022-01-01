@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -109,7 +110,7 @@ public class ACLSingletonProvider extends SingletonProvider {
          * EarLibClassLoader. If latter is the case, it assumes that this is a standalone module and hence it returns the
          * thread's context class loader.
          *
-         * @return a class loader that's common to all modules of a Java EE app
+         * @return a class loader that's common to all modules of a Jakarta EE application
          */
         private ClassLoader getClassLoader() {
             ClassLoader contextClassLoader = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<ClassLoader>() {

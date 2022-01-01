@@ -18,6 +18,11 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
+<!--
+
+    Tests for "WD" (Web Distribution, aka Jakarta EE Web Profile)
+
+ -->
 <suite name="QuickLookTests" verbose="2">
 
     <parameter name="admin.url" value="http://localhost:4848/__asadmin" />
@@ -48,11 +53,13 @@
         </classes>
     </test>
 
+    <!--  
     <test name="adminconsole_tests">
         <classes>
             <class name="test.admin.AdminConsoleTests" />
         </classes>
     </test>
+    -->
 
     <test name="rest_tests">
         <classes>
@@ -89,7 +96,6 @@
             <class name="test.jpa.jpainjectemf.JpaInjectEMFTestNG" />
         </classes>
     </test>
-
     <test name="jpa_validation">
         <classes>
             <class
@@ -110,43 +116,10 @@
         </classes>
     </test>
 
-    <test name="security_app_permissions">
-        <classes>
-            <class name="test.security.appperms.ApppermsTestNG" />
-        </classes>
-    </test>
-    <test name="ejb_remoteview">
-        <classes>
-            <class name="test.ejb.remoteview.RemoteViewTestNG" />
-        </classes>
-    </test>
-
-    <test name="ejb_singleton_ear_redeploy">
-        <classes>
-            <class name="test.ejb.singleton.SingletonTestNG" />
-        </classes>
-    </test>
-
     <test name="ejb_stateful_cmt_ni_war">
         <classes>
             <class name="test.ejb.slsbnicmt.SlsbnicmtTestNG" />
             <class name="test.ejb.sfulnoi.SfulnoiTestNG" />
-        </classes>
-    </test>
-
-    <test name="ejb_cmp_ear">
-        <classes>
-            <class name="test.CmpRosterTestNG" />
-        </classes>
-    </test>
-
-    <!-- MDB tests parameters -->
-    <parameter name="MDB_APP_DIR" value="./dist/mdb/" />
-    <parameter name="BATCH_FILE1" value="ejb/mdb/create_resources.asadmin" />
-    <parameter name="BATCH_FILE2" value="ejb/mdb/delete_resources.asadmin" />
-    <test name="MDB_tests">
-        <classes>
-            <class name="test.mdb.MDBTests" />
         </classes>
     </test>
 
@@ -173,6 +146,7 @@
             <class name="test.admin.OsgiAsadminTest" />
         </classes>
     </test>
+
 <!-- Uncomment when/if fighterfish is reenabled
     <test name="osgi_test">
         <classes>
@@ -180,11 +154,5 @@
         </classes>
     </test>
 -->
-
-    <test name="jms_injection_jmsContext">
-        <classes>
-            <class name="test.jms.injection.ClientTestNG" />
-        </classes>
-    </test>
 </suite>
 

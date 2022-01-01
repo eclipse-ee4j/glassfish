@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,8 +21,9 @@ package org.glassfish.sse.api;
  * Represents a Server-Sent Event data.
  *
  * <p>
- * {@code new ServerSentEventData().data("YHOO").data("+2").data("10)} would send
- * the following event (followed by blank line):
+ * {@code new ServerSentEventData().data("YHOO").data("+2").data("10)} would send the following event (followed by blank
+ * line):
+ *
  * <pre>
  * data:YHOO
  * data:+2
@@ -30,24 +32,26 @@ package org.glassfish.sse.api;
  * </pre>
  *
  * <p>
- * {@code new ServerSentEventData().comment("test stream")} would send the
- * following event (followed by blank line):
+ * {@code new ServerSentEventData().comment("test stream")} would send the following event (followed by blank line):
+ *
  * <pre>
  * :test stream
  *
  * </pre>
  *
  * <p>
- * {@code new ServerSentEventData().data("first event").id("1")} would send the
- * following event (followed by blank line):
+ * {@code new ServerSentEventData().data("first event").id("1")} would send the following event (followed by blank
+ * line):
+ *
  * <pre>
  * data:first event
  * id:1
  * </pre>
  *
  * <p>
- * {@code new ServerSentEventData().event("add").data("73857293")} would send the
- * following event (followed by blank line):
+ * {@code new ServerSentEventData().event("add").data("73857293")} would send the following event (followed by blank
+ * line):
+ *
  * <pre>
  * event:add
  * data:73857293

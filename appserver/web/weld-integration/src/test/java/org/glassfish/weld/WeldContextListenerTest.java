@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,23 +17,6 @@
 
 package org.glassfish.weld;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.apache.catalina.core.StandardContext;
-import org.apache.jasper.runtime.JspApplicationContextImpl;
-import org.easymock.EasyMockSupport;
-import org.jboss.weld.module.web.el.WeldELContextListener;
-import org.junit.jupiter.api.Test;
-
-import jakarta.el.ELResolver;
-import jakarta.el.ExpressionFactory;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.jsp.JspApplicationContext;
-
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +25,23 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.apache.catalina.core.StandardContext;
+import org.easymock.EasyMockSupport;
+import org.glassfish.wasp.runtime.JspApplicationContextImpl;
+import org.jboss.weld.module.web.el.WeldELContextListener;
+import org.junit.jupiter.api.Test;
+
+import jakarta.el.ELResolver;
+import jakarta.el.ExpressionFactory;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.jsp.JspApplicationContext;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

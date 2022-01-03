@@ -180,7 +180,7 @@
                                 <tck-setting key="report.dir" value="${tck.home}/facesreport/faces"/>
                                 <tck-setting key="work.dir" value="${tck.home}/faceswork/faces"/>
                                 
-                                <tck-setting key="webServerHome=" value="${glassfish.home}/glassfish"/>
+                                <tck-setting key="webServerHome" value="${glassfish.home}/glassfish"/>
                                 
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="webServerHome=/ri/glassfish3/glassfish" replace="webServerHome=${glassfish.home}/glassfish" />

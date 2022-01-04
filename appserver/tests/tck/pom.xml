@@ -57,6 +57,7 @@
             <modules>
                 <module>rest</module>
                 <module>faces</module>
+                <module>authentication</module>
             </modules>
         </profile>
         <profile>
@@ -69,6 +70,12 @@
             <id>tck-faces</id>
             <modules>
                 <module>faces</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tck-authentication</id>
+            <modules>
+                <module>authentication</module>
             </modules>
         </profile>
     </profiles>

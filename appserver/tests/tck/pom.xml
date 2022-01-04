@@ -56,12 +56,19 @@
             <id>tck-all</id>
             <modules>
                 <module>rest</module>
+                <module>faces</module>
             </modules>
         </profile>
         <profile>
             <id>tck-rest</id>
             <modules>
                 <module>rest</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tck-faces</id>
+            <modules>
+                <module>faces</module>
             </modules>
         </profile>
     </profiles>

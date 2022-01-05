@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 20202 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -111,6 +111,7 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
+                    <!-- 
                     <execution>
                         <id>unpack-tck</id>
                         <phase>pre-integration-test</phase>
@@ -122,6 +123,7 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
+                    -->
                 </executions>
             </plugin>
 
@@ -271,7 +273,14 @@
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dutil.dir=${tck.home}"  />
+                                    <arg value="-Dtest=foo"  />
+                                    <arg value="-DnoSecurityMgr=true" />
+                                    
                                     <arg value="runclient"/>
+                                     
+                                     <!--
+                                    <env key="ANT_OPTS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9009" />
+                                    -->
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

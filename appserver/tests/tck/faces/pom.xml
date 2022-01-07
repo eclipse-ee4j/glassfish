@@ -155,7 +155,7 @@
                         <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                          
@@ -225,8 +225,22 @@
                                         <arg value="domain1"/>
                                     </exec>
                                 </limit>
-                                <mkdir dir="${tck.home}/facestckreport"/>
-                                <mkdir dir="${tck.home}/facestckreport/facestck"/>
+                                <mkdir dir="${tck.home}/facesreport"/>
+                                <mkdir dir="${tck.home}/facesreport/faces"/>
+                                
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml">
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m" />]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m" />
+                                <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
+                                </replace>
+                                
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m" />]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m" />
+                                <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
+                                </replace>
+                                
+                                
                             </target>
                         </configuration>
                         <goals>
@@ -266,21 +280,16 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
 
-                                <echo level="info" message="Start running all tests" />
+                                <echo level="info" message="Start running all tests" unless:set="run.test"/>
+                                <echo level="info" message="Start running single test" if:set="run.test"/>
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dutil.dir=${tck.home}"  />
-                                    <arg value="-Dtest=foo"  />
-                                    <arg value="-DnoSecurityMgr=true" />
-                                    
+                                    <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
                                     <arg value="runclient"/>
-                                     
-                                     <!--
-                                    <env key="ANT_OPTS" value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9009" />
-                                    -->
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

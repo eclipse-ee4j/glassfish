@@ -269,7 +269,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
 
         @Override
         protected void configure() {
-            bind(EjbExceptionMapper.class).to(ExceptionMapper.class).in(Singleton.class);
+            bind(EjbExceptionMapper.class).to(ExceptionMapper.class).in(jakarta.inject.Singleton.class);
         }
     }
 }

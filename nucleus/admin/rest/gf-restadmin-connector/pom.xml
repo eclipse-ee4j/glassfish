@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>rest-service-parent</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.4</version>
     </parent>
 
     <artifactId>gf-restadmin-connector</artifactId>

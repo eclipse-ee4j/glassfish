@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-	Copyright (c) 2021 Contributors to the Eclipse Foundation
+	Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -94,7 +94,7 @@
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
-        <webservices.version>4.0.0-M1</webservices.version>
+        <webservices.version>4.0.0-M2</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>

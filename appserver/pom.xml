@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-	Copyright (c) 2021 Contributors to Eclipse Foundation.
+	Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -90,7 +90,7 @@
         <install.dir.name>glassfish7</install.dir.name>
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.0.0-SNAPSHOT</jakarta.faces-api.version>
+        <jakarta.faces-api.version>4.0.0-M2</jakarta.faces-api.version>
         <mojarra.version>4.0.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,23 +23,27 @@
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>6.2.4-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-authorization</artifactId>
+    <artifactId>glassfish-external-tck-rest</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: Authorization</name>
+    <name>TCK: REST</name>
 
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        <tck.home>${project.build.directory}/authorization-tck</tck.home>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        
+        <tck.home>${project.build.directory}/restful-ws-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+         
+        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+       
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+        
         <port.admin>14848</port.admin>
         <port.derby>11527</port.derby>
         <port.http>18080</port.http>
@@ -62,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-authorization-tck</artifactId>
+            <artifactId>jakarta-rest-tck</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -75,7 +79,7 @@
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-authorization-tck</id>
+                        <id>download-ant</id>
                         <phase>generate-resources</phase>
                         <goals>
                             <goal>wget</goal>
@@ -114,7 +118,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>jakarta-authorization-tck</includeArtifactIds>
+                            <includeArtifactIds>jakarta-rest-tck</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
@@ -152,45 +156,41 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
+                                         
+                               <macrodef name="tck-setting">
+                                    <attribute name="key" /> <attribute name="value" />
+                                    <sequential>
+                                      <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                        match="^@{key}=.*" replace="@{key}=@{value}" />
+                                    </sequential>
+                                </macrodef>
 
                                 <!-- Change configuration -->
                                 <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="s1as\.admin\.port=.*"
-                                    replace="s1as\.admin\.port=${port.admin}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="orb\.port=.*"
-                                    replace="orb\.port=${port.orb}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="database\.port=.*"
-                                    replace="database\.port=${port.derby}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="webServerPort=.*"
-                                    replace="webServerPort=${port.http}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="securedWebServicePort=.*"
-                                    replace="securedWebServicePort=${port.https}" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="harness\.log\.port=.*"
-                                    replace="harness\.log\.port=${port.harness.log}" />
-
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="javaee\.level=.*"
-                                    replace="javaee\.level=full" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="jacc\.home=.*"
-                                    replace="jacc\.home=${glassfish.home}/glassfish" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="report\.dir=.*"
-                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
-
-                                <!-- Run just selected subset tests -->
-                                <replaceregexp file="${tck.home}/bin/build.xml" byline="true"
-                                    match="&lt;/project&gt;"
-                                    replace="&lt;property name=&quot;all.test.dir&quot; value=&quot;com/sun/ts/tests/jacc/,com/sun/ts/tests/signaturetest/jacc,com/sun/ts/tests/common/vehicle/&quot; /&gt; &lt;/project&gt;" />
+                                
+                                <tck-setting key="webServerHost" value="localhost"/>
+                                <tck-setting key="webServerPort" value="${port.http}"/>
+                                <tck-setting key="securedWebServicePort" value="${port.https}"/>
+                                <tck-setting key="s1as.admin.port" value="${port.admin}"/>
+                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
+                                <tck-setting key="orb.port" value="${port.orb}"/>
+                                <tck-setting key="database.port" value="${port.derby}"/>
+                                <tck-setting key="harness.log.port" value="${port.harness.log}"/>
+                                
+                                <tck-setting key="report.dir" value="${tck.home}/restreport/rest"/>
+                                <tck-setting key="work.dir" value="${tck.home}/restwork/rest"/>
+                                
+                                <tck-setting key="web.home" value="${glassfish.home}/glassfish"/>
+                                <tck-setting key="impl.vi" value="glassfish"/>
+                                <tck-setting key="impl.vi.deploy.dir" value="${web.home}/domains/domain1/autodeploy"/>
+                                
+                                <tck-setting key="jaxrs_impl_name" value="jersey"/>
+                                
+                                <tck-setting key="jaxrs_impl.classes" value="${web.home}/modules/jakarta.json.jar:${web.home}/modules/jakarta.json.bind-api.jar:${web.home}/modules/jakarta.json.jar:${web.home}/modules/jsonp-jaxrs.jar:${web.home}/modules/jersey-client.jar:${web.home}/modules/jersey-common.jar:${web.home}/modules/jersey-server.jar:${web.home}/modules/jersey-container-servlet.jar:${web.home}/modules/jersey-container-servlet-core.jar:${web.home}/modules/jersey-media-jaxb.jar:${web.home}/modules/jersey-media-sse.jar:${web.home}/modules/jersey-hk2.jar:${web.home}/modules/osgi-resource-locator.jar:${web.home}/modules/jakarta.inject-api.jar:${web.home}/modules/guava.jar:${web.home}/modules/hk2-api.jar:${web.home}/modules/hk2-locator.jar:${web.home}/modules/hk2-utils.jar:${web.home}/modules/javassist.jar:${web.home}/modules/cglib.jar:${web.home}/modules/jakarta.annotation-api.jar:${web.home}/modules/jakarta.xml.bind-api.jar:${web.home}/modules/jakarta.activation.jar"/>
+                                <tck-setting key="jaxrs_impl_lib" value="${web.home}/modules/jersey-container-servlet-core.jar"/>
+                                <tck-setting key="jaxrs.classes" value="${web.home}/modules/jakarta.ws.rs-api.jar"/>
+                                <tck-setting key="servlet_adaptor" value="org/glassfish/jersey/servlet/ServletContainer.class"/>
+                                <tck-setting key="servlet.classes" value="${web.home}/modules/jakarta.servlet-api.jar"/>
 
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
@@ -223,8 +223,8 @@
                                         <arg value="domain1"/>
                                     </exec>
                                 </limit>
-                                <mkdir dir="${tck.home}/jacctckreport"/>
-                                <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
+                                <mkdir dir="${tck.home}/resttckreport"/>
+                                <mkdir dir="${tck.home}/resttckreport/resttck"/>
                                 
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
@@ -262,14 +262,17 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi" />
                                     <env key="tck.home" value="${tck.home}"/>
+                                    <env key="TCK_KEYWORDS" value="jaxrs"/>
                                 </exec>
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
-                                    <arg value="enable.jacc"  />
+                                    <arg value="deploy.all"  />
                                     <env key="tck.home" value="${tck.home}"/>
+                                    <env key="TCK_KEYWORDS" value="jaxrs"/>
                                 </exec>
                             </target>
                         </configuration>
                     </execution>
+      
 
                      <execution>
                         <id>run-tck-tests</id>
@@ -285,8 +288,8 @@
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="deploy"/>
-                                    <arg value="run.all"/>
+                                    <arg value="runclient"/>
+                                    <arg value="-Dkeywords=jaxrs.all"/>
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

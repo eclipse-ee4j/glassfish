@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import org.glassfish.admin.amx.core.*;
 import org.glassfish.admin.amx.base.*;
 import org.glassfish.admin.amx.config.*;
-//import org.glassfish.admin.amx.j2ee.*;
 import org.glassfish.admin.amx.monitoring.*;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.util.ExceptionUtil;

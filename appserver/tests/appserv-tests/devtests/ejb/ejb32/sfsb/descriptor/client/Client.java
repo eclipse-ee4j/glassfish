@@ -21,8 +21,6 @@ import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
 
-import javax.management.j2ee.ManagementHome;
-import javax.management.j2ee.Management;
 import javax.rmi.PortableRemoteObject;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;

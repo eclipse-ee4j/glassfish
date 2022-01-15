@@ -223,8 +223,6 @@
                                 javax.lang.model.type;
                                 javax.lang.model.util;
                                 javax.management;
-                                javax.management.j2ee;
-                                javax.management.j2ee.statistics;
                                 javax.management.loading;
                                 javax.management.modelmbean;
                                 javax.management.monitor;

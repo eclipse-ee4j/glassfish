@@ -35,6 +35,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._setClassLoader;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
@@ -51,11 +52,15 @@ public class ServiceInterfaceGenerator extends Generator {
     private final String serviceIntfSimpleName;
     private final Method[] intfMethods;
 
-   /**
+    /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
+     *
+     * @param loader {@link ClassLoader} owning generated classes
+     * @param ejbClass
      */
-    public ServiceInterfaceGenerator(Class<?> ejbClass) {
+    public ServiceInterfaceGenerator(final ClassLoader loader, final Class<?> ejbClass) {
+        super(loader);
         this.ejbClass = ejbClass;
         packageName = getPackageName(ejbClass.getName());
         serviceIntfSimpleName = getServiceIntfName(ejbClass);
@@ -90,6 +95,8 @@ public class ServiceInterfaceGenerator extends Generator {
     @Override
     public void evaluate() {
         _clear();
+
+        _setClassLoader(loader);
 
         if (packageName != null) {
             _package(packageName);

@@ -32,6 +32,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._setClassLoader;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
@@ -46,6 +47,14 @@ public class GenericHomeGenerator extends Generator {
      */
     public static final String GENERIC_HOME_CLASSNAME = GenericHomeGenerator.class.getPackageName()
         + ".GenericEJBHome_Generated";
+
+    /**
+     * @param loader {@link ClassLoader} owning generated classes
+     */
+    public GenericHomeGenerator(ClassLoader loader) {
+        super(loader);
+    }
+
 
     /**
      * Get the fully qualified name of the generated class.
@@ -67,6 +76,8 @@ public class GenericHomeGenerator extends Generator {
     public void evaluate() {
         _clear();
 
+        _setClassLoader(loader);
+
         String packageName = getPackageName(getGeneratedClassName());
         String simpleName = getBaseName(getGeneratedClassName());
 
@@ -80,7 +91,7 @@ public class GenericHomeGenerator extends Generator {
 
         _end();
 
-        _classGenerator() ;
+        _classGenerator();
     }
 
 }

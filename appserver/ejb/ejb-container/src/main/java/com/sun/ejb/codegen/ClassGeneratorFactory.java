@@ -36,7 +36,15 @@ public interface ClassGeneratorFactory {
     Class<?> getAnchorClass();
 
     /**
+     * @return {@link ClassLoader} owning the generated class.
+     */
+    ClassLoader getClassLoader();
+
+    /**
      * Calls {@link Wrapper} methods to configure the class definition.
+     * The {@link Wrapper} uses {@link ThreadLocal} internally, so you should
+     * always call {@link Wrapper#_clear()} in finally block after generation
+     * to avoid leakages.
      */
     void evaluate();
 }

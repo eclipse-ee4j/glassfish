@@ -27,6 +27,26 @@ import java.util.List;
  */
 public abstract class Generator implements ClassGeneratorFactory {
 
+    protected final ClassLoader loader;
+
+
+    /**
+     * @param loader {@link ClassLoader} owning generated classes
+     */
+    public Generator(final ClassLoader loader) {
+        this.loader = loader;
+    }
+
+
+    /**
+     * @return {@link ClassLoader} owning the generated class.
+     */
+    @Override
+    public ClassLoader getClassLoader() {
+        return this.loader;
+    }
+
+
     /**
      * @return the package name or null.
      */

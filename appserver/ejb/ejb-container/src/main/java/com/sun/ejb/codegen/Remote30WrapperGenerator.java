@@ -61,9 +61,6 @@ public final class Remote30WrapperGenerator extends Generator {
     private final String remoteClientSimpleName;
     private final Method[] methodsToGenerate;
 
-    private final ClassLoader loader;
-
-
     /**
      * Adds _Wrapper to the original name.
      *
@@ -89,7 +86,7 @@ public final class Remote30WrapperGenerator extends Generator {
     public Remote30WrapperGenerator(ClassLoader loader, String businessIntfName, String remoteInterfaceName)
         throws GeneratorException {
 
-        this.loader = loader;
+        super(loader);
         this.remoteInterfaceName = remoteInterfaceName;
 
         try {
@@ -130,6 +127,8 @@ public final class Remote30WrapperGenerator extends Generator {
 
         _clear();
 
+        _setClassLoader(loader);
+
         if (remoteClientPackageName != null) {
             _package(remoteClientPackageName);
         } else {
@@ -168,7 +167,7 @@ public final class Remote30WrapperGenerator extends Generator {
             LOG.log(Level.WARNING, "Got exception when generating byte code", e);
         }
 
-        _classGenerator() ;
+        _classGenerator();
     }
 
 

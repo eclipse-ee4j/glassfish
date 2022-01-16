@@ -387,20 +387,14 @@ public class EJBUtils {
             return generatedRemoteIntfName;
         }
 
-        Wrapper._setClassLoader(appClassLoader);
-        try {
-            if (generatedRemoteIntf == null) {
-                RemoteGenerator generator = new RemoteGenerator(appClassLoader, businessInterfaceName);
-                generateAndLoad(generator, appClassLoader);
-            }
-            if (generatedRemoteWrapper == null) {
-                Remote30WrapperGenerator generator
-                    = new Remote30WrapperGenerator(appClassLoader, businessInterfaceName, generatedRemoteIntfName);
-                generateAndLoad(generator, appClassLoader);
-            }
-        } finally {
-            // Make sure no classloader is bound to threadlocal: avoid possible classloader leak.
-            Wrapper._setClassLoader(null) ;
+        if (generatedRemoteIntf == null) {
+            RemoteGenerator generator = new RemoteGenerator(appClassLoader, businessInterfaceName);
+            generateAndLoad(generator);
+        }
+        if (generatedRemoteWrapper == null) {
+            Remote30WrapperGenerator generator
+                = new Remote30WrapperGenerator(appClassLoader, businessInterfaceName, generatedRemoteIntfName);
+            generateAndLoad(generator);
         }
         return generatedRemoteIntfName;
     }
@@ -411,17 +405,17 @@ public class EJBUtils {
         if (generatedGenericEJBHomeClass != null) {
             return generatedGenericEJBHomeClass;
         }
-        final GenericHomeGenerator generator = new GenericHomeGenerator();
-        return generateAndLoad(generator, appClassLoader);
+        final GenericHomeGenerator generator = new GenericHomeGenerator(appClassLoader);
+        return generateAndLoad(generator);
     }
 
 
-    public static Class<?> generateSEI(ClassGeneratorFactory cgf, ClassLoader loader) {
-        Class<?> clazz = loadClassIgnoringExceptions(loader, cgf.getGeneratedClassName());
+    public static Class<?> generateSEI(ClassGeneratorFactory cgf) {
+        Class<?> clazz = loadClassIgnoringExceptions(cgf.getClassLoader(), cgf.getGeneratedClassName());
         if (clazz != null) {
             return clazz;
         }
-        return generateAndLoad(cgf, loader);
+        return generateAndLoad(cgf);
     }
 
 
@@ -431,35 +425,40 @@ public class EJBUtils {
      * and if it wasn't found, generator knows it's definition.
      */
     // made package visible just for tests
-    static synchronized Class<?> generateAndLoad(final ClassGeneratorFactory generator, final ClassLoader loader) {
-        Class<?> clazz = loadClassIgnoringExceptions(loader, generator.getGeneratedClassName());
+    static synchronized Class<?> generateAndLoad(final ClassGeneratorFactory generator) {
+        Class<?> clazz = loadClassIgnoringExceptions(generator.getClassLoader(), generator.getGeneratedClassName());
         if (clazz != null) {
             return clazz;
         }
 
-        generator.evaluate();
-
-        final Properties props = new Properties();
-        if (_logger.isLoggable(Level.FINEST)) {
-            props.put(DUMP_AFTER_SETUP_VISITOR, "true");
-            props.put(TRACE_BYTE_CODE_GENERATION, "true");
-            props.put(USE_ASM_VERIFIER, "true");
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                PrintStream ps = new PrintStream(baos);
-                Wrapper._sourceCode(ps, props);
-                _logger.fine(baos.toString());
-            } catch (Exception e) {
-                _logger.log(Level.SEVERE, "Exception generating src for logs", e);
+        try {
+            generator.evaluate();
+            final Properties props = new Properties();
+            if (_logger.isLoggable(Level.FINEST)) {
+                props.put(DUMP_AFTER_SETUP_VISITOR, "true");
+                props.put(TRACE_BYTE_CODE_GENERATION, "true");
+                props.put(USE_ASM_VERIFIER, "true");
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    PrintStream ps = new PrintStream(baos);
+                    Wrapper._sourceCode(ps, props);
+                    _logger.fine(baos.toString());
+                } catch (Exception e) {
+                    _logger.log(Level.SEVERE, "Exception generating src for logs", e);
+                }
             }
-        }
 
-        if (System.getSecurityManager() == null) {
-            return Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
+            // FIXME: Wrapper._generate(anchorClass, props) generates class in anchor class's classloader,
+            //        not the provided. That is why we still use the deprecated method.
+            if (System.getSecurityManager() == null) {
+                return Wrapper._generate(generator.getClassLoader(), generator.getAnchorClass().getProtectionDomain(), props);
+            }
+            PrivilegedAction<Class<?>> action = () -> Wrapper._generate(generator.getClassLoader(), generator.getAnchorClass().getProtectionDomain(), props);
+            return AccessController.doPrivileged(action);
+        } finally {
+            Wrapper._clear();
+            Wrapper._setClassLoader(null);
         }
-        PrivilegedAction<Class<?>> action = () ->
-            Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
-        return AccessController.doPrivileged(action);
     }
 
     private static Class<?> loadClassIgnoringExceptions(ClassLoader classLoader, String className) {

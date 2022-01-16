@@ -36,6 +36,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._setClassLoader;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
@@ -75,6 +76,7 @@ public final class RemoteGenerator extends Generator {
      * @throws InvalidBean if the businessInterface doesn't exist.
      */
     public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws InvalidBean {
+        super(classLoader);
         try {
             businessInterface = classLoader.loadClass(businessIntf);
         } catch (ClassNotFoundException ex) {
@@ -115,6 +117,8 @@ public final class RemoteGenerator extends Generator {
 
         _clear();
 
+        _setClassLoader(loader);
+
         if (remoteInterfacePackageName != null) {
             _package(remoteInterfacePackageName);
         } else {
@@ -132,7 +136,7 @@ public final class RemoteGenerator extends Generator {
 
         _end();
 
-        _classGenerator() ;
+        _classGenerator();
     }
 
 

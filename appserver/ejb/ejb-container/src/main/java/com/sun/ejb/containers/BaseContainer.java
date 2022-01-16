@@ -17,13 +17,12 @@
 package com.sun.ejb.containers;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.rmi.AccessException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -279,9 +278,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     // object as ejbLocalHome, for example in the case of dynamic proxies.
     protected EJBLocalHomeImpl ejbLocalHomeImpl;
 
-    // Constructor used to instantiate ejb local object proxy.
-    private Constructor ejbLocalObjectProxyCtor;
-
     //
     // Data members for 3.x Local business view
     //
@@ -306,12 +302,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     // Implementation of internal local business home interface.
     protected EJBLocalHomeImpl ejbOptionalLocalBusinessHomeImpl;
-
-    // Constructor used to instantiate local business object proxy.
-    private Constructor ejbLocalBusinessObjectProxyCtor;
-
-    // Constructor used to instantiate local business object proxy.
-    private Constructor ejbOptionalLocalBusinessObjectProxyCtor;
 
     private Collection<EjbContainerInterceptor> interceptors = null;
 
@@ -352,9 +342,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     // Remote interface proxy class
     private Class ejbObjectProxyClass;
-
-    // Remote interface proxy constructor.
-    private Constructor ejbObjectProxyCtor;
 
     // RemoteReference Factory for RemoteHome view
     protected RemoteReferenceFactory remoteHomeRefFactory = null;
@@ -510,6 +497,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     protected EJBContainerTransactionManager containerTransactionManager;
 
     private final JCDIService jcdiService;
+
+    private Class[] ejbLocalBusinessProxyInterfaces;
+
+    private Class[] ejbOptionalLocalBusinessHomeProxyInterfaces;
 
     /**
      * This constructor is called from ContainerFactoryImpl when an EJB Jar is deployed.
@@ -1101,8 +1092,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             Class serviceEndpointIntfClass = loader.loadClass(webServiceEndpoint.getServiceEndpointInterface());
 
             if (!serviceEndpointIntfClass.isInterface()) {
-                ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(ejbClass);
-                serviceEndpointIntfClass = EJBUtils.generateSEI(generator, loader);
+                ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(loader, ejbClass);
+                serviceEndpointIntfClass = EJBUtils.generateSEI(generator);
                 if (serviceEndpointIntfClass == null) {
                     throw new RuntimeException(localStrings.getLocalString("ejb.error_generating_sei",
                         "Error in generating service endpoint interface class for EJB class {0}", this.ejbClass));
@@ -1170,12 +1161,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 this.ejbHomeImpl = instantiateEJBHomeImpl();
                 this.ejbHome = ejbHomeImpl.getEJBHome();
 
-                // Since some containers might create multiple EJBObjects for
-                // the same ejb, make sure we use the same Proxy class to
-                // instantiate all the proxy instances.
-                ejbObjectProxyClass = Proxy.getProxyClass(loader, new Class[] { remoteIntf });
-                ejbObjectProxyCtor = ejbObjectProxyClass.getConstructor(new Class[] { InvocationHandler.class });
-
                 //
                 // Make sure all Home/Remote interfaces conform to RMI-IIOP
                 // rules.  Checking for conformance here keeps the exposed
@@ -1230,11 +1215,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 getProtocolManager().validateTargetObjectInterfaces(this.ejbRemoteBusinessHome);
 
                 for (RemoteBusinessIntfInfo next : remoteBusinessIntfInfo.values()) {
-
-                    next.proxyClass = Proxy.getProxyClass(loader, new Class[] { next.generatedRemoteIntf });
-
-                    next.proxyCtor = next.proxyClass.getConstructor(new Class[] { InvocationHandler.class });
-
                     // Remotereference factory needs instances of
                     // Home and Remote to get repository Ids since it
                     // doesn't have stubs and ties.  This must be done before
@@ -1350,12 +1330,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 this.ejbLocalHomeImpl = instantiateEJBLocalHomeImpl();
                 this.ejbLocalHome = ejbLocalHomeImpl.getEJBLocalHome();
 
-                // Since some containers might create multiple EJBLocalObjects
-                // for the same ejb, make sure we use the same Proxy class to
-                // instantiate all the proxy instances.
-                Class ejbLocalObjectProxyClass = Proxy.getProxyClass(loader, new Class[] { IndirectlySerializable.class, localIntf });
-                ejbLocalObjectProxyCtor = ejbLocalObjectProxyClass.getConstructor(new Class[] { InvocationHandler.class });
-
                 // Portable JNDI name for EJB 2.x LocalHome.  We don't provide a
                 // glassfish-specific way of accessing Local EJBs.
 
@@ -1368,16 +1342,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 ejbLocalBusinessHomeImpl = instantiateEJBLocalBusinessHomeImpl();
                 ejbLocalBusinessHome = (GenericEJBLocalHome) ejbLocalBusinessHomeImpl.getEJBLocalHome();
 
-                Class[] proxyInterfaces = new Class[localBusinessIntfs.size() + 1];
-                proxyInterfaces[0] = IndirectlySerializable.class;
+                ejbLocalBusinessProxyInterfaces = new Class[localBusinessIntfs.size() + 1];
+                ejbLocalBusinessProxyInterfaces[0] = IndirectlySerializable.class;
                 int index = 1;
                 for (Class next : localBusinessIntfs) {
-                    proxyInterfaces[index] = next;
+                    ejbLocalBusinessProxyInterfaces[index] = next;
                     index++;
                 }
-
-                Class proxyClass = Proxy.getProxyClass(loader, proxyInterfaces);
-                ejbLocalBusinessObjectProxyCtor = proxyClass.getConstructor(new Class[] { InvocationHandler.class });
 
                 for (Class next : localBusinessIntfs) {
                     // Portable JNDI name for EJB 3.x Local business interface.
@@ -1385,7 +1356,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     JavaGlobalJndiNamingObjectProxy namingProxy = new JavaGlobalJndiNamingObjectProxy(this, next.getName());
                     intfsForPortableJndi.put(next.getName(), namingProxy);
                 }
-
             }
 
             if (hasOptionalLocalBusinessView) {
@@ -1394,14 +1364,12 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                 ejbOptionalLocalBusinessHome = (GenericEJBLocalHome) ejbOptionalLocalBusinessHomeImpl.getEJBLocalHome();
 
-                Class[] proxyInterfaces = new Class[2];
-                proxyInterfaces[0] = IndirectlySerializable.class;
+                ejbOptionalLocalBusinessHomeProxyInterfaces = new Class[2];
+                ejbOptionalLocalBusinessHomeProxyInterfaces[0] = IndirectlySerializable.class;
+
                 String optionalIntfName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
-
-                proxyInterfaces[1] = ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optionalIntfName);
-
-                Class proxyClass = Proxy.getProxyClass(loader, proxyInterfaces);
-                ejbOptionalLocalBusinessObjectProxyCtor = proxyClass.getConstructor(new Class[] { InvocationHandler.class });
+                ejbGeneratedOptionalLocalBusinessIntfClass = optIntfClassLoader.loadClass(optionalIntfName);
+                ejbOptionalLocalBusinessHomeProxyInterfaces[1] = ejbGeneratedOptionalLocalBusinessIntfClass;
 
                 // Portable JNDI name for no-interface view.
                 // We don't provide a glassfish-specific way of accessing the
@@ -3307,9 +3275,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         handler.setMethodMap(proxyInvocationInfoMap);
 
         EJBHomeImpl remoteBusinessHomeImpl = handler;
-
-        EJBHome ejbRemoteBusinessHomeProxy = (EJBHome) Proxy.newProxyInstance(loader, new Class[] { remoteBusinessHomeIntf }, handler);
-
+        EJBHome ejbRemoteBusinessHomeProxy = (EJBHome) Proxy.newProxyInstance(
+            loader, new Class[] {remoteBusinessHomeIntf}, handler);
         handler.setProxy(ejbRemoteBusinessHomeProxy);
 
         remoteBusinessHomeImpl.setContainer(this);
@@ -3406,7 +3373,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         localObjImpl = handler;
 
         try {
-            EJBLocalObject localObjectProxy = (EJBLocalObject) ejbLocalObjectProxyCtor.newInstance(new Object[] { handler });
+            EJBLocalObject localObjectProxy = (EJBLocalObject) Proxy.newProxyInstance(
+                loader, new Class[] {IndirectlySerializable.class, localIntf}, handler);
             handler.setProxy(localObjectProxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_local_interface",
@@ -3428,9 +3396,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         EJBLocalObjectInvocationHandler handler = new EJBLocalObjectInvocationHandler(proxyInvocationInfoMap, false);
 
         EJBLocalObjectImpl localBusinessObjImpl = handler;
-
-        ejbLocalBusinessObjectProxyCtor.newInstance(new Object[] { handler });
-
+        Proxy.newProxyInstance(loader, ejbLocalBusinessProxyInterfaces, handler);
         localBusinessObjImpl.setContainer(this);
 
         for (Class businessIntfClass : localBusinessIntfs) {
@@ -3445,17 +3411,15 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     protected EJBLocalObjectImpl instantiateOptionalEJBLocalBusinessObjectImpl() throws Exception {
 
         EJBLocalObjectInvocationHandler handler = new EJBLocalObjectInvocationHandler(proxyInvocationInfoMap, true);
-
         EJBLocalObjectImpl localBusinessObjImpl = handler;
-
-        ejbOptionalLocalBusinessObjectProxyCtor.newInstance(new Object[] { handler });
-
+        Proxy.newProxyInstance(loader, ejbOptionalLocalBusinessHomeProxyInterfaces, handler);
         localBusinessObjImpl.setContainer(this);
 
         Class businessIntfClass = ejbGeneratedOptionalLocalBusinessIntfClass;
-        EJBLocalObjectInvocationHandlerDelegate delegate = new EJBLocalObjectInvocationHandlerDelegate(businessIntfClass, getContainerId(),
-            handler);
-        Proxy proxy = (Proxy) Proxy.newProxyInstance(loader, new Class[] { IndirectlySerializable.class, businessIntfClass }, delegate);
+        EJBLocalObjectInvocationHandlerDelegate delegate = new EJBLocalObjectInvocationHandlerDelegate(
+            businessIntfClass, getContainerId(), handler);
+        Proxy proxy = (Proxy) Proxy.newProxyInstance(
+            loader, new Class[] {IndirectlySerializable.class, businessIntfClass}, delegate);
 
         String beanSubClassName = ejbGeneratedOptionalLocalBusinessIntfClass.getName() + "__Bean__";
 
@@ -3465,7 +3429,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         optIntfClassLoader.loadClass(ejbGeneratedOptionalLocalBusinessIntfClass.getName());
 
         Class subClass = optIntfClassLoader.loadClass(beanSubClassName);
-        OptionalLocalInterfaceProvider provider = (OptionalLocalInterfaceProvider) subClass.newInstance();
+        OptionalLocalInterfaceProvider provider = (OptionalLocalInterfaceProvider) subClass.getConstructor().newInstance();
         provider.setOptionalLocalIntfProxy(proxy);
         localBusinessObjImpl.mapClientObject(ejbClass.getName(), provider);
 
@@ -3481,7 +3445,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         EJBObjectImpl ejbObjImpl = handler;
 
         try {
-            EJBObject ejbObjectProxy = (EJBObject) ejbObjectProxyCtor.newInstance(new Object[] { handler });
+            EJBObject ejbObjectProxy = (EJBObject) Proxy.newProxyInstance(loader, new Class[] {remoteIntf}, handler);
+            this.ejbObjectProxyClass = ejbObjectProxyClass == null ? ejbObjectProxy.getClass() : ejbObjectProxyClass;
             handler.setEJBObject(ejbObjectProxy);
         } catch (ClassCastException e) {
             String msg = localStrings.getLocalString("ejb.basecontainer_invalid_remote_interface",
@@ -3519,11 +3484,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         for (RemoteBusinessIntfInfo next : remoteBusinessIntfInfo.values()) {
 
             EJBObjectInvocationHandlerDelegate delegate = new EJBObjectInvocationHandlerDelegate(next.remoteBusinessIntf, handler);
-
-            java.rmi.Remote ejbBusinessObjectProxy = (java.rmi.Remote) next.proxyCtor.newInstance(new Object[] { delegate });
-
+            Remote ejbBusinessObjectProxy = (Remote) Proxy.newProxyInstance(
+                loader, new Class[] {next.generatedRemoteIntf}, delegate);
+            next.proxyClass = ejbBusinessObjectProxy.getClass();
             ejbBusinessObjImpl.setEJBObject(next.generatedRemoteIntf.getName(), ejbBusinessObjectProxy);
-
         }
 
         ejbBusinessObjImpl.setContainer(this);
@@ -3935,7 +3899,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                         remoteHomeRefFactory.cleanupClass(homeIntf);
                         remoteHomeRefFactory.cleanupClass(remoteIntf);
                         remoteHomeRefFactory.cleanupClass(ejbHome.getClass());
-                        remoteHomeRefFactory.cleanupClass(ejbObjectProxyClass);
+                        if (ejbObjectProxyClass != null) {
+                            remoteHomeRefFactory.cleanupClass(ejbObjectProxyClass);
+                        }
 
                         // destroy the factory itself
                         remoteHomeRefFactory.destroy();
@@ -3956,7 +3922,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                             next.referenceFactory.cleanupClass(next.generatedRemoteIntf);
 
-                            next.referenceFactory.cleanupClass(next.proxyClass);
+                            if (next.proxyClass != null) {
+                                next.referenceFactory.cleanupClass(next.proxyClass);
+                            }
 
                             // destroy the factory itself
                             next.referenceFactory.destroy();
@@ -4621,14 +4589,11 @@ final class CallFlowInfoImpl implements CallFlowInfo {
 }
 
 final class RemoteBusinessIntfInfo {
-
     Class generatedRemoteIntf;
     Class remoteBusinessIntf;
     String jndiName;
     RemoteReferenceFactory referenceFactory;
     Class proxyClass;
-    Constructor proxyCtor;
-
 }
 
 final class SafeProperties extends Properties {

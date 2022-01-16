@@ -106,7 +106,7 @@ public class EJBUtilsTest {
         // random interface for the test
         String interfaceName = ClassGeneratorFactory.class.getName();
         Generator generator = new Remote30WrapperGenerator(loader, interfaceName, interfaceName);
-        Class<?> newClass = EJBUtils.generateAndLoad(generator, loader);
+        Class<?> newClass = EJBUtils.generateAndLoad(generator);
         assertNotNull(newClass);
         assertEquals(generator.getGeneratedClassName(), newClass.getName());
     }
@@ -138,8 +138,8 @@ public class EJBUtilsTest {
     @Test
     @Order(30)
     public void generateSEI() throws Exception {
-        Generator generator = new ServiceInterfaceGenerator(ClassGeneratorFactory.class);
-        Class<?> newClass = EJBUtils.generateSEI(generator, loader);
+        Generator generator = new ServiceInterfaceGenerator(loader, ClassGeneratorFactory.class);
+        Class<?> newClass = EJBUtils.generateSEI(generator);
         assertNotNull(newClass);
         assertEquals(generator.getGeneratedClassName(), newClass.getName());
     }

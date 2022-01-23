@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,13 +26,9 @@ import static java.lang.reflect.Modifier.ABSTRACT;
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._String;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._arg;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._classGenerator;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._clear;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._setClassLoader;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
@@ -42,17 +38,24 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
  */
 public class GenericHomeGenerator extends Generator {
 
-    /**
-     * This class name is relative to the classloader used, but has always the same name.
-     */
-    public static final String GENERIC_HOME_CLASSNAME = GenericHomeGenerator.class.getPackageName()
-        + ".GenericEJBHome_Generated";
+    public static final String GENERIC_HOME_CLASSNAME = "GenericEJBHome_Generated";
+    private final Class<?> anchorClass;
+    private final String packageName;
 
     /**
      * @param loader {@link ClassLoader} owning generated classes
+     * @param anchorClass
      */
-    public GenericHomeGenerator(ClassLoader loader) {
+    public GenericHomeGenerator(final ClassLoader loader, final Class<?> anchorClass) {
         super(loader);
+        this.anchorClass = anchorClass;
+        this.packageName = getClass().getPackageName();
+    }
+
+
+    @Override
+    public String getPackageName() {
+        return this.packageName;
     }
 
 
@@ -62,36 +65,21 @@ public class GenericHomeGenerator extends Generator {
      */
     @Override
     public final String getGeneratedClassName() {
-        return GENERIC_HOME_CLASSNAME;
+        return packageName + "." + GENERIC_HOME_CLASSNAME;
     }
 
 
     @Override
     public Class<?> getAnchorClass() {
-        return GenericHomeGenerator.class;
+        return this.anchorClass;
     }
 
 
     @Override
     public void evaluate() {
-        _clear();
-
-        _setClassLoader(loader);
-
-        String packageName = getPackageName(getGeneratedClassName());
-        String simpleName = getBaseName(getGeneratedClassName());
-
-        _package(packageName);
-
-        _interface(PUBLIC, simpleName, _t(GenericEJBHome.class.getName()));
-
+        _interface(PUBLIC, GENERIC_HOME_CLASSNAME, _t(GenericEJBHome.class.getName()));
         _method(PUBLIC | ABSTRACT, _t(Remote.class.getName()), "create", _t(RemoteException.class.getName()));
-
         _arg(_String(), "generatedBusinessIntf");
-
         _end();
-
-        _classGenerator();
     }
-
 }

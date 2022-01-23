@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -77,7 +78,6 @@ import com.sun.ejb.EjbInvocationFactory;
 import com.sun.ejb.InvocationInfo;
 import com.sun.ejb.MethodLockInfo;
 import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
-import com.sun.ejb.codegen.ServiceInterfaceGenerator;
 import com.sun.ejb.containers.interceptors.InterceptorManager;
 import com.sun.ejb.containers.interceptors.SystemInterceptorProxy;
 import com.sun.ejb.containers.util.MethodMap;
@@ -229,7 +229,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected static final String SINGLETON_BEAN_POOL_PROP = "singleton-bean-pool";
 
-    protected ClassLoader loader = null;
+    protected final ClassLoader loader;
     protected Class ejbClass = null;
     protected Class sfsbSerializedClass = null;
     protected Method ejbPassivateMethod = null;
@@ -352,7 +352,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     // Internal interface describing operation used to create an
     // instance of a remote business object.
-    protected Class remoteBusinessHomeIntf = null;
+    protected Class remoteBusinessHomeIntf;
 
     // Container implementation of internal EJB Business Home. May or may
     // not be same object as ejbRemoteBusinessHome, for example in the
@@ -505,7 +505,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     /**
      * This constructor is called from ContainerFactoryImpl when an EJB Jar is deployed.
      */
-    protected BaseContainer(ContainerType type, EjbDescriptor ejbDesc, ClassLoader loader, SecurityManager sm) throws Exception {
+    protected BaseContainer(final ContainerType type, final EjbDescriptor ejbDesc, final ClassLoader loader,
+        final SecurityManager sm) throws Exception {
         this.containerType = type;
         this.securityManager = sm;
 
@@ -551,8 +552,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                          * uses ASM directly instead of the CORBA codegen library since none of the corba .jars are part of the Web Profile.
                          */
                         if (!Serializable.class.isAssignableFrom(ejbClass)) {
-
-                            sfsbSerializedClass = EJBUtils.loadGeneratedSerializableClass(ejbClass.getClassLoader(), ejbClass.getName());
+                            sfsbSerializedClass = EJBUtils.loadGeneratedSerializableClass(loader, ejbClass);
                         }
 
                     }
@@ -590,20 +590,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 isRemote = true;
                 hasRemoteBusinessView = true;
 
-                remoteBusinessHomeIntf = EJBUtils.loadGeneratedGenericEJBHomeClass(loader);
+                remoteBusinessHomeIntf = EJBUtils.loadGeneratedGenericEJBHomeClass(loader, ejbClass);
 
                 for (String next : ejbDescriptor.getRemoteBusinessClassNames()) {
-
-                    // The generated remote business interface and the
-                    // client wrapper for the business interface are
-                    // produced dynamically.  The following call must be
-                    // made before any EJB 3.0 Remote business interface
-                    // runtime behavior is needed for a particular
-                    // classloader.
-                    String nextGen = EJBUtils.loadGeneratedRemoteBusinessClasses(loader, next);
-
-                    Class<?> genRemoteIntf = loader.loadClass(nextGen);
-
+                    Class<?> genRemoteIntf = EJBUtils.loadGeneratedRemoteBusinessClasses(loader, next);
                     RemoteBusinessIntfInfo info = new RemoteBusinessIntfInfo();
                     info.generatedRemoteIntf = genRemoteIntf;
                     info.remoteBusinessIntf = loader.loadClass(next);
@@ -617,7 +607,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                     remoteBusinessIntfInfo.put(genRemoteIntf.getName(), info);
 
-                    addToGeneratedMonitoredMethodInfo(nextGen, genRemoteIntf);
+                    addToGeneratedMonitoredMethodInfo(genRemoteIntf);
                 }
 
             }
@@ -642,7 +632,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 for (String next : ejbDescriptor.getLocalBusinessClassNames()) {
                     Class clz = loader.loadClass(next);
                     localBusinessIntfs.add(clz);
-                    addToGeneratedMonitoredMethodInfo(next, clz);
+                    addToGeneratedMonitoredMethodInfo(clz);
                 }
             }
 
@@ -652,7 +642,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                 ejbOptionalLocalBusinessHomeIntf = GenericEJBLocalHome.class;
                 Class clz = loader.loadClass(ejbDescriptor.getEjbClassName());
-                addToGeneratedMonitoredMethodInfo(ejbDescriptor.getEjbClassName(), clz);
+                addToGeneratedMonitoredMethodInfo(clz);
 
                 this.optIntfClassName = EJBUtils.getGeneratedOptionalInterfaceName(ejbClass.getName());
                 optIntfClassLoader = new EjbOptionalIntfGenerator(loader);
@@ -780,7 +770,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             localStrings.getLocalString("ejb.ejbhome_remove_on_nonentity", "EJBHome.remove() called on non entity container"));
     }
 
-    private void addToGeneratedMonitoredMethodInfo(String qualifiedClassName, Class generatedClass) {
+    private void addToGeneratedMonitoredMethodInfo(Class generatedClass) {
         monitoredGeneratedClasses.add(generatedClass);
     }
 
@@ -1092,8 +1082,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             Class serviceEndpointIntfClass = loader.loadClass(webServiceEndpoint.getServiceEndpointInterface());
 
             if (!serviceEndpointIntfClass.isInterface()) {
-                ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(loader, ejbClass);
-                serviceEndpointIntfClass = EJBUtils.generateSEI(generator);
+                serviceEndpointIntfClass = EJBUtils.generateSEI(loader, ejbClass);
                 if (serviceEndpointIntfClass == null) {
                     throw new RuntimeException(localStrings.getLocalString("ejb.error_generating_sei",
                         "Error in generating service endpoint interface class for EJB class {0}", this.ejbClass));
@@ -3270,7 +3259,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     private EJBHomeImpl instantiateEJBRemoteBusinessHomeImpl() throws Exception {
-
         EJBHomeInvocationHandler handler = getEJBHomeInvocationHandler(remoteBusinessHomeIntf);
         handler.setMethodMap(proxyInvocationInfoMap);
 
@@ -3280,7 +3268,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         handler.setProxy(ejbRemoteBusinessHomeProxy);
 
         remoteBusinessHomeImpl.setContainer(this);
-
         return remoteBusinessHomeImpl;
 
     }

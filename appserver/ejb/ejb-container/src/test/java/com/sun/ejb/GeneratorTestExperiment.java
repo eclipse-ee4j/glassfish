@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,16 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.ejb.codegen;
+package com.sun.ejb;
 
-public class InvalidBean extends GeneratorException {
 
-    private static final long serialVersionUID = -4858134858891698917L;
+/**
+ * @author David Matejcek
+ */
+public interface GeneratorTestExperiment {
 
-    /**
-     * Constructs the InvalidBean exception with the specified string.
-     */
-    public InvalidBean(String message) {
-        super(message);
-    }
+    String sayHello();
 }

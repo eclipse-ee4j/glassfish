@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,40 +17,59 @@
 
 package com.sun.ejb.codegen;
 
+import com.sun.ejb.ClassGenerator;
+import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
-import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
-import org.objectweb.asm.*;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
+import com.sun.enterprise.deployment.util.TypeUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ReflectPermission;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.io.Serializable;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
-import java.security.Permission;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.sun.enterprise.deployment.util.TypeUtil;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
 
-public class EjbOptionalIntfGenerator
-    implements Opcodes {
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
+import static org.objectweb.asm.Opcodes.ACC_INTERFACE;
+import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Opcodes.ACONST_NULL;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ARETURN;
+import static org.objectweb.asm.Opcodes.CHECKCAST;
+import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.NEW;
+import static org.objectweb.asm.Opcodes.PUTFIELD;
+import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.V11;
+
+public class EjbOptionalIntfGenerator {
 
     private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
 
     private static final String DELEGATE_FIELD_NAME = "__ejb31_delegate";
 
-    private static final Class[] emptyClassArray = new Class[] {};
+    private final Map<String, byte[]> classMap = new HashMap<>();
 
-    private Map<String, byte[]> classMap = new HashMap<String, byte[]>();
-
-    private ClassLoader loader;
+    private final ClassLoader loader;
 
     private ProtectionDomain protectionDomain;
 
@@ -57,34 +77,22 @@ public class EjbOptionalIntfGenerator
         this.loader = loader;
     }
 
-    public Class loadClass(final String name)
-        throws ClassNotFoundException
-    {
-        Class clz = null;
 
+    public Class loadClass(final String name) throws ClassNotFoundException {
+        Class clz = null;
         try {
             clz = loader.loadClass(name);
-        } catch(ClassNotFoundException cnfe) {
-
-            final byte[] classData = (byte []) classMap.get(name);
-
+        } catch (ClassNotFoundException cnfe) {
+            final byte[] classData = classMap.get(name);
             if (classData != null) {
-
-                clz = (Class) java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedAction() {
-                            public java.lang.Object run() {
-                                return makeClass(name, classData, protectionDomain, loader);
-                            }
-                        }
-                );
+                PrivilegedAction<Class<?>> action = () -> ClassGenerator.defineClass(loader, name, classData,
+                    protectionDomain);
+                clz = AccessController.doPrivileged(action);
             }
         }
-
-        if( clz == null ) {
-
+        if (clz == null) {
             throw new ClassNotFoundException(name);
         }
-
         return clz;
     }
 
@@ -100,17 +108,15 @@ public class EjbOptionalIntfGenerator
             interfaceNames[i] = Type.getType(interfaces[i]).getInternalName();
         }
 
-        if( protectionDomain == null ) {
+        if (protectionDomain == null) {
             protectionDomain = ejbClass.getProtectionDomain();
         }
 
         ClassWriter cw = new ClassWriter(INTF_FLAGS);
 
-//        ClassVisitor tv = (_debug)
-//                ? new TraceClassVisitor(cw, new PrintWriter(System.out)) : cw;
         ClassVisitor tv = cw;
         String intfInternalName = intfClassName.replace('.', '/');
-        tv.visit(V1_1, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
+        tv.visit(V11, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
                 intfInternalName, null,
                 Type.getType(Object.class).getInternalName(),
                 interfaceNames );
@@ -153,26 +159,22 @@ public class EjbOptionalIntfGenerator
         return sameSignature;
     }
 
-    public void generateOptionalLocalInterfaceSubClass(Class superClass, String subClassName,
-                                                       Class delegateClass)
-        throws Exception {
 
+    public void generateOptionalLocalInterfaceSubClass(Class superClass, String subClassName, Class delegateClass)
+        throws Exception {
         generateSubclass(superClass, subClassName, delegateClass, IndirectlySerializable.class);
     }
 
+
     public void generateSubclass(Class superClass, String subClassName, Class delegateClass, Class... interfaces)
-            throws Exception {
-
-
-        if( protectionDomain == null ) {
+        throws Exception {
+        if (protectionDomain == null) {
             protectionDomain = superClass.getProtectionDomain();
         }
 
         ClassWriter cw = new ClassWriter(INTF_FLAGS);
 
-       ClassVisitor tv = cw;
-//        ClassVisitor tv = (_debug)
-//                ? new TraceClassVisitor(cw, new PrintWriter(System.out)) : cw;
+        ClassVisitor tv = cw;
 
         String[] interfaceNames = new String[interfaces.length + 1];
         interfaceNames[0] = OptionalLocalInterfaceProvider.class.getName().replace('.', '/');
@@ -180,7 +182,7 @@ public class EjbOptionalIntfGenerator
             interfaceNames[i+1] = interfaces[i].getName().replace('.', '/');
         }
 
-        tv.visit(V1_1, ACC_PUBLIC, subClassName.replace('.', '/'), null,
+        tv.visit(V11, ACC_PUBLIC, subClassName.replace('.', '/'), null,
                 Type.getType(superClass).getInternalName(), interfaceNames);
 
         String fldDesc = Type.getDescriptor(delegateClass);
@@ -196,12 +198,12 @@ public class EjbOptionalIntfGenerator
             Constructor[] ctors = superClass.getConstructors();
             Constructor ctorWithParams = null;
             for(Constructor ctor : ctors) {
-            if(ctor.getParameterTypes().length == 0) {
-                        ctorWithParams = null;    //exists the no-arg ctor, use it
-                        break;
-                    } else if(ctorWithParams == null) {
-                ctorWithParams = ctor;
-            }
+                if(ctor.getParameterTypes().length == 0) {
+                    ctorWithParams = null;    //exists the no-arg ctor, use it
+                    break;
+                } else if(ctorWithParams == null) {
+                    ctorWithParams = ctor;
+                }
             }
 
             MethodVisitor cv = tv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -209,17 +211,16 @@ public class EjbOptionalIntfGenerator
             String paramTypeString = "()V";
             // if void, only one param (implicit 'this' param)
             int maxValue = 1;
-            if( ctorWithParams != null ) {
-            Class[] paramTypes = ctorWithParams.getParameterTypes();
-            for(int i = 0; i < paramTypes.length; i++) {
-                cv.visitInsn(ACONST_NULL);
+            if (ctorWithParams != null) {
+                Class[] paramTypes = ctorWithParams.getParameterTypes();
+                for (Class paramType : paramTypes) {
+                    cv.visitInsn(ACONST_NULL);
+                }
+                paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
+                // num params + one for 'this' pointer
+                maxValue = paramTypes.length + 1;
             }
-            paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
-            // num params + one for 'this' pointer
-            maxValue = paramTypes.length + 1;
-            }
-            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>",
-                   paramTypeString);
+            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>", paramTypeString);
             cv.visitInsn(RETURN);
             cv.visitMaxs(maxValue, 1);
         }
@@ -244,7 +245,7 @@ public class EjbOptionalIntfGenerator
         }
 
 
-        Set<java.lang.reflect.Method> allMethods = new HashSet<java.lang.reflect.Method>();
+        Set<java.lang.reflect.Method> allMethods = new HashSet<>();
 
         for (java.lang.reflect.Method m : superClass.getMethods()) {
             if (qualifiedAsBeanMethod(m)) {
@@ -274,8 +275,7 @@ public class EjbOptionalIntfGenerator
 
         // add toString() method if it was not overridden
         java.lang.reflect.Method mth = Object.class.getDeclaredMethod("toString");
-        if( !hasSameSignatureAsExisting(mth, allMethods)) {
-                        //generateBeanMethod(tv, subClassName, mth, delegateClass);
+        if (!hasSameSignatureAsExisting(mth, allMethods)) {
             generateToStringBeanMethod(tv, superClass);
         }
 
@@ -418,40 +418,5 @@ public class EjbOptionalIntfGenerator
         mg2.visitFieldInsn(PUTFIELD, subClassName.replace('.', '/'), DELEGATE_FIELD_NAME, delIntClassDesc);
         mg2.returnValue();
         mg2.endMethod();
-    }
-
-     // A Method for the protected ClassLoader.defineClass method, which we access
-    // using reflection.  This requires the supressAccessChecks permission.
-    private static final java.lang.reflect.Method defineClassMethod = AccessController.doPrivileged(
-        new PrivilegedAction<java.lang.reflect.Method>() {
-            public java.lang.reflect.Method run() {
-                try {
-                    java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(
-                    "defineClass", String.class,
-                    byte[].class, int.class, int.class,
-                    ProtectionDomain.class ) ;
-                    meth.setAccessible( true ) ;
-                    return meth ;
-                } catch (Exception exc) {
-                    throw new RuntimeException(
-                    "Could not find defineClass method!", exc ) ;
-                }
-            }
-        }
-    );
-
-    private static final Permission accessControlPermission = new ReflectPermission("suppressAccessChecks");
-
-    // This requires a permission check
-    private Class<?> makeClass(String name, byte[] def, ProtectionDomain pd, ClassLoader loader) {
-        SecurityManager sman = System.getSecurityManager();
-        if (sman != null) {
-            sman.checkPermission(accessControlPermission);
-        }
-        try {
-            return (Class) defineClassMethod.invoke(loader, name, def, 0, def.length, pd);
-        } catch (Exception exc) {
-            throw new RuntimeException("Could not invoke defineClass!", exc);
-        }
     }
 }

@@ -480,11 +480,8 @@ public class InterceptorManager {
             serializableInterceptorClasses[index] = interClass;
             instanceIndexMap.put(interClass.getName(), index);
             if (!Serializable.class.isAssignableFrom(interClass)) {
-
-                serializableInterceptorClasses[index] =
-                    EJBUtils.loadGeneratedSerializableClass(interClass.getClassLoader(),
-                            interClass.getName());
-
+                serializableInterceptorClasses[index] = EJBUtils
+                    .loadGeneratedSerializableClass(interClass.getClassLoader(), interClass);
             }
             index++;
         }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018-2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,7 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-
 // the label is unique and identifies the pod descriptor and its resulting pods
 // without this, the agent could be using a pod created from a different descriptor
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
@@ -24,7 +24,11 @@ def jobs = [
   "cdi_all",
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
-  "web_jsp"
+  "web_jsp",
+  "ejb_group_1",
+  "ejb_group_2",
+  "ejb_group_3",
+  "ejb_group_embedded"
 ]
 
 
@@ -33,12 +37,14 @@ def jobs_all = [
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
   "web_jsp",
-
-  "deployment_all",
   "ejb_group_1",
   "ejb_group_2",
   "ejb_group_3",
+  "ejb_group_embedded",
   "ejb_web_all",
+  "ejb_all",
+
+  "deployment_all",
   "ql_gf_nucleus_all",
   "nucleus_admin_all",
   "jdbc_all",

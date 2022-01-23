@@ -287,7 +287,6 @@ public class CLIBootstrap {
      */
     private void addProperties(final StringBuilder command) {
         command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
-        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
         command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));

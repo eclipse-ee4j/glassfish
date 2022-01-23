@@ -85,7 +85,7 @@
         <version_suffix />
         <major_version>6</major_version>
         <minor_version>2</minor_version>
-        <update_version>4</update_version>
+        <update_version>5</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
         <!-- Jakarta Faces -->

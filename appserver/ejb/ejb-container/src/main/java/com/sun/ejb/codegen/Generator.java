@@ -17,7 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.ejb.ClassGenerator;
 import com.sun.enterprise.loader.ASURLClassLoader;
 
 import java.io.ByteArrayOutputStream;
@@ -138,14 +137,6 @@ public abstract class Generator {
     private boolean useMethodHandles() {
         // The bootstrap CL used by embedded glassfish doesn't remember generated classes
         // Further ClassLoader.findClass calls will fail.
-        System.out.println(
-            "loader: " + loader + "\n"
-            + "loader.parent: " + loader.getParent() + "\n"
-            + "system CL: " + ClassLoader.getSystemClassLoader() + "\n"
-            + "platform CL: " + ClassLoader.getPlatformClassLoader()
-        );
-
-
         if (loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
             return false;
         }

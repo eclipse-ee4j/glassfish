@@ -17,7 +17,7 @@
 
 package org.glassfish.admin.rest.generator;
 
-import com.sun.ejb.ClassGenerator;
+import com.sun.ejb.codegen.ClassGenerator;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;

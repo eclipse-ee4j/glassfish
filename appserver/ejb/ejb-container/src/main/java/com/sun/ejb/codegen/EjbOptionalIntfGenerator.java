@@ -17,7 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.ejb.ClassGenerator;
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;

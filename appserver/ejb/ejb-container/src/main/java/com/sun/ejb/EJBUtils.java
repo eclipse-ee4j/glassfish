@@ -351,10 +351,9 @@ public class EJBUtils {
             .getGeneratedSerializableClassName(originalClass.getName());
         try {
             return loader.loadClass(generatedClassName);
-        } catch(ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             // Not loaded yet. Just continue
         }
-
         AsmSerializableBeanGenerator gen = new AsmSerializableBeanGenerator(loader, originalClass, generatedClassName);
         return gen.generateSerializableSubclass();
     }
@@ -443,25 +442,22 @@ public class EJBUtils {
         return java.security.AccessController.doPrivileged(action);
     }
 
-    public static void serializeObjectFields(
-                                             Object instance,
-                                             ObjectOutputStream oos)
-        throws IOException {
 
+    // warning: accessed by reflection (AsmSerializableBeanGenerator)
+    public static void serializeObjectFields(Object instance, ObjectOutputStream oos) throws IOException {
         serializeObjectFields(instance, oos, true);
     }
 
-    public static void serializeObjectFields(
-                                             Object instance,
-                                             ObjectOutputStream oos,
-                                             boolean usesSuperClass)
+
+    // warning: accessed by reflection (AsmSerializableBeanGenerator)
+    public static void serializeObjectFields(Object instance, ObjectOutputStream oos, boolean usesSuperClass)
         throws IOException {
 
         Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
         final ObjectOutputStream objOutStream = oos;
 
         // Write out list of fields eligible for serialization in sorted order.
-        for(Field next : getSerializationFields(clazz)) {
+        for (Field next : getSerializationFields(clazz)) {
 
             final Field nextField = next;
             final Object theInstance = instance;
@@ -489,41 +485,26 @@ public class EJBUtils {
                 }
 
                 objOutStream.writeObject(value);
-            } catch(Throwable t) {
-                if( _logger.isLoggable(FINE) ) {
-                    _logger.log(FINE, "=====> failed serializing field: " + nextField +
-                             " =====> of class: " + clazz + " =====> using: " + oos.getClass() +
-                             " =====> serializing value of type: " + ((value == null)? null : value.getClass().getName()) +
-                             " ===> Error: " + t);
-                    _logger.log(FINE, "", t);
+            } catch (Throwable t) {
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE,
+                        "Failed serializing field: " + nextField + " of " + clazz
+                            + " using: " + oos.getClass() + " serializing value of type: "
+                            + (value == null ? null : value.getClass().getName()) + ", cause: " + t);
                 }
-                IOException ioe = new IOException();
-                Throwable cause = (t instanceof InvocationTargetException) ?
-                    ((InvocationTargetException)t).getCause() : t;
-                ioe.initCause( cause );
-                throw ioe;
+                throw new IOException(t instanceof InvocationTargetException ? t.getCause() : t);
             }
         }
     }
 
     // note: accessed by reflection!
-    public static void deserializeObjectFields(
-                                               Object instance,
-                                               ObjectInputStream ois)
-        throws IOException {
-
+    public static void deserializeObjectFields(Object instance, ObjectInputStream ois) throws IOException {
         deserializeObjectFields(instance, ois, null, true);
-
     }
 
     // note: accessed by reflection!
-    public static void deserializeObjectFields(
-                                               Object instance,
-                                               ObjectInputStream ois,
-                                               Object replaceValue,
-                                               boolean usesSuperClass)
-        throws IOException {
-
+    public static void deserializeObjectFields(Object instance, ObjectInputStream ois, Object replaceValue,
+        boolean usesSuperClass) throws IOException {
         Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
         if( _logger.isLoggable(FINE) ) {
             _logger.log(FINE, "=====> Deserializing class: " + clazz);

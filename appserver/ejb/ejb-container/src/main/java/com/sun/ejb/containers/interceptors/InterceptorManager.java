@@ -62,20 +62,20 @@ public class InterceptorManager {
     // Set when initializing interceptors for a non-ejb
     private InterceptorInfo interceptorInfo;
 
-    private ClassLoader loader;
+    private final ClassLoader loader;
 
-    private Class beanClass;
+    private final Class beanClass;
 
-    private String beanClassName;
+    private final String beanClassName;
 
-    private Logger _logger;
+    private final Logger _logger;
 
     private Class[] interceptorClasses;
 
     private Class[] serializableInterceptorClasses;
 
-    private Map<String, Integer> instanceIndexMap
-            = new HashMap<String, Integer>();
+    private final Map<String, Integer> instanceIndexMap
+            = new HashMap<>();
 
     private boolean interceptorsExists;
 
@@ -88,7 +88,7 @@ public class InterceptorManager {
     // Optionally specified delegate to be set on SystemInterceptorProxy
     private Object runtimeInterceptor;
 
-    List<InterceptorDescriptor> frameworkInterceptors = new LinkedList<InterceptorDescriptor>();
+    List<InterceptorDescriptor> frameworkInterceptors = new LinkedList<>();
 
 
     public InterceptorManager(Logger _logger, BaseContainer container,
@@ -191,7 +191,7 @@ public class InterceptorManager {
             MethodDescriptor mDesc, Method beanMethod) {
 
         ArrayList<AroundInvokeInterceptor> interceptors =
-                new ArrayList<AroundInvokeInterceptor>();
+                new ArrayList<>();
 
         for(InterceptorDescriptor interceptor : frameworkInterceptors) {
             Set<LifecycleCallbackDescriptor> aroundInvokeDescs =
@@ -252,7 +252,7 @@ public class InterceptorManager {
 
 
         ArrayList<AroundInvokeInterceptor> interceptors =
-                new ArrayList<AroundInvokeInterceptor>();
+                new ArrayList<>();
 
 
         for(InterceptorDescriptor interceptor : frameworkInterceptors) {
@@ -279,7 +279,7 @@ public class InterceptorManager {
 
         List<EjbInterceptor> list = (ejbDesc != null) ?
                 ejbDesc.getAroundTimeoutInterceptors(mDesc) :
-                new LinkedList<EjbInterceptor>();
+                new LinkedList<>();
 
         for (EjbInterceptor interceptor : list) {
             String className = interceptor.getInterceptorClassName();
@@ -475,7 +475,6 @@ public class InterceptorManager {
         serializableInterceptorClasses = new Class[size];
         int index = 0;
         for (Class<?> interClass : classes) {
-
             interceptorClasses[index] = interClass;
             serializableInterceptorClasses[index] = interClass;
             instanceIndexMap.put(interClass.getName(), index);
@@ -573,7 +572,7 @@ public class InterceptorManager {
     private void initCallbackIndices(List<InterceptorDescriptor> callbackList,
                                      CallbackType callbackType) throws Exception {
 
-        ArrayList<CallbackInterceptor> callbacks = new ArrayList<CallbackInterceptor>();
+        ArrayList<CallbackInterceptor> callbacks = new ArrayList<>();
 
         int index = callbackType.ordinal();
 
@@ -614,7 +613,7 @@ public class InterceptorManager {
     private List<CallbackInterceptor> createCallbackInterceptors(CallbackType eventType,
                                                           InterceptorDescriptor inter,
                                                           ClassLoader classLoaderToUse) throws Exception {
-        List<CallbackInterceptor> callbackList = new ArrayList<CallbackInterceptor>();
+        List<CallbackInterceptor> callbackList = new ArrayList<>();
 
         List<LifecycleCallbackDescriptor> orderedCallbackMethods =
             inter.getOrderedCallbackDescriptors(eventType, classLoaderToUse);
@@ -758,7 +757,7 @@ public class InterceptorManager {
 
     public interface AroundInvokeContext extends InvocationContext {
 
-        public Object[] getInterceptorInstances();
+        Object[] getInterceptorInstances();
 
        /**
         * Called from Interceptor Chain to invoke the actual bean method.
@@ -768,13 +767,13 @@ public class InterceptorManager {
         * interceptor code, so it must not be changed in order for any exception
         * handling logic in that code to function properly.
         */
-        public  Object invokeBeanMethod()
+        Object invokeBeanMethod()
             throws Throwable;
 
     }
 
     public interface InterceptorChain {
-    public Object invokeNext(int index, AroundInvokeContext invCtx)
+    Object invokeNext(int index, AroundInvokeContext invCtx)
         throws Throwable;
     }
 

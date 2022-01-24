@@ -169,7 +169,8 @@ public class EntityContainer
     implements CacheListener
 {
 
-    private ThreadLocal ejbServant = new ThreadLocal() {
+    private final ThreadLocal ejbServant = new ThreadLocal() {
+        @Override
         protected Object initialValue() {
             return null;
         }
@@ -276,10 +277,10 @@ public class EntityContainer
 
         super.createCallFlowAgent(
                 isContainerManagedPers ? ComponentType.CMP : ComponentType.BMP);
-        _logger.log(Level.FINE,"[EntityContainer] Created EntityContainer: "
-                + logParams[0]);
+        _logger.log(Level.FINE,"[EntityContainer] Created EntityContainer: {0}", containerInfo);
     }
 
+    @Override
     protected void preInitialize(EjbDescriptor desc, ClassLoader loader) {
         EjbEntityDescriptor ed = (EjbEntityDescriptor)desc;
         isReentrant = ed.isReentrant();
@@ -402,6 +403,7 @@ public class EntityContainer
         this.idleBeansPassivator = null;
     }
 
+    @Override
     protected InvocationInfo postProcessInvocationInfo(
             InvocationInfo invInfo) {
         Method method = invInfo.method;
@@ -431,6 +433,7 @@ public class EntityContainer
     /**
      * Called from the ContainerFactory during initialization.
      */
+    @Override
     protected void initializeHome()
         throws Exception
     {
@@ -452,6 +455,7 @@ public class EntityContainer
     registerMonitorableComponents();
     }
 
+    @Override
     protected void registerMonitorableComponents() {
         super.registerMonitorableComponents();
     if (readyStore != null) {
@@ -490,11 +494,13 @@ public class EntityContainer
         _logger.log(Level.FINE, "[Entity Container] registered monitorable");
     }
 
+    @Override
     protected EjbMonitoringStatsProvider getMonitoringStatsProvider(
             String appName, String modName, String ejbName) {
         return new EntityBeanStatsProvider(this, getContainerId(), appName, modName, ejbName);
     }
 
+    @Override
     public void onReady() {
     }
 
@@ -557,6 +563,7 @@ public class EntityContainer
     /**
      * Implementation of BaseContainer method. This is never called.
      */
+    @Override
     protected EJBObjectImpl createEJBObjectImpl()
         throws CreateException, RemoteException
     {
@@ -564,6 +571,7 @@ public class EntityContainer
             "INTERNAL ERROR: EntityContainer.createEJBObject() called");
     }
 
+    @Override
     protected EJBLocalObjectImpl createEJBLocalObjectImpl()
         throws CreateException
     {
@@ -575,6 +583,7 @@ public class EntityContainer
     /**
      * Called when a remote EjbInvocation arrives for an EJB.
      */
+    @Override
     protected EJBObjectImpl getEJBObjectImpl(byte[] streamKey) {
         // First get the primary key of the EJB
         Object primaryKey;
@@ -592,6 +601,7 @@ public class EntityContainer
      * Called from EJBLocalObjectImpl.getLocalObject() while deserializing
      * a local object reference.
      */
+    @Override
     protected EJBLocalObjectImpl getEJBLocalObjectImpl(Object key) {
         return internalGetEJBLocalObjectImpl(key);
     }
@@ -600,6 +610,7 @@ public class EntityContainer
      * Called from BaseContainer.preInvoke which is called from the EJBObject
      * for local and remote invocations, and from the EJBHome for create/find.
      */
+    @Override
     protected ComponentContext _getContext(EjbInvocation inv) {
         if ( inv.invocationInfo.isCreateHomeFinder ) {
             // create*, find*, home methods
@@ -614,10 +625,11 @@ public class EntityContainer
             // context, so no need to synchronize.
             context.setState(BeanState.INVOKING);
 
-            if ( inv.invocationInfo.startsWithCreate )
+            if ( inv.invocationInfo.startsWithCreate ) {
                 preCreate(inv, context);
-            else if ( inv.invocationInfo.startsWithFind )
+            } else if ( inv.invocationInfo.startsWithFind ) {
                 preFind(inv, context);
+            }
 
 
             context.setLastTransactionStatus(-1);
@@ -632,15 +644,18 @@ public class EntityContainer
         // If we would invoke the EJB with the client's Tx,
         // try to get an EJB with that incomplete Tx.
         EntityContextImpl context = null;
-        if ( willInvokeWithClientTx(inv) )
+        if ( willInvokeWithClientTx(inv) ) {
             context = getEJBWithIncompleteTx(inv);
-        if ( context == null )
+        }
+        if ( context == null ) {
             context = getReadyEJB(inv);
+        }
 
         synchronized ( context ) {
-            if ( context.isInState(BeanState.INVOKING) && !isReentrant )
+            if ( context.isInState(BeanState.INVOKING) && !isReentrant ) {
                 throw new EJBException(
                     "EJB is already executing another request");
+            }
             if (context.isInState(BeanState.POOLED) ||
                 context.isInState(BeanState.DESTROYED)) {
                 // somehow a concurrent thread must have changed state.
@@ -686,12 +701,14 @@ public class EntityContainer
      * This is called from BaseContainer.postInvoke after
      * EntityContainer.preInvokeTx has been called.
      */
+    @Override
     public void releaseContext(EjbInvocation inv) {
         EntityContextImpl context = (EntityContextImpl)inv.context;
         boolean decrementedCalls = false; // End of IAS 4661771
 
-        if ( context.isInState(BeanState.DESTROYED) )
+        if ( context.isInState(BeanState.DESTROYED) ) {
             return;
+        }
 
         try {
             if ( context.hasReentrantCall() ) {
@@ -766,10 +783,11 @@ public class EntityContainer
                 context.decrementCalls();
                 context.setLastTransactionStatus(-1);
                 if ( status == -1 || status == Status.STATUS_COMMITTED
-                || status == Status.STATUS_NO_TRANSACTION )
+                || status == Status.STATUS_NO_TRANSACTION ) {
                     addReadyEJB(context);
-                else
+                } else {
                     passivateAndPoolEJB(context);
+                }
             } else {
                 // biz methods and ejbCreate
                 // The EJB is still associated with a Tx.
@@ -779,8 +797,7 @@ public class EntityContainer
                 doFlush( inv );
             }
         } catch ( Exception ex ) {
-            _logger.log(Level.FINE, "entitybean.container.release_context_exception",
-                        logParams);
+            _logger.log(Level.FINE, "entitybean.container.release_context_exception", containerInfo);
             _logger.log(Level.FINE, "",ex);
             throw new EJBException(ex);
         } finally {
@@ -808,12 +825,14 @@ public class EntityContainer
      * is called.
      * Note: postCreate will not be called if ejbCreate throws an exception
      */
+    @Override
     public void postCreate(EjbInvocation inv, Object primaryKey)
         throws CreateException
     {
-        if ( primaryKey == null )
+        if ( primaryKey == null ) {
             throw new EJBException(
                 "Null primary key returned by ejbCreate method");
+        }
 
         if ( (isRemote) && (!inv.isLocal) ) {
             // remote EjbInvocation: create EJBObject
@@ -845,6 +864,7 @@ public class EntityContainer
 
     //Called from EJB(Local)HomeInvocationHandler
     //Note: preFind is already called from getContext
+    @Override
     protected Object invokeFindByPrimaryKey(Method method,
         EjbInvocation inv, Object[] args)
     throws Throwable
@@ -854,12 +874,14 @@ public class EntityContainer
     return postFind(inv, pKeys, null);
     }
 
+    @Override
     protected void authorizeLocalGetPrimaryKey(EJBLocalRemoteObject ejbObj)
             throws EJBException {
         authorizeLocalMethod(BaseContainer.EJBLocalObject_getPrimaryKey);
         checkExists(ejbObj);
     }
 
+    @Override
     protected void authorizeRemoteGetPrimaryKey(EJBLocalRemoteObject ejbObj)
             throws RemoteException {
         authorizeRemoteMethod(BaseContainer.EJBObject_getPrimaryKey);
@@ -890,6 +912,7 @@ public class EntityContainer
     /**
      * Called from CMP PersistentManager
      */
+    @Override
     public void preSelect()
       throws jakarta.ejb.EJBException {
     // if the ejbSelect is being invoked with the client's transaction,
@@ -919,6 +942,7 @@ public class EntityContainer
      * after ejb.ejbFind**() has been called.
      * Note: postFind will not be called if ejbFindXXX throws an exception
      */
+    @Override
     public Object postFind(EjbInvocation inv, Object primaryKeys,
         Object[] findParams)
         throws FinderException
@@ -933,10 +957,11 @@ public class EntityContainer
                 Object primaryKey = e.nextElement();
                 Object ref;
                 if( primaryKey != null ) {
-                    if ( inv.isLocal )
+                    if ( inv.isLocal ) {
                         ref = getEJBLocalObjectForPrimaryKey(primaryKey);
-                    else
+                    } else {
                         ref = getEJBObjectStub(primaryKey, null);
+                    }
                     objrefs.add(ref);
                 } else {
                     objrefs.add(null);
@@ -952,10 +977,11 @@ public class EntityContainer
                 Object primaryKey = it.next();
                 Object ref;
                 if( primaryKey != null ) {
-                    if ( inv.isLocal )
+                    if ( inv.isLocal ) {
                         ref = getEJBLocalObjectForPrimaryKey(primaryKey);
-                    else
+                    } else {
                         ref = getEJBObjectStub(primaryKey, null);
+                    }
                     objrefs.add(ref);
                 } else {
                     objrefs.add(null);
@@ -964,10 +990,11 @@ public class EntityContainer
             return objrefs;
         } else {
             if( primaryKeys != null ) {
-                if ( inv.isLocal )
+                if ( inv.isLocal ) {
                     return getEJBLocalObjectForPrimaryKey(primaryKeys);
-                else
+                } else {
                     return getEJBObjectStub(primaryKeys, null);
+                }
             } else {
                 return null;
             }
@@ -981,6 +1008,7 @@ public class EntityContainer
      * for a primary key (home.findByPrimaryKey cant be used because it may
      * not run in the same tx).
      */
+    @Override
     public EJBObject getEJBObjectForPrimaryKey(Object pkey) {
         // create stub without creating EJBObject
         return getEJBObjectStub(pkey, null);
@@ -1027,6 +1055,7 @@ public class EntityContainer
      * @return The EJBLocalObject associated with the PK or null if it is cascade deleted.
      *
      */
+    @Override
     public EJBLocalObject getEJBLocalObjectForPrimaryKey
         (Object pkey, EJBContext ctx) {
         // EntityContextImpl should always be used in conjunction with EntityContainer so we can always cast
@@ -1045,8 +1074,7 @@ public class EntityContainer
         ActiveTxCache activeTxCache = (current == null) ? null :
         (ActiveTxCache) (ejbContainerUtilImpl.getActiveTxCache(current));
             if (activeTxCache != null) {
-        EntityContextImpl ctx2 = (EntityContextImpl)
-            activeTxCache.get(this, pkey);
+        EntityContextImpl ctx2 = activeTxCache.get(this, pkey);
         if ((ctx2 != null) &&
             (ctx2.isCascadeDeleteAfterSuperEJBRemove())) {
             return null;
@@ -1065,6 +1093,7 @@ public class EntityContainer
      * for a primary key (findByPrimaryKey cant be used because it may
      * not run in the same tx).
      */
+    @Override
     public EJBLocalObject getEJBLocalObjectForPrimaryKey(Object pkey) {
         EJBLocalObjectImpl localObjectImpl =
             internalGetEJBLocalObjectImpl(pkey);
@@ -1074,6 +1103,7 @@ public class EntityContainer
 
     // Called from EJBHomeImpl.remove(primaryKey),
     // EJBLocalHomeImpl.remove(primaryKey)
+    @Override
     protected void doEJBHomeRemove(Object primaryKey, Method removeMethod,
         boolean local)
         throws RemoveException, EJBException, RemoteException
@@ -1090,6 +1120,7 @@ public class EntityContainer
 
     // Called from EJBObjectImpl.remove, EJBLocalObjectImpl.remove,
     // and removeBean above.
+    @Override
     protected void removeBean(EJBLocalRemoteObject ejbo, Method removeMethod,
             boolean local)
         throws RemoveException, EJBException, RemoteException
@@ -1111,7 +1142,7 @@ public class EntityContainer
             preInvoke(i);
             removeBean(i);
         } catch(Exception e) {
-            _logger.log(Level.SEVERE,"entitybean.container.preinvoke_exception",logParams);
+            _logger.log(Level.SEVERE,"entitybean.container.preinvoke_exception", containerInfo);
             _logger.log(Level.SEVERE,"",e);
             i.exception = e;
         } finally {
@@ -1177,14 +1208,14 @@ public class EntityContainer
             cancelTimers(primaryKey);
         } catch ( RemoveException ex ) {
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,"entitybean.container.local_remove_exception",logParams);
+                _logger.log(Level.FINE,"entitybean.container.local_remove_exception", containerInfo);
                 _logger.log(Level.FINE,"",ex);
             }
             throw ex;
         }
         catch ( Exception ex ) {
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,"entitybean.container.remove_bean_exception",logParams);
+                _logger.log(Level.FINE,"entitybean.container.remove_bean_exception", containerInfo);
                 _logger.log(Level.FINE,"",ex);
             }
             throw new EJBException(ex);
@@ -1219,6 +1250,7 @@ public class EntityContainer
      * Remove a bean. Used by the PersistenceManager.
      * This is needed because the PM's remove must bypass tx/security checks.
      */
+    @Override
     public void removeBeanUnchecked(EJBLocalObject localObj) {
         // First convert client EJBLocalObject to EJBLocalObjectImpl
         EJBLocalObjectImpl localObjectImpl =
@@ -1231,6 +1263,7 @@ public class EntityContainer
      * Remove a bean. Used by the PersistenceManager.
      * This is needed because the PM's remove must bypass tx/security checks.
      */
+    @Override
     public void removeBeanUnchecked(Object primaryKey) {
         EJBLocalRemoteObject ejbo;
         if ( isLocal ) {
@@ -1336,6 +1369,7 @@ public class EntityContainer
      * from BaseContainer.postInvokeTx, getReadyEJB,
      * afterBegin, beforeCompletion, passivateEJB.
      */
+    @Override
     protected void forceDestroyBean(EJBContextImpl ctx) {
         // Something bad happened (such as a RuntimeException),
         // so kill the bean and let it be GC'ed
@@ -1394,6 +1428,7 @@ public class EntityContainer
 
     // Called before invoking a bean with no Tx or with a new Tx.
     // Check if the bean is associated with an unfinished tx.
+    @Override
     protected void checkUnfinishedTx(Transaction prevTx, EjbInvocation inv) {
 
         try {
@@ -1415,6 +1450,7 @@ public class EntityContainer
      * Called before executing non-business methods of EJBLocalObject.
      * @exception NoSuchObjectLocalException if the object has been removed.
      */
+    @Override
     protected void checkExists(EJBLocalRemoteObject ejbObj) {
         // Need to call ejbLoad to see if persistent state is removed.
         // However, the non-business methods dont have a transaction attribute.
@@ -1422,12 +1458,14 @@ public class EntityContainer
     }
 
     // Called from BaseContainer.SyncImpl
+    @Override
     protected void afterBegin(EJBContextImpl ctx) {
         EntityContextImpl context  = (EntityContextImpl)ctx;
 
         // Note: EntityBeans are not allowed to be TX_BEAN_MANAGED
-        if ( context.isInState(BeanState.DESTROYED) )
+        if ( context.isInState(BeanState.DESTROYED) ) {
             return;
+        }
 
         if ( !containerStateManager.isNullEJBObject(context)
              || !containerStateManager.isNullEJBLocalObject(context) ) {
@@ -1463,6 +1501,7 @@ public class EntityContainer
     }
 
     // Called from BaseContainer.SyncImpl.beforeCompletion, postInvokeNoTx
+    @Override
     protected void beforeCompletion(EJBContextImpl ctx) {
         EntityContextImpl context = (EntityContextImpl)ctx;
         if ( context.isInState(BeanState.DESTROYED) ) {
@@ -1523,6 +1562,7 @@ public class EntityContainer
     // getting reply from bean). So whatever is done here *MUST* be
     // consistent with releaseContext, and the bean should end up in
     // the correct state.
+    @Override
     protected void afterCompletion(EJBContextImpl ctx, int status) {
         EntityContextImpl context = (EntityContextImpl)ctx;
         if ( context.isInState(BeanState.DESTROYED) ) {
@@ -1670,6 +1710,7 @@ public class EntityContainer
     }
 
     // CacheListener interface
+    @Override
     public void trimEvent(Object primaryKey, Object context) {
         synchronized (asyncTaskSemaphore) {
             passivationCandidates.add(context);
@@ -1692,6 +1733,7 @@ public class EntityContainer
         implements Runnable
     {
 
+        @Override
         public void run() {
             final Thread currentThread = Thread.currentThread();
             final ClassLoader previousClassLoader =
@@ -1706,6 +1748,7 @@ public class EntityContainer
                 } else {
                     java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             currentThread.setContextClassLoader(myClassLoader);
                             return null;
@@ -1743,6 +1786,7 @@ public class EntityContainer
                 } else {
                     java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             currentThread.setContextClassLoader(previousClassLoader);
                             return null;
@@ -1755,6 +1799,7 @@ public class EntityContainer
     }
 
     // Called from AbstractCache
+    @Override
     protected boolean passivateEJB(ComponentContext ctx) {
         if (containerState != CONTAINER_STARTED) {
             return false;
@@ -1779,8 +1824,9 @@ public class EntityContainer
         boolean wasPassivated = false;
 
         // check state after locking ctx
-        if ( !context.isInState(BeanState.READY) )
+        if ( !context.isInState(BeanState.READY) ) {
             return false;
+        }
         try {
             invocationManager.preInvoke(inv);
 
@@ -1861,8 +1907,7 @@ public class EntityContainer
             }
             return localObjImpl;
         } catch ( Exception ex ) {
-            _logger.log(Level.SEVERE,"entitybean.container.get_ejb_local_object_exception",
-                        logParams);
+            _logger.log(Level.SEVERE,"entitybean.container.get_ejb_local_object_exception", containerInfo);
             _logger.log(Level.SEVERE,"",ex);
             throw new EJBException(ex);
         }
@@ -1968,7 +2013,7 @@ public class EntityContainer
             return ejbObjImpl;
         }
         catch ( Exception ex ) {
-            _logger.log(Level.FINE, "entitybean.container.get_ejb_context_exception", logParams);
+            _logger.log(Level.FINE, "entitybean.container.get_ejb_context_exception", containerInfo);
             _logger.log(Level.FINE,"",ex);
             throw new EJBException(ex);
         }
@@ -2004,8 +2049,9 @@ public class EntityContainer
 
     // called from addReadyEJB and afterCompletion
     protected void passivateAndPoolEJB(EntityContextImpl context) {
-        if ( context.isInState(BeanState.DESTROYED) || context.isInState(BeanState.POOLED) )
+        if ( context.isInState(BeanState.DESTROYED) || context.isInState(BeanState.POOLED) ) {
             return;
+        }
 
         // if ( context.isPooled() ) {
         // context.isPooled(false);
@@ -2214,12 +2260,14 @@ public class EntityContainer
             this.cache = cache;
         }
 
+        @Override
         public void run() {
             if (timerValid) {
                 cache.trimExpiredEntries(Integer.MAX_VALUE);
             }
         }
 
+    @Override
     public boolean cancel() {
         cache = null;
         return super.cancel();
@@ -2240,6 +2288,7 @@ public class EntityContainer
             this.pkHashCode = primaryKey.hashCode();
         }
 
+        @Override
         public final int hashCode() {
             // Note: this hashcode need not be persistent across
             // activations of this process.
@@ -2251,6 +2300,7 @@ public class EntityContainer
             return pkHashCode;
         }
 
+        @Override
         public final boolean equals(Object obj) {
             if ( !(obj instanceof EJBTxKey) ) {
                 return false;
@@ -2345,38 +2395,34 @@ public class EntityContainer
     } //PoolProperties
 
 
+    @Override
     protected boolean isIdentical(EJBObjectImpl ejbObjImpl, EJBObject other)
             throws RemoteException {
-        if ( other == ejbObjImpl.getStub() ) {
+        if (other == ejbObjImpl.getStub()) {
             return true;
-        } else {
-            try {
-                // EJBObject may be a remote object.
-                // Compare homes. See EJB2.0 spec section 9.8.
-                if ( !getProtocolManager().isIdentical(ejbHomeStub,
-                                              other.getEJBHome()))
-                    return false;
-
-                // Compare primary keys.
-                if (!ejbObjImpl.getPrimaryKey().equals(other.getPrimaryKey())) {
-                    return false;
-                }
-
-                return true;
-            } catch ( Exception ex ) {
-                _logger.log(Level.INFO, "entitybean.container.ejb_comparison_exception",
-                            logParams);
-                _logger.log(Level.INFO, "", ex);
-                throw new RemoteException("Exception in isIdentical()", ex);
+        }
+        try {
+            // EJBObject may be a remote object.
+            // Compare homes. See EJB2.0 spec section 9.8.
+            if (!getProtocolManager().isIdentical(ejbHomeStub, other.getEJBHome())) {
+                return false;
             }
+
+            // Compare primary keys.
+            if (!ejbObjImpl.getPrimaryKey().equals(other.getPrimaryKey())) {
+                return false;
+            }
+
+            return true;
+        } catch (Exception ex) {
+            _logger.log(Level.INFO, "entitybean.container.ejb_comparison_exception", containerInfo);
+            _logger.log(Level.INFO, "", ex);
+            throw new RemoteException("Exception in isIdentical()", ex);
         }
     }
 
 
-    protected void callEJBLoad(EntityBean ejb, EntityContextImpl context,
-                               boolean activeTx)
-        throws Exception
-    {
+    protected void callEJBLoad(EntityBean ejb, EntityContextImpl context, boolean activeTx) throws Exception {
         try {
             context.setInEjbLoad(true);
             ejb.ejbLoad();
@@ -2389,9 +2435,8 @@ public class EntityContainer
         }
     }
 
-    protected void callEJBStore(EntityBean ejb, EntityContextImpl context)
-        throws Exception
-    {
+
+    protected void callEJBStore(EntityBean ejb, EntityContextImpl context) throws Exception {
         try {
             context.setInEjbStore(true);
             ejb.ejbStore();
@@ -2401,8 +2446,8 @@ public class EntityContainer
         }
     }
 
-    protected void callEJBRemove(EntityBean ejb, EntityContextImpl context)
-            throws Exception {
+
+    protected void callEJBRemove(EntityBean ejb, EntityContextImpl context) throws Exception {
         Exception exc = null;
         try {
             // TODO - check if it is needed: context.setInEjbRemove(true);
@@ -2422,6 +2467,7 @@ public class EntityContainer
         }
     }
 
+    @Override
     protected void doTimerInvocationInit(EjbInvocation inv, Object primaryKey)
             throws Exception {
         if( isRemote ) {
@@ -2437,6 +2483,7 @@ public class EntityContainer
         }
     }
 
+    @Override
     protected void doConcreteContainerShutdown(boolean appBeingUndeployed) {
 
         String ejbName = ejbDescriptor.getName();
@@ -2529,12 +2576,13 @@ public class EntityContainer
     private class EntityContextFactory
         implements ObjectFactory
     {
-        private EntityContainer entityContainer;
+        private final EntityContainer entityContainer;
 
         public EntityContextFactory(EntityContainer entityContainer) {
             this.entityContainer = entityContainer;
         }
 
+        @Override
         public Object create(Object param) {
             EntityContextImpl entityCtx = null;
             EjbInvocation ejbInv = null;
@@ -2570,6 +2618,7 @@ public class EntityContainer
         }
 
 
+        @Override
         public void destroy(Object object) {
             if (object == null) {
                 //means that this is called through forceDestroyBean
@@ -2752,6 +2801,7 @@ public class EntityContainer
         readyStore.remove(primaryKey, context);
     }
 
+    @Override
     protected void addProxyInterfacesSetClass(Set proxyInterfacesSet, boolean local) {
         if( ejbDescriptor.getIASEjbExtraDescriptors().isIsReadOnlyBean() ) {
             if (local) {
@@ -2763,6 +2813,7 @@ public class EntityContainer
 
     }
 
+    @Override
     protected void doFlush( EjbInvocation inv ) {
         if( !inv.invocationInfo.flushEnabled ||
             inv.exception != null )  {
@@ -2863,10 +2914,12 @@ public class EntityContainer
         }
 
         //EJBObjectCacheListener interface
+        @Override
         public void handleOverflow(Object key) {
             doCleanup(key);
         }
 
+        @Override
         public void handleBatchOverflow(ArrayList paramKeys) {
             int size = paramKeys.size();
             synchronized (lock) {
@@ -2889,6 +2942,7 @@ public class EntityContainer
             }
         }
 
+        @Override
         public void run() {
             final Thread currentThread = Thread.currentThread();
             final ClassLoader previousClassLoader =
@@ -2902,6 +2956,7 @@ public class EntityContainer
                 } else {
                     java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             currentThread.setContextClassLoader(myClassLoader);
                             return null;
@@ -2939,6 +2994,7 @@ public class EntityContainer
                 } else {
                     java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             currentThread.setContextClassLoader(previousClassLoader);
                             return null;
@@ -2961,6 +3017,7 @@ public class EntityContainer
         protected EJBObjectCacheVictimHandler() {
         }
 
+        @Override
         protected void doCleanup(Object key) {
             removeEJBObjectFromStore(key, false);
         }
@@ -2971,48 +3028,57 @@ public class EntityContainer
     class EntityCacheStatsProvider
     implements EjbCacheStatsProviderDelegate
     {
-    private BaseCache cache;
-    private int confMaxCacheSize;
+    private final BaseCache cache;
+    private final int confMaxCacheSize;
 
     EntityCacheStatsProvider(BaseCache cache, int maxCacheSize) {
         this.cache = cache;
         this.confMaxCacheSize = maxCacheSize;
     }
 
+    @Override
     public int getCacheHits() {
         return ((Integer) cache.getStatByName(
             Constants.STAT_BASECACHE_HIT_COUNT)).intValue();
     }
 
+    @Override
     public int getCacheMisses() {
         return ((Integer) cache.getStatByName(
             Constants.STAT_BASECACHE_MISS_COUNT)).intValue();
     }
 
+    @Override
     public int getNumBeansInCache() {
         return cache.getEntryCount();
     }
 
+    @Override
     public int getNumExpiredSessionsRemoved() {
         return 0;
     }
 
+    @Override
     public int getNumPassivationErrors() {
         return totalPassivationErrors;
     }
 
+    @Override
     public int getNumPassivations() {
         return totalPassivations;
     }
 
+    @Override
     public int getNumPassivationSuccess() {
         return totalPassivations - totalPassivationErrors;
     }
 
+    @Override
     public int getMaxCacheSize() {
         return this.confMaxCacheSize;
     }
 
+    @Override
     public void appendStats(StringBuffer sbuf) {
         sbuf.append("[Cache: ")
         .append("Size=").append(getNumBeansInCache()).append("; ")
@@ -3029,7 +3095,7 @@ public class EntityContainer
 class ActiveTxCache {
 
     private EntityContextImpl[]        buckets;
-    private int                bucketMask;
+    private final int                bucketMask;
 
     ActiveTxCache(int numBuckets) {
     this.bucketMask = numBuckets - 1;

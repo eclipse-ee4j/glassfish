@@ -263,8 +263,8 @@ public final class StatefulSessionContainer
     private final static long CONCURRENCY_NOT_ALLOWED = 0;
     private final static long BLOCK_INDEFINITELY = -1;
 
-    private ArrayList passivationCandidates = new ArrayList();
-    private Object asyncTaskSemaphore = new Object();
+    private final ArrayList passivationCandidates = new ArrayList();
+    private final Object asyncTaskSemaphore = new Object();
 
 
     private int asyncTaskCount = 0;
@@ -278,21 +278,21 @@ public final class StatefulSessionContainer
     private LruSessionCache sessionBeanCache;
     private BackingStore<Serializable, SimpleMetadata> backingStore;
     private SFSBUUIDUtil uuidGenerator;
-    private ArrayList scheduledTimerTasks = new ArrayList();
+    private final ArrayList scheduledTimerTasks = new ArrayList();
 
     private int statMethodReadyCount = 0;
 
-    private Level TRACE_LEVEL = Level.FINE;
+    private final Level TRACE_LEVEL = Level.FINE;
 
-    private String ejbName;
+    private final String ejbName;
 
     private boolean isHAEnabled;
     private int removalGracePeriodInSeconds;
 
-    private InvocationInfo postConstructInvInfo;
-    private InvocationInfo preDestroyInvInfo;
-    private InvocationInfo postActivateInvInfo;
-    private InvocationInfo prePassivateInvInfo;
+    private final InvocationInfo postConstructInvInfo;
+    private final InvocationInfo preDestroyInvInfo;
+    private final InvocationInfo postActivateInvInfo;
+    private final InvocationInfo prePassivateInvInfo;
 
     private StatefulSessionStoreMonitor sfsbStoreMonitor;
 
@@ -303,7 +303,7 @@ public final class StatefulSessionContainer
     private Method afterBeginMethod;
     private Method beforeCompletionMethod;
     private Method afterCompletionMethod;
-    private boolean isPassivationCapable;
+    private final boolean isPassivationCapable;
 
     /*
      * Cache for keeping ref count for shared extended entity manager.
@@ -311,10 +311,10 @@ public final class StatefulSessionContainer
      */
 
     private static final Map<EntityManager, EEMRefInfo> extendedEMReferenceCountMap
-            = new HashMap<EntityManager, EEMRefInfo>();
+            = new HashMap<>();
 
     private static final Map<EEMRefInfoKey, EntityManager> eemKey2EEMMap
-            = new HashMap<EEMRefInfoKey, EntityManager>();
+            = new HashMap<>();
 
     /**
      * This constructor is called from the JarManager when a Jar is deployed.
@@ -346,6 +346,7 @@ public final class StatefulSessionContainer
         isPassivationCapable = sfulDesc.isPassivationCapable();
     }
 
+    @Override
     public boolean isPassivationCapable() {
         return isPassivationCapable;
     }
@@ -361,6 +362,7 @@ public final class StatefulSessionContainer
         return inv;
     }
 
+    @Override
     protected void initializeHome()
             throws Exception {
         super.initializeHome();
@@ -427,6 +429,7 @@ public final class StatefulSessionContainer
 
         java.security.AccessController.doPrivileged(
             new java.security.PrivilegedExceptionAction() {
+                @Override
                 public java.lang.Object run() throws Exception {
                     if( !methodAccessible.isAccessible() ) {
                         methodAccessible.setAccessible(true);
@@ -439,6 +442,7 @@ public final class StatefulSessionContainer
 
     // Called before invoking a bean with no Tx or with a new Tx.
     // Check if the bean is associated with an unfinished tx.
+    @Override
     protected void checkUnfinishedTx(Transaction prevTx, EjbInvocation inv) {
         try {
             if ( inv.invocationInfo.isBusinessMethod && prevTx != null &&
@@ -488,6 +492,7 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     protected void registerMonitorableComponents() {
         registerEjbCacheProbeProvider();
         super.registerMonitorableComponents();
@@ -552,6 +557,7 @@ public final class StatefulSessionContainer
         return sbuf.toString();
     }
 
+    @Override
     protected EjbMonitoringStatsProvider getMonitoringStatsProvider(
             String appName, String modName, String ejbName) {
         StatefulSessionBeanStatsProvider statsProvider = new StatefulSessionBeanStatsProvider(
@@ -578,7 +584,7 @@ public final class StatefulSessionContainer
     }
 **/
 
-    private static final String convertCtxStateToString(
+    private static String convertCtxStateToString(
             SessionContextImpl sc) {
         switch (sc.getState()) {
             case PASSIVATED:
@@ -595,18 +601,20 @@ public final class StatefulSessionContainer
         return "UNKNOWN-STATE";
     }
 
+    @Override
     protected boolean isIdentical(EJBObjectImpl ejbo, EJBObject other)
             throws RemoteException {
 
-        if (other == ejbo.getStub())
+        if (other == ejbo.getStub()) {
             return true;
-        else {
+        } else {
             try {
                 // other may be a stub for a remote object.
-                if (getProtocolManager().isIdentical(ejbo.getStub(), other))
+                if (getProtocolManager().isIdentical(ejbo.getStub(), other)) {
                     return true;
-                else
+                } else {
                     return false;
+                }
             } catch (Exception ex) {
                 _logger.log(Level.FINE,
                         "Exception while getting stub for ejb", ex);
@@ -622,6 +630,7 @@ public final class StatefulSessionContainer
      * ejbCreate on the new bean after createEJBObject() returns.
      * Return the EJBObject for the bean.
      */
+    @Override
     protected EJBObjectImpl createEJBObjectImpl()
             throws CreateException, RemoteException {
         try {
@@ -634,9 +643,9 @@ public final class StatefulSessionContainer
 
             _logger.log(Level.WARNING, CREATE_EJBOBJECT_EXCEPTION, new Object[]{ejbDescriptor.getName(), ex});
 
-            if (ex instanceof EJBException)
+            if (ex instanceof EJBException) {
                 throw (EJBException) ex;
-            else {
+            } else {
                 CreateException ce =
                         new CreateException("ERROR creating stateful SessionBean");
                 ce.initCause(ex);
@@ -645,6 +654,7 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     protected EJBObjectImpl createRemoteBusinessObjectImpl()
             throws CreateException, RemoteException {
         try {
@@ -658,9 +668,9 @@ public final class StatefulSessionContainer
 
             _logger.log(Level.WARNING, CREATE_EJBOBJECT_EXCEPTION, new Object[]{ejbDescriptor.getName(), ex});
 
-            if (ex instanceof EJBException)
+            if (ex instanceof EJBException) {
                 throw (EJBException) ex;
-            else {
+            } else {
                 CreateException ce =
                         new CreateException("ERROR creating stateful SessionBean");
                 ce.initCause(ex);
@@ -677,6 +687,7 @@ public final class StatefulSessionContainer
      * ejbCreate on the new bean after createEJBLocalObjectImpl() returns.
      * Return the EJBLocalObject for the bean.
      */
+    @Override
     protected EJBLocalObjectImpl createEJBLocalObjectImpl()
             throws CreateException {
         try {
@@ -693,9 +704,9 @@ public final class StatefulSessionContainer
 
             _logger.log(Level.WARNING, CREATE_EJBLOCALOBJECT_EXCEPTION, new Object[]{ejbDescriptor.getName(), ex});
 
-            if (ex instanceof EJBException)
+            if (ex instanceof EJBException) {
                 throw (EJBException) ex;
-            else {
+            } else {
                 CreateException ce =
                         new CreateException("ERROR creating stateful SessionBean");
                 ce.initCause(ex);
@@ -707,6 +718,7 @@ public final class StatefulSessionContainer
     /**
      * Internal creation event for Local Business view of SFSB
      */
+    @Override
     EJBLocalObjectImpl createEJBLocalBusinessObjectImpl(boolean localBeanView)
             throws CreateException {
         try {
@@ -830,7 +842,7 @@ public final class StatefulSessionContainer
         Set<EntityManagerReferenceDescriptor> emRefs
                 = ejbDescriptor.getEntityManagerReferenceDescriptors();
         Iterator<EntityManagerReferenceDescriptor> iter = emRefs.iterator();
-        Set<EEMRefInfo> eemRefInfos = new HashSet<EEMRefInfo>();
+        Set<EEMRefInfo> eemRefInfos = new HashSet<>();
         while (iter.hasNext()) {
             EntityManagerReferenceDescriptor refDesc = iter.next();
             if (refDesc.getPersistenceContextType() ==
@@ -898,8 +910,7 @@ public final class StatefulSessionContainer
     private PhysicalEntityManagerWrapper findExtendedEMFromInvList(EntityManagerFactory emf) {
         PhysicalEntityManagerWrapper em = null;
 
-        ComponentInvocation compInv = (ComponentInvocation)
-                invocationManager.getCurrentInvocation();
+        ComponentInvocation compInv = invocationManager.getCurrentInvocation();
         if (compInv != null) {
             if (compInv.getInvocationType() == ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
                 EjbInvocation ejbInv = (EjbInvocation) compInv;
@@ -915,6 +926,7 @@ public final class StatefulSessionContainer
         return em;
     }
 
+    @Override
     public EntityManager lookupExtendedEntityManager(EntityManagerFactory emf) {
         PhysicalEntityManagerWrapper physicalEntityManagerWrapper = findExtendedEMFromInvList(emf);
         return physicalEntityManagerWrapper == null ? null : physicalEntityManagerWrapper.getEM();
@@ -976,8 +988,9 @@ public final class StatefulSessionContainer
     // called from createEJBObject and activateEJB and createEJBLocalObjectImpl
     private EJBLocalObjectImpl createEJBLocalObjectImpl
             (SessionContextImpl context) throws Exception {
-        if (context.getEJBLocalObjectImpl() != null)
+        if (context.getEJBLocalObjectImpl() != null) {
             return context.getEJBLocalObjectImpl();
+        }
 
         // create EJBLocalObject
         EJBLocalObjectImpl localObjImpl = instantiateEJBLocalObjectImpl(context.getInstanceKey());
@@ -1007,8 +1020,9 @@ public final class StatefulSessionContainer
 
     private EJBLocalObjectImpl createEJBLocalBusinessObjectImpl
             (SessionContextImpl context) throws Exception {
-        if (context.getEJBLocalBusinessObjectImpl() != null)
+        if (context.getEJBLocalBusinessObjectImpl() != null) {
             return context.getEJBLocalBusinessObjectImpl();
+        }
 
         EJBLocalObjectImpl localBusinessObjImpl =
                 instantiateEJBLocalBusinessObjectImpl();
@@ -1038,8 +1052,9 @@ public final class StatefulSessionContainer
 
     private EJBLocalObjectImpl createOptionalEJBLocalBusinessObjectImpl
             (SessionContextImpl context) throws Exception {
-        if (context.getOptionalEJBLocalBusinessObjectImpl() != null)
+        if (context.getOptionalEJBLocalBusinessObjectImpl() != null) {
             return context.getOptionalEJBLocalBusinessObjectImpl();
+        }
 
         EJBLocalObjectImpl optionalLocalBusinessObjImpl =
                 instantiateOptionalEJBLocalBusinessObjectImpl();
@@ -1071,8 +1086,9 @@ public final class StatefulSessionContainer
     private EJBObjectImpl createEJBObjectImpl(SessionContextImpl context)
             throws Exception {
 
-        if (context.getEJBObjectImpl() != null)
+        if (context.getEJBObjectImpl() != null) {
             return context.getEJBObjectImpl();
+        }
 
         // create EJBObject and associate it with the key
         Object sessionKey = context.getInstanceKey();
@@ -1115,8 +1131,9 @@ public final class StatefulSessionContainer
     private EJBObjectImpl createRemoteBusinessObjectImpl
             (SessionContextImpl context) throws Exception {
 
-        if (context.getEJBRemoteBusinessObjectImpl() != null)
+        if (context.getEJBRemoteBusinessObjectImpl() != null) {
             return context.getEJBRemoteBusinessObjectImpl();
+        }
 
         // create EJBObject
         EJBObjectImpl ejbBusinessObjImpl =
@@ -1163,6 +1180,7 @@ public final class StatefulSessionContainer
 
     // Called from EJBObjectImpl.remove, EJBLocalObjectImpl.remove,
     // EJBHomeImpl.remove(Handle).
+    @Override
     protected void removeBean(EJBLocalRemoteObject ejbo, Method removeMethod,
                     boolean local)
             throws RemoveException, EJBException {
@@ -1273,12 +1291,14 @@ public final class StatefulSessionContainer
      * Note: EJB2.0 section 18.3.1 says that discarding an EJB
      * means that no methods other than finalize() should be invoked on it.
      */
+    @Override
     protected void forceDestroyBean(EJBContextImpl ctx) {
         SessionContextImpl sc = (SessionContextImpl) ctx;
 
         synchronized (sc) {
-            if (sc.getState() == EJBContextImpl.BeanState.DESTROYED)
+            if (sc.getState() == EJBContextImpl.BeanState.DESTROYED) {
                 return;
+            }
 
             // mark context as destroyed so no more invocations happen on it
             sc.setState(BeanState.DESTROYED);
@@ -1349,7 +1369,7 @@ public final class StatefulSessionContainer
                     // disconnect the EJBLocalObject from the context
                     // and vice versa
                     EJBLocalObjectImpl localObjImpl =
-                            (EJBLocalObjectImpl) sc.getEJBLocalObjectImpl();
+                            sc.getEJBLocalObjectImpl();
                     localObjImpl.clearContext();
                     localObjImpl.setRemoved(true);
                     sc.setEJBLocalObjectImpl(null);
@@ -1358,14 +1378,14 @@ public final class StatefulSessionContainer
                     // disconnect the EJBLocalObject from the context
                     // and vice versa
                     EJBLocalObjectImpl localBusinessObjImpl =
-                            (EJBLocalObjectImpl) sc.getEJBLocalBusinessObjectImpl();
+                            sc.getEJBLocalBusinessObjectImpl();
                     localBusinessObjImpl.clearContext();
                     localBusinessObjImpl.setRemoved(true);
                     sc.setEJBLocalBusinessObjectImpl(null);
                 }
                 if (hasOptionalLocalBusinessView) {
                     EJBLocalObjectImpl optionalLocalBusinessObjImpl =
-                            (EJBLocalObjectImpl) sc.getOptionalEJBLocalBusinessObjectImpl();
+                            sc.getOptionalEJBLocalBusinessObjectImpl();
                     optionalLocalBusinessObjImpl.clearContext();
                     optionalLocalBusinessObjImpl.setRemoved(true);
                     sc.setOptionalEJBLocalBusinessObjectImpl(null);
@@ -1411,6 +1431,7 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     public boolean userTransactionMethodsAllowed(ComponentInvocation inv) {
         boolean utMethodsAllowed = false;
 
@@ -1494,11 +1515,13 @@ public final class StatefulSessionContainer
     }
 
 
+    @Override
     protected EJBObjectImpl getEJBObjectImpl(byte[] instanceKey) {
         SessionContextImpl sc = _getContextForInstance(instanceKey);
         return sc.getEJBObjectImpl();
     }
 
+    @Override
     EJBObjectImpl getEJBRemoteBusinessObjectImpl(byte[] instanceKey) {
         SessionContextImpl sc = _getContextForInstance(instanceKey);
         return sc.getEJBRemoteBusinessObjectImpl();
@@ -1508,6 +1531,7 @@ public final class StatefulSessionContainer
      * Called from EJBLocalObjectImpl.getLocalObject() while deserializing
      * a local object reference.
      */
+    @Override
     protected EJBLocalObjectImpl getEJBLocalObjectImpl(Object sessionKey) {
 
         // Create an EJBLocalObject reference which
@@ -1532,6 +1556,7 @@ public final class StatefulSessionContainer
         return localObjImpl;
     }
 
+    @Override
     EJBLocalObjectImpl getEJBLocalBusinessObjectImpl(Object sessionKey) {
 
         // Create an EJBLocalObject reference which
@@ -1559,6 +1584,7 @@ public final class StatefulSessionContainer
         return localBusinessObjImpl;
     }
 
+    @Override
     EJBLocalObjectImpl getOptionalEJBLocalBusinessObjectImpl(Object sessionKey) {
 
         // Create an EJBLocalObject reference which
@@ -1591,17 +1617,19 @@ public final class StatefulSessionContainer
      *
      * @throws NoSuchObjectLocalException if the object has been removed.
      */
+    @Override
     protected void checkExists(EJBLocalRemoteObject ejbObj) {
-        if (ejbObj.isRemoved())
+        if (ejbObj.isRemoved()) {
             throw new NoSuchObjectLocalException("Bean has been removed");
+        }
     }
 
-    private final void logTraceInfo(EjbInvocation inv, Object key, String message) {
+    private void logTraceInfo(EjbInvocation inv, Object key, String message) {
         _logger.log(TRACE_LEVEL, traceInfoPrefix + message
                 + " for " + inv.method.getName() + "; key: " + key);
     }
 
-    private final void logTraceInfo(SessionContextImpl sc, String message) {
+    private void logTraceInfo(SessionContextImpl sc, String message) {
         _logger.log(TRACE_LEVEL, traceInfoPrefix + message
                 + " for key: " + sc.getInstanceKey()
                 + "; " + System.identityHashCode(sc));
@@ -1611,6 +1639,7 @@ public final class StatefulSessionContainer
      * Called from preInvoke which is called from the EJBObject
      * for local and remote invocations.
      */
+    @Override
     public ComponentContext _getContext(EjbInvocation inv) {
         EJBLocalRemoteObject ejbo = inv.ejbObject;
         SessionContextImpl sc = ejbo.getContext();
@@ -1756,6 +1785,7 @@ public final class StatefulSessionContainer
         return context;
     }
 
+    @Override
     public boolean isHAEnabled() {
         return isHAEnabled;
     }
@@ -1772,7 +1802,7 @@ public final class StatefulSessionContainer
 
         if (ejbLRO != null) {
             if (clientVersion ==
-                    sfsbVersionManager.NO_VERSION) {
+                    SFSBVersionManager.NO_VERSION) {
                 clientVersion = ejbLRO.getSfsbClientVersion();
             }
 
@@ -1825,6 +1855,7 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     protected void postInvokeTx(EjbInvocation inv) throws Exception {
 
         // Intercept postInvokeTx call to perform any @Remove logic
@@ -1884,6 +1915,7 @@ public final class StatefulSessionContainer
      * Called from preInvoke which is called from the EJBObject for local and
      * remote invocations.
      */
+    @Override
     public void releaseContext(EjbInvocation inv) {
         SessionContextImpl sc = (SessionContextImpl) inv.context;
 
@@ -1891,8 +1923,9 @@ public final class StatefulSessionContainer
         // any instance lock is released in the finally block.
         try {
             // check if the bean was destroyed
-            if (sc.getState() == BeanState.DESTROYED)
+            if (sc.getState() == BeanState.DESTROYED) {
                 return;
+            }
 
             // we're sure that no concurrent thread can be using this
             // context, so no need to synchronize.
@@ -1984,6 +2017,7 @@ public final class StatefulSessionContainer
 
     }
 
+    @Override
     protected void afterBegin(EJBContextImpl context) {
         // TX_BEAN_MANAGED EJBs cannot implement SessionSynchronization
         // Do not call afterBegin if it is a transactional lifecycle callback
@@ -2025,6 +2059,7 @@ public final class StatefulSessionContainer
     }
 
 
+    @Override
     protected void beforeCompletion(EJBContextImpl context) {
         // SessionSync calls on TX_BEAN_MANAGED SessionBeans
         // are not allowed
@@ -2067,6 +2102,7 @@ public final class StatefulSessionContainer
     // Called from SyncImpl.afterCompletion
     // May be called asynchronously during tx timeout
     // or on the same thread as tx.commit
+    @Override
     protected void afterCompletion(EJBContextImpl context, int status) {
         if (context.getState() == BeanState.DESTROYED) {
             return;
@@ -2237,13 +2273,14 @@ public final class StatefulSessionContainer
         }
     }
 
-    public final boolean canPassivateEJB(ComponentContext context) {
+    public boolean canPassivateEJB(ComponentContext context) {
         SessionContextImpl sc = (SessionContextImpl) context;
         return (sc.getState() == BeanState.READY);
     }
 
     // called asynchronously from the Recycler
-    public final boolean passivateEJB(ComponentContext context) {
+    @Override
+    public boolean passivateEJB(ComponentContext context) {
 
         SessionContextImpl sc = (SessionContextImpl) context;
 
@@ -2258,8 +2295,9 @@ public final class StatefulSessionContainer
                 }
             }
 
-            if (sc.getState() == BeanState.DESTROYED)
+            if (sc.getState() == BeanState.DESTROYED) {
                 return false;
+            }
 
             if (_logger.isLoggable(TRACE_LEVEL)) {
                 _logger.log(TRACE_LEVEL, traceInfoPrefix + "Passivating context "
@@ -2440,16 +2478,18 @@ public final class StatefulSessionContainer
 
     }
 
-    public final int getPassivationBatchCount() {
+    @Override
+    public int getPassivationBatchCount() {
         return this.passivationBatchCount;
     }
 
-    public final void setPassivationBatchCount(int count) {
+    public void setPassivationBatchCount(int count) {
         this.passivationBatchCount = count;
     }
 
     // called asynchronously from the Recycler
-    public final boolean passivateEJB(StatefulEJBContext sfsbCtx) {
+    @Override
+    public boolean passivateEJB(StatefulEJBContext sfsbCtx) {
         return passivateEJB((ComponentContext) sfsbCtx.getSessionContext());
     }
 
@@ -2463,6 +2503,7 @@ public final class StatefulSessionContainer
     }
 
     // called from StatefulSessionStore
+    @Override
     public void activateEJB(Object sessionKey, StatefulEJBContext sfsbCtx, Object cookie) {
         SessionContextImpl context = (SessionContextImpl) sfsbCtx.getSessionContext();
 
@@ -2640,10 +2681,12 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     public byte[] serializeContext(StatefulEJBContext ctx) throws IOException {
         return serializeContext((SessionContextImpl)ctx.getSessionContext());
     }
 
+    @Override
     public Object deserializeData(byte[] data) throws Exception {
         Object o = ejbContainerUtilImpl.getJavaEEIOUtils().deserializeObject(data, true, getClassLoader());
         if (o instanceof SessionContextImpl) {
@@ -2658,7 +2701,7 @@ public final class StatefulSessionContainer
                 try (ByteArrayInputStream bis = new ByteArrayInputStream(sejb.serializedFields);
                     ObjectInputStream ois = ejbContainerUtilImpl.getJavaEEIOUtils().createObjectInputStream(bis, true, getClassLoader());) {
 
-                    ejb = ejbClass.newInstance();
+                    ejb = ejbClass.getDeclaredConstructor().newInstance();
                     EJBUtils.deserializeObjectFields(ejb, ois, o, false);
                     ctx.setEJB(ejb);
                 }
@@ -2837,6 +2880,7 @@ public final class StatefulSessionContainer
         }
     }
 
+    @Override
     public void invokePeriodically(long delay, long periodicity, Runnable target) {
         java.util.Timer timer = ejbContainerUtilImpl.getTimer();
 
@@ -2851,14 +2895,14 @@ public final class StatefulSessionContainer
         undeploy((SessionContextImpl) sfsbCtx.getSessionContext());
     }
 
+    @Override
     protected String[] getPre30LifecycleMethodNames() {
         return new String[]{
                 null, null, "ejbRemove", "ejbPassivate", "ejbActivate"
         };
     }
 
-    ;
-
+    @Override
     protected void doConcreteContainerShutdown(boolean appBeingUndeployed) {
 
         cancelAllTimerTasks();
@@ -3105,6 +3149,7 @@ public final class StatefulSessionContainer
     }
 
     // CacheListener interface
+    @Override
     public void trimEvent(Object primaryKey, Object context) {
         boolean addTask = false;
         synchronized (asyncTaskSemaphore) {
@@ -3144,6 +3189,7 @@ public final class StatefulSessionContainer
 
     private class ASyncPassivator implements Runnable {
 
+        @Override
         public void run() {
             final Thread currentThread = Thread.currentThread();
             final ClassLoader previousClassLoader =
@@ -3159,6 +3205,7 @@ public final class StatefulSessionContainer
                 } else {
                     java.security.AccessController.doPrivileged
                             (new java.security.PrivilegedAction() {
+                                @Override
                                 public java.lang.Object run() {
                                     currentThread.setContextClassLoader(myClassLoader);
                                     return null;
@@ -3194,6 +3241,7 @@ public final class StatefulSessionContainer
                 } else {
                     java.security.AccessController.doPrivileged
                             (new java.security.PrivilegedAction() {
+                                @Override
                                 public java.lang.Object run() {
                                     currentThread.setContextClassLoader
                                             (previousClassLoader);
@@ -3444,13 +3492,13 @@ public final class StatefulSessionContainer
     static class EEMRefInfoKey
             implements Serializable {
 
-        private String emRefName;
+        private final String emRefName;
 
-        private long containerID;
+        private final long containerID;
 
-        private Object instanceKey;
+        private final Object instanceKey;
 
-        private int hc;
+        private final int hc;
 
         EEMRefInfoKey(String en, long cid, Object ikey) {
             this.emRefName = en;
@@ -3460,10 +3508,12 @@ public final class StatefulSessionContainer
             this.hc = instanceKey.hashCode();
         }
 
+        @Override
         public int hashCode() {
             return hc;
         }
 
+        @Override
         public boolean equals(Object obj) {
             boolean result = false;
             if (obj instanceof EEMRefInfoKey) {
@@ -3477,6 +3527,7 @@ public final class StatefulSessionContainer
             return result;
         }
 
+        @Override
         public String toString() {
             return "<" + instanceKey + ":" + emRefName + ":" + containerID + ">";
         }
@@ -3487,11 +3538,11 @@ public final class StatefulSessionContainer
 
         private transient int refCount = 0;
 
-        private String unitName;
+        private final String unitName;
 
-        private SynchronizationType synchronizationType;
+        private final SynchronizationType synchronizationType;
 
-        private EEMRefInfoKey eemRefInfoKey;
+        private final EEMRefInfoKey eemRefInfoKey;
 
         private byte[] serializedEEM;
 
@@ -3538,6 +3589,7 @@ public final class StatefulSessionContainer
         }
 
         //Method of IndirectlySerializable
+        @Override
         public SerializableObjectFactory getSerializableObjectFactory()
                 throws IOException {
 
@@ -3560,6 +3612,7 @@ public final class StatefulSessionContainer
         }
 
         //Method of SerializableObjectFactory
+        @Override
         public Object createObject()
                 throws IOException {
 
@@ -3596,6 +3649,7 @@ public final class StatefulSessionContainer
         }
 
         //Method of IndirectlySerializable
+        @Override
         public SerializableObjectFactory getSerializableObjectFactory()
                 throws IOException {
 
@@ -3603,6 +3657,7 @@ public final class StatefulSessionContainer
         }
 
         //Method of SerializableObjectFactory
+        @Override
         public Object createObject() throws IOException {
             return this;
         }
@@ -3619,12 +3674,14 @@ class PeriodicTask
         this.ejbContainerUtil = ejbContainerUtil;
     }
 
+    @Override
     public void run() {
         if (!task.isExecuting()) {
             ejbContainerUtil.addWork(task);
         }
     }
 
+    @Override
     public boolean cancel() {
         boolean cancelled = super.cancel();
 
@@ -3651,6 +3708,7 @@ class AsynchronousTask
     }
 
     //This will be called with the correct ClassLoader
+    @Override
     public void run() {
         ClassLoader prevCL = Thread.currentThread().getContextClassLoader();
         try {

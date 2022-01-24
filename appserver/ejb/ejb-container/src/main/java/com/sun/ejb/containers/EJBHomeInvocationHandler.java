@@ -56,7 +56,7 @@ public class EJBHomeInvocationHandler
     // but only has InvocationHandler.
     private EJBHome proxy_;
 
-    private Class homeIntfClass_;
+    private final Class homeIntfClass_;
 
     // Cache reference to invocation info.  There is one of these per
     // container.  It's populated during container initialization and
@@ -65,7 +65,7 @@ public class EJBHomeInvocationHandler
     // is created.
     private MethodMap invocationInfoMap_;
 
-    private EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
+    private final EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
 
 
     protected EJBHomeInvocationHandler(EjbDescriptor ejbDescriptor,
@@ -93,6 +93,7 @@ public class EJBHomeInvocationHandler
         invocationInfoMap_ = map;
     }
 
+    @Override
     protected EJBHome getEJBHome() {
         return proxy_;
     }
@@ -100,6 +101,7 @@ public class EJBHomeInvocationHandler
     /**
      * Called by EJBHome proxy.
      */
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
@@ -119,17 +121,14 @@ public class EJBHomeInvocationHandler
             // proceeding. Otherwise, the context classloader could still
             // reflect the caller's class loader.
 
-            if( Thread.currentThread().getContextClassLoader() !=
-                getContainer().getClassLoader() ) {
-                originalClassLoader = Utility.setContextClassLoader
-                    (getContainer().getClassLoader());
+            if (Thread.currentThread().getContextClassLoader() != getContainer().getClassLoader()) {
+                originalClassLoader = Utility.setContextClassLoader(getContainer().getClassLoader());
             }
 
             Class methodClass = method.getDeclaringClass();
 
-            if( methodClass == java.lang.Object.class )  {
-                return InvocationHandlerUtil.invokeJavaObjectMethod
-                    (this, method, args);
+            if (methodClass == java.lang.Object.class) {
+                return InvocationHandlerUtil.invokeJavaObjectMethod(this, method, args);
             } else if (invokeSpecialEJBHomeMethod(method, methodClass, args)) {
                 return null;
             }
@@ -236,7 +235,7 @@ public class EJBHomeInvocationHandler
                 inv.invocationInfo = invInfo;
 
                 if( ejbObjectImpl != null && invInfo.startsWithCreate ) {
-                    inv.ejbObject = (EJBLocalRemoteObject) ejbObjectImpl;
+                    inv.ejbObject = ejbObjectImpl;
                 }
 
                 BaseContainer container = (BaseContainer) getContainer();
@@ -335,24 +334,24 @@ public class EJBHomeInvocationHandler
         try {
             if( methodName.equals("getEJBMetaData") ) {
 
-                methodIndex = container.EJBHome_getEJBMetaData;
+                methodIndex = BaseContainer.EJBHome_getEJBMetaData;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getEJBMetaData();
 
             } else if( methodName.equals("getHomeHandle") ) {
 
-                methodIndex = container.EJBHome_getHomeHandle;
+                methodIndex = BaseContainer.EJBHome_getHomeHandle;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getHomeHandle();
 
             } else if( methodName.equals("remove") ) {
 
                 if( args[0] instanceof jakarta.ejb.Handle ) {
-                    methodIndex = container.EJBHome_remove_Handle;
+                    methodIndex = BaseContainer.EJBHome_remove_Handle;
                     container.onEjbMethodStart(methodIndex);
                     super.remove((jakarta.ejb.Handle)args[0]);
                 } else {
-                    methodIndex = container.EJBHome_remove_Pkey;
+                    methodIndex = BaseContainer.EJBHome_remove_Pkey;
                     container.onEjbMethodStart(methodIndex);
                     super.remove(args[0]);
                 }

@@ -17,14 +17,12 @@
 
 package org.glassfish.weld.services;
 
-import com.sun.ejb.ClassGenerator;
+import com.sun.ejb.codegen.ClassGenerator;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
@@ -43,8 +41,6 @@ import org.jboss.weld.serialization.spi.ProxyServices;
  * @author David Matějček
  */
 public class ProxyServicesImpl implements ProxyServices {
-
-    private static final AtomicBoolean CL_METHODS_INITIALIZATION_FINISHED = new AtomicBoolean(false);
 
     private final ClassLoaderHierarchy classLoaderHierarchy;
 

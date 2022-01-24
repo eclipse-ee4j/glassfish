@@ -17,8 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.ejb.ClassGenerator;
-
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
@@ -40,11 +38,9 @@ public class AsmSerializableBeanGenerator {
 
     private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
 
-    private final Class baseClass;
-    private final String subclassName;
     private final ClassLoader loader;
-
-    private Class loadedClass;
+    private final Class<?> baseClass;
+    private final String subclassName;
 
 
     /**
@@ -70,9 +66,8 @@ public class AsmSerializableBeanGenerator {
         return subclassName;
     }
 
-    public Class generateSerializableSubclass()
-        throws Exception {
 
+    public Class generateSerializableSubclass() throws Exception {
         ClassWriter cw = new ClassWriter(INTF_FLAGS);
 
         //ClassVisitor tv = //(_debug)
@@ -93,9 +88,9 @@ public class AsmSerializableBeanGenerator {
         // JSR 299 added requirements that allow a single constructor to define
         // parameters injected by CDI.
 
-        Constructor[] ctors = baseClass.getConstructors();
-        Constructor ctorWithParams = null;
-        for(Constructor ctor : ctors) {
+        Constructor<?>[] ctors = baseClass.getConstructors();
+        Constructor<?> ctorWithParams = null;
+        for(Constructor<?> ctor : ctors) {
             if(ctor.getParameterTypes().length == 0) {
                 ctorWithParams = null;    //exists the no-arg ctor, use it
                 break;
@@ -107,26 +102,25 @@ public class AsmSerializableBeanGenerator {
         int numArgsToPass = 1; // default is 1 to just handle 'this'
         String paramTypeString = "()V";
 
-        if( ctorWithParams != null ) {
-            Class[] paramTypes = ctorWithParams.getParameterTypes();
+        if (ctorWithParams != null) {
+            Class<?>[] paramTypes = ctorWithParams.getParameterTypes();
             numArgsToPass = paramTypes.length + 1;
             paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
         }
 
         MethodVisitor ctorv = tv.visitMethod(ACC_PUBLIC, "<init>", paramTypeString, null, null);
 
-        for(int i = 0; i < numArgsToPass; i++) {
+        for (int i = 0; i < numArgsToPass; i++) {
             ctorv.visitVarInsn(ALOAD, i);
         }
-
-        ctorv.visitMethodInsn(INVOKESPECIAL,  Type.getType(baseClass).getInternalName(), "<init>", paramTypeString);
+        ctorv.visitMethodInsn(INVOKESPECIAL,  Type.getType(baseClass).getInternalName(), "<init>", paramTypeString, false);
         ctorv.visitInsn(RETURN);
         ctorv.visitMaxs(numArgsToPass, numArgsToPass);
 
         MethodVisitor cv = cw.visitMethod(ACC_PRIVATE, "writeObject", "(Ljava/io/ObjectOutputStream;)V", null, new String[] { "java/io/IOException" });
         cv.visitVarInsn(ALOAD, 0);
         cv.visitVarInsn(ALOAD, 1);
-        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "serializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectOutputStream;)V");
+        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "serializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectOutputStream;)V", false);
         cv.visitInsn(RETURN);
         cv.visitMaxs(2, 2);
 
@@ -134,7 +128,7 @@ public class AsmSerializableBeanGenerator {
         cv = cw.visitMethod(ACC_PRIVATE, "readObject", "(Ljava/io/ObjectInputStream;)V", null, new String[] { "java/io/IOException", "java/lang/ClassNotFoundException" });
         cv.visitVarInsn(ALOAD, 0);
         cv.visitVarInsn(ALOAD, 1);
-        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "deserializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectInputStream;)V");
+        cv.visitMethodInsn(INVOKESTATIC, "com/sun/ejb/EJBUtils", "deserializeObjectFields", "(Ljava/lang/Object;Ljava/io/ObjectInputStream;)V", false);
         cv.visitInsn(RETURN);
         cv.visitMaxs(2, 2);
 

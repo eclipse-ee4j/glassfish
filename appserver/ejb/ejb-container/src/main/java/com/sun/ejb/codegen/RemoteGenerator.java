@@ -36,8 +36,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
- * This class is used to generate the RMI-IIOP version of a
- * remote business interface.
+ * This class is used to generate the RMI-IIOP version of a remote business interface.
  */
 public final class RemoteGenerator extends Generator {
 
@@ -69,14 +68,14 @@ public final class RemoteGenerator extends Generator {
      *
      * @param classLoader
      * @param businessIntf
-     * @throws InvalidBean if the businessInterface doesn't exist.
+     * @throws GeneratorException if the businessInterface doesn't exist.
      */
-    public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws InvalidBean {
+    public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws GeneratorException {
         super(classLoader);
         try {
             businessInterface = classLoader.loadClass(businessIntf);
         } catch (ClassNotFoundException ex) {
-            throw new InvalidBean(
+            throw new GeneratorException(
                 localStrings.getLocalString("generator.remote_interface_not_found", "Remote interface not found "));
         }
 

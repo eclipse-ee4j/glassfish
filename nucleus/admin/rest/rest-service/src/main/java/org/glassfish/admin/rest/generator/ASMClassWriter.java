@@ -17,12 +17,12 @@
 
 package org.glassfish.admin.rest.generator;
 
+import com.sun.ejb.ClassGenerator;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.List;
@@ -446,24 +446,18 @@ public class ASMClassWriter implements ClassWriter {
         return cw.toByteArray();
     }
 
-    public String defineClass(Class similarClass, byte[] classBytes) throws Exception {
-
+    private void defineClass(Class similarClass, byte[] classBytes) throws Exception {
         String generatedClassName = "org.glassfish.admin.rest.resources.generatedASM." + className;
-        byte[] byteContent = getByteClass();
+        RestLogging.restLogger.log(Level.FINEST, "Generating class {0}", generatedClassName);
+        ClassLoader loader = similarClass.getClassLoader();
         ProtectionDomain pd = similarClass.getProtectionDomain();
+        byte[] byteContent = getByteClass();
+        ClassGenerator.defineClass(loader, generatedClassName, byteContent, pd);
         try {
-            RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", generatedClassName);
-            MethodHandles.privateLookupIn(similarClass, MethodHandles.lookup()).defineClass(byteContent);
-            try {
-                similarClass.getClassLoader().loadClass(generatedClassName);
-            } catch (ClassNotFoundException cnfEx) {
-                throw new RuntimeException(cnfEx);
-            }
-            return generatedClassName;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            loader.loadClass(generatedClassName);
+        } catch (ClassNotFoundException cnfEx) {
+            throw new GeneratorException(cnfEx);
         }
-
     }
 
     /**

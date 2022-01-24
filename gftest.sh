@@ -33,6 +33,7 @@ if [ "$#" -eq 0 ]; then
        "ejb_group_1"
        "ejb_group_2"
        "ejb_group_3"
+       "ejb_group_embedded"
        "ejb_web_all"
        "cdi_all"
        "ql_gf_full_profile_all"
@@ -50,6 +51,9 @@ if [ "$#" -eq 0 ]; then
 else
     declare -a arr=("$@")
 fi
+
+echo "Removing old glassfish directory: ${S1AS_HOME}";
+rm -rf "${S1AS_HOME}";
 
 printf '\n Running tests for: \n\n'
 printf '* %s\n' "${arr[@]}"

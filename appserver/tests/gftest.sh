@@ -50,6 +50,9 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   # setup the local repository
   # with the archived chunk from the pipeline build stage
   cat ${WORKSPACE}/bundles/_maven-repo* | tar -xvz -f - --overwrite -m -p -C ${HOME}/.m2/repository
+  echo "Removing old glassfish directory: ${S1AS_HOME}";
+  rm -rf "${S1AS_HOME}";
 fi
 
 "$@"
+

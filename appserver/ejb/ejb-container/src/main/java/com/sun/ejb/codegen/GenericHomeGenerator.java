@@ -76,7 +76,7 @@ public class GenericHomeGenerator extends Generator {
 
 
     @Override
-    public void evaluate() {
+    public void defineClassBody() {
         _interface(PUBLIC, GENERIC_HOME_CLASSNAME, _t(GenericEJBHome.class.getName()));
         _method(PUBLIC | ABSTRACT, _t(Remote.class.getName()), "create", _t(RemoteException.class.getName()));
         _arg(_String(), "generatedBusinessIntf");

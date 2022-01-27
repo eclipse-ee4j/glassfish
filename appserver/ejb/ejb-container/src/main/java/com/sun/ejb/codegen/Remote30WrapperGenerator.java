@@ -129,7 +129,7 @@ public final class Remote30WrapperGenerator extends Generator {
     }
 
     @Override
-    public void evaluate() {
+    public void defineClassBody() {
         _class(PUBLIC, remoteClientSimpleName,
                _t(RemoteBusinessWrapperBase.class.getName()),
                _t(businessInterface.getName()));

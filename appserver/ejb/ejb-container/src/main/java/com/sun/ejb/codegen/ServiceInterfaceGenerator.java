@@ -94,7 +94,7 @@ public class ServiceInterfaceGenerator extends Generator {
 
 
     @Override
-    public void evaluate() {
+    public void defineClassBody() {
         _interface(PUBLIC, serviceIntfSimpleName);
 
         for (Method intfMethod : intfMethods) {

@@ -113,7 +113,7 @@ public final class RemoteGenerator extends Generator {
     }
 
     @Override
-    public void evaluate() {
+    public void defineClassBody() {
         _interface(PUBLIC, remoteInterfaceSimpleName,
             _t(java.rmi.Remote.class.getName()),
             _t(RemoteBusinessObject.class.getName())

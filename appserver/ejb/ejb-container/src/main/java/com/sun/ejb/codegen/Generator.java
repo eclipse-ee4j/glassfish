@@ -34,10 +34,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.pfl.dynamic.codegen.impl.ClassGeneratorImpl;
-import org.glassfish.pfl.dynamic.codegen.impl.CodeGenerator;
 import org.glassfish.pfl.dynamic.codegen.spi.ImportList;
 import org.glassfish.pfl.dynamic.codegen.spi.Wrapper;
 
+import static org.glassfish.pfl.dynamic.codegen.impl.CodeGenerator.generateBytecode;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.DUMP_AFTER_SETUP_VISITOR;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.TRACE_BYTE_CODE_GENERATION;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.USE_ASM_VERIFIER;
@@ -61,6 +61,9 @@ public abstract class Generator {
         this.loader = Objects.requireNonNull(loader);
     }
 
+    /**
+     * @return the name of the package of the generated class. Can be null.
+     */
     protected abstract String getPackageName();
 
     /**
@@ -79,7 +82,7 @@ public abstract class Generator {
      * always call {@link Wrapper#_clear()} in finally block after generation
      * to avoid leakages.
      */
-    protected abstract void evaluate();
+    protected abstract void defineClassBody();
 
 
     /**
@@ -90,6 +93,16 @@ public abstract class Generator {
     }
 
 
+    /**
+     * Generates the bytecode of the configured class with the usage of the PFL tool.
+     * Then uses {@link MethodHandles} or {@link ClassGenerator} to generate the class.
+     * <p>
+     * WARNING: This selection depends on the classloader capabilities and JVM rules,
+     * which change between JDK versions.
+     *
+     * @return {@link Class}
+     * @throws IllegalAccessException
+     */
     public Class<?> generate() throws IllegalAccessException {
         if (getPackageName() == null) {
             _package();
@@ -97,7 +110,7 @@ public abstract class Generator {
             _package(getPackageName());
         }
         final ImportList imports = Wrapper._import();
-        evaluate();
+        defineClassBody();
         final Properties props = new Properties();
         if (LOG.isLoggable(Level.FINEST)) {
             props.put(DUMP_AFTER_SETUP_VISITOR, "true");
@@ -114,7 +127,7 @@ public abstract class Generator {
         }
 
         final ClassGeneratorImpl codeGenerator = (ClassGeneratorImpl) _classGenerator();
-        final byte[] bytecode = CodeGenerator.generateBytecode(codeGenerator, getClassLoader(), imports, props, System.out);
+        final byte[] bytecode = generateBytecode(codeGenerator, getClassLoader(), imports, props, System.out);
 
         if (useMethodHandles()) {
             LOG.log(Level.FINEST, "Using MethodHandles to define {0}, anchorClass: {1}",
@@ -123,8 +136,6 @@ public abstract class Generator {
             return lookup.defineClass(bytecode);
         }
 
-        LOG.log(Level.FINEST, "Using ClassGenerator to define {0}, loader: {1}",
-            new Object[] {getGeneratedClassName(), getClassLoader()});
         if (System.getSecurityManager() == null) {
             return ClassGenerator.defineClass(getClassLoader(), getGeneratedClassName(), bytecode,
                 getAnchorClass().getProtectionDomain());
@@ -133,6 +144,7 @@ public abstract class Generator {
             getGeneratedClassName(), bytecode);
         return AccessController.doPrivileged(action);
     }
+
 
     private boolean useMethodHandles() {
         // The bootstrap CL used by embedded glassfish doesn't remember generated classes

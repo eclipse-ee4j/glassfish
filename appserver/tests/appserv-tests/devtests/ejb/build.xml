@@ -41,7 +41,6 @@
     </patternset>
 
     <target name="all">
-
         <antcall target="setup"/>
         <antcall target="test-all"/>
         <antcall target="unsetup"/>
@@ -49,7 +48,6 @@
     </target>
 
     <target name="lite">
-
         <antcall target="setup"/>
         <antcall target="test-lite"/>
         <antcall target="unsetup"/>
@@ -57,21 +55,20 @@
     </target>
 
      <target name="ejb_group_1">
-
         <antcall target="setup"/>
         <antcall target="test-group-1"/>
         <antcall target="unsetup"/>
         <antcall target="report"/>
     </target>
 
-      <target name="ejb_group_2">
+    <target name="ejb_group_2">
         <antcall target="setup"/>
         <antcall target="test-group-2"/>
         <antcall target="unsetup"/>
         <antcall target="report"/>
     </target>
 
-      <target name="ejb_group_3">
+    <target name="ejb_group_3">
         <antcall target="setup"/>
         <antcall target="test-group-3"/>
         <antcall target="unsetup"/>
@@ -79,12 +76,16 @@
     </target>
 
 
-    <target name="setup">
+    <target name="ejb_group_embedded">
+        <ant dir="ejb32/embedded" target="all"/>
+        <ant dir="ejb31/embedded" target="all"/>
+        <antcall target="report"/>
+    </target>
 
+    <target name="setup">
         <antcall target="start-database"/>
         <ant target="startDomain"/>
         <ant target="clean-result"/>
-
     </target>
 
     <target name="clean-result">
@@ -105,26 +106,26 @@
     </target>
 
     <target name="test-all">
-
         <ant dir="stubs" target="all"/>
         <ant dir="txprop" target="all"/>
         <ant dir="ejbc" target="all"/>
         <ant dir="ejb30" target="all"/>
+
         <ant dir="mdb" target="all"/>
         <ant dir="cli" target="all"/>
         <ant dir="timer" target="all"/>
         <ant dir="bmp" target="all"/>
+
         <ant dir="cmp" target="all"/>
         <ant dir="sfsb" target="all"/>
         <ant dir="allowedmethods" target="all"/>
         <ant dir="jms" target="all"/>
         <ant dir="ejb32" target="all"/>
-<!-- disable as it fails on hudson ...
--->
-
-<!-- ejb31 must be the last set of tests because embedded test might stop database -->
         <ant dir="ejb31" target="all"/>
 
+        <!-- ejb31 must be the last set of tests because embedded test might stop database -->
+        <ant dir="ejb32/embedded" target="all"/>
+        <ant dir="ejb31/embedded" target="all"/>
     </target>
 
     <target name="test-group-1">
@@ -141,7 +142,7 @@
         <ant dir="bmp" target="all"/>
     </target>
 
-      <target name="test-group-3">
+    <target name="test-group-3">
         <ant dir="cmp" target="all"/>
         <ant dir="sfsb" target="all"/>
         <ant dir="allowedmethods" target="all"/>
@@ -152,15 +153,10 @@
 
 
 
-
-
     <target name="unsetup">
         <echo message="Stopping app server instance"/>
         <ant target="stopDomain"/>
-
         <antcall target="stop-database"/>
-
-
         <record name="ejb.output" action="stop" />
 
     </target>
@@ -299,8 +295,7 @@
         <echo>
                 Usage:
                         ant all (Executes all the ejb tests)
-            ant orb_integration (Executes all ejb-related orb integration tests
-
+                        ant orb_integration (Executes all ejb-related orb integration tests)
                         ant allowedmethods (Executes the ejb allowedmethods tests)
                         ant bmp (Executes the ejb bmp tests)
                         ant ejbc (Executes the ejb ejbc tests)

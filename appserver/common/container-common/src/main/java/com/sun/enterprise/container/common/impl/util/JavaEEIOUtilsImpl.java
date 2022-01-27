@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +17,27 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import org.jvnet.hk2.annotations.Contract;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
 import com.sun.enterprise.container.common.spi.util.GlassFishInputStreamHandler;
+import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import com.sun.logging.LogDomains;
 
-import java.io.*;
+import jakarta.inject.Inject;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A contract that defines a set of methods to serialize / deserialze Java EE
@@ -53,20 +59,23 @@ public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
     @Inject
     ServiceLocator habitat;
 
-    private Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<GlassFishOutputStreamHandler>();
+    private final Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<>();
 
-    private Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<GlassFishInputStreamHandler>();
+    private final Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<>();
 
+    @Override
     public ObjectInputStream createObjectInputStream(InputStream is,
             boolean resolveObject, ClassLoader loader) throws Exception {
         return new GlassFishObjectInputStream(inputHandlers, is, loader, resolveObject);
     }
 
+    @Override
     public ObjectOutputStream createObjectOutputStream(OutputStream os,
             boolean replaceObject) throws IOException {
         return new GlassFishObjectOutputStream(outputHandlers, os, replaceObject);
     }
 
+    @Override
     public byte[] serializeObject(Object obj, boolean replaceObject)
             throws java.io.IOException {
 
@@ -101,6 +110,7 @@ public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
         return data;
     }
 
+    @Override
     public Object deserializeObject(byte[] data, boolean resolveObject,
             ClassLoader appClassLoader) throws Exception {
 
@@ -129,20 +139,24 @@ public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
         return obj;
     }
 
+    @Override
     public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
         outputHandlers.add(handler);
 
     }
 
+    @Override
     public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
         outputHandlers.remove(handler);
     }
 
+    @Override
     public void addGlassFishInputStreamHandler(
             GlassFishInputStreamHandler handler) {
         inputHandlers.add(handler);
     }
 
+    @Override
     public void removeGlassFishInputStreamHandler(
             GlassFishInputStreamHandler handler) {
         inputHandlers.remove(handler);

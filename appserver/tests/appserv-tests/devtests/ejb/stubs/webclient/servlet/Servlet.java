@@ -25,9 +25,6 @@ import javax.rmi.PortableRemoteObject;
 import com.sun.s1asdev.ejb.stubs.ejbapp.Hello;
 import com.sun.s1asdev.ejb.stubs.ejbapp.HelloHome;
 
-//import javax.management.j2ee.ManagementHome;
-//import javax.management.j2ee.Management;
-
 public class Servlet extends HttpServlet {
 
 

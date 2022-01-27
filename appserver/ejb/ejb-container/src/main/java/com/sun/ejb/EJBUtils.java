@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@
 package com.sun.ejb;
 
 import com.sun.ejb.codegen.AsmSerializableBeanGenerator;
-import com.sun.ejb.codegen.ClassGeneratorFactory;
+import com.sun.ejb.codegen.EjbClassGeneratorFactory;
 import com.sun.ejb.codegen.Generator;
-import com.sun.ejb.codegen.GenericHomeGenerator;
+import com.sun.ejb.codegen.GeneratorException;
 import com.sun.ejb.codegen.Remote30WrapperGenerator;
 import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.ejb.containers.BaseContainer;
@@ -31,35 +31,24 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.logging.LogDomains;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Collection;
-import java.util.Properties;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
-import org.glassfish.pfl.dynamic.codegen.spi.Wrapper;
-
-import static com.sun.ejb.codegen.GenericHomeGenerator.GENERIC_HOME_CLASSNAME;
 import static java.util.logging.Level.FINE;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.DUMP_AFTER_SETUP_VISITOR;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.TRACE_BYTE_CODE_GENERATION;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.USE_ASM_VERIFIER;
 
 /**
  * A handy class with static utility methods.
@@ -331,7 +320,7 @@ public class EJBUtils {
     public static Object lookupRemote30BusinessObject(Object jndiObj, String businessInterface) throws NamingException {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Class<?> genericEJBHome = loadGeneratedGenericEJBHomeClass(loader);
+            Class<?> genericEJBHome = loadGeneratedGenericEJBHomeClass(loader, jndiObj.getClass());
             final Object genericHomeObj = PortableRemoteObject.narrow(jndiObj, genericEJBHome);
 
             // The generated remote business interface and the
@@ -356,11 +345,16 @@ public class EJBUtils {
     }
 
 
-    public static Class loadGeneratedSerializableClass(ClassLoader loader, String className) throws Exception {
-        String generatedSerializableClassName = AsmSerializableBeanGenerator.getGeneratedSerializableClassName(className);
-        Class developerClass = loader.loadClass(className);
-        AsmSerializableBeanGenerator gen =
-            new AsmSerializableBeanGenerator(loader, developerClass, generatedSerializableClassName);
+    public static Class loadGeneratedSerializableClass(final ClassLoader loader, final Class<?> originalClass)
+        throws Exception {
+        final String generatedClassName = AsmSerializableBeanGenerator
+            .getGeneratedSerializableClassName(originalClass.getName());
+        try {
+            return loader.loadClass(generatedClassName);
+        } catch (ClassNotFoundException e) {
+            // Not loaded yet. Just continue
+        }
+        AsmSerializableBeanGenerator gen = new AsmSerializableBeanGenerator(loader, originalClass, generatedClassName);
         return gen.generateSerializableSubclass();
     }
 
@@ -377,117 +371,41 @@ public class EJBUtils {
      * @return full class name of the generated remote interface
      * @throws Exception
      */
-    public static String loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
+    public static Class<?> loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
         throws Exception {
-        String generatedRemoteIntfName = RemoteGenerator.getGeneratedRemoteIntfName(businessInterfaceName);
-        String wrapperClassName = Remote30WrapperGenerator.getGeneratedRemoteWrapperName(businessInterfaceName);
-        Class<?> generatedRemoteIntf = loadClassIgnoringExceptions(appClassLoader, generatedRemoteIntfName);
-        Class<?> generatedRemoteWrapper = loadClassIgnoringExceptions(appClassLoader, wrapperClassName);
-        if (generatedRemoteIntf != null && generatedRemoteWrapper != null) {
-            return generatedRemoteIntfName;
-        }
-
-        Wrapper._setClassLoader(appClassLoader);
-        try {
-            if (generatedRemoteIntf == null) {
-                RemoteGenerator generator = new RemoteGenerator(appClassLoader, businessInterfaceName);
-                generateAndLoad(generator, appClassLoader);
-            }
-            if (generatedRemoteWrapper == null) {
-                Remote30WrapperGenerator generator
-                    = new Remote30WrapperGenerator(appClassLoader, businessInterfaceName, generatedRemoteIntfName);
-                generateAndLoad(generator, appClassLoader);
-            }
-        } finally {
-            // Make sure no classloader is bound to threadlocal: avoid possible classloader leak.
-            Wrapper._setClassLoader(null) ;
-        }
-        return generatedRemoteIntfName;
-    }
-
-
-    public static Class<?> loadGeneratedGenericEJBHomeClass(final ClassLoader appClassLoader) throws Exception {
-        final Class<?> generatedGenericEJBHomeClass = loadClassIgnoringExceptions(appClassLoader, GENERIC_HOME_CLASSNAME);
-        if (generatedGenericEJBHomeClass != null) {
-            return generatedGenericEJBHomeClass;
-        }
-        final GenericHomeGenerator generator = new GenericHomeGenerator();
-        return generateAndLoad(generator, appClassLoader);
-    }
-
-
-    public static Class<?> generateSEI(ClassGeneratorFactory cgf, ClassLoader loader) {
-        Class<?> clazz = loadClassIgnoringExceptions(loader, cgf.getGeneratedClassName());
-        if (clazz != null) {
-            return clazz;
-        }
-        return generateAndLoad(cgf, loader);
-    }
-
-
-    /**
-     * Checks if the class wasn't already generated by another thread and if not, generates it.
-     * The class name is retrieved from {@link ClassGeneratorFactory#getGeneratedClassName()}
-     * and if it wasn't found, generator knows it's definition.
-     */
-    // made package visible just for tests
-    static synchronized Class<?> generateAndLoad(final ClassGeneratorFactory generator, final ClassLoader loader) {
-        Class<?> clazz = loadClassIgnoringExceptions(loader, generator.getGeneratedClassName());
-        if (clazz != null) {
-            return clazz;
-        }
-
-        generator.evaluate();
-
-        final Properties props = new Properties();
-        if (_logger.isLoggable(Level.FINEST)) {
-            props.put(DUMP_AFTER_SETUP_VISITOR, "true");
-            props.put(TRACE_BYTE_CODE_GENERATION, "true");
-            props.put(USE_ASM_VERIFIER, "true");
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                PrintStream ps = new PrintStream(baos);
-                Wrapper._sourceCode(ps, props);
-                _logger.fine(baos.toString());
-            } catch (Exception e) {
-                _logger.log(Level.SEVERE, "Exception generating src for logs", e);
-            }
-        }
-
-        if (System.getSecurityManager() == null) {
-            return Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
-        }
-        PrivilegedAction<Class<?>> action = () ->
-            Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
-        return AccessController.doPrivileged(action);
-    }
-
-    private static Class<?> loadClassIgnoringExceptions(ClassLoader classLoader, String className) {
-        try {
-            return classLoader.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            _logger.log(FINE, "Could not load class: " + className + " by classloader " + classLoader, e);
-            return null;
+        try (EjbClassGeneratorFactory factory = new EjbClassGeneratorFactory(appClassLoader)) {
+            return factory.ensureRemote(businessInterfaceName);
         }
     }
 
-    public static RemoteBusinessWrapperBase createRemoteBusinessObject
-        (String businessInterface, java.rmi.Remote delegate)
-        throws Exception {
 
-        ClassLoader appClassLoader =
-            getBusinessIntfClassLoader(businessInterface);
-
-        return createRemoteBusinessObject(appClassLoader,
-                                          businessInterface, delegate);
+    public static Class<?> loadGeneratedGenericEJBHomeClass(ClassLoader appClassLoader, Class<?> anchorClass) throws GeneratorException {
+        try (EjbClassGeneratorFactory factory = new EjbClassGeneratorFactory(appClassLoader)) {
+            return factory.ensureGenericHome(anchorClass);
+        }
     }
 
 
-    public static RemoteBusinessWrapperBase createRemoteBusinessObject(ClassLoader loader, String businessInterface,
+    public static Class<?> generateSEI(ClassLoader loader, final Class<?> ejbClass) throws GeneratorException {
+        try (EjbClassGeneratorFactory factory = new EjbClassGeneratorFactory(loader)) {
+            return factory.ensureServiceInterface(ejbClass);
+        }
+    }
+
+
+    public static RemoteBusinessWrapperBase createRemoteBusinessObject(
+        String businessInterface,
         java.rmi.Remote delegate) throws Exception {
+        ClassLoader appClassLoader = getBusinessIntfClassLoader(businessInterface);
+        return createRemoteBusinessObject(appClassLoader, businessInterface, delegate);
+    }
+
+
+    public static RemoteBusinessWrapperBase createRemoteBusinessObject(
+        ClassLoader loader, String businessInterface, java.rmi.Remote delegate) throws Exception {
         String wrapperClassName = Remote30WrapperGenerator.getGeneratedRemoteWrapperName(businessInterface);
         Class clientWrapperClass = loader.loadClass(wrapperClassName);
-        Constructor ctors[] = clientWrapperClass.getConstructors();
+        Constructor[] ctors = clientWrapperClass.getConstructors();
         Constructor ctor = null;
         for (Constructor next : ctors) {
             if (next.getParameterTypes().length > 0) {
@@ -503,70 +421,43 @@ public class EJBUtils {
     }
 
 
-    private static ClassLoader getBusinessIntfClassLoader
-        (String businessInterface) throws Exception {
-
-        ClassLoader contextLoader = null;
-        if(System.getSecurityManager() == null) {
+    private static ClassLoader getBusinessIntfClassLoader(String businessInterface) throws Exception {
+        final ClassLoader contextLoader;
+        if (System.getSecurityManager() == null) {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            contextLoader = (cl != null) ? cl :
-                ClassLoader.getSystemClassLoader();
+            contextLoader = cl == null ? ClassLoader.getSystemClassLoader() : cl;
         } else {
-            contextLoader = (ClassLoader)
-            java.security.AccessController.doPrivileged
-                    (new java.security.PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    // Return context class loader.  If there is none,
-                    // which could happen within Appclient container,
-                    // return system class loader.
-                    ClassLoader cl =
-                            Thread.currentThread().getContextClassLoader();
-                    return (cl != null) ? cl :
-                        ClassLoader.getSystemClassLoader();
-
-                }});
+            PrivilegedAction<ClassLoader> action = () -> {
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                return cl == null ? ClassLoader.getSystemClassLoader() : cl;
+            };
+            contextLoader = java.security.AccessController.doPrivileged(action);
         }
 
-        final Class businessInterfaceClass =
-            contextLoader.loadClass(businessInterface);
-
-        ClassLoader appClassLoader = null;
-        if(System.getSecurityManager() == null) {
-            appClassLoader = businessInterfaceClass.getClassLoader();
-        } else {
-            appClassLoader = (ClassLoader)
-            java.security.AccessController.doPrivileged
-                    (new java.security.PrivilegedAction() {
-                @Override
-                public java.lang.Object run() {
-                    return businessInterfaceClass.getClassLoader();
-
-                }});
+        final Class<?> businessInterfaceClass = contextLoader.loadClass(businessInterface);
+        if (System.getSecurityManager() == null) {
+            return businessInterfaceClass.getClassLoader();
         }
-
-        return appClassLoader;
+        PrivilegedAction<ClassLoader> action = () -> businessInterfaceClass.getClassLoader();
+        return java.security.AccessController.doPrivileged(action);
     }
 
-    public static void serializeObjectFields(
-                                             Object instance,
-                                             ObjectOutputStream oos)
-        throws IOException {
 
+    // warning: accessed by reflection (AsmSerializableBeanGenerator)
+    public static void serializeObjectFields(Object instance, ObjectOutputStream oos) throws IOException {
         serializeObjectFields(instance, oos, true);
     }
 
-    public static void serializeObjectFields(
-                                             Object instance,
-                                             ObjectOutputStream oos,
-                                             boolean usesSuperClass)
+
+    // warning: accessed by reflection (AsmSerializableBeanGenerator)
+    public static void serializeObjectFields(Object instance, ObjectOutputStream oos, boolean usesSuperClass)
         throws IOException {
 
         Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
         final ObjectOutputStream objOutStream = oos;
 
         // Write out list of fields eligible for serialization in sorted order.
-        for(Field next : getSerializationFields(clazz)) {
+        for (Field next : getSerializationFields(clazz)) {
 
             final Field nextField = next;
             final Object theInstance = instance;
@@ -594,39 +485,26 @@ public class EJBUtils {
                 }
 
                 objOutStream.writeObject(value);
-            } catch(Throwable t) {
-                if( _logger.isLoggable(FINE) ) {
-                    _logger.log(FINE, "=====> failed serializing field: " + nextField +
-                             " =====> of class: " + clazz + " =====> using: " + oos.getClass() +
-                             " =====> serializing value of type: " + ((value == null)? null : value.getClass().getName()) +
-                             " ===> Error: " + t);
-                    _logger.log(FINE, "", t);
+            } catch (Throwable t) {
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE,
+                        "Failed serializing field: " + nextField + " of " + clazz
+                            + " using: " + oos.getClass() + " serializing value of type: "
+                            + (value == null ? null : value.getClass().getName()) + ", cause: " + t);
                 }
-                IOException ioe = new IOException();
-                Throwable cause = (t instanceof InvocationTargetException) ?
-                    ((InvocationTargetException)t).getCause() : t;
-                ioe.initCause( cause );
-                throw ioe;
+                throw new IOException(t instanceof InvocationTargetException ? t.getCause() : t);
             }
         }
     }
 
-    public static void deserializeObjectFields(
-                                               Object instance,
-                                               ObjectInputStream ois)
-        throws IOException {
-
+    // note: accessed by reflection!
+    public static void deserializeObjectFields(Object instance, ObjectInputStream ois) throws IOException {
         deserializeObjectFields(instance, ois, null, true);
-
     }
 
-    public static void deserializeObjectFields(
-                                               Object instance,
-                                               ObjectInputStream ois,
-                                               Object replaceValue,
-                                               boolean usesSuperClass)
-        throws IOException {
-
+    // note: accessed by reflection!
+    public static void deserializeObjectFields(Object instance, ObjectInputStream ois, Object replaceValue,
+        boolean usesSuperClass) throws IOException {
         Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
         if( _logger.isLoggable(FINE) ) {
             _logger.log(FINE, "=====> Deserializing class: " + clazz);

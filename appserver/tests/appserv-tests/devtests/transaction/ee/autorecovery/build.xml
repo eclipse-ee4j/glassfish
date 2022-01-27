@@ -129,6 +129,7 @@
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
               classname="${se.client}">
+           <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="verify_xa"/>
            <arg line="${appname}-web"/>
            <arg line="in2"/>

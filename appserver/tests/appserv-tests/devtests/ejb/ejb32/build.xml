@@ -36,7 +36,7 @@
         <antcall target="intfces"/>
         <antcall target="persistence"/>
         <antcall target="interceptors"/>
-        <antcall target="embedded"/>
+<!--        <antcall target="embedded"/>-->
     </target>
 
     <target name="lite">

@@ -87,6 +87,7 @@
               failonerror="true"
               classpath="${assemble.dir}/${appname}-all.jar:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}"
               classname="${se.client}">
+           <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="${appname}-all"/>
         </java>
     </target>

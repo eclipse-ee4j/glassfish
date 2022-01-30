@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,30 +31,36 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-/*
+/**
+ * A facade for container services to be used by web services runtime.
+ *
  * @author Kenneth Saks
  */
-
 public class EjbEndpointFacadeImpl implements EjbEndpointFacade {
 
-    private BaseContainer container_;
-    private InvocationManager invManager_;
-    private static Logger logger_ = EjbContainerUtilImpl.getLogger();
+    private static final Logger LOG = EjbContainerUtilImpl.getLogger();
+    private final BaseContainer container;
+    private final InvocationManager invocationManager;
 
-
+    /**
+     * Creates a facade for container services to be used by web services runtime.
+     *
+     * @param container
+     * @param util
+     */
     public EjbEndpointFacadeImpl(BaseContainer container, EjbContainerUtil util) {
-        container_ = container;
-        invManager_ = util.getInvocationManager();
+        this.container = container;
+        this.invocationManager = util.getInvocationManager();
     }
 
 
+    @Override
     public ClassLoader getEndpointClassLoader() {
-
-        return container_.getClassLoader();
-
+        return container.getClassLoader();
     }
 
 
+    @Override
     public ComponentInvocation startInvocation() {
 
         // We need to split the preInvoke tasks into stages since handlers
@@ -61,29 +68,23 @@ public class EjbEndpointFacadeImpl implements EjbEndpointFacade {
         // place before handlers are run.  Note that the application
         // classloader was set much earlier when the invocation first arrived
         // so we don't need to set it here.
-        EjbInvocation inv = container_.createEjbInvocation();
+        EjbInvocation inv = container.createEjbInvocation();
 
         // Do the portions of preInvoke that don't need a Method object.
         inv.isWebService = true;
-        inv.container = container_;
+        inv.container = container;
         inv.transactionAttribute = Container.TX_NOT_INITIALIZED;
-
-        // AS per latest spec change, the MessageContext object in WebSvcCtxt
-        // should be the same one as used in the ejb's interceptors'
-        // TODO
-        // inv.setContextData(wsCtxt);
 
         // In all cases, the WebServiceInvocationHandler will do the
         // remaining preInvoke tasks : getContext, preInvokeTx, etc.
-        invManager_.preInvoke(inv);
-
+        invocationManager.preInvoke(inv);
         return inv;
 
     }
 
 
+    @Override
     public void endInvocation(ComponentInvocation inv) {
-
         try {
             EjbInvocation ejbInv = (EjbInvocation) inv;
 
@@ -96,19 +97,13 @@ public class EjbEndpointFacadeImpl implements EjbEndpointFacade {
             // and WebServiceInvocationHandler rather than change the
             // behavior of BaseContainer.preInvoke and
             // BaseContainer.postInvoke.
-
-
-            if( ejbInv.ejb != null ) {
-                container_.webServicePostInvoke(ejbInv);
+            if (ejbInv.ejb == null) {
+                invocationManager.postInvoke(inv);
             } else {
-                invManager_.postInvoke(inv);
+                container.webServicePostInvoke(ejbInv);
             }
-
-        } catch(Throwable t) {
-            logger_.log(Level.WARNING,
-                       "Unexpected error in EJB WebService endpoint post processing", t);
+        } catch (Throwable t) {
+            LOG.log(Level.WARNING, "Unexpected error in EJB WebService endpoint post processing", t);
         }
-
     }
-
 }

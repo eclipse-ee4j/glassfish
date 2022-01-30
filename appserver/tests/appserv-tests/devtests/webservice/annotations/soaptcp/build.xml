@@ -121,6 +121,7 @@
         <echo message="running client: client.Client dir: ${build.classes.dir}/client"/>
         <java fork="true" classname="client.Client" dir="${build.classes.dir}/client">
             <jvmarg value="-Djava.util.logging.config.file=logging.properties"/>
+            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
             <classpath>
                 <path refid="client-classpath"/>
                 <pathelement path="${build.classes.dir}/client"/>

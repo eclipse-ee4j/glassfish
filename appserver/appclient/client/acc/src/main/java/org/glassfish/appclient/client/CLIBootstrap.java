@@ -85,12 +85,12 @@ public class CLIBootstrap {
 
     private JavaInfo java = new JavaInfo();
     private GlassFishInfo gfInfo = new GlassFishInfo();
-    private UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
+    private final UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
 
     /**
      * Set up with various sub-types of command line elements
      */
-    private CommandLineElement
+    private final CommandLineElement
         /** options to the ACC that take a value */
         accValuedOptions = new ACCValuedOption("-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver"),
 
@@ -106,7 +106,7 @@ public class CLIBootstrap {
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
 
     /** command line elements from most specific to least specific matching pattern */
-    private CommandLineElement[] elementsInScanOrder = new CommandLineElement[] {
+    private final CommandLineElement[] elementsInScanOrder = new CommandLineElement[] {
             accValuedOptions,   // collects options into "agentArgs"
             accUnvaluedOptions, // collects options into "agentArgs"
             jvmValuedOptions,
@@ -119,7 +119,7 @@ public class CLIBootstrap {
      * Command line elements in the order they should appear on the generated command line
      * Add the elements in this order so they appear in the generated java command in the correct positions.
      */
-    private CommandLineElement[] elementsInOutputOrder = new CommandLineElement[] {
+    private final CommandLineElement[] elementsInOutputOrder = new CommandLineElement[] {
             jvmValuedOptions,
             jvmPropertySettings,
             otherJVMOptions,
@@ -287,7 +287,6 @@ public class CLIBootstrap {
      */
     private void addProperties(final StringBuilder command) {
         command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
-        command.append(' ').append("-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true");
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
         command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
@@ -381,7 +380,7 @@ public class CLIBootstrap {
      */
     private static class AgentArgs {
         private final StringBuilder args = new StringBuilder("=mode=acscript");
-        private char sep = ',';
+        private final char sep = ',';
 
         AgentArgs() {
             final String appcPath = System.getProperty(ENV_VAR_PROP_PREFIX + "APPCPATH");
@@ -430,7 +429,7 @@ public class CLIBootstrap {
         private final Pattern whiteSpacePattern = Pattern.compile("[\\r\\n]");
 
         /** Allows multiple values; not all command line elements support this */
-        final List<String> values = new ArrayList<String>();
+        final List<String> values = new ArrayList<>();
 
         CommandLineElement(String patternString) {
             this(patternString, 0);
@@ -584,8 +583,8 @@ public class CLIBootstrap {
     private class ValuedOption extends Option {
 
         class OptionValue {
-            private String option;
-            private String value;
+            private final String option;
+            private final String value;
 
             OptionValue(String option, String value) {
                 this.option = option;
@@ -1035,7 +1034,7 @@ public class CLIBootstrap {
         private CommandLineElement evJVMValuedOptions;
         private CommandLineElement evOtherJVMOptions;
 
-        private final List<CommandLineElement> evElements = new ArrayList<CommandLineElement>();
+        private final List<CommandLineElement> evElements = new ArrayList<>();
 
         UserVMArgs(String vmargs) throws UserError {
 

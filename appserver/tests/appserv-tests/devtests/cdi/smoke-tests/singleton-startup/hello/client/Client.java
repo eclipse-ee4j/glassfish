@@ -22,8 +22,6 @@ import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
 
-import javax.management.j2ee.ManagementHome;
-import javax.management.j2ee.Management;
 import javax.rmi.PortableRemoteObject;
 
 import com.acme.Hello;
@@ -50,16 +48,6 @@ public class Client {
     public void doTest() {
 
         try {
-
-            // Ensure that MEJB is registered under all three of its JNDI names
-            System.out.println("Looking up MEJB Homes");
-            ManagementHome mh1Obj = (ManagementHome) new InitialContext().lookup("ejb/mgmt/MEJB");
-            ManagementHome mh2Obj = (ManagementHome) new InitialContext().lookup("java:global/mejb/MEJBBean");
-            ManagementHome mh3Obj = (ManagementHome) new InitialContext().lookup("java:global/mejb/MEJBBean!javax.management.j2ee.ManagementHome");
-        addStatus("mejb relative lookup", (mh1Obj != null));
-        addStatus("mejb global lookup", (mh2Obj != null));
-        addStatus("mejb global lookup with explicit ManagedHome interface", (mh3Obj != null));
-
             Hello hello = (Hello) new InitialContext().lookup("java:global/" + appName + "/SingletonBean");
         String response = hello.hello();
         addStatus("Singleton bean response", response.equals("hello, world!\n"));

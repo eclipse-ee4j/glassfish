@@ -49,7 +49,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
 
             try {
                 System.out.println("Calling getMessageContext");
-                context.getMessageContext();
+                context.getEJBObject();
             } catch(IllegalStateException ise) {
                 System.out.println("getMessageContext() successfully threw illegalStateException");
             }
@@ -63,7 +63,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
         public void ejbTimeout(Timer timer) {
             try {
                 System.out.println("Calling getMessageContext");
-                context.getMessageContext();
+                context.getEJBObject();
             } catch(IllegalStateException ise) {
                 System.out.println("getMessageContext() successfully threw illegalStateException");
             }

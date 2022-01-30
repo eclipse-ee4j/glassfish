@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,8 +22,15 @@ package org.glassfish.flashlight.impl.core;
  *         Date: Jul 20, 2008
  */
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.lang.invoke.MethodHandles;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.flashlight.FlashlightLoggerInfo;
 import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.flashlight.provider.ProbeRegistry;
 import org.objectweb.asm.ClassWriter;
@@ -32,16 +40,6 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.security.PrivilegedActionException;
-import java.security.ProtectionDomain;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import org.glassfish.flashlight.FlashlightLoggerInfo;
-
 public class ProviderImplGenerator {
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
@@ -50,49 +48,13 @@ public class ProviderImplGenerator {
         String generatedClassName = provider.getModuleProviderName() + "_Flashlight_" + provider.getModuleName() + "_"
                 + "Probe_" + ((provider.getProbeProviderName() == null) ? providerClazz.getName() : provider.getProbeProviderName());
         generatedClassName = providerClazz.getName() + "_" + generatedClassName;
-
         byte[] classData = generateClassData(provider, providerClazz, generatedClassName);
-
-        ProtectionDomain pd = providerClazz.getProtectionDomain();
-
-        java.lang.reflect.Method jm = null;
-        for (java.lang.reflect.Method jm2 : ClassLoader.class.getDeclaredMethods()) {
-            if (jm2.getName().equals("defineClass") && jm2.getParameterTypes().length == 5) {
-                jm = jm2;
-                break;
-            }
-        }
-
-        if (jm == null)
-            throw new RuntimeException();
-
-        final java.lang.reflect.Method clM = jm;
         try {
-            java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedExceptionAction() {
-                        public java.lang.Object run() throws Exception {
-                            if (!clM.isAccessible()) {
-                                clM.setAccessible(true);
-                            }
-                            return null;
-                        }
-                    });
-
-            clM.invoke(providerClazz.getClassLoader(), generatedClassName, classData, 0,
-                    classData.length, pd);
-
+            MethodHandles.privateLookupIn(providerClazz, MethodHandles.lookup()).defineClass(classData);
             return generatedClassName;
-        }
-        catch (PrivilegedActionException pEx) {
-            throw new RuntimeException(pEx);
-        }
-        catch (IllegalAccessException illegalAccessException) {
+        } catch (IllegalAccessException illegalAccessException) {
             throw new RuntimeException(illegalAccessException);
         }
-        catch (InvocationTargetException invtEx) {
-            throw new RuntimeException(invtEx);
-        }
-
     }
 
     public byte[] generateClassData(FlashlightProbeProvider provider, Class providerClazz, String generatedClassName) {
@@ -173,8 +135,9 @@ public class ProviderImplGenerator {
 
 
         if (Boolean.parseBoolean(System.getenv("AS_DEBUG"))) {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Generated ClassDATA " + clsName);
+            }
 
             // the path is horribly long.  Let's just write t directly into the
             // lib dir.  It is not for loading as a class but just for us humans
@@ -183,8 +146,9 @@ public class ProviderImplGenerator {
             clsName = clsName.replace('\\', '/'); // just in case Windows?  unlikely...
             index = clsName.lastIndexOf("/");
 
-            if (index >= 0)
+            if (index >= 0) {
                 clsName = clsName.substring(index + 1);
+            }
             FileOutputStream fos = null;
             try {
                 String rootPath = System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY)
@@ -192,8 +156,9 @@ public class ProviderImplGenerator {
 
                 String fileName = rootPath + clsName + ".class";
 
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine("ClassFile: " + fileName);
+                }
 
                 File file = new File(fileName);
 
@@ -208,8 +173,9 @@ public class ProviderImplGenerator {
             }
             finally {
                 try {
-                    if (fos != null)
+                    if (fos != null) {
                         fos.close();
+                    }
                 }
                 catch (Exception e) {
                     // nothing can be done...

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,24 +17,22 @@
 
 package com.sun.ejb.codegen;
 
+import jakarta.jws.WebMethod;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.glassfish.pfl.dynamic.codegen.spi.Type ;
 
-import jakarta.jws.WebMethod;
+import org.glassfish.pfl.dynamic.codegen.spi.Type ;
 
 import static java.lang.reflect.Modifier.ABSTRACT;
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._arg;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._clear;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
@@ -51,11 +49,15 @@ public class ServiceInterfaceGenerator extends Generator {
     private final String serviceIntfSimpleName;
     private final Method[] intfMethods;
 
-   /**
+    /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
+     *
+     * @param loader {@link ClassLoader} owning generated classes
+     * @param ejbClass
      */
-    public ServiceInterfaceGenerator(Class<?> ejbClass) {
+    public ServiceInterfaceGenerator(final ClassLoader loader, final Class<?> ejbClass) {
+        super(loader);
         this.ejbClass = ejbClass;
         packageName = getPackageName(ejbClass.getName());
         serviceIntfSimpleName = getServiceIntfName(ejbClass);
@@ -66,6 +68,10 @@ public class ServiceInterfaceGenerator extends Generator {
         // is only visible through the RemoteHome view.
     }
 
+    @Override
+    public String getPackageName() {
+        return this.packageName;
+    }
 
     /**
      * Get the fully qualified name of the generated class.
@@ -88,13 +94,7 @@ public class ServiceInterfaceGenerator extends Generator {
 
 
     @Override
-    public void evaluate() {
-        _clear();
-
-        if (packageName != null) {
-            _package(packageName);
-        }
-
+    public void defineClassBody() {
         _interface(PUBLIC, serviceIntfSimpleName);
 
         for (Method intfMethod : intfMethods) {

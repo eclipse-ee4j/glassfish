@@ -16,17 +16,12 @@
 
 package org.glassfish.admin.amxtest;
 
-import com.sun.appserv.management.DomainRoot;
-import com.sun.appserv.management.base.AMX;
-import com.sun.appserv.management.base.BulkAccess;
+import com.sun.appserv.management.base.AMXDebugSupportMBean;
 import com.sun.appserv.management.base.NotificationServiceMgr;
 import com.sun.appserv.management.base.QueryMgr;
-import com.sun.appserv.management.base.SystemInfo;
-import com.sun.appserv.management.base.Util;
 import com.sun.appserv.management.base.XTypes;
 import com.sun.appserv.management.client.AppserverConnectionSource;
 import com.sun.appserv.management.client.ConnectionSource;
-import com.sun.appserv.management.client.ProxyFactory;
 import com.sun.appserv.management.config.AMXConfig;
 import com.sun.appserv.management.config.ConfigConfig;
 import com.sun.appserv.management.config.DomainConfig;
@@ -35,26 +30,36 @@ import com.sun.appserv.management.config.ModuleMonitoringLevelsConfig;
 import com.sun.appserv.management.config.NodeAgentConfig;
 import com.sun.appserv.management.config.ServerConfig;
 import com.sun.appserv.management.config.ServersConfig;
-import com.sun.appserv.management.j2ee.J2EEDomain;
-import com.sun.appserv.management.util.jmx.JMXUtil;
 import com.sun.appserv.management.util.jmx.MBeanServerConnectionConnectionSource;
-import com.sun.appserv.management.util.misc.ClassUtil;
-import com.sun.appserv.management.util.misc.ExceptionUtil;
 import com.sun.appserv.management.util.misc.GSetUtil;
-import com.sun.appserv.management.util.misc.TypeCast;
-import com.sun.appserv.management.base.AMXDebugSupportMBean;
 
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import javax.management.Attribute;
-import javax.management.AttributeList;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+
+import org.glassfish.admin.amx.base.BulkAccess;
+import org.glassfish.admin.amx.base.DomainRoot;
+import org.glassfish.admin.amx.base.SystemInfo;
+import org.glassfish.admin.amx.core.proxy.ProxyFactory;
+import org.glassfish.admin.amx.j2ee.J2EEDomain;
+import org.glassfish.admin.amx.util.ClassUtil;
+import org.glassfish.admin.amx.util.ExceptionUtil;
+import org.glassfish.admin.amx.util.TypeCast;
+import org.glassfish.admin.amx.util.jmx.JMXUtil;
+import org.glassfish.external.amx.AMX;
+
+import javassist.bytecode.analysis.Util;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  Base class for testing the AMX API

@@ -40,7 +40,7 @@
         <antcall target="asynchronous"/>
         <antcall target="timer31"/>
         <antcall target="security"/>
-        <antcall target="embedded"/>
+<!--        <antcall target="embedded"/>-->
     </target>
 
     <target name="ejblite">

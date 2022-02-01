@@ -22,7 +22,6 @@ import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
 
-import javax.management.j2ee.ManagementHome;
 
 @Stateful
 @LocalBean

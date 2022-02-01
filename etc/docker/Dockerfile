@@ -56,7 +56,7 @@ ENV JAVA_HOME /usr/lib/jvm/jdk11
 ENV MAVEN_HOME /usr/share/maven
 ENV M2_HOME /usr/share/maven
 ENV ANT_HOME /usr/share/ant
-ENV JAVA_TOOL_OPTIONS "-Xmx2G"
+ENV JAVA_TOOL_OPTIONS "-Xmx2G -Xss768k"
 
 ENV HOME /home/jenkins
 WORKDIR /home/jenkins

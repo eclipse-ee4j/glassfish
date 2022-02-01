@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,9 @@
 
 package org.glassfish.admin.rest.generator;
 
+import com.sun.ejb.codegen.ClassGenerator;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,29 +28,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.utils.ResourceUtil;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+
+import static org.objectweb.asm.Opcodes.*;
 
 /**
  * @author Ludovic Champenois
  */
-public class ASMClassWriter implements ClassWriter, Opcodes {
+public class ASMClassWriter implements ClassWriter {
     private final static String INJECTOR_FIELD = "serviceLocator";
     private final static String FORNAME_INJECTOR_TYPE = "Lorg/glassfish/hk2/api/ServiceLocator;";
     private final static String INTERFACE_INJECTOR_TYPE = "org/glassfish/hk2/api/ServiceLocator";
     private final static String CREATE_AND_INITIALIZE = "createAndInitialize";
     private final static String CREATE_AND_INITIALIZE_SIG = "(Ljava/lang/Class;)Ljava/lang/Object;";
 
-    private org.objectweb.asm.ClassWriter cw = new org.objectweb.asm.ClassWriter(0);
+    private final org.objectweb.asm.ClassWriter cw = new org.objectweb.asm.ClassWriter(0);
     private String className;
     private ServiceLocator habitat;
     private final String generatedPath;
-    private Map<String, String> generatedMethods = new HashMap<String, String>();
+    private final Map<String, String> generatedMethods = new HashMap<>();
     //  private String baseClassName;
     //  private String resourcePath;
 
@@ -441,56 +446,23 @@ public class ASMClassWriter implements ClassWriter, Opcodes {
         return cw.toByteArray();
     }
 
-    public String defineClass(Class similarClass, byte[] classBytes) throws Exception {
-
-        String generatedClassName = "org.glassfish.admin.rest.resources.generatedASM.";
-        generatedClassName = generatedClassName + className;
-
-        byte[] byteContent = getByteClass();
+    private void defineClass(Class similarClass, byte[] classBytes) throws Exception {
+        String generatedClassName = "org.glassfish.admin.rest.resources.generatedASM." + className;
+        RestLogging.restLogger.log(Level.FINEST, "Generating class {0}", generatedClassName);
+        ClassLoader loader = similarClass.getClassLoader();
         ProtectionDomain pd = similarClass.getProtectionDomain();
-
-        java.lang.reflect.Method jm = null;
-        for (java.lang.reflect.Method jm2 : ClassLoader.class.getDeclaredMethods()) {
-            if (jm2.getName().equals("defineClass") && jm2.getParameterTypes().length == 5) {
-                jm = jm2;
-                break;
-            }
-        }
-        if (jm == null) {//should never happen, makes findbug happy
-            throw new RuntimeException("cannot find method called defineclass...");
-        }
-        final java.lang.reflect.Method clM = jm;
+        byte[] byteContent = getByteClass();
+        ClassGenerator.defineClass(loader, generatedClassName, byteContent, pd);
         try {
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-
-                public java.lang.Object run() throws Exception {
-                    if (!clM.isAccessible()) {
-                        clM.setAccessible(true);
-                    }
-                    return null;
-                }
-            });
-
-            RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", generatedClassName);
-            clM.invoke(similarClass.getClassLoader()
-            /*Thread.currentThread().getContextClassLoader()*/, generatedClassName, byteContent, 0, byteContent.length, pd);
-
-            try {
-                similarClass.getClassLoader().loadClass(generatedClassName);
-            } catch (ClassNotFoundException cnfEx) {
-                throw new RuntimeException(cnfEx);
-            }
-
-            return generatedClassName;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            loader.loadClass(generatedClassName);
+        } catch (ClassNotFoundException cnfEx) {
+            throw new GeneratorException(cnfEx);
         }
-
     }
 
-    /*
-     dump bytecode in class files so that we can  decompile them to check the real content
-    */
+    /**
+     * dump bytecode in class files so that we can  decompile them to check the real content
+     */
     private void debug(String clsName, byte[] classData) {
 
         // the path is horribly long.  Let's just write t directly into the

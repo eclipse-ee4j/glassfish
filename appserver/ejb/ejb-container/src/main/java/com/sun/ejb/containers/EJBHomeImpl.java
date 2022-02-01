@@ -107,6 +107,7 @@ public abstract class EJBHomeImpl
      * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
      */
+    @Override
     public final void remove(Handle handle)
         throws RemoteException, RemoveException
     {
@@ -130,10 +131,11 @@ public abstract class EJBHomeImpl
      * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
      */
+    @Override
     public final void remove(Object primaryKey)
         throws RemoteException, RemoveException
     {
-        if (container.getContainerType() != BaseContainer.ContainerType.ENTITY) {
+        if (container.getContainerInfo().type != BaseContainer.ContainerType.ENTITY) {
             // Session beans dont have primary keys. EJB2.0 Section 6.6
             throw new RemoveException("Invalid remove operation.");
         }
@@ -155,6 +157,7 @@ public abstract class EJBHomeImpl
     /**
      * This is the implementation of the jakarta.ejb.EJBHome method.
      */
+    @Override
     public final EJBMetaData getEJBMetaData()
         throws RemoteException
     {
@@ -167,6 +170,7 @@ public abstract class EJBHomeImpl
      * This is the implementation of the jakarta.ejb.EJBHome getHomeHandle
      * method.
      */
+    @Override
     public final HomeHandle getHomeHandle()
         throws RemoteException
     {

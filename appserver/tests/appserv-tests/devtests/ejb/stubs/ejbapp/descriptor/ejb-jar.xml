@@ -33,20 +33,6 @@
         <use-caller-identity/>
       </security-identity>
     </session>
-<!-- no javax.management.jar in workspace yet
-    <session>
-      <display-name>DummyMEJBBean</display-name>
-      <ejb-name>DummyMEJBBean</ejb-name>
-      <home>javax.management.j2ee.ManagementHome</home>
-      <remote>javax.management.j2ee.Management</remote>
-      <ejb-class>com.sun.s1asdev.ejb.stubs.ejbapp.DummyMEJBBean</ejb-class>
-      <session-type>Stateless</session-type>
-      <transaction-type>Bean</transaction-type>
-      <security-identity>
-        <use-caller-identity/>
-      </security-identity>
-    </session>
--->
   </enterprise-beans>
   <assembly-descriptor>
   </assembly-descriptor>

@@ -67,7 +67,7 @@ archive_bundles(){
 }
 
 dev_build(){
-  mvn -U clean install -Pstaging ${MVN_EXTRA}
+  mvn -U clean install -Pstaging,fastest -T2C ${MVN_EXTRA}
 }
 
 build_re_dev(){
@@ -83,7 +83,5 @@ fi
 "$@"
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
-  # archive the local repository org.glassfish.main
-  # the output is a tar archive split into 1MB chunks.
-  tar -cz -f - -C ${HOME}/.m2/repository org/glassfish/main | split -b 1m - ${WORKSPACE}/bundles/_maven-repo
+  tar -c --exclude='*.zip' --exclude='*/main/tests/*' --exclude='*/main/distributions/*' --exclude='*/main/extras/*' --exclude='*/main/admingui/*' --newer-mtime '1 day ago' -C ${HOME}/.m2/repository org/glassfish/main | gzip --fast > ${WORKSPACE}/bundles/maven-repo.tar.gz
 fi

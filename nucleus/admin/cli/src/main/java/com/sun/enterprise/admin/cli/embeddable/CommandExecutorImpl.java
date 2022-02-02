@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -98,7 +99,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
         if (globalOptions.size() > 0) {
             String pwfile = globalOptions.getOne(ProgramOptions.PASSWORDFILE);
             if (pwfile != null && pwfile.length() > 0) {
-                Map<String, String> passwords = CLIUtil.readPasswordFileOptions(pwfile, true);
+                Map<String, String> passwords = CLIUtil.readPasswordFileOptions(pwfile, false);
                 for (CommandModel.ParamModel opt : commandModel.getParameters()) {
                     if (opt.getParam().password()) {
                         String pwdname = opt.getName();

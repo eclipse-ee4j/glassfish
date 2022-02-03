@@ -41,6 +41,7 @@
         <module>authentication</module>
         <module>authorization</module>
         <module>cdi</module>
+        <module>microprofile</module>
         <module>concurrency</module>
     </modules>
 

@@ -54,7 +54,7 @@
       </ior-security-config>
       <resource-ref>
         <res-ref-name>MyDB</res-ref-name>
-        <jndi-name>jdbc/XAPointbase</jndi-name>
+        <jndi-name>jdbc/Derby</jndi-name>
       </resource-ref>
       <gen-classes />
     </ejb>
@@ -79,7 +79,7 @@
       </ior-security-config>
       <resource-ref>
         <res-ref-name>MyDB</res-ref-name>
-        <jndi-name>jdbc/XAPointbase</jndi-name>
+        <jndi-name>jdbc/Derby</jndi-name>
       </resource-ref>
       <resource-env-ref>
         <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>

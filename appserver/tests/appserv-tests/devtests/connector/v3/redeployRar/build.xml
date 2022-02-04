@@ -24,7 +24,7 @@
         <!ENTITY testproperties SYSTEM "./build.properties">
         ]>
 
-<project name="redeploy-rar" default="usage" basedir=".">
+<project name="redeploy-rar" default="all" basedir=".">
 
     &commonSetup;
     &commonBuild;
@@ -44,7 +44,7 @@
 
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-            <param name="s1astest.classpath" value="${s1astest.classpath}:./ra/publish/internal/classes/"/>
+            <param name="s1astest.classpath" value="${s1astest.classpath}:${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes"/>
         </antcall>
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -85,7 +85,7 @@
     <target name="setupone" depends="init-common">
         <antcall target="create-ra-config"/>
         <antcall target="deploy-rar-common">
-            <param name="rarfile" value="versions/ver1/testjdbcra.rar"/>
+            <param name="rarfile" value="${env.APS_HOME}/connectors-ra-redeploy/rars/target/connectors-ra-redeploy-rars.rar"/>
         </antcall>
         <antcall target="create-admin-object"/>
         <antcall target="deploy"/>
@@ -93,8 +93,10 @@
 
     <target name="setuptwo" depends="init-common">
         <antcall target="create-ra-config"/>
+        <!-- Applications must have the same filename, which is used as an application name -->
+        <copy file="${env.APS_HOME}/connectors-ra-redeploy/rars/target/connectors-ra-redeploy-rars-v2.rar" tofile="connectors-ra-redeploy-rars.rar"/>
         <antcall target="deploy-rar-common">
-            <param name="rarfile" value="versions/ver2/testjdbcra.rar"/>
+          <param name="rarfile" value="connectors-ra-redeploy-rars.rar"/>
         </antcall>
         <antcall target="create-admin-object"/>
         <antcall target="deploy"/>
@@ -111,40 +113,7 @@
         <antcall target="runCycle"/>
     </target>
 
-    <!--
-        <target name="runCycle" depends="init-common">
-
-          <antcall target="setupone"/>
-          <exec executable="${APPCLIENT}" failonerror="true">
-              <env key="APPCPATH" value="${env.S1AS_HOME}/pointbase/lib/pbclient.jar"/>
-              <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
-          <arg line="-name ${appname}Client"/>
-          <arg line="-textauth"/>
-          <arg line="-user j2ee"/>
-          <arg line="-password j2ee"/>
-              <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
-          <arg line= " 1 " />
-           </exec>
-           <antcall target="unsetup"/>
-           <antcall target="setuptwo"/>
-           <exec executable="${APPCLIENT}" failonerror="true">
-              <env key="APPCPATH" value="${env.S1AS_HOME}/pointbase/lib/pbclient.jar"/>
-              <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
-          <arg line="-name ${appname}Client"/>
-          <arg line="-textauth"/>
-          <arg line="-user j2ee"/>
-          <arg line="-password j2ee"/>
-              <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
-          <arg line= " 2 " />
-           </exec>
-           <antcall target="unsetup"/>
-
-        </target>
-    -->
-
-
     <target name="runCycle" depends="init-common">
-
         <antcall target="setupone"/>
         <java classname="client.WebTest">
             <arg value="${http.host}"/>
@@ -172,8 +141,6 @@
             </classpath>
         </java>
         <antcall target="unsetup"/>
-
-
     </target>
 
 
@@ -186,7 +153,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
         <antcall target="undeploy-rar-common">
-            <param name="undeployrar" value="testjdbcra"/>
+            <param name="undeployrar" value="connectors-ra-redeploy-rars"/>
         </antcall>
     </target>
 
@@ -197,7 +164,7 @@
 
     <target name="create-pool">
         <antcall target="create-connector-connpool-common">
-            <param name="ra.name" value="testjdbcra"/>
+            <param name="ra.name" value="connectors-ra-redeploy-rars"/>
             <param name="connection.defname" value="javax.sql.DataSource"/>
             <param name="connector.conpool.name" value="versiontest-ra-pool"/>
         </antcall>
@@ -217,7 +184,7 @@
     <target name="create-admin-object" depends="init-common">
         <antcall target="asadmin-common">
             <param name="admin.command"
-                   value="create-admin-object --target ${appserver.instance.name} --restype com.sun.jdbcra.spi.JdbcSetupAdmin --raname testjdbcra --property TableName=customer2:JndiName=jdbc/ejb-subclassing:SchemaName=connector:NoOfRows=1"/>
+                   value="create-admin-object --target ${appserver.instance.name} --restype com.sun.jdbcra.spi.JdbcSetupAdmin --raname connectors-ra-redeploy-rars --property TableName=customer2:JndiName=jdbc/ejb-subclassing:SchemaName=connector:NoOfRows=1"/>
             <param name="operand.props" value="eis/testAdmin"/>
         </antcall>
     </target>
@@ -246,13 +213,13 @@
     <target name="create-ra-config" depends="init-common">
         <antcall target="asadmin-common">
             <param name="admin.command" value="create-resource-adapter-config  --property RAProperty=VALID"/>
-            <param name="operand.props" value="testjdbcra"/>
+            <param name="operand.props" value="connectors-ra-redeploy-rars"/>
         </antcall>
     </target>
     <target name="delete-ra-config" depends="init-common">
         <antcall target="asadmin-common">
             <param name="admin.command" value="delete-resource-adapter-config"/>
-            <param name="operand.props" value="testjdbcra"/>
+            <param name="operand.props" value="connectors-ra-redeploy-rars"/>
         </antcall>
         <!--<antcall target="reconfig-common"/>-->
     </target>

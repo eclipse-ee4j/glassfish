@@ -17,86 +17,106 @@
 
 package com.sun.gjc.spi;
 
-import com.sun.appserv.connectors.internal.spi.MCFLifecycleListener;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.gjc.common.DataSourceSpec;
-import com.sun.gjc.monitoring.JdbcStatsProvider;
-import com.sun.gjc.util.SQLTraceDelegator;
-import com.sun.gjc.util.SecurityUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static com.sun.gjc.util.SecurityUtils.isPasswordCredentialEqual;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+import javax.sql.PooledConnection;
+
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
+import com.sun.appserv.connectors.internal.spi.MCFLifecycleListener;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.common.DataSourceObjectBuilder;
+import com.sun.gjc.common.DataSourceSpec;
+import com.sun.gjc.monitoring.JdbcStatsProvider;
+import com.sun.gjc.util.SQLTraceDelegator;
+import com.sun.logging.LogDomains;
+
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionManager;
 import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.LazyEnlistableConnectionManager;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterAssociation;
 import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.ValidatingManagedConnectionFactory;
 import jakarta.resource.spi.security.PasswordCredential;
-import javax.sql.PooledConnection;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.
- * This class is extended by the DataSource specific <code>ManagedConnection</code> factories
- * and the <code>ManagedConnectionFactory</code> for the <code>DriverManager</code>.
+ * <code>ManagedConnectionFactory</code> implementation for Generic JDBC
+ * Connector. This class is extended by the DataSource specific
+ * <code>ManagedConnection</code> factories and the
+ * <code>ManagedConnectionFactory</code> for the <code>DriverManager</code>.
  *
  * @author Evani Sai Surya Kiran, Aditya Gore
  * @version 1.0, 02/08/03
  */
 
-public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.spi.ManagedConnectionFactory,
-        jakarta.resource.spi.ValidatingManagedConnectionFactory,
-        MCFLifecycleListener, ResourceAdapterAssociation,
-        java.io.Serializable, Externalizable {
+public abstract class ManagedConnectionFactoryImpl
+        implements ManagedConnectionFactory, ValidatingManagedConnectionFactory, MCFLifecycleListener,
+        ResourceAdapterAssociation, Serializable, Externalizable {
+
+    private static Logger _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
+    protected static final StringManager localStrings = StringManager.getManager(DataSourceObjectBuilder.class);
 
     protected DataSourceSpec spec = new DataSourceSpec();
-    protected transient DataSourceObjectBuilder dsObjBuilder;
-
-    protected java.io.PrintWriter logWriter = null;
-    protected transient jakarta.resource.spi.ResourceAdapter ra = null;
-
-    private static Logger _logger;
+    protected transient DataSourceObjectBuilder dataSourceObjectBuilder;
+    protected PrintWriter logWriter;
+    protected transient ResourceAdapter resourceAdapter;
     protected boolean statementWrapping;
+    protected SQLTraceDelegator sqlTraceDelegator;
+    protected LazyEnlistableConnectionManager connectionManager;
+    protected boolean isLazyConnectionManager;
 
     private JdbcObjectsFactory jdbcObjectsFactory = JdbcObjectsFactory.getInstance();
-    protected SQLTraceDelegator sqlTraceDelegator;
+    private int statementCacheSize;
+    private String statementCacheType;
+    private long statementLeakTimeout;
+    private boolean statementLeakReclaim;
 
-    static {
-        _logger = LogDomains.getLogger(ManagedConnectionFactoryImpl.class, LogDomains.RSR_LOGGER);
-    }
-
-    protected jakarta.resource.spi.LazyEnlistableConnectionManager cm_;
-    protected boolean isLazyCm_;
-    private int statementCacheSize = 0;
-    private String statementCacheType = null;
-    private long statementLeakTimeout = 0;
-    private boolean statementLeakReclaim = false;
-
-    //Jdbc Stats provider that is created
-    private JdbcStatsProvider jdbcStatsProvider = null;
-
-    protected static final StringManager localStrings =
-            StringManager.getManager(DataSourceObjectBuilder.class);
+    // Jdbc Stats provider that is created
+    private JdbcStatsProvider jdbcStatsProvider;
 
     /**
-     * Creates a Connection Factory instance. The <code>ConnectionManager</code> implementation
-     * of the resource adapter is used here.
+     * Creates a Connection Factory instance. The <code>ConnectionManager</code>
+     * implementation of the resource adapter is used here.
      *
-     * @return Generic JDBC Connector implementation of <code>javax.sql.DataSource</code>
+     * @return Generic JDBC Connector implementation of
+     * <code>javax.sql.DataSource</code>
      */
     public Object createConnectionFactory() {
         logFine("In createConnectionFactory()");
@@ -104,59 +124,64 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Creates a Connection Factory instance. The <code>ConnectionManager</code> implementation
-     * of the application server is used here.
+     * Creates a Connection Factory instance. The <code>ConnectionManager</code>
+     * implementation of the application server is used here.
      *
-     * @param cxManager <code>ConnectionManager</code> passed by the application server
-     * @return Generic JDBC Connector implementation of <code>javax.sql.DataSource</code>
+     * @param connectionManager <code>ConnectionManager</code> passed by the application
+     * server
+     * @return Generic JDBC Connector implementation of
+     * <code>javax.sql.DataSource</code>
      */
-    public Object createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager) {
+    public Object createConnectionFactory(ConnectionManager connectionManager) {
         logFine("In createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager)");
 
-        javax.sql.DataSource cf = jdbcObjectsFactory.getDataSourceInstance(this, cxManager);
+        DataSource connectionFactory = jdbcObjectsFactory.getDataSourceInstance(this, connectionManager);
 
-        if (cxManager instanceof jakarta.resource.spi.LazyEnlistableConnectionManager) {
-            cm_ = (jakarta.resource.spi.LazyEnlistableConnectionManager) cxManager;
-            isLazyCm_ = true;
+        if (connectionManager instanceof LazyEnlistableConnectionManager) {
+            this.connectionManager = (LazyEnlistableConnectionManager) connectionManager;
+            isLazyConnectionManager = true;
         }
-        return cf;
+
+        return connectionFactory;
     }
 
     /**
-     * Creates a new physical connection to the underlying EIS resource
-     * manager.
+     * Creates a new physical connection to the underlying EIS resource manager.
      *
-     * @param subject       <code>Subject</code> instance passed by the application server
+     * @param subject <code>Subject</code> instance passed by the application server
      * @param cxRequestInfo <code>ConnectionRequestInfo</code> which may be created
-     *                      as a result of the invocation <code>getConnection(user, password)</code>
-     *                      on the <code>DataSource</code> object
+     * as a result of the invocation <code>getConnection(user, password)</code> on
+     * the <code>DataSource</code> object
+     *
      * @return <code>ManagedConnection</code> object created
      * @throws ResourceException if there is an error in instantiating the
-     *                           <code>DataSource</code> object used for the
-     *                           creation of the <code>ManagedConnection</code> object
+     * <code>DataSource</code> object used for the creation of the
+     * <code>ManagedConnection</code> object
      * @throws SecurityException if there ino <code>PasswordCredential</code> object
-     *                           satisfying this request
-     * @throws ResourceException if there is an error in allocating the
-     *                           physical connection
+     * satisfying this request
+     * @throws ResourceException if there is an error in allocating the physical
+     * connection
      */
-    public abstract jakarta.resource.spi.ManagedConnection createManagedConnection
-            (javax.security.auth.Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException;
+    public abstract ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException;
 
     /**
-     * Check if this <code>ManagedConnectionFactoryImpl</code> is equal to
-     * another <code>ManagedConnectionFactoryImpl</code>.
+     * Check if this <code>ManagedConnectionFactoryImpl</code> is equal to another
+     * <code>ManagedConnectionFactoryImpl</code>.
      *
-     * @param other <code>ManagedConnectionFactoryImpl</code> object for checking equality with
-     * @return true    if the property sets of both the
-     *         <code>ManagedConnectionFactoryImpl</code> objects are the same
-     *         false    otherwise
+     * @param other <code>ManagedConnectionFactoryImpl</code> object for checking
+     * equality with
+     * @return true if the property sets of both the
+     * <code>ManagedConnectionFactoryImpl</code> objects are the same false
+     * otherwise
      */
     public abstract boolean equals(Object other);
 
     /**
-     * Get the log writer for this <code>ManagedConnectionFactoryImpl</code> instance.
+     * Get the log writer for this <code>ManagedConnectionFactoryImpl</code>
+     * instance.
      *
-     * @return <code>PrintWriter</code> associated with this <code>ManagedConnectionFactoryImpl</code> instance
+     * @return <code>PrintWriter</code> associated with this
+     * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>setLogWriter</code>
      */
     public java.io.PrintWriter getLogWriter() {
@@ -164,14 +189,16 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Get the <code>ResourceAdapterImpl</code> for this <code>ManagedConnectionFactoryImpl</code> instance.
+     * Get the <code>ResourceAdapterImpl</code> for this
+     * <code>ManagedConnectionFactoryImpl</code> instance.
      *
-     * @return <code>ResourceAdapterImpl</code> associated with this <code>ManagedConnectionFactoryImpl</code> instance
+     * @return <code>ResourceAdapterImpl</code> associated with this
+     * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>setResourceAdapter</code>
      */
     public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         logFine("In getResourceAdapter");
-        return ra;
+        return resourceAdapter;
     }
 
     /**
@@ -185,58 +212,58 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Returns a matched <code>ManagedConnection</code> from the candidate
-     * set of <code>ManagedConnection</code> objects.
+     * Returns a matched <code>ManagedConnection</code> from the candidate set of
+     * <code>ManagedConnection</code> objects.
      *
-     * @param connectionSet <code>Set</code> of  <code>ManagedConnection</code>
-     *                      objects passed by the application server
-     * @param subject       passed by the application server
-     *                      for retrieving information required for matching
-     * @param cxRequestInfo <code>ConnectionRequestInfo</code> passed by the application server
-     *                      for retrieving information required for matching
-     * @return <code>ManagedConnection</code> that is the best match satisfying this request
-     * @throws ResourceException if there is an error accessing the <code>Subject</code>
-     *                           parameter or the <code>Set</code> of <code>ManagedConnection</code>
-     *                           objects passed by the application server
+     * @param connectionSet <code>Set</code> of <code>ManagedConnection</code>
+     * objects passed by the application server
+     * @param subject passed by the application server for retrieving information
+     * required for matching
+     * @param cxRequestInfo <code>ConnectionRequestInfo</code> passed by the
+     * application server for retrieving information required for matching
+     * @return <code>ManagedConnection</code> that is the best match satisfying this
+     * request
+     * @throws ResourceException if there is an error accessing the
+     * <code>Subject</code> parameter or the <code>Set</code> of
+     * <code>ManagedConnection</code> objects passed by the application server
      */
-    public jakarta.resource.spi.ManagedConnection matchManagedConnections(
-            java.util.Set connectionSet, javax.security.auth.Subject subject, ConnectionRequestInfo cxRequestInfo)
-            throws ResourceException {
+    public ManagedConnection matchManagedConnections(Set connectionSet, Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In matchManagedConnections");
 
         if (connectionSet == null) {
             return null;
         }
 
+        PasswordCredential passwordCredential = getPasswordCredential(this, subject, cxRequestInfo);
 
-        PasswordCredential pc = SecurityUtils.getPasswordCredential(this, subject, cxRequestInfo);
-
-        java.util.Iterator iter = connectionSet.iterator();
-        ManagedConnectionImpl mc = null;
+        Iterator<ManagedConnectionImpl> iter = connectionSet.iterator();
+        ManagedConnectionImpl managedConnectionImpl = null;
 
         while (iter.hasNext()) {
             try {
-                mc = (ManagedConnectionImpl) iter.next();
-            } catch (java.util.NoSuchElementException nsee) {
-                _logger.log(Level.SEVERE, "jdbc.exc_iter");
+                managedConnectionImpl = iter.next();
+            } catch (NoSuchElementException nsee) {
+                _logger.log(SEVERE, "jdbc.exc_iter");
                 throw new ResourceException(nsee.getMessage());
             }
-            if (pc == null && this.equals(mc.getManagedConnectionFactory())) {
-                return mc;
-            } else if (SecurityUtils.isPasswordCredentialEqual(pc, mc.getPasswordCredential())) {
-                return mc;
+            if (passwordCredential == null && this.equals(managedConnectionImpl.getManagedConnectionFactory())) {
+                return managedConnectionImpl;
+            }
+
+            if (isPasswordCredentialEqual(passwordCredential, managedConnectionImpl.getPasswordCredential())) {
+                return managedConnectionImpl;
             }
         }
+
         return null;
     }
 
     /**
-     * This method returns a set of invalid <code>ManagedConnection</code>
-     * objects chosen from a specified set of <code>ManagedConnection</code>
-     * objects.
+     * This method returns a set of invalid <code>ManagedConnection</code> objects
+     * chosen from a specified set of <code>ManagedConnection</code> objects.
      *
-     * @param connectionSet a set of <code>ManagedConnection</code> objects
-     *                      that need to be validated.
+     * @param connectionSet a set of <code>ManagedConnection</code> objects that
+     * need to be validated.
      * @return a set of invalid <code>ManagedConnection</code> objects.
      * @throws ResourceException generic exception.
      */
@@ -244,55 +271,49 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         Iterator iter = connectionSet.iterator();
         Set<ManagedConnectionImpl> invalidConnections = new HashSet<ManagedConnectionImpl>();
         while (iter.hasNext()) {
-            ManagedConnectionImpl mc = (ManagedConnectionImpl) iter.next();
+            ManagedConnectionImpl managedConnectionImpl = (ManagedConnectionImpl) iter.next();
             try {
-                isValid(mc);
+                isValid(managedConnectionImpl);
             } catch (ResourceException re) {
-                invalidConnections.add(mc);
-                mc.connectionErrorOccurred(re, null);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "jdbc.invalid_connection", re);
-                }
+                invalidConnections.add(managedConnectionImpl);
+                managedConnectionImpl.connectionErrorOccurred(re, null);
+                _logger.log(FINE, "jdbc.invalid_connection", re);
             }
         }
+
         return invalidConnections;
     }
 
-    //GJCINT
-
     /**
-     * Checks if a <code>ManagedConnection</code> is to be validated or not
-     * and validates it or returns.
+     * Checks if a <code>ManagedConnection</code> is to be validated or not and
+     * validates it or returns.
      *
      * @param mc <code>ManagedConnection</code> to be validated
-     * @throws ResourceException if the connection is not valid or
-     *                           if validation method is not proper
+     * @throws ResourceException if the connection is not valid or if validation
+     * method is not proper
      */
     void isValid(ManagedConnectionImpl mc) throws ResourceException {
-
         if (mc == null || mc.isTransactionInProgress()) {
             return;
         }
 
         String conVal = spec.getDetail(DataSourceSpec.CONNECTIONVALIDATIONREQUIRED);
 
-        boolean connectionValidationRequired =
-                (conVal == null) ? false : Boolean.valueOf(conVal.toLowerCase(Locale.getDefault()));
+        boolean connectionValidationRequired = (conVal == null) ? false
+                : Boolean.valueOf(conVal.toLowerCase(Locale.getDefault()));
         if (!connectionValidationRequired) {
             return;
         }
-
 
         String validationMethod = spec.getDetail(DataSourceSpec.VALIDATIONMETHOD).toLowerCase(Locale.getDefault());
 
         mc.checkIfValid();
         /**
-         * The above call checks if the actual physical connection
-         * is usable or not.
+         * The above call checks if the actual physical connection is usable or not.
          */
         java.sql.Connection con = mc.getActualConnection();
 
-        if(validationMethod.equals("custom-validation")) {
+        if (validationMethod.equals("custom-validation")) {
             isValidByCustomValidation(con, spec.getDetail(DataSourceSpec.VALIDATIONCLASSNAME));
         } else if (validationMethod.equals("auto-commit")) {
             isValidByAutoCommit(con);
@@ -306,18 +327,17 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Checks if a <code>java.sql.Connection</code> is valid or not
-     * by doing a custom validation using the validation class name specified.
+     * Checks if a <code>java.sql.Connection</code> is valid or not by doing a
+     * custom validation using the validation class name specified.
      *
      * @param con <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
-    protected void isValidByCustomValidation(java.sql.Connection con,
-            String validationClassName) throws ResourceException {
+    protected void isValidByCustomValidation(java.sql.Connection con, String validationClassName)
+            throws ResourceException {
         boolean isValid = false;
         if (con == null) {
-            throw new ResourceException("The connection is not valid as "
-                    + "the connection is null");
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
         try {
@@ -335,16 +355,15 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Checks if a <code>java.sql.Connection</code> is valid or not
-     * by checking its auto commit property.
+     * Checks if a <code>java.sql.Connection</code> is valid or not by checking its
+     * auto commit property.
      *
      * @param con <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
     protected void isValidByAutoCommit(java.sql.Connection con) throws ResourceException {
         if (con == null) {
-            throw new ResourceException("The connection is not valid as "
-                    + "the connection is null");
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
         try {
@@ -352,7 +371,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
             // dbCon.setAutoCommit(dbCon.getAutoCommit()) will cause problems with
             // some drivers like sybase
             // We do not validate connections that are already enlisted
-            //in a transaction
+            // in a transaction
             // We cycle autocommit to true and false to by-pass drivers that
             // might cache the call to set autocomitt
             // Also notice that some XA data sources will throw and exception if
@@ -375,16 +394,15 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Checks if a <code>java.sql.Connection</code> is valid or not
-     * by checking its meta data.
+     * Checks if a <code>java.sql.Connection</code> is valid or not by checking its
+     * meta data.
      *
      * @param con <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
     protected void isValidByMetaData(java.sql.Connection con) throws ResourceException {
         if (con == null) {
-            throw new ResourceException("The connection is not valid as "
-                    + "the connection is null");
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
         try {
@@ -396,40 +414,37 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * Checks if a <code>java.sql.Connection</code> is valid or not
-     * by querying a table.
+     * Checks if a <code>java.sql.Connection</code> is valid or not by querying a
+     * table.
      *
-     * @param con       <code>java.sql.Connection</code> to be validated
+     * @param connection <code>java.sql.Connection</code> to be validated
      * @param tableName table which should be queried
      * @throws ResourceException if the connection is not valid
      */
-    protected void isValidByTableQuery(java.sql.Connection con,
-                                       String tableName) throws ResourceException {
-        if (con == null) {
-            throw new ResourceException("The connection is not valid as "
-                    + "the connection is null");
+    protected void isValidByTableQuery(Connection connection, String tableName) throws ResourceException {
+        if (connection == null) {
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
-        java.sql.PreparedStatement stmt = null;
-        java.sql.ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
-            final String statement = "SELECT COUNT(*) FROM " + tableName;
-            stmt = con.prepareStatement(statement);
-            rs = stmt.executeQuery();
+            preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM " + tableName);
+            resultSet = preparedStatement.executeQuery();
         } catch (Exception sqle) {
             _logger.log(Level.INFO, "jdbc.exc_table_validation", tableName);
             throw new ResourceException(sqle);
         } finally {
             try {
-                if (rs != null) {
-                    rs.close();
+                if (resultSet != null) {
+                    resultSet.close();
                 }
             } catch (Exception e1) {
             }
 
             try {
-                if (stmt != null) {
-                    stmt.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
                 }
             } catch (Exception e2) {
             }
@@ -440,14 +455,13 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      * Sets the isolation level specified in the <code>ConnectionRequestInfo</code>
      * for the <code>ManagedConnection</code> passed.
      *
-     * @param mc <code>ManagedConnection</code>
-     * @throws ResourceException if the isolation property is invalid
-     *                           or if the isolation cannot be set over the connection
+     * @param managedConnectionImpl <code>ManagedConnection</code>
+     * @throws ResourceException if the isolation property is invalid or if the
+     * isolation cannot be set over the connection
      */
-    protected void setIsolation(ManagedConnectionImpl mc) throws ResourceException {
-
-        java.sql.Connection con = mc.getActualConnection();
-        if (con == null) {
+    protected void setIsolation(ManagedConnectionImpl managedConnectionImpl) throws ResourceException {
+        Connection connection = managedConnectionImpl.getActualConnection();
+        if (connection == null) {
             return;
         }
 
@@ -455,63 +469,59 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         if (tranIsolation != null && !tranIsolation.equals("")) {
             int tranIsolationInt = getTransactionIsolationInt(tranIsolation);
             try {
-                con.setTransactionIsolation(tranIsolationInt);
-                mc.setLastTransactionIsolationLevel(tranIsolationInt);
-            } catch (java.sql.SQLException sqle) {
-                _logger.log(Level.SEVERE, "jdbc.exc_tx_iso", sqle);
-                throw new ResourceException("The transaction isolation could "
-                        + "not be set: " + sqle.getMessage());
+                connection.setTransactionIsolation(tranIsolationInt);
+                managedConnectionImpl.setLastTransactionIsolationLevel(tranIsolationInt);
+            } catch (SQLException sqle) {
+                _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
+                throw new ResourceException("The transaction isolation could " + "not be set: " + sqle.getMessage());
             }
         }
     }
 
     /**
-     * Resets the isolation level for the <code>ManagedConnection</code> passed.
-     * If the transaction level is to be guaranteed to be the same as the one
-     * present when this <code>ManagedConnection</code> was created, as specified
-     * by the <code>ConnectionRequestInfo</code> passed, it sets the transaction
-     * isolation level from the <code>ConnectionRequestInfo</code> passed. Else,
-     * it sets it to the transaction isolation passed.
+     * Resets the isolation level for the <code>ManagedConnection</code> passed. If
+     * the transaction level is to be guaranteed to be the same as the one present
+     * when this <code>ManagedConnection</code> was created, as specified by the
+     * <code>ConnectionRequestInfo</code> passed, it sets the transaction isolation
+     * level from the <code>ConnectionRequestInfo</code> passed. Else, it sets it to
+     * the transaction isolation passed.
      *
-     * @param mc       <code>ManagedConnection</code>
+     * @param managedConnectionImpl <code>ManagedConnection</code>
      * @param tranIsol int
-     * @throws ResourceException if the isolation property is invalid
-     *                           or if the isolation cannot be set over the connection
+     * @throws ResourceException if the isolation property is invalid or if the
+     * isolation cannot be set over the connection
      */
-    void resetIsolation(ManagedConnectionImpl mc, int tranIsol) throws ResourceException {
-
-        java.sql.Connection con = mc.getActualConnection();
-        if (con == null) {
+    void resetIsolation(ManagedConnectionImpl managedConnectionImpl, int tranIsol) throws ResourceException {
+        Connection connection = managedConnectionImpl.getActualConnection();
+        if (connection == null) {
             return;
         }
 
-        String tranIsolation = spec.getDetail(DataSourceSpec.TRANSACTIONISOLATION);
-        if (tranIsolation != null && !tranIsolation.equals("")) {
+        String transactionIsolation = spec.getDetail(DataSourceSpec.TRANSACTIONISOLATION);
+        if (transactionIsolation != null && !transactionIsolation.equals("")) {
             String guaranteeIsolationLevel = spec.getDetail(DataSourceSpec.GUARANTEEISOLATIONLEVEL);
 
             if (guaranteeIsolationLevel != null && !guaranteeIsolationLevel.equals("")) {
                 boolean guarantee = Boolean.valueOf(guaranteeIsolationLevel.toLowerCase(Locale.getDefault()));
 
                 if (guarantee) {
-                    int tranIsolationInt = getTransactionIsolationInt(tranIsolation);
+                    int tranIsolationInt = getTransactionIsolationInt(transactionIsolation);
                     try {
-                        if (tranIsolationInt != con.getTransactionIsolation()) {
-                            con.setTransactionIsolation(tranIsolationInt);
+                        if (tranIsolationInt != connection.getTransactionIsolation()) {
+                            connection.setTransactionIsolation(tranIsolationInt);
                         }
-                    } catch (java.sql.SQLException sqle) {
-                        _logger.log(Level.SEVERE, "jdbc.exc_tx_iso", sqle);
-                        throw new ResourceException("The isolation level could not be set: "
-                                + sqle.getMessage());
+                    } catch (SQLException sqle) {
+                        _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
+                        throw new ResourceException("The isolation level could not be set: " + sqle.getMessage());
                     }
                 } else {
                     try {
-                        if (tranIsol != con.getTransactionIsolation()) {
-                            con.setTransactionIsolation(tranIsol);
+                        if (tranIsol != connection.getTransactionIsolation()) {
+                            connection.setTransactionIsolation(tranIsol);
                         }
-                    } catch (java.sql.SQLException sqle) {
-                        _logger.log(Level.SEVERE, "jdbc.exc_tx_iso", sqle);
-                        throw new ResourceException("The isolation level could not be set: "
-                                + sqle.getMessage());
+                    } catch (SQLException sqle) {
+                        _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
+                        throw new ResourceException("The isolation level could not be set: " + sqle.getMessage());
                     }
                 }
             }
@@ -519,26 +529,27 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     private void detectSqlTraceListeners() {
-        //Check for sql-trace-listeners attribute.
+        // Check for sql-trace-listeners attribute.
         String sqlTraceListeners = getSqlTraceListeners();
         String delimiter = ",";
 
-        if(sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
+        if (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
             sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), getApplicationName(), getModuleName());
             StringTokenizer st = new StringTokenizer(sqlTraceListeners, delimiter);
+
             while (st.hasMoreTokens()) {
                 String sqlTraceListener = st.nextToken().trim();
-                if(!sqlTraceListener.equals("")) {
+                if (!sqlTraceListener.equals("")) {
                     Class listenerClass = null;
                     SQLTraceListener listener = null;
                     Constructor[] constructors = null;
                     Class[] parameterTypes = null;
                     Object[] initargs = null;
-                    //Load the listener class
+                    // Load the listener class
                     try {
                         listenerClass = Thread.currentThread().getContextClassLoader().loadClass(sqlTraceListener);
                     } catch (ClassNotFoundException ex) {
-                        _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_cnfe", sqlTraceListener);
+                        _logger.log(SEVERE, "jdbc.sql_trace_listener_cnfe", sqlTraceListener);
                     }
                     Class intf[] = listenerClass.getInterfaces();
                     for (int i = 0; i < intf.length; i++) {
@@ -550,22 +561,22 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
                                 constructors = listenerClass.getConstructors();
                                 for (Constructor constructor : constructors) {
                                     parameterTypes = constructor.getParameterTypes();
-                                    //For now only the no argument constructors are allowed.
-                                    //TODO should this be documented?
+                                    // For now only the no argument constructors are allowed.
+                                    // TODO should this be documented?
                                     if (parameterTypes.length == 0) {
                                         listener = (SQLTraceListener) constructor.newInstance(initargs);
                                     }
                                 }
                             } catch (InstantiationException ex) {
-                                _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
                             } catch (IllegalAccessException ex) {
-                                _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
                             } catch (IllegalArgumentException ex) {
-                                _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
                             } catch (InvocationTargetException ex) {
-                                _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
                             } catch (SecurityException ex) {
-                                _logger.log(Level.SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
+                                _logger.log(SEVERE, "jdbc.sql_trace_listener_exception", ex.getMessage());
                             }
                             sqlTraceDelegator.registerSQLTraceListener(listener);
                         }
@@ -575,74 +586,79 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         }
     }
 
-
     /**
-     * Gets the integer equivalent of the string specifying
-     * the transaction isolation.
+     * Gets the integer equivalent of the string specifying the transaction
+     * isolation.
      *
      * @param tranIsolation string specifying the isolation level
-     * @return tranIsolationInt    the <code>java.sql.Connection</code> constant
-     *         for the string specifying the isolation.
+     * @return tranIsolationInt the <code>java.sql.Connection</code> constant for
+     * the string specifying the isolation.
      */
     private int getTransactionIsolationInt(String tranIsolation) throws ResourceException {
         if (tranIsolation.equalsIgnoreCase("read-uncommitted")) {
-            return java.sql.Connection.TRANSACTION_READ_UNCOMMITTED;
-        } else if (tranIsolation.equalsIgnoreCase("read-committed")) {
-            return java.sql.Connection.TRANSACTION_READ_COMMITTED;
-        } else if (tranIsolation.equalsIgnoreCase("repeatable-read")) {
-            return java.sql.Connection.TRANSACTION_REPEATABLE_READ;
-        } else if (tranIsolation.equalsIgnoreCase("serializable")) {
-            return java.sql.Connection.TRANSACTION_SERIALIZABLE;
-        } else {
-            throw new ResourceException("Invalid transaction isolation; the transaction "
-                    + "isolation level can be empty or any of the following: "
-                    + "read-uncommitted, read-committed, repeatable-read, serializable");
+            return Connection.TRANSACTION_READ_UNCOMMITTED;
         }
+
+        if (tranIsolation.equalsIgnoreCase("read-committed")) {
+            return Connection.TRANSACTION_READ_COMMITTED;
+        }
+
+        if (tranIsolation.equalsIgnoreCase("repeatable-read")) {
+            return Connection.TRANSACTION_REPEATABLE_READ;
+        }
+
+        if (tranIsolation.equalsIgnoreCase("serializable")) {
+            return Connection.TRANSACTION_SERIALIZABLE;
+        }
+
+        throw new ResourceException(
+            "Invalid transaction isolation; the transaction " +
+            "isolation level can be empty or any of the following: " +
+            "read-uncommitted, read-committed, repeatable-read, serializable");
     }
 
     /**
-     * Common operation performed by all the child MCFs before returning a created mc
+     * Common operation performed by all the child MCFs before returning a created
+     * mc
      */
-    protected void validateAndSetIsolation(ManagedConnectionImpl mc) throws ResourceException {
+    protected void validateAndSetIsolation(ManagedConnectionImpl managedConnectionImpl) throws ResourceException {
         try {
-            isValid(mc);
-            setIsolation(mc);
+            isValid(managedConnectionImpl);
+            setIsolation(managedConnectionImpl);
         } catch (ResourceException e) {
-            if (mc != null) {
+            if (managedConnectionImpl != null) {
                 try {
-                    mc.destroy();
+                    managedConnectionImpl.destroy();
                 } catch (ResourceException e1) {
                     _logger.log(Level.WARNING, "jdbc.exc_destroy", e1);
                 }
             }
-            String msg = localStrings.getString("jdbc.exc_destroy", e.getMessage());
-            ResourceAllocationException rae = new ResourceAllocationException(
-                    msg, e);
-            throw rae;
+
+            throw new ResourceAllocationException(localStrings.getString("jdbc.exc_destroy", e.getMessage()), e);
         }
     }
 
     private void detectStatementCachingSupport() {
         String cacheSize = getStatementCacheSize();
-        if(cacheSize != null){
-            try{
+        if (cacheSize != null) {
+            try {
                 statementCacheSize = Integer.parseInt(cacheSize);
-                //TODO-SC FINE log-level with Pool Name (if possible)
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "StatementCaching Size : " + statementCacheSize);
+                // TODO-SC FINE log-level with Pool Name (if possible)
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "StatementCaching Size : " + statementCacheSize);
                 }
-            }catch(NumberFormatException nfe){
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("Exception while setting StatementCacheSize : " +
-                        nfe.getMessage());
+            } catch (NumberFormatException nfe) {
+                if (_logger.isLoggable(FINE)) {
+                    _logger.fine("Exception while setting StatementCacheSize : " + nfe.getMessage());
                 }
-                //ignore
+                // ignore
             }
         }
     }
 
     /**
-     * Set the log writer for this <code>ManagedConnectionFactoryImpl</code> instance.
+     * Set the log writer for this <code>ManagedConnectionFactoryImpl</code>
+     * instance.
      *
      * @param out <code>PrintWriter</code> passed by the application server
      * @see <code>getLogWriter</code>
@@ -655,11 +671,11 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      * Set the associated <code>ResourceAdapterImpl</code> JavaBean.
      *
      * @param ra <code>ResourceAdapterImpl</code> associated with this
-     *           <code>ManagedConnectionFactoryImpl</code> instance
+     * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>getResourceAdapter</code>
      */
     public void setResourceAdapter(jakarta.resource.spi.ResourceAdapter ra) {
-        this.ra = ra;
+        this.resourceAdapter = ra;
     }
 
     /**
@@ -788,18 +804,15 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
             if (isAssignable) {
                 spec.setDetail(DataSourceSpec.VALIDATIONCLASSNAME, className);
             } else {
-                //Validation Failed
-                _logger.log(Level.SEVERE, "jdbc.set_custom_validation_class_name_failure", className);
-                throw new ResourceException("The Custom validation class name is " +
-                        "not valid as it does not implement " +
-                        ConnectionValidation.class.getName());
+                // Validation Failed
+                _logger.log(SEVERE, "jdbc.set_custom_validation_class_name_failure", className);
+                throw new ResourceException("The Custom validation class name is "
+                        + "not valid as it does not implement " + ConnectionValidation.class.getName());
             }
         } catch (ResourceException ex) {
-            _logger.log(Level.SEVERE, "jdbc.set_custom_validation_class_name_failure",
-                    ex.getMessage());
+            _logger.log(SEVERE, "jdbc.set_custom_validation_class_name_failure", ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            _logger.log(Level.SEVERE, "jdbc.set_custom_validation_class_name_failure",
-                    ex.getMessage());
+            _logger.log(SEVERE, "jdbc.set_custom_validation_class_name_failure", ex.getMessage());
         }
     }
 
@@ -850,18 +863,16 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         return spec.getDetail(DataSourceSpec.GUARANTEEISOLATIONLEVEL);
     }
 
-    protected boolean isEqual(PasswordCredential pc, String user,
-                              String password) {
+    protected boolean isEqual(PasswordCredential pc, String user, String password) {
 
-        //if equal get direct connection else
-        //get connection with user and password.
+        // if equal get direct connection else
+        // get connection with user and password.
 
         String thisUser = (pc == null) ? null : pc.getUserName();
         char[] passwordArray = (pc == null) ? null : pc.getPassword();
         char[] tmpPasswordArray = (password == null) ? null : password.toCharArray();
 
-        return (isStringEqual(thisUser, user) &&
-                Arrays.equals(passwordArray, tmpPasswordArray));
+        return (isStringEqual(thisUser, user) && Arrays.equals(passwordArray, tmpPasswordArray));
 
     }
 
@@ -982,21 +993,21 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         return spec.getDetail(DataSourceSpec.STATEMENTWRAPPING);
     }
 
-    public void setStatementCacheSize(String value){
+    public void setStatementCacheSize(String value) {
         spec.setDetail(DataSourceSpec.STATEMENTCACHESIZE, value);
         detectStatementCachingSupport();
     }
 
-    public String getStatementCacheSize(){
+    public String getStatementCacheSize() {
         return spec.getDetail(DataSourceSpec.STATEMENTCACHESIZE);
     }
 
-    public void setStatementLeakTimeoutInSeconds(String value){
+    public void setStatementLeakTimeoutInSeconds(String value) {
         spec.setDetail(DataSourceSpec.STATEMENTLEAKTIMEOUTINSECONDS, value);
         detectStatementLeakSupport();
     }
 
-    public String getStatementLeakTimeoutInSeconds(){
+    public String getStatementLeakTimeoutInSeconds() {
         return spec.getDetail(DataSourceSpec.STATEMENTLEAKTIMEOUTINSECONDS);
     }
 
@@ -1047,13 +1058,14 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     public void setStatementCacheType(String statementCacheType) {
         spec.setDetail(DataSourceSpec.STATEMENTCACHETYPE, statementCacheType);
         this.statementCacheType = getStatementCacheType();
-        if(this.statementCacheType == null || this.statementCacheType.trim().equals("")) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine(" Default StatementCaching Type : " +
-                        localStrings.getString("jdbc.statement-cache.default.datastructure"));
+        if (this.statementCacheType == null || this.statementCacheType.trim().equals("")) {
+            if (_logger.isLoggable(FINE)) {
+                _logger.fine(
+                    " Default StatementCaching Type : " +
+                    localStrings.getString("jdbc.statement-cache.default.datastructure"));
             }
         } else {
-            if(_logger.isLoggable(Level.FINE)) {
+            if (_logger.isLoggable(FINE)) {
                 _logger.fine("StatementCaching Type : " + this.statementCacheType);
             }
         }
@@ -1080,9 +1092,8 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     public void setInitSql(String initSql) {
-        //TODO remove case where "null" is checked. Might be a CLI/GUI bug.
-        if(initSql != null && !initSql.equalsIgnoreCase("null") &&
-                !initSql.equals("")) {
+        // TODO remove case where "null" is checked. Might be a CLI/GUI bug.
+        if (initSql != null && !initSql.equalsIgnoreCase("null") && !initSql.equals("")) {
             spec.setDetail(DataSourceSpec.INITSQL, initSql);
         }
     }
@@ -1112,7 +1123,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     public void setSqlTraceListeners(String sqlTraceListeners) {
-        if(sqlTraceListeners != null) {
+        if (sqlTraceListeners != null) {
             spec.setDetail(DataSourceSpec.SQLTRACELISTENERS, sqlTraceListeners);
             detectSqlTraceListeners();
         }
@@ -1223,15 +1234,15 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         return spec.getDetail(DataSourceSpec.DELIMITER);
     }
 
-    public void setEscapeCharacter(String escapeCharacter){
+    public void setEscapeCharacter(String escapeCharacter) {
         spec.setDetail(DataSourceSpec.ESCAPECHARACTER, escapeCharacter);
     }
 
-    public String getEscapeCharacter(){
+    public String getEscapeCharacter() {
         return spec.getDetail(DataSourceSpec.ESCAPECHARACTER);
     }
 
-      /**
+    /**
      * Sets the driver specific properties.
      *
      * @param driverProps <code>String</code>
@@ -1252,16 +1263,14 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         return spec.getDetail(DataSourceSpec.DRIVERPROPERTIES);
     }
 
-    protected PoolInfo getPoolInfo(){
+    protected PoolInfo getPoolInfo() {
         return new PoolInfo(getPoolName(), getApplicationName(), getModuleName());
     }
 
-    protected ManagedConnectionImpl constructManagedConnection(PooledConnection pc,
-                                                           Connection sqlCon, PasswordCredential passCred,
-                                                           ManagedConnectionFactoryImpl mcf) throws ResourceException {
-        return new ManagedConnectionImpl(pc, sqlCon, passCred, mcf,
-                getPoolInfo(), statementCacheSize, statementCacheType, sqlTraceDelegator,
-                statementLeakTimeout, statementLeakReclaim);
+    protected ManagedConnectionImpl constructManagedConnection(PooledConnection pc, Connection sqlCon,
+            PasswordCredential passCred, ManagedConnectionFactoryImpl mcf) throws ResourceException {
+        return new ManagedConnectionImpl(pc, sqlCon, passCred, mcf, getPoolInfo(), statementCacheSize,
+                statementCacheType, sqlTraceDelegator, statementLeakTimeout, statementLeakReclaim);
     }
 
     /**
@@ -1271,10 +1280,10 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      * @throws ResourceException
      */
     public Object getDataSource() throws ResourceException {
-        if (dsObjBuilder == null) {
-            dsObjBuilder = new DataSourceObjectBuilder(spec);
+        if (dataSourceObjectBuilder == null) {
+            dataSourceObjectBuilder = new DataSourceObjectBuilder(spec);
         }
-        return dsObjBuilder.constructDataSourceObject();
+        return dataSourceObjectBuilder.constructDataSourceObject();
     }
 
     protected static final int JVM_OPTION_STATEMENT_WRAPPING_ON = 1;
@@ -1282,12 +1291,10 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     protected static final int JVM_OPTION_STATEMENT_WRAPPING_NOT_SET = -1;
 
     /**
-     * This wrapStatement flag is used to enable disable wrapping the
-     * statement objects. This can be enabled by passing jvm option,
-     * com.sun.appserv.jdbc.wrapstatement = true.
-     * This can be disabled by removing this option or by passing non true
-     * value.
-     * By default this will be disabled
+     * This wrapStatement flag is used to enable disable wrapping the statement
+     * objects. This can be enabled by passing jvm option,
+     * com.sun.appserv.jdbc.wrapstatement = true. This can be disabled by removing
+     * this option or by passing non true value. By default this will be disabled
      */
     private static int wrapStatement = JVM_OPTION_STATEMENT_WRAPPING_NOT_SET;
 
@@ -1303,8 +1310,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      */
     private static int getStatementWrappingJVMOption() {
         int result = JVM_OPTION_STATEMENT_WRAPPING_NOT_SET;
-        String str = System.getProperty(
-                "com.sun.appserv.jdbc.wrapJdbcObjects");
+        String str = System.getProperty("com.sun.appserv.jdbc.wrapJdbcObjects");
         if ("true".equalsIgnoreCase(str)) {
             result = JVM_OPTION_STATEMENT_WRAPPING_ON;
         } else if ("false".equalsIgnoreCase(str)) {
@@ -1314,9 +1320,9 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     /**
-     * 9.1 has attribute "wrap-statements" which will be overriden
-     * when JVM option is specified as "true" or "false"
-     * JVM Option will be deprecated in future versions.
+     * 9.1 has attribute "wrap-statements" which will be overridden when JVM option
+     * is specified as "true" or "false" JVM Option will be deprecated in future
+     * versions.
      */
     protected void computeStatementWrappingStatus() {
 
@@ -1325,8 +1331,8 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         if (statementWrappingString != null)
             poolProperty = Boolean.valueOf(statementWrappingString);
 
-        if (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_ON ||
-                (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_NOT_SET && poolProperty)) {
+        if (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_ON
+                || (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_NOT_SET && poolProperty)) {
             statementWrapping = true;
         } else {
             statementWrapping = false;
@@ -1345,10 +1351,9 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     public JdbcObjectsFactory getJdbcObjectsFactory() {
         return jdbcObjectsFactory;
     }
-    protected void logFine(String logMessage){
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, logMessage);
-        }
+
+    protected void logFine(String logMessage) {
+        _logger.log(FINE, logMessage);
     }
 
     @Override
@@ -1356,71 +1361,63 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         String poolMonitoringSubTreeRoot = getPoolMonitoringSubTreeRoot();
         String sqlTraceListeners = getSqlTraceListeners();
 
-        //Default values used in case sql tracing is OFF
+        // Default values used in case sql tracing is OFF
         int sqlTraceCacheSize = 0;
         long timeToKeepQueries = 0;
-        if(sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
-            if(getNumberOfTopQueriesToReport() != null && !getNumberOfTopQueriesToReport().equals("null")) {
-                //Some value is set for this property
+        if (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
+            if (getNumberOfTopQueriesToReport() != null && !getNumberOfTopQueriesToReport().equals("null")) {
+                // Some value is set for this property
                 sqlTraceCacheSize = Integer.parseInt(getNumberOfTopQueriesToReport());
             } else {
-                //No property by this name. default to 10 queries
+                // No property by this name. default to 10 queries
                 sqlTraceCacheSize = 10;
             }
-            if(getTimeToKeepQueriesInMinutes() != null && !getTimeToKeepQueriesInMinutes().equals("null")) {
-                //Time-To-Keep-Queries property has been set
+            if (getTimeToKeepQueriesInMinutes() != null && !getTimeToKeepQueriesInMinutes().equals("null")) {
+                // Time-To-Keep-Queries property has been set
                 timeToKeepQueries = Integer.parseInt(getTimeToKeepQueriesInMinutes());
             } else {
-                //Default to 5 minutes after which cache is pruned.
+                // Default to 5 minutes after which cache is pruned.
                 timeToKeepQueries = 5;
-                //Time to keep queries is set to 5 minutes because the timer
-                //task will keep running till mcf is destroyed even if
-                //monitoring is turned OFF.
+                // Time to keep queries is set to 5 minutes because the timer
+                // task will keep running till mcf is destroyed even if
+                // monitoring is turned OFF.
             }
         }
-        if(_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("MCF Created");
-        }
-        if (statementCacheSize > 0 ||
-                (sqlTraceListeners != null && !sqlTraceListeners.equals("null")) ||
-                statementLeakTimeout > 0) {
+
+        _logger.finest("MCF Created");
+
+        if (statementCacheSize > 0 || (sqlTraceListeners != null && !sqlTraceListeners.equals("null"))
+                || statementLeakTimeout > 0) {
             jdbcStatsProvider = new JdbcStatsProvider(getPoolName(), getApplicationName(), getModuleName(),
                     sqlTraceCacheSize, timeToKeepQueries);
-            //get the poolname and use it to initialize the stats provider n register
-            StatsProviderManager.register(
-                    "jdbc-connection-pool",
-                    PluginPoint.SERVER,
-                    poolMonitoringSubTreeRoot, jdbcStatsProvider);
-            if(jdbcStatsProvider.getSqlTraceCache() != null) {
-                if(_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest("Scheduling timer task for sql trace caching");
-                }
-                Timer timer = ((com.sun.gjc.spi.ResourceAdapterImpl) ra).getTimer();
+
+            // Get the poolname and use it to initialize the stats provider n register
+            StatsProviderManager.register("jdbc-connection-pool", PluginPoint.SERVER, poolMonitoringSubTreeRoot,
+                    jdbcStatsProvider);
+
+            if (jdbcStatsProvider.getSqlTraceCache() != null) {
+                _logger.finest("Scheduling timer task for sql trace caching");
+                Timer timer = ((ResourceAdapterImpl) resourceAdapter).getTimer();
                 jdbcStatsProvider.getSqlTraceCache().scheduleTimerTask(timer);
             }
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("Registered JDBCRA Stats Provider");
-            }
+
+            _logger.finest("Registered JDBCRA Stats Provider");
         }
     }
 
     @Override
     public void mcfDestroyed() {
-        if(_logger.isLoggable(Level.FINEST)) {
-            _logger.finest("MCF Destroyed");
-        }
-        if(jdbcStatsProvider != null) {
-            if(jdbcStatsProvider.getSqlTraceCache() != null) {
-                if(_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest("Canceling timer task for sql trace caching");
-                }
+        _logger.finest("MCF Destroyed");
+
+        if (jdbcStatsProvider != null) {
+            if (jdbcStatsProvider.getSqlTraceCache() != null) {
+                _logger.finest("Canceling timer task for sql trace caching");
                 jdbcStatsProvider.getSqlTraceCache().cancelTimerTask();
             }
+
             StatsProviderManager.unregister(jdbcStatsProvider);
             jdbcStatsProvider = null;
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("Unregistered JDBCRA Stats Provider");
-            }
+            _logger.finest("Unregistered JDBCRA Stats Provider");
         }
     }
 
@@ -1430,10 +1427,9 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         if (stmtLeakTimeout != null) {
             statementLeakTimeout = Integer.parseInt(stmtLeakTimeout) * 1000L;
             statementLeakReclaim = Boolean.valueOf(stmtLeakReclaim);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "StatementLeakTimeout in seconds: "
-                        + statementLeakTimeout + " & StatementLeakReclaim: "
-                        + statementLeakReclaim + " for pool : " + getPoolInfo());
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "StatementLeakTimeout in seconds: " + statementLeakTimeout
+                        + " & StatementLeakReclaim: " + statementLeakReclaim + " for pool : " + getPoolInfo());
             }
         }
     }
@@ -1442,6 +1438,6 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     }
 
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        ra = com.sun.gjc.spi.ResourceAdapterImpl.getInstance();
+        resourceAdapter = ResourceAdapterImpl.getInstance();
     }
 }

@@ -16,6 +16,18 @@
 
 package com.sun.gjc.spi.base;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.Savepoint;
+import java.sql.Statement;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.ManagedConnectionImpl;
@@ -23,48 +35,41 @@ import com.sun.gjc.util.MethodExecutor;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
-import java.sql.*;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.LazyAssociatableConnectionManager;
+import jakarta.resource.spi.LazyEnlistableConnectionManager;
+import jakarta.resource.spi.ManagedConnectionFactory;
 
 /**
- * Holds the java.sql.Connection object, which is to be
- * passed to the application program.
+ * Holds the java.sql.Connection object, which is to be passed to the
+ * application program.
  *
  * @author Binod P.G
  * @version 1.0, 02/07/23
  */
 public abstract class ConnectionHolder implements Connection {
 
-    protected Connection con;
+    protected final static Logger _logger = LogDomains.getLogger(ManagedConnectionImpl.class, LogDomains.RSR_LOGGER);
+    protected final static StringManager sm = StringManager.getManager(DataSourceObjectBuilder.class);
 
-    protected ManagedConnectionImpl mc;
+    protected Connection connection;
+    protected ManagedConnectionImpl managedConnectionImpl;
 
-    protected boolean wrappedAlready = false;
-
-    protected boolean isClosed = false;
-
+    protected boolean wrappedAlready;
+    protected boolean isClosed;
     protected boolean valid = true;
+    protected boolean active;
 
-    protected boolean active = false;
+    private LazyAssociatableConnectionManager lazyAssocCm_;
+    private LazyEnlistableConnectionManager lazyEnlistCm_;
 
-    private jakarta.resource.spi.LazyAssociatableConnectionManager lazyAssocCm_;
-    private jakarta.resource.spi.LazyEnlistableConnectionManager lazyEnlistCm_;
-
-    private jakarta.resource.spi.ConnectionRequestInfo cxReqInfo_;
-
-    private jakarta.resource.spi.ManagedConnectionFactory mcf_;
+    private ConnectionRequestInfo connectionRequestInfo;
+    private ManagedConnectionFactory managedConnectionFactory;
 
     protected int statementTimeout;
     protected boolean statementTimeoutEnabled;
 
-    protected final static Logger _logger;
-
-    static {
-        _logger = LogDomains.getLogger(ManagedConnectionImpl.class, LogDomains.RSR_LOGGER);
-    }
-    private MethodExecutor executor = null;
+    private MethodExecutor executor;
 
     public static enum ConnectionType {
         LAZY_ENLISTABLE, LAZY_ASSOCIATABLE, STANDARD
@@ -73,18 +78,14 @@ public abstract class ConnectionHolder implements Connection {
     private ConnectionType myType_ = ConnectionType.STANDARD;
 
     /**
-     * The active flag is false when the connection handle is
-     * created. When a method is invoked on this object, it asks
-     * the ManagedConnection if it can be the active connection
-     * handle out of the multiple connection handles. If the
-     * ManagedConnection reports that this connection handle
-     * can be active by setting this flag to true via the setActive
-     * function, the above method invocation succeeds; otherwise
-     * an exception is thrown.
+     * The active flag is false when the connection handle is created. When a method
+     * is invoked on this object, it asks the ManagedConnection if it can be the
+     * active connection handle out of the multiple connection handles. If the
+     * ManagedConnection reports that this connection handle can be active by
+     * setting this flag to true via the setActive function, the above method
+     * invocation succeeds; otherwise an exception is thrown.
      */
 
-    protected final static StringManager sm = StringManager.getManager(
-            DataSourceObjectBuilder.class);
 
 
     /**
@@ -92,12 +93,11 @@ public abstract class ConnectionHolder implements Connection {
      *
      * @param con <code>java.sql.Connection</code> object.
      */
-    public ConnectionHolder(Connection con, ManagedConnectionImpl mc,
-                            jakarta.resource.spi.ConnectionRequestInfo cxRequestInfo) {
-        this.con = con;
-        this.mc = mc;
-        mcf_ = mc.getMcf();
-        cxReqInfo_ = cxRequestInfo;
+    public ConnectionHolder(Connection con, ManagedConnectionImpl mc, ConnectionRequestInfo cxRequestInfo) {
+        this.connection = con;
+        this.managedConnectionImpl = mc;
+        managedConnectionFactory = mc.getMcf();
+        connectionRequestInfo = cxRequestInfo;
         statementTimeout = mc.getStatementTimeout();
         executor = new MethodExecutor();
         if (statementTimeout > 0) {
@@ -111,7 +111,7 @@ public abstract class ConnectionHolder implements Connection {
      * @return Connection object.
      */
     public Connection getConnection() {
-        return con;
+        return connection;
     }
 
     /**
@@ -133,13 +133,13 @@ public abstract class ConnectionHolder implements Connection {
     }
 
     /**
-     * Returns the <code>ManagedConnection</code> instance responsible
-     * for this connection.
+     * Returns the <code>ManagedConnection</code> instance responsible for this
+     * connection.
      *
      * @return <code>ManagedConnection</code> instance.
      */
     public ManagedConnectionImpl getManagedConnection() {
-        return mc;
+        return managedConnectionImpl;
     }
 
     /**
@@ -147,30 +147,30 @@ public abstract class ConnectionHolder implements Connection {
      * supplied. Also replace <code>ManagedConnection</code> link.
      *
      * @param con <code>Connection</code> object.
-     * @param mc  <code> ManagedConnection</code> object.
+     * @param mc <code> ManagedConnection</code> object.
      */
     public void associateConnection(Connection con, ManagedConnectionImpl mc) {
-        this.mc = mc;
-        this.con = con;
+        this.managedConnectionImpl = mc;
+        this.connection = con;
     }
 
     /**
-     * Dis-associate ManagedConnection and actual-connection from this user connection.
-     * Used when lazy-connection-association is ON.
+     * Dis-associate ManagedConnection and actual-connection from this user
+     * connection. Used when lazy-connection-association is ON.
      */
     public void dissociateConnection() {
-        this.mc = null;
-        this.con = null;
+        this.managedConnectionImpl = null;
+        this.connection = null;
     }
 
     /**
-     * Clears all warnings reported for the underlying connection  object.
+     * Clears all warnings reported for the underlying connection object.
      *
      * @throws SQLException In case of a database error.
      */
     public void clearWarnings() throws SQLException {
         checkValidity();
-        con.clearWarnings();
+        connection.clearWarnings();
     }
 
     /**
@@ -187,10 +187,10 @@ public abstract class ConnectionHolder implements Connection {
         }
 
         isClosed = true;
-        if (mc != null) {
-            //mc might be null if this is a lazyAssociatable connection
-            //and has not been associated yet or has been disassociated
-            mc.connectionClosed(null, this);
+        if (managedConnectionImpl != null) {
+            // mc might be null if this is a lazyAssociatable connection
+            // and has not been associated yet or has been disassociated
+            managedConnectionImpl.connectionClosed(null, this);
         }
     }
 
@@ -207,7 +207,7 @@ public abstract class ConnectionHolder implements Connection {
      * @throws SQLException In case of a database error.
      */
     void actualClose() throws SQLException {
-        con.close();
+        connection.close();
     }
 
     /**
@@ -217,7 +217,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void commit() throws SQLException {
         checkValidity();
-        con.commit();
+        connection.commit();
     }
 
     /**
@@ -229,21 +229,23 @@ public abstract class ConnectionHolder implements Connection {
     public Statement createStatement() throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        Statement stmt = con.createStatement();
+
+        Statement statement = connection.createStatement();
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                statement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                statement.close();
             }
         }
-        return stmt;
+
+        return statement;
     }
 
     /**
      * Creates a statement from the underlying Connection.
      *
-     * @param resultSetType        Type of the ResultSet
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @return <code>Statement</code> object.
      * @throws SQLException In case of a database error.
@@ -251,51 +253,54 @@ public abstract class ConnectionHolder implements Connection {
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        Statement stmt = con.createStatement(resultSetType, resultSetConcurrency);
+
+        Statement statement = connection.createStatement(resultSetType, resultSetConcurrency);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                statement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                statement.close();
             }
         }
-        return stmt;
+
+        return statement;
     }
 
     /**
      * Creates a statement from the underlying Connection.
      *
-     * @param resultSetType        Type of the ResultSet
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @param resultSetHoldability ResultSet Holdability.
      * @return <code>Statement</code> object.
      * @throws SQLException In case of a database error.
      */
-    public Statement createStatement(int resultSetType, int resultSetConcurrency,
-                                     int resultSetHoldability) throws SQLException {
+    public Statement createStatement(int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        Statement stmt = con.createStatement(resultSetType, resultSetConcurrency,
-                resultSetHoldability);
+
+        Statement statement = connection.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                statement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                statement.close();
             }
         }
-        return stmt;
+
+        return statement;
     }
 
     /**
-     * Retrieves the current auto-commit mode for the underlying <code> Connection</code>.
+     * Retrieves the current auto-commit mode for the underlying
+     * <code> Connection</code>.
      *
      * @return The current state of connection's auto-commit mode.
      * @throws SQLException In case of a database error.
      */
     public boolean getAutoCommit() throws SQLException {
         checkValidity();
-        return con.getAutoCommit();
+        return connection.getAutoCommit();
     }
 
     /**
@@ -306,7 +311,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public String getCatalog() throws SQLException {
         checkValidity();
-        return con.getCatalog();
+        return connection.getCatalog();
     }
 
     /**
@@ -318,7 +323,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public int getHoldability() throws SQLException {
         checkValidity();
-        return con.getHoldability();
+        return connection.getHoldability();
     }
 
     /**
@@ -330,18 +335,19 @@ public abstract class ConnectionHolder implements Connection {
      */
     public DatabaseMetaData getMetaData() throws SQLException {
         checkValidity();
-        return con.getMetaData();
+        return connection.getMetaData();
     }
 
     /**
-     * Retrieves this <code>Connection</code> object's current transaction isolation level.
+     * Retrieves this <code>Connection</code> object's current transaction isolation
+     * level.
      *
      * @return Transaction level
      * @throws SQLException In case of a database error.
      */
     public int getTransactionIsolation() throws SQLException {
         checkValidity();
-        return con.getTransactionIsolation();
+        return connection.getTransactionIsolation();
     }
 
     /**
@@ -353,7 +359,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public Map<String, Class<?>> getTypeMap() throws SQLException {
         checkValidity();
-        return con.getTypeMap();
+        return connection.getTypeMap();
     }
 
     /**
@@ -365,14 +371,14 @@ public abstract class ConnectionHolder implements Connection {
      */
     public SQLWarning getWarnings() throws SQLException {
         checkValidity();
-        return con.getWarnings();
+        return connection.getWarnings();
     }
 
     /**
      * Retrieves whether underlying <code>Connection</code> object is closed.
      *
-     * @return true if <code>Connection</code> object is closed, false
-     *         if it is closed.
+     * @return true if <code>Connection</code> object is closed, false if it is
+     * closed.
      * @throws SQLException In case of a database error.
      */
     public boolean isClosed() throws SQLException {
@@ -383,8 +389,8 @@ public abstract class ConnectionHolder implements Connection {
      * Set the isClosed flag based on whether the underlying <code>Connection</code>
      * object is closed.
      *
-     * @param flag true if <code>Connection</code> object is closed, false if
-     * its not closed.
+     * @param flag true if <code>Connection</code> object is closed, false if its
+     * not closed.
      */
     public void setClosed(boolean flag) {
         isClosed = flag;
@@ -398,7 +404,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public boolean isReadOnly() throws SQLException {
         checkValidity();
-        return con.isReadOnly();
+        return connection.isReadOnly();
     }
 
     /**
@@ -410,12 +416,12 @@ public abstract class ConnectionHolder implements Connection {
      */
     public String nativeSQL(String sql) throws SQLException {
         checkValidity();
-        return con.nativeSQL(sql);
+        return connection.nativeSQL(sql);
     }
 
     /**
-     * Creates a <code> CallableStatement </code> object for calling database
-     * stored procedures.
+     * Creates a <code> CallableStatement </code> object for calling database stored
+     * procedures.
      *
      * @param sql SQL Statement
      * @return <code> CallableStatement</code> object.
@@ -424,7 +430,7 @@ public abstract class ConnectionHolder implements Connection {
     public CallableStatement prepareCall(String sql) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        CallableStatement stmt = con.prepareCall(sql);
+        CallableStatement stmt = connection.prepareCall(sql);
         if (statementTimeoutEnabled) {
             stmt.setQueryTimeout(statementTimeout);
         }
@@ -432,53 +438,53 @@ public abstract class ConnectionHolder implements Connection {
     }
 
     /**
-     * Creates a <code> CallableStatement </code> object for calling database
-     * stored procedures.
+     * Creates a <code> CallableStatement </code> object for calling database stored
+     * procedures.
      *
-     * @param sql                  SQL Statement
-     * @param resultSetType        Type of the ResultSet
+     * @param sql SQL Statement
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @return <code> CallableStatement</code> object.
      * @throws SQLException In case of a database error.
      */
-    public CallableStatement prepareCall(String sql, int resultSetType,
-                                         int resultSetConcurrency) throws SQLException {
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        CallableStatement stmt = con.prepareCall(sql, resultSetType, resultSetConcurrency);
+
+        CallableStatement callableStatement = connection.prepareCall(sql, resultSetType, resultSetConcurrency);
         if (statementTimeoutEnabled) {
-            stmt.setQueryTimeout(statementTimeout);
+            callableStatement.setQueryTimeout(statementTimeout);
         }
-        return stmt;
+
+        return callableStatement;
     }
 
     /**
-     * Creates a <code> CallableStatement </code> object for calling database
-     * stored procedures.
+     * Creates a <code> CallableStatement </code> object for calling database stored
+     * procedures.
      *
-     * @param sql                  SQL Statement
-     * @param resultSetType        Type of the ResultSet
+     * @param sql SQL Statement
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @param resultSetHoldability ResultSet Holdability.
      * @return <code> CallableStatement</code> object.
      * @throws SQLException In case of a database error.
      */
-    public CallableStatement prepareCall(String sql, int resultSetType,
-                                         int resultSetConcurrency,
-                                         int resultSetHoldability) throws SQLException {
+    public CallableStatement prepareCall(String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        CallableStatement stmt = con.prepareCall(sql, resultSetType, resultSetConcurrency,
-                resultSetHoldability);
+
+        CallableStatement callableStatement = connection.prepareCall(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         if (statementTimeoutEnabled) {
-            stmt.setQueryTimeout(statementTimeout);
+            callableStatement.setQueryTimeout(statementTimeout);
         }
-        return stmt;
+
+        return callableStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
      * @param sql SQL Statement
      * @return <code> PreparedStatement</code> object.
@@ -487,122 +493,129 @@ public abstract class ConnectionHolder implements Connection {
     public PreparedStatement prepareStatement(final String sql) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
-     * @param sql               SQL Statement
-     * @param autoGeneratedKeys a flag indicating AutoGeneratedKeys need to be returned.
+     * @param sql SQL Statement
+     * @param autoGeneratedKeys a flag indicating AutoGeneratedKeys need to be
+     * returned.
      * @return <code> PreparedStatement</code> object.
      * @throws SQLException In case of a database error.
      */
     public PreparedStatement prepareStatement(final String sql, int autoGeneratedKeys) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql, autoGeneratedKeys);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, autoGeneratedKeys);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
-     * @param sql           SQL Statement
-     * @param columnIndexes an array of column indexes indicating the columns that should be
-     *                      returned from the inserted row or rows.
+     * @param sql SQL Statement
+     * @param columnIndexes an array of column indexes indicating the columns that
+     * should be returned from the inserted row or rows.
      * @return <code> PreparedStatement</code> object.
      * @throws SQLException In case of a database error.
      */
     public PreparedStatement prepareStatement(final String sql, int[] columnIndexes) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql, columnIndexes);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, columnIndexes);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
-     * @param sql                  SQL Statement
-     * @param resultSetType        Type of the ResultSet
+     * @param sql SQL Statement
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @return <code> PreparedStatement</code> object.
      * @throws SQLException In case of a database error.
      */
-    public PreparedStatement prepareStatement(final String sql, int resultSetType,
-                                              int resultSetConcurrency) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
-     * @param sql                  SQL Statement
-     * @param resultSetType        Type of the ResultSet
+     * @param sql SQL Statement
+     * @param resultSetType Type of the ResultSet
      * @param resultSetConcurrency ResultSet Concurrency.
      * @param resultSetHoldability ResultSet Holdability.
      * @return <code> PreparedStatement</code> object.
      * @throws SQLException In case of a database error.
      */
-    public PreparedStatement prepareStatement(final String sql, int resultSetType,
-                                              int resultSetConcurrency,
-                                              int resultSetHoldability) throws SQLException {
+    public PreparedStatement prepareStatement(final String sql, int resultSetType, int resultSetConcurrency, int resultSetHoldability) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql, resultSetType,
-                resultSetConcurrency, resultSetHoldability);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, resultSetType, resultSetConcurrency, resultSetHoldability);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending
-     * paramterized SQL statements to database
+     * Creates a <code> PreparedStatement </code> object for sending paramterized
+     * SQL statements to database
      *
-     * @param sql         SQL Statement
+     * @param sql SQL Statement
      * @param columnNames Name of bound columns.
      * @return <code> PreparedStatement</code> object.
      * @throws SQLException In case of a database error.
@@ -610,15 +623,17 @@ public abstract class ConnectionHolder implements Connection {
     public PreparedStatement prepareStatement(final String sql, String[] columnNames) throws SQLException {
         checkValidity();
         jdbcPreInvoke();
-        PreparedStatement stmt = con.prepareStatement(sql, columnNames);
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, columnNames);
         if (statementTimeoutEnabled) {
             try {
-                stmt.setQueryTimeout(statementTimeout);
+                preparedStatement.setQueryTimeout(statementTimeout);
             } catch (SQLException ex) {
-                stmt.close();
+                preparedStatement.close();
             }
         }
-        return stmt;
+
+        return preparedStatement;
     }
 
     /**
@@ -629,7 +644,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
         checkValidity();
-        con.releaseSavepoint(savepoint);
+        connection.releaseSavepoint(savepoint);
     }
 
     /**
@@ -639,7 +654,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void rollback() throws SQLException {
         checkValidity();
-        con.rollback();
+        connection.rollback();
     }
 
     /**
@@ -649,7 +664,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void rollback(Savepoint savepoint) throws SQLException {
         checkValidity();
-        con.rollback(savepoint);
+        connection.rollback(savepoint);
     }
 
     /**
@@ -660,8 +675,8 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         checkValidity();
-        con.setAutoCommit(autoCommit);
-        mc.setLastAutoCommitValue(autoCommit);
+        connection.setAutoCommit(autoCommit);
+        managedConnectionImpl.setLastAutoCommitValue(autoCommit);
     }
 
     /**
@@ -672,31 +687,31 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void setCatalog(String catalog) throws SQLException {
         checkValidity();
-        con.setCatalog(catalog);
+        connection.setCatalog(catalog);
     }
 
     /**
-     * Sets the holdability of <code>ResultSet</code> objects created
-     * using this <code>Connection</code> object.
+     * Sets the holdability of <code>ResultSet</code> objects created using this
+     * <code>Connection</code> object.
      *
      * @param holdability A <code>ResultSet</code> holdability constant
      * @throws SQLException In case of a database error.
      */
     public void setHoldability(int holdability) throws SQLException {
         checkValidity();
-        con.setHoldability(holdability);
+        connection.setHoldability(holdability);
     }
 
     /**
-     * Puts the connection in read-only mode as a hint to the driver to
-     * perform database optimizations.
+     * Puts the connection in read-only mode as a hint to the driver to perform
+     * database optimizations.
      *
      * @param readOnly true enables read-only mode, false disables it.
      * @throws SQLException In case of a database error.
      */
     public void setReadOnly(boolean readOnly) throws SQLException {
         checkValidity();
-        con.setReadOnly(readOnly);
+        connection.setReadOnly(readOnly);
     }
 
     /**
@@ -707,11 +722,12 @@ public abstract class ConnectionHolder implements Connection {
      */
     public Savepoint setSavepoint() throws SQLException {
         checkValidity();
-        return con.setSavepoint();
+        return connection.setSavepoint();
     }
 
     /**
-     * Creates a savepoint with the name and returns an object corresponding to that.
+     * Creates a savepoint with the name and returns an object corresponding to
+     * that.
      *
      * @param name Name of the savepoint.
      * @return <code>Savepoint</code> object.
@@ -719,7 +735,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public Savepoint setSavepoint(String name) throws SQLException {
         checkValidity();
-        return con.setSavepoint(name);
+        return connection.setSavepoint(name);
     }
 
     /**
@@ -730,19 +746,24 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void setTransactionIsolation(int level) throws SQLException {
         checkValidity();
-        con.setTransactionIsolation(level);
-        mc.setLastTransactionIsolationLevel(level);
+        connection.setTransactionIsolation(level);
+        managedConnectionImpl.setLastTransactionIsolationLevel(level);
     }
-
 
     /**
      * Checks the validity of this object
      */
     protected void checkValidity() throws SQLException {
-        if (isClosed) throw new SQLException("Connection closed");
-        if (!valid) throw new SQLException("Invalid Connection");
+        if (isClosed) {
+            throw new SQLException("Connection closed");
+        }
+
+        if (!valid) {
+            throw new SQLException("Invalid Connection");
+        }
+
         if (active == false) {
-            mc.checkIfActive(this);
+            managedConnectionImpl.checkIfActive(this);
         }
     }
 
@@ -756,8 +777,8 @@ public abstract class ConnectionHolder implements Connection {
     }
 
     /*
-     * Here this is a no-op. In the LazyEnlistableConnectionHolder, it will
-     * actually fire the lazyEnlist method of LazyEnlistableManagedConnection
+     * Here this is a no-op. In the LazyEnlistableConnectionHolder, it will actually
+     * fire the lazyEnlist method of LazyEnlistableManagedConnection
      */
     protected void jdbcPreInvoke() throws SQLException {
         if (myType_ == ConnectionType.LAZY_ASSOCIATABLE) {
@@ -770,13 +791,11 @@ public abstract class ConnectionHolder implements Connection {
 
     protected void performLazyEnlistment() throws SQLException {
         try {
-            if(lazyEnlistCm_ != null) {
-                lazyEnlistCm_.lazyEnlist(mc);
+            if (lazyEnlistCm_ != null) {
+                lazyEnlistCm_.lazyEnlist(managedConnectionImpl);
             }
         } catch (ResourceException re) {
-            String msg = sm.getString(
-                    "jdbc.cannot_enlist", re.getMessage() +
-                    " Cannnot Enlist ManagedConnection");
+            String msg = sm.getString("jdbc.cannot_enlist", re.getMessage() + " Cannnot Enlist ManagedConnection");
 
             SQLException sqle = new SQLException(msg);
             sqle.initCause(re);
@@ -786,15 +805,14 @@ public abstract class ConnectionHolder implements Connection {
     }
 
     protected void performLazyAssociation() throws SQLException {
-        if (mc == null) {
+        if (managedConnectionImpl == null) {
             try {
-                if(lazyAssocCm_ != null) {
-                    lazyAssocCm_.associateConnection(this, mcf_, cxReqInfo_);
+                if (lazyAssocCm_ != null) {
+                    lazyAssocCm_.associateConnection(this, managedConnectionFactory, connectionRequestInfo);
                 }
             } catch (ResourceException re) {
-                String msg = sm.getString(
-                        "jdbc.cannot_assoc", re.getMessage() +
-                        " Cannnot Associate ManagedConnection");
+                String msg = sm.getString("jdbc.cannot_assoc",
+                        re.getMessage() + " Cannnot Associate ManagedConnection");
 
                 SQLException sqle = new SQLException(msg);
                 sqle.initCause(re);
@@ -811,23 +829,13 @@ public abstract class ConnectionHolder implements Connection {
         return myType_;
     }
 
-    public void setLazyAssociatableConnectionManager(
-            jakarta.resource.spi.LazyAssociatableConnectionManager cm) {
-
+    public void setLazyAssociatableConnectionManager(jakarta.resource.spi.LazyAssociatableConnectionManager cm) {
         lazyAssocCm_ = cm;
     }
 
-    public void setLazyEnlistableConnectionManager(
-            jakarta.resource.spi.LazyEnlistableConnectionManager cm) {
-
+    public void setLazyEnlistableConnectionManager(jakarta.resource.spi.LazyEnlistableConnectionManager cm) {
         lazyEnlistCm_ = cm;
     }
-
-/*
-    public void setManagedConnection(ManagedConnection con) {
-        this.mc = con;
-    }
-*/
 
     /**
      * Installs the given <code>Map</code> object as the tyoe map for this
@@ -838,7 +846,7 @@ public abstract class ConnectionHolder implements Connection {
      */
     public void setTypeMap(java.util.Map<String, Class<?>> map) throws SQLException {
         checkValidity();
-        con.setTypeMap(map);
+        connection.setTypeMap(map);
     }
 
     protected MethodExecutor getMethodExecutor() {

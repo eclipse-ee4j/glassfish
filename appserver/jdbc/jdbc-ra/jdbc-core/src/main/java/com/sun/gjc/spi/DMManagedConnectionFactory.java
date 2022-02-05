@@ -16,14 +16,12 @@
 
 package com.sun.gjc.spi;
 
-import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.gjc.common.DataSourceSpec;
-import com.sun.gjc.util.SecurityUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
 
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ConnectionRequestInfo;
-import jakarta.resource.spi.security.PasswordCredential;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -31,135 +29,141 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+
+import com.sun.gjc.common.DataSourceObjectBuilder;
+import com.sun.gjc.common.DataSourceSpec;
+import com.sun.gjc.spi.base.AbstractDataSource;
+import com.sun.gjc.spi.base.ConnectionHolder;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConfigProperty;
 import jakarta.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.security.PasswordCredential;
 
 /**
- * Driver Manager <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.
+ * Driver Manager <code>ManagedConnectionFactory</code> implementation for
+ * Generic JDBC Connector.
  *
  * @author Evani Sai Surya Kiran
  * @version 1.0, 02/07/31
  */
-@ConnectionDefinition(
-    connectionFactory = javax.sql.DataSource.class,
-    connectionFactoryImpl = com.sun.gjc.spi.base.AbstractDataSource.class,
-    connection = java.sql.Connection.class,
-    connectionImpl = com.sun.gjc.spi.base.ConnectionHolder.class
-)
+@ConnectionDefinition(connectionFactory = DataSource.class, connectionFactoryImpl = AbstractDataSource.class, connection = Connection.class, connectionImpl = ConnectionHolder.class)
 public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
+
+    private static Logger _logger = LogDomains.getLogger(DMManagedConnectionFactory.class, LogDomains.RSR_LOGGER);
+    private boolean debug = _logger.isLoggable(FINE);
 
     Properties props;
 
-    private static Logger _logger;
-
-    static {
-        _logger = LogDomains.getLogger(DMManagedConnectionFactory.class, LogDomains.RSR_LOGGER);
-    }
-
-    private boolean debug = _logger.isLoggable(Level.FINE);
-
     /**
-     * Creates a new physical connection to the underlying EIS resource
-     * manager.
+     * Creates a new physical connection to the underlying EIS resource manager.
      *
-     * @param subject       <code>Subject</code> instance passed by the application server
+     * @param subject <code>Subject</code> instance passed by the application server
      * @param cxRequestInfo <code>ConnectionRequestInfo</code> which may be created
-     *                      as a result of the invocation <code>getConnection(user, password)</code>
-     *                      on the <code>DataSource</code> object
+     * as a result of the invocation <code>getConnection(user, password)</code> on
+     * the <code>DataSource</code> object
+     *
      * @return <code>ManagedConnection</code> object created
+     *
      * @throws ResourceException if there is an error in instantiating the
-     *                           <code>DataSource</code> object used for the
-     *                           creation of the <code>ManagedConnection</code> object
+     * <code>DataSource</code> object used for the creation of the
+     * <code>ManagedConnection</code> object
      * @throws SecurityException if there ino <code>PasswordCredential</code> object
-     *                           satisfying this request
+     * satisfying this request
      */
-    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
-                                                                        ConnectionRequestInfo cxRequestInfo) throws ResourceException {
+    public ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In createManagedConnection");
-        if (dsObjBuilder == null) {
-            dsObjBuilder = new DataSourceObjectBuilder(spec);
+
+        if (dataSourceObjectBuilder == null) {
+            dataSourceObjectBuilder = new DataSourceObjectBuilder(spec);
         }
-        PasswordCredential pc = SecurityUtils.getPasswordCredential(this, subject, cxRequestInfo);
+
+        PasswordCredential passwordCredential = getPasswordCredential(this, subject, cxRequestInfo);
 
         try {
             Class.forName(spec.getDetail(DataSourceSpec.CLASSNAME));
         } catch (ClassNotFoundException cnfe) {
-            _logger.log(Level.SEVERE, "jdbc.exc_cnfe", cnfe);
+            _logger.log(SEVERE, "jdbc.exc_cnfe", cnfe);
             throw new ResourceException("The driver could not be loaded: " + spec.getDetail(DataSourceSpec.CLASSNAME));
         }
 
-        java.sql.Connection dsConn = null;
-        ManagedConnectionImpl mc = null;
+        Connection connection = null;
+        ManagedConnectionImpl managedConnectionImpl = null;
 
         Properties driverProps = new Properties();
-        //Will return a set of properties that would have setURL and <url> as objects
-        //Get a set of normal case properties
-        Hashtable properties = dsObjBuilder.parseDriverProperties(spec, false);
-        Set<Map.Entry<String,Vector>> entries =
-                (Set<Map.Entry<String, Vector>>) properties.entrySet();
-        for(Map.Entry<String, Vector> entry : entries) {
+
+        // Will return a set of properties that would have setURL and <url> as objects
+        // Get a set of normal case properties
+        Hashtable properties = dataSourceObjectBuilder.parseDriverProperties(spec, false);
+        Set<Map.Entry<String, Vector>> entries = properties.entrySet();
+        for (Map.Entry<String, Vector> entry : entries) {
             String value = "";
-            String key = (String) entry.getKey();
-            Vector values = (Vector) entry.getValue();
-            if(!values.isEmpty() && values.size() == 1) {
+            String key = entry.getKey();
+            Vector values = entry.getValue();
+            if (!values.isEmpty() && values.size() == 1) {
                 value = (String) values.firstElement();
-            } else if(values.size() > 1) {
+            } else if (values.size() > 1) {
                 logFine("More than one value for key : " + key);
             }
+
             String prop = getParsedKey(key);
             driverProps.put(prop, value);
-            if(prop.equalsIgnoreCase("URL")) {
-                if(spec.getDetail(DataSourceSpec.URL) == null) {
+            if (prop.equalsIgnoreCase("URL")) {
+                if (spec.getDetail(DataSourceSpec.URL) == null) {
                     setConnectionURL(value);
                 }
             }
         }
+
         try {
             if (cxRequestInfo != null) {
-                driverProps.setProperty("user", pc.getUserName());
-                driverProps.setProperty("password", new String(pc.getPassword()));
+                driverProps.setProperty("user", passwordCredential.getUserName());
+                driverProps.setProperty("password", new String(passwordCredential.getPassword()));
             } else {
                 String user = spec.getDetail(DataSourceSpec.USERNAME);
                 String password = spec.getDetail(DataSourceSpec.PASSWORD);
-                if(user != null) {
+                if (user != null) {
                     driverProps.setProperty("user", user);
                 }
-                if(password != null) {
+                if (password != null) {
                     driverProps.setProperty("password", password);
                 }
             }
 
-            dsConn = DriverManager.getConnection(spec.getDetail(DataSourceSpec.URL), driverProps);
+            connection = DriverManager.getConnection(spec.getDetail(DataSourceSpec.URL), driverProps);
 
-        } catch (java.sql.SQLException sqle) {
-            _logger.log(Level.SEVERE, "jdbc.exc_create_mc", sqle);
-            throw new jakarta.resource.spi.ResourceAllocationException("The connection could not be allocated: " +
-                    sqle.getMessage());
+        } catch (SQLException sqle) {
+            _logger.log(SEVERE, "jdbc.exc_create_mc", sqle);
+            throw new ResourceAllocationException("The connection could not be allocated: " + sqle.getMessage());
         }
 
         try {
-
-            mc = constructManagedConnection(null, dsConn, pc, this);
-
-            //GJCINT
-            validateAndSetIsolation(mc);
+            managedConnectionImpl = constructManagedConnection(null, connection, passwordCredential, this);
+            validateAndSetIsolation(managedConnectionImpl);
         } finally {
-            if (mc == null) {
+            if (managedConnectionImpl == null) {
                 try {
-                    dsConn.close();
+                    connection.close();
                 } catch (SQLException e) {
-                    _logger.log(Level.FINEST, "Exception while closing connection : createManagedConnection" + dsConn);
+                    _logger.log(FINEST, "Exception while closing connection : createManagedConnection" + connection, e);
                 }
             }
         }
-        return mc;
+
+        return managedConnectionImpl;
     }
 
     /**
-     * Parses the key and removes the "set" string at the beginning of the
-     * property.
+     * Parses the key and removes the "set" string at the beginning of the property.
+     *
      * @param key
      * @return
      */
@@ -170,138 +174,25 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
             indexOfSet = key.indexOf("set");
         } catch (NullPointerException npe) {
             if (debug) {
-                _logger.log(Level.FINE, "jdbc.exc_caught_ign", npe.getMessage());
+                _logger.log(FINE, "jdbc.exc_caught_ign", npe.getMessage());
             }
 
         }
         if (indexOfSet == 0) {
-            //Find the key String
-
+            // Find the key String
             try {
                 parsedKey = key.substring(indexOfSet + 3, key.length()).trim();
             } catch (IndexOutOfBoundsException iobe) {
                 if (debug) {
-                    _logger.log(Level.FINE, "jdbc.exc_caught_ign", iobe.getMessage());
+                    _logger.log(FINE, "jdbc.exc_caught_ign", iobe.getMessage());
                 }
             }
             if (parsedKey != null && parsedKey.equals("")) {
-                throw new ResourceException("Invalid driver properties string - " +
-                        "Key cannot be an empty string");
+                throw new ResourceException("Invalid driver properties string - " + "Key cannot be an empty string");
             }
         }
+
         return parsedKey;
-
-    }
-
-    /**
-     * This method checks if the properties object is null or not.
-     * If the properties object is null, it creates a new Properties
-     * object and inserts the default "user" and "password" key value
-     * pairs. It checks if any other properties have been set or not
-     * and includes the key value pairs for those properties.
-     *
-     * @return props    <code>Properties</code> object conatining properties for getting a connection
-     * @throws ResourceException if the driver properties string and delimiter are not proper
-     */
-    //TODO remove unused method
-    /*private Properties getPropertiesObj() throws ResourceException {
-        if (props != null) {
-            return props;
-        }
-
-        props = new Properties();
-        props.setProperty("user", getUser());
-        props.setProperty("password", getPassword());
-
-        String driverProps = spec.getDetail(DataSourceSpec.DRIVERPROPERTIES);
-        String delimiter = spec.getDetail(DataSourceSpec.DELIMITER);
-
-        if (driverProps != null && driverProps.trim().equals("") == false) {
-            if (delimiter == null || delimiter.equals("")) {
-                throw new ResourceException("Invalid driver properties string - " +
-                        "delimiter not properly set!!");
-            }
-
-            StringTokenizer st = new StringTokenizer(driverProps, delimiter);
-            while (st.hasMoreTokens()) {
-                String keyValuePair = null;
-                try {
-                    keyValuePair = st.nextToken();
-                } catch (NoSuchElementException nsee) {
-                    throw new ResourceException("Invalid driver properties string - " +
-                            "Key value pair not available: " + nsee.getMessage());
-                }
-
-                int indexOfEqualsSign = -1;
-                try {
-                    indexOfEqualsSign = keyValuePair.indexOf("=");
-                    if (indexOfEqualsSign == -1) {
-                        throw new ResourceException("Invalid driver properties string - " +
-                                "Key value pair should be of the form key = value");
-                    }
-                } catch (NullPointerException npe) {
-                    if (debug) {
-                        _logger.log(Level.FINE, "jdbc.exc_caught_ign", npe.getMessage());
-                    }
-
-                }
-
-                String key = null;
-                try {
-                    key = keyValuePair.substring(0, indexOfEqualsSign).trim();
-                } catch (IndexOutOfBoundsException iobe) {
-                    if (debug) {
-                        _logger.log(Level.FINE, "jdbc.exc_caught_ign", iobe.getMessage());
-                    }
-                }
-                if (key != null && key.equals("")) {
-                    throw new ResourceException("Invalid driver properties string - " +
-                            "Key cannot be an empty string");
-                }
-
-                String value = null;
-                try {
-                    value = keyValuePair.substring(indexOfEqualsSign + 1).trim();
-                } catch (IndexOutOfBoundsException iobe) {
-                    if (debug) {
-                        _logger.log(Level.FINE, "jdbc.exc_caught_ign", iobe.getMessage());
-                    }
-                }
-
-                props.setProperty(key, value);
-            }
-        }
-
-        return props;
-    } */
-
-    /**
-     * Check if this <code>ManagedConnectionFactory</code> is equal to
-     * another <code>ManagedConnectionFactory</code>.
-     *
-     * @param other <code>ManagedConnectionFactory</code> object for checking equality with
-     * @return true    if the property sets of both the
-     *         <code>ManagedConnectionFactory</code> objects are the same
-     *         false    otherwise
-     */
-    public boolean equals(Object other) {
-        logFine("In equals");
-
-        /**
-         * The check below means that two ManagedConnectionFactory objects are equal
-         * if and only if their properties are the same.
-         */
-        if (other instanceof com.sun.gjc.spi.DMManagedConnectionFactory) {
-            com.sun.gjc.spi.DMManagedConnectionFactory otherMCF =
-                    (com.sun.gjc.spi.DMManagedConnectionFactory) other;
-            return this.spec.equals(otherMCF.spec);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return 31 * 7 + (spec.hashCode());
     }
 
     /**
@@ -311,14 +202,12 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @see <code>getLoginTimeOut</code>
      */
     public void setLoginTimeOut(String loginTimeOut) {
-        int timeOut = 0;
         try {
-            timeOut = Integer.parseInt(loginTimeOut);
-            DriverManager.setLoginTimeout(timeOut);
+            DriverManager.setLoginTimeout(Integer.parseInt(loginTimeOut));
             spec.setDetail(DataSourceSpec.LOGINTIMEOUT, loginTimeOut);
         } catch (Exception e) {
             if (debug) {
-                _logger.log(Level.FINE, "jdbc.exc_caught_ign", e.getMessage());
+                _logger.log(FINE, "jdbc.exc_caught_ign", e.getMessage());
             }
         }
     }
@@ -364,5 +253,34 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
 
     public Object getDataSource() throws ResourceException {
         return null;
+    }
+
+    /**
+     * Check if this <code>ManagedConnectionFactory</code> is equal to another
+     * <code>ManagedConnectionFactory</code>.
+     *
+     * @param other <code>ManagedConnectionFactory</code> object for checking
+     * equality with
+     * @return true if the property sets of both the
+     * <code>ManagedConnectionFactory</code> objects are the same false otherwise
+     */
+    public boolean equals(Object other) {
+        logFine("In equals");
+
+        /**
+         * The check below means that two ManagedConnectionFactory objects are equal if
+         * and only if their properties are the same.
+         */
+        if (other instanceof DMManagedConnectionFactory) {
+            DMManagedConnectionFactory otherMCF = (DMManagedConnectionFactory) other;
+            return this.spec.equals(otherMCF.spec);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * 7 + (spec.hashCode());
     }
 }

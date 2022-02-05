@@ -16,6 +16,7 @@
 
 package com.sun.gjc.common;
 
+import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,7 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Binod P.G
  * @version 1.0, 02/07/23
  */
-public class DataSourceSpec implements java.io.Serializable {
+public class DataSourceSpec implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public static final int USERNAME = 1;
     public static final int PASSWORD = 2;
@@ -53,7 +56,6 @@ public class DataSourceSpec implements java.io.Serializable {
     public static final int DATASOURCE = 23;
     public static final int CONNECTIONPOOLDATASOURCE = 24;
 
-    //GJCINT
     public static final int CONNECTIONVALIDATIONREQUIRED = 25;
     public static final int VALIDATIONMETHOD = 26;
     public static final int VALIDATIONTABLENAME = 27;
@@ -87,7 +89,7 @@ public class DataSourceSpec implements java.io.Serializable {
      * Set the property.
      *
      * @param property Property Name to be set.
-     * @param value    Value of property to be set.
+     * @param value Value of property to be set.
      */
     public void setDetail(int property, String value) {
         details.put(property, value);
@@ -102,14 +104,13 @@ public class DataSourceSpec implements java.io.Serializable {
     public String getDetail(int property) {
         if (details.containsKey(property)) {
             return details.get(property);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
-     * Checks whether two <code>DataSourceSpec</code> objects
-     * are equal or not.
+     * Checks whether two <code>DataSourceSpec</code> objects are equal or not.
      *
      * @param obj Instance of <code>DataSourceSpec</code> object.
      */
@@ -117,6 +118,7 @@ public class DataSourceSpec implements java.io.Serializable {
         if (obj instanceof DataSourceSpec) {
             return this.details.equals(((DataSourceSpec) obj).details);
         }
+
         return false;
     }
 

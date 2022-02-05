@@ -69,17 +69,15 @@ public interface JdbcRAConstants {
     /**
      * Dotted name used in monitoring for Statement caching.
      */
-    public static final String STATEMENT_CACHE_DOTTED_NAME = GLASSFISH + ":" +
-            JDBCRA + ":" + STATEMENT_CACHE_PROBE + ":";
+    public static final String STATEMENT_CACHE_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_CACHE_PROBE
+            + ":";
 
     /**
      * Dotted name used in monitoring for Sql Tracing.
      */
-    public static final String SQL_TRACING_DOTTED_NAME = GLASSFISH + ":" +
-            JDBCRA + ":" + SQL_TRACING_PROBE + ":";
+    public static final String SQL_TRACING_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + SQL_TRACING_PROBE + ":";
 
-    public static final String STATEMENT_LEAK_DOTTED_NAME = GLASSFISH + ":" +
-            JDBCRA + ":" + STATEMENT_LEAK_PROBE + ":";
+    public static final String STATEMENT_LEAK_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_LEAK_PROBE + ":";
 
     /**
      * Represents top queries to report.
@@ -89,15 +87,6 @@ public interface JdbcRAConstants {
     /**
      * List of valid method names that can be used for sql trace monitoring.
      */
-    public static final List<String> validSqlTracingMethodNames =
-            Collections.unmodifiableList(
-            Arrays.asList(
-                "nativeSQL",
-                "prepareCall",
-                "prepareStatement",
-                "addBatch",
-                "execute",
-                "executeQuery",
-                "executeUpdate"
-            ));
+    public static final List<String> validSqlTracingMethodNames = Collections.unmodifiableList(Arrays.asList(
+            "nativeSQL", "prepareCall", "prepareStatement", "addBatch", "execute", "executeQuery", "executeUpdate"));
 }

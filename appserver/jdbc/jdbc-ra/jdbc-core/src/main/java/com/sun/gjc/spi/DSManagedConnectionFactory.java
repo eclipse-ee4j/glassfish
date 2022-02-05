@@ -16,19 +16,30 @@
 
 package com.sun.gjc.spi;
 
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.sql.DataSource;
+
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.gjc.util.SecurityUtils;
+import com.sun.gjc.spi.base.AbstractDataSource;
+import com.sun.gjc.spi.base.ConnectionHolder;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionDefinition;
 import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.resource.spi.security.PasswordCredential;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.resource.spi.ConnectionDefinition;
 
 /**
  * Data Source <code>ManagedConnectionFactory</code> implementation for Generic JDBC Connector.
@@ -38,93 +49,82 @@ import jakarta.resource.spi.ConnectionDefinition;
  */
 
 @ConnectionDefinition(
-    connectionFactory = javax.sql.DataSource.class,
-    connectionFactoryImpl = com.sun.gjc.spi.base.AbstractDataSource.class,
+    connectionFactory = DataSource.class,
+    connectionFactoryImpl = AbstractDataSource.class,
     connection = java.sql.Connection.class,
-    connectionImpl = com.sun.gjc.spi.base.ConnectionHolder.class
+    connectionImpl = ConnectionHolder.class
 )
 public class DSManagedConnectionFactory extends ManagedConnectionFactoryImpl {
 
-    private transient javax.sql.DataSource dataSourceObj;
+    private static Logger _logger = LogDomains.getLogger(DSManagedConnectionFactory.class, LogDomains.RSR_LOGGER);
 
-    private static Logger _logger;
-
-    static {
-        _logger = LogDomains.getLogger(DSManagedConnectionFactory.class, LogDomains.RSR_LOGGER);
-    }
+    private transient DataSource dataSourceObj;
 
     /**
-     * Creates a new physical connection to the underlying EIS resource
-     * manager.
+     * Creates a new physical connection to the underlying EIS resource manager.
      *
-     * @param subject       <code>Subject</code> instance passed by the application server
-     * @param cxRequestInfo <code>ConnectionRequestInfo</code> which may be created
-     *                      as a result of the invocation <code>getConnection(user, password)</code>
-     *                      on the <code>DataSource</code> object
+     * @param subject <code>Subject</code> instance passed by the application server
+     * @param connectionRequestInfo <code>ConnectionRequestInfo</code> which may be created
+     * as a result of the invocation <code>getConnection(user, password)</code> on
+     * the <code>DataSource</code> object
+     *
      * @return <code>ManagedConnection</code> object created
-     * @throws ResourceException           if there is an error in instantiating the
-     *                                     <code>DataSource</code> object used for the
-     *                                     creation of the <code>ManagedConnection</code> object
-     * @throws SecurityException           if there ino <code>PasswordCredential</code> object
-     *                                     satisfying this request
+     *
+     * @throws ResourceException if there is an error in instantiating the
+     * <code>DataSource</code> object used for the creation of the
+     * <code>ManagedConnection</code> object
+     * @throws SecurityException if there ino <code>PasswordCredential</code> object
+     * satisfying this request
      * @throws ResourceAllocationException if there is an error in allocating the
-     *                                     physical connection
+     * physical connection
      */
-    public jakarta.resource.spi.ManagedConnection createManagedConnection(javax.security.auth.Subject subject,
-                                                                        ConnectionRequestInfo cxRequestInfo) throws ResourceException {
+    public ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo connectionRequestInfo) throws ResourceException {
         logFine("In createManagedConnection");
-        PasswordCredential pc = SecurityUtils.getPasswordCredential(this, subject, cxRequestInfo);
+        PasswordCredential passwordCredential = getPasswordCredential(this, subject, connectionRequestInfo);
 
-        javax.sql.DataSource dataSource = getDataSource();
+        DataSource dataSource = getDataSource();
 
-        java.sql.Connection dsConn = null;
-        ManagedConnectionImpl mc = null;
+        Connection connection = null;
+        ManagedConnectionImpl managedConnectionImpl = null;
 
         try {
-            /* For the case where the user/passwd of the connection pool is
-            * equal to the PasswordCredential for the connection request
-            * get a connection from this pool directly.
-            * for all other conditions go create a new connection
-            */
 
-            if (isEqual(pc, getUser(), getPassword())) {
-                dsConn = dataSource.getConnection();
+            /*
+             * For the case where the user/passwd of the connection pool is equal to the
+             * PasswordCredential for the connection request get a connection from this pool
+             * directly. for all other conditions go create a new connection
+             */
+            if (isEqual(passwordCredential, getUser(), getPassword())) {
+                connection = dataSource.getConnection();
             } else {
-                dsConn = dataSource.getConnection(pc.getUserName(),
-                        new String(pc.getPassword()));
+                connection = dataSource.getConnection(passwordCredential.getUserName(), new String(passwordCredential.getPassword()));
             }
-        } catch (java.sql.SQLException sqle) {
-            //_logger.log(Level.WARNING, "jdbc.exc_create_conn", sqle.getMessage());
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "jdbc.exc_create_conn", sqle.getMessage());
-            }
-            StringManager localStrings =
-                    StringManager.getManager(DataSourceObjectBuilder.class);
-            String msg = localStrings.getString("jdbc.cannot_allocate_connection"
-                    , sqle.getMessage());
-            ResourceAllocationException rae = new ResourceAllocationException(msg);
-            rae.initCause(sqle);
-            throw rae;
+        } catch (SQLException sqle) {
+            _logger.log(FINE, "jdbc.exc_create_conn", sqle.getMessage());
+
+            throw new ResourceAllocationException(
+                StringManager.getManager(DataSourceObjectBuilder.class).getString("jdbc.cannot_allocate_connection", sqle.getMessage()),
+                sqle);
         }
 
         try {
-            mc = constructManagedConnection(null, dsConn, pc, this);
+            managedConnectionImpl = constructManagedConnection(null, connection, passwordCredential, this);
 
-            //GJCINT
-            validateAndSetIsolation(mc);
+            validateAndSetIsolation(managedConnectionImpl);
         } finally {
-            if (mc == null) {
-                if (dsConn != null) {
+            if (managedConnectionImpl == null) {
+                if (connection != null) {
                     try {
-                        dsConn.close();
+                        connection.close();
                     } catch (SQLException e) {
-                        _logger.log(Level.FINEST, "Exception while closing connection : " +
-                                "createManagedConnection" + dsConn);
+                        _logger.log(FINEST,
+                            "Exception while closing connection : " + "createManagedConnection" + connection);
                     }
                 }
             }
         }
-        return mc;
+
+        return managedConnectionImpl;
     }
 
     /**
@@ -133,38 +133,40 @@ public class DSManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @return DataSource of jdbc vendor
      * @throws ResourceException
      */
-    public javax.sql.DataSource getDataSource() throws ResourceException {
+    public DataSource getDataSource() throws ResourceException {
         if (dataSourceObj == null) {
             try {
-                dataSourceObj = (javax.sql.DataSource) super.getDataSource();
+                dataSourceObj = (DataSource) super.getDataSource();
             } catch (ClassCastException cce) {
-                _logger.log(Level.SEVERE, "jdbc.exc_cce", cce);
+                _logger.log(SEVERE, "jdbc.exc_cce", cce);
                 throw new ResourceException(cce.getMessage());
             }
         }
+
         return dataSourceObj;
     }
 
     /**
-     * Check if this <code>ManagedConnectionFactory</code> is equal to
-     * another <code>ManagedConnectionFactory</code>.
+     * Check if this <code>ManagedConnectionFactory</code> is equal to another
+     * <code>ManagedConnectionFactory</code>.
      *
-     * @param other <code>ManagedConnectionFactory</code> object for checking equality with
-     * @return true    if the property sets of both the
-     *         <code>ManagedConnectionFactory</code> objects are the same
-     *         false    otherwise
+     * @param other <code>ManagedConnectionFactory</code> object for checking
+     * equality with
+     * @return true if the property sets of both the
+     * <code>ManagedConnectionFactory</code> objects are the same false otherwise
      */
     public boolean equals(Object other) {
         logFine("In equals");
+
         /**
-         * The check below means that two ManagedConnectionFactory objects are equal
-         * if and only if their properties are the same.
+         * The check below means that two ManagedConnectionFactory objects are equal if
+         * and only if their properties are the same.
          */
-        if (other instanceof com.sun.gjc.spi.DSManagedConnectionFactory) {
-            com.sun.gjc.spi.DSManagedConnectionFactory otherMCF =
-                    (com.sun.gjc.spi.DSManagedConnectionFactory) other;
+        if (other instanceof DSManagedConnectionFactory) {
+            DSManagedConnectionFactory otherMCF = (DSManagedConnectionFactory) other;
             return this.spec.equals(otherMCF.spec);
         }
+
         return false;
     }
 

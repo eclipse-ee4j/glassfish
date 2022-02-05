@@ -28,65 +28,64 @@ import javax.transaction.xa.Xid;
  */
 public class XAResourceImpl implements XAResource {
 
-    XAResource xar;
-    ManagedConnectionImpl mc;
+    XAResource xaResource;
+    ManagedConnectionImpl managedConnectionImpl;
 
     /**
      * Constructor for XAResourceImpl
      *
-     * @param xar <code>XAResource</code>
-     * @param mc  <code>ManagedConnection</code>
+     * @param xaResource <code>XAResource</code>
+     * @param managedConnection <code>ManagedConnection</code>
      */
-    public XAResourceImpl(XAResource xar, ManagedConnectionImpl mc) {
-        this.xar = xar;
-        this.mc = mc;
+    public XAResourceImpl(XAResource xaResource, ManagedConnectionImpl managedConnection) {
+        this.xaResource = xaResource;
+        this.managedConnectionImpl = managedConnection;
     }
 
     /**
      * Commit the global transaction specified by xid.
      *
-     * @param xid      A global transaction identifier
+     * @param xid A global transaction identifier
      * @param onePhase If true, the resource manager should use a one-phase commit
-     *                 protocol to commit the work done on behalf of xid.
+     * protocol to commit the work done on behalf of xid.
      */
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        //the mc.transactionCompleted call has come here because
-        //the transaction *actually* completes after the flow
-        //reaches here. the end() method might not really signal
-        //completion of transaction in case the transaction is
-        //suspended. In case of transaction suspension, the end
-        //method is still called by the transaction manager
+        // the mc.transactionCompleted call has come here because
+        // the transaction *actually* completes after the flow
+        // reaches here. the end() method might not really signal
+        // completion of transaction in case the transaction is
+        // suspended. In case of transaction suspension, the end
+        // method is still called by the transaction manager
         try {
-            xar.commit(xid, onePhase);
+            xaResource.commit(xid, onePhase);
         } catch (XAException xae) {
             throw xae;
         } catch (Exception e) {
             throw new XAException(e.getMessage());
         } finally {
-            mc.transactionCompleted();
+            managedConnectionImpl.transactionCompleted();
         }
     }
 
     /**
      * Ends the work performed on behalf of a transaction branch.
      *
-     * @param xid   A global transaction identifier that is the same as what
-     *              was used previously in the start method.
+     * @param xid A global transaction identifier that is the same as what was used
+     * previously in the start method.
      * @param flags One of TMSUCCESS, TMFAIL, or TMSUSPEND
      */
     public void end(Xid xid, int flags) throws XAException {
-        xar.end(xid, flags);
-        //GJCINT
-        //mc.transactionCompleted();
+        xaResource.end(xid, flags);
     }
 
     /**
-     * Tell the resource manager to forget about a heuristically completed transaction branch.
+     * Tell the resource manager to forget about a heuristically completed
+     * transaction branch.
      *
      * @param xid A global transaction identifier
      */
     public void forget(Xid xid) throws XAException {
-        xar.forget(xid);
+        xaResource.forget(xid);
     }
 
     /**
@@ -96,47 +95,47 @@ public class XAResourceImpl implements XAResource {
      * @return the transaction timeout value in seconds
      */
     public int getTransactionTimeout() throws XAException {
-        return xar.getTransactionTimeout();
+        return xaResource.getTransactionTimeout();
     }
 
     /**
      * This method is called to determine if the resource manager instance
-     * represented by the target object is the same as the resouce manager
-     * instance represented by the parameter xares.
+     * represented by the target object is the same as the resouce manager instance
+     * represented by the parameter xares.
      *
-     * @param xares An <code>XAResource</code> object whose resource manager
-     *              instance is to be compared with the resource
+     * @param xaResource An <code>XAResource</code> object whose resource manager
+     * instance is to be compared with the resource
      * @return true if it's the same RM instance; otherwise false.
      */
-    public boolean isSameRM(XAResource xares) throws XAException {
-        return xar.isSameRM(xares);
+    public boolean isSameRM(XAResource xaResource) throws XAException {
+        return this.xaResource.isSameRM(xaResource);
     }
 
     /**
-     * Ask the resource manager to prepare for a transaction commit
-     * of the transaction specified in xid.
+     * Ask the resource manager to prepare for a transaction commit of the
+     * transaction specified in xid.
      *
      * @param xid A global transaction identifier
-     * @return A value indicating the resource manager's vote on the
-     *         outcome of the transaction. The possible values
-     *         are: XA_RDONLY or XA_OK. If the resource manager wants
-     *         to roll back the transaction, it should do so
-     *         by raising an appropriate <code>XAException</code> in the prepare method.
+     * @return A value indicating the resource manager's vote on the outcome of the
+     * transaction. The possible values are: XA_RDONLY or XA_OK. If the resource
+     * manager wants to roll back the transaction, it should do so by raising an
+     * appropriate <code>XAException</code> in the prepare method.
      */
     public int prepare(Xid xid) throws XAException {
         try {
-            int result = xar.prepare(xid);
-            //When the VOTE from resource manager is XA_RDONLY , we will not get commit() call from TxManager.
-            //Hence calling txCompleted.
+            int result = xaResource.prepare(xid);
+            // When the VOTE from resource manager is XA_RDONLY , we will not get commit()
+            // call from TxManager.
+            // Hence calling txCompleted.
             if (result == XAResource.XA_RDONLY) {
-                mc.transactionCompleted();
+                managedConnectionImpl.transactionCompleted();
             }
             return result;
         } catch (XAException xae) {
-            mc.transactionCompleted();
+            managedConnectionImpl.transactionCompleted();
             throw xae;
         } catch (Exception e) {
-            mc.transactionCompleted();
+            managedConnectionImpl.transactionCompleted();
             throw new XAException(e.getMessage());
         }
     }
@@ -144,59 +143,61 @@ public class XAResourceImpl implements XAResource {
     /**
      * Obtain a list of prepared transaction branches from a resource manager.
      *
-     * @param flag One of TMSTARTRSCAN, TMENDRSCAN, TMNOFLAGS. TMNOFLAGS
-     *             must be used when no other flags are set in flags.
+     * @param flag One of TMSTARTRSCAN, TMENDRSCAN, TMNOFLAGS. TMNOFLAGS must be
+     * used when no other flags are set in flags.
      * @return The resource manager returns zero or more XIDs for the transaction
-     *         branches that are currently in a prepared or heuristically
-     *         completed state. If an error occurs during the operation, the resource
-     *         manager should throw the appropriate <code>XAException</code>.
+     * branches that are currently in a prepared or heuristically completed state.
+     * If an error occurs during the operation, the resource manager should throw
+     * the appropriate <code>XAException</code>.
      */
     public Xid[] recover(int flag) throws XAException {
-        return xar.recover(flag);
+        return xaResource.recover(flag);
     }
 
     /**
-     * Inform the resource manager to roll back work done on behalf of a transaction branch
+     * Inform the resource manager to roll back work done on behalf of a transaction
+     * branch
      *
      * @param xid A global transaction identifier
      */
     public void rollback(Xid xid) throws XAException {
-        //the mc.transactionCompleted call has come here becasue
-        //the transaction *actually* completes after the flow
-        //reaches here. the end() method might not really signal
-        //completion of transaction in case the transaction is
-        //suspended. In case of transaction suspension, the end
-        //method is still called by the transaction manager
+        // the mc.transactionCompleted call has come here becasue
+        // the transaction *actually* completes after the flow
+        // reaches here. the end() method might not really signal
+        // completion of transaction in case the transaction is
+        // suspended. In case of transaction suspension, the end
+        // method is still called by the transaction manager
         try {
-            xar.rollback(xid);
+            xaResource.rollback(xid);
         } catch (XAException xae) {
             throw xae;
         } catch (Exception e) {
             throw new XAException(e.getMessage());
         } finally {
-            mc.transactionCompleted();
+            managedConnectionImpl.transactionCompleted();
         }
     }
 
     /**
-     * Set the current transaction timeout value for this <code>XAResource</code> instance.
+     * Set the current transaction timeout value for this <code>XAResource</code>
+     * instance.
      *
      * @param seconds the transaction timeout value in seconds.
-     * @return true if transaction timeout value is set successfully; otherwise false.
+     * @return true if transaction timeout value is set successfully; otherwise
+     * false.
      */
     public boolean setTransactionTimeout(int seconds) throws XAException {
-        return xar.setTransactionTimeout(seconds);
+        return xaResource.setTransactionTimeout(seconds);
     }
 
     /**
      * Start work on behalf of a transaction branch specified in xid.
      *
      * @param xid A global transaction identifier to be associated with the resource
-     * @return flags    One of TMNOFLAGS, TMJOIN, or TMRESUME
+     * @return flags One of TMNOFLAGS, TMJOIN, or TMRESUME
      */
     public void start(Xid xid, int flags) throws XAException {
-        //GJCINT
-        mc.transactionStarted();
-        xar.start(xid, flags);
+        managedConnectionImpl.transactionStarted();
+        xaResource.start(xid, flags);
     }
 }

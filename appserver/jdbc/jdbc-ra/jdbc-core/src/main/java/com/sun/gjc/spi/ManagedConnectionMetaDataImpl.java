@@ -16,110 +16,111 @@
 
 package com.sun.gjc.spi;
 
+import static java.util.logging.Level.SEVERE;
+
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jakarta.resource.spi.ManagedConnectionMetaData;
+import jakarta.resource.spi.security.PasswordCredential;
 
 /**
- * <code>ManagedConnectionMetaData</code> implementation for Generic JDBC Connector.
+ * <code>ManagedConnectionMetaData</code> implementation for Generic JDBC
+ * Connector.
  *
  * @author Evani Sai Surya Kiran
  * @version 1.0, 02/08/03
  */
-public class ManagedConnectionMetaDataImpl implements jakarta.resource.spi.ManagedConnectionMetaData {
+public class ManagedConnectionMetaDataImpl implements ManagedConnectionMetaData {
 
-    private java.sql.DatabaseMetaData dmd = null;
-    private ManagedConnectionImpl mc;
+    private static Logger _logger = LogDomains.getLogger(ManagedConnectionMetaDataImpl.class, LogDomains.RSR_LOGGER);
 
-    private static Logger _logger;
-
-    static {
-        _logger = LogDomains.getLogger(ManagedConnectionMetaDataImpl.class, LogDomains.RSR_LOGGER);
-    }
-
-    private boolean debug = false;
+    private DatabaseMetaData databaseMetaData;
+    private ManagedConnectionImpl managedConnection;
 
     /**
      * Constructor for <code>ManagedConnectionMetaDataImpl</code>
      *
-     * @param mc <code>ManagedConnection</code>
-     * @throws <code>ResourceException</code> if getting the DatabaseMetaData object fails
+     * @param managedConnection <code>ManagedConnection</code>
+     * @throws <code>ResourceException</code> if getting the DatabaseMetaData object
+     * fails
      */
-    public ManagedConnectionMetaDataImpl(ManagedConnectionImpl mc) throws ResourceException {
+    public ManagedConnectionMetaDataImpl(ManagedConnectionImpl managedConnection) throws ResourceException {
         try {
-            this.mc = mc;
-            dmd = mc.getActualConnection().getMetaData();
+            this.managedConnection = managedConnection;
+            databaseMetaData = managedConnection.getActualConnection().getMetaData();
         } catch (SQLException sqle) {
-            _logger.log(Level.SEVERE, "jdbc.exc_md", sqle);
-            throw new ResourceException(sqle.getMessage());
+            _logger.log(SEVERE, "jdbc.exc_md", sqle);
+            throw new ResourceException(sqle.getMessage(), sqle);
         }
     }
 
     /**
-     * Returns product name of the underlying EIS instance connected
-     * through the ManagedConnection.
+     * Returns product name of the underlying EIS instance connected through the
+     * ManagedConnection.
      *
      * @return Product name of the EIS instance
      * @throws <code>ResourceException</code>
      */
     public String getEISProductName() throws ResourceException {
         try {
-            return dmd.getDatabaseProductName();
+            return databaseMetaData.getDatabaseProductName();
         } catch (SQLException sqle) {
-            _logger.log(Level.SEVERE, "jdbc.exc_eis_prodname", sqle);
-            throw new ResourceException(sqle.getMessage());
+            _logger.log(SEVERE, "jdbc.exc_eis_prodname", sqle);
+            throw new ResourceException(sqle.getMessage(), sqle);
         }
     }
 
     /**
-     * Returns product version of the underlying EIS instance connected
-     * through the ManagedConnection.
+     * Returns product version of the underlying EIS instance connected through the
+     * ManagedConnection.
      *
      * @return Product version of the EIS instance
      * @throws <code>ResourceException</code>
      */
     public String getEISProductVersion() throws ResourceException {
         try {
-            return dmd.getDatabaseProductVersion();
+            return databaseMetaData.getDatabaseProductVersion();
         } catch (SQLException sqle) {
-            _logger.log(Level.SEVERE, "jdbc.exc_eis_prodvers", sqle);
+            _logger.log(SEVERE, "jdbc.exc_eis_prodvers", sqle);
             throw new ResourceException(sqle.getMessage(), sqle.getMessage());
         }
     }
 
     /**
-     * Returns maximum limit on number of active concurrent connections
-     * that an EIS instance can support across client processes.
+     * Returns maximum limit on number of active concurrent connections that an EIS
+     * instance can support across client processes.
      *
      * @return Maximum limit for number of active concurrent connections
      * @throws <code>ResourceException</code>
      */
     public int getMaxConnections() throws ResourceException {
         try {
-            return dmd.getMaxConnections();
+            return databaseMetaData.getMaxConnections();
         } catch (SQLException sqle) {
-            _logger.log(Level.SEVERE, "jdbc.exc_eis_maxconn");
-            throw new ResourceException(sqle.getMessage());
+            _logger.log(SEVERE, "jdbc.exc_eis_maxconn");
+            throw new ResourceException(sqle.getMessage(), sqle);
         }
     }
 
     /**
-     * Returns name of the user associated with the ManagedConnection instance. The name
-     * corresponds to the resource principal under whose whose security context, a connection
-     * to the EIS instance has been established.
+     * Returns name of the user associated with the ManagedConnection instance. The
+     * name corresponds to the resource principal under whose whose security
+     * context, a connection to the EIS instance has been established.
      *
      * @return name of the user
      * @throws <code>ResourceException</code>
      */
     public String getUserName() throws ResourceException {
-        jakarta.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();
-        if (pc != null) {
-            return pc.getUserName();
+        PasswordCredential passwordCredential = managedConnection.getPasswordCredential();
+        if (passwordCredential != null) {
+            return passwordCredential.getUserName();
         }
 
-        return mc.getManagedConnectionFactory().getUser();
+        return managedConnection.getManagedConnectionFactory().getUser();
     }
 }

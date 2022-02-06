@@ -62,31 +62,17 @@
                 <version>3.2.1</version>
                 <executions>
                     <execution>
-                        <id>tags-api</id>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <streamLogs>true</streamLogs>
-                            <projectsDirectory>${project.build.directory}/jstl-api-master/api</projectsDirectory>
-                            <pomIncludes>
-                                <pomInclude>pom.xml</pomInclude>
-                            </pomIncludes>
-                            <goals>clean install -P staging</goals>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>tags-impl</id>
                         <goals>
                             <goal>run</goal>
                         </goals>
                         <configuration>
                             <streamLogs>true</streamLogs>
-                            <projectsDirectory>${project.build.directory}/jstl-api-master/impl</projectsDirectory>
+                            <projectsDirectory>${project.build.directory}/jstl-api-master</projectsDirectory>
                             <pomIncludes>
                                 <pomInclude>pom.xml</pomInclude>
                             </pomIncludes>
-                            <goals>clean install -P staging</goals>
+                            <goals>clean install -P staging -am -pl impl</goals>
                         </configuration>
                     </execution>
                 </executions>

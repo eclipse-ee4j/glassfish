@@ -36,7 +36,6 @@
     <description>Temporary snapshot modules</description>
 
     <modules>
-        <module>tags</module>
         <module>jbatch</module>
   </modules>
 </project>

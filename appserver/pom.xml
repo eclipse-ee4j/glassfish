@@ -152,8 +152,8 @@
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->
-        <jstl-api.version>3.0.0-SNAPSHOT</jstl-api.version>
-        <jstl-impl.version>3.0.0-SNAPSHOT</jstl-impl.version>
+        <jstl-api.version>3.0.0-RC1</jstl-api.version>
+        <jstl-impl.version>3.0.0-M1</jstl-impl.version>
 
         <!-- CDI -->
         <cdi-api.version>4.0.0.Beta3</cdi-api.version>

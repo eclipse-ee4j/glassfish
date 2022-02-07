@@ -22,7 +22,7 @@
 <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
 <!ENTITY commonRun SYSTEM "./../../../../config/run.xml">
 <!ENTITY testproperties SYSTEM "./build.properties">
-        ]>
+]>
 
 <project name="force-deploy-rar" default="usage" basedir=".">
 
@@ -38,8 +38,6 @@
   </target>
 
   <target name="compile" depends="clean">
-    <ant dir="ra" inheritAll="false" target="compile" />
-
     <antcall target="compile-common">
       <param name="src" value="ejb" />
       <param name="s1astest.classpath"
@@ -62,8 +60,6 @@
   </target>
 
   <target name="build" depends="compile">
-    <ant dir="ra" inheritAll="false" target="build" />
-
     <antcall target="webclient-war-common">
       <param name="hasWebclient" value="yes" />
       <param name="appname" value="force-deploy-rar" />
@@ -92,12 +88,6 @@
   </target>
 
   <target name="setuptwo" depends="init-common">
-    <!--
-        We need not create-ra-config as we are not undeploying first connectors-ra-redeploy-rars and its ra-config, we will be doing
-        force=true with second connectors-ra-redeploy-rars
-
-        <antcall target="create-ra-config"/>
--->
     <!-- Applications must have the same filename, which is used as an application name -->
     <copy file="${env.APS_HOME}/connectors-ra-redeploy/rars/target/connectors-ra-redeploy-rars-v2.rar"
           tofile="connectors-ra-redeploy-rars.rar"
@@ -160,11 +150,6 @@
 
 
   <target name="unsetup" depends="init-common">
-    <!--
-        <antcall target="delete-admin-object"/>
-        <antcall target="delete-resource"/>
-        <antcall target="delete-pool"/>
-        <antcall target="delete-ra-config"/>-->
     <antcall target="undeploy" />
   </target>
 
@@ -216,12 +201,6 @@
       <param name="connector.conpool.name" value="versiontest-ra-pool" />
       <param name="failonerror" value="true" />
     </antcall>
-    <!--
-        <antcall target="set-oracle-props">
-            <param name="pool.type" value="connector"/>
-            <param name="conpool.name" value="versiontest-ra-pool"/>
-        </antcall>
--->
   </target>
 
   <target name="create-resource">

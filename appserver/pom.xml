@@ -68,6 +68,7 @@
         <module>orb</module>
         <module>appclient</module>
         <module>ant-tasks</module>
+        <module>microprofile</module>
     </modules>
 
     <scm>
@@ -154,6 +155,9 @@
         <jakarta.mvc-api.version>2.0.0</jakarta.mvc-api.version>
         <krazo.version>2.0.1</krazo.version>
 
+        <!-- MicroProfile Config -->
+        <microprofile.config-api.version>3.0.1</microprofile.config-api.version>
+        <smallrye-config.version>3.0.0-RC1</smallrye-config.version>
 
         <!-- Admin console components -->
 

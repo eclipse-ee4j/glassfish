@@ -75,7 +75,7 @@ export PORT_HTTPS="8181"
 install_glassfish;
 install_jacoco;
 
-rm ./appserver/tests/appserv-tests/test_resultsValid.xml
-rm ./appserver/tests/appserv-tests/test_results.xml
+rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
+rm -f ./appserver/tests/appserv-tests/test_results.xml
 ./appserver/tests/gftest.sh run_test "${test}"
 

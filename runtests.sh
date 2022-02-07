@@ -64,6 +64,7 @@ if [ -z "${test}" ]
   exit 2;
 fi
 
+export MVN_REPOSITORY="${HOME}/.m2/repository"
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export CLASSPATH="${WORKSPACE}/glassfish6/javadb"

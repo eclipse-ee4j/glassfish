@@ -27,6 +27,7 @@
         <version>6.2.5-SNAPSHOT</version>
     </parent>
 
+    <groupId>org.glassfish.main.tests.connectors</groupId>
     <artifactId>cciblackbox-tx</artifactId>
     <name>GlassFish Ant Tests - CCI BlackBox TX</name>
 

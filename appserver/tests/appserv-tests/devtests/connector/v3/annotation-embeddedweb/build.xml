@@ -149,7 +149,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose"/>
     <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-         classpath="${s1astest.classpath}:${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes"
+         classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
          debug="on"
          failonerror="true"/>
   </target>
@@ -175,8 +175,8 @@
         <include name="*.jar" />
         <include name="*.war" />
       </fileset>
-      <fileset dir="${env.APS_HOME}/connectors-ra-redeploy/rars/target">
-        <include name="connectors-ra-redeploy-rars.rar" />
+      <fileset dir="${bundles.dir}">
+        <include name="connectors-ra-redeploy-rars.rar"/>
       </fileset>
     </ear>
   </target>

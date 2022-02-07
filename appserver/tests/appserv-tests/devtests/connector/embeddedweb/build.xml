@@ -151,7 +151,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose"/>
     <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-         classpath="${s1astest.classpath}:${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes"
+         classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
          debug="on"
          failonerror="true"/>
   </target>
@@ -171,13 +171,12 @@
     <delete file="${assemble.dir}/${appname}.ear"/>
     <mkdir dir="${assemble.dir}"/>
     <mkdir dir="${build.classes.dir}/META-INF"/>
-    <ear earfile="${assemble.dir}/${appname}App.ear"
-     appxml="${application.xml}">
+    <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
       <fileset dir="${assemble.dir}">
         <include name="*.jar"/>
         <include name="*.war"/>
       </fileset>
-      <fileset dir="${env.APS_HOME}/connectors-ra-redeploy/rars/target">
+      <fileset dir="${bundles.dir}">
         <include name="connectors-ra-redeploy-rars.rar"/>
       </fileset>
     </ear>

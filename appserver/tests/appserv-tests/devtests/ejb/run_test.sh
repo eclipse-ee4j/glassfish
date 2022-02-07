@@ -44,7 +44,10 @@ test_run_ejb(){
                         domain1
 
         # Create
-        echo "admin.domain=domain1
+        echo "
+        gf.version=\${env.GF_VERSION}
+        bundles.dir=\${env.WORKSPACE}/bundles
+        admin.domain=domain1
         admin.domain.dir=\${env.S1AS_HOME}/domains
         admin.port=${ADMIN_PORT}
         admin.user=anonymous
@@ -124,7 +127,10 @@ test_run_ejb_web(){
                         domain1
 
         # Create
-        echo "admin.domain=domain1
+        echo "
+        gf.version=\${env.GF_VERSION}
+        bundles.dir=\${env.WORKSPACE}/bundles
+        admin.domain=domain1
         admin.domain.dir=\${env.S1AS_HOME}/domains
         admin.port=${ADMIN_PORT}
         admin.user=anonymous
@@ -206,7 +212,10 @@ test_run_ejb_timer_cluster(){
                         domain1
 
         # Create
-        echo "admin.domain=domain1
+        echo "
+        gf.version=\${env.GF_VERSION}
+        bundles.dir=\${env.WORKSPACE}/bundles
+        admin.domain=domain1
         admin.domain.dir=\${env.S1AS_HOME}/domains
         admin.port=${ADMIN_PORT}
         admin.user=anonymous

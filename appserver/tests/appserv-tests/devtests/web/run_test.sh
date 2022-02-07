@@ -94,7 +94,10 @@ test_run(){
   HOST="localhost"
 
   # Create
-  echo "admin.domain=domain1
+  echo "
+  gf.version=\${env.GF_VERSION}
+  bundles.dir=\${env.WORKSPACE}/bundles
+  admin.domain=domain1
   admin.domain.dir=\${env.S1AS_HOME}/domains
   admin.port=${WEBTIER_ADMIN_PORT}
   admin.user=admin

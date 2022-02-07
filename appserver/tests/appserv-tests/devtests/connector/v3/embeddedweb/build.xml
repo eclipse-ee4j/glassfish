@@ -98,7 +98,6 @@
       <param name="admin.command" value="delete-admin-object" />
       <param name="operand.props" value="--target ${appserver.instance.name} eis/jdbcAdmin" />
     </antcall>
-    <!--<antcall target="reconfig-common"/>-->
   </target>
 
   <target name="restart">
@@ -119,17 +118,12 @@
       <param name="admin.command" value="delete-resource-adapter-config" />
       <param name="operand.props" value="${appname}App#connectors-ra-redeploy-rars" />
     </antcall>
-    <!--<antcall target="reconfig-common"/>-->
   </target>
 
   <target name="unsetup">
     <antcall target="execute-sql-connector">
       <param name="sql.file" value="sql/dropBankTables.sql" />
     </antcall>
-
-    <!--    <antcall target="delete-resource"/>
-    <antcall target="delete-pool"/>
-    <antcall target="delete-admin-object"/>-->
   </target>
 
   <target name="delete-pool">
@@ -156,7 +150,7 @@
     <echo message="common.xml: Compiling test source files" level="verbose" />
     <javac srcdir="servlet"
            destdir="${build.classes.dir}"
-           classpath="${s1astest.classpath}:${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes"
+           classpath="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar"
            debug="on"
            failonerror="true"
     />
@@ -183,7 +177,7 @@
         <include name="*.jar" />
         <include name="*.war" />
       </fileset>
-      <fileset dir="${env.APS_HOME}/connectors-ra-redeploy/rars/target">
+      <fileset dir="${bundles.dir}">
         <include name="connectors-ra-redeploy-rars.rar" />
       </fileset>
     </ear>

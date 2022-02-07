@@ -49,7 +49,7 @@
       <fileset dir="../ra">
         <include name="generic-ra.rar" />
       </fileset>
-      <fileset dir="${env.APS_HOME}/connectors-ra-redeploy/rars-xa/target">
+      <fileset dir="${bundles.dir}">
         <include name="connectors-ra-redeploy-rars-xa.rar" />
       </fileset>
       <fileset dir="${env.APS_HOME}/lib">

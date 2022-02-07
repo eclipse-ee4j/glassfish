@@ -30,30 +30,35 @@
   &testcommon;
 
   <target name="all" depends="init-common">
-   <antcall target="compile-common">
-        <param name="src" value="." />
-        <param name="s1astest.classpath" value="${s1astest.classpath}:${env.APS_HOME}/connectors-ra-redeploy/rars/target/connectors-ra-redeploy-rars.rar:${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes" />
+    <antcall target="compile-common">
+      <param name="src" value="." />
+      <param name="s1astest.classpath" value="${s1astest.classpath}:${bundles.dir}/connectors-ra-redeploy-jars.jar" />
     </antcall>
 
     <antcall target="ejb-jar-common">
-        <param name="ejb-jar.xml" value="META-INF/ejb-jar.xml" />
-        <param name="ejbjar.classes" value=" beans/*.class, ${env.APS_HOME}/connectors-ra-redeploy/jars/target/classes/**/*.class " />
-        <param name="sun-ejb-jar.xml" value="META-INF/sun-ejb-jar.xml" />
-        <param name="appname" value="generic-embedded" />
+      <param name="ejb-jar.xml" value="META-INF/ejb-jar.xml" />
+      <param name="ejbjar.classes" value=" beans/*.class " />
+      <param name="sun-ejb-jar.xml" value="META-INF/sun-ejb-jar.xml" />
+      <param name="appname" value="generic-embedded" />
     </antcall>
+    <jar jarfile="${assemble.dir}/generic-embedded-ejb.jar"
+         basedir="${build.classes.dir}"
+         update="true"
+    >
+      <zipfileset src="${bundles.dir}/connectors-ra-redeploy-jars.jar" includes="**/*.class" />
+    </jar>
 
     <antcall target="appclient-jar-common">
-        <param name="appname" value="generic-embedded" />
-        <param name="application-client.xml" value="META-INF/application-client.xml" />
-        <param name="appclientjar.classes" value="beans/*.class, client/Client.class" />
-        <param name="sun-application-client.xml" value="META-INF/sun-application-client.xml" />
+      <param name="appname" value="generic-embedded" />
+      <param name="application-client.xml" value="META-INF/application-client.xml" />
+      <param name="appclientjar.classes" value="beans/*.class, client/Client.class" />
+      <param name="sun-application-client.xml" value="META-INF/sun-application-client.xml" />
     </antcall>
-
-    </target>
+  </target>
 
   <target name="clean">
     <antcall target="clean-classes-common">
-        <param name="build.classes.dir" value="classes" />
+      <param name="build.classes.dir" value="classes" />
     </antcall>
   </target>
 </project>

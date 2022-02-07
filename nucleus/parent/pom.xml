@@ -159,8 +159,8 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.8.1</junit.version>
-        <jmh.version>1.33</jmh.version>
+        <junit.version>5.8.2</junit.version>
+        <jmh.version>1.34</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>

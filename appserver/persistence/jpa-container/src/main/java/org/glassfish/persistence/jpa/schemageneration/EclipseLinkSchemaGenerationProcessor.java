@@ -16,49 +16,48 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.persistence.common.*;
+import static org.glassfish.persistence.common.DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX;
+import static org.glassfish.persistence.common.DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.sun.logging.LogDomains;
 
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.persistence.common.DatabaseConstants;
+import org.glassfish.persistence.common.Java2DBProcessorHelper;
+
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.logging.LogDomains;
 
 import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 /**
- * SchemaGenerationProcessor that handles schema generation while
- * running against EclipseLink in pre JPA 2.1 mode
- * For each persistence unit descriptors that is defined for
- * an application create the ddl scripts. Additionally if the
- * user has requested the tables to be created or dropped from
- * the database complete that action too.
+ * SchemaGenerationProcessor that handles schema generation while running
+ * against EclipseLink in pre JPA 2.1 mode For each persistence unit descriptors
+ * that is defined for an application create the ddl scripts. Additionally if
+ * the user has requested the tables to be created or dropped from the database
+ * complete that action too.
  *
- * These are the principles and expectations of the implementation.
- * We don't want TopLink code to execute the DDLs, it should only
- * generate them. So, we always set the *generation-mode* to *script*
- * in the PUInfo object before passing it to createContainerEMF().
- * As a result TopLink never creates the actual tables, nor does it drop
- * them. The DDLs are executed by our code based on user preference which
- * considers inputs from persistence.xml and CLI. We set the TopLink
- * property to DROP_AND_CREATE in that map because we want it to always
- * generate both create- and dropDDL.jdbc files.
+ * These are the principles and expectations of the implementation. We don't
+ * want TopLink code to execute the DDLs, it should only generate them. So, we
+ * always set the *generation-mode* to *script* in the PUInfo object before
+ * passing it to createContainerEMF(). As a result TopLink never creates the
+ * actual tables, nor does it drop them. The DDLs are executed by our code based
+ * on user preference which considers inputs from persistence.xml and CLI. We
+ * set the TopLink property to DROP_AND_CREATE in that map because we want it to
+ * always generate both create- and dropDDL.jdbc files.
+ *
  * @author pramodg
  */
 public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationProcessor {
 
     // Defining the persistence provider class names here that we would use to
     // check if schema generation is supported.
-    private static final String TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD =
-        "oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider"; // NOI18N
-    private static final String TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW =
-        "oracle.toplink.essentials.PersistenceProvider"; // NOI18N
-    private static final String ECLIPSELINK_PERSISTENCE_PROVIDER_CLASS_NAME =
-        "org.eclipse.persistence.jpa.PersistenceProvider"; // NOI18N
+    private static final String TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD = "oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider";
+    private static final String TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW = "oracle.toplink.essentials.PersistenceProvider";
+    private static final String ECLIPSELINK_PERSISTENCE_PROVIDER_CLASS_NAME = "org.eclipse.persistence.jpa.PersistenceProvider";
 
     // Constants for various property values.
 
@@ -66,29 +65,29 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
     // oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider
     // and org.eclipse.persistence.jpa.config.PersistenceUnitProperties
     // This code assumes that the value of constant at both the place is same
-    private static final String CREATE_ONLY             = "create-tables"; //NOI18N
-    private static final String DROP_AND_CREATE         = "drop-and-create-tables"; //NOI18N
-    private static final String NONE                    = "none"; //NOI18N
+    private static final String CREATE_ONLY = "create-tables"; // NOI18N
+    private static final String DROP_AND_CREATE = "drop-and-create-tables"; // NOI18N
+    private static final String NONE = "none"; // NOI18N
 
-    private static final String DDL_BOTH_GENERATION     = "both"; //NOI18N
-    private static final String DDL_DATABASE_GENERATION = "database"; //NOI18N
-    private static final String DDL_SQL_SCRIPT_GENERATION = "sql-script"; //NOI18N
+    private static final String DDL_BOTH_GENERATION = "both"; // NOI18N
+    private static final String DDL_DATABASE_GENERATION = "database"; // NOI18N
+    private static final String DDL_SQL_SCRIPT_GENERATION = "sql-script"; // NOI18N
 
     // property names for Toplink and EclipseLink
-    private static final String TOPLINK_DDL_GENERATION     = "toplink.ddl-generation"; // NOI18N
-    private static final String ECLIPSELINK_DDL_GENERATION = "eclipselink.ddl-generation"; // NOI18N
+    private static final String TOPLINK_DDL_GENERATION = "toplink.ddl-generation";
+    private static final String ECLIPSELINK_DDL_GENERATION = "eclipselink.ddl-generation";
 
-    private static final String TOPLINK_DDL_GENERATION_OUTPUT_MODE = "toplink.ddl-generation.output-mode"; // NOI18N
-    private static final String ECLIPSELINK_DDL_GENERATION_OUTPUT_MODE = "eclipselink.ddl-generation.output-mode"; // NOI18N
+    private static final String TOPLINK_DDL_GENERATION_OUTPUT_MODE = "toplink.ddl-generation.output-mode";
+    private static final String ECLIPSELINK_DDL_GENERATION_OUTPUT_MODE = "eclipselink.ddl-generation.output-mode";
 
-    private static final String TOPLINK_APP_LOCATION         = "toplink.application-location"; // NOI18N
-    private static final String ECLIPSELINK_APP_LOCATION     = "eclipselink.application-location"; // NOI18N
+    private static final String TOPLINK_APP_LOCATION = "toplink.application-location";
+    private static final String ECLIPSELINK_APP_LOCATION = "eclipselink.application-location";
 
-    private static final String TOPLINK_CREATE_JDBC_DDL_FILE     = "toplink.create-ddl-jdbc-file-name"; // NOI18N
-    private static final String ECLIPSELINK_CREATE_JDBC_DDL_FILE = "eclipselink.create-ddl-jdbc-file-name"; // NOI18N
+    private static final String TOPLINK_CREATE_JDBC_DDL_FILE = "toplink.create-ddl-jdbc-file-name";
+    private static final String ECLIPSELINK_CREATE_JDBC_DDL_FILE = "eclipselink.create-ddl-jdbc-file-name";
 
-    private static final String TOPLINK_DROP_JDBC_DDL_FILE       = "toplink.drop-ddl-jdbc-file-name"; // NOI18N
-    private static final String ECLIPSELINK_DROP_JDBC_DDL_FILE   = "eclipselink.drop-ddl-jdbc-file-name"; // NOI18N
+    private static final String TOPLINK_DROP_JDBC_DDL_FILE = "toplink.drop-ddl-jdbc-file-name";
+    private static final String ECLIPSELINK_DROP_JDBC_DDL_FILE = "eclipselink.drop-ddl-jdbc-file-name";
 
     private static Logger logger = LogDomains.getLogger(EclipseLinkSchemaGenerationProcessor.class, LogDomains.PERSISTENCE_LOGGER);
 
@@ -104,7 +103,8 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
     private boolean isSchemaGenerationPU;
 
     /**
-     * Creates a new instance of EclipseLinkSchemaGenerationProcessor using Java2DBProcessorHelper
+     * Creates a new instance of EclipseLinkSchemaGenerationProcessor using
+     * Java2DBProcessorHelper
      */
     public EclipseLinkSchemaGenerationProcessor(String persistenceProviderClassName) {
         initializeProviderPropertyHolder(persistenceProviderClassName);
@@ -119,45 +119,38 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
         this.helper = new Java2DBProcessorHelper(context);
         this.helper.init();
 
-        String ddlGenerate = getPersistencePropVal(pud,
-                providerPropertyNamesHolder.ddlGeneration, NONE);
-        String ddlMode = getPersistencePropVal(pud,
-                providerPropertyNamesHolder.ddlGenerationOutputMode, DDL_BOTH_GENERATION);
+        String ddlGenerate = getPersistencePropVal(pud, providerPropertyNamesHolder.ddlGeneration, NONE);
+        String ddlMode = getPersistencePropVal(pud, providerPropertyNamesHolder.ddlGenerationOutputMode, DDL_BOTH_GENERATION);
 
         // If CLI options are not set, use value from the the ddl-generate property
         // if defined in persistence.xml
-        boolean userCreateTables = (ddlGenerate.equals(CREATE_ONLY)
-                || ddlGenerate.equals(DROP_AND_CREATE))
-                && !ddlMode.equals(NONE);
+        boolean userCreateTables = (ddlGenerate.equals(CREATE_ONLY) || ddlGenerate.equals(DROP_AND_CREATE)) && !ddlMode.equals(NONE);
 
         boolean createTables = helper.getCreateTables(userCreateTables);
 
         boolean userDropTables = ddlGenerate.equals(DROP_AND_CREATE)
-                && (ddlMode.equals(DDL_DATABASE_GENERATION)
-                || ddlMode.equals(DDL_BOTH_GENERATION));
+                && (ddlMode.equals(DDL_DATABASE_GENERATION) || ddlMode.equals(DDL_BOTH_GENERATION));
 
         if (logger.isLoggable(Level.FINE)) {
-            logger.fine("Processing request with create tables: " + createTables //NOI18N
-                    + ", drop tables: " + userDropTables); //NOI18N
+            logger.fine("Processing request with create tables: " + createTables // NOI18N
+                    + ", drop tables: " + userDropTables); // NOI18N
         }
 
         if (createTables || userDropTables) {
-            helper.setProcessorType("JPA", pud.getName()); // NOI18N
+            helper.setProcessorType("JPA", pud.getName());
             helper.setDropTablesValue(userDropTables, pud.getName());
-            helper.setCreateTablesValue(userCreateTables && !ddlMode.equals(DDL_SQL_SCRIPT_GENERATION),
-                    pud.getName());
+            helper.setCreateTablesValue(userCreateTables && !ddlMode.equals(DDL_SQL_SCRIPT_GENERATION), pud.getName());
 
-
-            // For a RESOURCE_LOCAL, managed pu, only non-jta-data-source should be specified.
-            String dataSourceName =
-                    (PersistenceUnitTransactionType.JTA == PersistenceUnitTransactionType.valueOf(pud.getTransactionType())) ?
-                            pud.getJtaDataSource() : pud.getNonJtaDataSource();
+            // For a RESOURCE_LOCAL, managed pu, only non-jta-data-source should be
+            // specified.
+            String dataSourceName = (PersistenceUnitTransactionType.JTA == PersistenceUnitTransactionType.valueOf(pud.getTransactionType()))
+                    ? pud.getJtaDataSource()
+                    : pud.getNonJtaDataSource();
             helper.setJndiName(dataSourceName, pud.getName());
             constructJdbcFileNames(pud);
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Processing request to create files - create file: " + //NOI18N
-                        helper.getCreateJdbcFileName(pud.getName())
-                        + ", drop  file: " + //NOI18N
+                logger.fine("Processing request to create files - create file: " + // NOI18N
+                        helper.getCreateJdbcFileName(pud.getName()) + ", drop  file: " + // NOI18N
                         helper.getDropJdbcFileName(pud.getName()));
             }
 
@@ -166,7 +159,6 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
             isSchemaGenerationPU = true;
         }
     }
-
 
     @Override
     public Map<String, Object> getOverridesForSchemaGeneration() {
@@ -180,7 +172,6 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
         return overridesForSuppressingSchemaGeneration;
     }
 
-
     @Override
     public boolean isContainerDDLExecutionRequired() {
         // DDL execution is required if this is a schema generation pu
@@ -193,8 +184,8 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
         providerPropertyNamesHolder = new ProviderPropertyNamesHolder();
 
         // Override with TLE names if running against TLE
-        if (TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW.equals(providerClassName) ||
-                TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD.equals(providerClassName)) {
+        if (TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW.equals(providerClassName)
+                || TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD.equals(providerClassName)) {
             // for backward compatibility
             providerPropertyNamesHolder.appLocation = TOPLINK_APP_LOCATION;
             providerPropertyNamesHolder.createJdbcDdlFile = TOPLINK_CREATE_JDBC_DDL_FILE;
@@ -205,36 +196,29 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
     }
 
     /**
-     * Construct the name of the create and
-     * drop jdbc ddl files that would be
-     * created. These name would be either
-     * obtained from the persistence.xml file
-     * (if the user has defined them) or we would
-     * create default filenames
+     * Construct the name of the create and drop jdbc ddl files that would be
+     * created. These name would be either obtained from the persistence.xml file
+     * (if the user has defined them) or we would create default filenames
+     *
      * @param parBundle the persistence unit descriptor that is being worked on.
      */
-    private void constructJdbcFileNames(PersistenceUnitDescriptor parBundle)  {
-        String createJdbcFileName =
-                getPersistencePropVal(parBundle,
-                providerPropertyNamesHolder.createJdbcDdlFile, null);
-        String dropJdbcFileName =
-                getPersistencePropVal(parBundle,
-                providerPropertyNamesHolder.dropJdbcDdlFile, null);
+    private void constructJdbcFileNames(PersistenceUnitDescriptor parBundle) {
+        String createJdbcFileName = getPersistencePropVal(parBundle, providerPropertyNamesHolder.createJdbcDdlFile, null);
+        String dropJdbcFileName = getPersistencePropVal(parBundle, providerPropertyNamesHolder.dropJdbcDdlFile, null);
 
-        if((null != createJdbcFileName) && (null != dropJdbcFileName)) {
+        if (createJdbcFileName != null && dropJdbcFileName != null) {
             return;
         }
 
-        String filePrefix =
-                    Java2DBProcessorHelper.getDDLNamePrefix(parBundle.getParent().getParent());
+        String filePrefix = Java2DBProcessorHelper.getDDLNamePrefix(parBundle.getParent().getParent());
 
-        if(null == createJdbcFileName) {
-            createJdbcFileName = filePrefix + DatabaseConstants.NAME_SEPARATOR + parBundle.getName() +
-                DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX;
+        if (createJdbcFileName == null) {
+            createJdbcFileName = filePrefix + DatabaseConstants.NAME_SEPARATOR + parBundle.getName()
+                    + CREATE_DDL_JDBC_FILE_SUFFIX;
         }
-        if(null == dropJdbcFileName) {
-            dropJdbcFileName = filePrefix + DatabaseConstants.NAME_SEPARATOR + parBundle.getName() +
-                DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX;
+        if (dropJdbcFileName == null) {
+            dropJdbcFileName = filePrefix + DatabaseConstants.NAME_SEPARATOR + parBundle.getName()
+                    + DROP_DDL_JDBC_FILE_SUFFIX;
         }
 
         helper.setCreateJdbcFileName(createJdbcFileName, parBundle.getName());
@@ -242,13 +226,13 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
     }
 
     /**
-     * This method is called after the jdbc files have been created.
-     * Iterate over all created jdbc ddl files and
-     * execute it against the database to have the required objects created.
+     * This method is called after the jdbc files have been created. Iterate over
+     * all created jdbc ddl files and execute it against the database to have the
+     * required objects created.
      */
     @Override
     public void executeCreateDDL() {
-        helper.createOrDropTablesInDB(true, "JPA"); // NOI18N
+        helper.createOrDropTablesInDB(true, "JPA");
     }
 
     private void addSchemaGenerationPropertiesToOverrides(PersistenceUnitDescriptor puDescriptor, Map<String, Object> overrides) {
@@ -259,69 +243,67 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
         addPropertyToOverride(puDescriptor, overrides, providerPropertyNamesHolder.dropJdbcDdlFile,
                 helper.getDropJdbcFileName(puDescriptor.getName()));
 
-        // The puDescriptor might not have this property if schema generation is triggered by deployment CLI override
-        addPropertyToOverride(puDescriptor, overrides,
-                providerPropertyNamesHolder.ddlGeneration, DROP_AND_CREATE);
+        // The puDescriptor might not have this property if schema generation is
+        // triggered by deployment CLI override
+        addPropertyToOverride(puDescriptor, overrides, providerPropertyNamesHolder.ddlGeneration, DROP_AND_CREATE);
+
         // If we are doing schema generation, we want DDL scripts to be generated
-        addPropertyToOverride(puDescriptor, overrides,
-                providerPropertyNamesHolder.ddlGenerationOutputMode, DDL_SQL_SCRIPT_GENERATION);
+        addPropertyToOverride(puDescriptor, overrides, providerPropertyNamesHolder.ddlGenerationOutputMode, DDL_SQL_SCRIPT_GENERATION);
 
     }
 
     /**
-     * Utility method that is used to actually set the property into the persistence unit descriptor.
+     * Utility method that is used to actually set the property into the persistence
+     * unit descriptor.
+     *
      * @param descriptor the persistence unit descriptor that is being worked on.
      * @param propertyName the name of the property.
      * @param propertyValue the value of the property.
      */
-    private static void addPropertyToOverride(PersistenceUnitDescriptor descriptor, Map<String, Object> overrides,
-                                       String propertyName, String propertyValue) {
+    private static void addPropertyToOverride(PersistenceUnitDescriptor descriptor, Map<String, Object> overrides, String propertyName, String propertyValue) {
         String oldPropertyValue = descriptor.getProperties().getProperty(propertyName);
-        if(null == oldPropertyValue) { //Do not override any value explicitly specified by the user
+        if (oldPropertyValue == null) { // Do not override any value explicitly specified by the user
             overrides.put(propertyName, propertyValue);
         }
     }
 
     /**
-     * Given a persistence unit descriptor
-     * return the value of a property if the
-     * user has specified it.
-     * If the user has not defined this property
-     * return the default value.
+     * Given a persistence unit descriptor return the value of a property if the
+     * user has specified it. If the user has not defined this property return the
+     * default value.
+     *
      * @param parBundle the persistence unit descriptor that is being worked on.
      * @param propertyName the property name being checked.
      * @param defaultValue the default value to be used.
      * @return the property value.
      */
-    private String getPersistencePropVal(PersistenceUnitDescriptor parBundle,
-            String propertyName, String defaultValue) {
+    private String getPersistencePropVal(PersistenceUnitDescriptor parBundle, String propertyName, String defaultValue) {
         return parBundle.getProperties().getProperty(propertyName, defaultValue);
     }
 
     /**
-     * This processor only supports EclipseLink, the default
-     * persistence povider in glassfish; or Toplink, the default provder for GF 2.x.
+     * This processor only supports EclipseLink, the default persistence povider in
+     * glassfish; or Toplink, the default provder for GF 2.x.
      *
      * @return true if persistence provider is EclipseLink or Toplink.
      */
     public static boolean isSupportedPersistenceProvider(final String providerClassName) {
 
-        return providerClassName.equals(TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD) ||
-                providerClassName.equals(TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW) ||
-                providerClassName.equals(ECLIPSELINK_PERSISTENCE_PROVIDER_CLASS_NAME);
+        return providerClassName.equals(TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_OLD)
+                || providerClassName.equals(TOPLINK_PERSISTENCE_PROVIDER_CLASS_NAME_NEW)
+                || providerClassName.equals(ECLIPSELINK_PERSISTENCE_PROVIDER_CLASS_NAME);
     }
-
 
     /**
      * Holds names of provider specific property
      */
     private static class ProviderPropertyNamesHolder {
         // Initialize property names with EL specific properties
-            String appLocation       = ECLIPSELINK_APP_LOCATION;
-            String createJdbcDdlFile = ECLIPSELINK_CREATE_JDBC_DDL_FILE;
-            String dropJdbcDdlFile   = ECLIPSELINK_DROP_JDBC_DDL_FILE;
-            String ddlGeneration     = ECLIPSELINK_DDL_GENERATION;
-            String ddlGenerationOutputMode = ECLIPSELINK_DDL_GENERATION_OUTPUT_MODE;
+        String appLocation = ECLIPSELINK_APP_LOCATION;
+        String createJdbcDdlFile = ECLIPSELINK_CREATE_JDBC_DDL_FILE;
+        String dropJdbcDdlFile = ECLIPSELINK_DROP_JDBC_DDL_FILE;
+        String ddlGeneration = ECLIPSELINK_DDL_GENERATION;
+        String ddlGenerationOutputMode = ECLIPSELINK_DDL_GENERATION_OUTPUT_MODE;
     }
 
 }

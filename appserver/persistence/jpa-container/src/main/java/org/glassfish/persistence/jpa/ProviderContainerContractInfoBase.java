@@ -16,15 +16,19 @@
 
 package org.glassfish.persistence.jpa;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.persistence.common.PersistenceHelper;
+import static org.glassfish.persistence.common.PersistenceHelper.lookupNonTxResource;
+import static org.glassfish.persistence.common.PersistenceHelper.lookupPMResource;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.glassfish.api.deployment.DeploymentContext;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+
 /**
  * Convenience base class for implementing ProviderContainerContractInfo.
+ *
  * @author Mitesh Meswani
  */
 public abstract class ProviderContainerContractInfoBase implements ProviderContainerContractInfo {
@@ -33,7 +37,9 @@ public abstract class ProviderContainerContractInfoBase implements ProviderConta
     private DeploymentContext context;
 
     public ProviderContainerContractInfoBase(ConnectorRuntime connectorRuntime) {
-        //This ctor is currently called only by ACC impl of ProviderContainerContractInfo which which will not deal with app/module scoped resources
+        // This ctor is currently called only by ACC impl of
+        // ProviderContainerContractInfo which which will not deal with app/module
+        // scoped resources
         this.connectorRuntime = connectorRuntime;
     }
 
@@ -44,12 +50,12 @@ public abstract class ProviderContainerContractInfoBase implements ProviderConta
 
     @Override
     public DataSource lookupDataSource(String dataSourceName) throws NamingException {
-        return DataSource.class.cast(PersistenceHelper.lookupPMResource(connectorRuntime, context, dataSourceName) );
+        return DataSource.class.cast(lookupPMResource(connectorRuntime, context, dataSourceName));
     }
 
     @Override
     public DataSource lookupNonTxDataSource(String dataSourceName) throws NamingException {
-        return DataSource.class.cast(PersistenceHelper.lookupNonTxResource(connectorRuntime, context, dataSourceName) );
+        return DataSource.class.cast(lookupNonTxResource(connectorRuntime, context, dataSourceName));
     }
 
     @Override

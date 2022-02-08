@@ -1446,11 +1446,11 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
     <parallel>
         <java classname="org.apache.derby.drda.NetworkServerControl" classpath="${db.classpath}" fork="true"
             spawn="true">
-            <arg line="-h localhost -p ${db.port} start" />
+            <arg line="-h localhost -p ${db.port} -noSecurityManager start" />
         </java>
         <java classname="org.apache.derby.drda.NetworkServerControl" classpath="${db.classpath}" fork="true"
             spawn="true">
-            <arg line="-h localhost -p ${db.port.2} start" />
+            <arg line="-h localhost -p ${db.port.2} -noSecurityManager start" />
         </java>
     </parallel>
 </target>
@@ -1461,12 +1461,12 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         <java classname="org.apache.derby.drda.NetworkServerControl" classpath="${db.classpath}" fork="true"
             spawn="true">
             <sysproperty key="derby.storage.fileSyncTransactionLog" value="true" />
-            <arg line="-h localhost -p ${db.port} start" />
+            <arg line="-h localhost -p ${db.port} -noSecurityManager start" />
         </java>
         <java classname="org.apache.derby.drda.NetworkServerControl" classpath="${db.classpath}" fork="true"
             spawn="true">
             <sysproperty key="derby.storage.fileSyncTransactionLog" value="true" />
-            <arg line="-h localhost -p ${db.port.2} start" />
+            <arg line="-h localhost -p ${db.port.2} -noSecurityManager start" />
         </java>
     </parallel>
 </target>

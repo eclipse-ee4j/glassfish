@@ -37,6 +37,7 @@ def jobs = [
   "connector_group_2",
   "connector_group_3",
   "connector_group_4",
+  "jdbc_all",
   "persistence_all"
 ]
 

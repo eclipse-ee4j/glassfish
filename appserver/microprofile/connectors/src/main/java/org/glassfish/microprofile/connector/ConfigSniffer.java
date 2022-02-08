@@ -15,9 +15,12 @@
  */
 package org.glassfish.microprofile.connector;
 
+import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
@@ -30,6 +33,16 @@ public class ConfigSniffer extends GenericSniffer {
 
     public ConfigSniffer() {
         super("mp-config", null, null);
+    }
+
+    @Override
+    public boolean handles(DeploymentContext context) {
+
+        // Check if Config is used statically
+        final var types = context.getTransientAppMetaData(Types.class.getName(), Types.class);
+        final boolean mpConfigUsed = types != null && types.getBy(Config.class.getName()) != null;
+
+        return mpConfigUsed || super.handles(context);
     }
 
     @Override

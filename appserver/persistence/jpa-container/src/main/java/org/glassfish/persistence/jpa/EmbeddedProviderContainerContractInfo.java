@@ -16,16 +16,13 @@
 
 package org.glassfish.persistence.jpa;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.deployment.DeploymentContext;
 
-import javax.naming.NamingException;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 
 /**
- * Implementation of ProviderContainerContractInfo while running inside embedded server
+ * Implementation of ProviderContainerContractInfo while running inside embedded
+ * server
  *
  * @author Mitesh Meswani
  */
@@ -37,7 +34,7 @@ public class EmbeddedProviderContainerContractInfo extends ServerProviderContain
 
     @Override
     public boolean isWeavingEnabled() {
-        return false; //Weaving is not enabled while running in embedded environment
+        return false; // Weaving is not enabled while running in embedded environment
     }
 
 }

@@ -85,25 +85,24 @@ public class CLIBootstrap {
 
     private JavaInfo java = new JavaInfo();
     private GlassFishInfo gfInfo = new GlassFishInfo();
-    private final UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
-
-    /**
-     * Set up with various sub-types of command line elements
-     */
-    private final CommandLineElement
-        /** options to the ACC that take a value */
-        accValuedOptions = new ACCValuedOption("-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver"),
-
-        /** options to the ACC that take no value */
-        accUnvaluedOptions = new ACCUnvaluedOption("-textauth|-noappinvoke|-usage|-help"),
-
-        jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions),
-        jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings),
-        otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions),
-        arguments = new CommandLineArgument(".*", Pattern.DOTALL);
-
     /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
+    // note: must be defined after jvmMainSetting, because it uses it
+    private final UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
+
+
+    // Set up with various sub-types of command line elements
+    /** options to the ACC that take a value */
+    private final CommandLineElement accValuedOptions = new ACCValuedOption(
+        "-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver");
+
+    /** options to the ACC that take no value */
+    private final CommandLineElement accUnvaluedOptions = new ACCUnvaluedOption("-textauth|-noappinvoke|-usage|-help");
+
+    private final CommandLineElement jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions);
+    private final CommandLineElement jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings);
+    private final CommandLineElement otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions);
+    private final CommandLineElement arguments = new CommandLineArgument(".*", Pattern.DOTALL);
 
     /** command line elements from most specific to least specific matching pattern */
     private final CommandLineElement[] elementsInScanOrder = new CommandLineElement[] {

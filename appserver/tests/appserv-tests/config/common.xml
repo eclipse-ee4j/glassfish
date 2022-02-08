@@ -53,8 +53,13 @@ Variables used:
 -->
 <!-- ================================================================ -->
 <target name="compile-common" depends="init-common">
+    <tstamp>
+      <format property="TIMESTAMP" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ" />
+    </tstamp>
+    <echo>Current time (ISO): ${TIMESTAMP}</echo>
     <mkdir dir="${build.classes.dir}" />
     <echo message="common.xml: Compiling test source files" level="verbose" />
+
     <mkdir dir="${src}" />
     <javac srcdir="${src}" destdir="${build.classes.dir}" classpath="${s1astest.classpath}"
         debug="on" includeantruntime="false" failonerror="true" fork="yes" />
@@ -1021,6 +1026,10 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="deploy-dir" depends="init-common">
+    <tstamp>
+      <format property="TIMESTAMP" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ" />
+    </tstamp>
+    <echo>Current time (ISO): ${TIMESTAMP}</echo>
     <echo message="Deploying files: ${assemble.dir}" level="verbose" />
     <exec executable="${ASADMIN}" failonerror="false">
         <arg line="deploy" />
@@ -1034,6 +1043,10 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
 <!-- deploy the applications in AppServ -->
 <target name="deploy-common" depends="init-common">
+    <tstamp>
+      <format property="TIMESTAMP" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ" />
+    </tstamp>
+    <echo>Current time (ISO): ${TIMESTAMP}</echo>
     <antcall target="deploy-common-pe" />
     <antcall target="deploy-common-ee" />
 </target>

@@ -31,7 +31,13 @@ def jobs = [
   "ejb_group_1",
   "ejb_group_2",
   "ejb_group_3",
-  "ejb_group_embedded"
+  "ejb_group_embedded",
+  "batch_all",
+  "connector_group_1",
+  "connector_group_2",
+  "connector_group_3",
+  "connector_group_4",
+  "persistence_all"
 ]
 
 def parallelStagesMap = jobs.collectEntries {

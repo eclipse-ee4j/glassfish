@@ -61,11 +61,11 @@ public class SimpleServlet extends HttpServlet {
                 //do not continue if one test failed
                 if (!pass) {
                         res = "SOME TESTS FAILED";
-                        System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " FAIL");
+                        System.out.println("Redeploy Connector test - Version : "+ versionToTest + " FAIL");
             out.println("TEST:FAIL");
                 } else {
                         res  = "ALL TESTS PASSED";
-                        System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " PASS");
+                        System.out.println("Redeploy Connector test - Version : "+ versionToTest + " PASS");
             out.println("TEST:PASS");
                 }
         } catch (Exception ex) {
@@ -73,7 +73,7 @@ public class SimpleServlet extends HttpServlet {
             ex.printStackTrace();
             res = "TEST FAILED";
         }finally{
-            out.println("Redeploy Connector 1.5");
+            out.println("Redeploy Connector");
             out.println("END_OF_TEST");
         }
 

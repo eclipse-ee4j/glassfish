@@ -119,6 +119,7 @@
             </activation>
             <modules>
                 <module>tck</module>
+                <module>appserv-tests</module>
             </modules>
         </profile>
         <profile>
@@ -127,11 +128,16 @@
         </profile>
         <profile>
             <id>fastest</id>
-            <modules />
+            <modules>
+                <!-- Compile dependencies -->
+                <module>appserv-tests</module>
+            </modules>
         </profile>
         <profile>
             <id>fast</id>
-            <modules />
+            <modules>
+                <module>appserv-tests</module>
+            </modules>
         </profile>
     </profiles>
 </project>

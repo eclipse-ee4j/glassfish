@@ -17,3 +17,16 @@ nb-configuration.xml
 appserver/security/jaspic-provider-framework/auth.conf
 appserver/tests/appserv-tests/devtests/web/JSESSIONID
 /bundles/
+appserver/tests/appserv-tests/devtests/**/count.txt
+appserver/tests/appserv-tests/devtests/connector/v3/testdb/
+appserver/tests/appserv-tests/devtests/connector/v3/**/*.log
+appserver/tests/appserv-tests/devtests/connector/v3/**/*.lck
+appserver/tests/appserv-tests/devtests/connector/v3/**/*.ctrl
+appserver/tests/appserv-tests/devtests/connector/v3/**/*.dat
+appserver/tests/appserv-tests/devtests/connector/v3/**/README_DO_NOT*.txt
+appserver/tests/appserv-tests/devtests/connector/v3/**/service.properties
+appserver/tests/appserv-tests/devtests/connector/**/*.[rj]ar
+appserver/tests/appserv-tests/devtests/connector/**/tmp-*/
+appserver/tests/appserv-tests/devtests/connector/**/seg0/
+appserver/tests/appserv-tests/devtests/connector/v3/derby.log
+

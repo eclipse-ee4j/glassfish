@@ -23,11 +23,6 @@
   <module>
     <ejb>web-subclassing-ejb.jar</ejb>
   </module>
-  <!--
-  <module>
-    <connector>jdbcra.rar</connector>
-  </module>
-  -->
   <module>
     <web>
       <web-uri>web-subclassing-web.war</web-uri>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.base.DatabaseMetaDataWrapper;
 
 import jakarta.resource.ResourceException;
@@ -373,31 +373,24 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     }
 
     @Override
-    public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-            throws SQLException {
-        if (DataSourceObjectBuilder.isJDBC41()) {
-            Class<?>[] valueTypes = new Class<?>[] { String.class, String.class, String.class, String.class };
-            try {
-                return (ResultSet) getMethodExecutor().invokeMethod(databaseMetaData, "getPseudoColumns", valueTypes, catalog,
-                        schemaPattern, tableNamePattern, columnNamePattern);
-            } catch (ResourceException ex) {
-                _logger.log(Level.SEVERE, "jdbc.ex_dmd_wrapper", ex);
-                throw new SQLException(ex);
-            }
+    public ResultSet getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern) throws SQLException {
+        Class<?>[] valueTypes = new Class<?>[] { String.class, String.class, String.class, String.class };
+        try {
+            return (ResultSet) getMethodExecutor().invokeMethod(databaseMetaData, "getPseudoColumns", valueTypes, catalog,
+                    schemaPattern, tableNamePattern, columnNamePattern);
+        } catch (ResourceException ex) {
+            _logger.log(Level.SEVERE, "jdbc.ex_dmd_wrapper", ex);
+            throw new SQLException(ex);
         }
-        throw new UnsupportedOperationException("Operation not supported in this runtime.");
     }
 
     @Override
     public boolean generatedKeyAlwaysReturned() throws SQLException {
-        if (DataSourceObjectBuilder.isJDBC41()) {
-            try {
-                return (Boolean) getMethodExecutor().invokeMethod(databaseMetaData, "generatedKeyAlwaysReturned", null);
-            } catch (ResourceException ex) {
-                _logger.log(Level.SEVERE, "jdbc.ex_dmd_wrapper", ex);
-                throw new SQLException(ex);
-            }
+        try {
+            return (Boolean) getMethodExecutor().invokeMethod(databaseMetaData, "generatedKeyAlwaysReturned", null);
+        } catch (ResourceException ex) {
+            _logger.log(Level.SEVERE, "jdbc.ex_dmd_wrapper", ex);
+            throw new SQLException(ex);
         }
-        throw new UnsupportedOperationException("Operation not supported in this runtime.");
     }
 }

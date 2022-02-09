@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +31,6 @@ import javax.sql.DataSource;
 
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
-import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.base.ConnectionHolder;
 import com.sun.gjc.util.SQLTraceDelegator;
 import com.sun.logging.LogDomains;
@@ -47,32 +47,20 @@ public abstract class JdbcObjectsFactory implements Serializable {
     protected final static Logger _logger = LogDomains.getLogger(JdbcObjectsFactory.class, LogDomains.RSR_LOGGER);
 
     /**
-     * Returns JDBC Object Factory for JDBC 3.0 or JDBC 4.0 depending upon the jdbc
-     * version available in JDK.
+     * Returns JDBC Object Factory
      *
      * @return JdbcObjectsFactory
      */
     public static JdbcObjectsFactory getInstance() {
-        boolean jdbc40 = DataSourceObjectBuilder.isJDBC40();
-
-        JdbcObjectsFactory factory = null;
         try {
-            if (jdbc40) {
-                factory = (JdbcObjectsFactory)
-                    Class.forName("com.sun.gjc.spi.jdbc40.Jdbc40ObjectsFactory")
-                         .getDeclaredConstructor()
-                         .newInstance();
-            } else {
-                factory = (JdbcObjectsFactory)
-                    Class.forName("com.sun.gjc.spi.jdbc30.Jdbc30ObjectsFactory")
-                         .getDeclaredConstructor()
-                         .newInstance();
-            }
+            return(JdbcObjectsFactory)
+                Class.forName("com.sun.gjc.spi.jdbc40.Jdbc40ObjectsFactory")
+                     .getDeclaredConstructor()
+                     .newInstance();
         } catch (Exception e) {
             _logger.log(WARNING, "jdbc.jdbc_factory_class_load_exception", e);
+            return null;
         }
-
-        return factory;
     }
 
     /**
@@ -112,6 +100,7 @@ public abstract class JdbcObjectsFactory implements Serializable {
     protected <T> T getProxyObject(final Object actualObject, Class<T>[] ifaces, final SQLTraceDelegator sqlTraceDelegator) throws Exception {
         InvocationHandler invocationHandler = new InvocationHandler() {
 
+            @Override
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 SQLTraceRecord record = new SQLTraceRecord();
                 record.setMethodName(method.getName());

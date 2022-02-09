@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +29,8 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,13 +69,14 @@ public class MethodExecutor implements Serializable {
             return;
         }
 
-        Class[] parameters = method.getParameterTypes();
+        Class<?>[] parameters = method.getParameterTypes();
         if (parameters.length == 1) {
             Object[] values = new Object[1];
             values[0] = convertType(parameters[0], value);
 
             final ResourceException[] exception = new ResourceException[1];
-            AccessController.doPrivileged(new PrivilegedAction() {
+            AccessController.doPrivileged(new PrivilegedAction<>() {
+                @Override
                 public Object run() {
                     try {
                         method.setAccessible(true);
@@ -108,22 +110,25 @@ public class MethodExecutor implements Serializable {
      * @throws <code>ResourceException</code>, in case of the mismatch of parameter
      * values or a security violation.
      */
-    public void runMethod(Method method, Object obj, Vector values) throws ResourceException {
-        Class[] parameters = method.getParameterTypes();
+    public void runMethod(Method method, Object obj, List<String> values) throws ResourceException {
+        Class<?>[] parameters = method.getParameterTypes();
         if (values.size() != parameters.length) {
             return;
         }
+
         Object[] actualValues = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
-            String val = (String) values.get(i);
+            String val = values.get(i);
             if (val.trim().equals("NULL")) {
                 actualValues[i] = null;
             } else {
                 actualValues[i] = convertType(parameters[i], val);
             }
         }
+
         final ResourceException[] exception = new ResourceException[1];
-        AccessController.doPrivileged(new PrivilegedAction() {
+        AccessController.doPrivileged(new PrivilegedAction<>() {
+            @Override
             public Object run() {
                 try {
                     method.setAccessible(true);
@@ -142,6 +147,7 @@ public class MethodExecutor implements Serializable {
                 return null;
             }
         });
+
         if (exception[0] != null) {
             throw exception[0];
         }
@@ -156,7 +162,7 @@ public class MethodExecutor implements Serializable {
      * @throws <code>ResourceException</code>, in case of the mismatch of parameter
      * values or a security violation.
      */
-    private Object convertType(Class type, String parameter) throws ResourceException {
+    private Object convertType(Class<?> type, String parameter) throws ResourceException {
         try {
             String typeName = type.getName();
             if (typeName.equals("java.lang.String") || typeName.equals("java.lang.Object")) {

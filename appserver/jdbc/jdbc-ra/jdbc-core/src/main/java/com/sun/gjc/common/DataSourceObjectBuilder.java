@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,37 @@
 
 package com.sun.gjc.common;
 
-import static java.util.logging.Level.FINEST;
+import static com.sun.gjc.common.DataSourceSpec.CLASSNAME;
+import static com.sun.gjc.common.DataSourceSpec.DATABASENAME;
+import static com.sun.gjc.common.DataSourceSpec.DATASOURCENAME;
+import static com.sun.gjc.common.DataSourceSpec.DELIMITER;
+import static com.sun.gjc.common.DataSourceSpec.DESCRIPTION;
+import static com.sun.gjc.common.DataSourceSpec.DRIVERPROPERTIES;
+import static com.sun.gjc.common.DataSourceSpec.ESCAPECHARACTER;
+import static com.sun.gjc.common.DataSourceSpec.INITIALPOOLSIZE;
+import static com.sun.gjc.common.DataSourceSpec.LOGINTIMEOUT;
+import static com.sun.gjc.common.DataSourceSpec.LOGWRITER;
+import static com.sun.gjc.common.DataSourceSpec.MAXIDLETIME;
+import static com.sun.gjc.common.DataSourceSpec.MAXPOOLSIZE;
+import static com.sun.gjc.common.DataSourceSpec.MAXSTATEMENTS;
+import static com.sun.gjc.common.DataSourceSpec.MINPOOLSIZE;
+import static com.sun.gjc.common.DataSourceSpec.NETWORKPROTOCOL;
+import static com.sun.gjc.common.DataSourceSpec.PASSWORD;
+import static com.sun.gjc.common.DataSourceSpec.PORTNUMBER;
+import static com.sun.gjc.common.DataSourceSpec.PROPERTYCYCLE;
+import static com.sun.gjc.common.DataSourceSpec.ROLENAME;
+import static com.sun.gjc.common.DataSourceSpec.SERVERNAME;
+import static com.sun.gjc.common.DataSourceSpec.USERNAME;
+import static java.util.Arrays.asList;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
-import java.util.logging.Level;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.glassfish.internal.api.ClassLoaderHierarchy;
@@ -52,11 +75,7 @@ public class DataSourceObjectBuilder implements Serializable {
     private static Logger _logger = LogDomains.getLogger(MethodExecutor.class, LogDomains.RSR_LOGGER);
     private static final StringManager sm = StringManager.getManager(DataSourceObjectBuilder.class);
 
-    private static boolean jdbc40 = detectJDBC40();
-    private static boolean jdbc41 = detectJDBC41();
-
     private DataSourceSpec spec;
-    private Hashtable driverProperties;
     private MethodExecutor executor;
 
     /**
@@ -77,71 +96,71 @@ public class DataSourceObjectBuilder implements Serializable {
      * issue in executing some method.
      */
     public Object constructDataSourceObject() throws ResourceException {
-        driverProperties = parseDriverProperties(spec, true);
+        Map<String, List<String>> driverProperties = parseDriverProperties(spec, true);
         Object dataSourceObject = getDataSourceObject();
-        Method[] methods = dataSourceObject.getClass().getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            String methodName = methods[i].getName();
+
+        for (Method method : dataSourceObject.getClass().getMethods()) {
+            String methodName = method.getName();
+
             // Check for driver properties first since some jdbc properties
             // may be supported in form of driver properties
             if (driverProperties.containsKey(methodName.toUpperCase(Locale.getDefault()))) {
-                Vector values = (Vector) driverProperties.get(methodName.toUpperCase(Locale.getDefault()));
-                executor.runMethod(methods[i], dataSourceObject, values);
+                executor.runMethod(method, dataSourceObject, driverProperties.get(methodName.toUpperCase(Locale.getDefault())));
+
             } else if (methodName.equalsIgnoreCase("setUser")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.USERNAME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(USERNAME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setPassword")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.PASSWORD), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(PASSWORD), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setLoginTimeOut")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.LOGINTIMEOUT), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(LOGINTIMEOUT), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setLogWriter")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.LOGWRITER), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(LOGWRITER), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setDatabaseName")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.DATABASENAME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(DATABASENAME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setDataSourceName")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.DATASOURCENAME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(DATASOURCENAME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setDescription")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.DESCRIPTION), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(DESCRIPTION), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setNetworkProtocol")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.NETWORKPROTOCOL), methods[i],
-                        dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(NETWORKPROTOCOL), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setPortNumber")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.PORTNUMBER), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(PORTNUMBER), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setRoleName")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.ROLENAME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(ROLENAME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setServerName")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.SERVERNAME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(SERVERNAME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setMaxStatements")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.MAXSTATEMENTS), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(MAXSTATEMENTS), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setInitialPoolSize")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.INITIALPOOLSIZE), methods[i],
-                        dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(INITIALPOOLSIZE), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setMinPoolSize")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.MINPOOLSIZE), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(MINPOOLSIZE), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setMaxPoolSize")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.MAXPOOLSIZE), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(MAXPOOLSIZE), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setMaxIdleTime")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.MAXIDLETIME), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(MAXIDLETIME), method, dataSourceObject);
 
             } else if (methodName.equalsIgnoreCase("setPropertyCycle")) {
-                executor.runJavaBeanMethod(spec.getDetail(DataSourceSpec.PROPERTYCYCLE), methods[i], dataSourceObject);
+                executor.runJavaBeanMethod(spec.getDetail(PROPERTYCYCLE), method, dataSourceObject);
 
             }
         }
+
         return dataSourceObject;
     }
 
@@ -155,13 +174,13 @@ public class DataSourceObjectBuilder implements Serializable {
      * @throws ResourceException If delimiter is not provided and property string is
      * not null.
      */
-    public Hashtable parseDriverProperties(DataSourceSpec spec, boolean returnUpperCase) throws ResourceException {
-        String delim = spec.getDetail(DataSourceSpec.DELIMITER);
-        String escape = spec.getDetail(DataSourceSpec.ESCAPECHARACTER);
-        String prop = spec.getDetail(DataSourceSpec.DRIVERPROPERTIES);
+    public Map<String, List<String>> parseDriverProperties(DataSourceSpec spec, boolean returnUpperCase) throws ResourceException {
+        String delim = spec.getDetail(DELIMITER);
+        String escape = spec.getDetail(ESCAPECHARACTER);
+        String prop = spec.getDetail(DRIVERPROPERTIES);
 
         if (prop == null || prop.trim().equals("")) {
-            return new Hashtable();
+            return new HashMap<>();
         }
 
         if (delim == null || delim.equals("")) {
@@ -184,17 +203,18 @@ public class DataSourceObjectBuilder implements Serializable {
      * @param delimiter delimiter
      * @return Hashtable
      */
-    public Hashtable parseDriverProperties(String values, String escape, String delimiter, boolean returnUpperCase) {
-        Hashtable result = new Hashtable();
+    public Map<String, List<String>> parseDriverProperties(String values, String escape, String delimiter, boolean returnUpperCase) {
+        Map<String, List<String>> parsedDriverProperties = new HashMap<>();
         String parsedValue = "";
         String name = "";
-        String value = "";
+
         char escapeChar = escape.charAt(0);
         char delimiterChar = delimiter.charAt(0);
         while (values.length() > 0) {
             if (values.charAt(0) == delimiterChar) {
                 if (values.length() > 1 && values.charAt(1) == delimiterChar) {
                     if (values.length() > 2 && values.charAt(2) == delimiterChar) {
+
                         // Check for first property that does not have a value
                         // There is no value specified for this property.
                         // Store the name or it will be lost
@@ -203,13 +223,13 @@ public class DataSourceObjectBuilder implements Serializable {
                         } else {
                             name = parsedValue;
                         }
+
                         // no value specified for value
                         parsedValue = "";
                     }
-                    value = parsedValue;
-                    Vector v = new Vector();
-                    v.add(value);
-                    result.put(name, v);
+
+                    parsedDriverProperties.put(name, asList(parsedValue));
+
                     parsedValue = "";
                     values = values.substring(2);
                 } else {
@@ -234,7 +254,7 @@ public class DataSourceObjectBuilder implements Serializable {
             }
         }
 
-        return result;
+        return parsedDriverProperties;
     }
 
     /**
@@ -245,72 +265,30 @@ public class DataSourceObjectBuilder implements Serializable {
      * not set properly.
      */
     private Object getDataSourceObject() throws ResourceException {
-        String className = spec.getDetail(DataSourceSpec.CLASSNAME);
+        String className = spec.getDetail(CLASSNAME);
 
         try {
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             Class<?> dataSourceClass;
             try {
-                dataSourceClass = Class.forName(className, true, cl);
+                dataSourceClass = Class.forName(className, true, classLoader);
             } catch (ClassNotFoundException cnfe) {
                 // OSGi-ed apps can't see lib dir, so try using CommonClassLoader
-                cl = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
-                dataSourceClass = Class.forName(className, true, cl);
+                classLoader = Globals.get(ClassLoaderHierarchy.class).getCommonClassLoader();
+                dataSourceClass = Class.forName(className, true, classLoader);
             }
 
             return dataSourceClass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException cnfe) {
-            _logger.log(Level.SEVERE, "jdbc.exc_cnfe_ds", cnfe);
+            _logger.log(SEVERE, "jdbc.exc_cnfe_ds", cnfe);
             throw new ResourceException(sm.getString("dsob.class_not_found", className), cnfe);
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException ce) {
-            _logger.log(Level.SEVERE, "jdbc.exc_inst", className);
+            _logger.log(SEVERE, "jdbc.exc_inst", className);
             throw new ResourceException(sm.getString("dsob.error_instantiating", className), ce);
         } catch (IllegalAccessException ce) {
-            _logger.log(Level.SEVERE, "jdbc.exc_acc_inst", className);
+            _logger.log(SEVERE, "jdbc.exc_acc_inst", className);
             throw new ResourceException(sm.getString("dsob.access_error", className), ce);
         }
     }
 
-    public static boolean isJDBC40() {
-        return jdbc40;
-    }
-
-    public static boolean isJDBC41() {
-        return jdbc41;
-    }
-
-    /**
-     * Check whether the jdbc api version is 4.0 or not.
-     *
-     * @return boolean
-     */
-    private static boolean detectJDBC40() {
-        boolean jdbc40 = false;
-        try {
-            Class.forName("java.sql.Wrapper");
-            jdbc40 = true;
-        } catch (ClassNotFoundException cnfe) {
-            _logger.log(FINEST, "could not find Wrapper(available in jdbc-40), jdk supports only jdbc-30");
-        }
-
-        return jdbc40;
-    }
-
-    /**
-     * Detect if jdbc api version is 4.1 or not
-     *
-     * @return boolean
-     */
-    private static boolean detectJDBC41() {
-        boolean jdbc41 = false;
-        try {
-            Class.forName("java.sql.PseudoColumnUsage");
-            jdbc41 = true;
-        } catch (ClassNotFoundException cnfe) {
-            _logger.log(FINEST, "could not find PseudoColumnUsage(enum available in jdbc-41),"
-                        + " jdk supports jdbc-40 or lesser");
-        }
-
-        return jdbc41;
-    }
 }

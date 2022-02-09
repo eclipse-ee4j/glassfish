@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -108,7 +109,7 @@ public class PersistenceUnitLoader {
      */
     private SchemaGenerationProcessor schemaGenerationProcessor;
 
-    public PersistenceUnitLoader(PersistenceUnitDescriptor puToInstatntiate, ProviderContainerContractInfo providerContainerContractInfo) {
+    public PersistenceUnitLoader(PersistenceUnitDescriptor persistenceUnitToInstantiate, ProviderContainerContractInfo providerContainerContractInfo) {
         this.providerContainerContractInfo = providerContainerContractInfo;
 
         // A hack to work around EclipseLink issue
@@ -118,7 +119,13 @@ public class PersistenceUnitLoader {
         // set the system property required by EclipseLink before we load it.
         setSystemPropertyToEnableDoPrivilegedInEclipseLink();
 
-        entityManagerFactory = loadPU(puToInstatntiate);
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(providerContainerContractInfo.getClassLoader());
+        try {
+            entityManagerFactory = loadPU(persistenceUnitToInstantiate);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
+        }
     }
 
     /**

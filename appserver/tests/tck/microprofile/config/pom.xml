@@ -27,7 +27,7 @@
     </parent>
 
     <artifactId>glassfish-external-tck-microprofile-config</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>TCK: MicroProfile Config</name>
 
@@ -76,7 +76,6 @@
                     </environmentVariables>
 
                     <systemProperties>
-                        <!-- We have put these values into mp.tck.properties above -->
                         <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
                         <customer.hobby>Tennis</customer.hobby>
                         <config_ordinal>120</config_ordinal>

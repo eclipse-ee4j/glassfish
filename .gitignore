@@ -28,5 +28,7 @@ appserver/tests/appserv-tests/devtests/connector/v3/**/service.properties
 appserver/tests/appserv-tests/devtests/connector/**/*.[rj]ar
 appserver/tests/appserv-tests/devtests/connector/**/tmp-*/
 appserver/tests/appserv-tests/devtests/connector/**/seg0/
-appserver/tests/appserv-tests/devtests/connector/v3/derby.log
+
+appserver/tests/appserv-tests/devtests/jdbc/jpa-dsd/client/Client.java
+appserver/tests/appserv-tests/devtests/jdbc/jpa-dsd/ejb/SfulBean.java
 

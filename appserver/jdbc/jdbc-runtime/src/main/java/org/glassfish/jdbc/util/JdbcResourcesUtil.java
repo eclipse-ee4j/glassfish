@@ -16,6 +16,17 @@
 
 package org.glassfish.jdbc.util;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.jdbc.config.JdbcConnectionPool;
+import org.glassfish.jdbc.config.JdbcResource;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.BindableResource;
@@ -26,16 +37,6 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.connectors.util.ClassLoadingUtility;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.logging.LogDomains;
-import org.glassfish.jdbc.config.JdbcConnectionPool;
-import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Utility class for JDBC related classes
@@ -43,18 +44,17 @@ import java.util.logging.Logger;
 public class JdbcResourcesUtil {
 
     private volatile static JdbcResourcesUtil jdbcResourcesUtil;
-    static Logger _logger = LogDomains.getLogger(JdbcResourcesUtil.class,
-            LogDomains.RSR_LOGGER);
+    static Logger _logger = LogDomains.getLogger(JdbcResourcesUtil.class, LogDomains.RSR_LOGGER);
     private ConnectorRuntime runtime;
 
-    private JdbcResourcesUtil(){
+    private JdbcResourcesUtil() {
     }
 
     public static JdbcResourcesUtil createInstance() {
-        //stateless, no synchronization needed
-        if(jdbcResourcesUtil == null){
-            synchronized(JdbcResourcesUtil.class) {
-                if(jdbcResourcesUtil == null) {
+        // stateless, no synchronization needed
+        if (jdbcResourcesUtil == null) {
+            synchronized (JdbcResourcesUtil.class) {
+                if (jdbcResourcesUtil == null) {
                     jdbcResourcesUtil = new JdbcResourcesUtil();
                 }
             }
@@ -62,13 +62,12 @@ public class JdbcResourcesUtil {
         return jdbcResourcesUtil;
     }
 
-    private ConnectorRuntime getRuntime(){
-        if(runtime == null){
+    private ConnectorRuntime getRuntime() {
+        if (runtime == null) {
             runtime = ConnectorRuntime.getRuntime();
         }
         return runtime;
     }
-
 
     public static <T> Resource getResourceByName(Resources resources, Class<T> type, String name) {
         return resources.getResourceByName(type, name);
@@ -91,8 +90,8 @@ public class JdbcResourcesUtil {
     }
 
     /**
-     * This method takes in an admin JdbcConnectionPool and returns the RA
-     * that it belongs to.
+     * This method takes in an admin JdbcConnectionPool and returns the RA that it
+     * belongs to.
      *
      * @param pool - The pool to check
      * @return The name of the JDBC RA that provides this pool's data-source
@@ -103,57 +102,56 @@ public class JdbcResourcesUtil {
 
         Class clz = null;
 
-        if(pool.getDatasourceClassname() != null && !pool.getDatasourceClassname().isEmpty()) {
+        if (pool.getDatasourceClassname() != null && !pool.getDatasourceClassname().isEmpty()) {
             try {
                 clz = ClassLoadingUtility.loadClass(pool.getDatasourceClassname());
             } catch (ClassNotFoundException cnfe) {
-                Object params[] = new Object[]{dsRAName, pool.getName()};
+                Object params[] = new Object[] { dsRAName, pool.getName() };
                 _logger.log(Level.WARNING, "using.default.ds", params);
                 return dsRAName;
             }
-        } else if(pool.getDriverClassname() != null && !pool.getDriverClassname().isEmpty()) {
+        } else if (pool.getDriverClassname() != null && !pool.getDriverClassname().isEmpty()) {
             try {
                 clz = ClassLoadingUtility.loadClass(pool.getDriverClassname());
             } catch (ClassNotFoundException cnfe) {
-                Object params[] = new Object[]{dsRAName, pool.getName()};
+                Object params[] = new Object[] { dsRAName, pool.getName() };
                 _logger.log(Level.WARNING, "using.default.ds", params);
                 return dsRAName;
             }
         }
 
-        if(clz != null){
-            //check if its XA
+        if (clz != null) {
+            // check if its XA
             if (ConnectorConstants.JAVAX_SQL_XA_DATASOURCE.equals(pool.getResType())) {
                 if (javax.sql.XADataSource.class.isAssignableFrom(clz)) {
                     return ConnectorConstants.JDBCXA_RA_NAME;
                 }
             }
 
-            //check if its CP
+            // check if its CP
             if (ConnectorConstants.JAVAX_SQL_CONNECTION_POOL_DATASOURCE.equals(pool.getResType())) {
-                if (javax.sql.ConnectionPoolDataSource.class.isAssignableFrom(
-                        clz)) {
+                if (javax.sql.ConnectionPoolDataSource.class.isAssignableFrom(clz)) {
                     return ConnectorConstants.JDBCCONNECTIONPOOLDATASOURCE_RA_NAME;
                 }
             }
 
-            //check if its DM
-            if(ConnectorConstants.JAVA_SQL_DRIVER.equals(pool.getResType())) {
-                if(java.sql.Driver.class.isAssignableFrom(clz)) {
+            // check if its DM
+            if (ConnectorConstants.JAVA_SQL_DRIVER.equals(pool.getResType())) {
+                if (java.sql.Driver.class.isAssignableFrom(clz)) {
                     return ConnectorConstants.JDBCDRIVER_RA_NAME;
                 }
             }
 
-            //check if its DS
+            // check if its DS
             if ("javax.sql.DataSource".equals(pool.getResType())) {
                 if (javax.sql.DataSource.class.isAssignableFrom(clz)) {
                     return dsRAName;
                 }
             }
         }
-        Object params[] = new Object[]{dsRAName, pool.getName()};
+        Object params[] = new Object[] { dsRAName, pool.getName() };
         _logger.log(Level.WARNING, "using.default.ds", params);
-        //default to __ds
+        // default to __ds
         return dsRAName;
     }
 
@@ -161,10 +159,10 @@ public class JdbcResourcesUtil {
         JdbcResource resource = null;
         JdbcConnectionPool pool = null;
         Resources resources = getResources(resourceInfo);
-        if(resources != null){
+        if (resources != null) {
             resource = (JdbcResource) ConnectorsUtil.getResourceByName(resources, JdbcResource.class, resourceInfo.getName());
-            if(resource != null){
-                pool = (JdbcConnectionPool)ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, resource.getPoolName());
+            if (resource != null) {
+                pool = (JdbcConnectionPool) ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, resource.getPoolName());
             }
         }
         return pool;
@@ -175,11 +173,12 @@ public class JdbcResourcesUtil {
     }
 
     /**
-     * Determines if a JDBC connection pool is referred in a
-     * server-instance via resource-refs
+     * Determines if a JDBC connection pool is referred in a server-instance via
+     * resource-refs
+     *
      * @param poolInfo pool-name
-     * @return boolean true if pool is referred in this server instance as well enabled, false
-     * otherwise
+     * @return boolean true if pool is referred in this server instance as well
+     * enabled, false otherwise
      */
     public boolean isJdbcPoolReferredInServerInstance(PoolInfo poolInfo) {
 
@@ -187,21 +186,20 @@ public class JdbcResourcesUtil {
 
         for (JdbcResource resource : jdbcResources) {
             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
-            //Have to check isReferenced here!
-            if ((resource.getPoolName().equalsIgnoreCase(poolInfo.getName())) &&
-                    ResourcesUtil.createInstance().isReferenced(resourceInfo)
-                    && ResourcesUtil.createInstance().isEnabled(resource)){
+            // Have to check isReferenced here!
+            if ((resource.getPoolName().equalsIgnoreCase(poolInfo.getName())) && ResourcesUtil.createInstance().isReferenced(resourceInfo)
+                    && ResourcesUtil.createInstance().isEnabled(resource)) {
                 if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("pool " + poolInfo + "resource " + resourceInfo
-                            + " referred " + ResourcesUtil.createInstance().isReferenced(resourceInfo));
+                    _logger.fine("pool " + poolInfo + "resource " + resourceInfo + " referred "
+                            + ResourcesUtil.createInstance().isReferenced(resourceInfo));
 
-                    _logger.fine("JDBC resource " + resource.getJndiName() + "refers " + poolInfo
-                            + "in this server instance and is enabled");
+                    _logger.fine(
+                            "JDBC resource " + resource.getJndiName() + "refers " + poolInfo + "in this server instance and is enabled");
                 }
                 return true;
             }
         }
-        if(_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("No JDBC resource refers [ " + poolInfo + " ] in this server instance");
         }
         return false;

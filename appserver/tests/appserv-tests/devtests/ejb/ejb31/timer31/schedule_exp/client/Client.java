@@ -42,7 +42,7 @@ public class Client {
             System.out.println("Creating timers for schedule_exp timer test");
             bean.createTimers();
             System.out.println("Waiting timers to expire for schedule_exp timer test");
-            Thread.sleep(12000);
+            Thread.sleep(15000);
             System.out.println("Verifying timers for schedule_exp timer test");
             bean.verifyTimers();
             stat.addStatus("schedule_exp: ", stat.PASS );

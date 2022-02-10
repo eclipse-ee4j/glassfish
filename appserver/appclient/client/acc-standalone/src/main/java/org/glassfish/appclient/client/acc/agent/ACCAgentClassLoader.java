@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +17,17 @@
 
 package org.glassfish.appclient.client.acc.agent;
 
-import static java.io.File.pathSeparator;
 import static java.security.AccessController.doPrivileged;
-import static java.util.Collections.emptyList;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
-import java.util.ListIterator;
+
+import org.glassfish.appclient.common.ClassPathUtils;
 
 /**
  * Used as the system class loader during app client launch.
@@ -47,26 +42,21 @@ public class ACCAgentClassLoader extends URLClassLoader {
 
     private boolean isActive = true;
 
+    /**
+     * This constructor is used by the VM to create a system class loader (as specified by -Djava.system.class.loader on the
+     * java command created from the appclient script).
+     */
     public ACCAgentClassLoader(ClassLoader parent) {
-        /*
-         * This constructor is used by the VM to create a system class loader (as specified by -Djava.system.class.loader on the
-         * java command created from the appclient script).
-         *
-         * Actually create two new loaders. One will handle the GlassFish
-         * system JARs and the second will temporarily handle the application resources - typically for a splash screen.
-         */
-        super(userClassPath(), prepareLoader(GFSystemClassPath(), new ClassLoaderWrapper(parent.getParent())));
+        super(new URL[] {}, prepareLoader(parent));
     }
 
-    private static URLClassLoader prepareLoader(URL[] urls, ClassLoader parent) {
-        return doPrivileged(new PrivilegedAction<URLClassLoader>() {
-            @Override
-            public URLClassLoader run() {
-                return new URLClassLoader(urls, parent);
-            }
 
-        });
+    private static URLClassLoader prepareLoader(ClassLoader parent) {
+        PrivilegedAction<URLClassLoader> action = () -> new URLClassLoader(
+            new URL[] {ClassPathUtils.getGFClientJarURL()}, new ClassLoaderWrapper(parent));
+        return doPrivileged(action);
     }
+
 
     public ACCAgentClassLoader(URL[] urls) {
         super(urls);
@@ -90,7 +80,6 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.loadClass(name);
         }
-
         return getParent().loadClass(name);
     }
 
@@ -99,7 +88,6 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResource(name);
         }
-
         return getParent().getResource(name);
     }
 
@@ -108,7 +96,6 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResources(name);
         }
-
         return getParent().getResources(name);
     }
 
@@ -117,62 +104,6 @@ public class ACCAgentClassLoader extends URLClassLoader {
             String propValue = System.getProperty("org.glassfish.appclient.acc.agentLoaderDone");
             isActive = (propValue != null);
         }
-
         return isActive;
-    }
-
-    private static URL[] userClassPath() {
-        URI GFSystemURI = GFSystemURI();
-        List<URL> classPathURLs = classPathToURLs(System.getProperty("java.class.path"));
-
-        for (ListIterator<URL> classPathURLsIterator = classPathURLs.listIterator(); classPathURLsIterator.hasNext();) {
-            URL classPathURL = classPathURLsIterator.next();
-            try {
-                if (classPathURL.toURI().equals(GFSystemURI)) {
-                    classPathURLsIterator.remove();
-                }
-            } catch (URISyntaxException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        return classPathURLs.toArray(new URL[classPathURLs.size()]);
-    }
-
-    private static URL[] GFSystemClassPath() {
-        try {
-            return new URL[] { GFSystemURI().normalize().toURL() };
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private static URI GFSystemURI() {
-        try {
-            return Class.forName("org.glassfish.appclient.client.acc.agent.AppClientContainerAgent")
-                        .getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .toURI()
-                        .normalize();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private static List<URL> classPathToURLs(final String classPath) {
-        if (classPath == null) {
-            return emptyList();
-        }
-
-        List<URL> classPathURLs = new ArrayList<>();
-        try {
-            for (String classPathElement : classPath.split(pathSeparator)) {
-                classPathURLs.add(new File(classPathElement).toURI().normalize().toURL());
-            }
-            return classPathURLs;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
     }
 }

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,15 @@
 
 package com.sun.gjc.spi;
 
+import static com.sun.gjc.common.DataSourceSpec.CONNECTIONVALIDATIONREQUIRED;
+import static com.sun.gjc.common.DataSourceSpec.GUARANTEEISOLATIONLEVEL;
+import static com.sun.gjc.common.DataSourceSpec.TRANSACTIONISOLATION;
+import static com.sun.gjc.common.DataSourceSpec.VALIDATIONCLASSNAME;
+import static com.sun.gjc.common.DataSourceSpec.VALIDATIONMETHOD;
 import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
 import static com.sun.gjc.util.SecurityUtils.isPasswordCredentialEqual;
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 import java.io.Externalizable;
@@ -118,6 +124,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return Generic JDBC Connector implementation of
      * <code>javax.sql.DataSource</code>
      */
+    @Override
     public Object createConnectionFactory() {
         logFine("In createConnectionFactory()");
         return jdbcObjectsFactory.getDataSourceInstance(this, null);
@@ -132,6 +139,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return Generic JDBC Connector implementation of
      * <code>javax.sql.DataSource</code>
      */
+    @Override
     public Object createConnectionFactory(ConnectionManager connectionManager) {
         logFine("In createConnectionFactory(jakarta.resource.spi.ConnectionManager cxManager)");
 
@@ -162,6 +170,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @throws ResourceException if there is an error in allocating the physical
      * connection
      */
+    @Override
     public abstract ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException;
 
     /**
@@ -174,6 +183,7 @@ public abstract class ManagedConnectionFactoryImpl
      * <code>ManagedConnectionFactoryImpl</code> objects are the same false
      * otherwise
      */
+    @Override
     public abstract boolean equals(Object other);
 
     /**
@@ -184,6 +194,7 @@ public abstract class ManagedConnectionFactoryImpl
      * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>setLogWriter</code>
      */
+    @Override
     public java.io.PrintWriter getLogWriter() {
         return logWriter;
     }
@@ -196,6 +207,7 @@ public abstract class ManagedConnectionFactoryImpl
      * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>setResourceAdapter</code>
      */
+    @Override
     public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         logFine("In getResourceAdapter");
         return resourceAdapter;
@@ -206,6 +218,7 @@ public abstract class ManagedConnectionFactoryImpl
      *
      * @return hash code for this <code>ManagedConnectionFactoryImpl</code>
      */
+    @Override
     public int hashCode() {
         logFine("In hashCode");
         return spec.hashCode();
@@ -227,6 +240,7 @@ public abstract class ManagedConnectionFactoryImpl
      * <code>Subject</code> parameter or the <code>Set</code> of
      * <code>ManagedConnection</code> objects passed by the application server
      */
+    @Override
     public ManagedConnection matchManagedConnections(Set connectionSet, Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In matchManagedConnections");
 
@@ -267,6 +281,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return a set of invalid <code>ManagedConnection</code> objects.
      * @throws ResourceException generic exception.
      */
+    @Override
     public Set getInvalidConnections(Set connectionSet) throws ResourceException {
         Iterator iter = connectionSet.iterator();
         Set<ManagedConnectionImpl> invalidConnections = new HashSet<ManagedConnectionImpl>();
@@ -288,39 +303,41 @@ public abstract class ManagedConnectionFactoryImpl
      * Checks if a <code>ManagedConnection</code> is to be validated or not and
      * validates it or returns.
      *
-     * @param mc <code>ManagedConnection</code> to be validated
+     * @param managedConnectionImpl <code>ManagedConnection</code> to be validated
      * @throws ResourceException if the connection is not valid or if validation
      * method is not proper
      */
-    void isValid(ManagedConnectionImpl mc) throws ResourceException {
-        if (mc == null || mc.isTransactionInProgress()) {
+    void isValid(ManagedConnectionImpl managedConnectionImpl) throws ResourceException {
+        if (managedConnectionImpl == null || managedConnectionImpl.isTransactionInProgress()) {
             return;
         }
 
-        String conVal = spec.getDetail(DataSourceSpec.CONNECTIONVALIDATIONREQUIRED);
+        String conVal = spec.getDetail(CONNECTIONVALIDATIONREQUIRED);
 
-        boolean connectionValidationRequired = (conVal == null) ? false
-                : Boolean.valueOf(conVal.toLowerCase(Locale.getDefault()));
+        boolean connectionValidationRequired = (conVal == null) ?
+                false :
+                Boolean.valueOf(conVal.toLowerCase(Locale.getDefault()));
         if (!connectionValidationRequired) {
             return;
         }
 
-        String validationMethod = spec.getDetail(DataSourceSpec.VALIDATIONMETHOD).toLowerCase(Locale.getDefault());
+        String validationMethod = spec.getDetail(VALIDATIONMETHOD).toLowerCase(Locale.getDefault());
 
-        mc.checkIfValid();
+        managedConnectionImpl.checkIfValid();
+
         /**
          * The above call checks if the actual physical connection is usable or not.
          */
-        java.sql.Connection con = mc.getActualConnection();
+        Connection connection = managedConnectionImpl.getActualConnection();
 
         if (validationMethod.equals("custom-validation")) {
-            isValidByCustomValidation(con, spec.getDetail(DataSourceSpec.VALIDATIONCLASSNAME));
+            isValidByCustomValidation(connection, spec.getDetail(VALIDATIONCLASSNAME));
         } else if (validationMethod.equals("auto-commit")) {
-            isValidByAutoCommit(con);
+            isValidByAutoCommit(connection);
         } else if (validationMethod.equals("meta-data")) {
-            isValidByMetaData(con);
+            isValidByMetaData(connection);
         } else if (validationMethod.equals("table")) {
-            isValidByTableQuery(con, spec.getDetail(DataSourceSpec.VALIDATIONTABLENAME));
+            isValidByTableQuery(connection, spec.getDetail(DataSourceSpec.VALIDATIONTABLENAME));
         } else {
             throw new ResourceException("The validation method is not proper");
         }
@@ -330,26 +347,31 @@ public abstract class ManagedConnectionFactoryImpl
      * Checks if a <code>java.sql.Connection</code> is valid or not by doing a
      * custom validation using the validation class name specified.
      *
-     * @param con <code>java.sql.Connection</code> to be validated
+     * @param connection <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
-    protected void isValidByCustomValidation(java.sql.Connection con, String validationClassName)
-            throws ResourceException {
+    protected void isValidByCustomValidation(Connection connection, String validationClassName) throws ResourceException {
         boolean isValid = false;
-        if (con == null) {
+        if (connection == null) {
             throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
         try {
-            Class validationClass = Thread.currentThread().getContextClassLoader().loadClass(validationClassName);
-            ConnectionValidation valClass = (ConnectionValidation) validationClass.newInstance();
-            isValid = valClass.isConnectionValid(con);
+            ConnectionValidation connectionValidation = (ConnectionValidation)
+                Thread.currentThread()
+                      .getContextClassLoader()
+                      .loadClass(validationClassName)
+                      .getDeclaredConstructor()
+                      .newInstance();
+
+            isValid = connectionValidation.isConnectionValid(connection);
         } catch (Exception e) {
-            _logger.log(Level.INFO, "jdbc.exc_custom_validation", validationClassName);
+            _logger.log(INFO, "jdbc.exc_custom_validation", validationClassName);
             throw new ResourceException(e);
         }
+
         if (!isValid) {
-            _logger.log(Level.INFO, "jdbc.exc_custom_validation", validationClassName);
+            _logger.log(INFO, "jdbc.exc_custom_validation", validationClassName);
             throw new ResourceException("Custom validation detected invalid connection");
         }
     }
@@ -358,11 +380,11 @@ public abstract class ManagedConnectionFactoryImpl
      * Checks if a <code>java.sql.Connection</code> is valid or not by checking its
      * auto commit property.
      *
-     * @param con <code>java.sql.Connection</code> to be validated
+     * @param connection <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
-    protected void isValidByAutoCommit(java.sql.Connection con) throws ResourceException {
-        if (con == null) {
+    protected void isValidByAutoCommit(Connection connection) throws ResourceException {
+        if (connection == null) {
             throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
@@ -377,18 +399,18 @@ public abstract class ManagedConnectionFactoryImpl
             // Also notice that some XA data sources will throw and exception if
             // you try to call setAutoCommit, for them this method is not recommended
 
-            boolean ac = con.getAutoCommit();
-            if (ac) {
-                con.setAutoCommit(false);
+            boolean autoCommit = connection.getAutoCommit();
+            if (autoCommit) {
+                connection.setAutoCommit(false);
             } else {
-                con.rollback(); // prevents uncompleted transaction exceptions
-                con.setAutoCommit(true);
+                connection.rollback(); // prevents uncompleted transaction exceptions
+                connection.setAutoCommit(true);
             }
 
-            con.setAutoCommit(ac);
+            connection.setAutoCommit(autoCommit);
 
         } catch (Exception sqle) {
-            _logger.log(Level.INFO, "jdbc.exc_autocommit_validation");
+            _logger.log(INFO, "jdbc.exc_autocommit_validation");
             throw new ResourceException(sqle);
         }
     }
@@ -397,18 +419,18 @@ public abstract class ManagedConnectionFactoryImpl
      * Checks if a <code>java.sql.Connection</code> is valid or not by checking its
      * meta data.
      *
-     * @param con <code>java.sql.Connection</code> to be validated
+     * @param connection <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
      */
-    protected void isValidByMetaData(java.sql.Connection con) throws ResourceException {
-        if (con == null) {
+    protected void isValidByMetaData(Connection connection) throws ResourceException {
+        if (connection == null) {
             throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
 
         try {
-            con.getMetaData();
+            connection.getMetaData();
         } catch (Exception sqle) {
-            _logger.log(Level.INFO, "jdbc.exc_metadata_validation");
+            _logger.log(INFO, "jdbc.exc_metadata_validation");
             throw new ResourceException(sqle);
         }
     }
@@ -432,7 +454,7 @@ public abstract class ManagedConnectionFactoryImpl
             preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM " + tableName);
             resultSet = preparedStatement.executeQuery();
         } catch (Exception sqle) {
-            _logger.log(Level.INFO, "jdbc.exc_table_validation", tableName);
+            _logger.log(INFO, "jdbc.exc_table_validation", tableName);
             throw new ResourceException(sqle);
         } finally {
             try {
@@ -465,7 +487,7 @@ public abstract class ManagedConnectionFactoryImpl
             return;
         }
 
-        String tranIsolation = spec.getDetail(DataSourceSpec.TRANSACTIONISOLATION);
+        String tranIsolation = spec.getDetail(TRANSACTIONISOLATION);
         if (tranIsolation != null && !tranIsolation.equals("")) {
             int tranIsolationInt = getTransactionIsolationInt(tranIsolation);
             try {
@@ -497,9 +519,9 @@ public abstract class ManagedConnectionFactoryImpl
             return;
         }
 
-        String transactionIsolation = spec.getDetail(DataSourceSpec.TRANSACTIONISOLATION);
+        String transactionIsolation = spec.getDetail(TRANSACTIONISOLATION);
         if (transactionIsolation != null && !transactionIsolation.equals("")) {
-            String guaranteeIsolationLevel = spec.getDetail(DataSourceSpec.GUARANTEEISOLATIONLEVEL);
+            String guaranteeIsolationLevel = spec.getDetail(GUARANTEEISOLATIONLEVEL);
 
             if (guaranteeIsolationLevel != null && !guaranteeIsolationLevel.equals("")) {
                 boolean guarantee = Boolean.valueOf(guaranteeIsolationLevel.toLowerCase(Locale.getDefault()));
@@ -663,6 +685,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @param out <code>PrintWriter</code> passed by the application server
      * @see <code>getLogWriter</code>
      */
+    @Override
     public void setLogWriter(java.io.PrintWriter out) {
         logWriter = out;
     }
@@ -674,6 +697,7 @@ public abstract class ManagedConnectionFactoryImpl
      * <code>ManagedConnectionFactoryImpl</code> instance
      * @see <code>getResourceAdapter</code>
      */
+    @Override
     public void setResourceAdapter(jakarta.resource.spi.ResourceAdapter ra) {
         this.resourceAdapter = ra;
     }
@@ -761,7 +785,7 @@ public abstract class ManagedConnectionFactoryImpl
      */
     @ConfigProperty(type = String.class, defaultValue = "")
     public void setValidationMethod(String validationMethod) {
-        spec.setDetail(DataSourceSpec.VALIDATIONMETHOD, validationMethod);
+        spec.setDetail(VALIDATIONMETHOD, validationMethod);
     }
 
     /**
@@ -770,7 +794,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return validation method
      */
     public String getValidationMethod() {
-        return spec.getDetail(DataSourceSpec.VALIDATIONMETHOD);
+        return spec.getDetail(VALIDATIONMETHOD);
     }
 
     /**
@@ -802,7 +826,7 @@ public abstract class ManagedConnectionFactoryImpl
             Class validationClass = Thread.currentThread().getContextClassLoader().loadClass(className);
             boolean isAssignable = ConnectionValidation.class.isAssignableFrom(validationClass);
             if (isAssignable) {
-                spec.setDetail(DataSourceSpec.VALIDATIONCLASSNAME, className);
+                spec.setDetail(VALIDATIONCLASSNAME, className);
             } else {
                 // Validation Failed
                 _logger.log(SEVERE, "jdbc.set_custom_validation_class_name_failure", className);
@@ -822,7 +846,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return table
      */
     public String getValidationClassName() {
-        return spec.getDetail(DataSourceSpec.VALIDATIONCLASSNAME);
+        return spec.getDetail(VALIDATIONCLASSNAME);
     }
 
     /**
@@ -832,7 +856,7 @@ public abstract class ManagedConnectionFactoryImpl
      */
     @ConfigProperty(type = String.class, defaultValue = "")
     public void setTransactionIsolation(String trnIsolation) {
-        spec.setDetail(DataSourceSpec.TRANSACTIONISOLATION, trnIsolation);
+        spec.setDetail(TRANSACTIONISOLATION, trnIsolation);
     }
 
     /**
@@ -841,7 +865,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return transaction isolation level
      */
     public String getTransactionIsolation() {
-        return spec.getDetail(DataSourceSpec.TRANSACTIONISOLATION);
+        return spec.getDetail(TRANSACTIONISOLATION);
     }
 
     /**
@@ -851,7 +875,7 @@ public abstract class ManagedConnectionFactoryImpl
      */
     @ConfigProperty(type = String.class, defaultValue = "")
     public void setGuaranteeIsolationLevel(String guaranteeIsolation) {
-        spec.setDetail(DataSourceSpec.GUARANTEEISOLATIONLEVEL, guaranteeIsolation);
+        spec.setDetail(GUARANTEEISOLATIONLEVEL, guaranteeIsolation);
     }
 
     /**
@@ -860,7 +884,7 @@ public abstract class ManagedConnectionFactoryImpl
      * @return isolation level guarantee
      */
     public String getGuaranteeIsolationLevel() {
-        return spec.getDetail(DataSourceSpec.GUARANTEEISOLATIONLEVEL);
+        return spec.getDetail(GUARANTEEISOLATIONLEVEL);
     }
 
     protected boolean isEqual(PasswordCredential pc, String user, String password) {
@@ -1434,9 +1458,11 @@ public abstract class ManagedConnectionFactoryImpl
         }
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
     }
 
+    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         resourceAdapter = ResourceAdapterImpl.getInstance();
     }

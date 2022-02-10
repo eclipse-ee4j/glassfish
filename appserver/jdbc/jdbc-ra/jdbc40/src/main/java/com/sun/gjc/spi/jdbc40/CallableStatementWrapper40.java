@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static com.sun.gjc.common.DataSourceObjectBuilder.isJDBC41;
 import static java.util.logging.Level.SEVERE;
 
 import java.io.InputStream;
@@ -1516,10 +1516,6 @@ public class CallableStatementWrapper40 extends CallableStatementWrapper {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getObject(int parameterIndex, Class<T> type) throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         Class<?>[] valueTypes = new Class<?>[] { Integer.TYPE, Class.class };
         try {
             return (T) executor.invokeMethod(jdbcStatement, "getObject", valueTypes, parameterIndex, type);
@@ -1532,10 +1528,6 @@ public class CallableStatementWrapper40 extends CallableStatementWrapper {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getObject(String parameterName, Class<T> type) throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         Class<?>[] valueTypes = new Class<?>[] { String.class, Class.class };
         try {
             return (T) executor.invokeMethod(jdbcStatement, "getObject", valueTypes, parameterName, type);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static com.sun.gjc.common.DataSourceObjectBuilder.isJDBC41;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
@@ -86,7 +86,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
                 defaultClientInfo = getClientInfo();
             }
         } catch (Throwable e) {
-            _logger.log(INFO, "jdbc.unable_to_get_client_info", e.getMessage());
             _logger.log(FINEST, "jdbc.unable_to_get_client_info", e);
         }
     }
@@ -584,7 +583,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
                     }
                 }
             } catch (Throwable e) {
-                _logger.log(INFO, "jdbc.unable_to_set_client_info", e.getMessage());
                 _logger.log(FINEST, "jdbc.unable_to_set_client_info", e);
             }
         }
@@ -594,10 +592,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
 
     @Override
     public void setSchema(String schema) throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         checkValidity();
 
         Class<?>[] valueTypes = new Class<?>[] { String.class };
@@ -614,10 +608,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
 
     @Override
     public String getSchema() throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         checkValidity();
 
         try {
@@ -630,10 +620,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
 
     @Override
     public void setNetworkTimeout(Executor executorObj, int milliseconds) throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         checkValidity();
 
         Class<?>[] valueTypes = new Class<?>[] { Executor.class, Integer.TYPE };
@@ -648,10 +634,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
 
     @Override
     public int getNetworkTimeout() throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         checkValidity();
 
         try {
@@ -673,10 +655,6 @@ public class ConnectionHolder40 extends ConnectionHolder {
      */
     @Override
     public void abort(Executor executor) throws SQLException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         getManagedConnection().markForRemoval(true);
         getManagedConnection().setAborted(true);
         if (!getManagedConnection().isTransactionInProgress()) {

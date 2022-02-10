@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.gjc.spi;
 
+import static com.sun.gjc.common.DataSourceSpec.CLASSNAME;
+import static com.sun.gjc.common.DataSourceSpec.LOGINTIMEOUT;
+import static com.sun.gjc.common.DataSourceSpec.PASSWORD;
+import static com.sun.gjc.common.DataSourceSpec.URL;
+import static com.sun.gjc.common.DataSourceSpec.USERNAME;
 import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
@@ -24,18 +30,15 @@ import static java.util.logging.Level.SEVERE;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 import javax.sql.DataSource;
 
 import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.gjc.common.DataSourceSpec;
 import com.sun.gjc.spi.base.AbstractDataSource;
 import com.sun.gjc.spi.base.ConnectionHolder;
 import com.sun.logging.LogDomains;
@@ -55,7 +58,11 @@ import jakarta.resource.spi.security.PasswordCredential;
  * @author Evani Sai Surya Kiran
  * @version 1.0, 02/07/31
  */
-@ConnectionDefinition(connectionFactory = DataSource.class, connectionFactoryImpl = AbstractDataSource.class, connection = Connection.class, connectionImpl = ConnectionHolder.class)
+@ConnectionDefinition(
+    connectionFactory = DataSource.class,
+    connectionFactoryImpl = AbstractDataSource.class,
+    connection = Connection.class,
+    connectionImpl = ConnectionHolder.class)
 public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
 
     private static Logger _logger = LogDomains.getLogger(DMManagedConnectionFactory.class, LogDomains.RSR_LOGGER);
@@ -79,6 +86,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @throws SecurityException if there ino <code>PasswordCredential</code> object
      * satisfying this request
      */
+    @Override
     public ManagedConnection createManagedConnection(Subject subject, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         logFine("In createManagedConnection");
 
@@ -89,10 +97,10 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
         PasswordCredential passwordCredential = getPasswordCredential(this, subject, cxRequestInfo);
 
         try {
-            Class.forName(spec.getDetail(DataSourceSpec.CLASSNAME));
+            Class.forName(spec.getDetail(CLASSNAME));
         } catch (ClassNotFoundException cnfe) {
             _logger.log(SEVERE, "jdbc.exc_cnfe", cnfe);
-            throw new ResourceException("The driver could not be loaded: " + spec.getDetail(DataSourceSpec.CLASSNAME));
+            throw new ResourceException("The driver could not be loaded: " + spec.getDetail(CLASSNAME));
         }
 
         Connection connection = null;
@@ -102,22 +110,21 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
 
         // Will return a set of properties that would have setURL and <url> as objects
         // Get a set of normal case properties
-        Hashtable properties = dataSourceObjectBuilder.parseDriverProperties(spec, false);
-        Set<Map.Entry<String, Vector>> entries = properties.entrySet();
-        for (Map.Entry<String, Vector> entry : entries) {
+        Map<String, List<String>> properties = dataSourceObjectBuilder.parseDriverProperties(spec, false);
+        for (Map.Entry<String, List<String>> entry : properties.entrySet()) {
             String value = "";
-            String key = entry.getKey();
-            Vector values = entry.getValue();
+            List<String> values = entry.getValue();
+
             if (!values.isEmpty() && values.size() == 1) {
-                value = (String) values.firstElement();
+                value = values.get(0);
             } else if (values.size() > 1) {
-                logFine("More than one value for key : " + key);
+                logFine("More than one value for key : " + entry.getKey());
             }
 
-            String prop = getParsedKey(key);
-            driverProps.put(prop, value);
-            if (prop.equalsIgnoreCase("URL")) {
-                if (spec.getDetail(DataSourceSpec.URL) == null) {
+            String parsedKey = getParsedKey(entry.getKey());
+            driverProps.put(parsedKey, value);
+            if (parsedKey.equalsIgnoreCase("URL")) {
+                if (spec.getDetail(URL) == null) {
                     setConnectionURL(value);
                 }
             }
@@ -128,8 +135,8 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
                 driverProps.setProperty("user", passwordCredential.getUserName());
                 driverProps.setProperty("password", new String(passwordCredential.getPassword()));
             } else {
-                String user = spec.getDetail(DataSourceSpec.USERNAME);
-                String password = spec.getDetail(DataSourceSpec.PASSWORD);
+                String user = spec.getDetail(USERNAME);
+                String password = spec.getDetail(PASSWORD);
                 if (user != null) {
                     driverProps.setProperty("user", user);
                 }
@@ -138,7 +145,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
                 }
             }
 
-            connection = DriverManager.getConnection(spec.getDetail(DataSourceSpec.URL), driverProps);
+            connection = DriverManager.getConnection(spec.getDetail(URL), driverProps);
 
         } catch (SQLException sqle) {
             _logger.log(SEVERE, "jdbc.exc_create_mc", sqle);
@@ -201,10 +208,11 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @param loginTimeOut <code>String</code>
      * @see <code>getLoginTimeOut</code>
      */
+    @Override
     public void setLoginTimeOut(String loginTimeOut) {
         try {
             DriverManager.setLoginTimeout(Integer.parseInt(loginTimeOut));
-            spec.setDetail(DataSourceSpec.LOGINTIMEOUT, loginTimeOut);
+            spec.setDetail(LOGINTIMEOUT, loginTimeOut);
         } catch (Exception e) {
             if (debug) {
                 _logger.log(FINE, "jdbc.exc_caught_ign", e.getMessage());
@@ -220,15 +228,15 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
     @ConfigProperty(type = String.class, defaultValue = "org.apache.derby.jdbc.ClientDriver")
     @Override
     public void setClassName(String className) {
-        spec.setDetail(DataSourceSpec.CLASSNAME, className);
+        spec.setDetail(CLASSNAME, className);
     }
 
     public void setURL(String url) {
-        spec.setDetail(DataSourceSpec.URL, url);
+        spec.setDetail(URL, url);
     }
 
     public String getURL() {
-        return spec.getDetail(DataSourceSpec.URL);
+        return spec.getDetail(URL);
     }
 
     /**
@@ -238,7 +246,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @see <code>getConnectionURL</code>
      */
     public void setConnectionURL(String url) {
-        spec.setDetail(DataSourceSpec.URL, url);
+        spec.setDetail(URL, url);
     }
 
     /**
@@ -248,9 +256,10 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @see <code>setConnectionURL</code>
      */
     public String getConnectionURL() {
-        return spec.getDetail(DataSourceSpec.URL);
+        return spec.getDetail(URL);
     }
 
+    @Override
     public Object getDataSource() throws ResourceException {
         return null;
     }
@@ -264,6 +273,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @return true if the property sets of both the
      * <code>ManagedConnectionFactory</code> objects are the same false otherwise
      */
+    @Override
     public boolean equals(Object other) {
         logFine("In equals");
 

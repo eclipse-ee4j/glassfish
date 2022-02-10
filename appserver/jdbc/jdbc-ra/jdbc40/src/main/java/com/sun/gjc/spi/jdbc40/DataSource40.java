@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.gjc.spi.jdbc40;
 
-import static com.sun.gjc.common.DataSourceObjectBuilder.isJDBC41;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -136,10 +136,6 @@ public class DataSource40 extends AbstractDataSource {
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        if (!isJDBC41()) {
-            throw new UnsupportedOperationException("Operation not supported in this runtime.");
-        }
-
         try {
             return (Logger) executor.invokeMethod(managedConnectionFactoryImpl.getDataSource().getClass(), "getParentLogger", null);
         } catch (ResourceException ex) {

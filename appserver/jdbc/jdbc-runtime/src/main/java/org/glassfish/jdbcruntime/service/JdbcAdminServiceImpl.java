@@ -16,6 +16,27 @@
 
 package org.glassfish.jdbcruntime.service;
 
+import static com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils.getValueFromMCF;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
+
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorRuntime;
@@ -23,22 +44,12 @@ import com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils;
 import com.sun.enterprise.connectors.service.ConnectorAdminServicesFactory;
 import com.sun.enterprise.connectors.service.ConnectorConnectionPoolAdminServiceImpl;
 import com.sun.enterprise.connectors.service.ConnectorService;
-import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
 import com.sun.enterprise.connectors.util.DriverLoader;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Singleton;
-import javax.naming.NamingException;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.DatabaseMetaData;
-import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Jdbc admin service performs Jdbc related operations for administration.
@@ -51,11 +62,13 @@ public class JdbcAdminServiceImpl extends ConnectorService {
 
     private ConnectorConnectionPoolAdminServiceImpl ccPoolAdmService;
     private static final String DBVENDOR_MAPPINGS_ROOT =
-            System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
-            "lib" + File.separator + "install" + File.separator + "databases" +
-            File.separator + "dbvendormapping" + File.separator;
-    private final static String JDBC40_CONNECTION_VALIDATION =
-            "org.glassfish.api.jdbc.validation.JDBC40ConnectionValidation";
+        System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
+        "lib" + File.separator +
+        "install" + File.separator +
+        "databases" + File.separator +
+        "dbvendormapping" + File.separator;
+
+    private final static String JDBC40_CONNECTION_VALIDATION = "org.glassfish.api.jdbc.validation.JDBC40ConnectionValidation";
     private final static String DS_PROPERTIES = "ds.properties";
     private final static String CPDS_PROPERTIES = "cpds.properties";
     private final static String XADS_PROPERTIES = "xads.properties";
@@ -69,35 +82,36 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      */
     public JdbcAdminServiceImpl() {
         super();
-        //jdbcAdminService = this;
-        ccPoolAdmService = (ConnectorConnectionPoolAdminServiceImpl)
-                ConnectorAdminServicesFactory.getService(ConnectorConstants.CCP);
+        ccPoolAdmService = (ConnectorConnectionPoolAdminServiceImpl) ConnectorAdminServicesFactory.getService(ConnectorConstants.CCP);
     }
 
     public static JdbcAdminServiceImpl getJdbcAdminService() {
         if (jdbcAdminService == null) {
             throw new RuntimeException("JDBC admin service not initialized");
         }
+
         return jdbcAdminService;
     }
 
     /**
-     * Get Validation class names list for the classname that the jdbc
-     * connection pool refers to. This is used for custom connection validation.
+     * Get Validation class names list for the classname that the jdbc connection
+     * pool refers to. This is used for custom connection validation.
+     *
      * @param className
      * @return all validation class names.
      */
     public Set<String> getValidationClassNames(String className) {
         SortedSet classNames = new TreeSet();
-        if(className == null) {
-            _logger.log(Level.WARNING, "jdbc.admin.service.ds_class_name_null");
+        if (className == null) {
+            _logger.log(WARNING, "jdbc.admin.service.ds_class_name_null");
             return classNames;
         }
         File validationClassMappingFile;
         String dbVendor = getDatabaseVendorName(className);
 
-        //Retrieve validation classnames from the properties file based on the retrieved
-        //dbvendor name
+        // Retrieve validation classnames from the properties file based on the
+        // retrieved
+        // dbvendor name
         if (dbVendor != null) {
             validationClassMappingFile = new File(DBVENDOR_MAPPINGS_ROOT + CONVAL_PROPERTIES);
             Properties validationClassMappings = DriverLoader.loadFile(validationClassMappingFile);
@@ -105,7 +119,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
             if (validationClassName != null) {
                 classNames.add(validationClassName);
             }
-            //If JDBC40 runtime, add the jdbc40 validation classname
+            // If JDBC40 runtime, add the jdbc40 validation classname
             if (detectJDBC40(className)) {
                 classNames.add(JDBC40_CONNECTION_VALIDATION);
             }
@@ -114,19 +128,15 @@ public class JdbcAdminServiceImpl extends ConnectorService {
     }
 
     private String getDatabaseVendorName(String className) {
-        String dbVendor = getDatabaseVendorName(DriverLoader.loadFile(
-                new File(DBVENDOR_MAPPINGS_ROOT + DS_PROPERTIES)), className);
-        if(dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(
-                new File(DBVENDOR_MAPPINGS_ROOT + CPDS_PROPERTIES)), className);
+        String dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + DS_PROPERTIES)), className);
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + CPDS_PROPERTIES)), className);
         }
-        if(dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(
-                new File(DBVENDOR_MAPPINGS_ROOT + XADS_PROPERTIES)), className);
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + XADS_PROPERTIES)), className);
         }
-        if(dbVendor == null) {
-            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(
-                new File(DBVENDOR_MAPPINGS_ROOT + DRIVER_PROPERTIES)), className);
+        if (dbVendor == null) {
+            dbVendor = getDatabaseVendorName(DriverLoader.loadFile(new File(DBVENDOR_MAPPINGS_ROOT + DRIVER_PROPERTIES)), className);
         }
         return dbVendor;
     }
@@ -134,11 +144,11 @@ public class JdbcAdminServiceImpl extends ConnectorService {
     private String getDatabaseVendorName(Properties classNameProperties, String className) {
         String dbVendor = null;
         Enumeration e = classNameProperties.propertyNames();
-        while(e.hasMoreElements()) {
+        while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
             String value = classNameProperties.getProperty(key);
-            if(className.equalsIgnoreCase(value)){
-                //There could be multiple keys for a particular value.
+            if (className.equalsIgnoreCase(value)) {
+                // There could be multiple keys for a particular value.
                 dbVendor = key;
                 break;
             }
@@ -148,14 +158,13 @@ public class JdbcAdminServiceImpl extends ConnectorService {
 
     private boolean detectJDBC40(String className) {
         boolean jdbc40 = true;
-        ClassLoader commonClassLoader =
-                ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
+        ClassLoader commonClassLoader = ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
         Class cls = null;
         try {
             cls = commonClassLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "jdbc.admin.service.ex_detect_jdbc40");
+            if (_logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "jdbc.admin.service.ex_detect_jdbc40");
             }
             return false;
         }
@@ -165,21 +174,21 @@ public class JdbcAdminServiceImpl extends ConnectorService {
             method.invoke(cls.newInstance(), javax.sql.DataSource.class);
         } catch (NoSuchMethodException e) {
             jdbc40 = false;
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "jdbc.admin.service.ex_detect_jdbc40");
+            if (_logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "jdbc.admin.service.ex_detect_jdbc40");
             }
         } catch (InvocationTargetException e) {
-            if(e.getCause() instanceof AbstractMethodError) {
+            if (e.getCause() instanceof AbstractMethodError) {
                 jdbc40 = false;
             }
         } catch (InstantiationException e) {
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "jdbc.admin.service.ex_detect_jdbc40");
+            if (_logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "jdbc.admin.service.ex_detect_jdbc40");
             }
             jdbc40 = false;
         } catch (IllegalAccessException e) {
-            if(_logger.isLoggable(Level.FINEST)) {
-                _logger.log(Level.FINEST, "jdbc.admin.service.ex_detect_jdbc40");
+            if (_logger.isLoggable(FINEST)) {
+                _logger.log(FINEST, "jdbc.admin.service.ex_detect_jdbc40");
             }
             jdbc40 = false;
         }
@@ -187,60 +196,55 @@ public class JdbcAdminServiceImpl extends ConnectorService {
     }
 
     /**
-     * Get Validation table names list for the database that the jdbc
-     * connection pool refers to. This is used for connection validation.
+     * Get Validation table names list for the database that the jdbc connection
+     * pool refers to. This is used for connection validation.
+     *
      * @param poolInfo
      * @return all validation table names.
      * @throws jakarta.resource.ResourceException
      * @throws javax.naming.NamingException
      */
-    public Set<String> getValidationTableNames(PoolInfo poolInfo)
-            throws ResourceException {
-        ManagedConnectionFactory mcf = null;
-        ManagedConnection mc = null;
-        java.sql.Connection con = null;
+    public Set<String> getValidationTableNames(PoolInfo poolInfo) throws ResourceException {
+        ManagedConnectionFactory managedConnectionFactory = null;
+        ManagedConnection managedConnection = null;
+        Connection connection = null;
         try {
-            mc = (ManagedConnection) ccPoolAdmService.getUnpooledConnection(poolInfo, null, false);
-            mcf = ccPoolAdmService.obtainManagedConnectionFactory(poolInfo);
+            managedConnection = (ManagedConnection) ccPoolAdmService.getUnpooledConnection(poolInfo, null, false);
+            managedConnectionFactory = ccPoolAdmService.obtainManagedConnectionFactory(poolInfo);
 
-            if (mc != null) {
-                con = (java.sql.Connection) mc.getConnection(null, null);
+            if (managedConnection != null) {
+                connection = (Connection) managedConnection.getConnection(null, null);
             }
-            return getValidationTableNames(con,
-                    getDefaultDatabaseName(poolInfo, mcf));
-        } catch(Exception re) {
-            _logger.log(Level.WARNING, "pool.get_validation_table_names_failure", re.getMessage());
+            return getValidationTableNames(connection, getDefaultDatabaseName(poolInfo, managedConnectionFactory));
+        } catch (Exception re) {
+            _logger.log(WARNING, "pool.get_validation_table_names_failure", re.getMessage());
             throw new ResourceException(re);
         } finally {
             try {
-                if(mc != null) {
-                    mc.destroy();
+                if (managedConnection != null) {
+                    managedConnection.destroy();
                 }
-            } catch(Exception ex) {
-                if(_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "pool.get_validation_table_names_mc_destroy", poolInfo);
-                }
+            } catch (Exception ex) {
+                _logger.log(FINEST, "pool.get_validation_table_names_mc_destroy", poolInfo);
             }
         }
     }
 
     /**
      * Returns a databaseName that is populated in pool's default DATABASENAME
+     *
      * @param poolInfo
-     * @param mcf
+     * @param managedConnectionFactory
      * @return
      * @throws javax.naming.NamingException if poolName lookup fails
      */
-    private String getDefaultDatabaseName(PoolInfo poolInfo, ManagedConnectionFactory mcf)
-            throws NamingException {
+    private String getDefaultDatabaseName(PoolInfo poolInfo, ManagedConnectionFactory managedConnectionFactory) throws NamingException {
         // All this to get the default user name and principal
         String databaseName = null;
         ConnectorConnectionPool connectorConnectionPool = null;
         try {
             String jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
-            connectorConnectionPool = (ConnectorConnectionPool)
-                    _runtime.getResourceNamingService().
-                            lookup(poolInfo, jndiNameForPool, null);
+            connectorConnectionPool = (ConnectorConnectionPool) _runtime.getResourceNamingService().lookup(poolInfo, jndiNameForPool, null);
         } catch (NamingException ne) {
             throw ne;
         }
@@ -250,25 +254,25 @@ public class JdbcAdminServiceImpl extends ConnectorService {
         // To avoid using "" as the default databasename, try to get
         // the databasename from MCF.
         if (databaseName == null || databaseName.trim().equals("")) {
-            databaseName = ConnectionPoolObjectsUtils.getValueFromMCF("DatabaseName", poolInfo, mcf);
+            databaseName = getValueFromMCF("DatabaseName", poolInfo, managedConnectionFactory);
         }
+
         return databaseName;
     }
 
     /**
-     * Get Validation table names list for the catalog that the jdbc
-     * connection pool refers to. This is used for connection validation.
+     * Get Validation table names list for the catalog that the jdbc connection pool
+     * refers to. This is used for connection validation.
+     *
      * @param con
      * @param catalog database name used.
      * @return
      * @throws jakarta.resource.ResourceException
      */
-    public static Set<String> getValidationTableNames(java.sql.Connection con, String catalog)
-            throws ResourceException {
-
+    public static Set<String> getValidationTableNames(java.sql.Connection con, String catalog) throws ResourceException {
 
         SortedSet<String> tableNames = new TreeSet();
-        if(catalog.trim().equals("")) {
+        if (catalog.trim().equals("")) {
             catalog = null;
         }
 
@@ -277,11 +281,11 @@ public class JdbcAdminServiceImpl extends ConnectorService {
             try {
                 DatabaseMetaData dmd = con.getMetaData();
                 rs = dmd.getTables(catalog, null, null, null);
-                while(rs.next()) {
+                while (rs.next()) {
                     String schemaName = rs.getString(2);
                     String tableName = rs.getString(3);
                     String actualTableName = tableName;
-                    if(schemaName != null && !schemaName.equals("")){
+                    if (schemaName != null && !schemaName.equals("")) {
                         actualTableName = schemaName + "." + tableName;
                     }
                     tableNames.add(actualTableName);
@@ -294,48 +298,12 @@ public class JdbcAdminServiceImpl extends ConnectorService {
                     if (rs != null) {
                         rs.close();
                     }
-                } catch (Exception e1) {}
+                } catch (Exception e1) {
+                }
             }
         } else {
-            throw new ResourceException("The connection is not valid as "
-                    + "the connection is null");
+            throw new ResourceException("The connection is not valid as " + "the connection is null");
         }
         return tableNames;
     }
-
-    /**
-     * Utility method to check if the retrieved table is accessible, since this
-     * will be used for connection validation method "table".
-     * @param tableName
-     * @param con
-     * @return accessibility status of the table.
-     */
-    /*private static boolean isPingable(String tableName, java.sql.Connection con) {
-        java.sql.PreparedStatement stmt = null;
-        java.sql.ResultSet rs = null;
-        final String sql = "SELECT COUNT(*) FROM " + tableName;
-        try {
-            stmt = con.prepareStatement(sql);
-            rs = stmt.executeQuery();
-        } catch (Exception sqle) {
-            _logger.log(Level.INFO, "pool.exc_is_pingable", tableName);
-            return false;
-
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e1) {
-            }
-
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (Exception e2) {
-            }
-        }
-        return true;
-    } */
 }

@@ -16,13 +16,14 @@
 
 package org.glassfish.jdbc.pool.monitor;
 
+import static org.glassfish.external.statistics.impl.StatisticImpl.UNIT_COUNT;
+
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.RangeStatistic;
 import org.glassfish.external.statistics.impl.CountStatisticImpl;
 import org.glassfish.external.statistics.impl.RangeStatisticImpl;
-import org.glassfish.external.statistics.impl.StatisticImpl;
 import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
@@ -37,25 +38,34 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
  *
  * @author Shalini M
  */
-@AMXMetadata(type="jdbc-connection-pool-app-mon", group="monitoring")
+@AMXMetadata(type = "jdbc-connection-pool-app-mon", group = "monitoring")
 @ManagedObject
 @Description("JDBC Connection pool Application based Statistics")
 public class JdbcConnPoolAppStatsProvider {
 
-    private RangeStatisticImpl numConnUsed = new RangeStatisticImpl(
-            0, 0, 0,
-            "NumConnUsed", StatisticImpl.UNIT_COUNT, "Provides connection usage " +
+    private static final String JDBC_APP_PROBE_LISTENER = "glassfish:jdbc-pool:applications:";
+
+    private RangeStatisticImpl numConnUsed =
+        new RangeStatisticImpl(
+            0, 0, 0, "NumConnUsed", UNIT_COUNT,
+            "Provides connection usage " +
             "statistics. The total number of connections that are currently being " +
             "used, as well as information about the maximum number of connections " +
             "that were used (the high water mark).",
-            System.currentTimeMillis(), System.currentTimeMillis());
-    private CountStatisticImpl numConnAcquired = new CountStatisticImpl(
-            "NumConnAcquired", StatisticImpl.UNIT_COUNT, "Number of logical " +
+            System.currentTimeMillis(),
+            System.currentTimeMillis());
+
+    private CountStatisticImpl numConnAcquired =
+        new CountStatisticImpl("NumConnAcquired", UNIT_COUNT,
+            "Number of logical " +
             "connections acquired from the pool.");
-    private CountStatisticImpl numConnReleased = new CountStatisticImpl(
-            "NumConnReleased", StatisticImpl.UNIT_COUNT, "Number of logical " +
+
+    private CountStatisticImpl numConnReleased =
+        new CountStatisticImpl("NumConnReleased", UNIT_COUNT,
+            "Number of logical " +
             "connections released to the pool.");
-    private static final String JDBC_APP_PROBE_LISTENER = "glassfish:jdbc-pool:applications:";
+
+
     private String appName;
     private String poolName;
 
@@ -73,13 +83,11 @@ public class JdbcConnPoolAppStatsProvider {
     }
 
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "decrementConnectionUsedEvent")
-    public void decrementConnectionUsedEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName) {
+    public void decrementConnectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
         // handle the num conn used decrement event
-        if((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
-                //Decrement numConnUsed counter
+                // Decrement numConnUsed counter
                 synchronized (numConnUsed) {
                     numConnUsed.setCurrent(numConnUsed.getCurrent() - 1);
                 }
@@ -89,17 +97,16 @@ public class JdbcConnPoolAppStatsProvider {
 
     /**
      * Connection used event
+     *
      * @param poolName
      * @param appName
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionUsedEvent")
-    public void connectionUsedEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName) {
+    public void connectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
         // handle the connection used event
-        if((poolName != null) && (poolName.equals(this.poolName))) {
+        if ((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
-                //increment numConnUsed
+                // increment numConnUsed
                 synchronized (numConnUsed) {
                     numConnUsed.setCurrent(numConnUsed.getCurrent() + 1);
                 }
@@ -111,10 +118,8 @@ public class JdbcConnPoolAppStatsProvider {
      * When a connection is acquired increment counter
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionAcquiredEvent")
-    public void connectionAcquiredEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName) {
-        if((poolName != null) && (poolName.equals(this.poolName))) {
+    public void connectionAcquiredEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
+        if ((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
                 numConnAcquired.increment();
             }
@@ -125,27 +130,25 @@ public class JdbcConnPoolAppStatsProvider {
      * When a connection is released increment counter
      */
     @ProbeListener(JDBC_APP_PROBE_LISTENER + "connectionReleasedEvent")
-    public void connectionReleasedEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName) {
-        if((poolName != null) && (poolName.equals(this.poolName))) {
+    public void connectionReleasedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName) {
+        if ((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
                 numConnReleased.increment();
             }
         }
     }
 
-    @ManagedAttribute(id="numconnused")
+    @ManagedAttribute(id = "numconnused")
     public RangeStatistic getNumConnUsed() {
         return numConnUsed;
     }
 
-    @ManagedAttribute(id="numconnacquired")
+    @ManagedAttribute(id = "numconnacquired")
     public CountStatistic getNumConnAcquired() {
         return numConnAcquired;
     }
 
-    @ManagedAttribute(id="numconnreleased")
+    @ManagedAttribute(id = "numconnreleased")
     public CountStatistic getNumConnReleased() {
         return numConnReleased;
     }

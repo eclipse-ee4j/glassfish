@@ -25,7 +25,7 @@
 <!ENTITY database SYSTEM "../config/database.xml">
 ]>
 
-<project name="web2connector" default="usage" basedir=".">
+<project name="web2connector" default="all" basedir=".">
     &database;
     &commonSetup;
     &commonBuild;

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,16 +22,16 @@ import static java.lang.System.arraycopy;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.glassfish.appclient.client.acc.UserError;
-
+import org.glassfish.appclient.common.ClassPathUtils;
 import com.sun.enterprise.util.OS;
 
 /**
@@ -73,7 +74,7 @@ public class CLIBootstrap {
     private final static boolean isDebug = System.getenv("AS_DEBUG") != null;
     private final static String INPUT_ARGS = System.getenv("inputArgs");
 
-    final static String ENV_VAR_PROP_PREFIX = "acc.";
+    static final String ENV_VAR_PROP_PREFIX = "acc.";
 
 
     private final static String INSTALL_ROOT_PROPERTY_EXPR = "-Dcom.sun.aas.installRoot=";
@@ -290,6 +291,7 @@ public class CLIBootstrap {
         command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
         command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
+        command.append(' ').append("-Xshare:off");
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
     }
 
@@ -766,73 +768,55 @@ public class CLIBootstrap {
 
         @Override
         int processValue(String[] args, int slot) throws UserError {
-            /*
-             * We only care about the most recent setting.
-             */
+            // We only care about the most recent setting.
             values.clear();
 
-            /*
-             * If arg[slot] is -jar or -client we expect the next value to be the file. Make sure there is a next item and that it
-             * does not start with -.
-             */
-            if (args[slot].charAt(0) == '-') {
-                if (nextLooksOK(args, slot)) {
-                    introducer = args[slot++];
-                    final int result = super.processValue(args, slot);
-                    final String path = values.get(values.size() - 1);
-                    final File clientSpec = new File(path);
-                    if (clientSpec.isDirectory()) {
-                        /*
-                         * Record in the agent args that the user is launching a directory. Set the main class launch info to launch the ACC
-                         * JAR.
-                         */
-                        agentArgs.add("client=dir=" + quote(clientSpec.getAbsolutePath()));
-                        introducer = "-jar";
-                        values.set(values.size() - 1, gfInfo.agentJarPath());
-                    } else {
-                        agentArgs.add("client=jar=" + quote(path));
-                        /*
-                         * The client path is not a directory. It should be a .jar or a .ear file. If an EAR, then we want Java to launch
-                         * our ACC jar. If a JAR, then we will launch that JAR.
-                         */
-                        if (path.endsWith(".ear")) {
-                            introducer = "-jar";
-                            values.set(values.size() - 1, gfInfo.agentJarPath());
-                        } else if (path.endsWith(".jar")) {
-                            introducer = null;
-                            values.set(values.size() - 1, "-classpath");
-                            values.add(gfInfo.agentJarPath() + File.pathSeparator + path);
-                            values.add(getMainClassOf(clientSpec));
-                        }
-                    }
-                    return result;
-                } else {
-                    throw new UserError("-jar or -client requires value but missing");
-                }
-            } else {
-                /*
-                 * This must be a main class specified on the command line.
-                 */
+            // If arg[slot] is -jar or -client we expect the next value to be the file. Make sure there is a next item and that it
+            if (args[slot].charAt(0) != '-') {
+                // This must be a main class specified on the command line.
                 final int result = super.processValue(args, slot);
                 agentArgs.add("client=class=" + values.get(values.size() - 1));
                 return result;
-
             }
-        }
-
-        private String getMainClassOf(File clientSpec) {
-            try {
-                try (JarFile jarFile = new JarFile(clientSpec)) {
-                    Manifest manifest = jarFile.getManifest();
-                    Attributes mainAttributes = manifest.getMainAttributes();
-                    String mainClass = mainAttributes.getValue("Main-Class");
-
-                    return mainClass == null ? "" : mainClass;
+            if (!nextLooksOK(args, slot)) {
+                throw new UserError("-jar or -client requires value but missing");
+            }
+            introducer = args[slot++];
+            final int result = super.processValue(args, slot);
+            final String clientJarPath = values.get(values.size() - 1);
+            final File clientJarFile = new File(clientJarPath);
+            if (clientJarFile.isDirectory()) {
+                // Record in the agent args that the user is launching a directory. Set the main class launch info to launch the ACC JAR.
+                agentArgs.add("client=dir=" + quote(clientJarFile.getAbsolutePath()));
+                introducer = "-jar";
+                values.set(values.size() - 1, gfInfo.agentJarPath());
+            } else {
+                agentArgs.add("client=jar=" + quote(clientJarPath));
+                // The client path is not a directory. It should be a .jar or a .ear file. If an EAR, then we want Java to launch
+                // our ACC jar. If a JAR, then we will launch that JAR.
+                if (clientJarPath.endsWith(".ear")) {
+                    introducer = "-jar";
+                    values.set(values.size() - 1, gfInfo.agentJarPath());
+                } else if (clientJarPath.endsWith(".jar")) {
+                    introducer = null;
+                    values.set(values.size() - 1, "-classpath");
+                    values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient(clientJarPath));
+                    values.add(ClassPathUtils.getMainClass(clientJarFile));
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+            return result;
         }
+
+
+        private String getClassPathForGfClient(String clientJarPath) {
+            URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
+            if (classpath.length == 0) {
+                return clientJarPath;
+            }
+            return clientJarPath + File.pathSeparator + Stream.of(classpath).map(ClassPathUtils::convertToString)
+                .collect(Collectors.joining(File.pathSeparator));
+        }
+
 
         @Override
         boolean format(final StringBuilder commandLine) {
@@ -941,6 +925,9 @@ public class CLIBootstrap {
             return new File(lib, "ext").getAbsolutePath();
         }
 
+        /**
+         * @return gf-client.jar path
+         */
         String agentJarPath() {
             return new File(lib, "gf-client.jar").getAbsolutePath();
         }

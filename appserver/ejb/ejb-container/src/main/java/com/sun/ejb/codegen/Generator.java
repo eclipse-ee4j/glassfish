@@ -17,15 +17,10 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.enterprise.loader.ASURLClassLoader;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +32,7 @@ import org.glassfish.pfl.dynamic.codegen.impl.ClassGeneratorImpl;
 import org.glassfish.pfl.dynamic.codegen.spi.ImportList;
 import org.glassfish.pfl.dynamic.codegen.spi.Wrapper;
 
+import static com.sun.ejb.codegen.ClassGenerator.defineClass;
 import static org.glassfish.pfl.dynamic.codegen.impl.CodeGenerator.generateBytecode;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.DUMP_AFTER_SETUP_VISITOR;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.TRACE_BYTE_CODE_GENERATION;
@@ -128,31 +124,7 @@ public abstract class Generator {
 
         final ClassGeneratorImpl codeGenerator = (ClassGeneratorImpl) _classGenerator();
         final byte[] bytecode = generateBytecode(codeGenerator, getClassLoader(), imports, props, System.out);
-
-        if (useMethodHandles()) {
-            LOG.log(Level.FINEST, "Using MethodHandles to define {0}, anchorClass: {1}",
-                new Object[] {getGeneratedClassName(), getAnchorClass()});
-            final Lookup lookup = MethodHandles.privateLookupIn(getAnchorClass(), MethodHandles.lookup());
-            return lookup.defineClass(bytecode);
-        }
-
-        if (System.getSecurityManager() == null) {
-            return ClassGenerator.defineClass(getClassLoader(), getGeneratedClassName(), bytecode,
-                getAnchorClass().getProtectionDomain());
-        }
-        final PrivilegedAction<Class<?>> action = () -> ClassGenerator.defineClass(getClassLoader(),
-            getGeneratedClassName(), bytecode);
-        return AccessController.doPrivileged(action);
-    }
-
-
-    private boolean useMethodHandles() {
-        // The bootstrap CL used by embedded glassfish doesn't remember generated classes
-        // Further ClassLoader.findClass calls will fail.
-        if (loader.getParent() == null || loader.getClass() == ASURLClassLoader.class) {
-            return false;
-        }
-        return Objects.equals(getPackageName(), getAnchorClass().getPackageName());
+        return defineClass(getClassLoader(), getAnchorClass(), getPackageName(), getGeneratedClassName(), bytecode);
     }
 
 

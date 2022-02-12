@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
-        <version>6.2.5</version>
+        <version>6.2.6</version>
     </parent>
 
     <artifactId>tiger-types</artifactId>

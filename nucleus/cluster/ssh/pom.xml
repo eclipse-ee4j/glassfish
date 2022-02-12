@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.cluster</groupId>
         <artifactId>cluster</artifactId>
-        <version>6.2.5</version>
+        <version>6.2.6</version>
     </parent>
 
     <artifactId>cluster-ssh</artifactId>

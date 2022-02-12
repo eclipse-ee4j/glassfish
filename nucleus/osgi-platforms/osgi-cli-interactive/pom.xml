@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.osgi-platforms</groupId>
         <artifactId>osgi-platforms</artifactId>
-        <version>6.2.5</version>
+        <version>6.2.6</version>
     </parent>
 
     <artifactId>osgi-cli-interactive</artifactId>

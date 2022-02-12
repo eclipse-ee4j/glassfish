@@ -28,7 +28,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-main-aggregator</artifactId>
-    <version>6.2.5</version>
+    <version>6.2.6</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Project</name>

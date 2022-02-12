@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.ejb</groupId>
         <artifactId>ejb</artifactId>
-        <version>6.2.5-SNAPSHOT</version>
+        <version>6.2.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

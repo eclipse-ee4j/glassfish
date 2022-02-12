@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.jaccApi.test</groupId>
     <artifactId>prog-auth</artifactId>
-    <version>6.2.5-SNAPSHOT</version>
+    <version>6.2.5</version>
     <packaging>pom</packaging>
 
     <name>Programmatic authentication with Jakarta Authorization api</name>

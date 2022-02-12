@@ -23,7 +23,7 @@
 
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>maven-plugin</artifactId>
-    <version>6.2.5-SNAPSHOT</version>
+    <version>6.2.5</version>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Maven Plugin Tests</name>
 

@@ -55,25 +55,6 @@
             <param name="sun-web.xml" value="META-INF/sun-web.xml"/>
             <param name="webclient.war.classes" value="servlet/*.class, beans/*.class"/>
         </antcall>
-
-
-        <!--
-            <antcall target="appclient-jar-common">
-                <param name="appname" value="generic-embedded" />
-                <param name="application-client.xml" value="META-INF/application-client.xml" />
-                <param name="appclientjar.classes" value="mdb/*.class, beans/*.class, connector/*.class, client/Client.class" />
-                <param name="sun-application-client.xml" value="META-INF/sun-application-client.xml" />
-            </antcall>
-        -->
-        <!--
-            <jar jarfile="../ejb.jar" basedir="classes"
-                 includes="mdb/*.class, beans/*.class, connector/*.class" >
-                        <metainf dir="META-INF">
-                                <include name="ejb-jar.xml"/>
-                                <include name="sun-ejb-jar.xml"/>
-                        </metainf>
-            </jar>
-        -->
     </target>
 
     <target name="clean">

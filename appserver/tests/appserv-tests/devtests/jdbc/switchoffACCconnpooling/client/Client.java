@@ -14,15 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * UnpooledTest.java
- *
- * Created on October 31, 2006, 11:44 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package com.sun.s1asdev.jdbc.switchoffACCConnPooling.client;
 
 import java.sql.ResultSet;
@@ -44,21 +35,14 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  */
 public class Client {
 
+    private static final String testSuite = "switchoffACCconnpooling";
     private static int count = 10;
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
+
     private static boolean rollback;
     private static String tableName = "COFFEE";
-
-    //static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
-    private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    private static final String testSuite = "switchoffACCconnpooling";
-    private static int testCount = 0;
-
-    private static boolean isXA=false;
-
-    /** Creates a new instance of UnpooledTest */
-    public Client() {
-    }
-
+    private static int testCount;
+    private static boolean isXA;
 
     /**
      * @param args the command line arguments

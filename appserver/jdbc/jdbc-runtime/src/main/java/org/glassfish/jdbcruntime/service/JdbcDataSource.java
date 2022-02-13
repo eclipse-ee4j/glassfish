@@ -16,19 +16,22 @@
 
 package org.glassfish.jdbcruntime.service;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
-import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
 
-import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
+
+import javax.sql.DataSource;
+
+import org.glassfish.jdbc.config.JdbcResource;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
 
 public class JdbcDataSource implements DataSource {
     private ResourceInfo resourceInfo;
@@ -43,52 +46,62 @@ public class JdbcDataSource implements DataSource {
     private void validateResource(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
         ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
         String jndiName = resourceInfo.getName();
-        String suffix = ConnectorsUtil.getValidSuffix(jndiName);
+        String suffix = getValidSuffix(jndiName);
 
-        if(suffix != null){
-            //Typically, resource is created without suffix. Try without suffix.
+        if (suffix != null) {
+            // Typically, resource is created without suffix. Try without suffix.
             String tmpJndiName = jndiName.substring(0, jndiName.lastIndexOf(suffix));
-            if(resourcesUtil.getResource(tmpJndiName, resourceInfo.getApplicationName(),
-                    resourceInfo.getModuleName(), JdbcResource.class) != null){
+            if (resourcesUtil.getResource(tmpJndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName(), JdbcResource.class) != null) {
                 return;
             }
         }
 
-        if(resourcesUtil.getResource(resourceInfo, JdbcResource.class) == null){
+        if (resourcesUtil.getResource(resourceInfo, JdbcResource.class) == null) {
             throw new ConnectorRuntimeException("Invalid resource : " + resourceInfo);
         }
     }
 
+    @Override
     public Connection getConnection() throws SQLException {
         return ConnectorRuntime.getRuntime().getConnection(resourceInfo);
     }
 
+    @Override
     public Connection getConnection(String username, String password) throws SQLException {
         return ConnectorRuntime.getRuntime().getConnection(resourceInfo, username, password);
     }
 
+    @Override
     public PrintWriter getLogWriter() throws SQLException {
         return logWriter;
     }
 
+    @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-       this.logWriter = out;
+        this.logWriter = out;
     }
 
+    @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-       loginTimeout = seconds;
+        loginTimeout = seconds;
     }
 
+    @Override
     public int getLoginTimeout() throws SQLException {
         return loginTimeout;
     }
-    public boolean isWrapperFor(Class<?> iface) throws SQLException{
-       throw new SQLException("Not supported operation");
-    }
-    public <T> T unwrap(Class<T> iface) throws SQLException{
-       throw new SQLException("Not supported operation");
+
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new SQLException("Not supported operation");
     }
 
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new SQLException("Not supported operation");
+    }
+
+    @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException("Not supported operation");
     }

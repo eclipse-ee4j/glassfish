@@ -64,6 +64,7 @@ if [ -z "${test}" ]
   exit 2;
 fi
 
+export MVN_REPOSITORY="${HOME}/.m2/repository"
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
 export CLASSPATH="${WORKSPACE}/glassfish7/javadb"
@@ -75,5 +76,7 @@ export PORT_HTTPS="8181"
 install_glassfish;
 install_jacoco;
 
+rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
+rm -f ./appserver/tests/appserv-tests/test_results.xml
 ./appserver/tests/gftest.sh run_test "${test}"
 

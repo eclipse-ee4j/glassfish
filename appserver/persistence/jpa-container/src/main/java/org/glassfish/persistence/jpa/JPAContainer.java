@@ -16,16 +16,19 @@
 
 package org.glassfish.persistence.jpa;
 
+import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
 import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "org.glassfish.persistence.jpa.JPAContainer")
-public class JPAContainer implements org.glassfish.api.container.Container {
+public class JPAContainer implements Container {
 
+    @Override
     public Class<? extends Deployer> getDeployer() {
         return JPADeployer.class;
     }
 
+    @Override
     public String getName() {
         return "JPA";
     }

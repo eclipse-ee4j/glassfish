@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
+        'http://java.sun.com/j2ee/dtds/web-app_2_3.dtd'>
 <!--
 
     Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
@@ -17,8 +18,6 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
-        'http://java.sun.com/j2ee/dtds/web-app_2_3.dtd'>
 
 <web-app>
     <display-name>connector-cci-web</display-name>

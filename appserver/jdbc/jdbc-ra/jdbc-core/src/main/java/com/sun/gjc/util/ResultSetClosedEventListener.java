@@ -27,8 +27,8 @@ import java.sql.SQLException;
 public interface ResultSetClosedEventListener {
 
     /**
-     * Used to perform operations like statement closeOnCompletion when the
-     * result set object is closed.
+     * Used to perform operations like statement closeOnCompletion when the result
+     * set object is closed.
      */
-    public void resultSetClosed() throws SQLException;
+    void resultSetClosed() throws SQLException;
 }

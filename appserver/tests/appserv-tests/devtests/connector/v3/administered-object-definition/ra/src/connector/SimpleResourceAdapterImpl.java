@@ -62,13 +62,12 @@ public class SimpleResourceAdapterImpl extends AbstractResourceAdapter
         this.wm = ctx.getWorkManager();
         debug("003. Simple RA start...");
 
-        // testing creat timer
+        // testing create timer
         Timer timer = null;
         try {
             timer = ctx.createTimer();
         } catch (UnavailableException ue) {
-            System.out.println("Error");
-            throw new ResourceAdapterInternalException("Error form bootstrap");
+            throw new ResourceAdapterInternalException("Error form bootstrap", ue);
         }
         debug("004. Simple RA start...");
     }
@@ -94,7 +93,6 @@ public class SimpleResourceAdapterImpl extends AbstractResourceAdapter
             wm.scheduleWork(work, 4 * 1000, null, null);
             debug("B.001. Scheduled Dispatcher");
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new RuntimeException(ex);
         }
     }

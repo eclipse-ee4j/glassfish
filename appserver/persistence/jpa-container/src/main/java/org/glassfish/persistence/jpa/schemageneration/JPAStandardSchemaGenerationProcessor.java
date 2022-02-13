@@ -16,16 +16,17 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import org.glassfish.api.deployment.DeploymentContext;
-
 import java.io.CharArrayReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.api.deployment.DeploymentContext;
+
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 /**
  * Schema generation processor while using standard JPA based schema generation
+ *
  * @author Mitesh Meswani
  */
 public class JPAStandardSchemaGenerationProcessor implements SchemaGenerationProcessor {
@@ -42,7 +43,8 @@ public class JPAStandardSchemaGenerationProcessor implements SchemaGenerationPro
 
     @Override
     public Map<String, Object> getOverridesForSchemaGeneration() {
-        // No override is needed now. When we wire in taking schema generation overrides from deploy CLI, this method will return corresponding overrides.
+        // No override is needed now. When we wire in taking schema generation overrides
+        // from deploy CLI, this method will return corresponding overrides.
         return null;
     }
 
@@ -51,7 +53,7 @@ public class JPAStandardSchemaGenerationProcessor implements SchemaGenerationPro
         Map<String, Object> overrides = new HashMap<>();
 
         overrides.put(SCHEMA_GENERATION_DATABASE_ACTION_PROPERTY, SCHEMA_GENERATION_ACTION_NONE); // suppress database action
-        overrides.put(SCHEMA_GENERATION_SCRIPTS_ACTION_PROPERTY, SCHEMA_GENERATION_ACTION_NONE);  // suppress script action
+        overrides.put(SCHEMA_GENERATION_SCRIPTS_ACTION_PROPERTY, SCHEMA_GENERATION_ACTION_NONE); // suppress script action
         overrides.put(SQL_LOAD_SCRIPT_SOURCE, new CharArrayReader(new char[0])); // suppress execution of load scripts
 
         return overrides;
@@ -65,7 +67,8 @@ public class JPAStandardSchemaGenerationProcessor implements SchemaGenerationPro
 
     @Override
     public void executeCreateDDL() {
-        // We should never reach here as this processor returns false for isContainerDDLExecutionRequired()
+        // We should never reach here as this processor returns false for
+        // isContainerDDLExecutionRequired()
         throw new UnsupportedOperationException();
     }
 }

@@ -30,6 +30,6 @@ public interface StatementLeakListener {
     /**
      * Reclaim the leaked statement
      */
-    public void reclaimStatement() throws SQLException;
+    void reclaimStatement() throws SQLException;
 
 }

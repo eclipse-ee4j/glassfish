@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2002, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +21,13 @@ import com.sun.enterprise.connectors.work.inflow.CustomWorkContext_D;
 import org.glassfish.security.common.PrincipalImpl;
 
 import java.lang.reflect.Method;
-import javax.resource.spi.ActivationSpec;
-import javax.resource.spi.BootstrapContext;
-import javax.resource.spi.XATerminator;
-import javax.resource.spi.endpoint.MessageEndpoint;
-import javax.resource.spi.endpoint.MessageEndpointFactory;
-import javax.resource.spi.work.*;
-import javax.transaction.xa.Xid;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.BootstrapContext;
+import jakarta.resource.spi.XATerminator;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+import jakarta.resource.spi.work.*;
+import jakarta.transaction.xa.Xid;
 
 /**
  * @author Qingqing Ouyang
@@ -85,14 +86,14 @@ public class WorkDispatcher implements Work {
 
                 /*if (!factory.isDeliveryTransacted(onMessage)) {
                     //MessageEndpoint ep = factory.createEndpoint(null);
-                    //DeliveryWork d = new DeliveryWork("NO_TX", ep); 
+                    //DeliveryWork d = new DeliveryWork("NO_TX", ep);
                     //wm.doWork(d, 0, null, null);
                 } else*/ {
 
                     String jagadish="jagadish";
                     String prasath = "prasath";
                     String groupName = "iec";
-                    
+
                     boolean translationRequired = determineIdentityType();
                     if(translationRequired){
                         jagadish= "eis-jagadish";
@@ -100,7 +101,7 @@ public class WorkDispatcher implements Work {
                         groupName="eis-group";
                     }
                     newLine(1);
-                    
+
 
                     int count =0;
 //                    count = testExecutionContext(count);

@@ -17,9 +17,9 @@
 package com.sun.gjc.util;
 
 /**
- * Store the sql queries executed by applications along with the number of
- * times executed and the time stamp of the last usage.
- * Used for monitoring information.
+ * Store the sql queries executed by applications along with the number of times
+ * executed and the time stamp of the last usage. Used for monitoring
+ * information.
  *
  * @author Shalini M
  */
@@ -90,8 +90,8 @@ public class SQLTrace implements Comparable {
     }
 
     /**
-     * Check for equality of the SQLTrace with the object passed by
-     * comparing the queryName stored.
+     * Check for equality of the SQLTrace with the object passed by comparing the
+     * queryName stored.
      *
      * @param obj against which the equality is to be checked.
      * @return true or false
@@ -101,12 +101,11 @@ public class SQLTrace implements Comparable {
         if (obj == null) {
             return false;
         }
-        if(!(obj instanceof SQLTrace)) {
+        if (!(obj instanceof SQLTrace)) {
             return false;
         }
         final SQLTrace other = (SQLTrace) obj;
-        if ((this.queryName == null) || (other.queryName == null) ||
-                !this.queryName.equals(other.queryName)) {
+        if ((this.queryName == null) || (other.queryName == null) || !this.queryName.equals(other.queryName)) {
             return false;
         }
         return true;
@@ -114,6 +113,7 @@ public class SQLTrace implements Comparable {
 
     /**
      * Generate hash code for this obejct using all the fields.
+     *
      * @return
      */
     @Override
@@ -140,15 +140,15 @@ public class SQLTrace implements Comparable {
             compare = 1;
         }
         if (compare == 0) {
-            //same number of executions. Hence compare based on time.
+            // same number of executions. Hence compare based on time.
             long timeCompare = this.getLastUsageTime() - t;
-            if(timeCompare == 0) {
+            if (timeCompare == 0) {
                 compare = 0;
-            } else if(timeCompare < 0) {
-                //compare = -1;
+            } else if (timeCompare < 0) {
+                // compare = -1;
                 compare = 1;
             } else {
-                //compare = 1;
+                // compare = 1;
                 compare = -1;
             }
         }

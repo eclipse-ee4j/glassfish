@@ -37,7 +37,7 @@ public class SQLTraceTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        //Redirecting the purge operation of the cache to the cache factory
+        // Redirecting the purge operation of the cache to the cache factory
         cache.purgeEntries();
     }
 

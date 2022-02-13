@@ -18,13 +18,15 @@ package com.sun.gjc.spi;
 
 import java.util.Arrays;
 
+import jakarta.resource.spi.ConnectionRequestInfo;
+
 /**
  * ConnectionRequestInfo implementation for Generic JDBC Connector.
  *
  * @author Binod P.G
  * @version 1.0, 02/07/31
  */
-public class ConnectionRequestInfoImpl implements jakarta.resource.spi.ConnectionRequestInfo {
+public class ConnectionRequestInfoImpl implements ConnectionRequestInfo {
 
     private String user;
     private char[] password;
@@ -32,7 +34,7 @@ public class ConnectionRequestInfoImpl implements jakarta.resource.spi.Connectio
     /**
      * Constructs a new <code>ConnectionRequestInfoImpl</code> object
      *
-     * @param user     User Name.
+     * @param user User Name.
      * @param password Password
      */
     public ConnectionRequestInfoImpl(String user, char[] password) {
@@ -64,14 +66,16 @@ public class ConnectionRequestInfoImpl implements jakarta.resource.spi.Connectio
      * @return True, if they are equal and false otherwise.
      */
     public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (obj instanceof ConnectionRequestInfoImpl) {
-            ConnectionRequestInfoImpl other = (ConnectionRequestInfoImpl) obj;
-            return (isEqual(this.user, other.user) &&
-                    Arrays.equals(this.password, other.password));
-        } else {
+        if (obj == null) {
             return false;
         }
+
+        if (obj instanceof ConnectionRequestInfoImpl) {
+            ConnectionRequestInfoImpl other = (ConnectionRequestInfoImpl) obj;
+            return (isEqual(this.user, other.user) && Arrays.equals(this.password, other.password));
+        }
+
+        return false;
     }
 
     /**
@@ -93,9 +97,9 @@ public class ConnectionRequestInfoImpl implements jakarta.resource.spi.Connectio
     private boolean isEqual(Object o1, Object o2) {
         if (o1 == null) {
             return (o2 == null);
-        } else {
-            return o1.equals(o2);
         }
+
+        return o1.equals(o2);
     }
 
 }

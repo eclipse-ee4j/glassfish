@@ -22,9 +22,10 @@
 <!ENTITY commonRun SYSTEM "./../../../../config/run.xml">
 <!ENTITY testproperties SYSTEM "./build.properties">
 <!ENTITY database SYSTEM "../../config/database.xml">
+
 ]>
 
-<project name="excptApp" default="usage" basedir=".">
+<project name="excptApp" default="all" basedir=".">
     &database;
     &commonSetup;
     &commonBuild;
@@ -70,16 +71,16 @@
     </target>
 
     <target name="run" depends="init-common">
-      <property file="${env.APS_HOME}/devtests/connector/config/oracle.properties"/>
+      <property file="${env.APS_HOME}/config/derby.properties"/>
       <exec executable="${APPCLIENT}" failonerror="true">
-          <env key="APPCPATH" value="${env.S1AS_HOME}/domains/domain1/lib/ext/Oranxo.jar:${env.APS_HOME}/lib/reporter.jar"/>
+          <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
           <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
           <arg line="-name ${appname}Client"/>
           <arg line="-textauth"/>
           <arg line="-user j2ee"/>
           <arg line="-password j2ee"/>
-          <arg line=" ${oracleForConnector.driver} ${oracleForConnector.url} ${oracleForConnector.user} ${oracleForConnector.pwd} "/>
           <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
+          <arg line=" ${db.driver} ${db.url} ${db.user} ${db.pwd} "/>
        </exec>
     </target>
 

@@ -31,7 +31,14 @@ def jobs = [
   "ejb_group_1",
   "ejb_group_2",
   "ejb_group_3",
-  "ejb_group_embedded"
+  "ejb_group_embedded",
+  "batch_all",
+  "connector_group_1",
+  "connector_group_2",
+  "connector_group_3",
+  "connector_group_4",
+  "jdbc_all",
+  "persistence_all"
 ]
 
 def parallelStagesMap = jobs.collectEntries {
@@ -95,16 +102,16 @@ def generateAntPodTemplate(job) {
       node(label) {
         stage("${job}") {
           container('glassfish-build') {
-            retry(5) {
-              sleep 1
-              checkout scm
-            }
             unstash 'build-bundles'
+            sh """
+              mkdir -p ${WORKSPACE}/appserver/tests
+              tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+            """
             try {
               timeout(time: 1, unit: 'HOURS') {
                 sh """
-                  export CLASSPATH=$WORKSPACE/glassfish6/javadb
-                  ./appserver/tests/gftest.sh run_test ${job}
+                  export CLASSPATH=${WORKSPACE}/glassfish6/javadb
+                  ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
                 """
               }
             } finally {
@@ -258,7 +265,9 @@ spec:
               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
               mvn clean install -Pfastest,staging -T4C
               ./gfbuild.sh archive_bundles
-              ls -la ./bundles
+              mvn clean
+              tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+              ls -la ${WORKSPACE}/bundles
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'
             stash includes: 'bundles/*', name: 'build-bundles'

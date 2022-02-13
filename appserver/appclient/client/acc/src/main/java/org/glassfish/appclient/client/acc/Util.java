@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,8 +40,7 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
-    private static Class thisClass = Util.class;
-    private final static LocalStringManager localStrings = new LocalStringManagerImpl(thisClass);
+    private final static LocalStringManager localStrings = new LocalStringManagerImpl(Util.class);
     private static final String SLASH_REPLACEMENT = Matcher.quoteReplacement("\\\\");
     private static final String DOLLAR_REPLACEMENT = Matcher.quoteReplacement("\\$");
 
@@ -57,7 +57,7 @@ public class Util {
             throw new FileNotFoundException(f.getAbsolutePath());
         }
         if ( ! f.canRead()) {
-            String msg = localStrings.getLocalString(thisClass,
+            String msg = localStrings.getLocalString(Util.class,
                     "appclient.notReadable",
                     "{0} is not a readable file",
                     new Object[] {f.getAbsolutePath()});
@@ -77,7 +77,7 @@ public class Util {
     static File verifyNonDirectoryFilePath(final String filePath) throws FileNotFoundException, IOException {
         File f = verifyFilePath(filePath);
         if ( ! f.isFile()) {
-            String msg = localStrings.getLocalString(thisClass,
+            String msg = localStrings.getLocalString(Util.class,
                     "appclient.isDir",
                     "{0} is a directory; it must be a readable non-directory file",
                     new Object[] {f.getAbsolutePath()});
@@ -103,7 +103,7 @@ public class Util {
     }
     /**
      * Writes the provided text to a temporary file marked for deletion on exit.
-     * @param the content to be written
+     * @param content the content to be written
      * @param prefix for the temp file, conforming to the File.createTempFile requirements
      * @param suffix for the temp file
      * @return File object for the newly-created temp file
@@ -187,12 +187,5 @@ public class Util {
         m.appendTail(sb);
 
         return sb.toString();
-    }
-
-    public static String toXMLEscaped(final String content) {
-        return content.
-                    replaceAll("<", "&lt;").
-                    replaceAll(">", "&gt;").
-                    replaceAll("\"", "&quot;");
     }
 }

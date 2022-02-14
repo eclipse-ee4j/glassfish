@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>admin</artifactId>
-        <version>6.2.6</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>backup</artifactId>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>6.2.6</version>
+        <version>6.2.6-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -85,7 +85,7 @@
         <version_suffix />
         <major_version>6</major_version>
         <minor_version>2</minor_version>
-        <update_version>5</update_version>
+        <update_version>6</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
         <!-- Jakarta Faces -->
@@ -146,7 +146,7 @@
         <wasp.version>3.0.1</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>6.2.6</woodstox.version>
+        <woodstox.version>6.2.5</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->

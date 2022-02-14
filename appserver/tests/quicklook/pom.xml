@@ -29,7 +29,7 @@
     <artifactId>quicklook</artifactId>
     <name>Glassfish Quicklook Bundle</name>
     <packaging>jar</packaging>
-    <version>6.2.6</version>
+    <version>6.2.6-SNAPSHOT</version>
     <description>This pom describes how to run QuickLook tests on the Glassfish Bundle</description>
     <build>
         <plugins>

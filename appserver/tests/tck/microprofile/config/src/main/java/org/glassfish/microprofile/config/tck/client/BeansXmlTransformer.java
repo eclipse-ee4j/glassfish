@@ -15,7 +15,9 @@
  */
 package org.glassfish.microprofile.config.tck.client;
 
+import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
+import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
@@ -49,18 +51,31 @@ public class BeansXmlTransformer implements ApplicationArchiveProcessor {
         }
     }
 
-    @Override
-    public void process(Archive<?> archive, TestClass testClass) {
-        replaceBeansXml(archive);
+    /**
+     * Listen for and process non-testable deployments. This is required as, by default, ShouldThrowException annotated
+     * deployments aren't processed by ApplicationArchiveProcessors, but the beans xml may still need fixing.
+     * @param event
+     */
+    public void onEvent(@Observes BeforeDeploy event) {
+        final var deployment = event.getDeployment();
+
+        if (!deployment.testable()) {
+            new BeansXmlTransformer().process(deployment.getArchive());
+        }
     }
 
-    private void replaceBeansXml(Archive<?> archive) {
+    @Override
+    public void process(Archive<?> archive, TestClass testClass) {
+        process(archive);
+    }
+
+    public void process(Archive<?> archive) {
         final var beansXml = archive.get(BEANS_XML_PATH);
         if (beansXml != null) {
             LOGGER.info(() -> format("Replacing beans.xml in archive [%s]", archive.getName()));
             archive.add(new UrlAsset(beansXmlResource), BEANS_XML_PATH);
         }
-        processLibraries(archive, this::replaceBeansXml);
+        processLibraries(archive, this::process);
     }
 
     private static void processLibraries(Archive<?> archive, Consumer<Archive<?>> consumer) {

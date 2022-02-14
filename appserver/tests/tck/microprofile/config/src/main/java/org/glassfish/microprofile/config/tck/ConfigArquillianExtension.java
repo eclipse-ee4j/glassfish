@@ -18,10 +18,8 @@ package org.glassfish.microprofile.config.tck;
 import org.glassfish.microprofile.config.tck.client.BeansXmlTransformer;
 import org.glassfish.microprofile.config.tck.client.ConfigDeploymentExceptionTransformer;
 import org.glassfish.microprofile.config.tck.client.LibraryIncluder;
-import org.glassfish.microprofile.config.tck.remote.ConfigRemoteArquillianExtension;
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
-import org.jboss.arquillian.container.test.spi.client.deployment.AuxiliaryArchiveAppender;
 import org.jboss.arquillian.core.spi.LoadableExtension;
 
 import java.util.logging.Logger;
@@ -42,5 +40,8 @@ public class ConfigArquillianExtension implements LoadableExtension {
         extensionBuilder.service(ApplicationArchiveProcessor.class, BeansXmlTransformer.class);
         extensionBuilder.service(ApplicationArchiveProcessor.class, LibraryIncluder.class);
         extensionBuilder.service(DeploymentExceptionTransformer.class, ConfigDeploymentExceptionTransformer.class);
+
+        // Register this class as an Arquillian event observer
+        extensionBuilder.observer(BeansXmlTransformer.class);
     }
 }

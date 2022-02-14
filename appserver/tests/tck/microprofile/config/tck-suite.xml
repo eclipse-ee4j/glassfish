@@ -17,7 +17,13 @@
 
 -->
 
-<suite name="MicroProfile Config TCK" verbose="2" configfailurepolicy="continue" >
+<suite name="MicroProfile Config TCK" verbose="2" configfailurepolicy="continue">
+
+    <test name="MicroProfile Config TCK Setup">
+        <classes>
+            <class name="org.glassfish.microprofile.config.tck.ContainerSetup" />
+        </classes>
+    </test>
 
     <test name="MicroProfile Config TCK">
         <packages>

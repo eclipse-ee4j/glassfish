@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>embedded</artifactId>
-        <version>6.2.6</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>tests-embedded</artifactId>

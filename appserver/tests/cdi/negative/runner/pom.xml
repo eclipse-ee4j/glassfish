@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.cdi</groupId>
         <artifactId>negative</artifactId>
-        <version>6.2.6</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.negative</groupId>

@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.glassfish.main.jdbc.jdbc-ra</groupId>
     <artifactId>jdbc-ra</artifactId>
-    <version>6.2.6</version>
+    <version>6.2.6-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 

@@ -13,7 +13,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.microprofile.config.tck;
+package org.glassfish.microprofile.config.tck.client;
 
 import jakarta.enterprise.inject.spi.DeploymentException;
 import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTransformer;

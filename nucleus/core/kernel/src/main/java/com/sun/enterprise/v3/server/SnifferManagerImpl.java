@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
 import org.glassfish.hk2.classmodel.reflect.AnnotationType;
 import org.glassfish.hk2.classmodel.reflect.Member;
+import org.glassfish.hk2.classmodel.reflect.Parameter;
+import org.glassfish.hk2.classmodel.reflect.ParameterizedType;
 import org.glassfish.hk2.classmodel.reflect.Type;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.deployment.SnifferManager;
@@ -154,8 +156,8 @@ public class SnifferManagerImpl implements SnifferManager {
                     Collection<AnnotatedElement> elements = ((AnnotationType) type).allAnnotatedTypes();
                     for (AnnotatedElement element : elements) {
                         if (checkPath) {
-                            Type t = (element instanceof Member ? ((Member) element).getDeclaringType() : (Type) element);
-                            if (t.wasDefinedIn(uris)) {
+                            final Type t = getDeclaringType(element);
+                            if (t != null && t.wasDefinedIn(uris)) {
                                 applicableSniffers.add(sniffer);
                                 break;
                             }
@@ -187,5 +189,17 @@ public class SnifferManagerImpl implements SnifferManager {
                 }
             }
         }
+    }
+
+    /**
+     * @param element an annotated element in the archive
+     * @return the type of the class containing the element
+     */
+    private static Type getDeclaringType(AnnotatedElement element) {
+        if (element instanceof Type) return (Type) element;
+        if (element instanceof Member) return ((Member) element).getDeclaringType();
+        if (element instanceof Parameter) return getDeclaringType(((Parameter) element).getMethod());
+        if (element instanceof ParameterizedType) return ((ParameterizedType) element).getType();
+        throw new IllegalStateException("Unable to recognise declaring type: " + element.getName());
     }
 }

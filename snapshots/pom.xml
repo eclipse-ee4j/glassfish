@@ -18,7 +18,10 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -37,5 +40,55 @@
 
     <modules>
         <module>jbatch</module>
-  </modules>
+        <module>hibernate-validator</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>download-jbatch</id>
+                            <phase>generate-resources</phase>
+                            <goals>
+                                <goal>wget</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <url>${snapshots.sources.url}</url>
+                        <unpack>true</unpack>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.2.1</version>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>snapshots.execute-build</id>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <streamLogs>true</streamLogs>
+                                <projectsDirectory>${snapshots.sources.directory}</projectsDirectory>
+                                <pomIncludes>
+                                    <pomInclude>pom.xml</pomInclude>
+                                </pomIncludes>
+                                <goals>clean install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
 </project>

@@ -91,7 +91,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.1</jakarta.validation-api.version>
-        <hibernate-validator.version>7.0.2.Final</hibernate-validator.version>
+        <hibernate-validator.version>7.0.3-SNAPSHOT</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>4.0.0-M2</webservices.version>
@@ -949,12 +949,6 @@
                 </executions>
             </plugin>
 
-            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions>
-                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals>
-                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include>
-                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include>
-                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions>
-                </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

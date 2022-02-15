@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>appserv-rt-pom</artifactId>
-        <version>6.2.5-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

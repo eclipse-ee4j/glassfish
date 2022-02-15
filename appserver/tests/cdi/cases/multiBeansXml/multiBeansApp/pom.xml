@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.cdi.cases</groupId>
         <artifactId>multiBeansXml</artifactId>
-        <version>6.2.5-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases.multiBeansXml</groupId>

@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.glassfish.soteria.test</groupId>
     <artifactId>soteria</artifactId>
-    <version>6.2.5-SNAPSHOT</version>
+    <version>6.2.6-SNAPSHOT</version>
   </parent>
 
         <artifactId>app-multiple-store</artifactId>
@@ -40,7 +40,7 @@
     <dependency>
       <groupId>org.glassfish.soteria.test</groupId>
       <artifactId>common</artifactId>
-      <version>6.2.5-SNAPSHOT</version>
+      <version>6.2.6-SNAPSHOT</version>
       <scope>test</scope>
       </dependency>
   </dependencies>

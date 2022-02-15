@@ -20,10 +20,12 @@ import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 
 @Service
@@ -43,6 +45,17 @@ public class ConfigSniffer extends GenericSniffer {
         final boolean mpConfigUsed = types != null && types.getBy(Config.class.getName()) != null;
 
         return mpConfigUsed || super.handles(context);
+    }
+
+    @Override
+    public boolean handles(ReadableArchive location) {
+        try {
+            if (location.exists("META-INF/microprofile-config.properties")) return true;
+            if (location.exists("WEB-INF/classes/META-INF/microprofile-config.properties")) return true;
+        } catch (IOException e) {
+            // ignore
+        }
+        return false;
     }
 
     @Override

@@ -21,10 +21,12 @@ import org.jboss.arquillian.core.api.annotation.Observes;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.ArchiveAsset;
 import org.jboss.shrinkwrap.api.asset.UrlAsset;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -39,8 +41,11 @@ public class BeansXmlTransformer implements ApplicationArchiveProcessor {
 
     private static final Logger LOGGER = Logger.getLogger(BeansXmlTransformer.class.getName());
 
-    private static final String BEANS_XML_PATH = format("/META-INF%sbeans.xml", ArchivePath.SEPARATOR);
     private static final String LIB_DIR_PATH = format("WEB-INF%slib", ArchivePath.SEPARATOR);
+    private static final String[] BEANS_XML_PATHS = {
+            format("/META-INF%sbeans.xml", ArchivePath.SEPARATOR),
+            format("/WEB-INF%sbeans.xml", ArchivePath.SEPARATOR),
+    };
 
     private final URL beansXmlResource;
 
@@ -56,7 +61,7 @@ public class BeansXmlTransformer implements ApplicationArchiveProcessor {
      * deployments aren't processed by ApplicationArchiveProcessors, but the beans xml may still need fixing.
      * @param event
      */
-    public void onEvent(@Observes BeforeDeploy event) {
+    protected void onEvent(@Observes BeforeDeploy event) {
         final var deployment = event.getDeployment();
 
         if (!deployment.testable()) {
@@ -70,12 +75,23 @@ public class BeansXmlTransformer implements ApplicationArchiveProcessor {
     }
 
     public void process(Archive<?> archive) {
-        final var beansXml = archive.get(BEANS_XML_PATH);
-        if (beansXml != null) {
-            LOGGER.info(() -> format("Replacing beans.xml in archive [%s]", archive.getName()));
-            archive.add(new UrlAsset(beansXmlResource), BEANS_XML_PATH);
-        }
+        findBeansXml(archive)
+                .ifPresent(beansXml -> {
+                    LOGGER.info(() -> format("Replacing beans.xml in archive [%s]", archive.getName()));
+                    archive.add(new UrlAsset(beansXmlResource), beansXml.getPath());
+                });
         processLibraries(archive, this::process);
+    }
+
+    private static Optional<Node> findBeansXml(Archive<?> archive) {
+        for (String beansXmlPath : BEANS_XML_PATHS) {
+            final var node = archive.get(beansXmlPath);
+            if (node != null) {
+                LOGGER.info(() -> format("Discovered beans.xml at path [%s]", node.getPath()));
+                return Optional.of(node);
+            }
+        }
+        return Optional.empty();
     }
 
     private static void processLibraries(Archive<?> archive, Consumer<Archive<?>> consumer) {

@@ -73,23 +73,16 @@
                     <instructions>
                         <Export-Package>
                             org.glassfish.microprofile.config,
-                        </Export-Package>
-                        <Private-Package>
                             io.smallrye.config,
-                            io.smallrye.config.common,
-                            io.smallrye.config.inject,
-
-                            io.smallrye.common.annotation,
-                            io.smallrye.common.classloader,
-                            io.smallrye.common.constraint,
-                            io.smallrye.common.expression,
-                            io.smallrye.common.function,
-                            io.smallrye.config.common.utils,
-                        </Private-Package>
+                        </Export-Package>
+                        <Embed-Dependency>
+                            artifactId=smallrye*;inline=true,
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Multi-Release>true</Multi-Release>
                         <Include-Resource>
                             {maven-resources},
-                            {maven-dependencies},
-                            META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/
+                            META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/,
                         </Include-Resource>
                     </instructions>
                     <unpackBundle>true</unpackBundle>

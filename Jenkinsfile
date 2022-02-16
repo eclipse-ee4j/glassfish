@@ -110,7 +110,7 @@ def generateAntPodTemplate(job) {
             try {
               timeout(time: 1, unit: 'HOURS') {
                 sh """
-                  export CLASSPATH=${WORKSPACE}/glassfish6/javadb
+                  export CLASSPATH=${WORKSPACE}/glassfish7/javadb
                   ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
                 """
               }

@@ -204,7 +204,7 @@ public class StlesEJB implements Stles {
         }
 
         if (timerSvc.getTimers().size() != 0) {
-            throw new EJBException("After cencel, timerSvc.getTimers().size() = "
+            throw new EJBException("After cancel, timerSvc.getTimers().size() = "
                     + timerSvc.getTimers().size());
         }
     }

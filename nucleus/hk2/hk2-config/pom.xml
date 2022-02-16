@@ -118,7 +118,7 @@
                     <instructions>
                         <Import-Package>
                             jakarta.validation.*;resolution:=optional;version="${jakarta.validation-api.version}",
-                            org.hibernate.validator.*;resolution:=optional;version="${hibernate-validator.version}",
+                            org.hibernate.validator.*;resolution:=optional;version="[7.0.0,8.0.0)",
                             org.jvnet.tiger_types;version=${project.version},
                             *
                         </Import-Package>

@@ -27,7 +27,7 @@
     </module>
 
     <module>
-        <connector>sivajdbcra.rar</connector>
+        <connector>connectors-ra-redeploy-rars-xa.rar</connector>
     </module>
 
     <module>
@@ -40,11 +40,4 @@
             <context-root>defaultResource</context-root>
         </web>
     </module>
-
-    <!--
-      <module>
-        <java>generic-embedded-client.jar</java>
-      </module>
-    -->
-
 </application>

@@ -83,5 +83,5 @@ fi
 "$@"
 
 if [ ! -z "${JENKINS_HOME}" ] ; then
-  tar -c --exclude='*.zip' --exclude='*/main/tests/*' --exclude='*/main/distributions/*' --exclude='*/main/extras/*' --exclude='*/main/admingui/*' --newer-mtime '1 day ago' -C ${HOME}/.m2/repository org/glassfish/main | gzip --fast > ${WORKSPACE}/bundles/maven-repo.tar.gz
+  tar -c --exclude='*.zip' --exclude='*/main/tests/tck/*' --exclude='*/main/distributions/*' --exclude='*/main/extras/*' --exclude='*/main/admingui/*' --newer-mtime '1 day ago' -C ${HOME}/.m2/repository org/glassfish/main | gzip --fast > ${WORKSPACE}/bundles/maven-repo.tar.gz
 fi

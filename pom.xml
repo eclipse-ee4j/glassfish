@@ -106,7 +106,6 @@
             </activation>
             <modules>
                 <module>qa</module>
-                <module>snapshots</module> <!-- TMP -->
                 <module>nucleus</module>
                 <module>appserver</module>
             </modules>

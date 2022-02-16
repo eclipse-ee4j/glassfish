@@ -52,7 +52,8 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   tar -xzf ${WORKSPACE}/bundles/maven-repo.tar.gz --overwrite -m -p -C ${HOME}/.m2/repository
   echo "Removing old glassfish directory: ${S1AS_HOME}";
   rm -rf "${S1AS_HOME}";
+  export GF_VERSION="$(mvn help:evaluate -f ${APS_HOME}/pom.xml -Dexpression=project.version -q -DforceStdout)";
+  export MVN_REPOSITORY="${HOME}/.m2/repository";
 fi
 
 "$@"
-

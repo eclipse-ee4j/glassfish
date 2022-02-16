@@ -25,7 +25,7 @@
   </module>
 
   <module>
-    <connector>jdbcra.rar</connector>
+    <connector>connectors-ra-redeploy-rars.rar</connector>
   </module>
 
   <module>

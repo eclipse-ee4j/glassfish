@@ -16,13 +16,15 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import java.util.Map;
+
 import org.glassfish.api.deployment.DeploymentContext;
 
-import java.util.Map;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 /**
  * Processor for schema generation
+ *
  * @author Mitesh Meswani
  */
 public interface SchemaGenerationProcessor {
@@ -38,9 +40,10 @@ public interface SchemaGenerationProcessor {
     Map<String, Object> getOverridesForSchemaGeneration();
 
     /**
-     @return overrides that will be supplied to EMF creation for suppressing schema generation
+     * @return overrides that will be supplied to EMF creation for suppressing
+     * schema generation
      */
-    Map<String,Object> getOverridesForSuppressingSchemaGeneration();
+    Map<String, Object> getOverridesForSuppressingSchemaGeneration();
 
     /**
      * @return whether ddl needs to be executed by container

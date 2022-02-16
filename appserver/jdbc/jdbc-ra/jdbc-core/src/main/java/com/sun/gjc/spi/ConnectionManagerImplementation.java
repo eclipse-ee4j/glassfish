@@ -17,8 +17,8 @@
 package com.sun.gjc.spi;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionManager;
 import jakarta.resource.spi.ConnectionRequestInfo;
-import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
 /**
@@ -27,25 +27,26 @@ import jakarta.resource.spi.ManagedConnectionFactory;
  * @author Binod P.G
  * @version 1.0, 02/07/31
  */
-public class ConnectionManagerImplementation implements jakarta.resource.spi.ConnectionManager {
+public class ConnectionManagerImplementation implements ConnectionManager {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Returns a <code>Connection </code> object to the <code>ConnectionFactory</code>
+     * Returns a <code>Connection </code> object to the
+     * <code>ConnectionFactory</code>
      *
-     * @param mcf  <code>ManagedConnectionFactory</code> object.
-     * @param info <code>ConnectionRequestInfo</code> object.
+     * @param managedConnectionFactory <code>ManagedConnectionFactory</code> object.
+     * @param connectionRequestInfo <code>ConnectionRequestInfo</code> object.
      * @return A <code>Connection</code> Object.
      * @throws ResourceException In case of an error in getting the <code>Connection</code>.
      */
-    public Object allocateConnection(ManagedConnectionFactory mcf,
-                                     ConnectionRequestInfo info)
-            throws ResourceException {
-        ManagedConnection mc = mcf.createManagedConnection(null, info);
-        return mc.getConnection(null, info);
+    public Object allocateConnection(ManagedConnectionFactory managedConnectionFactory, ConnectionRequestInfo connectionRequestInfo) throws ResourceException {
+        return managedConnectionFactory.createManagedConnection(null, connectionRequestInfo)
+                                       .getConnection(null, connectionRequestInfo);
     }
 
     /*
-    * This class could effectively implement Connection pooling also.
-    * Could be done for FCS.
-    */
+     * This class could effectively implement Connection pooling also. Could be done
+     * for FCS.
+     */
 }

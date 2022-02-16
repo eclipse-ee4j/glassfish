@@ -24,15 +24,9 @@
 >
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.glassfish.main</groupId>
-        <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
-        <relativePath>../nucleus/pom.xml</relativePath>
-    </parent>
-
     <groupId>org.glassfish.main.snapshots</groupId>
     <artifactId>snapshotsmodule</artifactId>
+    <version>0.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Snapshots Parent</name>
@@ -44,6 +38,15 @@
     </modules>
 
     <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>

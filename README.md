@@ -28,6 +28,8 @@ The Zip distributions can be found on following paths:
 
 ### Execution
 
+:warning: Because GF7 is now in intensive development and depends on external snapshot dependencies, you have to build these dependencies first: `mvn clean install -f ./snapshots/pom.xml`
+
 * `mvn clean install` - Full build including automatic QA and maven managed tests. Typical time: 5 minutes.
 * `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests, QA and integration tests excluded. Typical time: 3 minutes.
 * `mvn clean install -Pfastest` - Building all distribution artifacts, excluded all QA and testing. Typical time: 1.5 minutes.
@@ -61,29 +63,28 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ### Old Additional Tests
 
+:warning: if the script fails, sometimes it doesn't stop the domain and you have to do that manually.
+
+* `./runTests.sh 7.0.0 batch_all` - Usual time: 4 minutes
 * `./runTests.sh 7.0.0 cdi_all` - Usual time: 6 minutes
-* `./runTests.sh 7.0.0 ejb_group_1` - Usual time: 8 minutes
-* `./runTests.sh 7.0.0 web_jsp` - Usual time: 6 minutes
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
+* `./runTests.sh 7.0.0 connector_group_1` - Usual time: 16 minutes
+* `./runTests.sh 7.0.0 connector_group_2` - Usual time: 3 minutes
+* `./runTests.sh 7.0.0 connector_group_3` - Usual time: 4 minutes
+* `./runTests.sh 7.0.0 connector_group_4` - Usual time: 16 minutes
+* `./runTests.sh 7.0.0 deployment_all` - Not fixed yet
+* `./runTests.sh 7.0.0 ejb_group_1` - Usual time: 10 minutes
+* `./runTests.sh 7.0.0 ejb_group_2` - Usual time: 7 minutes
+* `./runTests.sh 7.0.0 ejb_group_3` - Usual time: 18 minutes
+* `./runTests.sh 7.0.0 ejb_group_embedded` - Usual time: 4 minutes
+* `./runTests.sh 7.0.0 jdbc_all` - Usual time: 20 minutes
+* `./runTests.sh 7.0.0 persistence_all` - Usual time: 3 minutes
+* `./runTests.sh 7.0.0 web_jsp` - Usual time: 8 minutes
+* `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes
+* `./gfbuild.sh archive_bundles && ./gftest.sh nucleus_admin_all` - Not fixed yet
 * `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
-
-### Half-Dead Additional Tests Waiting for a Rescue
-
-First warning: if the script fails, it doesn't stop the domain and you have to do that manually.
-* `./runTests.sh 7.0.0 batch_all` - Crashes, Derby uses different port than expected
-* `./runTests.sh 7.0.0 connector_group_1` - Crashes, ports
-* `./runTests.sh 7.0.0 connector_group_2` - Crashes, ports
-* `./runTests.sh 7.0.0 connector_group_3` - Crashes, ports
-* `./runTests.sh 7.0.0 connector_group_4` - Crashes, ports
-* `./runTests.sh 7.0.0 deployment_all` - Usual time: 1 minute, failure: still uses javax packages.
-* `./runTests.sh 7.0.0 ejb_group_2` - Usual time: 2 minutes, failure: incompatible API at TimerSessionEJB.
-* `./runTests.sh 7.0.0 ejb_group_3` - Usual time: 4 minutes, failure: still uses javax packages
-* `./runTests.sh 7.0.0 jdbc_all` - Crashes, Derby uses different port than expected
-* `./runTests.sh 7.0.0 persistence_all` - Crashes, Derby uses different port than expected
-* `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes, failure: could not create the derby database
-* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_nucleus_all` - Crashes
-* `./gfbuild.sh archive_bundles && ./gftest.sh nucleus_admin_all` - Crashes, missing TestNG dependency
-* many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
+* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_nucleus_all` - Not fixed yet
+* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
+* There are many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 
 ## Basic Usage
 

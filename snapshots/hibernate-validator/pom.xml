@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.main.snapshots</groupId>
         <artifactId>snapshotsmodule</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
+        <version>0.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>hibernate-validator-snapshot</artifactId>

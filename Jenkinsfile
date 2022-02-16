@@ -262,8 +262,8 @@ spec:
               echo Uname
               uname -a
 
-              mvn clean install -pl :glassfish-main-aggregator,:glassfish-nucleus-parent,:nucleus-parent,:glassfish-qa-config
-              mvn clean install -T4C -Pfastest,snapshots -pl :snapshotsmodule -amd
+              # temporary build of external snapshot dependencies
+              mvn clean install -f ./snapshots/pom.xml
               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
               mvn clean install -Pfastest,staging -T4C
               ./gfbuild.sh archive_bundles

@@ -84,7 +84,7 @@
 
         <!-- Jakarta EL -->
         <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
-        <jakarta.el.version>5.0.0-M1</jakarta.el.version>
+        <expressly.version>5.0.0-SNAPSHOT</expressly.version>
 
         <!-- Jakarta Servlet -->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
@@ -343,9 +343,9 @@
                 <version>${jakarta.annotation-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-                <version>${jakarta.el.version}</version>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
+                <version>${expressly.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

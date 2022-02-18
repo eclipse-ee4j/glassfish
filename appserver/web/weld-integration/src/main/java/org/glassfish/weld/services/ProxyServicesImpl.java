@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2010, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,15 +17,13 @@
 
 package org.glassfish.weld.services;
 
-import com.sun.ejb.codegen.ClassGenerator;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
+
+import com.sun.ejb.codegen.ClassGenerator;
 
 /**
  * An implementation of the {@link ProxyServices}.
@@ -51,42 +49,6 @@ public class ProxyServicesImpl implements ProxyServices {
     public ProxyServicesImpl(final ServiceLocator services) {
         classLoaderHierarchy = services.getService(ClassLoaderHierarchy.class);
     }
-
-
-    @Deprecated
-    @Override
-    public boolean supportsClassDefining() {
-        // true is mandatory since Weld 4.0.1.SP1, because default method impl returns false
-        // and cdi_all tests then fail
-        return true;
-    }
-
-
-    @Deprecated
-    @Override
-    public ClassLoader getClassLoader(final Class<?> proxiedBeanType) {
-        if (System.getSecurityManager() == null) {
-            return getClassLoaderforBean(proxiedBeanType);
-        }
-        final PrivilegedAction<ClassLoader> action = () -> getClassLoaderforBean(proxiedBeanType);
-        return AccessController.doPrivileged(action);
-    }
-
-
-    @Deprecated
-    @Override
-    public Class<?> loadBeanClass(final String className) {
-        try {
-            if (System.getSecurityManager() == null) {
-                return loadClassByThreadCL(className);
-            }
-            final PrivilegedExceptionAction<Class<?>> action = () -> loadClassByThreadCL(className);
-            return AccessController.doPrivileged(action);
-        } catch (final Exception ex) {
-            throw new WeldProxyException("Failed to load the bean class: " + className, ex);
-        }
-    }
-
 
     @Override
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,

@@ -373,11 +373,11 @@
                 <version>${hibernate-validator.version}</version>
             </dependency>
 
-            <!-- Jakarta Expression Language Impl -->
+            <!-- Expressly - Jakarta Expression Language Impl -->
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-                <version>${jakarta.el.version}</version>
+                <groupId>org.glassfish.expressly</groupId>
+                <artifactId>expressly</artifactId>
+                <version>${expressly.version}</version>
             </dependency>
 
             <!-- Jakarta Enterprise beans -->
@@ -937,15 +937,15 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.el</artifactId>
-                                <version>${jakarta.el.version}</version>
+                                <groupId>org.glassfish.expressly</groupId>
+                                <artifactId>expressly</artifactId>
+                                <version>${expressly.version}</version>
                             </artifact>
                             <jarType>impl</jarType>
-                            <specVersion>3.0</specVersion>
-                            <implVersion>3.0.0</implVersion>
+                            <specVersion>5.0</specVersion>
+                            <implVersion>5.0.0</implVersion>
                             <apiPackage>jakarta.el</apiPackage>
-                            <implNamespace>com.sun.el</implNamespace>
+                            <implNamespace>org.glassfish.expressly</implNamespace>
                         </spec>
                         <spec>
                             <artifact>

@@ -18,7 +18,7 @@
 AS_INSTALL=`dirname $0`/..
 AS_INSTALL_LIB=$AS_INSTALL/modules
 JSP_IMPL=$AS_INSTALL_LIB/wasp.jar
-EL_IMPL=$AS_INSTALL_LIB/jakarta.el.jar:$AS_INSTALL_LIB/jakarta.el-api.jar
+EL_IMPL=$AS_INSTALL_LIB/expressly:$AS_INSTALL_LIB/jakarta.el-api.jar
 JSTL_IMPL=$AS_INSTALL_LIB/jakarta.servlet.jsp.jstl.jar
 AS_LIB=$AS_INSTALL/lib
 JAVAEE_API=$AS_LIB/javaee.jar

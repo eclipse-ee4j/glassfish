@@ -192,7 +192,7 @@
                                 <tck-setting key="impl.vi.deploy.dir" value="${webServerHome}/domains/domain1/autodeploy"/>
                                 <tck-setting key="impl.deploy.timeout.multiplier" value="960"/>
                                 
-                                <tck-setting key="jsf.classes" value="${webServerHome}/modules/cdi-api.jar;${webServerHome}/modules/jakarta.servlet.jsp.jstl-api.jar;${webServerHome}/modules/jakarta.inject.jar;${webServerHome}/modules/jakarta.faces.jar;${webServerHome}/modules/jakarta.servlet.jsp-api.jar;${webServerHome}/modules/jakarta.servlet-api.jar;${webServerHome}/modules/jakarta.el.jar"/>
+                                <tck-setting key="jsf.classes" value="${webServerHome}/modules/cdi-api.jar;${webServerHome}/modules/jakarta.servlet.jsp.jstl-api.jar;${webServerHome}/modules/jakarta.inject.jar;${webServerHome}/modules/jakarta.faces.jar;${webServerHome}/modules/jakarta.servlet.jsp-api.jar;${webServerHome}/modules/jakarta.servlet-api.jar;${webServerHome}/modules/expressly.jar"/>
 
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">

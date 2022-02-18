@@ -180,8 +180,8 @@
         </dependency>
         <!-- Dependency of Hibernate Validator -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.el</artifactId>
+            <groupId>org.glassfish.expressly</groupId>
+            <artifactId>expressly</artifactId>
             <scope>test</scope>
         </dependency>
         <!-- Required by the cluster replication despite we don't do any - ConfigAttributeSetTest fails without it -->

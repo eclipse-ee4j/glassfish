@@ -137,10 +137,10 @@
 
         <!-- Jakarta JSON -->
         <jsonp-api.version>2.1.0</jsonp-api.version>
-        <jsonp-ri.version>2.0.1</jsonp-ri.version>
+        <parsson.version>1.1.0</parsson.version>
         <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
-        <json.bind-api.version>2.0.0</json.bind-api.version>
-        <yasson.version>2.0.4</yasson.version>
+        <json.bind-api.version>3.0.0-RC1</json.bind-api.version>
+        <yasson.version>3.0.0-RC1</yasson.version>
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.1.0</jsp-api.version>
@@ -399,19 +399,19 @@
                 <version>${json.bind-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.json</artifactId>
-                <version>${jsonp-ri.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jsonp-jaxrs</artifactId>
-                <version>${jsonp-jaxrs.version}</version>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
+                <version>${parsson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>jsonp-jaxrs</artifactId>
+                <version>${jsonp-jaxrs.version}</version>
             </dependency>
 
             <!-- Jakarta Server Pages -->
@@ -718,16 +718,16 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>org.glassfish</groupId>
-                                <artifactId>jakarta.json</artifactId>
-                                <version>${jsonp-ri.version}</version>
+                                <groupId>org.eclipse.parsson</groupId>
+                                <artifactId>parsson</artifactId>
+                                <version>${parsson.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>impl</jarType>
                             <specVersion>1.1</specVersion>
-                            <implVersion>${jsonp-ri.version}</implVersion>
+                            <implVersion>${parsson.version}</implVersion>
                             <apiPackage>jakarta.json</apiPackage>
-                            <implNamespace>org.glassfish</implNamespace>
+                            <implNamespace>org.eclipse</implNamespace>
                         </spec>
                         <spec>
                             <artifact>

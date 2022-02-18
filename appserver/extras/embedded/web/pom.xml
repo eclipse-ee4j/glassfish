@@ -1284,8 +1284,8 @@
         </dependency>
         <!-- glassfish-json -->
         <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.json</artifactId>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

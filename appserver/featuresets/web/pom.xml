@@ -1147,6 +1147,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Jakarta Expression Language -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
@@ -1167,9 +1169,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Jakarta WebSocket -->
         <dependency>
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-client-api</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -1257,6 +1271,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>websecurity</artifactId>

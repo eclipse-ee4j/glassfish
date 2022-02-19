@@ -56,7 +56,7 @@
                     <inherited>true</inherited>
                     <executions>
                         <execution>
-                            <id>download-jbatch</id>
+                            <id>download-snapshot</id>
                             <phase>generate-resources</phase>
                             <goals>
                                 <goal>wget</goal>

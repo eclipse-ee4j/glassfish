@@ -74,7 +74,7 @@
             <!-- Sets minimal Maven version to 3.5.4 -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>

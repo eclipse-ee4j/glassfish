@@ -94,7 +94,7 @@
         <mojarra.version>4.0.0-M2</mojarra.version>
 
         <!-- Jakarta WebSocket -->
-        <websocket-api.version>2.0.0</websocket-api.version>
+        <websocket-api.version>2.1.0</websocket-api.version>
         <tyrus.version>2.0.2</tyrus.version>
 
         <!-- Jakarta Concurrency -->
@@ -199,6 +199,11 @@
             <dependency>
                 <groupId>jakarta.websocket</groupId>
                 <artifactId>jakarta.websocket-api</artifactId>
+                <version>${websocket-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.websocket</groupId>
+                <artifactId>jakarta.websocket-client-api</artifactId>
                 <version>${websocket-api.version}</version>
             </dependency>
             <dependency>
@@ -871,7 +876,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>2.0</specVersion>
+                            <specVersion>2.1</specVersion>
                             <specImplVersion>${websocket-api.version}</specImplVersion>
                             <apiPackage>jakarta.websocket</apiPackage>
                         </spec>

@@ -1045,6 +1045,8 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
             <optional>true</optional>
         </dependency>
+        
+        <!-- Jakarta Expression Language -->
         <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
@@ -1055,9 +1057,16 @@
             <artifactId>expressly</artifactId>
             <optional>true</optional>
         </dependency>
+        
+        <!-- Jakarta WebSocket -->
         <dependency>
             <groupId>jakarta.websocket</groupId>
             <artifactId>jakarta.websocket-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-client-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1100,12 +1109,15 @@
             <artifactId>tyrus-container-glassfish-ejb</artifactId>
             <optional>true</optional>
         </dependency>
+        
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>websecurity</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
+        
+        <!-- Jakarta Security -->
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>jakarta.security.enterprise</artifactId>

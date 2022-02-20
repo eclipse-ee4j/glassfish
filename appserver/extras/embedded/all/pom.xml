@@ -1637,7 +1637,7 @@
         <dependency>
             <groupId>org.glassfish.mq</groupId>
             <artifactId>mq-distribution</artifactId>
-            <version>${mq.version}</version>
+            <version>${openmq.version}</version>
             <type>zip</type>
             <optional>true</optional>
         </dependency>

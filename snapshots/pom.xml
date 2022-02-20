@@ -35,7 +35,6 @@
     <modules>
         <module>jbatch</module>
         <module>expressly</module>
-        <module>hibernate-validator</module>
     </modules>
 
     <build>

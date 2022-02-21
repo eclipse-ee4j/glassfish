@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package org.glassfish.appclient.client.acc;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -26,13 +26,17 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 import java.util.HashSet;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.spi.ClassTransformer;
-import jakarta.validation.ValidatorFactory;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.spi.TransformerException;
+import jakarta.validation.ValidatorFactory;
 
 /**
  * Implements the internal GlassFish interface which all persistence provider
@@ -133,8 +137,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
         private final ClassTransformer persistenceTransformer;
         private final ClassLoader classLoader;
 
-        TransformerWrapper(final ClassTransformer persistenceTransformer,
-                final ClassLoader classLoader) {
+        TransformerWrapper(final ClassTransformer persistenceTransformer, final ClassLoader classLoader) {
             this.persistenceTransformer = persistenceTransformer;
             this.classLoader = classLoader;
         }
@@ -144,10 +147,13 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
              * Do not even bother running the transformer unless the loader
              * loading the class is the ACC's class loader.
              */
-            return (loader.equals(classLoader) ?
-                persistenceTransformer.transform(loader, className,
-                    classBeingRedefined, protectionDomain, classfileBuffer)
-                : null);
+            try {
+                return loader.equals(classLoader) ? 
+                    persistenceTransformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer) : 
+                    null;
+            } catch (TransformerException e) {
+                throw (IllegalClassFormatException) (new IllegalClassFormatException().initCause(e));
+            }
         }
     }
 

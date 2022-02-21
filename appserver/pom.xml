@@ -117,7 +117,7 @@
         <jakarta.resource-api.version>2.1.0-RC1</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.1.0-M1</jakarta.batch-api.version>
+        <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>
         <jbatch.version>2.1.0-M2-SNAPSHOT</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->

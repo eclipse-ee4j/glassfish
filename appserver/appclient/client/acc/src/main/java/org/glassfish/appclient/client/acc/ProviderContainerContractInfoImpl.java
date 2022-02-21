@@ -71,10 +71,12 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
         this.applicationLocation = applicationLocation;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return classLoader;
     }
 
+    @Override
     public ClassLoader getTempClassloader() {
         return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
 
@@ -86,6 +88,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
             });
     }
 
+    @Override
     public void addTransformer(ClassTransformer transformer) {
         final TransformerWrapper tw = new TransformerWrapper(transformer, classLoader);
         if (inst != null) {
@@ -95,29 +98,35 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
         }
     }
 
+    @Override
     public String getApplicationLocation() {
         return applicationLocation;
     }
 
+    @Override
     public ValidatorFactory getValidatorFactory() {
         // TODO: Need to implement this correctly.
         return null;
     }
 
     // TODO: remove after persistence is refactored.
+    @Override
     public DeploymentContext getDeploymentContext() {
         return null;
     }
 
+    @Override
     public boolean isJava2DBRequired() {
         // Returns whether Java2DB is required or not. For an AppClient it is always false
         return false;
     }
 
+    @Override
     public void registerEMF(String unitName, String persistenceRootUri, RootDeploymentDescriptor containingBundle, EntityManagerFactory emf) {
         emfs.add(emf);
     }
 
+    @Override
     public String getJTADataSourceOverride() {
         // Returns whether JTA datasource is overridden. For an appclient it is never the case.
         return null;
@@ -142,14 +151,15 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
             this.classLoader = classLoader;
         }
 
+        @Override
         public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
             /*
              * Do not even bother running the transformer unless the loader
              * loading the class is the ACC's class loader.
              */
             try {
-                return loader.equals(classLoader) ? 
-                    persistenceTransformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer) : 
+                return loader.equals(classLoader) ?
+                    persistenceTransformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer) :
                     null;
             } catch (TransformerException e) {
                 throw (IllegalClassFormatException) (new IllegalClassFormatException().initCause(e));

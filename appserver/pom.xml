@@ -92,7 +92,7 @@
         <concurrent.version>2.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.0.1-RC1</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <jakarta.security-api.version>2.0.0</jakarta.security-api.version>

@@ -884,12 +884,12 @@
                             <artifact>
                                 <groupId>jakarta.ws.rs</groupId>
                                 <artifactId>jakarta.ws.rs-api</artifactId>
-                                <version>${jax-rs-api.impl.version}</version>
+                                <version>${jakarta.rest-api.version}</version>
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
-                            <specVersion>${jax-rs-api.spec.version}</specVersion>
-                            <specImplVersion>${jax-rs-api.impl.version}</specImplVersion>
+                            <specVersion>${jakarta.rest-api.version}</specVersion>
+                            <specImplVersion>${jakarta.rest-api.version}</specImplVersion>
                             <apiPackage>jakarta.ws.rs</apiPackage>
                         </spec>
                         <spec>

@@ -111,7 +111,7 @@
         <eclipselink.asm.version>9.2.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
-        <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.1-RC1</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
         <jakarta.resource-api.version>2.1.0-RC1</jakarta.resource-api.version>

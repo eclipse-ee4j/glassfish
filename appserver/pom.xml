@@ -92,7 +92,7 @@
         <concurrent.version>2.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.0.1-RC1</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
         <jakarta.security-api.version>2.0.0</jakarta.security-api.version>
@@ -106,18 +106,18 @@
         <openmq.version>6.3.0-M1</openmq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>3.1.0-RC1</jakarta.persistence-api.version>
+        <jakarta.persistence-api.version>3.1.0-RC2</jakarta.persistence-api.version>
         <eclipselink.version>4.0.0-M1</eclipselink.version>
         <eclipselink.asm.version>9.2.0</eclipselink.asm.version>
 
         <!-- Jakarta Transactions -->
-        <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>
+        <jakarta.transaction-api.version>2.0.1-RC1</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
         <jakarta.resource-api.version>2.1.0-RC1</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.1.0-M1</jakarta.batch-api.version>
+        <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>
         <jbatch.version>2.1.0-M2-SNAPSHOT</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->

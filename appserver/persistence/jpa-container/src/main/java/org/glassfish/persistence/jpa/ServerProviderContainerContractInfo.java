@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,6 +35,7 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.spi.TransformerException;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 
@@ -78,7 +80,11 @@ public class ServerProviderContainerContractInfo extends ProviderContainerContra
             public byte[] transform(
                     ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain,
                     byte[] classfileBuffer) throws IllegalClassFormatException {
-                return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+                try {
+                    return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+                } catch (TransformerException e) {
+                    throw (IllegalClassFormatException) (new IllegalClassFormatException().initCause(e));
+                }
             }
         });
     }

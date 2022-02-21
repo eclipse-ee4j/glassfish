@@ -86,7 +86,7 @@ public class SecuritySupportImpl extends SecuritySupport {
 
     protected static final Logger _logger = Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
-    @LogMessageInfo(message = "The SSL certificate has expired: {0}", level = "SEVERE", cause = "Certificate expired.", action = "Check the expiration date of the certicate.")
+    @LogMessageInfo(message = "The SSL certificate with alias {0} has expired: {1}", level = "SEVERE", cause = "Certificate expired.", action = "Check the expiration date of the certicate.")
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static boolean initialized = false;
@@ -318,10 +318,11 @@ public class SecuritySupportImpl extends SecuritySupport {
 
         Enumeration<String> aliases = store.aliases();
         while (aliases.hasMoreElements()) {
-            Certificate cert = store.getCertificate(aliases.nextElement());
+            var alias = aliases.nextElement();
+            Certificate cert = store.getCertificate(alias);
             if (cert instanceof X509Certificate) {
                 if (((X509Certificate) cert).getNotAfter().before(initDate)) {
-                    _logger.log(Level.SEVERE, SSL_CERT_EXPIRED, cert);
+                    _logger.log(Level.SEVERE, SSL_CERT_EXPIRED, new Object[] { alias, cert });
                 }
             }
         }

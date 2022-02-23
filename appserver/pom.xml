@@ -81,7 +81,7 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>4.0.0-M3</jakarta.faces-api.version>
-        <mojarra.version>4.0.0-M4</mojarra.version>
+        <mojarra.version>4.0.0-M5</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.1.0</jakarta.websocket-api.version>
@@ -144,8 +144,8 @@
         <jstl-impl.version>3.0.0-M1</jstl-impl.version>
 
         <!-- Jakarta CDI -->
-        <jakarta.cdi-api.version>4.0.0.Beta3</jakarta.cdi-api.version>
-        <weld.version>5.0.0.Beta1</weld.version>
+        <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
+        <weld.version>5.0.0.CR1</weld.version>
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->

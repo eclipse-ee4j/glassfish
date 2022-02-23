@@ -118,7 +118,7 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>
-        <jbatch.version>2.1.0-M2-SNAPSHOT</jbatch.version>
+        <jbatch.version>2.1.0-M2</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>

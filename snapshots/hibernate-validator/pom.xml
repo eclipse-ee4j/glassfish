@@ -31,7 +31,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <snapshots.sources.url>https://github.com/jakartaredhat/hibernate-validator/archive/refs/heads/main.zip</snapshots.sources.url>
+        <snapshots.sources.url>https://github.com/omnifaces/hibernate-validator/archive/refs/heads/main.zip</snapshots.sources.url>
         <snapshots.sources.directory>${project.build.directory}/hibernate-validator-main</snapshots.sources.directory>
     </properties>
 

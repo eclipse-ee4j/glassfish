@@ -33,7 +33,6 @@
     <description>Temporary snapshot modules</description>
 
     <modules>
-        <module>jbatch</module>
         <module>hibernate-validator</module>
     </modules>
 
@@ -84,7 +83,7 @@
                                 <pomIncludes>
                                     <pomInclude>pom.xml</pomInclude>
                                 </pomIncludes>
-                                <goals>clean install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
+                                <goals>clean source:jar install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
                             </configuration>
                         </execution>
                     </executions>

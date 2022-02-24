@@ -83,7 +83,7 @@
                                 <pomIncludes>
                                     <pomInclude>pom.xml</pomInclude>
                                 </pomIncludes>
-                                <goals>clean install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
+                                <goals>clean source:jar install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
                             </configuration>
                         </execution>
                     </executions>

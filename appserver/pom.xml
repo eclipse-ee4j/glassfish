@@ -102,7 +102,7 @@
         <exousia.version>2.1.0-M1</exousia.version>
 
         <!-- Jakarta Messaging -->
-        <jakarta.messaging-api.version>3.0.0</jakarta.messaging-api.version>
+        <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
         <openmq.version>6.3.0-M1</openmq.version>
 
         <!-- Jakarta Persistence -->

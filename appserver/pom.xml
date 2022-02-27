@@ -114,7 +114,7 @@
         <jakarta.transaction-api.version>2.0.1-RC1</jakarta.transaction-api.version>
 
         <!-- Jakarta Connectors -->
-        <jakarta.resource-api.version>2.1.0-RC1</jakarta.resource-api.version>
+        <jakarta.resource-api.version>2.1.0</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>

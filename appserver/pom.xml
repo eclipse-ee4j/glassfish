@@ -97,7 +97,7 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <jakarta.security-api.version>2.0.0</jakarta.security-api.version>
         <jakarta.authorization-api.version>2.1.0-RC1</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
+        <jakarta.authentication-api.version>3.0.0-RC2</jakarta.authentication-api.version>
         <soteria.version>2.0.1</soteria.version>
         <exousia.version>2.1.0-M1</exousia.version>
 

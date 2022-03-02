@@ -263,7 +263,7 @@ spec:
               uname -a
 
               # temporary build of external snapshot dependencies
-              mvn clean install -f ./snapshots/pom.xml
+              mvn clean install -f ./snapshots/pom.xml -s ./snapshots/settings.xml
               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
               mvn clean install -Pfastest,staging -T4C
               ./gfbuild.sh archive_bundles

@@ -63,7 +63,6 @@ import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.security.auth.message.config.RegistrationListener;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.security.auth.message.module.ServerAuthModule;
 
 /**
  * @author Ron Monzillo
@@ -282,17 +281,6 @@ public class FactoryTest {
             }
         }
 
-        @Override
-        public String registerServerAuthModule(ServerAuthModule serverAuthModule, Object context) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public void removeServerAuthModule(Object context) {
-            // TODO Auto-generated method stub
-
-        }
     }
 
     static class _Extends_ExtendsAuthConfigFactory extends _ExtendsBaseAuthConfigFactory {

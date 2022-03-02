@@ -16,9 +16,7 @@
 
 package com.sun.jaspic.config.factory;
 
-import com.sun.jaspic.config.helper.JASPICLogManager;
 import java.lang.reflect.Constructor;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,9 +30,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.sun.jaspic.config.helper.JASPICLogManager;
+
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import jakarta.security.auth.message.config.RegistrationListener;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 
 /**
@@ -367,6 +368,18 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         if (preExistingListenersMap != null) {
             notifyListeners(preExistingListenersMap);
         }
+    }
+
+    @Override
+    public String registerServerAuthModule(ServerAuthModule serverAuthModule, Object context) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void removeServerAuthModule(Object context) {
+        // TODO Auto-generated method stub
+
     }
 
 

@@ -17,10 +17,14 @@
 
 package test.com.sun.jaspic.config;
 
-import com.sun.jaspic.config.factory.AuthConfigFileFactory;
-import com.sun.jaspic.config.factory.BaseAuthConfigFactory;
-import com.sun.jaspic.config.factory.EntryInfo;
-import com.sun.jaspic.config.factory.RegStoreFileParser;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.security.PrivilegedExceptionAction;
 import java.security.Security;
@@ -44,6 +48,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.sun.jaspic.config.factory.AuthConfigFileFactory;
+import com.sun.jaspic.config.factory.BaseAuthConfigFactory;
+import com.sun.jaspic.config.factory.EntryInfo;
+import com.sun.jaspic.config.factory.RegStoreFileParser;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.config.AuthConfigFactory;
@@ -54,17 +63,7 @@ import jakarta.security.auth.message.config.ClientAuthContext;
 import jakarta.security.auth.message.config.RegistrationListener;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 /**
  * @author Ron Monzillo
@@ -227,38 +226,6 @@ public class FactoryTest {
     }
 
     @Test
-    public void testRegistrationWithNonStringPropertyAndPreviousRegistration() {
-        logger.info("BEGIN Registration with NonString Property and Previous Registration FACTORY TEST");
-        Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, testFactoryClassName);
-
-        // first register a valid acp configuration
-        final String className = _AuthConfigProvider.class.getName();
-        final String layer = "HttpServlet";
-        final String appContext = "context";
-        final String description = null;
-        final String regId
-            = AuthConfigFactory.getFactory().registerConfigProvider(className, null, layer, appContext, description);
-        assertNotNull(regId, "Registration Should Have Succeeded returning a nonNULL RegistrationID but did not.");
-        final AuthConfigProvider previousAcp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-        assertNotNull(previousAcp, "Registration Should Have Succeeded returning a nonNULL ACP but did not.");
-        final String previousRegId = regId;
-
-        // now for an invalid configuration
-        final Map<String, List<String>> properties = new HashMap<>();
-        final ArrayList<String> list = new ArrayList<>();
-        list.add("larry was here");
-        properties.put("test", list);
-        assertThrows(IllegalArgumentException.class, () -> AuthConfigFactory.getFactory()
-            .registerConfigProvider(className, properties, layer, appContext, description));
-        AuthConfigProvider acp = null;
-        acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-        assertSame(previousAcp, acp,
-            "Registration Should Have Failed for Invalid Config and Therefore returned the Previously Registered ACP");
-        assertTrue(AuthConfigFactory.getFactory().removeRegistration(previousRegId),
-            "Failed to remove the previously registered provider.");
-    }
-
-    @Test
     public void testOverrideForDefaultEntries() {
         logger.info("BEGIN overrideGetDefaultEntries TEST");
         AuthConfigFactory f = new _ExtendsBaseAuthConfigFactory();
@@ -313,6 +280,18 @@ public class FactoryTest {
             } finally {
                 rLock.unlock();
             }
+        }
+
+        @Override
+        public String registerServerAuthModule(ServerAuthModule serverAuthModule, Object context) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void removeServerAuthModule(Object context) {
+            // TODO Auto-generated method stub
+
         }
     }
 

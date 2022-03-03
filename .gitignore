@@ -18,8 +18,16 @@ appserver/security/jaspic-provider-framework/auth.conf
 appserver/tests/appserv-tests/devtests/web/JSESSIONID
 /bundles/
 appserver/tests/appserv-tests/devtests/**/count.txt
+appserver/tests/appserv-tests/devtests/**/errors.txt
+appserver/tests/appserv-tests/devtests/**/*.log
+appserver/tests/appserv-tests/devtests/**/*.out
+appserver/tests/appserv-tests/devtests/**/build/
+appserver/tests/appserv-tests/**/results.html
+appserver/tests/appserv-tests/**/tests-results.xml
+appserver/tests/appserv-tests/security-gtest-results.xml
+appserver/tests/appserv-tests/test_results_junit.xml
+appserver/tests/appserv-tests/devtests/cdi/smoke-tests/simple-wab-with-cdi/build.properties
 appserver/tests/appserv-tests/devtests/connector/v3/testdb/
-appserver/tests/appserv-tests/devtests/connector/v3/**/*.log
 appserver/tests/appserv-tests/devtests/connector/v3/**/*.lck
 appserver/tests/appserv-tests/devtests/connector/v3/**/*.ctrl
 appserver/tests/appserv-tests/devtests/connector/v3/**/*.dat
@@ -29,6 +37,27 @@ appserver/tests/appserv-tests/devtests/connector/**/*.[rj]ar
 appserver/tests/appserv-tests/devtests/connector/**/tmp-*/
 appserver/tests/appserv-tests/devtests/connector/**/seg0/
 
+appserver/tests/appserv-tests/devtests/deployment/junit-4.12.jar
+appserver/tests/appserv-tests/devtests/deployment/password.txt
+
 appserver/tests/appserv-tests/devtests/jdbc/jpa-dsd/client/Client.java
 appserver/tests/appserv-tests/devtests/jdbc/jpa-dsd/ejb/SfulBean.java
 
+appserver/tests/appserv-tests/devtests/security/jmac/soap/client/Client.java
+appserver/tests/appserv-tests/devtests/security/jmac/soapDefault/client/Client.java
+appserver/tests/appserv-tests/devtests/security/jmac/soapEmbedded/webclient/Servlet.java
+
+appserver/tests/appserv-tests/devtests/webservice/annotations/dol-override-1/client-sun-web.xml
+appserver/tests/appserv-tests/devtests/webservice/annotations/dol-override-1/sun-web.xml
+appserver/tests/appserv-tests/devtests/webservice/annotations/mtom/client-sun-web.xml
+appserver/tests/appserv-tests/devtests/webservice/annotations/mtom/sun-web.xml
+appserver/tests/appserv-tests/devtests/webservice/annotations/soap12/sun-application-client.xml
+appserver/tests/appserv-tests/devtests/webservice/annotations/soap12/sun-web.xml
+appserver/tests/appserv-tests/devtests/webservice/ejb_annotations/security/roles/passwordfile
+appserver/tests/appserv-tests/devtests/webservice/security/*.cer
+appserver/tests/appserv-tests/devtests/webservice/security/*.jks
+
+appserver/tests/appserv-tests/temppwd
+
+opendj-*.zip
+/opendj/

@@ -290,6 +290,7 @@ public class CLIBootstrap {
         command.append(' ').append("--add-opens=java.base/java.lang=ALL-UNNAMED");
         command.append(' ').append(INSTALL_ROOT_PROPERTY_EXPR).append(quote(gfInfo.home().getAbsolutePath()));
         command.append(' ').append(SECURITY_POLICY_PROPERTY_EXPR).append(quote(gfInfo.securityPolicy().getAbsolutePath()));
+        command.append(' ').append("-classpath").append(' ').append(gfInfo.agentJarPath()).append(File.pathSeparatorChar).append('.');
         command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
         command.append(' ').append("-Xshare:off");
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
@@ -917,10 +918,6 @@ public class CLIBootstrap {
             return configXMLFile;
         }
 
-        String[] endorsedPaths() {
-            return new String[] { new File(lib, "endorsed").getAbsolutePath(), new File(modules, "endorsed").getAbsolutePath() };
-        }
-
         String extPaths() {
             return new File(lib, "ext").getAbsolutePath();
         }
@@ -984,10 +981,6 @@ public class CLIBootstrap {
 
         String javaExe() {
             return System.getenv(ACCJava_ENV_VAR_NAME);
-        }
-
-        File endorsed() {
-            return new File(lib(), "endorsed");
         }
 
         File ext() {

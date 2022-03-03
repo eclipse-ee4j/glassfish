@@ -19,5 +19,5 @@
 -->
 
 <glassfish-application-client>
-  <version-identifier>RC-1.0.0</version-identifier>
+  <version-identifier></version-identifier>
 </glassfish-application-client>

@@ -19,5 +19,5 @@
 -->
 
 <glassfish-ejb-jar>
-  <version-identifier>RC-1.0.0</version-identifier>
+  <version-identifier>ALPHA-1.0.0</version-identifier>
 </glassfish-ejb-jar>

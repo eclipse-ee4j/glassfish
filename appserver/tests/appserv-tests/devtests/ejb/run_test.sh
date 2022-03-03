@@ -98,19 +98,19 @@ test_run_ejb_web(){
         rm -rf $S1AS_HOME/domains/domain1
 
         export ADMIN_PORT=45707 \
-                                 JMS_PORT=45708 \
-                                 JMX_PORT=45709 \
-                                 ORB_PORT=45710 \
-                                 SSL_PORT=45711 \
-                                 INSTANCE_PORT=45712 \
-                                 INSTANCE_HTTPS_PORT=45718 \
-                                 INSTANCE_PORT_2=45719 \
-                                 INSTANCE_PORT_3=45720 \
-                                 ALTERNATE_PORT=45713 \
-                                 ORB_SSL_PORT=45714 \
-                                 ORB_SSL_MUTUALAUTH_PORT=45715 \
-                                 DB_PORT=45716 \
-                                 DB_PORT_2=45717
+               JMS_PORT=45708 \
+               JMX_PORT=45709 \
+               ORB_PORT=45710 \
+               SSL_PORT=45711 \
+               INSTANCE_PORT=45712 \
+               INSTANCE_HTTPS_PORT=45718 \
+               INSTANCE_PORT_2=45719 \
+               INSTANCE_PORT_3=45720 \
+               ALTERNATE_PORT=45713 \
+               ORB_SSL_PORT=45714 \
+               ORB_SSL_MUTUALAUTH_PORT=45715 \
+               DB_PORT=45716 \
+               DB_PORT_2=45717
         env
 
         cd ${APS_HOME}
@@ -182,20 +182,20 @@ test_run_ejb_timer_cluster(){
         rm -rf ${S1AS_HOME}/domains/domain1
 
         export ADMIN_PORT=45707 \
-                                 JMS_PORT=45708 \
-                                 JMX_PORT=45709 \
-                                 ORB_PORT=45710 \
-                                 SSL_PORT=45711 \
-                                 INSTANCE_PORT=45712 \
-                                 INSTANCE_HTTP_PORT=45721 \
-                                 INSTANCE_HTTPS_PORT=45718 \
-                                 INSTANCE_PORT_2=45719 \
-                                 INSTANCE_PORT_3=45720 \
-                                 ALTERNATE_PORT=45713 \
-                                 ORB_SSL_PORT=45714 \
-                                 ORB_SSL_MUTUALAUTH_PORT=45715 \
-                                 DB_PORT=45716 \
-                                 DB_PORT_2=45717
+               JMS_PORT=45708 \
+               JMX_PORT=45709 \
+               ORB_PORT=45710 \
+               SSL_PORT=45711 \
+               INSTANCE_PORT=45712 \
+               INSTANCE_HTTP_PORT=45721 \
+               INSTANCE_HTTPS_PORT=45718 \
+               INSTANCE_PORT_2=45719 \
+               INSTANCE_PORT_3=45720 \
+               ALTERNATE_PORT=45713 \
+               ORB_SSL_PORT=45714 \
+               ORB_SSL_MUTUALAUTH_PORT=45715 \
+               DB_PORT=45716 \
+               DB_PORT_2=45717
         env
 
         cd ${APS_HOME}
@@ -278,32 +278,32 @@ get_test_target(){
 
 
 run_test_id(){
-        if [[ ${1} = "ejb_web_all" ]]; then
-                unzip_test_resources ${WORKSPACE}/bundles/web.zip
-        else
-                unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
-        fi
-        dname=`pwd`
-        cd `dirname ${0}`
-        test_init
-        get_test_target ${1}
-        if [[ ${1} = "ejb_all" || ${1} = "ejb_group"* ]]; then
-                test_run_ejb
-        elif [[ ${1} = "ejb_timer_cluster_all" ]]; then
-                test_run_ejb_timer_cluster
-        elif [[ ${1} = "ejb_web_all" ]]; then
-                test_run_ejb_web
-        else
-                echo "Invalid Test ID"
-                exit 1
-        fi
-        check_successful_run
+  if [[ ${1} = "ejb_web_all" ]]; then
+          unzip_test_resources ${WORKSPACE}/bundles/web.zip
+  else
+          unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+  fi
+  dname=`pwd`
+  cd `dirname ${0}`
+  test_init
+  get_test_target ${1}
+  if [[ ${1} = "ejb_all" || ${1} = "ejb_group"* ]]; then
+          test_run_ejb
+  elif [[ ${1} = "ejb_timer_cluster_all" ]]; then
+          test_run_ejb_timer_cluster
+  elif [[ ${1} = "ejb_web_all" ]]; then
+          test_run_ejb_web
+  else
+          echo "Invalid Test ID"
+          exit 1
+  fi
+  check_successful_run
   generate_junit_report ${1}
   change_junit_report_class_names
 }
 
 list_test_ids(){
-        echo ejb_all ejb_timer_cluster_all ejb_web_all ejb_group_1 ejb_group_2 ejb_group_3 ejb_group_embedded
+  echo ejb_all ejb_timer_cluster_all ejb_web_all ejb_group_1 ejb_group_2 ejb_group_3 ejb_group_embedded
 }
 
 OPT=${1}

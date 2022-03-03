@@ -166,7 +166,10 @@
 
 <target name="generate-jks-key" depends="init-common">
     <exec executable="${java.home}/bin/keytool" failonerror="true">
-        <arg line="-genkey -alias ssltest -dname"/>
+        <arg line="-genkey -alias ssltest"/>
+        <arg value="-keyalg" />
+        <arg value="RSA" />
+        <arg value="-dname" />
         <arg value="CN=SSLTest, OU=Sun Java System Application Server, O=Sun Microsystems, L=Santa Clara, ST=California, C=US"/>
         <arg value="-validity"/>
         <arg value="3650"/>
@@ -387,12 +390,14 @@
 
 <target name="wsgen" depends="init-common,setJAXWSToolsForWin,setJAXWSToolsForUnix">
     <exec executable="${WSGEN}" failonerror="true" >
+        <env key="AS_JAVA" value="${env.JAVA_HOME}" />
         <arg line="${wsgen.args}" />
     </exec>
 </target>
 
 <target name="wsimport" depends="init-common,setJAXWSToolsForWin,setJAXWSToolsForUnix">
     <exec executable="${WSIMPORT}" failonerror="true" >
+        <env key="AS_JAVA" value="${env.JAVA_HOME}" />
         <env key="WSIMPORT_OPTS" value="${wsimport.VMARGS}"/>
         <arg line="${wsimport.args}" />
     </exec>

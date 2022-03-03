@@ -16,6 +16,7 @@
 
 package com.sun.s1asdev.security.jmac.httpservletchallenge;
 
+import java.util.Base64;
 import java.util.Map;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -34,8 +35,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
-import sun.misc.BASE64Decoder;
 
 public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
     private CallbackHandler handler = null;
@@ -67,11 +66,9 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
             HttpServletRequest request =
                 (HttpServletRequest)messageInfo.getRequestMessage();
             String authorization = request.getHeader("authorization");
-            if (authorization != null &&
-                    authorization.toLowerCase().startsWith("basic ")) {
+            if (authorization != null && authorization.toLowerCase().startsWith("basic ")) {
                 authorization = authorization.substring(6).trim();
-                BASE64Decoder decoder = new BASE64Decoder();
-                byte[] bs = decoder.decodeBuffer(authorization);
+                byte[] bs = Base64.getDecoder().decode(authorization);
                 String decodedString = new String(bs);
                 int ind = decodedString.indexOf(':');
                 if (ind > 0) {
@@ -80,8 +77,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
                 }
             }
 
-            HttpServletResponse response =
-                     (HttpServletResponse)messageInfo.getResponseMessage();
+            HttpServletResponse response = (HttpServletResponse) messageInfo.getResponseMessage();
             if (username == null || password == null) {
                 response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

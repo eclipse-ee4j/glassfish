@@ -18,6 +18,7 @@ package org.glassfish.jacc.test.mr8;
 
 import java.net.*;
 import java.io.*;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -442,15 +443,14 @@ public class Client {
                 if ((user != null) && (user.length() > 0)) {
                         // Add BASIC header for authentication
                         String auth =  user + ":" + password;
-                        String authEncoded = new sun.misc.BASE64Encoder().encode(auth.getBytes());
+                        String authEncoded = Base64.getEncoder().encodeToString(auth.getBytes());
                         c1.setRequestProperty("Authorization", "Basic " + authEncoded);
                 }
                 c1.setDoOutput(true);
                 c1.setUseCaches(false);
 
                 // get the output stream to POST to.
-                DataOutputStream out;
-                out = new DataOutputStream(c1.getOutputStream());
+                DataOutputStream out = new DataOutputStream(c1.getOutputStream());
                 String content = "";
 
                 // Create a single String value to be POSTED from the parameters passed

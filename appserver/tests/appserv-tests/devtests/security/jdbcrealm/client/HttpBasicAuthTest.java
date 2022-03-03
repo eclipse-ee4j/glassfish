@@ -16,6 +16,8 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.Base64;
+
 import sun.misc.*;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
@@ -162,8 +164,7 @@ public class HttpBasicAuthTest implements Runnable {
         URLConnection uconn = u.openConnection();
 
         String up = username + ":" + password;
-        BASE64Encoder be = new BASE64Encoder();
-        up = new String(be.encode(up.getBytes()));
+        up = Base64.getEncoder().encodeToString(up.getBytes());
 
         uconn.setRequestProperty("authorization", "Basic " + up);
 

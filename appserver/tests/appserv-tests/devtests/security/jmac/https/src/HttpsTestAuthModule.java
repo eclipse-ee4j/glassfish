@@ -59,15 +59,11 @@ public class HttpsTestAuthModule implements ServerAuthModule {
 
         X500Principal x500Principal = null;
         try {
-            HttpServletRequest request =
-                    (HttpServletRequest) messageInfo.getRequestMessage();
-            X509Certificate certs[] =
-                    (X509Certificate[]) request.getAttribute(
-                    "jakarta.servlet.request.X509Certificate");
-            if (certs == null || certs.length < 1) {
-                System.out.println("javax...certs is null or empty");
-                certs = (X509Certificate[]) request.getAttribute(
-                        "org.apache.coyote.request.X509Certificate");
+            HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
+            X509Certificate certs[] = (X509Certificate[]) request
+                .getAttribute("jakarta.servlet.request.X509Certificate");
+            if (certs == null || certs.length == 0) {
+                System.out.println("jakarta.servlet.request.X509Certificate attribute is null or empty");
             }
             System.out.println("certs: " + certs);
             if (certs != null && certs.length > 0) {

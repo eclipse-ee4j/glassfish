@@ -37,7 +37,7 @@ public class WebTest {
         String versionToTest = args[3];
         versionToTest = versionToTest.trim();
 
-        int port = new Integer(portS);
+        int port = Integer.parseInt(portS);
         String name;
 
         int testVersion = Integer.valueOf(versionToTest);

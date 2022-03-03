@@ -17,9 +17,14 @@
 package com.sun.s1peqe.connector.cci;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Iterator;
 import jakarta.ejb.*;
-import jakarta.resource.cci.*;
+import jakarta.resource.cci.Connection;
+import jakarta.resource.cci.ConnectionSpec;
+import jakarta.resource.cci.ConnectionFactory;
+import jakarta.resource.cci.IndexedRecord;
+import jakarta.resource.cci.Interaction;
+import jakarta.resource.cci.RecordFactory;
 import jakarta.resource.ResourceException;
 import javax.naming.*;
 
@@ -59,7 +64,7 @@ public class CoffeeBean implements SessionBean {
             iSpec.setFunctionName("COUNTCOFFEE");
             RecordFactory rf = cf.getRecordFactory();
             IndexedRecord iRec = rf.createIndexedRecord("InputRecord");
-            Record oRec = ix.execute(iSpec, iRec);
+            jakarta.resource.cci.Record oRec = ix.execute(iSpec, iRec);
             Iterator iterator = ((IndexedRecord) oRec).iterator();
             while (iterator.hasNext()) {
                 Object obj = iterator.next();

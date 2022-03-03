@@ -40,17 +40,13 @@
     </target>
 
     <target name="setup" depends="assemble-web, assemble-client, deploy-app, deploy-client"/>
-<path id="class.path">
+    <path id="class.path">
         <fileset dir="${env.S1AS_HOME}/modules">
-            <include name="**/*.jar"/>
-        </fileset>
-        <fileset dir="${env.S1AS_HOME}/modules/endorsed">
             <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${env.APS_HOME}/lib">
             <include name="**/*.jar"/>
         </fileset>
-
     </path>
 
 

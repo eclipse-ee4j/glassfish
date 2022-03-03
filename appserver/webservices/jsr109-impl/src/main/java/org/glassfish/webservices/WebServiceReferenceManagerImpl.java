@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +32,6 @@ import jakarta.inject.Inject;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
 import jakarta.xml.ws.soap.MTOMFeature;
 import jakarta.xml.ws.soap.AddressingFeature;
 import jakarta.xml.ws.WebServiceFeature;
@@ -68,10 +68,12 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
     protected Logger logger = LogUtils.getLogger();
 
+    @Override
     public Object getWSContextObject() {
         return new WebServiceContextImpl();
     }
 
+    @Override
     public Object resolveWSReference(ServiceReferenceDescriptor desc, Context context)
             throws NamingException {
 
@@ -261,8 +263,9 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
              */
             if (e instanceof InvocationTargetException) {
                 URL optionalWsdlURL = generateWsdlFile(desc);
-                if (optionalWsdlURL == null)
+                if (optionalWsdlURL == null) {
                     throw e;
+                }
                 obj = cons.newInstance(optionalWsdlURL, desc.getServiceName());
             }
         }
@@ -328,13 +331,15 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          * generate it again.
          */
 
-        if (optionalWsdl.exists())
+        if (optionalWsdl.exists()) {
             return optionalWsdl.toURI().toURL();
+        }
 
         createParentDirs(optionalWsdl);
         ServletAdapter targetEndpoint = getServletAdapter(desc);
-        if (targetEndpoint == null)
+        if (targetEndpoint == null) {
             return null;
+        }
         ServiceDefinition serviceDefinition = targetEndpoint.getServiceDefinition();
         Iterator wsdlnum = serviceDefinition.iterator();
         SDDocument wsdlDocument = null;
@@ -346,8 +351,9 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
             }
         }
 
-        if (wsdlDocument == null)
+        if (wsdlDocument == null) {
             return null;
+        }
 
         OutputStream outputStream = null;
         try {
@@ -357,8 +363,9 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
             DocumentAddressResolver resolver = targetEndpoint.getDocumentAddressResolver(portAddressResolver);
             wsdlDocument.writeTo(portAddressResolver, resolver, outputStream);
         } finally {
-            if (outputStream != null)
+            if (outputStream != null) {
                 outputStream.close();
+            }
         }
 
         return optionalWsdl.toURI().toURL();
@@ -374,7 +381,6 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
     private ServletAdapter getServletAdapter(ServiceReferenceDescriptor desc) {
 
         WebBundleDescriptor webBundle = null;
-        WebServicesDescriptor webServicesDescriptor = null;
 
         /*
          * If flow has reached to this part of the code,then in all likelihood,
@@ -425,8 +431,9 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          * If an unlikely event when there is no associated webService or desc.getServiceLocalPart()
          * itself is null, then fall back on fetching ServletAdapter based on wsdl url.
          */
-        if (webService == null)
+        if (webService == null) {
             return getServletAdapterBasedOnWsdlUrl(desc);
+        }
 
         String contextRoot = webBundle.getContextRoot();
         String webSevicePath = null;
@@ -442,8 +449,9 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
             if (desc.getServiceName().equals(endpoint.getServiceName())
                     && desc.getServiceNamespaceUri().equals(endpoint.getWsdlService().getNamespaceURI())) {
                 String endPointAddressURI = endpoint.getEndpointAddressUri();
-                if (endPointAddressURI == null || endPointAddressURI.length() == 0)
+                if (endPointAddressURI == null || endPointAddressURI.length() == 0) {
                     return null;
+                }
                 webSevicePath = endPointAddressURI.startsWith("/") ? endPointAddressURI : ("/" + endPointAddressURI);
                 publishingContext = "/" + endpoint.getPublishingUri() + "/" + webService.getWsdlFileUri();
                 Adapter adapter = JAXWSAdapterRegistry.getInstance()
@@ -473,9 +481,13 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         }
 
         URL wsdl = desc.getWsdlFileUrl();
-        String wsdlPath = wsdl.getPath().trim();
-        if (!wsdlPath.contains(WebServiceEndpoint.PUBLISHING_SUBCONTEXT))
+        if (wsdl == null) {
             return null;
+        }
+        String wsdlPath = wsdl.getPath().trim();
+        if (!wsdlPath.contains(WebServiceEndpoint.PUBLISHING_SUBCONTEXT)) {
+            return null;
+        }
 
          /*
           * WsdlPath indeed contains the WebServiceEndpoint.PUBLISHING_SUBCONTEXT,
@@ -486,16 +498,20 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
         String contextRootAndPath = wsdlPath.substring(1,
                 wsdlPath.indexOf(WebServiceEndpoint.PUBLISHING_SUBCONTEXT) - 1); // test/Translator
-        if (!(contextRootAndPath.length() > 0))
+        if (contextRootAndPath.isEmpty()) {
             return null;
+        }
         String[] contextRootAndPathArray = contextRootAndPath.split("/"); // {test, Translator}
-        if (contextRootAndPathArray.length != 2)
+        if (contextRootAndPathArray.length != 2) {
             return null;
-        if (contextRootAndPathArray[0] == null)
+        }
+        if (contextRootAndPathArray[0] == null) {
             return null;
+        }
         String contextRoot = "/" + contextRootAndPathArray[0];  // /test
-        if (contextRootAndPathArray[1] == null)
+        if (contextRootAndPathArray[1] == null) {
             return null;
+        }
         String webSevicePath = "/" + contextRootAndPathArray[1]; // /Translator
         String urlPattern = wsdlPath.substring(contextRoot.length());
         Adapter adapter = JAXWSAdapterRegistry.getInstance()
@@ -524,7 +540,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          * If these are present use the
          * Service(url,wsdl,features) constructor
          */
-        ArrayList<WebServiceFeature> wsFeatures = new ArrayList<WebServiceFeature>();
+        ArrayList<WebServiceFeature> wsFeatures = new ArrayList<>();
         if (desc.isMtomEnabled()) {
             wsFeatures.add( new MTOMFeature(true,desc.getMtomThreshold()))   ;
         }
@@ -548,14 +564,13 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
     }
 
     private AddressingFeature.Responses getResponse(String s) {
-       if (s != null) {
-            return AddressingFeature.Responses.valueOf(AddressingFeature.Responses.class,s);
-        } else return AddressingFeature.Responses.ALL;
-
+        if (s == null) {
+            return AddressingFeature.Responses.ALL;
+        }
+        return Enum.valueOf(AddressingFeature.Responses.class, s);
     }
 
-    private void resolvePortComponentLinks(ServiceReferenceDescriptor desc)
-            throws Exception {
+    private void resolvePortComponentLinks(ServiceReferenceDescriptor desc) throws Exception {
 
         // Resolve port component links to target endpoint address.
         // We can't assume web service client is running in same VM
@@ -563,12 +578,11 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         //
         // Also set port-qname based on linked port's qname if not
         // already set.
-        for(Iterator iter = desc.getPortsInfo().iterator(); iter.hasNext();) {
-            ServiceRefPortInfo portInfo = (ServiceRefPortInfo) iter.next();
+        for (Object element : desc.getPortsInfo()) {
+            ServiceRefPortInfo portInfo = (ServiceRefPortInfo) element;
 
             if( portInfo.isLinkedToPortComponent() ) {
-                WebServiceEndpoint linkedPortComponent =
-                        portInfo.getPortComponentLink();
+                WebServiceEndpoint linkedPortComponent = portInfo.getPortComponentLink();
 
                 // XXX-JD we could at this point try to figure out the
                 // endpoint-address from the ejb wsdl file but it is a

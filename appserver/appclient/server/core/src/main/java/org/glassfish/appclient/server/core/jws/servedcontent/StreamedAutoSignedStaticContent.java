@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -105,35 +107,26 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
          * Instead we'll just write to the output stream and Grizzly will
          * chunk it for us if needed.
          */
-        final ZipOutputStream zos = new ZipOutputStream(gResp.getOutputStream());
 
         logger.log(Level.FINE, "Request's session contains cached JNLP");
         final byte[] jnlpContent = (byte[]) jwsObj;
-        final Map<String,byte[]> addedContent = new HashMap<String,byte[]>();
+        final Map<String,byte[]> addedContent = new HashMap<>();
         addedContent.put(SIGNED_JNLP_PATH, jnlpContent);
         try {
-            jarSigner().signJar(unsignedFile(), zos, userProvidedAlias(), createJWSAttrs(AppClientHTTPAdapter.requestURI(gReq), appName()), addedContent);
-            /*
-             * Create an on-disk copy of the signed JAR for debugging purposes
-             * if logging is detailed enough.
-             */
+            jarSigner().signJar(unsignedFile(), gResp.getOutputStream(), userProvidedAlias(),
+                createJWSAttrs(AppClientHTTPAdapter.requestURI(gReq), appName()), addedContent);
+             // Create an on-disk copy of the signed JAR for debugging purposes if logging is detailed enough.
             if (logger.isLoggable(Level.FINEST)) {
-                final File debugSignedJARFile = new File(unsignedFile().getAbsolutePath()+".debug");
-                final ZipOutputStream dbgZos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(debugSignedJARFile)));
-                try {
-                    jarSigner().signJar(unsignedFile(), dbgZos, userProvidedAlias(), createJWSAttrs(AppClientHTTPAdapter.requestURI(gReq), appName()), addedContent);
-                } finally {
-                    dbgZos.close();
+                final File debugSignedJARFile = new File(unsignedFile().getAbsolutePath() + ".debug");
+                try (ZipOutputStream dbgZos = new ZipOutputStream(
+                    new BufferedOutputStream(new FileOutputStream(debugSignedJARFile)))) {
+                    jarSigner().signJar(unsignedFile(), dbgZos, userProvidedAlias(),
+                        createJWSAttrs(AppClientHTTPAdapter.requestURI(gReq), appName()), addedContent);
                 }
                 logger.log(Level.FINEST, "Created on-disk signed JAR {0}", debugSignedJARFile.getAbsolutePath());
             }
-            zos.close();
-        } catch (IOException ioex) {
-            throw ioex;
-        } catch (Exception ex) {
+        } catch (URISyntaxException ex) {
             throw new IOException(ex);
-        } finally {
-            zos.close();
         }
     }
 
@@ -156,10 +149,8 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
 
         if (dot > 0) {
             String ext = substr.substring(dot + 1);
-            String ct = MimeType.get(ext);
-            return ct;
-        } else {
-            return MimeType.get("html");
+            return MimeType.get(ext);
         }
+        return MimeType.get("html");
     }
 }

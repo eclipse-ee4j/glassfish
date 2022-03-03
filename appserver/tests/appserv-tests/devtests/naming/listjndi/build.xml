@@ -68,14 +68,10 @@
     </target>
 
     <target name="run">
-        <!--
         <record name="listjndi.output" action="start" />
-        -->
         <antcall target="listjndi"/>
-        <!--
         <record name="admin.output" action="stop" />
         <antcall target="dev-report"/>
-        -->
     </target>
 
     <target name="clean">

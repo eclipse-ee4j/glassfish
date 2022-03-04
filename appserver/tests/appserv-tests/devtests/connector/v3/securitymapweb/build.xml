@@ -447,6 +447,7 @@
           fork="true"
     >
       <arg line="${db.driver}" />
+      <arg line="${http.port}" />
     </java>
     <antcall target="drop-table" />
 

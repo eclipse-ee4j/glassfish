@@ -32,11 +32,8 @@
     &jaxwsTools;
 
     <target name="all" depends="clean, setup, runtest, undeploy"/>
-<path id="class.path">
+    <path id="class.path">
         <fileset dir="${env.S1AS_HOME}/modules">
-            <include name="**/*.jar"/>
-        </fileset>
-        <fileset dir="${env.S1AS_HOME}/modules/endorsed">
             <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${env.APS_HOME}/lib">

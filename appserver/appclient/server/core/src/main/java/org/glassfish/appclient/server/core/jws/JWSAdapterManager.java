@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +18,12 @@
 package org.glassfish.appclient.server.core.jws;
 
 import com.sun.enterprise.config.serverbeans.Config;
-import org.glassfish.orb.admin.config.IiopService;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -38,8 +42,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.api.container.RequestDispatcher;
@@ -52,12 +55,11 @@ import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.SimpleDynamicContentImpl;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.enterprise.iiop.api.GlassFishORBFactory;
-import org.glassfish.internal.api.ServerContext;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
+import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.orb.admin.config.IiopService;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Handles all management of the HTTP adapters created to support Java Web
@@ -98,39 +100,35 @@ public class JWSAdapterManager implements PostConstruct {
 
     private static final String LINE_SEP = System.getProperty("line.separator");
 
-    private static final List<String> DO_NOT_SERVE_LIST =
-            Collections.EMPTY_LIST; //Arrays.asList("glassfish/modules/jaxb-osgi.jar");
+    private static final List<String> DO_NOT_SERVE_LIST = Collections.emptyList();
 
     private static final String JWS_SIGNED_SYSTEM_JARS_ROOT = "java-web-start/___system";
     private static final String JWS_SIGNED_DOMAIN_JARS_ROOT = "java-web-start/___domain";
 
-    private static final String JAVA_WEB_START_CONTEXT_ROOT_PROPERTY_NAME =
-            "javaWebStartContextRoot";
+    private static final String JAVA_WEB_START_CONTEXT_ROOT_PROPERTY_NAME = "javaWebStartContextRoot";
+
     /**
      * maps "(aliasName)/(systemJarRelativePath)" to AutoSignedContent for
      * the system JAR as signed by the cert linked to the alias
      */
-    private final Map<String,AutoSignedContent> appLevelSignedSystemContent =
-            new HashMap<String,AutoSignedContent>();
+    private final Map<String, AutoSignedContent> appLevelSignedSystemContent = new HashMap<>();
 
-    private URI installRootURI = null;
+    private URI installRootURI;
 
-    private AppClientHTTPAdapter systemAdapter = null;
+    private AppClientHTTPAdapter systemAdapter;
 
-    private Logger logger = null;
+    private Logger logger;
 
     private IiopService iiopService;
 
-    private final HashMap<String,Set<AppClientServerApplication>> contributingAppClients =
-            new HashMap<String,Set<AppClientServerApplication>>();
+    private final HashMap<String, Set<AppClientServerApplication>> contributingAppClients = new HashMap<>();
 
-    private final ConcurrentHashMap<String,AppClientHTTPAdapter> httpAdapters = new
-            ConcurrentHashMap<String, AppClientHTTPAdapter>();
+    private final ConcurrentHashMap<String, AppClientHTTPAdapter> httpAdapters = new ConcurrentHashMap<>();
 
-    private URI umbrellaRootURI = null;
-    private File umbrellaRoot = null;
-    private File systemLevelSignedJARsRoot = null;
-    private File domainLevelSignedJARsRoot = null;
+    private URI umbrellaRootURI;
+    private File umbrellaRoot;
+    private File systemLevelSignedJARsRoot;
+    private File domainLevelSignedJARsRoot;
 
     @LogMessageInfo(
             message = "Error starting the adapter to serve static system-level content",
@@ -227,7 +225,7 @@ public class JWSAdapterManager implements PostConstruct {
          * adapter which serves files from the installation, as opposed to
          * files from the domain or files from a specific app.
          */
-        Map<String,StaticContent> result = new HashMap<String,StaticContent>();
+        Map<String,StaticContent> result = new HashMap<>();
         File gfClientJAR = gfClientJAR();
 
         final String classPathExpr = getGFClientModuleClassPath(gfClientJAR);
@@ -277,39 +275,39 @@ public class JWSAdapterManager implements PostConstruct {
         return result;
     }
 
+
     File gfClientJAR() {
-        return new File(
-            libDir(),
-            "gf-client.jar");
+        return new File(libDir(), "gf-client.jar");
     }
 
+
     File gfClientModuleJAR() {
-        return new File(
-            modulesDir(),
-            "gf-client-module.jar");
+        return new File(modulesDir(), "gf-client-module.jar");
     }
+
 
     private synchronized File modulesDir() {
         return new File(new File(installRootURI), "modules");
     }
 
+
     private synchronized File libDir() {
         return new File(new File(installRootURI), "lib");
     }
 
-    private AutoSignedContent systemJarSignedContent (
-            final File unsignedFile,
-            final String signingAlias) throws FileNotFoundException {
+
+    private AutoSignedContent systemJarSignedContent(final File unsignedFile, final String signingAlias)
+        throws FileNotFoundException {
         final String relativeURI = relativeSystemPath(unsignedFile.toURI());
-        final File signedFile = new File(signedSystemContentAliasDir(signingAlias),
-                relativeURI);
+        final File signedFile = new File(signedSystemContentAliasDir(signingAlias), relativeURI);
         return new AutoSignedContent(unsignedFile, signedFile, signingAlias, jarSigner, relativeURI,
                 MANIFEST_APP_NAME_FOR_SYSTEM_FILES);
     }
 
-    Map<String,DynamicContent> addDynamicSystemContent(final List<String> systemJARRelativeURIs,
-            final String signingAlias) throws IOException {
-        final Map<String,DynamicContent> result = new HashMap<String,DynamicContent>();
+
+    Map<String, DynamicContent> addDynamicSystemContent(final List<String> systemJARRelativeURIs,
+        final String signingAlias) throws IOException {
+        final Map<String,DynamicContent> result = new HashMap<>();
         final String template = JavaWebStartInfo.textFromURL(
                 "/org/glassfish/appclient/server/core/jws/templates/systemJarsDocumentTemplate.jnlp");
         final StringBuilder sb = new StringBuilder();
@@ -328,8 +326,7 @@ public class JWSAdapterManager implements PostConstruct {
     }
 
     private String systemPath(final URI systemFileURI) {
-        return //NamingConventions.JWSAPPCLIENT_SYSTEM_PREFIX + "/" +
-                relativeSystemPath(systemFileURI);
+        return relativeSystemPath(systemFileURI);
     }
 
     String systemPath(final URI systemFileURI, final String signingAlias) {
@@ -546,23 +543,16 @@ public class JWSAdapterManager implements PostConstruct {
 
     public String contextRootForAppAdapter(final String appName) {
         final AppClientHTTPAdapter adapter = httpAdapters.get(appName);
-        if (adapter != null) {
-            return adapter.contextRoot();
-        } else {
-            return null;
-        }
+        return adapter == null ? null : adapter.contextRoot();
     }
 
-    private synchronized void addContributorToAppLevelAdapter(
-            final String appName,
-            final AppClientServerApplication contributor) {
-        /*
-         * Record that the calling app client server app has contributed content
-         * to the Grizzly adapter.
-         */
+
+    private synchronized void addContributorToAppLevelAdapter(final String appName,
+        final AppClientServerApplication contributor) {
+        // Record that the calling app client server app has contributed content to the Grizzly adapter.
         Set<AppClientServerApplication> contributorsToAppLevelAdapter = contributingAppClients.get(appName);
         if (contributorsToAppLevelAdapter == null) {
-            contributorsToAppLevelAdapter = new HashSet<AppClientServerApplication>();
+            contributorsToAppLevelAdapter = new HashSet<>();
             contributingAppClients.put(appName, contributorsToAppLevelAdapter);
         }
         contributorsToAppLevelAdapter.add(contributor);
@@ -572,13 +562,9 @@ public class JWSAdapterManager implements PostConstruct {
             final String clientURIWithinEAR,
             final AppClientServerApplication contributor) throws EndpointRegistrationException {
 
-        /*
-         * Remove the adapter for the user-friendly context root.
-         */
+        // Remove the adapter for the user-friendly context root.
         removeAdapter(userFriendlyContextRoot(contributor));
-
         removeContributorToAppLevelAdapter(appName, contributor);
-
         appClientDeployer.removeContextRoot(appName, clientURIWithinEAR);
     }
 
@@ -602,21 +588,17 @@ public class JWSAdapterManager implements PostConstruct {
         }
     }
 
-    private synchronized void removeAdapter(final String contextRoot)
-            throws EndpointRegistrationException {
+
+    private synchronized void removeAdapter(final String contextRoot) throws EndpointRegistrationException {
         requestDispatcher.unregisterEndpoint(contextRoot);
     }
 
-    private String getGFClientModuleClassPath(final File gfClientJAR) throws IOException {
-        final JarFile jf = new JarFile(gfClientJAR);
 
-        try {
-          final Manifest mf = jf.getManifest();
-          Attributes mainAttrs = mf.getMainAttributes();
-          return mainAttrs.getValue(Attributes.Name.CLASS_PATH);
-        } finally
-        {
-          jf.close();
+    private String getGFClientModuleClassPath(final File gfClientJAR) throws IOException {
+        try (JarFile jf = new JarFile(gfClientJAR)) {
+            final Manifest mf = jf.getManifest();
+            Attributes mainAttrs = mf.getMainAttributes();
+            return mainAttrs.getValue(Attributes.Name.CLASS_PATH);
         }
     }
 

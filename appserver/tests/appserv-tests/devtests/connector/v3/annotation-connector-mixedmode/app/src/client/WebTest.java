@@ -35,7 +35,7 @@ public class WebTest {
         String portS = args[1];
         String contextRoot = args[2];
 
-        int port = new Integer(portS).intValue();
+        int port = Integer.parseInt(portS);
 
         goGet(host, port, "TEST", contextRoot + "/SimpleServlet");
         stat.printSummary(TEST_NAME);

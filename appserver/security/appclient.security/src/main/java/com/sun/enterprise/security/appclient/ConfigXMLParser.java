@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +19,7 @@ package com.sun.enterprise.security.appclient;
 
 import static java.util.regex.Matcher.quoteReplacement;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,8 +61,8 @@ public class ConfigXMLParser implements ConfigParser {
     private static Pattern PROPERTY_PATTERN = Pattern.compile("\\$\\{\\{(.*?)}}|\\$\\{(.*?)}");
 
     // configuration info
-    private Map configMap = new HashMap();
-    private Set<String> layersWithDefault = new HashSet<String>();
+    private final Map configMap = new HashMap();
+    private final Set<String> layersWithDefault = new HashSet<>();
     private List<MessageSecurityConfig> msgSecConfigs = null;
     private static final String ACC_XML = "glassfish-acc.xml.url";
 
@@ -90,10 +92,12 @@ public class ConfigXMLParser implements ConfigParser {
 
     }
 
+    @Override
     public Map getConfigMap() {
         return configMap;
     }
 
+    @Override
     public Set<String> getLayersWithDefault() {
         return layersWithDefault;
     }
@@ -218,23 +222,18 @@ public class ConfigXMLParser implements ConfigParser {
         return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
+    @Override
     public void initialize(Object config) throws IOException {
         String sun_acc = System.getProperty(ACC_XML, "glassfish-acc.xml");
         List<MessageSecurityConfig> msgconfigs = null;
-        if (Globals.getDefaultHabitat() == null && sun_acc != null) {
-            InputStream is = null;
-            try {
-                is = new FileInputStream(sun_acc);
+        if (Globals.getDefaultHabitat() == null && sun_acc != null && new File(sun_acc).exists()) {
+            try (InputStream is = new FileInputStream(sun_acc)) {
                 JAXBContext jc = JAXBContext.newInstance(ClientContainer.class);
                 Unmarshaller u = jc.createUnmarshaller();
                 ClientContainer cc = (ClientContainer) u.unmarshal(is);
                 msgconfigs = cc.getMessageSecurityConfig();
             } catch (JAXBException ex) {
                 _logger.log(Level.SEVERE, null, ex);
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
             }
         } else {
             Util util = Util.getInstance();

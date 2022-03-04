@@ -119,7 +119,7 @@ public class ConverterClient {
                 // Create Home object
                 obj = context.lookup(jndiName);
             }
-            String mys = "CN=SSLTest, OU=Sun Java System Application Server, O=Sun Microsystems, L=Santa Clara, ST=California, C=US";
+            String mys = "CN=SSLTest,OU=Sun Java System Application Server,O=Sun Microsystems,L=Santa Clara,ST=California,C=US";
             System.out.println("Certname in appclication-client ->"+mys);
             ConverterRemoteHome home =
                (ConverterRemoteHome) PortableRemoteObject.narrow(obj,

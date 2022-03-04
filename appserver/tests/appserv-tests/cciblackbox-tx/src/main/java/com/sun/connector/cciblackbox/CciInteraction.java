@@ -56,7 +56,7 @@ public class CciInteraction implements Interaction {
 
   }
 
-  public boolean execute(InteractionSpec ispec, Record input, Record output)
+  public boolean execute(InteractionSpec ispec, jakarta.resource.cci.Record input, jakarta.resource.cci.Record output)
       throws ResourceException {
 
     if (ispec == null || (!(ispec instanceof CciInteractionSpec))) {
@@ -84,7 +84,7 @@ public class CciInteraction implements Interaction {
   * {? = call proc_name()}
   * 3> execute the statement and return the output in an IndexedRecord object
   */
-  Record exec(String procName, String schema, String catalog, Record input, Record output)
+  jakarta.resource.cci.Record exec(String procName, String schema, String catalog, jakarta.resource.cci.Record input, jakarta.resource.cci.Record output)
       throws ResourceException {
     try {
       java.sql.Connection conn = ((CciConnection) connection).getManagedConnection()
@@ -228,7 +228,7 @@ public class CciInteraction implements Interaction {
     }
   }
 
-  public Record execute(InteractionSpec ispec, Record input) throws ResourceException {
+  public jakarta.resource.cci.Record execute(InteractionSpec ispec, jakarta.resource.cci.Record input) throws ResourceException {
 
     if (ispec == null || (!(ispec instanceof CciInteractionSpec))) {
       throw new ResourceException("Invalid interaction spec");

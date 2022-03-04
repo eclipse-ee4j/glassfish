@@ -106,42 +106,6 @@
 </target>
 
 <!--
-  Deploys the given version with JSR88 API that use a File
-  @param ${versionExpression} (optional)
-  @param ${xmlVersionIdentifier} (optional)
--->
-<target name="deploy.version.jsr88" depends="prepare.version.jsr88,common.deploy.jsr88"/>
-
-<!--
-  Deploys the given version with the JSR88 API that use an Inputstream.
-  @param ${versionExpression} (optional)
-  @param ${xmlVersionIdentifier} (optional)
--->
-<target name="deploy.version-stream.jsr88" depends="prepare.version.jsr88,common.deploy-stream.jsr88"/>
-
-<!--
-  Redeploys the given version with JSR88 API that use a File
-  @param ${versionExpression} (optional)
--->
-<target name="redeploy.version.jsr88" depends="prepare.version.jsr88">
-    <antcall target="common.run.jsr88">
-        <param name="command" value="redeploy"/>
-        <param name="arg.list" value="true ${arg.list}"/>
-    </antcall>
-</target>
-
-<!--
-  Redeploys the given version with the JSR88 API that use a Inputstream.
-  @param ${versionExpression} (optional)
--->
-<target name="redeploy.version-stream.jsr88" depends="prepare.version.jsr88">
-    <antcall target="common.run.jsr88">
-        <param name="command" value="redeploy-stream"/>
-        <param name="arg.list" value="true ${arg.list}"/>
-    </antcall>
-</target>
-
-<!--
   Deploys the given version with autodeploy directory, available only in PE mode
   @param ${versionExpression} (optional)
   @param ${xmlVersionIdentifier} (optional)
@@ -415,9 +379,6 @@
 <target name="prepare.get-client-stubs.asadmin" depends="process.appname,process.target">
   <property name="arg.list" value="get-client-stubs --appname=${appName} ${stubsPath}"/>
   <property name="desc" value="${description}"/>
-</target>
-<target name="prepare.version.jsr88" depends="process.appname,create.version">
-    <property name="arg.list" value="${build}/${appName}.${packaging}"/>
 </target>
 <target name="prepare.appclient.preparator">
   <property name="classname" value="${preparatorClassName}"/>

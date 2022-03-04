@@ -26,29 +26,11 @@
     &commonBuild;
 
     <target name="private-all">
-        <!--ant dir="webservices" target="private-all">
-            <property name="build" value="${build}/webservices"/>
-        </ant-->
-        <ant dir="servletonly" target="private-all">
-            <property name="build" value="${build}/servletonly"/>
-        </ant>
-        <ant dir="jsponly" target="private-all">
-            <property name="build" value="${build}/jsponly"/>
-        </ant>
-        <ant dir="htmlonly" target="private-all">
-            <property name="build" value="${build}/htmlonly"/>
-        </ant>
-        <ant dir="webinflib" target="private-all">
-            <property name="build" value="${build}/webinflib"/>
-        </ant>
         <ant dir="deploydir" target="private-all">
             <property name="build" value="${build}/deploydir"/>
         </ant>
-        <ant dir="nojarexpansion" target="private-all">
-            <property name="build" value="${build}/nojarexpansion"/>
-        </ant>
-        <ant dir="appmgt" target="private-all">
-            <property name="build" value="${build}/appmgt"/>
+        <ant dir="virtualserver" target="private-all">
+            <property name="build" value="${build}/virtualserver"/>
         </ant>
     </target>
 </project>

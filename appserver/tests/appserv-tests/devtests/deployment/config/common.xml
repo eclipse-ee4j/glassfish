@@ -138,7 +138,7 @@
     </path>
 
     <path id="test.compile.classpath">
-        <pathelement location="${inst}/lib/j2ee.jar"/>
+        <pathelement location="${inst}/lib/javaee.jar"/>
         <pathelement location="${java.home}/lib/tools.jar"/>
     </path>
 
@@ -705,34 +705,6 @@ AS_ADMIN_MASTERPASSWORD=changeit
     </antcall>
 </target>
 
-<!-- jsr88 deployer commands -->
-
-<!-- deploy user jsr88 -->
-<!-- @param ${arg.list} (required) -->
-<target name="common.deploy.jsr88" >
-    <antcall target="common.run.jsr88">
-        <param name="command" value="deploy"/>
-        <param name="arg.list" value="true ${arg.list}"/>
-    </antcall>
-</target>
-
-<!-- use InputStream signature to deploy -->
-<target name="common.deploy-stream.jsr88" >
-    <antcall target="common.run.jsr88">
-        <param name="command" value="deploy-stream"/>
-        <param name="arg.list" value="true ${arg.list}"/>
-    </antcall>
-</target>
-
-<!-- undeploy user jsr88 -->
-<!-- @param ${arg.list} (required) -->
-<target name="common.undeploy.jsr88" >
-    <antcall target="common.run.jsr88">
-        <param name="command" value="undeploy"/>
-        <param name="arg.list" value="${arg.list}"/>
-    </antcall>
-</target>
-
 <target name="common.run.positive">
     <antcall target="common.run">
         <param name="test-details" value="${desc}"/>
@@ -781,62 +753,6 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <antcall target="runclient">
         <param name="arg.list" value="${clurl1} ${state} ${extra.args}"/>
         <param name="log.id" value="${log.id}CL1"/>
-    </antcall>
-</target>
-
-<!-- run jsr88 -->
-<!-- @param ${arg.list} (required) -->
-<!--
-<target name="common.run.jsr88" depends="init, compile.util">
--->
-<!-- to disable running jsr88 tests, set the property -Drun.jsr88=false -->
-<target name="common.run.jsr88" depends="init, compile.util" unless="run.jsr88" >
-    <delete file="${testsRoot}/build/archives/DEPLOY_RESULT"/>
-
-    <!--
-        Due to differences in command line parsing on Windows and non-Windows systems we need
-        to pass the possibly-empty admin.password differently.
-    -->
-    <condition property="admin.password.arg" value="&quot;${admin.password}&quot;" else="${admin.password}">
-        <os family="windows"/>
-    </condition>
-
-    <echo message="JSR88Deployer ${command} ${jsr88.uri} ${admin.user} ${admin.password}  ${arg.list}"/>
-    <javaWithResult
-            fork="true"
-            failonerror="false"
-            jvm="${JAVA}"
-            classname="devtests.deployment.util.JSR88Deployer"
-            resultproperty="deployActionResult">
-        <arg value="${command}"/>
-        <arg value="${jsr88.uri}"/>
-        <arg value="${admin.user}"/>
-        <arg value="${admin.password.arg}"/>
-        <arg line="${arg.list}"/>
-<!--        <arg line="${command} ${jsr88.uri} ${admin.user} &quot;&quot; ${arg.list}"/> -->
-        <classpath>
-            <path refid="gfv3.classpath"/>
-            <path location="${junit.jar}"/>
-            <path location="${env.APS_HOME}/devtests/deployment/util/build"/>
-        </classpath>
-        <sysproperty key="com.sun.aas.installRoot" value="${inst}"/>
-        <sysproperty key="deploymentTarget" value="${targetPlatform}"/>
-        <sysproperty key="server" value="${appserver.instance.name}"/>
-        <sysproperty key="java.library.path" value="${inst}/lib"/>
-        <sysproperty key="com.sun.aas.configRoot" value="${inst}/config"/>
-<!--
-        <jvmarg value="-Xdebug"/>
-        <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9999"/>
--->
-    </javaWithResult>
-    <condition property="deployFailed">
-        <or>
-            <equals arg1="${deployActionResult}" arg2="-1"/>
-            <equals arg1="${deployActionResult}" arg2="1"/>
-        </or>
-    </condition>
-    <antcall target="deployActionFailed">
-        <param name="indicator" value="${testsRoot}/build/archives/DEPLOY_RESULT"/>
     </antcall>
 </target>
 
@@ -1242,13 +1158,13 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <target name="init.tools.unix" if="unix">
     <property name="JAVA" value="${java.home}/bin/java"/>
     <property name="ASADMIN" value="${s1as.home}/bin/asadmin"/>
-    <property name="WSCOMPILE" value="${s1as.home}/bin/wscompile"/>
+    <property name="WSCOMPILE" value="${s1as.home}/bin/wsgen"/>
     <property name="APPCLIENT" value="${s1as.home}/bin/appclient"/>
 </target>
 <target name="init.tools.windows" if="windows">
     <property name="JAVA" value="${java.home}/bin/java.exe"/>
     <property name="ASADMIN" value="${s1as.home}/bin/asadmin.bat"/>
-    <property name="WSCOMPILE" value="${s1as.home}/bin/wscompile.bat"/>
+    <property name="WSCOMPILE" value="${s1as.home}/bin/wsgen.bat"/>
     <property name="APPCLIENT" value="${s1as.home}/bin/appclient.bat"/>
 </target>
 
@@ -1268,7 +1184,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <jvmarg value="-Djava.library.path=${inst}/lib"/>
         <jvmarg value="-Dcom.sun.aas.configRoot=${inst}/config"/>
         <classpath>
-            <pathelement path="${build}:${inst}/lib/j2ee.jar:${inst}/lib/appserv-rt.jar:${inst}/lib/appserv-admin.jar:${inst}/lib/dom.jar:${inst}/lib/xalan.jar:${inst}/lib/xercesImpl.jar"/>
+            <pathelement path="${build}:${inst}/lib/javaee.jar:${inst}/lib/appserv-rt.jar"/>
         </classpath>
         <arg value="${deployablearchive}"/>
         <arg value="${deploymentplan}"/>

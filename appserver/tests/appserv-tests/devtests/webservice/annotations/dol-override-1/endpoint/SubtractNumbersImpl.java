@@ -16,7 +16,9 @@
 
 package endpoint;
 
-@jakarta.jws.WebService (serviceName="junkjunkjunk", portName="SubtractNumbersPortType", endpointInterface="endpoint.SubtractNumbersPortType")
+import jakarta.jws.WebService;
+
+@WebService(serviceName="junkjunkjunk", portName="SubtractNumbersPortType", endpointInterface="endpoint.SubtractNumbersPortType")
 public class SubtractNumbersImpl implements SubtractNumbersPortType {
 
     public int subtractNumbers (int number1, int number2) {

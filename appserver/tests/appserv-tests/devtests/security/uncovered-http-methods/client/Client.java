@@ -18,6 +18,7 @@ package org.glassfish.jacc.test.uncoveredmethods;
 
 import java.net.*;
 import java.io.*;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -404,7 +405,7 @@ public class Client {
                 if ((user != null) && (user.length() > 0)) {
                         // Add BASIC header for authentication
                         String auth =  user + ":" + password;
-                        String authEncoded = new sun.misc.BASE64Encoder().encode(auth.getBytes());
+                        String authEncoded = Base64.getEncoder().encodeToString(auth.getBytes());
                         c1.setRequestProperty("Authorization", "Basic " + authEncoded);
                 }
                 c1.setUseCaches(false);

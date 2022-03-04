@@ -17,6 +17,7 @@
 package com.sun.s1asdev.security.jmac.httpservlet;
 
 import java.io.PrintWriter;
+import java.util.Base64;
 import java.util.Map;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -34,8 +35,6 @@ import jakarta.security.auth.message.module.ServerAuthModule;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
-import sun.misc.BASE64Decoder;
 
 public class HttpServletTestAuthModule implements ServerAuthModule {
     private CallbackHandler handler = null;
@@ -75,8 +74,7 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
             if (authorization != null &&
                     authorization.toLowerCase().startsWith("basic ")) {
                 authorization = authorization.substring(6).trim();
-                BASE64Decoder decoder = new BASE64Decoder();
-                byte[] bs = decoder.decodeBuffer(authorization);
+                byte[] bs = Base64.getDecoder().decode(authorization);
                 String decodedString = new String(bs);
                 int ind = decodedString.indexOf(':');
                 if (ind > 0) {
@@ -94,10 +92,8 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
 
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
-            PasswordValidationCallback pwdCallback =
-                new PasswordValidationCallback(clientSubject, username, pwd);
-            CallerPrincipalCallback cpCallback =
-                new CallerPrincipalCallback(clientSubject, username);
+            PasswordValidationCallback pwdCallback = new PasswordValidationCallback(clientSubject, username, pwd);
+            CallerPrincipalCallback cpCallback = new CallerPrincipalCallback(clientSubject, username);
             System.out.println("Subject before invoking callbacks: " + clientSubject);
             handler.handle(new Callback[] { pwdCallback, cpCallback });
             System.out.println("Subject after invoking callbacks: " + clientSubject);
@@ -128,11 +124,9 @@ public class HttpServletTestAuthModule implements ServerAuthModule {
 
         try {
             System.out.println("SR is called");
-            HttpServletRequest request =
-                (HttpServletRequest)messageInfo.getRequestMessage();
+            HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
             request.setAttribute("SR", "true");
-            MyHttpServletResponseWrapper response =
-                (MyHttpServletResponseWrapper)messageInfo.getResponseMessage();
+            MyHttpServletResponseWrapper response = (MyHttpServletResponseWrapper) messageInfo.getResponseMessage();
             int count = response.getAdjustedCount();
             PrintWriter writer = response.getWriter();
             writer.println("\nAdjusted count: " + count);

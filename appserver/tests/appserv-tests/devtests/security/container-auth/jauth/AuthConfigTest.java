@@ -34,7 +34,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  *
  * 2. sun-acc.xml test:
  *
- *    %java -Dsun-acc.xml.url=sun-acc.xml
+ *    %java -Dglassfish-acc.xml.url=sun-acc.xml
  *        -Djava.security.debug=configfile,configxmlparser
  *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
  *        AuthConfigTest xml-parse

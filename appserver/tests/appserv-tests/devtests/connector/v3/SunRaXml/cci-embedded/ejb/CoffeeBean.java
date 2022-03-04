@@ -59,7 +59,7 @@ public class CoffeeBean implements SessionBean {
             iSpec.setFunctionName("COUNTCOFFEE");
             RecordFactory rf = cf.getRecordFactory();
             IndexedRecord iRec = rf.createIndexedRecord("InputRecord");
-            Record oRec = ix.execute(iSpec, iRec);
+            jakarta.resource.cci.Record oRec = ix.execute(iSpec, iRec);
             Iterator iterator = ((IndexedRecord) oRec).iterator();
             while (iterator.hasNext()) {
                 Object obj = iterator.next();

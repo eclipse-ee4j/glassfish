@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,15 @@
 
 package org.glassfish.appclient.server.core.jws.servedcontent;
 
-import com.sun.enterprise.util.net.NetUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.jar.Attributes;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Represents otherwise fixed content that must be automatically signed
@@ -64,7 +63,6 @@ public class AutoSignedContent extends FixedContent {
     private final File signedFile;
     private final String userProvidedAlias;
     private final ASJarSigner jarSigner;
-    private final URI relativeURI;
     private final String appName;
 
     public AutoSignedContent(final File unsignedFile,
@@ -80,7 +78,6 @@ public class AutoSignedContent extends FixedContent {
         this.signedFile = signedFile;
         this.userProvidedAlias = userProvidedAlias;
         this.jarSigner = jarSigner;
-        this.relativeURI = URI.create(relativeURI);
         this.appName = appName;
     }
 
@@ -151,7 +148,15 @@ public class AutoSignedContent extends FixedContent {
             }
         }
         final Attributes attrs = createJWSAttrs(requestURI, appName);
-        jarSigner.signJar(unsignedFile, signedFile, userProvidedAlias, attrs);
+        try {
+            jarSigner.signJar(unsignedFile, signedFile, userProvidedAlias, attrs);
+        } catch (Exception e) {
+            // File may be already created, but probably has corrupted content.
+            if (signedFile.exists()) {
+                Files.deleteIfExists(signedFile.toPath());
+            }
+            throw e;
+        }
     }
 
     @Override

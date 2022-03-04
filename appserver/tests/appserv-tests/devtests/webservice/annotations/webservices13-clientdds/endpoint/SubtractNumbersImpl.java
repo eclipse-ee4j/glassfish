@@ -16,7 +16,7 @@
 
 package endpoint;
 
-import jakarta.jws.WebService ;
+import jakarta.jws.WebService;
 
 @WebService(
     portName="SubtractNumbersPortType",

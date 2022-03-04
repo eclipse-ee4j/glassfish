@@ -36,7 +36,7 @@ public class WebTest {
         String contextRoot = args[2];
         String expectedCount = args[3];
 
-        int port = Integer.valueOf(portS);
+        int port = Integer.parseInt(portS);
 
         goGet(host, port, "TEST", contextRoot + "/SimpleServlet", expectedCount);
         stat.printSummary(TEST_NAME);

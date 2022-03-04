@@ -90,7 +90,7 @@
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${depltest.orbport}"/>
 
             <classpath>
-                <path location="${inst}/lib/j2ee.jar"/>
+                <path location="${inst}/lib/javaee.jar"/>
                 <path location="${build}"/>
             </classpath>
 

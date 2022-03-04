@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +26,7 @@ import admin.AdminBaseDevTest;
 public class ListJndiEntriesTest extends AdminBaseDevTest {
 
     public static final String[] EXPECTED_TOKENS =
-    {"UserTransaction:", "java:global:", "ejb:", "com.sun.enterprise.naming.impl.TransientContext"};
+    {"UserTransaction:", "jdbc:", "jms:", "com.sun.enterprise.naming.impl.TransientContext"};
 
     public static final String INSTANCE_RESOURCE_NAME = "INSTANCE_RESOURCE_NAME";
     public static final String CLUSTER_RESOURCE_NAME = "CLUSTER_RESOURCE_NAME";
@@ -92,8 +93,8 @@ public class ListJndiEntriesTest extends AdminBaseDevTest {
         AsadminReturn result = asadminWithOutput("list-jndi-entries");
         reportResultStatus(testName, result);
         reportExpectedResult(testName, result);
-        reportUnexpectedResult(testName, result, STANDALONE_INSTANCE_NAME,
-                CLUSTER_NAME, INSTANCE1_NAME);
+        reportExpectedResult(testName, result, "java:global:");
+        reportUnexpectedResult(testName, result, STANDALONE_INSTANCE_NAME, CLUSTER_NAME, INSTANCE1_NAME);
     }
 
     public void testListJndiEntriesTargetServer() {
@@ -101,8 +102,8 @@ public class ListJndiEntriesTest extends AdminBaseDevTest {
         AsadminReturn result = asadminWithOutput("list-jndi-entries", "server");
         reportResultStatus(testName, result);
         reportExpectedResult(testName, result);
-        reportUnexpectedResult(testName, result, STANDALONE_INSTANCE_NAME,
-                CLUSTER_NAME, INSTANCE1_NAME);
+        reportExpectedResult(testName, result, "java:global:");
+        reportUnexpectedResult(testName, result, STANDALONE_INSTANCE_NAME, CLUSTER_NAME, INSTANCE1_NAME);
     }
 
     public void testListJndiEntriesTargetDomain() {
@@ -110,6 +111,7 @@ public class ListJndiEntriesTest extends AdminBaseDevTest {
         AsadminReturn result = asadminWithOutput("list-jndi-entries", "domain");
         reportResultStatus(testName, result);
         reportExpectedResult(testName, result);
+        reportExpectedResult(testName, result, "java:global:");
     }
 
     public void testListJndiEntriesTargetCluster() {
@@ -150,7 +152,8 @@ public class ListJndiEntriesTest extends AdminBaseDevTest {
 
     private void reportResultStatus(String testName, AsadminReturn result) {
         report(testName + "-returnValue", result.returnValue);
-        report(testName + "-isEmpty", result.err.isEmpty());
+        // FIXME: on Jenkins prints Picked up JAVA_TOOLS_OPTIONS ...
+//        report(testName + "-isEmpty", result.err.isEmpty());
     }
 
     private void reportExpectedResult(String testName, AsadminReturn result, String... expected) {

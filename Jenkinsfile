@@ -38,7 +38,11 @@ def jobs = [
   "connector_group_3",
   "connector_group_4",
   "jdbc_all",
-  "persistence_all"
+  "persistence_all",
+  "naming_all",
+  "deployment_all",
+  "security_all",
+  "webservice_all"
 ]
 
 def parallelStagesMap = jobs.collectEntries {

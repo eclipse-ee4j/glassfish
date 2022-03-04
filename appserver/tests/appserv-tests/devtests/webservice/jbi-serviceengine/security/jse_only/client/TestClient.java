@@ -22,6 +22,8 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -57,7 +59,7 @@ public class TestClient {
     private int invokeServlet(String url, String userPassword) throws Exception {
         log("Invoking url = " + url+", password = " + userPassword);
         URL u = new URL(url);
-        String encoding = new sun.misc.BASE64Encoder().encode (userPassword.getBytes());
+        String encoding = Base64.getEncoder().encodeToString(userPassword.getBytes(StandardCharsets.UTF_8));;
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
         c1.setRequestProperty ("Authorization", "Basic " + encoding);
         int code = c1.getResponseCode();

@@ -17,19 +17,13 @@
 
 set -e
 
-echo "This script can be temporarily used for local testing until we integrate current set of tests to Maven";
-echo "First argument is a version of GlassFish used for testing. It will be downloaded by Maven command";
-echo "Second argument is a test set id, one of:
-cdi_all, ql_gf_full_profile_all, \n
-\n
-web_jsp, deployment_all, \n
-ejb_group_1. ejb_group_2, ejb_group_3, ejb_group_embedded, \n
-cdi_all, ql_gf_full_profile_all, ql_gf_nucleus_all, \
-ql_gf_web_profile_all, nucleus_admin_all, jdbc_all, batch_all, persistence_all, \
-connector_group_1, connector_group_2, connector_group_3, connector_group_4";
-
-echo "If you need to use a different JAVA_HOME than is used by your system, export it or edit this script.";
-echo "";
+catch() {
+  if [ "$1" != "0" ]; then
+    "${S1AS_HOME}"/bin/asadmin stop-domain --kill=true --force=true domain1
+    echo "Error $1 occurred on $2"
+    exit $1;
+  fi
+}
 
 install_glassfish() {
   mvn clean -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
@@ -48,34 +42,61 @@ install_jacoco() {
 
 ####################################
 
-export GF_VERSION="$1"
-export JACOCO_ENABLED="true"
-test="${2}"
+trap 'catch $? $LINENO' EXIT
 
-# uncomment and edit this line if your system uses another version.
-export JAVA_HOME=/usr/lib/jvm/jdk11
+echo "This script can be temporarily used for local testing until we integrate current set of tests to Maven";
+echo "First argument is a version of GlassFish used for testing. It will be downloaded by Maven command";
+echo "Second argument is a test set id, one of:
+cdi_all, ql_gf_full_profile_all, \n
+\n
+web_jsp, deployment_all, \n
+ejb_group_1. ejb_group_2, ejb_group_3, ejb_group_embedded, \n
+cdi_all, ql_gf_full_profile_all, ql_gf_nucleus_all, \
+ql_gf_web_profile_all, nucleus_admin_all, jdbc_all, batch_all, persistence_all, \
+connector_group_1, connector_group_2, connector_group_3, connector_group_4";
 
-if [ -z "${GF_VERSION}" ]
-  then echo "No version supplied."
+echo "If you need to use a different JAVA_HOME than is used by your system, export it or edit this script.";
+echo "";
+
+
+test="${1}"
+if [ -z "${test}" ]; then
+  echo "No test supplied."
   exit 1;
 fi
-if [ -z "${test}" ]
-  then echo "No test supplied."
-  exit 2;
+
+if [ -z "${JAVA_HOME}" ]; then
+  export JAVA_HOME=/usr/lib/jvm/jdk11
 fi
+export PATH="${JAVA_HOME}/bin:${PATH}"
 
 export MVN_REPOSITORY="${HOME}/.m2/repository"
+export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
+export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
+
+if [ -z "${2}" ]; then
+  export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout)"
+else
+  export GF_VERSION="$2"
+fi
+
+export JACOCO_ENABLED="true"
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
-export CLASSPATH="${WORKSPACE}/glassfish7/javadb"
-export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
-export S1AS_HOME="${WORKSPACE}/glassfish7/glassfish"
-export PORT_ADMIN="4848"
-export PORT_HTTP="8080"
-export PORT_HTTPS="8181"
-install_glassfish;
+export GLASSFISH_HOME="${WORKSPACE}/glassfish7"
+export CLASSPATH="${GLASSFISH_HOME}/javadb"
+export S1AS_HOME="${GLASSFISH_HOME}/glassfish"
+
+# These values can be preset by the caller
+export PORT_ADMIN="${PORT_ADMIN=4848}"
+export PORT_HTTP="${PORT_HTTP=8080}"
+export PORT_HTTPS="${PORT_HTTPS=8181}"
+if [ ! -f "${WORKSPACE}/bundles/glassfish.zip" ]; then
+  install_glassfish;
+fi
 install_jacoco;
 
+rm -rf "${GLASSFISH_HOME}"
 rm -f ./appserver/tests/appserv-tests/test_resultsValid.xml
 rm -f ./appserver/tests/appserv-tests/test_results.xml
 ./appserver/tests/gftest.sh run_test "${test}"

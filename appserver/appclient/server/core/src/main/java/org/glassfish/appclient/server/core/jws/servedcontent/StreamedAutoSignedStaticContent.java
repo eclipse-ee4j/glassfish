@@ -22,13 +22,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipOutputStream;
 import org.glassfish.appclient.server.core.AppClientDeployerHelper;
 import org.glassfish.appclient.server.core.jws.AppClientHTTPAdapter;
 import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.DATE_HEADER_NAME;
@@ -118,8 +118,7 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
              // Create an on-disk copy of the signed JAR for debugging purposes if logging is detailed enough.
             if (logger.isLoggable(Level.FINEST)) {
                 final File debugSignedJARFile = new File(unsignedFile().getAbsolutePath() + ".debug");
-                try (ZipOutputStream dbgZos = new ZipOutputStream(
-                    new BufferedOutputStream(new FileOutputStream(debugSignedJARFile)))) {
+                try (OutputStream dbgZos = new BufferedOutputStream(new FileOutputStream(debugSignedJARFile))) {
                     jarSigner().signJar(unsignedFile(), dbgZos, userProvidedAlias(),
                         createJWSAttrs(AppClientHTTPAdapter.requestURI(gReq), appName()), addedContent);
                 }

@@ -95,11 +95,13 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <jakarta.security-api.version>2.0.0</jakarta.security-api.version>
+        <jakarta.security-api.version>3.0.0-RC1</jakarta.security-api.version>
         <jakarta.authorization-api.version>2.1.0-RC1</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0-RC2</jakarta.authentication-api.version>
-        <soteria.version>2.0.1</soteria.version>
+        <soteria.version>3.0.0-SNAPSHOT</soteria.version>
         <exousia.version>2.1.0-M1</exousia.version>
+        <nimbus.version>9.20</nimbus.version>
+        <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
         <jakarta.messaging-api.version>3.1.0</jakarta.messaging-api.version>
@@ -276,6 +278,16 @@
                 <groupId>org.glassfish.exousia</groupId>
                 <artifactId>exousia</artifactId>
                 <version>${exousia.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.io7m.jcip</groupId>
+                <artifactId>jcip-annotations</artifactId>
+                <version>${jcip.version}</version>
             </dependency>
 
             <!-- Jakarta Messaging -->

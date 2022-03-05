@@ -75,8 +75,7 @@ public class HttpServletFormTestAuthModule implements ServerAuthModule {
         try {
             HttpSession session = request.getSession(false);
             if (session != null) {
-                Subject savedClientSubject =
-                        (Subject)session.getValue(SAVED_SUBJECT);
+                Subject savedClientSubject = (Subject) session.getAttribute(SAVED_SUBJECT);
                 if (savedClientSubject != null) {
                     System.out.println("already has saved subject");
                     // just copy principals for testing
@@ -96,7 +95,7 @@ public class HttpServletFormTestAuthModule implements ServerAuthModule {
                 if (session == null) {
                     session = request.getSession(true);
                 }
-                session.putValue(SAVED_REQUEST, new SavedRequest(request));
+                session.setAttribute(SAVED_REQUEST, new SavedRequest(request));
                 RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
                 rd.forward(request, response);
                 System.out.println("Form: SEND_CONTINUE");
@@ -117,9 +116,9 @@ public class HttpServletFormTestAuthModule implements ServerAuthModule {
                 System.out.println("login success: " + username + ", " + password);
                 SavedRequest sreq = null;
                 if (session != null) {
-                    sreq = (SavedRequest)session.getValue(SAVED_REQUEST);
+                    sreq = (SavedRequest) session.getAttribute(SAVED_REQUEST);
                     // for testing only as Subject is not Serializable
-                    session.putValue(SAVED_SUBJECT, clientSubject);
+                    session.setAttribute(SAVED_SUBJECT, clientSubject);
                 }
                 if (sreq != null) {
                     StringBuffer sb = new StringBuffer(sreq.getRequestURI());

@@ -86,8 +86,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
             }
 
             HttpSession session = request.getSession(false);
-            boolean secondPhase = (session != null &&
-                    session.getValue("FIRST_DONE") != null);
+            boolean secondPhase = (session != null && session.getAttribute("FIRST_DONE") != null);
             String loginName = ((secondPhase)? username + "_2" : username);
             char[] pwd = new char[password.length()];
             password.getChars(0, password.length(), pwd, 0);
@@ -117,7 +116,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
                     response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                     if (session == null) {
                         session = request.getSession(true);
-                        session.putValue("FIRST_DONE", Boolean.TRUE);
+                        session.setAttribute("FIRST_DONE", Boolean.TRUE);
                     }
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return AuthStatus.SEND_SUCCESS;

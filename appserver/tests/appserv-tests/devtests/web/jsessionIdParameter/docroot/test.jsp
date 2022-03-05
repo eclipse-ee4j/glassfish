@@ -19,7 +19,7 @@
 id=<%=session.getId()%>
 <% String a = request.getParameter("a");
    if (a != null) {
-       session.putValue("a", a);
+       session.setAttribute("a", a);
    }
-   out.println("a=" + session.getValue("a"));
+   out.println("a=" + session.getAttribute("a"));
 %>

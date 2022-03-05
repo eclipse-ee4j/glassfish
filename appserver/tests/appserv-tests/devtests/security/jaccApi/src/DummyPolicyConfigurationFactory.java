@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,14 +22,24 @@ import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
 
 public class DummyPolicyConfigurationFactory extends PolicyConfigurationFactory {
-    public PolicyConfiguration
-            getPolicyConfiguration(String contextID, boolean remove)
-                throws jakarta.security.jacc.PolicyContextException {
+
+    public PolicyConfiguration getPolicyConfiguration() {
         return null;
     }
 
-    public boolean inService(String contextID)
-            throws jakarta.security.jacc.PolicyContextException {
+
+    public PolicyConfiguration getPolicyConfiguration(String contextID) {
+        return null;
+    }
+
+
+    public PolicyConfiguration getPolicyConfiguration(String contextID, boolean remove)
+        throws jakarta.security.jacc.PolicyContextException {
+        return null;
+    }
+
+
+    public boolean inService(String contextID) throws jakarta.security.jacc.PolicyContextException {
         return false;
     }
 }

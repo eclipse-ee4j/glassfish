@@ -600,8 +600,7 @@
             </exclusions>
         </dependency>
 
-         <!-- Jakarta Security -->
-         <!-- TMP disable until EE 10 versions 
+        <!-- Jakarta Security -->
         <dependency>
             <groupId>jakarta.security.enterprise</groupId>
             <artifactId>jakarta.security.enterprise-api</artifactId>
@@ -632,7 +631,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.io7m.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
         
         <dependency>
             <groupId>jakarta.authentication</groupId>
@@ -1623,6 +1642,16 @@
 
         <!-- json -->
         <dependency>
+            <groupId>jakarta.json</groupId>
+            <artifactId>jakarta.json-api</artifactId>
+             <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
             <exclusions>
@@ -1662,6 +1691,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <!-- glassfish-gui -->
         <dependency>
             <groupId>org.glassfish.jsftemplating</groupId>

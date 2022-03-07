@@ -428,6 +428,11 @@
                 <version>${parsson.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson-media</artifactId>
+                <version>${parsson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>

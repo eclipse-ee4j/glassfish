@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
     Copyright (c) 2015, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -163,9 +163,8 @@
             </exclusions>
           </dependency>
 
-        <!-- jersey -->
-        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-<!--        <dependency>
+        <!-- Jersey -->
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
             <exclusions>
@@ -174,7 +173,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
@@ -225,8 +224,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- TODO: see https://github.com/eclipse-ee4j/jersey/issues/4454 -->
-<!--        <dependency>
+        <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-processing</artifactId>
             <exclusions>
@@ -235,7 +233,7 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-mvc</artifactId>
@@ -1654,6 +1652,16 @@
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson-media</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

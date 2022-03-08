@@ -108,7 +108,7 @@
         <openmq.version>6.3.0-RC1</openmq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>3.1.0-RC2</jakarta.persistence-api.version>
+        <jakarta.persistence-api.version>3.1.0</jakarta.persistence-api.version>
         <eclipselink.version>4.0.0-M2</eclipselink.version>
         <eclipselink.asm.version>9.2.0</eclipselink.asm.version>
 

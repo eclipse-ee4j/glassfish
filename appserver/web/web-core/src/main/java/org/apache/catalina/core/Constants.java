@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2021 Contributors to Eclipse Foundation.
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@ package org.apache.catalina.core;
 public class Constants {
 
     public static final String Package = "org.apache.catalina.core";
-    public static final int MAJOR_VERSION = 5;
+    public static final int MAJOR_VERSION = 6;
     public static final int MINOR_VERSION = 0;
 
     public static final String JSP_SERVLET_CLASS =

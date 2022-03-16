@@ -20,7 +20,7 @@
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
-env.gfImage = "ee4jglassfish/ci:tini-jdk-11.0.10"
+env.gfImage = "dmatej/eclipse-jenkins-glassfish:11.0.14.1"
 
 def jobs = [
   "verifyPhase",

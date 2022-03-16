@@ -92,7 +92,8 @@
                                 <pomIncludes>
                                     <pomInclude>pom.xml</pomInclude>
                                 </pomIncludes>
-                                <goals>clean install</goals>
+                                <!-- source:jar - ie. metro uses sources of other modules -->
+                                <goals>clean source:jar install</goals>
                                 <settingsFile>${basedir}/../settings.xml</settingsFile>
                                 <profiles>staging,default</profiles>
                                 <parallelThreads>4</parallelThreads>

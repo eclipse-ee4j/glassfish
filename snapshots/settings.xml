@@ -17,7 +17,6 @@
                 <spotbugs.skip>true</spotbugs.skip>
                 <pmd.skip>true</pmd.skip>
                 <maven.javadoc.skip>true</maven.javadoc.skip>
-                <maven.source.skip>true</maven.source.skip>
                 <maven.test.skip>true</maven.test.skip>
             </properties>
 

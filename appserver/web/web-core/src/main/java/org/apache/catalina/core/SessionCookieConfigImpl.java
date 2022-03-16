@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package org.apache.catalina.core;
 
-import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import java.util.TreeMap;
+
 import jakarta.servlet.SessionCookieConfig;
 
 /**
@@ -31,14 +33,15 @@ import jakarta.servlet.SessionCookieConfig;
  */
 public class SessionCookieConfigImpl implements SessionCookieConfig {
 
-    private String name;
-    private String domain;
-    private String path;
-    private String comment;
-    private boolean httpOnly = true;
-    private boolean secure;
-    private StandardContext ctx;
-    private int maxAge = -1;
+    private static final int DEFAULT_MAX_AGE = -1;
+    private static final boolean DEFAULT_HTTP_ONLY = false;
+    private static final boolean DEFAULT_SECURE = false;
+    private static final String DEFAULT_NAME = "JSESSIONID";
+
+    private String name = DEFAULT_NAME;
+
+    private final Map<String,String> attributes = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final StandardContext ctx;
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
@@ -95,8 +98,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"dnmain", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.domain = domain;
+        setAttribute(Constants.COOKIE_DOMAIN_ATTR, domain);
     }
 
 
@@ -106,7 +108,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
      */
     @Override
     public String getDomain() {
-        return domain;
+        return getAttribute(Constants.COOKIE_DOMAIN_ATTR);
     }
 
 
@@ -124,8 +126,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"path", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.path = path;
+        setAttribute(Constants.COOKIE_PATH_ATTR, path);
     }
 
 
@@ -137,7 +138,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
      */
     @Override
     public String getPath() {
-        return path;
+        return getAttribute(Constants.COOKIE_PATH_ATTR);
     }
 
 
@@ -155,8 +156,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"comment", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.comment = comment;
+        setAttribute(Constants.COOKIE_COMMENT_ATTR, comment);
     }
 
 
@@ -166,7 +166,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
      */
     @Override
     public String getComment() {
-        return comment;
+        return getAttribute(Constants.COOKIE_COMMENT_ATTR);
     }
 
 
@@ -187,8 +187,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"httpOnly", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.httpOnly = httpOnly;
+        setAttribute(Constants.COOKIE_HTTP_ONLY_ATTR, String.valueOf(httpOnly));
     }
 
 
@@ -199,7 +198,8 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
      */
     @Override
     public boolean isHttpOnly() {
-        return httpOnly;
+        String value = getAttribute(Constants.COOKIE_HTTP_ONLY_ATTR);
+        return value == null ? DEFAULT_HTTP_ONLY : Boolean.parseBoolean(value);
     }
 
 
@@ -223,8 +223,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"secure", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.secure = secure;
+        setAttribute(Constants.COOKIE_SECURE_ATTR, String.valueOf(secure));
     }
 
 
@@ -239,7 +238,8 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
      */
     @Override
     public boolean isSecure() {
-        return secure;
+        String value = getAttribute(Constants.COOKIE_SECURE_ATTR);
+        return value == null ? DEFAULT_SECURE : Boolean.parseBoolean(value);
     }
 
 
@@ -250,35 +250,28 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
                                               new Object[] {"maxAge", ctx.getName()});
             throw new IllegalStateException(msg);
         }
-
-        this.maxAge = maxAge;
+        setAttribute(Constants.COOKIE_MAX_AGE_ATTR, String.valueOf(maxAge));
     }
 
 
     @Override
     public int getMaxAge() {
-        return maxAge;
+        String value = getAttribute(Constants.COOKIE_MAX_AGE_ATTR);
+        return value == null ? DEFAULT_MAX_AGE : Integer.parseInt(value);
     }
-
 
     @Override
     public void setAttribute(String name, String value) {
-        // TODO IMPLEMENT!
-
+        this.attributes.put(name, value);
     }
-
 
     @Override
     public String getAttribute(String name) {
-        // TODO IMPLEMENT!
-        return null;
+        return this.attributes.get(name);
     }
-
 
     @Override
     public Map<String, String> getAttributes() {
-        // TODO IMPLEMENT!
-        return null;
+        return Collections.unmodifiableMap(this.attributes);
     }
-
 }

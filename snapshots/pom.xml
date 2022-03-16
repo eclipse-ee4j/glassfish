@@ -41,6 +41,8 @@
 
     <modules>
         <module>hibernate-validator</module>
+        <module>grizzly</module>
+        <module>metro</module>
     </modules>
 
     <build>

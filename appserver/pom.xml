@@ -95,12 +95,12 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <jakarta.security-api.version>3.0.0-RC1</jakarta.security-api.version>
+        <jakarta.security-api.version>3.0.0-RC3</jakarta.security-api.version>
         <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
-        <soteria.version>3.0.0-M2</soteria.version>
+        <soteria.version>3.0.0-M4</soteria.version>
         <exousia.version>2.1.0-M1</exousia.version>
-        <nimbus.version>9.20</nimbus.version>
+        <nimbus.version>9.21</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

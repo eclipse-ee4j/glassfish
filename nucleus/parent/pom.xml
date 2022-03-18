@@ -143,7 +143,7 @@
         <jsch.version>0.1.56</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.2</ant.version>
-        <jackson.version>2.13.1</jackson.version>
+        <jackson.version>2.13.2</jackson.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.4.1</jettison.version>

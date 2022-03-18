@@ -85,7 +85,7 @@
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.1.0</jakarta.websocket-api.version>
-        <tyrus.version>2.1.0-M1</tyrus.version>
+        <tyrus.version>2.1.0-M2</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>2.0.0</jakarta.concurrent-api.version>

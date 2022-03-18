@@ -105,7 +105,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.0-M3</jersey.version>
+        <jersey.version>3.1.0-SNAPSHOT</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
@@ -127,7 +127,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
         <gmbal.version>4.0.3</gmbal.version>
-        <shoal.version>2.0.0</shoal.version>
+        <shoal.version>3.0.0-SNAPSHOT</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.14</command-security-plugin.version>

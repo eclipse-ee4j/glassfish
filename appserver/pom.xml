@@ -137,7 +137,7 @@
         <wasp.version>3.1.0-M1</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
-        <xmlsec.version>2.1.7</xmlsec.version>
+        <xmlsec.version>2.3.0</xmlsec.version>
         <woodstox.version>6.2.8</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
@@ -156,7 +156,7 @@
 
 
         <!-- Admin console components -->
-        
+
         <jsftemplating.version>3.0.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>5.0.0</woodstock.version>
@@ -167,16 +167,16 @@
 
 
         <!-- Other -->
-        
+
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.15.2.0</derby.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>2.4</maven-rar-plugin.version>
-        
-        
+
+
         <!-- Settings -->
-        
+
         <product.name>Eclipse GlassFish</product.name>
         <brief_product_name>GlassFish</brief_product_name>
         <abbrev_product_name>glassfish</abbrev_product_name>

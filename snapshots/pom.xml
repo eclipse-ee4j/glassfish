@@ -43,6 +43,8 @@
         <module>hibernate-validator</module>
         <module>grizzly</module>
         <module>metro</module>
+        <module>jersey</module>
+        <module>shoal</module>
     </modules>
 
     <build>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +19,6 @@ package org.glassfish.appclient.server.core.jws;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.logging.LogDomains;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -133,8 +133,8 @@ public class JavaWebStartInfo implements ConfigListener {
 
     private String signingAlias;
 
-    final private Map<String,StaticContent> staticContent = new HashMap<String,StaticContent>();
-    final private Map<String,DynamicContent> dynamicContent = new HashMap<String,DynamicContent>();
+    final private Map<String,StaticContent> staticContent = new HashMap<>();
+    final private Map<String,DynamicContent> dynamicContent = new HashMap<>();
 
     private static final String JNLP_MIME_TYPE = "application/x-java-jnlp-file";
 
@@ -423,7 +423,7 @@ public class JavaWebStartInfo implements ConfigListener {
 
         dch.addDeveloperContentFromPath(developerJNLPDoc);
 
-        Set<Content> result = new HashSet<Content>(staticContent.values());
+        Set<Content> result = new HashSet<>(staticContent.values());
         result.addAll(dynamicContent.values());
 
         jwsAdapterManager.addContentForAppClient(
@@ -498,7 +498,7 @@ public class JavaWebStartInfo implements ConfigListener {
 
     private void addSignedSystemContent(
             ) throws FileNotFoundException, IOException {
-        final List<String> systemJARRelativeURIs = new ArrayList<String>();
+        final List<String> systemJARRelativeURIs = new ArrayList<>();
         final Map<String,StaticContent> addedStaticContent =
                 jwsAdapterManager.addStaticSystemContent(
                     systemJARRelativeURIs,
@@ -663,17 +663,12 @@ public class JavaWebStartInfo implements ConfigListener {
     public static File signedFileForProvidedAppFile(final URI relURI,
             final File unsignedFile,
             final AppClientDeployerHelper helper,
-            final DeploymentContext dc) {    /*
-         * Place a signed file for a developer-provided file at
-         *
-         * generated/xml/(appName)/signed/(path-within-app-of-unsigned-file)
-         *
-         *
-         */
+            final DeploymentContext dc) {
+         // Place a signed file for a developer-provided file at
+        // generated/xml/(appName)/signed/(path-within-app-of-unsigned-file)
         final File rootForSignedFilesInApp = helper.rootForSignedFilesInApp();
         mkdirs(rootForSignedFilesInApp);
         final URI signedFileURI = rootForSignedFilesInApp.toURI().resolve(relURI);
-
         return new File(signedFileURI);
     }
 
@@ -805,7 +800,7 @@ public class JavaWebStartInfo implements ConfigListener {
     }
 
     public static class VendorInfo {
-        private String vendorStringFromDescriptor;
+        private final String vendorStringFromDescriptor;
         private String vendor = "";
         private String imageURIString = "";
         private String splashImageURIString = "";
@@ -858,7 +853,7 @@ public class JavaWebStartInfo implements ConfigListener {
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         /* Record any events we tried to process but could not. */
-        List<UnprocessedChangeEvent> unprocessedEvents = new ArrayList<UnprocessedChangeEvent>();
+        List<UnprocessedChangeEvent> unprocessedEvents = new ArrayList<>();
 
         for (PropertyChangeEvent event : events) {
             try {

@@ -23,11 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 >
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.6</version>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.main.snapshots</groupId>
@@ -40,6 +41,10 @@
 
     <modules>
         <module>hibernate-validator</module>
+        <module>grizzly</module>
+        <module>metro</module>
+        <module>jersey</module>
+        <module>shoal</module>
     </modules>
 
     <build>
@@ -89,7 +94,11 @@
                                 <pomIncludes>
                                     <pomInclude>pom.xml</pomInclude>
                                 </pomIncludes>
-                                <goals>clean source:jar install -Pstaging -DskipTests -Dmaven.test.skip=true</goals>
+                                <!-- source:jar - ie. metro uses sources of other modules -->
+                                <goals>clean source:jar install</goals>
+                                <settingsFile>${basedir}/../settings.xml</settingsFile>
+                                <profiles>staging,default</profiles>
+                                <parallelThreads>4</parallelThreads>
                             </configuration>
                         </execution>
                     </executions>

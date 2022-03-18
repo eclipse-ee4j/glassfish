@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2010-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -77,12 +77,12 @@ public class GlassfishSSLSupport implements SSLSupport {
     }
 
     @Override
-    public Object[] getPeerCertificateChain() throws IOException {
-        return getPeerCertificateChain(false);
+    public Certificate[] getPeerCertificates() throws IOException {
+        return getPeerCertificates(false);
     }
 
     @Override
-    public Object[] getPeerCertificateChain(boolean force) throws IOException {
+    public Certificate[] getPeerCertificates(boolean force) throws IOException {
         if (session == null) {
             return null;
         }
@@ -152,7 +152,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         socket.startHandshake();
     }
 
-    private Object[] getX509Certs() {
+    private Certificate[] getX509Certs() {
         Certificate[] certs = null;
         try {
             certs = session.getPeerCertificates();

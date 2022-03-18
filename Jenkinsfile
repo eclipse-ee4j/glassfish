@@ -20,7 +20,7 @@
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
 // Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
-env.gfImage = "ee4jglassfish/ci:tini-jdk-11.0.10"
+env.gfImage = "dmatej/eclipse-jenkins-glassfish:11.0.14.1"
 
 def jobs = [
   "verifyPhase",
@@ -38,7 +38,11 @@ def jobs = [
   "connector_group_3",
   "connector_group_4",
   "jdbc_all",
-  "persistence_all"
+  "persistence_all",
+  "naming_all",
+  "deployment_all",
+  "security_all",
+  "webservice_all"
 ]
 
 def parallelStagesMap = jobs.collectEntries {
@@ -263,7 +267,7 @@ spec:
               uname -a
 
               # temporary build of external snapshot dependencies
-              mvn clean install -f ./snapshots/pom.xml -s ./snapshots/settings.xml
+              mvn clean install -f ./snapshots/pom.xml
               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
               mvn clean install -Pfastest,staging -T4C
               ./gfbuild.sh archive_bundles

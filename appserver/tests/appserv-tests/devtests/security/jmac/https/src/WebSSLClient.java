@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
 public class WebSSLClient {
 
     private static final String TEST_NAME = "security-jmac-https";
-    private static final String EXPECTED_RESPONSE_PATTERN = "Hello, CN=.* from com.sun.s1asdev.security.jmac.https.HttpsTestAuthModule";
+    private static final Pattern EXPECTED_RESPONSE_PATTERN = Pattern.compile("Hello, CN=.* from com.sun.s1asdev.security.jmac.https.HttpsTestAuthModule");
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String args[]) throws Exception {
@@ -56,22 +56,16 @@ public class WebSSLClient {
     private static void parseResponse(HttpsURLConnection connection)
             throws Exception {
 
-        BufferedReader in = null;
-
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
-
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             String line = null;
             String matched = null;
             try {
-                Pattern p = Pattern.compile(EXPECTED_RESPONSE_PATTERN);
                 while ((line = in.readLine()) != null) {
-                    if (p.matcher(line).matches()) {
+                    System.out.println("XXXPORN: " + line);
+                    if (EXPECTED_RESPONSE_PATTERN.matcher(line).matches()) {
                         stat.addStatus(TEST_NAME, stat.PASS);
                         matched = line;
                     }
-                    System.out.println(line);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -83,21 +77,13 @@ public class WebSSLClient {
                         + ", received: " + matched);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 
-    private static HttpsURLConnection connect(String urlAddress,
-            SSLSocketFactory ssf)
-            throws Exception {
 
+    private static HttpsURLConnection connect(String urlAddress, SSLSocketFactory ssf) throws Exception {
         URL url = new URL(urlAddress);
-        HttpsURLConnection.setDefaultSSLSocketFactory(ssf);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-
         connection.setHostnameVerifier(
                 new HostnameVerifier() {
 
@@ -107,7 +93,6 @@ public class WebSSLClient {
                 });
 
         connection.setDoOutput(true);
-
         return connection;
     }
 }

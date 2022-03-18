@@ -208,12 +208,13 @@
 
         <jvm-options>-XX:NewRatio=2</jvm-options>
         <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
-        <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
-        <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
-        <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
       </java-config>
       <network-config>
@@ -398,12 +399,13 @@
              <jvm-options>-Dorg.glassfish.gmbal.no.multipleUpperBoundsException=true</jvm-options>
 
              <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
-             <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
-             <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
-             <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
          </java-config>
          <availability-service>
@@ -461,7 +463,7 @@
          </thread-pools>
          <group-management-service/>
          <!--%%%DEFAULT_TOKENS_HERE%%%-->
-         <system-property name="ASADMIN_LISTENER_PORT" value="24848"/>
+         <system-property name="ASADMIN_LISTENER_PORT" value="24848" />
          <system-property name="HTTP_LISTENER_PORT" value="28080"/>
          <system-property name="HTTP_SSL_LISTENER_PORT" value="28181"/>
          <system-property name="IIOP_LISTENER_PORT" value="23700"/>

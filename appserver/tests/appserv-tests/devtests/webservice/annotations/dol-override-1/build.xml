@@ -33,13 +33,10 @@
 
     <path id="classpath">
         <fileset dir="${env.S1AS_HOME}/modules">
-                      <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${env.S1AS_HOME}/modules/endorsed">
-                      <include name="*.jar"/>
+            <include name="*.jar"/>
         </fileset>
         <fileset dir="${env.APS_HOME}/lib">
-                      <include name="*.jar"/>
+            <include name="*.jar"/>
         </fileset>
     </path>
 

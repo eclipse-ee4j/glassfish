@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021-2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997-2022 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -25,12 +25,19 @@ public class Constants {
     public static final int MAJOR_VERSION = 6;
     public static final int MINOR_VERSION = 0;
 
-    public static final String JSP_SERVLET_CLASS =
-        "org.glassfish.wasp.servlet.JspServlet";
+    public static final String JSP_SERVLET_CLASS = "org.glassfish.wasp.servlet.JspServlet";
 
     public static final String JSP_SERVLET_NAME = "jsp";
 
     public static final String DEFAULT_SERVLET_NAME = "default";
 
     public static final String IS_DEFAULT_ERROR_PAGE_ENABLED_INIT_PARAM = "org.glassfish.web.isDefaultErrorPageEnabled";
+
+    public static final String COOKIE_COMMENT_ATTR = "Comment";
+    public static final String COOKIE_DOMAIN_ATTR = "Domain";
+    public static final String COOKIE_MAX_AGE_ATTR = "Max-Age";
+    public static final String COOKIE_PATH_ATTR = "Path";
+    public static final String COOKIE_SECURE_ATTR = "Secure";
+    public static final String COOKIE_HTTP_ONLY_ATTR = "HttpOnly";
+    public static final String COOKIE_SAME_SITE_ATTR = "SameSite";
 }

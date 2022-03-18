@@ -2,13 +2,18 @@ FROM krallin/centos-tini
 
 ADD ./entrypoint.sh /etc/
 
+# HOWTO:
 #
-# The JDK was got from the following releases:
-#  -JDK11: https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/
-#          releases/download/jdk-11.0.10%2B9/OpenJDK11U-jdk_x64_linux_11.0.10_9.tar.gz
-# Since the JDK is a very large file, download and add the file manually.
+# 1) cd etc/docker
+# 2) wget https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.14.1%2B1/OpenJDK11U-jdk_x64_linux_11.0.14.1_1.tar.gz
+# 3) tar -xvzf OpenJDK11U-jdk_x64_linux_11.0.14.1_1.tar.gz
+# 4) make # takes aroung 5 minutes, depending on network speed
+# 5) docker login
+# 6) docker push dmatej/eclipse-jenkins-glassfish:11.0.14.1 or another repository, don't forget to update the Jenkinsfile and Makefile too.
+# 7) docker logout
+# 8) git commit, git push, run jenkins build, etc.
 #
-ADD ./openjdk-11.0.10_9 /usr/lib/jvm/jdk11
+ADD ./openjdk-11.0.14.1_1 /usr/lib/jvm/jdk11
 
 RUN chmod +x /etc/entrypoint.sh && \
     #
@@ -24,7 +29,7 @@ RUN chmod +x /etc/entrypoint.sh && \
     #
     # install maven
     #
-    curl -O https://archive.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.zip && \
+    curl -O https://archive.apache.org/dist/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.zip && \
     unzip apache-maven-*-bin.zip -d /usr/share && \
     rm apache-maven-*-bin.zip && \
     mv /usr/share/apache-maven-* /usr/share/maven && \

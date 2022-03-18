@@ -49,11 +49,17 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
 
   # setup the local repository
   # with the archived chunk from the pipeline build stage
-  tar -xzf ${WORKSPACE}/bundles/maven-repo.tar.gz --overwrite -m -p -C ${HOME}/.m2/repository
+  if [ -f "${WORKSPACE}/bundles/maven-repo.tar.gz" ]; then
+    tar -xzf ${WORKSPACE}/bundles/maven-repo.tar.gz --overwrite -m -p -C ${HOME}/.m2/repository
+  fi
   echo "Removing old glassfish directory: ${S1AS_HOME}";
   rm -rf "${S1AS_HOME}";
-  export GF_VERSION="$(mvn help:evaluate -f ${APS_HOME}/pom.xml -Dexpression=project.version -q -DforceStdout)";
-  export MVN_REPOSITORY="${HOME}/.m2/repository";
+  if [ -z "${GF_VERSION}" ]; then
+    export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout)"
+  fi
+  if [ -z "${MVN_REPOSITORY}" ]; then
+    export MVN_REPOSITORY="${HOME}/.m2/repository";
+  fi
 fi
 
 "$@"

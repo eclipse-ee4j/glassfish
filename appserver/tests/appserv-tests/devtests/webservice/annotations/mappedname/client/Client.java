@@ -16,9 +16,6 @@
 
 package client;
 
-import jakarta.xml.ws.WebServiceRef;
-
-
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {

@@ -95,8 +95,8 @@ class JSSESupport implements SSLSupport {
 
 
     @Override
-    public Object[] getPeerCertificateChain() throws IOException {
-        return getPeerCertificateChain(false);
+    public Certificate[] getPeerCertificates() throws IOException {
+        return getPeerCertificates(false);
     }
 
 
@@ -136,7 +136,7 @@ class JSSESupport implements SSLSupport {
 
 
     @Override
-    public Object[] getPeerCertificateChain(boolean force) throws IOException {
+    public Certificate[] getPeerCertificates(boolean force) throws IOException {
         if (session == null) {
             return null;
         }

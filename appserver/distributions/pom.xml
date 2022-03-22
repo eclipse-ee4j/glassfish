@@ -86,7 +86,6 @@
                                 <copyTypes>jar,war</copyTypes>
                                 <unpackTypes>zip,rar,war</unpackTypes>
                                 <silent>true</silent>
-                                <copyExcludes>war</copyExcludes>
                                 <mappings>
                                     <mapping>
                                         <artifactId>org.apache.felix.main</artifactId>

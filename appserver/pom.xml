@@ -95,10 +95,10 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <jakarta.security-api.version>3.0.0-RC3</jakarta.security-api.version>
+        <jakarta.security-api.version>3.0.0-RC4</jakarta.security-api.version>
         <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
-        <soteria.version>3.0.0-M4</soteria.version>
+        <soteria.version>3.0.0-M5</soteria.version>
         <exousia.version>2.1.0-M1</exousia.version>
         <nimbus.version>9.21</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
@@ -147,7 +147,7 @@
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
-        <weld.version>5.0.0.CR1</weld.version>
+        <weld.version>5.0.0.CR2</weld.version>
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->

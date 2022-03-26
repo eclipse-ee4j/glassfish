@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,43 +17,37 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.io.IOException;
+import jakarta.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DomainTest extends RestTestBase {
+
     @Test
-    public void testDomainGet() throws IOException {
-        Map payload = new HashMap();
+    public void testDomainGet() throws Exception {
         Map<String, String> current = getEntityValues(get("/domain"));
 
         // Select a random locale so we're not setting the locale to its current value
-        List<String> locales = new ArrayList<String>() {{
-            add("en_US");
-            add("en");
-            add("de_DE");
-            add("_GB");
-            add("en_US_WIN");
-            add("de__POSIX");
-            add("fr__MAC");
-        }};
+        List<String> locales = new ArrayList<>(List.of("en_US", "en", "de_DE", "_GB", "en_US_WIN", "de__POSIX", "fr__MAC"));
         locales.remove(current.get("locale"));
         final int random = new Random().nextInt(locales.size());
         String newLocale = locales.get(random);
 
+        Map<String, String> payload = new HashMap<>();
         payload.put("locale", newLocale);
-
-        Response response = post("/domain", payload);
-        assertTrue(isSuccess(response));
+        Response response = post("domain", payload);
+        assertEquals(200, response.getStatus());
 
         // Reload the domain and make sure our new locale was saved
-        Map<String, String> map = getEntityValues(this.get("/domain"));
+        Map<String, String> map = getEntityValues(this.get("domain"));
         assertEquals(newLocale, map.get("locale"));
     }
 }

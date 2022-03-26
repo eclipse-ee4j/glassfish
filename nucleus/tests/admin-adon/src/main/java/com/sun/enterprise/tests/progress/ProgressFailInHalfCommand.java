@@ -27,7 +27,8 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Basic progress status example.
+/**
+ * Basic progress status example.
  * Contains 10 steps
  *
  * @author mmares

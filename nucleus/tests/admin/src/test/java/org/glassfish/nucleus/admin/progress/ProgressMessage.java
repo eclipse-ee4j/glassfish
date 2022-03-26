@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,26 +18,31 @@
 package org.glassfish.nucleus.admin.progress;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-/** Parse progress status message.
+/**
+ * Parse progress status message.
  *
  * @author martinmares
  */
 public class ProgressMessage {
 
-    private static final Pattern RGXP = Pattern.compile(" *(\\d+)(%)?:(.+:)?(.*)");
+    private static final Pattern PATTERN = Pattern.compile("[ ]*(\\d+)(%)?:(.+:)?(.*)");
+    private static final Predicate<String> PREDICATE = PATTERN.asMatchPredicate();
 
     private final int value;
     private final boolean percentage;
     private final String scope;
     private final String message;
 
-    public ProgressMessage(String txt) throws IllegalArgumentException {
-        Matcher matcher = RGXP.matcher(txt);
+    private ProgressMessage(String txt) throws IllegalArgumentException {
+        Matcher matcher = PATTERN.matcher(txt);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Arg txt is not progress message");
         }
@@ -70,23 +76,15 @@ public class ProgressMessage {
     }
 
     public static List<ProgressMessage> grepProgressMessages(String txt) {
-        StringTokenizer stok = new StringTokenizer(txt, "\n\r");
-        List<ProgressMessage> result = new ArrayList<ProgressMessage>();
-        while (stok.hasMoreTokens()) {
-            String line = stok.nextToken();
-            try {
-                result.add(new ProgressMessage(line));
-            } catch (Exception ex) {
-                //System.out.println(ex);
-            }
-        }
-        return result;
+        StringTokenizer stok = new StringTokenizer(txt, System.lineSeparator());
+        return Collections.list(stok).stream().map(Object::toString).filter(PREDICATE).map(ProgressMessage::new)
+            .collect(Collectors.toList());
     }
 
     /** Unique only that not equal with previous.
      */
     public static String[] uniqueMessages(List<ProgressMessage> pms) {
-        List<String> messages = new ArrayList<String>();
+        List<String> messages = new ArrayList<>();
         for (ProgressMessage pm : pms) {
             if (pm.getMessage() != null &&
                     (messages.isEmpty() || !pm.getMessage().equals(messages.get(messages.size() - 1)))) {
@@ -105,9 +103,8 @@ public class ProgressMessage {
         for (ProgressMessage pm : pms) {
             if (pm.getValue() < lastVal) {
                 return false;
-            } else {
-                lastVal = pm.getValue();
             }
+            lastVal = pm.getValue();
         }
         return true;
     }

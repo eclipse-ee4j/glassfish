@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,25 @@
 
 package org.glassfish.nucleus.admin.progress;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import static org.glassfish.tests.utils.NucleusTestUtils.*;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author martinmares
  */
-@Test(testName="ProgressStatusBasicTest")
+@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusBasicTest {
 
+    @Test
     public void simple() {
         NadminReturn result = nadminWithOutput("progress-simple");
         assertTrue(result.returnValue);
@@ -44,6 +48,7 @@ public class ProgressStatusBasicTest {
         assertTrue(ProgressMessage.isNonDecreasing(prgs));
     }
 
+    @Test
     public void simpleNoTotal() {
         NadminReturn result = nadminWithOutput("progress-simple", "--nototalsteps");
         assertTrue(result.returnValue);
@@ -59,6 +64,7 @@ public class ProgressStatusBasicTest {
         assertTrue(ProgressMessage.isNonDecreasing(prgs));
     }
 
+    @Test
     public void simpleSpecInAnnotation() {
         NadminReturn result = nadminWithOutput("progress-full-annotated");
         assertTrue(result.returnValue);
@@ -72,28 +78,11 @@ public class ProgressStatusBasicTest {
         assertEquals("annotated:", prgs.get(5).getScope());
     }
 
+    @Test
     public void simpleTerse() {
         NadminReturn result = nadminWithOutput("--terse", "progress-simple");
         assertTrue(result.returnValue);
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
         assertTrue(prgs.isEmpty());
     }
-
-//    public void commandWithPayloud() throws IOException {
-//        File tmp = File.createTempFile(String.valueOf(System.currentTimeMillis()) + "ms_", "test");
-//        FileWriter writer = null;
-//        try {
-//            writer = new FileWriter(tmp);
-//            writer.write("This is testing file for nucleus admin tests.\n");
-//            writer.write("Created - " + System.currentTimeMillis() + "\n");
-//            writer.close();
-//            NadminReturn result = nadminWithOutput("progress-payload", tmp.getCanonicalPath());
-//            assertTrue(result.returnValue);
-//            List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
-//            assertTrue(prgs.size() > 0);
-//        } finally {
-//            try {tmp.delete();} catch (Exception ex) {}
-//        }
-//    }
-
 }

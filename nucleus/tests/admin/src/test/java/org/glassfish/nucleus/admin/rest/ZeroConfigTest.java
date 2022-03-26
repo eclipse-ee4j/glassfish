@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,15 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.util.Map;
 import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * This class will test that the zero-config effort is handled correctly by the
@@ -32,16 +38,17 @@ import org.testng.annotations.Test;
  * @author jdlee
  */
 public class ZeroConfigTest extends RestTestBase {
-    public static final String BASE_SERVER_CONFIG_URL = "/domain/configs/config/server-config";
+    public static final String BASE_SERVER_CONFIG_URL = "domain/configs/config/server-config";
     /**
      * Currently (6/29/2012), the transaction-service element is missing from
      * server-config out of the box.  This should continue to be the case once
      * zero-config is fully implemented and integrated.
      */
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void testTransactionService() {
         final Response response = get(BASE_SERVER_CONFIG_URL + "/transaction-service");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
         Map<String, String> entity = getEntityValues(response);
         assertNotNull(entity);
     }

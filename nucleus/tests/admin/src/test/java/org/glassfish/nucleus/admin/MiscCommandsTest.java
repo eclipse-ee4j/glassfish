@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,40 @@
 
 package org.glassfish.nucleus.admin;
 
-import static org.glassfish.tests.utils.NucleusTestUtils.*;
-import static org.testng.AssertJUnit.assertTrue;
-import org.testng.annotations.Test;
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
- *
  * @author Tom Mueller
  */
-@Test(testName="MiscCommandsTest")
+@ExtendWith(DomainLifecycleExtension.class)
+@TestMethodOrder(OrderAnnotation.class)
 public class MiscCommandsTest {
 
+    @Test
+    @Order(1)
     public void uptime() {
         assertTrue(nadmin("uptime"));
     }
 
+    @Test
+    @Order(1)
     public void version1() {
         assertTrue(nadmin("version"));
     }
 
+    @Test
+    @Order(100)
     public void version2() {
         assertTrue(nadmin("stop-domain"));
         assertTrue(nadmin("version", "--local"));
-        assertTrue(nadmin("start-domain"));
     }
-
 }

@@ -22,8 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>nucleus-tests</artifactId>
-        <version>@project.version@</version>
-        <relativePath>../../../../../pom.xml</relativePath>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
     <artifactId>test-progress-status-commands</artifactId>
     <name>Progress status - Test Commands</name>

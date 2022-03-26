@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,28 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.util.Map;
 import jakarta.ws.rs.core.Response;
+
+import java.util.Map;
+
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author jasonlee
  */
 public class MetadataTest extends RestTestBase {
-    protected static final String URL_CONFIG = "/domain/configs/config.json";
-    protected static final String URL_UPTIMECOMMAND = "/domain/uptime.json";
+    private static final String URL_CONFIG = "domain/configs/config.json";
+    private static final String URL_UPTIMECOMMAND = "domain/uptime.json";
 
     @Test
     public void configParameterTest() {
         Response response = options(URL_CONFIG);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
         // Really dumb test.  Should be good enough for now
 
         Map extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
@@ -47,7 +52,7 @@ public class MetadataTest extends RestTestBase {
     @Test
     public void UpTimeMetadaDataTest() {
         Response response = options(URL_UPTIMECOMMAND);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         Map extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         assertNotNull(extraProperties);

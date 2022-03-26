@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,46 @@
 
 package org.glassfish.nucleus.admin;
 
-import static org.glassfish.tests.utils.NucleusTestUtils.getURL;
-import static org.glassfish.tests.utils.NucleusTestUtils.matchString;
-import static org.glassfish.tests.utils.NucleusTestUtils.nadmin;
-import static org.testng.AssertJUnit.assertTrue;
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.testng.annotations.Test;
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.getURL;
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Tom Mueller
  */
-@Test(testName = "ClusterTest", enabled = true)
+@TestMethodOrder(OrderAnnotation.class)
+@ExtendWith(DomainLifecycleExtension.class)
 public class ClusterTest {
 
-    final String tn = "QLCluster";
-    final String port1 = "55123";
-    final String port2 = "55124";
-    final String cname = "eec1";
-    final String i1name = "eein1-with-a-very-very-very-long-name";
-    final String i2name = "eein2";
-    String i1url = "http://localhost:" + port1;
-    String i2url = "http://localhost:" + port2;
+    private final String tn = "QLCluster";
+    private final String port1 = "55123";
+    private final String port2 = "55124";
+    private final String cname = "eec1";
+    private final String i1name = "eein1-with-a-very-very-very-long-name";
+    private final String i2name = "eein2";
+    private final String i1url = "http://localhost:" + port1;
+    private final String i2url = "http://localhost:" + port2;
 
     @Test
+    @Order(1)
     public void createClusterTest() {
         // create a cluster and two instances
-        assertTrue("create cluster", nadmin("create-cluster", cname));
+        assertTrue(nadmin("create-cluster", cname), "create cluster");
     }
 
-    @Test(dependsOnMethods = { "createClusterTest" })
+    @Test
+    @Order(2)
     public void createInstancesTest() {
-        assertTrue("create instance1",
+        assertTrue(
             nadmin("create-local-instance", "--cluster", cname, "--systemproperties",
                         "HTTP_LISTENER_PORT=" + port1 + ":" +
                         "HTTP_SSL_LISTENER_PORT=18181:" +
@@ -57,47 +66,52 @@ public class ClusterTest {
                         "IIOP_SSL_MUTUALAUTH_PORT=13801:" +
                         "JMS_PROVIDER_PORT=18686:" +
                         "ASADMIN_LISTENER_PORT=14848",
-                        i1name));
+                        i1name), "create instance1");
 
-        assertTrue("create instance2",
+        assertTrue(
             nadmin("create-local-instance", "--cluster", cname, "--systemproperties",
                     "HTTP_LISTENER_PORT=" + port2 +
                     ":HTTP_SSL_LISTENER_PORT=28181:IIOP_SSL_LISTENER_PORT=23800:" +
                     "IIOP_LISTENER_PORT=23700:JMX_SYSTEM_CONNECTOR_PORT=27676:IIOP_SSL_MUTUALAUTH_PORT=23801:" +
                     "JMS_PROVIDER_PORT=28686:ASADMIN_LISTENER_PORT=24848",
-                    i2name));
+                    i2name), "create instance2");
     }
 
-    @Test(dependsOnMethods = { "createInstancesTest" })
+    @Test
+    @Order(3)
     public void startInstancesTest() {
         // start the instances
-        assertTrue("start instance1", nadmin("start-local-instance", i1name));
-        assertTrue("start instance2", nadmin("start-local-instance", i2name));
+        assertTrue(nadmin("start-local-instance", i1name), "start instance1");
+        assertTrue(nadmin("start-local-instance", i2name), "start instance2");
     }
 
-    @Test(dependsOnMethods = { "startInstancesTest" })
+    @Test
+    @Order(4)
     public void checkClusterTest() {
         // check that the instances are there
-        assertTrue("list-instances", nadmin("list-instances"));
-        assertTrue("getindex1", matchString("GlassFish Server", getURL(i1url)));
-        assertTrue("getindex2", matchString("GlassFish Server", getURL(i2url)));
+        assertTrue(nadmin("list-instances"), "list-instances");
+        assertThat(getURL(i1url), stringContainsInOrder("GlassFish Server"));
+        assertThat(getURL(i2url), stringContainsInOrder("GlassFish Server"));
     }
 
-    @Test(dependsOnMethods = { "checkClusterTest" })
+    @Test
+    @Order(5)
     public void stopInstancesTest() {
         // stop and delete the instances and cluster
-        assertTrue("stop instance1", nadmin("stop-local-instance", "--kill", i1name));
-        assertTrue("stop instance2", nadmin("stop-local-instance", "--kill", i2name));
+        assertTrue(nadmin("stop-local-instance", "--kill", i1name), "stop instance1");
+        assertTrue(nadmin("stop-local-instance", "--kill", i2name), "stop instance2");
     }
 
-    @Test(dependsOnMethods = { "stopInstancesTest" })
+    @Test
+    @Order(6)
     public void deleteInstancesTest() {
-        assertTrue("delete instance1", nadmin("delete-local-instance", i1name));
-        assertTrue("delete instance2", nadmin("delete-local-instance", i2name));
+        assertTrue(nadmin("delete-local-instance", i1name), "delete instance1");
+        assertTrue(nadmin("delete-local-instance", i2name), "delete instance2");
     }
 
-    @Test(dependsOnMethods = { "deleteInstancesTest" })
+    @Test
+    @Order(7)
     public void deleteClusterTest() {
-        assertTrue("delete cluster", nadmin("delete-cluster", cname));
+        assertTrue(nadmin("delete-cluster", cname), "delete cluster");
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,42 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import org.testng.annotations.Test;
+
+import org.glassfish.resources.custom.factory.PrimitivesAndStringFactory;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
- *
  * @author jasonlee
  */
+@Disabled
 public class ExternalResourceTest extends RestTestBase {
-    protected static final String URL_EXTERNAL_RESOURCE = "/domain/resources/external-jndi-resource";
-    @Test(enabled=false)
+
+    protected static final String URL_EXTERNAL_RESOURCE = "domain/resources/external-jndi-resource";
+
+    @Test
     public void createAndDeleteExternalResource() {
         final String resourceName = "resource_" + generateRandomString();
-        final String jndiName = "jndi/"+resourceName;
-        Map<String, String> newResource = new HashMap<String, String>() {{
-            put("id", resourceName);
-            put("jndilookupname", jndiName);
-            put("factoryClass", "org.glassfish.resources.custom.factory.PrimitivesAndStringFactory");
-            put("restype", "java.lang.Double");
-        }};
-        Response response = post (URL_EXTERNAL_RESOURCE, newResource);
-        checkStatusForSuccess(response);
+        final String jndiName = "jndi/" + resourceName;
+        Map<String, String> newResource = new HashMap<>() {
+            {
+                put("id", resourceName);
+                put("jndilookupname", jndiName);
+                put("factoryClass", PrimitivesAndStringFactory.class.getName());
+                put("restype", Double.class.getName());
+            }
+        };
+        Response response = post(URL_EXTERNAL_RESOURCE, newResource);
+        checkStatus(response);
 
         response = get(URL_EXTERNAL_RESOURCE + "/" + resourceName);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         response = delete(URL_EXTERNAL_RESOURCE + "/" + resourceName);
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +18,23 @@
 package org.glassfish.nucleus.admin.rest;
 
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Mitesh Meswani
  */
+@Disabled
 public class MonitoringTest extends RestTestBase {
     private static final String MONITORING_RESOURCE_URL = "/domain/configs/config/server-config/monitoring-service/module-monitoring-levels";
     private static final String JDBC_CONNECTION_POOL_URL = "/domain/resources/jdbc-connection-pool";
@@ -39,11 +46,11 @@ public class MonitoringTest extends RestTestBase {
         return CONTEXT_ROOT_MONITORING;
     }
 
-    @Test(enabled=false)
+    @Test
     public void initializeMonitoring() {
         // Enable monitoring
         String url = getManagementURL(MONITORING_RESOURCE_URL);
-        Map<String, String> payLoad = new HashMap<String, String>() {
+        Map<String, String> payLoad = new HashMap<>() {
             {
                 put("ThreadPool", "HIGH");
                 put("Orb", "HIGH");
@@ -64,16 +71,16 @@ public class MonitoringTest extends RestTestBase {
             }
         };
         Response response = post(url, payLoad);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
     }
 
     /**
      * Objective - Verify that basic monitoring is working
      * Strategy - Call /monitoring/domain and assert that "server" is present as child element
      */
-    @Test(enabled=false)
+    @Test
     public void testBaseURL() {
-        Map<String, String> entity = getChildResources(get("/domain")); // monitoring/domain
+        Map<String, String> entity = getChildResources(get("domain")); // monitoring/domain
         assertNotNull(entity.get("server"));
     }
 
@@ -81,7 +88,7 @@ public class MonitoringTest extends RestTestBase {
      * Objective - Verify that resources with dot work
      * Strategy - create a resource with "." in name and then try to access it
      */
-    @Test(enabled=false)
+    @Test
     public void testDot() {
         // Step 1- Create a resource with "."
         final String POOL_NAME = "poolNameWith.dot";
@@ -91,7 +98,7 @@ public class MonitoringTest extends RestTestBase {
         delete(url);
 
         url = getManagementURL(JDBC_CONNECTION_POOL_URL);
-        Map<String, String> payLoad = new HashMap<String, String>() {
+        Map<String, String> payLoad = new HashMap<>() {
             {
                 put("name", POOL_NAME);
                 put("resType", "javax.sql.DataSource");
@@ -99,7 +106,7 @@ public class MonitoringTest extends RestTestBase {
             }
         };
         Response response = post(url, payLoad);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
 
 
         // Step 2- Ping the connection pool to generate some monitoring data
@@ -109,25 +116,25 @@ public class MonitoringTest extends RestTestBase {
         get(url, payLoad);
 
        // Step 3 - Access monitoring tree to assert it is accessible
-        response = get("/domain/server/resources/"+ POOL_NAME);
-        checkStatusForSuccess(response);
+        response = get("domain/server/resources/"+ POOL_NAME);
+        assertEquals(200, response.getStatus());
         Map<String, String> responseEntity = getEntityValues(response);
-        assertTrue("No Monitoring data found for pool " + POOL_NAME, responseEntity.size() > 0 );
+        assertTrue(responseEntity.size() > 0, "No Monitoring data found for pool " + POOL_NAME);
     }
 
     /**
      * Objective - Verify that invalid resources returns 404
      * Strategy - Request an invalid resource under monitoring and ensure that 404 is returned
      */
-    @Test(enabled=false)
+    @Test
     public void testInvalidResource() {
-        Response response = get("/domain/server/foo");
-        assertTrue("Did not receive ", response.getStatus() == jakarta.ws.rs.core.Response.Status.NOT_FOUND.getStatusCode() ) ;
+        Response response = get("domain/server/foo");
+        assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus(), "Did not receive ");
     }
 
 
     private String getManagementURL(String targetResourceURL) {
-        return getBaseUrl() + CONTEXT_ROOT_MANAGEMENT + targetResourceURL;
+        return getBaseAdminUrl() + CONTEXT_ROOT_MANAGEMENT + targetResourceURL;
 
     }
 

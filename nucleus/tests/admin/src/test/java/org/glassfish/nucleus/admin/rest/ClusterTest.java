@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,18 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import jakarta.ws.rs.core.Response;
-import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author jasonlee
  */
 public class ClusterTest extends RestTestBase {
-    public static final String URL_CLUSTER = "/domain/clusters/cluster";
 
     @Test
     public void testClusterCreationAndDeletion() {
@@ -45,90 +44,16 @@ public class ClusterTest extends RestTestBase {
     @Test
     public void testListLifecycleModules() {
         final String clusterName = "cluster_" + generateRandomString();
-        Map<String, String> newCluster = new HashMap<String, String>() {
-            {
-                put("id", clusterName);
-            }
-        };
-
-        Response response = post(URL_CLUSTER, newCluster);
-        checkStatusForSuccess(response);
+        Response response = post(URL_CLUSTER, Map.of("id", clusterName));
+        checkStatus(response);
 
         response = get(URL_CLUSTER + "/" + clusterName + "/list-lifecycle-modules");
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
-        response = delete(URL_CLUSTER + "/" + clusterName); // + "/delete-cluster");
-        checkStatusForSuccess(response);
+        response = delete(URL_CLUSTER + "/" + clusterName);
+        checkStatus(response);
 
         response = get(URL_CLUSTER + "/" + clusterName);
-        checkStatusForFailure(response);
-
-    }
-
-    public String createCluster() {
-        final String clusterName = "cluster_" + generateRandomString();
-        createCluster(clusterName);
-
-        return clusterName;
-    }
-
-    public void createCluster(final String clusterName) {
-        Map<String, String> newCluster = new HashMap<String, String>() {
-            {
-                put("id", clusterName);
-            }
-        };
-
-        Response response = post(URL_CLUSTER, newCluster);
-        checkStatusForSuccess(response);
-    }
-
-    public void startCluster(String clusterName) {
-        Response response = post(URL_CLUSTER + "/" + clusterName + "/start-cluster");
-        checkStatusForSuccess(response);
-    }
-
-    public void stopCluster(String clusterName) {
-        Response response = post(URL_CLUSTER + "/" + clusterName + "/stop-cluster");
-        checkStatusForSuccess(response);
-    }
-
-    public void createClusterInstance(final String clusterName, final String instanceName) {
-        Response response = post("/domain/create-instance", new HashMap<String, String>() {
-            {
-                put("cluster", clusterName);
-                put("id", instanceName);
-                put("node", "localhost-domain1");
-            }
-        });
-        checkStatusForSuccess(response);
-    }
-
-    public void deleteCluster(String clusterName) {
-        Response response = get(URL_CLUSTER + "/" + clusterName + "/list-instances");
-        Map body = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
-        Map extraProperties = (Map) body.get("extraProperties");
-        if (extraProperties != null) {
-            List<Map<String, String>> instanceList = (List<Map<String, String>>) extraProperties.get("instanceList");
-            if ((instanceList != null) && (!instanceList.isEmpty())) {
-                for (Map<String, String> instance : instanceList) {
-                    String status = instance.get("status");
-                    String instanceName = instance.get("name");
-                    if (!"NOT_RUNNING".equalsIgnoreCase(status)) {
-                        response = post("/domain/servers/server/" + instanceName + "/stop-instance");
-                        checkStatusForSuccess(response);
-                    }
-                    response = delete("/domain/servers/server/" + instanceName + "/delete-instance");
-                    checkStatusForSuccess(response);
-                }
-            }
-        }
-
-
-        response = delete(URL_CLUSTER + "/" + clusterName);// + "/delete-cluster");
-        checkStatusForSuccess(response);
-
-//        response = get(URL_CLUSTER + "/" + clusterName);
-//        checkStatusForFailure(response);
+        assertEquals(404, response.getStatus());
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,56 +17,62 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This class tests the changes to the handling of @Element("*") instances
  * @author jasonlee
  */
 public class ElementStarTest extends RestTestBase {
-    protected static final String URL_CREATE_INSTANCE = "/domain/create-instance";
+    protected static final String URL_CREATE_INSTANCE = "domain/create-instance";
 
     protected String instanceName1;
     protected String instanceName2;
 
-    @BeforeMethod
+    @BeforeEach
     public void before() {
         instanceName1 = "instance_" + generateRandomString();
         instanceName2 = "instance_" + generateRandomString();
 
         Response response = post(URL_CREATE_INSTANCE, new HashMap<String, String>() {{ put("id", instanceName1); put("node", "localhost-domain1"); }});
-        checkStatusForSuccess(response);
+        checkStatus(response);
         response = post(URL_CREATE_INSTANCE, new HashMap<String, String>() {{ put("id", instanceName2); put("node", "localhost-domain1"); }});
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
-    @AfterMethod
+    @AfterEach
     public void after() {
-        Response response = delete("/domain/servers/server/" + instanceName1 + "/delete-instance"); // TODO: This url should be fixed
-        checkStatusForSuccess(response);
-        response = delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
-        checkStatusForSuccess(response);
+        Response response = delete("domain/servers/server/" + instanceName1 + "/delete-instance"); // FIXME: This url should be fixed
+        checkStatus(response);
+        response = delete("domain/servers/server/" + instanceName2 + "/delete-instance");
+        checkStatus(response);
     }
 
-    @Test(enabled=false)
+    @Test
+    @Disabled("Unavailable webapp")
     public void testApplications() throws URISyntaxException {
-        ApplicationTest at = getTestClass(ApplicationTest.class);
         final String app1 = "app" + generateRandomString();
         final String app2 = "app" + generateRandomString();
 
-        at.deployApp("test.war", app1, app1);
-        at.deployApp("test.war", app2, app2);
-        at.addAppRef(app1, instanceName1);
-        at.addAppRef(app2, instanceName1);
+        // FIXME: we need some example webapp
+//        deployApp("test.war", app1, app1);
+//        deployApp("test.war", app2, app2);
+        addAppRef(app1, instanceName1);
+        addAppRef(app2, instanceName1);
 
-        Response response = get("/domain/servers/server/"+instanceName1+"/application-ref");
+        Response response = get("domain/servers/server/" + instanceName1 + "/application-ref");
         Map<String, String> children = this.getChildResources(response);
         assertEquals(2, children.size());
     }
@@ -73,28 +80,29 @@ public class ElementStarTest extends RestTestBase {
     @Test
     public void testResources() {
         // The DAS should already have two resource-refs (jdbc/__TimerPool and jdbc/__default)
-        Response response = get ("/domain/servers/server/server/resource-ref");
+        Response response = get ("domain/servers/server/server/resource-ref");
         Map<String, String> children = this.getChildResources(response);
         assertTrue(children.size() >= 2);
     }
 
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void testLoadBalancerConfigs() {
         final String lbName = "lbconfig-" + generateRandomString();
-        Response response = post ("/domain/lb-configs/lb-config/",
+        Response response = post ("domain/lb-configs/lb-config/",
                 new HashMap<String, String>() {{
                     put("id", lbName);
                     put("target", instanceName1);
                 }});
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
-        response = post("/domain/lb-configs/lb-config/" + lbName + "/create-http-lb-ref",
+        response = post("domain/lb-configs/lb-config/" + lbName + "/create-http-lb-ref",
                 new HashMap<String,String>() {{
                     put ("id", instanceName2);
                 }});
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
-        response = get ("/domain/lb-configs/lb-config/" + lbName + "/server-ref");
+        response = get ("domain/lb-configs/lb-config/" + lbName + "/server-ref");
         Map<String, String> children = this.getChildResources(response);
         assertTrue(!children.isEmpty());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,21 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.glassfish.nucleus.admin.rest;
+package org.glassfish.nucleus.test.tool;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+
 
 /**
- *
- * @author jdlee
+ * @author David Matejcek
  */
-@Test(enabled = false)
-public class ExceptionFilterTest {
-    public void testExceptionFiler() {
-        // TODO
+public class DomainLifecycleExtension extends StopDomainExtension implements BeforeAllCallback {
+
+
+    @Override
+    public void beforeAll(ExtensionContext context) throws Exception {
+        NucleusTestUtils.nadmin(20000, "start-domain", "domain1");
     }
 }

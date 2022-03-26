@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,52 +19,66 @@ package org.glassfish.nucleus.admin;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@Test
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(DomainLifecycleExtension.class)
 public class RestTest {
 
-    public void testManagementEndpoint() {
+    @Test
+    public void testManagementEndpoint() throws Exception {
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain.xml");
         try {
-            HttpURLConnection connection = getConnection("http://localhost:4848/management/domain.xml");
             assertEquals(200, connection.getResponseCode());
-        } catch (Exception e) {
-            fail(e.getMessage());
+        } finally {
+            connection.disconnect();
         }
     }
 
-    public void testMonitoringEndpoint() {
+    @Test
+    public void testMonitoringEndpoint() throws Exception {
+        HttpURLConnection connection = getConnection("http://localhost:4848/monitoring/domain.xml");
         try {
-            HttpURLConnection connection = getConnection("http://localhost:4848/monitoring/domain.xml");
             assertEquals(200, connection.getResponseCode());
-        } catch (Exception e) {
-            fail(e.getMessage());
+        } finally {
+            connection.disconnect();
         }
     }
 
-    public void testAdminCommandEndpoint() {
+    @Test
+    public void testAdminCommandEndpoint() throws Exception {
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/version.xml");
         try {
-            HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/version.xml");
             assertEquals(200, connection.getResponseCode());
-        } catch (Exception e) {
-            fail(e.getMessage());
+        } finally {
+            connection.disconnect();
         }
     }
 
-    public void testChildConfigBeanEndpoint() {
+    @Test
+    public void testChildConfigBeanEndpoint() throws Exception {
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/applications.xml");
         try {
-            HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/applications.xml");
             assertEquals(200, connection.getResponseCode());
-        } catch (Exception e) {
-            fail(e.getMessage());
+        } finally {
+            connection.disconnect();
         }
     }
 
-    public void testPostGetDelete() {
-        deleteNode(); // This should almost always fail, so we don't check the status. Just need to clean up from any prior runs
+    @Test
+    public void testPostGetDelete() throws Exception {
+        // FIXME: causes HTTP 500 without any log
+        assertThat(deleteNode(), greaterThanOrEqualTo(400));
         assertEquals(200, createNode());
         assertEquals(200, getNode());
         assertEquals(200, deleteNode());
@@ -73,69 +88,55 @@ public class RestTest {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestProperty("X-GlassFish-3", "true");
         connection.setRequestProperty("X-Requested-By", "dummy");
+        connection.setAuthenticator(new DasAuthenticator());
         return connection;
     }
 
-    private int createNode() {
-        HttpURLConnection connection = null;
+    private int createNode() throws IOException {
+        String parameters = "name=myConfigNode";
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/create-node-config");
         try {
-            String parameters = "name=myConfigNode";
-            connection = getConnection("http://localhost:4848/management/domain/nodes/create-node-config");
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+            connection.setRequestProperty("Content-Length", Integer.toString(parameters.getBytes().length));
             connection.setUseCaches(false);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestProperty("Content-Language", "en-US");
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(parameters);
-            wr.flush();
-            wr.close();
-            return connection.getResponseCode();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+            try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+                wr.writeBytes(parameters);
             }
+            return connection.getResponseCode();
+        } finally {
+            connection.disconnect();
         }
-
-        return -1;
     }
 
-    private int getNode() {
-        HttpURLConnection connection = null;
+    private int getNode() throws IOException {
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/node/myConfigNode");
         try {
-            connection = getConnection("http://localhost:4848/management/domain/nodes/node/myConfigNode");
             return connection.getResponseCode();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
         } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+            connection.disconnect();
         }
-
-        return -1;
     }
 
-    private int deleteNode() {
-        HttpURLConnection connection = null;
+    private int deleteNode() throws IOException {
+        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/delete-node-config?id=myConfigNode");
         try {
-            connection = getConnection("http://localhost:4848/management/domain/nodes/delete-node-config?name=myConfigNode");
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setDoOutput(true);
             return connection.getResponseCode();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
         } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
+            connection.disconnect();
         }
+    }
 
-        return -1;
+    private static class DasAuthenticator extends Authenticator {
+        @Override
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(NucleusTestUtils.ADMIN_USER, NucleusTestUtils.ADMIN_PASSWORD.toCharArray());
+        }
     }
 }

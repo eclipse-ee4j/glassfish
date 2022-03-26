@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,31 @@
 
 package org.glassfish.nucleus.admin.progress;
 
+import java.util.List;
+
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.grepProgressMessages;
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.isNonDecreasing;
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.uniqueMessages;
-import static org.glassfish.tests.utils.NucleusTestUtils.nadminWithOutput;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
-import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
-
-import java.util.List;
-
-import org.glassfish.tests.utils.NucleusTestUtils;
-import org.glassfish.tests.utils.NucleusTestUtils.NadminReturn;
-import org.testng.annotations.Test;
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author martinmares
  */
-@Test(testName = "ProgressStatusComplexTest")
+@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusComplexTest {
 
+    @Test
     public void executeCommandFromCommand() {
         NadminReturn result = nadminWithOutput("progress-exec-other");
 
@@ -50,7 +54,8 @@ public class ProgressStatusComplexTest {
             uniqueMessages(grepProgressMessages(result.out)));
     }
 
-    @Test(enabled = false)
+    @Test
+    @Disabled
     public void executeCommandWithSupplements() {
         NadminReturn result = nadminWithOutput("progress-supplement");
         assertTrue(result.returnValue);
@@ -70,7 +75,8 @@ public class ProgressStatusComplexTest {
     }
 
     // Test disabled till intermittent failures are fixed
-    @Test(enabled = false)
+    @Test
+    @Disabled
     public void executeVeryComplexCommand() {
         NucleusTestUtils.NadminReturn result = nadminWithOutput("progress-complex");
 

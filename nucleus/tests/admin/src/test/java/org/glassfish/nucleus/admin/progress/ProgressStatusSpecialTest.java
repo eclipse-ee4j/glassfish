@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,17 +19,23 @@ package org.glassfish.nucleus.admin.progress;
 
 import java.util.Iterator;
 import java.util.List;
-import static org.glassfish.tests.utils.NucleusTestUtils.*;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author martinmares
  */
-@Test(testName="ProgressStatusSpecialTest")
+@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusSpecialTest {
 
+    @Test
     public void stepBackCommand() {
         NadminReturn result = nadminWithOutput("progress-step-back");
         assertTrue(result.returnValue);
@@ -54,6 +61,7 @@ public class ProgressStatusSpecialTest {
         assertTrue(prg.getValue() < 80);
     }
 
+    @Test
     public void doubleTotalCommand() {
         NadminReturn result = nadminWithOutput("progress-double-totals");
         assertTrue(result.returnValue);

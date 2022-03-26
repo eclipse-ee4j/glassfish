@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,6 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
@@ -37,112 +24,193 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.nio.file.Path;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.glassfish.admin.rest.client.ClientWrapper;
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.logging.LoggingFeature.Verbosity;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
-import static org.testng.AssertJUnit.*;
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.w3c.dom.Document;
 
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.ADMIN_PASSWORD;
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.ADMIN_USER;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(DomainLifecycleExtension.class)
 public class RestTestBase {
-    protected static String baseUrl = "http://localhost:4848";
-    protected static final String RESPONSE_TYPE = MediaType.APPLICATION_JSON;//APPLICATION_XML;
-    protected static final String AUTH_USER_NAME = "dummyuser";
-    protected static final String AUTH_PASSWORD = "dummypass";
-    protected static final String CONTEXT_ROOT_MANAGEMENT = "/management";
-    private static final HttpAuthenticationFeature basicAuthFilter = HttpAuthenticationFeature.basic(AUTH_USER_NAME, AUTH_PASSWORD);
-    protected static String adminHost;
-    protected static String adminPort;
-    protected static String adminUser;
-    protected static String adminPass;
-    protected static String instancePort;
+    protected static final String RESPONSE_TYPE = MediaType.APPLICATION_JSON;
 
-    private static String currentTestClass = "";
-    protected Client client;
+    protected static final String CONTEXT_ROOT_MANAGEMENT = "management";
+    protected static final String URL_CLUSTER = "domain/clusters/cluster";
+    protected static final String URL_APPLICATION_DEPLOY = "domain/applications/application";
+    protected static final String URL_CREATE_INSTANCE = "domain/create-instance";
 
-//    @BeforeClass
+    private static String adminHost;
+    private static String adminPort;
+    private static String instancePort;
+    private static String baseAdminUrl;
+    private static String baseInstanceUrl;
+
+    private static String currentTestClass;
+    private Client client;
+
+    @BeforeAll
     public static void initialize() {
         adminPort = getParameter("admin.port", "4848");
         instancePort = getParameter("instance.port", "8080");
         adminHost = getParameter("instance.host", "localhost");
-        adminUser = getParameter("user.name", "admin");
-        adminPass = getParameter("user.pass", "");
-        baseUrl = "http://" + adminHost + ':' + adminPort + '/';
+        baseAdminUrl = "http://" + adminHost + ':' + adminPort + '/';
+        baseInstanceUrl = "http://" + adminHost + ':' + instancePort + '/';
 
         final RestTestBase rtb = new RestTestBase();
-        rtb.get("/domain/rotate-log");
+        rtb.get("domain/rotate-log");
     }
 
-//    @AfterClass
+    @AfterAll
     public static void captureLog() {
         try {
-
-            if (!currentTestClass.isEmpty()) {
+            if (currentTestClass != null) {
                 RestTestBase rtb = new RestTestBase();
-                Client client = new ClientWrapper(new HashMap<String, String>(), adminUser, adminPass);
-                Response cr = client.target(rtb.getAddress("/domain/view-log")).
-                        request().
-                        get(Response.class);
-
-                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("target/surefire-reports/" + currentTestClass + "-server.log")));
-                out.write(cr.readEntity(String.class));
-                out.close();
+                Client client = new ClientWrapper(new HashMap<String, String>(), ADMIN_USER, ADMIN_PASSWORD);
+                Response response = client.target(rtb.getAddress("domain/view-log")).request().get(Response.class);
+                File directory = NucleusTestUtils.BASEDIR.toPath().resolve(Path.of("target", "surefire-reports")).toFile();
+                directory.mkdirs();
+                File output = new File(directory, currentTestClass + "-server.log");
+                try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(output)))) {
+                    out.write(response.readEntity(String.class));
+                }
             }
         } catch (Exception ex) {
-            Logger.getLogger(RestTestBase.class.getName()).
-                    log(Level.INFO, null, ex);
+            Logger.getLogger(RestTestBase.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected static String getBaseUrl() {
-        return baseUrl;
-    }
-
-    protected String getContextRoot() {
-        return CONTEXT_ROOT_MANAGEMENT;
-    }
-
-//    @BeforeMethod(alwaysRun = true)
+    @BeforeEach
     public void setup() {
         currentTestClass = this.getClass().getName();
     }
 
-    protected String getAddress(String address) {
-        if (address.startsWith("http://")) {
-            return address;
+    @AfterEach
+    protected void resetClient() {
+        if (client == null) {
+            return;
         }
-
-        return baseUrl + getContextRoot() + address;
+        client.close();
+        client = null;
     }
 
-//    @BeforeMethod
-    protected Client getClient() {
-        if (client == null) {
-            client = new ClientWrapper(new HashMap<String, String>(), adminUser, adminPass);
-            if (Boolean.parseBoolean(System.getProperty("DEBUG"))) {
-                client.register(LoggingFeature.class);
+
+    public String createCluster() {
+        final String clusterName = "cluster_" + generateRandomString();
+        createCluster(clusterName);
+        return clusterName;
+    }
+
+    public void createCluster(final String clusterName) {
+        Map<String, String> newCluster = Map.of("id", clusterName);
+        Response response = post(URL_CLUSTER, newCluster);
+        checkStatus(response);
+    }
+
+    public void startCluster(String clusterName) {
+        Response response = post(URL_CLUSTER + "/" + clusterName + "/start-cluster");
+        checkStatus(response);
+    }
+
+    public void stopCluster(String clusterName) {
+        Response response = post(URL_CLUSTER + "/" + clusterName + "/stop-cluster");
+        checkStatus(response);
+    }
+
+    public void createClusterInstance(final String clusterName, final String instanceName) {
+        Response response = post("domain/create-instance",
+            Map.of("cluster", clusterName, "id", instanceName, "node", "localhost-domain1"));
+        checkStatus(response);
+    }
+
+    public void deleteCluster(String clusterName) {
+        Response response = get(URL_CLUSTER + "/" + clusterName + "/list-instances");
+        Map body = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        Map extraProperties = (Map) body.get("extraProperties");
+        if (extraProperties != null) {
+            List<Map<String, String>> instanceList = (List<Map<String, String>>) extraProperties.get("instanceList");
+            if (instanceList != null && !instanceList.isEmpty()) {
+                for (Map<String, String> instance : instanceList) {
+                    String status = instance.get("status");
+                    String instanceName = instance.get("name");
+                    if (!"NOT_RUNNING".equalsIgnoreCase(status)) {
+                        response = post("domain/servers/server/" + instanceName + "/stop-instance");
+                        checkStatus(response);
+                    }
+                    response = delete("domain/servers/server/" + instanceName + "/delete-instance");
+                    checkStatus(response);
+                }
             }
         }
-        return client;
+        response = delete(URL_CLUSTER + "/" + clusterName);
+        assertEquals(200, response.getStatus());
+        response = get(URL_CLUSTER + "/" + clusterName);
+        assertEquals(404, response.getStatus());
     }
 
-    protected void resetClient() {
-        client = null;
-        getClient();
+    public Map<String, String> deployApp (final File archive, final String contextRoot, final String name) {
+        Map<String, Object> app = Map.of(
+            "id", archive,
+            "contextroot", contextRoot,
+            "name", name
+        );
+        Response response = postWithUpload(URL_APPLICATION_DEPLOY, app);
+        checkStatus(response);
+        return getEntityValues(get(URL_APPLICATION_DEPLOY + "/" + app.get("name")));
     }
 
-    protected void authenticate() {
-        getClient().register(basicAuthFilter);
+    public void addAppRef(final String applicationName, final String targetName){
+        Response cr = post("domain/servers/server/" + targetName + "/application-ref",
+            Map.of("id", applicationName, "target", targetName));
+        checkStatus(cr);
+    }
+
+    public Response undeployApp(String appName) {
+        Response response = delete(URL_APPLICATION_DEPLOY + "/" + appName);
+        checkStatus(response);
+        return response;
     }
 
     protected <T> T getTestClass(Class<T> clazz) {
         try {
-            T test = clazz.newInstance();
+            T test = clazz.getDeclaredConstructor().newInstance();
             ((RestTestBase) test).setup();
             return test;
         } catch (Exception ex) {
@@ -166,29 +234,45 @@ public class RestTestBase {
         return Math.abs(r.nextInt(max - 1)) + 1;
     }
 
-    protected boolean isSuccess(Response response) {
-        int status = response.getStatus();
-        return ((status >= 200) && (status <= 299));
-    }
-
-    protected void checkStatusForSuccess(Response cr) {
-        int status = cr.getStatus();
-        if (!isSuccess(cr)) {
-            String message = getErrorMessage(cr);
-            fail("Expected a status between 200 and 299 (inclusive).  Found " + status
-                    + ((message != null) ? ":  " + message : ""));
-        }
-    }
-
-    protected void checkStatusForFailure(Response cr) {
-        int status = cr.getStatus();
-        if (isSuccess(cr)) {
-            fail("Expected a status less than 200 or greater than 299 (inclusive).  Found " + status);
-        }
+    protected void checkStatus(Response response) {
+        assertAll("response status",
+            () -> assertThat(response.getStatus(), greaterThanOrEqualTo(200)),
+            () -> assertThat(response.getStatus(), lessThan(300))
+        );
     }
 
     protected String getResponseType() {
         return RESPONSE_TYPE;
+    }
+
+
+    protected static String getBaseAdminUrl() {
+        return baseAdminUrl;
+    }
+
+    protected static String getBaseInstanceUrl() {
+        return baseInstanceUrl;
+    }
+
+
+    protected String getContextRoot() {
+        return CONTEXT_ROOT_MANAGEMENT;
+    }
+
+    protected String getAddress(String address) {
+        if (address.startsWith("http://")) {
+            return address;
+        }
+
+        return baseAdminUrl + getContextRoot() + '/' + address;
+    }
+
+    protected Client getClient() {
+        if (client == null) {
+            client = new ClientWrapper(new HashMap<String, String>(), ADMIN_USER, ADMIN_PASSWORD);
+            client.register(LoggingFeature.builder().withLogger(Logger.getLogger("CLIENT")).level(Level.FINE).verbosity(Verbosity.PAYLOAD_TEXT).separator("\n").build());
+        }
+        return client;
     }
 
     protected Response get(String address) {
@@ -211,9 +295,13 @@ public class RestTestBase {
     }
 
     protected Response post(String address, Map<String, String> payload) {
+        return post(address, buildMultivaluedMap(payload));
+    }
+
+    protected Response post(String address, MultivaluedMap<String, String> payload) {
         return getClient().target(getAddress(address)).
-                request(getResponseType()).
-                post(Entity.entity(buildMultivaluedMap(payload), MediaType.APPLICATION_FORM_URLENCODED), Response.class);
+            request(getResponseType()).
+            post(Entity.entity(payload, MediaType.APPLICATION_FORM_URLENCODED), Response.class);
     }
 
     protected Response post(String address) {
@@ -258,8 +346,7 @@ public class RestTestBase {
         for (Map.Entry<String, String> entry : payload.entrySet()) {
             target = target.queryParam(entry.getKey(), entry.getValue());
         }
-        return target.request(getResponseType())
-                .delete(Response.class);
+        return target.request(getResponseType()).delete(Response.class);
     }
 
     /**
@@ -270,7 +357,7 @@ public class RestTestBase {
      * @return
      */
     protected Map<String, String> getEntityValues(Response response) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
 
         String xml = response.readEntity(String.class);
         Map responseMap = MarshallingUtils.buildMapFromDocument(xml);
@@ -284,7 +371,7 @@ public class RestTestBase {
 
     protected List<String> getCommandResults(Response response) {
         String document = response.readEntity(String.class);
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         Map map = MarshallingUtils.buildMapFromDocument(document);
         String message = (String) map.get("message");
         if (message != null && !"".equals(message)) {
@@ -309,10 +396,10 @@ public class RestTestBase {
         Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         Map<String, Map> extraProperties = (Map<String, Map>) responseMap.get("extraProperties");
         if (extraProperties != null) {
-            return (Map<String, String>) extraProperties.get("childResources");
+            return extraProperties.get("childResources");
         }
 
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     public Document getDocument(String input) {
@@ -330,18 +417,15 @@ public class RestTestBase {
         Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         Map extraProperties = (Map) responseMap.get("extraProperties");
         if (extraProperties != null) {
-            return (List) extraProperties.get("properties");
+            return (List<Map<String, String>>) extraProperties.get("properties");
         }
-        return new ArrayList<Map<String, String>>();
+        return new ArrayList<>();
     }
 
-    private MultivaluedMap buildMultivaluedMap(Map<String, String> payload) {
-        if (payload instanceof MultivaluedMap) {
-            return (MultivaluedMap) payload;
-        }
-        MultivaluedMap formData = new MultivaluedHashMap();
+    private MultivaluedMap<String, String> buildMultivaluedMap(Map<String, String> payload) {
+        MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         if (payload != null) {
-            for (final Map.Entry<String, String> entry : payload.entrySet()) {
+            for (final Entry<String, String> entry : payload.entrySet()) {
                 formData.add(entry.getKey(), entry.getValue());
             }
         }

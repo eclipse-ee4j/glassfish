@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,40 +17,44 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jasonlee
- * Date: May 26, 2010
- * Time: 2:28:27 PM
- * To change this template use File | Settings | File Templates.
+ * @author jasonlee
+ * @since May 26, 2010
  */
+@Disabled
 public class JmsTest extends RestTestBase {
-    static final String URL_ADMIN_OBJECT_RESOURCE = "/domain/resources/admin-object-resource";
-    static final String URL_CONNECTOR_CONNECTION_POOL = "/domain/resources/connector-connection-pool";
-    static final String URL_CONNECTOR_RESOURCE = "/domain/resources/connector-resource";
-    static final String URL_JMS_HOST = "/domain/configs/config/server-config/jms-service/jms-host";
-    static final String URL_SEVER_JMS_DEST = "/domain/servers/server/server";
+    static final String URL_ADMIN_OBJECT_RESOURCE = "domain/resources/admin-object-resource";
+    static final String URL_CONNECTOR_CONNECTION_POOL = "domain/resources/connector-connection-pool";
+    static final String URL_CONNECTOR_RESOURCE = "domain/resources/connector-resource";
+    static final String URL_JMS_HOST = "domain/configs/config/server-config/jms-service/jms-host";
+    static final String URL_SEVER_JMS_DEST = "domain/servers/server/server";
     static final String DEST_TYPE = "topic";
 
-    @Test(enabled=false)
+    @Test
     public void testJmsConnectionFactories() {
         final String poolName = "JmsConnectionFactory" + generateRandomString();
-        Map<String, String> ccp_attrs = new HashMap<String, String>() {
+        Map<String, String> ccp_attrs = new HashMap<>() {
             {
                 put("name", poolName);
                 put("connectiondefinition", "jakarta.jms.ConnectionFactory");
                 put("raname", "jmsra");
             }
         };
-        Map<String, String> cr_attrs = new HashMap<String, String>() {
+        Map<String, String> cr_attrs = new HashMap<>() {
             {
                 put("id", poolName);
                 put("poolname", poolName);
@@ -58,7 +63,7 @@ public class JmsTest extends RestTestBase {
 
         // Create connection pool
         Response response = post(URL_CONNECTOR_CONNECTION_POOL, ccp_attrs);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         // Check connection pool creation
         Map<String, String> pool = getEntityValues(get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
@@ -66,7 +71,7 @@ public class JmsTest extends RestTestBase {
 
         // Create connector resource
         response = post(URL_CONNECTOR_RESOURCE, cr_attrs);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         // Check connector resource
         Map<String, String> resource = getEntityValues(get(URL_CONNECTOR_RESOURCE + "/" + poolName));
@@ -78,7 +83,7 @@ public class JmsTest extends RestTestBase {
                 put("description", poolName);
             }
         });
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         pool = getEntityValues(get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
         assertTrue(pool.get("description").equals(poolName));
@@ -89,7 +94,7 @@ public class JmsTest extends RestTestBase {
                 put("description", poolName);
             }
         });
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         resource = getEntityValues(get(URL_CONNECTOR_RESOURCE + "/" + poolName));
         assertTrue(pool.get("description").equals(poolName));
@@ -100,10 +105,10 @@ public class JmsTest extends RestTestBase {
                 put("cascade", "true");
             }
         });
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsDestinationResources() {
         final String jndiName = "jndi/" + generateRandomString();
         String encodedJndiName = jndiName;
@@ -112,7 +117,7 @@ public class JmsTest extends RestTestBase {
         } catch (UnsupportedEncodingException e) {
         }
 
-        Map<String, String> attrs = new HashMap<String, String>() {
+        Map<String, String> attrs = new HashMap<>() {
             {
                 put("id", jndiName);
                 put("raname", "jmsra");
@@ -121,16 +126,16 @@ public class JmsTest extends RestTestBase {
         };
 
         Response response = post(URL_ADMIN_OBJECT_RESOURCE, attrs);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         Map<String, String> entity = getEntityValues(get(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName));
         assertFalse(entity.isEmpty());
 
         response = delete(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName);
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsPhysicalDestination() {
         final String destName = "jmsDest" + generateRandomString();
         final int maxNumMsgs = generateRandomNumber(500);
@@ -138,13 +143,13 @@ public class JmsTest extends RestTestBase {
 
         createJmsPhysicalDestination(destName, DEST_TYPE, URL_SEVER_JMS_DEST);
 
-        final HashMap<String, String> newDest = new HashMap<String, String>() {
+        final HashMap<String, String> newDest = new HashMap<>() {
             {
                 put("id", destName);
                 put("desttype", DEST_TYPE);
             }
         };
-        Map<String, String> destProps = new HashMap<String, String>() {
+        Map<String, String> destProps = new HashMap<>() {
             {
                 putAll(newDest);
                 put("property", "MaxNumMsgs=" + maxNumMsgs + ":ConsumerFlowLimit=" + consumerFlowLimit);
@@ -152,12 +157,12 @@ public class JmsTest extends RestTestBase {
         };
 
         Response response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         response = post(URL_SEVER_JMS_DEST + "/__update-jmsdest", destProps);
-        checkStatusForSuccess(response);
+        checkStatus(response);
         response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
-        checkStatusForSuccess(response);
+        checkStatus(response);
         Map<String, String> entity = this.getEntityValues(response);
         assertEquals(maxNumMsgs, entity.get("MaxNumMsgs"));
         assertEquals(consumerFlowLimit, entity.get("ConsumerFlowLimit"));
@@ -165,7 +170,7 @@ public class JmsTest extends RestTestBase {
         deleteJmsPhysicalDestination(destName, URL_SEVER_JMS_DEST);
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsPhysicalDestionationsWithClusters() {
         final String destName = "jmsDest" + generateRandomString();
         ClusterTest ct = getTestClass(ClusterTest.class);
@@ -176,7 +181,7 @@ public class JmsTest extends RestTestBase {
         try {
 
             createJmsPhysicalDestination(destName, "topic", endpoint);
-            final HashMap<String, String> newDest = new HashMap<String, String>() {
+            final HashMap<String, String> newDest = new HashMap<>() {
                 {
                     put("id", destName);
                     put("desttype", DEST_TYPE);
@@ -184,10 +189,10 @@ public class JmsTest extends RestTestBase {
             };
 
             Response response = get(endpoint + "/__get-jmsdest", newDest);
-            checkStatusForSuccess(response);
+            checkStatus(response);
 
             response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
-            checkStatusForFailure(response);
+            checkStatus(response);
         }
         finally {
             deleteJmsPhysicalDestination(destName, endpoint);
@@ -196,15 +201,15 @@ public class JmsTest extends RestTestBase {
         }
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsPing() {
         String results = get(URL_SEVER_JMS_DEST + "/jms-ping").readEntity(String.class);
         assertTrue(results.contains("JMS-ping command executed successfully"));
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsFlush() {
-        Map<String, String> payload = new HashMap<String, String>() {
+        Map<String, String> payload = new HashMap<>() {
             {
                 put("id", "mq.sys.dmq");
                 put("destType", "queue");
@@ -212,13 +217,13 @@ public class JmsTest extends RestTestBase {
         };
 
         Response response = post(URL_SEVER_JMS_DEST + "/flush-jmsdest", payload);
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
-    @Test(enabled=false)
+    @Test
     public void testJmsHosts() {
         final String jmsHostName = "jmshost" + generateRandomString();
-        Map<String, String> newHost = new HashMap<String, String>() {
+        Map<String, String> newHost = new HashMap<>() {
             {
                 put("id", jmsHostName);
                 put("adminPassword", "admin");
@@ -230,7 +235,7 @@ public class JmsTest extends RestTestBase {
 
         // Test create
         Response response = post(URL_JMS_HOST, newHost);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         // Test edit
         Map<String, String> entity = getEntityValues(get(URL_JMS_HOST + "/" + jmsHostName));
@@ -238,17 +243,17 @@ public class JmsTest extends RestTestBase {
         assertEquals(jmsHostName, entity.get("name"));
         entity.put("port", "8686");
         response = post(URL_JMS_HOST + "/" + jmsHostName, entity);
-        checkStatusForSuccess(response);
+        checkStatus(response);
         entity = getEntityValues(get(URL_JMS_HOST + "/" + jmsHostName));
         assertEquals("8686", entity.get("port"));
 
         // Test delete
         response = delete(URL_JMS_HOST + "/" + jmsHostName);
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
     public void createJmsPhysicalDestination(final String destName, final String type, String endpoint) {
-        final Map<String, String> newDest = new HashMap<String, String>() {
+        final Map<String, String> newDest = new HashMap<>() {
             {
                 put("id", destName);
                 put("desttype", type);
@@ -258,11 +263,11 @@ public class JmsTest extends RestTestBase {
         // Test Create
         Response response = post(endpoint + "/create-jmsdest", newDest);
         // This command returns 200 instead of 201, for some reason.  Odd.
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
     public void deleteJmsPhysicalDestination(final String destName, String endpoint) {
-        final HashMap<String, String> newDest = new HashMap<String, String>() {
+        final HashMap<String, String> newDest = new HashMap<>() {
             {
                 put("id", destName);
                 put("desttype", DEST_TYPE);
@@ -271,7 +276,7 @@ public class JmsTest extends RestTestBase {
 
         // Test deletion
         Response response = delete(endpoint + "/delete-jmsdest", newDest); // You POST to commands
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         response = get(endpoint + "__get-jmsdest", newDest);
         assertFalse(response.getStatus() == 200);

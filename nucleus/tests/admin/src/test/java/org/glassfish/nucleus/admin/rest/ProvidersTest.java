@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,20 +18,21 @@
 package org.glassfish.nucleus.admin.rest;
 
 import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author jasonlee
  */
 public class ProvidersTest extends RestTestBase {
-    private static final String URL_ACTION_REPORT_RESULT = "/domain/uptime";
-    private static final String URL_COMMAND_RESOURCE_GET_RESULT = "/domain/stop";
-    private static final String URL_GET_RESULT = "/domain";
-    private static final String URL_GET_RESULT_LIST = "/domain/servers/server";
-    private static final String URL_OPTIONS_RESULT = "/domain";
-    private static final String URL_STRING_LIST_RESULT = "/domain/configs/config/server-config/java-config/jvm-options";
+    private static final String URL_ACTION_REPORT_RESULT = "domain/uptime";
+    private static final String URL_COMMAND_RESOURCE_GET_RESULT = "domain/stop";
+    private static final String URL_GET_RESULT = "domain";
+    private static final String URL_GET_RESULT_LIST = "domain/servers/server";
+    private static final String URL_OPTIONS_RESULT = "domain";
+    private static final String URL_STRING_LIST_RESULT = "domain/configs/config/server-config/java-config/jvm-options";
     private static String URL_TREE_NODE;
 
     public ProvidersTest() {
@@ -40,120 +42,120 @@ public class ProvidersTest extends RestTestBase {
     @Test
     public void testActionReportResultHtmlProvider() {
         Response response = get(URL_ACTION_REPORT_RESULT + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testActionReportResultXmlProvider() {
         Response response = get(URL_ACTION_REPORT_RESULT + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testActionReportResultJsonProvider() {
         Response response = get(URL_ACTION_REPORT_RESULT + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultHtmlProvider() {
         Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultXmlProvider() {
         Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultJsonProvider() {
         Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultHtmlProvider() {
         Response response = get(URL_GET_RESULT + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultXmlProvider() {
         Response response = get(URL_GET_RESULT + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultJsonProvider() {
         Response response = get(URL_GET_RESULT + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListHtmlProvider() {
         Response response = get(URL_GET_RESULT_LIST + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListXmlProvider() {
         Response response = get(URL_GET_RESULT_LIST + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListJsonProvider() {
         Response response = get(URL_GET_RESULT_LIST + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testOptionsResultXmlProvider() {
         Response response = options(URL_OPTIONS_RESULT + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testOptionsResultJsonProvider() {
         Response response = options(URL_OPTIONS_RESULT + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultHtmlProvider() {
         Response response = get(URL_STRING_LIST_RESULT + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultXmlProvider() {
         Response response = get(URL_STRING_LIST_RESULT + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultJsonProvider() {
         Response response = get(URL_STRING_LIST_RESULT + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeHtmlProvider() {
         Response response = get(URL_TREE_NODE + ".html");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeXmlProvider() {
         Response response = get(URL_TREE_NODE + ".xml");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeJsonProvider() {
         Response response = get(URL_TREE_NODE + ".json");
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,21 +20,24 @@ package org.glassfish.nucleus.admin.rest;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author jasonlee
  */
 public class ConfigTest extends RestTestBase {
 
-    public static final String BASE_CONFIGS_URL = "/domain/configs";
+    public static final String BASE_CONFIGS_URL = "domain/configs";
 
     @Test
     public void testConfigCopy() {
         String configName = "config-" + generateRandomString();
-        MultivaluedMap formData = new MultivaluedHashMap();
+        MultivaluedHashMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("id", "default-config");
         formData.add("id", configName);
         createAndVerifyConfig(configName, formData);
@@ -41,28 +45,28 @@ public class ConfigTest extends RestTestBase {
     }
 
     @Test
-    public void duplicateCopyShouldFail() {
-        MultivaluedMap formData = new MultivaluedHashMap();
+    public void duplicitCopyShouldFail() {
+        MultivaluedHashMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("id", "default-config");
         formData.add("id", "server-config");
-
         Response response = post(BASE_CONFIGS_URL + "/copy-config", formData);
-        assertFalse(isSuccess(response));
+        // FIXME: causes HTTP 500 without any log
+        assertThat(response.getStatus(), greaterThanOrEqualTo(400));
     }
 
-    public void createAndVerifyConfig(String configName, MultivaluedMap configData) {
+    public void createAndVerifyConfig(String configName, MultivaluedMap<String, String> configData) {
         Response response = post(BASE_CONFIGS_URL + "/copy-config", configData);
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         response = get(BASE_CONFIGS_URL + "/config/" + configName);
-        checkStatusForSuccess(response);
+        checkStatus(response);
     }
 
     public void deleteAndVerifyConfig(String configName) {
         Response response = post(BASE_CONFIGS_URL + "/config/" + configName + "/delete-config");
-        checkStatusForSuccess(response);
+        checkStatus(response);
 
         response = get(BASE_CONFIGS_URL + "/config/" + configName);
-        assertFalse(isSuccess(response));
+        assertEquals(404, response.getStatus());
     }
 }

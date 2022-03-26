@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,67 +17,71 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author jasonlee
  */
 public class ResourceRefTest extends RestTestBase {
-    private static final String URL_CREATE_INSTANCE = "/domain/create-instance";
-    private static final String URL_JDBC_RESOURCE = "/domain/resources/jdbc-resource";
-    private static final String URL_RESOURCE_REF = "/domain/servers/server/server/resource-ref";
+    private static final String URL_CREATE_INSTANCE = "domain/create-instance";
+    private static final String URL_JDBC_RESOURCE = "domain/resources/jdbc-resource";
+    private static final String URL_RESOURCE_REF = "domain/servers/server/server/resource-ref";
 
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void testCreatingResourceRef() {
         final String instanceName = "instance_" + generateRandomString();
         final String jdbcResourceName = "jdbc_" + generateRandomString();
-        Map<String, String> newInstance = new HashMap<String, String>() {{
+        Map<String, String> newInstance = new HashMap<>() {{
             put("id", instanceName);
             put("node", "localhost-domain1");
         }};
-        Map<String, String> jdbcResource = new HashMap<String, String>() {{
+        Map<String, String> jdbcResource = new HashMap<>() {{
             put("id", jdbcResourceName);
             put("connectionpoolid", "DerbyPool");
             put("target", instanceName);
         }};
-        Map<String, String> resourceRef = new HashMap<String, String>() {{
+        Map<String, String> resourceRef = new HashMap<>() {{
             put("id", jdbcResourceName);
             put("target", "server");
         }};
 
         try {
             Response response = post(URL_CREATE_INSTANCE, newInstance);
-            assertTrue(isSuccess(response));
+            assertEquals(200, response.getStatus());
 
             response = post(URL_JDBC_RESOURCE, jdbcResource);
-            assertTrue(isSuccess(response));
+            assertEquals(200, response.getStatus());
 
             response = post(URL_RESOURCE_REF, resourceRef);
-            assertTrue(isSuccess(response));
+            assertEquals(200, response.getStatus());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            Response response = delete("/domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName, new HashMap<String, String>() {{
+            Response response = delete("domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName, new HashMap<String, String>() {{
                 put("target", instanceName);
             }});
-            assertTrue(isSuccess(response));
-            response = get("/domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName);
-            assertFalse(isSuccess(response));
+            assertEquals(200, response.getStatus());
+            response = get("domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName);
+            assertEquals(404, response.getStatus());
 
             response = delete(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
-            assertTrue(isSuccess(response));
+            assertEquals(200, response.getStatus());
             response = get(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
-            assertFalse(isSuccess(response));
+            assertEquals(404, response.getStatus());
 
-            response = delete("/domain/servers/server/" + instanceName + "/delete-instance");
-            assertTrue(isSuccess(response));
-            response = get("/domain/servers/server/" + instanceName);
-            assertFalse(isSuccess(response));
+            response = delete("domain/servers/server/" + instanceName + "/delete-instance");
+            assertEquals(200, response.getStatus());
+            response = get("domain/servers/server/" + instanceName);
+            assertEquals(404, response.getStatus());
         }
     }
 }

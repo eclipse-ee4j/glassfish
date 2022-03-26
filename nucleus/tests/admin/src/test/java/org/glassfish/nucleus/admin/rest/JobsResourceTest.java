@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +17,42 @@
 
 package org.glassfish.nucleus.admin.rest;
 
-import java.util.Locale;
 import jakarta.ws.rs.core.Response;
+
+import java.util.Locale;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.resources.composite.Job;
-import static org.glassfish.tests.utils.NucleusTestUtils.nadminWithOutput;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author jdlee
  */
-@Test(testName="JobsResourceTest")
 public class JobsResourceTest extends RestTestBase {
-    public static final String URL_JOBS = "/jobs";
+    public static final String URL_JOBS = "jobs";
 
+    @Test
     public void testJobsListing() {
-        assertTrue(isSuccess(get(URL_JOBS)));
+        assertEquals(200, get(URL_JOBS).getStatus());
     }
 
+    @Test
     public void testGetJob() throws JSONException {
         // make sure we have at least one job
         issueDetachedCommand();
 
         // verify getting the collection
         Response response = get(URL_JOBS);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         // verify the overall structure
         JSONObject json = response.readEntity(JSONObject.class);
@@ -71,7 +77,7 @@ public class JobsResourceTest extends RestTestBase {
         // verify the job it refers to by following the link.
         // it should only have a parent link
         response = get(uri);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
         json = response.readEntity(JSONObject.class);
         JSONObject item = json.getJSONObject("item");
         verifyItem(jobId, item);

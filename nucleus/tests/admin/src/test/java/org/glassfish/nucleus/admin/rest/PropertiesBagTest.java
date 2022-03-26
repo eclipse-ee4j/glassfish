@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,43 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- *
  * @author jasonlee
  */
 public class PropertiesBagTest extends RestTestBase {
 
-    protected static final String PROP_DOMAIN_NAME = "administrative.domain.name";
-    protected static final String URL_DOMAIN_PROPERTIES = "/domain/property";
-    protected static final String URL_JAVA_CONFIG_PROPERTIES = "/domain/configs/config/default-config/java-config/property";
-    protected static final String URL_SERVER_PROPERTIES = "/domain/servers/server/server/property";
-    protected static final String URL_DERBYPOOL_PROPERTIES = "/domain/resources/jdbc-connection-pool/DerbyPool/property";
+    private static final String PROP_DOMAIN_NAME = "administrative.domain.name";
+    private static final String URL_DOMAIN_PROPERTIES = "domain/property";
+    private static final String URL_JAVA_CONFIG_PROPERTIES = "domain/configs/config/default-config/java-config/property";
+    private static final String URL_SERVER_PROPERTIES = "domain/servers/server/server/property";
+    private static final String URL_DERBYPOOL_PROPERTIES = "domain/resources/jdbc-connection-pool/DerbyPool/property";
     private static final String REQUEST_FORMAT = MediaType.APPLICATION_JSON;
 
     @Test
     public void propertyRetrieval() {
         Response response = get(URL_DOMAIN_PROPERTIES);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
         List<Map<String, String>> properties = getProperties(response);
         assertTrue(isPropertyFound(properties, PROP_DOMAIN_NAME));
     }
@@ -59,9 +68,10 @@ public class PropertiesBagTest extends RestTestBase {
         createAndDeleteProperties(URL_SERVER_PROPERTIES);
     }
 
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void propsWithEmptyValues() {
-        List<Map<String, String>> properties = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> properties = new ArrayList<>();
         final String empty = "empty" + generateRandomNumber();
         final String foo = "foo" + generateRandomNumber();
         final String bar = "bar" + generateRandomNumber();
@@ -88,10 +98,11 @@ public class PropertiesBagTest extends RestTestBase {
         assertFalse(isPropertyFound(newProperties, bar));
     }
 
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void testOptimizedPropertyHandling() {
         // First, test changing one property and adding a new
-        List<Map<String, String>> properties = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> properties = new ArrayList<>();
         properties.add(createProperty("PortNumber","1527"));
         properties.add(createProperty("Password","APP"));
         properties.add(createProperty("User","APP"));
@@ -146,11 +157,12 @@ public class PropertiesBagTest extends RestTestBase {
         }
     }
 
-    // the prop name can not contain .
+    // FIXME: the prop name can not contain .
     // need to remove the . test when http://java.net/jira/browse/GLASSFISH-15418  is fixed
-//    @Test
+    @Test
+    @Disabled
     public void testPropertiesWithDots() {
-        List<Map<String, String>> properties = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> properties = new ArrayList<>();
         final String prop = "some.property.with.dots." + generateRandomNumber();
         final String description = "This is the description";
         final String value = generateRandomString();
@@ -170,9 +182,10 @@ public class PropertiesBagTest extends RestTestBase {
     // saved. This test will create the jmsra config with a set of properties,
     // then update only one the object's properties, which should be a very quick,
     // inexpensive operation.
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void testJmsRaCreateAndUpdate() {
-        List<Map<String, String>> props = new ArrayList<Map<String, String>>(){{
+        List<Map<String, String>> props = new ArrayList<>(){{
            add(createProperty("AddressListBehavior", "random"));
            add(createProperty("AddressListIterations", "3"));
            add(createProperty("AdminPassword", "admin"));
@@ -190,20 +203,20 @@ public class PropertiesBagTest extends RestTestBase {
            add(createProperty("startRMIRegistry", "false"));
         }};
         final String propertyList = buildPropertyList(props);
-        Map<String, String> attrs = new HashMap<String, String>() {{
+        Map<String, String> attrs = new HashMap<>() {{
             put("objecttype","user");
             put("id","jmsra");
             put("threadPoolIds","thread-pool-1");
             put("property", propertyList);
         }};
 
-        final String URL = "/domain/resources/resource-adapter-config";
+        final String URL = "domain/resources/resource-adapter-config";
         delete(URL+"/jmsra");
         Response response = post(URL, attrs);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         // Change one property value (AddressListIterations) and update the object
-        props = new ArrayList<Map<String, String>>(){{
+        props = new ArrayList<>(){{
            add(createProperty("AddressListBehavior", "random"));
            add(createProperty("AddressListIterations", "4"));
            add(createProperty("AdminPassword", "admin"));
@@ -225,8 +238,8 @@ public class PropertiesBagTest extends RestTestBase {
         delete(URL+"/jmsra");
     }
 
-    //Disable this test for now. The functionality this tests is not available in nucleus
-    //@Test
+    @Disabled("Disable this test for now. The functionality this tests is not available in nucleus")
+    @Test
     public void test20810() {
         Map<String, String> payload = new HashMap<>();
         payload.put("persistenceScope","session");
@@ -237,22 +250,22 @@ public class PropertiesBagTest extends RestTestBase {
         payload.put("persistenceStoreHealthCheckEnabled","false");
         payload.put("ssoFailoverEnabled","false");
 
-        final String wcaUri = "/domain/configs/config/default-config/availability-service/web-container-availability";
+        final String wcaUri = "domain/configs/config/default-config/availability-service/web-container-availability";
         Response r = post(wcaUri, payload);
-        assertTrue(isSuccess(r));
+        checkStatus(r);
 
-        assertTrue(isSuccess(get(wcaUri)));
+        checkStatus(get(wcaUri));
 
         r = getClient()
-                .target(getAddress("/domain/configs/config/default-config/availability-service/web-container-availability/property")).
+                .target(getAddress("domain/configs/config/default-config/availability-service/web-container-availability/property")).
                 request(getResponseType())
                 .post(Entity.json(new JSONArray()), Response.class);
-        assertTrue(isSuccess(r));
+        checkStatus(r);
 
-        assertTrue(isSuccess(get(wcaUri)));
+        checkStatus(get(wcaUri));
     }
 
-    protected String buildPropertyList(List<Map<String, String>> props) {
+    private String buildPropertyList(List<Map<String, String>> props) {
         StringBuilder sb = new StringBuilder();
         String sep = "";
         for (Map<String, String> prop : props) {
@@ -263,12 +276,12 @@ public class PropertiesBagTest extends RestTestBase {
         return sb.toString();
     }
 
-    protected void createAndDeleteProperties(String endpoint) {
+    private void createAndDeleteProperties(String endpoint) {
         Response response = get(endpoint);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
         assertNotNull(getProperties(response));
 
-        List<Map<String, String>> properties = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> properties = new ArrayList<>();
 
         for(int i = 0, max = generateRandomNumber(16); i < max; i++) {
             properties.add(createProperty("property_" + generateRandomString(), generateRandomString(), generateRandomString()));
@@ -276,15 +289,15 @@ public class PropertiesBagTest extends RestTestBase {
 
         createProperties(endpoint, properties);
         response = delete(endpoint);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
     }
 
-    protected Map<String, String> createProperty(final String name, final String value) {
+    private Map<String, String> createProperty(final String name, final String value) {
         return createProperty(name, value, null);
     }
 
-    protected Map<String, String> createProperty(final String name, final String value, final String description) {
-        return new HashMap<String, String>() {{
+    private Map<String, String> createProperty(final String name, final String value, final String description) {
+        return new HashMap<>() {{
                 put ("name", name);
                 put ("value", value);
                 if (description != null) {
@@ -293,14 +306,14 @@ public class PropertiesBagTest extends RestTestBase {
             }};
     }
 
-    protected void createProperties(String endpoint, List<Map<String, String>> properties) {
+    private void createProperties(String endpoint, List<Map<String, String>> properties) {
         final String payload = buildPayload(properties);
         Response response = getClient().target(getAddress(endpoint))
             .request(RESPONSE_TYPE)
             .post(Entity.entity(payload, REQUEST_FORMAT), Response.class);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
         response = get(endpoint);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
 
         // Retrieve the properties and make sure they were created.
 //        List<Map<String, String>> newProperties = getProperties(response);
@@ -311,21 +324,21 @@ public class PropertiesBagTest extends RestTestBase {
     }
 
     // Restore and verify the default domain properties
-    protected void restoreDomainProperties() {
-        final HashMap<String, String> domainProps = new HashMap<String, String>() {{
+    private void restoreDomainProperties() {
+        final HashMap<String, String> domainProps = new HashMap<>() {{
             put("name", PROP_DOMAIN_NAME);
             put("value", "domain1");
         }};
         Response response = getClient().target(getAddress(URL_DOMAIN_PROPERTIES))
                 .request(RESPONSE_TYPE)
                 .put(Entity.entity(buildPayload(new ArrayList<Map<String, String>>() {{ add(domainProps); }}), REQUEST_FORMAT), Response.class);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
         response = get(URL_DOMAIN_PROPERTIES);
-        checkStatusForSuccess(response);
+        assertEquals(200, response.getStatus());
         assertTrue(isPropertyFound(getProperties(response), PROP_DOMAIN_NAME));
     }
 
-    protected String buildPayload(List<Map<String, String>> properties) {
+    private String buildPayload(List<Map<String, String>> properties) {
         if (RESPONSE_TYPE.equals(MediaType.APPLICATION_XML)) {
             return MarshallingUtils.getXmlForProperties(properties);
         } else {
@@ -333,11 +346,11 @@ public class PropertiesBagTest extends RestTestBase {
         }
     }
 
-    protected boolean isPropertyFound(List<Map<String, String>> properties, String name) {
+    private boolean isPropertyFound(List<Map<String, String>> properties, String name) {
         return getProperty(properties, name) != null;
     }
 
-    protected Map<String, String> getProperty(List<Map<String, String>> properties, String name) {
+    private Map<String, String> getProperty(List<Map<String, String>> properties, String name) {
         Map<String, String> retval = null;
         for (Map<String,String> property : properties) {
             if (name.equals(property.get("name"))) {

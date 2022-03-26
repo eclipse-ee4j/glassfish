@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,28 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.ws.rs.core.Response;
+
 import org.codehaus.jettison.json.JSONObject;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author jasonlee
  */
 public class NetworkListenerTest extends RestTestBase {
-    protected static final String URL_PROTOCOL = "/domain/configs/config/server-config/network-config/protocols/protocol";
-    protected static final String URL_SSL = "/domain/configs/config/server-config/network-config/protocols/protocol/http-listener-2/ssl";
+    protected static final String URL_PROTOCOL = "domain/configs/config/server-config/network-config/protocols/protocol";
+    protected static final String URL_SSL = "domain/configs/config/server-config/network-config/protocols/protocol/http-listener-2/ssl";
 
-    @Test(enabled=false)
+    @Test
+    @Disabled
     public void createHttpListener() {
         final String redirectProtocolName = "http-redirect"; //protocol_" + generateRandomString();
         final String portUniProtocolName = "pu-protocol"; //protocol_" + generateRandomString();
@@ -41,21 +48,21 @@ public class NetworkListenerTest extends RestTestBase {
         final String finderName2 = "http-redirect"; //finder" + generateRandomString();
 
         try {
-            Response response = post("/domain/set", new HashMap<String, String>() {{
+            Response response = post("domain/set", new HashMap<String, String>() {{
                 put("configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol", "http-listener-1");
             }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             delete(URL_PROTOCOL + "/" + portUniProtocolName);
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             delete(URL_PROTOCOL + "/" + redirectProtocolName);
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
 // asadmin commands taken from: http://www.antwerkz.com/port-unification-in-glassfish-3-part-1/
 //        asadmin create-protocol --securityenabled=false http-redirect
 //        asadmin create-protocol --securityenabled=false pu-protocol
             response = post(URL_PROTOCOL, new HashMap<String, String>() {{ put ("securityenabled", "false"); put("id", redirectProtocolName); }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = post(URL_PROTOCOL, new HashMap<String, String>() {{ put ("securityenabled", "false"); put("id", portUniProtocolName); }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
 
 //        asadmin create-protocol-filter --protocol http-redirect --classname org.glassfish.grizzly.config.portunif.HttpRedirectFilter redirect-filter
             response = post (URL_PROTOCOL + "/" + redirectProtocolName + "/create-protocol-filter",
@@ -64,7 +71,7 @@ public class NetworkListenerTest extends RestTestBase {
                     put ("protocol", redirectProtocolName);
                     put ("classname", "org.glassfish.grizzly.config.portunif.HttpRedirectFilter");
                 }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
 
 //        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-listener-2 --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
 //        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-redirect   --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-redirect
@@ -75,7 +82,7 @@ public class NetworkListenerTest extends RestTestBase {
                     put ("targetprotocol", "http-listener-2");
                     put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
                 }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = post (URL_PROTOCOL + "/" + portUniProtocolName + "/create-protocol-finder",
                 new HashMap<String, String>() {{
                     put ("id", finderName2);
@@ -83,14 +90,14 @@ public class NetworkListenerTest extends RestTestBase {
                     put ("targetprotocol", redirectProtocolName);
                     put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
                 }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
 
 
 //        asadmin set configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol=pu-protocol
             response = post("/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1", new HashMap<String, String>() {{
                 put("protocol", portUniProtocolName);
             }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
 
             response = get("/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1/find-http-protocol");
             assertTrue(response.readEntity(String.class).contains("http-listener-2"));
@@ -99,33 +106,33 @@ public class NetworkListenerTest extends RestTestBase {
             Response response = post("/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1", new HashMap<String, String>() {{
                 put("protocol", "http-listener-1");
             }});
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
                 new HashMap<String, String>() {{
                     put("protocol", portUniProtocolName);
                     put("id", finderName1);
                 }} );
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
                 new HashMap<String, String>() {{
                     put("protocol", portUniProtocolName);
                     put("id", finderName2);
                 }} );
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = delete(URL_PROTOCOL + "/" + redirectProtocolName + "/protocol-chain-instance-handler/protocol-chain/protocol-filter/" + redirectFilterName,
                     new HashMap<String, String>() {{ put("protocol", redirectProtocolName); }} );
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = delete(URL_PROTOCOL + "/" + portUniProtocolName);
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
             response = delete(URL_PROTOCOL + "/" + redirectProtocolName);
-            checkStatusForSuccess(response);
+            assertEquals(200, response.getStatus());
         }
 
     }
 
     @Test
     public void testClearingProperties() {
-        Map<String, String> params = new HashMap<String, String>() {{
+        Map<String, String> params = new HashMap<>() {{
             put("keyStore", "foo");
             put("trustAlgorithm", "bar");
             put("trustMaxCertLength", "15");
@@ -133,7 +140,7 @@ public class NetworkListenerTest extends RestTestBase {
         }};
 
         Response response = post(URL_SSL, params);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
         response = get(URL_SSL, params);
         Map<String, String> entity = this.getEntityValues(response);
         assertEquals(params.get("keyStore"), entity.get("keyStore"));
@@ -145,7 +152,7 @@ public class NetworkListenerTest extends RestTestBase {
         params.put("trustAlgorithm", "");
         params.put("trustStore", "");
         response = post(URL_SSL, params);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
         response = get(URL_SSL, params);
         entity = this.getEntityValues(response);
         assertEquals(JSONObject.NULL, entity.get("keyStore"));

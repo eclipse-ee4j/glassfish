@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,43 +17,52 @@
 
 package org.glassfish.nucleus.admin;
 
-import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.tests.utils.NucleusTestUtils;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.glassfish.tests.utils.NucleusTestUtils.nadmin;
-import static org.glassfish.tests.utils.NucleusTestUtils.nadminWithOutput;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * @author sanjeeb.sahoo@oracle.com
  */
-@Test
+@ExtendWith(DomainLifecycleExtension.class)
 public class OSGiCommandsTest {
 
+    @Test
     public void basicOsgiCmd() {
         assertTrue(nadmin("osgi", "lb"));
     }
 
     private List<String> runCmd(String... cmd) throws Exception {
-        NucleusTestUtils.NadminReturn value = nadminWithOutput(cmd);
+        NadminReturn value = nadminWithOutput(cmd);
         if (!value.returnValue) {
             throw new Exception("Cmd failed: \n" + value.outAndErr);
         }
-        List<String> output = new ArrayList<String>();
+        List<String> output = new ArrayList<>();
         for (String line : value.out.split("\\n")) {
             line = line.trim();
-            if (line.isEmpty() || line.startsWith("nadmin") || line.startsWith("Command")) continue;
+            if (line.isEmpty() || line.startsWith("nadmin") || line.startsWith("Command")) {
+                continue;
+            }
             output.add(line);
         }
         return output;
@@ -68,7 +78,7 @@ public class OSGiCommandsTest {
 
     private Set<String> listCmdSessions() throws Exception {
         List<String> sessions = runCmd("osgi", "--session", "list");
-        return new HashSet<String>(sessions);
+        return new HashSet<>(sessions);
     }
 
     /**
@@ -76,33 +86,38 @@ public class OSGiCommandsTest {
      * It creates sessions, lists them, executes commands against each session and finally stops them.
      * @throws Exception
      */
+    @Test
     public void osgiCmdSession() throws Exception {
         // Create some sessions
-        Set<String> sessions = new HashSet<String>();
-        for (int i = 0 ; i < 3; ++i) {
+        Set<String> sessions = new HashSet<>();
+        for (int i = 0; i < 3; ++i) {
             sessions.add(newCmdSession());
         }
 
         // Let's list them to make sure list operation works.
         final Set<String> actual = listCmdSessions();
-        assertEquals("listed sessions do not match with created sessions", sessions, actual);
+        assertEquals(sessions, actual, "listed sessions do not match with created sessions");
 
-        // Let's set the same variable in each command session with a different value and make sure the variables
+        // Let's set the same variable in each command session with a different value and make sure
+        // the variables
         // are scoped to sessions.
         for (String sessionId : sessions) {
-            runCmd("osgi", "--session", "execute", "--session-id", sessionId, "var=" + sessionId);
+            List<String> result = runCmd("osgi", "--session", "execute", "--session-id", sessionId, "var=" + sessionId);
+            assertThat(result, IsEmptyCollection.empty());
         }
         for (String sessionId : sessions) {
-            String value = runCmd("osgi", "--session", "execute", "--session-id", sessionId, "echo $var").get(0);
-            assertEquals(sessionId, value);
+            List<String> result = runCmd("osgi", "--session", "execute", "--session-id", sessionId, "echo $var");
+            assertThat(result, not(IsEmptyCollection.empty()));
+            assertEquals(sessionId, result.get(0));
         }
 
         // Let's stop all sessions.
         for (String sessionId : sessions) {
-            runCmd("osgi", "--session", "stop", "--session-id", sessionId);
+            List<String> result = runCmd("osgi", "--session", "stop", "--session-id", sessionId);
+            assertThat(result, IsEmptyCollection.empty());
         }
         sessions = listCmdSessions();
-        assertTrue("Not all sessions closed properly: " + sessions, sessions.isEmpty());
+        assertTrue(sessions.isEmpty(), "Not all sessions closed properly: " + sessions);
     }
 
     /**
@@ -110,6 +125,7 @@ public class OSGiCommandsTest {
      * a list of shell commands to be executed.
      * @throws IOException
      */
+    @Test
     public void osgiShell() throws IOException {
         File cmdFile = File.createTempFile("osgi-commands", ".txt");
         cmdFile.deleteOnExit();

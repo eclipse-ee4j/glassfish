@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +18,23 @@
 package org.glassfish.nucleus.admin.progress;
 
 import java.util.List;
-import org.testng.annotations.Test;
-import static org.glassfish.tests.utils.NucleusTestUtils.*;
-import static org.testng.AssertJUnit.*;
+
+import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- *
  * @author martinmares
  */
-@Test(testName="ProgressStatusFailTest")
+@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusFailTest {
 
+    @Test
     public void failDuringExecution() {
         NadminReturn result = nadminWithOutput("progress-fail-in-half");
         assertFalse(result.returnValue);
@@ -36,6 +43,7 @@ public class ProgressStatusFailTest {
         assertEquals(50, prgs.get(prgs.size() - 1).getValue());
     }
 
+    @Test
     public void timeout() {
         NadminReturn result = nadminWithOutput(6 * 1000, "progress-custom", "3x1", "1x8", "2x1");
         assertFalse(result.returnValue);

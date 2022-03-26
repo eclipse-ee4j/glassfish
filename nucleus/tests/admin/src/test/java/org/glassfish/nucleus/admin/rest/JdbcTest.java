@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,51 +17,55 @@
 
 package org.glassfish.nucleus.admin.rest;
 
+import jakarta.ws.rs.core.Response;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.ws.rs.core.Response;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
- *
  * @author jasonlee
  */
+@Disabled
 public class JdbcTest extends RestTestBase {
-    public static final String BASE_JDBC_RESOURCE_URL = "/domain/resources/jdbc-resource";
-    public static final String BASE_JDBC_CONNECTION_POOL_URL = "/domain/resources/jdbc-connection-pool";
+    public static final String BASE_JDBC_RESOURCE_URL = "domain/resources/jdbc-resource";
+    public static final String BASE_JDBC_CONNECTION_POOL_URL = "domain/resources/jdbc-connection-pool";
 
-    @Test(enabled=false)
+    @Test
     public void testReadingPoolEntity() {
         Map<String, String> entity = getEntityValues(get(BASE_JDBC_CONNECTION_POOL_URL + "/__TimerPool"));
         assertEquals("__TimerPool", entity.get("name"));
     }
 
-    @Test(enabled=false)
+    @Test
     public void testCreateAndDeletePool() {
         String poolName = "TestPool" + generateRandomString();
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("name", poolName);
         params.put("datasourceClassname","org.apache.derby.jdbc.ClientDataSource");
         Response response = post(BASE_JDBC_CONNECTION_POOL_URL, params);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         Map<String, String> entity = getEntityValues(get(BASE_JDBC_CONNECTION_POOL_URL + "/"+poolName));
         assertNotSame(0, entity.size());
 
         response = delete(BASE_JDBC_CONNECTION_POOL_URL+"/"+poolName, new HashMap<String, String>());
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         response = get(BASE_JDBC_CONNECTION_POOL_URL + "/" + poolName);
         assertEquals(404, response.getStatus());
     }
 
-//    @Test(enabled=false)
-    // TODO: Disabled until 13348 is resolved
+    @Test
     public void testCreateResourceWithBackslash() {
         String poolName = "TestPool\\" + generateRandomString();
         String encodedPoolName = poolName;
@@ -69,44 +74,44 @@ public class JdbcTest extends RestTestBase {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(JdbcTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("name", poolName);
         params.put("poolName", "DerbyPool");
 
         Response response = post (BASE_JDBC_RESOURCE_URL, params);
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         Map<String, String> entity = getEntityValues(get(BASE_JDBC_CONNECTION_POOL_URL + "/" + encodedPoolName));
         assertNotSame(0, entity.size());
 
         response = delete("/" + encodedPoolName, new HashMap<String, String>());
-        assertTrue(isSuccess(response));
+        assertEquals(200, response.getStatus());
 
         response = get(BASE_JDBC_CONNECTION_POOL_URL + "/" + encodedPoolName);
         assertEquals(404, response.getStatus());
     }
 
-    @Test(enabled=false)
+    @Test
     public void createDuplicateResource() {
         final String resourceName = "jdbc/__default";
-        Map<String, String> params = new HashMap<String, String>() {{
+        Map<String, String> params = new HashMap<>() {{
            put("id", resourceName);
            put("poolName", "DerbyPool");
         }};
 
         Response response = post (BASE_JDBC_RESOURCE_URL, params);
-        assertFalse(isSuccess(response));
+        assertEquals(404, response.getStatus());
     }
 
-    @Test(enabled=false)
+    @Test
     public void createDuplicateConnectionPool() {
         final String poolName = "DerbyPool";
-        Map<String, String> params = new HashMap<String, String>() {{
+        Map<String, String> params = new HashMap<>() {{
            put("id", poolName);
            put("datasourceClassname", "org.apache.derby.jdbc.ClientDataSource");
         }};
 
         Response response = post (BASE_JDBC_CONNECTION_POOL_URL, params);
-        assertFalse(isSuccess(response));
+        assertEquals(404, response.getStatus());
     }
 }

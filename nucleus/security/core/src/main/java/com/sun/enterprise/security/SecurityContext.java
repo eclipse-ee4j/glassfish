@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,6 +47,9 @@ import com.sun.enterprise.security.integration.AppServSecurityContext;
  *
  * This class is used on the server side to represent the security context.
  *
+ * Class is a concept introduced in JDK1.0.
+ * Thread is a concept introduced in JDK1.0.
+ * Principal is a concept introduced in JDK1.1.
  * Thread Local Storage is a concept introduced in JDK1.2.
  *
  * @see java.lang.ThreadLocal
@@ -70,6 +74,8 @@ public class SecurityContext extends AbstractSecurityContext {
 
     // Did the client log in as or did the server generate the context
     private boolean SERVER_GENERATED_SECURITY_CONTEXT = false;
+
+    private Principal sessionPrincipal;
 
     /* This creates a new SecurityContext object.
      * Note: that the docs for Subject state that the internal sets
@@ -350,6 +356,14 @@ public class SecurityContext extends AbstractSecurityContext {
     @Override
     public String toString() {
         return "SecurityContext[ " + "Initiator: " + initiator + "Subject " + subject + " ]";
+    }
+
+    public Principal getSessionPrincipal() {
+        return sessionPrincipal;
+    }
+
+    public void setSessionPrincipal(Principal sessionPrincipal) {
+        this.sessionPrincipal = sessionPrincipal;
     }
 
     public Set<Principal> getPrincipalSet() {

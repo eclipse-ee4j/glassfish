@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,27 +18,43 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.SecurityPermission;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
 import org.apache.catalina.core.RequestFacadeHelper;
 import org.apache.catalina.security.SecurityUtil;
 
-import jakarta.servlet.*;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 import jakarta.servlet.http.PushBuilder;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.SecurityPermission;
-import java.util.*;
-import jakarta.servlet.http.HttpServletMapping;
 
 
 /**
@@ -837,11 +854,29 @@ public class RequestFacade
     }
 
     @Override
-    public java.security.Principal getUserPrincipal() {
+    public Principal getUserPrincipal() {
 
         if (request == null) {
             throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
         }
+
+        Principal principal = request.getUserPrincipal();
+        if (principal instanceof WebPrincipal) {
+            WebPrincipal webPrincipal = (WebPrincipal) principal;
+            if (webPrincipal.getCustomPrincipal() != null) {
+                principal = webPrincipal.getCustomPrincipal();
+            }
+        }
+
+        return principal;
+    }
+
+    // returns the original, unwrapped principal from the underlying request
+    public Principal getRequestPrincipal() {
+        if (request == null) {
+            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
+        }
+
 
         return request.getUserPrincipal();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Eclipse Foundation.
+ * Copyright 2021, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -80,6 +80,7 @@ import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.authenticator.AuthenticatorBase;
+import org.apache.catalina.connector.RequestFacade;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.realm.Constants;
@@ -479,8 +480,11 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             // Jakarta Authentication is enabled for this application
             try {
                 context.fireContainerEvent(BEFORE_AUTHENTICATION, null);
+                RequestFacade requestFacade = (RequestFacade) request.getRequest();
+                SecurityContext.getCurrent().setSessionPrincipal(requestFacade.getRequestPrincipal());
                 return validate(request, response, config, authenticator, calledFromAuthenticate);
             } finally {
+                SecurityContext.getCurrent().setSessionPrincipal(null);
                 context.fireContainerEvent(AFTER_AUTHENTICATION, null);
             }
         }

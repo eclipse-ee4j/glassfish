@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -306,6 +306,19 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
     private void processCallerPrincipal(CallerPrincipalCallback cpCallback) {
         final Subject fs = cpCallback.getSubject();
         Principal principal = cpCallback.getPrincipal();
+
+        // See if we need to wrap back the principal. This looks weird, but is needed for the
+        // check to re-use that is done below to work.
+        if (principal != null && !(principal instanceof WebPrincipal)) {
+            Principal sessionPrincipal = SecurityContext.getCurrent().getSessionPrincipal();
+            if (sessionPrincipal instanceof WebPrincipal) {
+                WebPrincipal webPrincipalFromSession = (WebPrincipal) sessionPrincipal;
+
+                if (webPrincipalFromSession.getCustomPrincipal() == principal) {
+                    principal = webPrincipalFromSession;
+                }
+            }
+        }
 
         if (principal instanceof WebPrincipal) {
             WebPrincipal wp = (WebPrincipal) principal;

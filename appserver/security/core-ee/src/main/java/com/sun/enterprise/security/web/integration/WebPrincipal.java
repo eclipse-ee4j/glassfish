@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -82,6 +83,10 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
     @Override
     public SecurityContext getSecurityContext() {
         return securityContext;
+    }
+
+    public Principal getCustomPrincipal() {
+        return customPrincipal;
     }
 
     @Override

@@ -31,8 +31,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <snapshots.sources.url>https://github.com/dmatej/jersey/archive/refs/heads/grizzly4.zip</snapshots.sources.url>
-        <snapshots.sources.directory>${project.build.directory}/jersey-grizzly4</snapshots.sources.directory>
+        <snapshots.sources.url>https://github.com/eclipse-ee4j/jersey/archive/refs/heads/3.1.zip</snapshots.sources.url>
+        <snapshots.sources.directory>${project.build.directory}/jersey-3.1</snapshots.sources.directory>
     </properties>
 
     <build>

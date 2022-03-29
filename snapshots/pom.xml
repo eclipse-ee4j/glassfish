@@ -61,6 +61,7 @@
                 <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
+                    <version>1.6.8</version>
                     <inherited>true</inherited>
                     <executions>
                         <execution>

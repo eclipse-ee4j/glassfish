@@ -31,8 +31,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <snapshots.sources.url>https://github.com/dmatej/glassfish-shoal/archive/refs/heads/jakartaee-10.zip</snapshots.sources.url>
-        <snapshots.sources.directory>${project.build.directory}/glassfish-shoal-jakartaee-10</snapshots.sources.directory>
+        <snapshots.sources.url>https://github.com/eclipse-ee4j/glassfish-shoal/archive/refs/heads/master.zip</snapshots.sources.url>
+        <snapshots.sources.directory>${project.build.directory}/glassfish-shoal-master</snapshots.sources.directory>
     </properties>
 
     <build>

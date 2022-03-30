@@ -21,36 +21,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>nucleus-tests</artifactId>
+        <artifactId>admin-tests-parent</artifactId>
         <version>6.2.6-SNAPSHOT</version>
     </parent>
-    <artifactId>test-progress-status-commands</artifactId>
-    <name>Progress status - Test Commands</name>
+    <artifactId>test-progress-admin-extension</artifactId>
+    <name>GlassFish Admin Tests - Progress Admin Extension</name>
     <packaging>glassfish-jar</packaging>
-
-    <properties>
-    </properties>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.1</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>

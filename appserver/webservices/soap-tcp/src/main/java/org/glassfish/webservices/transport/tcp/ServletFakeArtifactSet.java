@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,9 @@
 
 package org.glassfish.webservices.transport.tcp;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-
-import com.sun.xml.ws.api.DistributedPropertySet;
+import com.oracle.webservices.api.message.BaseDistributedPropertySet;
 
 import jakarta.servlet.AsyncContext;
-import jakarta.servlet.AsyncListener;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConnection;
@@ -44,14 +34,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.handler.MessageContext;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Alexey Stashok
  */
-public final class ServletFakeArtifactSet extends DistributedPropertySet {
+public final class ServletFakeArtifactSet extends BaseDistributedPropertySet {
 
     private static final PropertyMap model;
 
@@ -63,7 +61,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
     }
 
     @Override
-    public DistributedPropertySet.PropertyMap getPropertyMap() {
+    public BaseDistributedPropertySet.PropertyMap getPropertyMap() {
         return model;
     }
 
@@ -72,12 +70,12 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         response = createResponse();
     }
 
-    @com.sun.xml.ws.api.PropertySet.Property(MessageContext.SERVLET_RESPONSE)
+    @Property(MessageContext.SERVLET_RESPONSE)
     public HttpServletResponse getResponse() {
         return response;
     }
 
-    @com.sun.xml.ws.api.PropertySet.Property(MessageContext.SERVLET_REQUEST)
+    @Property(MessageContext.SERVLET_REQUEST)
     public HttpServletRequest getRequest() {
         return request;
     }
@@ -226,10 +224,6 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return true;
         }
 
-        public boolean isRequestedSessionIdFromUrl() {
-            return true;
-        }
-
         @Override
         public Object getAttribute(final String string) {
             return null;
@@ -285,7 +279,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         }
 
         @Override
-        public Map getParameterMap() {
+        public Map<String, String[]> getParameterMap() {
             return null;
         }
 
@@ -352,10 +346,6 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return null;
         }
 
-        public String getRealPath(final String string) {
-            return null;
-        }
-
         @Override
         public int getRemotePort() {
             return 0;
@@ -407,19 +397,6 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         @Override
         public DispatcherType getDispatcherType() {
             return null;
-        }
-
-        public long getAsyncTimeout() {
-            return Long.MAX_VALUE;
-        }
-
-        public void setAsyncTimeout(long timeout) {
-        }
-
-        public void addAsyncListener(AsyncListener listener) {
-        }
-
-        public void addAsyncListener(AsyncListener listener, ServletRequest request, ServletResponse response) {
         }
 
         @Override
@@ -488,14 +465,6 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return null;
         }
 
-        public String encodeUrl(final String string) {
-            return null;
-        }
-
-        public String encodeRedirectUrl(final String string) {
-            return null;
-        }
-
         @Override
         public void sendError(final int i, final String string) throws IOException {
         }
@@ -534,9 +503,6 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
 
         @Override
         public void setStatus(final int i) {
-        }
-
-        public void setStatus(final int i, final String string) {
         }
 
         @Override
@@ -630,14 +596,4 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
             return 200;
         }
     }
-
-    // TODO - remove when these are added to DistributedPropertySet
-    public SOAPMessage getSOAPMessage() throws SOAPException {
-       throw new UnsupportedOperationException();
-    }
-
-    public void setSOAPMessage(SOAPMessage soap) {
-       throw new UnsupportedOperationException();
-    }
-
 }

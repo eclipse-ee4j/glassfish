@@ -42,7 +42,6 @@
     <modules>
         <module>hibernate-validator</module>
         <module>metro</module>
-        <module>jersey</module>
     </modules>
 
     <build>

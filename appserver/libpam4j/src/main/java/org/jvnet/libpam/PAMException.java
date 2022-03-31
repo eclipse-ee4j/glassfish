@@ -22,6 +22,9 @@ package org.jvnet.libpam;
  * @author Kohsuke Kawaguchi
  */
 public class PAMException extends Exception {
+    
+    private static final long serialVersionUID = 1L;
+    
     public PAMException() {
     }
 
@@ -37,5 +40,5 @@ public class PAMException extends Exception {
         super(cause);
     }
 
-    private static final long serialVersionUID = 1L;
+    
 }

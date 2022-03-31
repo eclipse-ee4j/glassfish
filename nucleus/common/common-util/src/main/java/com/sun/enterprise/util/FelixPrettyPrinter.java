@@ -160,7 +160,8 @@ public class FelixPrettyPrinter {
 
         List<Integer> ids = findBundleIds(test1);
 
-        String test2 = prettyPrintExceptionMessage(" Unable to resolve org.glassfish.main.resources.mail-connector [29](R 29.0): missing requirement [org.glassfish.main.resources.mail-connector [29](R 29.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.resources.admin.cli)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.resources.connector [217](R 217.0): missing requirement [org.glassfish.main.resources.connector [217](R 217.0)] osgi.wiring.package; (&(osgi.wiring.package=com.sun.enterprise.repository)(version>=7.0.0)(!(version>=8.0.0))) [caused by: Unable to resolve org.glassfish.main.deployment.dol [284](R 284.0): missing requirement [org.glassfish.main.deployment.dol [284](R 284.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.enterprise.inject.spi)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve jakarta.enterprise.cdi-api [127](R 127.0): missing requirement [jakarta.enterprise.cdi-api [127](R 127.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.enterprise.lang.model)(version>=4.0.0)(!(version>=5.0.0)))]]] Unresolved requirements: [[org.glassfish.main.resources.mail-connector [29](R 29.0)] osgi.wiring.package; (&(osgi.wiring.package=org.glassfish.resources.admin.cli)(version>=7.0.0)(!(version>=8.0.0)))] ");
+        String test2 = prettyPrintExceptionMessage("  Unable to resolve org.apache.felix.scr [304](R 304.0): missing requirement [org.apache.felix.scr [304](R 304.0)] osgi.wiring.package; (&(osgi.wiring.package=org.osgi.framework)(version>=1.10.0)(!(version>=2.0.0))) Unresolved requirements: [[org.apache.felix.scr [304](R304.0)] osgi.wiring.package; (&(osgi.wiring.package=org.osgi.framework)(version>=1.10.0)(!(version>=2.0.0)))]\n"
+                + "at org.apache.felix.framework.Felix.resolveBundleRevision(Felix.java:4398) ");
 
 
         System.out.println(test2);

@@ -22,6 +22,7 @@ package org.jvnet.libpam.impl;
  */
 public interface BSDCLibrary extends CLibrary {
 
-  BSDPasswd getpwnam(String username);
+    @Override
+    BSDPasswd getpwnam(String username);
 
 }

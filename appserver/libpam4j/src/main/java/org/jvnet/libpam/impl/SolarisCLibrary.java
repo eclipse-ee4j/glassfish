@@ -22,6 +22,7 @@ package org.jvnet.libpam.impl;
  */
 public interface SolarisCLibrary extends CLibrary {
 
-  SolarisPasswd getpwnam(String username);
+    @Override
+    SolarisPasswd getpwnam(String username);
 
 }

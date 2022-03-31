@@ -33,10 +33,10 @@ import java.util.Set;
  */
 public class UnixUser {
     private final String userName, gecos, dir, shell;
-    private final int uid,gid;
+    private final int uid, gid;
     private final Set<String> groups;
 
-    /*package*/ UnixUser(String userName, Passwd pwd) throws PAMException {
+    UnixUser(String userName, Passwd pwd) throws PAMException {
         this.userName = userName;
         this.gecos = pwd.getPwGecos();
         this.dir = pwd.getPwDir();
@@ -44,33 +44,33 @@ public class UnixUser {
         this.uid = pwd.getPwUid();
         this.gid = pwd.getPwGid();
 
-        long sz = 4; /*sizeof(gid_t)*/
+        long sz = 4; /* sizeof(gid_t) */
 
         int ngroups = 64;
-        Memory m = new Memory(ngroups*sz);
+        Memory m = new Memory(ngroups * sz);
         IntByReference pngroups = new IntByReference(ngroups);
         try {
-            if(libc.getgrouplist(userName,pwd.getPwGid(),m,pngroups)<0) {
+            if (libc.getgrouplist(userName, pwd.getPwGid(), m, pngroups) < 0) {
                 // allocate a bigger memory
-                m = new Memory(pngroups.getValue()*sz);
-                if(libc.getgrouplist(userName,pwd.getPwGid(),m,pngroups)<0)
+                m = new Memory(pngroups.getValue() * sz);
+                if (libc.getgrouplist(userName, pwd.getPwGid(), m, pngroups) < 0)
                     // shouldn't happen, but just in case.
                     throw new PAMException("getgrouplist failed");
             }
             ngroups = pngroups.getValue();
         } catch (LinkageError e) {
             // some platform, notably Solaris, doesn't have the getgrouplist function
-            ngroups = libc._getgroupsbymember(userName,m,ngroups,0);
-            if (ngroups<0)
+            ngroups = libc._getgroupsbymember(userName, m, ngroups, 0);
+            if (ngroups < 0)
                 throw new PAMException("_getgroupsbymember failed");
         }
 
         groups = new HashSet<String>();
-        for( int i=0; i<ngroups; i++ ) {
+        for (int i = 0; i < ngroups; i++) {
             int gid = m.getInt(i * sz);
             Group grp = libc.getgrgid(gid);
-            if( grp == null ) {
-                 continue;
+            if (grp == null) {
+                continue;
             }
             groups.add(grp.gr_name);
         }
@@ -81,8 +81,8 @@ public class UnixUser {
     }
 
     /**
-     * Copy constructor for mocking. Not intended for regular use. Only for testing.
-     * This signature may change in the future.
+     * Copy constructor for mocking. Not intended for regular use. Only for testing. This signature may change in the
+     * future.
      */
     protected UnixUser(String userName, String gecos, String dir, String shell, int uid, int gid, Set<String> groups) {
         this.userName = userName;
@@ -139,14 +139,13 @@ public class UnixUser {
     /**
      * Gets the groups that this user belongs to.
      *
-     * @return
-     *      never null.
+     * @return never null.
      */
     public Set<String> getGroups() {
         return Collections.unmodifiableSet(groups);
     }
 
     public static boolean exists(String name) {
-        return libc.getpwnam(name)!=null;
+        return libc.getpwnam(name) != null;
     }
 }

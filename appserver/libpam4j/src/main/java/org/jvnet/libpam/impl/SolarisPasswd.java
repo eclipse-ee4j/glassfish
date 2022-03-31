@@ -26,13 +26,13 @@ import org.jvnet.libpam.impl.CLibrary.Passwd;
  * Solaris passwd
  *
  * struct passwd {
- *   char    *pw_name;
- *   char    *pw_passwd;
- *   uid_t   pw_uid;
- *   gid_t   pw_gid;
- *   char    *pw_gecos;
- *   char    *pw_dir;
- *   char    *pw_shell;
+ *      char *pw_name;
+ *      char *pw_passwd;
+ *      uid_t pw_uid;
+ *      gid_t pw_gid;
+ *      char *pw_gecos;
+ *      char *pw_dir;
+ *      char* *pw_shell;
  * };
  *
  * @author Sebastian Sdorra
@@ -43,7 +43,6 @@ public class SolarisPasswd extends Passwd {
     public String pw_dir;
 
     public String pw_shell;
-
 
     @Override
     public String getPwGecos() {
@@ -63,8 +62,7 @@ public class SolarisPasswd extends Passwd {
     @Override
     protected List getFieldOrder() {
         List fieldOrder = new ArrayList(super.getFieldOrder());
-        fieldOrder.addAll(Arrays.asList("pw_gecos",
-                "pw_dir", "pw_shell"));
+        fieldOrder.addAll(Arrays.asList("pw_gecos", "pw_dir", "pw_shell"));
         return fieldOrder;
     }
 

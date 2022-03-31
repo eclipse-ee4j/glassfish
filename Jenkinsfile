@@ -19,8 +19,11 @@
 // without this, the agent could be using a pod created from a different descriptor
 env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
 
-// Docker image defined in this project in [glassfish]/etc/docker/Dockerfile
-env.gfImage = "dmatej/eclipse-jenkins-glassfish:11.0.14.1"
+// Docker images defined in this project in [glassfish]/etc/docker*
+// Older image
+env.gfImage11 = "dmatej/eclipse-jenkins-glassfish:11.0.14.1"
+// Image required to be able to build hibernate-validator snapshot, but now used for glassfish too
+env.gfImage17 = "dmatej/eclipse-jenkins-glassfish:17.20"
 
 def jobs = [
   "verifyPhase",
@@ -64,7 +67,7 @@ def generateMvnPodTemplate(job) {
       containers: [
         containerTemplate(
           name: "glassfish-build",
-          image: "${env.gfImage}",
+          image: "${env.gfImage17}",
           resourceRequestMemory: "7Gi",
           resourceRequestCpu: "2650m"
         )
@@ -97,7 +100,7 @@ def generateAntPodTemplate(job) {
       containers: [
         containerTemplate(
           name: "glassfish-build",
-          image: "${env.gfImage}",
+          image: "${env.gfImage17}",
           resourceRequestMemory: "4Gi",
           resourceRequestCpu: "2650m"
         )
@@ -156,7 +159,7 @@ spec:
         memory: "1200Mi"
         cpu: "300m"
   - name: glassfish-build
-    image: ${env.gfImage}
+    image: ${env.gfImage17}
     args:
     - cat
     tty: true

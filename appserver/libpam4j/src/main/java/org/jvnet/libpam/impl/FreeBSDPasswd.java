@@ -19,6 +19,7 @@ package org.jvnet.libpam.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.jvnet.libpam.impl.CLibrary.Passwd;
 
 /**
@@ -36,7 +37,6 @@ import org.jvnet.libpam.impl.CLibrary.Passwd;
  *
  * @author R. Tyler Croy
  */
-
 public class FreeBSDPasswd extends Passwd {
     /* Honeywell login info */
     public String pw_gecos;
@@ -65,8 +65,7 @@ public class FreeBSDPasswd extends Passwd {
     @Override
     protected List getFieldOrder() {
         List fieldOrder = new ArrayList(super.getFieldOrder());
-        fieldOrder.addAll(Arrays.asList("pw_gecos",
-                "pw_dir", "pw_shell"));
+        fieldOrder.addAll(Arrays.asList("pw_gecos", "pw_dir", "pw_shell"));
         return fieldOrder;
     }
 

@@ -19,6 +19,7 @@ package org.jvnet.libpam.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.jvnet.libpam.impl.CLibrary.Passwd;
 
 /**
@@ -47,7 +48,7 @@ public class LinuxPasswd extends Passwd {
     /* default shell */
     public String pw_shell;
 
-
+    @Override
     public String getPwGecos() {
         return pw_gecos;
     }

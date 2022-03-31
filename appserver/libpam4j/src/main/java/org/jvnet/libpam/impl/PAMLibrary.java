@@ -16,29 +16,49 @@
 
 package org.jvnet.libpam.impl;
 
-import com.sun.jna.Library;
-import com.sun.jna.PointerType;
-import com.sun.jna.Structure;
-import com.sun.jna.Pointer;
-import com.sun.jna.Native;
-import com.sun.jna.Callback;
-import com.sun.jna.ptr.PointerByReference;
+import static org.jvnet.libpam.impl.CLibrary.libc;
+
 import java.util.Arrays;
 import java.util.List;
-import static org.jvnet.libpam.impl.CLibrary.libc;
+
+import com.sun.jna.Callback;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.PointerType;
+import com.sun.jna.Structure;
+import com.sun.jna.ptr.PointerByReference;
 
 /**
  * libpam.so binding.
  *
- * See http://www.opengroup.org/onlinepubs/008329799/apdxa.htm
- * for the online reference of pam_appl.h
+ * See http://www.opengroup.org/onlinepubs/008329799/apdxa.htm for the online reference of pam_appl.h
  *
  * @author Kohsuke Kawaguchi
  */
 public interface PAMLibrary extends Library {
+
+    final int PAM_USER = 2;
+
+    // error code
+    final int PAM_SUCCESS = 0;
+    final int PAM_CONV_ERR = 6;
+
+    final int PAM_PROMPT_ECHO_OFF = 1; /* Echo off when getting response */
+    final int PAM_PROMPT_ECHO_ON = 2; /* Echo on when getting response */
+    final int PAM_ERROR_MSG = 3; /* Error message */
+    final int PAM_TEXT_INFO = 4; /* Textual information */
+
+    public static final PAMLibrary libpam = Native.loadLibrary("pam", PAMLibrary.class);
+
+
     class pam_handle_t extends PointerType {
-        public pam_handle_t() {}
-        public pam_handle_t(Pointer pointer) { super(pointer); }
+        public pam_handle_t() {
+        }
+
+        public pam_handle_t(Pointer pointer) {
+            super(pointer);
+        }
     }
 
     class pam_message extends Structure {
@@ -53,6 +73,7 @@ public interface PAMLibrary extends Library {
             read();
         }
 
+        @Override
         protected List getFieldOrder() {
             return Arrays.asList("msg_style", "msg");
         }
@@ -67,14 +88,15 @@ public interface PAMLibrary extends Library {
     }
 
     class pam_response extends Structure {
+
+        public static final int SIZE = new pam_response().size();
+
         /**
-         * This is really a string, but this field needs to be malloc-ed by the conversation
-         * method, and to be freed by the caler, so I bind it to {@link Pointer} here.
+         * This is really a string, but this field needs to be malloc-ed by the conversation method, and to be freed by the
+         * caler, so I bind it to {@link Pointer} here.
          *
-         * The man page doesn't say that, but see
-         * http://www.netbsd.org/docs/guide/en/chap-pam.html#pam-sample-conv
-         * This behavior is confirmed with a test, too; if I don't do strdup,
-         * libpam crashes.
+         * The man page doesn't say that, but see http://www.netbsd.org/docs/guide/en/chap-pam.html#pam-sample-conv This
+         * behavior is confirmed with a test, too; if I don't do strdup, libpam crashes.
          */
         public Pointer resp;
         public int resp_retcode;
@@ -87,17 +109,18 @@ public interface PAMLibrary extends Library {
             read();
         }
 
-        public pam_response() {}
+        public pam_response() {
+        }
 
         /**
          * Sets the response code.
          */
         public void setResp(String msg) {
-           this.resp = libc.strdup(msg);
+            this.resp = libc.strdup(msg);
         }
 
         protected Pointer getResp() {
-           return resp;
+            return resp;
         }
 
         public void setRespCode(int resp_retcode) {
@@ -108,22 +131,21 @@ public interface PAMLibrary extends Library {
             return resp_retcode;
         }
 
+        @Override
         protected List getFieldOrder() {
             return Arrays.asList("resp", "resp_retcode");
         }
-
-        public static final int SIZE = new pam_response().size();
     }
 
     class pam_conv extends Structure {
         public interface PamCallback extends Callback {
             /**
-             * According to http://www.netbsd.org/docs/guide/en/chap-pam.html#pam-sample-conv,
-             * resp and its member string both needs to be allocated by malloc,
-             * to be freed by the caller.
+             * According to http://www.netbsd.org/docs/guide/en/chap-pam.html#pam-sample-conv, resp and its member string both needs
+             * to be allocated by malloc, to be freed by the caller.
              */
             int callback(int num_msg, Pointer msg, Pointer resp, Pointer pointer);
         }
+
         public PamCallback conv;
         public Pointer pointer;
 
@@ -131,34 +153,31 @@ public interface PAMLibrary extends Library {
             this.conv = conv;
         }
 
+        @Override
         protected List getFieldOrder() {
             return Arrays.asList("conv", "pointer");
         }
-        protected PamCallback getConv(){
+
+        protected PamCallback getConv() {
             return conv;
         }
     }
 
     int pam_start(String service, String user, pam_conv conv, PointerByReference/* pam_handle_t** */ pamh_p);
+
     int pam_end(pam_handle_t handle, int pam_status);
+
     int pam_set_item(pam_handle_t handle, int item_type, String item);
+
     int pam_get_item(pam_handle_t handle, int item_type, PointerByReference item);
+
     int pam_authenticate(pam_handle_t handle, int flags);
+
     int pam_setcred(pam_handle_t handle, int flags);
+
     int pam_acct_mgmt(pam_handle_t handle, int flags);
+
     String pam_strerror(pam_handle_t handle, int pam_error);
 
-    final int PAM_USER = 2;
 
-    // error code
-    final int PAM_SUCCESS = 0;
-    final int PAM_CONV_ERR = 6;
-
-
-    final int PAM_PROMPT_ECHO_OFF  = 1; /* Echo off when getting response */
-    final int PAM_PROMPT_ECHO_ON   = 2; /* Echo on when getting response */
-    final int PAM_ERROR_MSG        = 3; /* Error message */
-    final int PAM_TEXT_INFO        = 4; /* Textual information */
-
-    public static final PAMLibrary libpam = (PAMLibrary)Native.loadLibrary("pam",PAMLibrary.class);
 }

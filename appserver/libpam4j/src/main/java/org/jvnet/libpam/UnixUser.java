@@ -16,15 +16,17 @@
 
 package org.jvnet.libpam;
 
-import com.sun.jna.Memory;
-import com.sun.jna.ptr.IntByReference;
 import static org.jvnet.libpam.impl.CLibrary.libc;
-import org.jvnet.libpam.impl.CLibrary.Passwd;
-import org.jvnet.libpam.impl.CLibrary.Group;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jvnet.libpam.impl.CLibrary.Group;
+import org.jvnet.libpam.impl.CLibrary.Passwd;
+
+import com.sun.jna.Memory;
+import com.sun.jna.ptr.IntByReference;
 
 /**
  * Represents an Unix user. Immutable.
@@ -53,19 +55,21 @@ public class UnixUser {
             if (libc.getgrouplist(userName, pwd.getPwGid(), m, pngroups) < 0) {
                 // allocate a bigger memory
                 m = new Memory(pngroups.getValue() * sz);
-                if (libc.getgrouplist(userName, pwd.getPwGid(), m, pngroups) < 0)
+                if (libc.getgrouplist(userName, pwd.getPwGid(), m, pngroups) < 0) {
                     // shouldn't happen, but just in case.
                     throw new PAMException("getgrouplist failed");
+                }
             }
             ngroups = pngroups.getValue();
         } catch (LinkageError e) {
             // some platform, notably Solaris, doesn't have the getgrouplist function
             ngroups = libc._getgroupsbymember(userName, m, ngroups, 0);
-            if (ngroups < 0)
+            if (ngroups < 0) {
                 throw new PAMException("_getgroupsbymember failed");
+            }
         }
 
-        groups = new HashSet<String>();
+        groups = new HashSet<>();
         for (int i = 0; i < ngroups; i++) {
             int gid = m.getInt(i * sz);
             Group grp = libc.getgrgid(gid);

@@ -16,19 +16,27 @@
 
 package org.jvnet.libpam;
 
-import org.jvnet.libpam.impl.PAMLibrary.*;
-import static org.jvnet.libpam.impl.PAMLibrary.*;
-import org.jvnet.libpam.impl.PAMLibrary.pam_conv.PamCallback;
-import org.jvnet.libpam.impl.CLibrary.Passwd;
-import static org.jvnet.libpam.impl.CLibrary.libc;
-import com.sun.jna.Pointer;
 import static com.sun.jna.Native.POINTER_SIZE;
 import static java.util.logging.Level.FINE;
+import static org.jvnet.libpam.impl.CLibrary.libc;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_CONV_ERR;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_PROMPT_ECHO_OFF;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_SUCCESS;
+import static org.jvnet.libpam.impl.PAMLibrary.PAM_USER;
+import static org.jvnet.libpam.impl.PAMLibrary.libpam;
 
-import com.sun.jna.ptr.PointerByReference;
 import java.util.Set;
-
 import java.util.logging.Logger;
+
+import org.jvnet.libpam.impl.CLibrary.Passwd;
+import org.jvnet.libpam.impl.PAMLibrary.pam_conv;
+import org.jvnet.libpam.impl.PAMLibrary.pam_conv.PamCallback;
+import org.jvnet.libpam.impl.PAMLibrary.pam_handle_t;
+import org.jvnet.libpam.impl.PAMLibrary.pam_message;
+import org.jvnet.libpam.impl.PAMLibrary.pam_response;
+
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
 
 /**
  * PAM authenticator.
@@ -47,9 +55,9 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class PAM {
-    
+
     private static final Logger LOGGER = Logger.getLogger(PAM.class.getName());
-    
+
     private pam_handle_t pht;
     private int ret;
 
@@ -65,11 +73,14 @@ public class PAM {
      */
     public PAM(String serviceName) throws PAMException {
         pam_conv conv = new pam_conv(new PamCallback() {
+            @Override
             public int callback(int num_msg, Pointer msg, Pointer resp, Pointer pointer) {
-                if (LOGGER.isLoggable(FINE))
+                if (LOGGER.isLoggable(FINE)) {
                     LOGGER.fine("pam_conv num_msg=" + num_msg);
-                if (password == null)
+                }
+                if (password == null) {
                     return PAM_CONV_ERR;
+                }
 
                 // allocates pam_response[num_msg]. the caller will free this
                 Pointer m = libc.calloc(pam_response.SIZE, num_msg);
@@ -77,8 +88,9 @@ public class PAM {
 
                 for (int i = 0; i < num_msg; i++) {
                     pam_message pm = new pam_message(msg.getPointer(POINTER_SIZE * i));
-                    if (LOGGER.isLoggable(FINE))
+                    if (LOGGER.isLoggable(FINE)) {
                         LOGGER.fine(pm.msg_style + ":" + pm.msg);
+                    }
                     if (pm.msg_style == PAM_PROMPT_ECHO_OFF) {
                         pam_response r = new pam_response(m.share(pam_response.SIZE * i));
                         r.setResp(password);
@@ -98,10 +110,11 @@ public class PAM {
     private void check(int ret, String msg) throws PAMException {
         this.ret = ret;
         if (ret != 0) {
-            if (pht != null)
+            if (pht != null) {
                 throw new PAMException(msg + " : " + libpam.pam_strerror(pht, ret));
-            else
+            } else {
                 throw new PAMException(msg);
+            }
         }
     }
 
@@ -124,8 +137,9 @@ public class PAM {
             check(libpam.pam_get_item(pht, PAM_USER, r), "pam_get_item failed");
             String userName = r.getValue().getString(0);
             Passwd pwd = libc.getpwnam(userName);
-            if (pwd == null)
+            if (pwd == null) {
                 throw new PAMException("Authentication succeeded but no user information is available");
+            }
             return new UnixUser(userName, pwd);
         } finally {
             this.password = null;
@@ -134,12 +148,13 @@ public class PAM {
 
     /**
      * Returns the groups a user belongs to
-     * 
+     *
      * @param username
      * @return Set of group names
      * @throws PAMException
      * @deprecated Pointless and ugly convenience method.
      */
+    @Deprecated
     public Set<String> getGroupsOfUser(String username) throws PAMException {
         return new UnixUser(username).getGroups();
     }
@@ -169,5 +184,5 @@ public class PAM {
         dispose();
     }
 
-    
+
 }

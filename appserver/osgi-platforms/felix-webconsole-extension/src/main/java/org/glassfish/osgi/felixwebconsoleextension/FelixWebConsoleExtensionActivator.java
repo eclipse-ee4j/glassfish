@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,20 @@
 
 package org.glassfish.osgi.felixwebconsoleextension;
 
-import org.apache.felix.webconsole.BrandingPlugin;
-import org.apache.felix.webconsole.WebConsoleSecurityProvider;
-import org.osgi.framework.*;
-import org.osgi.service.cm.ConfigurationAdmin;
-import org.osgi.util.tracker.ServiceTracker;
-
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.felix.webconsole.BrandingPlugin;
+import org.apache.felix.webconsole.WebConsoleSecurityProvider;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  *
@@ -41,7 +45,7 @@ import java.util.logging.Logger;
  */
 public class FelixWebConsoleExtensionActivator implements BundleActivator {
 
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    private final Logger logger = Logger.getLogger(getClass().getPackage().getName());
     private BundleContext context;
     private static final String WEBCONSOLE_PID = "org.apache.felix.webconsole.internal.servlet.OsgiManager";
     private static final String PROP_HTTP_SERVICE_SELECTOR = "http.service.filter";

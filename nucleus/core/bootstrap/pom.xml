@@ -63,11 +63,6 @@
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.cmpn</artifactId>
-            <scope>provided</scope>
-        </dependency>
 
         <!-- Although we package simple-glassfish-api bundle's content in glassfish.jar, in standalone mode, we have to create
             a launcher classloader that has the launching APIs and OSGi APIs in same level. SO, we need this jar to be part of distribution.

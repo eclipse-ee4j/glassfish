@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
         <relativePath />
     </parent>
 
@@ -81,7 +81,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.1</jakarta.validation-api.version>
-        <hibernate-validator.version>7.0.3-SNAPSHOT</hibernate-validator.version>
+        <hibernate-validator.version>8.0.0-SNAPSHOT</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <!--
@@ -105,7 +105,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.0-M4</jersey.version>
+        <jersey.version>3.1.0-M5</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
@@ -333,6 +333,12 @@
                 <groupId>org.glassfish.corba</groupId>
                 <artifactId>glassfish-corba-orb</artifactId>
                 <version>${glassfish-corba.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.corba</groupId>
@@ -429,26 +435,23 @@
                 <version>${ha-api.version}</version>
             </dependency>
 
-
-
-             <!-- OSGi / Felix -->
-
+            <!-- OSGi / Felix -->
             <dependency>
                 <groupId>org.osgi</groupId>
-                <artifactId>osgi.cmpn</artifactId>
-                <version>7.0.0</version>
+                <artifactId>osgi.promise</artifactId>
+                <version>8.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.annotation</artifactId>
-                <version>7.0.0</version>
+                <version>8.1.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>osgi.core</artifactId>
-                <version>7.0.0</version>
+                <version>8.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -458,6 +461,17 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.promise</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.util.function</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
                 <version>7.0.3</version>
@@ -466,16 +480,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
                 <version>4.7.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.util.promise</artifactId>
-                <version>1.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.util.function</artifactId>
-                <version>1.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -512,29 +516,38 @@
                 <artifactId>org.apache.felix.configadmin</artifactId>
                 <version>1.9.22</version>
             </dependency>
-            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that. Since Felix Core doesn't export
-                these packages, we have to deploy them together with Felix SCR. -->
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.scr</artifactId>
-                <version>2.2.0</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.bundlerepository</artifactId>
                 <version>2.0.10</version>
             </dependency>
-            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
             <dependency>
-                <groupId>jline</groupId>
-                <artifactId>jline</artifactId>
-                <version>2.14.5</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.resolver</artifactId>
+                <version>2.0.4</version>
+                <scope>provided</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.osgi</groupId>
+                        <artifactId>org.osgi.core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>7.0.3</version>
+                <scope>provided</scope>
             </dependency>
 
-
+            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
+            <dependency>
+                <groupId>org.jline</groupId>
+                <artifactId>jline</artifactId>
+                <version>3.21.0</version>
+            </dependency>
 
             <!--3rd party dependencies -->
-
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>

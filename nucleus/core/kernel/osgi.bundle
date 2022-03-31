@@ -36,5 +36,5 @@ DynamicImport-Package: org.glassfish.flashlight.provider, \
 Import-Package: \
     com.sun.enterprise.server.logging.*; resolution:=optional, \
     org.jvnet.tiger_types;version="${project.version}", \
-    org.hibernate.validator.*;resolution:=optional;version="[7.0.0,8.0.0)", \
+    org.hibernate.validator.*;resolution:=optional;version="[8,9)", \
     *

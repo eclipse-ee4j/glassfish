@@ -47,22 +47,22 @@
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
             <artifactId>org.osgi.service.resolver</artifactId>
             <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.resolver</artifactId>
-            <version>2.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
-            <version>7.0.3</version>
         </dependency>
-        
-        
-        
+
         <dependency>
             <groupId>org.glassfish.main.featuresets</groupId>
             <artifactId>glassfish</artifactId>

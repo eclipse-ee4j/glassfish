@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,9 @@ import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.util.CommandModelData;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -35,11 +39,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import jakarta.inject.Inject;
-import jline.console.ConsoleReader;
-import jline.console.completer.Completer;
-import jline.console.completer.NullCompleter;
-import jline.console.completer.StringsCompleter;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -52,6 +52,13 @@ import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
+import org.jline.reader.Completer;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.reader.impl.completer.NullCompleter;
+import org.jline.reader.impl.completer.StringsCompleter;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -75,6 +82,7 @@ public class LocalOSGiShellCommand extends CLICommand {
     protected static final String SESSION_OPTION_EXECUTE = "execute";
     protected static final String SESSION_OPTION_START = "new";
     protected static final String SESSION_OPTION_STOP = "stop";
+    private static final LocalStringsImpl STRINGS = new LocalStringsImpl(MultimodeCommand.class);
 
     @Inject
     private ServiceLocator locator;
@@ -88,33 +96,33 @@ public class LocalOSGiShellCommand extends CLICommand {
     @Param(name = "printprompt", optional = true)
     private Boolean printPromptOpt;
 
-    private boolean printPrompt;
-
     @Param(optional = true)
     private String encoding;
 
-    private boolean echo;       // saved echo flag
-    private RemoteCLICommand cmd;     // the remote sub-command
+    private boolean echo;
+    private RemoteCLICommand cmd;
     private String shellType;
 
-    // re-using existing strings...
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(MultimodeCommand.class);
 
     protected String[] enhanceForTarget(String[] args) {
-        if(instance != null) {
-            String[] targetArgs = new String[args.length + 2];
-            targetArgs[1] = "--instance";
-            targetArgs[2] = instance;
-            System.arraycopy(args, 0, targetArgs, 0, 1);
-            System.arraycopy(args, 1, targetArgs, 3, args.length - 1);
-            args = targetArgs;
+        if (instance == null) {
+            return null;
         }
-        return args;
+        String[] targetArgs = new String[args.length + 2];
+        targetArgs[1] = "--instance";
+        targetArgs[2] = instance;
+        System.arraycopy(args, 0, targetArgs, 0, 1);
+        System.arraycopy(args, 1, targetArgs, 3, args.length - 1);
+        return targetArgs;
     }
 
     protected String[] prepareArguments(String sessionId, String[] args) {
-        if(sessionId != null) {
+        if (sessionId == null) {
+            String[] osgiArgs = new String[args.length + 1];
+            osgiArgs[0] = REMOTE_COMMAND;
+            System.arraycopy(args, 0, osgiArgs, 1, args.length);
+            args = osgiArgs;
+        } else {
             // attach command to remote session...
             String[] sessionArgs = new String[args.length + 5];
             sessionArgs[0] = REMOTE_COMMAND;
@@ -124,37 +132,24 @@ public class LocalOSGiShellCommand extends CLICommand {
             sessionArgs[4] = sessionId;
             System.arraycopy(args, 0, sessionArgs, 5, args.length);
             args = sessionArgs;
-        } else {
-            String[] osgiArgs = new String[args.length + 1];
-            osgiArgs[0] = REMOTE_COMMAND;
-            System.arraycopy(args, 0, osgiArgs, 1, args.length);
-            args = osgiArgs;
         }
         return args;
     }
 
     protected String startSession() throws CommandException {
-        String sessionId = null;
-        if("gogo".equals(shellType)) {
-            // start a remote session...
-            String[] args = {REMOTE_COMMAND, SESSION_OPTION,
-                SESSION_OPTION_START};
-            args = enhanceForTarget(args);
-            sessionId = cmd.executeAndReturnOutput(args).trim();
+        if (!"gogo".equals(shellType)) {
+            return null;
         }
-        return sessionId;
+        String[] args = {REMOTE_COMMAND, SESSION_OPTION, SESSION_OPTION_START};
+        return cmd.executeAndReturnOutput(enhanceForTarget(args)).trim();
     }
 
     protected int stopSession(String sessionId) throws CommandException {
-        int rc = 0;
-        if(sessionId != null) {
-            // stop the remote session...
-            String[] args = {REMOTE_COMMAND, SESSION_OPTION,
-                SESSION_OPTION_STOP, SESSIONID_OPTION, sessionId};
-            args = enhanceForTarget(args);
-            rc = cmd.execute(args);
+        if (sessionId == null) {
+            return 0;
         }
-        return rc;
+        String[] args = {REMOTE_COMMAND, SESSION_OPTION, SESSION_OPTION_STOP, SESSIONID_OPTION, sessionId};
+        return cmd.execute(enhanceForTarget(args));
     }
 
     /**
@@ -164,18 +159,10 @@ public class LocalOSGiShellCommand extends CLICommand {
      * the environment.
      */
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
-        if (printPromptOpt != null) {
-            printPrompt = printPromptOpt.booleanValue();
-        } else {
-            printPrompt = programOpts.isInteractive();
-        }
-        /*
-         * Save value of --echo because CLICommand will reset it
-         * before calling our executeCommand method but we want it
-         * to also apply to all commands in multimode.
-         */
+    protected void validate() throws CommandException, CommandValidationException {
+        // Save value of --echo because CLICommand will reset it
+        // before calling our executeCommand method but we want it
+        // to also apply to all commands in multimode.
         echo = programOpts.isEcho();
     }
 
@@ -186,7 +173,7 @@ public class LocalOSGiShellCommand extends CLICommand {
     @Override
     protected Collection<ParamModel> usageOptions() {
         Collection<ParamModel> opts = commandModel.getParameters();
-        Set<ParamModel> uopts = new LinkedHashSet<ParamModel>();
+        Set<ParamModel> uopts = new LinkedHashSet<>();
         ParamModel p = new CommandModelData.ParamModelData("printprompt",
                 boolean.class, true,
                 Boolean.toString(programOpts.isInteractive()));
@@ -201,75 +188,58 @@ public class LocalOSGiShellCommand extends CLICommand {
     }
 
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
-        ConsoleReader reader = null;
-
-        if(cmd == null) {
+    protected int executeCommand() throws CommandException, CommandValidationException {
+        if (cmd == null) {
             throw new CommandException("Remote command 'osgi' is not available.");
         }
-
         programOpts.setEcho(echo);       // restore echo flag, saved in validate
-        try {
             if (encoding != null) {
                 // see Configuration.getEncoding()...
                 System.setProperty("input.encoding", encoding);
             }
-
-            String[] args = new String[] {REMOTE_COMMAND,
-                "asadmin-osgi-shell"};
-            args = enhanceForTarget(args);
+            final String[] args = enhanceForTarget(new String[] {REMOTE_COMMAND, "asadmin-osgi-shell"});
             shellType = cmd.executeAndReturnOutput(args).trim();
-
-            if (file == null) {
-                System.out.println(strings.get("multimodeIntro"));
-                reader = new ConsoleReader(REMOTE_COMMAND,
-                        new FileInputStream(FileDescriptor.in), System.out,
-                        null);
-            } else {
-                printPrompt = false;
-                if (!file.canRead()) {
-                    throw new CommandException("File: " + file
-                            + " can not be read");
-                }
-
-                OutputStream out = new OutputStream() {
-
-                    @Override
-                    public void write(int b) throws IOException {
-                        return;
-                    }
-
-                    @Override
-                    public void write(byte[] b) throws IOException {
-                        return;
-                    }
-
-                    @Override
-                    public void write(byte[] b, int off, int len) throws IOException {
-                        return;
-                    }
-                };
-
-                reader = new ConsoleReader(REMOTE_COMMAND,
-                        new FileInputStream(file), out,
-                        null);
-            }
-
-            reader.setBellEnabled(false);
-            reader.addCompleter(getCommandCompleter());
-
+        try (Terminal terminal = createTerminal()) {
+            LineReader reader = LineReaderBuilder.builder().completer(getCommandCompleter()).appName(REMOTE_COMMAND).terminal(terminal).build();
             return executeCommands(reader);
         } catch (IOException e) {
             throw new CommandException(e);
         }
     }
 
+
+    private Terminal createTerminal() throws IOException, CommandException {
+        if (file == null) {
+            System.out.println(STRINGS.get("multimodeIntro"));
+            return TerminalBuilder.builder().streams(new FileInputStream(FileDescriptor.in), System.out).build();
+        }
+        if (!file.canRead()) {
+            throw new CommandException("File: " + file + " can not be read");
+        }
+
+        OutputStream out = new OutputStream() {
+
+            @Override
+            public void write(int b) throws IOException {
+                return;
+            }
+
+            @Override
+            public void write(byte[] b) throws IOException {
+                return;
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                return;
+            }
+        };
+        return TerminalBuilder.builder().streams(new FileInputStream(file), out).build();
+    }
+
+
     /**
      * Get the command completion.
-     *
-     * TODO: make this non-static!
-     * TODO: ask remote for dynamically added commands
      *
      * @return The command completer
      */
@@ -352,8 +322,7 @@ public class LocalOSGiShellCommand extends CLICommand {
      *
      * @return the exit code of the last command executed
      */
-    private int executeCommands(ConsoleReader reader)
-            throws CommandException, CommandValidationException, IOException {
+    private int executeCommands(LineReader reader) throws CommandException, CommandValidationException {
         String line = null;
         int rc = 0;
 
@@ -368,14 +337,14 @@ public class LocalOSGiShellCommand extends CLICommand {
 
         try {
             for (;;) {
-                if (printPrompt) {
+                if (isPromptPrinted()) {
                     line = reader.readLine(shellType + "$ ");
                 } else {
                     line = reader.readLine();
                 }
 
                 if (line == null) {
-                    if (printPrompt) {
+                    if (isPromptPrinted()) {
                         System.out.println();
                     }
                     break;
@@ -457,6 +426,10 @@ public class LocalOSGiShellCommand extends CLICommand {
         return rc;
     }
 
+    private boolean isPromptPrinted() {
+        return file == null;
+    }
+
     private static void atomicReplace(ServiceLocator locator, ProgramOptions options) {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
@@ -469,9 +442,9 @@ public class LocalOSGiShellCommand extends CLICommand {
         config.commit();
     }
 
-    private String[] getArgs(String line)
-            throws ArgumentTokenizer.ArgumentException {
-        List<String> args = new ArrayList<String>();
+
+    private String[] getArgs(String line) throws ArgumentTokenizer.ArgumentException {
+        List<String> args = new ArrayList<>();
         ArgumentTokenizer t = new ArgumentTokenizer(line);
         while (t.hasMoreTokens()) {
             args.add(t.nextToken());

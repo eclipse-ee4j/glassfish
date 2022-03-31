@@ -55,18 +55,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.cmpn</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.webconsole</artifactId>
         </dependency>
-        <!-- TangYong's contribution towards Glassfish-12975 begins -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.enterprise</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>osgi.core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>security-services</artifactId>
@@ -77,6 +76,5 @@
             <artifactId>simple-glassfish-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- TangYong's contribution towards Glassfish-12975 ends -->
     </dependencies>
 </project>

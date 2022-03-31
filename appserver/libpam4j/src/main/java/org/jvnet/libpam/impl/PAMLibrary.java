@@ -37,7 +37,7 @@ import com.sun.jna.ptr.PointerByReference;
  * @author Kohsuke Kawaguchi
  */
 public interface PAMLibrary extends Library {
-    
+
     final int PAM_USER = 2;
 
     // error code
@@ -50,8 +50,8 @@ public interface PAMLibrary extends Library {
     final int PAM_TEXT_INFO = 4; /* Textual information */
 
     public static final PAMLibrary libpam = Native.loadLibrary("pam", PAMLibrary.class);
-    
-    
+
+
     class pam_handle_t extends PointerType {
         public pam_handle_t() {
         }
@@ -88,9 +88,9 @@ public interface PAMLibrary extends Library {
     }
 
     class pam_response extends Structure {
-        
+
         public static final int SIZE = new pam_response().size();
-        
+
         /**
          * This is really a string, but this field needs to be malloc-ed by the conversation method, and to be freed by the
          * caler, so I bind it to {@link Pointer} here.
@@ -179,5 +179,5 @@ public interface PAMLibrary extends Library {
 
     String pam_strerror(pam_handle_t handle, int pam_error);
 
-    
+
 }

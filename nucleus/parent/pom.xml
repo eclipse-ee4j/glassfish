@@ -438,12 +438,6 @@
             <!-- OSGi / Felix -->
             <dependency>
                 <groupId>org.osgi</groupId>
-                <artifactId>osgi.promise</artifactId>
-                <version>8.0.0</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
                 <artifactId>osgi.annotation</artifactId>
                 <version>8.1.0</version>
                 <scope>provided</scope>
@@ -459,16 +453,6 @@
                 <artifactId>osgi.enterprise</artifactId>
                 <version>7.0.0</version>
                 <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.util.promise</artifactId>
-                <version>1.2.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.util.function</artifactId>
-                <version>1.2.0</version>
             </dependency>
 
             <dependency>

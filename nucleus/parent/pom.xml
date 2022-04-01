@@ -81,7 +81,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.1</jakarta.validation-api.version>
-        <hibernate-validator.version>8.0.0-SNAPSHOT</hibernate-validator.version>
+        <hibernate-validator.version>8.0.0.Alpha3</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <!--

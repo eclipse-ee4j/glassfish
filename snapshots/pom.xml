@@ -40,7 +40,6 @@
     <description>Temporary snapshot modules</description>
 
     <modules>
-        <module>hibernate-validator</module>
         <module>metro</module>
     </modules>
 

@@ -96,7 +96,7 @@
                                 <goals>clean source:jar install</goals>
                                 <settingsFile>${basedir}/../settings.xml</settingsFile>
                                 <profiles>staging,default</profiles>
-                                <parallelThreads>4</parallelThreads>
+                                <parallelThreads>1</parallelThreads>
                             </configuration>
                         </execution>
                     </executions>

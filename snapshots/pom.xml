@@ -39,10 +39,6 @@
     <name>GlassFish Snapshots Parent</name>
     <description>Temporary snapshot modules</description>
 
-    <modules>
-        <module>metro</module>
-    </modules>
-
     <build>
         <plugins>
             <plugin>

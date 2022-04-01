@@ -63,13 +63,11 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- Needed to have a bundle activator to set up a different serialization policy -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- Needed to have a bundle activator to set up a different serialization policy -->
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.enterprise</artifactId>

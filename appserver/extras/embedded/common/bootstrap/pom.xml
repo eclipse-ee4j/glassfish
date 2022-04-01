@@ -78,11 +78,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.cmpn</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>glassfish</artifactId>
             <version>${project.version}</version>

@@ -144,7 +144,7 @@
       <mkdir dir="${build.classes.dir}/webclient/WEB-INF/classes"/>
       <antcall target="wsimport">
         <param name="wsimport.args"
-          value="-p client  -Xendorsed -keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://${http.host}:${http.port}/mappedname/HelloService?wsdl"/>
+          value="-p client   -keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://${http.host}:${http.port}/mappedname/HelloService?wsdl"/>
       </antcall>
 
       <replace file="webclient/Client.java" value="${http.host}" token="HTTP_HOST"/>

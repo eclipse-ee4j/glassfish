@@ -70,7 +70,7 @@
     <echo message="wsimporting http://${http.host}:${http.port}/HelloImplService/HelloImpl?WSDL" />
     <antcall target="wsimport">
       <param name="wsimport.args"
-             value="-keep  -Xendorsed -d ${build.classes.dir}/client http://${http.host}:${http.port}/HelloImplService/HelloImpl?WSDL"
+             value="-keep   -d ${build.classes.dir}/client http://${http.host}:${http.port}/HelloImplService/HelloImpl?WSDL"
       />
     </antcall>
     <javac verbose="true"

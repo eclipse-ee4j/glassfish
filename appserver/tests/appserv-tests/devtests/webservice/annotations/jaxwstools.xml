@@ -42,7 +42,7 @@
     <echo message="wsimporting http://${http.host}:${http.port}/${test-wsdl-uri}"/>
     <antcall target="wsimport">
         <param name="wsimport.args"
-               value="-keep  -Xendorsed  -d ${build.classes.dir}/client http://${http.host}:${http.port}/${test-wsdl-uri}"/>
+               value="-keep    -d ${build.classes.dir}/client http://${http.host}:${http.port}/${test-wsdl-uri}"/>
     </antcall>
     <javac srcdir="." destdir="${build.classes.dir}/client"
             includes="${client-src}/**">

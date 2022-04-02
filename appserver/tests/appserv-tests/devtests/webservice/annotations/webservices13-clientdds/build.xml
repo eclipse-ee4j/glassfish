@@ -60,7 +60,7 @@
       <mkdir dir="${build.classes.dir}"/>
       <antcall target="wsimport">
         <param name="wsimport.args"
-          value=" -Xendorsed -p endpoint -keep -d ${build.classes.dir} ${env.APS_HOME}/devtests/webservice/annotations/webservices13-clientdds/SubtractNumbers.wsdl"/>
+          value="  -p endpoint -keep -d ${build.classes.dir} ${env.APS_HOME}/devtests/webservice/annotations/webservices13-clientdds/SubtractNumbers.wsdl"/>
       </antcall>
       <antcall target="compile"/>
       <antcall target="pkg-war">
@@ -75,7 +75,7 @@
       <mkdir dir="${build.classes.dir}/webclient/WEB-INF/classes"/>
       <antcall target="wsimport">
         <param name="wsimport.args"
-          value="-p client  -Xendorsed -keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://${http.host}:${http.port}/webservices13-clientdds/webservice/SubtractNumbersService?wsdl"/>
+          value="-p client   -keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://${http.host}:${http.port}/webservices13-clientdds/webservice/SubtractNumbersService?wsdl"/>
       </antcall>
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
             includes="webclient/**">

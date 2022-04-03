@@ -18,6 +18,7 @@
 package org.glassfish.nucleus.admin.progress;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -25,6 +26,8 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.hamcrest.CustomTypeSafeMatcher;
 
 /**
  * Parse progress status message.
@@ -75,6 +78,11 @@ public class ProgressMessage {
         return message;
     }
 
+    @Override
+    public String toString() {
+        return Arrays.toString(new Object[] {value, percentage, scope, message});
+    }
+
     public static List<ProgressMessage> grepProgressMessages(String txt) {
         StringTokenizer stok = new StringTokenizer(txt, System.lineSeparator());
         return Collections.list(stok).stream().map(Object::toString).filter(PREDICATE).map(ProgressMessage::new)
@@ -95,18 +103,24 @@ public class ProgressMessage {
         return messages.toArray(result);
     }
 
-    public static boolean isNonDecreasing(List<ProgressMessage> pms) {
-        if (pms == null) {
-            return false;
-        }
-        int lastVal = Integer.MIN_VALUE;
-        for (ProgressMessage pm : pms) {
-            if (pm.getValue() < lastVal) {
-                return false;
+    public static CustomTypeSafeMatcher<List<ProgressMessage>> isIncreasing() {
+        return new CustomTypeSafeMatcher<>("is increasing") {
+
+            @Override
+            protected boolean matchesSafely(List<ProgressMessage> pms) {
+                if (pms == null) {
+                    return false;
+                }
+                int lastVal = Integer.MIN_VALUE;
+                for (ProgressMessage pm : pms) {
+                    if (pm.getValue() < lastVal) {
+                        return false;
+                    }
+                    lastVal = pm.getValue();
+                }
+                return true;
             }
-            lastVal = pm.getValue();
-        }
-        return true;
+        };
     }
 
 }

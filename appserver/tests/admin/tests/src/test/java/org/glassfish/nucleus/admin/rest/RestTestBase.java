@@ -29,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.nio.file.Path;
@@ -53,6 +54,11 @@ import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
 import org.glassfish.nucleus.test.tool.NucleusTestUtils;
+import org.glassfish.nucleus.test.webapp.HelloServlet;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,20 +68,25 @@ import org.w3c.dom.Document;
 
 import static org.glassfish.nucleus.test.tool.NucleusTestUtils.ADMIN_PASSWORD;
 import static org.glassfish.nucleus.test.tool.NucleusTestUtils.ADMIN_USER;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThan;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(DomainLifecycleExtension.class)
 public class RestTestBase {
+
+    private static final Logger LOG = Logger.getLogger(RestTestBase.class.getName());
+
     protected static final String RESPONSE_TYPE = MediaType.APPLICATION_JSON;
 
     protected static final String CONTEXT_ROOT_MANAGEMENT = "management";
+
     protected static final String URL_CLUSTER = "domain/clusters/cluster";
     protected static final String URL_APPLICATION_DEPLOY = "domain/applications/application";
     protected static final String URL_CREATE_INSTANCE = "domain/create-instance";
+    protected static final String URL_CONFIGS = "domain/configs";
+    protected static final String URL_JDBC_RESOURCE = "domain/resources/jdbc-resource";
+    protected static final String URL_JDBC_CONNECTION_POOL = "domain/resources/jdbc-connection-pool";
 
     private static String adminHost;
     private static String adminPort;
@@ -131,6 +142,21 @@ public class RestTestBase {
         client = null;
     }
 
+    public void createAndVerifyConfig(String configName, MultivaluedMap<String, String> configData) {
+        Response response = post(URL_CONFIGS + "/copy-config", configData);
+        assertThat(response.getStatus(), equalTo(200));
+
+        response = get(URL_CONFIGS + "/config/" + configName);
+        assertEquals(200, response.getStatus());
+    }
+
+    public void deleteAndVerifyConfig(String configName) {
+        Response response = post(URL_CONFIGS + "/config/" + configName + "/delete-config");
+        assertThat(response.getStatus(), equalTo(200));
+
+        response = get(URL_CONFIGS + "/config/" + configName);
+        assertEquals(404, response.getStatus());
+    }
 
     public String createCluster() {
         final String clusterName = "cluster_" + generateRandomString();
@@ -141,23 +167,23 @@ public class RestTestBase {
     public void createCluster(final String clusterName) {
         Map<String, String> newCluster = Map.of("id", clusterName);
         Response response = post(URL_CLUSTER, newCluster);
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
     }
 
     public void startCluster(String clusterName) {
         Response response = post(URL_CLUSTER + "/" + clusterName + "/start-cluster");
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
     }
 
     public void stopCluster(String clusterName) {
         Response response = post(URL_CLUSTER + "/" + clusterName + "/stop-cluster");
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
     }
 
     public void createClusterInstance(final String clusterName, final String instanceName) {
         Response response = post("domain/create-instance",
             Map.of("cluster", clusterName, "id", instanceName, "node", "localhost-domain1"));
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
     }
 
     public void deleteCluster(String clusterName) {
@@ -172,10 +198,10 @@ public class RestTestBase {
                     String instanceName = instance.get("name");
                     if (!"NOT_RUNNING".equalsIgnoreCase(status)) {
                         response = post("domain/servers/server/" + instanceName + "/stop-instance");
-                        checkStatus(response);
+                        assertThat(response.getStatus(), equalTo(200));
                     }
                     response = delete("domain/servers/server/" + instanceName + "/delete-instance");
-                    checkStatus(response);
+                    assertThat(response.getStatus(), equalTo(200));
                 }
             }
         }
@@ -185,26 +211,26 @@ public class RestTestBase {
         assertEquals(404, response.getStatus());
     }
 
-    public Map<String, String> deployApp (final File archive, final String contextRoot, final String name) {
+    public Map<String, String> deployApp(final File archive, final String contextRoot, final String name) {
         Map<String, Object> app = Map.of(
             "id", archive,
             "contextroot", contextRoot,
             "name", name
         );
         Response response = postWithUpload(URL_APPLICATION_DEPLOY, app);
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
         return getEntityValues(get(URL_APPLICATION_DEPLOY + "/" + app.get("name")));
     }
 
     public void addAppRef(final String applicationName, final String targetName){
-        Response cr = post("domain/servers/server/" + targetName + "/application-ref",
+        Response response = post("domain/servers/server/" + targetName + "/application-ref",
             Map.of("id", applicationName, "target", targetName));
-        checkStatus(cr);
+        assertThat(response.getStatus(), equalTo(200));
     }
 
     public Response undeployApp(String appName) {
         Response response = delete(URL_APPLICATION_DEPLOY + "/" + appName);
-        checkStatus(response);
+        assertThat(response.getStatus(), equalTo(200));
         return response;
     }
 
@@ -232,13 +258,6 @@ public class RestTestBase {
     protected int generateRandomNumber(int max) {
         Random r = new Random();
         return Math.abs(r.nextInt(max - 1)) + 1;
-    }
-
-    protected void checkStatus(Response response) {
-        assertAll("response status",
-            () -> assertThat(response.getStatus(), greaterThanOrEqualTo(200)),
-            () -> assertThat(response.getStatus(), lessThan(300))
-        );
     }
 
     protected String getResponseType() {
@@ -325,7 +344,7 @@ public class RestTestBase {
     protected Response postWithUpload(String address, Map<String, Object> payload) {
         FormDataMultiPart form = new FormDataMultiPart();
         for (Map.Entry<String, Object> entry : payload.entrySet()) {
-            if ((entry.getValue() instanceof File)) {
+            if (entry.getValue() instanceof File) {
                 form.getBodyParts().
                         add((new FileDataBodyPart(entry.getKey(), (File) entry.getValue())));
             } else {
@@ -357,16 +376,16 @@ public class RestTestBase {
      * @return
      */
     protected Map<String, String> getEntityValues(Response response) {
-        Map<String, String> map = new HashMap<>();
-
         String xml = response.readEntity(String.class);
-        Map responseMap = MarshallingUtils.buildMapFromDocument(xml);
-        Object obj = responseMap.get("extraProperties");
-        if (obj != null) {
-            return (Map) ((Map) obj).get("entity");
-        } else {
-            return map;
+        Map<String, Object> responseMap = MarshallingUtils.buildMapFromDocument(xml);
+        if (responseMap == null) {
+            return null;
         }
+        Map<String, Object> obj = (Map<String, Object>) responseMap.get("extraProperties");
+        if (obj == null) {
+            return null;
+        }
+        return (Map<String, String>) obj.get("entity");
     }
 
     protected List<String> getCommandResults(Response response) {
@@ -394,6 +413,7 @@ public class RestTestBase {
 
     protected Map<String, String> getChildResources(Response response) {
         Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        LOG.log(Level.INFO, "responseMap: \n{0}", responseMap);
         Map<String, Map> extraProperties = (Map<String, Map>) responseMap.get("extraProperties");
         if (extraProperties != null) {
             return extraProperties.get("childResources");
@@ -453,4 +473,30 @@ public class RestTestBase {
 
         return value;
     }
+
+
+    protected static File getEar(final String appName) {
+        final EnterpriseArchive ear = ShrinkWrap.create(EnterpriseArchive.class).addAsModule(getWar(appName), "simple.war");
+        LOG.info(ear.toString(true));
+        try {
+            File tempFile = File.createTempFile(appName, ".ear");
+            ear.as(ZipExporter.class).exportTo(tempFile, true);
+            return tempFile;
+        } catch (IOException e) {
+            throw new IllegalStateException("Deployment failed - cannot load the input archive!", e);
+        }
+    }
+
+    protected static File getWar(final String appName) {
+        final WebArchive war = ShrinkWrap.create(WebArchive.class).addPackage(HelloServlet.class.getPackage());
+        LOG.info(war.toString(true));
+        try {
+            File tempFile = File.createTempFile(appName, ".war");
+            war.as(ZipExporter.class).exportTo(tempFile, true);
+            return tempFile;
+        } catch (IOException e) {
+            throw new IllegalStateException("Deployment failed - cannot load the input archive!", e);
+        }
+    }
+
 }

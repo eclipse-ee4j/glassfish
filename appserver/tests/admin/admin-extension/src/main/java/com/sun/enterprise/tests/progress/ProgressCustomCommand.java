@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ package com.sun.enterprise.tests.progress;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -31,7 +33,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author mmares
  */
 @Service(name = "progress-custom")
@@ -51,14 +52,14 @@ public class ProgressCustomCommand implements AdminCommand {
     private static class Interval {
 
         private boolean valid = true;
-        private String origInteval;
+        private String origInterval;
         private int multiplicator = 1;
         private int minSec = -1;
         private int maxSec = 0;
         private boolean spin = false;
 
         private Interval(String interval) {
-            origInteval = interval;
+            origInterval = interval;
             try {
                 if (!keyPattern.matcher(interval).matches()) {
                     valid = false;
@@ -99,13 +100,8 @@ public class ProgressCustomCommand implements AdminCommand {
         public int getMultiplicator() {
             if (valid) {
                 return multiplicator;
-            } else {
-                return 1;
             }
-        }
-
-        public String getOrigInteval() {
-            return origInteval;
+            return 1;
         }
 
         public boolean isValid() {
@@ -128,7 +124,7 @@ public class ProgressCustomCommand implements AdminCommand {
 
         @Override
         public String toString() {
-            return origInteval;
+            return origInterval;
         }
 
     }
@@ -149,7 +145,7 @@ public class ProgressCustomCommand implements AdminCommand {
     @Override
     public void execute(AdminCommandContext context) {
         ProgressStatus ps = context.getProgressStatus();
-        parsedIntervals = new ArrayList<Interval>(intervals != null ? intervals.length : 0);
+        parsedIntervals = new ArrayList<>(intervals != null ? intervals.length : 0);
         ActionReport report = context.getActionReport();
         for (String interval : intervals) {
             parsedIntervals.add(new Interval(interval));

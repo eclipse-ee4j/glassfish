@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,8 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Basic progress status example.
+/**
+ * Basic progress status example.
  * Contains 10 steps
  *
  * @author mmares

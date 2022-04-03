@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.tests.progress;
 
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -26,7 +26,8 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Same as {@code ProgressSimpleCommand} but this one has supplements.
+/**
+ * Same as {@code ProgressSimpleCommand} but this one has supplements.
  * It also does not specify totalStepCount in annotation but using API.
  * Percentage can be printed after {@code SupplementBefore} will be done.
  *
@@ -38,11 +39,8 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("progress")
-@Progress()
+@Progress
 public class ProgressWithSupplementCommand implements AdminCommand {
-
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ProgressWithSupplementCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {

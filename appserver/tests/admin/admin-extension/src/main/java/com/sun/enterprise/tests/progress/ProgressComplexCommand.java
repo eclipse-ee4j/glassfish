@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,22 @@
 
 package com.sun.enterprise.tests.progress;
 
-import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.logging.LogDomains;
-import java.util.logging.Level;
+
 import java.util.logging.Logger;
+
 import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.ManagedJob;
 import org.glassfish.api.admin.Progress;
 import org.glassfish.api.admin.ProgressStatus;
-import org.glassfish.api.admin.RestEndpoint;
-import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** Basic progress status example.
+/**
+ * Basic progress status example.
  * Contains 10 steps
  *
  * @author mmares
@@ -137,6 +136,7 @@ public class ProgressComplexCommand implements AdminCommand {
             this.message = message;
         }
 
+        @Override
         public void run() {
             doProgress(ps, count, interval, message);
         }

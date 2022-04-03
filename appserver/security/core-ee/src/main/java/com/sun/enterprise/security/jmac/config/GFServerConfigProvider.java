@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -108,7 +109,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
     protected AuthConfigFactory factory = null;
     private WebServicesDelegate wsdelegate = null;
 
-    public GFServerConfigProvider(Map properties, AuthConfigFactory factory) {
+    public GFServerConfigProvider(Map<String, String> properties, AuthConfigFactory factory) {
         this.factory = factory;
         initializeParser();
 
@@ -376,10 +377,10 @@ public class GFServerConfigProvider implements AuthConfigProvider {
         private static final Class[] PARAMS = {};
         private static final Object[] ARGS = {};
 
-        private String moduleClassName;
-        private MessagePolicy requestPolicy;
-        private MessagePolicy responsePolicy;
-        private Map options;
+        private final String moduleClassName;
+        private final MessagePolicy requestPolicy;
+        private final MessagePolicy responsePolicy;
+        private final Map options;
 
         /**
          * Construct a ConfigFile entry.
@@ -488,11 +489,11 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * parsed ID entry
      */
     public static class IDEntry {
-        private String type; // provider type (client, server, client-server)
-        private String moduleClassName;
-        private MessagePolicy requestPolicy;
-        private MessagePolicy responsePolicy;
-        private Map options;
+        private final String type; // provider type (client, server, client-server)
+        private final String moduleClassName;
+        private final MessagePolicy requestPolicy;
+        private final MessagePolicy responsePolicy;
+        private final Map options;
 
         public String getModuleClassName() {
             return moduleClassName;
@@ -527,8 +528,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
      * A data object contains module object and the corresponding map.
      */
     protected static class ModuleInfo {
-        private Object module;
-        private Map map;
+        private final Object module;
+        private final Map map;
 
         ModuleInfo(Object module, Map map) {
             this.module = module;
@@ -940,11 +941,11 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
     static protected class GFServerAuthContext implements ServerAuthContext {
 
-        private GFServerAuthConfig config;
-        private ServerAuthModule module;
-        private com.sun.enterprise.security.jauth.ServerAuthModule oldModule;
+        private final GFServerAuthConfig config;
+        private final ServerAuthModule module;
+        private final com.sun.enterprise.security.jauth.ServerAuthModule oldModule;
 
-        private Map map;
+        private final Map map;
         boolean managesSession = false;
 
         GFServerAuthContext(GFServerAuthConfig config, ServerAuthModule module, Map map) {
@@ -1068,9 +1069,9 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
     static protected class GFClientAuthContext implements ClientAuthContext {
 
-        private GFClientAuthConfig config;
-        private ClientAuthModule module;
-        private com.sun.enterprise.security.jauth.ClientAuthModule oldModule;
+        private final GFClientAuthConfig config;
+        private final ClientAuthModule module;
+        private final com.sun.enterprise.security.jauth.ClientAuthModule oldModule;
         // private Map map;
 
         GFClientAuthContext(GFClientAuthConfig config, ClientAuthModule module, Map map) {

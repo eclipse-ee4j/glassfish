@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.types.Property;
 
 import java.beans.PropertyVetoException;
@@ -43,6 +43,9 @@ import org.glassfish.quality.ToDo;
 
 @Configured
 public interface JmsAvailability extends ConfigExtension, PropertyBag, AvailabilityServiceExtension {
+
+    String PATTERN_BROKER = "(masterbroker|shareddb)";
+    String PATTERN_MESSAGE_STORE_TYPE = "(file|jdbc)";
 
     /**
      * Gets the value of the availabilityEnabled property.
@@ -87,7 +90,7 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
       */
 
     @Attribute (defaultValue="masterbroker")
-    @Pattern(regexp="(masterbroker|shareddb)")
+    @Pattern(regexp = PATTERN_BROKER, message = "Valid values: " + PATTERN_BROKER)
     String getConfigStoreType();
 
 
@@ -112,8 +115,8 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
       *         {@link String }
       */
 
-    @Attribute (defaultValue="file")
-    @Pattern(regexp="(file|jdbc)")
+    @Attribute(defaultValue = "file")
+    @Pattern(regexp = PATTERN_MESSAGE_STORE_TYPE, message = "Valid values: " + PATTERN_MESSAGE_STORE_TYPE)
     String getMessageStoreType();
 
 
@@ -144,29 +147,28 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
      * Sets the value of the DB Vendor property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
     void setDbVendor(String value) throws PropertyVetoException;
 
     /**
-         * Gets the value of the DB User Name property.
-         *
-         * This is the DB user Name for the DB used by the MQ broker cluster
-         * for use in saving persistent JMS messages and other broker
-         * cluster configuration information.
-         *
-         * @return possible object is
-         *         {@link String }
-      */
+     * Gets the value of the DB User Name property.
+     * This is the DB user Name for the DB used by the MQ broker cluster
+     * for use in saving persistent JMS messages and other broker
+     * cluster configuration information.
+     *
+     * @return possible object is
+     *         {@link String }
+     */
     @Attribute
     String getDbUsername();
 
-      /**
-         * Sets the value of the DB UserName property.
-         *
-         * @param value allowed object is
-         *              {@link String }
-       */
+    /**
+     * Sets the value of the DB UserName property.
+     *
+     * @param value allowed object is
+     *            {@link String }
+     */
     void setDbUsername(String value) throws PropertyVetoException;
 
     /**
@@ -227,10 +229,12 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
      *              {@link String }
      */
     void setMqStorePoolName(String value) throws PropertyVetoException;
+
     /**
-        Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
+    @Override
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props={})
     @Element
     List<Property> getProperty();

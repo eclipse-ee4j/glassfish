@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,14 @@
 package org.glassfish.ha.commands;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.util.*;
+
+import jakarta.validation.constraints.Pattern;
+
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -25,15 +33,11 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-
-import jakarta.validation.constraints.Pattern;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.ha.store.spi.BackingStoreFactoryRegistry;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * The list-persistence-types command lists different kinds of persistence options for session data
@@ -51,10 +55,12 @@ import org.glassfish.ha.store.spi.BackingStoreFactoryRegistry;
 })
 public class ListPersistenceTypesCommand implements AdminCommand {
 
-    @Param(name="type", optional=false, primary=false)
+    private static final String CONTAINER_TYPES = "(ejb|web)";
+
+    @Param(name = "type", optional = false, primary = false)
     @I18n("list.persistence.types.container")
-    @Pattern(regexp = "(ejb|web)")
-    private String containerType = "";
+    @Pattern(regexp = CONTAINER_TYPES, message = "Valid values: " + CONTAINER_TYPES)
+    private final String containerType = "";
 
     private Logger logger;
     private static final String EOL = "\n";
@@ -89,7 +95,7 @@ public class ListPersistenceTypesCommand implements AdminCommand {
             output = output.substring(0, output.length()-1);
         }
         Properties extraProperties = new Properties();
-        extraProperties.put("types", new ArrayList<String>(allPersistenceTypes));
+        extraProperties.put("types", new ArrayList<>(allPersistenceTypes));
 
         report.setExtraProperties(extraProperties);
         report.setMessage(output);

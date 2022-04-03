@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,26 +18,27 @@
 package org.glassfish.connectors.config;
 
 import com.sun.enterprise.config.serverbeans.Resource;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
+
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.api.admin.RestRedirect;
+
 import static org.glassfish.config.support.Constants.NAME_REGEX;
-
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Pattern;
-/**
- *
- */
 
 /* @XmlType(name = "", propOrder = {
     "property"
@@ -56,6 +58,8 @@ import jakarta.validation.constraints.Pattern;
 @ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.RESOURCEADAPTERCONFIG_RESOURCE)
 public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, PropertyBag {
 
+    String PATTERN_RA_NAME = "[^',][^',\\\\]*";
+
     /**
      * Gets the value of the name property.
      *
@@ -63,16 +67,16 @@ public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, Proper
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp=NAME_REGEX)
-    public String getName();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getName();
 
     /**
      * Sets the value of the name property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the threadPoolIds property.
@@ -81,15 +85,15 @@ public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, Proper
      *         {@link String }
      */
     @Attribute
-    public String getThreadPoolIds();
+    String getThreadPoolIds();
 
     /**
      * Sets the value of the threadPoolIds property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setThreadPoolIds(String value) throws PropertyVetoException;
+    void setThreadPoolIds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the resourceAdapterName property.
@@ -97,31 +101,34 @@ public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, Proper
      * @return possible object is
      *         {@link String }
      */
-    @Attribute(key=true)
-    @Pattern(regexp="[^',][^',\\\\]*")
-    public String getResourceAdapterName();
+    @Attribute(key = true)
+    @Pattern(regexp = PATTERN_RA_NAME, message = "Pattern: " + PATTERN_RA_NAME)
+    String getResourceAdapterName();
 
     /**
      * Sets the value of the resourceAdapterName property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setResourceAdapterName(String value) throws PropertyVetoException;
+    void setResourceAdapterName(String value) throws PropertyVetoException;
 
     /**
-        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @Override
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
+    @Override
     @DuckTyped
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(ResourceAdapterConfig resource){
+
+        public static String getIdentity(ResourceAdapterConfig resource) {
             return resource.getResourceAdapterName();
         }
     }

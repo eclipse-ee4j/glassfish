@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +18,22 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
 import jakarta.validation.Payload;
-import org.jvnet.hk2.config.*;
-import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
-
-import java.beans.PropertyVetoException;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+
+import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
+
 /**
  * Element relating a reference to a cluster to be load balanced to an (optional) health-checker
- *
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -47,17 +52,16 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
     @Override
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = NAME_SERVER_REGEX)
+    @Pattern(regexp = NAME_SERVER_REGEX, message = "{config.invalid.name}")
     @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.cluster-ref}", type = Cluster.class)
-    public String getRef();
+    String getRef();
 
     /**
      * Sets the value of the ref property.
      *
      * @param value allowed object is {@link String }
      */
-    @Override
-    public void setRef(String value) throws PropertyVetoException;
+    @Override void setRef(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the lbPolicy property.
@@ -70,14 +74,14 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "round-robin")
-    public String getLbPolicy();
+    String getLbPolicy();
 
     /**
      * Sets the value of the lbPolicy property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setLbPolicy(String value) throws PropertyVetoException;
+    void setLbPolicy(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the lbPolicyModule property.
@@ -89,14 +93,14 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getLbPolicyModule();
+    String getLbPolicyModule();
 
     /**
      * Sets the value of the lbPolicyModule property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setLbPolicyModule(String value) throws PropertyVetoException;
+    void setLbPolicyModule(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the healthChecker property.
@@ -106,12 +110,12 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
      * @return possible object is {@link HealthChecker }
      */
     @Element
-    public HealthChecker getHealthChecker();
+    HealthChecker getHealthChecker();
 
     /**
      * Sets the value of the healthChecker property.
      *
      * @param value allowed object is {@link HealthChecker }
      */
-    public void setHealthChecker(HealthChecker value) throws PropertyVetoException;
+    void setHealthChecker(HealthChecker value) throws PropertyVetoException;
 }

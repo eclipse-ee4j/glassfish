@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,16 @@
 
 package org.glassfish.webservices.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import static org.glassfish.config.support.Constants.NAME_REGEX;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  * Specifies the registry where web service end point artifacts are published.
@@ -41,17 +43,17 @@ public interface RegistryLocation extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
-    public String getConnectorResourceJndiName();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getConnectorResourceJndiName();
 
     /**
      * Sets the value of the connectorResourceJndiName property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setConnectorResourceJndiName(String value) throws PropertyVetoException;
+    void setConnectorResourceJndiName(String value) throws PropertyVetoException;
 
 }

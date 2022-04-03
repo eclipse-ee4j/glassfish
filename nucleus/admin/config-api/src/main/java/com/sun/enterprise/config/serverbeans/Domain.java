@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,20 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import com.sun.enterprise.config.modularity.parser.ModuleConfigurationLoader;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.StringUtils;
+
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
@@ -30,19 +42,8 @@ import org.jvnet.hk2.config.ConfigExtensionMethod;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Configured
 /**
@@ -52,7 +53,7 @@ import java.util.logging.Logger;
  */
 public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag, ConfigLoader {
 
-    public static final String DOMAIN_NAME_PROPERTY = "administrative.domain.name";
+    String DOMAIN_NAME_PROPERTY = "administrative.domain.name";
 
     /**
      * Gets the value of the applicationRoot property.
@@ -269,6 +270,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      * <p/>
      * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Any more legal system properties?")
     @PropertiesDesc(systemProperties = true, props = {
             @PropertyDesc(name = "com.sun.aas.installRoot", description = "Operating system dependent. Path to the directory where the server is installed"),
@@ -294,6 +296,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
     /**
      * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element
@@ -376,8 +379,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
     @DuckTyped
     List<String> getAllTargets();
 
-    @DuckTyped
-    public List<String> getTargets(final String tgt);
+    @DuckTyped List<String> getTargets(final String tgt);
 
     @DuckTyped
     List<Application> getApplicationsInTarget(String target);
@@ -428,16 +430,18 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
          * or if no matches
          */
         public static List<Server> getInstancesOnNode(Domain domain, String nodeName) {
-            List<Server> ret = new LinkedList<Server>();
+            List<Server> ret = new LinkedList<>();
             try {
-                if (!StringUtils.ok(nodeName))
+                if (!StringUtils.ok(nodeName)) {
                     return ret;
+                }
 
                 List<Server> servers = domain.getServers().getServer();
 
                 for (Server server : servers) {
-                    if (nodeName.equals(server.getNodeRef()))
+                    if (nodeName.equals(server.getNodeRef())) {
                         ret.add(server);
+                    }
                 }
             } catch (Exception e) {
                 logger.log(Level.WARNING, ConfigApiLoggerInfo.errorGettingServers, e.getLocalizedMessage());
@@ -450,7 +454,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
          */
         public static List<Cluster> getClustersOnNode(Domain domain, String nodeName) {
 
-            HashMap<String, Cluster> clMap = new HashMap<String, Cluster>();
+            HashMap<String, Cluster> clMap = new HashMap<>();
             List<Server> serverList = getInstancesOnNode(domain, nodeName);
 
             try {
@@ -468,12 +472,13 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<Application> getAllDefinedSystemApplications(Domain me) {
-            List<Application> allSysApps = new ArrayList<Application>();
+            List<Application> allSysApps = new ArrayList<>();
             SystemApplications sa = me.getSystemApplications();
             if (sa != null) {
                 for (ApplicationName m : sa.getModules()) {
-                    if (m instanceof Application)
+                    if (m instanceof Application) {
                         allSysApps.add((Application) m);
+                    }
                 }
             }
             return Collections.unmodifiableList(allSysApps);
@@ -512,14 +517,17 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<Application> getSystemApplicationsReferencedFrom(Domain d, String sn) {
-            if (d == null || sn == null)
+            if (d == null || sn == null) {
                 throw new IllegalArgumentException("Null argument");
+            }
             List<Application> allApps = d.getAllDefinedSystemApplications();
             if (allApps.isEmpty())
+             {
                 return allApps; //if there are no sys-apps, none can reference one :)
+            }
             //allApps now contains ALL the system applications
             Server s = getServerNamed(d, sn);
-            List<Application> referencedApps = new ArrayList<Application>();
+            List<Application> referencedApps = new ArrayList<>();
             List<ApplicationRef> appsReferenced = s.getApplicationRef();
             for (ApplicationRef ref : appsReferenced) {
                 for (Application app : allApps) {
@@ -545,15 +553,17 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         public static boolean isNamedSystemApplicationReferencedFrom(Domain d, String appName, String serverName) {
             List<Application> referencedApps = getSystemApplicationsReferencedFrom(d, serverName);
             for (Application app : referencedApps) {
-                if (app.getName().equals(appName))
+                if (app.getName().equals(appName)) {
                     return true;
+                }
             }
             return false;
         }
 
         public static Server getServerNamed(Domain d, String name) {
-            if (d.getServers() == null || name == null)
+            if (d.getServers() == null || name == null) {
                 throw new IllegalArgumentException("no <servers> element");
+            }
             List<Server> servers = d.getServers().getServer();
             for (Server s : servers) {
                 if (name.equals(s.getName().trim())) {
@@ -564,8 +574,9 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static Config getConfigNamed(Domain d, String name) {
-            if (d.getConfigs() == null || name == null)
+            if (d.getConfigs() == null || name == null) {
                 throw new IllegalArgumentException("no <config> element");
+            }
             List<Config> configs = d.getConfigs().getConfig();
             for (Config c : configs) {
                 if (name.equals(c.getName().trim())) {
@@ -608,7 +619,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
                 return false;
             }
 
-            List<String> targets = new ArrayList<String>();
+            List<String> targets = new ArrayList<>();
             if (!target.equals("domain")) {
                 targets.add(target);
             } else {
@@ -639,7 +650,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<Server> getServersInTarget(Domain me, String target) {
-            List<Server> servers = new ArrayList<Server>();
+            List<Server> servers = new ArrayList<>();
             Server server = me.getServerNamed(target);
             if (server != null) {
                 servers.add(server);
@@ -657,7 +668,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<String> getTargets(final Domain me, final String tgt) {
-            List<String> targets = new ArrayList<String>();
+            List<String> targets = new ArrayList<>();
             if (!tgt.equals("domain")) {
                 targets.add(tgt);
             } else {
@@ -668,7 +679,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
 
         public static List<ApplicationRef> getApplicationRefsInTarget(Domain me, String tgt, boolean includeInstances) {
             List<String> targets = getTargets(me, tgt);
-            List<ApplicationRef> allAppRefs = new ArrayList<ApplicationRef>();
+            List<ApplicationRef> allAppRefs = new ArrayList<>();
 
             for (String target : targets) {
                 Server server = me.getServerNamed(target);
@@ -731,7 +742,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         public static boolean isAppEnabledInTarget(Domain me, String appName, String target) {
             Application application = me.getApplications().getApplication(appName);
             if (application != null && Boolean.valueOf(application.getEnabled())) {
-                List<String> targets = new ArrayList<String>();
+                List<String> targets = new ArrayList<>();
                 if (!target.equals("domain")) {
                     targets.add(target);
                 } else {
@@ -748,7 +759,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<String> getAllTargets(Domain d) {
-            List<String> targets = new ArrayList<String>();
+            List<String> targets = new ArrayList<>();
             // only add non-clustered servers as the cluster
             // targets will be separately added
             for (Server server : d.getServers().getServer()) {
@@ -765,7 +776,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
         }
 
         public static List<String> getAllReferencedTargetsForApplication(Domain me, String appName) {
-            List<String> referencedTargets = new ArrayList<String>();
+            List<String> referencedTargets = new ArrayList<>();
             for (String target : me.getAllTargets()) {
                 if (me.getApplicationRefInTarget(appName, target) != null) {
                     referencedTargets.add(target);
@@ -793,7 +804,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
                 return me.getApplications().getApplications();
             }
 
-            List<Application> apps = new ArrayList<Application>();
+            List<Application> apps = new ArrayList<>();
 
             List<ApplicationRef> applicationRefs = me.getApplicationRefsInTarget(target);
             for (ApplicationRef ref : applicationRefs) {
@@ -827,36 +838,40 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
             // Clusters and Servers are ReferenceContainers
             Cluster c = getClusterNamed(d, name);
 
-            if (c != null)
+            if (c != null) {
                 return c;
+            }
 
             return getServerNamed(d, name);
         }
 
         public static List<ReferenceContainer> getReferenceContainersOf(Domain d, Config config) {
             // Clusters and Servers are ReferenceContainers
-            List<ReferenceContainer> sub = new LinkedList<ReferenceContainer>();
+            List<ReferenceContainer> sub = new LinkedList<>();
 
             // both the config and its name need to be sanity-checked
             String name = null;
 
-            if (config != null)
+            if (config != null) {
                 name = config.getName();
+            }
 
-            if (!StringUtils.ok(name)) // we choose to make this not an error
-                return sub;
+            if (!StringUtils.ok(name)) { // we choose to make this not an error
+            	return sub;
+            }
 
             List<ReferenceContainer> all = getAllReferenceContainers(d);
 
             for (ReferenceContainer rc : all) {
-                if (name.equals(rc.getReference()))
+                if (name.equals(rc.getReference())) {
                     sub.add(rc);
+                }
             }
             return sub;
         }
 
         public static List<ReferenceContainer> getAllReferenceContainers(Domain d) {
-            List<ReferenceContainer> ReferenceContainers = new LinkedList<ReferenceContainer>();
+            List<ReferenceContainer> ReferenceContainers = new LinkedList<>();
             ReferenceContainers.addAll(d.getServers().getServer());
             if (d.getClusters() != null) {
                 ReferenceContainers.addAll(d.getClusters().getCluster());

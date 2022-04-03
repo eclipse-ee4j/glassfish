@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,8 +58,8 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
     void setCertNickname(String value);
 
     /**
-     * Determines whether SSL3 client authentication is performed on every request, independent of ACL-based access
-     * control.
+     * Determines whether SSL3 client authentication is performed on every request,
+     * independent of ACL-based access control.
      */
     @Attribute(defaultValue = "" + CLIENT_AUTH_ENABLED, dataType = Boolean.class)
     String getClientAuthEnabled();
@@ -66,11 +67,11 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
     void setClientAuthEnabled(String value);
 
     /**
-     * Determines if if the engine will request (want) or require (need) client authentication. Valid values:  want,
-     * need, or left blank
+     * Determines if if the engine will request (want) or require (need) client authentication.
+     * Valid values: want, need, or left blank
      */
     @Attribute(dataType = String.class, defaultValue = "")
-    @Pattern(regexp = CLIENT_AUTH_PATTERN)
+    @Pattern(regexp = CLIENT_AUTH_PATTERN, message = "Valid values: " + CLIENT_AUTH_PATTERN)
     String getClientAuth();
 
     void setClientAuth(String value);
@@ -89,7 +90,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
      * type of the keystore file
      */
     @Attribute(dataType = String.class)
-    @Pattern(regexp = STORE_TYPE_PATTERN)
+    @Pattern(regexp = STORE_TYPE_PATTERN, message = "Valid values: " + STORE_TYPE_PATTERN)
     String getKeyStoreType();
 
     void setKeyStoreType(String type);
@@ -126,7 +127,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
      * ciphers are assumed to be enabled. NOT Used in PE
      */
     @Attribute
-    @Pattern(regexp = SSL2_CIPHERS_PATTERN)
+    @Pattern(regexp = SSL2_CIPHERS_PATTERN, message = "Valid values: " + SSL2_CIPHERS_PATTERN)
     String getSsl2Ciphers();
 
     void setSsl2Ciphers(String value);
@@ -221,7 +222,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
      * type of the truststore file
      */
     @Attribute(dataType = String.class)
-    @Pattern(regexp = STORE_TYPE_PATTERN)
+    @Pattern(regexp = STORE_TYPE_PATTERN, message = "Valid values: " + STORE_TYPE_PATTERN)
     String getTrustStoreType();
 
     void setTrustStoreType(String type);

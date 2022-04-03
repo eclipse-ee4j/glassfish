@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,26 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.api.admin.RestRedirect;
-import org.glassfish.quality.ToDo;
+
 import static org.glassfish.config.support.Constants.NAME_REGEX;
-
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.NotNull;
-
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 
 /**
  * An audit-module specifies an optional plug-in module which implements audit capabilities.
@@ -57,7 +58,7 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
     String getName();
 
     /**
@@ -87,6 +88,7 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
     /**
      * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element

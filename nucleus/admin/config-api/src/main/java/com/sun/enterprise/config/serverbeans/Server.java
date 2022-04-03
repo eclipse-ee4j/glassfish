@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,60 +17,74 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
-import com.sun.enterprise.config.util.InstanceRegisterInstanceCommandParameters;
-import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.*;
 import com.sun.enterprise.config.serverbeans.customvalidators.ConfigRefConstraint;
 import com.sun.enterprise.config.serverbeans.customvalidators.ConfigRefValidator;
-import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
-import com.sun.enterprise.config.util.ServerHelper;
+import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
+import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
+import com.sun.enterprise.config.util.InstanceRegisterInstanceCommandParameters;
 import com.sun.enterprise.config.util.PortBaseHelper;
 import com.sun.enterprise.config.util.PortManager;
+import com.sun.enterprise.config.util.ServerHelper;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
-import java.io.*;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.config.support.*;
-import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.config.Named;
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.api.admin.config.ReferenceContainer;
-import org.glassfish.quality.ToDo;
-import static org.glassfish.config.support.Constants.*;
-
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import org.glassfish.api.admin.ServerEnvironment;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.config.Named;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.admin.config.ReferenceContainer;
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.config.support.CreationDecorator;
+import org.glassfish.config.support.DeletionDecorator;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
+
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.OPERAND_NAME;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_CHECKPORTS;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_CLUSTER;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_CONFIG;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_LBENABLED;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_NODE;
+import static com.sun.enterprise.config.util.RegisterInstanceCommandParameters.ParameterNames.PARAM_PORTBASE;
+import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
 /**
- *
- * Java EE Application Server Configuration
- *
- * Each Application Server instance is a Java EE compliant container. One server instance is specially designated as the
- * Administration Server in SE/EE
- *
+ * Jakarta EE Application Server Configuration
+ * Each Application Server instance is a Jakarta EE compliant container.
+ * One server instance is specially designated as the Administration Server in SE/EE
  * User applications cannot be deployed to an Administration Server instance
  */
 @Configured
@@ -77,31 +92,31 @@ import org.glassfish.api.logging.LogHelper;
 @SuppressWarnings("unused")
 @NotDuplicateTargetName(message = "{server.duplicate.name}", payload = Server.class)
 @ReferenceConstraint(skipDuringCreation = true, payload = Server.class)
-public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
+public interface Server
+    extends ConfigBeanProxy, PropertyBag, Named, SystemPropertyBag, ReferenceContainer, RefContainer, Payload {
 
     String lbEnabledSystemProperty = "org.glassfish.lb-enabled-default";
 
     @Param(name = OPERAND_NAME, primary = true)
     @Override
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     @NotTargetKeyword(message = "{server.reserved.name}", payload = Server.class)
     @Pattern(regexp = NAME_SERVER_REGEX, message = "{server.invalid.name}", payload = Server.class)
     @Override
-    public String getName();
+    String getName();
 
     /**
      * Gets the value of the configRef property.
-     *
-     * Points to a named config. Needed for stand-alone servers. If server instance is part of a cluster, then it points to
-     * the cluster config
+     * Points to a named config. Needed for stand-alone servers.
+     * If server instance is part of a cluster, then it points to the cluster config
      *
      * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
     @NotTargetKeyword(message = "{server.reserved.name}", payload = Server.class)
-    @Pattern(regexp = NAME_SERVER_REGEX)
+    @Pattern(regexp = NAME_SERVER_REGEX, message = "Pattern: " + NAME_SERVER_REGEX)
     @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.configref}", type = Config.class)
     String getConfigRef();
 
@@ -359,8 +374,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
 
         public static Config getConfig(Server server) {
             try {
-                if (server == null)
+                if (server == null) {
                     return null;
+                }
 
                 Dom serverDom = Dom.unwrap(server);
                 Configs configs = serverDom.getHabitat().getService(Configs.class);
@@ -763,8 +779,9 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
                 // bnevins September 30, 2010
                 // don't delete the config if it wasn't auto-generated.
                 final String autoGeneratedName = child.getName() + "-config";
-                if (!autoGeneratedName.equals(instanceConfig))
+                if (!autoGeneratedName.equals(instanceConfig)) {
                     return;
+                }
 
                 try {
                     if (config != null) {

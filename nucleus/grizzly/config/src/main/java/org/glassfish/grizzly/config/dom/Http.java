@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -113,7 +114,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     void setCompressableMimeType(String type);
 
     @Attribute(defaultValue = COMPRESSION, dataType = String.class)
-    @Pattern(regexp = COMPRESSION_PATTERN)
+    @Pattern(regexp = COMPRESSION_PATTERN, message = "Pattern: " + COMPRESSION_PATTERN)
     String getCompression();
 
     void setCompression(String compression);
@@ -470,6 +471,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
 
     void setHttp2Enabled(boolean http2Enabled);
 
+    @Override
     @DuckTyped
     Protocol getParent();
 

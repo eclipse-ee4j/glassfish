@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,16 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-
-import java.beans.PropertyVetoException;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.api.admin.RestRedirect;
+import java.beans.PropertyVetoException;
 
-/**
- *
- */
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /* @XmlType(name = "") */
 
@@ -38,6 +34,8 @@ import org.glassfish.api.admin.RestRedirect;
 @RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-resource-ref"),
         @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-resource-ref") })
 public interface ResourceRef extends ConfigBeanProxy {
+
+    String PATTERN_REF = "[^':,][^':,]*";
 
     /**
      * Determines whether the resource is active or ignored.
@@ -55,14 +53,15 @@ public interface ResourceRef extends ConfigBeanProxy {
     void setEnabled(String value) throws PropertyVetoException;
 
     /**
-     * References the name attribute of a resources, such as an {@link org.glassfish.connectors.config.JdbcResource} or
+     * References the name attribute of a resources, such as an
+     * {@link org.glassfish.connectors.config.JdbcResource} or
      * {@link org.glassfish.connectors.config.JdbcConnectionPool}.
      *
      * @return possible object is {@link String }
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = "[^':,][^':,]*")
+    @Pattern(regexp = PATTERN_REF, message = "Pattern: " + PATTERN_REF)
     String getRef();
 
     /**

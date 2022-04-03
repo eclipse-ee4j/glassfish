@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +34,7 @@ import java.util.List;
 @Configured
 public interface Transport extends ConfigBeanProxy, PropertyBag {
 
+    String BYTE_BUFFER_TYPES = "heap|direct";
     boolean DISPLAY_CONFIGURATION = false;
     boolean ENABLE_SNOOP = false;
     boolean TCP_NO_DELAY = true;
@@ -89,7 +91,11 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
      * Type of ByteBuffer, which will be used with transport. Possible values are: HEAP and DIRECT
      */
     @Attribute(defaultValue = BYTE_BUFFER_TYPE, dataType = String.class)
-    @Pattern(regexp = "heap|direct", flags = Pattern.Flag.CASE_INSENSITIVE)
+    @Pattern(
+        regexp = BYTE_BUFFER_TYPES,
+        message = "Valid values: " + BYTE_BUFFER_TYPES,
+        flags = Pattern.Flag.CASE_INSENSITIVE
+    )
     String getByteBufferType();
 
     void setByteBufferType(String value);
@@ -208,6 +214,7 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
     @DuckTyped
     List<NetworkListener> findNetworkListeners();
 
+    @Override
     @DuckTyped
     Transports getParent();
 
@@ -215,7 +222,7 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
         static public List<NetworkListener> findNetworkListeners(Transport transport) {
             NetworkListeners networkListeners =
                     transport.getParent().getParent().getNetworkListeners();
-            List<NetworkListener> refs = new ArrayList<NetworkListener>();
+            List<NetworkListener> refs = new ArrayList<>();
             for (NetworkListener listener : networkListeners.getNetworkListener()) {
                 if (listener.getTransport().equals(transport.getName())) {
                     refs.add(listener);

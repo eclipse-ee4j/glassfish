@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,10 @@
 
 package org.glassfish.orb.admin.config;
 
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -31,15 +36,7 @@ import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
 import static org.glassfish.config.support.Constants.NAME_REGEX;
-
-/**
- *
- */
 
 /* @XmlType(name = "", propOrder = {
     "ssl",
@@ -67,9 +64,9 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
     String getId();
 
     /**
@@ -109,9 +106,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      *         {@link String }
      */
     @Attribute (defaultValue="1072")
-    @Pattern(regexp=PORT_PATTERN,
-            message="{port-pattern}",
-            payload=IiopListener.class)
+    @Pattern(regexp = PORT_PATTERN, message = "{port-pattern}", payload = IiopListener.class)
     String getPort();
 
     /**

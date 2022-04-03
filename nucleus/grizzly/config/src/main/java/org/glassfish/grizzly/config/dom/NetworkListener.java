@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package org.glassfish.grizzly.config.dom;
 
+import jakarta.validation.constraints.Pattern;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import jakarta.validation.constraints.Pattern;
 
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
@@ -39,7 +40,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
     boolean JK_ENABLED = false;
     String DEFAULT_ADDRESS = "0.0.0.0";
     String DEFAULT_CONFIGURATION_FILE = "${com.sun.aas.instanceRoot}/config/glassfish-jk.properties";
-    String TYPE_PATTERN = "(standard|proxy)";
+    String LISTENER_TYPES = "(standard|proxy)";
     String DEFAULT_TYPE = "standard";
 
 
@@ -85,7 +86,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
      * Network-listener name, which could be used as reference
      */
     @Attribute(required = true, dataType = String.class, defaultValue = DEFAULT_TYPE)
-    @Pattern(regexp = TYPE_PATTERN)
+    @Pattern(regexp = LISTENER_TYPES, message = "Valid values: " + LISTENER_TYPES)
     String getType();
 
     void setType(String type);
@@ -138,6 +139,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
     @DuckTyped
     Transport findTransport();
 
+    @Override
     @DuckTyped
     NetworkListeners getParent();
 
@@ -204,7 +206,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
                 final ConfigBeanProxy parent = listener.getParent().getParent().getParent();
                 final Dom proxy = Dom.unwrap(parent).element("thread-pools");
                 final List<Dom> domList = proxy.nodeElements("thread-pool");
-                list = new ArrayList<ThreadPool>(domList.size());
+                list = new ArrayList<>(domList.size());
                 for (Dom dom : domList) {
                     list.add(dom.<ThreadPool>createProxy());
                 }

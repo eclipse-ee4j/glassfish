@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,22 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
-import org.glassfish.grizzly.config.dom.NetworkConfig;
-import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.glassfish.config.support.datatypes.PositiveInteger;
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
@@ -44,15 +46,23 @@ import org.jvnet.hk2.config.types.PropertyBag;
  *
  * Virtualization in Application Server allows multiple URL domains to be served by the same HTTP server process, which
  * is listening on multiple host addresses If an application is available at two virtual servers, they still share same
- * physical resource pools, such as JDBC connection pools. Sun ONE Application Server allows a list of virtual servers,
- * to be specified along with web-module and j2ee-application elements. This establishes an association between URL
+ * physical resource pools, such as JDBC connection pools. GlassFish allows a list of virtual servers,
+ * to be specified along with web-module and Jakarta EE application elements. This establishes an association between URL
  * domains, represented by the virtual server and the web modules (standalone web modules or web modules inside the ear
  * file)
  */
 @Configured
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-virtual-server"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-virtual-server") })
+@RestRedirects({
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-virtual-server"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-virtual-server"
+)})
 public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
+
+    String VALUES_ACCESS_LOG_ENABLED = "(true|on|false|off|inherit)";
+    String VALUES_SSO_ENABLED = "(true|on|false|off|inherit)";
+    String VALUES_SSO_COOKIE_ENABLED = "(true|false|dynamic)";
+    String VALUES_STATE = "(on|off|disabled)";
+
     /**
      * Gets the value of the id property.
      *
@@ -154,7 +164,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "on")
-    @Pattern(regexp = "(on|off|disabled)")
+    @Pattern(regexp = VALUES_STATE, message = "Valid values: " + VALUES_STATE)
     String getState();
 
     /**
@@ -202,7 +212,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "inherit")
-    @Pattern(regexp = "(true|on|false|off|inherit)")
+    @Pattern(regexp = VALUES_SSO_ENABLED, message = "Valid values: " + VALUES_SSO_ENABLED)
     String getSsoEnabled();
 
     /**
@@ -218,7 +228,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "inherit")
-    @Pattern(regexp = "(true|on|false|off|inherit)")
+    @Pattern(regexp = VALUES_ACCESS_LOG_ENABLED, message = "Valid values: " + VALUES_ACCESS_LOG_ENABLED)
     String getAccessLoggingEnabled();
 
     /**
@@ -268,7 +278,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
      * "dynamic"
      */
     @Attribute(defaultValue = "dynamic")
-    @Pattern(regexp = "(true|false|dynamic)")
+    @Pattern(regexp = VALUES_SSO_COOKIE_ENABLED, message = "Valid values: " + VALUES_SSO_COOKIE_ENABLED)
     String getSsoCookieSecure();
 
     void setSsoCookieSecure(String value);
@@ -294,7 +304,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
         public static void addNetworkListener(VirtualServer server, String name) throws PropertyVetoException {
             final String listeners = server.getNetworkListeners();
             final String[] strings = listeners == null ? new String[0] : listeners.split(",");
-            final Set<String> set = new TreeSet<String>();
+            final Set<String> set = new TreeSet<>();
             for (String string : strings) {
                 set.add(string.trim());
             }
@@ -305,7 +315,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
         public static void removeNetworkListener(VirtualServer server, String name) throws PropertyVetoException {
             final String listeners = server.getNetworkListeners();
             final String[] strings = listeners == null ? new String[0] : listeners.split(",");
-            final Set<String> set = new TreeSet<String>();
+            final Set<String> set = new TreeSet<>();
             for (String string : strings) {
                 set.add(string.trim());
             }
@@ -327,7 +337,7 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
             final String listeners = server.getNetworkListeners();
             final String[] strings = listeners == null ? new String[0] : listeners.split(",");
             final NetworkConfig config = server.getParent().getParent(Config.class).getNetworkConfig();
-            List<NetworkListener> list = new ArrayList<NetworkListener>();
+            List<NetworkListener> list = new ArrayList<>();
             for (String s : strings) {
                 final String name = s.trim();
                 final NetworkListener networkListener = config.getNetworkListener(name);
@@ -342,46 +352,90 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
     /**
      * Properties.
      */
-    @PropertiesDesc(props = {
-            @PropertyDesc(name = "sso-max-inactive-seconds", defaultValue = "300", dataType = PositiveInteger.class, description = "The time after which a user's single sign-on record becomes eligible for purging if "
-                    + "no client activity is received. Since single sign-on applies across several applications on the same virtual server, "
-                    + "access to any of the applications keeps the single sign-on record active. Higher values provide longer "
-                    + "single sign-on persistence for the users at the expense of more memory use on the server"),
-            @PropertyDesc(name = "sso-reap-interval-seconds", defaultValue = "60", dataType = PositiveInteger.class, description = "Interval between purges of expired single sign-on records"),
-            @PropertyDesc(name = "setCacheControl", description = "Comma-separated list of Cache-Control response directives. For a list of valid directives, "
+    @Override
+    @PropertiesDesc(
+        props = {@PropertyDesc(
+            name = "sso-max-inactive-seconds",
+            defaultValue = "300",
+            dataType = PositiveInteger.class,
+            description = "The time after which a user's single sign-on record becomes eligible for purging if "
+                + "no client activity is received. Since single sign-on applies across several applications on the same virtual server, "
+                + "access to any of the applications keeps the single sign-on record active. Higher values provide longer "
+                + "single sign-on persistence for the users at the expense of more memory use on the server"),
+            @PropertyDesc(
+                name = "sso-reap-interval-seconds",
+                defaultValue = "60",
+                dataType = PositiveInteger.class,
+                description = "Interval between purges of expired single sign-on records"),
+            @PropertyDesc(
+                name = "setCacheControl",
+                description = "Comma-separated list of Cache-Control response directives. For a list of valid directives, "
                     + "see section 14.9 of the document at http://www.ietf.org/rfc/rfc2616.txt"),
-            @PropertyDesc(name = "accessLoggingEnabled", defaultValue = "false", dataType = Boolean.class, description = "Enables access logging for this virtual server only"),
-            @PropertyDesc(name = "accessLogBufferSize", defaultValue = "32768", dataType = PositiveInteger.class, description = "Size in bytes of the buffer where access log calls are stored. If the value is "
+            @PropertyDesc(
+                name = "accessLoggingEnabled",
+                defaultValue = "false",
+                dataType = Boolean.class,
+                description = "Enables access logging for this virtual server only"),
+            @PropertyDesc(
+                name = "accessLogBufferSize",
+                defaultValue = "32768",
+                dataType = PositiveInteger.class,
+                description = "Size in bytes of the buffer where access log calls are stored. If the value is "
                     + "less than 5120, a warning message is issued, and the value is set to 5120. To set this "
                     + "property for all virtual servers, set it as a property of the parent http-service"),
-            @PropertyDesc(name = "accessLogWriteInterval", defaultValue = "300", dataType = PositiveInteger.class, description = "Number of seconds before the log is written to the disk. The access log is written when "
+            @PropertyDesc(
+                name = "accessLogWriteInterval",
+                defaultValue = "300",
+                dataType = PositiveInteger.class,
+                description = "Number of seconds before the log is written to the disk. The access log is written when "
                     + "the buffer is full or when the interval expires. If the value is 0, the buffer is always written even if "
                     + "it is not full. This means that each time the server is accessed, the log message is stored directly to the file. "
                     + "To set this property for all virtual servers, set it as a property of the parent http-service"),
-            @PropertyDesc(name = "allowRemoteAddress", description = "Comma-separated list of regular expression patterns that the remote client's IP address is "
+            @PropertyDesc(
+                name = "allowRemoteAddress",
+                description = "Comma-separated list of regular expression patterns that the remote client's IP address is "
                     + "compared to. If this property is specified, the remote address must match for this request to be accepted. "
                     + "If this property is not specified, all requests are accepted unless the remote address matches a 'denyRemoteAddress' pattern"),
-            @PropertyDesc(name = "denyRemoteAddress", description = "Comma-separated list of regular expression patterns that the remote client's "
+            @PropertyDesc(
+                name = "denyRemoteAddress",
+                description = "Comma-separated list of regular expression patterns that the remote client's "
                     + "IP address is compared to. If this property is specified, the remote address must not "
                     + "match for this request to be accepted. If this property is not specified, request "
                     + "acceptance is governed solely by the 'allowRemoteAddress' property"),
-            @PropertyDesc(name = "allowRemoteHost", description = "Comma-separated list of regular expression patterns that the remote client's "
+            @PropertyDesc(
+                name = "allowRemoteHost",
+                description = "Comma-separated list of regular expression patterns that the remote client's "
                     + "hostname (as returned by java.net.Socket.getInetAddress().getHostName()) is compared to. "
                     + "If this property is specified, the remote hostname must match for the request to be accepted. "
                     + "If this property is not specified, all requests are accepted unless the remote hostname matches a 'denyRemoteHost' pattern"),
-            @PropertyDesc(name = "denyRemoteHost", description = "Specifies a comma-separated list of regular expression patterns that the remote client's "
+            @PropertyDesc(
+                name = "denyRemoteHost",
+                description = "Specifies a comma-separated list of regular expression patterns that the remote client's "
                     + "hostname (as returned by java.net.Socket.getInetAddress().getHostName()) is compared to. "
                     + "If this property is specified, the remote hostname must not match for this request to be accepted. "
                     + "If this property is not specified, request acceptance is governed solely by the 'allowRemoteHost' property"),
-            @PropertyDesc(name = "authRealm", description = "Specifies the name attribute of an “auth-realm�? on page 23 element, which overrides "
+            @PropertyDesc(
+                name = "authRealm",
+                description = "Specifies the name attribute of an “auth-realm“ on page 23 element, which overrides "
                     + "the server instance's default realm for stand-alone web applications deployed to this virtual server. "
                     + "A realm defined in a stand-alone web application's web.xml file overrides the virtual server's realm"),
-            @PropertyDesc(name = "securePagesWithPragma", defaultValue = "true", dataType = Boolean.class, description = "Set this property to false to ensure that for all web applications on this virtual server "
+            @PropertyDesc(
+                name = "securePagesWithPragma",
+                defaultValue = "true",
+                dataType = Boolean.class,
+                description = "Set this property to false to ensure that for all web applications on this virtual server "
                     + "file downloads using SSL work properly in Internet Explorer. You can set this property for a specific web application."),
-            @PropertyDesc(name = "contextXmlDefault", description = "The location, relative to domain-dir, of the context.xml file for this virtual server, if one is used"),
-            @PropertyDesc(name = "allowLinking", defaultValue = "false", dataType = Boolean.class, description = "If true, resources that are symbolic links in web applications on this virtual server are served. "
+            @PropertyDesc(
+                name = "contextXmlDefault",
+                description = "The location, relative to domain-dir, of the context.xml file for this virtual server, if one is used"),
+            @PropertyDesc(
+                name = "allowLinking",
+                defaultValue = "false",
+                dataType = Boolean.class,
+                description = "If true, resources that are symbolic links in web applications on this virtual server are served. "
                     + "The value of this property in the sun-web.xml file takes precedence if defined. "
                     + "Caution: setting this property to true on Windows systems exposes JSP source code."),
+
             /**
              * Specifies an alternate document root (docroot), where n is a positive integer that allows specification of more than
              * one. Alternate docroots allow web applications to serve requests for certain resources from outside their own

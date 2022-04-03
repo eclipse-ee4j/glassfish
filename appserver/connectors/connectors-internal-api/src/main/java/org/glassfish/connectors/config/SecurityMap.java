@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,18 @@
 
 package org.glassfish.connectors.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import static org.glassfish.config.support.Constants.NAME_REGEX;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  * Perform mapping from principal received during Servlet/EJB authentication,
@@ -49,18 +51,18 @@ public interface SecurityMap extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    @Pattern(regexp=NAME_REGEX)
-    public String getName();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getName();
 
     /**
      * Sets the value of the name property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the backendPrincipal property.
@@ -68,33 +70,34 @@ public interface SecurityMap extends ConfigBeanProxy {
      * @return possible object is
      *         {@link BackendPrincipal }
      */
-    @Element(required=true)
-    public BackendPrincipal getBackendPrincipal();
+    @Element(required = true)
+    BackendPrincipal getBackendPrincipal();
 
     /**
      * Sets the value of the backendPrincipal property.
      *
      * @param value allowed object is
-     *              {@link BackendPrincipal }
+     *            {@link BackendPrincipal }
      */
-    public void setBackendPrincipal(BackendPrincipal value) throws PropertyVetoException;
+    void setBackendPrincipal(BackendPrincipal value) throws PropertyVetoException;
 
     /**
      * get the list of principals to be mapped to backend-principal
+     *
      * @return list of principals
      */
     @Element
-    public List<String> getPrincipal();
+    List<String> getPrincipal();
 
     void setPrincipal(List<String> principals) throws PropertyVetoException;
 
-
     /**
      * get the list of user-groups to be mapped to backend principal
+     *
      * @return list of user-groups
      */
     @Element
-    public List<String> getUserGroup();
+    List<String> getUserGroup();
 
     void setUserGroup(List<String> userGroups) throws PropertyVetoException;
 }

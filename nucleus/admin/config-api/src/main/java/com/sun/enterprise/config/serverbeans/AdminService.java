@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,21 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.quality.ToDo;
-import org.jvnet.hk2.config.*;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 
 /* @XmlType(name = "", propOrder = {
     "jmxConnector",
@@ -40,6 +45,8 @@ import jakarta.validation.constraints.Pattern;
 @Configured
 public interface AdminService extends ConfigBeanProxy, PropertyBag {
 
+    String PATTERN_TYPE = "(das|das-and-server|server)";
+
     /**
      * Gets the value of the type property. An instance can either be of type das Domain Administration Server in SE/EE or
      * the PE instance das-and-server same as das server Any non-DAS instance in SE/EE. Not valid for PE.
@@ -47,7 +54,7 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "server")
-    @Pattern(regexp = "(das|das-and-server|server)")
+    @Pattern(regexp = PATTERN_TYPE, message = "Pattern: " + PATTERN_TYPE)
     String getType();
 
     /**
@@ -98,6 +105,7 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element
@@ -150,8 +158,9 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
             SecurityService ss = cfg.getSecurityService();
             List<AuthRealm> realms = ss.getAuthRealm();
             for (AuthRealm realm : realms) {
-                if (rn.equals(realm.getName()))
+                if (rn.equals(realm.getName())) {
                     return realm;
+                }
             }
             return null;
         }
@@ -167,8 +176,9 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
             boolean usesFR = false;
             AuthRealm ar = as.getAssociatedAuthRealm();
             //Note: This is type unsafe.
-            if (ar != null && "com.sun.enterprise.security.auth.realm.file.FileRealm".equals(ar.getClassname()))
+            if (ar != null && "com.sun.enterprise.security.auth.realm.file.FileRealm".equals(ar.getClassname())) {
                 usesFR = true;
+            }
             return usesFR;
         }
     }

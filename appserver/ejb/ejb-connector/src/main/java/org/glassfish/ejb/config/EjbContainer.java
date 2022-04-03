@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,23 @@
 
 package org.glassfish.ejb.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.admin.config.PropertyDesc;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import org.glassfish.api.admin.config.PropertyDesc;
-import org.glassfish.api.admin.config.ConfigExtension;
 
 /**
  * Configuration of EJB Container
@@ -46,12 +46,15 @@ import org.glassfish.api.admin.config.ConfigExtension;
 
 @Configured
 public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtension {
-    public static final int DEFAULT_THREAD_CORE_POOL_SIZE = 16;
-    public static final int DEFAULT_THREAD_MAX_POOL_SIZE = 32;
-    public static final long DEFAULT_THREAD_KEEP_ALIVE_SECONDS = 60;
-    public static final int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
-    public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
-    public static final boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
+
+    String PATTERN_VICTIM_SELECTION_POLICY = "(nru|fifo|lru)";
+
+    int DEFAULT_THREAD_CORE_POOL_SIZE = 16;
+    int DEFAULT_THREAD_MAX_POOL_SIZE = 32;
+    long DEFAULT_THREAD_KEEP_ALIVE_SECONDS = 60;
+    int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
+    boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
+    boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
 
     /**
      * Gets the value of the steadyPoolSize property.
@@ -280,8 +283,8 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="nru")
-    @Pattern(regexp="(nru|fifo|lru)")
+    @Attribute(defaultValue = "nru")
+    @Pattern(regexp = PATTERN_VICTIM_SELECTION_POLICY, message = "Pattern: " + PATTERN_VICTIM_SELECTION_POLICY)
     String getVictimSelectionPolicy();
 
     /**
@@ -301,8 +304,8 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="B")
-    @Pattern(regexp="B|C")
+    @Attribute(defaultValue = "B")
+    @Pattern(regexp = "B|C", message = "B to enable entity bean caching, C to disable.")
     String getCommitOption();
 
     /**
@@ -358,6 +361,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
     /**
         Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props = {
         @PropertyDesc(name = "disable-nonportable-jndi-names",

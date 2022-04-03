@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -86,7 +87,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     protected ConfigModel childModel; //good model even if the child entity is null
     protected String childID; // id of the current child if part of a list, might be null
     public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateRestResource.class);
-    final private static List<String> attributesToSkip = new ArrayList<String>() {
+    final private static List<String> attributesToSkip = new ArrayList<>() {
 
         {
             add("parent");
@@ -118,7 +119,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        return getAttributes((ConfigBean) getEntity());
+        return getAttributes(getEntity());
     }
 
     @POST
@@ -183,7 +184,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
      */
     protected RestActionReporter doCreateOrUpdate(HashMap<String, String> data) {
         if (data == null) {
-            data = new HashMap<String, String>();
+            data = new HashMap<>();
         }
         try {
             //data.remove("submit");
@@ -226,7 +227,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
     protected ExitCode doDelete(HashMap<String, String> data) {
         if (data == null) {
-            data = new HashMap<String, String>();
+            data = new HashMap<>();
         }
         if (entity == null) {//wrong resource
             //            return Response.status(404).entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo)).build();
@@ -372,7 +373,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
      * local location on the server side (ie. just the path)
      */
     public static HashMap<String, String> createDataBasedOnForm(FormDataMultiPart formData) {
-        HashMap<String, String> data = new HashMap<String, String>();
+        HashMap<String, String> data = new HashMap<>();
         try {
             //data passed to the generic command running
             Map<String, List<FormDataBodyPart>> m1 = formData.getFields();
@@ -380,10 +381,11 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
             Set<String> ss = m1.keySet();
             for (String fieldName : ss) {
                 for (FormDataBodyPart bodyPart : formData.getFields(fieldName)) {
-                    if (bodyPart.getContentDisposition().getFileName() != null) {//we have a file
+                    if (bodyPart.getContentDisposition().getFileName() == null) {
+                        data.put(fieldName, bodyPart.getValue());
+                    } else {
                         //save it and mark it as delete on exit.
                         InputStream fileStream = bodyPart.getValueAs(InputStream.class);
-                        String mimeType = bodyPart.getMediaType().toString();
 
                         //Use just the filename without complete path. File creation
                         //in case of remote deployment failing because fo this.
@@ -396,13 +398,9 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
                             }
                         }
 
-                        File f = Util.saveFile(fileName, mimeType, fileStream);
-                        f.deleteOnExit();
+                        File f = Util.saveTemporaryFile(fileName, fileStream);
                         //put only the local path of the file in the same field.
                         data.put(fieldName, f.getAbsolutePath());
-
-                    } else {
-                        data.put(fieldName, bodyPart.getValue());
                     }
                 }
             }
@@ -448,7 +446,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
                 String keyvalue = c.attribute(keyAttributeName.toLowerCase(Locale.US));
                 if (keyvalue.equals(childID)) {
-                    setEntity((ConfigBean) c);
+                    setEntity(c);
                 }
             }
         }
@@ -565,7 +563,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
 
     //******************************************************************************************************************
     private Map<String, String> getAttributes(Dom entity) {
-        Map<String, String> result = new TreeMap<String, String>();
+        Map<String, String> result = new TreeMap<>();
         Set<String> attributeNames = entity.model.getAttributeNames();
         for (String attributeName : attributeNames) {
             result.put(eleminateHypen(attributeName), entity.attribute(attributeName));
@@ -575,7 +573,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     }
 
     private Map<String, MethodMetaData> getMethodMetaData() {
-        Map<String, MethodMetaData> map = new TreeMap<String, MethodMetaData>();
+        Map<String, MethodMetaData> map = new TreeMap<>();
         //GET meta data
         map.put("GET", new MethodMetaData());
 

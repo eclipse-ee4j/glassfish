@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,8 +45,6 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.HttpHeaders;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.model.ResponseBody;
-
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.admin.restconnector.RestConfig;
 import org.glassfish.api.ActionReport.MessagePart;
@@ -330,7 +329,7 @@ public class Util {
     }
 
     public static Map<String, String> getCurrentValues(String basePath, ServiceLocator habitat, Subject subject) {
-        Map<String, String> values = new HashMap<String, String>();
+        Map<String, String> values = new HashMap<>();
         final String path = (basePath.endsWith(".")) ? basePath.substring(0, basePath.length() - 1) : basePath;
         RestActionReporter gr = ResourceUtil.runCommand("get", new ParameterMap() {
             {
@@ -442,7 +441,6 @@ public class Util {
             String sep = "";
             for (CommandModel.ParamModel model : params) {
                 Param param = model.getParam();
-                boolean include = true;
                 if (param.optional() && !includeOptional) {
                     continue;
                 }
@@ -467,38 +465,38 @@ public class Util {
         return sb.toString();
     }
 
-    public static File saveFile(String fileName, String mimeType, InputStream fileStream) {
-        BufferedOutputStream out = null;
-        File f = null;
+    public static File saveTemporaryFile(String fileName, InputStream fileStream) {
+        File file;
         try {
-            if (fileName.contains(".")) {
-                //String prefix = fileName.substring(0, fileName.indexOf("."));
-                // String suffix = fileName.substring(fileName.indexOf("."), fileName.length());
-                //if (prefix.length() < 3) {
-                //    prefix = "glassfish" + prefix;
-                //}
-                f = new File(new File(System.getProperty("java.io.tmpdir")), fileName);
-            }
-
-            out = new BufferedOutputStream(new FileOutputStream(f));
+            String[] parts = getNameAndSuffix(fileName);
+            file = File.createTempFile(parts[0], parts[1]);
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not create a temp file for " + fileName, e);
+        }
+        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
             byte[] buffer = new byte[32 * 1024];
             int bytesRead = 0;
             while ((bytesRead = fileStream.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
             }
-            return f;
-        } catch (IOException ex) {
-            RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex.getMessage());
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException ex) {
-                RestLogging.restLogger.log(Level.SEVERE, RestLogging.IO_EXCEPTION, ex.getMessage());
-            }
+            return file;
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not write to a temp file " + file, e);
         }
-        return null;
+    }
+
+
+    private static String[] getNameAndSuffix(String fileName) {
+        if (fileName == null) {
+            return new String[2];
+        }
+        int dotPosition = fileName.lastIndexOf('.');
+        if (dotPosition < 1) {
+            // on Linux: files with dots as the first char mean hidden files.
+            // or the dot wasn't found at all
+            return new String[] {fileName, null};
+        }
+        return new String[] {fileName.substring(0, dotPosition), fileName.substring(dotPosition)};
     }
 
     public static boolean isGenericType(Type type) {

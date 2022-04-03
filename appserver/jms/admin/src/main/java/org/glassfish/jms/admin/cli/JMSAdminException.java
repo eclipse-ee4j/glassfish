@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,20 +18,18 @@
 package org.glassfish.jms.admin.cli;
 
 
+/**
+ * JMS Admin command failure.
+ */
 public class JMSAdminException extends Exception {
 
-    /**
-     * Exception reference
-     **/
-    private volatile Exception linkedException;
-    private String _message = null;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructs an JMSAdminException object
      */
     public JMSAdminException() {
         super();
-        linkedException = null;
     }
 
 
@@ -41,53 +40,38 @@ public class JMSAdminException extends Exception {
      */
     public JMSAdminException(String message) {
         super(message);
-        _message = message;
-        linkedException = null;
+    }
+
+
+    /**
+     * Constructs an JMSAdminException object
+     *
+     * @param message Exception message
+     * @param cause original cause.
+     */
+    public JMSAdminException(String message, Exception cause) {
+        super(message, cause);
     }
 
 
     /**
      * Gets the exception linked to this one
      *
-     * @return the linked Exception, null if none
-     **/
+     * @return same as {@link #getCause()}
+     */
+    @Deprecated(forRemoval = true)
     public Exception getLinkedException() {
-        return (linkedException);
+        return (Exception) getCause();
     }
 
 
     /**
-     * Adds a linked Exception
+     * Calls {@link #initCause(Throwable)}
      *
      * @param ex the linked Exception
-     **/
+     */
+    @Deprecated(forRemoval = true)
     public void setLinkedException(Exception ex) {
-        linkedException = ex;
+        super.initCause(ex);
     }
-
-
-    /**
-     * Returns the message along with the message from any linked exception.
-     **/
-    @Override
-    public String getMessage() {
-        String retString = null;
-
-        // Return the message of this exception.
-        if (_message != null) {
-            retString = _message;
-        }
-
-        // Append any message from the linked exception.
-        Exception localLinkedException = linkedException;
-        if (localLinkedException != null && localLinkedException.getMessage() != null) {
-            if (retString != null) {
-                retString += retString + "\n" + localLinkedException.getMessage();
-            } else {
-                retString = localLinkedException.getMessage();
-            }
-        }
-        return retString;
-    }
-
 }

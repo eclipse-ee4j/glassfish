@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +40,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.api.logging.LogHelper;
 
 /**
- *
  * @author jasonlee
  */
 public class MarshallingUtils {
@@ -47,7 +47,7 @@ public class MarshallingUtils {
         List<Map<String, String>> properties = null;
         json = json.trim();
         if (json.startsWith("{")) {
-            properties = new ArrayList<Map<String, String>>();
+            properties = new ArrayList<>();
             properties.add(processJsonMap(json));
         } else if (json.startsWith("[")) {
             try {
@@ -63,7 +63,7 @@ public class MarshallingUtils {
     }
 
     public static List<Map<String, String>> getPropertiesFromXml(String xml) {
-        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> list = new ArrayList<>();
         InputStream input = null;
         try {
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -157,13 +157,13 @@ public class MarshallingUtils {
     }
 
     public static Map buildMapFromDocument(String text) {
-        Map map = null;
-        if ((text == null) || text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             return new HashMap();
         }
 
         text = text.trim();
 
+        Map map = null;
         if (text.startsWith("{")) {
             map = processJsonMap(text);
         } else if (text.startsWith("<")) {
@@ -176,15 +176,15 @@ public class MarshallingUtils {
                 while (parser.hasNext()) {
                     int event = parser.next();
                     switch (event) {
-                    case XMLStreamConstants.START_ELEMENT: {
-                        if ("map".equals(parser.getLocalName())) {
-                            map = processXmlMap(parser);
+                        case XMLStreamConstants.START_ELEMENT: {
+                            if ("map".equals(parser.getLocalName())) {
+                                map = processXmlMap(parser);
+                            }
+                            break;
                         }
-                        break;
-                    }
-                    default: {
-                        // No-op
-                    }
+                        default: {
+                            // No-op
+                        }
                     }
                 }
             } catch (UnsupportedEncodingException ex) {
@@ -204,7 +204,7 @@ public class MarshallingUtils {
             }
         } else {
             System.out.println(text);
-            throw new RuntimeException("An unknown document type was provided:  " + text); //.substring(0, 10));
+            throw new RuntimeException("An unknown document type was provided:  " + text);
         }
 
         return map;
@@ -212,21 +212,20 @@ public class MarshallingUtils {
 
     /**************************************************************************/
     private static Map processJsonMap(String json) {
-        Map map;
         try {
-            map = processJsonObject(new JSONObject(json));
+            return processJsonObject(new JSONObject(json));
         } catch (JSONException e) {
-            map = new HashMap();
+            // FIXME: Really swallow exception?
+            return new HashMap<>();
         }
-        return map;
     }
 
-    private static Map processJsonObject(JSONObject jo) {
-        Map<String, Object> map = new HashMap<String, Object>();
+    private static Map<String, Object> processJsonObject(JSONObject jo) {
+        Map<String, Object> map = new HashMap<>();
         try {
-            Iterator i = jo.keys();
+            Iterator<String> i = jo.keys();
             while (i.hasNext()) {
-                String key = (String) i.next();
+                String key = i.next();
                 Object value = jo.get(key);
                 if (value instanceof JSONArray) {
                     map.put(key, processJsonArray((JSONArray) value));
@@ -270,7 +269,7 @@ public class MarshallingUtils {
 
     private static Map processXmlMap(XMLStreamReader parser) throws XMLStreamException {
         boolean endOfMap = false;
-        Map<String, Object> entry = new HashMap<String, Object>();
+        Map<String, Object> entry = new HashMap<>();
         String key = null;
         String element = null;
         while (!endOfMap) {

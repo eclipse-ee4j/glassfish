@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,40 +17,47 @@
 
 package org.glassfish.jms.admin.cli;
 
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.CommandLock;
-import org.glassfish.internal.api.ServerContext;
-
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.config.serverbeans.*;
-
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.jvnet.hk2.annotations.Service;
-
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.api.admin.*;
+import org.glassfish.internal.api.ServerContext;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Create JMS Destination
- *
  */
 @Service(name="list-jmsdest")
 @PerLookup
@@ -100,6 +108,7 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
     ServerContext serverContext;
 
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -112,7 +121,7 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
         }
 
         report.setExtraProperties(new Properties());
-        List<Map> jmsDestList = new ArrayList<Map>();
+        List<Map> jmsDestList = new ArrayList<>();
 
         try {
             List<JMSDestinationInfo> list = listJMSDestinations(target, destType);
@@ -120,7 +129,7 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
             for (JMSDestinationInfo destInfo : list) {
                 final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                 part.setMessage(destInfo.getDestinationName());
-                Map<String, String> destMap = new HashMap<String, String>();
+                Map<String, String> destMap = new HashMap<>();
                 destMap.put("name", destInfo.getDestinationName());
                 destMap.put("type", destInfo.getDestinationType());
                 jmsDestList.add(destMap);
@@ -130,88 +139,65 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
 
         } catch (Exception e) {
             logger.throwing(getClass().getName(), "ListJMSDestination", e);
-            e.printStackTrace();//handleException(e);
             report.setMessage(localStrings.getLocalString("list.jms.dest.fail",
-                    "Unable to list JMS Destinations. Please ensure that the Message Queue Brokers are running"));// + " " + e.getLocalizedMessage());
+                    "Unable to list JMS Destinations. Please ensure that the Message Queue Brokers are running"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
-            return;
         }
     }
 
-// list-jmsdest
-    public List listJMSDestinations(String tgtName, String destType)
-        throws Exception {
-
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "listJMSDestination ...");
-        }
-        MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
-
-        //MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
-        try {
+    public List<JMSDestinationInfo> listJMSDestinations(String tgtName, String destType) throws Exception {
+        logger.log(Level.FINE, "listJMSDestinations ...");
+        try (MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime)) {
             MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
             ObjectName on = new ObjectName(DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
+            ObjectName[] dests = (ObjectName[]) mbsc.invoke(on, "getDestinations", null, null);
+            if (dests == null || dests.length <= 0) {
+                return null;
+            }
+            final List<JMSDestinationInfo> jmsdi = new ArrayList<>();
+            for (ObjectName dest : dests) {
+                on = dest;
+                String jdiType = toStringLabel(on.getKeyProperty("desttype"));
+                String jdiName = on.getKeyProperty("name");
 
-            ObjectName [] dests = (ObjectName [])mbsc.invoke(on, "getDestinations", null, null);
-            if ((dests != null) && (dests.length > 0)) {
-                List<JMSDestinationInfo> jmsdi = new ArrayList<JMSDestinationInfo>();
-                for (int i = 0; i < dests.length; i++) {
-                    on = dests[i];
-
-                    String jdiType = toStringLabel(on.getKeyProperty("desttype"));
-                    String jdiName = on.getKeyProperty("name");
-
-                    // check if the destination name has double quotes at the beginning
-                    // and end, if yes strip them
-                    if ((jdiName != null) && (jdiName.length() > 1)) {
-                        if (jdiName.indexOf('"') == 0) {
-                            jdiName = jdiName.substring(1);
-                        }
-                        if (jdiName.lastIndexOf('"') == (jdiName.length() - 1)) {
-                            jdiName = jdiName.substring(0, jdiName.lastIndexOf('"'));
-                        }
+                // check if the destination name has double quotes at the beginning
+                // and end, if yes strip them
+                if ((jdiName != null) && (jdiName.length() > 1)) {
+                    if (jdiName.indexOf('"') == 0) {
+                        jdiName = jdiName.substring(1);
                     }
+                    if (jdiName.lastIndexOf('"') == (jdiName.length() - 1)) {
+                        jdiName = jdiName.substring(0, jdiName.lastIndexOf('"'));
+                    }
+                }
 
-                    JMSDestinationInfo jdi = new JMSDestinationInfo(jdiName, jdiType);
+                JMSDestinationInfo jdi = new JMSDestinationInfo(jdiName, jdiType);
 
-                    if (destType == null) {
+                if (destType == null) {
+                    jmsdi.add(jdi);
+                } else if (destType.equals(JMS_DEST_TYPE_TOPIC)
+                        || destType.equals(JMS_DEST_TYPE_QUEUE)) {
+                    //Physical Destination Type specific listing
+                    if (jdiType.equalsIgnoreCase(destType)) {
                         jmsdi.add(jdi);
-                    } else if (destType.equals(JMS_DEST_TYPE_TOPIC)
-                            || destType.equals(JMS_DEST_TYPE_QUEUE)) {
-                        //Physical Destination Type specific listing
-                        if (jdiType.equalsIgnoreCase(destType)) {
-                            jmsdi.add(jdi);
-                        }
                     }
                 }
-                return jmsdi;
-                //(JMSDestinationInfo[]) jmsdi.toArray(new JMSDestinationInfo[]{});
             }
+            return jmsdi;
         } catch (Exception e) {
-            // log JMX Exception trace as WARNING
-            logAndHandleException(e, "admin.mbeans.rmb.error_listing_jms_dest");
-        } finally {
-            try {
-                if (mqInfo != null) {
-                    mqInfo.closeMQMBeanServerConnection();
-                }
-            } catch (Exception e) {
-                handleException(e);
-            }
+            throw logAndHandleException(e, "admin.mbeans.rmb.error_listing_jms_dest");
         }
-
-        return null;
     }
 
 
     private String toStringLabel(String type) {
         if (type.equals(DESTINATION_TYPE_QUEUE)) {
-            return ("queue");
+            return "queue";
         } else if (type.equals(DESTINATION_TYPE_TOPIC)) {
-            return ("topic");
+            return "topic";
         } else {
-            return ("unknown");
+            return "unknown";
         }
     }
 

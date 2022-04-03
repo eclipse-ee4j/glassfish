@@ -1278,9 +1278,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.admingui</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

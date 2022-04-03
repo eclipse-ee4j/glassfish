@@ -106,7 +106,7 @@
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0</jax-rs-api.impl.version>
-        <jersey.version>3.0.3</jersey.version>
+        <jersey.version>3.0.4</jersey.version>
 
         <!-- Jakarta Mail -->
         <mail.version>2.0.1</mail.version>
@@ -362,7 +362,7 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
                 <version>${jackson.version}</version>
                 <exclusions>
                     <exclusion>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,19 +14,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package org.glassfish.appclient.client.acc;
 
-import static java.security.AccessController.doPrivileged;
-import static java.util.Collections.emptyList;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.CodeSource;
@@ -35,10 +31,12 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.function.Consumer;
 
+import org.glassfish.appclient.common.ClassPathUtils;
 import org.glassfish.appclient.common.ClientClassLoaderDelegate;
+
+import static java.security.AccessController.doPrivileged;
 
 /**
  *
@@ -69,7 +67,8 @@ public class ACCClassLoader extends URLClassLoader {
 
             @Override
             public ACCClassLoader run() {
-                return new ACCClassLoader(userClassPath(), parentForACCCL, shouldTransform);
+                URL[] classpath = ClassPathUtils.getJavaClassPathForAppClient();
+                return new ACCClassLoader(classpath, parentForACCCL, shouldTransform);
             }
 
         });
@@ -105,54 +104,6 @@ public class ACCClassLoader extends URLClassLoader {
         }
     }
 
-    private static URL[] userClassPath() {
-        URI GFSystemURI = GFSystemURI();
-        List<URL> result = classPathToURLs(System.getProperty("java.class.path"));
-
-        for (ListIterator<URL> it = result.listIterator(); it.hasNext();) {
-            URL url = it.next();
-            try {
-                if (url.toURI().equals(GFSystemURI)) {
-                    it.remove();
-                }
-            } catch (URISyntaxException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        result.addAll(classPathToURLs(System.getenv("APPCPATH")));
-
-        return result.toArray(new URL[result.size()]);
-    }
-
-    private static URI GFSystemURI() {
-        try {
-            return Class.forName("org.glassfish.appclient.client.acc.agent.AppClientContainerAgent")
-                        .getProtectionDomain()
-                        .getCodeSource()
-                        .getLocation()
-                        .toURI()
-                        .normalize();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private static List<URL> classPathToURLs(final String classPath) {
-        if (classPath == null) {
-            return emptyList();
-        }
-
-        List<URL> result = new ArrayList<>();
-        try {
-            for (String classPathElement : classPath.split(File.pathSeparator)) {
-                result.add(new File(classPathElement).toURI().normalize().toURL());
-            }
-            return result;
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
     public ACCClassLoader(ClassLoader parent, final boolean shouldTransform) {
         super(new URL[0], parent);

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
     <artifactId>config-generator</artifactId>
     <packaging>maven-plugin</packaging>

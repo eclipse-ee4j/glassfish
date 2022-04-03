@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>maven-plugin</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.tests.embedded.maven-plugin</groupId>
     <artifactId>jmxUndeployEvent</artifactId>

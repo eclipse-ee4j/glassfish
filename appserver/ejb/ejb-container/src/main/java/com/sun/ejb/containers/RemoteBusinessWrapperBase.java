@@ -25,10 +25,9 @@ import java.io.IOException;
 
 import com.sun.ejb.EJBUtils;
 
-public class RemoteBusinessWrapperBase
-    implements java.io.Serializable {
+public class RemoteBusinessWrapperBase implements java.io.Serializable {
 
-    // This is the name of the developer-written business interface.
+    /** This is the name of the developer-written business interface. */
     private String businessInterface_;
 
     private Remote stub_;
@@ -41,16 +40,20 @@ public class RemoteBusinessWrapperBase
         this.hashCode_ = busIntf.hashCode();
     }
 
+
     public Remote getStub() {
         return stub_;
     }
 
+
+    @Override
     public int hashCode() {
         return hashCode_;
     }
 
-    public boolean equals(Object obj) {
 
+    @Override
+    public boolean equals(Object obj) {
         boolean result = (obj == this); //Most efficient
         if ((result == false) && (obj != null)) { //Do elaborate checks
             if (obj instanceof RemoteBusinessWrapperBase) {
@@ -70,59 +73,45 @@ public class RemoteBusinessWrapperBase
         return result;
     }
 
+
     public String getBusinessInterfaceName() {
         return businessInterface_;
     }
+
 
     public Object writeReplace() throws ObjectStreamException {
         return new RemoteBusinessWrapperBase(stub_, businessInterface_);
     }
 
-    private void writeObject(java.io.ObjectOutputStream oos)
-        throws java.io.IOException
-    {
 
+    private void writeObject(java.io.ObjectOutputStream oos) throws java.io.IOException {
         oos.writeObject(businessInterface_);
         oos.writeObject(stub_);
-
     }
 
-    private void readObject(ObjectInputStream ois)
-        throws IOException, ClassNotFoundException {
 
+    private void readObject(ObjectInputStream ois) throws IOException {
         try {
-
             businessInterface_ = (String) ois.readObject();
             hashCode_ = businessInterface_.hashCode();
 
             EJBUtils.loadGeneratedRemoteBusinessClasses(businessInterface_);
 
             stub_ = (Remote) ois.readObject();
-
-        } catch(Exception e) {
-            IOException ioe = new IOException("RemoteBusinessWrapper.readObj "
-                                              + " error");
-            ioe.initCause(e);
-            throw ioe;
+        } catch (Exception e) {
+            throw new IOException("RemoteBusinessWrapper.readObj error", e);
         }
     }
 
+
     public Object readResolve() throws ObjectStreamException {
-
         try {
-
-            return EJBUtils.createRemoteBusinessObject(businessInterface_,
-                                                       stub_);
-        } catch(Exception e) {
-            WriteAbortedException wae = new WriteAbortedException
-                ("RemoteBusinessWrapper.readResolve error", e);
+            return EJBUtils.createRemoteBusinessObject(businessInterface_, stub_);
+        } catch (Exception e) {
+            WriteAbortedException wae = new WriteAbortedException("RemoteBusinessWrapper.readResolve error", e);
             throw wae;
         }
 
     }
-
-
-
-
 }
 

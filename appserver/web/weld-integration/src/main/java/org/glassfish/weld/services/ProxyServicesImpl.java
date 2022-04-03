@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018-2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +17,12 @@
 
 package org.glassfish.weld.services;
 
-import java.lang.reflect.Method;
+import com.sun.ejb.codegen.ClassGenerator;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.jboss.weld.serialization.spi.ProxyServices;
@@ -41,10 +41,6 @@ import org.jboss.weld.serialization.spi.ProxyServices;
  * @author David Matějček
  */
 public class ProxyServicesImpl implements ProxyServices {
-
-    private static Method defineClassMethod;
-    private static Method defineClassMethodSM;
-    private static final AtomicBoolean CL_METHODS_INITIALIZATION_FINISHED = new AtomicBoolean(false);
 
     private final ClassLoaderHierarchy classLoaderHierarchy;
 
@@ -102,7 +98,6 @@ public class ProxyServicesImpl implements ProxyServices {
     @Override
     public Class<?> defineClass(final Class<?> originalClass, final String className, final byte[] classBytes,
         final int off, final int len, final ProtectionDomain protectionDomain) throws ClassFormatError {
-        checkClassDefinitionFeature();
         final ClassLoader loader = getClassLoaderforBean(originalClass);
         if (protectionDomain == null) {
             return defineClass(loader, className, classBytes, off, len);
@@ -121,30 +116,6 @@ public class ProxyServicesImpl implements ProxyServices {
     @Override
     public void cleanup() {
         // nothing to cleanup in this implementation.
-    }
-
-
-    /**
-     * Initialization of access to protected methods of the {@link ClassLoader} class.
-     */
-    private static void checkClassDefinitionFeature() {
-        if (CL_METHODS_INITIALIZATION_FINISHED.compareAndSet(false, true)) {
-            try {
-                final PrivilegedExceptionAction<Void> action = () -> {
-                    final Class<?> cl = Class.forName("java.lang.ClassLoader");
-                    final String name = "defineClass";
-                    defineClassMethod = cl.getDeclaredMethod(name, String.class, byte[].class, int.class, int.class);
-                    defineClassMethod.setAccessible(true);
-                    defineClassMethodSM = cl.getDeclaredMethod(
-                        name, String.class, byte[].class, int.class, int.class, ProtectionDomain.class);
-                    defineClassMethodSM.setAccessible(true);
-                    return null;
-                };
-                AccessController.doPrivileged(action);
-            } catch (final Exception e) {
-                throw new WeldProxyException("Could not initialize access to ClassLoader.defineClass method.", e);
-            }
-        }
     }
 
 
@@ -199,7 +170,7 @@ public class ProxyServicesImpl implements ProxyServices {
         final byte[] b, final int off, final int len,
         final ProtectionDomain protectionDomain) {
         try {
-            return (Class<?>) defineClassMethodSM.invoke(loader, className, b, 0, len, protectionDomain);
+            return ClassGenerator.defineClass(loader, className, b, 0, len, protectionDomain);
         } catch (final Exception e) {
             throw new WeldProxyException("Could not define class " + className, e);
         }
@@ -210,7 +181,7 @@ public class ProxyServicesImpl implements ProxyServices {
         final ClassLoader loader, final String className,
         final byte[] b, final int off, final int len) {
         try {
-            return (Class<?>) defineClassMethod.invoke(loader, className, b, 0, len);
+            return ClassGenerator.defineClass(loader, className, b, 0, len);
         } catch (final Exception e) {
             throw new WeldProxyException("Could not define class " + className, e);
         }

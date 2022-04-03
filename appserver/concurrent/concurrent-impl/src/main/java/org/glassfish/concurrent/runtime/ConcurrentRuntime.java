@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -171,7 +172,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         }
         managedExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
-            scheduleInternalTimer();
+            scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds(), config.isHungLoggerPrintOnce());
         }
         return mes;
     }
@@ -213,7 +214,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         }
         managedScheduledExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
-            scheduleInternalTimer();
+            scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds(), config.isHungLoggerPrintOnce());
         }
         return mes;
     }
@@ -299,7 +300,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         return contextTypeArray.toArray(contextTypes);
     }
 
-    private void scheduleInternalTimer() {
+    private void scheduleInternalTimer(long initialDelay, long interval, boolean logOnce) {
         if (internalScheduler == null) {
             String name = "glassfish-internal";
             ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(
@@ -316,7 +317,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
                     createContextService(name + "-contextservice",
                             CONTEXT_INFO_CLASSLOADER, "true", false),
                     AbstractManagedExecutorService.RejectPolicy.ABORT);
-            internalScheduler.scheduleAtFixedRate(new HungTasksLogger(), 1L, 1L, TimeUnit.MINUTES);
+            internalScheduler.scheduleAtFixedRate(new HungTasksLogger(logOnce), initialDelay, interval, TimeUnit.SECONDS);
         }
     }
 
@@ -330,6 +331,13 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
     }
 
     class HungTasksLogger implements Runnable {
+
+        private Boolean logOnce;
+        private Map<String, Collection<AbstractManagedThread>> cachedHungThreadsMap = new HashMap<>();
+
+        HungTasksLogger(Boolean logOnce) {
+            this.logOnce = logOnce;
+        }
 
         public void run() {
             ArrayList<ManagedExecutorServiceImpl> executorServices = new ArrayList();
@@ -357,6 +365,25 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         }
 
         private void logHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf, String mesName) {
+             if (!logOnce){
+                 logRawHungThreads(hungThreads, mtf, mesName);
+                 return;
+             }
+             if (hungThreads == null) {
+                 cachedHungThreadsMap.remove(mesName);
+                 return;
+             }
+             Collection<AbstractManagedThread> targetHungThreads = new HashSet<>();
+             targetHungThreads.addAll(hungThreads);
+             Collection<AbstractManagedThread> cachedHungThreads = cachedHungThreadsMap.get(mesName);
+             if (cachedHungThreads != null) {
+                 targetHungThreads.removeAll(cachedHungThreads);
+             }
+             logRawHungThreads(targetHungThreads, mtf, mesName);
+             cachedHungThreadsMap.put(mesName, hungThreads);
+        }
+
+        private void logRawHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf, String mesName) {
             if (hungThreads != null) {
                 for (AbstractManagedThread hungThread: hungThreads) {
                     Object[] params = {hungThread.getTaskIdentityName(),

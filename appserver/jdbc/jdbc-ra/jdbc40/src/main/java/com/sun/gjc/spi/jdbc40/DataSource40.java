@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,40 @@
 
 package com.sun.gjc.spi.jdbc40;
 
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.Wrapper;
+import java.util.logging.Logger;
+
 import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.common.DataSourceObjectBuilder;
 import com.sun.gjc.spi.ManagedConnectionFactoryImpl;
 import com.sun.gjc.spi.base.AbstractDataSource;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionManager;
-import java.util.logging.Level;
-import java.sql.*;
-import java.util.logging.Logger;
 
 /**
- * Holds the <code>java.sql.Connection</code> object, which is to be
- * passed to the application program.
+ * Holds the <code>java.sql.Connection</code> object, which is to be passed to
+ * the application program.
  *
  * @author Binod P.G
  * @version 1.0, 02/07/31
  */
 public class DataSource40 extends AbstractDataSource {
 
-
-    protected final static StringManager localStrings =
-            StringManager.getManager(ManagedConnectionFactoryImpl.class);
+    private static final long serialVersionUID = 1L;
+    protected final static StringManager localStrings = StringManager.getManager(ManagedConnectionFactoryImpl.class);
 
     /**
      * Constructs <code>DataSource</code> object. This is created by the
      * <code>ManagedConnectionFactory</code> object.
      *
-     * @param mcf <code>ManagedConnectionFactory</code> object
-     *            creating this object.
-     * @param cm  <code>ConnectionManager</code> object either associated
-     *            with Application server or Resource Adapter.
+     * @param mcf <code>ManagedConnectionFactory</code> object creating this object.
+     * @param cm <code>ConnectionManager</code> object either associated with
+     * Application server or Resource Adapter.
      */
     public DataSource40(ManagedConnectionFactoryImpl mcf, ConnectionManager cm) {
         super(mcf, cm);
@@ -57,23 +60,26 @@ public class DataSource40 extends AbstractDataSource {
      * Returns an object that implements the given interface to allow access to
      * non-standard methods, or standard methods not exposed by the proxy.
      * <p/>
-     * If the receiver implements the interface then the result is the receiver
-     * or a proxy for the receiver. If the receiver is a wrapper
-     * and the wrapped object implements the interface then the result is the
-     * wrapped object or a proxy for the wrapped object. Otherwise return the
-     * the result of calling <code>unwrap</code> recursively on the wrapped object
-     * or a proxy for that result. If the receiver is not a
-     * wrapper and does not implement the interface, then an <code>SQLException</code> is thrown.
+     * If the receiver implements the interface then the result is the receiver or a
+     * proxy for the receiver. If the receiver is a wrapper and the wrapped object
+     * implements the interface then the result is the wrapped object or a proxy for
+     * the wrapped object. Otherwise return the the result of calling
+     * <code>unwrap</code> recursively on the wrapped object or a proxy for that
+     * result. If the receiver is not a wrapper and does not implement the
+     * interface, then an <code>SQLException</code> is thrown.
      *
      * @param iface A Class defining an interface that the result must implement.
-     * @return an object that implements the interface. May be a proxy for the actual implementing object.
-     * @throws java.sql.SQLException If no object found that implements the interface
+     * @return an object that implements the interface. May be a proxy for the
+     * actual implementing object.
+     * @throws java.sql.SQLException If no object found that implements the
+     * interface
      * @since 1.6
      */
+    @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
         T result;
         try {
-            Object cds = mcf.getDataSource();
+            Object cds = managedConnectionFactoryImpl.getDataSource();
 
             if (iface.isInstance(cds)) {
                 result = iface.cast(cds);
@@ -84,54 +90,58 @@ public class DataSource40 extends AbstractDataSource {
                 throw new SQLException(msg);
             }
         } catch (ResourceException e) {
-            _logger.log(Level.WARNING, "jdbc.exc_unwrap", e);
+            _logger.log(WARNING, "jdbc.exc_unwrap", e);
             throw new SQLException(e);
         }
+
         return result;
     }
 
     /**
-     * Returns true if this either implements the interface argument or is directly or indirectly a wrapper
-     * for an object that does. Returns false otherwise. If this implements the interface then return true,
-     * else if this is a wrapper then return the result of recursively calling <code>isWrapperFor</code> on the wrapped
-     * object. If this does not implement the interface and is not a wrapper, return false.
-     * This method should be implemented as a low-cost operation compared to <code>unwrap</code> so that
-     * callers can use this method to avoid expensive <code>unwrap</code> calls that may fail. If this method
-     * returns true then calling <code>unwrap</code> with the same argument should succeed.
+     * Returns true if this either implements the interface argument or is directly
+     * or indirectly a wrapper for an object that does. Returns false otherwise. If
+     * this implements the interface then return true, else if this is a wrapper
+     * then return the result of recursively calling <code>isWrapperFor</code> on
+     * the wrapped object. If this does not implement the interface and is not a
+     * wrapper, return false. This method should be implemented as a low-cost
+     * operation compared to <code>unwrap</code> so that callers can use this method
+     * to avoid expensive <code>unwrap</code> calls that may fail. If this method
+     * returns true then calling <code>unwrap</code> with the same argument should
+     * succeed.
      *
      * @param iface a Class defining an interface.
-     * @return true if this implements the interface or directly or indirectly wraps an object that does.
-     * @throws java.sql.SQLException if an error occurs while determining whether this is a wrapper
-     *                               for an object with the given interface.
+     * @return true if this implements the interface or directly or indirectly wraps
+     * an object that does.
+     * @throws java.sql.SQLException if an error occurs while determining whether
+     * this is a wrapper for an object with the given interface.
      * @since 1.6
      */
+    @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         boolean result = false;
         try {
-            Object cds = mcf.getDataSource();
+            Object cds = managedConnectionFactoryImpl.getDataSource();
 
             if (iface.isInstance(cds)) {
                 result = true;
             } else if (cds instanceof java.sql.Wrapper) {
-                result = ((java.sql.Wrapper) cds).isWrapperFor(iface);
+                result = ((Wrapper) cds).isWrapperFor(iface);
             }
         } catch (ResourceException e) {
-            _logger.log(Level.WARNING, "jdbc.exc_is_wrapper", e);
+            _logger.log(WARNING, "jdbc.exc_is_wrapper", e);
             throw new SQLException(e);
         }
         return result;
     }
 
+    @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        if(DataSourceObjectBuilder.isJDBC41()) {
-            try {
-                return (Logger) executor.invokeMethod(mcf.getDataSource().getClass(),
-                    "getParentLogger", null);
-            } catch (ResourceException ex) {
-                _logger.log(Level.SEVERE, "jdbc.ex_get_parent_logger", ex);
-                throw new SQLFeatureNotSupportedException(ex);
-            }
+        try {
+            return (Logger) executor.invokeMethod(managedConnectionFactoryImpl.getDataSource().getClass(), "getParentLogger", null);
+        } catch (ResourceException ex) {
+            _logger.log(SEVERE, "jdbc.ex_get_parent_logger", ex);
+            throw new SQLFeatureNotSupportedException(ex);
         }
-        throw new UnsupportedOperationException("Operation not supported in this runtime.");
+
     }
 }

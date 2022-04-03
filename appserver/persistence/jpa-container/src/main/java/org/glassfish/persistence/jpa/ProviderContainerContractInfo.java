@@ -16,35 +16,37 @@
 
 package org.glassfish.persistence.jpa;
 
-import jakarta.persistence.spi.ClassTransformer;
-import jakarta.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import javax.naming.NamingException;
-import jakarta.validation.ValidatorFactory;
+import javax.sql.DataSource;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.validation.ValidatorFactory;
 
 /**
+ * This encapsulates information needed to load or unload
+ * persistence units.
+ *
  * @author Mitesh Meswani
- * This encapsulates information needed  to load or unload persistence units.
  */
 public interface ProviderContainerContractInfo {
 
-    static final String DEFAULT_DS_NAME = "jdbc/__default";
+    String DEFAULT_DS_NAME = "jdbc/__default";
 
     /**
      *
-     * @return a class loader that is used to load persistence entities
-     * bundled in this application.
+     * @return a class loader that is used to load persistence entities bundled in
+     * this application.
      */
     ClassLoader getClassLoader();
 
     /**
      *
-     * @return a temp class loader that is used to load persistence entities
-     * bundled in this application.
+     * @return a temp class loader that is used to load persistence entities bundled
+     * in this application.
      */
     ClassLoader getTempClassloader();
 
@@ -54,7 +56,6 @@ public interface ProviderContainerContractInfo {
      */
     void addTransformer(ClassTransformer transformer);
 
-
     /**
      * @return absolute path of the location where application is exploded.
      */
@@ -62,6 +63,7 @@ public interface ProviderContainerContractInfo {
 
     /**
      * Looks up DataSource with JNDI name given by <code>dataSourceName</code>
+     *
      * @param dataSourceName
      * @return DataSource with JNDI name given by <code>dataSourceName</code>
      * @throws javax.naming.NamingException
@@ -69,9 +71,12 @@ public interface ProviderContainerContractInfo {
     DataSource lookupDataSource(String dataSourceName) throws NamingException;
 
     /**
-     * Looks up Non transactional DataSource with JNDI name given by <code>dataSourceName</code>
+     * Looks up Non transactional DataSource with JNDI name given by
+     * <code>dataSourceName</code>
+     *
      * @param dataSourceName
-     * @return Non transactional DataSource with JNDI name given by <code>dataSourceName</code>
+     * @return Non transactional DataSource with JNDI name given by
+     * <code>dataSourceName</code>
      * @throws NamingException
      */
     DataSource lookupNonTxDataSource(String dataSourceName) throws NamingException;
@@ -83,6 +88,7 @@ public interface ProviderContainerContractInfo {
 
     /**
      * Will be called while loading an application.
+     *
      * @return true if java2DB is required false otherwise
      */
     boolean isJava2DBRequired();
@@ -92,11 +98,12 @@ public interface ProviderContainerContractInfo {
      */
     DeploymentContext getDeploymentContext();
 
-
     /**
      * Register the give emf with underlying container
+     *
      * @param unitName Name of correspoding PersistenceUnit
-     * @param persistenceRootUri URI within application (excluding META-INF) for root of corresponding PersistenceUnit
+     * @param persistenceRootUri URI within application (excluding META-INF) for
+     * root of corresponding PersistenceUnit
      * @param containingBundle The bundle that contains PU for the given EMF
      * @param emf The emf that needs to be registered
      */
@@ -109,12 +116,14 @@ public interface ProviderContainerContractInfo {
 
     /**
      *
-     * @return default data source name to be used if user has not defined a data source
+     * @return default data source name to be used if user has not defined a data
+     * source
      */
     String getDefaultDataSourceName();
 
     /**
-     * @return true if weaving is enabled for the current environment false otherwise
+     * @return true if weaving is enabled for the current environment false
+     * otherwise
      */
     boolean isWeavingEnabled();
 }

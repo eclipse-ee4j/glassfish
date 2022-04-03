@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests</groupId>
@@ -119,15 +119,25 @@
             </activation>
             <modules>
                 <module>tck</module>
+                <module>appserv-tests</module>
             </modules>
         </profile>
         <profile>
-            <id>fastest</id>
+            <id>oss-release</id>
             <modules />
         </profile>
         <profile>
+            <id>fastest</id>
+            <modules>
+                <!-- Compile dependencies -->
+                <module>appserv-tests</module>
+            </modules>
+        </profile>
+        <profile>
             <id>fast</id>
-            <modules />
+            <modules>
+                <module>appserv-tests</module>
+            </modules>
         </profile>
     </profiles>
 </project>

@@ -40,8 +40,8 @@ class EjbClassUtilities {
     static List<Class<?>> getRemoteAndLocalIfaces(final Class<?> resourceClass) {
         final List<Class<?>> allLocalOrRemoteIfaces = new LinkedList<>();
         if (resourceClass.isAnnotationPresent(Remote.class)) {
-            List<Class<?>> asList = Arrays.asList(resourceClass.getAnnotation(Remote.class).value());
-            allLocalOrRemoteIfaces.addAll(asList);
+            List<Class<?>> list = Arrays.asList(resourceClass.getAnnotation(Remote.class).value());
+            allLocalOrRemoteIfaces.addAll(list);
         }
         if (resourceClass.isAnnotationPresent(Local.class)) {
             List<Class<?>> list = Arrays.asList(resourceClass.getAnnotation(Local.class).value());

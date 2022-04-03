@@ -95,10 +95,11 @@ public abstract class EJBLocalHomeImpl
     /**
      * This is the implementation of the jakarta.ejb.EJBLocalHome remove method.
      */
+    @Override
     public final void remove(Object primaryKey)
         throws RemoveException, EJBException
     {
-        if (container.getContainerType() != BaseContainer.ContainerType.ENTITY) {
+        if (container.getContainerInfo().type != BaseContainer.ContainerType.ENTITY) {
             // Session beans dont have primary keys. EJB2.0 Section 6.6.
             throw new RemoveException("Attempt to call remove(Object primaryKey) on a session bean.");
         }
@@ -119,12 +120,11 @@ public abstract class EJBLocalHomeImpl
             // This should never be thrown for local invocations, but it's
             // part of the removeBean signature.  If for some strange
             // reason it happens, convert to EJBException
-            EJBException ejbEx =new EJBException("unexpected RemoteException");
-            ejbEx.initCause(re);
-            throw ejbEx;
+            throw new EJBException("unexpected RemoteException", re);
         }
     }
 
+    @Override
     public SerializableObjectFactory getSerializableObjectFactory() {
         return new SerializableLocalHome(
             container.getEjbDescriptor().getUniqueId());
@@ -133,12 +133,13 @@ public abstract class EJBLocalHomeImpl
     public static final class SerializableLocalHome
         implements SerializableObjectFactory
     {
-        private long ejbId;
+        private final long ejbId;
 
         public SerializableLocalHome(long uniqueId) {
             this.ejbId = uniqueId;
         }
 
+        @Override
         public Object createObject()
             throws IOException
         {

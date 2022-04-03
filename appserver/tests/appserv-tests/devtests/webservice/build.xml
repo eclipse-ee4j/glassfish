@@ -36,59 +36,19 @@
         <delete dir="${env.APS_HOME}/build/module"/>
         <record name="webservice.output" action="start" />
         <delete dir="${env.APS_HOME}/build/module"/>
-        <ant dir="jaxrpc-hello-ejb" target="all"/>
-        <delete dir="${env.APS_HOME}/build/module"/>
-        <ant dir="jaxrpc-hello-web" target="all"/>
-<!--        <ant dir="googleserver" target="all"/>--> <!-- 3 tests -->
-        <ant dir="xsdany" target="all"/> <!-- 1 test -->
-        <ant dir="filter_urlhandling" target="all"/> <!-- 1 test -->
-    <!--    <ant dir="security" target="all"/>-->         <!-- 9 test -->
-<!--        <ant dir="simplefault" target="all"/>
-        <ant dir="handler" target="all"/>
-        <ant dir="webstub_properties" target="all"/>
-        <ant dir="servlethandler" target="all"/>-->
+        <ant dir="filter_urlhandling" target="all"/>
+        <!--ant dir="security" target="all"/-->
         <ant dir="annotations" target="all"/>
         <ant dir="ejb_annotations" target="all"/>
-        <ant dir="mapping/j2w/signature" target="all"/> <!-- 2 tests -->
-        <ant dir="google" target="all"/> <!-- 1 test -->
-        <ant dir="gf_dd/endpoint_address_uri" target="all"/> <!-- 1 test -->
+        <ant dir="gf_dd/endpoint_address_uri" target="all"/>
         <record name="webservice.output" action="stop" />
         <antcall target="report"/>
         <antcall target="dev-report"/>
     </target>
 
-    <target name="google">
-        <record name="google.output" action="start" />
-            <ant dir="google" target="all"/>
-        <record name="google.output" action="stop" />
-        <antcall target="report"/>
-    </target>
-
-    <target name="xsdany">
-        <record name="xsdany.output" action="start" />
-            <ant dir="xsdany" target="all"/>
-        <record name="xsdany.output" action="stop" />
-        <antcall target="report"/>
-    </target>
-
-    <target name="soapfaults">
-        <record name="soapfaults.output" action="start" />
-            <ant dir="soapfaults" target="all"/>
-        <record name="soapfaults.output" action="stop" />
-        <antcall target="report"/>
-    </target>
-
-    <target name="signature">
-        <record name="signature.output" action="start" />
-            <ant dir="mapping/j2w/signature" target="all"/>
-        <record name="signature.output" action="stop" />
-        <antcall target="report"/>
-    </target>
-
     <target name="clean">
         <delete>
-            <fileset dir="${basedir}"
-                     includes="**.output, count.txt"/>
+            <fileset dir="${basedir}" includes="**.output, count.txt"/>
         </delete>
         <ant dir="google" target="clean"/>
         <ant dir="xsdany" target="clean"/>

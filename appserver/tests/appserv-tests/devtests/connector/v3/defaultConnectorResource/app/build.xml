@@ -18,13 +18,13 @@
 
 <!DOCTYPE project [
   <!ENTITY common SYSTEM     "../../../../../config/common.xml">
-  <!ENTITY testcommon SYSTEM "../../../../../config/properties.xml">
+<!ENTITY testcommon SYSTEM "../../../../../config/properties.xml">
 ]>
 
 <project name="connector1.5 MDB" default="all" basedir=".">
 
-  <property name="j2ee.home" value="../../../.."/>
-  <property name="earfile" value="generic-embedded.ear"/>
+  <property name="j2ee.home" value="../../../.." />
+  <property name="earfile" value="generic-embedded.ear" />
 
 
   <!-- include common.xml and testcommon.xml -->
@@ -32,96 +32,90 @@
   &testcommon;
 
   <target name="all" depends="init-common, clean-common">
-   <ant dir="src" inheritAll="false" target="all"/>
-   <antcall target="build-ear"/>
- <!--
-   <antcall target="ear-common">
-        <param name="appname" value="generic-embedded"/>
-        <param name="application.xml" value="META-INF/application.xml"/>
-   </antcall>
- -->
+    <ant dir="src" inheritAll="false" target="all" />
+    <antcall target="build-ear" />
   </target>
 
   <target name="build-ear">
-<echo message="Building EAR with sivajdbcra"/>
-     <delete file="${assemble.dir}/generic-embeddedApp.ear"/>
-     <mkdir dir="${assemble.dir}"/>
-     <mkdir dir="${build.classes.dir}/META-INF"/>
-     <ear earfile="${assemble.dir}/generic-embeddedApp.ear"
-       appxml="META-INF/application.xml">
-       <fileset dir="${assemble.dir}">
-            <include name="*.jar"/>
-            <include name="*.war"/>
-       </fileset>
-       <fileset dir="../ra">
-           <!--  <include name="*.rar"/> -->
-           <include name="sivajdbcra.rar"/>
-           <include name="generic-ra.rar"/>
-       </fileset>
-       <fileset dir="${env.APS_HOME}/lib">
-           <include name="reporter.jar"/>
-       </fileset>
-     </ear>
+    <echo message="Building EAR with two ra" />
+    <delete file="${assemble.dir}/generic-embeddedApp.ear" />
+    <mkdir dir="${assemble.dir}" />
+    <mkdir dir="${build.classes.dir}/META-INF" />
+    <ear earfile="${assemble.dir}/generic-embeddedApp.ear" appxml="META-INF/application.xml">
+      <fileset dir="${assemble.dir}">
+        <include name="*.jar" />
+        <include name="*.war" />
+      </fileset>
+      <fileset dir="../ra">
+        <include name="generic-ra.rar" />
+      </fileset>
+      <fileset dir="${bundles.dir}">
+        <include name="connectors-ra-redeploy-rars-xa.rar" />
+      </fileset>
+      <fileset dir="${env.APS_HOME}/lib">
+        <include name="reporter.jar" />
+      </fileset>
+    </ear>
 
   </target>
 
-    <target name="setupJdbc" depends="init-common">
+  <target name="setupJdbc" depends="init-common">
 
-           <antcall target="deploy-jdbc-common">
-               <param name="jdbc.conpool.name" value="jdbc-pointbase-pool1"/>
-               <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
-               <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
-               <param name="jdbc.resource.name" value="jdbc/XAPointbase"/>
-           </antcall>
+    <antcall target="deploy-jdbc-common">
+      <param name="jdbc.conpool.name" value="jdbc-derby-pool1" />
+      <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource" />
+      <param name="jdbc.resource.type" value="javax.sql.XADataSource" />
+      <param name="jdbc.resource.name" value="jdbc/DerbyDb" />
+    </antcall>
 
-           <antcall target="execute-sql-common">
-               <param name="sql.file" value="createdb.sql"/>
-           </antcall>
+    <antcall target="execute-sql-common">
+      <param name="sql.file" value="createdb.sql" />
+    </antcall>
 
-       </target>
+  </target>
 
-       <target name="unsetJdbc" depends="init-common">
-           <antcall target="execute-sql-common">
-               <param name="sql.file" value="dropdb.sql"/>
-           </antcall>
+  <target name="unsetJdbc" depends="init-common">
+    <antcall target="execute-sql-common">
+      <param name="sql.file" value="dropdb.sql" />
+    </antcall>
 
-           <antcall target="undeploy-jdbc-common">
-               <param name="jdbc.resource.name" value="jdbc/XAPointbase"/>
-               <param name="jdbc.conpool.name" value="jdbc-pointbase-pool1"/>
-           </antcall>
-       </target>
+    <antcall target="undeploy-jdbc-common">
+      <param name="jdbc.resource.name" value="jdbc/DerbyDb" />
+      <param name="jdbc.conpool.name" value="jdbc-derby-pool1" />
+    </antcall>
+  </target>
 
 
   <target name="deploy-ear" depends="init-common">
     <antcall target="deploy-common">
-      <param name="appname" value="generic-embedded"/>
+      <param name="appname" value="generic-embedded" />
     </antcall>
   </target>
 
-    <target name="deploy-war" depends="init-common">
-           <antcall target="deploy-war-common"/>
-       </target>
+  <target name="deploy-war" depends="init-common">
+    <antcall target="deploy-war-common" />
+  </target>
 
-       <target name="run-war" depends="init-common">
-           <antcall target="runwebclient-common">
-               <param name="testsuite.id" value="defaultConnectorResource  (stand-alone war based)"/>
-           </antcall>
-       </target>
+  <target name="run-war" depends="init-common">
+    <antcall target="runwebclient-common">
+      <param name="testsuite.id" value="defaultConnectorResource  (stand-alone war based)" />
+    </antcall>
+  </target>
 
 
-       <target name="undeploy-war" depends="init-common">
-           <antcall target="undeploy-war-common"/>
-       </target>
+  <target name="undeploy-war" depends="init-common">
+    <antcall target="undeploy-war-common" />
+  </target>
 
 
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-common">
-        <param name="extra-params" value="--cascade=true"/>
-        <param name="deployedapp.name" value="generic-embeddedApp"/>
+      <param name="extra-params" value="--cascade=true" />
+      <param name="deployedapp.name" value="generic-embeddedApp" />
     </antcall>
   </target>
 
   <target name="clean">
-    <antcall target="clean-common"/>
+    <antcall target="clean-common" />
   </target>
 </project>

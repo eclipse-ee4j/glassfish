@@ -17,9 +17,9 @@
 package com.sun.devtests.security.jdbcrealm;
 
 import java.sql.*;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.security.*;
-
-import sun.misc.BASE64Encoder;
 
 public class PopulateDB {
 
@@ -190,10 +190,10 @@ public class PopulateDB {
         ps.close();
 
         ps = con.prepareStatement(INSERT_USER_STMT_BASE64);
-        BASE64Encoder base64 = new BASE64Encoder();
+        Encoder base64 = Base64.getEncoder();
         for(int i=0; i<users_BASE64.length; i++) {
             ps.setString(1, users_BASE64[i][0]);
-            ps.setString(2, new String(base64.encode(users_BASE64[i][1].getBytes())));
+            ps.setString(2, new String(base64.encodeToString(users_BASE64[i][1].getBytes())));
             ps.executeUpdate();
         }
         ps.close();
@@ -210,7 +210,7 @@ public class PopulateDB {
         MessageDigest md2 = MessageDigest.getInstance("MD2");
         for(int i=0; i<users_MD2_BASE64.length; i++) {
             ps.setString(1, users_MD2_BASE64[i][0]);
-            ps.setString(2, base64.encode(md2.digest(users_MD2_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(md2.digest(users_MD2_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             md2.reset();
         }
@@ -220,7 +220,7 @@ public class PopulateDB {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         for(int i=0; i<users_MD5_BASE64.length; i++) {
             ps.setString(1, users_MD5_BASE64[i][0]);
-            ps.setString(2, base64.encode(md5.digest(users_MD5_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(md5.digest(users_MD5_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             md5.reset();
         }
@@ -230,7 +230,7 @@ public class PopulateDB {
         MessageDigest sha = MessageDigest.getInstance("SHA");
         for(int i=0; i<users_SHA_BASE64.length; i++) {
             ps.setString(1, users_SHA_BASE64[i][0]);
-            ps.setString(2, base64.encode(sha.digest(users_SHA_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(sha.digest(users_SHA_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             sha.reset();
         }
@@ -240,7 +240,7 @@ public class PopulateDB {
         MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
         for(int i=0; i<users_SHA256_BASE64.length; i++) {
             ps.setString(1, users_SHA256_BASE64[i][0]);
-            ps.setString(2, base64.encode(sha256.digest(users_SHA256_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(sha256.digest(users_SHA256_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             sha256.reset();
         }
@@ -250,7 +250,7 @@ public class PopulateDB {
         MessageDigest sha384 = MessageDigest.getInstance("SHA-384");
         for(int i=0; i<users_SHA384_BASE64.length; i++) {
             ps.setString(1, users_SHA384_BASE64[i][0]);
-            ps.setString(2, base64.encode(sha384.digest(users_SHA384_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(sha384.digest(users_SHA384_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             sha384.reset();
         }
@@ -260,7 +260,7 @@ public class PopulateDB {
         MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
         for(int i=0; i<users_SHA512_BASE64.length; i++) {
             ps.setString(1, users_SHA512_BASE64[i][0]);
-            ps.setString(2, base64.encode(sha512.digest(users_SHA512_BASE64[i][1].getBytes())));
+            ps.setString(2, base64.encodeToString(sha512.digest(users_SHA512_BASE64[i][1].getBytes())));
             ps.executeUpdate();
             sha512.reset();
         }

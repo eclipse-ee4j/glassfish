@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,17 +30,13 @@ import org.glassfish.pfl.dynamic.codegen.spi.Type ;
 import static java.lang.reflect.Modifier.ABSTRACT;
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._arg;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._classGenerator;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._clear;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
 import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
- * This class is used to generate the RMI-IIOP version of a
- * remote business interface.
+ * This class is used to generate the RMI-IIOP version of a remote business interface.
  */
 public final class RemoteGenerator extends Generator {
 
@@ -72,13 +68,14 @@ public final class RemoteGenerator extends Generator {
      *
      * @param classLoader
      * @param businessIntf
-     * @throws InvalidBean if the businessInterface doesn't exist.
+     * @throws GeneratorException if the businessInterface doesn't exist.
      */
-    public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws InvalidBean {
+    public RemoteGenerator(ClassLoader classLoader, String businessIntf) throws GeneratorException {
+        super(classLoader);
         try {
             businessInterface = classLoader.loadClass(businessIntf);
         } catch (ClassNotFoundException ex) {
-            throw new InvalidBean(
+            throw new GeneratorException(
                 localStrings.getLocalString("generator.remote_interface_not_found", "Remote interface not found "));
         }
 
@@ -90,6 +87,11 @@ public final class RemoteGenerator extends Generator {
 
         // NOTE : no need to remove ejb object methods because EJBObject
         // is only visible through the RemoteHome view.
+    }
+
+    @Override
+    public String getPackageName() {
+        return this.remoteInterfacePackageName;
     }
 
     /**
@@ -111,16 +113,7 @@ public final class RemoteGenerator extends Generator {
     }
 
     @Override
-    public void evaluate() {
-
-        _clear();
-
-        if (remoteInterfacePackageName != null) {
-            _package(remoteInterfacePackageName);
-        } else {
-            _package();
-        }
-
+    public void defineClassBody() {
         _interface(PUBLIC, remoteInterfaceSimpleName,
             _t(java.rmi.Remote.class.getName()),
             _t(RemoteBusinessObject.class.getName())
@@ -131,8 +124,6 @@ public final class RemoteGenerator extends Generator {
         }
 
         _end();
-
-        _classGenerator() ;
     }
 
 

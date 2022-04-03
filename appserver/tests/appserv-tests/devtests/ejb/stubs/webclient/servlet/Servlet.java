@@ -25,9 +25,6 @@ import javax.rmi.PortableRemoteObject;
 import com.sun.s1asdev.ejb.stubs.ejbapp.Hello;
 import com.sun.s1asdev.ejb.stubs.ejbapp.HelloHome;
 
-//import javax.management.j2ee.ManagementHome;
-//import javax.management.j2ee.Management;
-
 public class Servlet extends HttpServlet {
 
 
@@ -46,22 +43,7 @@ public class Servlet extends HttpServlet {
 
             InitialContext ic = new InitialContext();
 
-            System.out.println("Skipping mejb test for now.  NEED TO REENABLE");
-            //            System.out.println("Calling DummyMEJBBean");
-
-            /* TODO reenable once javax.management classes are available
-            Object objref = ic.lookup("java:comp/env/ejb/dummymejb");
-            ManagementHome mHome = (ManagementHome)
-                PortableRemoteObject.narrow(objref, ManagementHome.class);
-            Management dummyMejb = mHome.create();
-
-            System.out.println("Invoking dummy mejb to force context class loader test.");
-            dummyMejb.getMBeanCount();
-            System.out.println("dummy mejb test successful");
-
-            */
-
-           System.out.println("Looking up ejb ref ");
+            System.out.println("Looking up ejb ref ");
             // create EJB using factory from container
             Object objref2 = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref2);

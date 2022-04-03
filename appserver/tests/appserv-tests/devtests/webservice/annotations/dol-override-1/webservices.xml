@@ -17,10 +17,10 @@
 
 -->
 
-<webservices xmlns="http://java.sun.com/xml/ns/javaee"
+<webservices xmlns="https://jakarta.ee/xml/ns/jakartaee"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             version="1.2"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://www.ibm.com/webservices/xsd/javaee_web_services_1_2.xsd">
+             version="2.0"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_2_0.xsd">
     <webservice-description>
         <display-name>SubtractNumbersService</display-name>
         <webservice-description-name>SubtractNumbersService</webservice-description-name>

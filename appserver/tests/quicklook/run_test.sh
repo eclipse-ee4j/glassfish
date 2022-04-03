@@ -26,7 +26,7 @@ copy_ql_results(){
         cp ${WORKSPACE}/nucleus/domains/domain1/logs/server.log* ${WORKSPACE}/results
     fi
     cp ${TEST_RUN_LOG} ${WORKSPACE}/results/
-    tar -cf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
+    tar -czf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results
     change_junit_report_class_names
 }
 

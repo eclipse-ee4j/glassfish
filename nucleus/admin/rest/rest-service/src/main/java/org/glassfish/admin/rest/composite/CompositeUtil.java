@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -29,7 +31,6 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,9 +89,9 @@ import org.objectweb.asm.MethodVisitor;
  * @author jdlee
  */
 public class CompositeUtil {
-    private static final Map<String, Class<?>> generatedClasses = new HashMap<String, Class<?>>();
-    private static final Map<String, List<String>> modelExtensions = new HashMap<String, List<String>>();
-    private boolean extensionsLoaded = false;
+    private static final Map<String, Class<?>> generatedClasses = new HashMap<>();
+    private static final Map<String, List<String>> modelExtensions = new HashMap<>();
+    private final boolean extensionsLoaded = false;
     private static volatile Validator beanValidator = null;
     private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CompositeUtil.class);
 
@@ -117,7 +118,7 @@ public class CompositeUtil {
     public synchronized <T> T getModel(Class<T> modelIface) {
         String className = modelIface.getName() + "Impl";
         if (!generatedClasses.containsKey(className)) {
-            Map<String, Map<String, Object>> properties = new HashMap<String, Map<String, Object>>();
+            Map<String, Map<String, Object>> properties = new HashMap<>();
 
             Set<Class<?>> interfaces = getModelExtensions(modelIface);
             interfaces.add(modelIface);
@@ -155,7 +156,7 @@ public class CompositeUtil {
     }
 
     public Set<Class<?>> getRestModels() {
-        Set<Class<?>> classes = new HashSet<Class<?>>();
+        Set<Class<?>> classes = new HashSet<>();
         for (ActiveDescriptor ad : Globals.getDefaultBaseServiceLocator()
                 .getDescriptors(BuilderHelper.createContractFilter(RestModel.class.getName()))) {
             try {
@@ -176,7 +177,7 @@ public class CompositeUtil {
      * @param method
      */
     public Object getResourceExtensions(Class<?> baseClass, Object data, String method) {
-        List<RestExtension> extensions = new ArrayList<RestExtension>();
+        List<RestExtension> extensions = new ArrayList<>();
 
         for (RestExtension extension : Globals.getDefaultHabitat().<RestExtension>getAllServices(RestExtension.class)) {
             if (baseClass.getName().equals(extension.getParent())) {
@@ -531,7 +532,7 @@ public class CompositeUtil {
      * @return
      */
     private Set<Class<?>> getModelExtensions(Class<?> baseModel) {
-        Set<Class<?>> exts = new HashSet<Class<?>>();
+        Set<Class<?>> exts = new HashSet<>();
 
         if (!extensionsLoaded) {
             synchronized (modelExtensions) {
@@ -583,7 +584,7 @@ public class CompositeUtil {
                         String ext = entry[1];
                         List<String> list = modelExtensions.get(base);
                         if (list == null) {
-                            list = new ArrayList<String>();
+                            list = new ArrayList<>();
                             modelExtensions.put(base, list);
                         }
                         list.add(ext);
@@ -605,7 +606,7 @@ public class CompositeUtil {
     }
 
     private List<Method> getSetters(Class<?> clazz) {
-        List<Method> methods = new ArrayList<Method>();
+        List<Method> methods = new ArrayList<>();
 
         for (Method method : clazz.getMethods()) {
             if (method.getName().startsWith("set")) {
@@ -631,7 +632,7 @@ public class CompositeUtil {
                 name = name.substring(3);
                 Map<String, Object> property = properties.get(name);
                 if (property == null) {
-                    property = new HashMap<String, Object>();
+                    property = new HashMap<>();
                     properties.put(name, property);
                 }
 
@@ -662,12 +663,12 @@ public class CompositeUtil {
     }
 
     private Map<String, Map<String, Object>> gatherReferencedAttributes(String bean, String attribute) {
-        Map<String, Map<String, Object>> annos = new HashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> annos = new HashMap<>();
         try {
             Class<?> configBeanClass = Class.forName(bean);
             Method m = configBeanClass.getMethod("get" + attribute);
             for (Annotation a : m.getAnnotations()) {
-                Map<String, Object> anno = new HashMap<String, Object>();
+                Map<String, Object> anno = new HashMap<>();
                 for (Method am : a.annotationType().getDeclaredMethods()) {
                     String methodName = am.getName();
                     Object value = am.invoke(a);
@@ -885,51 +886,9 @@ public class CompositeUtil {
         return className.replace(".", "/");
     }
 
-    // TODO: This is duplicated from the generator class.
     private Class<?> defineClass(Class<?> similarClass, String className, byte[] classBytes) throws Exception {
-        byte[] byteContent = classBytes;
-        ProtectionDomain pd = similarClass.getProtectionDomain();
-
-        java.lang.reflect.Method jm = null;
-        for (java.lang.reflect.Method jm2 : ClassLoader.class.getDeclaredMethods()) {
-            if (jm2.getName().equals("defineClass") && jm2.getParameterTypes().length == 5) {
-                jm = jm2;
-                break;
-            }
-        }
-        if (jm == null) {//should never happen, makes findbug happy
-            throw new RuntimeException("cannot find method called defineclass...");
-        }
-        final java.lang.reflect.Method clM = jm;
-        try {
-            java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                @Override
-                public java.lang.Object run() throws Exception {
-                    if (!clM.isAccessible()) {
-                        clM.setAccessible(true);
-                    }
-                    return null;
-                }
-            });
-
-            RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", className);
-            final ClassLoader classLoader = similarClass.getClassLoader();
-            //Thread.currentThread().getContextClassLoader();
-            //                    Thread.currentThread().getContextClassLoader();
-            try {
-                clM.invoke(classLoader, className, byteContent, 0, byteContent.length, pd);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            try {
-                return classLoader.loadClass(className);
-            } catch (ClassNotFoundException cnfEx) {
-                throw new RuntimeException(cnfEx);
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        RestLogging.restLogger.log(Level.FINEST, "Loading bytecode for {0}", className);
+        return MethodHandles.privateLookupIn(similarClass, MethodHandles.lookup()).defineClass(classBytes);
     }
 
     private static synchronized void initBeanValidator() {

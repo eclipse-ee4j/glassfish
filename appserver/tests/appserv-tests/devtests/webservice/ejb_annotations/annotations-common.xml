@@ -48,22 +48,14 @@
     <mkdir dir="${env.APS_HOME}/build/module/classes"/>
     <mkdir dir="${env.APS_HOME}/build/module/archive"/>
 </target>
- <path id="classpath">
-
-        <fileset dir="${env.S1AS_HOME}/modules">
-                      <include name="*.jar"/>
-
-                   </fileset>
-                   <fileset dir="${env.S1AS_HOME}/modules/endorsed">
-                      <include name="*.jar"/>
-
-                   </fileset>
-                   <fileset dir="${env.APS_HOME}/lib">
-                     <include name="reporter.jar"/>
-                   </fileset>
-
-
-    </path>
+<path id="classpath">
+    <fileset dir="${env.S1AS_HOME}/modules">
+        <include name="*.jar" />
+    </fileset>
+    <fileset dir="${env.APS_HOME}/lib">
+        <include name="reporter.jar" />
+    </fileset>
+</path>
 
 
 <target name="test-compile">
@@ -159,6 +151,10 @@
 </target>
 
 <target name="configurable-wsdl-import">
+    <tstamp>
+      <format property="TIMESTAMP" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ" />
+    </tstamp>
+    <echo>Current time (ISO): ${TIMESTAMP}</echo>
     <echo message="wsimporting ${protocol}://${host-name}:${host-port}/${server}Service/${port}?WSDL; special args are ${wsimport-special-args}"/>
     <exec executable="${env.S1AS_HOME}/bin/wsimport">
         <arg line="-keep -d ${env.APS_HOME}/build/module/classes ${protocol}://${host-name}:${host-port}/${server}Service/${port}?WSDL"/>

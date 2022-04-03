@@ -26,7 +26,7 @@ import java.util.List;
 import com.sun.enterprise.module.ResolveError;
 
 /**
- * This class is responsible foe creation of class loader hierarchy
+ * This class is responsible for creation of class loader hierarchy
  * of an application.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -132,7 +132,7 @@ public interface ClassLoaderHierarchy {
         * @return class loader capable of loading public APIs identified by the deployers
         * @throws com.sun.enterprise.module.ResolveError if one of the deployer's public API module is not found.
         */
-       public ClassLoader createApplicationParentCL(ClassLoader parent, DeploymentContext context)
+       ClassLoader createApplicationParentCL(ClassLoader parent, DeploymentContext context)
            throws ResolveError;
 
 }

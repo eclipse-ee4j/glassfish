@@ -51,6 +51,16 @@
     <target name="test-deploy" depends="test-build">
         <basename file="${src-name}" property="server" suffix=".java"/>
         <basename file="${server}" property="port" suffix="EJB"/>
+      <!-- FIXME: Reproducer for the following exception:
+java.lang.NullPointerException
+at java.base/java.io.File.<init>(File.java:361)
+at org.glassfish.webservices.WebServicesDeployer.doWebServicesDeployment(WebServicesDeployer.java:612)
+at org.glassfish.webservices.WebServicesDeployer.prepare(WebServicesDeployer.java:167)
+at com.sun.enterprise.v3.server.ApplicationLifecycle.prepareModule(ApplicationLifecycle.java:929)
+at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:414)
+at com.sun.enterprise.v3.server.ApplicationLifecycle.deploy(ApplicationLifecycle.java:199)
+at org.glassfish.deployment.admin.DeployCommand.execute(DeployCommand.java:467)
+       -->
         <exec executable="${env.S1AS_HOME}/bin/asadmin" failonerror="true">
             <arg line="deploy --port ${admin.port} --user ${admin.user} --passwordfile ${admin.password.file} ${env.APS_HOME}/build/module/archive/${server}.jar"/>
          </exec>

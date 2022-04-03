@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -85,7 +85,7 @@
         <version_suffix />
         <major_version>6</major_version>
         <minor_version>2</minor_version>
-        <update_version>4</update_version>
+        <update_version>6</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
         <!-- Jakarta Faces -->
@@ -94,7 +94,7 @@
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0</websocket-api.version>
-        <tyrus.version>2.0.1</tyrus.version>
+        <tyrus.version>2.0.2</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <concurrent-api.version>2.0.0</concurrent-api.version>
@@ -139,14 +139,14 @@
         <jsonp-ri.version>2.0.1</jsonp-ri.version>
         <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
         <json.bind-api.version>2.0.0</json.bind-api.version>
-        <yasson.version>2.0.2</yasson.version>
+        <yasson.version>2.0.4</yasson.version>
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>
         <wasp.version>3.0.1</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>6.2.6</woodstox.version>
+        <woodstox.version>6.2.5</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->

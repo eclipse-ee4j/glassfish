@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,6 +56,15 @@ public class CreateManagedExecutorServiceBase {
     @Param(name="hungafterseconds", alias="hungAfterSeconds", defaultValue="0", optional=true)
     protected Integer hungafterseconds;
 
+    @Param(name="hungloggerprintonce", alias="hungLoggerPrintOnce", defaultValue="false", optional=true)
+    protected Boolean hungloggerprintonce;
+
+    @Param(name = "hungloggerinitialdelayseconds", alias = "hungLoggerInitialDelaySeconds", defaultValue = "60", optional = true)
+    protected Integer hungloggerinitialdelayseconds;
+
+    @Param(name = "hungloggerintervalseconds", alias = "hungLoggerIntervalSeconds", defaultValue = "60", optional = true)
+    protected Integer hungloggerintervalseconds;
+
     @Param(name="corepoolsize", alias="corePoolSize", defaultValue="0", optional=true)
     protected Integer corepoolsize;
 
@@ -83,6 +93,10 @@ public class CreateManagedExecutorServiceBase {
             longrunningtasks.toString());
         attrList.put(ResourceConstants.HUNG_AFTER_SECONDS,
             hungafterseconds.toString());
+        attrList.put(ResourceConstants.HUNG_LOGGER_PRINT_ONCE,
+            hungloggerprintonce.toString());
+        attrList.put(ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS, hungloggerinitialdelayseconds.toString());
+        attrList.put(ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS, hungloggerintervalseconds.toString());
         attrList.put(ResourceConstants.CORE_POOL_SIZE,
             corepoolsize.toString());
         attrList.put(ResourceConstants.KEEP_ALIVE_SECONDS,

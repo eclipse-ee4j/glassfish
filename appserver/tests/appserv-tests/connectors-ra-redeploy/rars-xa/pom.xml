@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main.tests.connectors</groupId>
+        <artifactId>connectors-ra-redeploy</artifactId>
+        <version>6.2.6-SNAPSHOT</version>
+    </parent>
+    <artifactId>connectors-ra-redeploy-rars-xa</artifactId>
+    <packaging>rar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.tests.connectors</groupId>
+            <artifactId>connectors-ra-redeploy-jars</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <stripClassifier>true</stripClassifier>
+                    <stripVersion>true</stripVersion>
+                    <includeArtifactIds>connectors-ra-redeploy-jars</includeArtifactIds>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>version1</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/v1</outputDirectory>
+                            <excludeClassifiers>v2</excludeClassifiers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-rar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-rar</id>
+                        <goals>
+                            <goal>rar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <rarSourceDirectory>${project.build.directory}/v1</rarSourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

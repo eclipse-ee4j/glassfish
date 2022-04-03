@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +17,14 @@
 
 package org.glassfish.appclient.client.jws.boot;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,29 +32,29 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.Policy;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.Vector;
+
 import javax.swing.SwingUtilities;
+
 import org.glassfish.appclient.client.acc.AppClientContainer;
-import org.glassfish.appclient.common.Util;
 import org.glassfish.appclient.client.acc.JWSACCClassLoader;
 
 /**
- *Alternate main class for ACC, used when launched by Java Web Start.
- *<p>
- *This class assigns security permissions needed by the app server code and
- *by the app client code, then starts the regular app client container.
- *<p>
- *Note that any logic this class executes that requires privileged access
- *must occur either:
- *- from a class in the signed jar containing this class, or
- *- after setPermissions has been invoked.
- *This is because Java Web Start grants elevated permissions only to the classes
- *in the appserv-jwsacc-signed.jar at the beginning.  Only after setPermissions
- *has been invoked can other app server-provided code run with all permissions.
+ * Alternate main class for ACC, used when launched by Java Web Start.
+ * <p>
+ * This class assigns security permissions needed by the app server code and
+ * by the app client code, then starts the regular app client container.
+ * <p>
+ * Note that any logic this class executes that requires privileged access
+ * must occur either:
+ * - from a class in the signed jar containing this class, or
+ * - after setPermissions has been invoked.
+ * This is because Java Web Start grants elevated permissions only to the classes
+ * in the appserv-jwsacc-signed.jar at the beginning. Only after setPermissions
+ * has been invoked can other app server-provided code run with all permissions.
  *
  * @author tjquinn
  */
@@ -93,7 +97,7 @@ public class JWSACCMain implements Runnable {
      * command-line clients; otherwise it can prematurely end the JVM when
      * the GUI and other user work is continuing
      */
-    private static boolean exitAfterReturn = false;
+    private static boolean exitAfterReturn;
 
     /*
      *Normally the ACC is not run with the Java Web Start classloader as the
@@ -101,27 +105,25 @@ public class JWSACCMain implements Runnable {
      *To profile performance, though, sometimes we need to keep the JWS
      *class loader as the parent rather than skipping it.
      */
-    private static boolean keepJWSClassLoader = false;
+    private static boolean keepJWSClassLoader;
 
-    private static boolean runOnSwingThread = false;
+    private static boolean runOnSwingThread;
 
     /** helper for building the class loader and policy changes */
-    private static ClassPathManager classPathManager = null;
+    private static ClassPathManager classPathManager;
 
     /** URLs for downloaded JAR files to be used in the class path */
-    private static URL [] downloadedJarURLs;
+    private static URL[] downloadedJarURLs;
 
     /** URLs for persistence-related JAR files for the class path and permissions */
-    private static URL [] persistenceJarURLs;
+    private static URL[] persistenceJarURLs;
 
     /** localizable strings */
-    private static final ResourceBundle rb =
-        ResourceBundle.getBundle(
-            dotToSlash(JWSACCMain.class.getPackage().getName() + ".LocalStrings"));
-
+    private static final ResourceBundle rb = ResourceBundle
+        .getBundle(dotToSlash(JWSACCMain.class.getPackage().getName() + ".LocalStrings"));
 
     /** make the arguments passed to the constructor available to the main method */
-    private String args[];
+    private final String[] args;
 
     /** Creates a new instance of JWSMain */
     public JWSACCMain(String[] args) {
@@ -173,6 +175,7 @@ public class JWSACCMain implements Runnable {
         return orig.replaceAll("\\.","/");
     }
 
+    @Override
     public void run() {
 //        Main.main(args);
         int exitValue = 0;
@@ -193,10 +196,9 @@ public class JWSACCMain implements Runnable {
              *Use the prepared class loader to load the ACC main method, prepare
              *the arguments to the constructor, and invoke the static main method.
              */
-            Constructor constr = null;
-            Class mainClass = Class.forName("com.sun.enterprise.appclient.MainWithModuleSupport", true /* initialize */, loader);
-            constr = mainClass.getConstructor(
-                    new Class[] { String[].class, URL[].class } );
+            Class mainClass = Class.forName("com.sun.enterprise.appclient.MainWithModuleSupport",
+                true /* initialize */, loader);
+            Constructor constr = mainClass.getConstructor(new Class[] {String[].class, URL[].class});
             constr.newInstance(args, persistenceJarURLs);
         } catch(Throwable thr) {
             exitValue = 1;
@@ -217,6 +219,7 @@ public class JWSACCMain implements Runnable {
             if (exitAfterReturn || (exitValue != 0)) {
                 Runnable exit = new Runnable() {
                     private int statusValue;
+                    @Override
                     public void run() {
                         System.out.printf("Exiting after return from client with status %1$d%n", statusValue);
                         System.exit(statusValue);
@@ -245,8 +248,8 @@ public class JWSACCMain implements Runnable {
      *@return command arguments with any handled by JWS ACC removed
      */
     private static String[] prepareJWSArgs(String[] args) {
-        Vector<String> JWSACCArgs = new Vector<String>();
-        Vector<String> nonJWSACCArgs = new Vector<String>();
+        Vector<String> JWSACCArgs = new Vector<>();
+        Vector<String> nonJWSACCArgs = new Vector<>();
         for (String arg : args) {
             if (arg.startsWith(JWSACC_ARGUMENT_PREFIX)) {
                 JWSACCArgs.add(arg.substring(JWSACC_ARGUMENT_PREFIX.length()));
@@ -280,9 +283,8 @@ public class JWSACCMain implements Runnable {
     private static void setPermissions() {
         try {
             /*
-             *Get the permissions template and write it to a temporary file.
              */
-            String permissionsTemplate = Util.loadResource(JWSACCMain.class, PERMISSIONS_TEMPLATE_NAME);
+            String permissionsTemplate = loadResource(JWSACCMain.class, PERMISSIONS_TEMPLATE_NAME);
 
             /*
              *Prepare the grant clauses for the downloaded jars and substitute
@@ -431,18 +433,61 @@ public class JWSACCMain implements Runnable {
             containingJar = findContainingJar("META-INF/application-client.xml", loader);
         }
         if (containingJar == null) {
-//            needs i18n
-//            throw new IllegalArgumentException(localStrings.getString("appclient.JWSnoDownloadedDescr"));
             throw new IllegalArgumentException("Could not locate META-INF/application.xml or META-INF/application-client.xml");
         }
         return containingJar;
     }
 
+
     /**
-     *Return the class path manager appropriate to the current version.
-     *@return the correct type of ClassPathManager
+     * Return the class path manager appropriate to the current version.
+     *
+     * @return the correct type of ClassPathManager
      */
-    public static ClassPathManager getClassPathManager() throws ClassNotFoundException, NoSuchMethodException {
+    public static ClassPathManager getClassPathManager() {
         return ClassPathManager.getClassPathManager(keepJWSClassLoader);
     }
+
+
+    /**
+     * Get the permissions template and write it to a temporary file.
+     *
+     * <p>
+     * This method does not save the template in a cache. Use the instance method
+     * getTemplate for that purpose.
+     *
+     * @param contextClass a class, the class loader of which should be used for searching for the template
+     * @param resourcePath the path of the resource to load, relative to the contextClass
+     * @return the resource's contents
+     * @throws IOException if the resource is not found or in case of error while loading it
+     */
+    private static String loadResource(Class<?> contextClass, String resourcePath) throws IOException {
+        String result = null;
+        InputStream is = null;
+        BufferedReader reader = null;
+        try {
+            is = contextClass.getResourceAsStream(resourcePath);
+            if (is == null) {
+                throw new IOException("Could not locate the requested resource relative to class " + contextClass.getName());
+            }
+
+            StringBuilder sb = new StringBuilder();
+            reader = new BufferedReader(new InputStreamReader(is));
+            int charsRead;
+            char [] buffer = new char[1024];
+            while ((charsRead = reader.read(buffer)) != -1) {
+                sb.append(buffer, 0, charsRead);
+            }
+
+            result= sb.toString();
+            return result;
+        } catch (IOException ioe) {
+            throw new IOException("Error loading resource " + resourcePath, ioe);
+        } finally {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+
 }

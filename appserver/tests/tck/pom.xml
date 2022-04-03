@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.main.tests.tck</groupId>
@@ -50,4 +50,33 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>tck-all</id>
+            <modules>
+                <module>rest</module>
+                <module>faces</module>
+                <module>authentication</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tck-rest</id>
+            <modules>
+                <module>rest</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tck-faces</id>
+            <modules>
+                <module>faces</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>tck-authentication</id>
+            <modules>
+                <module>authentication</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

@@ -16,49 +16,53 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import static org.glassfish.persistence.jpa.schemageneration.EclipseLinkSchemaGenerationProcessor.isSupportedPersistenceProvider;
+
 import org.glassfish.persistence.jpa.PersistenceUnitInfoImpl;
 
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 
 /**
  * Factory for creating SchemaGenerationProcessor
- * @author  Mitesh Meswani
+ *
+ * @author Mitesh Meswani
  */
 public class SchemaGenerationProcessorFactory {
 
-    /**
-     * @return EclipseLink specific schema generation iff provider is EclipseLink or Toplink, and user has not specified
-     * any standard JPA schema generation property else return JPAStandardSchemaGenerationProcessor
-     */
-    public static SchemaGenerationProcessor createSchemaGenerationProcessor(PersistenceUnitDescriptor pud) {
-        // We use
+    private static final String STANDARD_SCHEMA_GENERATION_PREFIX = "jakarta.persistence.schema-generation";
 
-        String providerClassName = PersistenceUnitInfoImpl.getPersistenceProviderClassNameForPuDesc(pud);
+    /**
+     * @return EclipseLink specific schema generation iff provider is EclipseLink or
+     * Toplink, and user has not specified any standard JPA schema generation
+     * property else return JPAStandardSchemaGenerationProcessor
+     */
+    public static SchemaGenerationProcessor createSchemaGenerationProcessor(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+        String providerClassName = PersistenceUnitInfoImpl.getPersistenceProviderClassNameForPuDesc(persistenceUnitDescriptor);
 
         boolean useJPA21Processor = true;
 
-        if(EclipseLinkSchemaGenerationProcessor.isSupportedPersistenceProvider(providerClassName) ) {
-           if(!containsStandardSchemaGenerationProperty(pud)) {
-               useJPA21Processor = false;
-           }
+        if (isSupportedPersistenceProvider(providerClassName)) {
+            if (!containsStandardSchemaGenerationProperty(persistenceUnitDescriptor)) {
+                useJPA21Processor = false;
+            }
         }
 
         return useJPA21Processor ? new JPAStandardSchemaGenerationProcessor() : new EclipseLinkSchemaGenerationProcessor(providerClassName);
     }
 
-    private static final String STANDARD_SCHEMA_GENERATION_PREFIX = "jakarta.persistence.schema-generation";
-
     /**
-     * @return true if the given <code>pud</code> contains a JPA standard property for schema generation
+     * @return true if the given <code>pud</code> contains a JPA standard property
+     * for schema generation
      */
-    private static boolean containsStandardSchemaGenerationProperty(PersistenceUnitDescriptor pud) {
+    private static boolean containsStandardSchemaGenerationProperty(PersistenceUnitDescriptor persistenceUnitDescriptor) {
         boolean containsStandardSchemaGenerationProperty = false;
-        for (Object puPropertyName : pud.getProperties().keySet()) {
-            if(puPropertyName instanceof String && String.class.cast(puPropertyName).startsWith(STANDARD_SCHEMA_GENERATION_PREFIX) ) {
+        for (Object puPropertyName : persistenceUnitDescriptor.getProperties().keySet()) {
+            if (puPropertyName instanceof String && String.class.cast(puPropertyName).startsWith(STANDARD_SCHEMA_GENERATION_PREFIX)) {
                 containsStandardSchemaGenerationProperty = true;
                 break;
             }
         }
+
         return containsStandardSchemaGenerationProperty;
     }
 

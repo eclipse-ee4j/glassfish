@@ -19,7 +19,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import sun.misc.BASE64Encoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 
 class TestRoleAssignment {
 
@@ -45,14 +47,12 @@ class TestRoleAssignment {
             URL u = new URL(url);
             URLConnection uconn = u.openConnection();
 
-            String up = username + ":" + password;
-            BASE64Encoder be = new BASE64Encoder();
-            up = be.encode(up.getBytes());
+            up = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
             uconn.setRequestProperty("authorization", "Basic " + up);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    uconn.getInputStream()));
-            while (reader.readLine() != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(uconn.getInputStream()))) {
+                while (reader.readLine() != null) {
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

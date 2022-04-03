@@ -3,6 +3,7 @@
 <!--
 
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2022 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,28 +18,16 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-
 <application>
-
-<display-name>Redeploy rar test</display-name>
-
-  <description>Application description</description>
-
-  <module>
-    <ejb>force-deploy-rar-ejb.jar</ejb>
-  </module>
-
-<!--
-  <module>
-    <java>force-deploy-rar-client.jar</java>
-  </module>
--->
-
+    <display-name>Redeploy rar test</display-name>
+    <description>Application description</description>
+    <module>
+        <ejb>force-deploy-rar-ejb.jar</ejb>
+    </module>
     <module>
         <web>
-        <web-uri>force-deploy-rar-web.war</web-uri>
-         <context-root>force-deploy-rar</context-root>
-       </web>
-     </module>
-
+            <web-uri>force-deploy-rar-web.war</web-uri>
+            <context-root>force-deploy-rar</context-root>
+        </web>
+    </module>
 </application>

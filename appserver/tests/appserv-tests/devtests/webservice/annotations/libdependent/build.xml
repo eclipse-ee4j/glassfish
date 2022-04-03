@@ -52,7 +52,8 @@
 
     <target name="assemble-web" depends="init-common, compile">
       <mkdir dir="${assemble.dir}"/>
-      <echo message="my build classes dir is:${build.classes.dir}" level="verbose"/>  <mkdir dir="${build.classes.dir}/tmp"/>
+      <echo message="my build classes dir is:${build.classes.dir}" level="verbose"/>
+      <mkdir dir="${build.classes.dir}/tmp"/>
       <mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
       <mkdir dir="${build.classes.dir}/tmp/WEB-INF/classes"/>
       <mkdir dir="${build.classes.dir}/tmp/WEB-INF/lib"/>

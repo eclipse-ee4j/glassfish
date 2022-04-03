@@ -16,35 +16,38 @@
 
 package org.glassfish.jdbcruntime;
 
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Naming Object Proxy to handle the Default Data Source.
- * Maps to a pre-configured data source, when binding for
- * a datasource reference is absent in the @Resource annotation.
+ * Naming Object Proxy to handle the Default Data Source. Maps to a
+ * pre-configured data source, when binding for a datasource reference is absent
+ * in the @Resource annotation.
  *
  * @author Shalini M
  */
 @Service
-@NamespacePrefixes({DefaultDataSource.DEFAULT_DATASOURCE})
+@NamespacePrefixes(DefaultDataSource.DEFAULT_DATASOURCE)
 public class DefaultDataSource implements NamedNamingObjectProxy, DefaultResourceProxy {
 
     static final String DEFAULT_DATASOURCE = "java:comp/DefaultDataSource";
     static final String DEFAULT_DATASOURCE_PHYS = "jdbc/__default";
+
     private DataSource dataSource;
 
     @Override
     public Object handle(String name) throws NamingException {
-        if(dataSource == null) {
-            javax.naming.Context ctx = new javax.naming.InitialContext();
+        if (dataSource == null) {
             // cache the datasource to avoid JNDI lookup overheads
-            dataSource = (DataSource)ctx.lookup(DEFAULT_DATASOURCE_PHYS);
+            dataSource = (DataSource) new InitialContext().lookup(DEFAULT_DATASOURCE_PHYS);
         }
+
         return dataSource;
     }
 

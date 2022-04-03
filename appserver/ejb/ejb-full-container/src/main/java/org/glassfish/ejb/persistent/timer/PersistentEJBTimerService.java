@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -76,7 +75,7 @@ import org.jvnet.hk2.config.types.Property;
  */
 public class PersistentEJBTimerService extends EJBTimerService {
 
-    private TimerLocal timerLocal_;
+    private final TimerLocal timerLocal_;
 
     private static final Logger logger =
         LogDomains.getLogger(PersistentEJBTimerService.class, LogDomains.EJB_LOGGER);
@@ -160,6 +159,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
     /**
      * Provide a count of timers owned by each server
      */
+    @Override
     public String[] listTimers( String[] serverIds ) {
         String[] totalTimers = null;
         try {
@@ -177,6 +177,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
     /**
      * Take ownership of another server's timers.
      */
+    @Override
     public int migrateTimers(String fromOwnerId) {
 
         String ownerIdOfThisServer = getOwnerIdOfThisServer();
@@ -276,6 +277,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
     } //migrateTimers()
 
+    @Override
     public boolean isPersistent() {
         return true;
     }
@@ -419,7 +421,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
         Map timersToRestore = new HashMap();
         Set timerIdsToRemove = new HashSet();
-        Set<TimerState> result = new HashSet<TimerState>();
+        Set<TimerState> result = new HashSet<>();
 
         for(TimerState timer: timersEligibleForRestoration) {
 
@@ -452,7 +454,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
                 // an entity bean.  That allows us to lazily load the underlying
                 // blob for stateless session and message-driven bean timers.
                 Object timedObjectPrimaryKey = null;
-                if( container.getContainerType() == BaseContainer.ContainerType.ENTITY) {
+                if (container.getContainerInfo().type == BaseContainer.ContainerType.ENTITY) {
                     timedObjectPrimaryKey = timer.getTimedObjectPrimaryKey();
                 }
 
@@ -570,16 +572,13 @@ public class PersistentEJBTimerService extends EJBTimerService {
             timerLocal_.remove(timerIdsToRemove);
         }
 
-        for(Iterator entries = timersToRestore.entrySet().iterator();
-            entries.hasNext(); ) {
-            Map.Entry next  = (Map.Entry) entries.next();
+        for (Object element : timersToRestore.entrySet()) {
+            Map.Entry next = (Map.Entry) element;
             RuntimeTimerState nextTimer = (RuntimeTimerState) next.getKey();
-            TimerPrimaryKey timerId    = nextTimer.getTimerId();
+            TimerPrimaryKey timerId = nextTimer.getTimerId();
             Date expiration = (Date) next.getValue();
             scheduleTask(timerId, expiration);
-            logger.log(Level.FINE,
-                       "EJBTimerService.restoreTimers(), scheduling timer " +
-                       nextTimer);
+            logger.log(Level.FINE, "EJBTimerService.restoreTimers(), scheduling timer " + nextTimer);
         }
 
         logger.log(Level.FINE, "DONE EJBTimerService.restoreTimers()");
@@ -708,14 +707,14 @@ public class PersistentEJBTimerService extends EJBTimerService {
             Map<Method, List<ScheduledTimerDescriptor>> schedules,
             boolean deploy) {
 
-        Map<TimerPrimaryKey, Method> result = new HashMap<TimerPrimaryKey, Method>();
+        Map<TimerPrimaryKey, Method> result = new HashMap<>();
 
         TransactionManager tm = ejbContainerUtil.getTransactionManager();
         try {
             tm.begin();
 
             Set<TimerState> timers = _restoreTimers(
-                    (Set<TimerState>)timerLocal_.findActiveTimersOwnedByThisServerByContainer(containerId));
+                    timerLocal_.findActiveTimersOwnedByThisServerByContainer(containerId));
 
             if (timers.size() > 0) {
                 logger.log(Level.FINE, "Found " + timers.size() +
@@ -756,9 +755,10 @@ public class PersistentEJBTimerService extends EJBTimerService {
      * Called in a clustered environment to eagerly create automatic persistent timers
      * on the specific server instance.
      */
+    @Override
     public void createSchedulesOnServer(EjbDescriptor ejbDescriptor, String server_name) {
         Map<MethodDescriptor, List<ScheduledTimerDescriptor>> schedules =
-                new HashMap<MethodDescriptor, List<ScheduledTimerDescriptor>>();
+                new HashMap<>();
         for (ScheduledTimerDescriptor schd : ejbDescriptor.getScheduledTimerDescriptors()) {
             MethodDescriptor method = schd.getTimeoutMethod();
             if (method != null && schd.getPersistent()) {
@@ -768,7 +768,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
                 List<ScheduledTimerDescriptor> list = schedules.get(method);
                 if (list == null) {
-                    list = new ArrayList<ScheduledTimerDescriptor>();
+                    list = new ArrayList<>();
                     schedules.put(method, list);
                 }
                 list.add(schd);
@@ -794,6 +794,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
      * Only persistent schedule based timers for the containerId that has no timers associated
      * with it, will be created. And no timers will be scheduled.
      */
+    @Override
     public void createSchedules(long containerId, long applicationId,
             Map<MethodDescriptor, List<ScheduledTimerDescriptor>> methodDescriptorSchedules, String server_name) {
         TransactionManager tm = ejbContainerUtil.getTransactionManager();
@@ -894,7 +895,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         // timer cache to avoid some database access in PE/SE, or
         // even in EE with the appropriate consistency tradeoff.
 
-        Collection<TimerPrimaryKey> timerIdsForTimedObject = new HashSet<TimerPrimaryKey>();
+        Collection<TimerPrimaryKey> timerIdsForTimedObject = new HashSet<>();
 
         if (timedObjectPrimaryKey == null) {
             timerIdsForTimedObject = timerLocal_.findActiveTimerIdsByContainer(containerId);
@@ -921,7 +922,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
      */
     @Override
     protected Collection<TimerPrimaryKey> getTimerIds(Collection<Long> containerIds) {
-        Collection<TimerPrimaryKey> timerIds = new HashSet<TimerPrimaryKey>(super.getTimerIds(containerIds));
+        Collection<TimerPrimaryKey> timerIds = new HashSet<>(super.getTimerIds(containerIds));
         timerIds.addAll(timerLocal_.findActiveTimerIdsByContainers(containerIds));
         return timerIds;
     }
@@ -1486,6 +1487,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
                     success = h.executeDDLStatement(
                             dir.getCanonicalPath() + "/ejbtimer_upgrade_", resource);
                     ConfigSupport.apply(new SingleConfigCode<Property>() {
+                        @Override
                         public Object run(Property p) throws PropertyVetoException, TransactionFailure {
                             p.setValue("true");
                             return null;

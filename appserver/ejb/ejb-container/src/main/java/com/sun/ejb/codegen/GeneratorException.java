@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,14 +23,27 @@ package com.sun.ejb.codegen;
  */
 public class GeneratorException extends java.lang.Exception {
 
+    private static final long serialVersionUID = -6932740662092591668L;
+
+
     /**
      * Constructs the Generator exception with the specified string.
      *
-     * @param the string description
+     * @param message string description
      */
-    public GeneratorException(String s) {
-        super(s);
-        this.reason = s;
+    public GeneratorException(String message) {
+        super(message);
+    }
+
+
+    /**
+     * Constructs the Generator exception with the specified string.
+     *
+     * @param message string description
+     * @param cause exception which caused the failure
+     */
+    public GeneratorException(String message, Exception cause) {
+        super(message, cause);
     }
 
 
@@ -40,11 +54,6 @@ public class GeneratorException extends java.lang.Exception {
      */
     @Override
     public String toString() {
-        return reason;
+        return getMessage();
     }
-
-    /**
-     * @serial XXX needs doc
-     */
-    private final String reason;
 }

@@ -16,9 +16,9 @@
 
 package org.glassfish.jdbc.pool.monitor;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
-import com.sun.enterprise.resource.pool.PoolStatus;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
@@ -33,8 +33,9 @@ import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
+import com.sun.enterprise.resource.pool.PoolStatus;
 
 /**
  * StatsProvider object for Jdbc pool monitoring.
@@ -61,14 +62,17 @@ public class JdbcConnPoolStatsProvider {
             "NumConnFailedValidation", StatisticImpl.UNIT_COUNT,
             "The total number of connections in the connection pool that failed " +
             "validation from the start time until the last sample time.");
+
     private CountStatisticImpl numConnTimedOut = new CountStatisticImpl(
             "NumConnTimedOut", StatisticImpl.UNIT_COUNT, "The total number of " +
             "connections in the pool that timed out between the start time and the last sample time.");
+
     private RangeStatisticImpl numConnFree = new RangeStatisticImpl(
             0, 0, 0,
             "NumConnFree", StatisticImpl.UNIT_COUNT, "The total number of free " +
             "connections in the pool as of the last sampling.",
             System.currentTimeMillis(), System.currentTimeMillis());
+
     private RangeStatisticImpl numConnUsed = new RangeStatisticImpl(
             0, 0, 0,
             "NumConnUsed", StatisticImpl.UNIT_COUNT, "Provides connection usage " +
@@ -76,6 +80,7 @@ public class JdbcConnPoolStatsProvider {
             "used, as well as information about the maximum number of connections " +
             "that were used (the high water mark).",
             System.currentTimeMillis(), System.currentTimeMillis());
+
     private RangeStatisticImpl connRequestWaitTime = new RangeStatisticImpl(
             0, 0, 0,
             "ConnRequestWaitTime", StatisticImpl.UNIT_MILLISECOND,
@@ -83,12 +88,15 @@ public class JdbcConnPoolStatsProvider {
             "current value indicates the wait time of the last request that was " +
             "serviced by the pool.",
             System.currentTimeMillis(), System.currentTimeMillis());
+
     private CountStatisticImpl numConnDestroyed = new CountStatisticImpl(
             "NumConnDestroyed", StatisticImpl.UNIT_COUNT,
             "Number of physical connections that were destroyed since the last reset.");
+
     private CountStatisticImpl numConnAcquired = new CountStatisticImpl(
             "NumConnAcquired", StatisticImpl.UNIT_COUNT, "Number of logical " +
             "connections acquired from the pool.");
+
     private CountStatisticImpl numConnReleased = new CountStatisticImpl(
             "NumConnReleased", StatisticImpl.UNIT_COUNT, "Number of logical " +
             "connections released to the pool.");
@@ -203,22 +211,21 @@ public class JdbcConnPoolStatsProvider {
             @ProbeParam("steadyPoolSize") int steadyPoolSize) {
         // handle the num conn free increment event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(this.poolInfo.equals(poolInfo)) {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("Increment Num Connections Free event received - poolName = " +
-                             poolName);
+        if (this.poolInfo.equals(poolInfo)) {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Increment Num Connections Free event received - poolName = " + poolName);
             }
-            if(beingDestroyed) {
-                //if pruned by resizer thread
-                synchronized(numConnFree) {
-                    synchronized(numConnUsed) {
-                        if(numConnFree.getCurrent() + numConnUsed.getCurrent() < steadyPoolSize) {
+            if (beingDestroyed) {
+                // if pruned by resizer thread
+                synchronized (numConnFree) {
+                    synchronized (numConnUsed) {
+                        if (numConnFree.getCurrent() + numConnUsed.getCurrent() < steadyPoolSize) {
                             numConnFree.setCurrent(numConnFree.getCurrent() + 1);
                         }
                     }
                 }
             } else {
-                synchronized(numConnFree) {
+                synchronized (numConnFree) {
                     numConnFree.setCurrent(numConnFree.getCurrent() + 1);
                 }
             }
@@ -232,20 +239,17 @@ public class JdbcConnPoolStatsProvider {
      * @param steadyPoolSize
      */
     @ProbeListener(JDBC_PROBE_LISTENER + "decrementConnectionUsedEvent")
-    public void decrementConnectionUsedEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName,
-            @ProbeParam("moduleName") String moduleName
-            ) {
+    public void decrementConnectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName,
+            @ProbeParam("moduleName") String moduleName) {
+
         // handle the num conn used decrement event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(this.poolInfo.equals(poolInfo)) {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("Decrement Num Connections Used event received - poolName = " +
-                             poolName);
+        if (this.poolInfo.equals(poolInfo)) {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Decrement Num Connections Used event received - poolName = " + poolName);
             }
-            //Decrement numConnUsed counter
-            synchronized(numConnUsed) {
+            // Decrement numConnUsed counter
+            synchronized (numConnUsed) {
                 numConnUsed.setCurrent(numConnUsed.getCurrent() - 1);
             }
         }
@@ -264,16 +268,14 @@ public class JdbcConnPoolStatsProvider {
             @ProbeParam("count") int count) {
         // handle the connections freed event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(this.poolInfo.equals(poolInfo)) {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("Connections Freed event received - poolName = " +
-                             poolName);
-                logger.finest("numConnUsed =" + numConnUsed.getCurrent() +
-                    " numConnFree=" + numConnFree.getCurrent() +
-                    " Number of connections freed =" + count);
+        if (this.poolInfo.equals(poolInfo)) {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Connections Freed event received - poolName = " + poolName);
+                logger.finest("numConnUsed =" + numConnUsed.getCurrent() + " numConnFree=" + numConnFree.getCurrent()
+                        + " Number of connections freed =" + count);
             }
-            //set numConnFree to the count value
-            synchronized(numConnFree) {
+            // set numConnFree to the count value
+            synchronized (numConnFree) {
                 numConnFree.setCurrent(count);
             }
         }
@@ -284,20 +286,17 @@ public class JdbcConnPoolStatsProvider {
      * @param poolName
      */
     @ProbeListener(JDBC_PROBE_LISTENER + "connectionUsedEvent")
-    public void connectionUsedEvent(
-            @ProbeParam("poolName") String poolName,
-            @ProbeParam("appName") String appName,
-            @ProbeParam("moduleName") String moduleName
-            ) {
+    public void connectionUsedEvent(@ProbeParam("poolName") String poolName, @ProbeParam("appName") String appName,
+            @ProbeParam("moduleName") String moduleName) {
+
         // handle the connection used event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(this.poolInfo.equals(poolInfo)) {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("Connection Used event received - poolName = " +
-                             poolName);
+        if (this.poolInfo.equals(poolInfo)) {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Connection Used event received - poolName = " + poolName);
             }
-            //increment numConnUsed
-            synchronized(numConnUsed) {
+            // increment numConnUsed
+            synchronized (numConnUsed) {
                 numConnUsed.setCurrent(numConnUsed.getCurrent() + 1);
             }
         }
@@ -315,12 +314,12 @@ public class JdbcConnPoolStatsProvider {
             @ProbeParam("increment") int increment) {
 
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(this.poolInfo.equals(poolInfo)) {
-            if(logger.isLoggable(Level.FINEST)) {
-                logger.finest("Connection Validation Failed event received - " +
-                    "poolName = " + poolName);
+        if (this.poolInfo.equals(poolInfo)) {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.finest("Connection Validation Failed event received - " + "poolName = " + poolName);
             }
-            //TODO V3 : add support in CounterImpl for addAndGet(increment)
+
+            // TODO V3 : add support in CounterImpl for addAndGet(increment)
             numConnFailedValidation.increment(increment);
         }
 
@@ -553,58 +552,6 @@ public class JdbcConnPoolStatsProvider {
         return poolRegistry;
     }
 
-    /**
-     * When a connection leak is observed, the monitoring statistics are displayed
-     * to the server.log. This method helps in segregating the statistics based
-     * on LOW/HIGH monitoring levels and displaying them.
-     *
-     * @param poolName
-     * @param stackTrace
-     */
-    //TODO V3 need this?
-    /*@ProbeListener("glassfish:connector:jdbc-connection-pool:toString")
-    public void toString(@ProbeParam("poolName") String poolName,
-            @ProbeParam("stackTrace") StringBuffer stackTrace) {
-        logger.finest("toString(poolName) event received. " +
-                "poolName = " + poolName);
-        if((poolName != null) && (poolName.equals(this.jdbcPoolName))) {
-            //If level is not OFF then print the stack trace.
-            if(jdbcPoolStatsProviderBootstrap.getEnabledValue(monitoringLevel)) {
-                if("LOW".equals(monitoringLevel)) {
-                    lowLevelLog(stackTrace);
-                } else if("HIGH".equals(monitoringLevel)) {
-                    highLevelLog(stackTrace);
-                }
-            }
-        }
-    }*/
-
-/*    private void lowLevelLog(StringBuffer stackTrace) {
-        stackTrace.append("\n curNumConnUsed = " + numConnUsed.getCurrent());
-        stackTrace.append("\n curNumConnFree = " + numConnFree.getCurrent());
-        stackTrace.append("\n numConnCreated = " + numConnCreated.getCount());
-        stackTrace.append("\n numConnDestroyed = " + numConnDestroyed.getCount());
-    }
-
-    private void highLevelLog(StringBuffer stackTrace) {
-        lowLevelLog(stackTrace);
-        stackTrace.append("\n numConnFailedValidation = " + numConnFailedValidation.getCount());
-        stackTrace.append("\n numConnTimedOut = " + numConnTimedOut.getCount());
-
-        stackTrace.append("\n numConnAcquired = " + numConnAcquired.getCount());
-        stackTrace.append("\n numConnReleased = " + numConnReleased.getCount());
-
-        //TODO V3 : enabling other counters.
-        stackTrace.append("\n currConnectionRequestWait = " + currConnectionRequestWait);
-        stackTrace.append("\n minConnectionRequestWait = " + minConnectionRequestWait);
-        stackTrace.append("\n maxConnectionRequestWait = " + maxConnectionRequestWait);
-        stackTrace.append("\n totalConnectionRequestWait = " + totalConnectionRequestWait);
-
-        stackTrace.append("\n numConnSuccessfullyMatched = " + this.numConnSuccessfullyMatched);
-        stackTrace.append("\n numConnNotSuccessfullyMatched = " + numConnNotSuccessfullyMatched);
-        stackTrace.append("\n numPotentialConnLeak = " + numPotentialConnLeak.getCount());
-    }
-*/
     @ManagedAttribute(id="numpotentialconnleak")
     public CountStatistic getNumPotentialConnLeakCount() {
         return numPotentialConnLeak;
@@ -667,8 +614,8 @@ public class JdbcConnPoolStatsProvider {
 
     @ManagedAttribute(id="averageconnwaittime")
     public CountStatistic getAverageConnWaitTime() {
-       //Time taken by all connection requests divided by total number of
-       //connections acquired in the sampling period.
+       // Time taken by all connection requests divided by total number of
+       // connections acquired in the sampling period.
        long averageWaitTime = 0;
        if (numConnAcquired.getCount() != 0) {
            averageWaitTime = totalConnRequestWaitTime.getCount()/

@@ -35,8 +35,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-import sun.misc.BASE64Decoder;
-
 public class HttpServletFormTestAuthModule implements ServerAuthModule {
     private static final String SAVED_REQUEST = "Saved_Request";
     private static final String SAVED_SUBJECT = "Saved_Subject";

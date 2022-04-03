@@ -39,6 +39,7 @@
     <target name="all" depends="runMaven"/>
     <target name="runMaven">
       <artifact:mvn mavenHome="${env.M2_HOME}" fork="true">
+        <jvmarg value="-Dglassfish.version=${env.GF_VERSION}" />
         <jvmarg value="-Dmaven.multiModuleProjectDirectory"/>
         <jvmarg value="-Dmaven.javadoc.skip=true" />
         <arg value="clean"/>

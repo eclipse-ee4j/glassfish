@@ -25,7 +25,7 @@
         <ant dir="noname" target="all"/>
         <ant dir="nointf" target="all"/>
         <ant dir="security" target="all"/>
-        <!--ant dir="provider" target="all"/-->
+        <ant dir="provider" target="all" />
         <ant dir="oneway" target="all"/>
         <ant dir="wsctxtinterceptor" target="all"/>
         <ant dir="ejbclient" target="all"/>
@@ -43,9 +43,9 @@
         <ant dir="ejbwebservicesinwar-3" target="all"/>
         <ant dir="ejbwebservicesinwar-sessioncontext" target="all"/>
         <ant dir="ejbwebservicesinwar-interceptor" target="all"/>
-    <ant dir="ejbservletwebservicesinwar" target="all"/>
+        <ant dir="ejbservletwebservicesinwar" target="all"/>
         <ant dir="async" target="all"/>
-        <!--<ant dir="bigint" target="all"/>-->
+        <ant dir="bigint" target="all"/>
         <ant dir="libdependent" target="all"/>
         <ant dir="libdependent-2" target="all"/>
         <ant dir="svchandler" target="all"/>

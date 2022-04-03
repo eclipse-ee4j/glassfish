@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.security</groupId>
         <artifactId>nucleus-security</artifactId>
-        <version>6.2.4-SNAPSHOT</version>
+        <version>6.2.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>security-services</artifactId>

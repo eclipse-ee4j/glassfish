@@ -16,8 +16,6 @@
 
 package com.sun.gjc.monitoring;
 
-import com.sun.gjc.util.SQLTrace;
-import com.sun.gjc.util.SQLTraceCache;
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
@@ -30,6 +28,9 @@ import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import com.sun.gjc.util.SQLTrace;
+import com.sun.gjc.util.SQLTraceCache;
 
 /**
  * Provides the monitoring data for JDBC RA module

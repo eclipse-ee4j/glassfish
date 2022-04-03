@@ -22,8 +22,6 @@ import jakarta.annotation.*;
 
 import javax.naming.InitialContext;
 
-import javax.management.j2ee.ManagementHome;
-
 public class SFSB implements Hello {
 
     private EntityManager em;

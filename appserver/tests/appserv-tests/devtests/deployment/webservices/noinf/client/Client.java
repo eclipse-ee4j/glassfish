@@ -25,8 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-        private static SimpleReporterAdapter stat =
-                new SimpleReporterAdapter("appserv-tests");
+        private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
         @WebServiceRef(wsdlLocation="http://localhost:8080/HelloImplService/HelloImpl?WSDL")
         static HelloImplService service;

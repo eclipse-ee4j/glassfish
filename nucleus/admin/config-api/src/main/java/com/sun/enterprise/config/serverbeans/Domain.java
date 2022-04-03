@@ -857,7 +857,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
             }
 
             if (!StringUtils.ok(name)) { // we choose to make this not an error
-            	return sub;
+                return sub;
             }
 
             List<ReferenceContainer> all = getAllReferenceContainers(d);

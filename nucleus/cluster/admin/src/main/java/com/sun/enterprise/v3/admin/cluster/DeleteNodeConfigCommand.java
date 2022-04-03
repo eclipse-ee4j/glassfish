@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,34 @@
 
 package com.sun.enterprise.v3.admin.cluster;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Nodes;
+
+import jakarta.inject.Inject;
+
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
-import jakarta.inject.Inject;
-
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
-import java.util.logging.Logger;
 
 
 /**
  * Remote AdminCommand to create a config node.  This command is run only on DAS.
- *  Register the config node on DAS
+ * Register the config node on DAS
  *
  * @author Carla Mott
  */

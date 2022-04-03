@@ -89,7 +89,6 @@
         <module>community-theme</module>
         <module>web</module>
         <module>gf-admingui-connector</module>
-        <module>jackson-jaxb</module>
         <module>jts</module>
         <module>jdbc</module>
         <module>jca</module>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,15 +56,11 @@ public class ProgressExecOtherCommand implements AdminCommand {
         }
 
         // Execute other command
-        commandRunner.getCommandInvocation(
-            "progress-simple",
-            context.getActionReport()
-                   .addSubActionsReport(),
+        // Number 20 is little bit tricky. Please see javadoc of ProgressStatus
+        commandRunner.getCommandInvocation("progress-simple",
+            context.getActionReport().addSubActionsReport(),
             context.getSubject())
-            .progressStatusChild(
-                 // Number 20 is little bit tricky. Please see javadoc of ProgressStatus
-                progressStatus.createChild("subcommand", 20))
-            .execute();
+        .progressStatusChild(progressStatus.createChild("subcommand", 20)).execute();
 
         // Do some after logic
         progressStatus.progress("Finishing outer command");
@@ -73,8 +70,6 @@ public class ProgressExecOtherCommand implements AdminCommand {
         }
 
         progressStatus.complete("Finished outer command");
-
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 
     private void doSomeLogic() {

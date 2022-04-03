@@ -14,20 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.nucleus.test.tool;
+package org.glassfish.nucleus.test.webapp;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 
 /**
  * @author David Matejcek
  */
-public class DomainLifecycleExtension extends StopDomainExtension implements BeforeAllCallback {
+@WebServlet(urlPatterns = "/")
+public class HelloServlet extends HttpServlet {
 
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
-        NucleusTestUtils.nadmin(20000, "start-domain", "--debug", "domain1");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.getOutputStream().print("Hello!");
     }
+
 }

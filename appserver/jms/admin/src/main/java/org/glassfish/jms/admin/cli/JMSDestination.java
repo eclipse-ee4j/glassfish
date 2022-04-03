@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,48 +37,51 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.*;
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import org.glassfish.internal.api.ServerContext;
+
+import static com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter.ADMINPASSWORD;
+import static com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter.ADMINUSERNAME;
+
 import org.glassfish.internal.api.Globals;
 import org.glassfish.config.support.CommandTarget;
 
+/**
+ * Common parent for JMS Destination admin commands
+ */
 public abstract class JMSDestination {
 
     protected static final Logger logger = Logger.getLogger(LogUtils.JMS_ADMIN_LOGGER);
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJMSDestination.class);
 
-    // JMS destination types
     public static final String JMS_DEST_TYPE_TOPIC = "topic";
     public static final String JMS_DEST_TYPE_QUEUE = "queue";
+
     public static final String DEFAULT_MAX_ACTIVE_CONSUMERS = "-1";
     public static final String MAX_ACTIVE_CONSUMERS_ATTRIBUTE = "MaxNumActiveConsumers";
     public static final String MAX_ACTIVE_CONSUMERS_PROPERTY = "maxNumActiveConsumers";
     public static final String JMXSERVICEURLLIST = "JMXServiceURLList";
     public static final String JMXCONNECTORENV = "JMXConnectorEnv";
-    // flag to enable the use of JMX for JMS destination commands
-    // if false uses the old behavior
-    // The value for DONT_USE_MQ_JMX can be set thru sysproperty
-    private static final boolean USE_JMX = true;// !(Boolean.getBoolean("DONT_USE_MQ_JMX"));
-    // Following properties are from com.sun.messaging.jms.management.server.MQObjectName
-    /* Domain name for MQ MBeans */
-    protected static final String MBEAN_DOMAIN_NAME = "com.sun.messaging.jms.server";
-    /* String representation of the ObjectName for the DestinationManager Config MBean. */
-    protected static final String DESTINATION_MANAGER_CONFIG_MBEAN_NAME = MBEAN_DOMAIN_NAME + ":type="
-        + "DestinationManager" + ",subtype=Config";
 
-    protected static final String CLUSTER_CONFIG_MBEAN_NAME
-    = MBEAN_DOMAIN_NAME
-    + ":type=" + "Cluster"
-    + ",subtype=Config";
-    // Queue destination type
+    // Following properties are from com.sun.messaging.jms.management.server.MQObjectName
+    /** Domain name for MQ MBeans */
+    protected static final String MBEAN_DOMAIN_NAME = "com.sun.messaging.jms.server";
+    /** String representation of the ObjectName for the DestinationManager Config MBean. */
+    protected static final String DESTINATION_MANAGER_CONFIG_MBEAN_NAME = MBEAN_DOMAIN_NAME
+        + ":type=DestinationManager,subtype=Config";
+
+    protected static final String CLUSTER_CONFIG_MBEAN_NAME = MBEAN_DOMAIN_NAME + ":type=Cluster,subtype=Config";
+    /** Queue destination type */
     protected static final String DESTINATION_TYPE_QUEUE= "q";
-    //Topic destination type
+    /** Topic destination type */
     protected static final String DESTINATION_TYPE_TOPIC = "t";
 
-    protected void validateJMSDestName(String destName) {
+    protected void validateJMSDestName(final String destName) {
         if (destName == null || destName.length() <= 0) {
             throw new IllegalArgumentException(
                 localStrings.getLocalString("admin.mbeans.rmb.invalid_jms_destname", destName));
@@ -85,143 +89,110 @@ public abstract class JMSDestination {
     }
 
 
-    protected void validateJMSDestType(String destType) {
-        if (destType == null || destType.length() <= 0) {
+    protected void validateJMSDestType(final String destType) {
+        if (destType == null || destType.isEmpty()) {
             throw new IllegalArgumentException(
                 localStrings.getLocalString("admin.mbeans.rmb.invalid_jms_desttype", destType));
         }
-        if (!destType.equals(JMS_DEST_TYPE_QUEUE) && !destType.equals(JMS_DEST_TYPE_TOPIC)) {
+        if (!JMS_DEST_TYPE_QUEUE.equals(destType) && !JMS_DEST_TYPE_TOPIC.equals(destType)) {
             throw new IllegalArgumentException(
                 localStrings.getLocalString("admin.mbeans.rmb.invalid_jms_desttype", destType));
         }
     }
 
 
-    protected MQJMXConnectorInfo getMQJMXConnectorInfo(String target, Config config, ServerContext serverContext,
-        Domain domain, ConnectorRuntime connectorRuntime) throws Exception {
-        logger.log(Level.FINE, "getMQJMXConnectorInfo for " + target);
-        MQJMXConnectorInfo mcInfo = null;
-
-        try {
-            MQJMXConnectorInfo[] cInfo = getMQJMXConnectorInfos(target, config, serverContext, domain,
-                connectorRuntime);
-            if (cInfo.length < 1) {
-                throw new Exception(
-                    localStrings.getLocalString("admin.mbeans.rmb.error_obtaining_jms", "Error obtaining JMS Info"));
-            }
-            mcInfo = cInfo[0];
-
-        } catch (Exception e) {
-            handleException(e);
-        }
-        return mcInfo;
-    }
-
-
-    protected MQJMXConnectorInfo[] getMQJMXConnectorInfos(final String target, final Config config,
-        final ServerContext serverContext, final Domain domain, ConnectorRuntime connectorRuntime)
-        throws ConnectorRuntimeException {
+    protected MQJMXConnectorInfo createMQJMXConnectorInfo(final String targetName, final Config config,
+        final ServerContext serverContext, final Domain domain, final ConnectorRuntime connectorRuntime)
+            throws ConnectorRuntimeException {
+        logger.log(Level.FINE, "createMQJMXConnectorInfo for {0}", targetName);
         try {
             final JmsService jmsService = config.getExtensionByType(JmsService.class);
-
-            ActiveJmsResourceAdapter air = getMQAdapter(connectorRuntime);
-            final Class mqRAClassName = air.getResourceAdapter().getClass();
-            final CommandTarget ctarget = this.getTypeForTarget(target);
-            MQJMXConnectorInfo mqjmxForServer = (MQJMXConnectorInfo) java.security.AccessController
-                .doPrivileged(new java.security.PrivilegedExceptionAction() {
-
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (ctarget == CommandTarget.CLUSTER || ctarget == CommandTarget.CLUSTERED_INSTANCE) {
-                            if (logger.isLoggable(Level.FINE)) {
-                                logger.log(Level.FINE, "Getting JMX connector for" + " cluster target " + target);
-                            }
-                            return _getMQJMXConnectorInfoForCluster(target, jmsService, mqRAClassName, serverContext);
-                        } else {
-                            if (logger.isLoggable(Level.FINE)) {
-                                logger.log(Level.FINE, "Getting JMX connector for" + " standalone target " + target);
-                            }
-                            return _getMQJMXConnectorInfo(target, jmsService, mqRAClassName, serverContext, config, domain);
-                        }
+            final ActiveJmsResourceAdapter air = getMQAdapter(connectorRuntime);
+            final Class<? extends ResourceAdapter> mqRAClassName = air.getResourceAdapter().getClass();
+            final CommandTarget ctarget = this.getTypeForTarget(targetName);
+            final PrivilegedExceptionAction<MQJMXConnectorInfo> action = () -> {
+                if (ctarget == CommandTarget.CLUSTER || ctarget == CommandTarget.CLUSTERED_INSTANCE) {
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.log(Level.FINE, "Getting JMX connector for cluster target " + targetName);
                     }
-                });
-
-            return new MQJMXConnectorInfo[] {mqjmxForServer};
-        } catch (Exception e) {
-            // e.printStackTrace();
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+                    return _getMQJMXConnectorInfoForCluster(targetName, jmsService, mqRAClassName, serverContext);
+                }
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.log(Level.FINE, "Getting JMX connector for standalone target " + targetName);
+                }
+                return createMQJMXConnectorInfo(targetName, jmsService, mqRAClassName, serverContext, config, domain);
+            };
+            return AccessController.doPrivileged(action);
+        } catch (final Exception e) {
+            throw new ConnectorRuntimeException(e);
         }
     }
 
 
-    protected MQJMXConnectorInfo _getMQJMXConnectorInfo(
-        String targetName, JmsService jmsService, Class mqRAClassName, ServerContext serverContext, Config config, Domain domain)
-            throws ConnectorRuntimeException {
+    private MQJMXConnectorInfo createMQJMXConnectorInfo(final String targetName, final JmsService jmsService,
+        final Class<? extends ResourceAdapter> mqRAClassName, final ServerContext serverContext, final Config config,
+        final Domain domain) throws ConnectorRuntimeException {
         try {
-            //If DAS, use the default address list, else obtain
+            final MQAddressList mqadList = new MQAddressList();
 
-            String connectionURL = null;
-            MQAddressList mqadList = new MQAddressList();
-            //boolean isDAS = mqadList.isDAS(targetName);
-
+            final String connectionURL;
             if (getTypeForTarget(targetName) == CommandTarget.DAS) {
                 connectionURL = getDefaultAddressList(jmsService).toString();
             } else {
-                //Standalone server instance
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE,"not in DAS");
-                    logger.log(Level.FINE," _getMQJMXConnectorInfo - NOT in DAS");
-                }
-                JmsService serverJmsService= getJmsServiceOfStandaloneServerInstance(targetName, config, domain);
-                //MQAddressList mqadList = new MQAddressList(serverJmsService, targetName);
+                logger.log(Level.FINEST," _getMQJMXConnectorInfo - standalone JMS service, NOT in DAS");
+                final JmsService serverJmsService= getJmsServiceOfStandaloneServerInstance(targetName, config, domain);
                 mqadList.setJmsService(serverJmsService);
                 mqadList.setTargetName(targetName);
                 mqadList.setup(false);
                 connectionURL = mqadList.toString();
             }
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, " _getMQJMXConnectorInfo - connection URL " + connectionURL);
-            }
-            String adminUserName = null;
-            String adminPassword = null;
-            JmsHost jmsHost = mqadList.getDefaultJmsHost(jmsService);
-            if (jmsHost != null) {//&& jmsHost.isEnabled()) {
+            logger.log(Level.FINE, " _getMQJMXConnectorInfo - connection URL {0}", connectionURL);
+            final String adminUserName;
+            final String adminPassword;
+            final JmsHost jmsHost = mqadList.getDefaultJmsHost(jmsService);
+            if (jmsHost == null) {
+                logger.log(Level.FINE, " _getMQJMXConnectorInfo, using default jms admin user and password ");
+                adminUserName = null;
+                adminPassword = null;
+            } else {
                 adminUserName = jmsHost.getAdminUserName();
                 adminPassword = JmsRaUtil.getUnAliasedPwd(jmsHost.getAdminPassword());
-            } else {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, " _getMQJMXConnectorInfo, using default jms admin user and password ");
-                }
             }
-            ResourceAdapter raInstance = getConfiguredRA(mqRAClassName,
-                connectionURL, adminUserName, adminPassword);
-            String jmxServiceURL = null, jmxServiceURLList = null;
-            Map<String, ?> jmxConnectorEnv = null;
-            Method[] methds = raInstance.getClass().getMethods();
-            for (Method m : methds) {
-                if (m.getName().equalsIgnoreCase("get" + JMXSERVICEURLLIST)){
-                    jmxServiceURLList = (String)m.invoke(raInstance, new Object[]{});
-                } else if (m.getName().equalsIgnoreCase("get" + JMXCONNECTORENV)){
-                    jmxConnectorEnv = (Map<String,?>)m.invoke(raInstance, new Object[]{});
-                }
-            }
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, " _getMQJMXConnectorInfo - jmxServiceURLList " +  jmxServiceURLList);
-                logger.log(Level.FINE, " _getMQJMXConnectorInfo - jmxConnectorEnv " + jmxConnectorEnv);
-            }
-            jmxServiceURL = getFirstJMXServiceURL(jmxServiceURLList);
 
-            MQJMXConnectorInfo mqInfo = new MQJMXConnectorInfo(targetName,
-                ActiveJmsResourceAdapter.getBrokerInstanceName(jmsService) ,
+            final ResourceAdapter raInstance = getConfiguredRA(mqRAClassName, connectionURL, adminUserName, adminPassword);
+            final String jmxServiceURLList = getJmxServiceUrlList(raInstance);
+            final Map<String, ?> jmxConnectorEnv = getJmxConnectorEnv(raInstance);
+            logger.log(Level.CONFIG, " _getMQJMXConnectorInfo - jmxServiceURLList {0}", jmxServiceURLList);
+            logger.log(Level.CONFIG, " _getMQJMXConnectorInfo - jmxConnectorEnv {0}", jmxConnectorEnv);
+            final String jmxServiceURL = getFirstJMXServiceURL(jmxServiceURLList);
+            return new MQJMXConnectorInfo(targetName, ActiveJmsResourceAdapter.getBrokerInstanceName(jmsService),
                 jmsService.getType(), jmxServiceURL, jmxConnectorEnv);
-            return mqInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+        } catch (final Exception e) {
+            throw new ConnectorRuntimeException(e);
+        }
+    }
+
+
+    private String getJmxServiceUrlList(final ResourceAdapter raInstance) {
+        final String methodName = "get" + JMXSERVICEURLLIST;
+        try {
+            final Method method = raInstance.getClass().getMethod(methodName);
+            return (String) method.invoke(raInstance);
+        } catch (final ReflectiveOperationException e) {
+            logger.log(Level.INFO, "Invocation of " + methodName + " failed, returning null.", e);
+            return null;
+        }
+    }
+
+
+    private Map<String, ?> getJmxConnectorEnv(final ResourceAdapter raInstance) {
+        final String methodName = "get" + JMXCONNECTORENV;
+        try {
+            final Method method = raInstance.getClass().getMethod(methodName);
+            return (Map<String, ?>) method.invoke(raInstance);
+        } catch (final ReflectiveOperationException e) {
+            logger.log(Level.INFO, "Invocation of " + methodName + " failed, returning null.", e);
+            return null;
         }
     }
 
@@ -231,188 +202,95 @@ public abstract class JMSDestination {
      *  executed in DAS, an admin API is used to resolve hostnames and ports of
      *  cluster instances for LOCAL type brokers while creating the connectionURL.
      */
-    protected  MQJMXConnectorInfo _getMQJMXConnectorInfoForCluster(
-        String target, JmsService jmsService, Class mqRAClassName, ServerContext serverContext)
+    protected MQJMXConnectorInfo _getMQJMXConnectorInfoForCluster(final String target, final JmsService jmsService,
+        final Class<? extends ResourceAdapter> mqRAClass, final ServerContext serverContext)
             throws ConnectorRuntimeException {
-        // Create a new RA instance.
-        ResourceAdapter raInstance = null;
-        // Set the ConnectionURL
-        MQAddressList list = null;
+        final ResourceAdapter raInstance;
         try {
+            final MQAddressList list;
             if (jmsService.getType().equalsIgnoreCase(ActiveJmsResourceAdapter.REMOTE)) {
                 list = getDefaultAddressList(jmsService);
             } else {
                 list = new MQAddressList();
-                CommandTarget ctarget = this.getTypeForTarget(target);
+                final CommandTarget ctarget = this.getTypeForTarget(target);
                 if (ctarget == CommandTarget.CLUSTER) {
-                    Server[] servers = list.getServersInCluster(target);
+                    final Server[] servers = list.getServersInCluster(target);
                     if (servers != null && servers.length > 0) {
                         list.setInstanceName(servers[0].getName());
                     }
-                } else if (ctarget == CommandTarget.CLUSTERED_INSTANCE ){
+                } else if (ctarget == CommandTarget.CLUSTERED_INSTANCE) {
                     list.setInstanceName(target);
                 }
-                java.util.Map<String,JmsHost> hostMap =  list.getResolvedLocalJmsHostsInMyCluster(true);
-
-                if ( hostMap.size() == 0 ) {
-                    String msg = localStrings.getLocalString("mqjmx.no_jms_hosts", "No JMS Hosts Configured");
+                final Map<String, JmsHost> hostMap = list.getResolvedLocalJmsHostsInMyCluster(true);
+                if (hostMap.isEmpty()) {
+                    final String msg = localStrings.getLocalString("mqjmx.no_jms_hosts", "No JMS Hosts Configured");
                     throw new ConnectorRuntimeException(msg);
                 }
-
-                for (JmsHost host : hostMap.values()) {
+                for (final JmsHost host : hostMap.values()) {
                     list.addMQUrl(host);
                 }
             }
 
-            String connectionUrl = list.toString();
-            String adminUserName = null;
-            String adminPassword = null;
-            JmsHost jmsHost = list.getDefaultJmsHost(jmsService);
-            if (jmsHost != null){// && jmsHost.isEnabled()) {
+            final String connectionUrl = list.toString();
+            final String adminUserName;
+            final String adminPassword;
+            final JmsHost jmsHost = list.getDefaultJmsHost(jmsService);
+            if (jmsHost == null) {
+                logger.log(Level.FINE, " _getMQJMXConnectorInfo, using default jms admin user and password ");
+                adminUserName = null;
+                adminPassword = null;
+            } else {
                 adminUserName = jmsHost.getAdminUserName();
                 adminPassword = JmsRaUtil.getUnAliasedPwd(jmsHost.getAdminPassword());
-            } else {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, " _getMQJMXConnectorInfo, using default jms admin user and password ");
-                }
             }
-            raInstance = getConfiguredRA(mqRAClassName, connectionUrl, adminUserName, adminPassword);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+            raInstance = getConfiguredRA(mqRAClass, connectionUrl, adminUserName, adminPassword);
+        } catch (final Exception e) {
+            throw new ConnectorRuntimeException(e);
         }
 
         try {
-            String jmxServiceURL = null, jmxServiceURLList = null;
-            Map<String, ?> jmxConnectorEnv = null;
-            Method[] methds = raInstance.getClass().getMethods();
-            for (Method m : methds) {
-                if (m.getName().equalsIgnoreCase("get" + JMXSERVICEURLLIST)){
-                    jmxServiceURLList = (String)m.invoke(raInstance, new Object[]{});
-                    if (jmxServiceURLList != null && !jmxServiceURLList.trim().equals("")){
-                        jmxServiceURL = getFirstJMXServiceURL(jmxServiceURLList);
-                    }
-                } else if (m.getName().equalsIgnoreCase("get" + JMXCONNECTORENV)){
-                    jmxConnectorEnv = (Map<String,?>)m.invoke(raInstance, new Object[]{});
-                }
-            }
-            MQJMXConnectorInfo mqInfo = new MQJMXConnectorInfo(target,
-                ActiveJmsResourceAdapter.getBrokerInstanceName(jmsService),
+            final String jmxServiceURLList = getJmxServiceUrlList(raInstance);
+            final Map<String, ?> jmxConnectorEnv = getJmxConnectorEnv(raInstance);
+            final String jmxServiceURL = getFirstJMXServiceURL(jmxServiceURLList);
+            return new MQJMXConnectorInfo(target, ActiveJmsResourceAdapter.getBrokerInstanceName(jmsService),
                 jmsService.getType(), jmxServiceURL, jmxConnectorEnv);
-            return mqInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+        } catch (final Exception e) {
+            throw new ConnectorRuntimeException(e);
         }
     }
-
-      /*  protected boolean isAConfig(String targetName) throws Exception {
-                Domain domain = Globals.get(Domain.class);
-                Configs configs = domain.getConfigs();
-                List configsList = configs.getConfig();
-                for (int i =0; i < configsList.size(); i++){
-                    Config config = (Config)configsList.get(i);
-                    if (targetName.equals(config.getName()))
-                        return true;
-                }
-                return false;
-                //ConfigContext con = com.sun.enterprise.admin.server.core.AdminService.getAdminService().getAdminContext().getAdminConfigContext();
-                //return ServerHelper.isAConfig(con, targetName);
-            } */
-
-     /*   protected JmsHost getDefaultJmsHost(JmsService jmsService){
-            String defaultJmsHost = jmsService.getDefaultJmsHost();
-            JmsHost jmsHost = null;
-           if (defaultJmsHost == null || defaultJmsHost.equals("")) {
-                 try {
-                         jmsHost = jmsService.getJmsHost().get(0);
-                 }catch (Exception e) {
-                     ;
-                 }
-            } else {
-                    for (JmsHost defaultHost: jmsService.getJmsHost())
-                        if(defaultJmsHost.equals(defaultHost.getName()))
-                            jmsHost = defaultHost;
-            }
-            return jmsHost;
-        } */
-
-        /* protected Map<String, JmsHost> getResolvedLocalJmsHostsInCluster(String clusterName, MQAddressList list) {
-             Map<String, JmsHost> map = new HashMap<String, JmsHost> ();
-
-             Domain domain = Globals.get(Domain.class);
-             Clusters clusters = domain.getClusters();
-             List clusterList = clusters.getCluster();
-             Cluster cluster = null;
-             for (int i =0; i < clusterList.size(); i++){
-                if (clusterName.equals(((Cluster)clusterList.get(i)).getName()))
-                    cluster =    (Cluster)clusterList.get(i);
-             }
-
-        //final String myCluster      = ClusterHelper.getClusterByName(domainCC, clusterName).getName();
-        final Server[] buddies      = this.getServersInCluster(cluster);//ServerHelper.getServersInCluster(domainCC, myCluster);
-        final Config cfg =  getConfigForServer(buddies[0]);
-
-             final String myCluster      = ClusterHelper.getClusterByName(domainCC, clusterName).getName();
-             final Server[] buddies      = ServerHelper.getServersInCluster(domainCC, myCluster);
-             for (final Server as : buddies) {
-             try {
-                 final JmsHost copy   = getResolvedJmsHost(as);
-                 map.put(as.getName(), copy);
-                } catch (Exception e) {
-                    // we dont add the host if we cannot get it
-                    ;
-                }
-             }
-             return map;
-        } */
 
 
     /**
      * Configures an instance of MQ-RA with the connection URL passed in.
      * This configured RA is then used to obtain the JMXServiceURL/JMXServiceURLList
      */
-    protected ResourceAdapter getConfiguredRA(Class mqRAclassname, String connectionURL, String adminuser,
-        String adminpasswd) throws Exception {
-        ResourceAdapter raInstance = (ResourceAdapter) mqRAclassname.newInstance();
-        Method setConnectionURL = mqRAclassname.getMethod(
+    protected ResourceAdapter getConfiguredRA(final Class<? extends ResourceAdapter> mqRAclassname,
+        final String connectionURL, final String adminuser, final String adminpasswd) throws Exception {
+        final ResourceAdapter raInstance = mqRAclassname.getDeclaredConstructor().newInstance();
+        final Method setConnectionURL = mqRAclassname.getMethod(
             "set" + ActiveJmsResourceAdapter.CONNECTION_URL, new Class[] {String.class});
         setConnectionURL.invoke(raInstance, new Object[] {connectionURL});
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, " getConfiguredRA - set connectionURL as " + connectionURL);
-        }
+        logger.log(Level.FINE, "getConfiguredRA - set connectionURL as {0}", connectionURL);
         if (adminuser != null) {
-            Method setAdminUser = mqRAclassname.getMethod(
-                "set" + ActiveJmsResourceAdapter.ADMINUSERNAME,
-                new Class[] { String.class});
+            final Method setAdminUser = mqRAclassname.getMethod("set" + ADMINUSERNAME, new Class[] {String.class});
             setAdminUser.invoke(raInstance, new Object[] {adminuser});
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, " getConfiguredRA - set admin user as " + adminuser);
-            }
+            logger.log(Level.FINE, "getConfiguredRA - set admin user as {0}", adminuser);
         }
         if (adminpasswd != null) {
-            Method setAdminPasswd = mqRAclassname.getMethod(
-                "set" + ActiveJmsResourceAdapter.ADMINPASSWORD, new Class[] {String.class});
+            final Method setAdminPasswd = mqRAclassname.getMethod("set" + ADMINPASSWORD, new Class[] {String.class});
             setAdminPasswd.invoke(raInstance, new Object[] {adminpasswd});
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, " getConfiguredRA - set admin passwd as *****  ");
-            }
+            logger.log(Level.FINE, "getConfiguredRA - set admin passwd");
         }
         return raInstance;
     }
 
 
-    private JmsService getJmsServiceOfStandaloneServerInstance(String target, Config cfg, Domain domain) throws Exception {
+    private JmsService getJmsServiceOfStandaloneServerInstance(final String target, final Config cfg, final Domain domain) throws Exception {
         if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "getJMSServiceOfSI LL " + target);
-            //ConfigContext con = com.sun.enterprise.admin.server.core.AdminService.getAdminService().getAdminContext().getAdminConfigContext();
+            logger.log(Level.FINE, "getJMSServiceOfSI target: {0}", target);
             logger.log(Level.FINE, "cfg " + cfg);
         }
-        JmsService jmsService = cfg.getExtensionByType(JmsService.class);
+        final JmsService jmsService = cfg.getExtensionByType(JmsService.class);
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "jmsservice " + jmsService);
         }
@@ -420,42 +298,33 @@ public abstract class JMSDestination {
     }
 
 
-    protected String getFirstJMXServiceURL(String jmxServiceURLList) {
-        //If type is REMOTE, MQ RA returns a null jmxServiceURL and a non-null
-        //jmxServiceURLList for PE also.
-        if ((jmxServiceURLList == null) || ("".equals(jmxServiceURLList))) {
-            return jmxServiceURLList;
-        } else {
-            StringTokenizer tokenizer = new StringTokenizer(jmxServiceURLList, " ");
-            return  tokenizer.nextToken();
+    private String getFirstJMXServiceURL(final String jmxServiceURLList) {
+        if (jmxServiceURLList == null || jmxServiceURLList.isBlank()) {
+            return null;
         }
+        final StringTokenizer tokenizer = new StringTokenizer(jmxServiceURLList, " ");
+        return tokenizer.nextToken();
     }
 
 
-    protected CommandTarget getTypeForTarget(String target){
-        Domain domain = Globals.get(Domain.class);
-        Config config = domain.getConfigNamed(target);
+    protected CommandTarget getTypeForTarget(final String target){
+        final Domain domain = Globals.get(Domain.class);
+        final Config config = domain.getConfigNamed(target);
         if (config != null) {
             return CommandTarget.CONFIG;
         }
-        Server targetServer = domain.getServerNamed(target);
-        if (targetServer!=null) {
-            // Clusters clusters = domain.getClusters();
-            // List clustersList = clusters.getCluster();
-            //if (JmsRaUtil.isServerClustered(clustersList, target))
-            //  return CommandTarget.CLUSTERED_INSTANCE;
+        final Server targetServer = domain.getServerNamed(target);
+        if (targetServer != null) {
             if (targetServer.isDas()) {
                 return CommandTarget.DAS;
-            } else {
-                return CommandTarget.STANDALONE_INSTANCE;
             }
-        }//end if (targetServer!=null)
-        Cluster cluster =domain.getClusterNamed(target);
-        if (cluster!=null) {
+            return CommandTarget.STANDALONE_INSTANCE;
+        }
+        final Cluster cluster = domain.getClusterNamed(target);
+        if (cluster != null) {
             return CommandTarget.CLUSTER;
         }
         return CommandTarget.DAS;
-
     }
 
 
@@ -464,186 +333,143 @@ public abstract class JMSDestination {
      * performed in DAS.
      */
     protected ActiveJmsResourceAdapter getMQAdapter(final ConnectorRuntime connectorRuntime) throws Exception {
-        ActiveJmsResourceAdapter air = (ActiveJmsResourceAdapter) java.security.AccessController
-            .doPrivileged(new java.security.PrivilegedExceptionAction() {
-
-                @Override
-                public java.lang.Object run() throws Exception {
-                    String module = ConnectorConstants.DEFAULT_JMS_ADAPTER;
-                    String loc = ConnectorsUtil.getSystemModuleLocation(module);
-                    connectorRuntime.createActiveResourceAdapter(loc, module, null);
-                    return ConnectorRegistry.getInstance().getActiveResourceAdapter(module);
-                }
-            });
-        return air;
+        PrivilegedExceptionAction<ActiveJmsResourceAdapter> action = () -> {
+            final String module = ConnectorConstants.DEFAULT_JMS_ADAPTER;
+            final String loc = ConnectorsUtil.getSystemModuleLocation(module);
+            connectorRuntime.createActiveResourceAdapter(loc, module, null);
+            return (ActiveJmsResourceAdapter) ConnectorRegistry.getInstance().getActiveResourceAdapter(module);
+        };
+        return AccessController.doPrivileged(action);
     }
 
-      /*   private boolean isDAS(String targetName) {
-             //return true;
-            if (isAConfig(targetName)) {
-            return false;
+
+    protected MQAddressList getDefaultAddressList(final JmsService jmsService) throws Exception {
+        final MQAddressList list = new MQAddressList(jmsService);
+        list.setup(false);
+        return list;
+    }
+
+
+    protected final JMSAdminException logAndHandleException(final Exception cause, final String messageKey)
+        throws JMSAdminException {
+        return handleException(new Exception(localStrings.getLocalString(messageKey, null), cause));
+    }
+
+
+    /**
+     * @param e original cause; it is not included in the result, because the caller's classloader
+     *            might not know all internal exception.
+     * @return JMSAdminException to throw
+     */
+    protected final JMSAdminException handleException(final Exception e) {
+        logger.log(Level.WARNING, "Handling exception to be thrown.", e);
+        if (e instanceof JMSAdminException)  {
+            return ((JMSAdminException)e);
+        }
+        final String msg = e.getMessage();
+        if (msg == null) {
+            try (PrintWriter writer = new PrintWriter(new StringWriter())) {
+                e.printStackTrace(writer);
+                return new JMSAdminException(writer.toString());
             }
+        }
+        return new JMSAdminException(msg);
+    }
 
-            return getServerByName(targetName).isDas();
 
-        }*/
-       /* private Server getServerByName(String serverName){
-            Domain domain = Globals.get(Domain.class);
-            Servers servers = domain.getServers();
-            List serverList = servers.getServer();
+    // XXX: To refactor into a Generic attribute type mapper, so that it is extensible later.
+    protected AttributeList convertProp2Attrs(final Properties destProps) {
+        final AttributeList destAttrs = new AttributeList();
 
-            for (int i=0; i < serverList.size(); i++){
-                Server server = (Server) serverList.get(i);
-                if(serverName.equals(server.getName()))
-                    return server;
+        String propName = null;
+        String propValue = null;
+
+        for (final Enumeration e = destProps.propertyNames(); e.hasMoreElements();) {
+            propName = (String) e.nextElement();
+            if (propName.equals("AutoCreateQueueMaxNumActiveConsumers")) {
+                destAttrs.add(new Attribute("AutoCreateQueueMaxNumActiveConsumers",
+                    Integer.valueOf(destProps.getProperty("AutoCreateQueueMaxNumActiveConsumers"))));
+            } else if (propName.equals("maxNumActiveConsumers")) {
+                destAttrs.add(new Attribute("MaxNumActiveConsumers",
+                    Integer.valueOf(destProps.getProperty("maxNumActiveConsumers"))));
+            } else if (propName.equals("MaxNumActiveConsumers")) {
+                destAttrs.add(new Attribute("MaxNumActiveConsumers",
+                    Integer.valueOf(destProps.getProperty("MaxNumActiveConsumers"))));
+            } else if (propName.equals("AutoCreateQueueMaxNumBackupConsumers")) {
+                destAttrs.add(new Attribute("AutoCreateQueueMaxNumBackupConsumers",
+                    Integer.valueOf(destProps.getProperty("AutoCreateQueueMaxNumBackupConsumers"))));
+            } else if (propName.equals("AutoCreateQueues")) {
+                boolean b = false;
+                propValue = destProps.getProperty("AutoCreateQueues");
+                if (propValue.equalsIgnoreCase("true")) {
+                    b = true;
+                }
+                destAttrs.add(new Attribute("AutoCreateQueues", Boolean.valueOf(b)));
+            } else if (propName.equals("AutoCreateTopics")) {
+                boolean b = false;
+                propValue = destProps.getProperty("AutoCreateTopics");
+                if (propValue.equalsIgnoreCase("true")) {
+                    b = true;
+                }
+                destAttrs.add(new Attribute("AutoCreateTopics", Boolean.valueOf(b)));
+            } else if (propName.equals("DMQTruncateBody")) {
+                boolean b = false;
+                propValue = destProps.getProperty("DMQTruncateBody");
+                if (propValue.equalsIgnoreCase("true")) {
+                    b = true;
+                }
+                destAttrs.add(new Attribute("DMQTruncateBody", Boolean.valueOf(b)));
+            } else if (propName.equals("LogDeadMsgs")) {
+                boolean b = false;
+                propValue = destProps.getProperty("LogDeadMsgs");
+                if (propValue.equalsIgnoreCase("true")) {
+                    b = true;
+                }
+                destAttrs.add(new Attribute("LogDeadMsgs", Boolean.valueOf(b)));
+            } else if (propName.equals("MaxBytesPerMsg")) {
+                destAttrs.add(new Attribute("MaxBytesPerMsg",
+                    Long.valueOf(destProps.getProperty("MaxBytesPerMsg"))));
+            } else if (propName.equals("MaxNumMsgs")) {
+                destAttrs.add(new Attribute("MaxNumMsgs",
+                    Long.valueOf(destProps.getProperty("MaxNumMsgs"))));
+            } else if (propName.equals("MaxTotalMsgBytes")) {
+                destAttrs.add(new Attribute("MaxTotalMsgBytes",
+                    Long.valueOf(destProps.getProperty("MaxTotalMsgBytes"))));
+            } else if (propName.equals("NumDestinations")) {
+                destAttrs.add(new Attribute("NumDestinations",
+                    Integer.valueOf(destProps.getProperty("NumDestinations"))));
+            } else if (propName.equals("ConsumerFlowLimit")) {
+                destAttrs.add(new Attribute("ConsumerFlowLimit",
+                    Long.valueOf(destProps.getProperty("ConsumerFlowLimit"))));
+            } else if (propName.equals("LocalDeliveryPreferred")) {
+                destAttrs.add(new Attribute("LocalDeliveryPreferred",
+                    getBooleanValue(destProps.getProperty("LocalDeliveryPreferred"))));
+            } else if (propName.equals("ValidateXMLSchemaEnabled")) {
+                destAttrs.add(new Attribute("ValidateXMLSchemaEnabled",
+                    getBooleanValue(destProps.getProperty("ValidateXMLSchemaEnabled"))));
+            } else if (propName.equals("UseDMQ")) {
+                destAttrs.add(new Attribute("UseDMQ",
+                    getBooleanValue(destProps.getProperty("UseDMQ"))));
+            } else if (propName.equals("LocalOnly")) {
+                destAttrs.add(new Attribute("LocalOnly",
+                    getBooleanValue(destProps.getProperty("LocalOnly"))));
+            } else if (propName.equals("ReloadXMLSchemaOnFailure")) {
+                destAttrs.add(new Attribute("ReloadXMLSchemaOnFailure",
+                    getBooleanValue(destProps.getProperty("ReloadXMLSchemaOnFailure"))));
+            } else if (propName.equals("MaxNumProducers")) {
+                destAttrs.add(new Attribute("MaxNumProducers",
+                    Integer.valueOf(destProps.getProperty("MaxNumProducers"))));
+            } else if (propName.equals("MaxNumBackupConsumers")) {
+                destAttrs.add(new Attribute("MaxNumBackupConsumers",
+                    Integer.valueOf(destProps.getProperty("MaxNumBackupConsumers"))));
+            } else if (propName.equals("LimitBehavior")) {
+                destAttrs.add(new Attribute("LimitBehavior", destProps.getProperty("LimitBehavior")));
             }
-            return null;
-        }*/
+        }
+        return destAttrs;
+    }
 
-
-     protected MQAddressList getDefaultAddressList(JmsService jmsService) throws Exception {
-         MQAddressList list = new MQAddressList(jmsService);
-         list.setup(false);
-         return list;
-     }
-
-
-     protected void logAndHandleException(Exception e, String errorMsg) throws JMSAdminException {
-         // log JMX Exception trace as WARNING
-         StringWriter s = new StringWriter();
-         e.getCause().printStackTrace(new PrintWriter(s));
-         logger.log(Level.WARNING, s.toString());
-         JMSAdminException je = new JMSAdminException(localStrings.getLocalString(errorMsg, ""));
-
-         // Cause will be InvocationTargetException, cause of that
-          // wil be MBeanException and cause of that will be the
-          // real exception we need
-         if ((e.getCause() != null) && (e.getCause().getCause() != null)) {
-             je.initCause(e.getCause().getCause().getCause());
-         }
-         handleException(je);
-     }
-
-
-     protected void handleException(Exception e) throws JMSAdminException {
-         if (e instanceof JMSAdminException)  {
-             throw ((JMSAdminException)e);
-         }
-
-         String msg = e.getMessage();
-
-         JMSAdminException jae;
-         if (msg == null)  {
-             jae = new JMSAdminException();
-         } else  {
-             jae = new JMSAdminException(msg);
-         }
-
-         /*
-          * Don't do this for now because the CLI does not include jms.jar
-          * (at least not yet) in the classpath. Sending over a JMSException
-          * will cause a class not found exception to be thrown.
-          */
-         //jae.setLinkedException(e);
-
-         throw jae;
-     }
-
-
-     // XXX: To refactor into a Generic attribute type mapper, so that it is extensible later.
-     protected AttributeList convertProp2Attrs(Properties destProps) {
-         AttributeList destAttrs = new AttributeList();
-
-         String propName = null;
-         String propValue = null;
-
-         for (Enumeration e = destProps.propertyNames(); e.hasMoreElements();) {
-             propName = (String) e.nextElement();
-             if (propName.equals("AutoCreateQueueMaxNumActiveConsumers")) {
-                 destAttrs.add(new Attribute("AutoCreateQueueMaxNumActiveConsumers",
-                     Integer.valueOf(destProps.getProperty("AutoCreateQueueMaxNumActiveConsumers"))));
-             } else if (propName.equals("maxNumActiveConsumers")) {
-                 destAttrs.add(new Attribute("MaxNumActiveConsumers",
-                     Integer.valueOf(destProps.getProperty("maxNumActiveConsumers"))));
-             } else if (propName.equals("MaxNumActiveConsumers")) {
-                 destAttrs.add(new Attribute("MaxNumActiveConsumers",
-                     Integer.valueOf(destProps.getProperty("MaxNumActiveConsumers"))));
-             } else if (propName.equals("AutoCreateQueueMaxNumBackupConsumers")) {
-                 destAttrs.add(new Attribute("AutoCreateQueueMaxNumBackupConsumers",
-                     Integer.valueOf(destProps.getProperty("AutoCreateQueueMaxNumBackupConsumers"))));
-             } else if (propName.equals("AutoCreateQueues")) {
-                 boolean b = false;
-                 propValue = destProps.getProperty("AutoCreateQueues");
-                 if (propValue.equalsIgnoreCase("true")) {
-                     b = true;
-                 }
-                 destAttrs.add(new Attribute("AutoCreateQueues", Boolean.valueOf(b)));
-             } else if (propName.equals("AutoCreateTopics")) {
-                 boolean b = false;
-                 propValue = destProps.getProperty("AutoCreateTopics");
-                 if (propValue.equalsIgnoreCase("true")) {
-                     b = true;
-                 }
-                 destAttrs.add(new Attribute("AutoCreateTopics", Boolean.valueOf(b)));
-             } else if (propName.equals("DMQTruncateBody")) {
-                 boolean b = false;
-                 propValue = destProps.getProperty("DMQTruncateBody");
-                 if (propValue.equalsIgnoreCase("true")) {
-                     b = true;
-                 }
-                 destAttrs.add(new Attribute("DMQTruncateBody", Boolean.valueOf(b)));
-             } else if (propName.equals("LogDeadMsgs")) {
-                 boolean b = false;
-                 propValue = destProps.getProperty("LogDeadMsgs");
-                 if (propValue.equalsIgnoreCase("true")) {
-                     b = true;
-                 }
-                 destAttrs.add(new Attribute("LogDeadMsgs", Boolean.valueOf(b)));
-             } else if (propName.equals("MaxBytesPerMsg")) {
-                 destAttrs.add(new Attribute("MaxBytesPerMsg",
-                     Long.valueOf(destProps.getProperty("MaxBytesPerMsg"))));
-             } else if (propName.equals("MaxNumMsgs")) {
-                 destAttrs.add(new Attribute("MaxNumMsgs",
-                     Long.valueOf(destProps.getProperty("MaxNumMsgs"))));
-             } else if (propName.equals("MaxTotalMsgBytes")) {
-                 destAttrs.add(new Attribute("MaxTotalMsgBytes",
-                     Long.valueOf(destProps.getProperty("MaxTotalMsgBytes"))));
-             } else if (propName.equals("NumDestinations")) {
-                 destAttrs.add(new Attribute("NumDestinations",
-                     Integer.valueOf(destProps.getProperty("NumDestinations"))));
-             } else if (propName.equals("ConsumerFlowLimit")) {
-                 destAttrs.add(new Attribute("ConsumerFlowLimit",
-                     Long.valueOf(destProps.getProperty("ConsumerFlowLimit"))));
-             } else if (propName.equals("LocalDeliveryPreferred")) {
-                 destAttrs.add(new Attribute("LocalDeliveryPreferred",
-                     getBooleanValue(destProps.getProperty("LocalDeliveryPreferred"))));
-             } else if (propName.equals("ValidateXMLSchemaEnabled")) {
-                 destAttrs.add(new Attribute("ValidateXMLSchemaEnabled",
-                     getBooleanValue(destProps.getProperty("ValidateXMLSchemaEnabled"))));
-             } else if (propName.equals("UseDMQ")) {
-                 destAttrs.add(new Attribute("UseDMQ",
-                     getBooleanValue(destProps.getProperty("UseDMQ"))));
-             } else if (propName.equals("LocalOnly")) {
-                 destAttrs.add(new Attribute("LocalOnly",
-                     getBooleanValue(destProps.getProperty("LocalOnly"))));
-             } else if (propName.equals("ReloadXMLSchemaOnFailure")) {
-                 destAttrs.add(new Attribute("ReloadXMLSchemaOnFailure",
-                     getBooleanValue(destProps.getProperty("ReloadXMLSchemaOnFailure"))));
-             } else if (propName.equals("MaxNumProducers")) {
-                 destAttrs.add(new Attribute("MaxNumProducers",
-                     Integer.valueOf(destProps.getProperty("MaxNumProducers"))));
-             } else if (propName.equals("MaxNumBackupConsumers")) {
-                 destAttrs.add(new Attribute("MaxNumBackupConsumers",
-                     Integer.valueOf(destProps.getProperty("MaxNumBackupConsumers"))));
-             } else if (propName.equals("LimitBehavior")) {
-                 destAttrs.add(new Attribute("LimitBehavior", destProps.getProperty("LimitBehavior")));
-             }
-         }
-         return destAttrs;
-     }
-
-     private Boolean getBooleanValue(String propValue) {
-         return propValue.equalsIgnoreCase("true") ? Boolean.TRUE : Boolean.FALSE;
-//            UseDMQ
+    private Boolean getBooleanValue(final String propValue) {
+        return propValue.equalsIgnoreCase("true") ? Boolean.TRUE : Boolean.FALSE;
     }
 }

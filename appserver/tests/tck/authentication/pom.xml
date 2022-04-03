@@ -38,7 +38,7 @@
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home> 
          
-        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
        
@@ -174,8 +174,6 @@
                                 
 
                                 <!-- Change configuration -->
-                                <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
-                                
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
                                 <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>

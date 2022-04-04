@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.UriBuilder;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
  *
  * @author jdlee
  */
-public class ClientWrapper implements Client {
+public class ClientWrapper implements Client, Closeable {
     protected Client realClient;
 
     public ClientWrapper() {

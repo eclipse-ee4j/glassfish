@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,13 +44,9 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.sse.SseFeature;
 
-import static org.glassfish.admin.rest.resources.TemplateExecCommand.localStrings;
-
 /**
- *
  * @author ludovic champenois ludo@dev.java.net Code moved from generated classes to here. Gen code inherits from this
  * template class that contains the logic for mapped commands RS Resources
- *
  */
 @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
 public class TemplateCommandPostResource extends TemplateExecCommand {
@@ -175,20 +172,18 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
             formData = new FormDataMultiPart();
         }
         try {
-            /* data passed to the generic command running
-             *
-             * */
-
+            // data passed to the generic command running
             Map<String, List<FormDataBodyPart>> m1 = formData.getFields();
 
             Set<String> ss = m1.keySet();
             for (String fieldName : ss) {
                 for (FormDataBodyPart bodyPart : formData.getFields(fieldName)) {
 
-                    if (bodyPart.getContentDisposition().getFileName() != null) {//we have a file
+                    if (bodyPart.getContentDisposition().getFileName() == null) {
+                        data.add(fieldName, bodyPart.getValue());
+                    } else {
                         //save it and mark it as delete on exit.
                         InputStream fileStream = bodyPart.getValueAs(InputStream.class);
-                        String mimeType = bodyPart.getMediaType().toString();
 
                         //Use just the filename without complete path. File creation
                         //in case of remote deployment failing because fo this.
@@ -201,12 +196,9 @@ public class TemplateCommandPostResource extends TemplateExecCommand {
                             }
                         }
 
-                        File f = Util.saveFile(fileName, mimeType, fileStream);
-                        f.deleteOnExit();
+                        File f = Util.saveTemporaryFile(fileName, fileStream);
                         //put only the local path of the file in the same field.
                         data.add(fieldName, f.getAbsolutePath());
-                    } else {
-                        data.add(fieldName, bodyPart.getValue());
                     }
                 }
             }

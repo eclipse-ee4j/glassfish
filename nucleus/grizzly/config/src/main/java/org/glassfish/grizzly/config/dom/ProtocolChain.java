@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +47,7 @@ public interface ProtocolChain extends ConfigBeanProxy, PropertyBag {
      * Protocol chain type. Could be STATEFUL or STATELESS
      */
     @Attribute(defaultValue = TYPE)
-    @Pattern(regexp = TYPE_PATTERN)
+    @Pattern(regexp = TYPE_PATTERN, message = "Valid values: " + TYPE_PATTERN)
     String getType();
 
     void setType(String value);
@@ -59,6 +60,7 @@ public interface ProtocolChain extends ConfigBeanProxy, PropertyBag {
 
     void setProtocolFilter(List<ProtocolFilter> list);
 
+    @Override
     @DuckTyped
     Protocol getParent();
 

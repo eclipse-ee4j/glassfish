@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,32 +18,35 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
-import java.beans.PropertyVetoException;
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-/**
- *
- */
+import java.beans.PropertyVetoException;
 
-/* @XmlType(name = "", propOrder = {
-    "healthChecker"
-}) */
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+
+import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
+
+/*
+ * @XmlType(name = "", propOrder = {
+ * "healthChecker"
+ * })
+ */
 
 @Configured
 @ReferenceConstraint(skipDuringCreation = true, payload = ServerRef.class)
 public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
 
+    // defines the default value for lb-enabled attribute
+    String LBENABLED_DEFAULT_VALUE = "true";
+
     /**
      * Gets the value of the ref property.
-     *
      * A reference to the name of a server defined elsewhere
      *
      * @return possible object is {@link String }
@@ -52,7 +56,7 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
     @NotNull
     @Pattern(regexp = NAME_SERVER_REGEX, message = "{server.invalid.name}", payload = ServerRef.class)
     @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.server-ref}", type = Server.class)
-    public String getRef();
+    String getRef();
 
     /**
      * Sets the value of the ref property.
@@ -60,59 +64,58 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
      * @param value allowed object is {@link String }
      */
     @Override
-    public void setRef(String value) throws PropertyVetoException;
+    void setRef(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the disableTimeoutInMinutes property.
-     *
-     * The time, in minutes, that it takes this server to reach a quiescent state after having been disabled
+     * The time, in minutes, that it takes this server to reach a quiescent state after having been
+     * disabled
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "30")
-    public String getDisableTimeoutInMinutes();
+    String getDisableTimeoutInMinutes();
 
     /**
      * Sets the value of the disableTimeoutInMinutes property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDisableTimeoutInMinutes(String value) throws PropertyVetoException;
+    void setDisableTimeoutInMinutes(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the lbEnabled property.
-     *
-     * Causes any and all load-balancers using this server to consider this server available to them. Defaults to
-     * available(true)
+     * Causes any and all load-balancers using this server to consider this server available to
+     * them. Defaults to available(true)
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = LBENABLED_DEFAULT_VALUE, dataType = Boolean.class)
-    public String getLbEnabled();
+    String getLbEnabled();
 
     /**
      * Sets the value of the lbEnabled property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setLbEnabled(String value) throws PropertyVetoException;
+    void setLbEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
-     *
-     * A boolean flag that causes the server to be enabled to serve end-users, or not. Default is to be enabled (true)
+     * A boolean flag that causes the server to be enabled to serve end-users, or not.
+     * Default is to be enabled (true)
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getEnabled();
+    String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the healthChecker property.
@@ -120,16 +123,12 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
      * @return possible object is {@link HealthChecker }
      */
     @Element("health-checker")
-    public HealthChecker getHealthChecker();
+    HealthChecker getHealthChecker();
 
     /**
      * Sets the value of the healthChecker property.
      *
      * @param value allowed object is {@link HealthChecker }
      */
-    public void setHealthChecker(HealthChecker value) throws PropertyVetoException;
-
-    //defines the default value for lb-enabled attribute
-    public String LBENABLED_DEFAULT_VALUE = "true";
-
+    void setHealthChecker(HealthChecker value) throws PropertyVetoException;
 }

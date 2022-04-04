@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,8 +30,6 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
-import java.util.logging.Level;
-
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
@@ -75,12 +74,12 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ChangeMasterBrokerCommand.class);
     // [usemasterbroker] [availability-enabled] [dbvendor] [dbuser] [dbpassword admin] [jdbcurl] [properties props] clusterName
 
-    private static enum BrokerStatusCode {
+    private enum BrokerStatusCode {
         BAD_REQUEST(400), NOT_ALLOWED(405), UNAVAILABLE(503), PRECONDITION_FAILED(412);
 
-        private int code;
+        private final int code;
 
-        private BrokerStatusCode(int c) {
+        BrokerStatusCode(int c) {
             code = c;
         }
 
@@ -115,6 +114,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         final String newMB = newMasterBroker;
@@ -227,6 +227,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
               }*/
 
             ConfigSupport.apply(new SingleConfigCode<JmsService>() {
+                @Override
                 public Object run(JmsService param) throws PropertyVetoException, TransactionFailure {
 
                     param.setMasterBroker(newMB);
@@ -249,8 +250,8 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
         JmsHost jmsHost = null;
         String defaultJmsHostName = jmsService.getDefaultJmsHost();
         List jmsHostsList = jmsService.getJmsHost();
-        for (int i = 0; i < jmsHostsList.size(); i++) {
-            JmsHost tmpJmsHost = (JmsHost) jmsHostsList.get(i);
+        for (Object element : jmsHostsList) {
+            JmsHost tmpJmsHost = (JmsHost) element;
             if (tmpJmsHost != null && tmpJmsHost.getName().equals(defaultJmsHostName)) {
                 jmsHost = tmpJmsHost;
             }
@@ -259,68 +260,27 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
     }
 
     private CompositeData updateMasterBroker(String serverName, String oldMasterBroker, String newMasterBroker) throws Exception {
-        MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(serverName, config,serverContext, domain, connectorRuntime);
-
-        //MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
-        CompositeData result = null;
-        try {
+        try (MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(serverName, config,serverContext, domain, connectorRuntime)) {
             MBeanServerConnection mbsc = null;
             try {
                 mbsc = mqInfo.getMQMBeanServerConnection();
             } catch (Exception e) {
                 String emsg = localStrings.getLocalString(
                     "change.master.broker.cannotConnectOldMasterBroker",
-                    "Unable to connect to the current master broker {0}. Likely reasons: the cluster might not be running, the server instance {0} associated with the current master broker or the current master broker might not be running.  Please check server logs.",
-                    new String[] {mqInfo.getASInstanceName()}
+                    "Unable to connect to the current master broker {0}. Likely reasons:"
+                    + " the cluster might not be running, the server instance {0} associated with"
+                    + " the current master broker or the current master broker might not be running."
+                    + " Please check server logs.",
+                    mqInfo.getASInstanceName()
                 );
-                if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, emsg);
-                }
-                logAndHandleException(e, emsg);
+                throw handleException(new Exception(emsg, e));
             }
             ObjectName on = new ObjectName(CLUSTER_CONFIG_MBEAN_NAME);
-            Object[] params = null;
             String[] signature = new String[] {"java.lang.String", "java.lang.String"};
-            params = new Object [] {oldMasterBroker, newMasterBroker};
-
-            result = mbsc != null ? (CompositeData) mbsc.invoke(on, "changeMasterBroker", params, signature) : null;
+            Object[] params = new Object [] {oldMasterBroker, newMasterBroker};
+            return mbsc == null ? null : (CompositeData) mbsc.invoke(on, "changeMasterBroker", params, signature);
         } catch (Exception e) {
-            logAndHandleException(e, e.getMessage());
-        } finally {
-            try {
-                if(mqInfo != null) {
-                    mqInfo.closeMQMBeanServerConnection();
-                }
-            } catch (Exception e) {
-                handleException(e);
-            }
+            throw logAndHandleException(e, e.getMessage());
         }
-        return result;
-    }
-
-    /**
-     * This is a copy from the super method except that
-     * it avoids a NPE in using e.getCause() and ensure
-     * the exception message is errorMsg not "" - these
-     * eventually should be incoporated to the super method
-     * post 5.0 release.
-     */
-    @Override
-    protected void logAndHandleException(Exception e, String errorMsg)
-        throws JMSAdminException {
-        //log JMX Exception trace as WARNING
-        java.io.StringWriter s = new java.io.StringWriter();
-        e.printStackTrace(new java.io.PrintWriter(s));
-        String emsg = localStrings.getLocalString(errorMsg, errorMsg);
-        JMSAdminException je = new JMSAdminException(emsg);
-        /* Cause will be InvocationTargetException, cause of that
-         * will be  MBeanException and cause of that will be the
-         * real exception we need
-         */
-        if ((e.getCause() != null) &&
-            (e.getCause().getCause() != null)) {
-            je.initCause(e.getCause().getCause().getCause());
-        }
-        handleException(je);
     }
 }

@@ -490,6 +490,12 @@
                 <version>${jmh.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+                <version>3.1.4</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>commons-io</groupId>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +18,21 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.common.util.logging.LoggingConfigImpl;
-import com.sun.enterprise.config.modularity.parser.ModuleConfigurationLoader;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
 import com.sun.enterprise.config.util.ServerHelper;
+
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.io.IOException;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.Container;
 import org.glassfish.api.admin.config.Named;
@@ -29,25 +41,24 @@ import org.glassfish.api.admin.config.PropertyDesc;
 import org.glassfish.config.support.datatypes.Port;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
-import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.quality.ToDo;
 import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigExtensionMethod;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.ConfigView;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
-import java.io.IOException;
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
 
@@ -373,8 +384,9 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             try {
                 String type = c.getAdminService().getType();
 
-                if (type != null && (type.equals("das") || type.equals("das-and-server")))
+                if (type != null && (type.equals("das") || type.equals("das-and-server"))) {
                     return true;
+                }
             } catch (Exception e) {
                 // fall through
             }
@@ -401,7 +413,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
             loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
 
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             try {
                 map = loggingConfig.getLoggingProperties();
             } catch (IOException ex) {
@@ -415,7 +427,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
             loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
 
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             try {
                 map = loggingConfig.updateLoggingProperties(properties);
             } catch (IOException ex) {
@@ -463,6 +475,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
         public static void createResourceRef(Config config, final String enabled, final String refName) throws TransactionFailure {
             ConfigSupport.apply(new SingleConfigCode<Config>() {
 
+                @Override
                 public Object run(Config param) throws PropertyVetoException, TransactionFailure {
 
                     ResourceRef newResourceRef = param.createChild(ResourceRef.class);
@@ -492,6 +505,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
             if (ref != null) {
                 ConfigSupport.apply(new SingleConfigCode<Config>() {
 
+                    @Override
                     public Object run(Config param) {
                         return param.getResourceRef().remove(ref);
                     }

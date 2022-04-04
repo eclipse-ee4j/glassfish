@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +17,44 @@
 
 package org.glassfish.jms.admin.cli;
 
-import javax.security.auth.Subject;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.config.support.TargetType;
-import org.glassfish.internal.api.ServerContext;
-import java.util.*;
-import java.util.logging.Logger;
-
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.config.serverbeans.*;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.util.Properties;
+
+import javax.management.AttributeList;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import javax.management.AttributeList;
+import javax.security.auth.Subject;
 
-import org.jvnet.hk2.annotations.Service;
-
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-
-import org.glassfish.api.admin.*;
+import org.glassfish.internal.api.ServerContext;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Create JMS Destination
- *
  */
 @Service(name = "create-jmsdest")
 @PerLookup
@@ -104,6 +112,7 @@ public class CreateJMSDestination extends JMSDestination implements AdminCommand
     @Inject
     ServerContext serverContext;
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -139,13 +148,9 @@ public class CreateJMSDestination extends JMSDestination implements AdminCommand
     // create-jmsdest
     private void createJMSDestination(ActionReport report, final Subject subject) throws Exception {
 
-        MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
-
-        //MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
-        try {
+        try (MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime)) {
             MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-            ObjectName on = new ObjectName(
-                    DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
+            ObjectName on = new ObjectName(DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
             String[] signature = null;
             AttributeList destAttrs = null;
             Object[] params = null;
@@ -182,8 +187,6 @@ public class CreateJMSDestination extends JMSDestination implements AdminCommand
                 destAttrs = convertProp2Attrs(props);
             }
 
-            // setAppserverDefaults(destAttrs, mqInfo);
-
             if (destType.equalsIgnoreCase(JMS_DEST_TYPE_TOPIC)) {
                 destType = DESTINATION_TYPE_TOPIC;
             } else if (destType.equalsIgnoreCase(JMS_DEST_TYPE_QUEUE)) {
@@ -205,15 +208,7 @@ public class CreateJMSDestination extends JMSDestination implements AdminCommand
             mbsc.invoke(on, "create", params, signature);
             report.setMessage(localStrings.getLocalString("create.jms.destination.success", "JMS Desctination {0} created.", destName));
         } catch (Exception e) {
-            logAndHandleException(e, "admin.mbeans.rmb.error_creating_jms_dest");
-        } finally {
-            try {
-                if (mqInfo != null) {
-                    mqInfo.closeMQMBeanServerConnection();
-                }
-            } catch (Exception e) {
-                handleException(e);
-            }
+            throw logAndHandleException(e, "admin.mbeans.rmb.error_creating_jms_dest");
         }
     }
 }

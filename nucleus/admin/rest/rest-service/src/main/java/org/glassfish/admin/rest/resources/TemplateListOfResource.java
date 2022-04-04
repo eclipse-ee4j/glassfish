@@ -16,27 +16,9 @@
 
 package org.glassfish.admin.rest.resources;
 
-import java.lang.reflect.Method;
-import org.glassfish.config.support.Create;
-import java.net.HttpURLConnection;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.admin.rest.utils.ResourceUtil;
-import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.admin.rest.provider.MethodMetaData;
-import org.glassfish.admin.rest.results.ActionReportResult;
-import org.glassfish.admin.rest.results.OptionsResult;
-import org.glassfish.admin.rest.utils.xml.RestActionReporter;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.RestRedirect;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DomDocument;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -49,10 +31,33 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.admin.rest.provider.MethodMetaData;
+import org.glassfish.admin.rest.results.ActionReportResult;
+import org.glassfish.admin.rest.results.OptionsResult;
+import org.glassfish.admin.rest.utils.ResourceUtil;
+import org.glassfish.admin.rest.utils.Util;
+import org.glassfish.admin.rest.utils.xml.RestActionReporter;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.config.support.Create;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.TransactionFailure;
 
+import static org.glassfish.admin.rest.utils.ResourceUtil.getActionReportResult;
 import static org.glassfish.admin.rest.utils.Util.decode;
 import static org.glassfish.admin.rest.utils.Util.getName;
 
@@ -61,13 +66,15 @@ import static org.glassfish.admin.rest.utils.Util.getName;
  * @author Rajeshwar Patil
  */
 public abstract class TemplateListOfResource extends AbstractResource {
+    private static final Logger LOG = Logger.getLogger(TemplateListOfResource.class.getName());
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateListOfResource.class);
+
     @Context
     protected ServiceLocator injector;
 
     protected List<Dom> entity;
     protected Dom parent;
     protected String tagName;
-    public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(TemplateListOfResource.class);
 
     @GET
     @Produces({ "text/html", MediaType.APPLICATION_JSON + ";qs=0.5", MediaType.APPLICATION_XML + ";qs=0.5" })
@@ -81,13 +88,13 @@ public abstract class TemplateListOfResource extends AbstractResource {
     @Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_FORM_URLENCODED })
     public Response createResource(HashMap<String, String> data) {
         if (data == null) {
-            data = new HashMap<String, String>();
+            data = new HashMap<>();
         }
         try {
             if (data.containsKey("error")) {
                 String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
                         "Unable to parse the input entity. Please check the syntax.");
-                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders,
+                ActionReportResult arr = getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders,
                         uriInfo);
                 return Response.status(400).entity(arr).build();
             }
@@ -98,42 +105,39 @@ public abstract class TemplateListOfResource extends AbstractResource {
             String commandName = getPostCommand();
             String resourceToCreate = uriInfo.getAbsolutePath() + "/";
 
-            if (null != commandName) {
-                ResourceUtil.adjustParameters(data); //adjusting for DEFAULT is required only while executing a CLI command
-                if (data.containsKey("name")) {
-                    resourceToCreate += data.get("name");
-                } else {
-                    resourceToCreate += data.get("DEFAULT");
-                }
-                RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
-
-                ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
-                if (exitCode != ActionReport.ExitCode.FAILURE) {
-                    String successMessage = localStrings.getLocalString("rest.resource.create.message", "\"{0}\" created successfully.",
-                            resourceToCreate);
-                    ActionReportResult arr = ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo);
-                    return Response.ok(arr).build();
-                }
-
-                String errorMessage = getErrorMessage(data, actionReport);
-                ActionReportResult arr = ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo);
+            if (commandName == null) {
+                ActionReportResult arr = getActionReportResult(ActionReport.ExitCode.FAILURE,
+                    "No CRUD Create possible.", requestHeaders, uriInfo);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(arr).build();
-            } else {
-                ActionReportResult arr = ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, "No CRUD Create possible.",
-                        requestHeaders, uriInfo);
-                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(arr).build();
             }
+            ResourceUtil.adjustParameters(data);
+            if (data.containsKey("name")) {
+                resourceToCreate += data.get("name");
+            } else {
+                resourceToCreate += data.get("DEFAULT");
+            }
+            RestActionReporter actionReport = ResourceUtil.runCommand(commandName, data, getSubject());
+
+            ActionReport.ExitCode exitCode = actionReport.getActionExitCode();
+            if (exitCode == ActionReport.ExitCode.FAILURE) {
+                String errorMessage = actionReport.getMessage();
+                LOG.log(Level.SEVERE, errorMessage, actionReport.getFailureCause());
+                ActionReportResult result = getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(result).build();
+            }
+            String successMessage = localStrings.getLocalString("rest.resource.create.message",
+                "\"{0}\" created successfully.", resourceToCreate);
+            ActionReportResult arr = getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo);
+            return Response.ok(arr).build();
         } catch (Exception e) {
-            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+            throw handleException(e);
         }
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response post(FormDataMultiPart formData) {
-        /* data passed to the generic command running
-         *
-         * */
+        // data passed to the generic command running
         HashMap<String, String> data = TemplateRestResource.createDataBasedOnForm(formData);
         return createResource(data, data.get("name")); //execute the deploy command with a copy of the file locally
 
@@ -196,7 +200,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
             try {
                 cbp = (Class<? extends ConfigBeanProxy>) parent.model.classLoaderHolder.loadClass(parent.model.targetTypeName);
             } catch (MultiException e) {
-                return null;//
+                return null;
             }
             Create create = null;
             for (Method m : cbp.getMethods()) {
@@ -243,7 +247,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
     protected ActionReportResult buildActionReportResult() {
         if (entity == null) {//wrong resource
             String errorMessage = localStrings.getLocalString("rest.resource.erromessage.noentity", "Resource not found.");
-            return ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo);
+            return getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo);
         }
         RestActionReporter ar = new RestActionReporter();
         final String typeKey = (decode(getName(uriInfo.getPath(), '/')));
@@ -271,7 +275,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
                 String errorMessage = localStrings.getLocalString("rest.request.parsing.error",
                         "Unable to parse the input entity. Please check the syntax.");
                 return Response.status(400)
-                        .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo))
+                        .entity(getActionReportResult(ActionReport.ExitCode.FAILURE, errorMessage, requestHeaders, uriInfo))
                         .build();
             }
 
@@ -304,26 +308,26 @@ public abstract class TemplateListOfResource extends AbstractResource {
                 if (exitCode != ActionReport.ExitCode.FAILURE) {
                     String successMessage = localStrings.getLocalString("rest.resource.create.message", "\"{0}\" created successfully.",
                             new Object[] { resourceToCreate });
-                    return Response.ok().entity(ResourceUtil.getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo))
+                    return Response.ok().entity(getActionReportResult(actionReport, successMessage, requestHeaders, uriInfo))
                             .build();
                 }
 
-                String errorMessage = getErrorMessage(data, actionReport);
-                return Response.status(400).entity(ResourceUtil.getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo))
-                        .build();
+                String errorMessage = actionReport.getMessage();
+                return Response.status(400)
+                    .entity(getActionReportResult(actionReport, errorMessage, requestHeaders, uriInfo)).build();
             }
-            String message = localStrings.getLocalString("rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.",
-                    new Object[] { resourceToCreate });
+            String message = localStrings.getLocalString("rest.resource.post.forbidden",
+                "POST on \"{0}\" is forbidden.", new Object[] {resourceToCreate});
             return Response.status(403)
-                    .entity(ResourceUtil.getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
+                .entity(getActionReportResult(ActionReport.ExitCode.FAILURE, message, requestHeaders, uriInfo)).build();
 
         } catch (Exception e) {
-            throw new WebApplicationException(e, Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(e);
         }
     }
 
     private Map<String, MethodMetaData> getMethodMetaData() {
-        Map<String, MethodMetaData> map = new TreeMap<String, MethodMetaData>();
+        Map<String, MethodMetaData> map = new TreeMap<>();
         //GET meta data
         map.put("GET", new MethodMetaData());
 
@@ -340,7 +344,15 @@ public abstract class TemplateListOfResource extends AbstractResource {
         return map;
     }
 
-    private String getErrorMessage(HashMap<String, String> data, ActionReport ar) {
-        return ar.getMessage();
+    private WebApplicationException handleException(Exception e) {
+        // note: WeApplicationExceptions are not logged otherwise.
+        LOG.log(Level.SEVERE, "Create resource call failed", e);
+        if (e instanceof TransactionFailure) {
+            TransactionFailure failure = (TransactionFailure) e;
+            if (failure.getCause() instanceof ConstraintViolationException) {
+                return new WebApplicationException(failure, Response.Status.BAD_REQUEST);
+            }
+        }
+        return new WebApplicationException(e);
     }
 }

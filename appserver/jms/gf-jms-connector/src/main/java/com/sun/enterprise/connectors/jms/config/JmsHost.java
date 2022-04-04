@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,6 @@ import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
@@ -34,8 +34,6 @@ import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.quality.ToDo;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.Payload;
 
@@ -54,7 +52,7 @@ import jakarta.validation.Payload;
 })
 public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
 
-    final static String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*\\}"
+    String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*\\}"
             + "|[1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]"
             + "|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]"
             + "|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]";
@@ -104,10 +102,8 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="7676")
-    @Pattern(regexp=PORT_PATTERN,
-            message="{port-pattern}",
-            payload=JmsHost.class)
+    @Attribute(defaultValue = "7676")
+    @Pattern(regexp = PORT_PATTERN, message = "{port-pattern}", payload = JmsHost.class)
     String getPort();
 
     /**
@@ -178,6 +174,7 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
     /**
         Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element

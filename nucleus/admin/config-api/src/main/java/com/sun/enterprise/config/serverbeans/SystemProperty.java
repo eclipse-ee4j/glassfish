@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import java.beans.PropertyVetoException;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import org.glassfish.api.admin.RestRedirects;
+import java.beans.PropertyVetoException;
+
 import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
@@ -38,8 +39,10 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 }) */
 
 @Configured
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property") })
+@RestRedirects({
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-system-properties"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-system-property")
+})
 public interface SystemProperty extends ConfigBeanProxy {
 
     /**
@@ -49,15 +52,15 @@ public interface SystemProperty extends ConfigBeanProxy {
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = NAME_REGEX)
-    public String getName();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getName();
 
     /**
      * Sets the value of the name property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the value property.
@@ -66,14 +69,14 @@ public interface SystemProperty extends ConfigBeanProxy {
      */
     @Attribute
     @NotNull
-    public String getValue();
+    String getValue();
 
     /**
      * Sets the value of the value property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setValue(String value) throws PropertyVetoException;
+    void setValue(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
@@ -81,13 +84,13 @@ public interface SystemProperty extends ConfigBeanProxy {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getDescription();
+    String getDescription();
 
     /**
      * Sets the value of the description property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String value) throws PropertyVetoException;
 
 }

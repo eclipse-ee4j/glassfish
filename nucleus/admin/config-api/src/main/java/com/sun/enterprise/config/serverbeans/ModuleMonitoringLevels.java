@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,19 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.Pattern;
 
 /**
  *
@@ -43,59 +42,59 @@ import jakarta.validation.constraints.Pattern;
 @Configured
 public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
 
+    String MONITORING_LEVELS = "(OFF|LOW|HIGH)";
+    String MONITORING_LEVELS_MSG = "Valid values: " + MONITORING_LEVELS;
+
     /**
      * Gets the value of the threadPool property.
-     *
      * All the thread-pools used by the run time
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getThreadPool();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getThreadPool();
 
     /**
      * Sets the value of the threadPool property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setThreadPool(String value) throws PropertyVetoException;
+    void setThreadPool(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the orb property.
-     *
      * Specifies the level for connection managers of the orb, which apply to connections to the orb
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getOrb();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getOrb();
 
     /**
      * Sets the value of the orb property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setOrb(String value) throws PropertyVetoException;
+    void setOrb(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the ejbContainer property.
-     *
      * Various ejbs deployed to the server, ejb-pools, ejb-caches & ejb-methods
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getEjbContainer();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getEjbContainer();
 
     /**
      * Sets the value of the ejbContainer property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setEjbContainer(String value) throws PropertyVetoException;
+    void setEjbContainer(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the webContainer property.
@@ -103,15 +102,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getWebContainer();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getWebContainer();
 
     /**
      * Sets the value of the webContainer property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setWebContainer(String value) throws PropertyVetoException;
+    void setWebContainer(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the deployment property.
@@ -119,87 +118,83 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getDeployment();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getDeployment();
 
     /**
      * Sets the value of the webContainer property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDeployment(String value) throws PropertyVetoException;
+    void setDeployment(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the transactionService property.
-     *
      * Transaction subsystem
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getTransactionService();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getTransactionService();
 
     /**
      * Sets the value of the transactionService property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setTransactionService(String value) throws PropertyVetoException;
+    void setTransactionService(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the httpService property.
-     *
      * http engine and the http listeners therein.
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getHttpService();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getHttpService();
 
     /**
      * Sets the value of the httpService property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setHttpService(String value) throws PropertyVetoException;
+    void setHttpService(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the jdbcConnectionPool property.
-     *
      * Monitoring level for all the jdbc-connection-pools used by the runtime.
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getJdbcConnectionPool();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getJdbcConnectionPool();
 
     /**
      * Sets the value of the jdbcConnectionPool property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJdbcConnectionPool(String value) throws PropertyVetoException;
+    void setJdbcConnectionPool(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the connectorConnectionPool property.
-     *
      * Monitoring level for all the connector-connection-pools used by runtime.
      *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getConnectorConnectionPool();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getConnectorConnectionPool();
 
     /**
      * Sets the value of the connectorConnectionPool property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setConnectorConnectionPool(String value) throws PropertyVetoException;
+    void setConnectorConnectionPool(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the connectorService property.
@@ -207,15 +202,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getConnectorService();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getConnectorService();
 
     /**
      * Sets the value of the connectorService property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setConnectorService(String value) throws PropertyVetoException;
+    void setConnectorService(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the jmsService property.
@@ -223,15 +218,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getJmsService();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getJmsService();
 
     /**
      * Sets the value of the jmsService property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJmsService(String value) throws PropertyVetoException;
+    void setJmsService(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the jvm property.
@@ -239,15 +234,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getJvm();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getJvm();
 
     /**
      * Sets the value of the jvm property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJvm(String value) throws PropertyVetoException;
+    void setJvm(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the security property.
@@ -255,15 +250,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getSecurity();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getSecurity();
 
     /**
      * Sets the value of the security property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setSecurity(String value) throws PropertyVetoException;
+    void setSecurity(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the web-service-container property.
@@ -271,15 +266,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getWebServicesContainer();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getWebServicesContainer();
 
     /**
      * Sets the value of the web-service-container property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setWebServicesContainer(String value) throws PropertyVetoException;
+    void setWebServicesContainer(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the jpa property.
@@ -287,15 +282,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getJpa();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getJpa();
 
     /**
      * Sets the value of the jpa property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJpa(String value) throws PropertyVetoException;
+    void setJpa(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the jax-ra property.
@@ -303,15 +298,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getJersey();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getJersey();
 
     /**
      * Sets the value of the jax-ra property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJersey(String value) throws PropertyVetoException;
+    void setJersey(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloudTenantManager property.
@@ -319,15 +314,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getCloudTenantManager();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getCloudTenantManager();
 
     /**
      * Sets the value of the cloudTenantManager property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setCloudTenantManager(String value) throws PropertyVetoException;
+    void setCloudTenantManager(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloud property.
@@ -335,15 +330,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getCloud();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getCloud();
 
     /**
      * Sets the value of the cloud property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setCloud(String value) throws PropertyVetoException;
+    void setCloud(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloud Orchestrator property.
@@ -351,15 +346,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getCloudOrchestrator();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getCloudOrchestrator();
 
     /**
      * Sets the value of the cloud Orchestrator property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setCloudOrchestrator(String value) throws PropertyVetoException;
+    void setCloudOrchestrator(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloud Elasticity property.
@@ -367,19 +362,15 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getCloudElasticity();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getCloudElasticity();
 
     /**
      * Sets the value of the cloud elasticity property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setCloudElasticity(String value) throws PropertyVetoException;
-
-    /**
-     * Properties as per {@link PropertyBag}
-     */
+    void setCloudElasticity(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the cloud IMS property.
@@ -387,20 +378,20 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
-    @Pattern(regexp = "(OFF|LOW|HIGH)")
-    public String getCloudVirtAssemblyService();
+    @Pattern(regexp = MONITORING_LEVELS, message = MONITORING_LEVELS_MSG)
+    String getCloudVirtAssemblyService();
 
     /**
      * Sets the value of the cloud IMS property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setCloudVirtAssemblyService(String value) throws PropertyVetoException;
+    void setCloudVirtAssemblyService(String value) throws PropertyVetoException;
 
     /**
      * Properties as per {@link PropertyBag}
      */
-
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element

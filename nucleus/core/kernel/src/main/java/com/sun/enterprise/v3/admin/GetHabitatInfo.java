@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,17 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.universal.collections.ManifestUtils;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.Pattern;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -27,18 +37,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import jakarta.inject.Inject;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.Pattern;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RestEndpoint;
@@ -50,12 +53,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.universal.collections.ManifestUtils;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
-import org.glassfish.api.admin.AccessRequired;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Dumps a sorted list of all registered Contract's in the Habitat
@@ -86,7 +85,7 @@ public class GetHabitatInfo implements AdminCommand {
     @Param(primary = true, optional = true)
     String contract;
 
-    @Pattern(regexp="true|false")
+    @Pattern(regexp="true|false", message = "Valid values: true|false")
     @Param(optional = true)
     String started = "false";
 
@@ -97,8 +96,7 @@ public class GetHabitatInfo implements AdminCommand {
             dumpContracts(sb);
             dumpModules(sb);
             dumpTypes(sb);
-        }
-        else {
+        } else {
             dumpInhabitantsImplementingContractPattern(contract, sb);
         }
 
@@ -114,29 +112,17 @@ public class GetHabitatInfo implements AdminCommand {
     }
 
     private void dumpContracts(StringBuilder sb) {
-        // Probably not very efficient but it is not a factor for this rarely-used
-        // user-called command...
-
         sb.append("\n*********** Sorted List of all Registered Contracts in the Habitat **************\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
-
-        SortedSet<String> allContracts = new TreeSet<String>();
-        for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
-            allContracts.addAll(aDescriptor.getAdvertisedContracts());
-        }
-
-        // now the contracts are sorted...
-
-        Iterator<String> it = allContracts.iterator();
-        for (int i = 1; it.hasNext(); i++) {
-            sb.append("Contract-" + i + ": " + it.next() + "\n");
-        }
+        AtomicInteger counter = new AtomicInteger(0);
+        allDescriptors.stream().flatMap(desc -> desc.getAdvertisedContracts().stream()).sorted().forEach(contract -> sb
+            .append("Contract-").append(counter.incrementAndGet()).append(": ").append(contract).append('\n'));
     }
 
     private void dumpInhabitantsImplementingContractPattern(String pattern, StringBuilder sb) {
         sb.append("\n*********** List of all services for contract named like " + contract + " **************\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
-        HashSet<String> allContracts = new HashSet<String>();
+        HashSet<String> allContracts = new HashSet<>();
         for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
             allContracts.addAll(aDescriptor.getAdvertisedContracts());
         }
@@ -144,17 +130,17 @@ public class GetHabitatInfo implements AdminCommand {
         Iterator<String> it = allContracts.iterator();
         while (it.hasNext()) {
             String cn = it.next();
-            if (cn.toLowerCase(Locale.ENGLISH).indexOf(pattern.toLowerCase(Locale.ENGLISH)) < 0)
+            if (cn.toLowerCase(Locale.ENGLISH).indexOf(pattern.toLowerCase(Locale.ENGLISH)) < 0) {
                 continue;
-            sb.append("\n-----------------------------\n");
+            }
+            sb.append("-----------------------------\n");
             for ( ActiveDescriptor<?> descriptor : serviceLocator.getDescriptors(BuilderHelper.createContractFilter(cn))) {
                 sb.append("Inhabitant-Metadata: " + descriptor.getMetadata());
                 sb.append("\n");
                 boolean isStarted = Boolean.parseBoolean(started);
                 if (isStarted) {
-                        ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
-
-                    sb.append((handle.isActive() ? " started" : " not started"));
+                    ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
+                    sb.append(handle.isActive() ? " started" : " not started");
                 }
             }
         }
@@ -163,40 +149,20 @@ public class GetHabitatInfo implements AdminCommand {
     private void dumpTypes(StringBuilder sb) {
         sb.append("\n\n*********** Sorted List of all Types in the Habitat **************\n\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
-        HashSet<String> allTypes = new HashSet<String>();
-        for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
-            allTypes.add(aDescriptor.getImplementation());
-        }
-
-        Iterator<String> it = allTypes.iterator();
-
-        if (it == null)  //PP (paranoid programmer)
-            return;
-
-        SortedSet<String> types = new TreeSet<String>();
-
-        while (it.hasNext()) {
-            types.add(it.next());
-        }
-
-        // now the types are sorted...
-
-        it = types.iterator();
-
-        for (int i = 1; it.hasNext(); i++) {
-            sb.append("Type-" + i + ": " + it.next() + "\n");
-        }
+        AtomicInteger counter = new AtomicInteger(0);
+        allDescriptors.stream().map(ActiveDescriptor::getImplementation).sorted().forEach(
+            impl -> sb.append("Type-").append(counter.incrementAndGet()).append(": ").append(impl).append('\n'));
     }
 
     private void dumpModules(StringBuilder sb) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         modulesRegistry.dumpState(new PrintStream(baos));
         sb.append("\n\n*********** List of all Registered Modules **************\n\n");
-        sb.append(baos.toString());
+        sb.append(baos);
     }
-    /*
-     * NOTE: this valdation is here just to test the AdminCommand validation
-     * implementation.
+
+    /**
+     * NOTE: this valdation is here just to test the AdminCommand validation implementation.
      */
     @Retention(RUNTIME)
     @Target({TYPE})
@@ -216,8 +182,9 @@ public class GetHabitatInfo implements AdminCommand {
         @Override
         public boolean isValid(final GetHabitatInfo bean,
             final ConstraintValidatorContext constraintValidatorContext) {
-            if (bean.contract.equals("test") && bean.started.equals("true"))
+            if ("test".equals(bean.contract) && "true".equals(bean.started)) {
                 return false;
+            }
             return true;
         }
     }

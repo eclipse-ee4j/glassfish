@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,42 +17,44 @@
 
 package org.glassfish.admin.rest.resources;
 
-import org.glassfish.admin.rest.utils.Util;
-import org.glassfish.admin.rest.utils.ProxyImpl;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
 
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
-import jakarta.ws.rs.core.Context;
-import static jakarta.ws.rs.core.Response.Status.*;
+
 import java.net.URL;
-import java.util.Properties;
-import java.util.TreeMap;
-import jakarta.ws.rs.Consumes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.PathParam;
-
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
+import java.util.Properties;
+import java.util.TreeMap;
 
 import org.glassfish.admin.rest.adapter.LocatorBridge;
 import org.glassfish.admin.rest.results.ActionReportResult;
+import org.glassfish.admin.rest.utils.ProxyImpl;
+import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.external.statistics.Statistic;
 import org.glassfish.external.statistics.Stats;
-
-import org.glassfish.flashlight.datatree.TreeNode;
 import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
+import org.glassfish.flashlight.datatree.TreeNode;
 
-import static org.glassfish.admin.rest.provider.ProviderUtil.*;
+import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
+import static jakarta.ws.rs.core.Response.Status.OK;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getElementLink;
+import static org.glassfish.admin.rest.provider.ProviderUtil.getStatistic;
+import static org.glassfish.admin.rest.provider.ProviderUtil.jsonValue;
 
 /**
  * @author rajeshwar patil
@@ -88,28 +91,57 @@ public class MonitoringResource {
         pathSegments = pathSegments.subList(1, pathSegments.size());
         if (!pathSegments.isEmpty()) {
             PathSegment lastSegment = pathSegments.get(pathSegments.size() - 1);
-            if (lastSegment.getPath().isEmpty()) { // if there is a trailing '/' (like monitoring/domain/), a spurious pathSegment is added. Discard it.
+            if (lastSegment.getPath().isEmpty()) {
+                // if there is a trailing '/' (like monitoring/domain/), a spurious pathSegment is added. Discard it.
                 pathSegments = pathSegments.subList(0, pathSegments.size() - 1);
             }
         }
 
-        if (!pathSegments.isEmpty()) {
+        if (pathSegments.isEmpty()) {
+            // Called for /monitoring/domain/
+            List<TreeNode> list = new ArrayList<>();
+            if (rootNode != null) {
+                //Add currentInstance to response
+                list.add(rootNode);
+            }
+            constructEntity(list, ar);
+
+            if (isRunningOnDAS) {
+                // Add links to instances from the cluster
+                Domain domain = habitat.getRemoteLocator().getService(Domain.class);
+                Map<String, String> links = (Map<String, String>) ar.getExtraProperties().get("childResources");
+                for (Server s : domain.getServers().getServer()) {
+                    if (!"server".equals(s.getName())) {
+                        // add all non 'server' instances
+                        links.put(s.getName(), getElementLink(uriInfo, s.getName()));
+                    }
+                }
+            }
+            responseBuilder.entity(new ActionReportResult(ar));
+        } else {
             String firstPathElement = pathSegments.get(0).getPath();
-            if (firstPathElement.equals(currentInstanceName)) { // Query for current instance. Execute it
+            if (firstPathElement.equals(currentInstanceName)) {
+                // Query for current instance. Execute it
                 //iterate over pathsegments and build a dotted name to look up in monitoring registry
                 StringBuilder pathInMonitoringRegistry = new StringBuilder();
                 for (PathSegment pathSegment : pathSegments.subList(1, pathSegments.size())) {
                     if (pathInMonitoringRegistry.length() > 0) {
                         pathInMonitoringRegistry.append('.');
                     }
-                    pathInMonitoringRegistry.append(pathSegment.getPath().replaceAll("\\.", "\\\\.")); // Need to escape '.' before passing it to monitoring code
+                    // Need to escape '.' before passing it to monitoring code
+                    pathInMonitoringRegistry.append(pathSegment.getPath().replaceAll("\\.", "\\\\."));
                 }
 
                 TreeNode resultNode = pathInMonitoringRegistry.length() > 0 && rootNode != null
                         ? rootNode.getNode(pathInMonitoringRegistry.toString())
                         : rootNode;
-                if (resultNode != null) {
-                    List<TreeNode> list = new ArrayList<TreeNode>();
+                if (resultNode == null) {
+                    //No monitoring data, so nothing to list
+                    responseBuilder.status(NOT_FOUND);
+                    ar.setFailure();
+                    responseBuilder.entity(new ActionReportResult(ar));
+                } else {
+                    List<TreeNode> list = new ArrayList<>();
                     if (resultNode.hasChildNodes()) {
                         list.addAll(resultNode.getEnabledChildNodes());
                     } else {
@@ -117,16 +149,13 @@ public class MonitoringResource {
                     }
                     constructEntity(list, ar);
                     responseBuilder.entity(new ActionReportResult(ar));
-                } else {
-                    //No monitoring data, so nothing to list
-                    responseBuilder.status(NOT_FOUND);
-                    ar.setFailure();
-                    responseBuilder.entity(new ActionReportResult(ar));
                 }
 
             } else { //firstPathElement != currentInstanceName => A proxy request
                 if (isRunningOnDAS) { //Attempt to forward to instance if running on Das
                     //TODO validate that firstPathElement corresponds to a valid server name
+                    // FIXME: As of 03.04.2022 Utils.getJerseyClient here throws exception:
+                    // java.lang.ClassNotFoundException: Provider for jakarta.ws.rs.client.ClientBuilder cannot be found
                     Properties proxiedResponse = new MonitoringProxyImpl().proxyRequest(uriInfo, Util.getJerseyClient(),
                             habitat.getRemoteLocator());
                     ar.setExtraProperties(proxiedResponse);
@@ -135,31 +164,14 @@ public class MonitoringResource {
                     return Response.status(FORBIDDEN).build();
                 }
             }
-        } else { // Called for /monitoring/domain/
-            List<TreeNode> list = new ArrayList<TreeNode>();
-            if (rootNode != null) {
-                list.add(rootNode); //Add currentInstance to response
-            }
-            constructEntity(list, ar);
-
-            if (isRunningOnDAS) { // Add links to instances from the cluster
-                Domain domain = habitat.getRemoteLocator().getService(Domain.class);
-                Map<String, String> links = (Map<String, String>) ar.getExtraProperties().get("childResources");
-                for (Server s : domain.getServers().getServer()) {
-                    if (!s.getName().equals("server")) {// add all non 'server' instances
-                        links.put(s.getName(), getElementLink(uriInfo, s.getName()));
-                    }
-                }
-            }
-            responseBuilder.entity(new ActionReportResult(ar));
         }
 
         return responseBuilder.build();
     }
 
     private void constructEntity(List<TreeNode> nodeList, RestActionReporter ar) {
-        Map<String, Object> entity = new TreeMap<String, Object>();
-        Map<String, String> links = new TreeMap<String, String>();
+        Map<String, Object> entity = new TreeMap<>();
+        Map<String, String> links = new TreeMap<>();
 
         for (TreeNode node : nodeList) {
             //process only the leaf nodes, if any
@@ -174,7 +186,7 @@ public class MonitoringResource {
                             Statistic statisticObject = (Statistic) value;
                             entity.put(node.getName(), getStatistic(statisticObject));
                         } else if (value instanceof Stats) {
-                            Map<String, Map> subMap = new TreeMap<String, Map>();
+                            Map<String, Map> subMap = new TreeMap<>();
                             for (Statistic statistic : ((Stats) value).getStatistics()) {
                                 subMap.put(statistic.getName(), getStatistic(statistic));
                             }

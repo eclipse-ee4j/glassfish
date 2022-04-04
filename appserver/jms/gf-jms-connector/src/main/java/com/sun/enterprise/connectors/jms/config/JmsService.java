@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,15 @@ package com.sun.enterprise.connectors.jms.config;
 
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.modularity.annotation.HasCustomizationTokens;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.api.admin.config.ConfigExtension;
 import org.glassfish.api.admin.config.Container;
 import org.glassfish.api.admin.config.PropertiesDesc;
@@ -27,13 +37,6 @@ import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  * The jms-service element specifies information about the bundled/built-in
@@ -49,6 +52,11 @@ import java.util.List;
 @HasCustomizationTokens
 @CustomConfiguration(baseConfigurationFileName = "jms-module-conf.xml")
 public interface JmsService extends ConfigExtension, PropertyBag, Container {
+
+    String ADDRESS_LIST_SELECTIONS = "(random|priority)";
+    String SERVICE_TYPES = "(LOCAL|EMBEDDED|REMOTE)";
+    String MQ_SCHEMES = "(mq||http)";
+    String MQ_SERVICES = "(ssljms||jms)";
 
     /**
      * Gets the value of the initTimeoutInSeconds property.
@@ -83,7 +91,7 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      */
     @Attribute
     @NotNull
-    @Pattern(regexp="(LOCAL|EMBEDDED|REMOTE)")
+    @Pattern(regexp = SERVICE_TYPES, message = "Valid values: " + SERVICE_TYPES)
     String getType();
 
     /**
@@ -134,14 +142,14 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      */
     void setDefaultJmsHost(String value) throws PropertyVetoException;
 
-     @Attribute
+    @Attribute
     String getMasterBroker();
 
     /**
      * Sets the value of the MasterBroker property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
     void setMasterBroker(String value) throws PropertyVetoException;
 
@@ -215,8 +223,8 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="random")
-    @Pattern(regexp="(random|priority)")
+    @Attribute(defaultValue = "random")
+    @Pattern(regexp = ADDRESS_LIST_SELECTIONS, message = "Valid values: " + ADDRESS_LIST_SELECTIONS)
     String getAddresslistBehavior();
 
     /**
@@ -259,7 +267,7 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp="(mq||http)")
+    @Pattern(regexp = MQ_SCHEMES, message = "Valid values: " + MQ_SCHEMES)
     String getMqScheme();
 
     /**
@@ -281,7 +289,7 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp="(ssljms||jms)")
+    @Pattern(regexp = MQ_SERVICES, message = "Valid values: " + MQ_SERVICES)
     String getMqService();
 
     /**
@@ -315,33 +323,44 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
     @Element
     List<JmsHost> getJmsHost();
 
-     /**
-        Properties.
+    /**
+     * Properties.
      */
-@PropertiesDesc(
-    props={
-        @PropertyDesc(name="instance-name", defaultValue="imqbroker",
-            description="The full Sun GlassFish Message Queue broker instance name"),
+    @Override
+    @PropertiesDesc(
+        props = {
+            @PropertyDesc(
+                name = "instance-name",
+                defaultValue = "imqbroker",
+                description = "The full Sun GlassFish Message Queue broker instance name"),
 
-        @PropertyDesc(name="instance-name-suffix", defaultValue="xxxxxxxxxxxxxxxxxx",
-            description="A suffix to add to the full Message Queue broker instance name. The suffix is separated " +
-                "from the instance name by an underscore character (_). For example, if the instance name is 'imqbroker', " +
-                "appending the suffix 'xyz' changes the instance name to 'imqbroker_xyz'"),
+            @PropertyDesc(
+                name = "instance-name-suffix",
+                defaultValue = "xxxxxxxxxxxxxxxxxx",
+                description = "A suffix to add to the full Message Queue broker instance name. The suffix is separated "
+                    + "from the instance name by an underscore character (_). For example, if the instance name is 'imqbroker', "
+                    + "appending the suffix 'xyz' changes the instance name to 'imqbroker_xyz'"),
 
-        @PropertyDesc(name="append-version", defaultValue="",
-            description="If true, appends the major and minor version numbers, preceded by underscore characters (_), " +
-                "to the full Message Queue broker instance name. For example, if the instance name is 'imqbroker', " +
-                "appending the version numbers changes the instance name to imqbroker_8_0"),
+            @PropertyDesc(
+                name = "append-version",
+                defaultValue = "",
+                description = "If true, appends the major and minor version numbers, preceded by underscore characters (_), "
+                    + "to the full Message Queue broker instance name. For example, if the instance name is 'imqbroker', "
+                    + "appending the version numbers changes the instance name to imqbroker_8_0"),
 
-        @PropertyDesc(name="user-name", defaultValue="xxxxxxxxxxxxxxxxxx",
-            description="Specifies the user name for creating the JMS connection. Needed only if the default " +
-                "username/password of guest/guest is not available in the broker"),
+            @PropertyDesc(
+                name = "user-name",
+                defaultValue = "xxxxxxxxxxxxxxxxxx",
+                description = "Specifies the user name for creating the JMS connection. Needed only if the default "
+                    + "username/password of guest/guest is not available in the broker"),
 
-        @PropertyDesc(name="password", defaultValue="xxxxxxxxxxxxxxxxxx",
-            description="Specifies the password for creating the JMS connection. Needed only if the default " +
-                "username/password of guest/guest is not available in the broker")
-    }
-    )
+            @PropertyDesc(
+                name = "password",
+                defaultValue = "xxxxxxxxxxxxxxxxxx",
+                description = "Specifies the password for creating the JMS connection. Needed only if the default "
+                    + "username/password of guest/guest is not available in the broker")
+            }
+        )
     @Element
     List<Property> getProperty();
 }

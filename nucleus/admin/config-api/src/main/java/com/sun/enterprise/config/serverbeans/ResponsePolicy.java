@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,13 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
-import java.io.Serializable;
 
-import jakarta.validation.constraints.Pattern;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * Used to define the authentication policy requirements associated with the response processing performed by an
@@ -36,25 +36,27 @@ import jakarta.validation.constraints.Pattern;
 @Configured
 public interface ResponsePolicy extends ConfigBeanProxy {
 
+    String AUTH_RECIPIENT_TIMINGS = "(before-content|after-content)";
+    String AUTH_SOURCES = "(sender|content|username-password)";
+
     /**
-     * Specifies the type of required authentication, either "sender" (user name and password) or "content" (digital
-     * signature).
-     *
-     * Defines a requirement for message layer sender authentication (e.g. username password) or content authentication
-     * (e.g. digital signature)
+     * Specifies the type of required authentication, either "sender" (user name and password) or
+     * "content" (digital signature).
+     * Defines a requirement for message layer sender authentication (e.g. username password) or
+     * content authentication (e.g. digital signature)
      *
      * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp = "(sender|content|username-password)")
-    public String getAuthSource();
+    @Pattern(regexp = AUTH_SOURCES, message = "Valid values: " + AUTH_SOURCES)
+    String getAuthSource();
 
     /**
      * Sets the value of the authSource property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setAuthSource(String value) throws PropertyVetoException;
+    void setAuthSource(String value) throws PropertyVetoException;
 
     /**
      * Specifies whether recipient authentication occurs before or after content authentication. Allowed values are
@@ -70,14 +72,14 @@ public interface ResponsePolicy extends ConfigBeanProxy {
      * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp = "(before-content|after-content)")
-    public String getAuthRecipient();
+    @Pattern(regexp = AUTH_RECIPIENT_TIMINGS, message = "Valid values: " + AUTH_RECIPIENT_TIMINGS)
+    String getAuthRecipient();
 
     /**
      * Sets the value of the authRecipient property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setAuthRecipient(String value) throws PropertyVetoException;
+    void setAuthRecipient(String value) throws PropertyVetoException;
 
 }

@@ -18,7 +18,6 @@
 package org.glassfish.nucleus.admin.rest;
 
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_XML;
 import static org.glassfish.admin.rest.client.utils.MarshallingUtils.getXmlForProperties;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,7 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Mitesh Meswani
  */
 public class NoCLICommandResourceCreationITest extends RestTestBase {
-    private static final String URL_SERVER_PROPERTY = "domain/servers/server/server/property";
+    private static final String URL_SERVER_PROPERTY = "/domain/servers/server/server/property";
+
 
     @Test
     public void testPropertyCreation() {
@@ -43,15 +44,14 @@ public class NoCLICommandResourceCreationITest extends RestTestBase {
         //Create a property
         Map<String, String> param = new HashMap<>();
         param.put("name", propertyKey);
-        param.put("value",propertyValue);
-        Response response = getClient().target(getAddress(URL_SERVER_PROPERTY))
-                .request(RESPONSE_TYPE)
-                .post(Entity.entity(getXmlForProperties(param), MediaType.APPLICATION_XML), Response.class);
+        param.put("value", propertyValue);
+        Response response = managementClient.post(URL_SERVER_PROPERTY,
+            Entity.entity(getXmlForProperties(param), APPLICATION_XML));
         assertEquals(200, response.getStatus());
 
         //Verify the property got created
         String propertyURL = URL_SERVER_PROPERTY + "/" + propertyKey;
-        response = get (propertyURL);
+        response = managementClient.get(propertyURL);
         assertEquals(200, response.getStatus());
         Map<String, String> entity = getEntityValues(response);
         assertEquals(propertyKey, entity.get("name"));
@@ -60,19 +60,16 @@ public class NoCLICommandResourceCreationITest extends RestTestBase {
         // Verify property update
         propertyValue = generateRandomString();
         param.put("value", propertyValue);
-        response = getClient().target(getAddress(URL_SERVER_PROPERTY))
-                .request(RESPONSE_TYPE)
-                .put(Entity.entity(getXmlForProperties(param), MediaType.APPLICATION_XML), Response.class);
+        response = managementClient.put(URL_SERVER_PROPERTY, Entity.entity(getXmlForProperties(param), APPLICATION_XML));
         assertEquals(200, response.getStatus());
-        response = get (propertyURL);
+        response = managementClient.get(propertyURL);
         assertEquals(200, response.getStatus());
         entity = getEntityValues(response);
         assertEquals(propertyKey, entity.get("name"));
         assertEquals(propertyValue, entity.get("value"));
 
         //Clean up to leave domain.xml good for next run
-        response = delete(propertyURL, new HashMap<String, String>());
+        response = managementClient.delete(propertyURL, new HashMap<String, String>());
         assertEquals(200, response.getStatus());
     }
-
 }

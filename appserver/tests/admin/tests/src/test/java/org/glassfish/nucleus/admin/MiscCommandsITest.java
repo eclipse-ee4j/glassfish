@@ -17,40 +17,47 @@
 
 package org.glassfish.nucleus.admin;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 /**
  * @author Tom Mueller
  */
-@ExtendWith(DomainLifecycleExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class MiscCommandsITest {
+
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+
+    @AfterAll
+    public static void startDomainAgain() {
+        assertThat(ASADMIN.exec("start-domain"), asadminOK());
+    }
 
     @Test
     @Order(1)
     public void uptime() {
-        assertTrue(nadmin("uptime"));
+        assertThat(ASADMIN.exec("uptime"), asadminOK());
     }
 
     @Test
     @Order(1)
     public void version1() {
-        assertTrue(nadmin("version"));
+        assertThat(ASADMIN.exec("version"), asadminOK());
     }
 
     @Test
     @Order(100)
     public void version2() {
-        assertTrue(nadmin("stop-domain"));
-        assertTrue(nadmin("version", "--local"));
+        assertThat(ASADMIN.exec("stop-domain"), asadminOK());
+        assertThat(ASADMIN.exec("version", "--local"), asadminOK());
     }
 }

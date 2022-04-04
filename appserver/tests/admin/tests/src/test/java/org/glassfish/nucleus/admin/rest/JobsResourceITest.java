@@ -20,11 +20,15 @@ package org.glassfish.nucleus.admin.rest;
 import jakarta.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.glassfish.nucleus.test.tool.DomainAdminRestClient;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
+import static org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment.getAsadmin;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,20 +39,41 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author jdlee
  */
 public class JobsResourceITest extends RestTestBase {
-    public static final String URL_JOBS = "jobs";
+
+    private static final String GF_JSON_TYPE = "application/vnd.oracle.glassfish+json";
+    private static final String URL_JOBS = "/jobs";
+
+    private DomainAdminRestClient client;
+    private String jobId;
+
+    @BeforeEach
+    public void initInstanceClient() {
+        client = new DomainAdminRestClient(getBaseAdminUrl() + "/management", GF_JSON_TYPE);
+    }
+
+
+    @AfterEach
+    public void closeInstanceClient() {
+        if (jobId != null) {
+            GlassFishTestEnvironment.getAsadmin().exec("attach", jobId);
+        }
+        if (client != null) {
+            client.close();
+        }
+    }
 
     @Test
     public void testJobsListing() {
-        assertEquals(200, get(URL_JOBS).getStatus());
+        assertEquals(200, client.get(URL_JOBS).getStatus());
     }
 
     @Test
     public void testGetJob() throws Exception {
         // make sure we have at least one detached job
-        nadminWithOutput("--detach", "uptime");
+        assertThat(getAsadmin().exec("--detach", "uptime"), asadminOK());
 
         // verify getting the collection
-        Response response = get(URL_JOBS);
+        Response response = client.get(URL_JOBS);
         assertEquals(200, response.getStatus());
 
         // verify the overall structure
@@ -56,6 +81,7 @@ public class JobsResourceITest extends RestTestBase {
         JSONArray resources = json.getJSONArray("resources");
         assertNotNull(resources);
         assertThat(resources.length(), equalTo(1));
+
         JSONArray items = json.getJSONArray("items");
         assertNotNull(items);
         assertThat(items.length(), equalTo(1));
@@ -67,21 +93,27 @@ public class JobsResourceITest extends RestTestBase {
         String uri = resource.getString("uri");
         assertNotNull(uri);
         assertEquals("job", resource.getString("rel"));
-        String jobId = resource.getString("title");
+
+        jobId = resource.getString("title");
         assertNotNull(jobId);
         assertThat(uri, endsWith(URL_JOBS + "/id/" + jobId));
 
         // verify the job it refers to by following the link.
         // it should only have a parent link
-        response = get(uri);
-        assertEquals(200, response.getStatus());
-        json = response.readEntity(JSONObject.class);
+        try (GenericClient genericClient = new GenericClient()) {
+            response = genericClient.get(uri);
+            assertThat(response.getStatus(), equalTo(200));
+            json = response.readEntity(JSONObject.class);
+        }
         JSONObject item = json.getJSONObject("item");
         System.out.println(item.toString());
-        verifyItem(jobId, item);
+        assertNotNull(item);
+        assertEquals(jobId, item.getString("jobId"));
+
         resources = json.getJSONArray("resources");
         assertNotNull(resources);
         assertThat(resources.length(), equalTo(1));
+
         resource = resources.getJSONObject(0);
         assertEquals("parent", resource.getString("rel"));
         assertThat(resource.getString("uri"), endsWith(URL_JOBS));
@@ -94,16 +126,14 @@ public class JobsResourceITest extends RestTestBase {
                 item = thisItem;
             }
         }
-        verifyItem(jobId, item);
+        assertNotNull(item);
+        assertEquals(jobId, item.getString("jobId"));
     }
 
-    private void verifyItem(String expectedJobId, JSONObject jobJsonObject) throws JSONException {
-        assertNotNull(jobJsonObject);
-        assertEquals(expectedJobId, jobJsonObject.getString("jobId"));
-    }
 
-    @Override
-    protected String getResponseType() {
-        return "application/vnd.oracle.glassfish+json";
+    private static class GenericClient extends DomainAdminRestClient {
+        public GenericClient() {
+            super(GlassFishTestEnvironment.createClient(), "", GF_JSON_TYPE);
+        }
     }
 }

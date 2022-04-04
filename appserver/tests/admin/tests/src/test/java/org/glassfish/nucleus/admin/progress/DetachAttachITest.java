@@ -29,55 +29,49 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
-import org.junit.jupiter.api.AfterEach;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.deleteJobsFile;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.deleteOsgiDirectory;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author martinmares
  */
-@ExtendWith(DomainLifecycleExtension.class)
 public class DetachAttachITest {
-
-    @AfterEach
-    public void cleanUp() throws Exception {
-        nadmin("stop-domain");
-        deleteJobsFile();
-        deleteOsgiDirectory();
-        nadmin("start-domain");
-    }
+    private static final Logger LOG = Logger.getLogger(DetachAttachITest.class.getName());
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     public void uptimePeriodically() throws Exception {
         Set<String> ids = new HashSet<>();
         for (int i = 0; i < 3; i++) {
-            System.out.println("detachAndAttachUptimePeriodically(): round " + i);
+            LOG.log(Level.FINE, "detachAndAttachUptimePeriodically(): round " + i);
             final String id;
             {
-                NadminReturn result = nadminWithOutput("--detach", "--terse", "uptime");
-                assertTrue(result.returnValue);
-                id = parseJobIdFromEchoTerse(result.out);
+                AsadminResult result = ASADMIN.execDetached("--terse", "uptime");
+                assertThat(result, asadminOK());
+                id = parseJobIdFromEchoTerse(result.getStdOut());
                 assertTrue(ids.add(id));
             }
             Thread.sleep(1000L);
             {
-                NadminReturn result = nadminWithOutput("--terse", "attach", id);
-                assertTrue(result.returnValue);
-                assertTrue(result.out.contains("uptime"));
+                AsadminResult result = ASADMIN.exec("--terse", "attach", id);
+                assertThat(result, asadminOK());
+                assertTrue(result.getStdOut().contains("uptime"));
             }
         }
     }
@@ -85,21 +79,20 @@ public class DetachAttachITest {
 
     @Test
     public void commandWithProgressStatus() throws Exception {
-        NadminReturn result = nadminWithOutput("--detach", "--terse", "progress-custom", "6x1");
-        assertTrue(result.returnValue);
-        String id = parseJobIdFromEchoTerse(result.out);
+        AsadminResult result = ASADMIN.execDetached("--terse", "progress-custom", "6x1");
+        assertThat(result, asadminOK());
+        String id = parseJobIdFromEchoTerse(result.getStdOut());
         Thread.sleep(2000L);
         // Now attach running
-        result = nadminWithOutput("attach", id);
-        assertTrue(result.returnValue);
-        assertThat(result.out, stringContainsInOrder("progress-custom"));
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        result = ASADMIN.exec("attach", id);
+        assertThat(result, asadminOK());
+        assertThat(result.getStdOut(), stringContainsInOrder("progress-custom"));
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty());
-        assertTrue(prgs.get(0).getValue() > 0);
+        assertThat(prgs.get(0).getValue(), greaterThan(0));
         assertEquals(100, prgs.get(prgs.size() - 1).getValue());
         // Now attach finished - must NOT exist - seen progress job is removed
-        result = nadminWithOutput("attach", id);
-        assertFalse(result.returnValue);
+        assertThat(ASADMIN.exec("attach", id), not(asadminOK()));
     }
 
 
@@ -113,28 +106,29 @@ public class DetachAttachITest {
                 return result;
             }
         });
-        NadminReturn result = nadminWithOutput("--detach", "--terse", "progress-custom", "8x1");
-        assertTrue(result.returnValue);
-        final String id = parseJobIdFromEchoTerse(result.out);
+        AsadminResult result = ASADMIN.execDetached("--terse", "progress-custom", "8x1");
+        assertThat(result, asadminOK());
+        final String id = parseJobIdFromEchoTerse(result.getStdOut());
+        assertNotNull(id, "id");
         Thread.sleep(1500L);
         final int attachCount = 3;
-        Collection<Callable<NadminReturn>> attaches = new ArrayList<>(attachCount);
+        Collection<Callable<AsadminResult>> attaches = new ArrayList<>(attachCount);
         for (int i = 0; i < attachCount; i++) {
-            attaches.add(new Callable<NadminReturn>() {
+            attaches.add(new Callable<AsadminResult>() {
                 @Override
-                public NadminReturn call() throws Exception {
-                    return nadminWithOutput("attach", id);
+                public AsadminResult call() throws Exception {
+                    return ASADMIN.exec("attach", id);
                 }
             });
         }
-        List<Future<NadminReturn>> results = pool.invokeAll(attaches);
-        for (Future<NadminReturn> fRes : results) {
-            NadminReturn res = fRes.get();
-            assertTrue(res.returnValue);
-            assertTrue(res.out.contains("progress-custom"));
-            List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(res.out);
+        List<Future<AsadminResult>> results = pool.invokeAll(attaches);
+        for (Future<AsadminResult> fRes : results) {
+            AsadminResult res = fRes.get();
+            assertThat(res, asadminOK());
+            assertTrue(res.getStdOut().contains("progress-custom"));
+            List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(res.getStdOut());
             assertFalse(prgs.isEmpty());
-            assertTrue(prgs.get(0).getValue() > 0);
+            assertThat(prgs.get(0).getValue(), greaterThan(0));
             assertEquals(100, prgs.get(prgs.size() - 1).getValue());
         }
     }

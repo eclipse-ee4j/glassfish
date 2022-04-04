@@ -44,17 +44,17 @@ import static org.hamcrest.collection.IsMapWithSize.aMapWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AuthRealmITest extends RestTestBase {
-    private static final String URL_LIST_GROUP_NAMES = "domain/configs/config/server-config/security-service/auth-realm/admin-realm/list-group-names";
-    private static final String URL_SUPPORTS_USER_MANAGEMENT = "domain/configs/config/server-config/security-service/auth-realm/admin-realm/supports-user-management";
-    private static final String URL_LIST_ADMIN_REALM_USERS = "domain/configs/config/server-config/security-service/auth-realm/admin-realm/list-users";
-    private static final String URL_LIST_FILE_USERS = "domain/configs/config/server-config/security-service/auth-realm/file/list-users";
-    private static final String URL_CREATE_USER = "domain/configs/config/server-config/security-service/auth-realm/file/create-user";
-    private static final String URL_DELETE_USER = "domain/configs/config/server-config/security-service/auth-realm/file/delete-user";
-    private static final String URL_AUTH_REALM_CLASS_NAMES = "domain/list-predefined-authrealm-classnames";
+    private static final String URL_LIST_GROUP_NAMES = "/domain/configs/config/server-config/security-service/auth-realm/admin-realm/list-group-names";
+    private static final String URL_SUPPORTS_USER_MANAGEMENT = "/domain/configs/config/server-config/security-service/auth-realm/admin-realm/supports-user-management";
+    private static final String URL_LIST_ADMIN_REALM_USERS = "/domain/configs/config/server-config/security-service/auth-realm/admin-realm/list-users";
+    private static final String URL_LIST_FILE_USERS = "/domain/configs/config/server-config/security-service/auth-realm/file/list-users";
+    private static final String URL_CREATE_USER = "/domain/configs/config/server-config/security-service/auth-realm/file/create-user";
+    private static final String URL_DELETE_USER = "/domain/configs/config/server-config/security-service/auth-realm/file/delete-user";
+    private static final String URL_AUTH_REALM_CLASS_NAMES = "/domain/list-predefined-authrealm-classnames";
 
     @Test
     public void testListGroupNames() {
-        Response response = get(URL_LIST_GROUP_NAMES, Map.of("userName", "admin", "realmName", "admin-realm"));
+        Response response = managementClient.get(URL_LIST_GROUP_NAMES, Map.of("userName", "admin", "realmName", "admin-realm"));
         assertEquals(200, response.getStatus());
         final String entity = response.readEntity(String.class);
         Map responseMap = MarshallingUtils.buildMapFromDocument(entity);
@@ -65,7 +65,7 @@ public class AuthRealmITest extends RestTestBase {
 
     @Test
     public void testListAdminUsers() {
-        Response response = get(URL_LIST_ADMIN_REALM_USERS);
+        Response response = managementClient.get(URL_LIST_ADMIN_REALM_USERS);
         assertEquals(200, response.getStatus());
         final String entity = response.readEntity(String.class);
         Map<String, ?> responseMap = MarshallingUtils.buildMapFromDocument(entity);
@@ -82,7 +82,7 @@ public class AuthRealmITest extends RestTestBase {
 
     @Test
     public void testSupportsUserManagement() {
-        List<String> groups = getCommandResults(get(URL_SUPPORTS_USER_MANAGEMENT));
+        List<String> groups = getCommandResults(managementClient.get(URL_SUPPORTS_USER_MANAGEMENT));
         assertEquals("true", groups.get(0));
     }
 
@@ -91,19 +91,19 @@ public class AuthRealmITest extends RestTestBase {
     public void testUserManagement() {
         final String userName = "user" + generateRandomString();
         {
-            Response response = post(URL_CREATE_USER, Map.of("id", userName, "AS_ADMIN_USERPASSWORD", "password"));
+            Response response = managementClient.post(URL_CREATE_USER, Map.of("id", userName, "AS_ADMIN_USERPASSWORD", "password"));
             assertEquals(200, response.getStatus());
         }
         {
-            List<String> values = getCommandResults(get(URL_LIST_FILE_USERS));
+            List<String> values = getCommandResults(managementClient.get(URL_LIST_FILE_USERS));
             assertThat(values, hasItem(userName));
         }
         {
-            Response response = delete(URL_DELETE_USER, Map.of("id", userName));
+            Response response = managementClient.delete(URL_DELETE_USER, Map.of("id", userName));
             assertEquals(200, response.getStatus());
         }
         {
-            List<String> values = getCommandResults(get(URL_LIST_FILE_USERS));
+            List<String> values = getCommandResults(managementClient.get(URL_LIST_FILE_USERS));
             assertThat(values, not(hasItem(userName)));
         }
     }
@@ -111,7 +111,7 @@ public class AuthRealmITest extends RestTestBase {
 
     @Test
     public void testListAuthRealmClassNames() {
-        List<String> classNameList = getCommandResults(get(URL_AUTH_REALM_CLASS_NAMES));
+        List<String> classNameList = getCommandResults(managementClient.get(URL_AUTH_REALM_CLASS_NAMES));
         assertThat(classNameList.toString(), classNameList, hasSize(6));
         String[] realms = Stream.of(JDBCRealm.class, PamRealm.class, CertificateRealm.class, FileRealm.class,
             LDAPRealm.class, SolarisRealm.class).map(Class::getName).toArray(String[]::new);

@@ -19,31 +19,60 @@ package org.glassfish.nucleus.admin.rest;
 
 
 import jakarta.ws.rs.core.Response;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.nucleus.test.tool.DomainAdminRestClient;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
+ * Note regards HTTP 200/202 - not sure why it is happening, but the server probably needs some time
+ * to propagate changes, while we request another.
+ *
  * @author Mitesh Meswani
  */
 @TestMethodOrder(OrderAnnotation.class)
 public class MonitoringITest extends RestTestBase {
-    private static final String MONITORING_RESOURCE_URL = "domain/configs/config/server-config/monitoring-service/module-monitoring-levels";
-    private static final String JDBC_CONNECTION_POOL_URL = "domain/resources/jdbc-connection-pool";
-    private static final String PING_CONNECTION_POOL_URL = "domain/resources/ping-connection-pool";
-    private static final String CONTEXT_ROOT_MONITORING = "monitoring";
+
+    private static final String MONITORING_RESOURCE_URL = "/domain/configs/config/server-config/monitoring-service/module-monitoring-levels";
+    private static final String JDBC_CONNECTION_POOL_URL = "/domain/resources/jdbc-connection-pool";
+    private static final String PING_CONNECTION_POOL_URL = "/domain/resources/ping-connection-pool";
+    private static final String POOL_NAME_W_DOT = "poolNameWith.dot";
+
+    private static DomainAdminRestClient monitoringClient;
+
+    @BeforeAll
+    public static void init() {
+        monitoringClient = new DomainAdminRestClient(getBaseAdminUrl() + "/monitoring");
+    }
+
+
+    @AfterAll
+    public static void closeResources() {
+        Response responseDel = managementClient.delete(JDBC_CONNECTION_POOL_URL + '/' + POOL_NAME_W_DOT);
+        assertThat(responseDel.getStatus(), anyOf(equalTo(200), equalTo(202), equalTo(404)));
+        if (monitoringClient != null) {
+            monitoringClient.close();
+        }
+    }
+
 
     @Test
     @Order(1)
     public void enableMonitoring() {
-        String url = getManagementURL(MONITORING_RESOURCE_URL);
         Map<String, String> payLoad = new HashMap<>() {
             {
                 put("ThreadPool", "HIGH");
@@ -64,8 +93,8 @@ public class MonitoringITest extends RestTestBase {
                 put("Jersey", "HIGH");
             }
         };
-        Response response = post(url, payLoad);
-        assertEquals(202, response.getStatus());
+        Response response = managementClient.post(MONITORING_RESOURCE_URL, payLoad);
+        assertThat(response.getStatus(), anyOf(equalTo(200), equalTo(202)));
     }
 
     /**
@@ -75,11 +104,11 @@ public class MonitoringITest extends RestTestBase {
     @Test
     @Order(2)
     public void testBaseURL() {
-        Response response = get("domain");
-        assertEquals(200, response.getStatus());
+        Response response = monitoringClient.get("/domain");
+        assertThat(response.getStatus(), anyOf(equalTo(200), equalTo(202)));
         // monitoring/domain
         Map<String, String> entity = getChildResources(response);
-        assertNull(entity.get("server"), entity.toString());
+        assertNotNull(entity.get("server"), entity.toString());
     }
 
     /**
@@ -89,7 +118,7 @@ public class MonitoringITest extends RestTestBase {
     @Test
     @Order(10)
     public void testInvalidResource() {
-        Response response = get("domain/server/foo");
+        Response response = monitoringClient.get("/domain/server/foo");
         assertEquals(404, response.getStatus(), "Did not receive ");
     }
 
@@ -100,75 +129,56 @@ public class MonitoringITest extends RestTestBase {
     @Test
     @Order(20)
     public void testDot() {
-        // Step 1- Create a resource with "."
-        final String poolNameWithDot = "poolNameWith.dot";
+        Response responseDel = managementClient.delete(JDBC_CONNECTION_POOL_URL + '/' + POOL_NAME_W_DOT);
+        assertThat(responseDel.getStatus(), equalTo(404));
 
-        // Clean up from leftover from previous run
-        String url = getManagementURL(JDBC_CONNECTION_POOL_URL + '/' + poolNameWithDot);
-        Response responseDel = delete(url);
-        assertEquals(202, responseDel.getStatus());
-
-        url = getManagementURL(JDBC_CONNECTION_POOL_URL);
         Map<String, String> payLoad = new HashMap<>() {
             {
-                put("name", poolNameWithDot);
+                put("name", POOL_NAME_W_DOT);
                 put("resType", "javax.sql.DataSource");
                 put("datasourceClassname", "foo.bar");
             }
         };
-        Response response = post(url, payLoad);
-        assertEquals(202, response.getStatus());
-
+        Response response = managementClient.post(JDBC_CONNECTION_POOL_URL, payLoad);
+        assertThat(response.getStatus(), anyOf(equalTo(200), equalTo(202)));
 
         // Step 2- Ping the connection pool to generate some monitoring data
-        url = getManagementURL(PING_CONNECTION_POOL_URL);
-        Response responsePing = get(url, Map.of("id", poolNameWithDot));
-        assertEquals(202, responsePing.getStatus());
+        Response responsePing = managementClient.get(PING_CONNECTION_POOL_URL, Map.of("id", POOL_NAME_W_DOT));
+        // foo.bar is invalid ds class
+        assertThat(responsePing.toString(), responsePing.getStatus(), equalTo(500));
 
         // Step 3 - Access monitoring tree to assert it is accessible
-        // FIXME: As of 03.04.2022 Utils.getJerseyClient here throws exception:
-        // java.lang.ClassNotFoundException: Provider for jakarta.ws.rs.client.ClientBuilder cannot be found
-//        Response responsePool = get("domain/server/resources/" + poolNameWithDot);
-//        assertEquals(200, responsePool.getStatus());
-//        Map<String, String> responseEntity = getEntityValues(responsePool);
-//        assertThat("No Monitoring data found for pool " + poolNameWithDot, responseEntity, aMapWithSize(2));
+        Response responsePool = monitoringClient.get("/domain/server/resources/" + POOL_NAME_W_DOT);
+        assertEquals(200, responsePool.getStatus());
+        Map<String, String> responseEntity = getEntityValues(responsePool);
+        assertThat("Monitoring data: \n" + responseEntity, responseEntity, aMapWithSize(14));
     }
 
 
     @Test
     @Order(1000)
     public void testCleanup() {
-        String url = getManagementURL(MONITORING_RESOURCE_URL);
         Map<String, String> payLoad = new HashMap<>() {
             {
-                put("ThreadPool", "LOW");
-                put("Orb", "LOW");
-                put("EjbContainer", "LOW");
-                put("WebContainer", "LOW");
-                put("Deployment", "LOW");
-                put("TransactionService", "LOW");
-                put("HttpService", "LOW");
-                put("JdbcConnectionPool", "LOW");
-                put("ConnectorConnectionPool", "LOW");
-                put("ConnectorService", "LOW");
-                put("JmsService", "LOW");
-                put("Jvm", "LOW");
-                put("Security", "LOW");
-                put("WebServicesContainer", "LOW");
-                put("Jpa", "LOW");
-                put("Jersey", "LOW");
+                put("ThreadPool", "OFF");
+                put("Orb", "OFF");
+                put("EjbContainer", "OFF");
+                put("WebContainer", "OFF");
+                put("Deployment", "OFF");
+                put("TransactionService", "OFF");
+                put("HttpService", "OFF");
+                put("JdbcConnectionPool", "OFF");
+                put("ConnectorConnectionPool", "OFF");
+                put("ConnectorService", "OFF");
+                put("JmsService", "OFF");
+                put("Jvm", "OFF");
+                put("Security", "OFF");
+                put("WebServicesContainer", "OFF");
+                put("Jpa", "OFF");
+                put("Jersey", "OFF");
             }
         };
-        Response response = post(url, payLoad);
-        assertEquals(202, response.getStatus());
-    }
-
-    @Override
-    protected String getContextRoot() {
-        return CONTEXT_ROOT_MONITORING;
-    }
-
-    private String getManagementURL(String targetResourceURL) {
-        return getBaseAdminUrl() + CONTEXT_ROOT_MANAGEMENT + targetResourceURL;
+        Response response = managementClient.post(MONITORING_RESOURCE_URL, payLoad);
+        assertThat(response.getStatus(), anyOf(equalTo(200), equalTo(202)));
     }
 }

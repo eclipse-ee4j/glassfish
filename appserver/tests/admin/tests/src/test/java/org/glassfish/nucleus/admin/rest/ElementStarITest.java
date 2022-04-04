@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author jasonlee
  */
 public class ElementStarITest extends RestTestBase {
-    private static final String URL_CREATE_INSTANCE = "domain/create-instance";
+    private static final String URL_CREATE_INSTANCE = "/domain/create-instance";
 
     private String instanceName1;
     private String instanceName2;
@@ -47,19 +47,22 @@ public class ElementStarITest extends RestTestBase {
         instanceName1 = "instance_" + generateRandomString();
         instanceName2 = "instance_" + generateRandomString();
 
-        Response response = post(URL_CREATE_INSTANCE, Map.of("id", instanceName1, "node", "localhost-domain1"));
+        Response response = managementClient.post(URL_CREATE_INSTANCE,
+            Map.of("id", instanceName1, "node", "localhost-domain1"));
         assertThat(response.getStatus(), equalTo(200));
-        response = post(URL_CREATE_INSTANCE, Map.of("id", instanceName2, "node", "localhost-domain1"));
+        response = managementClient.post(URL_CREATE_INSTANCE, Map.of("id", instanceName2, "node", "localhost-domain1"));
         assertEquals(200, response.getStatus());
     }
 
+
     @AfterEach
     public void after() {
-        Response response = delete("domain/servers/server/" + instanceName1 + "/delete-instance");
+        Response response = managementClient.delete("/domain/servers/server/" + instanceName1 + "/delete-instance");
         assertEquals(200, response.getStatus());
-        response = delete("domain/servers/server/" + instanceName2 + "/delete-instance");
+        response = managementClient.delete("/domain/servers/server/" + instanceName2 + "/delete-instance");
         assertEquals(200, response.getStatus());
     }
+
 
     @Test
     public void testApplications() throws URISyntaxException {
@@ -71,29 +74,33 @@ public class ElementStarITest extends RestTestBase {
         addAppRef(app1, instanceName1);
         addAppRef(app2, instanceName1);
 
-        Response response = get("domain/servers/server/" + instanceName1 + "/application-ref");
+        Response response = managementClient.get("/domain/servers/server/" + instanceName1 + "/application-ref");
         Map<String, String> children = this.getChildResources(response);
         assertThat(children, aMapWithSize(2));
     }
 
+
     @Test
     public void testResources() {
         // The DAS should already have two resource-refs (jdbc/__TimerPool and jdbc/__default)
-        Response response = get ("domain/servers/server/server/resource-ref");
+        Response response = managementClient.get("/domain/servers/server/server/resource-ref");
         Map<String, String> children = this.getChildResources(response);
         assertThat(children, aMapWithSize(7));
     }
 
+
     @Test
     public void testLoadBalancerConfigs() {
         final String lbName = "lbconfig-" + generateRandomString();
-        Response response = post("domain/lb-configs/lb-config/", Map.of("id", lbName, "target", instanceName1));
+        Response response = managementClient.post("/domain/lb-configs/lb-config/",
+            Map.of("id", lbName, "target", instanceName1));
         assertEquals(200, response.getStatus());
 
-        response = post("domain/lb-configs/lb-config/" + lbName + "/create-http-lb-ref", Map.of("id", instanceName2));
+        response = managementClient.post("/domain/lb-configs/lb-config/" + lbName + "/create-http-lb-ref",
+            Map.of("id", instanceName2));
         assertEquals(200, response.getStatus());
 
-        response = get ("domain/lb-configs/lb-config/" + lbName + "/server-ref");
+        response = managementClient.get("/domain/lb-configs/lb-config/" + lbName + "/server-ref");
         Map<String, String> children = getChildResources(response);
         assertThat(children, aMapWithSize(1));
     }

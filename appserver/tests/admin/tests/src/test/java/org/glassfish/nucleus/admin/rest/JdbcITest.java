@@ -38,7 +38,7 @@ public class JdbcITest extends RestTestBase {
 
     @Test
     public void testReadingPoolEntity() {
-        Map<String, String> entity = getEntityValues(get(URL_JDBC_CONNECTION_POOL + "/__TimerPool"));
+        Map<String, String> entity = getEntityValues(managementClient.get(URL_JDBC_CONNECTION_POOL + "/__TimerPool"));
         assertEquals("__TimerPool", entity.get("name"));
     }
 
@@ -49,16 +49,16 @@ public class JdbcITest extends RestTestBase {
         Map<String, String> params = new HashMap<>();
         params.put("name", poolName);
         params.put("datasourceClassname", "org.apache.derby.jdbc.ClientDataSource");
-        Response response = post(URL_JDBC_CONNECTION_POOL, params);
+        Response response = managementClient.post(URL_JDBC_CONNECTION_POOL, params);
         assertEquals(200, response.getStatus());
 
-        Map<String, String> entity = getEntityValues(get(URL_JDBC_CONNECTION_POOL + "/" + poolName));
+        Map<String, String> entity = getEntityValues(managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + poolName));
         assertThat(entity, aMapWithSize(greaterThan(40)));
 
-        response = delete(URL_JDBC_CONNECTION_POOL + "/" + poolName, Map.of());
+        response = managementClient.delete(URL_JDBC_CONNECTION_POOL + "/" + poolName, Map.of());
         assertEquals(200, response.getStatus());
 
-        response = get(URL_JDBC_CONNECTION_POOL + "/" + poolName);
+        response = managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + poolName);
         assertEquals(404, response.getStatus());
     }
 
@@ -71,18 +71,18 @@ public class JdbcITest extends RestTestBase {
         params.put("name", poolName);
         params.put("poolName", "DerbyPool");
 
-        Response response = post(URL_JDBC_RESOURCE, params);
+        Response response = managementClient.post(URL_JDBC_RESOURCE, params);
         assertEquals(500, response.getStatus());
 
-        Response responseGet = get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
+        Response responseGet = managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
         assertEquals(500, response.getStatus());
         Map<String, String> entity = getEntityValues(responseGet);
         assertNull(entity);
 
-        response = delete("/" + encodedPoolName, Map.of());
+        response = managementClient.delete("/" + encodedPoolName, Map.of());
         assertEquals(500, response.getStatus());
 
-        response = get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
+        response = managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
         assertEquals(500, response.getStatus());
     }
 
@@ -91,7 +91,7 @@ public class JdbcITest extends RestTestBase {
     public void createDuplicateResource() {
         final String resourceName = "jdbc/__default";
         Map<String, String> params = Map.of("id", resourceName, "poolName", "DerbyPool");
-        Response response = post(URL_JDBC_RESOURCE, params);
+        Response response = managementClient.post(URL_JDBC_RESOURCE, params);
         assertEquals(500, response.getStatus());
     }
 
@@ -101,7 +101,7 @@ public class JdbcITest extends RestTestBase {
         final String poolName = "DerbyPool";
         Map<String, String> params = Map.of("id", poolName, "datasourceClassname",
             "org.apache.derby.jdbc.ClientDataSource");
-        Response response = post(URL_JDBC_CONNECTION_POOL, params);
+        Response response = managementClient.post(URL_JDBC_CONNECTION_POOL, params);
         assertEquals(500, response.getStatus());
     }
 }

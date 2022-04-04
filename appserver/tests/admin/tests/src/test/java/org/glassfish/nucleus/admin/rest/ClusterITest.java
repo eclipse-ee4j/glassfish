@@ -37,7 +37,7 @@ public class ClusterITest extends RestTestBase {
         final String clusterName = "cluster_" + generateRandomString();
         createCluster(clusterName);
 
-        Map<String, String> entity = getEntityValues(get(URL_CLUSTER + "/" + clusterName));
+        Map<String, String> entity = getEntityValues(managementClient.get(URL_CLUSTER + "/" + clusterName));
         assertEquals(clusterName + "-config", entity.get("configRef"));
 
         deleteCluster(clusterName);
@@ -46,16 +46,16 @@ public class ClusterITest extends RestTestBase {
     @Test
     public void testListLifecycleModules() {
         final String clusterName = "cluster_" + generateRandomString();
-        Response response = post(URL_CLUSTER, Map.of("id", clusterName));
+        Response response = managementClient.post(URL_CLUSTER, Map.of("id", clusterName));
         assertThat(response.getStatus(), equalTo(200));
 
-        response = get(URL_CLUSTER + "/" + clusterName + "/list-lifecycle-modules");
+        response = managementClient.get(URL_CLUSTER + "/" + clusterName + "/list-lifecycle-modules");
         assertThat(response.getStatus(), equalTo(200));
 
-        response = delete(URL_CLUSTER + "/" + clusterName);
+        response = managementClient.delete(URL_CLUSTER + "/" + clusterName);
         assertThat(response.getStatus(), equalTo(200));
 
-        response = get(URL_CLUSTER + "/" + clusterName);
+        response = managementClient.get(URL_CLUSTER + "/" + clusterName);
         assertEquals(404, response.getStatus());
     }
 }

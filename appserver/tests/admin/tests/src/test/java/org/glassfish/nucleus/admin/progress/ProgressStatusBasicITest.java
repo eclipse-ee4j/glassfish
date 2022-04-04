@@ -19,13 +19,13 @@ package org.glassfish.nucleus.admin.progress;
 
 import java.util.List;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.isIncreasing;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,14 +35,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author martinmares
  */
-@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusBasicITest {
+
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     public void simple() {
-        NadminReturn result = nadminWithOutput("progress-simple");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("progress-simple");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, isIncreasing());
         assertEquals(12, prgs.size());
         for (int i = 0; i < 11; i++) {
@@ -53,9 +54,9 @@ public class ProgressStatusBasicITest {
 
     @Test
     public void simpleNoTotal() {
-        NadminReturn result = nadminWithOutput("progress-simple", "--nototalsteps");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("progress-simple", "--nototalsteps");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, isIncreasing());
         boolean nonPercentageExists = false;
         for (ProgressMessage prg : prgs) {
@@ -69,9 +70,9 @@ public class ProgressStatusBasicITest {
 
     @Test
     public void simpleSpecInAnnotation() {
-        NadminReturn result = nadminWithOutput("progress-full-annotated");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("progress-full-annotated");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, hasSize(12));
         assertThat(prgs, isIncreasing());
         for (int i = 0; i < 11; i++) {
@@ -83,9 +84,9 @@ public class ProgressStatusBasicITest {
 
     @Test
     public void simpleTerse() {
-        NadminReturn result = nadminWithOutput("--terse", "progress-simple");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("--terse", "progress-simple");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, hasSize(0));
     }
 }

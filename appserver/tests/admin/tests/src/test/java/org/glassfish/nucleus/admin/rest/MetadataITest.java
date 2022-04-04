@@ -33,12 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author jasonlee
  */
 public class MetadataITest extends RestTestBase {
-    private static final String URL_CONFIG = "domain/configs/config.json";
-    private static final String URL_UPTIMECOMMAND = "domain/uptime.json";
+    private static final String URL_CONFIG = "/domain/configs/config.json";
+    private static final String URL_UPTIMECOMMAND = "/domain/uptime.json";
 
     @Test
     public void configParameterTest() {
-        Response response = options(URL_CONFIG);
+        Response response = managementClient.options(URL_CONFIG);
         assertEquals(200, response.getStatus());
         // Really dumb test.  Should be good enough for now
 
@@ -46,21 +46,21 @@ public class MetadataITest extends RestTestBase {
         assertNotNull(extraProperties);
 
         // Another dumb test to make sure that "name" shows up on the HTML page
-        response = getClient().target(getAddress(URL_CONFIG)).request().get(Response.class);
+        response = managementClient.get(URL_CONFIG);
         String data = response.readEntity(String.class);
         assertThat(data, stringContainsInOrder("extraProperties"));
     }
 
     @Test
     public void upTimeMetadaDataTest() {
-        Response response = options(URL_UPTIMECOMMAND);
+        Response response = managementClient.options(URL_UPTIMECOMMAND);
         assertEquals(200, response.getStatus());
 
-        Map extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        Map<String, ?> extraProperties = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         assertNotNull(extraProperties);
 
         // Another dumb test to make sure that "extraProperties" shows up on the HTML page
-        response = getClient().target(getAddress(URL_UPTIMECOMMAND)).request().get(Response.class);
+        response = managementClient.get(URL_UPTIMECOMMAND);
         String resp = response.readEntity(String.class);
         assertThat(resp, stringContainsInOrder("extraProperties"));
         // test to see if we get the milliseconds parameter description which is an

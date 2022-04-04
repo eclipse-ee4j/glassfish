@@ -16,18 +16,33 @@
 
 package org.glassfish.nucleus.test.tool;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.hamcrest.CustomTypeSafeMatcher;
 
 
 /**
+ * Matcher checking that {@link Asadmin} command succeeded. Prints it's output otherwise.
+ *
  * @author David Matejcek
  */
-public class DomainLifecycleExtension extends StopDomainExtension implements BeforeAllCallback {
+public class AsadminResultMatcher extends CustomTypeSafeMatcher<AsadminResult> {
+
+    private AsadminResultMatcher() {
+        super("asadmin succeeded");
+    }
 
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
-        NucleusTestUtils.nadmin(20000, "start-domain", "--debug", "domain1");
+    protected boolean matchesSafely(AsadminResult item) {
+        return !item.isError();
+    }
+
+
+    /**
+     * @return matcher checking that {@link Asadmin} command succeeded. Prints it's output otherwise.
+     */
+    public static AsadminResultMatcher asadminOK() {
+        return new AsadminResultMatcher();
     }
 }

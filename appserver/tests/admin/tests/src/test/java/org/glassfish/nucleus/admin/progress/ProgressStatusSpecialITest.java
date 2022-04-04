@@ -20,13 +20,13 @@ package org.glassfish.nucleus.admin.progress;
 import java.util.Iterator;
 import java.util.List;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.isIncreasing;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
@@ -36,14 +36,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author martinmares
  */
-@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusSpecialITest {
+
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     public void stepBackCommand() {
-        NadminReturn result = nadminWithOutput("progress-step-back");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("progress-step-back");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, not(isIncreasing()));
         Iterator<ProgressMessage> itr = prgs.iterator();
         while (itr.hasNext()) {
@@ -67,9 +68,9 @@ public class ProgressStatusSpecialITest {
 
     @Test
     public void doubleTotalCommand() {
-        NadminReturn result = nadminWithOutput("progress-double-totals");
-        assertTrue(result.returnValue);
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        AsadminResult result = ASADMIN.exec("progress-double-totals");
+        assertThat(result, asadminOK());
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, not(isIncreasing()));
     }
 

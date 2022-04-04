@@ -29,15 +29,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author jasonlee
  */
 public class PartialUpdateITest extends RestTestBase {
+
     @Test
     public void testPartialUpdate() {
         final String endpoint = URL_JDBC_CONNECTION_POOL + "/DerbyPool";
         final String newDesc = generateRandomString();
-        Map<String, String> origAttrs = getEntityValues(get(endpoint));
+        Map<String, String> origAttrs = getEntityValues(managementClient.get(endpoint));
         Map<String, String> newAttrs = Map.of("description", newDesc);
-        Response response = post(endpoint, newAttrs);
+        Response response = managementClient.post(endpoint, newAttrs);
         assertEquals(200, response.getStatus());
-        Map<String, String> updatedAttrs = getEntityValues(get(endpoint));
+        Map<String, String> updatedAttrs = getEntityValues(managementClient.get(endpoint));
         assertEquals(newDesc, updatedAttrs.get("description"));
         assertEquals(origAttrs.get("driverClassname"), updatedAttrs.get("driverClassname"));
         assertEquals(origAttrs.get("resType"), updatedAttrs.get("resType"));

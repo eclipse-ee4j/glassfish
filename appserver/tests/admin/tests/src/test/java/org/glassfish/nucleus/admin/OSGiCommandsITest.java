@@ -26,15 +26,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,12 +42,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author sanjeeb.sahoo@oracle.com
  */
-@ExtendWith(DomainLifecycleExtension.class)
 public class OSGiCommandsITest {
+
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     public void basicOsgiCmd() {
-        assertTrue(nadmin("osgi", "lb"));
+        assertThat(ASADMIN.exec("osgi", "lb"), asadminOK());
     }
 
 
@@ -103,27 +102,11 @@ public class OSGiCommandsITest {
         try (PrintStream ps = new PrintStream(new FileOutputStream(cmdFile))) {
             ps.println("help");
             ps.println("lb");
-            NucleusTestUtils.NadminReturn value = nadminWithOutput("osgi-shell", "--file", cmdFile.getAbsolutePath());
-            assertTrue(value.out.contains("System Bundle"));
+            AsadminResult value = ASADMIN.exec("osgi-shell", "--file", cmdFile.getAbsolutePath());
+            assertTrue(value.getStdOut().contains("System Bundle"));
         }
     }
 
-
-    private List<String> runCmd(String... cmd) throws Exception {
-        NadminReturn value = nadminWithOutput(cmd);
-        if (!value.returnValue) {
-            throw new Exception("Cmd failed: \n" + value.outAndErr);
-        }
-        List<String> output = new ArrayList<>();
-        for (String line : value.out.split("\\n")) {
-            line = line.trim();
-            if (line.isEmpty() || line.startsWith("nadmin") || line.startsWith("Command")) {
-                continue;
-            }
-            output.add(line);
-        }
-        return output;
-    }
 
     private String newCmdSession() throws Exception {
         List<String> value = runCmd("osgi", "--session", "new");
@@ -136,5 +119,20 @@ public class OSGiCommandsITest {
     private Set<String> listCmdSessions() throws Exception {
         List<String> sessions = runCmd("osgi", "--session", "list");
         return new HashSet<>(sessions);
+    }
+
+
+    private List<String> runCmd(String... cmd) throws Exception {
+        AsadminResult value = ASADMIN.exec(cmd);
+        assertThat(value, asadminOK());
+        List<String> output = new ArrayList<>();
+        for (String line : value.getStdOut().split("\\n")) {
+            line = line.trim();
+            if (line.isEmpty() || line.startsWith(ASADMIN.getCommandName()) || line.startsWith("Command")) {
+                continue;
+            }
+            output.add(line);
+        }
+        return output;
     }
 }

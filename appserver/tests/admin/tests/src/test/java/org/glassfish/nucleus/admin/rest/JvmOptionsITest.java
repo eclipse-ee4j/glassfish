@@ -21,7 +21,6 @@ import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,27 +30,29 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jasonlee
  */
 public class JvmOptionsITest extends RestTestBase {
-    private static final String URL_SERVER_JVM_OPTIONS = "domain/configs/config/server-config/java-config/jvm-options";
-    private static final String URL_DEFAULT_JVM_OPTIONS = "domain/configs/config/default-config/java-config/jvm-options";
+    private static final String URL_SERVER_JVM_OPTIONS = "/domain/configs/config/server-config/java-config/jvm-options";
+    private static final String URL_DEFAULT_JVM_OPTIONS = "/domain/configs/config/default-config/java-config/jvm-options";
 
-    private static final String URL_SERVER_CONFIG_CREATE_PROFILER = "domain/configs/config/server-config/java-config/create-profiler";
-    private static final String URL_SERVER_CONFIG_DELETE_PROFILER = "domain/configs/config/server-config/java-config/profiler/delete-profiler";
+    private static final String URL_SERVER_CONFIG_CREATE_PROFILER = "/domain/configs/config/server-config/java-config/create-profiler";
+    private static final String URL_SERVER_CONFIG_DELETE_PROFILER = "/domain/configs/config/server-config/java-config/profiler/delete-profiler";
     private static final String URL_SERVER_CONFIG_PROFILER_JVM_OPTIONS = "/domain/configs/config/server-config/java-config/profiler/jvm-options";
 
-    private static final String URL_DEFAULT_CONFIG_CREATE_PROFILER = "domain/configs/config/default-config/java-config/create-profiler";
-    private static final String URL_DEFAULT_CONFIG_DELETE_PROFILER = "domain/configs/config/default-config/java-config/profiler/delete-profiler";
-    private static final String URL_DEFAULT_CONFIG_PROFILER_JVM_OPTIONS = "domain/configs/config/default-config/java-config/profiler/jvm-options";
+    private static final String URL_DEFAULT_CONFIG_CREATE_PROFILER = "/domain/configs/config/default-config/java-config/create-profiler";
+    private static final String URL_DEFAULT_CONFIG_DELETE_PROFILER = "/domain/configs/config/default-config/java-config/profiler/delete-profiler";
+    private static final String URL_DEFAULT_CONFIG_PROFILER_JVM_OPTIONS = "/domain/configs/config/default-config/java-config/profiler/jvm-options";
 
     private static RestTestBase configManagement;
     private String testConfigName;
@@ -71,7 +72,7 @@ public class JvmOptionsITest extends RestTestBase {
             add("id", testConfigName);
         }};
         configManagement.createAndVerifyConfig(testConfigName, formData);
-        testConfigUrl = "domain/configs/config/" + testConfigName;
+        testConfigUrl = "/domain/configs/config/" + testConfigName;
         testConfigJvmOptionsUrl = testConfigUrl + "/java-config/jvm-options";
     }
 
@@ -83,7 +84,7 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void getJvmOptions() {
-        Response response = get(URL_SERVER_JVM_OPTIONS);
+        Response response = managementClient.get(URL_SERVER_JVM_OPTIONS);
         assertEquals(200, response.getStatus());
         Map<String, ?> responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
         List<String> jvmOptions = (List<String>)((Map)responseMap.get("extraProperties")).get("leafList");
@@ -93,90 +94,75 @@ public class JvmOptionsITest extends RestTestBase {
     @Test
     public void createAndDeleteOptions() {
         final String option1Name = "-Doption" + generateRandomString();
-        Map<String, String> newOptions = new HashMap<>() {{
-            put(option1Name, "someValue");
-        }};
+        Map<String, String> newOptions = Map.of(option1Name, "someValue");
 
-        Response response = post(testConfigJvmOptionsUrl, newOptions);
+        Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(option1Name+"=someValue"));
+        assertThat(jvmOptions, hasItem(option1Name + "=someValue"));
 
-        response = delete(testConfigJvmOptionsUrl, newOptions);
+        response = managementClient.delete(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         jvmOptions = getJvmOptions(response);
-        assertFalse(jvmOptions.contains(option1Name+"=someValue"));
+        assertThat(jvmOptions, not(hasItem(option1Name + "=someValue")));
     }
 
     @Test
     public void createAndDeleteOptionsWithBackslashes() {
         final String optionName = "-Dfile" + generateRandomString();
         final String optionValue = "C:\\ABC\\DEF\\";
-        Map<String, String> newOptions = new HashMap<>() {{
-            put(optionName, escape(optionValue));
-        }};
+        Map<String, String> newOptions = Map.of(optionName, escape(optionValue));
 
-        Response response = post(testConfigJvmOptionsUrl, newOptions);
+        Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(optionName+"="+optionValue));
+        assertThat(jvmOptions, hasItem(optionName + "=" + optionValue));
 
-        response = delete(testConfigJvmOptionsUrl, newOptions);
+        response = managementClient.delete(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         jvmOptions = getJvmOptions(response);
-        assertFalse(jvmOptions.contains(optionName+"="+optionValue));
+        assertThat(jvmOptions, not(hasItem(optionName + "=" + optionValue)));
     }
 
     @Test
     public void createAndDeleteOptionsWithoutValues() {
         final String option1Name = "-Doption" + generateRandomString();
         final String option2Name = "-Doption" + generateRandomString();
-        Map<String, String> newOptions = new HashMap<>() {{
-            put(option1Name, "");
-            put(option2Name, "");
-        }};
-
-        Response response = post(testConfigJvmOptionsUrl, newOptions);
+        Map<String, String> newOptions = Map.of(option1Name, "", option2Name, "");
+        Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(option1Name));
-        assertFalse(jvmOptions.contains(option1Name+"="));
-        assertTrue(jvmOptions.contains(option2Name));
-        assertFalse(jvmOptions.contains(option2Name+"="));
+        assertThat(jvmOptions, hasItems(option2Name, option2Name));
+        assertThat(jvmOptions, not(hasItems(option1Name + '=', option2Name + '=')));
 
-        response = delete(testConfigJvmOptionsUrl, newOptions);
+        response = managementClient.delete(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         jvmOptions = getJvmOptions(response);
-        assertFalse(jvmOptions.contains(option1Name));
-        assertFalse(jvmOptions.contains(option2Name));
+        assertThat(jvmOptions, allOf(not(hasItem(option1Name)), not(hasItem(option2Name))));
     }
 
     @Test
     public void testIsolatedOptionsCreationOnNewConfig() {
         final String optionName = "-Doption" + generateRandomString();
-
-        Map<String, String> newOptions = new HashMap<>() {{
-            put(optionName, "");
-            put("target", testConfigName);
-        }};
+        Map<String, String> newOptions = Map.of(optionName, "", "target", testConfigName);
 
         // Test new config to make sure option is there
-        Response response = post(testConfigJvmOptionsUrl, newOptions);
+        Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(optionName));
+        assertThat(jvmOptions, hasItem(optionName));
 
         // Test server-config to make sure the options are NOT there
-        response = get(URL_SERVER_JVM_OPTIONS);
+        response = managementClient.get(URL_SERVER_JVM_OPTIONS);
         jvmOptions = getJvmOptions(response);
-        assertFalse(jvmOptions.contains(optionName));
+        assertThat(jvmOptions, not(hasItem(optionName)));
     }
 
     @Test
@@ -187,15 +173,15 @@ public class JvmOptionsITest extends RestTestBase {
         Map<String, String> newOptions = Map.of(optionName, "");
         deleteProfiler(testConfigUrl + "/java-config/profiler/delete-profiler", testConfigName, false);
 
-        Response response = post(testConfigUrl + "/java-config/create-profiler", attrs);
+        Response response = managementClient.post(testConfigUrl + "/java-config/create-profiler", attrs);
         assertEquals(200, response.getStatus());
 
-        response = post(testConfigUrl + "/java-config/profiler/jvm-options", newOptions);
+        response = managementClient.post(testConfigUrl + "/java-config/profiler/jvm-options", newOptions);
         assertEquals(200, response.getStatus());
 
-        response = get(testConfigUrl + "/java-config/profiler/jvm-options");
+        response = managementClient.get(testConfigUrl + "/java-config/profiler/jvm-options");
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(optionName));
+        assertThat(jvmOptions, hasItem(optionName));
 
         deleteProfiler(testConfigUrl + "/java-config/profiler/delete-profiler", testConfigName, true);
     }
@@ -204,26 +190,24 @@ public class JvmOptionsITest extends RestTestBase {
     public void testJvmOptionWithColon() {
         final String optionName = "-XX:MaxPermSize";
         final String optionValue = "152m";
-        Map<String, String> newOptions = new HashMap<>() {{
-            put(escape(optionName), optionValue);
-        }};
+        Map<String, String> newOptions = Map.of(escape(optionName), optionValue);
 
-        Response response = post(testConfigJvmOptionsUrl, newOptions);
+        Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         assertEquals(200, response.getStatus());
         List<String> jvmOptions = getJvmOptions(response);
-        assertTrue(jvmOptions.contains(optionName+"="+optionValue));
+        assertThat(jvmOptions, hasItem(optionName + '=' + optionValue));
 
-        response = delete(testConfigJvmOptionsUrl, newOptions);
+        response = managementClient.delete(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
-        response = get(testConfigJvmOptionsUrl);
+        response = managementClient.get(testConfigJvmOptionsUrl);
         jvmOptions = getJvmOptions(response);
-        assertFalse(jvmOptions.contains(optionName+"="+optionValue));
+        assertThat(jvmOptions, not(hasItem(optionName + '=' + optionValue)));
     }
 
     private void deleteProfiler(final String url, final String target, final boolean failOnError) {
-        Response response = delete(url, Map.of("target", target));
+        Response response = managementClient.delete(url, Map.of("target", target));
         if (failOnError) {
             assertEquals(200, response.getStatus());
         }

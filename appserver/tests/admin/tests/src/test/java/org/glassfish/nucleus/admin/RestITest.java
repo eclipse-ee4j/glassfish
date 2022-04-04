@@ -19,25 +19,20 @@ package org.glassfish.nucleus.admin;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
-import java.net.URL;
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.junit.jupiter.api.Test;
+
+import static org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment.openConnection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(DomainLifecycleExtension.class)
 public class RestITest {
 
     @Test
     public void testManagementEndpoint() throws Exception {
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain.xml");
+        HttpURLConnection connection = openConnection("/management/domain.xml");
         try {
             assertEquals(200, connection.getResponseCode());
         } finally {
@@ -47,7 +42,7 @@ public class RestITest {
 
     @Test
     public void testMonitoringEndpoint() throws Exception {
-        HttpURLConnection connection = getConnection("http://localhost:4848/monitoring/domain.xml");
+        HttpURLConnection connection = openConnection("/monitoring/domain.xml");
         try {
             assertEquals(200, connection.getResponseCode());
         } finally {
@@ -57,7 +52,7 @@ public class RestITest {
 
     @Test
     public void testAdminCommandEndpoint() throws Exception {
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/version.xml");
+        HttpURLConnection connection = openConnection("/management/domain/version.xml");
         try {
             assertEquals(200, connection.getResponseCode());
         } finally {
@@ -67,7 +62,7 @@ public class RestITest {
 
     @Test
     public void testChildConfigBeanEndpoint() throws Exception {
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/applications.xml");
+        HttpURLConnection connection = openConnection("/management/domain/applications.xml");
         try {
             assertEquals(200, connection.getResponseCode());
         } finally {
@@ -84,17 +79,9 @@ public class RestITest {
         assertEquals(200, deleteNode());
     }
 
-    protected HttpURLConnection getConnection(String url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.setRequestProperty("X-GlassFish-3", "true");
-        connection.setRequestProperty("X-Requested-By", "dummy");
-        connection.setAuthenticator(new DasAuthenticator());
-        return connection;
-    }
-
     private int createNode() throws IOException {
         String parameters = "name=myConfigNode";
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/create-node-config");
+        HttpURLConnection connection = openConnection("/management/domain/nodes/create-node-config");
         try {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -113,7 +100,7 @@ public class RestITest {
     }
 
     private int getNode() throws IOException {
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/node/myConfigNode");
+        HttpURLConnection connection = openConnection("/management/domain/nodes/node/myConfigNode");
         try {
             return connection.getResponseCode();
         } finally {
@@ -122,7 +109,7 @@ public class RestITest {
     }
 
     private int deleteNode() throws IOException {
-        HttpURLConnection connection = getConnection("http://localhost:4848/management/domain/nodes/delete-node-config?id=myConfigNode");
+        HttpURLConnection connection = openConnection("/management/domain/nodes/delete-node-config?id=myConfigNode");
         try {
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -130,13 +117,6 @@ public class RestITest {
             return connection.getResponseCode();
         } finally {
             connection.disconnect();
-        }
-    }
-
-    private static class DasAuthenticator extends Authenticator {
-        @Override
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(NucleusTestUtils.ADMIN_USER, NucleusTestUtils.ADMIN_PASSWORD.toCharArray());
         }
     }
 }

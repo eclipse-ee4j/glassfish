@@ -45,7 +45,7 @@ public class ConfigITest extends RestTestBase {
         MultivaluedHashMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("id", "default-config");
         formData.add("id", "server-config");
-        Response response = post(URL_CONFIGS + "/copy-config", formData);
+        Response response = managementClient.post(URL_CONFIGS + "/copy-config", formData);
         // FIXME: causes HTTP 500 without any log, should be 422.
         assertThat(response.getStatus(), equalTo(500));
     }

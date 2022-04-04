@@ -33,18 +33,17 @@ import static org.hamcrest.Matchers.aMapWithSize;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jasonlee
  * @since May 26, 2010
  */
 public class JmsITest extends RestTestBase {
-    static final String URL_ADMIN_OBJECT_RESOURCE = "domain/resources/admin-object-resource";
-    static final String URL_CONNECTOR_CONNECTION_POOL = "domain/resources/connector-connection-pool";
-    static final String URL_CONNECTOR_RESOURCE = "domain/resources/connector-resource";
-    static final String URL_JMS_HOST = "domain/configs/config/server-config/jms-service/jms-host";
-    static final String URL_SEVER_JMS_DEST = "domain/servers/server/server";
+    static final String URL_ADMIN_OBJECT_RESOURCE = "/domain/resources/admin-object-resource";
+    static final String URL_CONNECTOR_CONNECTION_POOL = "/domain/resources/connector-connection-pool";
+    static final String URL_CONNECTOR_RESOURCE = "/domain/resources/connector-resource";
+    static final String URL_JMS_HOST = "/domain/configs/config/server-config/jms-service/jms-host";
+    static final String URL_SEVER_JMS_DEST = "/domain/servers/server/server";
     static final String DEST_TYPE = "topic";
 
     @Test
@@ -53,39 +52,39 @@ public class JmsITest extends RestTestBase {
         final String poolName = "JmsConnectionFactory" + generateRandomString();
         Map<String, String> ccp_attrs = Map.of("name", poolName, "connectiondefinition",
             "jakarta.jms.ConnectionFactory", "raname", "jmsra");
-        Response response = post(URL_CONNECTOR_CONNECTION_POOL, ccp_attrs);
+        Response response = managementClient.post(URL_CONNECTOR_CONNECTION_POOL, ccp_attrs);
         assertThat(response.getStatus(), equalTo(200));
 
         // Check connection pool creation
-        Map<String, String> pool = getEntityValues(get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
+        Map<String, String> pool = getEntityValues(managementClient.get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
         assertThat(pool, aMapWithSize(greaterThanOrEqualTo(26)));
 
         // Create connector resource
         String resourceName = poolName + "Resource";
         Map<String, String> cr_attrs = Map.of("name", resourceName, "poolname", poolName);
-        response = post(URL_CONNECTOR_RESOURCE, cr_attrs);
+        response = managementClient.post(URL_CONNECTOR_RESOURCE, cr_attrs);
         assertThat(response.getStatus(), equalTo(200));
 
         // Check connector resource
-        Map<String, String> resource = getEntityValues(get(URL_CONNECTOR_RESOURCE + "/" + resourceName));
+        Map<String, String> resource = getEntityValues(managementClient.get(URL_CONNECTOR_RESOURCE + "/" + resourceName));
         assertThat(resource, aMapWithSize(6));
 
         // Edit and check ccp
-        response = post(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName, Map.of("description", poolName));
+        response = managementClient.post(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName, Map.of("description", poolName));
         assertThat(response.getStatus(), equalTo(200));
 
-        pool = getEntityValues(get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
-        assertTrue(pool.get("description").equals(poolName));
+        pool = getEntityValues(managementClient.get(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName));
+        assertThat(pool.get("description"), equalTo(poolName));
 
         // Edit and check cr
-        response = post(URL_CONNECTOR_RESOURCE + "/" + resourceName, Map.of("description", poolName));
+        response = managementClient.post(URL_CONNECTOR_RESOURCE + "/" + resourceName, Map.of("description", poolName));
         assertThat(response.getStatus(), equalTo(200));
 
-        resource = getEntityValues(get(URL_CONNECTOR_RESOURCE + "/" + resourceName));
-        assertTrue(pool.get("description").equals(poolName));
+        resource = getEntityValues(managementClient.get(URL_CONNECTOR_RESOURCE + "/" + resourceName));
+        assertThat(pool.get("description"), equalTo(poolName));
 
         // Delete objects
-        response = delete(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName, Map.of("cascade", "true"));
+        response = managementClient.delete(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName, Map.of("cascade", "true"));
         assertThat(response.getStatus(), equalTo(200));
     }
 
@@ -96,13 +95,14 @@ public class JmsITest extends RestTestBase {
 
         Map<String, String> attrs = Map.of("id", jndiName, "raname", "jmsra", "restype", "jakarta.jms.Topic");
 
-        Response response = post(URL_ADMIN_OBJECT_RESOURCE, attrs);
+        Response response = managementClient.post(URL_ADMIN_OBJECT_RESOURCE, attrs);
         assertThat(response.getStatus(), equalTo(200));
 
-        Map<String, String> entity = getEntityValues(get(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName));
+        Map<String, String> entity = getEntityValues(
+            managementClient.get(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName));
         assertThat(entity, aMapWithSize(8));
 
-        response = delete(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName);
+        response = managementClient.delete(URL_ADMIN_OBJECT_RESOURCE + "/" + encodedJndiName);
         assertThat(response.getStatus(), equalTo(200));
     }
 
@@ -118,12 +118,12 @@ public class JmsITest extends RestTestBase {
         Map<String, String> destProps = new HashMap<>(newDest);
         destProps.putAll(Map.of("property", "MaxNumMsgs=" + maxNumMsgs + ":ConsumerFlowLimit=" + consumerFlowLimit));
 
-        Response response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
+        Response response = managementClient.get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
         assertThat(response.getStatus(), equalTo(200));
 
-        response = post(URL_SEVER_JMS_DEST + "/__update-jmsdest", destProps);
+        response = managementClient.post(URL_SEVER_JMS_DEST + "/__update-jmsdest", destProps);
         assertThat(response.getStatus(), equalTo(200));
-        response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
+        response = managementClient.get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
         assertThat(response.getStatus(), equalTo(200));
         Map<String, String> entity = getEntityValues(response);
         assertEquals(maxNumMsgs, entity.get("MaxNumMsgs"));
@@ -140,14 +140,14 @@ public class JmsITest extends RestTestBase {
         final String clusterName = createCluster();
         createClusterInstance(clusterName, "in1_" + clusterName);
         startCluster(clusterName);
-        final String endpoint = "domain/clusters/cluster/" + clusterName;
+        final String endpoint = "/domain/clusters/cluster/" + clusterName;
         try {
             createJmsPhysicalDestination(destName, "topic", endpoint);
             final Map<String, String> newDest = Map.of("id", destName, "desttype", DEST_TYPE);
-            Response response = get(endpoint + "/__get-jmsdest", newDest);
+            Response response = managementClient.get(endpoint + "/__get-jmsdest", newDest);
             assertThat(response.getStatus(), equalTo(200));
 
-            response = get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
+            response = managementClient.get(URL_SEVER_JMS_DEST + "/__get-jmsdest", newDest);
             assertThat(response.getStatus(), equalTo(200));
         } finally {
             deleteJmsPhysicalDestination(destName, endpoint);
@@ -158,14 +158,14 @@ public class JmsITest extends RestTestBase {
 
     @Test
     public void testJmsPing() {
-        String results = get(URL_SEVER_JMS_DEST + "/jms-ping").readEntity(String.class);
+        String results = managementClient.get(URL_SEVER_JMS_DEST + "/jms-ping").readEntity(String.class);
         assertThat(results, stringContainsInOrder("JMS-ping command executed successfully"));
     }
 
     @Test
     public void testJmsFlush() {
         Map<String, String> payload = Map.of("id", "mq.sys.dmq", "destType", "queue");
-        Response response = post(URL_SEVER_JMS_DEST + "/flush-jmsdest", payload);
+        Response response = managementClient.post(URL_SEVER_JMS_DEST + "/flush-jmsdest", payload);
         assertThat(response.getStatus(), equalTo(200));
     }
 
@@ -176,36 +176,36 @@ public class JmsITest extends RestTestBase {
             "adminUserName", "admin", "host", "localhost");
 
         // Test create
-        Response response = post(URL_JMS_HOST, newHost);
+        Response response = managementClient.post(URL_JMS_HOST, newHost);
         assertThat(response.getStatus(), equalTo(200));
 
         // Test edit
-        Map<String, String> entity = getEntityValues(get(URL_JMS_HOST + "/" + jmsHostName));
+        Map<String, String> entity = getEntityValues(managementClient.get(URL_JMS_HOST + "/" + jmsHostName));
         assertThat(entity, aMapWithSize(greaterThanOrEqualTo(6)));
         assertEquals(jmsHostName, entity.get("name"));
         entity.put("port", "8686");
-        response = post(URL_JMS_HOST + "/" + jmsHostName, entity);
+        response = managementClient.post(URL_JMS_HOST + "/" + jmsHostName, entity);
         assertThat(response.getStatus(), equalTo(200));
-        entity = getEntityValues(get(URL_JMS_HOST + "/" + jmsHostName));
+        entity = getEntityValues(managementClient.get(URL_JMS_HOST + "/" + jmsHostName));
         assertEquals("8686", entity.get("port"));
 
         // Test delete
-        response = delete(URL_JMS_HOST + "/" + jmsHostName);
+        response = managementClient.delete(URL_JMS_HOST + "/" + jmsHostName);
         assertThat(response.getStatus(), equalTo(200));
     }
 
     public void createJmsPhysicalDestination(final String destName, final String type, final String endpoint) {
         final Map<String, String> newDest = Map.of("id", destName, "desttype", type);
-        Response response = post(endpoint + "/create-jmsdest", newDest);
+        Response response = managementClient.post(endpoint + "/create-jmsdest", newDest);
         assertThat(response.getStatus(), equalTo(200));
     }
 
     public void deleteJmsPhysicalDestination(final String destName, final String endpoint) {
         final Map<String, String> newDest = Map.of("id", destName, "desttype", DEST_TYPE);
-        Response response = delete(endpoint + "/delete-jmsdest", newDest);
+        Response response = managementClient.delete(endpoint + "/delete-jmsdest", newDest);
         assertThat(response.getStatus(), equalTo(200));
 
-        response = get(endpoint + "__get-jmsdest", newDest);
+        response = managementClient.get(endpoint + "__get-jmsdest", newDest);
         assertThat(response.getStatus(), equalTo(404));
     }
 }

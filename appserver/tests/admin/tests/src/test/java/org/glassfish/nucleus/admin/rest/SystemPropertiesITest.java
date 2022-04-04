@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.admin.rest.client.utils.MarshallingUtils.buildMapFromDocument;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -33,33 +33,39 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author jasonlee
  */
 public class SystemPropertiesITest extends RestTestBase {
-    public static final String URL_CONFIG_SYSTEM_PROPERTIES = "domain/configs/config/%config%/system-properties";
-    public static final String URL_CLUSTER_SYSTEM_PROPERTIES = "domain/clusters/cluster/%clusterName%/system-properties";
-    public static final String URL_INSTANCE_SYSTEM_PROPERTIES = "domain/servers/server/%instanceName%/system-properties";
+    public static final String URL_CONFIG_SYSTEM_PROPERTIES = "/domain/configs/config/%config%/system-properties";
+    public static final String URL_CLUSTER_SYSTEM_PROPERTIES = "/domain/clusters/cluster/%clusterName%/system-properties";
+    public static final String URL_INSTANCE_SYSTEM_PROPERTIES = "/domain/servers/server/%instanceName%/system-properties";
     public static final String URL_DAS_SYSTEM_PROPERTIES = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", "server");
-    public static final String URL_CREATE_INSTANCE = "domain/create-instance";
+    public static final String URL_CREATE_INSTANCE = "/domain/create-instance";
     public static final String PROP_VALUE = "${com.sun.aas.instanceRoot}/foo";
 
     @Test
     public void getSystemProperties() {
-        Response response = get(URL_DAS_SYSTEM_PROPERTIES);
+        Response response = managementClient.get(URL_DAS_SYSTEM_PROPERTIES);
         assertEquals(200, response.getStatus());
-        List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        List<Map<String, String>> systemProperties = getSystemProperties(
+            buildMapFromDocument(response.readEntity(String.class)));
         assertNotNull(systemProperties);
     }
+
 
     @Test
     public void createSystemProperties() {
         final String prop1 = "property" + generateRandomString();
         final String prop2 = "property" + generateRandomString();
-        Map<String, String> payload = new HashMap<>() {{
-            put(prop1, "value1");
-            put(prop2, "value2");
-        }};
-        Response response = post(URL_DAS_SYSTEM_PROPERTIES, payload);
+        Map<String, String> payload = new HashMap<>() {
+
+            {
+                put(prop1, "value1");
+                put(prop2, "value2");
+            }
+        };
+        Response response = managementClient.post(URL_DAS_SYSTEM_PROPERTIES, payload);
         assertEquals(200, response.getStatus());
-        response = get(URL_DAS_SYSTEM_PROPERTIES);
-        List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        response = managementClient.get(URL_DAS_SYSTEM_PROPERTIES);
+        List<Map<String, String>> systemProperties = getSystemProperties(
+            buildMapFromDocument(response.readEntity(String.class)));
         assertNotNull(systemProperties);
 
         int testPropsFound = 0;
@@ -72,9 +78,9 @@ public class SystemPropertiesITest extends RestTestBase {
 
         assertEquals(2, testPropsFound);
 
-        response = delete(URL_DAS_SYSTEM_PROPERTIES+"/"+prop1);
+        response = managementClient.delete(URL_DAS_SYSTEM_PROPERTIES+"/"+prop1);
         assertEquals(200, response.getStatus());
-        response = delete(URL_DAS_SYSTEM_PROPERTIES+"/"+prop2);
+        response = managementClient.delete(URL_DAS_SYSTEM_PROPERTIES+"/"+prop2);
         assertEquals(200, response.getStatus());
     }
 
@@ -84,11 +90,11 @@ public class SystemPropertiesITest extends RestTestBase {
         Map<String, String> payload = new HashMap<>() {{
             put(prop1, "http://localhost:4848");
         }};
-        Response response = post(URL_DAS_SYSTEM_PROPERTIES, payload);
+        Response response = managementClient.post(URL_DAS_SYSTEM_PROPERTIES, payload);
         assertEquals(200, response.getStatus());
-        response = get(URL_DAS_SYSTEM_PROPERTIES);
+        response = managementClient.get(URL_DAS_SYSTEM_PROPERTIES);
         List<Map<String, String>> systemProperties = getSystemProperties(
-            MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+            buildMapFromDocument(response.readEntity(String.class)));
         assertNotNull(systemProperties);
 
         int testPropsFound = 0;
@@ -101,7 +107,7 @@ public class SystemPropertiesITest extends RestTestBase {
 
         assertEquals(1, testPropsFound);
 
-        response = delete(URL_DAS_SYSTEM_PROPERTIES + "/" + prop1);
+        response = managementClient.delete(URL_DAS_SYSTEM_PROPERTIES + "/" + prop1);
         assertEquals(200, response.getStatus());
     }
 
@@ -117,7 +123,7 @@ public class SystemPropertiesITest extends RestTestBase {
         final String instanceName = "in" + generateRandomNumber();
         final String propertyName = "property" + generateRandomString();
 
-        Response response = post(URL_CREATE_INSTANCE, Map.of("id", instanceName, "node", "localhost-domain1"));
+        Response response = managementClient.post(URL_CREATE_INSTANCE, Map.of("id", instanceName, "node", "localhost-domain1"));
         assertEquals(200, response.getStatus());
 
         createAndTestConfigProperty(propertyName, PROP_VALUE, instanceName + "-config");
@@ -127,8 +133,8 @@ public class SystemPropertiesITest extends RestTestBase {
     @Test
     public void testNotResolvingClusterProperties() {
         final String propertyName = "property" + generateRandomString();
-        final String clusterName = "c" + generateRandomNumber();
-        final String instanceName = clusterName + "in" + generateRandomNumber();
+        final String clusterName = "cluster_" + generateRandomNumber();
+        final String instanceName = clusterName + "_instance_" + generateRandomNumber();
         createCluster(clusterName);
         createClusterInstance(clusterName, instanceName);
 
@@ -141,14 +147,14 @@ public class SystemPropertiesITest extends RestTestBase {
 
     private void createAndTestConfigProperty(final String propertyName, final String propertyValue, String configName) {
         final String url = URL_CONFIG_SYSTEM_PROPERTIES.replaceAll("%config%", configName);
-        Response response = get(url);
-        Map<String, String> payload = getSystemPropertiesMap(getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class))));
+        Response response = managementClient.get(url);
+        Map<String, String> payload = getSystemPropertiesMap(getSystemProperties(buildMapFromDocument(response.readEntity(String.class))));
         payload.put(propertyName, propertyValue);
-        response = post(url, payload);
+        response = managementClient.post(url, payload);
         assertEquals(200, response.getStatus());
 
-        response = get(url);
-        List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        response = managementClient.get(url);
+        List<Map<String, String>> systemProperties = getSystemProperties(buildMapFromDocument(response.readEntity(String.class)));
         Map<String, String> sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(propertyValue, sysProp.get("value"));
@@ -157,18 +163,18 @@ public class SystemPropertiesITest extends RestTestBase {
     private void createAndTestClusterOverride(final String propertyName, final String defaultValue, final String propertyValue, final String clusterName) {
         final String clusterSysPropsUrl = URL_CLUSTER_SYSTEM_PROPERTIES.replaceAll("%clusterName%", clusterName);
 
-        Response response = get(clusterSysPropsUrl);
-        List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        Response response = managementClient.get(clusterSysPropsUrl);
+        List<Map<String, String>> systemProperties = getSystemProperties(buildMapFromDocument(response.readEntity(String.class)));
         Map<String, String> sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
 
-        response = post(clusterSysPropsUrl, Map.of(propertyName, propertyValue));
+        response = managementClient.post(clusterSysPropsUrl, Map.of(propertyName, propertyValue));
         assertEquals(200, response.getStatus());
 
         // Check updated/overriden system property
-        response = get(clusterSysPropsUrl);
-        systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        response = managementClient.get(clusterSysPropsUrl);
+        systemProperties = getSystemProperties(buildMapFromDocument(response.readEntity(String.class)));
         sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(sysProp.get("value"), propertyValue);
@@ -178,18 +184,18 @@ public class SystemPropertiesITest extends RestTestBase {
     private void createAndTestInstanceOverride(final String propertyName, final String defaultValue, final String propertyValue, final String instanceName) {
         final String instanceSysPropsUrl = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", instanceName);
 
-        Response response = get(instanceSysPropsUrl);
-        List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        Response response = managementClient.get(instanceSysPropsUrl);
+        List<Map<String, String>> systemProperties = getSystemProperties(buildMapFromDocument(response.readEntity(String.class)));
         Map<String, String> sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
 
-        response = post(instanceSysPropsUrl, Map.of(propertyName, propertyValue));
+        response = managementClient.post(instanceSysPropsUrl, Map.of(propertyName, propertyValue));
         assertEquals(200, response.getStatus());
 
         // Check updated/overriden system property
-        response = get(instanceSysPropsUrl);
-        systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
+        response = managementClient.get(instanceSysPropsUrl);
+        systemProperties = getSystemProperties(buildMapFromDocument(response.readEntity(String.class)));
         sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(propertyValue, sysProp.get("value"));

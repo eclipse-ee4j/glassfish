@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,87 +34,92 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author jasonlee
  */
 public class NetworkListenerITest extends RestTestBase {
-    protected static final String URL_PROTOCOL = "domain/configs/config/server-config/network-config/protocols/protocol";
-    protected static final String URL_SSL = "domain/configs/config/server-config/network-config/protocols/protocol/http-listener-2/ssl";
+    private static final String URL_PROTOCOL = "/domain/configs/config/server-config/network-config/protocols/protocol";
+    private static final String URL_SSL = "/domain/configs/config/server-config/network-config/protocols/protocol/http-listener-2/ssl";
+
+    private static final String redirectProtocolName = "http-redirect";
+    private static final String portUniProtocolName = "pu-protocol";
+
+    private static final String redirectFilterName = "redirect-filter";
+    private static final String finderName1 = "http-finder";
+    private static final String finderName2 = "http-redirect";
+
+    @AfterAll
+    public static void cleanup() {
+        Response response = managementClient.post(
+            "/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1",
+            Map.of("protocol", "http-listener-1"));
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
+            Map.of("protocol", portUniProtocolName, "id", finderName1));
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
+            Map.of("protocol", portUniProtocolName, "id", finderName2));
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(
+            URL_PROTOCOL + "/" + redirectProtocolName
+                + "/protocol-chain-instance-handler/protocol-chain/protocol-filter/" + redirectFilterName,
+            Map.of("protocol", redirectProtocolName));
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(URL_PROTOCOL + "/" + portUniProtocolName);
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(URL_PROTOCOL + "/" + redirectProtocolName);
+        assertEquals(200, response.getStatus());
+    }
+
 
     @Test
     public void createHttpListener() {
-        final String redirectProtocolName = "http-redirect";
-        final String portUniProtocolName = "pu-protocol";
+        Response response = managementClient.post("/domain/set", Map.of(
+            "configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol",
+            "http-listener-1"));
+        assertEquals(200, response.getStatus());
+        managementClient.delete(URL_PROTOCOL + "/" + portUniProtocolName);
+        assertEquals(200, response.getStatus());
+        managementClient.delete(URL_PROTOCOL + "/" + redirectProtocolName);
+        assertEquals(200, response.getStatus());
+        // asadmin commands taken from: http://www.antwerkz.com/port-unification-in-glassfish-3-part-1/
+        //        asadmin create-protocol --securityenabled=false http-redirect
+        //        asadmin create-protocol --securityenabled=false pu-protocol
+        response = managementClient.post(URL_PROTOCOL, Map.of("securityenabled", "false", "id", redirectProtocolName));
+        assertEquals(200, response.getStatus());
+        response = managementClient.post(URL_PROTOCOL, Map.of("securityenabled", "false", "id", portUniProtocolName));
+        assertEquals(200, response.getStatus());
 
-        final String redirectFilterName = "redirect-filter";
-        final String finderName1 = "http-finder";
-        final String finderName2 = "http-redirect";
+        //        asadmin create-protocol-filter --protocol http-redirect --classname org.glassfish.grizzly.config.portunif.HttpRedirectFilter redirect-filter
+        response = managementClient.post(URL_PROTOCOL + "/" + redirectProtocolName + "/create-protocol-filter",
+            Map.of("id", redirectFilterName, "protocol", redirectProtocolName,
+                "classname", "org.glassfish.grizzly.config.portunif.HttpRedirectFilter"));
+        assertEquals(200, response.getStatus());
 
-        try {
-            Response response = post("domain/set", Map.of("configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol", "http-listener-1"));
-            assertEquals(200, response.getStatus());
-            delete(URL_PROTOCOL + "/" + portUniProtocolName);
-            assertEquals(200, response.getStatus());
-            delete(URL_PROTOCOL + "/" + redirectProtocolName);
-            assertEquals(200, response.getStatus());
-// asadmin commands taken from: http://www.antwerkz.com/port-unification-in-glassfish-3-part-1/
-//        asadmin create-protocol --securityenabled=false http-redirect
-//        asadmin create-protocol --securityenabled=false pu-protocol
-            response = post(URL_PROTOCOL, Map.of("securityenabled", "false", "id", redirectProtocolName));
-            assertEquals(200, response.getStatus());
-            response = post(URL_PROTOCOL, Map.of("securityenabled", "false", "id", portUniProtocolName));
-            assertEquals(200, response.getStatus());
-
-//        asadmin create-protocol-filter --protocol http-redirect --classname org.glassfish.grizzly.config.portunif.HttpRedirectFilter redirect-filter
-            response = post(URL_PROTOCOL + "/" + redirectProtocolName + "/create-protocol-filter",
-                Map.of("id", redirectFilterName, "protocol", redirectProtocolName,
-                    "classname", "org.glassfish.grizzly.config.portunif.HttpRedirectFilter"));
-            assertEquals(200, response.getStatus());
-
-//        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-listener-2 --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
-//        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-redirect   --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-redirect
-            response = post (URL_PROTOCOL + "/" + portUniProtocolName + "/create-protocol-finder",
-                new HashMap<String, String>() {{
-                    put ("id", finderName1);
-                    put ("protocol", portUniProtocolName);
-                    put ("targetprotocol", "http-listener-2");
-                    put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
-                }});
-            assertEquals(200, response.getStatus());
-            response = post (URL_PROTOCOL + "/" + portUniProtocolName + "/create-protocol-finder",
-                new HashMap<String, String>() {{
-                    put ("id", finderName2);
-                    put ("protocol", portUniProtocolName);
-                    put ("targetprotocol", redirectProtocolName);
-                    put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
-                }});
-            assertEquals(200, response.getStatus());
+        //        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-listener-2 --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
+        //        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol http-redirect   --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-redirect
+        response = managementClient.post(URL_PROTOCOL + "/" + portUniProtocolName + "/create-protocol-finder",
+            new HashMap<String, String>() {{
+                put ("id", finderName1);
+                put ("protocol", portUniProtocolName);
+                put ("targetprotocol", "http-listener-2");
+                put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
+            }});
+        assertEquals(200, response.getStatus());
+        response = managementClient.post(URL_PROTOCOL + "/" + portUniProtocolName + "/create-protocol-finder",
+            new HashMap<String, String>() {{
+                put ("id", finderName2);
+                put ("protocol", portUniProtocolName);
+                put ("targetprotocol", redirectProtocolName);
+                put ("classname", "org.glassfish.grizzly.config.portunif.HttpProtocolFinder");
+            }});
+        assertEquals(200, response.getStatus());
 
 
-//        asadmin set configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol=pu-protocol
-            response = post("domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1",
-                Map.of("protocol", portUniProtocolName));
-            assertEquals(200, response.getStatus());
+        //        asadmin set configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.protocol=pu-protocol
+        response = managementClient.post(
+            "/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1",
+            Map.of("protocol", portUniProtocolName));
+        assertEquals(200, response.getStatus());
 
-            response = get("domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1/find-http-protocol");
-            assertThat(response.readEntity(String.class), stringContainsInOrder("http-listener-2"));
-        } finally {
-            Response response = post(
-                "domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1",
-                Map.of("protocol", "http-listener-1"));
-            assertEquals(200, response.getStatus());
-            response = delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
-                Map.of("protocol", portUniProtocolName, "id", finderName1));
-            assertEquals(200, response.getStatus());
-            response = delete(URL_PROTOCOL + "/" + portUniProtocolName + "/delete-protocol-finder",
-                Map.of("protocol", portUniProtocolName, "id", finderName2));
-            assertEquals(200, response.getStatus());
-            response = delete(
-                URL_PROTOCOL + "/" + redirectProtocolName
-                    + "/protocol-chain-instance-handler/protocol-chain/protocol-filter/" + redirectFilterName,
-                Map.of("protocol", redirectProtocolName));
-            assertEquals(200, response.getStatus());
-            response = delete(URL_PROTOCOL + "/" + portUniProtocolName);
-            assertEquals(200, response.getStatus());
-            response = delete(URL_PROTOCOL + "/" + redirectProtocolName);
-            assertEquals(200, response.getStatus());
-        }
+        response = managementClient.get("/domain/configs/config/server-config/network-config/network-listeners/network-listener/http-listener-1/find-http-protocol");
+        assertThat(response.readEntity(String.class), stringContainsInOrder("http-listener-2"));
     }
 
     @Test
@@ -125,9 +131,9 @@ public class NetworkListenerITest extends RestTestBase {
             put("trustStore", "baz");
         }};
 
-        Response response = post(URL_SSL, params);
+        Response response = managementClient.post(URL_SSL, params);
         assertEquals(200, response.getStatus());
-        response = get(URL_SSL, params);
+        response = managementClient.get(URL_SSL, params);
         Map<String, String> entity = this.getEntityValues(response);
         assertEquals(params.get("keyStore"), entity.get("keyStore"));
         assertEquals(params.get("trustAlgorithm"), entity.get("trustAlgorithm"));
@@ -137,9 +143,9 @@ public class NetworkListenerITest extends RestTestBase {
         params.put("keyStore", "");
         params.put("trustAlgorithm", "");
         params.put("trustStore", "");
-        response = post(URL_SSL, params);
+        response = managementClient.post(URL_SSL, params);
         assertEquals(200, response.getStatus());
-        response = get(URL_SSL, params);
+        response = managementClient.get(URL_SSL, params);
         entity = this.getEntityValues(response);
         assertEquals(JSONObject.NULL, entity.get("keyStore"));
         assertEquals(JSONObject.NULL, entity.get("trustAlgorithm"));

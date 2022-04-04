@@ -37,15 +37,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author jdlee
  */
 public class ZeroConfigITest extends RestTestBase {
-    public static final String BASE_SERVER_CONFIG_URL = "domain/configs/config/server-config";
+    public static final String BASE_SERVER_CONFIG_URL = "/domain/configs/config/server-config";
+
     /**
      * Currently (6/29/2012), the transaction-service element is missing from
-     * server-config out of the box.  This should continue to be the case once
+     * server-config stdOut of the box.  This should continue to be the case once
      * zero-config is fully implemented and integrated.
      */
     @Test
     public void testTransactionService() {
-        final Response response = get(BASE_SERVER_CONFIG_URL + "/transaction-service");
+        final Response response = managementClient.get(BASE_SERVER_CONFIG_URL + "/transaction-service");
         assertEquals(200, response.getStatus());
         Map<String, String> entity = getEntityValues(response);
         assertNotNull(entity);

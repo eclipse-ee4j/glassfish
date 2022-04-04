@@ -33,9 +33,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DomainITest extends RestTestBase {
 
+    private static final String URL_DOMAIN = "/domain";
+
     @Test
     public void testDomainGet() throws Exception {
-        Response response0 = get("domain");
+        Response response0 = managementClient.get(URL_DOMAIN);
         assertThat(response0.getStatus(), equalTo(200));
         Map<String, String> current = getEntityValues(response0);
 
@@ -47,11 +49,11 @@ public class DomainITest extends RestTestBase {
 
         Map<String, String> payload = new HashMap<>();
         payload.put("locale", newLocale);
-        Response response = post("domain", payload);
+        Response response = managementClient.post(URL_DOMAIN, payload);
         assertEquals(200, response.getStatus());
 
         // Reload the domain and make sure our new locale was saved
-        Map<String, String> map = getEntityValues(this.get("domain"));
+        Map<String, String> map = getEntityValues(managementClient.get(URL_DOMAIN));
         assertEquals(newLocale, map.get("locale"));
     }
 }

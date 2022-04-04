@@ -17,24 +17,30 @@
 
 package org.glassfish.nucleus.admin;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.getURL;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadmin;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author Tom Mueller
  */
 @TestMethodOrder(OrderAnnotation.class)
-@ExtendWith(DomainLifecycleExtension.class)
 public class ClusterITest {
 
     private static final String PORT1 = "55123";
@@ -44,48 +50,54 @@ public class ClusterITest {
     private static final String INSTANCE_NAME_2 = "eein2";
     private static final String URL1 = "http://localhost:" + PORT1;
     private static final String URL2 = "http://localhost:" + PORT2;
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     @Order(1)
     public void createClusterTest() {
-        assertTrue(nadmin("create-cluster", CLUSTER_NAME), "create cluster");
+        assertThat(ASADMIN.exec("create-cluster", CLUSTER_NAME), asadminOK());
     }
 
     @Test
     @Order(2)
     public void createInstancesTest() {
-        assertTrue(
-            nadmin("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                        "HTTP_LISTENER_PORT=" + PORT1 + ":" +
-                        "HTTP_SSL_LISTENER_PORT=18181:" +
-                        "IIOP_SSL_LISTENER_PORT=13800:" +
-                        "IIOP_LISTENER_PORT=13700:" +
-                        "JMX_SYSTEM_CONNECTOR_PORT=17676:" +
-                        "IIOP_SSL_MUTUALAUTH_PORT=13801:" +
-                        "JMS_PROVIDER_PORT=18686:" +
-                        "ASADMIN_LISTENER_PORT=14848",
-                        INSTANCE_NAME_1), "create instance1");
+        assertThat(
+            ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
+                   "HTTP_LISTENER_PORT=" + PORT1
+                + ":HTTP_SSL_LISTENER_PORT=18181"
+                + ":IIOP_SSL_LISTENER_PORT=13800"
+                + ":IIOP_LISTENER_PORT=13700"
+                + ":JMX_SYSTEM_CONNECTOR_PORT=17676"
+                + ":IIOP_SSL_MUTUALAUTH_PORT=13801"
+                + ":JMS_PROVIDER_PORT=18686"
+                + ":ASADMIN_LISTENER_PORT=14848",
+                INSTANCE_NAME_1), asadminOK());
 
-        assertTrue(
-            nadmin("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
-                    "HTTP_LISTENER_PORT=" + PORT2 +
-                    ":HTTP_SSL_LISTENER_PORT=28181:IIOP_SSL_LISTENER_PORT=23800:" +
-                    "IIOP_LISTENER_PORT=23700:JMX_SYSTEM_CONNECTOR_PORT=27676:IIOP_SSL_MUTUALAUTH_PORT=23801:" +
-                    "JMS_PROVIDER_PORT=28686:ASADMIN_LISTENER_PORT=24848",
-                    INSTANCE_NAME_2), "create instance2");
+        assertThat(
+            ASADMIN.exec("create-local-instance", "--cluster", CLUSTER_NAME, "--systemproperties",
+                   "HTTP_LISTENER_PORT=" + PORT2
+                + ":HTTP_SSL_LISTENER_PORT=28181"
+                + ":IIOP_SSL_LISTENER_PORT=23800"
+                + ":IIOP_LISTENER_PORT=23700"
+                + ":JMX_SYSTEM_CONNECTOR_PORT=27676"
+                + ":IIOP_SSL_MUTUALAUTH_PORT=23801"
+                + ":JMS_PROVIDER_PORT=28686"
+                + ":ASADMIN_LISTENER_PORT=24848",
+                INSTANCE_NAME_2), asadminOK());
     }
+
 
     @Test
     @Order(3)
     public void startInstancesTest() {
-        assertTrue(nadmin("start-local-instance", INSTANCE_NAME_1), "start instance1");
-        assertTrue(nadmin("start-local-instance", INSTANCE_NAME_2), "start instance2");
+        assertThat(ASADMIN.exec(30_000, false, "start-local-instance", INSTANCE_NAME_1), asadminOK());
+        assertThat(ASADMIN.exec(30_000, false, "start-local-instance", INSTANCE_NAME_2), asadminOK());
     }
 
     @Test
     @Order(4)
     public void checkClusterTest() {
-        assertTrue(nadmin("list-instances"), "list-instances");
+        assertThat(ASADMIN.exec("list-instances"), asadminOK());
         assertThat(getURL(URL1), stringContainsInOrder("GlassFish Server"));
         assertThat(getURL(URL2), stringContainsInOrder("GlassFish Server"));
     }
@@ -93,20 +105,55 @@ public class ClusterITest {
     @Test
     @Order(5)
     public void stopInstancesTest() {
-        assertTrue(nadmin("stop-local-instance", "--kill", INSTANCE_NAME_1), "stop instance1");
-        assertTrue(nadmin("stop-local-instance", "--kill", INSTANCE_NAME_2), "stop instance2");
+        assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1), asadminOK());
+        assertThat(ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_2), asadminOK());
     }
 
     @Test
     @Order(6)
     public void deleteInstancesTest() {
-        assertTrue(nadmin("delete-local-instance", INSTANCE_NAME_1), "delete instance1");
-        assertTrue(nadmin("delete-local-instance", INSTANCE_NAME_2), "delete instance2");
+        assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_1), asadminOK());
+        assertThat(ASADMIN.exec("delete-local-instance", INSTANCE_NAME_2), asadminOK());
     }
 
     @Test
     @Order(7)
     public void deleteClusterTest() {
-        assertTrue(nadmin("delete-cluster", CLUSTER_NAME), "delete cluster");
+        assertThat(ASADMIN.exec("delete-cluster", CLUSTER_NAME), asadminOK());
+    }
+
+
+    /**
+     * This methods opens a connection to the given URL and
+     * returns the string that is returned from that URL.  This
+     * is useful for simple servlet retrieval
+     *
+     * @param urlstr The URL to connect to
+     * @return The string returned from that URL, or empty
+     * string if there was a problem contacting the URL
+     */
+    public static String getURL(String urlstr) {
+        URLConnection urlc = openConnection(urlstr);
+        try (
+            BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1));
+            StringWriter ow = new StringWriter();
+        ) {
+            String line;
+            while ((line = ir.readLine()) != null) {
+                ow.write(line);
+                ow.write("\n");
+            }
+            return ow.getBuffer().toString();
+        } catch (IOException ex) {
+            return fail(ex);
+        }
+    }
+
+    private static URLConnection openConnection(String url) {
+        try {
+            return new URL(url).openConnection();
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

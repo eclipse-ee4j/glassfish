@@ -22,22 +22,34 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author jasonlee
  */
 public class ResourceRefITest extends RestTestBase {
-    private static final String URL_CREATE_INSTANCE = "domain/create-instance";
-    private static final String URL_JDBC_RESOURCE = "domain/resources/jdbc-resource";
-    private static final String URL_RESOURCE_REF = "domain/servers/server/server/resource-ref";
+    private static final String URL_CREATE_INSTANCE = "/domain/create-instance";
+    private static final String URL_JDBC_RESOURCE = "/domain/resources/jdbc-resource";
+    private static final String URL_RESOURCE_REF = "/domain/servers/server/server/resource-ref";
+
+    private final String instanceName = "instance_" + generateRandomString();
+    private final String jdbcResourceName = "jdbc_" + generateRandomString();
+
+    @AfterEach
+    public void cleanup() {
+        Asadmin asadmin = GlassFishTestEnvironment.getAsadmin();
+        asadmin.exec("delete-resource-ref", jdbcResourceName);
+        asadmin.exec("delete-jdbc-resource", jdbcResourceName);
+        asadmin.exec("delete-instance", instanceName);
+    }
+
 
     @Test
     public void testCreatingResourceRef() {
-        final String instanceName = "instance_" + generateRandomString();
-        final String jdbcResourceName = "jdbc_" + generateRandomString();
         Map<String, String> newInstance = new HashMap<>() {{
             put("id", instanceName);
             put("node", "localhost-domain1");
@@ -52,31 +64,29 @@ public class ResourceRefITest extends RestTestBase {
             put("target", "server");
         }};
 
-        try {
-            Response response = post(URL_CREATE_INSTANCE, newInstance);
-            assertEquals(200, response.getStatus());
+        Response response = managementClient.post(URL_CREATE_INSTANCE, newInstance);
+        assertEquals(200, response.getStatus());
 
-            response = post(URL_JDBC_RESOURCE, jdbcResource);
-            assertEquals(200, response.getStatus());
+        response = managementClient.post(URL_JDBC_RESOURCE, jdbcResource);
+        assertEquals(200, response.getStatus());
 
-            response = post(URL_RESOURCE_REF, resourceRef);
-            assertEquals(200, response.getStatus());
-        } finally {
-            Response response = delete("domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName,
-                Map.of("target", instanceName));
-            assertEquals(200, response.getStatus());
-            response = get("domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName);
-            assertEquals(404, response.getStatus());
+        response = managementClient.post(URL_RESOURCE_REF, resourceRef);
+        assertEquals(200, response.getStatus());
+        response = managementClient.delete(
+            "/domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName,
+            Map.of("target", instanceName));
+        assertEquals(200, response.getStatus());
+        response = managementClient.get("/domain/servers/server/" + instanceName + "/resource-ref/" + jdbcResourceName);
+        assertEquals(404, response.getStatus());
 
-            response = delete(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
-            assertEquals(200, response.getStatus());
-            response = get(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
-            assertEquals(404, response.getStatus());
+        response = managementClient.delete(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
+        assertEquals(200, response.getStatus());
+        response = managementClient.get(URL_JDBC_RESOURCE + "/" + jdbcResourceName);
+        assertEquals(404, response.getStatus());
 
-            response = delete("domain/servers/server/" + instanceName + "/delete-instance");
-            assertEquals(200, response.getStatus());
-            response = get("domain/servers/server/" + instanceName);
-            assertEquals(404, response.getStatus());
-        }
+        response = managementClient.delete("/domain/servers/server/" + instanceName + "/delete-instance");
+        assertEquals(200, response.getStatus());
+        response = managementClient.get("/domain/servers/server/" + instanceName);
+        assertEquals(404, response.getStatus());
     }
 }

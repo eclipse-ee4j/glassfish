@@ -19,6 +19,9 @@ package org.glassfish.nucleus.admin.rest;
 
 import jakarta.ws.rs.core.Response;
 
+import org.glassfish.nucleus.test.tool.DomainAdminRestClient;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,135 +30,145 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author jasonlee
  */
 public class ProvidersITest extends RestTestBase {
-    private static final String URL_ACTION_REPORT_RESULT = "domain/uptime";
-    private static final String URL_COMMAND_RESOURCE_GET_RESULT = "domain/stop";
-    private static final String URL_GET_RESULT = "domain";
-    private static final String URL_GET_RESULT_LIST = "domain/servers/server";
-    private static final String URL_OPTIONS_RESULT = "domain";
-    private static final String URL_STRING_LIST_RESULT = "domain/configs/config/server-config/java-config/jvm-options";
-    private static String URL_TREE_NODE;
+    private static final String URL_ACTION_REPORT_RESULT = "/domain/uptime";
+    private static final String URL_COMMAND_RESOURCE_GET_RESULT = "/domain/stop";
+    private static final String URL_GET_RESULT = "/domain";
+    private static final String URL_GET_RESULT_LIST = "/domain/servers/server";
+    private static final String URL_OPTIONS_RESULT = "/domain";
+    private static final String URL_STRING_LIST_RESULT = "/domain/configs/config/server-config/java-config/jvm-options";
 
-    public ProvidersITest() {
-        URL_TREE_NODE = "http://localhost:" + getParameter("admin.port", "4848") + "/monitoring/domain";
+    private static DomainAdminRestClient monitoringClient;
+
+    @BeforeAll
+    public static void init() {
+        monitoringClient = new DomainAdminRestClient(getBaseAdminUrl() + "/monitoring/domain");
+    }
+
+
+    @AfterAll
+    public static void closeResources() {
+        if (monitoringClient != null) {
+            monitoringClient.close();
+        }
     }
 
     @Test
     public void testActionReportResultHtmlProvider() {
-        Response response = get(URL_ACTION_REPORT_RESULT + ".html");
+        Response response = managementClient.get(URL_ACTION_REPORT_RESULT + ".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testActionReportResultXmlProvider() {
-        Response response = get(URL_ACTION_REPORT_RESULT + ".xml");
+        Response response = managementClient.get(URL_ACTION_REPORT_RESULT + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testActionReportResultJsonProvider() {
-        Response response = get(URL_ACTION_REPORT_RESULT + ".json");
+        Response response = managementClient.get(URL_ACTION_REPORT_RESULT + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultHtmlProvider() {
-        Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".html");
+        Response response = managementClient.get(URL_COMMAND_RESOURCE_GET_RESULT + ".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultXmlProvider() {
-        Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".xml");
+        Response response = managementClient.get(URL_COMMAND_RESOURCE_GET_RESULT + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testCommandResourceGetResultJsonProvider() {
-        Response response = get(URL_COMMAND_RESOURCE_GET_RESULT + ".json");
+        Response response = managementClient.get(URL_COMMAND_RESOURCE_GET_RESULT + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultHtmlProvider() {
-        Response response = get(URL_GET_RESULT + ".html");
+        Response response = managementClient.get(URL_GET_RESULT + ".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultXmlProvider() {
-        Response response = get(URL_GET_RESULT + ".xml");
+        Response response = managementClient.get(URL_GET_RESULT + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultJsonProvider() {
-        Response response = get(URL_GET_RESULT + ".json");
+        Response response = managementClient.get(URL_GET_RESULT + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListHtmlProvider() {
-        Response response = get(URL_GET_RESULT_LIST + ".html");
+        Response response = managementClient.get(URL_GET_RESULT_LIST + ".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListXmlProvider() {
-        Response response = get(URL_GET_RESULT_LIST + ".xml");
+        Response response = managementClient.get(URL_GET_RESULT_LIST + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testGetResultListJsonProvider() {
-        Response response = get(URL_GET_RESULT_LIST + ".json");
+        Response response = managementClient.get(URL_GET_RESULT_LIST + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testOptionsResultXmlProvider() {
-        Response response = options(URL_OPTIONS_RESULT + ".xml");
+        Response response = managementClient.options(URL_OPTIONS_RESULT + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testOptionsResultJsonProvider() {
-        Response response = options(URL_OPTIONS_RESULT + ".json");
+        Response response = managementClient.options(URL_OPTIONS_RESULT + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultHtmlProvider() {
-        Response response = get(URL_STRING_LIST_RESULT + ".html");
+        Response response = managementClient.get(URL_STRING_LIST_RESULT + ".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultXmlProvider() {
-        Response response = get(URL_STRING_LIST_RESULT + ".xml");
+        Response response = managementClient.get(URL_STRING_LIST_RESULT + ".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testStringListResultJsonProvider() {
-        Response response = get(URL_STRING_LIST_RESULT + ".json");
+        Response response = managementClient.get(URL_STRING_LIST_RESULT + ".json");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeHtmlProvider() {
-        Response response = get(URL_TREE_NODE + ".html");
+        Response response = monitoringClient.get(".html");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeXmlProvider() {
-        Response response = get(URL_TREE_NODE + ".xml");
+        Response response = monitoringClient.get(".xml");
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void testTreeNodeJsonProvider() {
-        Response response = get(URL_TREE_NODE + ".json");
+        Response response = monitoringClient.get(".json");
         assertEquals(200, response.getStatus());
     }
 }

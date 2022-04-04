@@ -19,16 +19,15 @@ package org.glassfish.nucleus.admin.progress;
 
 import java.util.List;
 
-import org.glassfish.nucleus.test.tool.DomainLifecycleExtension;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils;
-import org.glassfish.nucleus.test.tool.NucleusTestUtils.NadminReturn;
+import org.glassfish.nucleus.test.tool.asadmin.Asadmin;
+import org.glassfish.nucleus.test.tool.asadmin.AsadminResult;
+import org.glassfish.nucleus.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.grepProgressMessages;
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.isIncreasing;
 import static org.glassfish.nucleus.admin.progress.ProgressMessage.uniqueMessages;
-import static org.glassfish.nucleus.test.tool.NucleusTestUtils.nadminWithOutput;
+import static org.glassfish.nucleus.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,25 +41,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author martinmares
  */
-@ExtendWith(DomainLifecycleExtension.class)
 public class ProgressStatusComplexITest {
+
+    private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @Test
     public void executeCommandFromCommand() {
-        NadminReturn result = nadminWithOutput("progress-exec-other");
-        assertTrue(result.returnValue);
+        AsadminResult result = ASADMIN.exec(30_000, false, "progress-exec-other");
+        assertThat(result, asadminOK());
         assertArrayEquals(new String[] {
             "Starting", "Preparing", "Parsing", "Working on main part",
             "Cleaning", "Finished", "Finishing outer command", "Finished outer command" },
-            uniqueMessages(grepProgressMessages(result.out)));
+            uniqueMessages(grepProgressMessages(result.getStdOut())));
     }
 
     @Test
     public void executeCommandWithSupplements() {
-        NadminReturn result = nadminWithOutput("progress-supplement");
-        assertTrue(result.returnValue);
+        AsadminResult result = ASADMIN.exec("progress-supplement");
+        assertThat(result, asadminOK());
 
-        List<ProgressMessage> prgs = grepProgressMessages(result.out);
+        List<ProgressMessage> prgs = grepProgressMessages(result.getStdOut());
         assertArrayEquals(new String[] {
             "Starting", "2 seconds supplemental command", "Parsing",
             "Working on main part", "Finished", "3 seconds supplemental" },
@@ -74,10 +74,10 @@ public class ProgressStatusComplexITest {
 
     @Test
     public void executeVeryComplexCommand() {
-        NucleusTestUtils.NadminReturn result = nadminWithOutput("progress-complex");
-        assertTrue(result.returnValue);
+        AsadminResult result = ASADMIN.exec("progress-complex");
+        assertThat(result, asadminOK());
 
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
+        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertThat(prgs, hasSize(greaterThanOrEqualTo(100)));
         assertThat(prgs, isIncreasing());
         assertEquals(5, scopeCount(prgs, "complex:"));
@@ -103,5 +103,4 @@ public class ProgressStatusComplexITest {
         }
         return result;
     }
-
 }

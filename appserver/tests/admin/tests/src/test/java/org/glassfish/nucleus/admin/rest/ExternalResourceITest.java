@@ -31,7 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class ExternalResourceITest extends RestTestBase {
 
-    private static final String URL_EXTERNAL_RESOURCE = "domain/resources/external-jndi-resource";
+    private static final String URL_EXTERNAL_RESOURCE = "/domain/resources/external-jndi-resource";
 
     @Test
     public void createAndDeleteExternalResource() {
@@ -43,13 +43,13 @@ public class ExternalResourceITest extends RestTestBase {
             "factoryClass", "org.glassfish.resources.custom.factory.PrimitivesAndStringFactory",
             "restype", Double.class.getName()
         );
-        Response response = post(URL_EXTERNAL_RESOURCE, newResource);
+        Response response = managementClient.post(URL_EXTERNAL_RESOURCE, newResource);
         assertThat(response.getStatus(), equalTo(200));
 
-        response = get(URL_EXTERNAL_RESOURCE + "/" + resourceName);
+        response = managementClient.get(URL_EXTERNAL_RESOURCE + "/" + resourceName);
         assertThat(response.getStatus(), equalTo(200));
 
-        response = delete(URL_EXTERNAL_RESOURCE + "/" + resourceName);
+        response = managementClient.delete(URL_EXTERNAL_RESOURCE + "/" + resourceName);
         assertThat(response.getStatus(), equalTo(200));
     }
 }

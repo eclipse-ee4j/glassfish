@@ -154,10 +154,9 @@
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                          
-                               <macrodef name="tck-setting">
+                                <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
                                       <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
@@ -250,17 +249,31 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
                                     </exec>
                                 </limit>
                                 
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
-                                    <arg value="deploy.all"  />
-                                </exec>
+                                <!-- Deploy single test -->
+                                <sequential if:set="run.test" >
+                                	<dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
+                                	<echo>Deploying from ${test.dir}</echo>
+                                	
+                                	<exec executable="${ant.home}/bin/ant" dir="${test.dir}">
+                                    	<arg value="deploy"  />
+                                	</exec>
+                                </sequential>
+                                
+                                <!-- Deploy all tests -->
+                                <sequential unless:set="run.test" >
+                                	<exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
+                                    	<arg value="deploy.all"  />
+                                	</exec>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>
@@ -278,7 +291,8 @@
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="run.all"/>
+                                    <arg value="run.all" unless:set="run.test"/>
+                                    <arg value="runclient" if:set="run.test" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

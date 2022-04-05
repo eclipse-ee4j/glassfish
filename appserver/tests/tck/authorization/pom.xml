@@ -154,7 +154,6 @@
                                          classpathref="maven.plugin.classpath" />
 
                                 <!-- Change configuration -->
-                                <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="s1as\.admin\.port=.*"
                                     replace="s1as\.admin\.port=${port.admin}" />

@@ -26,19 +26,19 @@
         <version>7.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-faces</artifactId>
+    <artifactId>glassfish-external-tck-pages</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: Faces</name>
+    <name>TCK: pages</name>
 
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         
-        <tck.home>${project.build.directory}/faces-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home> 
+        <tck.home>${project.build.directory}/pages-tck</tck.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home> 
          
-        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
        
@@ -66,7 +66,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-faces-tck</artifactId>
+            <artifactId>jakarta-pages-tck</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -111,7 +111,6 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
-                    <!-- 
                     <execution>
                         <id>unpack-tck</id>
                         <phase>pre-integration-test</phase>
@@ -119,11 +118,10 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>jakarta-faces-tck</includeArtifactIds>
+                            <includeArtifactIds>jakarta-pages-tck</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
-                    -->
                 </executions>
             </plugin>
 
@@ -156,22 +154,23 @@
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                          
-                               <macrodef name="tck-setting">
+                                <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
                                       <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                         match="@{key}=.*" replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
+                                
 
                                 <!-- Change configuration -->
-                                <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
                                 
+                                <tck-setting key="webServerHome" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
+                                
                                 <tck-setting key="securedWebServicePort" value="${port.https}"/>
                                 <tck-setting key="s1as.admin.port" value="${port.admin}"/>
                                 <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
@@ -179,21 +178,18 @@
                                 <tck-setting key="database.port" value="${port.derby}"/>
                                 <tck-setting key="harness.log.port" value="${port.harness.log}"/>
                                 
-                                <tck-setting key="report.dir" value="${tck.home}/facesreport/faces"/>
-                                <tck-setting key="work.dir" value="${tck.home}/faceswork/faces"/>
-                                
-                                <tck-setting key="webServerHome" value="${glassfish.home}/glassfish"/>
-                                
-                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
-                                    match="webServerHome=/ri/glassfish3/glassfish" replace="webServerHome=${glassfish.home}/glassfish" />
-                                 
+                                <tck-setting key="report.dir" value="${tck.home}/pagesreport/pages"/>
+                                <tck-setting key="work.dir" value="${tck.home}/pageswork/pages"/>
                                 
                                 <tck-setting key="impl.vi" value="glassfish"/>
                                 <tck-setting key="impl.vi.deploy.dir" value="${webServerHome}/domains/domain1/autodeploy"/>
-                                <tck-setting key="impl.deploy.timeout.multiplier" value="960"/>
+                                <tck-setting key="impl.deploy.timeout.multiplier" value="30"/>
                                 
-                                <tck-setting key="jsf.classes" value="${webServerHome}/modules/cdi-api.jar;${webServerHome}/modules/jakarta.servlet.jsp.jstl-api.jar;${webServerHome}/modules/jakarta.inject.jar;${webServerHome}/modules/jakarta.faces.jar;${webServerHome}/modules/jakarta.servlet.jsp-api.jar;${webServerHome}/modules/jakarta.servlet-api.jar;${webServerHome}/modules/expressly.jar"/>
-
+                                <tck-setting key="jspservlet.classes" value="${webServerHome}/modules/jakarta.servlet-api.jar${pathsep}${webServerHome}/modules/wasp.jar${pathsep}${webServerHome}/modules/jakarta.servlet.jsp-api.jar"/>
+                                <tck-setting key="jstl.classes" value="${webServerHome}/modules/jakarta.servlet.jsp.jstl.jar"/>
+                                <tck-setting key="el.classes" value="${webServerHome}/modules/jakarta.el.jar${pathsep}${webServerHome}/modules/jakarta.el-api.jar"/>
+								
+                          
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="delete-domain"/>
@@ -225,22 +221,20 @@
                                         <arg value="domain1"/>
                                     </exec>
                                 </limit>
-                                <mkdir dir="${tck.home}/facesreport"/>
-                                <mkdir dir="${tck.home}/facesreport/faces"/>
+                                <mkdir dir="${tck.home}/pagestckreport"/>
+                                <mkdir dir="${tck.home}/pagestckreport/pagestck"/>
                                 
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m" />]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m" />
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
                                 
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m" />]]></replacetoken>
-                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m" />
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
+                                  <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
                                 </replace>
-                                
-                                
                             </target>
                         </configuration>
                         <goals>
@@ -255,25 +249,36 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
                                     </exec>
                                 </limit>
                                 
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
-                                    <arg value="-Dutil.dir=${tck.home}"  />
-                                    <arg value="deploy.all"  />
-                                </exec>
+                                <!-- Deploy single test -->
+                                <sequential if:set="run.test" >
+                                	<dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
+                                	<echo>Deploying from ${test.dir}</echo>
+                                	
+                                	<exec executable="${ant.home}/bin/ant" dir="${test.dir}">
+                                    	<arg value="deploy"  />
+                                	</exec>
+                                </sequential>
+                                
+                                <!-- Deploy all tests -->
+                                <sequential unless:set="run.test" >
+                                	<exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}">
+                                    	<arg value="deploy.all"  />
+                                	</exec>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>
-      
 
-                     <execution>
+                    <execution>
                         <id>run-tck-tests</id>
                         <phase>integration-test</phase>
                         <goals>
@@ -281,15 +286,13 @@
                         </goals>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
 
-                                <echo level="info" message="Start running all tests" unless:set="run.test"/>
-                                <echo level="info" message="Start running single test" if:set="run.test"/>
+                                <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
-                                    <arg value="-Dutil.dir=${tck.home}"  />
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="runclient"/>
+                                    <arg value="run.all" unless:set="run.test"/>
+                                    <arg value="runclient" if:set="run.test" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

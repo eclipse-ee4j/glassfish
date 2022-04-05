@@ -59,6 +59,7 @@
             <modules>
                 <module>jakarta-rest-tck</module>
                 <module>jakarta-faces-tck</module>
+                <module>jakarta-pages-tck</module>
                 <module>jakarta-authentication-tck</module>
             </modules>
         </profile>

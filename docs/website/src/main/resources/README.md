@@ -14,7 +14,7 @@ sponsored by the Eclipse Foundation.
 We are pleased to announce the release of Eclipse GlassFish 6.2.5. This release provides implementations
 of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download). Eclipse GlassFish 6.2.5 implements the Jakarta EE 9.1 specification ([Jakarta EE 9.1 Platform](https://jakarta.ee/specifications/platform/9.1/), [Jakarta EE 9 Web Profile](https://jakarta.ee/specifications/webprofile/9.1/)). GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previous versions (most after the GF 5 to 6 transition), once again improves JDK 17 compatibility (cases found by the new tests), fixes several bugs, and contains new versions of Hibernate Validator, Jackson and others.
 
-GlassFish 6.2.3 compiles and run with JDK 11 to JDK 18-EA releases.
+GlassFish 6.2.5 compiles and run with JDK 11 to JDK 18-EA releases.
 
 Note this release requires at least JDK 11. 
 
@@ -23,7 +23,7 @@ Note this release requires at least JDK 11.
 We are pleased to announce the release of Eclipse GlassFish 6.2.4. This release provides implementations
 of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download). Eclipse GlassFish 6.2.4 implements the Jakarta EE 9.1 specification ([Jakarta EE 9.1 Platform](https://jakarta.ee/specifications/platform/9.1/), [Jakarta EE 9 Web Profile](https://jakarta.ee/specifications/webprofile/9.1/)). GlassFish 6.2.4 brings initial support for JDK 18 (tested until ea29) and adds running several standalone Jakarta EE TCKs directly from the project. An import internal fix is removing a troublesome circular dependency between GlassFish and Jersey.
 
-GlassFish 6.2.3 compiles and run with JDK 11 to JDK 18-EA releases.
+GlassFish 6.2.4 compiles and run with JDK 11 to JDK 18-EA releases.
 
 Note this release requires at least JDK 11. 
 

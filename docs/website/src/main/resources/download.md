@@ -1,5 +1,23 @@
 # Eclipse GlassFish Downloads
 
+## Eclipse GlassFish 6.2.5
+
+GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previous versions (most after the GF 5 to 6 transition), once again improves JDK 17 compatibility (cases found by the new tests), fixes several bugs, and contains new versions of Hibernate Validator, Jackson and others.
+
+For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
+
+* [Eclipse GlassFish 6.2.5, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-6.2.5.zip)
+* [Eclipse GlassFish 6.2.5, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-6.2.5.zip)
+
+## Eclipse GlassFish 6.2.4
+
+GlassFish 6.2.4 brings initial support for JDK 18 (tested until ea29) and adds running several standalone Jakarta EE TCKs directly from the project. An import internal fix is removing a troublesome circular dependency between GlassFish and Jersey.
+
+For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
+
+* [Eclipse GlassFish 6.2.4, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-6.2.4.zip)
+* [Eclipse GlassFish 6.2.4, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-6.2.4.zip)
+
 ## Eclipse GlassFish 6.2.3
 
 GlassFish 6.2.3 brings Admin console fixes, build times improvement, component updates, and bug fixes.

@@ -118,7 +118,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>tck</module>
                 <module>admin</module>
                 <module>appserv-tests</module>
             </modules>
@@ -135,9 +134,11 @@
             </modules>
         </profile>
         <profile>
-            <id>fast</id>
+            <id>tck</id>
             <modules>
+                <module>admin</module>
                 <module>appserv-tests</module>
+                <module>tck</module>
             </modules>
         </profile>
     </profiles>

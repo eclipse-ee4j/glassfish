@@ -33,7 +33,7 @@
 
     <properties>
         <tck.test.authentication.file>jakarta-authentication-tck-2.0.1.zip</tck.test.authentication.file>
-        <tck.test.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.authentication.file}</tck.test.authentication.url>
+        <tck.test.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/${tck.test.authentication.file}</tck.test.authentication.url>
     </properties>
 
     <build>

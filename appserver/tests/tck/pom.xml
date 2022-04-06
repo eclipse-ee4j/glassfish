@@ -32,9 +32,12 @@
     <name>TCK: Parent</name>
 
     <modules>
-        <module>tck-download</module>
-        <module>authorization</module>
         <module>embedded_ejb_smoke</module>
+        <module>tck-download</module>
+        <module>rest</module>
+        <module>faces</module>
+        <module>authentication</module>
+        <module>authorization</module>
     </modules>
 
     <build>
@@ -50,33 +53,4 @@
             </plugin>
         </plugins>
     </build>
-    
-    <profiles>
-        <profile>
-            <id>tck-all</id>
-            <modules>
-                <module>rest</module>
-                <module>faces</module>
-                <module>authentication</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-rest</id>
-            <modules>
-                <module>rest</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-faces</id>
-            <modules>
-                <module>faces</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-authentication</id>
-            <modules>
-                <module>authentication</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>

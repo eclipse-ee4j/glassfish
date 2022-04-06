@@ -600,7 +600,7 @@
                 <artifactId>org.apache.felix.bundlerepository</artifactId>
                 <version>2.0.10</version>
             </dependency>
-            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
+            <!-- This is currently used by osgi-shell cmd -->
             <dependency>
                 <groupId>jline</groupId>
                 <artifactId>jline</artifactId>
@@ -948,12 +948,6 @@
                 </executions>
             </plugin>
 
-            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions>
-                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals>
-                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include>
-                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include>
-                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions>
-                </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

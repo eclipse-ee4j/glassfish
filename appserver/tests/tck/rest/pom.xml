@@ -34,16 +34,16 @@
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
+
         <tck.home>${project.build.directory}/restful-ws-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
-         
+
         <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-       
+
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
-        
+
         <port.admin>14848</port.admin>
         <port.derby>11527</port.derby>
         <port.http>18080</port.http>
@@ -156,7 +156,7 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                         
+
                                <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
@@ -167,7 +167,7 @@
 
                                 <!-- Change configuration -->
                                 <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
-                                
+
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
                                 <tck-setting key="securedWebServicePort" value="${port.https}"/>
@@ -176,16 +176,16 @@
                                 <tck-setting key="orb.port" value="${port.orb}"/>
                                 <tck-setting key="database.port" value="${port.derby}"/>
                                 <tck-setting key="harness.log.port" value="${port.harness.log}"/>
-                                
+
                                 <tck-setting key="report.dir" value="${tck.home}/restreport/rest"/>
                                 <tck-setting key="work.dir" value="${tck.home}/restwork/rest"/>
-                                
+
                                 <tck-setting key="web.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="impl.vi" value="glassfish"/>
                                 <tck-setting key="impl.vi.deploy.dir" value="${web.home}/domains/domain1/autodeploy"/>
-                                
+
                                 <tck-setting key="jaxrs_impl_name" value="jersey"/>
-                                
+
                                 <tck-setting key="jaxrs_impl.classes" value="${web.home}/modules/jakarta.json.jar:${web.home}/modules/jakarta.json.bind-api.jar:${web.home}/modules/jakarta.json.jar:${web.home}/modules/jsonp-jaxrs.jar:${web.home}/modules/jersey-client.jar:${web.home}/modules/jersey-common.jar:${web.home}/modules/jersey-server.jar:${web.home}/modules/jersey-container-servlet.jar:${web.home}/modules/jersey-container-servlet-core.jar:${web.home}/modules/jersey-media-jaxb.jar:${web.home}/modules/jersey-media-sse.jar:${web.home}/modules/jersey-hk2.jar:${web.home}/modules/osgi-resource-locator.jar:${web.home}/modules/jakarta.inject-api.jar:${web.home}/modules/guava.jar:${web.home}/modules/hk2-api.jar:${web.home}/modules/hk2-locator.jar:${web.home}/modules/hk2-utils.jar:${web.home}/modules/javassist.jar:${web.home}/modules/cglib.jar:${web.home}/modules/jakarta.annotation-api.jar:${web.home}/modules/jakarta.xml.bind-api.jar:${web.home}/modules/jakarta.activation.jar"/>
                                 <tck-setting key="jaxrs_impl_lib" value="${web.home}/modules/jersey-container-servlet-core.jar"/>
                                 <tck-setting key="jaxrs.classes" value="${web.home}/modules/jakarta.ws.rs-api.jar"/>
@@ -225,13 +225,13 @@
                                 </limit>
                                 <mkdir dir="${tck.home}/resttckreport"/>
                                 <mkdir dir="${tck.home}/resttckreport/resttck"/>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
@@ -272,7 +272,7 @@
                             </target>
                         </configuration>
                     </execution>
-      
+
 
                      <execution>
                         <id>run-tck-tests</id>

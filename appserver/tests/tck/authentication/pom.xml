@@ -34,16 +34,16 @@
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
+
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home> 
-         
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home>
+
         <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-       
+
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
-        
+
         <port.admin>14848</port.admin>
         <port.derby>11527</port.derby>
         <port.http>18080</port.http>
@@ -156,7 +156,7 @@
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                         
+
                                <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
@@ -164,22 +164,22 @@
                                         match="@{key}=.*" replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
-                                
+
                                 <macrodef name="tck-add">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
                                         <concat append="true" destfile="${tck.home}/bin/ts.jte">@{key}=@{value}${line.separator}</concat>
                                     </sequential>
                                 </macrodef>
-                                
+
 
                                 <!-- Change configuration -->
                                 <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
-                                
+
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
                                 <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
-                                
+
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
                                 <tck-setting key="securedWebServicePort" value="${port.https}"/>
@@ -188,15 +188,15 @@
                                 <tck-setting key="orb.port" value="${port.orb}"/>
                                 <tck-setting key="database.port" value="${port.derby}"/>
                                 <tck-setting key="harness.log.port" value="${port.harness.log}"/>
-                                
+
                                 <tck-setting key="report.dir" value="${tck.home}/authenticationreport/authentication"/>
                                 <tck-setting key="work.dir" value="${tck.home}/authenticationwork/authentication"/>
-                                
-                                <!-- 
+
+                                <!--
                                     # It's an open question why these settings are not just part of ts.jte to begin with.
                                     # It's also an open question why the Authentication TCK insists on these being defined
                                 -->
-                                
+
                                 <tck-add key="persistence.unit.name.2" value="JPATCK2"/>
                                 <tck-add key="persistence.unit.name" value="CTS-EM"/>
                                 <tck-add key="jakarta.persistence.provider" value="org.eclipse.persistence.jpa.PersistenceProvider"/>
@@ -206,7 +206,7 @@
                                 <tck-add key="jakarta.persistence.jdbc.password" value="cts1"/>
                                 <tck-add key="jpa.provider.implementation.specific.properties" value="eclipselink.logging.level=OFF"/>
                                 <tck-add key="persistence.second.level.caching.supported" value="true"/>
-                          
+
                                 <limit maxwait="60">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="delete-domain"/>
@@ -240,13 +240,13 @@
                                 </limit>
                                 <mkdir dir="${tck.home}/authenticationtckreport"/>
                                 <mkdir dir="${tck.home}/authenticationtckreport/authenticationtck"/>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
@@ -274,7 +274,7 @@
                                         <arg value="start-domain"/>
                                     </exec>
                                 </limit>
-                                
+
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi"  />
                                 </exec>
@@ -284,7 +284,7 @@
                             </target>
                         </configuration>
                     </execution>
-      
+
 
                      <execution>
                         <id>run-tck-tests</id>

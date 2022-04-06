@@ -32,7 +32,8 @@
     <name>TCK: Install Jakarta Faces TCK</name>
 
     <properties>
-        <tck.test.faces.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-faces-tck-3.0.1.zip</tck.test.faces.url>
+        <tck.test.faces.file>jakarta-faces-tck-3.0.1.zip</tck.test.faces.file>
+        <tck.test.faces.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.faces.file}</tck.test.faces.url>
     </properties>
 
     <build>
@@ -65,7 +66,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/jakarta-faces-tck-3.0.1.zip</file>
+                            <file>${project.build.directory}/${tck.test.faces.file}</file>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>

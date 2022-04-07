@@ -22,6 +22,8 @@ import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.UnsupportedCharsetException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
@@ -138,12 +140,20 @@ public class ResponseFacade implements HttpServletResponse {
     public PrintWriter getWriter() throws IOException {
         checkResponseNull();
 
-        PrintWriter writer = response.getWriter();
-        if (isFinished()) {
-            response.setSuspended(true);
-        }
+        try {
+            PrintWriter writer = response.getWriter();
+            if (isFinished()) {
+                response.setSuspended(true);
+            }
 
-        return writer;
+            return writer;
+        } catch (UnsupportedCharsetException e) {
+            // Servlet 6 states we should throw an UnsupportedEncodingException, but our backend
+            // naturally throws an UnsupportedCharsetException.
+            UnsupportedEncodingException unsupportedEncodingException = new UnsupportedEncodingException();
+            unsupportedEncodingException.initCause(e);
+            throw unsupportedEncodingException;
+        }
     }
 
     @Override

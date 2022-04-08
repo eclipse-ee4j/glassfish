@@ -24,6 +24,7 @@ import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.main.admin.test.progress.ProgressMessage.isIncreasing;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
@@ -36,9 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author martinmares
  */
+@ExtendWith(JobTestExtension.class)
 public class ProgressStatusSpecialITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+
 
     @Test
     public void stepBackCommand() {

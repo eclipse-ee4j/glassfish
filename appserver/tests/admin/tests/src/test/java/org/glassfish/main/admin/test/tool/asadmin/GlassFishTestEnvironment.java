@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -66,10 +65,10 @@ public class GlassFishTestEnvironment {
         LOG.log(Level.INFO, "Expected GlassFish directory: {0}", GF_ROOT);
         changePassword();
         Thread hook = new Thread(() -> {
-            getAsadmin().exec(10_000, false, "stop-domain", "--kill", "--force");
+            getAsadmin().exec(10_000, "stop-domain", "--kill", "--force");
         });
         Runtime.getRuntime().addShutdownHook(hook);
-        assertThat(getAsadmin().exec(30_000, false, "start-domain"), AsadminResultMatcher.asadminOK());
+        assertThat(getAsadmin().exec(30_000, "start-domain"), AsadminResultMatcher.asadminOK());
     }
 
     /**
@@ -130,28 +129,6 @@ public class GlassFishTestEnvironment {
 
 
     /**
-     * osgi-cache workaround
-     */
-    public static void deleteOsgiDirectory() {
-        Path osgiCacheDir = GF_ROOT.toPath().resolve(Paths.get("domains", "domain1", "osgi-cache"));
-        try {
-            Files.list(osgiCacheDir).forEach(GlassFishTestEnvironment::deleteSubpaths);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-
-    public static void deleteSubpaths(final Path path) {
-        try {
-            Files.walk(path).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-        } catch (Exception e) {
-            throw new IllegalStateException("Cannot delete path recursively: " + path, e);
-        }
-    }
-
-
-    /**
      * Useful for a heuristic inside Eclipse and other environments.
      *
      * @return Absolute path to the glassfish directory.
@@ -203,7 +180,7 @@ public class GlassFishTestEnvironment {
 
     private static void changePassword() {
         final Asadmin asadmin = new Asadmin(ASADMIN, ADMIN_USER, PASSWORD_FILE_FOR_UPDATE);
-        final AsadminResult result = asadmin.exec(5_000, false, "change-admin-password");
+        final AsadminResult result = asadmin.exec(5_000, "change-admin-password");
         if (result.isError()) {
             // probably changed by previous execution without maven clean
             System.out.println("Admin password NOT changed.");

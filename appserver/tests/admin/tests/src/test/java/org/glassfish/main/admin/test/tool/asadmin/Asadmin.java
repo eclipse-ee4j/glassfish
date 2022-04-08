@@ -22,11 +22,17 @@ import com.sun.enterprise.universal.process.ProcessManagerTimeoutException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Tool for executing asadmin/asadmin.bat commands.
@@ -37,7 +43,14 @@ import static java.util.Arrays.asList;
 public class Asadmin {
     private static final Logger LOG = Logger.getLogger(Asadmin.class.getName());
 
-    private static final int DEFAULT_TIMEOUT_MSEC = 10 * 1000;
+    private static final int DEFAULT_TIMEOUT_MSEC = 30 * 1000;
+    private static final Function<String, KeyAndValue<String>> KEYVAL_SPLITTER = s -> {
+        int equalSignPos = s.indexOf('=');
+        if (equalSignPos <= 0 || equalSignPos == s.length() - 1) {
+            return null;
+        }
+        return new KeyAndValue<>(s.substring(0, equalSignPos), s.substring(equalSignPos + 1, s.length()));
+    };
 
     private final File asadmin;
     private final String adminUser;
@@ -66,6 +79,27 @@ public class Asadmin {
     }
 
 
+    public <T> KeyAndValue<T> getValue(final String key, final Function<String, T> transformer) {
+        List<KeyAndValue<T>> result = get(key, transformer);
+        if (result.isEmpty()) {
+            return null;
+        }
+        if (result.size() > 1) {
+            throw new IllegalArgumentException("The key is not concrete enough to get a single value: " + key);
+        }
+        return result.get(0);
+    }
+
+
+    public <T> List<KeyAndValue<T>> get(final String key, final Function<String, T> transformer) {
+        AsadminResult result = exec("get", key);
+        assertThat(result, asadminOK());
+        return Arrays.stream(result.getStdOut().split(System.lineSeparator())).map(KEYVAL_SPLITTER)
+            .filter(Objects::nonNull).map(kv -> new KeyAndValue<>(kv.getKey(), transformer.apply(kv.getValue())))
+            .collect(Collectors.toList());
+    }
+
+
     /**
      * Executes the command with arguments asynchronously with {@value #DEFAULT_TIMEOUT_MSEC} ms timeout.
      * The command can be attached by the attach command.
@@ -74,8 +108,8 @@ public class Asadmin {
      * @param args
      * @return {@link AsadminResult} never null.
      */
-    public AsadminResult execDetached(final String... args) {
-        return exec(DEFAULT_TIMEOUT_MSEC, true, args);
+    public DetachedTerseAsadminResult execDetached(final String... args) {
+        return (DetachedTerseAsadminResult) exec(DEFAULT_TIMEOUT_MSEC, true, args);
     }
 
     /**
@@ -87,40 +121,51 @@ public class Asadmin {
     public AsadminResult exec(final String... args) {
         return exec(DEFAULT_TIMEOUT_MSEC, false, args);
     }
-
+    /**
+     * Executes the command with arguments synchronously with given timeout in millis.
+     *
+     * @param timeout
+     * @param args
+     * @return {@link AsadminResult} never null.
+     */
+    public AsadminResult exec(final int timeout, final String... args) {
+        return exec(timeout, false, args);
+    }
 
     /**
      * Executes the command with arguments.
      *
      * @param timeout timeout in millis
-     * @param detached - detached command is executed asynchronously, can be attached later by the attach command.
+     * @param detachedAndTerse - detached command is executed asynchronously, can be attached later by the attach command.
      * @param args - command and arguments.
      * @return {@link AsadminResult} never null.
      */
-    public AsadminResult exec(final int timeout, final boolean detached, final String... args) {
+    private AsadminResult exec(final int timeout, final boolean detachedAndTerse, final String... args) {
         final List<String> parameters = asList(args);
-        LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})", new Object[] {timeout, detached, parameters});
+        LOG.log(Level.INFO, "exec(timeout={0}, detached={1}, args={2})",
+            new Object[] {timeout, detachedAndTerse, parameters});
         final List<String> command = new ArrayList<>();
         command.add(asadmin.getAbsolutePath());
         command.add("--user");
         command.add(adminUser);
         command.add("--passwordfile");
         command.add(adminPasswordFile.getAbsolutePath());
-        if (detached) {
+        if (detachedAndTerse) {
+            command.add("--terse");
             command.add("--detach");
         }
         command.addAll(parameters);
 
-        final ProcessManager pm = new ProcessManager(command);
-        pm.setTimeoutMsec(timeout);
-        pm.setEcho(false);
+        final ProcessManager processManager = new ProcessManager(command);
+        processManager.setTimeoutMsec(timeout);
+        processManager.setEcho(false);
 
         int exitCode;
         String asadminErrorMessage = "";
         try {
-            exitCode = pm.execute();
+            exitCode = processManager.execute();
         } catch (final ProcessManagerTimeoutException e) {
-            asadminErrorMessage = "ProcessManagerTimeoutException: command timed stdOut after " + timeout + " ms.\n";
+            asadminErrorMessage = "ProcessManagerTimeoutException: command timed out after " + timeout + " ms.\n";
             exitCode = 1;
         } catch (final ProcessManagerException e) {
             LOG.log(Level.SEVERE, "The execution failed.", e);
@@ -128,16 +173,14 @@ public class Asadmin {
             exitCode = 1;
         }
 
-        final String stdErr = pm.getStderr() + '\n' + asadminErrorMessage;
-        final AsadminResult ret = new AsadminResult(args[0], exitCode, pm.getStdout(), stdErr);
-        writeToStdOut(ret.getOutput());
-        return ret;
-    }
-
-
-    private static void writeToStdOut(final String text) {
-        if (!text.isEmpty()) {
-            System.out.print(text);
+        final String stdErr = processManager.getStderr() + '\n' + asadminErrorMessage;
+        final AsadminResult result;
+        if (detachedAndTerse) {
+            result = new DetachedTerseAsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
+        } else {
+            result = new AsadminResult(args[0], exitCode, processManager.getStdout(), stdErr);
         }
+        System.out.print(result.getStdOut());
+        return result;
     }
 }

@@ -31,13 +31,13 @@ public class AsadminResult {
     /**
      * Creates a value object instance.
      *
-     * @param cmd - command name
+     * @param commandName
      * @param exitCode
      * @param stdOut
      * @param stdErr
      */
-    public AsadminResult(final String cmd, final int exitCode, final String stdOut, final String stdErr) {
-        this.error = exitCode != 0 || containsError(stdOut, String.format("Command %s failed.", cmd));
+    public AsadminResult(final String commandName, final int exitCode, final String stdOut, final String stdErr) {
+        this.error = exitCode != 0 || containsError(stdOut, String.format("Command %s failed.", commandName));
         this.stdOut = stdOut;
         this.stdErr = stdErr;
         this.output = this.stdOut + this.stdErr;

@@ -349,7 +349,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     protected String requestedSessionCookiePath;
 
     // Temporary holder for URI params from which session id is parsed
-    protected CharChunk uriParamsCC = new CharChunk();
+    protected CharChunk uriParamsCharChunk = new CharChunk();
 
     /**
      * Was the requested session ID received in a URL?
@@ -424,9 +424,9 @@ public class Request implements HttpRequest, HttpServletRequest {
     private String requestURI;
 
     /**
-     * Coyote request.
+     * Grizzly request.
      */
-    protected org.glassfish.grizzly.http.server.Request coyoteRequest;
+    protected org.glassfish.grizzly.http.server.Request grizzlyRequest;
 
     /**
      * The facade associated with this request.
@@ -532,8 +532,8 @@ public class Request implements HttpRequest, HttpServletRequest {
      *
      * @param grizzlyRequest The Coyote request
      */
-    public void setCoyoteRequest(org.glassfish.grizzly.http.server.Request grizzlyRequest) {
-        this.coyoteRequest = grizzlyRequest;
+    public void setGrizzlyRequest(org.glassfish.grizzly.http.server.Request grizzlyRequest) {
+        this.grizzlyRequest = grizzlyRequest;
         inputBuffer.setRequest(grizzlyRequest);
         inputBuffer.setRequest(this);
     }
@@ -541,8 +541,8 @@ public class Request implements HttpRequest, HttpServletRequest {
     /**
      * Get the Coyote request.
      */
-    public org.glassfish.grizzly.http.server.Request getCoyoteRequest() {
-        return this.coyoteRequest;
+    public org.glassfish.grizzly.http.server.Request getGrizzlyRequest() {
+        return this.grizzlyRequest;
     }
 
     /**
@@ -610,7 +610,7 @@ public class Request implements HttpRequest, HttpServletRequest {
         requestedSessionId = null;
         requestedSessionCookiePath = null;
         requestedSessionURL = false;
-        uriParamsCC.recycle();
+        uriParamsCharChunk.recycle();
         sessionTracker.reset();
 
         /*
@@ -689,7 +689,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getAuthorization() {
-        return coyoteRequest.getHeader(AUTHORIZATION_HEADER);
+        return grizzlyRequest.getHeader(AUTHORIZATION_HEADER);
     }
 
     /**
@@ -1064,7 +1064,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setContentLength(int length) {
-        coyoteRequest.getRequest().setContentLength(length);
+        grizzlyRequest.getRequest().setContentLength(length);
     }
 
     /**
@@ -1124,7 +1124,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setServerName(String name) {
-        coyoteRequest.setServerName(name);
+        grizzlyRequest.setServerName(name);
     }
 
     /**
@@ -1134,7 +1134,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setServerPort(int port) {
-        coyoteRequest.setServerPort(port);
+        grizzlyRequest.setServerPort(port);
     }
 
     /**
@@ -1180,20 +1180,20 @@ public class Request implements HttpRequest, HttpServletRequest {
             return attribute;
         }
 
-        attribute = coyoteRequest.getAttribute(name);
+        attribute = grizzlyRequest.getAttribute(name);
         if (attribute != null) {
             return attribute;
         }
 
         if (Globals.SSL_CERTIFICATE_ATTR.equals(name)) {
             // @TODO Implement SSL rehandshake
-            RequestUtils.populateCertificateAttribute(coyoteRequest);
+            RequestUtils.populateCertificateAttribute(grizzlyRequest);
             attribute = getAttribute(CERTIFICATES_ATTR);
             if (attribute != null) {
                 attributes.put(name, attribute);
             }
         } else if (isSSLAttribute(name)) {
-            RequestUtils.populateSSLAttributes(coyoteRequest);
+            RequestUtils.populateSSLAttributes(grizzlyRequest);
             attribute = attributes.get(name);
         }
 
@@ -1226,7 +1226,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getCharacterEncoding() {
-        return coyoteRequest.getCharacterEncoding();
+        return grizzlyRequest.getCharacterEncoding();
     }
 
     /**
@@ -1234,7 +1234,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public int getContentLength() {
-        return coyoteRequest.getContentLength();
+        return grizzlyRequest.getContentLength();
     }
 
     /**
@@ -1242,7 +1242,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public long getContentLengthLong() {
-        return coyoteRequest.getContentLengthLong();
+        return grizzlyRequest.getContentLengthLong();
     }
 
     /**
@@ -1250,7 +1250,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getContentType() {
-        return coyoteRequest.getContentType();
+        return grizzlyRequest.getContentType();
     }
 
     /**
@@ -1281,7 +1281,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public Locale getLocale() {
-        return coyoteRequest.getLocale();
+        return grizzlyRequest.getLocale();
     }
 
     /**
@@ -1291,7 +1291,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public Enumeration<Locale> getLocales() {
-        return new Enumerator<>(coyoteRequest.getLocales());
+        return new Enumerator<>(grizzlyRequest.getLocales());
     }
 
     private void processParameters() {
@@ -1320,7 +1320,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     public String getParameter(String name) {
         processParameters();
 
-        return coyoteRequest.getParameter(name);
+        return grizzlyRequest.getParameter(name);
     }
 
     /**
@@ -1354,7 +1354,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     public Enumeration<String> getParameterNames() {
         processParameters();
 
-        return new Enumerator<>(coyoteRequest.getParameterNames());
+        return new Enumerator<>(grizzlyRequest.getParameterNames());
     }
 
     /**
@@ -1366,7 +1366,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     public String[] getParameterValues(String name) {
         processParameters();
 
-        return coyoteRequest.getParameterValues(name);
+        return grizzlyRequest.getParameterValues(name);
     }
 
     /**
@@ -1374,7 +1374,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getProtocol() {
-        return coyoteRequest.getProtocol().getProtocolString();
+        return grizzlyRequest.getProtocol().getProtocolString();
     }
 
     /**
@@ -1425,7 +1425,7 @@ public class Request implements HttpRequest, HttpServletRequest {
                 InetAddress inet = socket.getInetAddress();
                 remoteAddr = inet.getHostAddress();
             } else {
-                remoteAddr = coyoteRequest.getRemoteAddr();
+                remoteAddr = grizzlyRequest.getRemoteAddr();
             }
         }
 
@@ -1456,7 +1456,7 @@ public class Request implements HttpRequest, HttpServletRequest {
                 InetAddress inet = socket.getInetAddress();
                 remoteHost = inet.getHostName();
             } else {
-                remoteHost = coyoteRequest.getRemoteHost();
+                remoteHost = grizzlyRequest.getRemoteHost();
             }
         }
 
@@ -1472,7 +1472,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             if (socket != null) {
                 remotePort = socket.getPort();
             } else {
-                remotePort = coyoteRequest.getRemotePort();
+                remotePort = grizzlyRequest.getRemotePort();
             }
         }
 
@@ -1489,7 +1489,7 @@ public class Request implements HttpRequest, HttpServletRequest {
                 InetAddress inet = socket.getLocalAddress();
                 localName = inet.getHostName();
             } else {
-                localName = coyoteRequest.getLocalName();
+                localName = grizzlyRequest.getLocalName();
             }
         }
 
@@ -1506,7 +1506,7 @@ public class Request implements HttpRequest, HttpServletRequest {
                 InetAddress inet = socket.getLocalAddress();
                 localAddr = inet.getHostAddress();
             } else {
-                localAddr = coyoteRequest.getLocalAddr();
+                localAddr = grizzlyRequest.getLocalAddr();
             }
         }
 
@@ -1522,7 +1522,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             if (socket != null) {
                 localPort = socket.getLocalPort();
             } else {
-                localPort = coyoteRequest.getLocalPort();
+                localPort = grizzlyRequest.getLocalPort();
             }
         }
 
@@ -1589,7 +1589,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             }
         }
 
-        return coyoteRequest.getScheme();
+        return grizzlyRequest.getScheme();
     }
 
     /**
@@ -1597,7 +1597,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getServerName() {
-        return coyoteRequest.getServerName();
+        return grizzlyRequest.getServerName();
     }
 
     /**
@@ -1613,7 +1613,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             }
         }
 
-        return coyoteRequest.getServerPort();
+        return grizzlyRequest.getServerPort();
     }
 
     /**
@@ -1719,7 +1719,7 @@ public class Request implements HttpRequest, HttpServletRequest {
 
         // Pass special attributes to the grizzly layer
         if (name.startsWith("grizzly.")) {
-            coyoteRequest.setAttribute(name, value);
+            grizzlyRequest.setAttribute(name, value);
         }
 
         // Notify interested application event listeners
@@ -1799,7 +1799,7 @@ public class Request implements HttpRequest, HttpServletRequest {
         }
 
         // Save the validated encoding
-        coyoteRequest.setCharacterEncoding(enc);
+        grizzlyRequest.setCharacterEncoding(enc);
     }
 
     /**
@@ -1954,7 +1954,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void addHeader(String name, String value) {
-        coyoteRequest.getRequest().getHeaders().addValue(name).setString(value);
+        grizzlyRequest.getRequest().getHeaders().addValue(name).setString(value);
     }
 
     /**
@@ -1977,7 +1977,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void addParameter(String name, String values[]) {
-        coyoteRequest.addParameter(name, values);
+        grizzlyRequest.addParameter(name, values);
     }
 
     /**
@@ -1994,7 +1994,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void clearHeaders() {
-        coyoteRequest.getRequest().getHeaders().recycle();
+        grizzlyRequest.getRequest().getHeaders().recycle();
     }
 
     /**
@@ -2010,8 +2010,8 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void clearParameters() {
-        coyoteRequest.getParameters().recycle();
-        coyoteRequest.getParameters().setQueryStringEncoding(Charsets.lookupCharset(getConnector().getURIEncoding()));
+        grizzlyRequest.getParameters().recycle();
+        grizzlyRequest.getParameters().setQueryStringEncoding(Charsets.lookupCharset(getConnector().getURIEncoding()));
     }
 
     @Override
@@ -2020,7 +2020,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             return;
         }
 
-        coyoteRequest.replayPayload(Buffers.wrap(coyoteRequest.getContext().getMemoryManager(), payloadByteArray));
+        grizzlyRequest.replayPayload(Buffers.wrap(grizzlyRequest.getContext().getMemoryManager(), payloadByteArray));
     }
 
     /**
@@ -2044,7 +2044,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setMethod(String method) {
-        coyoteRequest.setMethod(method);
+        grizzlyRequest.setMethod(method);
     }
 
     /**
@@ -2057,7 +2057,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setQueryString(String query) {
-        coyoteRequest.setQueryString(query);
+        grizzlyRequest.setQueryString(query);
     }
 
     /**
@@ -2141,7 +2141,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public void setRequestURI(String uri) {
-        coyoteRequest.setRequestURI(uri);
+        grizzlyRequest.setRequestURI(uri);
     }
 
     /**
@@ -2163,9 +2163,9 @@ public class Request implements HttpRequest, HttpServletRequest {
     public String getDecodedRequestURI(boolean maskDefaultContextMapping) {
         try {
             if (maskDefaultContextMapping || !isDefaultContext) {
-                return coyoteRequest.getDecodedRequestURI();
+                return grizzlyRequest.getDecodedRequestURI();
             } else {
-                return getContextPath() + coyoteRequest.getDecodedRequestURI();
+                return getContextPath() + grizzlyRequest.getDecodedRequestURI();
             }
         } catch (CharConversionException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -2296,7 +2296,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getHeader(String name) {
-        return coyoteRequest.getHeader(name);
+        return grizzlyRequest.getHeader(name);
     }
 
     /**
@@ -2306,7 +2306,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public Enumeration<String> getHeaders(String name) {
-        return new Enumerator<>(coyoteRequest.getHeaders(name).iterator());
+        return new Enumerator<>(grizzlyRequest.getHeaders(name).iterator());
     }
 
     /**
@@ -2314,7 +2314,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public Enumeration<String> getHeaderNames() {
-        return new Enumerator<>(coyoteRequest.getHeaderNames().iterator());
+        return new Enumerator<>(grizzlyRequest.getHeaderNames().iterator());
     }
 
     /**
@@ -2336,12 +2336,12 @@ public class Request implements HttpRequest, HttpServletRequest {
 
     @Override
     public Map<String, String> getTrailerFields() {
-        return coyoteRequest.getTrailers();
+        return grizzlyRequest.getTrailers();
     }
 
     @Override
     public boolean isTrailerFieldsReady() {
-        return coyoteRequest.areTrailersAvailable();
+        return grizzlyRequest.areTrailersAvailable();
     }
 
     /**
@@ -2349,7 +2349,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getMethod() {
-        return coyoteRequest.getMethod().getMethodString();
+        return grizzlyRequest.getMethod().getMethodString();
     }
 
     /**
@@ -2379,8 +2379,8 @@ public class Request implements HttpRequest, HttpServletRequest {
     @Override
     public PushBuilder newPushBuilder() {
         Http2Stream http2Stream = null;
-        if (coyoteRequest != null) {
-            http2Stream = (Http2Stream) coyoteRequest.getAttribute(Http2Stream.HTTP2_STREAM_ATTRIBUTE);
+        if (grizzlyRequest != null) {
+            http2Stream = (Http2Stream) grizzlyRequest.getAttribute(Http2Stream.HTTP2_STREAM_ATTRIBUTE);
         }
 
         if (http2Stream != null && http2Stream.isPushEnabled()) {
@@ -2395,7 +2395,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     @Override
     public String getQueryString() {
-        String queryString = coyoteRequest.getQueryString();
+        String queryString = grizzlyRequest.getQueryString();
 
         if (queryString == null || "".equals(queryString)) {
             return null;
@@ -2450,14 +2450,14 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     public String getRequestURI(boolean maskDefaultContextMapping) {
         if (maskDefaultContextMapping) {
-            return coyoteRequest.getRequestURI();
+            return grizzlyRequest.getRequestURI();
         }
 
         if (requestURI == null) {
             if (isDefaultContext) {
-                requestURI = getContextPath() + coyoteRequest.getRequestURI();
+                requestURI = getContextPath() + grizzlyRequest.getRequestURI();
             } else {
-                requestURI = coyoteRequest.getRequestURI();
+                requestURI = grizzlyRequest.getRequestURI();
             }
         }
 
@@ -2764,7 +2764,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             throw new ServletException(t);
         }
         httpUpgradeHandler = handler;
-        coyoteRequest.getResponse().suspend();
+        grizzlyRequest.getResponse().suspend();
         return handler;
     }
 
@@ -2958,7 +2958,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     protected void parseCookies() {
         cookiesParsed = true;
 
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
@@ -3033,7 +3033,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      * Read post body in an array.
      */
     protected int readPostBody(byte body[], int len) throws IOException {
-        Buffer b = coyoteRequest.getPostBody(len).duplicate();
+        Buffer b = grizzlyRequest.getPostBody(len).duplicate();
         final int length = b.limit() - b.position();
         b.get(body, b.position(), length);
         return length;
@@ -3064,18 +3064,18 @@ public class Request implements HttpRequest, HttpServletRequest {
      */
     protected void obtainSessionId() {
         setRequestedSessionURL(true);
-        setJrouteId(coyoteRequest.getJrouteId());
-        setRequestedSessionId(coyoteRequest.getRequestedSessionId());
+        setJrouteId(grizzlyRequest.getJrouteId());
+        setRequestedSessionId(grizzlyRequest.getRequestedSessionId());
     }
 
     /**
      * Parse session id in URL.
      */
-    protected void parseSessionId(String sessionParameterName, CharChunk uriBB) {
+    protected void parseSessionId(String sessionParameterName, CharChunk uriCharChunk) {
 
         // Parse session ID, and extract it from the decoded request URI
         String sessionParam = ";" + sessionParameterName + "=";
-        String sessionId = parseParameterFromRequestURI(uriBB, sessionParam);
+        String sessionId = parseParameterFromRequestURI(uriCharChunk, sessionParam);
 
         if (sessionId != null) {
             int jrouteIndex = sessionId.lastIndexOf(':');
@@ -3093,7 +3093,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             /*
              * Parse the session id from the encoded URI only if the encoded URI is not null, to allow for lazy evaluation
              */
-            if (coyoteRequest.getRequestURI() != null) {
+            if (grizzlyRequest.getRequestURI() != null) {
                 removeParameterFromRequestURI(sessionParam);
             }
 
@@ -3153,21 +3153,21 @@ public class Request implements HttpRequest, HttpServletRequest {
      * @param parameter of the form ";" + parameterName + "="
      * @return parameterValue
      */
-    private String parseParameterFromRequestURI(CharChunk uriCC, String parameter) {
+    private String parseParameterFromRequestURI(CharChunk uriCharChunk, String parameter) {
         String parameterValue = null;
 
-        int semicolon = uriCC.indexOf(parameter, 0, parameter.length(), 0);
+        int semicolon = uriCharChunk.indexOf(parameter, 0, parameter.length(), 0);
         if (semicolon >= 0) {
 
-            int start = uriCC.getStart();
-            int end = uriCC.getEnd();
+            int start = uriCharChunk.getStart();
+            int end = uriCharChunk.getEnd();
 
             int parameterStart = start + semicolon + parameter.length();
-            int semicolon2 = uriCC.indexOf(';', semicolon + parameter.length());
+            int semicolon2 = uriCharChunk.indexOf(';', semicolon + parameter.length());
             if (semicolon2 >= 0) {
-                parameterValue = new String(uriCC.getBuffer(), parameterStart, semicolon2 - semicolon - parameter.length());
+                parameterValue = new String(uriCharChunk.getBuffer(), parameterStart, semicolon2 - semicolon - parameter.length());
             } else {
-                parameterValue = new String(uriCC.getBuffer(), parameterStart, end - parameterStart);
+                parameterValue = new String(uriCharChunk.getBuffer(), parameterStart, end - parameterStart);
             }
 
         }
@@ -3183,22 +3183,22 @@ public class Request implements HttpRequest, HttpServletRequest {
     private void removeParameterFromRequestURI(String parameter) {
         int semicolon, semicolon2;
 
-        final DataChunk uriBC = coyoteRequest.getRequest().getRequestURIRef().getRequestURIBC();
+        final DataChunk uriDataChunk = grizzlyRequest.getRequest().getRequestURIRef().getRequestURIBC();
 
-        semicolon = uriBC.indexOf(parameter, 0);
+        semicolon = uriDataChunk.indexOf(parameter, 0);
 
         if (semicolon > 0) {
-            semicolon2 = uriBC.indexOf(';', semicolon + parameter.length());
+            semicolon2 = uriDataChunk.indexOf(';', semicolon + parameter.length());
 
             final int end;
             if (semicolon2 >= 0) {
                 end = semicolon2;
-                uriBC.notifyDirectUpdate();
+                uriDataChunk.notifyDirectUpdate();
             } else {
-                end = uriBC.getLength();
+                end = uriDataChunk.getLength();
             }
 
-            uriBC.delete(semicolon, end);
+            uriDataChunk.delete(semicolon, end);
         }
     }
 
@@ -3231,7 +3231,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      * Parses the value of the JROUTE cookie, if present.
      */
     void parseJrouteCookie() {
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
@@ -3281,7 +3281,7 @@ public class Request implements HttpRequest, HttpServletRequest {
         }
 
         // Parse session id from cookies
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
@@ -3299,23 +3299,18 @@ public class Request implements HttpRequest, HttpServletRequest {
                 if (!isRequestedSessionIdFromCookie()) {
                     // Accept only the first session id cookie
                     setRequestedSessionId(scookie.getValue());
-                    // TODO: Pass cookie path into
-                    // getSessionVersionFromCookie()
-                    String sessionVersionString = getSessionVersionFromCookie();
-                    parseSessionVersionString(sessionVersionString);
+                    // TODO: Pass cookie path into getSessionVersionFromCookie()
+                    parseSessionVersionString(getSessionVersionFromCookie());
                     setRequestedSessionCookie(true);
-                    // TBD: ServerCookie#getSecure currently always returns
-                    // false.
+                    // TBD: ServerCookie#getSecure currently always returns false.
                     setRequestedSessionIdFromSecureCookie(scookie.isSecure());
                     setRequestedSessionURL(false);
                 } else {
                     if (!isRequestedSessionIdValid()) {
                         // Replace the session id until one is valid
                         setRequestedSessionId(scookie.getValue());
-                        // TODO: Pass cookie path into
-                        // getSessionVersionFromCookie()
-                        String sessionVersionString = getSessionVersionFromCookie();
-                        parseSessionVersionString(sessionVersionString);
+                        // TODO: Pass cookie path into getSessionVersionFromCookie()
+                        parseSessionVersionString(getSessionVersionFromCookie());
                     }
                 }
             }
@@ -3332,7 +3327,7 @@ public class Request implements HttpRequest, HttpServletRequest {
             return null;
         }
 
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return null;
@@ -3352,7 +3347,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      * @return temporary holder for URI params from which session id is parsed
      */
     CharChunk getURIParams() {
-        return uriParamsCC;
+        return uriParamsCharChunk;
     }
 
     /**
@@ -3483,7 +3478,7 @@ public class Request implements HttpRequest, HttpServletRequest {
                 }
             };
 
-            coyoteRequest.getResponse().suspend(-1, TimeUnit.MILLISECONDS, requestCompletionHandler, timeoutHandler);
+            grizzlyRequest.getResponse().suspend(-1, TimeUnit.MILLISECONDS, requestCompletionHandler, timeoutHandler);
             asyncStartedThread = Thread.currentThread();
         }
 
@@ -3516,7 +3511,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     }
 
     void setAsyncTimeout(long timeout) {
-        coyoteRequest.getResponse().getSuspendContext().setTimeout(timeout, TimeUnit.MILLISECONDS);
+        grizzlyRequest.getResponse().getSuspendContext().setTimeout(timeout, TimeUnit.MILLISECONDS);
 
     }
 
@@ -3548,12 +3543,12 @@ public class Request implements HttpRequest, HttpServletRequest {
 
         if (asyncStartedThread != Thread.currentThread() || !asyncContext.isOkToConfigure()) {
             // it's not safe to just mark response as resumed
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         } else {
             // This code is called if we startAsync and complete in the service() thread.
             // So instead of resuming the suspendedContext (which will finish the response processing),
             // we just have to mark the context as resumed like it has never been suspended.
-            final SuspendedContextImpl suspendContext = (SuspendedContextImpl) coyoteRequest.getResponse().getSuspendContext();
+            final SuspendedContextImpl suspendContext = (SuspendedContextImpl) grizzlyRequest.getResponse().getSuspendContext();
 
             suspendContext.markResumed();
             suspendContext.getSuspendStatus().reset();
@@ -3587,21 +3582,21 @@ public class Request implements HttpRequest, HttpServletRequest {
             asyncContextImpl.setOkToConfigure(false);
 
             if (asyncStarted.get()) {
-                coyoteRequest.getResponse().getSuspendContext().setTimeout(asyncContextImpl.getTimeout(), TimeUnit.MILLISECONDS);
+                grizzlyRequest.getResponse().getSuspendContext().setTimeout(asyncContextImpl.getTimeout(), TimeUnit.MILLISECONDS);
             }
 
             asyncContextImpl.onExitService();
         }
         afterService = true;
         if (resume) {
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         }
 
     }
 
     void resumeAfterService() {
         if (afterService) {
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         } else {
             resume = true;
         }
@@ -3708,20 +3703,20 @@ public class Request implements HttpRequest, HttpServletRequest {
     }
 
     private void populateSSLAttributes() {
-        RequestUtils.populateSSLAttributes(coyoteRequest);
-        Object attr = coyoteRequest.getAttribute(CERTIFICATES_ATTR);
+        RequestUtils.populateSSLAttributes(grizzlyRequest);
+        Object attr = grizzlyRequest.getAttribute(CERTIFICATES_ATTR);
         if (attr != null) {
             attributes.put(CERTIFICATES_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(CIPHER_SUITE_ATTR);
+        attr = grizzlyRequest.getAttribute(CIPHER_SUITE_ATTR);
         if (attr != null) {
             attributes.put(CIPHER_SUITE_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(KEY_SIZE_ATTR);
+        attr = grizzlyRequest.getAttribute(KEY_SIZE_ATTR);
         if (attr != null) {
             attributes.put(KEY_SIZE_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(SSL_SESSION_ID_ATTR);
+        attr = grizzlyRequest.getAttribute(SSL_SESSION_ID_ATTR);
         if (attr != null) {
             attributes.put(SSL_SESSION_ID_ATTR, attr);
         }

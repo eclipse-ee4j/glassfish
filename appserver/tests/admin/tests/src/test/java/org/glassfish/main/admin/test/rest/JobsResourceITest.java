@@ -80,11 +80,11 @@ public class JobsResourceITest extends RestTestBase {
         JSONObject json = response.readEntity(JSONObject.class);
         JSONArray resources = json.getJSONArray("resources");
         assertNotNull(resources);
-        assertThat(resources.length(), equalTo(1));
+        assertThat(resources.toString(), resources.length(), equalTo(1));
 
         JSONArray items = json.getJSONArray("items");
         assertNotNull(items);
-        assertThat(items.length(), equalTo(1));
+        assertThat(items.toString(), items.length(), equalTo(1));
 
         // unlike most resources that also return a parent link,
         // the jobs resource only returns child links.
@@ -112,7 +112,7 @@ public class JobsResourceITest extends RestTestBase {
 
         resources = json.getJSONArray("resources");
         assertNotNull(resources);
-        assertThat(resources.length(), equalTo(1));
+        assertThat(resources.toString(), resources.length(), equalTo(1));
 
         resource = resources.getJSONObject(0);
         assertEquals("parent", resource.getString("rel"));

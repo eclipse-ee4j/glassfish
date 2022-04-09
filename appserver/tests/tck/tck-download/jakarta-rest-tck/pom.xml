@@ -32,7 +32,8 @@
     <name>TCK: Install Jakarta REST TCK</name>
 
     <properties>
-        <tck.test.rest.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-restful-ws-tck-3.0.2.zip</tck.test.rest.url>
+        <tck.test.rest.file>jakarta-restful-ws-tck-3.0.2.zip</tck.test.rest.file>
+        <tck.test.rest.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/${tck.test.rest.file}</tck.test.rest.url>
     </properties>
 
     <build>
@@ -65,7 +66,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/jakarta-restful-ws-tck-3.0.2.zip</file>
+                            <file>${project.build.directory}/${tck.test.rest.file}</file>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>

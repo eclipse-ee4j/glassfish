@@ -70,7 +70,7 @@
       <mkdir dir="${build.classes.dir}/appclient"/>
       <antcall target="wsimport">
         <param name="wsimport.args"
-          value="-Xendorsed -b custom-client.xml -extension -keep -d ${build.classes.dir}/appclient ${env.APS_HOME}/devtests/webservice/annotations/webservices13-addressing-appclient/AddNumbers.wsdl"/>
+          value=" -b custom-client.xml -extension -keep -d ${build.classes.dir}/appclient ${env.APS_HOME}/devtests/webservice/annotations/webservices13-addressing-appclient/AddNumbers.wsdl"/>
       </antcall>
 <javac srcdir="." destdir="${build.classes.dir}/appclient"
             includes="appclient/**">

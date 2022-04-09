@@ -32,7 +32,8 @@
     <name>TCK: Install Jakarta Authentication TCK</name>
 
     <properties>
-        <tck.test.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authentication-tck-2.0.1.zip</tck.test.authentication.url>
+        <tck.test.authentication.file>jakarta-authentication-tck-2.0.1.zip</tck.test.authentication.file>
+        <tck.test.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/${tck.test.authentication.file}</tck.test.authentication.url>
     </properties>
 
     <build>
@@ -65,7 +66,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/jakarta-authentication-tck-2.0.1.zip</file>
+                            <file>${project.build.directory}/${tck.test.authentication.file}</file>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>

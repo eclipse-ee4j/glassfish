@@ -23,6 +23,7 @@ import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.main.admin.test.progress.ProgressMessage.grepProgressMessages;
 import static org.glassfish.main.admin.test.progress.ProgressMessage.isIncreasing;
@@ -41,13 +42,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author martinmares
  */
+@ExtendWith(JobTestExtension.class)
 public class ProgressStatusComplexITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
+
     @Test
     public void executeCommandFromCommand() {
-        AsadminResult result = ASADMIN.exec(30_000, false, "progress-exec-other");
+        AsadminResult result = ASADMIN.exec(30_000, "progress-exec-other");
         assertThat(result, asadminOK());
         assertArrayEquals(new String[] {
             "Starting", "Preparing", "Parsing", "Working on main part",

@@ -75,8 +75,7 @@ public class MyFilter implements Filter {
         }
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         HttpSession httpSession = httpRequest.getSession(true);
-        httpSession.putValue("deployment.ejb30.web.jsp", "Hello World: " +
-            loginTimeout);
+        httpSession.setAttribute("deployment.ejb30.web.jsp", "Hello World: " + loginTimeout);
         chain.doFilter(request, response);
     }
 

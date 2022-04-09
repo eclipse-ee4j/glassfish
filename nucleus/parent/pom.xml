@@ -122,8 +122,8 @@
         <grizzly.version>3.0.1</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
-        <hk2.version>3.0.2</hk2.version>
-        <hk2.plugin.version>3.0.2</hk2.plugin.version>
+        <hk2.version>3.0.3</hk2.version>
+        <hk2.plugin.version>3.0.3</hk2.plugin.version>
         <hk2.config-generator.version>2.5.0-b53</hk2.config-generator.version>
         <pfl.version>4.1.2</pfl.version>
 
@@ -600,7 +600,7 @@
                 <artifactId>org.apache.felix.bundlerepository</artifactId>
                 <version>2.0.10</version>
             </dependency>
-            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
+            <!-- This is currently used by osgi-shell cmd -->
             <dependency>
                 <groupId>jline</groupId>
                 <artifactId>jline</artifactId>
@@ -690,7 +690,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.1</version>
                     <configuration>
                         <source>11</source>
                         <target>11</target>
@@ -704,7 +704,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -713,7 +713,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -721,11 +721,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M6</version>
                     <configuration>
                         <argLine>${surefire.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -740,7 +740,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M6</version>
                     <configuration>
                         <argLine>${failsafe.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -795,7 +795,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>8.43</version>
+                            <version>10.1</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -810,13 +810,17 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.6.7</version>
+                    <version>1.6.8</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.0.0-M5</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -824,7 +828,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.9.0</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -832,7 +836,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0-M1</version>
+                    <version>3.0.0-M2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -840,12 +844,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.2.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
@@ -927,10 +931,9 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- Sets minimal Maven version to 3.5.4 -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -940,7 +943,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.5.4</version>
+                                    <version>3.6.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -948,12 +951,6 @@
                 </executions>
             </plugin>
 
-            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions>
-                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals>
-                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include>
-                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include>
-                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions>
-                </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -1376,7 +1373,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.7</jacoco.version>
+                <jacoco.version>0.8.8</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

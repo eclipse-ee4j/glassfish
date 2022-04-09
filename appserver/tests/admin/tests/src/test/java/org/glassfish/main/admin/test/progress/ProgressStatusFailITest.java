@@ -23,6 +23,7 @@ import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * @author martinmares
  */
+@ExtendWith(JobTestExtension.class)
 public class ProgressStatusFailITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
@@ -41,14 +43,14 @@ public class ProgressStatusFailITest {
     public void failDuringExecution() {
         AsadminResult result = ASADMIN.exec("progress-fail-in-half");
         assertThat(result, not(asadminOK()));
-        List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
-        assertFalse(prgs.isEmpty());
-        assertEquals(50, prgs.get(prgs.size() - 1).getValue());
+        List<ProgressMessage> messages = ProgressMessage.grepProgressMessages(result.getStdOut());
+        assertFalse(messages.isEmpty());
+        assertEquals(50, messages.get(messages.size() - 1).getValue());
     }
 
     @Test
     public void timeout() {
-        AsadminResult result = ASADMIN.exec(6_000, false, "progress-custom", "3x1", "1x8", "2x1");
+        AsadminResult result = ASADMIN.exec(6_000, "progress-custom", "3x1", "1x8", "2x1");
         assertThat(result, not(asadminOK()));
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.getStdOut());
         assertFalse(prgs.isEmpty());

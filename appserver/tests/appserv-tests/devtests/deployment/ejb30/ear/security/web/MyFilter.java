@@ -64,9 +64,7 @@ public class MyFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         HttpSession httpSession = httpRequest.getSession(true);
         if (httpRequest.isUserInRole("j2ee")) {
-            httpSession.putValue("deployment.ejb30.ear.security",
-                "filterMessage=hello world: " + loginTimeout);
-
+            httpSession.setAttribute("deployment.ejb30.ear.security", "filterMessage=hello world: " + loginTimeout);
         }
         chain.doFilter(request, response);
     }

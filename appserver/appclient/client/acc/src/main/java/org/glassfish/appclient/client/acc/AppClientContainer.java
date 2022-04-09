@@ -378,12 +378,9 @@ public class AppClientContainer {
 
         prepareURLStreamHandling();
 
-        //This is required for us to enable interrupt jaxws service
-        //creation calls
-        System.setProperty("jakarta.xml.ws.spi.Provider",
-                           "com.sun.enterprise.webservice.spi.ProviderImpl");
+        //This is required for us to enable interrupt jaxws service creation calls
+        System.setProperty("jakarta.xml.ws.spi.Provider", "com.sun.xml.ws.spi.ProviderImpl");
         //InjectionManager's injectClass will be called from getMainMethod
-
 
         // Load any managed beans
         ManagedBeanManager managedBeanManager = habitat.getService(ManagedBeanManager.class);

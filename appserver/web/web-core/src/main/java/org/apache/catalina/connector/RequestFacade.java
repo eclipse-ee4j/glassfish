@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,27 +18,42 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Globals;
-import org.apache.catalina.core.RequestFacadeHelper;
-import org.apache.catalina.security.SecurityUtil;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
 
-import jakarta.servlet.*;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.http.Part;
 import jakarta.servlet.http.PushBuilder;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
+import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.security.SecurityPermission;
-import java.util.*;
-import jakarta.servlet.http.HttpServletMapping;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.RequestFacadeHelper;
+import org.apache.catalina.security.SecurityUtil;
 
 
 /**
@@ -60,6 +76,7 @@ public class RequestFacade
     private final class GetAttributePrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getAttributeNames();
         }
@@ -69,6 +86,7 @@ public class RequestFacade
     private final class GetParameterMapPrivilegedAction
             implements PrivilegedAction<Map<String, String[]>> {
 
+        @Override
         public Map<String, String[]> run() {
             return request.getParameterMap();
         }
@@ -78,12 +96,13 @@ public class RequestFacade
     private final class GetRequestDispatcherPrivilegedAction
             implements PrivilegedAction<RequestDispatcher> {
 
-        private String path;
+        private final String path;
 
         public GetRequestDispatcherPrivilegedAction(String path){
             this.path = path;
         }
 
+        @Override
         public RequestDispatcher run() {
             return request.getRequestDispatcher(path);
         }
@@ -99,6 +118,7 @@ public class RequestFacade
             this.name = name;
         }
 
+        @Override
         public String run() {
             return request.getParameter(name);
         }
@@ -108,6 +128,7 @@ public class RequestFacade
     private final class GetParameterNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getParameterNames();
         }
@@ -123,6 +144,7 @@ public class RequestFacade
             this.name = name;
         }
 
+        @Override
         public String[] run() {
             return request.getParameterValues(name);
         }
@@ -132,6 +154,7 @@ public class RequestFacade
     private final class GetCookiesPrivilegedAction
             implements PrivilegedAction<Cookie[]> {
 
+        @Override
         public Cookie[] run() {
             return request.getCookies();
         }
@@ -141,6 +164,7 @@ public class RequestFacade
     private final class GetCharacterEncodingPrivilegedAction
             implements PrivilegedAction<String> {
 
+        @Override
         public String run() {
             return request.getCharacterEncoding();
         }
@@ -150,12 +174,13 @@ public class RequestFacade
     private final class GetHeadersPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
-        private String name;
+        private final String name;
 
         public GetHeadersPrivilegedAction(String name){
             this.name = name;
         }
 
+        @Override
         public Enumeration<String> run() {
             return request.getHeaders(name);
         }
@@ -165,6 +190,7 @@ public class RequestFacade
     private final class GetHeaderNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
+        @Override
         public Enumeration<String> run() {
             return request.getHeaderNames();
         }
@@ -174,6 +200,7 @@ public class RequestFacade
     private final class GetLocalePrivilegedAction
             implements PrivilegedAction<Locale> {
 
+        @Override
         public Locale run() {
             return request.getLocale();
         }
@@ -183,6 +210,7 @@ public class RequestFacade
     private final class GetLocalesPrivilegedAction
             implements PrivilegedAction<Enumeration<Locale>> {
 
+        @Override
         public Enumeration<Locale> run() {
             return request.getLocales();
         }
@@ -191,12 +219,13 @@ public class RequestFacade
     private final class GetSessionPrivilegedAction
             implements PrivilegedAction<HttpSession> {
 
-        private boolean create;
+        private final boolean create;
 
         public GetSessionPrivilegedAction(boolean create){
             this.create = create;
         }
 
+        @Override
         public HttpSession run() {
             return request.getSession(create);
         }
@@ -205,6 +234,7 @@ public class RequestFacade
     private final class ChangeSessionIdPrivilegedAction
             implements PrivilegedAction<String> {
 
+        @Override
         public String run() {
             return request.changeSessionId();
         }
@@ -276,6 +306,7 @@ public class RequestFacade
     /**
     * Prevent cloning the facade.
     */
+    @Override
     protected Object clone()
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
@@ -392,6 +423,7 @@ public class RequestFacade
         return request.getInputStream();
     }
 
+    @Override
     public HttpServletMapping getHttpServletMapping() {
 
         if (request == null) {
@@ -401,6 +433,7 @@ public class RequestFacade
         return request.getHttpServletMapping();
     }
 
+    @Override
     public String getParameter(String name) {
 
         if (request == null) {
@@ -447,7 +480,7 @@ public class RequestFacade
             ret = AccessController.doPrivileged(
                 new GetParameterValuePrivilegedAction(name));
             if (ret != null) {
-                ret = (String[]) ret.clone();
+                ret = ret.clone();
             }
         } else {
             ret = request.getParameterValues(name);
@@ -653,7 +686,7 @@ public class RequestFacade
             ret = AccessController.doPrivileged(
                 new GetCookiesPrivilegedAction());
             if (ret != null) {
-                ret = (Cookie[]) ret.clone();
+                ret = ret.clone();
             }
         } else {
             ret = request.getCookies();
@@ -830,11 +863,29 @@ public class RequestFacade
     }
 
     @Override
-    public java.security.Principal getUserPrincipal() {
+    public Principal getUserPrincipal() {
 
         if (request == null) {
             throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
         }
+
+        Principal principal = request.getUserPrincipal();
+        if (principal instanceof WebPrincipal) {
+            WebPrincipal webPrincipal = (WebPrincipal) principal;
+            if (webPrincipal.getCustomPrincipal() != null) {
+                principal = webPrincipal.getCustomPrincipal();
+            }
+        }
+
+        return principal;
+    }
+
+    // returns the original, unwrapped principal from the underlying request
+    public Principal getRequestPrincipal() {
+        if (request == null) {
+            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_USE_REQUEST_OBJECT_OUTSIDE_SCOPE_EXCEPTION));
+        }
+
 
         return request.getUserPrincipal();
     }

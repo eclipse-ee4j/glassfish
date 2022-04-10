@@ -17,6 +17,21 @@
 
 package org.apache.catalina.connector;
 
+import static org.apache.catalina.Globals.JREPLICA_PARAMETER;
+import static org.apache.catalina.Globals.JREPLICA_SESSION_NOTE;
+import static org.apache.catalina.Globals.SESSION_PARAMETER_NAME;
+import static org.apache.catalina.Globals.SESSION_VERSION_PARAMETER;
+import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_ERROR_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_CALL_SEND_REDIRECT_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_CHANGE_BUFFER_SIZE_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_RESET_BUFFER_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_DURING_FINISH_RESPONSE;
+import static org.apache.catalina.LogFacade.GET_WRITER_BEEN_CALLED_EXCEPTION;
+import static org.apache.catalina.Logger.WARNING;
+import static org.apache.catalina.connector.Constants.PROXY_JROUTE;
+import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderName;
+import static org.glassfish.common.util.InputValidationUtil.getSafeHeaderValue;
+import static org.glassfish.web.util.HtmlEntityEncoder.encodeXSS;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,34 +43,36 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 
-import com.sun.appserv.ProxyHandler;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Context;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Globals;
 import org.apache.catalina.HttpResponse;
+import org.apache.catalina.LogFacade;
 import org.apache.catalina.Session;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.security.SecurityUtil;
-import org.apache.catalina.util.CharsetMapper;
 import org.apache.catalina.util.RequestUtil;
-import org.glassfish.common.util.InputValidationUtil;
 import org.glassfish.grizzly.http.util.CharChunk;
-import org.glassfish.grizzly.http.util.CookieSerializerUtils;
-import org.glassfish.grizzly.http.util.CookieUtils;
+import org.glassfish.grizzly.http.util.CookieHeaderGenerator;
 import org.glassfish.grizzly.http.util.FastHttpDateFormat;
 import org.glassfish.grizzly.http.util.MimeHeaders;
 import org.glassfish.grizzly.http.util.UEncoder;
-import org.glassfish.web.util.HtmlEntityEncoder;
-// START S1AS 6170450
+
+import com.sun.appserv.ProxyHandler;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 // END S1AS 6170450
 
@@ -67,80 +84,40 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  * @version $Revision: 1.22 $ $Date: 2007/05/05 05:32:43 $
  */
 
-public class Response
-    implements HttpResponse, HttpServletResponse {
+public class Response implements HttpResponse, HttpServletResponse {
 
     // ------------------------------------------------------ Static variables
 
-    private static final Logger log = LogFacade.getLogger();
-    private static final ResourceBundle rb = log.getResourceBundle();
-
-
-    /**
-     * Whether or not to enforce scope checking of this object.
-     */
-    private static boolean enforceScope = false;
-
-    public static final String HTTP_RESPONSE_DATE_HEADER =
-        "EEE, dd MMM yyyy HH:mm:ss zzz";
+    public static final String HTTP_RESPONSE_DATE_HEADER = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
     /**
      * Descriptive information about this Response implementation.
      */
-    protected static final String info =
-        "org.apache.catalina.connector.Response/1.0";
+    protected static final String info = "org.apache.catalina.connector.Response/1.0";
 
+    private static final Logger log = LogFacade.getLogger();
+    private static final ResourceBundle rb = log.getResourceBundle();
 
-    // ----------------------------------------------------------- Constructors
-
-    public Response() {
-        // START OF SJSAS 6231069
-        outputBuffer = new OutputBuffer();
-        outputStream = new CoyoteOutputStream(outputBuffer);
-        writer = createWriter(outputBuffer);
-        // END OF SJSAS 6231069
-        urlEncoder.addSafeCharacter('/');
-    }
-
-    // START OF SJSAS 6231069
-    public Response(boolean chunkingDisabled) {
-        outputBuffer = new OutputBuffer();
-        outputStream = new CoyoteOutputStream(outputBuffer);
-        writer = createWriter(outputBuffer);
-        urlEncoder.addSafeCharacter('/');
-    }
-    // END OF SJSAS 6231069
-
+    /**
+     * Whether or not to enforce scope checking of this object.
+     */
+    private static boolean enforceScope;
 
     // ----------------------------------------------------- Instance Variables
 
-    // BEGIN S1AS 4878272
     private String detailErrorMsg;
-    // END S1AS 4878272
 
     /**
      * The date format we will use for creating date headers.
      */
-    protected SimpleDateFormat format = null;
+    protected SimpleDateFormat format;
 
     /**
      * Associated context.
      */
-    protected Context context = null;
+    protected Context context;
 
-    protected boolean upgrade = false;
-
-    // ------------------------------------------------------------- Properties
-
-    /**
-     * Set whether or not to enforce scope checking of this object.
-     */
-    public static void setEnforceScope(boolean enforce) {
-
-        enforceScope = enforce;
-
-    }
-
+    protected boolean upgrade;
 
     /**
      * Associated Catalina connector.
@@ -148,8 +125,49 @@ public class Response
     protected Connector connector;
 
     /**
+     * The request with which this response is associated.
+     */
+    protected Request connectorRequest;
+
+    /**
+     * The facade associated with this response.
+     */
+    protected ResponseFacade connectorResponsefacade;
+
+    /**
+     * Grizzly response.
+     */
+    protected org.glassfish.grizzly.http.server.Response grizzlyResponse;
+
+    // ----------------------------------------------------------- Constructors
+
+    public Response() {
+        outputBuffer = new OutputBuffer();
+        outputStream = new CoyoteOutputStream(outputBuffer);
+        writer = createWriter(outputBuffer);
+        urlEncoder.addSafeCharacter('/');
+    }
+
+    public Response(boolean chunkingDisabled) {
+        outputBuffer = new OutputBuffer();
+        outputStream = new CoyoteOutputStream(outputBuffer);
+        writer = createWriter(outputBuffer);
+        urlEncoder.addSafeCharacter('/');
+    }
+
+    // ------------------------------------------------------------- Properties
+
+    /**
+     * Set whether or not to enforce scope checking of this object.
+     */
+    public static void setEnforceScope(boolean enforce) {
+        enforceScope = enforce;
+    }
+
+    /**
      * Return the Connector through which this Request was received.
      */
+    @Override
     public Connector getConnector() {
         return this.connector;
     }
@@ -159,15 +177,10 @@ public class Response
      *
      * @param connector The new connector
      */
+    @Override
     public void setConnector(Connector connector) {
         this.connector = connector;
     }
-
-
-    /**
-     * Coyote response.
-     */
-    protected org.glassfish.grizzly.http.server.Response coyoteResponse;
 
     /**
      * Set the Coyote response.
@@ -175,7 +188,7 @@ public class Response
      * @param coyoteResponse The Coyote response
      */
     public void setCoyoteResponse(org.glassfish.grizzly.http.server.Response coyoteResponse) {
-        this.coyoteResponse = coyoteResponse;
+        this.grizzlyResponse = coyoteResponse;
         outputBuffer.setCoyoteResponse(this);
     }
 
@@ -183,127 +196,97 @@ public class Response
      * Get the Coyote response.
      */
     public org.glassfish.grizzly.http.server.Response getCoyoteResponse() {
-        return coyoteResponse;
+        return grizzlyResponse;
     }
-
 
     /**
      * Return the Context within which this Request is being processed.
      */
+    @Override
     public Context getContext() {
         /*
-         * Ideally, we would call CoyoteResponse.setContext() from
-         * CoyoteAdapter (the same way we call it for CoyoteRequest), and
-         * have getContext() return this context. However, for backwards
-         * compatibility with WS 7.0's NSAPIProcessor, which does not call
-         * CoyoteResponse.setContext(), we must delegate to the getContext()
-         * method of the linked request object.
+         * Ideally, we would call CoyoteResponse.setContext() from CoyoteAdapter (the same way we call it for CoyoteRequest),
+         * and have getContext() return this context. However, for backwards compatibility with WS 7.0's NSAPIProcessor, which
+         * does not call CoyoteResponse.setContext(), we must delegate to the getContext() method of the linked request object.
          */
-        return request.getContext();
+        return connectorRequest.getContext();
     }
 
     /**
-     * Set the Context within which this Request is being processed.  This
-     * must be called as soon as the appropriate Context is identified, because
-     * it identifies the value to be returned by <code>getContextPath()</code>,
-     * and thus enables parsing of the request URI.
+     * Set the Context within which this Request is being processed. This must be called as soon as the appropriate Context
+     * is identified, because it identifies the value to be returned by <code>getContextPath()</code>, and thus enables
+     * parsing of the request URI.
      *
      * @param context The newly associated Context
      */
+    @Override
     public void setContext(Context context) {
         this.context = context;
     }
 
-
     /**
      * The associated output buffer.
      */
-    // START OF SJSAS 6231069
-    //protected OutputBuffer outputBuffer = new OutputBuffer();
     protected OutputBuffer outputBuffer;
-    // END OF SJSAS 6231069
 
     /**
      * The associated output stream.
      */
-    // START OF SJSAS 6231069
-    /*protected CoyoteOutputStream outputStream =
-        new CoyoteOutputStream(outputBuffer);*/
     protected CoyoteOutputStream outputStream;
-    // END OF SJSAS 6231069
 
     /**
      * The associated writer.
      */
-    // START OF SJSAS 6231069
-    // protected CoyoteWriter writer = new CoyoteWriter(outputBuffer);
     protected CoyoteWriter writer;
-    // END OF SJSAS 6231069
-
 
     /**
      * The application commit flag.
      */
-    protected boolean appCommitted = false;
-
+    protected boolean appCommitted;
 
     /**
      * The included flag.
      */
-    protected boolean included = false;
-
+    protected boolean included;
 
     /**
      * The characterEncoding flag
      */
-    private boolean isCharacterEncodingSet = false;
-
-    /**
-     * The contextType flag
-     */
-    private boolean isContentTypeSet = false;
-
+    private boolean isCharacterEncodingSet;
 
     /**
      * The error flag.
      */
-    protected boolean error = false;
-
+    protected boolean error;
 
     /**
      * Using output stream flag.
      */
-    protected boolean usingOutputStream = false;
-
+    protected boolean usingOutputStream;
 
     /**
      * Using writer flag.
      */
-    protected boolean usingWriter = false;
-
+    protected boolean usingWriter;
 
     /**
      * URL encoder.
      */
     protected UEncoder urlEncoder = new UEncoder();
 
-
     /**
      * Recyclable buffer to hold the redirect URL.
      */
-    protected CharChunk redirectURLCC = new CharChunk();
-
+    protected CharChunk redirectURLCharChunk = new CharChunk();
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Release all object references, and initialize instance variables, in
-     * preparation for reuse of this object.
+     * Release all object references, and initialize instance variables, in preparation for reuse of this object.
      */
+    @Override
     public void recycle() {
-
-        if (request != null && request.isAsyncStarted()) {
+        if (connectorRequest != null && connectorRequest.isAsyncStarted()) {
             return;
         }
 
@@ -314,14 +297,13 @@ public class Response
         appCommitted = false;
         included = false;
         error = false;
-        isContentTypeSet = false;
         isCharacterEncodingSet = false;
         detailErrorMsg = null;
 
         if (enforceScope) {
-            if (facade != null) {
-                facade.clear();
-                facade = null;
+            if (connectorResponsefacade != null) {
+                connectorResponsefacade.clear();
+                connectorResponsefacade = null;
             }
             if (outputStream != null) {
                 outputStream.clear();
@@ -337,77 +319,67 @@ public class Response
 
     }
 
-
     // ------------------------------------------------------- Response Methods
-
 
     /**
      * Return the number of bytes actually written to the output stream.
      */
+    @Override
     public int getContentCount() {
         return outputBuffer.getContentWritten();
     }
-
 
     /**
      * Set the application commit flag.
      *
      * @param appCommitted The new application committed flag value
      */
+    @Override
     public void setAppCommitted(boolean appCommitted) {
         this.appCommitted = appCommitted;
     }
 
-
     /**
      * Application commit flag accessor.
      */
+    @Override
     public boolean isAppCommitted() {
-        return this.appCommitted || isCommitted() || isSuspended()
-                || getContentLength() > 0
-                    && getContentCount() >= getContentLength();
+        return appCommitted || isCommitted() || isSuspended() || getContentLength() > 0 && getContentCount() >= getContentLength();
     }
-
 
     /**
      * Return the "processing inside an include" flag.
      */
+    @Override
     public boolean getIncluded() {
         return included;
     }
 
-
     /**
      * Set the "processing inside an include" flag.
      *
-     * @param included <code>true</code> if we are currently inside a
-     *  RequestDispatcher.include(), else <code>false</code>
+     * @param included <code>true</code> if we are currently inside a RequestDispatcher.include(), else <code>false</code>
      */
+    @Override
     public void setIncluded(boolean included) {
         this.included = included;
     }
 
-
     /**
-     * Return descriptive information about this Response implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Response implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
         return info;
     }
 
-
-    /**
-     * The request with which this response is associated.
-     */
-    protected Request request = null;
-
     /**
      * Return the Request with which this Response is associated.
      */
+    @Override
     public org.apache.catalina.Request getRequest() {
-        return this.request;
+        return connectorRequest;
     }
 
     /**
@@ -415,33 +387,28 @@ public class Response
      *
      * @param request The new associated request
      */
+    @Override
     public void setRequest(org.apache.catalina.Request request) {
         if (request instanceof Request) {
-            this.request = (Request) request;
+            this.connectorRequest = (Request) request;
         }
     }
 
-
     /**
-     * The facade associated with this response.
+     * Return the <code>ServletResponse</code> for which this object is the facade.
      */
-    protected ResponseFacade facade = null;
-
-    /**
-     * Return the <code>ServletResponse</code> for which this object
-     * is the facade.
-     */
+    @Override
     public HttpServletResponse getResponse() {
-        if (facade == null) {
-            facade = new ResponseFacade(this);
+        if (connectorResponsefacade == null) {
+            connectorResponsefacade = new ResponseFacade(this);
         }
-        return facade;
+        return connectorResponsefacade;
     }
-
 
     /**
      * Return the output stream associated with this Response.
      */
+    @Override
     public OutputStream getStream() {
         if (outputStream == null) {
             outputStream = new CoyoteOutputStream(outputBuffer);
@@ -449,81 +416,77 @@ public class Response
         return outputStream;
     }
 
-
     /**
      * Set the output stream associated with this Response.
      *
      * @param stream The new output stream
      */
+    @Override
     public void setStream(OutputStream stream) {
         // This method is evil
     }
-
 
     /**
      * Set the suspended flag.
      *
      * @param suspended The new suspended flag value
      */
+    @Override
     public void setSuspended(boolean suspended) {
         outputBuffer.setSuspended(suspended);
     }
 
-
     /**
      * Suspended flag accessor.
      */
+    @Override
     public boolean isSuspended() {
         return outputBuffer.isSuspended();
     }
 
-
     /**
      * Set the error flag.
      */
+    @Override
     public void setError() {
         error = true;
     }
 
-
     /**
      * Error flag accessor.
      */
+    @Override
     public boolean isError() {
         return error;
     }
 
-
-    // BEGIN S1AS 4878272
     /**
      * Sets detail error message.
      *
      * @param message detail error message
      */
+    @Override
     public void setDetailMessage(String message) {
         this.detailErrorMsg = message;
     }
-
 
     /**
      * Gets detail error message.
      *
      * @return the detail error message
      */
+    @Override
     public String getDetailMessage() {
         return this.detailErrorMsg;
     }
-    // END S1AS 4878272
-
 
     /**
-     * Create and return a ServletOutputStream to write the content
-     * associated with this Response.
+     * Create and return a ServletOutputStream to write the content associated with this Response.
      *
      * @exception IOException if an input/output error occurs
      */
-    public ServletOutputStream createOutputStream()
-        throws IOException {
+    @Override
+    public ServletOutputStream createOutputStream() throws IOException {
         // Probably useless
         if (outputStream == null) {
             outputStream = new CoyoteOutputStream(outputBuffer);
@@ -531,179 +494,158 @@ public class Response
         return outputStream;
     }
 
-
     /**
-     * Perform whatever actions are required to flush and close the output
-     * stream or writer, in a single operation.
+     * Perform whatever actions are required to flush and close the output stream or writer, in a single operation.
      *
      * @exception IOException if an input/output error occurs
      */
-    public void finishResponse()
-        throws IOException {
-
+    @Override
+    public void finishResponse() throws IOException {
         // Writing leftover bytes
         try {
             outputBuffer.close();
-        } catch(IOException e) {
-        ;
-        } catch(Throwable t) {
-        log(rb.getString(LogFacade.ERROR_DURING_FINISH_RESPONSE), t);
+        } catch (IOException e) {
+
+        } catch (Throwable t) {
+            log(rb.getString(ERROR_DURING_FINISH_RESPONSE), t);
         }
     }
-
 
     /**
      * Return the content length that was set or calculated for this Response.
      */
+    @Override
     public int getContentLength() {
-        return coyoteResponse.getContentLength();
+        return grizzlyResponse.getContentLength();
     }
 
-
     /**
-     * Return the content type that was set or calculated for this response,
-     * or <code>null</code> if no content type was set.
+     * Return the content type that was set or calculated for this response, or <code>null</code> if no content type was
+     * set.
      */
+    @Override
     public String getContentType() {
-        return coyoteResponse.getContentType();
+        return grizzlyResponse.getContentType();
     }
 
-
     /**
-     * Return a PrintWriter that can be used to render error messages,
-     * regardless of whether a stream or writer has already been acquired.
+     * Return a PrintWriter that can be used to render error messages, regardless of whether a stream or writer has already
+     * been acquired.
      *
-     * @return Writer which can be used for error reports. If the response is
-     * not an error report returned using sendError or triggered by an
-     * unexpected exception thrown during the servlet processing
-     * (and only in that case), null will be returned if the response stream
-     * has already been used.
+     * @return Writer which can be used for error reports. If the response is not an error report returned using sendError
+     * or triggered by an unexpected exception thrown during the servlet processing (and only in that case), null will be
+     * returned if the response stream has already been used.
      *
      * @exception IOException if an input/output error occurs
      */
+    @Override
     public PrintWriter getReporter() throws IOException {
-        if (outputBuffer.isNew()) {
-            outputBuffer.checkConverter();
-            if (writer == null) {
-                writer = createWriter(outputBuffer);
-            }
-            return writer;
-        } else {
+        if (!outputBuffer.isNew()) {
             return null;
         }
+
+        outputBuffer.checkConverter();
+        if (writer == null) {
+            writer = createWriter(outputBuffer);
+        }
+
+        return writer;
     }
 
-
     // ------------------------------------------------ ServletResponse Methods
-
 
     /**
      * Flush the buffer and commit this response.
      *
      * @exception IOException if an input/output error occurs
      */
-    public void flushBuffer()
-        throws IOException {
+    @Override
+    public void flushBuffer() throws IOException {
         outputBuffer.flush();
     }
-
 
     /**
      * Return the actual buffer size used for this Response.
      */
+    @Override
     public int getBufferSize() {
         return outputBuffer.getBufferSize();
     }
 
-
     /**
      * Return the character encoding used for this Response.
      */
+    @Override
     public String getCharacterEncoding() {
-        return coyoteResponse.getCharacterEncoding();
+        return grizzlyResponse.getCharacterEncoding();
     }
 
-
     /*
-     * Overrides the name of the character encoding used in the body
-     * of the request. This method must be called prior to reading
-     * request parameters or reading input using getReader().
+     * Overrides the name of the character encoding used in the body of the request. This method must be called prior to
+     * reading request parameters or reading input using getReader().
      *
      * @param charset String containing the name of the character encoding.
      */
+    @Override
     public void setCharacterEncoding(String charset) {
 
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
-            return;
-
         // Ignore any call made after the getWriter has been invoked
         // The default should be used
-        if (usingWriter)
+        if (isCommitted() || included || usingWriter) {
             return;
+        }
 
-        coyoteResponse.setCharacterEncoding(charset);
+        grizzlyResponse.setCharacterEncoding(charset);
         isCharacterEncodingSet = true;
     }
-
 
     /**
      * Return the servlet output stream associated with this Response.
      *
-     * @exception IllegalStateException if <code>getWriter</code> has
-     *  already been called for this response
+     * @exception IllegalStateException if <code>getWriter</code> has already been called for this response
      * @exception IOException if an input/output error occurs
      */
-    public ServletOutputStream getOutputStream()
-        throws IOException {
-
-        if (usingWriter)
-            throw new IllegalStateException
-                (rb.getString(LogFacade.GET_WRITER_BEEN_CALLED_EXCEPTION));
+    @Override
+    public ServletOutputStream getOutputStream() throws IOException {
+        if (usingWriter) {
+            throw new IllegalStateException(rb.getString(GET_WRITER_BEEN_CALLED_EXCEPTION));
+        }
 
         usingOutputStream = true;
         if (outputStream == null) {
             outputStream = new CoyoteOutputStream(outputBuffer);
         }
+
         return outputStream;
-
     }
-
 
     /**
      * Return the Locale assigned to this response.
      */
+    @Override
     public Locale getLocale() {
-        return coyoteResponse.getLocale();
+        return grizzlyResponse.getLocale();
     }
-
 
     /**
      * Return the writer associated with this Response.
      *
-     * @exception IllegalStateException if <code>getOutputStream</code> has
-     *  already been called for this response
+     * @exception IllegalStateException if <code>getOutputStream</code> has already been called for this response
      * @exception IOException if an input/output error occurs
      */
-    public PrintWriter getWriter()
-        throws IOException {
-
-        if (usingOutputStream)
+    @Override
+    public PrintWriter getWriter() throws IOException {
+        if (usingOutputStream) {
             throw new IllegalStateException(rb.getString(LogFacade.GET_OUTPUT_STREAM_BEEN_CALLED_EXCEPTION));
+        }
 
         /*
-         * If the response's character encoding has not been specified as
-         * described in <code>getCharacterEncoding</code> (i.e., the method
-         * just returns the default value <code>ISO-8859-1</code>),
-         * <code>getWriter</code> updates it to <code>ISO-8859-1</code>
-         * (with the effect that a subsequent call to getContentType() will
-         * include a charset=ISO-8859-1 component which will also be
-         * reflected in the Content-Type response header, thereby satisfying
-         * the Servlet spec requirement that containers must communicate the
-         * character encoding used for the servlet response's writer to the
+         * If the response's character encoding has not been specified as described in <code>getCharacterEncoding</code> (i.e.,
+         * the method just returns the default value <code>ISO-8859-1</code>), <code>getWriter</code> updates it to
+         * <code>ISO-8859-1</code> (with the effect that a subsequent call to getContentType() will include a charset=ISO-8859-1
+         * component which will also be reflected in the Content-Type response header, thereby satisfying the Servlet spec
+         * requirement that containers must communicate the character encoding used for the servlet response's writer to the
          * client).
          */
         setCharacterEncoding(getCharacterEncoding());
@@ -713,144 +655,125 @@ public class Response
         if (writer == null) {
             writer = createWriter(outputBuffer);
         }
+
         return writer;
-
     }
-
 
     /**
      * Has the output of this response already been committed?
      */
+    @Override
     public boolean isCommitted() {
-        return coyoteResponse.isCommitted();
+        return grizzlyResponse.isCommitted();
     }
-
 
     /**
      * Clear any content written to the buffer.
      *
-     * @exception IllegalStateException if this response has already
-     *  been committed
+     * @exception IllegalStateException if this response has already been committed
      */
+    @Override
     public void reset() {
+        if (included) {
+            return; // Ignore any call from an included servlet
+        }
 
-        if (included)
-            return;     // Ignore any call from an included servlet
-
-        coyoteResponse.reset();
+        grizzlyResponse.reset();
         outputBuffer.reset();
+
         // reset Grizzly duplicated internal attributes
-        coyoteResponse.resetBuffer(true);
+        grizzlyResponse.resetBuffer(true);
         usingOutputStream = false;
         usingWriter = false;
         isCharacterEncodingSet = false;
     }
 
-
     /**
      * Reset the data buffer but not any status or header information.
      *
-     * @exception IllegalStateException if the response has already
-     *  been committed
+     * @exception IllegalStateException if the response has already been committed
      */
+    @Override
     public void resetBuffer() {
         resetBuffer(false);
     }
 
-
     /**
-     * Reset the data buffer and the using Writer/Stream flags but not any
-     * status or header information.
+     * Reset the data buffer and the using Writer/Stream flags but not any status or header information.
      *
-     * @param resetWriterStreamFlags <code>true</code> if the internal
-     *        <code>usingWriter</code>, <code>usingOutputStream</code>,
-     *        <code>isCharacterEncodingSet</code> flags should also be reset
+     * @param resetWriterStreamFlags <code>true</code> if the internal <code>usingWriter</code>,
+     * <code>usingOutputStream</code>, <code>isCharacterEncodingSet</code> flags should also be reset
      *
-     * @exception IllegalStateException if the response has already
-     *  been committed
+     * @exception IllegalStateException if the response has already been committed
      */
+    @Override
     public void resetBuffer(boolean resetWriterStreamFlags) {
-
-        if (isCommitted())
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_RESET_BUFFER_EXCEPTION));
+        if (isCommitted()) {
+            throw new IllegalStateException(rb.getString(CANNOT_RESET_BUFFER_EXCEPTION));
+        }
 
         outputBuffer.reset();
 
-        if(resetWriterStreamFlags) {
+        if (resetWriterStreamFlags) {
             usingOutputStream = false;
             usingWriter = false;
             isCharacterEncodingSet = false;
         }
-
     }
-
 
     /**
      * Set the buffer size to be used for this Response.
      *
      * @param size The new buffer size
      *
-     * @exception IllegalStateException if this method is called after
-     *  output has been committed for this response
+     * @exception IllegalStateException if this method is called after output has been committed for this response
      */
+    @Override
     public void setBufferSize(int size) {
-
-        if (isCommitted() || !outputBuffer.isNew())
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_CHANGE_BUFFER_SIZE_EXCEPTION));
+        if (isCommitted() || !outputBuffer.isNew()) {
+            throw new IllegalStateException(rb.getString(CANNOT_CHANGE_BUFFER_SIZE_EXCEPTION));
+        }
 
         outputBuffer.setBufferSize(size);
-
     }
-
 
     /**
      * Set the content length (in bytes) for this Response.
      *
      * @param length The new content length
      */
+    @Override
     public void setContentLength(int length) {
-
         setContentLengthLong(length);
-
     }
 
-
     /**
-     * Sets the length of the content body in the response In HTTP servlets,
-     * this method sets the HTTP Content-Length header.
+     * Sets the length of the content body in the response In HTTP servlets, this method sets the HTTP Content-Length
+     * header.
      *
      * @param length The new content length
      */
+    @Override
     public void setContentLengthLong(long length) {
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included || usingWriter) {
             return;
+        }
 
-        if (usingWriter)
-            return;
-
-        coyoteResponse.setContentLengthLong(length);
-
+        grizzlyResponse.setContentLengthLong(length);
     }
-
 
     /**
      * Set the content type for this Response.
      *
      * @param type The new content type
      */
+    @Override
     public void setContentType(String type) {
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included) {
             return;
+        }
 
         // Ignore charset if getWriter() has already been called
         if (usingWriter) {
@@ -862,7 +785,7 @@ public class Response
             }
         }
 
-        coyoteResponse.setContentType(type);
+        grizzlyResponse.setContentType(type);
 
         // Check to see if content type contains charset
         if (type != null) {
@@ -873,205 +796,161 @@ public class Response
                 while (index < len && Character.isWhitespace(type.charAt(index))) {
                     index++;
                 }
-                if (index+7 < len
-                        && type.charAt(index) == 'c'
-                        && type.charAt(index+1) == 'h'
-                        && type.charAt(index+2) == 'a'
-                        && type.charAt(index+3) == 'r'
-                        && type.charAt(index+4) == 's'
-                        && type.charAt(index+5) == 'e'
-                        && type.charAt(index+6) == 't'
-                        && type.charAt(index+7) == '=') {
+                if (index + 7 < len &&
+                    type.charAt(index)     == 'c' &&
+                    type.charAt(index + 1) == 'h' &&
+                    type.charAt(index + 2) == 'a' &&
+                    type.charAt(index + 3) == 'r' &&
+                    type.charAt(index + 4) == 's' &&
+                    type.charAt(index + 5) == 'e' &&
+                    type.charAt(index + 6) == 't' &&
+                    type.charAt(index + 7) == '=') {
                     isCharacterEncodingSet = true;
                 }
             }
         }
-
-        isContentTypeSet = true;
     }
 
-
     /**
-     * Set the Locale that is appropriate for this response, including
-     * setting the appropriate character encoding.
+     * Set the Locale that is appropriate for this response, including setting the appropriate character encoding.
      *
      * @param locale The new locale
      */
+    @Override
     public void setLocale(Locale locale) {
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included) {
             return;
+        }
 
-        coyoteResponse.setLocale(locale);
+        grizzlyResponse.setLocale(locale);
 
         // Ignore any call made after the getWriter has been invoked.
         // The default should be used
-        if (usingWriter)
+        if (usingWriter) {
             return;
+        }
 
         if (isCharacterEncodingSet) {
             return;
         }
 
-        CharsetMapper cm = getContext().getCharsetMapper();
-        String charset = cm.getCharset( locale );
-        if ( charset != null ){
-            coyoteResponse.setCharacterEncoding(charset);
+        String charset = getContext().getCharsetMapper().getCharset(locale);
+        if (charset != null) {
+            grizzlyResponse.setCharacterEncoding(charset);
         }
-
     }
-
 
     // --------------------------------------------------- HttpResponse Methods
 
-
     /**
-     * Return the value for the specified header, or <code>null</code> if this
-     * header has not been set.  If more than one value was added for this
-     * name, only the first is returned; use {@link #getHeaders(String)} to
-     * retrieve all of them.
+     * Return the value for the specified header, or <code>null</code> if this header has not been set. If more than one
+     * value was added for this name, only the first is returned; use {@link #getHeaders(String)} to retrieve all of them.
      *
      * @param name Header name to look up
      */
+    @Override
     public String getHeader(String name) {
-        return coyoteResponse.getHeader(name);
+        return grizzlyResponse.getHeader(name);
     }
-
 
     /**
-     * @return a (possibly empty) <code>Collection</code> of the names
-     * of the headers of this response
+     * @return a (possibly empty) <code>Collection</code> of the names of the headers of this response
      */
+    @Override
     public Collection<String> getHeaderNames() {
-        final Collection<String> result = new ArrayList<String>();
-        for (final String headerName : coyoteResponse.getResponse().getHeaders().names()) {
-            result.add(headerName);
+        final Collection<String> headerNames = new ArrayList<>();
+        for (String headerName : grizzlyResponse.getResponse().getHeaders().names()) {
+            headerNames.add(headerName);
         }
 
-        return result;
+        return headerNames;
     }
-
 
     /**
      * @param name the name of the response header whose values to return
      *
-     * @return a (possibly empty) <code>Collection</code> of the values
-     * of the response header with the given name
+     * @return a (possibly empty) <code>Collection</code> of the values of the response header with the given name
      */
+    @Override
     public Collection<String> getHeaders(String name) {
-        final Collection<String> result = new ArrayList<String>();
-        for (final String headerValue : coyoteResponse.getResponse().getHeaders().values(name)) {
-            result.add(headerValue);
+        final Collection<String> headers = new ArrayList<>();
+        for (String headerValue : grizzlyResponse.getResponse().getHeaders().values(name)) {
+            headers.add(headerValue);
         }
 
-        return result;
+        return headers;
     }
-
 
     /**
-     * Return the error message that was set with <code>sendError()</code>
-     * for this Response.
+     * Return the error message that was set with <code>sendError()</code> for this Response.
      */
+    @Override
     public String getMessage() {
-        return coyoteResponse.getMessage();
+        return grizzlyResponse.getMessage();
     }
-
 
     /**
      * Return the HTTP status code associated with this Response.
      */
+    @Override
     public int getStatus() {
-        return coyoteResponse.getStatus();
+        return grizzlyResponse.getStatus();
     }
 
-
     /**
-     * Reset this response, and specify the values for the HTTP status code
-     * and corresponding message.
+     * Reset this response, and specify the values for the HTTP status code and corresponding message.
      *
-     * @exception IllegalStateException if this response has already been
-     *  committed
+     * @exception IllegalStateException if this response has already been committed
      */
+    @Override
     public void reset(int status, String message) {
         reset();
         setStatus(status, message);
     }
 
-
     // -------------------------------------------- HttpServletResponse Methods
 
-
     /**
-     * Add the specified Cookie to those that will be included with
-     * this Response.
+     * Add the specified Cookie to those that will be included with this Response.
      *
      * @param cookie Cookie to be added
      */
+    @Override
     public void addCookie(final Cookie cookie) {
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included) {
             return;
-
-        /* GlassFish 898
-        final StringBuilder sb = new StringBuilder();
-        if (SecurityUtil.isPackageProtectionEnabled()) {
-            AccessController.doPrivileged(new PrivilegedAction<Void>() {
-                public Void run(){
-                    ServerCookie.appendCookieValue
-                        (sb, cookie.getVersion(), cookie.getName(),
-                         cookie.getValue(), cookie.getPath(),
-                         cookie.getDomain(), cookie.getComment(),
-                         cookie.getMaxAge(), cookie.getSecure());
-                    return null;
-                }
-            });
-        } else {
-            ServerCookie.appendCookieValue
-                (sb, cookie.getVersion(), cookie.getName(), cookie.getValue(),
-                     cookie.getPath(), cookie.getDomain(), cookie.getComment(),
-                     cookie.getMaxAge(), cookie.getSecure());
         }
-        */
-        // START GlassFish 898
-        String cookieValue = getCookieString(cookie);
-        // END GlassFish 898
 
-        // the header name is Set-Cookie for both "old" and v.1 ( RFC2109 )
+        String cookieValue = getCookieString(cookie);
+
+        // The header name is Set-Cookie for both "old" and v.1 (RFC2109)
         // RFC2965 is not supported by browsers and the Servlet spec
-        // asks for 2109.
-        /* GlassFish 898
-        addHeader("Set-Cookie", sb.toString());
-        */
-        // START GlassFish 898
+        // asks for RFC6265 (which obsoletes both RFC2965 and RFC2109)
         addHeader("Set-Cookie", cookieValue);
-        // END GlassFish 898
     }
 
     /**
-     * Special method for adding a session cookie as we should be overriding
-     * any previous
+     * Special method for adding a session cookie as we should be overriding any previous
+     *
      * @param cookie
      */
+    @Override
     public void addSessionCookieInternal(final Cookie cookie) {
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         String name = cookie.getName();
         final String headername = "Set-Cookie";
         final String startsWith = name + "=";
         final String cookieString = getCookieString(cookie);
         boolean set = false;
-        MimeHeaders headers = coyoteResponse.getResponse().getHeaders();
-        int n = headers.size();
-        for (int i = 0; i < n; i++) {
+
+        MimeHeaders headers = grizzlyResponse.getResponse().getHeaders();
+        int headersSize = headers.size();
+        for (int i = 0; i < headersSize; i++) {
             if (headers.getName(i).toString().equals(headername)) {
                 if (headers.getValue(i).toString().startsWith(startsWith)) {
                     headers.getValue(i).setString(cookieString);
@@ -1079,11 +958,10 @@ public class Response
                 }
             }
         }
+
         if (!set) {
             addHeader(headername, cookieString);
         }
-
-
     }
 
     /**
@@ -1092,30 +970,20 @@ public class Response
      * @param name Name of the header to set
      * @param value Date value to be set
      */
+    @Override
     public void addDateHeader(String name, long value) {
-
-        if (name == null || name.length() == 0) {
-            return;
-        }
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included) {
+        if (name == null || name.length() == 0 || isCommitted() || included) {
             return;
         }
 
         if (format == null) {
-            format = new SimpleDateFormat(HTTP_RESPONSE_DATE_HEADER,
-                                          Locale.US);
+            format = new SimpleDateFormat(HTTP_RESPONSE_DATE_HEADER, Locale.US);
             format.setTimeZone(TimeZone.getTimeZone("GMT"));
         }
 
         addHeader(name, FastHttpDateFormat.formatDate(value, format));
-
     }
-
 
     /**
      * Add the specified header to the specified value.
@@ -1123,23 +991,15 @@ public class Response
      * @param name Name of the header to set
      * @param value Value to be set
      */
+    @Override
     public void addHeader(String name, String value) {
-
-        if (name == null || name.length() == 0 || value == null) {
+        // Ignore any call from an included servlet
+        if (name == null || name.length() == 0 || value == null || isCommitted() || included) {
             return;
         }
 
-        if (isCommitted())
-            return;
-
-        // Ignore any call from an included servlet
-        if (included)
-            return;
-
-        coyoteResponse.addHeader(name, value);
-
+        grizzlyResponse.addHeader(name, value);
     }
-
 
     /**
      * Add the specified integer header to the specified value.
@@ -1147,175 +1007,121 @@ public class Response
      * @param name Name of the header to set
      * @param value Integer value to be set
      */
+    @Override
     public void addIntHeader(String name, int value) {
-
-        if (name == null || name.length() == 0) {
+        // Ignore any call from an included servlet
+        if (name == null || name.length() == 0 || isCommitted() || included) {
             return;
         }
 
-        if (isCommitted())
-            return;
-
-        // Ignore any call from an included servlet
-        if (included)
-            return;
-
         addHeader(name, "" + value);
-
     }
-
 
     /**
      * Has the specified header been set already in this response?
      *
      * @param name Name of the header to check
      */
+    @Override
     public boolean containsHeader(String name) {
-        return coyoteResponse.containsHeader(name);
+        return grizzlyResponse.containsHeader(name);
     }
-
 
     @Override
     public Supplier<Map<String, String>> getTrailerFields() {
-        return coyoteResponse.getTrailers();
+        return grizzlyResponse.getTrailers();
     }
-
 
     @Override
     public void setTrailerFields(Supplier<Map<String, String>> supplier) {
-        coyoteResponse.setTrailers(supplier);
+        grizzlyResponse.setTrailers(supplier);
     }
 
-
     /**
-     * Encode the session identifier associated with this response
-     * into the specified redirect URL, if necessary.
+     * Encode the session identifier associated with this response into the specified redirect URL, if necessary.
      *
      * @param url URL to be encoded
      */
+    @Override
     public String encodeRedirectURL(String url) {
-        if (isEncodeable(toAbsolute(url))) {
-            String sessionVersion = null;
-            Map<String, String> sessionVersions =
-                request.getSessionVersionsRequestAttribute();
-            if (sessionVersions != null) {
-                sessionVersion = RequestUtil.createSessionVersionString(
-                    sessionVersions);
-            }
-            return toEncoded(url,
-                              request.getSessionInternal().getIdInternal(),
-                              sessionVersion);
-        } else {
+        if (!isEncodeable(toAbsolute(url))) {
             return url;
         }
+
+        String sessionVersion = null;
+        Map<String, String> sessionVersions = connectorRequest.getSessionVersionsRequestAttribute();
+        if (sessionVersions != null) {
+            sessionVersion = RequestUtil.createSessionVersionString(sessionVersions);
+        }
+
+        return toEncoded(url, connectorRequest.getSessionInternal().getIdInternal(), sessionVersion);
     }
 
-
     /**
-     * Encode the session identifier associated with this response
-     * into the specified redirect URL, if necessary.
-     *
-     * @param url URL to be encoded
-     *
-     * @deprecated As of Version 2.1 of the Java Servlet API, use
-     *  <code>encodeRedirectURL()</code> instead.
-     */
-    public String encodeRedirectUrl(String url) {
-        return encodeRedirectURL(url);
-    }
-
-
-    /**
-     * Encode the session identifier associated with this response
-     * into the specified URL, if necessary.
+     * Encode the session identifier associated with this response into the specified URL, if necessary.
      *
      * @param url URL to be encoded
      */
+    @Override
     public String encodeURL(String url) {
         String absolute = toAbsolute(url);
-        if (isEncodeable(absolute)) {
-            // W3c spec clearly said
-            if (url.equalsIgnoreCase("")){
-                url = absolute;
-            } else if (url.equals(absolute) && !hasPath(url)) {
-                url += '/';
-            }
-            String sessionVersion = null;
-            Map<String, String> sessionVersions =
-                request.getSessionVersionsRequestAttribute();
-            if (sessionVersions != null) {
-                sessionVersion = RequestUtil.createSessionVersionString(
-                    sessionVersions);
-            }
-            return toEncoded(url,
-                              request.getSessionInternal().getIdInternal(),
-                              sessionVersion);
-        } else {
+        if (!isEncodeable(absolute)) {
             return url;
         }
+
+        // W3c spec clearly said
+        if (url.equalsIgnoreCase("")) {
+            url = absolute;
+        } else if (url.equals(absolute) && !hasPath(url)) {
+            url += '/';
+        }
+
+        String sessionVersion = null;
+        Map<String, String> sessionVersions = connectorRequest.getSessionVersionsRequestAttribute();
+        if (sessionVersions != null) {
+            sessionVersion = RequestUtil.createSessionVersionString(sessionVersions);
+        }
+
+        return toEncoded(url, connectorRequest.getSessionInternal().getIdInternal(), sessionVersion);
     }
 
-
     /**
-     * Encode the session identifier associated with this response
-     * into the specified URL, if necessary.
-     *
-     * @param url URL to be encoded
-     *
-     * @deprecated As of Version 2.1 of the Java Servlet API, use
-     *  <code>encodeURL()</code> instead.
-     */
-    public String encodeUrl(String url) {
-        return encodeURL(url);
-    }
-
-
-    /**
-     * Apply URL Encoding to the given URL without adding session identifier
-     * et al associated to this response.
+     * Apply URL Encoding to the given URL without adding session identifier et al associated to this response.
      *
      * @param url URL to be encoded
      */
+    @Override
     public String encode(String url) {
         return urlEncoder.encodeURL(url);
     }
-
 
     /**
      * Send an acknowledgment of a request.
      *
      * @exception IOException if an input/output error occurs
      */
-    public void sendAcknowledgement()
-        throws IOException {
-
-        if (isCommitted())
-            return;
-
+    @Override
+    public void sendAcknowledgement() throws IOException {
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included) {
             return;
+        }
 
-        coyoteResponse.sendAcknowledgement();
-
+        grizzlyResponse.sendAcknowledgement();
     }
 
-
     /**
-     * Send an error response with the specified status and a
-     * default message.
+     * Send an error response with the specified status and a default message.
      *
      * @param status HTTP status code to send
      *
-     * @exception IllegalStateException if this response has
-     *  already been committed
+     * @exception IllegalStateException if this response has already been committed
      * @exception IOException if an input/output error occurs
      */
-    public void sendError(int status)
-        throws IOException {
+    @Override
+    public void sendError(int status) throws IOException {
         sendError(status, null);
     }
-
 
     /**
      * Send an error response with the specified status and message.
@@ -1323,15 +1129,14 @@ public class Response
      * @param status HTTP status code to send
      * @param message Corresponding message to send
      *
-     * @exception IllegalStateException if this response has
-     *  already been committed
+     * @exception IllegalStateException if this response has already been committed
      * @exception IOException if an input/output error occurs
      */
-    public void sendError(int status, String message)
-        throws IOException {
-
-        if (isCommitted())
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_CALL_SEND_ERROR_EXCEPTION));
+    @Override
+    public void sendError(int status, String message) throws IOException {
+        if (isCommitted()) {
+            throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_ERROR_EXCEPTION));
+        }
 
         // Ignore any call from an included servlet
         if (included) {
@@ -1340,71 +1145,63 @@ public class Response
 
         setError();
 
-        coyoteResponse.setStatus(status);
-        // use encoding in GlassFish
-        coyoteResponse.getResponse().setHtmlEncodingCustomReasonPhrase(false);
-        coyoteResponse.setDetailMessage(HtmlEntityEncoder.encodeXSS(message));
+        grizzlyResponse.setStatus(status);
+
+        // Use encoding in GlassFish
+        grizzlyResponse.getResponse().setHtmlEncodingCustomReasonPhrase(false);
+        grizzlyResponse.setDetailMessage(encodeXSS(message));
 
         // Clear any data content that has been buffered
         resetBuffer();
 
         // Cause the response to be finished (from the application perspective)
         setSuspended(true);
-
     }
-
 
     /**
      * Sends a temporary redirect to the specified redirect location URL.
      *
      * @param location Location URL to redirect to
      *
-     * @throws IllegalStateException if this response has
-     *  already been committed
+     * @throws IllegalStateException if this response has already been committed
      * @throws IOException if an input/output error occurs
      */
+    @Override
     public void sendRedirect(String location) throws IOException {
         sendRedirect(location, true);
     }
 
-
     /**
-     * Sends a temporary or permanent redirect to the specified redirect
-     * location URL.
+     * Sends a temporary or permanent redirect to the specified redirect location URL.
      *
      * @param location Location URL to redirect to
-     * @param isTemporary true if the redirect is supposed to be temporary,
-     * false if permanent
+     * @param isTemporary true if the redirect is supposed to be temporary, false if permanent
      *
-     * @throws IllegalStateException if this response has
-     *  already been committed
+     * @throws IllegalStateException if this response has already been committed
      * @throws IOException if an input/output error occurs
      */
-    public void sendRedirect(String location, boolean isTemporary)
-            throws IOException {
-
-        if (isCommitted())
-            throw new IllegalStateException(rb.getString(LogFacade.CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
+    public void sendRedirect(String location, boolean isTemporary) throws IOException {
+        if (isCommitted()) {
+            throw new IllegalStateException(rb.getString(CANNOT_CALL_SEND_REDIRECT_EXCEPTION));
+        }
 
         // Ignore any call from an included servlet
-        if (included)
+        if (included) {
             return;
+        }
 
         // Clear any data content that has been buffered
         resetBuffer();
 
         // Generate a temporary redirect to the specified location
         try {
-            /* RIMOD 4642650
-            String absolute = toAbsolute(location);
-            */
-            // START RIMOD 4642650
             String absolute;
-            if (getContext().getAllowRelativeRedirect())
+            if (getContext().getAllowRelativeRedirect()) {
                 absolute = location;
-            else
+            } else {
                 absolute = toAbsolute(location);
-            // END RIMOD 4642650
+            }
+
             if (isTemporary) {
                 setStatus(SC_MOVED_TEMPORARILY);
             } else {
@@ -1418,7 +1215,7 @@ public class Response
             setContentType("text/html");
             setLocale(Locale.getDefault());
 
-            String href = HtmlEntityEncoder.encodeXSS(absolute);
+            String href = encodeXSS(absolute);
             StringBuilder sb = new StringBuilder(150 + href.length());
 
             sb.append("<html>\r\n");
@@ -1446,9 +1243,7 @@ public class Response
 
         // Cause the response to be finished (from the application perspective)
         setSuspended(true);
-
     }
-
 
     /**
      * Set the specified date header to the specified value.
@@ -1456,30 +1251,20 @@ public class Response
      * @param name Name of the header to set
      * @param value Date value to be set
      */
+    @Override
     public void setDateHeader(String name, long value) {
-
-        if (name == null || name.length() == 0) {
-            return;
-        }
-
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included) {
+        if (name == null || name.length() == 0 || isCommitted() || included) {
             return;
         }
 
         if (format == null) {
-            format = new SimpleDateFormat(HTTP_RESPONSE_DATE_HEADER,
-                                          Locale.US);
+            format = new SimpleDateFormat(HTTP_RESPONSE_DATE_HEADER, Locale.US);
             format.setTimeZone(TimeZone.getTimeZone("GMT"));
         }
 
         setHeader(name, FastHttpDateFormat.formatDate(value, format));
-
     }
-
 
     /**
      * Set the specified header to the specified value.
@@ -1487,33 +1272,29 @@ public class Response
      * @param name Name of the header to set
      * @param value Value to be set
      */
+    @Override
     public void setHeader(String name, String value) {
-
-        if (name == null || name.length() == 0 || value == null) {
+        if (name == null || name.length() == 0 || value == null || isCommitted()) {
             return;
         }
 
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (included) {
             return;
+        }
 
         try {
-            String safeName = InputValidationUtil.getSafeHeaderName(name);
-            String safeValue = InputValidationUtil.getSafeHeaderValue(value);
-            coyoteResponse.setHeader(safeName, safeValue);
+            grizzlyResponse.setHeader(
+                getSafeHeaderName(name),
+                getSafeHeaderValue(value));
         } catch (Exception e) {
             try {
-                coyoteResponse.sendError(403, "Forbidden");
+                grizzlyResponse.sendError(403, "Forbidden");
             } catch (IOException ex) {
                 // just return
             }
         }
-
     }
-
 
     /**
      * Set the specified integer header to the specified value.
@@ -1521,37 +1302,30 @@ public class Response
      * @param name Name of the header to set
      * @param value Integer value to be set
      */
+    @Override
     public void setIntHeader(String name, int value) {
-
-        if (name == null || name.length() == 0) {
+        // Ignore any call from an included servlet
+        if (name == null || name.length() == 0 || isCommitted() || included) {
             return;
         }
 
-        if (isCommitted())
-            return;
-
-        // Ignore any call from an included servlet
-        if (included)
-            return;
-
         setHeader(name, "" + value);
-
     }
-
 
     /**
      * Set the HTTP status to be returned with this response.
      *
      * @param status The new HTTP status
      */
+    @Override
     public void setStatus(int status) {
         setStatus(status, null);
     }
 
+    @Override
     public void setError(int status, String message) {
         setStatus(status, message);
     }
-
 
     /**
      * Set the HTTP status and message to be returned with this response.
@@ -1561,72 +1335,59 @@ public class Response
      *
      */
     private void setStatus(int status, String message) {
-        if (isCommitted())
-            return;
-
         // Ignore any call from an included servlet
-        if (included)
+        if (isCommitted() || included) {
             return;
+        }
 
-        coyoteResponse.setStatus(status);
-        // use encoding in GlassFish
-        coyoteResponse.getResponse().setHtmlEncodingCustomReasonPhrase(false);
-        coyoteResponse.setDetailMessage(HtmlEntityEncoder.encodeXSS(message));
+        grizzlyResponse.setStatus(status);
+        // Use encoding in GlassFish
+        grizzlyResponse.getResponse().setHtmlEncodingCustomReasonPhrase(false);
+        grizzlyResponse.setDetailMessage(encodeXSS(message));
     }
-
 
     // ------------------------------------------------------ Protected Methods
 
-
     /**
-     * Return <code>true</code> if the specified URL should be encoded with
-     * a session identifier.  This will be true if all of the following
-     * conditions are met:
+     * Return <code>true</code> if the specified URL should be encoded with a session identifier. This will be true if all
+     * of the following conditions are met:
      * <ul>
      * <li>The request we are responding to asked for a valid session
      * <li>The requested session ID was not received via a cookie
-     * <li>The specified URL points back to somewhere within the web
-     *     application that is responding to this request
+     * <li>The specified URL points back to somewhere within the web application that is responding to this request
      * </ul>
      *
      * @param location Absolute URL to be validated
      */
     protected boolean isEncodeable(final String location) {
-
-        if (location == null)
-            return false;
-
         // Is this an intra-document reference?
-        if (location.startsWith("#"))
+        if (location == null || location.startsWith("#")) {
             return false;
+        }
 
         // Are we in a valid session that is not using cookies?
-        final Request hreq = request;
-        final Session session = hreq.getSessionInternal(false);
+        final Session session = connectorRequest.getSessionInternal(false);
         if (session == null) {
             return false;
         }
-        if (hreq.isRequestedSessionIdFromCookie() ||
-            getContext() != null && !getContext().isEnableURLRewriting()) {
+
+        if (connectorRequest.isRequestedSessionIdFromCookie() || getContext() != null && !getContext().isEnableURLRewriting()) {
             return false;
         }
 
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (
-                AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-
+            return (AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
                 @Override
-                public Boolean run(){
-                    return Boolean.valueOf(doIsEncodeable(hreq, session, location));
+                public Boolean run() {
+                    return Boolean.valueOf(doIsEncodeable(connectorRequest, session, location));
                 }
             })).booleanValue();
         } else {
-            return doIsEncodeable(hreq, session, location);
+            return doIsEncodeable(connectorRequest, session, location);
         }
     }
 
-    private boolean doIsEncodeable(Request hreq, Session session,
-                                   String location){
+    private boolean doIsEncodeable(Request hreq, Session session, String location) {
         // Is this a valid absolute URL?
         URL url = null;
         try {
@@ -1636,26 +1397,31 @@ public class Response
         }
 
         // Does this URL match down to (and including) the context path?
-        if (!hreq.getScheme().equalsIgnoreCase(url.getProtocol()))
+        if (!hreq.getScheme().equalsIgnoreCase(url.getProtocol()) || !hreq.getServerName().equalsIgnoreCase(url.getHost())) {
             return false;
-        if (!hreq.getServerName().equalsIgnoreCase(url.getHost()))
-            return false;
+        }
+
         int serverPort = hreq.getServerPort();
         if (serverPort == -1) {
-            if ("https".equals(hreq.getScheme()))
+            if ("https".equals(hreq.getScheme())) {
                 serverPort = 443;
-            else
+            } else {
                 serverPort = 80;
+            }
         }
+
         int urlPort = url.getPort();
         if (urlPort == -1) {
-            if ("https".equals(url.getProtocol()))
+            if ("https".equals(url.getProtocol())) {
                 urlPort = 443;
-            else
+            } else {
                 urlPort = 80;
+            }
         }
-        if (serverPort != urlPort)
+
+        if (serverPort != urlPort) {
             return false;
+        }
 
         Context ctx = getContext();
         if (ctx != null) {
@@ -1665,6 +1431,7 @@ public class Response
                 if (file == null || !file.startsWith(contextPath)) {
                     return false;
                 }
+
                 String sessionParamName = ctx.getSessionParameterName();
                 if (file.contains(";" + sessionParamName + "=" + session.getIdInternal())) {
                     return false;
@@ -1674,82 +1441,76 @@ public class Response
 
         // This URL belongs to our web application, so it is encodeable
         return true;
-
     }
 
-
     /**
-     * Convert (if necessary) and return the absolute URL that represents the
-     * resource referenced by this possibly relative URL.  If this URL is
-     * already absolute, return it unchanged.
+     * Convert (if necessary) and return the absolute URL that represents the resource referenced by this possibly relative
+     * URL. If this URL is already absolute, return it unchanged.
      *
      * @param location URL to be (possibly) converted and then returned
      *
-     * @exception IllegalArgumentException if a MalformedURLException is
-     *  thrown when converting the relative URL to an absolute one
+     * @exception IllegalArgumentException if a MalformedURLException is thrown when converting the relative URL to an
+     * absolute one
      */
     protected String toAbsolute(String location) {
-
-        if (location == null)
+        if (location == null) {
             return location;
+        }
 
         boolean leadingSlash = location.startsWith("/");
 
         if (location.startsWith("//")) {
             // Scheme relative, network-path reference in RFC 3986
-            redirectURLCC.recycle();
+            redirectURLCharChunk.recycle();
+
             // Add the scheme
             String scheme = getRedirectScheme();
             try {
-                redirectURLCC.append(scheme, 0, scheme.length());
-                redirectURLCC.append(':');
-                redirectURLCC.append(location, 0, location.length());
-                return redirectURLCC.toString();
+                redirectURLCharChunk.append(scheme, 0, scheme.length());
+                redirectURLCharChunk.append(':');
+                redirectURLCharChunk.append(location, 0, location.length());
+
+                return redirectURLCharChunk.toString();
             } catch (IOException e) {
-                IllegalArgumentException iae =
-                    new IllegalArgumentException(location);
-                iae.initCause(e);
-                throw iae;
+                throw new IllegalArgumentException(location, e);
             }
 
-        } else if (leadingSlash || (location.indexOf("://") == -1)) {
+        }
 
-            redirectURLCC.recycle();
+        if (leadingSlash || location.indexOf("://") == -1) {
+            redirectURLCharChunk.recycle();
 
             String scheme = getRedirectScheme();
-
-            String name = request.getServerName();
-            int port = request.getServerPort();
+            String name = connectorRequest.getServerName();
+            int port = connectorRequest.getServerPort();
 
             try {
-                redirectURLCC.append(scheme, 0, scheme.length());
-                redirectURLCC.append("://", 0, 3);
-                redirectURLCC.append(name, 0, name.length());
-                if (scheme.equals("http") && port != 80
-                    || scheme.equals("https") && port != 443) {
-                    redirectURLCC.append(':');
+                redirectURLCharChunk.append(scheme, 0, scheme.length());
+                redirectURLCharChunk.append("://", 0, 3);
+                redirectURLCharChunk.append(name, 0, name.length());
+                if (scheme.equals("http") && port != 80 || scheme.equals("https") && port != 443) {
+                    redirectURLCharChunk.append(':');
                     String portS = port + "";
-                    redirectURLCC.append(portS, 0, portS.length());
+                    redirectURLCharChunk.append(portS, 0, portS.length());
                 }
+
                 if (!leadingSlash) {
-                    String relativePath = request.getDecodedRequestURI();
-                    int pos = relativePath.lastIndexOf('/');
-                    relativePath = relativePath.substring(0, pos);
+                    String relativePath = connectorRequest.getDecodedRequestURI();
+                    relativePath = relativePath.substring(0, relativePath.lastIndexOf('/'));
 
                     String encodedURI = null;
                     final String frelativePath = relativePath;
 
-                     if (SecurityUtil.isPackageProtectionEnabled() ){
-                        try{
-                            encodedURI = AccessController.doPrivileged(
-                                new PrivilegedExceptionAction<String>(){
-                                    public String run() throws IOException{
-                                        return urlEncoder.encodeURL(frelativePath);
-                                    }
-                           });
-                        } catch (PrivilegedActionException pae){
-                            IllegalArgumentException iae =
-                                new IllegalArgumentException(location);
+                    if (SecurityUtil.isPackageProtectionEnabled()) {
+                        try {
+                            encodedURI = AccessController.doPrivileged(new PrivilegedExceptionAction<String>() {
+                                @Override
+                                public String run() throws IOException {
+                                    return urlEncoder.encodeURL(frelativePath);
+                                }
+                            });
+                        } catch (PrivilegedActionException pae) {
+                            IllegalArgumentException iae = new IllegalArgumentException(location);
                             iae.initCause(pae.getCause());
                             throw iae;
                         }
@@ -1757,53 +1518,39 @@ public class Response
                         encodedURI = urlEncoder.encodeURL(relativePath);
                     }
 
-                    redirectURLCC.append(encodedURI, 0, encodedURI.length());
-                    redirectURLCC.append('/');
+                    redirectURLCharChunk.append(encodedURI, 0, encodedURI.length());
+                    redirectURLCharChunk.append('/');
                 }
-                redirectURLCC.append(location, 0, location.length());
-                normalize(redirectURLCC);
+                redirectURLCharChunk.append(location, 0, location.length());
+                normalize(redirectURLCharChunk);
             } catch (IOException e) {
-                IllegalArgumentException iae =
-                    new IllegalArgumentException(location);
-                iae.initCause(e);
-                throw iae;
+                throw new IllegalArgumentException(location, e);
             }
 
-            return redirectURLCC.toString();
-
-        } else {
-
-            return location;
-
+            return redirectURLCharChunk.toString();
         }
 
+        return location;
     }
-
 
     /**
      * Returns the scheme for a redirect if it is not specified.
      */
     private String getRedirectScheme() {
-        String scheme = request.getScheme();
+        String scheme = connectorRequest.getScheme();
 
-        // START S1AS 6170450
-        if (getConnector() != null
-                && getConnector().getAuthPassthroughEnabled()) {
+        if (getConnector() != null && getConnector().getAuthPassthroughEnabled()) {
             ProxyHandler proxyHandler = getConnector().getProxyHandler();
-            if (proxyHandler != null
-                    && proxyHandler.getSSLKeysize(request) > 0) {
+            if (proxyHandler != null && proxyHandler.getSSLKeysize(connectorRequest) > 0) {
                 scheme = "https";
             }
         }
-        // END S1AS 6170450
 
         return scheme;
     }
 
-
     /**
-     * Return the specified URL with the specified session identifier
-     * suitably encoded.
+     * Return the specified URL with the specified session identifier suitably encoded.
      *
      * @param url URL to be encoded with the session id
      * @param sessionId Session id to be included in the encoded URL
@@ -1812,74 +1559,69 @@ public class Response
         return toEncoded(url, sessionId, null);
     }
 
-
     /**
-     * Return the specified URL with the specified session identifier
-     * suitably encoded.
+     * Return the specified URL with the specified session identifier suitably encoded.
      *
      * @param url URL to be encoded with the session id
      * @param sessionId Session id to be included in the encoded URL
      * @param sessionVersion Session version to be included in the encoded URL
      */
-    private String toEncoded(String url, String sessionId,
-                             String sessionVersion) {
-        if (url == null || sessionId == null)
+    private String toEncoded(String url, String sessionId, String sessionVersion) {
+        if (url == null || sessionId == null) {
             return url;
+        }
 
         String path = url;
         String query = "";
         String anchor = "";
+
         int question = url.indexOf('?');
         if (question >= 0) {
             path = url.substring(0, question);
             query = url.substring(question);
         }
+
         int pound = path.indexOf('#');
         if (pound >= 0) {
             anchor = path.substring(pound);
             path = path.substring(0, pound);
         }
 
-        StringBuilder sb = new StringBuilder(path);
-        if( sb.length() > 0 ) { // jsessionid can't be first.
+        StringBuilder urlBuilder = new StringBuilder(path);
+        if (urlBuilder.length() > 0) { // jsessionid can't be first.
             StandardContext ctx = (StandardContext) getContext();
-            String sessionParamName =
-                ctx != null ? ctx.getSessionParameterName() :
-                    Globals.SESSION_PARAMETER_NAME;
-            sb.append(";" + sessionParamName + "=");
-            sb.append(sessionId);
+            String sessionParamName = ctx != null ? ctx.getSessionParameterName() : SESSION_PARAMETER_NAME;
+            urlBuilder.append(";" + sessionParamName + "=");
+            urlBuilder.append(sessionId);
             if (ctx != null && ctx.getJvmRoute() != null) {
-                sb.append('.').append(ctx.getJvmRoute());
+                urlBuilder.append('.').append(ctx.getJvmRoute());
             }
 
-            // START SJSAS 6337561
-            String jrouteId = request.getHeader(Constants.PROXY_JROUTE);
+            String jrouteId = connectorRequest.getHeader(PROXY_JROUTE);
             if (jrouteId != null) {
-                sb.append(":");
-                sb.append(jrouteId);
+                urlBuilder.append(":");
+                urlBuilder.append(jrouteId);
             }
-            // END SJSAS 6337561
 
-            final Session session = request.getSessionInternal(false);
+            Session session = connectorRequest.getSessionInternal(false);
             if (session != null) {
-                String replicaLocation =
-                    (String) session.getNote(Globals.JREPLICA_SESSION_NOTE);
+                String replicaLocation = (String) session.getNote(JREPLICA_SESSION_NOTE);
                 if (replicaLocation != null) {
-                    sb.append(Globals.JREPLICA_PARAMETER);
-                    sb.append(replicaLocation);
+                    urlBuilder.append(JREPLICA_PARAMETER);
+                    urlBuilder.append(replicaLocation);
                 }
             }
 
             if (sessionVersion != null) {
-                sb.append(Globals.SESSION_VERSION_PARAMETER);
-                sb.append(sessionVersion);
+                urlBuilder.append(SESSION_VERSION_PARAMETER);
+                urlBuilder.append(sessionVersion);
             }
         }
 
-        sb.append(anchor);
-        sb.append(query);
-        return sb.toString();
+        urlBuilder.append(anchor);
+        urlBuilder.append(query);
 
+        return urlBuilder.toString();
     }
 
     /**
@@ -1889,7 +1631,6 @@ public class Response
         return new CoyoteWriter(outbuf);
     }
 
-    // START GlassFish 898
     /**
      * Gets the string representation of the given cookie.
      *
@@ -1899,59 +1640,59 @@ public class Response
      */
     protected String getCookieString(final Cookie cookie) {
         String cookieValue = null;
-        final StringBuilder sb = new StringBuilder();
 
-        // TODO:  default these values for now.  update later.
-        final boolean versionOneStrictCompliance = CookieUtils.COOKIE_VERSION_ONE_STRICT_COMPLIANCE;
-        final boolean alwaysAddExpires = CookieUtils.ALWAYS_ADD_EXPIRES;
-        final boolean rfc6265Support = CookieUtils.RFC_6265_SUPPORT_ENABLED;
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            cookieValue = AccessController.doPrivileged(
-                new PrivilegedAction<String>() {
-                    public String run(){
-                        CookieSerializerUtils.serializeServerCookie(
-                            sb, versionOneStrictCompliance, rfc6265Support,
-                            alwaysAddExpires, cookie.getName(),
-                            cookie.getValue(), cookie.getVersion(), cookie.getPath(),
-                            cookie.getDomain(), cookie.getComment(),
-                            cookie.getMaxAge(), cookie.getSecure(),
-                            cookie.isHttpOnly());
-                        return sb.toString();
-                    }
-                });
+            cookieValue = AccessController.doPrivileged(new PrivilegedAction<String>() {
+                @Override
+                public String run() {
+                    return CookieHeaderGenerator.generateHeader(
+                            cookie.getName(),
+                            cookie.getValue(),
+                            cookie.getMaxAge(),
+                            cookie.getDomain(),
+                            cookie.getPath(),
+                            cookie.getSecure(),
+                            cookie.isHttpOnly(),
+                            cookie.getAttributes());
+                }
+            });
         } else {
-            CookieSerializerUtils.serializeServerCookie(
-                sb, versionOneStrictCompliance, rfc6265Support,
-                alwaysAddExpires, cookie.getName(),
-                cookie.getValue(), cookie.getVersion(), cookie.getPath(),
-                cookie.getDomain(), cookie.getComment(),
-                cookie.getMaxAge(), cookie.getSecure(),
-                cookie.isHttpOnly());
-            cookieValue = sb.toString();
+            cookieValue =
+                CookieHeaderGenerator.generateHeader(
+                    cookie.getName(),
+                    cookie.getValue(),
+                    cookie.getMaxAge(),
+                    cookie.getDomain(),
+                    cookie.getPath(),
+                    cookie.getSecure(),
+                    cookie.isHttpOnly(),
+                    cookie.getAttributes());
         }
 
         return cookieValue;
     }
-    // END GlassFish 898
 
-
-    // START GlassFish 896
     /**
-     * Removes any Set-Cookie response headers whose value contains the
-     * string JSESSIONID
+     * Removes any Set-Cookie response headers whose value contains the string JSESSIONID
      */
     public void removeSessionCookies() {
         String matchExpression = "^" + getContext().getSessionCookieName() + "=.*";
-        coyoteResponse.getResponse().getHeaders().removeHeaderMatches("Set-Cookie", matchExpression);
-        matchExpression = "^" +
-            org.apache.catalina.authenticator.Constants.SINGLE_SIGN_ON_COOKIE + "=.*";
-        coyoteResponse.getResponse().getHeaders().removeHeaderMatches("Set-Cookie", matchExpression);
+        grizzlyResponse.getResponse().getHeaders().removeHeaderMatches("Set-Cookie", matchExpression);
+
+        matchExpression = "^" + org.apache.catalina.authenticator.Constants.SINGLE_SIGN_ON_COOKIE + "=.*";
+        grizzlyResponse.getResponse().getHeaders().removeHeaderMatches("Set-Cookie", matchExpression);
     }
-    // END GlassFish 896
+
+    public void setUpgrade(boolean upgrade) {
+        this.upgrade = upgrade;
+    }
+
+    void disableWriteHandler() {
+        outputBuffer.disableWriteHandler();
+    }
 
     /*
-     * Removes /./ and /../ sequences from absolute URLs.
-     * Code borrowed heavily from CoyoteAdapter.normalize()
+     * Removes /./ and /../ sequences from absolute URLs. Code borrowed heavily from CoyoteAdapter.normalize()
      */
     private void normalize(CharChunk cc) {
         // Strip query string and/or fragment first as doing it this way makes
@@ -1960,10 +1701,10 @@ public class Response
         if (truncate == -1) {
             truncate = cc.indexOf('#');
         }
+
         char[] truncateCC = null;
         if (truncate > -1) {
-            truncateCC = Arrays.copyOfRange(cc.getBuffer(),
-                    cc.getStart() + truncate, cc.getEnd());
+            truncateCC = Arrays.copyOfRange(cc.getBuffer(), cc.getStart() + truncate, cc.getEnd());
             cc.setEnd(cc.getStart() + truncate);
         }
 
@@ -1995,8 +1736,7 @@ public class Response
             if (index < 0) {
                 break;
             }
-            copyChars(c, start + index, start + index + 2,
-                      end - start - index - 2);
+            copyChars(c, start + index, start + index + 2, end - start - index - 2);
             end = end - 2;
             cc.setEnd(end);
         }
@@ -2014,13 +1754,12 @@ public class Response
                 throw new IllegalArgumentException();
             }
             int index2 = -1;
-            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos --) {
+            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
                 if (c[pos] == (byte) '/') {
                     index2 = pos;
                 }
             }
-            copyChars(c, start + index2, start + index + 3,
-                      end - start - index - 3);
+            copyChars(c, start + index2, start + index + 3, end - start - index - 3);
             end = end + index2 - index - 3;
             cc.setEnd(end);
             index = index2;
@@ -2062,22 +1801,13 @@ public class Response
         if (connector != null && connector.getContainer() != null) {
             logger = connector.getContainer().getLogger();
         }
+
         String localName = "Response";
         if (logger != null) {
-            logger.log(localName + " " + message, t,
-                org.apache.catalina.Logger.WARNING);
+            logger.log(localName + " " + message, t, WARNING);
         } else {
             log.log(Level.WARNING, localName + " " + message, t);
         }
     }
 
-
-    public void setUpgrade(boolean upgrade) {
-        this.upgrade = upgrade;
-    }
-
-    void disableWriteHandler() {
-        outputBuffer.disableWriteHandler();
-    }
 }
-

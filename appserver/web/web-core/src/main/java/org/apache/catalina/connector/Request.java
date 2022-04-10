@@ -2971,7 +2971,6 @@ public class Request implements HttpRequest, HttpServletRequest {
             try {
                 Cookie cookie = makeCookie(scookie);
                 cookie.setPath(scookie.getPath());
-                cookie.setVersion(scookie.getVersion());
                 String domain = scookie.getDomain();
                 if (domain != null) {
                     cookie.setDomain(scookie.getDomain());

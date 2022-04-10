@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,12 +18,13 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
+import static org.apache.catalina.LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ResourceBundle;
 
+import org.apache.catalina.LogFacade;
 
 /**
  * Coyote implementation of the servlet writer.
@@ -30,52 +32,39 @@ import java.util.ResourceBundle;
  * @author Remy Maucherat
  * @author Kin-man Chung
  */
-public class CoyoteWriter
-    extends PrintWriter {
+public class CoyoteWriter extends PrintWriter {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
-
     // -------------------------------------------------------------- Constants
-
 
     // No need for a do privileged block - every web app has permission to read
     // this by default
-    private static final char[] LINE_SEP =
-        System.getProperty("line.separator").toCharArray();
-
-
+    private static final char[] LINE_SEP = System.getProperty("line.separator").toCharArray();
 
     // ----------------------------------------------------- Instance Variables
-
 
     protected OutputBuffer ob;
     protected boolean error = false;
 
-
     // ----------------------------------------------------------- Constructors
-
 
     public CoyoteWriter(OutputBuffer ob) {
         super(ob);
         this.ob = ob;
     }
 
-
     // --------------------------------------------------------- Public Methods
 
-
     /**
-    * Prevent cloning the facade.
-    */
-    protected Object clone()
-        throws CloneNotSupportedException {
+     * Prevent cloning the facade.
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
 
-
     // -------------------------------------------------------- Package Methods
-
 
     /**
      * Clear facade.
@@ -91,15 +80,14 @@ public class CoyoteWriter
         error = false;
     }
 
-
     // --------------------------------------------------------- Writer Methods
 
-
+    @Override
     public void flush() {
 
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         if (error)
@@ -113,41 +101,40 @@ public class CoyoteWriter
 
     }
 
-
+    @Override
     public void close() {
-
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         // We don't close the PrintWriter - super() is not called,
         // so the stream can be reused. We close ob.
         try {
             ob.close();
-        } catch (IOException ex ) {
+        } catch (IOException ex) {
             // Ignore
         }
         error = false;
 
     }
 
-
+    @Override
     public boolean checkError() {
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
         flush();
         return error;
     }
 
-
+    @Override
     public void write(int c) {
 
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         if (error)
@@ -161,12 +148,12 @@ public class CoyoteWriter
 
     }
 
-
+    @Override
     public void write(char buf[], int off, int len) {
 
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         if (error)
@@ -179,17 +166,16 @@ public class CoyoteWriter
         }
     }
 
-
+    @Override
     public void write(char buf[]) {
         write(buf, 0, buf.length);
     }
 
-
+    @Override
     public void write(String s, int off, int len) {
-
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         if (error)
@@ -203,17 +189,16 @@ public class CoyoteWriter
 
     }
 
-
+    @Override
     public void write(String s) {
         write(s, 0, s.length());
     }
-
 
     public void write(byte[] buff, int off, int len) {
 
         // Disallow operation if the object has gone out of scope
         if (ob == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(OBJECT_INVALID_SCOPE_EXCEPTION));
         }
 
         if (error)
@@ -226,10 +211,9 @@ public class CoyoteWriter
         }
     }
 
-
     // ---------------------------------------------------- PrintWriter Methods
 
-
+    @Override
     public void print(boolean b) {
         if (b) {
             write("true");
@@ -238,37 +222,37 @@ public class CoyoteWriter
         }
     }
 
-
+    @Override
     public void print(char c) {
         write(c);
     }
 
-
+    @Override
     public void print(int i) {
         write(String.valueOf(i));
     }
 
-
+    @Override
     public void print(long l) {
         write(String.valueOf(l));
     }
 
-
+    @Override
     public void print(float f) {
         write(String.valueOf(f));
     }
 
-
+    @Override
     public void print(double d) {
         write(String.valueOf(d));
     }
 
-
+    @Override
     public void print(char s[]) {
         write(s);
     }
 
-
+    @Override
     public void print(String s) {
         if (s == null) {
             s = "null";
@@ -276,65 +260,65 @@ public class CoyoteWriter
         write(s);
     }
 
-
+    @Override
     public void print(Object obj) {
         write(String.valueOf(obj));
     }
 
-
+    @Override
     public void println() {
         write(LINE_SEP);
     }
 
-
+    @Override
     public void println(boolean b) {
         print(b);
         println();
     }
 
-
+    @Override
     public void println(char c) {
         print(c);
         println();
     }
 
-
+    @Override
     public void println(int i) {
         print(i);
         println();
     }
 
-
+    @Override
     public void println(long l) {
         print(l);
         println();
     }
 
-
+    @Override
     public void println(float f) {
         print(f);
         println();
     }
 
-
+    @Override
     public void println(double d) {
         print(d);
         println();
     }
 
-
+    @Override
     public void println(char c[]) {
         print(c);
         println();
     }
 
-
+    @Override
     public void println(String s) {
         print(s);
         println();
     }
 
-
+    @Override
     public void println(Object o) {
         print(o);
         println();

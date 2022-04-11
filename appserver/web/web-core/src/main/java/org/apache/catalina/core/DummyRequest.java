@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,7 +17,6 @@
  */
 
 package org.apache.catalina.core;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,8 +57,7 @@ import org.apache.catalina.Wrapper;
 import org.glassfish.grizzly.http.util.DataChunk;
 
 /**
- * Dummy request object, used for request dispatcher mapping, as well as
- * JSP precompilation.
+ * Dummy request object, used for request dispatcher mapping, as well as JSP precompilation.
  *
  * @author Remy Maucherat
  * @version $Revision: 1.5.6.2 $ $Date: 2008/04/17 18:37:07 $
@@ -73,25 +72,21 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
 
     protected FilterChain filterChain;
 
-    // START CR 6415120
     /**
-     * Whether or not access to resources in WEB-INF or META-INF needs to be
-     * checked.
+     * Whether or not access to resources in WEB-INF or META-INF needs to be checked.
      */
     protected boolean checkRestrictedResources = true;
-    // END CR 6415120
 
-    // START PWC 4707989
     private String method;
-    // END PWC 4707989
 
-    private static Enumeration<String> dummyEnum = new Enumeration<String>(){
+    private static Enumeration<String> dummyEnum = new Enumeration<String>() {
         @Override
-        public boolean hasMoreElements(){
+        public boolean hasMoreElements() {
             return false;
         }
+
         @Override
-        public String nextElement(){
+        public String nextElement() {
             return null;
         }
     };
@@ -171,7 +166,6 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
         this.wrapper = wrapper;
     }
 
-    // START PWC 4707989
     @Override
     public void setMethod(String method) {
         this.method = method;
@@ -181,254 +175,536 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
     public String getMethod() {
         return method;
     }
-    // END PWC 4707989
 
     @Override
-    public String getAuthorization() { return null; }
+    public String getAuthorization() {
+        return null;
+    }
+
     @Override
-    public Connector getConnector() { return null; }
+    public Connector getConnector() {
+        return null;
+    }
+
     @Override
-    public void setConnector(Connector connector) {}
+    public void setConnector(Connector connector) {
+    }
+
     @Override
-    public Context getContext() { return null; }
+    public Context getContext() {
+        return null;
+    }
+
     @Override
-    public void setContext(Context context) {}
+    public void setContext(Context context) {
+    }
+
     @Override
-    public Host getHost() { return null; }
+    public Host getHost() {
+        return null;
+    }
+
     @Override
-    public void setHost(Host host) {}
+    public void setHost(Host host) {
+    }
+
     @Override
-    public String getInfo() { return null; }
+    public String getInfo() {
+        return null;
+    }
+
     @Override
-    public Response getResponse() { return null; }
+    public Response getResponse() {
+        return null;
+    }
+
     @Override
-    public void setResponse(Response response) {}
+    public void setResponse(Response response) {
+    }
+
     @Override
-    public Socket getSocket() { return null; }
+    public Socket getSocket() {
+        return null;
+    }
+
     @Override
-    public void setSocket(Socket socket) {}
+    public void setSocket(Socket socket) {
+    }
+
     @Override
-    public InputStream getStream() { return null; }
+    public InputStream getStream() {
+        return null;
+    }
+
     @Override
-    public void setStream(InputStream input) {}
+    public void setStream(InputStream input) {
+    }
+
     @Override
-    public void addLocale(Locale locale) {}
+    public void addLocale(Locale locale) {
+    }
+
     @Override
     public ServletInputStream createInputStream() throws IOException {
         return null;
     }
+
     @Override
-    public void finishRequest() throws IOException {}
+    public void finishRequest() throws IOException {
+    }
+
     @Override
-    public Object getNote(String name) { return null; }
+    public Object getNote(String name) {
+        return null;
+    }
+
     @Override
-    public Iterator<String> getNoteNames() { return null; }
+    public Iterator<String> getNoteNames() {
+        return null;
+    }
+
     @Override
-    public void removeNote(String name) {}
+    public void removeNote(String name) {
+    }
+
     @Override
-    public void setContentType(String type) {}
+    public void setContentType(String type) {
+    }
+
     @Override
-    public void setNote(String name, Object value) {}
+    public void setNote(String name, Object value) {
+    }
+
     @Override
-    public void setProtocol(String protocol) {}
+    public void setProtocol(String protocol) {
+    }
+
     @Override
-    public void setRemoteAddr(String remoteAddr) {}
-    public void setRemoteHost(String remoteHost) {}
+    public void setRemoteAddr(String remoteAddr) {
+    }
+
+    public void setRemoteHost(String remoteHost) {
+    }
+
     @Override
-    public void setServerName(String name) {}
+    public void setServerName(String name) {
+    }
+
     @Override
-    public void setServerPort(int port) {}
+    public void setServerPort(int port) {
+    }
+
     @Override
-    public Object getAttribute(String name) { return null; }
+    public Object getAttribute(String name) {
+        return null;
+    }
+
     @Override
-    public Enumeration<String> getAttributeNames() { return null; }
+    public Enumeration<String> getAttributeNames() {
+        return null;
+    }
+
     @Override
-    public String getCharacterEncoding() { return null; }
+    public String getCharacterEncoding() {
+        return null;
+    }
+
     @Override
-    public int getContentLength() { return -1; }
+    public int getContentLength() {
+        return -1;
+    }
+
     @Override
-    public long getContentLengthLong() { return -1L; }
+    public long getContentLengthLong() {
+        return -1L;
+    }
+
     @Override
-    public void setContentLength(int length) {}
+    public void setContentLength(int length) {
+    }
+
     @Override
-    public String getContentType() { return null; }
+    public String getContentType() {
+        return null;
+    }
+
     @Override
     public ServletInputStream getInputStream() throws IOException {
         return null;
     }
+
     @Override
-    public Locale getLocale() { return null; }
+    public Locale getLocale() {
+        return null;
+    }
+
     @Override
-    public Enumeration<Locale> getLocales() { return null; }
+    public Enumeration<Locale> getLocales() {
+        return null;
+    }
+
     @Override
-    public String getProtocol() { return null; }
+    public String getProtocol() {
+        return null;
+    }
+
     @Override
-    public BufferedReader getReader() throws IOException { return null; }
-    public String getRealPath(String path) { return null; }
+    public BufferedReader getReader() throws IOException {
+        return null;
+    }
+
+    public String getRealPath(String path) {
+        return null;
+    }
+
     @Override
-    public String getRemoteAddr() { return null; }
+    public String getRemoteAddr() {
+        return null;
+    }
+
     @Override
-    public String getRemoteHost() { return null; }
+    public String getRemoteHost() {
+        return null;
+    }
+
     @Override
-    public String getScheme() { return null; }
+    public String getScheme() {
+        return null;
+    }
+
     @Override
-    public String getServerName() { return null; }
+    public String getServerName() {
+        return null;
+    }
+
     @Override
-    public int getServerPort() { return -1; }
+    public int getServerPort() {
+        return -1;
+    }
+
     @Override
-    public boolean isSecure() { return false; }
+    public boolean isSecure() {
+        return false;
+    }
+
     @Override
-    public void removeAttribute(String name) {}
+    public void removeAttribute(String name) {
+    }
+
     @Override
-    public void setAttribute(String name, Object value) {}
+    public void setAttribute(String name, Object value) {
+    }
+
     @Override
-    public void setCharacterEncoding(String enc)
-        throws UnsupportedEncodingException {}
+    public void setCharacterEncoding(String enc) throws UnsupportedEncodingException {
+    }
+
     @Override
-    public void addCookie(Cookie cookie) {}
+    public void addCookie(Cookie cookie) {
+    }
+
     @Override
-    public void addHeader(String name, String value) {}
+    public void addHeader(String name, String value) {
+    }
+
     @Override
-    public void addParameter(String name, String values[]) {}
+    public void addParameter(String name, String values[]) {
+    }
+
     @Override
-    public void clearCookies() {}
+    public void clearCookies() {
+    }
+
     @Override
-    public void clearHeaders() {}
+    public void clearHeaders() {
+    }
+
     @Override
-    public void clearLocales() {}
+    public void clearLocales() {
+    }
+
     @Override
-    public void clearParameters() {}
+    public void clearParameters() {
+    }
+
     @Override
-    public void replayPayload(byte[] payloadByteArray) {}
+    public void replayPayload(byte[] payloadByteArray) {
+    }
+
     @Override
-    public void recycle() {}
+    public void recycle() {
+    }
+
     @Override
-    public void setAuthType(String authType) {}
-    /* START PWC 4707989
-    public void setMethod(String method) {}
-    */
+    public void setAuthType(String authType) {
+    }
+
     @Override
-    public void setRequestedSessionCookie(boolean flag) {}
+    public void setRequestedSessionCookie(boolean flag) {
+    }
+
     @Override
-    public void setRequestedSessionId(String id) {}
+    public void setRequestedSessionId(String id) {
+    }
+
     @Override
-    public void setRequestedSessionURL(boolean flag) {}
+    public void setRequestedSessionURL(boolean flag) {
+    }
+
     @Override
-    public void setRequestURI(String uri) {}
+    public void setRequestURI(String uri) {
+    }
+
     @Override
-    public void setSecure(boolean secure) {}
+    public void setSecure(boolean secure) {
+    }
+
     @Override
-    public void setUserPrincipal(Principal principal) {}
+    public void setUserPrincipal(Principal principal) {
+    }
+
     @Override
-    public String getParameter(String name) { return null; }
+    public String getParameter(String name) {
+        return null;
+    }
+
     @Override
-    public Map<String, String[]> getParameterMap() { return null; }
+    public Map<String, String[]> getParameterMap() {
+        return null;
+    }
+
     @Override
-    public Enumeration<String> getParameterNames() { return dummyEnum; }
+    public Enumeration<String> getParameterNames() {
+        return dummyEnum;
+    }
+
     @Override
-    public String[] getParameterValues(String name) { return null; }
+    public String[] getParameterValues(String name) {
+        return null;
+    }
+
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
         return null;
     }
-    @Override
-    public String getAuthType() { return null; }
-    @Override
-    public Cookie[] getCookies() { return null; }
-    @Override
-    public long getDateHeader(String name) { return -1; }
-    @Override
-    public String getHeader(String name) { return null; }
-    @Override
-    public Enumeration<String> getHeaders(String name) { return null; }
-    @Override
-    public Enumeration<String> getHeaderNames() { return null; }
-    @Override
-    public int getIntHeader(String name) { return -1; }
-    /* START PWC 4707989
-    public String getMethod() { return null; }
-    */
-    @Override
-    public String getPathTranslated() { return null; }
-    @Override
-    public String getRemoteUser() { return null; }
-    @Override
-    public String getRequestedSessionId() { return null; }
-    @Override
-    public String getRequestURI() { return null; }
-    @Override
-    public StringBuffer getRequestURL() { return null; }
-    @Override
-    public HttpSession getSession() { return null; }
-    @Override
-    public HttpSession getSession(boolean create) { return null; }
-    @Override
-    public Session getSessionInternal(boolean create) { return null; }
-    @Override
-    public String changeSessionId() { return null; }
-    @Override
-    public boolean isRequestedSessionIdFromCookie() { return false; }
-    @Override
-    public boolean isRequestedSessionIdFromURL() { return false; }
-    public boolean isRequestedSessionIdFromUrl() { return false; }
-    @Override
-    public boolean isRequestedSessionIdValid() { return false; }
-    @Override
-    public void setRequestedSessionCookiePath(String cookiePath) {}
-    @Override
-    public boolean isUserInRole(String role) { return false; }
-    @Override
-    public Principal getUserPrincipal() { return null; }
-    @Override
-    public String getLocalAddr() { return null; }
-    @Override
-    public String getLocalName() { return null; }
-    @Override
-    public int getLocalPort() { return -1; }
-    @Override
-    public int getRemotePort() { return -1; }
-    @Override
-    public DispatcherType getDispatcherType() { return null; }
-    @Override
-    public AsyncContext startAsync() throws IllegalStateException { return null; }
-    @Override
-    public AsyncContext startAsync(ServletRequest servletRequest,
-                                   ServletResponse servletResponse)
-            throws IllegalStateException { return null; }
-    @Override
-    public boolean isAsyncStarted() { return false; }
-    @Override
-    public boolean isAsyncSupported() { return false; }
-    public void setAsyncTimeout(long timeout) {}
-    public long getAsyncTimeout() { return -1; }
-    @Override
-    public AsyncContext getAsyncContext() { return null; }
-    public void addAsyncListener(AsyncListener listener) {};
-    public void addAsyncListener(AsyncListener listener,
-                                 ServletRequest servletRequest,
-                                 ServletResponse servletResponse) {}
-    public boolean isSetAsyncTimeoutCalled() { return false; }
-    @Override
-    public void disableAsyncSupport() {}
-    @Override
-    public Collection<Part> getParts() {return null;}
-    @Override
-    public Part getPart(String name) {return null;}
-    @Override
-    public boolean authenticate(HttpServletResponse response)
-        throws IOException, ServletException { return false; }
-    @Override
-    public void login(String username, String password)
-        throws ServletException {}
-    @Override
-    public void logout() throws ServletException {}
-    @Override
-    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) { return null; }
 
-    // START CR 6415120
+    @Override
+    public String getAuthType() {
+        return null;
+    }
+
+    @Override
+    public Cookie[] getCookies() {
+        return null;
+    }
+
+    @Override
+    public long getDateHeader(String name) {
+        return -1;
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return null;
+    }
+
+    @Override
+    public Enumeration<String> getHeaders(String name) {
+        return null;
+    }
+
+    @Override
+    public Enumeration<String> getHeaderNames() {
+        return null;
+    }
+
+    @Override
+    public int getIntHeader(String name) {
+        return -1;
+    }
+
+    /*
+     * START PWC 4707989 public String getMethod() { return null; }
+     */
+    @Override
+    public String getPathTranslated() {
+        return null;
+    }
+
+    @Override
+    public String getRemoteUser() {
+        return null;
+    }
+
+    @Override
+    public String getRequestedSessionId() {
+        return null;
+    }
+
+    @Override
+    public String getRequestURI() {
+        return null;
+    }
+
+    @Override
+    public StringBuffer getRequestURL() {
+        return null;
+    }
+
+    @Override
+    public HttpSession getSession() {
+        return null;
+    }
+
+    @Override
+    public HttpSession getSession(boolean create) {
+        return null;
+    }
+
+    @Override
+    public Session getSessionInternal(boolean create) {
+        return null;
+    }
+
+    @Override
+    public String changeSessionId() {
+        return null;
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromCookie() {
+        return false;
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromURL() {
+        return false;
+    }
+
+    public boolean isRequestedSessionIdFromUrl() {
+        return false;
+    }
+
+    @Override
+    public boolean isRequestedSessionIdValid() {
+        return false;
+    }
+
+    @Override
+    public void setRequestedSessionCookiePath(String cookiePath) {
+    }
+
+    @Override
+    public boolean isUserInRole(String role) {
+        return false;
+    }
+
+    @Override
+    public Principal getUserPrincipal() {
+        return null;
+    }
+
+    @Override
+    public String getLocalAddr() {
+        return null;
+    }
+
+    @Override
+    public String getLocalName() {
+        return null;
+    }
+
+    @Override
+    public int getLocalPort() {
+        return -1;
+    }
+
+    @Override
+    public int getRemotePort() {
+        return -1;
+    }
+
+    @Override
+    public DispatcherType getDispatcherType() {
+        return null;
+    }
+
+    @Override
+    public AsyncContext startAsync() throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
+        return null;
+    }
+
+    @Override
+    public boolean isAsyncStarted() {
+        return false;
+    }
+
+    @Override
+    public boolean isAsyncSupported() {
+        return false;
+    }
+
+    public void setAsyncTimeout(long timeout) {
+    }
+
+    public long getAsyncTimeout() {
+        return -1;
+    }
+
+    @Override
+    public AsyncContext getAsyncContext() {
+        return null;
+    }
+
+    public void addAsyncListener(AsyncListener listener) {
+    };
+
+    public void addAsyncListener(AsyncListener listener, ServletRequest servletRequest, ServletResponse servletResponse) {
+    }
+
+    public boolean isSetAsyncTimeoutCalled() {
+        return false;
+    }
+
+    @Override
+    public void disableAsyncSupport() {
+    }
+
+    @Override
+    public Collection<Part> getParts() {
+        return null;
+    }
+
+    @Override
+    public Part getPart(String name) {
+        return null;
+    }
+
+    @Override
+    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+        return false;
+    }
+
+    @Override
+    public void login(String username, String password) throws ServletException {
+    }
+
+    @Override
+    public void logout() throws ServletException {
+    }
+
+    @Override
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) {
+        return null;
+    }
+
     /**
-     * Set whether or not access to resources under WEB-INF or META-INF
-     * needs to be checked.
+     * Set whether or not access to resources under WEB-INF or META-INF needs to be checked.
      */
     @Override
     public void setCheckRestrictedResources(boolean check) {
@@ -436,33 +712,27 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
     }
 
     /**
-     * Return whether or not access to resources under WEB-INF or META-INF
-     * needs to be checked.
+     * Return whether or not access to resources under WEB-INF or META-INF needs to be checked.
      */
     @Override
     public boolean getCheckRestrictedResources() {
         return checkRestrictedResources;
     }
-    // END CR 6415120
 
-    // START SJSAS 6346226
     /**
-     * Gets the jroute id of this request, which may have been
-     * sent as a separate <code>JROUTE</code> cookie or appended to the
-     * session identifier encoded in the URI (if cookies have been disabled).
+     * Gets the jroute id of this request, which may have been sent as a separate <code>JROUTE</code> cookie or appended to
+     * the session identifier encoded in the URI (if cookies have been disabled).
      *
-     * @return The jroute id of this request, or null if this request does not
-     * carry any jroute id
+     * @return The jroute id of this request, or null if this request does not carry any jroute id
      */
     @Override
     public String getJrouteId() {
         return null;
     }
-    // END SJSAS 6346226
 
     /**
-     * This object does not implement a session ID generator. Provide
-     * a dummy implementation so that the default one will be used.
+     * This object does not implement a session ID generator. Provide a dummy implementation so that the default one will be
+     * used.
      */
     @Override
     public String generateSessionId() {
@@ -470,11 +740,9 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
     }
 
     /**
-     * Gets the servlet context to which this servlet request was last
-     * dispatched.
+     * Gets the servlet context to which this servlet request was last dispatched.
      *
-     * @return the servlet context to which this servlet request was last
-     * dispatched
+     * @return the servlet context to which this servlet request was last dispatched
      */
     @Override
     public ServletContext getServletContext() {
@@ -487,25 +755,22 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
     }
 
     @Override
-    public void unlockSession() {}
+    public void unlockSession() {
+    }
 
     @Override
     public String getRequestId() {
-        // TODO IMPLEMENT!
         return null;
     }
 
     @Override
     public String getProtocolRequestId() {
-        // TODO IMPLEMENT!
         return null;
     }
 
     @Override
     public ServletConnection getServletConnection() {
-        // TODO IMPLEMENT!
         return null;
     }
 
 }
-

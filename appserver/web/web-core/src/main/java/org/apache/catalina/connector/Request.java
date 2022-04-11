@@ -126,6 +126,7 @@ import org.apache.catalina.util.RequestUtil;
 import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.CompletionHandler;
 import org.glassfish.grizzly.EmptyCompletionHandler;
+import org.glassfish.grizzly.http.Protocol;
 import org.glassfish.grizzly.http.server.Response.SuspendedContextImpl;
 import org.glassfish.grizzly.http.server.TimeoutHandler;
 import org.glassfish.grizzly.http.server.util.MappingData;
@@ -3825,20 +3826,67 @@ public class Request implements HttpRequest, HttpServletRequest {
 
     @Override
     public String getRequestId() {
-        // TODO Implement!
-        return null;
+        return grizzlyRequest.getRequestId();
     }
 
     @Override
     public String getProtocolRequestId() {
-        // TODO Implement!
-        return null;
+        return grizzlyRequest.getProtocolRequestId();
     }
 
     @Override
     public ServletConnection getServletConnection() {
-        // TODO Implement!
-        return null;
+        String connectionId = grizzlyRequest.getConnection() == null ? null : Long.toString(grizzlyRequest.getConnection().getId());
+        return new ServletConnectionImpl(connectionId, grizzlyRequest.getProtocol(), grizzlyRequest.isSecure());
+    }
+
+    /**
+     * Trivial implementation of the {@link ServletConnection}
+     *
+     * @author David Matejcek
+     */
+    public static class ServletConnectionImpl implements ServletConnection {
+
+        private final String connectionId;
+        private final Protocol protocol;
+        private final boolean secure;
+
+        /**
+         * Just sets all fields.
+         *
+         * @param connectionId - see {@link #getConnectionId()}, can be null.
+         * @param protocol - see {@link #getProtocol()} and {@link Protocol}, can be null.
+         * @param secure - true if the connection was encrypted.
+         */
+        public ServletConnectionImpl(String connectionId, Protocol protocol, boolean secure) {
+            this.connectionId = connectionId;
+            this.protocol = protocol;
+            this.secure = secure;
+        }
+
+        @Override
+        public String getConnectionId() {
+            return this.connectionId;
+        }
+
+
+        @Override
+        public String getProtocol() {
+            return protocol == null ? "unknown" : this.protocol.getProtocolString();
+        }
+
+
+        @Override
+        public String getProtocolConnectionId() {
+            // we don't support HTTP3 yet.
+            return "";
+        }
+
+
+        @Override
+        public boolean isSecure() {
+            return this.secure;
+        }
     }
 
 }

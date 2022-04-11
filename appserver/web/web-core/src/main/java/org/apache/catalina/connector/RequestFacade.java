@@ -768,20 +768,23 @@ public class RequestFacade implements HttpServletRequest {
 
     @Override
     public String getRequestId() {
-        // TODO Implement!
-        return null;
+        checkRequestNull();
+
+        return catalinaConnectorReqest.getRequestId();
     }
 
     @Override
     public String getProtocolRequestId() {
-        // // TODO Implement!
-        return null;
+        checkRequestNull();
+
+        return catalinaConnectorReqest.getProtocolRequestId();
     }
 
     @Override
     public ServletConnection getServletConnection() {
-        // // TODO Implement!
-        return null;
+        checkRequestNull();
+
+        return catalinaConnectorReqest.getServletConnection();
     }
 
     private void checkRequestNull() {

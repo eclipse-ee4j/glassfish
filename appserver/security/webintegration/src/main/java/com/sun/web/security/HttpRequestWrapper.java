@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -610,20 +611,17 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
 
     @Override
     public String getRequestId() {
-        // TODO Implement!
-        return null;
+        return servletRequest.getRequestId();
     }
 
     @Override
     public String getProtocolRequestId() {
-        // TODO Implement!
-        return null;
+        return servletRequest.getProtocolRequestId();
     }
 
     @Override
     public ServletConnection getServletConnection() {
-        // TODO Implement!
-        return null;
+        return servletRequest.getServletConnection();
     }
 
 }

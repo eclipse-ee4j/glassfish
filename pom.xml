@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.6</version>
+        <version>1.0.7</version>
     </parent>
 
     <groupId>org.glassfish.main</groupId>
@@ -73,7 +73,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -134,9 +133,9 @@
                 <module>appserver</module>
                 <module>nucleus/hk2/config-generator</module>
                 <module>docs</module>
-                <module>appserver/admingui/devtests</module>
                 <module>appserver/extras/embedded/common</module>
-                <module>nucleus/tests</module>
+                <module>appserver/tests/appserv-tests/util/reportbuilder</module>
+                <module>appserver/tests/tck</module>
             </modules>
         </profile>
 

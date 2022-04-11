@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
@@ -33,57 +34,49 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
-import javax.tools.StandardLocation;
+
 import org.glassfish.admin.rest.composite.RestModelExtension;
 
-/**
- * Hello world!
- *
- */
+import static javax.tools.StandardLocation.CLASS_OUTPUT;
+
+
 @SupportedAnnotationTypes("org.glassfish.admin.rest.composite.RestModelExtension")
 public class RestModelExtensionProcessor extends AbstractProcessor {
     @Override
-    public boolean process(Set<? extends TypeElement> elements, RoundEnvironment env) {
-        Messager messager = processingEnv.getMessager();
-        BufferedWriter bw = null;
+    public boolean process(final Set<? extends TypeElement> elements, final RoundEnvironment env) {
         try {
-            Map<String, List<String>> classes = new HashMap<String, List<String>>();
-
-            for (TypeElement te : elements) {
-                for (Element e : env.getElementsAnnotatedWith(te)) {
-                    final RestModelExtension annotation = e.getAnnotation(RestModelExtension.class);
+            final Map<String, List<String>> classes = new HashMap<>();
+            for (final TypeElement typeElement : elements) {
+                for (final Element element : env.getElementsAnnotatedWith(typeElement)) {
+                    final RestModelExtension annotation = element.getAnnotation(RestModelExtension.class);
                     final String parent = annotation.parent();
                     List<String> list = classes.get(parent);
                     if (list == null) {
-                        list = new ArrayList<String>();
+                        list = new ArrayList<>();
                         classes.put(parent, list);
                     }
-                    list.add(e.toString());
+                    list.add(element.toString());
                 }
             }
-
-            if (!classes.isEmpty()) {
-                final Filer filer = processingEnv.getFiler();
-                FileObject fo = filer.createResource(StandardLocation.CLASS_OUTPUT, "", "META-INF/restmodelextensions");
-                bw = new BufferedWriter(fo.openWriter());
+            if (classes.isEmpty()) {
+                return true;
+            }
+            final Filer filer = processingEnv.getFiler();
+            final FileObject file = filer.createResource(CLASS_OUTPUT, "", "META-INF/restmodelextensions");
+            try (BufferedWriter bw = new BufferedWriter(file.openWriter())) {
                 // parent model:model extension
-                for (Map.Entry<String, List<String>> entry : classes.entrySet()) {
+                for (final Map.Entry<String, List<String>> entry : classes.entrySet()) {
                     final String key = entry.getKey();
-                    for (String ext : entry.getValue()) {
-                        bw.write(key + ":" + ext + "\n");
+                    for (final String ext : entry.getValue()) {
+                        bw.write(key);
+                        bw.write(":");
+                        bw.write(ext);
+                        bw.write('\n');
                     }
                 }
-                bw.close();
             }
-        } catch (IOException ex) {
-            messager.printMessage(Kind.ERROR, ex.getLocalizedMessage());
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (Exception e) {
-
-                }
-            }
+        } catch (final IOException ex) {
+            processingEnv.getMessager().printMessage(Kind.ERROR, ex.getLocalizedMessage());
         }
 
         return true;

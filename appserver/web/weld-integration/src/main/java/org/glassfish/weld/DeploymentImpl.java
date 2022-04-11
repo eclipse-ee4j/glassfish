@@ -19,6 +19,8 @@ package org.glassfish.weld;
 import static com.sun.enterprise.util.Utility.isAnyEmpty;
 import static com.sun.enterprise.util.Utility.isAnyNull;
 import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.lang.System.getSecurityManager;
+import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
 import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
@@ -42,6 +44,7 @@ import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -73,6 +76,9 @@ import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.EjbDescriptor;
 
 import jakarta.enterprise.inject.spi.Extension;
+import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
+import org.jboss.weld.lite.extension.translator.BuildCompatibleExtensionLoader;
+import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 
 /*
  * Represents a deployment of a CDI (Weld) application.
@@ -243,6 +249,22 @@ public class DeploymentImpl implements CDI11Deployment {
         }
 
         List<Metadata<Extension>> extensionsList = new ArrayList<>();
+        // Register org.jboss.weld.lite.extension.translator.LiteExtensionTranslator in order to be able to execute build compatible extensions
+        // Note that we only register this if we discovered at least one implementation of BuildCompatibleExtension
+        if (!BuildCompatibleExtensionLoader.getBuildCompatibleExtensions().isEmpty()) {
+            try {
+                LiteExtensionTranslator extension = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<LiteExtensionTranslator>() {
+                    @Override
+                    public LiteExtensionTranslator run() {
+                        return new LiteExtensionTranslator();
+                    }
+                }) : new LiteExtensionTranslator();
+                extensionsList.add(new MetadataImpl<>(extension));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         for (BeanDeploymentArchive beanDeploymentArchive : getBeanDeploymentArchives()) {
             if (!(beanDeploymentArchive instanceof RootBeanDeploymentArchive)) {
                 extensions =

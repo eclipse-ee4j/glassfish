@@ -54,8 +54,11 @@ if [ ! -z "${JENKINS_HOME}" ] ; then
   fi
   echo "Removing old glassfish directory: ${S1AS_HOME}";
   rm -rf "${S1AS_HOME}";
+  if [ -z "${MVN_EXTRA}" ]; then
+    export MVN_EXTRA="";
+  fi
   if [ -z "${GF_VERSION}" ]; then
-    export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout)"
+    export GF_VERSION="$(mvn help:evaluate -f \"${APS_HOME}/pom.xml\" -Dexpression=project.version -q -DforceStdout ${MVN_EXTRA})"
   fi
   if [ -z "${MVN_REPOSITORY}" ]; then
     export MVN_REPOSITORY="${HOME}/.m2/repository";

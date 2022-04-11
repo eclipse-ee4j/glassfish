@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,8 +19,7 @@
 package com.sun.enterprise.web.connector.grizzly;
 
 /**
- * Dummy Connector Launcher that doesn't start any listener like Grizzly
- * or Coyote.
+ * Dummy Connector Launcher that doesn't start any listener like Grizzly or Coyote.
  *
  * @author Jean-Francois Arcand
  */
@@ -27,9 +27,8 @@ public class DummyConnectorLauncher extends CoyoteConnectorLauncher {
 
     // ------------------------------------------------------- Constructor --//
 
-    public DummyConnectorLauncher(boolean secure, boolean blocking,
-                               String selectorThreadImpl) {
-        super(secure,blocking,selectorThreadImpl);
+    public DummyConnectorLauncher(boolean secure, boolean blocking, String selectorThreadImpl) {
+        super(secure, blocking, selectorThreadImpl);
     }
 
     /**
@@ -39,17 +38,12 @@ public class DummyConnectorLauncher extends CoyoteConnectorLauncher {
     public void init() throws Exception {
     }
 
-
     @Override
     public void start() throws Exception {
     }
-
 
     @Override
     public void destroy() throws Exception {
     }
 
-
-
 }
-

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -21,8 +22,8 @@ import java.io.Serializable;
 import java.security.Principal;
 
 /**
- * Generic implementation of <strong>java.security.Principal</strong> that
- * is used to represent principals authenticated at the protocol handler level.
+ * Generic implementation of <strong>java.security.Principal</strong> that is used to represent principals authenticated
+ * at the protocol handler level.
  *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:28:34 $
@@ -32,45 +33,35 @@ public class CoyotePrincipal implements Principal, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-
     // ----------------------------------------------------------- Constructors
 
-
     public CoyotePrincipal(String name) {
-
         this.name = name;
-
     }
 
-
     // ------------------------------------------------------------- Properties
-
 
     /**
      * The username of the user represented by this Principal.
      */
-    protected String name = null;
+    protected String name;
 
+    @Override
     public String getName() {
-        return (this.name);
+        return name;
     }
-
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
-     * Return a String representation of this object, which exposes only
-     * information that should be public.
+     * Return a String representation of this object, which exposes only information that should be public.
      */
+    @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder("CoyotePrincipal[");
-        sb.append(this.name);
+        sb.append(name);
         sb.append("]");
         return (sb.toString());
-
     }
-
 
 }

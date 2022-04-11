@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -91,16 +92,6 @@ public class ApplicationContext implements ServletContext {
     public StandardContext getStandardContext() {
         return context;
     }
-
-
-    // ----------------------------------------------------- Class Variables
-
-    // START PWC 1.2
-    /*
-    private static final SecurityPermission GET_UNWRAPPED_CONTEXT_PERMISSION =
-        new SecurityPermission("getUnwrappedContext");
-    */
-    // END PWC 1.2
 
 
     // ----------------------------------------------------- Instance Variables
@@ -243,7 +234,7 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public Enumeration<String> getInitParameterNames() {
-        return (new Enumerator<String>(parameters.keySet()));
+        return new Enumerator<String>(parameters.keySet());
     }
 
     /**
@@ -267,7 +258,7 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public int getMajorVersion() {
-        return (Constants.MAJOR_VERSION);
+        return Constants.MAJOR_VERSION;
     }
 
     /**
@@ -275,7 +266,7 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public int getMinorVersion() {
-        return (Constants.MINOR_VERSION);
+        return Constants.MINOR_VERSION;
     }
 
     /**
@@ -284,10 +275,6 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public int getEffectiveMajorVersion() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getEffectiveMajorVersion();
     }
 
@@ -297,10 +284,6 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public int getEffectiveMinorVersion() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getEffectiveMinorVersion();
     }
 
@@ -803,10 +786,6 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getDefaultSessionTrackingModes();
     }
 
@@ -819,10 +798,6 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getEffectiveSessionTrackingModes();
     }
 
@@ -885,19 +860,11 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public JspConfigDescriptor getJspConfigDescriptor() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getJspConfigDescriptor();
     }
 
     @Override
     public ClassLoader getClassLoader() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getClassLoader();
     }
 
@@ -912,19 +879,11 @@ public class ApplicationContext implements ServletContext {
 
     @Override
     public String getVirtualServerName() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getVirtualServerName();
     }
 
     @Override
     public int getSessionTimeout() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getSessionTimeout();
     }
 
@@ -939,10 +898,6 @@ public class ApplicationContext implements ServletContext {
 
     @Override
     public String getRequestCharacterEncoding() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getRequestCharacterEncoding();
     }
 
@@ -957,10 +912,6 @@ public class ApplicationContext implements ServletContext {
 
     @Override
     public String getResponseCharacterEncoding() {
-        if (isRestricted) {
-            throw new UnsupportedOperationException(
-                    rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
-        }
         return context.getResponseCharacterEncoding();
     }
 
@@ -972,26 +923,6 @@ public class ApplicationContext implements ServletContext {
         }
         context.setResponseCharacterEncoding(encoding);
     }
-
-    // START PWC 1.2
-    /**
-     * Gets the underlying StandardContext to which this ApplicationContext is
-     * delegating.
-     *
-     * @return The underlying StandardContext
-     */
-    /*
-    public StandardContext getUnwrappedContext() {
-
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(GET_UNWRAPPED_CONTEXT_PERMISSION);
-        }
-
-        return this.context;
-    }
-    */
-    // END PWC 1.2
 
 
     // -------------------------------------------------------- Package Methods

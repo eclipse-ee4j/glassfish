@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -104,7 +105,7 @@ public class ApplicationPushBuilder implements PushBuilder {
         }
         if (current instanceof Request) {
             catalinaRequest = ((Request) current);
-            coyoteRequest = catalinaRequest.getCoyoteRequest();
+            coyoteRequest = catalinaRequest.getGrizzlyRequest();
         } else {
             String msg = MessageFormat.format(
                     rb.getString(LogFacade.NO_PUSH_COYOTE_REQUEST_EXCEPTION), current.getClass().getName());

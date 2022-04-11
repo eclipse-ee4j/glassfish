@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -20,18 +21,16 @@ package org.apache.catalina.connector;
 import java.io.IOException;
 
 /**
- * Wrap an IOException identifying it as being caused by an abort
- * of a request by a remote client.
+ * Wrap an IOException identifying it as being caused by an abort of a request by a remote client.
  *
  * @author Glenn L. Nielsen
  * @version $Revision: 1.3 $ $Date: 2005/12/08 01:27:28 $
  */
-
 public final class ClientAbortException extends IOException {
 
+    private static final long serialVersionUID = 1L;
 
-    //------------------------------------------------------------ Constructors
-
+    // ------------------------------------------------------------ Constructors
 
     /**
      * Construct a new ClientAbortException with no other information.
@@ -39,7 +38,6 @@ public final class ClientAbortException extends IOException {
     public ClientAbortException() {
         super();
     }
-
 
     /**
      * Construct a new ClientAbortException for the specified message.
@@ -50,7 +48,6 @@ public final class ClientAbortException extends IOException {
         super(message);
     }
 
-
     /**
      * Construct a new ClientAbortException for the specified throwable.
      *
@@ -60,10 +57,8 @@ public final class ClientAbortException extends IOException {
         super(throwable);
     }
 
-
     /**
-     * Construct a new ClientAbortException for the specified message
-     * and throwable.
+     * Construct a new ClientAbortException for the specified message and throwable.
      *
      * @param message Message describing this exception
      * @param throwable Throwable that caused this exception

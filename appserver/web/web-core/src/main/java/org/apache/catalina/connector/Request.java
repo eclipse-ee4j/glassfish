@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,6 +17,52 @@
  */
 
 package org.apache.catalina.connector;
+
+import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
+import static jakarta.servlet.DispatcherType.REQUEST;
+import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static jakarta.servlet.RequestDispatcher.INCLUDE_SERVLET_PATH;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.Globals.CERTIFICATES_ATTR;
+import static org.apache.catalina.Globals.CIPHER_SUITE_ATTR;
+import static org.apache.catalina.Globals.DISPATCHER_TYPE_ATTR;
+import static org.apache.catalina.Globals.ISO_8859_1_ENCODING;
+import static org.apache.catalina.Globals.JREPLICA_PARAMETER;
+import static org.apache.catalina.Globals.JREPLICA_SESSION_NOTE;
+import static org.apache.catalina.Globals.KEY_SIZE_ATTR;
+import static org.apache.catalina.Globals.REQUEST_FACADE_HELPER;
+import static org.apache.catalina.Globals.SESSION_COOKIE_NAME;
+import static org.apache.catalina.Globals.SESSION_VERSIONS_REQUEST_ATTRIBUTE;
+import static org.apache.catalina.Globals.SESSION_VERSION_COOKIE_NAME;
+import static org.apache.catalina.Globals.SESSION_VERSION_PARAMETER;
+import static org.apache.catalina.Globals.SSL_SESSION_ID_ATTR;
+import static org.apache.catalina.LogFacade.ALREADY_AUTHENTICATED;
+import static org.apache.catalina.LogFacade.ASYNC_ALREADY_COMPLETE_EXCEPTION;
+import static org.apache.catalina.LogFacade.ATTRIBUTE_EVENT_LISTENER_EXCEPTION;
+import static org.apache.catalina.LogFacade.BREAKING_BACKGROUND_LOCK_EXCEPTION;
+import static org.apache.catalina.LogFacade.GETINPUTSTREAM_BEEN_CALLED_EXCEPTION;
+import static org.apache.catalina.LogFacade.INTERNAL_LOGOUT_ERROR;
+import static org.apache.catalina.LogFacade.INVALID_URI_CHAR_ENCODING;
+import static org.apache.catalina.LogFacade.INVALID_URI_ENCODING;
+import static org.apache.catalina.LogFacade.LOGIN_WITH_AUTH_CONFIG;
+import static org.apache.catalina.LogFacade.NO_AUTHENTICATOR;
+import static org.apache.catalina.LogFacade.NULL_ATTRIBUTE_NAME_EXCEPTION;
+import static org.apache.catalina.LogFacade.REQUEST_CALLED_WITHOUT_MULTIPART_CONFIG_EXCEPTION;
+import static org.apache.catalina.LogFacade.REQUEST_NOT_PUT_INTO_ASYNC_MODE_EXCEPTION;
+import static org.apache.catalina.LogFacade.REQUEST_WITHIN_SCOPE_OF_FILTER_OR_SERVLET_EXCEPTION;
+import static org.apache.catalina.LogFacade.START_ASYNC_CALLED_AGAIN_EXCEPTION;
+import static org.apache.catalina.LogFacade.START_ASYNC_CALLED_OUTSIDE_SCOPE_EXCEPTION;
+import static org.apache.catalina.LogFacade.UNABLE_DETERMINE_CLIENT_ADDRESS;
+import static org.apache.catalina.LogFacade.UNABLE_PERFORM_ERROR_DISPATCH;
+import static org.apache.catalina.LogFacade.UNABLE_RESOLVE_IP_EXCEPTION;
+import static org.apache.catalina.LogFacade.UNABLE_SET_REQUEST_CHARS;
+import static org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE;
+import static org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE;
+import static org.apache.catalina.connector.Constants.AUTHORIZATION_HEADER;
+import static org.apache.catalina.connector.Constants.JROUTE_COOKIE;
 
 import java.io.BufferedReader;
 import java.io.CharConversionException;
@@ -35,44 +82,29 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
-import jakarta.servlet.AsyncContext;
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletConnection;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestAttributeEvent;
-import jakarta.servlet.ServletRequestAttributeListener;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpUpgradeHandler;
-import jakarta.servlet.http.Part;
-import jakarta.servlet.http.PushBuilder;
-import jakarta.servlet.http.WebConnection;
 
-import com.sun.appserv.ProxyHandler;
-import jakarta.servlet.http.MappingMatch;
-
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.apache.catalina.Context;
-import org.apache.catalina.LogFacade;
 import org.apache.catalina.Globals;
 import org.apache.catalina.Host;
 import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
+import org.apache.catalina.LogFacade;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Pipeline;
 import org.apache.catalina.Realm;
@@ -88,7 +120,9 @@ import org.apache.catalina.fileupload.Multipart;
 import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.session.PersistentManagerBase;
 import org.apache.catalina.session.StandardSession;
-import org.apache.catalina.util.*;
+import org.apache.catalina.util.Enumerator;
+import org.apache.catalina.util.ParameterMap;
+import org.apache.catalina.util.RequestUtil;
 import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.CompletionHandler;
 import org.glassfish.grizzly.EmptyCompletionHandler;
@@ -106,8 +140,31 @@ import org.glassfish.grizzly.http2.Http2Stream;
 import org.glassfish.grizzly.memory.Buffers;
 import org.glassfish.grizzly.utils.Charsets;
 import org.glassfish.web.valve.GlassFishValve;
+
+import com.sun.appserv.ProxyHandler;
+
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConnection;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestAttributeEvent;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletMapping;
-import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.http.Part;
+import jakarta.servlet.http.PushBuilder;
+import jakarta.servlet.http.WebConnection;
 
 /**
  * Wrapper object for the Coyote request.
@@ -117,8 +174,7 @@ import static com.sun.logging.LogCleanerUtil.getSafeHeaderValue;
  * @author Rajiv Mordani
  * @version $Revision: 1.67.2.9 $ $Date: 2008/04/17 18:37:34 $
  */
-public class Request
-        implements HttpRequest, HttpServletRequest {
+public class Request implements HttpRequest, HttpServletRequest {
 
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
@@ -127,214 +183,204 @@ public class Request
     /**
      * Descriptive information about this Request implementation.
      */
-    protected static final String info =
-            "org.apache.catalina.connector.Request/1.0";
+    protected static final String info = "org.apache.catalina.connector.Request/1.0";
 
     /**
      * Whether or not to enforce scope checking of this object.
      */
-    private static boolean enforceScope = false;
+    private static boolean enforceScope;
 
-    /**
-     * The notes key for the password used to authenticate this user.
-     */
-    private static final String SESS_PASSWORD_NOTE =
-      "org.apache.catalina.session.PASSWORD";
-
-
-    /**
-     * The notes key for the username used to authenticate this user.
-     */
-    private static final String SESS_USERNAME_NOTE =
-      "org.apache.catalina.session.USERNAME";
-
-    // END CR 6309511
-    // START OF SJSAS 6231069
-    /*
-    protected SimpleDateFormat formats[] = {
-    new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),
-    new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US),
-    new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US)
-    }*/
     /**
      * The set of SimpleDateFormat formats to use in getDateHeader().
      *
-     * Notice that because SimpleDateFormat is not thread-safe, we can't
-     * declare formats[] as a static variable.
+     * Notice that because SimpleDateFormat is not thread-safe, we can't declare formats[] as a static variable.
      */
-    private static ThreadLocal staticDateFormats = new ThreadLocal() {
+    private static ThreadLocal<Object> staticDateFormats = new ThreadLocal<>() {
 
         @Override
         protected Object initialValue() {
             SimpleDateFormat[] f = new SimpleDateFormat[3];
-            f[0] = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz",
-                    Locale.US);
-            f[1] = new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz",
-                    Locale.US);
+            f[0] = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+            f[1] = new SimpleDateFormat("EEEEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US);
             f[2] = new SimpleDateFormat("EEE MMMM d HH:mm:ss yyyy", Locale.US);
             return f;
         }
     };
     protected SimpleDateFormat formats[];
-    // END OF SJSAS 6231069
+
     /**
-     * ThreadLocal object to keep track of the reentrancy status of each thread.
-     * It contains a byte[] object whose single element is either 0 (initial
-     * value or no reentrancy), or 1 (current thread is reentrant). When a
-     * thread exits the implies method, byte[0] is alwasy reset to 0.
+     * ThreadLocal object to keep track of the reentrancy status of each thread. It contains a byte[] object whose single
+     * element is either 0 (initial value or no reentrancy), or 1 (current thread is reentrant). When a thread exits the
+     * implies method, byte[0] is alwasy reset to 0.
      */
-    private static ThreadLocal reentrancyStatus;
+    private static ThreadLocal<Object> reentrancyStatus = new ThreadLocal<>() {
+        @Override
+        protected synchronized Object initialValue() {
+            return new byte[] { 0 };
+        }
+    };
 
-    static {
-        reentrancyStatus = new ThreadLocal() {
-
-            @Override
-            protected synchronized Object initialValue() {
-                return new byte[]{0};
-            }
-        };
-    }
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * The set of cookies associated with this Request.
      */
-    protected ArrayList<Cookie> cookies = new ArrayList<Cookie>();
+    protected ArrayList<Cookie> cookies = new ArrayList<>();
+
     /**
      * The default Locale if none are specified.
      */
     protected static final Locale defaultLocale = Locale.getDefault();
+
     /**
      * The attributes associated with this Request, keyed by attribute name.
      */
-    protected Map<String, Object> attributes = new HashMap<String, Object>();
+    protected Map<String, Object> attributes = new HashMap<>();
+
     /**
      * The preferred Locales associated with this Request.
      */
-    protected ArrayList<Locale> locales = new ArrayList<Locale>();
+    protected ArrayList<Locale> locales = new ArrayList<>();
+
     /**
-     * Internal notes associated with this request by Catalina components
-     * and event listeners.
+     * Internal notes associated with this request by Catalina components and event listeners.
      */
-    private Map<String, Object> notes = new HashMap<String, Object>();
+    private Map<String, Object> notes = new HashMap<>();
+
     /**
      * Authentication type.
      */
-    protected String authType = null;
+    protected String authType;
+
     /**
      * The current dispatcher type.
      */
-    protected Object dispatcherTypeAttr = null;
+    protected Object dispatcherTypeAttr;
+
     /**
      * The associated input buffer.
      */
     protected InputBuffer inputBuffer = new InputBuffer();
+
     /**
      * ServletInputStream.
      */
-    protected CoyoteInputStream inputStream =
-            new CoyoteInputStream(inputBuffer);
+    protected CoyoteInputStream inputStream = new CoyoteInputStream(inputBuffer);
+
     /**
      * Reader.
      */
     protected CoyoteReader reader = new CoyoteReader(inputBuffer);
+
     /**
      * Using stream flag.
      */
-    protected boolean usingInputStream = false;
+    protected boolean usingInputStream;
+
     /**
      * Using writer flag.
      */
-    protected boolean usingReader = false;
+    protected boolean usingReader;
+
     /**
      * User principal.
      */
-    protected Principal userPrincipal = null;
+    protected Principal userPrincipal;
+
     /**
      * Session parsed flag.
      */
-    protected boolean sessionParsed = false;
+    protected boolean sessionParsed;
 
-    protected boolean parametersProcessed = false;
+    protected boolean parametersProcessed;
+
     /**
      * Cookies parsed flag.
      */
-    protected boolean cookiesParsed = false;
+    protected boolean cookiesParsed;
+
     /**
      * Secure flag.
      */
-    protected boolean secure = false;
+    protected boolean secure;
+
     /**
      * The Subject associated with the current AccessControllerContext
      */
-    protected Subject subject = null;
+    protected Subject subject;
     /**
      * Post data buffer.
      */
     protected static final int CACHED_POST_LEN = 8192;
-    protected byte[] postData = null;
+    protected byte[] postData;
     /**
      * Hash map used in the getParametersMap method.
      */
-    protected ParameterMap<String, String[]> parameterMap = new ParameterMap<String, String[]>();
+    protected ParameterMap<String, String[]> parameterMap = new ParameterMap<>();
+
     /**
      * The currently active session for this request.
      */
-    protected Session session = null;
+    protected Session session;
+
     /**
      * The current request dispatcher path.
      */
-    protected Object requestDispatcherPath = null;
+    protected Object requestDispatcherPath;
+
     /**
      * Was the requested session ID received in a cookie?
      */
-    protected boolean requestedSessionCookie = false;
+    protected boolean requestedSessionCookie;
+
     /**
      * The requested session ID (if any) for this request.
      */
-    protected String requestedSessionId = null;
+    protected String requestedSessionId;
 
     /**
      * The requested session version (if any) for this request.
      */
-    protected String requestedSessionVersion = null;
+    protected String requestedSessionVersion;
 
     private boolean isRequestedSessionIdFromSecureCookie;
 
-    // The requested session cookie path, see IT 7426
+    // The requested session cookie path
     protected String requestedSessionCookiePath;
 
     // Temporary holder for URI params from which session id is parsed
-    protected CharChunk uriParamsCC = new CharChunk();
+    protected CharChunk uriParamsCharChunk = new CharChunk();
+
     /**
      * Was the requested session ID received in a URL?
      */
-    protected boolean requestedSessionURL = false;
+    protected boolean requestedSessionURL;
+
     /**
      * The socket through which this Request was received.
      */
-    protected Socket socket = null;
+    protected Socket socket;
+
     /**
      * Parse locales.
      */
-    protected boolean localesParsed = false;
-    /**
-     * The string parser we will use for parsing request lines.
-     */
-    private StringParser parser = new StringParser();
+    protected boolean localesParsed;
+
     /**
      * Local port
      */
     protected int localPort = -1;
+
     /**
      * Remote address.
      */
-    protected String remoteAddr = null;
+    protected String remoteAddr;
+
     /**
      * Remote host.
      */
-    protected String remoteHost = null;
+    protected String remoteHost;
+
     /**
      * Remote port
      */
@@ -342,90 +388,83 @@ public class Request
     /**
      * Local address
      */
-    protected String localName = null;
+    protected String localName;
     /**
      * Local address
      */
-    protected String localAddr = null;
-    /** After the request is mapped to a ServletContext, we can also
-     * map it to a logger.
-     */
-    /* CR 6309511
-    protected Log log=null;
-     */
-    // START CR 6415120
+    protected String localAddr;
+
     /**
-     * Whether or not access to resources in WEB-INF or META-INF needs to be
-     * checked.
+     * Whether or not access to resources in WEB-INF or META-INF needs to be checked.
      */
     protected boolean checkRestrictedResources = true;
-    // END CR 6415120
+
     /**
      * has findSession been called and returned null already
      */
-    private boolean unsuccessfulSessionFind = false;
+    private boolean unsuccessfulSessionFind;
 
     /*
-     * Are we supposed to honor the unsuccessfulSessionFind flag?
-     * WS overrides this to false.
+     * Are we supposed to honor the unsuccessfulSessionFind flag? WS overrides this to false.
      */
     protected boolean checkUnsuccessfulSessionFind = true;
-    // START S1AS 4703023
+
     /**
      * The current application dispatch depth.
      */
     private int dispatchDepth = 0;
+
     /**
      * The maximum allowed application dispatch depth.
      */
     private static int maxDispatchDepth = Constants.DEFAULT_MAX_DISPATCH_DEPTH;
-    // END S1AS 4703023
-    // START SJSAS 6346226
     private String jrouteId;
-    // END SJSAS 6346226
-    // START GlassFish 896
     private SessionTracker sessionTracker = new SessionTracker();
-    // END GlassFish 896
-    // START GlassFish 1024
-    private boolean isDefaultContext = false;
-    // END GlassFish 1024
-    private String requestURI = null;
+    private boolean isDefaultContext;
+    private String requestURI;
+
     /**
-     * Coyote request.
+     * Grizzly request.
      */
-    protected org.glassfish.grizzly.http.server.Request coyoteRequest;
+    protected org.glassfish.grizzly.http.server.Request grizzlyRequest;
+
     /**
      * The facade associated with this request.
      */
-    protected RequestFacade facade = null;
+    protected RequestFacade facade;
+
     /**
-     * Request facade that masks the fact that a request received
-     * at the root context was mapped to a default-web-module (if such a
-     * mapping exists).
-     * For example, its getContextPath() will return "/" rather than the
-     * context root of the default-web-module.
+     * Request facade that masks the fact that a request received at the root context was mapped to a default-web-module (if
+     * such a mapping exists). For example, its getContextPath() will return "/" rather than the context root of the
+     * default-web-module.
      */
-    protected RequestFacade defaultContextMaskingFacade = null;
+    protected RequestFacade defaultContextMaskingFacade;
+
     /**
      * The response with which this request is associated.
      */
-    protected org.apache.catalina.Response response = null;
+    protected org.apache.catalina.Response response;
+
     /**
      * Associated Catalina connector.
      */
     protected org.apache.catalina.Connector connector;
+
     /**
      * Mapping data.
      */
     protected MappingData mappingData = new MappingData();
+
     /**
      * Associated wrapper.
      */
-    protected Wrapper wrapper = null;
+    protected Wrapper wrapper;
+
     /**
      * Filter chain associated with the request.
      */
-    protected FilterChain filterChain = null;
+    protected FilterChain filterChain;
+
     /**
      * Async operation
      */
@@ -441,11 +480,12 @@ public class Request
      * Multi-Part support
      */
     private Multipart multipart;
+
     /**
      * Associated context.
      */
-    protected Context context = null;
-    protected ServletContext servletContext = null;
+    protected Context context;
+    protected ServletContext servletContext;
     // Associated StandardHost valve for error dispatches
     protected GlassFishValve hostValve;
 
@@ -456,19 +496,17 @@ public class Request
     private String servletPath;
     private String pathInfo;
 
-    private boolean initRequestFacadeHelper = false;
+    private boolean initRequestFacadeHelper;
 
     // Allow Grizzly to auto detect a remote close connection.
-    public final static boolean discardDisconnectEvent =
-            Boolean.getBoolean("org.glassfish.grizzly.discardDisconnect");
+    public final static boolean discardDisconnectEvent = Boolean.getBoolean("org.glassfish.grizzly.discardDisconnect");
 
     /*
      * An upgrade request is received
      */
-    private boolean upgrade = false;
-
-    private boolean afterService = false;
-    private boolean resume = false;
+    private boolean upgrade;
+    private boolean afterService;
+    private boolean resume;
 
     /*
      * The HttpUpgradeHandler to be used for upgrade request
@@ -480,15 +518,12 @@ public class Request
      */
     private WebConnection webConnection;
 
-
     // ----------------------------------------------------------- Constructor
     public Request() {
-        // START OF SJSAS 6231069
         formats = (SimpleDateFormat[]) staticDateFormats.get();
         formats[0].setTimeZone(TimeZone.getTimeZone("GMT"));
         formats[1].setTimeZone(TimeZone.getTimeZone("GMT"));
         formats[2].setTimeZone(TimeZone.getTimeZone("GMT"));
-        // END OF SJSAS 6231069
     }
 
     // --------------------------------------------------------- Public Methods
@@ -497,8 +532,8 @@ public class Request
      *
      * @param grizzlyRequest The Coyote request
      */
-    public void setCoyoteRequest(org.glassfish.grizzly.http.server.Request grizzlyRequest) {
-        this.coyoteRequest = grizzlyRequest;
+    public void setGrizzlyRequest(org.glassfish.grizzly.http.server.Request grizzlyRequest) {
+        this.grizzlyRequest = grizzlyRequest;
         inputBuffer.setRequest(grizzlyRequest);
         inputBuffer.setRequest(this);
     }
@@ -506,8 +541,8 @@ public class Request
     /**
      * Get the Coyote request.
      */
-    public org.glassfish.grizzly.http.server.Request getCoyoteRequest() {
-        return this.coyoteRequest;
+    public org.glassfish.grizzly.http.server.Request getGrizzlyRequest() {
+        return this.grizzlyRequest;
     }
 
     /**
@@ -518,12 +553,10 @@ public class Request
     }
 
     /**
-     * Release all object references, and initialize instance variables, in
-     * preparation for reuse of this object.
+     * Release all object references, and initialize instance variables, in preparation for reuse of this object.
      */
     @Override
     public void recycle() {
-
         if (isAsyncStarted()) {
             return;
         }
@@ -577,16 +610,13 @@ public class Request
         requestedSessionId = null;
         requestedSessionCookiePath = null;
         requestedSessionURL = false;
-        uriParamsCC.recycle();
-
-        // START GlassFish 896
+        uriParamsCharChunk.recycle();
         sessionTracker.reset();
-        // END GlassFish 896
 
-        /* CR 6309511
-        log = null;
+        /*
+         * CR 6309511 log = null;
          */
-        dispatchDepth = 0; // S1AS 4703023
+        dispatchDepth = 0;
 
         parameterMap.setLocked(false);
         parameterMap.clear();
@@ -659,7 +689,7 @@ public class Request
      */
     @Override
     public String getAuthorization() {
-        return coyoteRequest.getHeader(Constants.AUTHORIZATION_HEADER);
+        return grizzlyRequest.getHeader(AUTHORIZATION_HEADER);
     }
 
     /**
@@ -689,10 +719,9 @@ public class Request
     }
 
     /**
-     * Set the Context within which this Request is being processed.  This
-     * must be called as soon as the appropriate Context is identified, because
-     * it identifies the value to be returned by <code>getContextPath()</code>,
-     * and thus enables parsing of the request URI.
+     * Set the Context within which this Request is being processed. This must be called as soon as the appropriate Context
+     * is identified, because it identifies the value to be returned by <code>getContextPath()</code>, and thus enables
+     * parsing of the request URI.
      *
      * @param context The newly associated Context
      */
@@ -716,26 +745,22 @@ public class Request
                     if (resEncoding != null) {
                         getResponse().getResponse().setCharacterEncoding(resEncoding);
                     }
-                } catch(UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
-        // START GlassFish 896
+
         initSessionTracker();
-        // END GlassFish 896
     }
 
-    // START GlassFish 1024
     /**
-     * @param isDefaultContext true if this request was mapped to a context
-     * with an empty context root that is backed by the vitual server's
-     * default-web-module
+     * @param isDefaultContext true if this request was mapped to a context with an empty context root that is backed by the
+     * vitual server's default-web-module
      */
     public void setDefaultContext(boolean isDefaultContext) {
         this.isDefaultContext = isDefaultContext;
     }
-    // END GlassFish 1024
 
     /**
      * Get filter chain associated with the request.
@@ -764,9 +789,8 @@ public class Request
     }
 
     /**
-     * Set the Host within which this Request is being processed.  This
-     * must be called as soon as the appropriate Host is identified, and
-     * before the Request is passed to a context.
+     * Set the Host within which this Request is being processed. This must be called as soon as the appropriate Host is
+     * identified, and before the Request is passed to a context.
      *
      * @param host The newly associated Host
      */
@@ -776,8 +800,7 @@ public class Request
     }
 
     /**
-     * Return descriptive information about this Request implementation and
-     * the corresponding version number, in the format
+     * Return descriptive information about this Request implementation and the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
     @Override
@@ -787,11 +810,9 @@ public class Request
 
     @Override
     public HttpServletMapping getHttpServletMapping() {
-        HttpServletMapping result;
-
-        result = new MappingImpl(mappingData);
-        return result;
+        return new MappingImpl(mappingData);
     }
+
     /**
      * Return mapping data.
      */
@@ -807,27 +828,23 @@ public class Request
     }
 
     /**
-     * Update this instance with the content of the {@link MappingData}
-     * {@link MappingData}
+     * Update this instance with the content of the {@link MappingData} {@link MappingData}
      */
-    public void updatePaths(MappingData md) {
+    public void updatePaths(MappingData mappingData) {
         /*
-         * Save the path components of this request, in order for them to
-         * survive when the mapping data get recycled as the request
-         * returns to the container after it has been put into async mode.
-         * This is required to satisfy the requirements of subsequent async
-         * dispatches (or error dispatches, if the async operation times out,
-         * and no async listeners have been registered that could be notified
-         * at their onTimeout method)
+         * Save the path components of this request, in order for them to survive when the mapping data get recycled as the
+         * request returns to the container after it has been put into async mode. This is required to satisfy the requirements
+         * of subsequent async dispatches (or error dispatches, if the async operation times out, and no async listeners have
+         * been registered that could be notified at their onTimeout method)
          */
-        pathInfo = md.pathInfo.toString();
-        servletPath = md.wrapperPath.toString();
-        contextPath = md.contextPath.toString();
+        pathInfo = mappingData.pathInfo.toString();
+        servletPath = mappingData.wrapperPath.toString();
+        contextPath = mappingData.contextPath.toString();
     }
 
     /**
-     * Gets the <code>ServletRequest</code> for which this object
-     * is the facade. This method must be implemented by a subclass.
+     * Gets the <code>ServletRequest</code> for which this object is the facade. This method must be implemented by a
+     * subclass.
      */
     @Override
     public HttpServletRequest getRequest() {
@@ -835,12 +852,11 @@ public class Request
     }
 
     /**
-     * Gets the <code>ServletRequest</code> for which this object
-     * is the facade. This method must be implemented by a subclass.
+     * Gets the <code>ServletRequest</code> for which this object is the facade. This method must be implemented by a
+     * subclass.
      *
-     * @param maskDefaultContextMapping true if the fact that a request
-     * received at the root context was mapped to a default-web-module will
-     * be masked, false otherwise
+     * @param maskDefaultContextMapping true if the fact that a request received at the root context was mapped to a
+     * default-web-module will be masked, false otherwise
      */
     @Override
     public HttpServletRequest getRequest(boolean maskDefaultContextMapping) {
@@ -850,24 +866,23 @@ public class Request
             }
 
             if (!initRequestFacadeHelper) {
-                attributes.put(Globals.REQUEST_FACADE_HELPER,
-                        facade.getRequestFacadeHelper());
+                attributes.put(REQUEST_FACADE_HELPER, facade.getRequestFacadeHelper());
                 initRequestFacadeHelper = true;
             }
+
             return facade;
-        } else {
-            if (defaultContextMaskingFacade == null) {
-                defaultContextMaskingFacade = new RequestFacade(this, true);
-            }
-
-            if (!initRequestFacadeHelper) {
-                attributes.put(Globals.REQUEST_FACADE_HELPER,
-                        defaultContextMaskingFacade.getRequestFacadeHelper());
-                initRequestFacadeHelper = true;
-            }
-
-            return defaultContextMaskingFacade;
         }
+
+        if (defaultContextMaskingFacade == null) {
+            defaultContextMaskingFacade = new RequestFacade(this, true);
+        }
+
+        if (!initRequestFacadeHelper) {
+            attributes.put(REQUEST_FACADE_HELPER, defaultContextMaskingFacade.getRequestFacadeHelper());
+            initRequestFacadeHelper = true;
+        }
+
+        return defaultContextMaskingFacade;
     }
 
     /**
@@ -875,7 +890,7 @@ public class Request
      */
     @Override
     public org.apache.catalina.Response getResponse() {
-        return this.response;
+        return response;
     }
 
     /**
@@ -892,10 +907,8 @@ public class Request
     }
 
     /**
-     * Return the Socket (if any) through which this Request was received.
-     * This should <strong>only</strong> be used to access underlying state
-     * information about this Socket, such as the SSLSession associated with
-     * an SSLSocket.
+     * Return the Socket (if any) through which this Request was received. This should <strong>only</strong> be used to
+     * access underlying state information about this Socket, such as the SSLSession associated with an SSLSocket.
      */
     @Override
     public Socket getSocket() {
@@ -938,6 +951,7 @@ public class Request
     public void setStream(InputStream stream) {
         // Ignore
     }
+
     /**
      * URI byte to char converter (not recycled).
      */
@@ -968,9 +982,9 @@ public class Request
     }
 
     /**
-     * Set the Wrapper within which this Request is being processed.  This
-     * must be called as soon as the appropriate Wrapper is identified, and
-     * before the Request is ultimately passed to an application servlet.
+     * Set the Wrapper within which this Request is being processed. This must be called as soon as the appropriate Wrapper
+     * is identified, and before the Request is ultimately passed to an application servlet.
+     *
      * @param wrapper The newly associated Wrapper
      */
     @Override
@@ -980,14 +994,12 @@ public class Request
 
     // ------------------------------------------------- Request Public Methods
     /**
-     * Create and return a ServletInputStream to read the content
-     * associated with this Request.
+     * Create and return a ServletInputStream to read the content associated with this Request.
      *
      * @exception IOException if an input/output error occurs
      */
     @Override
-    public ServletInputStream createInputStream()
-            throws IOException {
+    public ServletInputStream createInputStream() throws IOException {
         if (inputStream == null) {
             inputStream = new CoyoteInputStream(inputBuffer);
         }
@@ -995,8 +1007,7 @@ public class Request
     }
 
     /**
-     * Perform whatever actions are required to flush and close the input
-     * stream or reader, in a single operation.
+     * Perform whatever actions are required to flush and close the input stream or reader, in a single operation.
      *
      * @exception IOException if an input/output error occurs
      */
@@ -1006,8 +1017,8 @@ public class Request
     }
 
     /**
-     * Return the object bound with the specified name to the internal notes
-     * for this request, or <code>null</code> if no such binding exists.
+     * Return the object bound with the specified name to the internal notes for this request, or <code>null</code> if no
+     * such binding exists.
      *
      * @param name Name of the note to be returned
      */
@@ -1017,8 +1028,7 @@ public class Request
     }
 
     /**
-     * Return an Iterator containing the String names of all notes bindings
-     * that exist for this request.
+     * Return an Iterator containing the String names of all notes bindings that exist for this request.
      */
     @Override
     public Iterator<String> getNoteNames() {
@@ -1026,8 +1036,7 @@ public class Request
     }
 
     /**
-     * Remove any object bound to the specified name in the internal notes
-     * for this request.
+     * Remove any object bound to the specified name in the internal notes for this request.
      *
      * @param name Name of the note to be removed
      */
@@ -1037,8 +1046,8 @@ public class Request
     }
 
     /**
-     * Bind an object to a specified name in the internal notes associated
-     * with this request, replacing any existing binding for this name.
+     * Bind an object to a specified name in the internal notes associated with this request, replacing any existing binding
+     * for this name.
      *
      * @param name Name to which the object should be bound
      * @param value Object to be bound to the specified name
@@ -1055,12 +1064,11 @@ public class Request
      */
     @Override
     public void setContentLength(int length) {
-        coyoteRequest.getRequest().setContentLength(length);
+        grizzlyRequest.getRequest().setContentLength(length);
     }
 
     /**
-     * Set the content type (and optionally the character encoding)
-     * associated with this Request.  For example,
+     * Set the content type (and optionally the character encoding) associated with this Request. For example,
      * <code>text/html; charset=ISO-8859-4</code>.
      *
      * @param type The new content type
@@ -1091,8 +1099,7 @@ public class Request
     }
 
     /**
-     * Set the fully qualified name of the remote client associated with this
-     * Request.
+     * Set the fully qualified name of the remote client associated with this Request.
      *
      * @param remoteHost The remote host name
      */
@@ -1101,8 +1108,7 @@ public class Request
     }
 
     /**
-     * Set the value to be returned by <code>isSecure()</code>
-     * for this Request.
+     * Set the value to be returned by <code>isSecure()</code> for this Request.
      *
      * @param secure The new isSecure value
      */
@@ -1118,7 +1124,7 @@ public class Request
      */
     @Override
     public void setServerName(String name) {
-        coyoteRequest.setServerName(name);
+        grizzlyRequest.setServerName(name);
     }
 
     /**
@@ -1128,13 +1134,11 @@ public class Request
      */
     @Override
     public void setServerPort(int port) {
-        coyoteRequest.setServerPort(port);
+        grizzlyRequest.setServerPort(port);
     }
 
-    // START CR 6415120
     /**
-     * Set whether or not access to resources under WEB-INF or META-INF
-     * needs to be checked.
+     * Set whether or not access to resources under WEB-INF or META-INF needs to be checked.
      */
     @Override
     public void setCheckRestrictedResources(boolean check) {
@@ -1142,100 +1146,79 @@ public class Request
     }
 
     /**
-     * Return whether or not access to resources under WEB-INF or META-INF
-     * needs to be checked.
+     * Return whether or not access to resources under WEB-INF or META-INF needs to be checked.
      */
     @Override
     public boolean getCheckRestrictedResources() {
         return this.checkRestrictedResources;
     }
-    // END CR 6415120
 
     // ------------------------------------------------- ServletRequest Methods
     /**
-     * Return the specified request attribute if it exists; otherwise, return
-     * <code>null</code>.
+     * Return the specified request attribute if it exists; otherwise, return <code>null</code>.
      *
      * @param name Name of the request attribute to return
      */
     @Override
     public Object getAttribute(String name) {
 
-        if (name.equals(Globals.DISPATCHER_TYPE_ATTR)) {
-            return dispatcherTypeAttr == null
-                    ? DispatcherType.REQUEST
-                    : dispatcherTypeAttr;
-        } else if (name.equals(Globals.DISPATCHER_REQUEST_PATH_ATTR)) {
-            return requestDispatcherPath == null
-                    ? getRequestPathMB().toString()
-                    : requestDispatcherPath.toString();
-        } else if (name.equals(Globals.CONSTRAINT_URI)) {
-            return getRequestPathMB() != null
-                    ? getRequestPathMB().toString() : null;
+        if (name.equals(DISPATCHER_TYPE_ATTR)) {
+            return dispatcherTypeAttr == null ? REQUEST : dispatcherTypeAttr;
         }
 
-        Object attr = attributes.get(name);
-
-        if (attr != null) {
-            return attr;
+        if (name.equals(Globals.DISPATCHER_REQUEST_PATH_ATTR)) {
+            return requestDispatcherPath == null ? getRequestPathMB().toString() : requestDispatcherPath.toString();
         }
 
-        attr = coyoteRequest.getAttribute(name);
-        if (attr != null) {
-            return attr;
+        if (name.equals(Globals.CONSTRAINT_URI)) {
+            return getRequestPathMB() != null ? getRequestPathMB().toString() : null;
         }
+
+        Object attribute = attributes.get(name);
+
+        if (attribute != null) {
+            return attribute;
+        }
+
+        attribute = grizzlyRequest.getAttribute(name);
+        if (attribute != null) {
+            return attribute;
+        }
+
         if (Globals.SSL_CERTIFICATE_ATTR.equals(name)) {
             // @TODO Implement SSL rehandshake
-            RequestUtils.populateCertificateAttribute(coyoteRequest);
-            attr = getAttribute(Globals.CERTIFICATES_ATTR);
-            if (attr != null) {
-                attributes.put(name, attr);
+            RequestUtils.populateCertificateAttribute(grizzlyRequest);
+            attribute = getAttribute(CERTIFICATES_ATTR);
+            if (attribute != null) {
+                attributes.put(name, attribute);
             }
         } else if (isSSLAttribute(name)) {
-            /* SJSAS 6419950
-            coyoteRequest.action(ActionCode.ACTION_REQ_SSL_ATTRIBUTE,
-            coyoteRequest);
-            attr = coyoteRequest.getAttribute(Globals.CERTIFICATES_ATTR);
-            if( attr != null) {
-            attributes.put(Globals.CERTIFICATES_ATTR, attr);
-            }
-            attr = coyoteRequest.getAttribute(Globals.CIPHER_SUITE_ATTR);
-            if(attr != null) {
-            attributes.put(Globals.CIPHER_SUITE_ATTR, attr);
-            }
-            attr = coyoteRequest.getAttribute(Globals.KEY_SIZE_ATTR);
-            if(attr != null) {
-            attributes.put(Globals.KEY_SIZE_ATTR, attr);
-            }
-             */
-            // START SJSAS 6419950
-            RequestUtils.populateSSLAttributes(coyoteRequest);
-            // END SJSAS 6419950
-            attr = attributes.get(name);
+            RequestUtils.populateSSLAttributes(grizzlyRequest);
+            attribute = attributes.get(name);
         }
-        return attr;
+
+        return attribute;
     }
 
     /**
      * Test if a given name is one of the special Servlet-spec SSL attributes.
      */
     static boolean isSSLAttribute(String name) {
-        return Globals.CERTIFICATES_ATTR.equals(name) ||
-                Globals.CIPHER_SUITE_ATTR.equals(name) ||
-                Globals.KEY_SIZE_ATTR.equals(name) ||
-                Globals.SSL_SESSION_ID_ATTR.equals(name);
+        return
+            CERTIFICATES_ATTR.equals(name) || CIPHER_SUITE_ATTR.equals(name) ||
+            KEY_SIZE_ATTR.equals(name) || SSL_SESSION_ID_ATTR.equals(name);
     }
 
     /**
-     * Return the names of all request attributes for this Request, or an
-     * empty <code>Enumeration</code> if there are none.
+     * Return the names of all request attributes for this Request, or an empty <code>Enumeration</code> if there are none.
      */
     @Override
     public Enumeration<String> getAttributeNames() {
         if (isSecure()) {
             populateSSLAttributes();
         }
-        return new Enumerator<String>(attributes.keySet(), true);
+
+        return new Enumerator<>(attributes.keySet(), true);
     }
 
     /**
@@ -1243,7 +1226,7 @@ public class Request
      */
     @Override
     public String getCharacterEncoding() {
-        return coyoteRequest.getCharacterEncoding();
+        return grizzlyRequest.getCharacterEncoding();
     }
 
     /**
@@ -1251,7 +1234,7 @@ public class Request
      */
     @Override
     public int getContentLength() {
-        return coyoteRequest.getContentLength();
+        return grizzlyRequest.getContentLength();
     }
 
     /**
@@ -1259,7 +1242,7 @@ public class Request
      */
     @Override
     public long getContentLengthLong() {
-        return coyoteRequest.getContentLengthLong();
+        return grizzlyRequest.getContentLengthLong();
     }
 
     /**
@@ -1267,21 +1250,18 @@ public class Request
      */
     @Override
     public String getContentType() {
-        return coyoteRequest.getContentType();
+        return grizzlyRequest.getContentType();
     }
 
     /**
-     * Return the servlet input stream for this Request.  The default
-     * implementation returns a servlet input stream created by
-     * <code>createInputStream()</code>.
+     * Return the servlet input stream for this Request. The default implementation returns a servlet input stream created
+     * by <code>createInputStream()</code>.
      *
-     * @exception IllegalStateException if <code>getReader()</code> has
-     *  already been called for this request
+     * @exception IllegalStateException if <code>getReader()</code> has already been called for this request
      * @exception IOException if an input/output error occurs
      */
     @Override
     public ServletInputStream getInputStream() throws IOException {
-
         if (usingReader) {
             throw new IllegalStateException(rb.getString(LogFacade.GETREADER_BEEN_CALLED_EXCEPTION));
         }
@@ -1290,106 +1270,74 @@ public class Request
         if (inputStream == null) {
             inputStream = new CoyoteInputStream(inputBuffer);
         }
-        return inputStream;
 
+        return inputStream;
     }
 
     /**
-     * Return the preferred Locale that the client will accept content in,
-     * based on the value for the first <code>Accept-Language</code> header
-     * that was encountered.  If the request did not specify a preferred
-     * language, the server's default Locale is returned.
+     * Return the preferred Locale that the client will accept content in, based on the value for the first
+     * <code>Accept-Language</code> header that was encountered. If the request did not specify a preferred language, the
+     * server's default Locale is returned.
      */
     @Override
     public Locale getLocale() {
-        return coyoteRequest.getLocale();
-//        if (!localesParsed) {
-//            parseLocales();
-//        }
-//
-//        if (locales.size() > 0) {
-//            return locales.get(0);
-//        } else {
-//            return defaultLocale;
-//        }
-
+        return grizzlyRequest.getLocale();
     }
 
     /**
-     * Return the set of preferred Locales that the client will accept
-     * content in, based on the values for any <code>Accept-Language</code>
-     * headers that were encountered.  If the request did not specify a
-     * preferred language, the server's default Locale is returned.
+     * Return the set of preferred Locales that the client will accept content in, based on the values for any
+     * <code>Accept-Language</code> headers that were encountered. If the request did not specify a preferred language, the
+     * server's default Locale is returned.
      */
     @Override
     public Enumeration<Locale> getLocales() {
-        return new Enumerator<Locale>(coyoteRequest.getLocales());
-//        if (!localesParsed) {
-//            parseLocales();
-//        }
-//
-//        if (locales.size() > 0) {
-//            return (new Enumerator<Locale>(locales));
-//        }
-//        ArrayList<Locale> results = new ArrayList<Locale>();
-//        results.add(defaultLocale);
-//        return (new Enumerator<Locale>(results));
+        return new Enumerator<>(grizzlyRequest.getLocales());
     }
 
     private void processParameters() {
         if (parametersProcessed) {
             return;
         }
+
         getCharacterEncoding();
         if (isMultipartConfigured() && getMethod().equalsIgnoreCase("POST")) {
             String contentType = getContentType();
-            if (contentType != null &&
-                        contentType.startsWith("multipart/form-data")) {
+            if (contentType != null && contentType.startsWith("multipart/form-data")) {
                 getMultipart().init();
             }
         }
+
         parametersProcessed = true;
     }
 
     /**
-     * Return the value of the specified request parameter, if any; otherwise,
-     * return <code>null</code>.  If there is more than one value defined,
-     * return only the first one.
+     * Return the value of the specified request parameter, if any; otherwise, return <code>null</code>. If there is more
+     * than one value defined, return only the first one.
      *
      * @param name Name of the desired request parameter
      */
     @Override
     public String getParameter(String name) {
-
-/*
-        if (!requestParametersParsed) {
-            parseRequestParameters();
-        }
-*/
         processParameters();
 
-        return coyoteRequest.getParameter(name);
+        return grizzlyRequest.getParameter(name);
     }
 
     /**
-     * Returns a <code>Map</code> of the parameters of this request.
-     * Request parameters are extra information sent with the request.
-     * For HTTP servlets, parameters are contained in the query string
-     * or posted form data.
+     * Returns a <code>Map</code> of the parameters of this request. Request parameters are extra information sent with the
+     * request. For HTTP servlets, parameters are contained in the query string or posted form data.
      *
-     * @return A <code>Map</code> containing parameter names as keys
-     *  and parameter values as map values.
+     * @return A <code>Map</code> containing parameter names as keys and parameter values as map values.
      */
     @Override
     public Map<String, String[]> getParameterMap() {
-
         if (parameterMap.isLocked()) {
             return parameterMap;
         }
 
-        Enumeration<String> e = getParameterNames();
-        while (e.hasMoreElements()) {
-            String name = e.nextElement();
+        Enumeration<String> paramaterNames = getParameterNames();
+        while (paramaterNames.hasMoreElements()) {
+            String name = paramaterNames.nextElement();
             String[] values = getParameterValues(name);
             parameterMap.put(name, values);
         }
@@ -1397,7 +1345,6 @@ public class Request
         parameterMap.setLocked(true);
 
         return parameterMap;
-
     }
 
     /**
@@ -1405,32 +1352,21 @@ public class Request
      */
     @Override
     public Enumeration<String> getParameterNames() {
-/*
-        if (!requestParametersParsed) {
-            parseRequestParameters();
-        }
-*/
         processParameters();
 
-        return new Enumerator<String>(coyoteRequest.getParameterNames());
+        return new Enumerator<>(grizzlyRequest.getParameterNames());
     }
 
     /**
-     * Return the defined values for the specified request parameter, if any;
-     * otherwise, return <code>null</code>.
+     * Return the defined values for the specified request parameter, if any; otherwise, return <code>null</code>.
      *
      * @param name Name of the desired request parameter
      */
     @Override
     public String[] getParameterValues(String name) {
-/*
-        if (!requestParametersParsed) {
-            parseRequestParameters();
-        }
-*/
         processParameters();
 
-        return coyoteRequest.getParameterValues(name);
+        return grizzlyRequest.getParameterValues(name);
     }
 
     /**
@@ -1438,31 +1374,27 @@ public class Request
      */
     @Override
     public String getProtocol() {
-        return coyoteRequest.getProtocol().getProtocolString();
+        return grizzlyRequest.getProtocol().getProtocolString();
     }
 
     /**
-     * Read the Reader wrapping the input stream for this Request.  The
-     * default implementation wraps a <code>BufferedReader</code> around the
-     * servlet input stream returned by <code>createInputStream()</code>.
+     * Read the Reader wrapping the input stream for this Request. The default implementation wraps a
+     * <code>BufferedReader</code> around the servlet input stream returned by <code>createInputStream()</code>.
      *
-     * @exception IllegalStateException if <code>getInputStream()</code>
-     *  has already been called for this request
+     * @exception IllegalStateException if <code>getInputStream()</code> has already been called for this request
      * @exception IOException if an input/output error occurs
      */
     @Override
     public BufferedReader getReader() throws IOException {
-
         if (usingInputStream) {
-            throw new IllegalStateException(rb.getString(LogFacade.GETINPUTSTREAM_BEEN_CALLED_EXCEPTION));
+            throw new IllegalStateException(rb.getString(GETINPUTSTREAM_BEEN_CALLED_EXCEPTION));
         }
 
         usingReader = true;
         try {
             inputBuffer.checkConverter();
         } catch (UnsupportedCharsetException uce) {
-            UnsupportedEncodingException uee =
-                    new UnsupportedEncodingException(uce.getMessage());
+            UnsupportedEncodingException uee = new UnsupportedEncodingException(uce.getMessage());
             uee.initCause(uce);
             throw uee;
         }
@@ -1470,6 +1402,7 @@ public class Request
         if (reader == null) {
             reader = new CoyoteReader(inputBuffer);
         }
+
         return reader;
     }
 
@@ -1480,25 +1413,22 @@ public class Request
     public String getRemoteAddr() {
         if (remoteAddr == null) {
 
-            // START SJSAS 6347215
             if (connector.getAuthPassthroughEnabled() && connector.getProxyHandler() != null) {
-                remoteAddr = connector.getProxyHandler().getRemoteAddress(
-                        getRequest());
-                if (remoteAddr == null && log.isLoggable(Level.FINEST)) {
-                    log.log(Level.FINEST, LogFacade.UNABLE_DETERMINE_CLIENT_ADDRESS);
+                remoteAddr = connector.getProxyHandler().getRemoteAddress(getRequest());
+                if (remoteAddr == null && log.isLoggable(FINEST)) {
+                    log.log(FINEST, UNABLE_DETERMINE_CLIENT_ADDRESS);
                 }
                 return remoteAddr;
             }
-            // END SJSAS 6347215
 
             if (socket != null) {
                 InetAddress inet = socket.getInetAddress();
                 remoteAddr = inet.getHostAddress();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_HOST_ADDR_ATTRIBUTE, coyoteRequest);
-                remoteAddr = coyoteRequest.getRemoteAddr();
+                remoteAddr = grizzlyRequest.getRemoteAddr();
             }
         }
+
         return remoteAddr;
     }
 
@@ -1510,35 +1440,31 @@ public class Request
         if (remoteHost == null) {
             if (!connector.getEnableLookups()) {
                 remoteHost = getRemoteAddr();
-                // START SJSAS 6347215
             } else if (connector.getAuthPassthroughEnabled() && connector.getProxyHandler() != null) {
-                String addr =
-                        connector.getProxyHandler().getRemoteAddress(getRequest());
+                String addr = connector.getProxyHandler().getRemoteAddress(getRequest());
                 if (addr != null) {
                     try {
                         remoteHost = InetAddress.getByName(addr).getHostName();
                     } catch (UnknownHostException e) {
-                        String msg = MessageFormat.format(rb.getString(LogFacade.UNABLE_RESOLVE_IP_EXCEPTION), addr);
-                        log.log(Level.WARNING, msg, e);
+                        String msg = MessageFormat.format(rb.getString(UNABLE_RESOLVE_IP_EXCEPTION), addr);
+                        log.log(WARNING, msg, e);
                     }
-                } else if (log.isLoggable(Level.FINEST)) {
-                    log.log(Level.FINEST, LogFacade.UNABLE_DETERMINE_CLIENT_ADDRESS);
+                } else if (log.isLoggable(FINEST)) {
+                    log.log(FINEST, UNABLE_DETERMINE_CLIENT_ADDRESS);
                 }
-                // END SJSAS 6347215
             } else if (socket != null) {
                 InetAddress inet = socket.getInetAddress();
                 remoteHost = inet.getHostName();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_HOST_ATTRIBUTE, coyoteRequest);
-                remoteHost = coyoteRequest.getRemoteHost();
+                remoteHost = grizzlyRequest.getRemoteHost();
             }
         }
+
         return remoteHost;
     }
 
     /**
-     * Returns the Internet Protocol (IP) source port of the client
-     * or last proxy that sent the request.
+     * Returns the Internet Protocol (IP) source port of the client or last proxy that sent the request.
      */
     @Override
     public int getRemotePort() {
@@ -1546,16 +1472,15 @@ public class Request
             if (socket != null) {
                 remotePort = socket.getPort();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_REMOTEPORT_ATTRIBUTE, coyoteRequest);
-                remotePort = coyoteRequest.getRemotePort();
+                remotePort = grizzlyRequest.getRemotePort();
             }
         }
+
         return remotePort;
     }
 
     /**
-     * Returns the host name of the Internet Protocol (IP) interface on
-     * which the request was received.
+     * Returns the host name of the Internet Protocol (IP) interface on which the request was received.
      */
     @Override
     public String getLocalName() {
@@ -1564,16 +1489,15 @@ public class Request
                 InetAddress inet = socket.getLocalAddress();
                 localName = inet.getHostName();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_LOCAL_NAME_ATTRIBUTE, coyoteRequest);
-                localName = coyoteRequest.getLocalName();
+                localName = grizzlyRequest.getLocalName();
             }
         }
+
         return localName;
     }
 
     /**
-     * Returns the Internet Protocol (IP) address of the interface on
-     * which the request  was received.
+     * Returns the Internet Protocol (IP) address of the interface on which the request was received.
      */
     @Override
     public String getLocalAddr() {
@@ -1582,16 +1506,15 @@ public class Request
                 InetAddress inet = socket.getLocalAddress();
                 localAddr = inet.getHostAddress();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_LOCAL_ADDR_ATTRIBUTE, coyoteRequest);
-                localAddr = coyoteRequest.getLocalAddr();
+                localAddr = grizzlyRequest.getLocalAddr();
             }
         }
+
         return localAddr;
     }
 
     /**
-     * Returns the Internet Protocol (IP) port number of the interface
-     * on which the request was received.
+     * Returns the Internet Protocol (IP) port number of the interface on which the request was received.
      */
     @Override
     public int getLocalPort() {
@@ -1599,22 +1522,21 @@ public class Request
             if (socket != null) {
                 localPort = socket.getLocalPort();
             } else {
-//                coyoteRequest.action(ActionCode.ACTION_REQ_LOCALPORT_ATTRIBUTE, coyoteRequest);
-                localPort = coyoteRequest.getLocalPort();
+                localPort = grizzlyRequest.getLocalPort();
             }
         }
+
         return localPort;
     }
 
     /**
-     * Return a RequestDispatcher that wraps the resource at the specified
-     * path, which may be interpreted as relative to the current request path.
+     * Return a RequestDispatcher that wraps the resource at the specified path, which may be interpreted as relative to the
+     * current request path.
      *
      * @param path Path of the resource to be wrapped
      */
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
-
         if (servletContext == null) {
             return null;
         }
@@ -1622,37 +1544,37 @@ public class Request
         // If the path is already context-relative, just pass it through
         if (path == null) {
             return null;
-        } else if (path.startsWith("/")) {
+        }
+
+        if (path.startsWith("/")) {
             return servletContext.getRequestDispatcher(path);
         }
 
         // Convert a request-relative path to a context-relative one
-        String servPath = (String) getAttribute(
-                RequestDispatcher.INCLUDE_SERVLET_PATH);
-        if (servPath == null) {
-            servPath = getServletPath();
+        String servletPath = (String) getAttribute(INCLUDE_SERVLET_PATH);
+        if (servletPath == null) {
+            servletPath = getServletPath();
         }
 
         // Add the path info, if there is any
-        String pInfo = getPathInfo();
+        String pathInfo = getPathInfo();
         String requestPath = null;
 
-        if (pInfo == null) {
-            requestPath = servPath;
+        if (pathInfo == null) {
+            requestPath = servletPath;
         } else {
-            requestPath = servPath + pInfo;
+            requestPath = servletPath + pathInfo;
         }
 
-        int pos = requestPath.lastIndexOf('/');
-        String relative = null;
-        if (pos >= 0) {
-            relative = requestPath.substring(0, pos + 1) + path;
+        int lastSlashPos = requestPath.lastIndexOf('/');
+        String relativePath = null;
+        if (lastSlashPos >= 0) {
+            relativePath = requestPath.substring(0, lastSlashPos + 1) + path;
         } else {
-            relative = requestPath + path;
+            relativePath = requestPath + path;
         }
 
-        return servletContext.getRequestDispatcher(relative);
-
+        return servletContext.getRequestDispatcher(relativePath);
     }
 
     /**
@@ -1660,16 +1582,14 @@ public class Request
      */
     @Override
     public String getScheme() {
-        // START S1AS 6170450
         if (getConnector() != null && getConnector().getAuthPassthroughEnabled()) {
             ProxyHandler proxyHandler = getConnector().getProxyHandler();
             if (proxyHandler != null && proxyHandler.getSSLKeysize(getRequest()) > 0) {
                 return "https";
             }
         }
-        // END S1AS 6170450
 
-        return coyoteRequest.getScheme();
+        return grizzlyRequest.getScheme();
     }
 
     /**
@@ -1677,7 +1597,7 @@ public class Request
      */
     @Override
     public String getServerName() {
-        return coyoteRequest.getServerName();
+        return grizzlyRequest.getServerName();
     }
 
     /**
@@ -1685,22 +1605,15 @@ public class Request
      */
     @Override
     public int getServerPort() {
-        /* SJSAS 6586658
-        return (coyoteRequest.getServerPort());
-         */
-        // START SJSAS 6586658
         if (isSecure()) {
             String host = getHeader("host");
             if (host != null && host.indexOf(':') == -1) {
                 // No port number provided with Host header, use default
                 return 443;
-            } else {
-                return coyoteRequest.getServerPort();
             }
-        } else {
-            return coyoteRequest.getServerPort();
         }
-        // END SJSAS 6586658
+
+        return grizzlyRequest.getServerPort();
     }
 
     /**
@@ -1732,23 +1645,21 @@ public class Request
         if (listeners.isEmpty()) {
             return;
         }
-        ServletRequestAttributeEvent event =
-                new ServletRequestAttributeEvent(servletContext, getRequest(),
-                name, value);
+        ServletRequestAttributeEvent event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
         Iterator<EventListener> iter = listeners.iterator();
         while (iter.hasNext()) {
             EventListener eventListener = iter.next();
             if (!(eventListener instanceof ServletRequestAttributeListener)) {
                 continue;
             }
-            ServletRequestAttributeListener listener =
-                    (ServletRequestAttributeListener) eventListener;
+
+            ServletRequestAttributeListener listener = (ServletRequestAttributeListener) eventListener;
             try {
                 listener.attributeRemoved(event);
             } catch (Throwable t) {
-                log(rb.getString(LogFacade.ATTRIBUTE_EVENT_LISTENER_EXCEPTION), t);
+                log(rb.getString(ATTRIBUTE_EVENT_LISTENER_EXCEPTION), t);
                 // Error valve will pick this exception up and display it to user
-                attributes.put(RequestDispatcher.ERROR_EXCEPTION, t);
+                attributes.put(ERROR_EXCEPTION, t);
             }
         }
     }
@@ -1761,10 +1672,9 @@ public class Request
      */
     @Override
     public void setAttribute(String name, Object value) {
-
         // Name cannot be null
         if (name == null) {
-            throw new IllegalArgumentException(rb.getString(LogFacade.NULL_ATTRIBUTE_NAME_EXCEPTION));
+            throw new IllegalArgumentException(rb.getString(NULL_ATTRIBUTE_NAME_EXCEPTION));
         }
 
         // Null value is the same as removeAttribute()
@@ -1773,7 +1683,7 @@ public class Request
             return;
         }
 
-        if (name.equals(Globals.DISPATCHER_TYPE_ATTR)) {
+        if (name.equals(DISPATCHER_TYPE_ATTR)) {
             dispatcherTypeAttr = value;
             return;
         } else if (name.equals(Globals.DISPATCHER_REQUEST_PATH_ATTR)) {
@@ -1784,8 +1694,7 @@ public class Request
         boolean replaced = false;
 
         // Do the security check before any updates are made
-        if (Globals.IS_SECURITY_ENABLED &&
-                name.equals("org.apache.tomcat.sendfile.filename")) {
+        if (Globals.IS_SECURITY_ENABLED && name.equals("org.apache.tomcat.sendfile.filename")) {
             // Use the canonical file name to avoid any possible symlink and
             // relative path issues
             String canonicalPath;
@@ -1808,27 +1717,22 @@ public class Request
             replaced = true;
         }
 
-        // START SJSAS 6231069
-        // Pass special attributes to the ngrizzly layer
+        // Pass special attributes to the grizzly layer
         if (name.startsWith("grizzly.")) {
-            coyoteRequest.setAttribute(name, value);
+            grizzlyRequest.setAttribute(name, value);
         }
-        // END SJSAS 6231069
 
         // Notify interested application event listeners
         List<EventListener> listeners = context.getApplicationEventListeners();
         if (listeners.isEmpty()) {
             return;
         }
+
         ServletRequestAttributeEvent event = null;
         if (replaced) {
-            event = new ServletRequestAttributeEvent(servletContext,
-                    getRequest(), name,
-                    oldValue);
+            event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, oldValue);
         } else {
-            event = new ServletRequestAttributeEvent(servletContext,
-                    getRequest(), name,
-                    value);
+            event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
         }
 
         Iterator<EventListener> iter = listeners.iterator();
@@ -1837,8 +1741,7 @@ public class Request
             if (!(eventListener instanceof ServletRequestAttributeListener)) {
                 continue;
             }
-            ServletRequestAttributeListener listener =
-                    (ServletRequestAttributeListener) eventListener;
+            ServletRequestAttributeListener listener = (ServletRequestAttributeListener) eventListener;
             try {
                 if (replaced) {
                     listener.attributeReplaced(event);
@@ -1846,54 +1749,37 @@ public class Request
                     listener.attributeAdded(event);
                 }
             } catch (Throwable t) {
-                log(rb.getString(LogFacade.ATTRIBUTE_EVENT_LISTENER_EXCEPTION), t);
+                log(rb.getString(ATTRIBUTE_EVENT_LISTENER_EXCEPTION), t);
                 // Error valve will pick this exception up and display it to user
-                attributes.put(RequestDispatcher.ERROR_EXCEPTION, t);
+                attributes.put(ERROR_EXCEPTION, t);
             }
         }
     }
 
     /**
-     * Overrides the name of the character encoding used in the body of this
-     * request.
+     * Overrides the name of the character encoding used in the body of this request.
      *
-     * This method must be called prior to reading request parameters or
-     * reading input using <code>getReader()</code>. Otherwise, it has no
-     * effect.
+     * This method must be called prior to reading request parameters or reading input using <code>getReader()</code>.
+     * Otherwise, it has no effect.
      *
-     * @param enc      <code>String</code> containing the name of
-     *                 the character encoding.
-     * @throws         UnsupportedEncodingException if this
-     *                 ServletRequest is still in a state where a
-     *                 character encoding may be set, but the specified
-     *                 encoding is invalid
+     * @param enc <code>String</code> containing the name of the character encoding.
+     * @throws UnsupportedEncodingException if this ServletRequest is still in a state where a character encoding may be
+     * set, but the specified encoding is invalid
      *
      * @since Servlet 2.3
      */
     @Override
-    public void setCharacterEncoding(String enc)
-            throws UnsupportedEncodingException {
-
-        // START SJSAS 4936855
+    public void setCharacterEncoding(String enc) throws UnsupportedEncodingException {
         if (parametersProcessed || usingReader) {
-            String contextName =
-                getContext() != null ? getContext().getName() : "UNKNOWN";
-            log.log(Level.WARNING, LogFacade.UNABLE_SET_REQUEST_CHARS, new Object[] {enc, contextName});
+            String contextName = getContext() != null ? getContext().getName() : "UNKNOWN";
+            log.log(WARNING, UNABLE_SET_REQUEST_CHARS, new Object[] { enc, contextName });
             return;
         }
-        // END SJSAS 4936855
 
         // Ensure that the specified encoding is valid
         byte buffer[] = new byte[1];
         buffer[0] = (byte) 'a';
 
-        // START S1AS 6179607: Workaround for 6181598. Workaround should be
-        // removed once the underlying issue in J2SE has been fixed.
-        /*
-         * String dummy = new String(buffer, enc);
-         */
-        // END S1AS 6179607
-        // START S1AS 6179607
         final byte[] finalBuffer = buffer;
         final String finalEnc = enc;
         if (Globals.IS_SECURITY_ENABLED) {
@@ -1911,14 +1797,11 @@ public class Request
         } else {
             new String(buffer, RequestUtil.lookupCharset(enc));
         }
-        // END S1AS 6179607
 
         // Save the validated encoding
-        coyoteRequest.setCharacterEncoding(enc);
-
+        grizzlyRequest.setCharacterEncoding(enc);
     }
 
-    // START S1AS 4703023
     /**
      * Static setter method for the maximum dispatch depth
      */
@@ -1950,20 +1833,11 @@ public class Request
     public boolean isMaxDispatchDepthReached() {
         return dispatchDepth > maxDispatchDepth;
     }
-    // END S1AS 4703023
 
     // ---------------------------------------------------- HttpRequest Methods
     @Override
-    public boolean authenticate(HttpServletResponse response)
-            throws IOException, ServletException {
-
-        //Issue 9650 - COmmenting this as required
-      /*  if (getUserPrincipal() != null) {
-        throw new ServletException("Attempt to re-login while the " +
-        "user identity already exists");
-        }*/
-
-        if (context == null) {//TODO: throw an exception
+    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
+        if (context == null) {
             throw new ServletException("Internal error: Context null");
         }
 
@@ -1975,17 +1849,16 @@ public class Request
 
         byte[] alreadyCalled = (byte[]) reentrancyStatus.get();
         if (alreadyCalled[0] == 1) {
-            //Re-entrancy from a JSR 196  module, so call the authenticate directly
+            // Re-entrancy from a Jakarta Authentication module, so call the authenticate directly
             try {
-                return authBase.authenticate(this, (HttpResponse) getResponse(),
-                        context.getLoginConfig());
+                return authBase.authenticate(this, (HttpResponse) getResponse(), context.getLoginConfig());
             } catch (Exception ex) {
                 throw new ServletException("Exception thrown while attempting to authenticate", ex);
             }
 
         } else {
-            //No re-entrancy, so call invokeAuthenticateDelegate to check if
-            //JSR196 module is present
+            // No re-entrancy, so call invokeAuthenticateDelegate to check if
+            // a Jakarta Authentication is present
             alreadyCalled[0] = 1;
             try {
                 final Realm realm = context.getRealm();
@@ -1999,7 +1872,8 @@ public class Request
                             @Override
                             public Boolean run() {
                                 try {
-                                    return Boolean.valueOf(realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true));
+                                    return Boolean.valueOf(
+                                            realm.invokeAuthenticateDelegate(req, (HttpResponse) getResponse(), context, authBase, true));
                                 } catch (IOException ex) {
                                     throw new RuntimeException("Exception thrown while attempting to authenticate", ex);
                                 }
@@ -2015,34 +1889,29 @@ public class Request
                 }
 
             } finally {
-                //Reset the threadlocal re-entrancy check variable
+                // Reset the threadlocal re-entrancy check variable
                 alreadyCalled[0] = 0;
             }
         }
     }
 
     @Override
-    public void login(final String username, final String password)
-            throws ServletException {
+    public void login(final String username, final String password) throws ServletException {
         login(username, password != null ? password.toCharArray() : null);
     }
 
-    public void login(final String username, final char[] password)
-            throws ServletException {
+    public void login(final String username, final char[] password) throws ServletException {
         final Realm realm = context.getRealm();
         if (realm != null && realm.isSecurityExtensionEnabled(getServletContext())) {
-            throw new ServletException
-               (rb.getString(LogFacade.LOGIN_WITH_AUTH_CONFIG));
-     }
+            throw new ServletException(rb.getString(LOGIN_WITH_AUTH_CONFIG));
+        }
 
-        if (getAuthType() != null || getRemoteUser() != null ||
-                getUserPrincipal() != null) {
-            throw new ServletException(
-                    rb.getString(LogFacade.ALREADY_AUTHENTICATED));
+        if (getAuthType() != null || getRemoteUser() != null || getUserPrincipal() != null) {
+            throw new ServletException(rb.getString(ALREADY_AUTHENTICATED));
         }
 
         if (context.getAuthenticator() == null) {
-            throw new ServletException(rb.getString(LogFacade.NO_AUTHENTICATOR));
+            throw new ServletException(rb.getString(NO_AUTHENTICATOR));
         }
 
         context.getAuthenticator().login(username, password, this);
@@ -2050,18 +1919,15 @@ public class Request
 
     @Override
     public void logout() throws ServletException {
-
         Realm realm = (context == null ? null : context.getRealm());
         if (realm == null) {
             if (getUserPrincipal() != null || getAuthType() != null) {
-                throw new ServletException(
-                        rb.getString(LogFacade.INTERNAL_LOGOUT_ERROR));
+                throw new ServletException(rb.getString(INTERNAL_LOGOUT_ERROR));
             }
             return;
         }
-        /*
-         * Pass the request (this).
-         */
+
+        // Pass the request (this).
         realm.logout(this);
     }
 
@@ -2072,7 +1938,6 @@ public class Request
      */
     @Override
     public void addCookie(Cookie cookie) {
-
         // For compatibility only
         if (!cookiesParsed) {
             parseCookies();
@@ -2089,12 +1954,12 @@ public class Request
      */
     @Override
     public void addHeader(String name, String value) {
-        coyoteRequest.getRequest().getHeaders().addValue(name).setString(value);
+        grizzlyRequest.getRequest().getHeaders().addValue(name).setString(value);
     }
 
     /**
-     * Add a Locale to the set of preferred Locales for this Request.  The
-     * first added Locale will be the first one returned by getLocales().
+     * Add a Locale to the set of preferred Locales for this Request. The first added Locale will be the first one returned
+     * by getLocales().
      *
      * @param locale The new preferred Locale
      */
@@ -2104,16 +1969,15 @@ public class Request
     }
 
     /**
-     * Add a parameter name and corresponding set of values to this Request.
-     * (This is used when restoring the original request on a form based
-     * login).
+     * Add a parameter name and corresponding set of values to this Request. (This is used when restoring the original
+     * request on a form based login).
      *
      * @param name Name of this request parameter
      * @param values Corresponding values for this request parameter
      */
     @Override
     public void addParameter(String name, String values[]) {
-        coyoteRequest.addParameter(name, values);
+        grizzlyRequest.addParameter(name, values);
     }
 
     /**
@@ -2130,7 +1994,7 @@ public class Request
      */
     @Override
     public void clearHeaders() {
-        coyoteRequest.getRequest().getHeaders().recycle();
+        grizzlyRequest.getRequest().getHeaders().recycle();
     }
 
     /**
@@ -2142,14 +2006,12 @@ public class Request
     }
 
     /**
-     * Clear the collection of parameters associated with this Request
-     * and reset the query string encoding charset.
+     * Clear the collection of parameters associated with this Request and reset the query string encoding charset.
      */
     @Override
     public void clearParameters() {
-        coyoteRequest.getParameters().recycle();
-        coyoteRequest.getParameters().setQueryStringEncoding(
-                Charsets.lookupCharset(getConnector().getURIEncoding()));
+        grizzlyRequest.getParameters().recycle();
+        grizzlyRequest.getParameters().setQueryStringEncoding(Charsets.lookupCharset(getConnector().getURIEncoding()));
     }
 
     @Override
@@ -2158,14 +2020,12 @@ public class Request
             return;
         }
 
-        coyoteRequest.replayPayload(Buffers.wrap(
-                coyoteRequest.getContext().getMemoryManager(), payloadByteArray));
+        grizzlyRequest.replayPayload(Buffers.wrap(grizzlyRequest.getContext().getMemoryManager(), payloadByteArray));
     }
 
     /**
-     * Set the authentication type used for this request, if any; otherwise
-     * set the type to <code>null</code>.  Typical values are "BASIC",
-     * "DIGEST", or "SSL".
+     * Set the authentication type used for this request, if any; otherwise set the type to <code>null</code>. Typical
+     * values are "BASIC", "DIGEST", or "SSL".
      *
      * @param type The authentication type used
      */
@@ -2177,27 +2037,27 @@ public class Request
     /**
      * Set the HTTP request method used for this Request.
      *
-     * <p>Used by FBL when the original request is restored after
-     * successful authentication.
+     * <p>
+     * Used by FBL when the original request is restored after successful authentication.
      *
      * @param method The request method
      */
     @Override
     public void setMethod(String method) {
-        coyoteRequest.setMethod(method);
+        grizzlyRequest.setMethod(method);
     }
 
     /**
      * Sets the query string for this Request.
      *
-     * <p>Used by FBL when the original request is restored after
-     * successful authentication.
+     * <p>
+     * Used by FBL when the original request is restored after successful authentication.
      *
      * @param query The query string
      */
     @Override
     public void setQueryString(String query) {
-        coyoteRequest.setQueryString(query);
+        grizzlyRequest.setQueryString(query);
     }
 
     /**
@@ -2212,9 +2072,8 @@ public class Request
     }
 
     /**
-     * Set a flag indicating whether or not the requested session ID for this
-     * request came in through a cookie.  This is normally called by the
-     * HTTP Connector, when it parses the request headers.
+     * Set a flag indicating whether or not the requested session ID for this request came in through a cookie. This is
+     * normally called by the HTTP Connector, when it parses the request headers.
      *
      * @param flag The new flag
      */
@@ -2232,12 +2091,11 @@ public class Request
     }
 
     /**
-     * Set the requested session ID for this request.  This is normally called
-     * by the HTTP Connector, when it parses the request headers.
+     * Set the requested session ID for this request. This is normally called by the HTTP Connector, when it parses the
+     * request headers.
      *
-     * This method, which is called when the session id is sent as a cookie,
-     * or when it is encoded in the request URL, removes a jvmRoute
-     * (if present) from the given id.
+     * This method, which is called when the session id is sent as a cookie, or when it is encoded in the request URL,
+     * removes a jvmRoute (if present) from the given id.
      *
      * @param id The new session id
      */
@@ -2263,9 +2121,8 @@ public class Request
     }
 
     /**
-     * Set a flag indicating whether or not the requested session ID for this
-     * request came in through a URL.  This is normally called by the
-     * HTTP Connector, when it parses the request headers.
+     * Set a flag indicating whether or not the requested session ID for this request came in through a URL. This is
+     * normally called by the HTTP Connector, when it parses the request headers.
      *
      * @param flag The new flag
      */
@@ -2275,17 +2132,16 @@ public class Request
     }
 
     /**
-     * Set the unparsed request URI for this Request.  This will normally be
-     * called by the HTTP Connector, when it parses the request headers.
+     * Set the unparsed request URI for this Request. This will normally be called by the HTTP Connector, when it parses the
+     * request headers.
      *
-     * Used by FBL when restoring original request after successful
-     * authentication.
+     * Used by FBL when restoring original request after successful authentication.
      *
      * @param uri The request URI
      */
     @Override
     public void setRequestURI(String uri) {
-        coyoteRequest.setRequestURI(uri);
+        grizzlyRequest.setRequestURI(uri);
     }
 
     /**
@@ -2301,16 +2157,15 @@ public class Request
     /**
      * Gets the decoded request URI.
      *
-     * @param maskDefaultContextMapping true if the fact that a request
-     * received at the root context was mapped to a default-web-module will
-     * be masked, false otherwise
+     * @param maskDefaultContextMapping true if the fact that a request received at the root context was mapped to a
+     * default-web-module will be masked, false otherwise
      */
     public String getDecodedRequestURI(boolean maskDefaultContextMapping) {
         try {
             if (maskDefaultContextMapping || !isDefaultContext) {
-                return coyoteRequest.getDecodedRequestURI();
+                return grizzlyRequest.getDecodedRequestURI();
             } else {
-                return getContextPath() + coyoteRequest.getDecodedRequestURI();
+                return getContextPath() + grizzlyRequest.getDecodedRequestURI();
             }
         } catch (CharConversionException e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -2329,22 +2184,18 @@ public class Request
     }
 
     /**
-     * Set the Principal who has been authenticated for this Request.  This
-     * value is also used to calculate the value to be returned by the
-     * <code>getRemoteUser()</code> method.
+     * Set the Principal who has been authenticated for this Request. This value is also used to calculate the value to be
+     * returned by the <code>getRemoteUser()</code> method.
      *
      * @param principal The user Principal
      */
     @Override
     public void setUserPrincipal(Principal principal) {
-
         if (SecurityUtil.isPackageProtectionEnabled()) {
             HttpSession session = getSession(false);
-            if (subject != null &&
-                !subject.getPrincipals().contains(principal)) {
+            if (subject != null && !subject.getPrincipals().contains(principal)) {
                 subject.getPrincipals().add(principal);
-            } else if (session != null &&
-                    session.getAttribute(Globals.SUBJECT_ATTR) == null) {
+            } else if (session != null && session.getAttribute(Globals.SUBJECT_ATTR) == null) {
                 subject = new Subject();
                 subject.getPrincipals().add(principal);
             }
@@ -2366,8 +2217,7 @@ public class Request
     }
 
     /**
-     * Return the portion of the request URI used to select the Context
-     * of the Request.
+     * Return the portion of the request URI used to select the Context of the Request.
      */
     @Override
     public String getContextPath() {
@@ -2375,19 +2225,17 @@ public class Request
     }
 
     /**
-     * Gets the portion of the request URI used to select the Context
-     * of the Request.
+     * Gets the portion of the request URI used to select the Context of the Request.
      *
-     * @param maskDefaultContextMapping true if the fact that a request
-     * received at the root context was mapped to a default-web-module will
-     * be masked, false otherwise
+     * @param maskDefaultContextMapping true if the fact that a request received at the root context was mapped to a
+     * default-web-module will be masked, false otherwise
      */
     public String getContextPath(boolean maskDefaultContextMapping) {
         if (isDefaultContext && maskDefaultContextMapping) {
             return "";
-        } else {
-            return contextPath;
         }
+
+        return contextPath;
     }
 
     /**
@@ -2395,7 +2243,6 @@ public class Request
      */
     @Override
     public Cookie[] getCookies() {
-
         if (!cookiesParsed) {
             parseCookies();
         }
@@ -2411,27 +2258,23 @@ public class Request
      * Set the set of cookies received with this Request.
      */
     public void setCookies(Cookie[] cookies) {
-
         this.cookies.clear();
         if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                this.cookies.add(cookies[i]);
+            for (Cookie element : cookies) {
+                this.cookies.add(element);
             }
         }
     }
 
     /**
-     * Return the value of the specified date header, if any; otherwise
-     * return -1.
+     * Return the value of the specified date header, if any; otherwise return -1.
      *
      * @param name Name of the requested date header
      *
-     * @exception IllegalArgumentException if the specified header value
-     *  cannot be converted to a date
+     * @exception IllegalArgumentException if the specified header value cannot be converted to a date
      */
     @Override
     public long getDateHeader(String name) {
-
         String value = getHeader(name);
         if (value == null) {
             return -1L;
@@ -2442,30 +2285,28 @@ public class Request
         if (result != -1L) {
             return result;
         }
-        throw new IllegalArgumentException(value);
 
+        throw new IllegalArgumentException(value);
     }
 
     /**
-     * Return the first value of the specified header, if any; otherwise,
-     * return <code>null</code>
+     * Return the first value of the specified header, if any; otherwise, return <code>null</code>
      *
      * @param name Name of the requested header
      */
     @Override
     public String getHeader(String name) {
-        return coyoteRequest.getHeader(name);
+        return grizzlyRequest.getHeader(name);
     }
 
     /**
-     * Return all of the values of the specified header, if any; otherwise,
-     * return an empty enumeration.
+     * Return all of the values of the specified header, if any; otherwise, return an empty enumeration.
      *
      * @param name Name of the requested header
      */
     @Override
     public Enumeration<String> getHeaders(String name) {
-        return new Enumerator<String>(coyoteRequest.getHeaders(name).iterator());
+        return new Enumerator<>(grizzlyRequest.getHeaders(name).iterator());
     }
 
     /**
@@ -2473,38 +2314,34 @@ public class Request
      */
     @Override
     public Enumeration<String> getHeaderNames() {
-        return new Enumerator<String>(coyoteRequest.getHeaderNames().iterator());
+        return new Enumerator<>(grizzlyRequest.getHeaderNames().iterator());
     }
 
     /**
-     * Return the value of the specified header as an integer, or -1 if there
-     * is no such header for this request.
+     * Return the value of the specified header as an integer, or -1 if there is no such header for this request.
      *
      * @param name Name of the requested header
      *
-     * @exception IllegalArgumentException if the specified header value
-     *  cannot be converted to an integer
+     * @exception IllegalArgumentException if the specified header value cannot be converted to an integer
      */
     @Override
     public int getIntHeader(String name) {
-
         String value = getHeader(name);
         if (value == null) {
             return -1;
-        } else {
-            return Integer.parseInt(value);
         }
 
+        return Integer.parseInt(value);
     }
 
     @Override
     public Map<String, String> getTrailerFields() {
-        return coyoteRequest.getTrailers();
+        return grizzlyRequest.getTrailers();
     }
 
     @Override
     public boolean isTrailerFieldsReady() {
-        return coyoteRequest.areTrailersAvailable();
+        return grizzlyRequest.areTrailersAvailable();
     }
 
     /**
@@ -2512,7 +2349,7 @@ public class Request
      */
     @Override
     public String getMethod() {
-        return coyoteRequest.getMethod().getMethodString();
+        return grizzlyRequest.getMethod().getMethodString();
     }
 
     /**
@@ -2524,35 +2361,33 @@ public class Request
     }
 
     /**
-     * Return the extra path information for this request, translated
-     * to a real path.
+     * Return the extra path information for this request, translated to a real path.
      */
     @Override
     public String getPathTranslated() {
-
         if (servletContext == null) {
             return null;
         }
 
         if (getPathInfo() == null) {
             return null;
-        } else {
-            return servletContext.getRealPath(getPathInfo());
         }
 
+        return servletContext.getRealPath(getPathInfo());
     }
 
     @Override
     public PushBuilder newPushBuilder() {
         Http2Stream http2Stream = null;
-        if (coyoteRequest != null) {
-            http2Stream = (Http2Stream)coyoteRequest.getAttribute(Http2Stream.HTTP2_STREAM_ATTRIBUTE);
+        if (grizzlyRequest != null) {
+            http2Stream = (Http2Stream) grizzlyRequest.getAttribute(Http2Stream.HTTP2_STREAM_ATTRIBUTE);
         }
+
         if (http2Stream != null && http2Stream.isPushEnabled()) {
             return new ApplicationPushBuilder(this);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -2560,26 +2395,25 @@ public class Request
      */
     @Override
     public String getQueryString() {
-        String queryString = coyoteRequest.getQueryString();
+        String queryString = grizzlyRequest.getQueryString();
 
         if (queryString == null || "".equals(queryString)) {
             return null;
-        } else {
-            return queryString;
         }
+
+        return queryString;
     }
 
     /**
-     * Return the name of the remote user that has been authenticated
-     * for this Request.
+     * Return the name of the remote user that has been authenticated for this Request.
      */
     @Override
     public String getRemoteUser() {
         if (userPrincipal != null) {
             return userPrincipal.getName();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -2611,45 +2445,35 @@ public class Request
     /**
      * Gets the request URI for this request.
      *
-     * @param maskDefaultContextMapping true if the fact that a request
-     * received at the root context was mapped to a default-web-module will
-     * be masked, false otherwise
+     * @param maskDefaultContextMapping true if the fact that a request received at the root context was mapped to a
+     * default-web-module will be masked, false otherwise
      */
     public String getRequestURI(boolean maskDefaultContextMapping) {
         if (maskDefaultContextMapping) {
-            return coyoteRequest.getRequestURI();
-        } else {
-            if (requestURI == null) {
-                // START GlassFish 1024
-                if (isDefaultContext) {
-                    requestURI = getContextPath() +
-                        coyoteRequest.getRequestURI();
-                } else {
-                    // END GlassFish 1024
-                    requestURI = coyoteRequest.getRequestURI();
-                    // START GlassFish 1024
-                }
-                // END GlassFish 1024
-            }
-            return requestURI;
+            return grizzlyRequest.getRequestURI();
         }
+
+        if (requestURI == null) {
+            if (isDefaultContext) {
+                requestURI = getContextPath() + grizzlyRequest.getRequestURI();
+            } else {
+                requestURI = grizzlyRequest.getRequestURI();
+            }
+        }
+
+        return requestURI;
     }
 
     /**
-     * Reconstructs the URL the client used to make the request.
-     * The returned URL contains a protocol, server name, port
-     * number, and server path, but it does not include query
-     * string parameters.
+     * Reconstructs the URL the client used to make the request. The returned URL contains a protocol, server name, port
+     * number, and server path, but it does not include query string parameters.
      * <p>
-     * Because this method returns a <code>StringBuffer</code>,
-     * not a <code>String</code>, you can modify the URL easily,
+     * Because this method returns a <code>StringBuffer</code>, not a <code>String</code>, you can modify the URL easily,
      * for example, to append query parameters.
      * <p>
-     * This method is useful for creating redirect messages and
-     * for reporting errors.
+     * This method is useful for creating redirect messages and for reporting errors.
      *
-     * @return A <code>StringBuffer</code> object containing the
-     *  reconstructed URL
+     * @return A <code>StringBuffer</code> object containing the reconstructed URL
      */
     @Override
     public StringBuffer getRequestURL() {
@@ -2677,8 +2501,7 @@ public class Request
     }
 
     /**
-     * Return the portion of the request URI used to select the servlet
-     * that will process this request.
+     * Return the portion of the request URI used to select the servlet that will process this request.
      */
     @Override
     public String getServletPath() {
@@ -2686,33 +2509,31 @@ public class Request
     }
 
     /**
-     * Return the session associated with this Request, creating one
-     * if necessary.
+     * Return the session associated with this Request, creating one if necessary.
      */
     @Override
     public HttpSession getSession() {
         Session session = doGetSession(true);
-        if (session != null) {
-            return session.getSession();
-        } else {
+        if (session == null) {
             return null;
         }
+
+        return session.getSession();
     }
 
     /**
-     * Return the session associated with this Request, creating one
-     * if necessary and requested.
+     * Return the session associated with this Request, creating one if necessary and requested.
      *
      * @param create Create a new session if one does not exist
      */
     @Override
     public HttpSession getSession(boolean create) {
         Session session = doGetSession(create);
-        if (session != null) {
-            return session.getSession();
-        } else {
+        if (session == null) {
             return null;
         }
+
+        return session.getSession();
     }
 
     /**
@@ -2725,70 +2546,55 @@ public class Request
     }
 
     /**
-     * Return <code>true</code> if the session identifier included in this
-     * request came from a cookie.
+     * Return <code>true</code> if the session identifier included in this request came from a cookie.
      */
     @Override
     public boolean isRequestedSessionIdFromCookie() {
-
-        if (requestedSessionId != null) {
-            return requestedSessionCookie;
-        } else {
+        if (requestedSessionId == null) {
             return false;
         }
 
+        return requestedSessionCookie;
     }
 
     /**
-     * Return <code>true</code> if the session identifier included in this
-     * request came from the request URI.
+     * Return <code>true</code> if the session identifier included in this request came from the request URI.
      */
     @Override
     public boolean isRequestedSessionIdFromURL() {
-
-        if (requestedSessionId != null) {
-            return requestedSessionURL;
-        } else {
+        if (requestedSessionId == null) {
             return false;
         }
 
+        return requestedSessionURL;
     }
 
     /**
-     * Marks (or unmarks) this request as having a JSESSIONID cookie
-     * that is marked as secure
+     * Marks (or unmarks) this request as having a JSESSIONID cookie that is marked as secure
      *
-     * @param secure true if this request has a JSESSIONID cookie that is
-     * marked as secure, false otherwise
+     * @param secure true if this request has a JSESSIONID cookie that is marked as secure, false otherwise
      */
     public void setRequestedSessionIdFromSecureCookie(boolean secure) {
         isRequestedSessionIdFromSecureCookie = secure;
     }
 
-
     /**
-     * @return true if this request contains a JSESSIONID cookie that is
-     * marked as secure, false otherwise
+     * @return true if this request contains a JSESSIONID cookie that is marked as secure, false otherwise
      */
     public boolean isRequestedSessionIdFromSecureCookie() {
         return isRequestedSessionIdFromSecureCookie;
     }
 
     /**
-     * Return <code>true</code> if the session identifier included in this
-     * request identifies a valid session.
+     * Return <code>true</code> if the session identifier included in this request identifies a valid session.
      */
     @Override
     public boolean isRequestedSessionIdValid() {
-        if (requestedSessionId == null) {
-            return false;
-        }
-        if (context == null) {
+        if ((requestedSessionId == null) || (context == null)) {
             return false;
         }
 
-        if (session != null &&
-                requestedSessionId.equals(session.getIdInternal())) {
+        if (session != null && requestedSessionId.equals(session.getIdInternal())) {
             return session.isValid();
         }
 
@@ -2796,51 +2602,45 @@ public class Request
         if (manager == null) {
             return false;
         }
+
         Session localSession = null;
         try {
             if (manager.isSessionVersioningSupported()) {
-                localSession = manager.findSession(requestedSessionId,
-                                                   requestedSessionVersion);
+                localSession = manager.findSession(requestedSessionId, requestedSessionVersion);
             } else {
                 localSession = manager.findSession(requestedSessionId, this);
             }
         } catch (IOException e) {
             localSession = null;
         }
+
         if (localSession != null && localSession.isValid()) {
             return true;
-        } else {
-            return false;
         }
 
+        return false;
     }
 
     /**
-     * Return <code>true</code> if the authenticated user principal
-     * possesses the specified role name.
+     * Return <code>true</code> if the authenticated user principal possesses the specified role name.
      *
      * @param role Role name to be validated
      */
     @Override
     public boolean isUserInRole(String role) {
 
-        // BEGIN RIMOD 4949842
         /*
-         * Must get userPrincipal through getUserPrincipal(), can't assume
-         * it has already been set since it may be coming from core.
+         * Must get userPrincipal through getUserPrincipal(), can't assume it has already been set since it may be coming from
+         * core.
          */
-        Principal userPrincipal = this.getUserPrincipal();
-        // END RIMOD 4949842
+        Principal userPrincipal = getUserPrincipal();
 
         // Have we got an authenticated principal at all?
-        if (userPrincipal == null) {
+        // Identify the Realm we will use for checking role assignments
+        if (userPrincipal == null || context == null) {
             return false;
         }
 
-        // Identify the Realm we will use for checking role assignments
-        if (context == null) {
-            return false;
-        }
         Realm realm = context.getRealm();
         if (realm == null) {
             return false;
@@ -2850,21 +2650,13 @@ public class Request
         if (wrapper != null) {
             String realRole = wrapper.findSecurityReference(role);
 
-            //START SJSAS 6232464
-            if (realRole != null &&
-                    //realm.hasRole(userPrincipal, realRole))
-                    realm.hasRole(this, (HttpResponse) response,
-                    userPrincipal, realRole)) {
+            if (realRole != null && realm.hasRole(this, (HttpResponse) response, userPrincipal, realRole)) {
                 return true;
             }
         }
 
         // Check for a role defined directly as a <security-role>
-
-        //return (realm.hasRole(userPrincipal, role));
-        return realm.hasRole(this, (HttpResponse) response,
-                userPrincipal, role);
-        //END SJSAS 6232464
+        return realm.hasRole(this, (HttpResponse) response, userPrincipal, role);
     }
 
     /**
@@ -2876,19 +2668,16 @@ public class Request
     }
 
     /**
-     * Return the session associated with this Request, creating one
-     * if necessary.
+     * Return the session associated with this Request, creating one if necessary.
      */
     public Session getSessionInternal() {
         return doGetSession(true);
     }
 
     /**
-     * Gets the session associated with this Request, creating one
-     * if necessary and requested.
+     * Gets the session associated with this Request, creating one if necessary and requested.
      *
-     * @param create true if a new session is to be created if one does not
-     * already exist, false otherwise
+     * @param create true if a new session is to be created if one does not already exist, false otherwise
      */
     @Override
     public Session getSessionInternal(boolean create) {
@@ -2896,13 +2685,11 @@ public class Request
     }
 
     /**
-     * Change the session id of the current session associated with this
-     * request and return the new session id.
+     * Change the session id of the current session associated with this request and return the new session id.
      *
      * @return the new session id
      *
-     * @throws IllegalStateException if there is no session associated
-     * with the request
+     * @throws IllegalStateException if there is no session associated with the request
      *
      * @since Servlet 3.1
      */
@@ -2931,8 +2718,8 @@ public class Request
     }
 
     /**
-     * This object does not implement a session ID generator. Provide
-     * a dummy implementation so that the default one will be used.
+     * This object does not implement a session ID generator. Provide a dummy implementation so that the default one will be
+     * used.
      */
     @Override
     public String generateSessionId() {
@@ -2940,11 +2727,9 @@ public class Request
     }
 
     /**
-     * Gets the servlet context to which this servlet request was last
-     * dispatched.
+     * Gets the servlet context to which this servlet request was last dispatched.
      *
-     * @return the servlet context to which this servlet request was last
-     * dispatched
+     * @return the servlet context to which this servlet request was last dispatched
      */
     @Override
     public ServletContext getServletContext() {
@@ -2952,16 +2737,15 @@ public class Request
     }
 
     /**
-     * Create an instance of <code>HttpUpgradeHandler</code> for an given
-     * class and uses it for the http protocol upgrade processing.
+     * Create an instance of <code>HttpUpgradeHandler</code> for an given class and uses it for the http protocol upgrade
+     * processing.
      *
      * @param handlerClass The <code>HttpUpgradeHandler</code> class used for the upgrade.
      *
      * @return an instance of the <code>HttpUpgradeHandler</code>
      *
      * @exception IOException if an I/O error occurred during the upgrade
-     * @exception ServletException if the given <tt>clazz</tt> fails to be
-     * instantiated
+     * @exception ServletException if the given <tt>clazz</tt> fails to be instantiated
      *
      * @see jakarta.servlet.http.HttpUpgradeHandler
      * @see jakarta.servlet.http.WebConnection
@@ -2969,19 +2753,18 @@ public class Request
      * @since Servlet 3.1
      */
     @Override
-    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass)
-            throws IOException, ServletException {
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
         upgrade = true;
         T handler = null;
         try {
             handler = ((StandardContext) getContext()).createHttpUpgradeHandlerInstance(handlerClass);
-        } catch(IOException | ServletException ise) {
+        } catch (IOException | ServletException ise) {
             throw ise;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             throw new ServletException(t);
         }
         httpUpgradeHandler = handler;
-        coyoteRequest.getResponse().suspend();
+        grizzlyRequest.getResponse().suspend();
         return handler;
     }
 
@@ -2989,8 +2772,8 @@ public class Request
         return webConnection;
     }
 
-    public void setWebConnection(WebConnection wc) {
-        webConnection = wc;
+    public void setWebConnection(WebConnection webConnection) {
+        this.webConnection = webConnection;
     }
 
     // ------------------------------------------------------ Protected Methods
@@ -3013,18 +2796,16 @@ public class Request
         // Return the requested session if it exists and is valid
         Manager manager = context.getManager();
         if (manager == null) {
-            return null;      // Sessions are not supported
+            return null; // Sessions are not supported
         }
         if (requestedSessionId != null) {
             if (!checkUnsuccessfulSessionFind || !unsuccessfulSessionFind) {
                 try {
                     if (manager.isSessionVersioningSupported()) {
-                        session = manager.findSession(requestedSessionId,
-                                                      requestedSessionVersion);
-                        //XXX need to revisit
+                        session = manager.findSession(requestedSessionId, requestedSessionVersion);
+                        // XXX need to revisit
                         if (session instanceof StandardSession) {
-                            incrementSessionVersion((StandardSession) session,
-                                                    context);
+                            incrementSessionVersion((StandardSession) session, context);
                         }
                     } else {
                         session = manager.findSession(requestedSessionId, this);
@@ -3049,20 +2830,16 @@ public class Request
         if (!create) {
             return null;
         }
-        if (context != null && response != null &&
-                context.getCookies() &&
-                response.getResponse().isCommitted()) {
+
+        if (context != null && response != null && context.getCookies() && response.getResponse().isCommitted()) {
             throw new IllegalStateException(rb.getString(LogFacade.CANNOT_CREATE_SESSION_EXCEPTION));
         }
 
-        // START S1AS8PE 4817642
         if (requestedSessionId != null && context.getReuseSessionID()) {
             session = manager.createSession(requestedSessionId);
             if (manager instanceof PersistentManagerBase) {
                 ((PersistentManagerBase) manager).removeFromInvalidatedSessions(requestedSessionId);
             }
-            // END S1AS8PE 4817642
-            // START GlassFish 896
         } else if (sessionTracker.getActiveSessions() > 0) {
             synchronized (sessionTracker) {
                 if (sessionTracker.getActiveSessions() > 0) {
@@ -3073,10 +2850,7 @@ public class Request
                     }
                 }
             }
-            // END GlassFish 896
-            // START S1AS8PE 4817642
         } else {
-            // END S1AS8PE 4817642
             // Use the connector's random number generator (if any) to generate
             // a session ID. Fallback to the default session ID generator if
             // the connector does not implement one.
@@ -3086,33 +2860,26 @@ public class Request
             } else {
                 session = manager.createSession();
             }
-            // START S1AS8PE 4817642
         }
-        // END S1AS8PE 4817642
 
         StandardHost reqHost = (StandardHost) getHost();
         if (reqHost != null) {
             SingleSignOn sso = reqHost.getSingleSignOn();
             if (sso != null) {
-                String ssoId = (String) getNote(
-                        org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE);
+                String ssoId = (String) getNote(REQ_SSOID_NOTE);
                 if (ssoId != null) {
                     long ssoVersion = 0L;
-                    Long ssoVersionObj = (Long)getNote(
-                            org.apache.catalina.authenticator.Constants.REQ_SSO_VERSION_NOTE);
+                    Long ssoVersionObj = (Long) getNote(REQ_SSO_VERSION_NOTE);
                     if (ssoVersionObj != null) {
                         ssoVersion = ssoVersionObj.longValue();
                     }
                     sso.associate(ssoId, ssoVersion, session);
-                    removeNote(
-                            org.apache.catalina.authenticator.Constants.REQ_SSOID_NOTE);
+                    removeNote(REQ_SSOID_NOTE);
                 }
             }
         }
 
-        // START GlassFish 896
         sessionTracker.track(session);
-        // END GlassFish 896
 
         // Creating a new session cookie based on the newly created session
         if (session != null && getContext() != null) {
@@ -3126,10 +2893,9 @@ public class Request
         if (session != null) {
             session.access();
             return session;
-        } else {
-            return null;
         }
 
+        return null;
     }
 
     /**
@@ -3141,25 +2907,19 @@ public class Request
         cookie.setHttpOnly(true);
         cookie.setMaxAge(-1);
         String contextPath = null;
-        // START GlassFish 1024
         if (isDefaultContext) {
             cookie.setPath("/");
         } else {
-            // END GlassFish 1024
             if (context != null) {
-                // START OF SJSAS 6231069
-                // contextPath = getContext().getEncodedPath();
                 contextPath = context.getPath();
-                // END OF SJSAS 6231069
             }
             if (contextPath != null && contextPath.length() > 0) {
                 cookie.setPath(contextPath);
             } else {
                 cookie.setPath("/");
             }
-            // START GlassFish 1024
         }
-        // END GlassFish 1024
+
         if (isSecure()) {
             cookie.setSecure(true);
         }
@@ -3167,8 +2927,7 @@ public class Request
         // Override the default config with servlet context
         // sessionCookieConfig
         if (context != null) {
-            SessionCookieConfig sessionCookieConfig =
-                    context.getSessionCookieConfig();
+            SessionCookieConfig sessionCookieConfig = context.getSessionCookieConfig();
             if (sessionCookieConfig.getDomain() != null) {
                 cookie.setDomain(sessionCookieConfig.getDomain());
             }
@@ -3179,7 +2938,8 @@ public class Request
                 cookie.setVersion(1);
                 cookie.setComment(sessionCookieConfig.getComment());
             }
-            // do nothing if it is already secure
+
+            // Do nothing if it is already secure
             if (!cookie.getSecure()) {
                 cookie.setSecure(sessionCookieConfig.isSecure());
             }
@@ -3196,10 +2956,9 @@ public class Request
      * Parse cookies.
      */
     protected void parseCookies() {
-
         cookiesParsed = true;
 
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
@@ -3210,33 +2969,24 @@ public class Request
         for (int i = 0; i < count; i++) {
             org.glassfish.grizzly.http.Cookie scookie = serverCookies[i];
             try {
-                /* GlassFish 898
-                Cookie cookie = new Cookie(scookie.getName().toString(),
-                scookie.getValue().toString());
-                 */
-                // START GlassFish 898
                 Cookie cookie = makeCookie(scookie);
-                // END GlassFish 898
                 cookie.setPath(scookie.getPath());
-                cookie.setVersion(scookie.getVersion());
                 String domain = scookie.getDomain();
                 if (domain != null) {
                     cookie.setDomain(scookie.getDomain());
                 }
                 cookies.add(cookie);
             } catch (IllegalArgumentException e) {
-                ; // Ignore bad cookie.
+                 // Ignore bad cookie.
             }
         }
     }
 
-    // START GlassFish 898
     protected Cookie makeCookie(org.glassfish.grizzly.http.Cookie scookie) {
         return makeCookie(scookie, false);
     }
 
     protected Cookie makeCookie(org.glassfish.grizzly.http.Cookie scookie, boolean decode) {
-
         String name = scookie.getName();
         String value = scookie.getValue();
 
@@ -3252,110 +3002,13 @@ public class Request
 
         return new Cookie(name, value);
     }
-    // END GlassFish 898
 
-    /**
-     * Parse request parameters.
-     */
-//    protected void parseRequestParameters() {
-//
-//        /* SJSAS 4936855
-//        requestParametersParsed = true;
-//         */
-//
-//        Parameters parameters = coyoteRequest.getParameters();
-//
-//        // getCharacterEncoding() may have been overridden to search for
-//        // hidden form field containing request encoding
-//        String enc = getCharacterEncoding();
-//        // START SJSAS 4936855
-//        // Delay updating requestParametersParsed to TRUE until
-//        // after getCharacterEncoding() has been called, because
-//        // getCharacterEncoding() may cause setCharacterEncoding() to be
-//        // called, and the latter will ignore the specified encoding if
-//        // requestParametersParsed is TRUE
-//        requestParametersParsed = true;
-//        // END SJSAS 4936855
-//        if (enc != null) {
-//            parameters.setEncoding(enc);
-//            parameters.setQueryStringEncoding(enc);
-//        } else {
-//            parameters.setEncoding(org.glassfish.grizzly.http.server.Constants.DEFAULT_CHARACTER_ENCODING);
-//            parameters.setQueryStringEncoding(org.glassfish.grizzly.http.server.Constants.DEFAULT_CHARACTER_ENCODING);
-//        }
-//
-//        parameters.handleQueryParameters();
-//
-//        if (usingInputStream || usingReader) {
-//            return;
-//        }
-//
-//        if (!"POST".equalsIgnoreCase(getMethod())) {
-//            return;
-//        }
-//
-//        String contentType = getContentType();
-//        if (contentType == null) {
-//            contentType = "";
-//        }
-//        int semicolon = contentType.indexOf(';');
-//        if (semicolon >= 0) {
-//            contentType = contentType.substring(0, semicolon).trim();
-//        } else {
-//            contentType = contentType.trim();
-//        }
-//        if (!"application/x-www-form-urlencoded".equals(contentType)) {
-//            return;
-//        }
-//
-//        int len = getContentLength();
-//
-//        if (len > 0) {
-//            int maxPostSize = ((Connector) connector).getMaxPostSize();
-//            if (maxPostSize > 0 && len > maxPostSize) {
-//                log(sm.getString("coyoteRequest.postTooLarge"));
-
-                  //coyoteRequest.postTooLarge=PWC4004: Parameters were not parsed because the size of the posted data was too big.
-                  // Use the maxPostSize attribute of the connector to resolve this if the application should accept large POSTs.
-//
-//                throw new IllegalStateException("Post too large");
-//            }
-//            try {
-//                /* SJSAS 6346738
-//                byte[] formData = null;
-//                if (len < CACHED_POST_LEN) {
-//                if (postData == null)
-//                postData = new byte[CACHED_POST_LEN];
-//                formData = postData;
-//                } else {
-//                formData = new byte[len];
-//                }
-//                int actualLen = readPostBody(formData, len);
-//                if (actualLen == len) {
-//                parameters.processParameters(formData, 0, len);
-//                }
-//                 */
-//                // START SJSAS 6346738
-//                byte[] formData = getPostBody();
-//                if (formData != null) {
-//                    parameters.processParameters(formData, 0, len);
-//                }
-//                // END SJSAS 6346738
-//            } catch (Throwable t) {
-//                ; // Ignore
-//            }
-//        }
-//
-//    }
-
-    // START SJSAS 6346738
     /**
      * Gets the POST body of this request.
      *
      * @return The POST body of this request
      */
     protected byte[] getPostBody() throws IOException {
-
         int len = getContentLength();
         byte[] formData = null;
 
@@ -3374,158 +3027,23 @@ public class Request
 
         return null;
     }
-    // END SJSAS 6346738
 
     /**
      * Read post body in an array.
      */
-    protected int readPostBody(byte body[], int len)
-            throws IOException {
-
-        Buffer b = coyoteRequest.getPostBody(len).duplicate();
+    protected int readPostBody(byte body[], int len) throws IOException {
+        Buffer b = grizzlyRequest.getPostBody(len).duplicate();
         final int length = b.limit() - b.position();
         b.get(body, b.position(), length);
         return length;
-
     }
 
     /**
-     * Parse request locales.
-     */
-//    protected void parseLocales() {
-//
-//        localesParsed = true;
-//        for (String value : getHeaders("accept-language")) {
-//            parseLocalesHeader(value);
-//        }
-//
-//    }
-
-    /**
-     * Parse accept-language header value.
-     */
-//    protected void parseLocalesHeader(String value) {
-//
-        // Store the accumulated languages that have been requested in
-//        // a local collection, sorted by the quality value (so we can
-//        // add Locales in descending order).  The values will be ArrayLists
-//        // containing the corresponding Locales to be added
-//        TreeMap<Double, ArrayList<Locale>> locales = new TreeMap<Double, ArrayList<Locale>>();
-//
-//        // Preprocess the value to remove all whitespace
-//        int white = value.indexOf(' ');
-//        if (white < 0) {
-//            white = value.indexOf('\t');
-//        }
-//        if (white >= 0) {
-//            StringBuilder sb = new StringBuilder();
-//            int len = value.length();
-//            for (int i = 0; i < len; i++) {
-//                char ch = value.charAt(i);
-//                if ((ch != ' ') && (ch != '\t')) {
-//                    sb.append(ch);
-//                }
-//            }
-//            value = sb.toString();
-//        }
-//
-//        // Process each comma-delimited language specification
-//        parser.setString(value);        // ASSERT: parser is available to us
-//        int length = parser.getLength();
-//        while (true) {
-//
-//            // Extract the next comma-delimited entry
-//            int start = parser.getIndex();
-//            if (start >= length) {
-//                break;
-//            }
-//            int end = parser.findChar(',');
-//            String entry = parser.extract(start, end).trim();
-//            parser.advance();   // For the following entry
-//
-//            // Extract the quality factor for this entry
-//            double quality = 1.0;
-//            int semi = entry.indexOf(";q=");
-//            if (semi >= 0) {
-//                try {
-//                    String strQuality = entry.substring(semi + 3);
-//                    if (strQuality.length() <= 5) {
-//                        quality = Double.parseDouble(strQuality);
-//                    } else {
-//                        quality = 0.0;
-//                    }
-//                } catch (NumberFormatException e) {
-//                    quality = 0.0;
-//                }
-//                entry = entry.substring(0, semi);
-//            }
-//
-//            // Skip entries we are not going to keep track of
-//            if (quality < 0.00005) {
-//                continue;       // Zero (or effectively zero) quality factors
-//            }
-//            if ("*".equals(entry)) {
-//                continue;       // FIXME - "*" entries are not handled
-//            }
-//            // Extract the language and country for this entry
-//            String language = null;
-//            String country = null;
-//            String variant = null;
-//            int dash = entry.indexOf('-');
-//            if (dash < 0) {
-//                language = entry;
-//                country = "";
-//                variant = "";
-//            } else {
-//                language = entry.substring(0, dash);
-//                country = entry.substring(dash + 1);
-//                int vDash = country.indexOf('-');
-//                if (vDash > 0) {
-//                    String cTemp = country.substring(0, vDash);
-//                    variant = country.substring(vDash + 1);
-//                    country = cTemp;
-//                } else {
-//                    variant = "";
-//                }
-//            }
-//
-//            if (!isAlpha(language) || !isAlpha(country) || !isAlpha(variant)) {
-//                continue;
-//            }
-//
-//            // Add a new Locale to the list of Locales for this quality level
-//            Locale locale = new Locale(language, country, variant);
-//            Double key = Double.valueOf(-quality);  // Reverse the order
-//            ArrayList<Locale> values = locales.get(key);
-//            if (values == null) {
-//                values = new ArrayList<Locale>();
-//                locales.put(key, values);
-//            }
-//            values.add(locale);
-//
-//        }
-//
-//        // Process the quality values in highest->lowest order (due to
-//        // negating the Double value when creating the key)
-//        for (ArrayList<Locale> list : locales.values()) {
-//            Iterator<Locale> values = list.iterator();
-//            while (values.hasNext()) {
-//                Locale locale = values.next();
-//                addLocale(locale);
-//            }
-//        }
-//
-//    }
-
-    /*
-     * Returns true if the given string is composed of upper- or lowercase
-     * letters only, false otherwise.
+     * Returns true if the given string is composed of upper- or lowercase letters only, false otherwise.
      *
-     * @return true if the given string is composed of upper- or lowercase
-     * letters only, false otherwise.
+     * @return true if the given string is composed of upper- or lowercase letters only, false otherwise.
      */
     protected static final boolean isAlpha(String value) {
-
         if (value == null) {
             return false;
         }
@@ -3545,71 +3063,20 @@ public class Request
      */
     protected void obtainSessionId() {
         setRequestedSessionURL(true);
-        setJrouteId(coyoteRequest.getJrouteId());
-        setRequestedSessionId(coyoteRequest.getRequestedSessionId());
+        setJrouteId(grizzlyRequest.getJrouteId());
+        setRequestedSessionId(grizzlyRequest.getRequestedSessionId());
     }
 
-    // START CR 6309511
     /**
      * Parse session id in URL.
      */
-    protected void parseSessionId(String sessionParameterName, CharChunk uriBB) {
-        //START GLASSFISH-15508
-        /*
-        if (coyoteRequest.isRequestedSessionIdFromURL() &&
-                sessionParam.equals(Globals.SESSION_PARAMETER_NAME)) {
-            setRequestedSessionURL(true);
-            setRequestedSessionId(coyoteRequest.getRequestedSessionId());
-            setJrouteId(coyoteRequest.getJrouteId());
-
-            return;
-        }
-
-        sessionParam = ";" + sessionParam + "=";
-        int semicolon = uriBB.indexOf(sessionParam, 0, sessionParam.length(),
-                0);
-        if (semicolon >= 0) {
-
-            // Parse session ID, and extract it from the decoded request URI
-            int start = uriBB.getStart();
-            int end = uriBB.getEnd();
-
-            int sessionIdStart = start + semicolon + sessionParam.length();
-            int semicolon2 = uriBB.indexOf(';', sessionIdStart);
-        */
-        //END GLASSFISH-15508
-            /* SJSAS 6346226
-            if (semicolon2 >= 0) {
-            setRequestedSessionId
-            (new String(uriBB.getBuffer(), sessionIdStart,
-            semicolon2 - semicolon - match.length()));
-            } else {
-            setRequestedSessionId
-            (new String(uriBB.getBuffer(), sessionIdStart,
-            end - sessionIdStart));
-            }
-             */
-            //START GLASSFISH-15508
-            /*
-            // START SJSAS 6346226
-            String sessionId = null;
-            if (semicolon2 >= 0) {
-                sessionId = new String(uriBB.getBuffer(), sessionIdStart,
-                        semicolon2 - semicolon - sessionParam.length());
-            } else {
-                sessionId = new String(uriBB.getBuffer(), sessionIdStart,
-                        end - sessionIdStart);
-            }
-            */
-            //END GLASSFISH-15508
+    protected void parseSessionId(String sessionParameterName, CharChunk uriCharChunk) {
 
         // Parse session ID, and extract it from the decoded request URI
         String sessionParam = ";" + sessionParameterName + "=";
-        String sessionId =
-            parseParameterFromRequestURI(uriBB, sessionParam);
+        String sessionId = parseParameterFromRequestURI(uriCharChunk, sessionParam);
 
         if (sessionId != null) {
-            // START SJSAS 6346226
             int jrouteIndex = sessionId.lastIndexOf(':');
             if (jrouteIndex > 0) {
                 setRequestedSessionId(sessionId.substring(0, jrouteIndex));
@@ -3619,65 +3086,33 @@ public class Request
             } else {
                 setRequestedSessionId(sessionId);
             }
-            // END SJSAS 6346226
 
             setRequestedSessionURL(true);
 
-            /* SJSWS 6376484
-            // Extract session ID from request URI
-            ByteChunk uriBC = coyoteRequest.requestURI().getByteChunk();
-            start = uriBC.getStart();
-            end = uriBC.getEnd();
-            semicolon = uriBC.indexOf(match, 0, match.length(), 0);
-
-            if (semicolon > 0) {
-            sessionIdStart = start + semicolon;
-            semicolon2 = uriBB.indexOf
-            (';', start + semicolon + match.length());
-            uriBC.setEnd(start + semicolon);
-            byte[] buf = uriBC.getBuffer();
-            if (semicolon2 >= 0) {
-            for (int i = 0; i < end - start - semicolon2; i++) {
-            buf[start + semicolon + i]
-            = buf[start + i + semicolon2];
-            }
-            uriBC.setBytes(buf, start, semicolon
-            + (end - start - semicolon2));
-            }
-            }
-             */
-            // START SJSWS 6376484
             /*
-             * Parse the session id from the encoded URI only if the encoded
-             * URI is not null, to allow for lazy evaluation
+             * Parse the session id from the encoded URI only if the encoded URI is not null, to allow for lazy evaluation
              */
-            if (coyoteRequest.getRequestURI() != null) {
+            if (grizzlyRequest.getRequestURI() != null) {
                 removeParameterFromRequestURI(sessionParam);
             }
-            // END SJSWS 6376484
 
         } else {
             setRequestedSessionId(null);
             setRequestedSessionURL(false);
         }
     }
-    // END CR 6309511
 
     /**
-     * Parses and removes any session version (if present) from the request
-     * URI.
+     * Parses and removes any session version (if present) from the request URI.
      *
      */
     protected void parseSessionVersion(CharChunk uriCC) {
-        String sessionVersionString =
-            parseParameterFromRequestURI(uriCC, Globals.SESSION_VERSION_PARAMETER);
+        String sessionVersionString = parseParameterFromRequestURI(uriCC, SESSION_VERSION_PARAMETER);
 
         if (sessionVersionString != null) {
             parseSessionVersionString(sessionVersionString);
 
-//            if (!coyoteRequest.requestURI().getByteChunk().isNull()) {
-                removeParameterFromRequestURI(Globals.SESSION_VERSION_PARAMETER);
-//            }
+            removeParameterFromRequestURI(SESSION_VERSION_PARAMETER);
         }
     }
 
@@ -3685,17 +3120,14 @@ public class Request
      * Parses and removes jreplica (if present) from the request URI.
      */
     protected void parseJReplica(CharChunk uriCC) {
-        String jreplica =
-            parseParameterFromRequestURI(uriCC, Globals.JREPLICA_PARAMETER);
+        String jreplica = parseParameterFromRequestURI(uriCC, JREPLICA_PARAMETER);
 
         if (jreplica != null) {
             Session session = getSessionInternal(false);
             if (session != null) {
-                session.setNote(Globals.JREPLICA_SESSION_NOTE, jreplica);
+                session.setNote(JREPLICA_SESSION_NOTE, jreplica);
             }
-//            if (!coyoteRequest.requestURI().getByteChunk().isNull()) {
-                removeParameterFromRequestURI(Globals.JREPLICA_PARAMETER);
-//            }
+            removeParameterFromRequestURI(JREPLICA_PARAMETER);
         }
 
     }
@@ -3704,47 +3136,37 @@ public class Request
         if (context != null && context.getCookies() && response != null) {
             String jvmRoute = ((StandardContext) getContext()).getJvmRoute();
             /*
-             * Check if context has been configured with jvmRoute for
-             * Apache LB. If it has, do not add the JSESSIONID cookie
-             * here, but rely on OutputBuffer#addSessionCookieWithJvmRoute
-             * to add the jvmRoute enhanced JSESSIONID as a cookie right
+             * Check if context has been configured with jvmRoute for Apache LB. If it has, do not add the JSESSIONID cookie here,
+             * but rely on OutputBuffer#addSessionCookieWithJvmRoute to add the jvmRoute enhanced JSESSIONID as a cookie right
              * before the response is flushed.
              */
             if (jvmRoute == null) {
-                Cookie newCookie = new Cookie(
-                        getSafeHeaderValue(getContext().getSessionCookieName()), getSafeHeaderValue(session.getId()));
+                Cookie newCookie = new Cookie(getSafeHeaderValue(getContext().getSessionCookieName()), getSafeHeaderValue(session.getId()));
                 configureSessionCookie(newCookie);
-                ((HttpResponse)response).addSessionCookieInternal(newCookie);
+                ((HttpResponse) response).addSessionCookieInternal(newCookie);
             }
         }
     }
 
     /**
-     * @param parameter  of the form ";" + parameterName + "="
+     * @param parameter of the form ";" + parameterName + "="
      * @return parameterValue
      */
-    private String parseParameterFromRequestURI(CharChunk uriCC, String parameter) {
-
+    private String parseParameterFromRequestURI(CharChunk uriCharChunk, String parameter) {
         String parameterValue = null;
 
-        int semicolon = uriCC.indexOf(parameter, 0, parameter.length(), 0);
+        int semicolon = uriCharChunk.indexOf(parameter, 0, parameter.length(), 0);
         if (semicolon >= 0) {
 
-            int start = uriCC.getStart();
-            int end = uriCC.getEnd();
+            int start = uriCharChunk.getStart();
+            int end = uriCharChunk.getEnd();
 
             int parameterStart = start + semicolon + parameter.length();
-            int semicolon2 = uriCC.indexOf(';', semicolon + parameter.length());
+            int semicolon2 = uriCharChunk.indexOf(';', semicolon + parameter.length());
             if (semicolon2 >= 0) {
-                parameterValue = new String(
-                    uriCC.getBuffer(),
-                    parameterStart,
-                    semicolon2 - semicolon - parameter.length());
+                parameterValue = new String(uriCharChunk.getBuffer(), parameterStart, semicolon2 - semicolon - parameter.length());
             } else {
-                parameterValue = new String(
-                    uriCC.getBuffer(),
-                    parameterStart,
-                    end - parameterStart);
+                parameterValue = new String(uriCharChunk.getBuffer(), parameterStart, end - parameterStart);
             }
 
         }
@@ -3752,67 +3174,48 @@ public class Request
         return parameterValue;
     }
 
-    // START SJSWS 6376484
     /**
      * Removes the session version from the request URI.
-     * @param parameter   of the form ";" + parameterName + "="
+     *
+     * @param parameter of the form ";" + parameterName + "="
      */
     private void removeParameterFromRequestURI(String parameter) {
-
         int semicolon, semicolon2;
 
-        final DataChunk uriBC =
-                coyoteRequest.getRequest().getRequestURIRef().getRequestURIBC();
+        final DataChunk uriDataChunk = grizzlyRequest.getRequest().getRequestURIRef().getRequestURIBC();
 
-//        start = uriBC.getStart();
-//        end = uriBC.getEnd();
-        semicolon = uriBC.indexOf(parameter, 0);
+        semicolon = uriDataChunk.indexOf(parameter, 0);
 
         if (semicolon > 0) {
-            semicolon2 = uriBC.indexOf(';', semicolon + parameter.length());
+            semicolon2 = uriDataChunk.indexOf(';', semicolon + parameter.length());
 
             final int end;
             if (semicolon2 >= 0) {
                 end = semicolon2;
-                uriBC.notifyDirectUpdate();
+                uriDataChunk.notifyDirectUpdate();
             } else {
-                end = uriBC.getLength();
+                end = uriDataChunk.getLength();
             }
 
-            uriBC.delete(semicolon, end);
-//            uriBC.setEnd(start + semicolon);
-//            byte[] buf = uriBC.getBuffer();
-//            if (semicolon2 >= 0) {
-//                for (int i = 0; i < end - start - semicolon2; i++) {
-//                    buf[start + semicolon + i] = buf[start + i + semicolon2];
-//                }
-//                uriBC.setBytes(buf, start, semicolon
-//                               + (end - start - semicolon2));
-//            }
+            uriDataChunk.delete(semicolon, end);
         }
     }
-    // END SJSWS 6376484
 
     /*
-     * Parses the given session version string into its components. Each
-     * component is stored as an entry in a HashMap, which maps a context
-     * path to its session version number. The HashMap is stored as a
-     * request attribute, to make it available to any target contexts to which
-     * this request may be dispatched.
+     * Parses the given session version string into its components. Each component is stored as an entry in a HashMap, which
+     * maps a context path to its session version number. The HashMap is stored as a request attribute, to make it available
+     * to any target contexts to which this request may be dispatched.
      *
-     * This method also sets the session version number for the context with
-     * which this request has been associated.
+     * This method also sets the session version number for the context with which this request has been associated.
      */
     void parseSessionVersionString(String sessionVersionString) {
         if (sessionVersionString == null || !isSessionVersioningSupported()) {
             return;
         }
 
-        HashMap<String, String> sessionVersions =
-            RequestUtil.parseSessionVersionString(sessionVersionString);
+        HashMap<String, String> sessionVersions = RequestUtil.parseSessionVersionString(sessionVersionString);
         if (sessionVersions != null) {
-            attributes.put(Globals.SESSION_VERSIONS_REQUEST_ATTRIBUTE,
-                           sessionVersions);
+            attributes.put(SESSION_VERSIONS_REQUEST_ATTRIBUTE, sessionVersions);
             if (context != null) {
                 String path = context.getPath();
                 if ("".equals(path)) {
@@ -3827,7 +3230,7 @@ public class Request
      * Parses the value of the JROUTE cookie, if present.
      */
     void parseJrouteCookie() {
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
@@ -3835,7 +3238,7 @@ public class Request
 
         for (int i = 0; i < count; i++) {
             org.glassfish.grizzly.http.Cookie scookie = serverCookies[i];
-            if (scookie.getName().equals(Constants.JROUTE_COOKIE)) {
+            if (scookie.getName().equals(JROUTE_COOKIE)) {
                 setJrouteId(scookie.getValue());
                 break;
             }
@@ -3852,20 +3255,16 @@ public class Request
     }
 
     /**
-     * Gets the jroute id of this request, which may have been
-     * sent as a separate <code>JROUTE</code> cookie or appended to the
-     * session identifier encoded in the URI (if cookies have been disabled).
+     * Gets the jroute id of this request, which may have been sent as a separate <code>JROUTE</code> cookie or appended to
+     * the session identifier encoded in the URI (if cookies have been disabled).
      *
-     * @return The jroute id of this request, or null if this request does not
-     * carry any jroute id
+     * @return The jroute id of this request, or null if this request does not carry any jroute id
      */
     @Override
     public String getJrouteId() {
         return jrouteId;
     }
-    // END SJSAS 6346226
 
-    // START CR 6309511
     /**
      * Parse session id in URL.
      */
@@ -3881,16 +3280,17 @@ public class Request
         }
 
         // Parse session id from cookies
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return;
         }
 
-        String sessionCookieName = Globals.SESSION_COOKIE_NAME;
+        String sessionCookieName = SESSION_COOKIE_NAME;
         if (context != null) {
             sessionCookieName = context.getSessionCookieName();
         }
+
         for (int i = 0; i < count; i++) {
             org.glassfish.grizzly.http.Cookie scookie = serverCookies[i];
             if (scookie.getName().equals(sessionCookieName)) {
@@ -3898,44 +3298,35 @@ public class Request
                 if (!isRequestedSessionIdFromCookie()) {
                     // Accept only the first session id cookie
                     setRequestedSessionId(scookie.getValue());
-                    // TODO: Pass cookie path into
-                    // getSessionVersionFromCookie()
-                    String sessionVersionString = getSessionVersionFromCookie();
-                    parseSessionVersionString(sessionVersionString);
+                    // TODO: Pass cookie path into getSessionVersionFromCookie()
+                    parseSessionVersionString(getSessionVersionFromCookie());
                     setRequestedSessionCookie(true);
-                    // TBD: ServerCookie#getSecure currently always returns
-                    // false.
+                    // TBD: ServerCookie#getSecure currently always returns false.
                     setRequestedSessionIdFromSecureCookie(scookie.isSecure());
                     setRequestedSessionURL(false);
                 } else {
                     if (!isRequestedSessionIdValid()) {
                         // Replace the session id until one is valid
                         setRequestedSessionId(scookie.getValue());
-                        // TODO: Pass cookie path into
-                        // getSessionVersionFromCookie()
-                        String sessionVersionString =
-                            getSessionVersionFromCookie();
-                        parseSessionVersionString(sessionVersionString);
+                        // TODO: Pass cookie path into getSessionVersionFromCookie()
+                        parseSessionVersionString(getSessionVersionFromCookie());
                     }
                 }
             }
         }
     }
-    // END CR 6309511
 
     /*
-     * Returns the value of the first JSESSIONIDVERSION cookie, or null
-     * if no such cookie present in the request.
+     * Returns the value of the first JSESSIONIDVERSION cookie, or null if no such cookie present in the request.
      *
-     * TODO: Add cookie path argument, and return value of JSESSIONIDVERSION
-     * cookie with the specified path.
+     * TODO: Add cookie path argument, and return value of JSESSIONIDVERSION cookie with the specified path.
      */
     private String getSessionVersionFromCookie() {
         if (!isSessionVersioningSupported()) {
             return null;
         }
 
-        org.glassfish.grizzly.http.Cookie[] serverCookies = coyoteRequest.getCookies();
+        org.glassfish.grizzly.http.Cookie[] serverCookies = grizzlyRequest.getCookies();
         int count = serverCookies.length;
         if (count <= 0) {
             return null;
@@ -3943,8 +3334,7 @@ public class Request
 
         for (int i = 0; i < count; i++) {
             org.glassfish.grizzly.http.Cookie scookie = serverCookies[i];
-            if (scookie.getName().equals(
-                                Globals.SESSION_VERSION_COOKIE_NAME)) {
+            if (scookie.getName().equals(SESSION_VERSION_COOKIE_NAME)) {
                 return scookie.getValue();
             }
         }
@@ -3956,15 +3346,13 @@ public class Request
      * @return temporary holder for URI params from which session id is parsed
      */
     CharChunk getURIParams() {
-        return uriParamsCC;
+        return uriParamsCharChunk;
     }
 
-    // START CR 6309511
     /**
      * Character conversion of the URI.
      */
-    protected void convertURI(MessageBytes uri)
-            throws Exception {
+    protected void convertURI(MessageBytes uri) throws Exception {
 
         ByteChunk bc = uri.getByteChunk();
         CharChunk cc = uri.getCharChunk();
@@ -3972,8 +3360,7 @@ public class Request
         cc.allocate(length, -1);
 
         String enc = connector.getURIEncoding();
-        if (enc != null && !enc.isEmpty() &&
-                !Globals.ISO_8859_1_ENCODING.equalsIgnoreCase(enc)) {
+        if (enc != null && !enc.isEmpty() && !ISO_8859_1_ENCODING.equalsIgnoreCase(enc)) {
             B2CConverter conv = getURIConverter();
             try {
                 if (conv == null) {
@@ -3982,17 +3369,16 @@ public class Request
                 }
             } catch (IOException e) {
                 // Ignore
-                log.log(Level.SEVERE, LogFacade.INVALID_URI_ENCODING);
+                log.log(SEVERE, INVALID_URI_ENCODING);
                 connector.setURIEncoding(null);
             }
             if (conv != null) {
                 try {
                     conv.convert(bc, cc, cc.getBuffer().length - cc.getEnd());
-                    uri.setChars(cc.getBuffer(), cc.getStart(),
-                            cc.getLength());
+                    uri.setChars(cc.getBuffer(), cc.getStart(), cc.getLength());
                     return;
                 } catch (IOException e) {
-                    log.log(Level.SEVERE, LogFacade.INVALID_URI_CHAR_ENCODING);
+                    log.log(SEVERE, INVALID_URI_CHAR_ENCODING);
                     cc.recycle();
                 }
             }
@@ -4008,14 +3394,12 @@ public class Request
         uri.setChars(cbuf, 0, length);
 
     }
-    // END CR 6309511
 
     @Override
     public DispatcherType getDispatcherType() {
-        DispatcherType dispatcher = (DispatcherType) getAttribute(
-                Globals.DISPATCHER_TYPE_ATTR);
+        DispatcherType dispatcher = (DispatcherType) getAttribute(DISPATCHER_TYPE_ATTR);
         if (dispatcher == null) {
-            dispatcher = DispatcherType.REQUEST;
+            dispatcher = REQUEST;
         }
         return dispatcher;
     }
@@ -4031,31 +3415,22 @@ public class Request
     /**
      * Starts async processing on this request.
      *
-     * @param servletRequest the ServletRequest with which to initialize
-     * the AsyncContext
-     * @param servletResponse the ServletResponse with which to initialize
-     * the AsyncContext
+     * @param servletRequest the ServletRequest with which to initialize the AsyncContext
+     * @param servletResponse the ServletResponse with which to initialize the AsyncContext
      */
     @Override
-    public AsyncContext startAsync(ServletRequest servletRequest,
-                                   ServletResponse servletResponse)
-            throws IllegalStateException {
+    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
         return startAsync(servletRequest, servletResponse, false);
     }
 
     /**
      * Starts async processing on this request.
      *
-     * @param servletRequest the ServletRequest with which to initialize
-     * the AsyncContext
-     * @param servletResponse the ServletResponse with which to initialize
-     * the AsyncContext
-     * @param isStartAsyncWithZeroArg true if the zero-arg version of
-     * startAsync was called, false otherwise
+     * @param servletRequest the ServletRequest with which to initialize the AsyncContext
+     * @param servletResponse the ServletResponse with which to initialize the AsyncContext
+     * @param isStartAsyncWithZeroArg true if the zero-arg version of startAsync was called, false otherwise
      */
-    private AsyncContext startAsync(ServletRequest servletRequest,
-                ServletResponse servletResponse,
-                boolean isStartAsyncWithZeroArg)
+    private AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse, boolean isStartAsyncWithZeroArg)
             throws IllegalStateException {
 
         if (servletRequest == null || servletResponse == null) {
@@ -4063,44 +3438,36 @@ public class Request
         }
 
         if (!isAsyncSupported()) {
-            throw new IllegalStateException(rb.getString(LogFacade.REQUEST_WITHIN_SCOPE_OF_FILTER_OR_SERVLET_EXCEPTION));
+            throw new IllegalStateException(rb.getString(REQUEST_WITHIN_SCOPE_OF_FILTER_OR_SERVLET_EXCEPTION));
         }
 
         final AsyncContextImpl asyncContextLocal = asyncContext;
 
         if (asyncContextLocal != null) {
             if (isAsyncStarted()) {
-                throw new IllegalStateException(rb.getString(LogFacade.START_ASYNC_CALLED_AGAIN_EXCEPTION));
+                throw new IllegalStateException(rb.getString(START_ASYNC_CALLED_AGAIN_EXCEPTION));
             }
             if (asyncContextLocal.isAsyncComplete()) {
-                throw new IllegalStateException(rb.getString(LogFacade.ASYNC_ALREADY_COMPLETE_EXCEPTION));
+                throw new IllegalStateException(rb.getString(ASYNC_ALREADY_COMPLETE_EXCEPTION));
             }
             if (!asyncContextLocal.isStartAsyncInScope()) {
-                throw new IllegalStateException(rb.getString(LogFacade.START_ASYNC_CALLED_OUTSIDE_SCOPE_EXCEPTION));
+                throw new IllegalStateException(rb.getString(START_ASYNC_CALLED_OUTSIDE_SCOPE_EXCEPTION));
             }
 
             // Reinitialize existing AsyncContext
-            asyncContextLocal.reinitialize(servletRequest, servletResponse,
-                    isStartAsyncWithZeroArg);
+            asyncContextLocal.reinitialize(servletRequest, servletResponse, isStartAsyncWithZeroArg);
         } else {
             final AsyncContextImpl asyncContextFinal =
-                    new AsyncContextImpl(this,
-                                         servletRequest,
-                                         (Response) getResponse(),
-                                         servletResponse,
-                                         isStartAsyncWithZeroArg);
+                new AsyncContextImpl(this, servletRequest, (Response) getResponse(), servletResponse, isStartAsyncWithZeroArg);
             asyncContext = asyncContextFinal;
 
-            final CompletionHandler<org.glassfish.grizzly.http.server.Response> requestCompletionHandler =
-                    new EmptyCompletionHandler<org.glassfish.grizzly.http.server.Response>() {
+            final CompletionHandler<org.glassfish.grizzly.http.server.Response> requestCompletionHandler = new EmptyCompletionHandler<>() {
 
-                        @Override
-                        public void completed(org.glassfish.grizzly.http.server.Response response) {
-                            asyncContextFinal.notifyAsyncListeners(
-                                    AsyncContextImpl.AsyncEventType.COMPLETE,
-                                    null);
-                        }
-                    };
+                @Override
+                public void completed(org.glassfish.grizzly.http.server.Response response) {
+                    asyncContextFinal.notifyAsyncListeners(AsyncContextImpl.AsyncEventType.COMPLETE, null);
+                }
+            };
 
             final TimeoutHandler timeoutHandler = new TimeoutHandler() {
 
@@ -4110,8 +3477,7 @@ public class Request
                 }
             };
 
-            coyoteRequest.getResponse().suspend(-1, TimeUnit.MILLISECONDS,
-                    requestCompletionHandler, timeoutHandler);
+            grizzlyRequest.getResponse().suspend(-1, TimeUnit.MILLISECONDS, requestCompletionHandler, timeoutHandler);
             asyncStartedThread = Thread.currentThread();
         }
 
@@ -4135,9 +3501,8 @@ public class Request
     /**
      * Disables async support for this request.
      *
-     * Async support is disabled as soon as this request has passed a filter
-     * or servlet that does not support async (either via the designated
-     * annotation or declaratively).
+     * Async support is disabled as soon as this request has passed a filter or servlet that does not support async (either
+     * via the designated annotation or declaratively).
      */
     @Override
     public void disableAsyncSupport() {
@@ -4145,8 +3510,8 @@ public class Request
     }
 
     void setAsyncTimeout(long timeout) {
-        coyoteRequest.getResponse().getSuspendContext().setTimeout(
-                timeout, TimeUnit.MILLISECONDS);;
+        grizzlyRequest.getResponse().getSuspendContext().setTimeout(timeout, TimeUnit.MILLISECONDS);
+
     }
 
     /**
@@ -4163,29 +3528,26 @@ public class Request
     @Override
     public AsyncContext getAsyncContext() {
         if (!isAsyncStarted()) {
-            throw new IllegalStateException(rb.getString(LogFacade.REQUEST_NOT_PUT_INTO_ASYNC_MODE_EXCEPTION));
+            throw new IllegalStateException(rb.getString(REQUEST_NOT_PUT_INTO_ASYNC_MODE_EXCEPTION));
         }
 
         return asyncContext;
     }
 
     /*
-     * Invokes any registered AsyncListener instances at their
-     * <tt>onComplete</tt> method
+     * Invokes any registered AsyncListener instances at their <tt>onComplete</tt> method
      */
     void asyncComplete() {
         asyncStarted.set(false);
 
-        if (asyncStartedThread != Thread.currentThread() ||
-                !asyncContext.isOkToConfigure()) {
+        if (asyncStartedThread != Thread.currentThread() || !asyncContext.isOkToConfigure()) {
             // it's not safe to just mark response as resumed
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         } else {
             // This code is called if we startAsync and complete in the service() thread.
             // So instead of resuming the suspendedContext (which will finish the response processing),
             // we just have to mark the context as resumed like it has never been suspended.
-            final SuspendedContextImpl suspendContext =
-                    (SuspendedContextImpl) coyoteRequest.getResponse().getSuspendContext();
+            final SuspendedContextImpl suspendContext = (SuspendedContextImpl) grizzlyRequest.getResponse().getSuspendContext();
 
             suspendContext.markResumed();
             suspendContext.getSuspendStatus().reset();
@@ -4193,52 +3555,47 @@ public class Request
     }
 
     /*
-     * Invokes all registered AsyncListener instances at their
-     * <tt>onTimeout</tt> method.
+     * Invokes all registered AsyncListener instances at their <tt>onTimeout</tt> method.
      *
-     * This method also performs an error dispatch and completes the response
-     * if none of the listeners have done so.
+     * This method also performs an error dispatch and completes the response if none of the listeners have done so.
      */
     void asyncTimeout() {
         if (asyncContext != null) {
-            asyncContext.notifyAsyncListeners(
-                    AsyncContextImpl.AsyncEventType.TIMEOUT, null);
+            asyncContext.notifyAsyncListeners(AsyncContextImpl.AsyncEventType.TIMEOUT, null);
         }
         inputBuffer.disableReadHandler();
         if (response instanceof Response) {
-            ((Response)response).disableWriteHandler();
+            ((Response) response).disableWriteHandler();
         }
         errorDispatchAndComplete(null);
     }
 
     /**
-     * Notifies this Request that the container-initiated dispatch
-     * during which ServletRequest#startAsync was called is about to
-     * return to the container
+     * Notifies this Request that the container-initiated dispatch during which ServletRequest#startAsync was called is
+     * about to return to the container
      */
     void onExitService() {
-        final AsyncContextImpl ac = asyncContext;
+        final AsyncContextImpl asyncContextImpl = asyncContext;
 
-        if (ac != null) {
-            ac.setOkToConfigure(false);
+        if (asyncContextImpl != null) {
+            asyncContextImpl.setOkToConfigure(false);
 
             if (asyncStarted.get()) {
-                coyoteRequest.getResponse().getSuspendContext().setTimeout(
-                        ac.getTimeout(), TimeUnit.MILLISECONDS);
+                grizzlyRequest.getResponse().getSuspendContext().setTimeout(asyncContextImpl.getTimeout(), TimeUnit.MILLISECONDS);
             }
 
-            ac.onExitService();
+            asyncContextImpl.onExitService();
         }
         afterService = true;
         if (resume) {
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         }
 
     }
 
     void resumeAfterService() {
         if (afterService) {
-            coyoteRequest.getResponse().resume();
+            grizzlyRequest.getResponse().resume();
         } else {
             resume = true;
         }
@@ -4258,35 +3615,29 @@ public class Request
 
     void errorDispatchAndComplete(Throwable t) {
         /*
-         * If no listeners, or none of the listeners called
-         * AsyncContext#complete or any of the AsyncContext#dispatch
-         * methods (in which case asyncStarted would have been set to false),
-         * perform an error dispatch with a status code equal to 500.
+         * If no listeners, or none of the listeners called AsyncContext#complete or any of the AsyncContext#dispatch methods
+         * (in which case asyncStarted would have been set to false), perform an error dispatch with a status code equal to 500.
          */
-        final AsyncContextImpl ac = asyncContext;
-        if (ac != null
-                && !ac.isDispatchInScope()
-                && !ac.isAsyncComplete()) {
-            ((HttpServletResponse) response).setStatus(
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        final AsyncContextImpl asyncContextImpl = asyncContext;
+        if (asyncContextImpl != null && !asyncContextImpl.isDispatchInScope() && !asyncContextImpl.isAsyncComplete()) {
+            ((HttpServletResponse) response).setStatus(SC_INTERNAL_SERVER_ERROR);
             response.setError();
             if (t != null) {
-                setAttribute(RequestDispatcher.ERROR_EXCEPTION, t);
+                setAttribute(ERROR_EXCEPTION, t);
             }
             try {
                 if (hostValve != null) {
                     hostValve.postInvoke(this, response);
                 }
             } catch (Exception e) {
-                log.log(Level.SEVERE, LogFacade.UNABLE_PERFORM_ERROR_DISPATCH, e);
+                log.log(SEVERE, UNABLE_PERFORM_ERROR_DISPATCH, e);
             } finally {
                 /*
-                 * If no matching error page was found, or the error page
-                 * did not call AsyncContext#complete or any of the
+                 * If no matching error page was found, or the error page did not call AsyncContext#complete or any of the
                  * AsyncContext#dispatch methods, call AsyncContext#complete
                  */
-                if (!ac.isAsyncComplete()) {
-                    ac.complete();
+                if (!asyncContextImpl.isAsyncComplete()) {
+                    asyncContextImpl.complete();
                 }
             }
         }
@@ -4294,25 +3645,26 @@ public class Request
 
     private Multipart getMultipart() {
         if (multipart == null) {
-            multipart = new Multipart(this,
-                    wrapper.getMultipartLocation(),
-                    wrapper.getMultipartMaxFileSize(),
-                    wrapper.getMultipartMaxRequestSize(),
-                    wrapper.getMultipartFileSizeThreshold());
+            multipart =
+                new Multipart(
+                    this, wrapper.getMultipartLocation(), wrapper.getMultipartMaxFileSize(),
+                    wrapper.getMultipartMaxRequestSize(), wrapper.getMultipartFileSizeThreshold());
         }
+
         return multipart;
     }
 
     private boolean isMultipartConfigured() {
         if (wrapper instanceof StandardWrapper) {
-            return ((StandardWrapper)wrapper).isMultipartConfigured();
+            return ((StandardWrapper) wrapper).isMultipartConfigured();
         }
+
         return false;
     }
 
     private void checkMultipartConfiguration(String name) {
-        if (! isMultipartConfigured()) {
-            String msg = MessageFormat.format(rb.getString(LogFacade.REQUEST_CALLED_WITHOUT_MULTIPART_CONFIG_EXCEPTION), name);
+        if (!isMultipartConfigured()) {
+            String msg = MessageFormat.format(rb.getString(REQUEST_CALLED_WITHOUT_MULTIPART_CONFIG_EXCEPTION), name);
             throw new IllegalStateException(msg);
         }
     }
@@ -4333,26 +3685,6 @@ public class Request
      * Log a message on the Logger associated with our Container (if any).
      *
      * @param message Message to be logged
-     *
-    private void log(String message) {
-        org.apache.catalina.Logger logger = null;
-        if (connector != null && connector.getContainer() != null) {
-            logger = connector.getContainer().getLogger();
-        }
-        String localName = "Request";
-        if (logger != null) {
-            logger.log(localName + " " + message);
-        } else {
-            if (log.isLoggable(Level.INFO)) {
-                log.info(localName + " " + message);
-            }
-        }
-    }*/
-
-    /**
-     * Log a message on the Logger associated with our Container (if any).
-     *
-     * @param message Message to be logged
      * @param t Associated exception
      */
     private void log(String message, Throwable t) {
@@ -4360,94 +3692,88 @@ public class Request
         if (connector != null && connector.getContainer() != null) {
             logger = connector.getContainer().getLogger();
         }
+
         String localName = "Request";
         if (logger != null) {
-            logger.log(localName + " " + message, t,
-                    org.apache.catalina.Logger.WARNING);
+            logger.log(localName + " " + message, t, org.apache.catalina.Logger.WARNING);
         } else {
-            log.log(Level.WARNING, localName + " " + message, t);
+            log.log(WARNING, localName + " " + message, t);
         }
     }
 
-    // START SJSAS 6419950
     private void populateSSLAttributes() {
-        RequestUtils.populateSSLAttributes(coyoteRequest);
-        Object attr = coyoteRequest.getAttribute(Globals.CERTIFICATES_ATTR);
+        RequestUtils.populateSSLAttributes(grizzlyRequest);
+        Object attr = grizzlyRequest.getAttribute(CERTIFICATES_ATTR);
         if (attr != null) {
-            attributes.put(Globals.CERTIFICATES_ATTR, attr);
+            attributes.put(CERTIFICATES_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(Globals.CIPHER_SUITE_ATTR);
+        attr = grizzlyRequest.getAttribute(CIPHER_SUITE_ATTR);
         if (attr != null) {
-            attributes.put(Globals.CIPHER_SUITE_ATTR, attr);
+            attributes.put(CIPHER_SUITE_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(Globals.KEY_SIZE_ATTR);
+        attr = grizzlyRequest.getAttribute(KEY_SIZE_ATTR);
         if (attr != null) {
-            attributes.put(Globals.KEY_SIZE_ATTR, attr);
+            attributes.put(KEY_SIZE_ATTR, attr);
         }
-        attr = coyoteRequest.getAttribute(Globals.SSL_SESSION_ID_ATTR);
+        attr = grizzlyRequest.getAttribute(SSL_SESSION_ID_ATTR);
         if (attr != null) {
-            attributes.put(Globals.SSL_SESSION_ID_ATTR, attr);
+            attributes.put(SSL_SESSION_ID_ATTR, attr);
         }
     }
-    // END SJSAS 6419950
 
-    // START GlassFish 896
     private void initSessionTracker() {
         notes.put(Globals.SESSION_TRACKER, sessionTracker);
     }
-    // END GlassFish 896
 
     /**
-     * lock the session associated with this request
-     * this will be a foreground lock
-     * checks for background lock to clear
-     * and does a decay poll loop to wait until
-     * it is clear; after 5 times it takes control for
-     * the foreground
+     * lock the session associated with this request this will be a foreground lock checks for background lock to clear and
+     * does a decay poll loop to wait until it is clear; after 5 times it takes control for the foreground
      *
      * @return the session that's been locked
      */
     @Override
     public Session lockSession() {
-        Session sess = getSessionInternal(false);
+        Session session = getSessionInternal(false);
+
         // Now lock the session
-        if (sess != null) {
+        if (session != null) {
             long pollTime = 200L;
             int maxNumberOfRetries = 7;
             int tryNumber = 0;
             boolean keepTrying = true;
             boolean lockResult = false;
+
             // Try to lock up to maxNumberOfRetries times.
             // Poll and wait starting with 200 ms.
-            while(keepTrying) {
-                lockResult = sess.lockForeground();
-                if(lockResult) {
+            while (keepTrying) {
+                lockResult = session.lockForeground();
+                if (lockResult) {
                     keepTrying = false;
                     break;
                 }
                 tryNumber++;
-                if(tryNumber < maxNumberOfRetries) {
+                if (tryNumber < maxNumberOfRetries) {
                     pollTime = pollTime * 2L;
                     threadSleep(pollTime);
                 } else {
                     // Tried to wait and lock maxNumberOfRetries times.
                     // Unlock the background so we can take over.
-                    log.log(Level.WARNING, LogFacade.BREAKING_BACKGROUND_LOCK_EXCEPTION, sess);
-                    if (sess instanceof StandardSession) {
-                        ((StandardSession)sess).unlockBackground();
+                    log.log(WARNING, BREAKING_BACKGROUND_LOCK_EXCEPTION, session);
+                    if (session instanceof StandardSession) {
+                        ((StandardSession) session).unlockBackground();
                     }
                 }
             }
         }
 
-        return sess;
+        return session;
     }
 
     private void threadSleep(long sleepTime) {
         try {
             Thread.sleep(sleepTime);
         } catch (InterruptedException e) {
-            ;
+
         }
     }
 
@@ -4456,48 +3782,45 @@ public class Request
      */
     @Override
     public void unlockSession() {
-        Session sess = getSessionInternal(false);
+        Session session = getSessionInternal(false);
         // Now unlock the session
-        if (sess != null) {
-            sess.unlockForeground();
+        if (session != null) {
+            session.unlockForeground();
         }
     }
 
     /**
-     * Increments the version of the given session, and stores it as a
-     * request attribute, so it can later be included in a response cookie.
+     * Increments the version of the given session, and stores it as a request attribute, so it can later be included in a
+     * response cookie.
      */
-    private void incrementSessionVersion(StandardSession ss,
-                                         Context context) {
-        if (ss == null || context == null) {
+    private void incrementSessionVersion(StandardSession standardSession, Context context) {
+        if (standardSession == null || context == null) {
             return;
         }
 
-        String versionString = Long.toString(ss.incrementVersion());
+        String versionString = Long.toString(standardSession.incrementVersion());
 
         Map<String, String> sessionVersions = getSessionVersionsRequestAttribute();
         if (sessionVersions == null) {
-            sessionVersions = new HashMap<String, String>();
-            setAttribute(Globals.SESSION_VERSIONS_REQUEST_ATTRIBUTE,
-                         sessionVersions);
+            sessionVersions = new HashMap<>();
+            setAttribute(SESSION_VERSIONS_REQUEST_ATTRIBUTE, sessionVersions);
         }
+
         String path = context.getPath();
         if ("".equals(path)) {
             path = "/";
         }
+
         sessionVersions.put(path, versionString);
     }
 
     @SuppressWarnings("unchecked")
     Map<String, String> getSessionVersionsRequestAttribute() {
-        return (Map<String, String>) getAttribute(
-                Globals.SESSION_VERSIONS_REQUEST_ATTRIBUTE);
+        return (Map<String, String>) getAttribute(SESSION_VERSIONS_REQUEST_ATTRIBUTE);
     }
 
     private boolean isSessionVersioningSupported() {
-        return context != null &&
-            context.getManager() != null &&
-            context.getManager().isSessionVersioningSupported();
+        return context != null && context.getManager() != null && context.getManager().isSessionVersioningSupported();
     }
 
     @Override
@@ -4518,87 +3841,4 @@ public class Request
         return null;
     }
 
-    /**
-     * This class will be invoked by Grizzly when a suspended operation is
-     * resumed {@link org.glassfish.grizzly.http.server.Response#resume} or has timed out.
-     * See {@link org.glassfish.grizzly.http.server.Response.ResponseAttachment} for details.
-     */
-//    private final static class RequestAttachment<A> extends
-//            org.glassfish.grizzly.http.server.Response.ResponseAttachment {
-//
-//        private Response res;
-//
-//        public RequestAttachment(Long timeout, A attachment,
-//                CompletionHandler<? super A> completionHandler,
-//                Response res) {
-//            super(timeout, attachment, completionHandler, res.getCoyoteResponse());
-//            this.res = res;
-//        }
-//
-//        @Override
-//        public void resume() {
-//            getCompletionHandler().resumed(getAttachment());
-//            if (log.isLoggable(Level.FINE)) {
-//                log.log(Level.FINE, "RequestAttachement.resume: " + res);
-//            }
-//            completeProcessing();
-//        }
-//
-//        /**
-//         * {@inheritDoc}
-//         */
-//        //@Override
-//        public void handleSelectedKey(SelectionKey selectionKey) {
-//            if (!selectionKey.isValid() || discardDisconnectEvent){
-//                selectionKey.cancel();
-//                return;
-//            }
-//            try {
-//                ((Request)getAttachment()).clientClosedConnection = ((SocketChannel)selectionKey.channel()).
-//                    read(ByteBuffer.allocate(1)) == -1;
-//            } catch (IOException ex) {
-//
-//            } finally{
-//                if (((Request)getAttachment()).clientClosedConnection){
-//                   selectionKey.cancel();
-//                   getCompletionHandler().cancelled(getAttachment());
-//                }
-//            }
-//        }
-//
-//        void completeProcessing() {
-//            try {
-//                res.finishResponse();
-//            } catch (IOException ex) {
-//                if (log.isLoggable(Level.FINE)) {
-//                    log.log(Level.FINE, "res.finishResponse()" + res);
-//                }
-//            }
-//            res.recycle();
-//            res.getRequest().recycle();
-//        }
-//
-//        @Override
-//        public boolean timeout() {
-//            // If the buffers are empty, commit the response header
-//            boolean result = true;
-//
-//            try {
-//                if (log.isLoggable(Level.FINE)) {
-//                    log.log(Level.FINE, "RequestAttachement.timeout: " + res);
-//                }
-//                cancel();
-//            } finally {
-//                Request req = (Request)getAttachment();
-//                final AsyncContextImpl asyncContext = req.asyncContext;
-//                if (asyncContext != null && !asyncContext.getAndResetDispatchInScope()) {
-//                completeProcessing();
-//                } else {
-//                    result = false;
-//            }
-//        }
-//
-//            return result;
-//    }
-//}
 }

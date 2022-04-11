@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,47 +18,53 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.security.SecurityUtil;
+import static org.apache.catalina.LogFacade.NULL_RESPONSE_OBJECT;
 
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.*;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.UnsupportedCharsetException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
 
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.security.SecurityUtil;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Facade class that wraps a Coyote response object.
- * All methods are delegated to the wrapped response.
+ * Facade class that wraps a Coyote response object. All methods are delegated to the wrapped response.
  *
  * @author Remy Maucherat
  * @author Jean-Francois Arcand
- * @version $Revision: 1.9 $ $Date: 2007/05/05 05:32:43 $
  */
-
-
-public class ResponseFacade
-    implements HttpServletResponse {
+public class ResponseFacade implements HttpServletResponse {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
+    // ----------------------------------------------- Class/Instance Variables
 
+    /**
+     * The wrapped response.
+     */
+    protected Response response;
 
     // ----------------------------------------------------------- DoPrivileged
 
-    private final class SetContentTypePrivilegedAction
-            implements PrivilegedAction<Void> {
+    private final class SetContentTypePrivilegedAction implements PrivilegedAction<Void> {
 
         private String contentType;
 
-        public SetContentTypePrivilegedAction(String contentType){
+        public SetContentTypePrivilegedAction(String contentType) {
             this.contentType = contentType;
         }
 
@@ -68,9 +75,7 @@ public class ResponseFacade
         }
     }
 
-
     // ----------------------------------------------------------- Constructors
-
 
     /**
      * Construct a wrapper for the specified response.
@@ -81,18 +86,7 @@ public class ResponseFacade
         this.response = response;
     }
 
-
-    // ----------------------------------------------- Class/Instance Variables
-
-
-    /**
-     * The wrapped response.
-     */
-    protected Response response = null;
-
-
     // --------------------------------------------------------- Public Methods
-
 
     /**
      * Prevent cloning the facade.
@@ -102,7 +96,6 @@ public class ResponseFacade
         throw new CloneNotSupportedException();
     }
 
-
     /**
      * Clear facade.
      */
@@ -110,119 +103,90 @@ public class ResponseFacade
         response = null;
     }
 
-
     public void finish() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         response.setSuspended(true);
-
     }
 
-
     public boolean isFinished() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.isSuspended();
     }
-
 
     // ------------------------------------------------ ServletResponse Methods
 
     @Override
     public String getCharacterEncoding() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.getCharacterEncoding();
     }
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        //        if (isFinished())
-        //            throw new IllegalStateException
-        //                (/*sm.getString("responseFacade.finished")*/);
+        checkResponseNull();
 
         ServletOutputStream sos = response.getOutputStream();
-        if (isFinished())
+        if (isFinished()) {
             response.setSuspended(true);
-        return (sos);
+        }
+
+        return sos;
     }
 
     @Override
     public PrintWriter getWriter() throws IOException {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
+        try {
+            PrintWriter writer = response.getWriter();
+            if (isFinished()) {
+                response.setSuspended(true);
+            }
+
+            return writer;
+        } catch (UnsupportedCharsetException e) {
+            // Servlet 6 states we should throw an UnsupportedEncodingException, but our backend
+            // naturally throws an UnsupportedCharsetException.
+            UnsupportedEncodingException unsupportedEncodingException = new UnsupportedEncodingException();
+            unsupportedEncodingException.initCause(e);
+            throw unsupportedEncodingException;
         }
-
-        //        if (isFinished())
-        //            throw new IllegalStateException
-        //                (/*sm.getString("responseFacade.finished")*/);
-
-        PrintWriter writer = response.getWriter();
-        if (isFinished())
-            response.setSuspended(true);
-        return (writer);
     }
 
     @Override
     public void setContentLength(int len) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setContentLength(len);
     }
 
     @Override
     public void setContentLengthLong(long len) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setContentLengthLong(len);
     }
 
     @Override
     public void setContentType(String type) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
+        if (isCommitted()) {
+            return;
         }
 
-        if (isCommitted())
-            return;
-
-        if (SecurityUtil.isPackageProtectionEnabled()){
+        if (SecurityUtil.isPackageProtectionEnabled()) {
             AccessController.doPrivileged(new SetContentTypePrivilegedAction(type));
         } else {
             response.setContentType(type);
@@ -231,405 +195,294 @@ public class ResponseFacade
 
     @Override
     public void setBufferSize(int size) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.setBufferSize(size);
     }
 
     @Override
     public int getBufferSize() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.getBufferSize();
     }
 
     @Override
     public void flushBuffer() throws IOException {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
+        if (isFinished()) {
+            return;
         }
 
-        if (isFinished())
-            //            throw new IllegalStateException
-            //                (/*sm.getString("responseFacade.finished")*/);
-            return;
-
-        if (SecurityUtil.isPackageProtectionEnabled()){
-            try{
-                AccessController.doPrivileged(
-                        new PrivilegedExceptionAction<Void>(){
+        if (SecurityUtil.isPackageProtectionEnabled()) {
+            try {
+                AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
 
                     @Override
-                    public Void run() throws IOException{
+                    public Void run() throws IOException {
                         response.setAppCommitted(true);
 
                         response.flushBuffer();
                         return null;
                     }
                 });
-            } catch(PrivilegedActionException e){
+            } catch (PrivilegedActionException e) {
                 Exception ex = e.getException();
-                if (ex instanceof IOException){
-                    throw (IOException)ex;
+                if (ex instanceof IOException) {
+                    throw (IOException) ex;
                 }
             }
         } else {
             response.setAppCommitted(true);
-
             response.flushBuffer();
         }
     }
 
     @Override
     public void resetBuffer() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.resetBuffer();
     }
 
     @Override
     public boolean isCommitted() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return (response.isAppCommitted());
     }
 
     @Override
     public void reset() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.reset();
     }
 
     @Override
     public void setLocale(Locale loc) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setLocale(loc);
     }
 
     @Override
     public Locale getLocale() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.getLocale();
     }
 
     @Override
     public void addCookie(Cookie cookie) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.addCookie(cookie);
     }
 
     @Override
     public boolean containsHeader(String name) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.containsHeader(name);
     }
 
     @Override
     public String encodeURL(String url) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.encodeURL(url);
     }
 
     @Override
     public String encodeRedirectURL(String url) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.encodeRedirectURL(url);
     }
 
     @Override
     public void sendError(int sc, String msg) throws IOException {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.setAppCommitted(true);
-
         response.sendError(sc, msg);
     }
 
     @Override
     public void sendError(int sc) throws IOException {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.setAppCommitted(true);
-
         response.sendError(sc);
     }
 
     @Override
     public void sendRedirect(String location) throws IOException {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            throw new IllegalStateException
-                (/*sm.getString("responseBase.reset.ise")*/);
+        checkResponseNull();
+        checkCommitted();
 
         response.setAppCommitted(true);
-
         response.sendRedirect(location);
     }
 
     @Override
     public void setDateHeader(String name, long date) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setDateHeader(name, date);
     }
 
     @Override
     public void addDateHeader(String name, long date) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.addDateHeader(name, date);
     }
 
     @Override
     public void setHeader(String name, String value) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setHeader(name, value);
     }
 
     @Override
     public void addHeader(String name, String value) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.addHeader(name, value);
     }
 
     @Override
     public void setIntHeader(String name, int value) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setIntHeader(name, value);
     }
 
     @Override
     public void addIntHeader(String name, int value) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.addIntHeader(name, value);
     }
 
     @Override
     public void setStatus(int sc) {
+        checkResponseNull();
 
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
+        if (isCommitted()) {
             return;
+        }
 
         response.setStatus(sc);
     }
 
     @Override
     public String getContentType() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.getContentType();
     }
 
     @Override
     public void setCharacterEncoding(String arg0) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         response.setCharacterEncoding(arg0);
     }
 
-
-    // START SJSAS 6374990
     @Override
     public int getStatus() {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
 
         return response.getStatus();
     }
 
-    // END SJSAS 6374990
-
     @Override
     public String getHeader(String name) {
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
+
         return response.getHeader(name);
     }
 
     @Override
     public Collection<String> getHeaders(String name) {
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
+
         return response.getHeaders(name);
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
+
         return response.getHeaderNames();
     }
 
     @Override
     public Supplier<Map<String, String>> getTrailerFields() {
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
+
         return response.getTrailerFields();
     }
 
     @Override
     public void setTrailerFields(Supplier<Map<String, String>> supplier) {
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
+        checkResponseNull();
+
         response.setTrailerFields(supplier);
     }
+
+    private void checkResponseNull() {
+        if (response == null) {
+            throw new IllegalStateException(rb.getString(NULL_RESPONSE_OBJECT));
+        }
+    }
+
+    private void checkCommitted() {
+        if (isCommitted()) {
+            throw new IllegalStateException();
+        }
+    }
+
 }

@@ -54,12 +54,5 @@
                 </excludes>
             </resource>
         </resources>
-        <plugins>
-            <plugin><!--
-                  Use JDBC 4.0 API regardless of which JDK we are building with.
-                -->
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
 </project>

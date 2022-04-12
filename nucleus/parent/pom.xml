@@ -530,8 +530,7 @@
                 <version>7.0.3</version>
                 <scope>provided</scope>
             </dependency>
-
-            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
+            <!-- This is currently used by osgi-shell cmd -->
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>

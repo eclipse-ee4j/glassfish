@@ -192,7 +192,7 @@
                     <verbose>false</verbose>
                     <linksource>true</linksource>
                     <links>
-                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
+                        <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
                     </links>
                     <show>private</show>
                 </configuration>

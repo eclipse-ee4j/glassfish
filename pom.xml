@@ -73,7 +73,6 @@
         <plugins>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>

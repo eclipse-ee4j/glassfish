@@ -95,18 +95,8 @@
                     <version>2.4</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.jaxb2.maven2</groupId>
-                    <artifactId>maven-jaxb2-plugin</artifactId>
-                    <version>0.8.1</version>
-                </plugin>
-                <plugin>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.3.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxws-maven-plugin</artifactId>
-                    <version>1.12</version>
                 </plugin>
             </plugins>
         </pluginManagement>

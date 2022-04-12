@@ -119,6 +119,7 @@
             </activation>
             <modules>
                 <module>tck</module>
+                <module>admin</module>
                 <module>appserv-tests</module>
             </modules>
         </profile>
@@ -129,7 +130,7 @@
         <profile>
             <id>fastest</id>
             <modules>
-                <!-- Compile dependencies -->
+                <!-- Builds compile dependencies for Ant tests executed by runtest.sh/gftest.sh -->
                 <module>appserv-tests</module>
             </modules>
         </profile>

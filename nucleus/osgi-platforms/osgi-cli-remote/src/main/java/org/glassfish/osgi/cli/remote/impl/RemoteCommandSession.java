@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.osgi.cli.remote;
+package org.glassfish.osgi.cli.remote.impl;
 
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -26,6 +27,7 @@ import java.nio.channels.WritableByteChannel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.UUID;
+
 import org.apache.felix.service.command.CommandSession;
 
 /**
@@ -39,48 +41,46 @@ import org.apache.felix.service.command.CommandSession;
  *
  * @author ancoron
  */
-public class RemoteCommandSession {
+class RemoteCommandSession {
 
     private final CommandSession delegate;
     private final String id;
 
-    public RemoteCommandSession(CommandSession delegate)
-    {
+    public RemoteCommandSession(final CommandSession delegate) {
         this.delegate = delegate;
         this.id = UUID.randomUUID().toString();
     }
 
+
     /**
-     * Get the identifier for this session, which is a UUID of type 4.
-     *
-     * @return
+     * @return the identifier for this session, which is a UUID of type 4.
      */
     public String getId() {
         return id;
     }
 
+
     /**
-     * Attached the specified streams to the delegate of this instance and
+     * Attaches the specified streams to the delegate of this instance and
      * returns the modified delegate.
      *
      * @param in The "stdin" stream for the session
      * @param out The "stdout" stream for the session
      * @param err The "stderr" stream for the session
-     *
      * @return The modified {@link CommandSession} delegate
-     *
      * @see #detach()
      */
-    public CommandSession attach(InputStream in, PrintStream out, PrintStream err) {
+    public CommandSession attach(final InputStream in, final PrintStream out, final PrintStream err) {
         set(this.delegate, "in", in);
         set(this.delegate, "out", out);
         set(this.delegate, "err", err);
-        ReadableByteChannel inCh = Channels.newChannel(in);
-        WritableByteChannel outCh = Channels.newChannel(out);
-        WritableByteChannel errCh = out == err ? outCh : Channels.newChannel(err);
+        final ReadableByteChannel inCh = Channels.newChannel(in);
+        final WritableByteChannel outCh = Channels.newChannel(out);
+        final WritableByteChannel errCh = out == err ? outCh : Channels.newChannel(err);
         set(this.delegate, "channels", new Channel[] {inCh, outCh, errCh});
         return this.delegate;
     }
+
 
     /**
      * Detaches all previously attached streams and hence, ensures that there
@@ -94,11 +94,14 @@ public class RemoteCommandSession {
         set(this.delegate, "err", null);
     }
 
+
     private void set(final Object obj, final String field, final Object value) {
         try {
             final Field f = obj.getClass().getDeclaredField(field);
-            final boolean accessible = f.isAccessible();
-            if(!accessible) {
+            final boolean accessible = f.canAccess(obj);
+            if (accessible) {
+                f.set(obj, value);
+            } else {
                 AccessController.doPrivileged(new PrivilegedAction<Void>() {
 
                     @Override
@@ -106,7 +109,7 @@ public class RemoteCommandSession {
                         f.setAccessible(true);
                         try {
                             f.set(obj, value);
-                        } catch(Exception x) {
+                        } catch (final Exception x) {
                             throw new RuntimeException(x);
                         }
 
@@ -115,10 +118,8 @@ public class RemoteCommandSession {
                         return null;
                     }
                 });
-            } else {
-                f.set(obj, value);
             }
-        } catch(Exception x) {
+        } catch (final Exception x) {
             throw new RuntimeException(x);
         }
     }

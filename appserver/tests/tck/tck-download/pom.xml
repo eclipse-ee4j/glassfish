@@ -32,6 +32,9 @@
     <name>TCK: Download and Install Dependencies not in Maven Repos</name>
 
     <modules>
+        <module>jakarta-rest-tck</module>
+        <module>jakarta-faces-tck</module>
+        <module>jakarta-authentication-tck</module>
         <module>jakarta-authorization-tck</module>
         <module>tsharness</module>
         <module>javatest</module>
@@ -52,34 +55,4 @@
             </plugin>
         </plugins>
     </build>
-    
-    <profiles>
-        <profile>
-            <id>tck-all</id>
-            <modules>
-                <module>jakarta-rest-tck</module>
-                <module>jakarta-faces-tck</module>
-                <module>jakarta-pages-tck</module>
-                <module>jakarta-authentication-tck</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-rest</id>
-            <modules>
-                <module>jakarta-rest-tck</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-faces</id>
-            <modules>
-                <module>jakarta-faces-tck</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tck-authentication</id>
-            <modules>
-                <module>jakarta-authentication-tck</module>
-            </modules>
-        </profile>
-    </profiles>
 </project>

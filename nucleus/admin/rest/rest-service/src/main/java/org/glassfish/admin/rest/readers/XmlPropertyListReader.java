@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,17 +51,14 @@ public class XmlPropertyListReader implements MessageBodyReader<List<Map<String,
     @Override
     public List<Map<String, String>> readFrom(Class<List<Map<String, String>>> type, Type genericType, Annotation[] annotations,
             MediaType mediaType, MultivaluedMap<String, String> headers, InputStream in) throws IOException {
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             StringBuilder sb = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line = reader.readLine();
             while (line != null) {
                 sb.append(line);
                 line = reader.readLine();
             }
-
             return MarshallingUtils.getPropertiesFromXml(sb.toString());
-
         } catch (Exception exception) {
             throw new WebApplicationException(exception, Response.Status.INTERNAL_SERVER_ERROR);
         }

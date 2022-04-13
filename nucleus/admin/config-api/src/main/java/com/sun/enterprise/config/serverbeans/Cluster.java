@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,14 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
-import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
 import com.sun.enterprise.config.serverbeans.customvalidators.ConfigRefConstraint;
 import com.sun.enterprise.config.serverbeans.customvalidators.ConfigRefValidator;
+import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
+import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
-import java.io.*;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.config.support.*;
-import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.*;
-import org.glassfish.api.admin.config.Named;
-import org.glassfish.api.admin.config.PropertyDesc;
-import org.glassfish.api.admin.config.ReferenceContainer;
-// import org.glassfish.virtualization.util.RuntimeContext;
-
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.ArrayList;
-import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
-
-import org.glassfish.quality.ToDo;
 
 import jakarta.inject.Inject;
 import jakarta.validation.Payload;
@@ -62,12 +33,51 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.config.Named;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.admin.config.PropertyDesc;
+import org.glassfish.api.admin.config.ReferenceContainer;
+import org.glassfish.config.support.CreationDecorator;
+import org.glassfish.config.support.DeletionDecorator;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
+
+import static org.glassfish.config.support.Constants.NAME_SERVER_REGEX;
+
 /**
  * A cluster defines a homogeneous set of server instances that share the same applications, resources, and
  * configuration.
  */
 @Configured
-@SuppressWarnings("unused")
 @ConfigRefConstraint(message = "{configref.invalid}", payload = ConfigRefValidator.class)
 @NotDuplicateTargetName(message = "{cluster.duplicate.name}", payload = Cluster.class)
 @ReferenceConstraint(skipDuringCreation = true, payload = Cluster.class)
@@ -80,13 +90,11 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
      * @throws PropertyVetoException if a listener vetoes the change
      */
     @Param(name = "name", primary = true)
-    @Override
-    public void setName(String value) throws PropertyVetoException;
+    @Override void setName(String value) throws PropertyVetoException;
 
     @NotTargetKeyword(message = "{cluster.reserved.name}", payload = Cluster.class)
     @Pattern(regexp = NAME_SERVER_REGEX, message = "{cluster.invalid.name}", payload = Cluster.class)
-    @Override
-    public String getName();
+    @Override String getName();
 
     /**
      * points to a named config. All server instances in the cluster will share this config.
@@ -95,7 +103,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
      */
     @Attribute
     @NotNull
-    @Pattern(regexp = NAME_SERVER_REGEX)
+    @Pattern(regexp = NAME_SERVER_REGEX, message = "{config.invalid.name}")
     @ReferenceConstraint.RemoteKey(message = "{resourceref.invalid.configref}", type = Config.class)
     String getConfigRef();
 
@@ -334,8 +342,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     @DuckTyped
     List<Server> getInstances();
 
-    @DuckTyped
-    public ServerRef getServerRefByRef(String ref);
+    @DuckTyped ServerRef getServerRefByRef(String ref);
 
     // four trivial methods that ReferenceContainer's need to implement
     @DuckTyped
@@ -408,7 +415,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             Dom clusterDom = Dom.unwrap(cluster);
             Domain domain = clusterDom.getHabitat().getService(Domain.class);
 
-            ArrayList<Server> instances = new ArrayList<Server>();
+            ArrayList<Server> instances = new ArrayList<>();
             for (ServerRef sRef : cluster.getServerRef()) {
                 Server svr = domain.getServerNamed(sRef.getRef());
                 // the instance's domain.xml only has its own server
@@ -456,6 +463,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             if (ref != null) {
                 ConfigSupport.apply(new SingleConfigCode<Cluster>() {
 
+                    @Override
                     public Object run(Cluster param) {
                         return param.getResourceRef().remove(ref);
                     }
@@ -467,6 +475,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
             ConfigSupport.apply(new SingleConfigCode<Cluster>() {
 
+                @Override
                 public Object run(Cluster param) throws PropertyVetoException, TransactionFailure {
 
                     ResourceRef newResourceRef = param.createChild(ResourceRef.class);
@@ -479,7 +488,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
         }
 
         public static <T extends ClusterExtension> List<T> getExtensionsByType(Cluster cluster, Class<T> type) {
-            List<T> extensions = new ArrayList<T>();
+            List<T> extensions = new ArrayList<>();
             for (ClusterExtension ce : cluster.getExtensions()) {
                 try {
                     type.cast(ce);
@@ -829,8 +838,9 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
             // check if the config is null or still in use by some other
             // ReferenceContainer or is not <cluster-name>-config -- if so just return...
-            if (config == null || domain.getReferenceContainersOf(config).size() > 1 || !instanceConfig.equals(child.getName() + "-config"))
+            if (config == null || domain.getReferenceContainersOf(config).size() > 1 || !instanceConfig.equals(child.getName() + "-config")) {
                 return;
+            }
 
             try {
                 File configConfigDir = new File(env.getConfigDirPath(), config.getName());

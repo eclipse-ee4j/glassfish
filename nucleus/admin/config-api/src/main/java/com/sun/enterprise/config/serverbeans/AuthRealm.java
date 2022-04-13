@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,42 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import com.sun.enterprise.config.serverbeans.customvalidators.*;
+import com.sun.enterprise.config.serverbeans.customvalidators.FileRealmPropertyCheck;
+import com.sun.enterprise.config.serverbeans.customvalidators.JDBCRealmPropertyCheck;
+import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+import com.sun.enterprise.config.serverbeans.customvalidators.LDAPRealmPropertyCheck;
+import com.sun.enterprise.config.serverbeans.customvalidators.SolarisRealmPropertyCheck;
+
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import static org.glassfish.config.support.Constants.NAME_REGEX;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
-import java.util.List;
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 @Configured
 @FileRealmPropertyCheck
 @LDAPRealmPropertyCheck
 @JDBCRealmPropertyCheck
 @SolarisRealmPropertyCheck
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm") })
+@RestRedirects({
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-auth-realm"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-auth-realm")
+})
+
 /**
  * The auth-realm element defines and configures one authentication realm. There must be at least one realm available
  * for a server instance; any number can be configured, as desired. Authentication realms need provider-specific
@@ -54,7 +69,7 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = NAME_REGEX)
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
     String getName();
 
     /**
@@ -87,8 +102,9 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
     class Duck {
         public static String getGroupMapping(AuthRealm me) {
             Property prop = me.getProperty("group-mapping"); //have to hard-code this, unfortunately :(
-            if (prop != null)
+            if (prop != null) {
                 return prop.getValue();
+            }
             return null;
         }
     }
@@ -96,6 +112,7 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
     /**
      * Properties.
      */
+    @Override
     @PropertiesDesc(props = {
             @PropertyDesc(name = "jaas-context", description = "jaas-contextfile,jdbcSpecifies the JAAS (Java Authentication and Authorization Service) context"),
             @PropertyDesc(name = "file", defaultValue = "${com.sun.aas.instanceRoot}/config/keyfile", description = "file realm. Specifies the file that stores user names, passwords, and group names."),

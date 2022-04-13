@@ -32,7 +32,7 @@
     <name>TCK: Install Jakarta REST TCK</name>
 
     <properties>
-    	<tck.test.rest.file>jakarta-pages-tck-3.1.0.zip</tck.test.rest.file>
+        <tck.test.rest.file>jakarta-restful-ws-tck-3.1.0.zip</tck.test.rest.file>
         <tck.test.rest.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.rest.file}</tck.test.rest.url>
     </properties>
 

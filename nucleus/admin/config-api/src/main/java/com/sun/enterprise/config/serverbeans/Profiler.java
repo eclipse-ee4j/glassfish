@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,22 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
 
 import org.glassfish.api.admin.config.PropertiesDesc;
-import static org.glassfish.config.support.Constants.NAME_REGEX;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import org.glassfish.quality.ToDo;
-
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  *
@@ -59,15 +59,15 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      */
     @Attribute(key = false) // bizarre case of having a name, but it's not a key; it's a singleton
     @NotNull
-    @Pattern(regexp = NAME_REGEX)
-    public String getName();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getName();
 
     /**
      * Sets the value of the name property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the classpath property.
@@ -75,14 +75,14 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getClasspath();
+    String getClasspath();
 
     /**
      * Sets the value of the classpath property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setClasspath(String value) throws PropertyVetoException;
+    void setClasspath(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the nativeLibraryPath property.
@@ -90,14 +90,14 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getNativeLibraryPath();
+    String getNativeLibraryPath();
 
     /**
      * Sets the value of the nativeLibraryPath property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setNativeLibraryPath(String value) throws PropertyVetoException;
+    void setNativeLibraryPath(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
@@ -105,18 +105,19 @@ public interface Profiler extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getEnabled();
+    String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
+    @Override
     @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
     @PropertiesDesc(props = {})
     @Element

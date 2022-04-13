@@ -111,17 +111,10 @@ public class UpdateJmsPhysicalDestinationCommand extends JMSDestination implemen
     }
 
     protected void updateJMSDestination() throws Exception {
-        logger.log(Level.FINE, "__updateJmsPhysicalDestination ...");
-        MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
-
-        try {
-            MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-            AttributeList destAttrs = null;
-
-            if (props != null) {
-                destAttrs = convertProp2Attrs(props);
-            }
-
+        logger.log(Level.FINE, "updateJMSDestination ...");
+        try (MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime)) {
+            final MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
+            final AttributeList destAttrs = props == null ? null : convertProp2Attrs(props);
             if (destType.equalsIgnoreCase("topic")) {
                 destType = DESTINATION_TYPE_TOPIC;
             } else if (destType.equalsIgnoreCase("queue")) {
@@ -130,16 +123,7 @@ public class UpdateJmsPhysicalDestinationCommand extends JMSDestination implemen
             ObjectName on = new ObjectName(MBEAN_DOMAIN_NAME + ":type=Destination,subtype=Config,desttype=" + destType +",name=\"" + destName + "\"");
             mbsc.setAttributes(on, destAttrs);
         } catch (Exception e) {
-            //log JMX Exception trace as WARNING
-            logAndHandleException(e, "admin.mbeans.rmb.error_updating_jms_dest");
-        } finally {
-            try {
-                if (mqInfo != null) {
-                    mqInfo.closeMQMBeanServerConnection();
-                }
-            } catch (Exception e) {
-                handleException(e);
-            }
+            throw logAndHandleException(e, "admin.mbeans.rmb.error_updating_jms_dest");
         }
     }
 }

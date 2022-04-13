@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,15 @@ package org.glassfish.jdbc.config;
 
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
@@ -27,18 +36,15 @@ import org.glassfish.config.support.datatypes.Port;
 import org.glassfish.connectors.config.validators.ConnectionPoolErrorMessages;
 import org.glassfish.jdbc.config.validators.JdbcConnectionPoolConstraint;
 import org.glassfish.jdbc.config.validators.JdbcConnectionPoolConstraints;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  * Defines configuration used to create and manage a pool physical database
@@ -69,8 +75,11 @@ import java.util.List;
 })
 @ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.JDBC_POOL)
 @UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=JdbcConnectionPool.class)
-public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourcePool,
-    PropertyBag {
+public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourcePool, PropertyBag {
+
+    String CONNECTION_VALIDATION_METHODS = "(auto-commit|meta-data|custom-validation|table)";
+    String ISOLATION_LEVELS = "(read-uncommitted|read-committed|repeatable-read|serializable)";
+    String RESOURCE_TYPES = "(java.sql.Driver|javax.sql.DataSource|javax.sql.XADataSource|javax.sql.ConnectionPoolDataSource)";
 
     /**
      *
@@ -131,7 +140,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp="(java.sql.Driver|javax.sql.DataSource|javax.sql.XADataSource|javax.sql.ConnectionPoolDataSource)")
+    @Pattern(regexp = RESOURCE_TYPES, message = "Valid values: " + RESOURCE_TYPES)
     String getResType();
 
     /**
@@ -274,7 +283,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *         {@link String }
      */
     @Attribute
-    @Pattern(regexp="(read-uncommitted|read-committed|repeatable-read|serializable)")
+    @Pattern(regexp = ISOLATION_LEVELS, message = "Valid values: " + ISOLATION_LEVELS)
     String getTransactionIsolationLevel();
 
     /**
@@ -299,7 +308,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="true", dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getIsIsolationLevelGuaranteed();
 
     /**
@@ -348,7 +357,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *         {@link String }
      */
     @Attribute (defaultValue="table")
-    @Pattern(regexp="(auto-commit|meta-data|custom-validation|table)")
+    @Pattern(regexp = CONNECTION_VALIDATION_METHODS, message = "Valid values: " + CONNECTION_VALIDATION_METHODS)
     String getConnectionValidationMethod();
 
     /**
@@ -942,6 +951,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * deployment descriptors.
      *
      */
+@Override
 @PropertiesDesc(
     props={
         @PropertyDesc(name="PortNumber", defaultValue="1527", dataType=Port.class,
@@ -966,6 +976,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     @Element
     List<Property> getProperty();
 
+    @Override
     @DuckTyped
     String getIdentity();
 

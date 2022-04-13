@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,13 +37,13 @@ public abstract class JAASAuthConfigProvider extends AuthConfigProviderHelper {
     private static final String DEFAULT_JAAS_APP_NAME = "other";
     private static final String ALL_APPS = "*";
 
-    private String configFileName;
+    private final String configFileName;
     private ExtendedConfigFile jaasConfig;
 
-    private Map<String, ?> properties;
-    private AuthConfigFactory factory;
+    private final Map<String, String> properties;
+    private final AuthConfigFactory factory;
 
-    public JAASAuthConfigProvider(Map properties, AuthConfigFactory factory) {
+    public JAASAuthConfigProvider(Map<String, String> properties, AuthConfigFactory factory) {
         this.properties = properties;
         this.factory = factory;
 
@@ -62,11 +63,13 @@ public abstract class JAASAuthConfigProvider extends AuthConfigProviderHelper {
        selfRegister();
     }
 
+    @Override
     public Map<String, ?> getProperties() {
         return properties;
     }
 
 
+    @Override
     public AuthConfigFactory getFactory() {
         return factory;
     }
@@ -85,24 +88,29 @@ public abstract class JAASAuthConfigProvider extends AuthConfigProviderHelper {
 
             final String description = "JAAS AuthConfig: " + appContext;
 
+            @Override
             public String getMessageLayer() {
                 return layer;
             }
 
+            @Override
             public String getAppContext() {
                 return appContext;
             }
 
+            @Override
             public String getDescription() {
                 return description;
             }
 
+            @Override
             public boolean isPersistent() {
                 return false;
             }
         };
     }
 
+    @Override
     public AuthConfigFactory.RegistrationContext[] getSelfRegistrationContexts() {
         final String[] appContexts = jaasConfig.getAppNames(getModuleTypes());
         RegistrationContext[] rvalue = new RegistrationContext[appContexts.length];
@@ -112,6 +120,7 @@ public abstract class JAASAuthConfigProvider extends AuthConfigProviderHelper {
         return rvalue;
     }
 
+    @Override
     public AuthContextHelper getAuthContextHelper(String appContext, boolean returnNullContexts)
             throws AuthException {
         return new JAASAuthContextHelper(getLoggerName(), returnNullContexts,

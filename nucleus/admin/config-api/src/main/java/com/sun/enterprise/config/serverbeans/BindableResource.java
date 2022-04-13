@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +18,21 @@
 package com.sun.enterprise.config.serverbeans;
 
 import com.sun.enterprise.config.serverbeans.customvalidators.ResourceNameConstraint;
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.DuckTyped;
 
-import java.beans.PropertyVetoException;
 import jakarta.validation.Payload;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.DuckTyped;
+
 @ResourceNameConstraint(message = "{resourcename.invalid.character}", payload = BindableResource.class)
 public interface BindableResource extends Resource, Payload {
+
+    String PATTERN_JNDI = "[^',][^',\\\\]*";
+
     /**
      * Gets the value of the jndiName property.
      *
@@ -35,15 +40,15 @@ public interface BindableResource extends Resource, Payload {
      */
     @Attribute(key = true)
     @NotNull
-    @Pattern(regexp = "[^',][^',\\\\]*")
-    public String getJndiName();
+    @Pattern(regexp = PATTERN_JNDI, message = "Pattern: " + PATTERN_JNDI)
+    String getJndiName();
 
     /**
      * Sets the value of the jndiName property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setJndiName(String value) throws PropertyVetoException;
+    void setJndiName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
@@ -60,6 +65,7 @@ public interface BindableResource extends Resource, Payload {
      */
     void setEnabled(String value) throws PropertyVetoException;
 
+    @Override
     @DuckTyped
     String getIdentity();
 

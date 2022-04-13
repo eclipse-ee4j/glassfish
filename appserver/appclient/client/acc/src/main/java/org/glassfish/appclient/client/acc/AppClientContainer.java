@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -236,7 +237,7 @@ public class AppClientContainer {
 
     private URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
-    private Collection<EntityManagerFactory> emfs = null;
+    private final Collection<EntityManagerFactory> emfs = null;
 
 //    private boolean isJWS = false;
 
@@ -354,7 +355,7 @@ public class AppClientContainer {
          * Allow pre-destroy handling to work on the main class during clean-up.
          */
         cleanup.setInjectionManager(injectionManager,
-                clientMainClassSetting.clientMainClass);
+                ClientMainClassSetting.clientMainClass);
 
         /*
          * If this app client contains persistence unit refs, then initialize
@@ -456,9 +457,10 @@ public class AppClientContainer {
 
     private void cleanupWhenSafe() {
         if (isEDTRunning()) {
-            final AtomicReference<Thread> edt = new AtomicReference<Thread>();
+            final AtomicReference<Thread> edt = new AtomicReference<>();
             try {
                 SwingUtilities.invokeAndWait(new Runnable() {
+                    @Override
                     public void run() {
                         edt.set(Thread.currentThread());
                     }
@@ -495,7 +497,7 @@ public class AppClientContainer {
         // String[] as the only argument
         Method result = null;
 
-        result = clientMainClassSetting.getClientMainClass(
+        result = ClientMainClassSetting.getClientMainClass(
                 classLoader,
                 injectionManager,
                 invocationManager,
@@ -726,14 +728,14 @@ public class AppClientContainer {
      */
     public interface Builder {
 
-        public AppClientContainer newContainer(URI archiveURI) throws Exception, UserError;
+        AppClientContainer newContainer(URI archiveURI) throws Exception, UserError;
 
-        public AppClientContainer newContainer(URI archiveURI,
+        AppClientContainer newContainer(URI archiveURI,
                 CallbackHandler callbackHandler,
                 String mainClassName,
                 String appName) throws Exception, UserError;
 
-        public AppClientContainer newContainer(URI archiveURI,
+        AppClientContainer newContainer(URI archiveURI,
                 CallbackHandler callbackHandler,
                 String mainClassName,
                 String appName,
@@ -741,9 +743,9 @@ public class AppClientContainer {
 
 
 
-        public AppClientContainer newContainer(Class mainClass) throws Exception, UserError;
+        AppClientContainer newContainer(Class mainClass) throws Exception, UserError;
 
-        public TargetServer[] getTargetServers();
+        TargetServer[] getTargetServers();
 
         /**
          * Adds an optional {@link MessageSecurityConfig} setting.
@@ -751,9 +753,9 @@ public class AppClientContainer {
          * @param msConfig the new MessageSecurityConfig
          * @return the <code>Builder</code> instance
          */
-        public Builder addMessageSecurityConfig(final MessageSecurityConfig msConfig);
+        Builder addMessageSecurityConfig(final MessageSecurityConfig msConfig);
 
-        public List<MessageSecurityConfig> getMessageSecurityConfig();
+        List<MessageSecurityConfig> getMessageSecurityConfig();
 
        /**
          * Sets the optional authentication realm for the ACC.
@@ -764,9 +766,9 @@ public class AppClientContainer {
          * @param className name of the class which implements the realm
          * @return the <code>Builder</code> instance
          */
-        public Builder authRealm(final String className);
+        Builder authRealm(final String className);
 
-        public AuthRealm getAuthRealm();
+        AuthRealm getAuthRealm();
 
 //        /**
 //         * Sets the callback handler the ACC will use when authentication is
@@ -799,9 +801,9 @@ public class AppClientContainer {
          * @param password password valid in the default realm on the server for the username
          * @return the <code>Builder</code> instance
         */
-        public Builder clientCredentials(final String user, final char[] password);
+        Builder clientCredentials(final String user, final char[] password);
 
-        public ClientCredential getClientCredential();
+        ClientCredential getClientCredential();
 
         /**
          * Sets the optional client credentials and server-side realm to be used during
@@ -816,7 +818,7 @@ public class AppClientContainer {
          * @param realmName name of the realm on the server within which the credentials are valid
          * @return the <code>Builder</code> instance
          */
-        public Builder clientCredentials(final String user, final char[] password, final String realm);
+        Builder clientCredentials(final String user, final char[] password, final String realm);
 
         /**
          * Sets the container-level Properties.
@@ -824,7 +826,7 @@ public class AppClientContainer {
          * @param containerProperties
          * @return
          */
-        public Builder containerProperties(final Properties containerProperties);
+        Builder containerProperties(final Properties containerProperties);
 
         /**
          * Sets the container-level properties.
@@ -835,13 +837,13 @@ public class AppClientContainer {
          * @param containerProperties Property objects to use in setting the properties
          * @return
          */
-        public Builder containerProperties(final List<Property> containerProperties);
+        Builder containerProperties(final List<Property> containerProperties);
 
         /**
          * Returns the container-level Properties.
          * @return container-level properties
          */
-        public Properties getContainerProperties();
+        Properties getContainerProperties();
 
         /**
          * Sets the logger which the ACC should use as it runs.
@@ -849,9 +851,9 @@ public class AppClientContainer {
          * @param logger
          * @return
          */
-        public Builder logger(final Logger logger);
+        Builder logger(final Logger logger);
 
-        public Logger getLogger();
+        Logger getLogger();
 
         /**
          * Sets whether the ACC should send the password to the server during
@@ -860,9 +862,9 @@ public class AppClientContainer {
          * @param sendPassword
          * @return
          */
-        public Builder sendPassword(final boolean sendPassword);
+        Builder sendPassword(final boolean sendPassword);
 
-        public boolean getSendPassword();
+        boolean getSendPassword();
 
     }
 

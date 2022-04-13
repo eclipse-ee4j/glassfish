@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,27 @@
 
 package org.glassfish.connectors.config;
 
-import com.sun.enterprise.config.serverbeans.*;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
+import com.sun.enterprise.config.serverbeans.Resource;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
+
 @Configured
-@ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.WORKSECURITYMAP_RESOURCE)
-public interface WorkSecurityMap  extends /*Named,*/ ConfigBeanProxy, Resource {
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.WORKSECURITYMAP_RESOURCE)
+public interface WorkSecurityMap extends ConfigBeanProxy, Resource {
+
+    String PATTERN_RA_NAME = "[^',][^',\\\\]*";
 
     /**
      * Gets the value of the enabled property.
@@ -36,14 +45,14 @@ public interface WorkSecurityMap  extends /*Named,*/ ConfigBeanProxy, Resource {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
     String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
     void setEnabled(String value) throws PropertyVetoException;
 
@@ -60,10 +69,9 @@ public interface WorkSecurityMap  extends /*Named,*/ ConfigBeanProxy, Resource {
      * Sets the value of the description property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
-
 
     /**
      * Gets the value of the ra name
@@ -73,53 +81,55 @@ public interface WorkSecurityMap  extends /*Named,*/ ConfigBeanProxy, Resource {
      */
     @Attribute
     @NotNull
-    @Pattern(regexp="[^',][^',\\\\]*")
-    public String getResourceAdapterName();
+    @Pattern(regexp = PATTERN_RA_NAME, message = "Pattern: " + PATTERN_RA_NAME)
+    String getResourceAdapterName();
 
     /**
      * Sets the value of the ra name
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setResourceAdapterName(String value) throws PropertyVetoException;
+    void setResourceAdapterName(String value) throws PropertyVetoException;
 
     /**
      * Gets the group map
-     * @return group map
      *
+     * @return group map
      */
     @Element
     @NotNull
-    public List<GroupMap> getGroupMap();
+    List<GroupMap> getGroupMap();
 
     /**
      * gets the principal map
+     *
      * @return principal map
      */
     @Element
     @NotNull
-    public List<PrincipalMap> getPrincipalMap();
+    List<PrincipalMap> getPrincipalMap();
 
     /**
-     *  Name of the configured object
+     * Name of the configured object
      *
      * @return name of the configured object
      */
-    @Attribute(required=true, key=true)
-    @Pattern(regexp="[^',][^',\\\\]*")
+    @Attribute(required = true, key = true)
+    @Pattern(regexp = PATTERN_RA_NAME, message = "Pattern: " + PATTERN_RA_NAME)
     @NotNull
-    public String getName();
+    String getName();
 
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
+    @Override
     @DuckTyped
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(WorkSecurityMap wsm){
-            return ("resource-adapter : " + wsm.getResourceAdapterName()
-                    + " : security-map : " +  wsm.getName());
+
+        public static String getIdentity(WorkSecurityMap wsm) {
+            return ("resource-adapter : " + wsm.getResourceAdapterName() + " : security-map : " + wsm.getName());
         }
     }
 }

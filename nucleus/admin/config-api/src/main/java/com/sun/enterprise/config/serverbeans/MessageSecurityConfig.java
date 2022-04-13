@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,19 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import java.beans.PropertyVetoException;
-import java.io.Serializable;
-import java.util.List;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import org.glassfish.api.admin.RestRedirects;
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
+
 import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
@@ -43,8 +43,10 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 }) */
 
 @Configured
-@RestRedirects({ @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-message-security-provider"),
-        @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-message-security-provider") })
+@RestRedirects({
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-message-security-provider"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-message-security-provider")
+})
 public interface MessageSecurityConfig extends ConfigBeanProxy {
 
     /**
@@ -57,14 +59,14 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      */
     @Attribute(key = true)
     @NotNull
-    public String getAuthLayer();
+    String getAuthLayer();
 
     /**
      * Sets the value of the authLayer property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setAuthLayer(String value) throws PropertyVetoException;
+    void setAuthLayer(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the defaultProvider property.
@@ -78,15 +80,15 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp = NAME_REGEX)
-    public String getDefaultProvider();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getDefaultProvider();
 
     /**
      * Sets the value of the defaultProvider property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDefaultProvider(String value) throws PropertyVetoException;
+    void setDefaultProvider(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the defaultClientProvider property.
@@ -97,15 +99,15 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      * @return possible object is {@link String }
      */
     @Attribute
-    @Pattern(regexp = NAME_REGEX)
-    public String getDefaultClientProvider();
+    @Pattern(regexp = NAME_REGEX, message = "Pattern: " + NAME_REGEX)
+    String getDefaultClientProvider();
 
     /**
      * Sets the value of the defaultClientProvider property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDefaultClientProvider(String value) throws PropertyVetoException;
+    void setDefaultClientProvider(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the providerConfig property.
@@ -127,5 +129,5 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      * Objects of the following type(s) are allowed in the list {@link ProviderConfig }
      */
     @Element(required = true)
-    public List<ProviderConfig> getProviderConfig();
+    List<ProviderConfig> getProviderConfig();
 }

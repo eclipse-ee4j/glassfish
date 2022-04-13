@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.DuckTyped;
-
-import jakarta.validation.constraints.Pattern;
-import java.beans.PropertyVetoException;
 
 /**
  * Tag interface for all types of resource.
@@ -31,6 +33,8 @@ import java.beans.PropertyVetoException;
  */
 @Configured
 public interface Resource extends ConfigBeanProxy {
+
+    String OBJECT_TYPES = "(system-all|system-all-req|system-admin|system-instance|user)";
 
     /**
      * Gets the value of the objectType property. where object-type defines the type of the resource. It can be: system-all
@@ -42,7 +46,7 @@ public interface Resource extends ConfigBeanProxy {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "user")
-    @Pattern(regexp = "(system-all|system-all-req|system-admin|system-instance|user)")
+    @Pattern(regexp = OBJECT_TYPES, message = "Valid values: " + OBJECT_TYPES)
     String getObjectType();
 
     /**

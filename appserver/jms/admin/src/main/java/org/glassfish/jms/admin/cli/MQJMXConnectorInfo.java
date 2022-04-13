@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,29 +37,29 @@ import java.io.IOException;
  * @author Sivakumar Thyagarajan
  * @since SJSAS 9.0
  */
-public class MQJMXConnectorInfo {
-    private String jmxServiceURL = null;
-    private Map<String,?> jmxConnectorEnv = null;
-    private String asInstanceName = null;
-    private String brokerInstanceName = null;
-    private String brokerType = null;
+public class MQJMXConnectorInfo implements AutoCloseable {
     private static final Logger _logger = Logger.getLogger(LogUtils.JMS_ADMIN_LOGGER);
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MQJMXConnectorInfo.class);
-    private JMXConnector connector = null;
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MQJMXConnectorInfo.class);
 
-    public MQJMXConnectorInfo(String asInstanceName, String brokerInstanceName,
-                              String brokerType, String jmxServiceURL,
-                                       Map<String, ?> jmxConnectorEnv) {
+    private final String jmxServiceURL;
+    private final Map<String,?> jmxConnectorEnv;
+    private final String asInstanceName;
+    private final String brokerInstanceName;
+    private final String brokerType;
+    private JMXConnector connector;
+
+    public MQJMXConnectorInfo(String asInstanceName, String brokerInstanceName, String brokerType, String jmxServiceURL,
+        Map<String, ?> jmxConnectorEnv) {
         this.brokerInstanceName = brokerInstanceName;
         this.asInstanceName = asInstanceName;
         this.jmxServiceURL = jmxServiceURL;
         this.brokerType = brokerType;
         this.jmxConnectorEnv = jmxConnectorEnv;
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "MQJMXConnectorInfo : brokerInstanceName " +
-                            brokerInstanceName + " ASInstanceName " + asInstanceName +
-                            " jmxServiceURL "  + jmxServiceURL +  " BrokerType " + brokerType
-                            + " jmxConnectorEnv " + jmxConnectorEnv);
+            _logger.log(Level.FINE,
+                "MQJMXConnectorInfo : brokerInstanceName " + brokerInstanceName + " ASInstanceName " + asInstanceName
+                    + " jmxServiceURL " + jmxServiceURL + " BrokerType " + brokerType + " jmxConnectorEnv "
+                    + jmxConnectorEnv);
         }
     }
 
@@ -86,9 +87,7 @@ public class MQJMXConnectorInfo {
     }
 
     /**
-     * Returns an <code>MBeanServerConnection</code> representing the MQ broker instance's MBean
-     * server.
-     * @return
+     * @return an <code>MBeanServerConnection</code> representing the MQ broker instance's MBean server.
      * @throws ConnectorRuntimeException
      */
     //XXX:Enhance to support SSL (once MQ team delivers support in the next drop)
@@ -96,37 +95,36 @@ public class MQJMXConnectorInfo {
     //be shared with the consumer of this API
     public MBeanServerConnection getMQMBeanServerConnection() throws ConnectorRuntimeException {
         try {
-            if (getJMXServiceURL() == null || getJMXServiceURL().equals("")) {
-                String msg = localStrings.getLocalString("error.get.jmsserviceurl",
-                                "Failed to get MQ JMXServiceURL of {0}.", getASInstanceName());
-                throw new ConnectorRuntimeException(msg);
+            if (connector == null) {
+                if (getJMXServiceURL() == null || getJMXServiceURL().isEmpty()) {
+                    String msg = localStrings.getLocalString("error.get.jmsserviceurl",
+                        "Failed to get MQ JMXServiceURL of {0}.", getASInstanceName());
+                    throw new ConnectorRuntimeException(msg);
+                }
+                _logger.log(Level.FINE, "creating MBeanServerConnection to MQ JMXServer with {0}", getJMXServiceURL());
+                JMXServiceURL serviceURL = new JMXServiceURL(getJMXServiceURL());
+                connector = JMXConnectorFactory.connect(serviceURL, this.jmxConnectorEnv);
             }
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                "creating MBeanServerConnection to MQ JMXServer with "+getJMXServiceURL());
-            }
-            JMXServiceURL jmxServiceURL = new JMXServiceURL(getJMXServiceURL());
-            connector = JMXConnectorFactory.connect(jmxServiceURL, this.jmxConnectorEnv);
             //XXX: Do we need to pass in a Subject?
             MBeanServerConnection mbsc = connector.getMBeanServerConnection();
             return mbsc;
         } catch (Exception e) {
-            e.printStackTrace();
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+            throw new ConnectorRuntimeException(e.getMessage(), e);
         }
     }
 
-    public void closeMQMBeanServerConnection() throws ConnectorRuntimeException {
+    /**
+     * Closes the connector.
+     */
+    @Override
+    public void close() throws ConnectorRuntimeException {
         try {
-           if (connector != null) {
-                 connector.close();
-           }
+            if (connector != null) {
+                connector.close();
+                connector = null;
+            }
         } catch (IOException e) {
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-            cre.initCause(e);
-            throw cre;
+            throw new ConnectorRuntimeException(e.getMessage(), e);
         }
     }
  }

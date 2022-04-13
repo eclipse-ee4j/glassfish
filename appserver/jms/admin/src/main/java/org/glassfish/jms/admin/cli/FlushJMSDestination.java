@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -103,11 +104,11 @@ public class FlushJMSDestination extends JMSDestination implements AdminCommand 
     ServerContext serverContext;
 
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
-        logger.entering(getClass().getName(), "flushJMSDestination",
-            new Object[] {destName, destType});
+        logger.entering(getClass().getName(), "flushJMSDestination", new Object[] {destName, destType});
 
         try{
             validateJMSDestName(destName);
@@ -120,10 +121,8 @@ public class FlushJMSDestination extends JMSDestination implements AdminCommand 
 
         try {
             flushJMSDestination(destName, destType, target);
-            return;
         } catch (Exception e) {
             logger.throwing(getClass().getName(), "flushJMSDestination", e);
-            //e.printStackTrace();//handleException(e);
             report.setMessage(localStrings.getLocalString("flush.jms.dest.failed",
                 "Flush JMS Destination failed", e.getMessage()));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -154,71 +153,58 @@ public class FlushJMSDestination extends JMSDestination implements AdminCommand 
                  * This works because we resolve the port numbers
                  * even for standalone instances in MQAddressList.
                  */
-                boolean success = true;
-                Cluster cluster = null;
+                Exception failure = new Exception("Purging failed.");
+                final Cluster cluster;
                 if (ctarget == CommandTarget.CLUSTER){
                     cluster = Globals.get(Domain.class).getClusterNamed(target);
-                }else {
-                    List clustersList = Globals.get(Domain.class).getClusters().getCluster();
+                } else {
+                    List<Cluster> clustersList = Globals.get(Domain.class).getClusters().getCluster();
                     cluster = JmsRaUtil.getClusterForServer(clustersList, target);
                 }
-                List servers =cluster.getInstances(); //target.getServer();
-                for (int server = 0; server < servers.size(); server++) {
+                List<Server> servers = cluster.getInstances();
+                for (Server server : servers) {
                     try {
-                        purgeJMSDestination(destName, destType, ((Server)servers.get(server)).getName());
+                        purgeJMSDestination(destName, destType, server.getName());
                     } catch (Exception e) {
-                        success = false;
-                        //todo: enable localized string
-                        logger.log(Level.SEVERE,/*localStrings.getLocalString("admin.mbeans.rmb.error_purging_jms_dest") +*/ ((Server)servers.get(server)).getName());
+                        failure.addSuppressed(
+                            new RuntimeException("Purging failed for server of this name: " + server.getName(), e));
                     }
                 }
-                if (!success) {
-                    //todo: enable localized string
-                    throw new Exception();//localStrings.getLocalString("admin.mbeans.rmb.error_purging_jms_dest"));
+                if (failure.getSuppressed().length != 0) {
+                    throw failure;
                 }
-
             } else {
                 purgeJMSDestination(destName, destType, tgtName);
             }
 
         } catch (Exception e) {
-            logger.throwing(getClass().getName(), "flushJMSDestination", e);
-            handleException(e);
+            throw handleException(e);
         }
     }
 
-    public void purgeJMSDestination(String destName, String destType, String tgtName)
-        throws Exception {
 
+    public void purgeJMSDestination(String destName, String destType, String tgtName) throws Exception {
         logger.log(Level.FINE, "purgeJMSDestination ...");
-        MQJMXConnectorInfo[] mqInfos = getMQJMXConnectorInfos(target, config, serverContext, domain, connectorRuntime);
-
-        if (mqInfos != null && mqInfos.length > 0) {
-            for (MQJMXConnectorInfo mqInfo : mqInfos){
-                try {
-
-                    MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-
-                    if (destType.equalsIgnoreCase("topic")) {
-                        destType = DESTINATION_TYPE_TOPIC;
-                    } else if (destType.equalsIgnoreCase("queue")) {
-                        destType = DESTINATION_TYPE_QUEUE;
-                    }
-                    ObjectName on = createDestinationConfig(destType, destName);
-
-                    mbsc.invoke(on, "purge", null, null);
-                } catch (Exception e) {
-                    //log JMX Exception trace as WARNING
-                    logAndHandleException(e, "admin.mbeans.rmb.error_purging_jms_dest");
-                } finally {
-                    try {
-                        if(mqInfo != null) {
-                            mqInfo.closeMQMBeanServerConnection();
-                        }
-                    } catch (Exception e) {
-                        handleException(e);
-                    }
-                }
+        final MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
+        if (mqInfo == null) {
+            return;
+        }
+        try {
+            MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
+            if (destType.equalsIgnoreCase("topic")) {
+                destType = DESTINATION_TYPE_TOPIC;
+            } else if (destType.equalsIgnoreCase("queue")) {
+                destType = DESTINATION_TYPE_QUEUE;
+            }
+            ObjectName on = createDestinationConfig(destType, destName);
+            mbsc.invoke(on, "purge", null, null);
+        } catch (Exception e) {
+            throw logAndHandleException(e, "admin.mbeans.rmb.error_purging_jms_dest");
+        } finally {
+            try {
+                mqInfo.close();
+            } catch (Exception e) {
+                throw handleException(e);
             }
         }
     }

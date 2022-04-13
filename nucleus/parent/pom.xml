@@ -411,6 +411,12 @@
                 <artifactId>gmbal</artifactId>
                 <version>${gmbal.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+                <version>3.1.4</version>
+                <scope>test</scope>
+            </dependency>
 
             <!-- GlassFish Shoal -->
             <dependency>
@@ -524,8 +530,7 @@
                 <version>7.0.3</version>
                 <scope>provided</scope>
             </dependency>
-
-            <!-- This is currently used by osgi-shell cmd, but can be used for others as well -->
+            <!-- This is currently used by osgi-shell cmd -->
             <dependency>
                 <groupId>org.jline</groupId>
                 <artifactId>jline</artifactId>
@@ -764,10 +769,32 @@
                             <testExclude>**/.ade_path/**</testExclude>
                         </testExcludes>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <proc>none</proc>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>process-annotations</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                            <configuration>
+                                <proc>only</proc>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -776,7 +803,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.3.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
@@ -784,11 +811,11 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M6</version>
                     <configuration>
                         <argLine>${surefire.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -803,7 +830,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M6</version>
                     <configuration>
                         <argLine>${failsafe.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -873,6 +900,10 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+                <plugin>
                     <groupId>com.googlecode.maven-download-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
                     <version>1.6.8</version>
@@ -887,7 +918,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -990,10 +1021,8 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- Sets minimal Maven version to 3.5.4 -->
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -1003,7 +1032,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.5.4</version>
+                                    <version>3.6.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -1435,7 +1464,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.7</jacoco.version>
+                <jacoco.version>0.8.8</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

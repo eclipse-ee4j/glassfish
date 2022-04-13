@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,32 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import java.beans.PropertyVetoException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.config.util.ConfigApiLoggerInfo;
-import org.glassfish.api.admin.config.ConfigExtension;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.admin.config.PropertiesDesc;
-import org.glassfish.api.admin.config.PropertyDesc;
-import org.glassfish.config.support.datatypes.NonNegativeInteger;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.config.ConfigExtension;
+import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.api.admin.config.PropertyDesc;
+import org.glassfish.config.support.datatypes.NonNegativeInteger;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+import org.jvnet.hk2.config.types.PropertyBag;
 
 @Configured
 public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtension {
@@ -81,7 +92,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
     List<String> getNonAdminVirtualServerList();
 
     @Attribute(defaultValue = "false")
-    @Pattern(regexp = "(false|true|on|off)")
+    @Pattern(regexp = "(false|true|on|off)", message = "Valid values: true|false")
     String getAccessLoggingEnabled();
 
     void setAccessLoggingEnabled(String enabled);
@@ -96,7 +107,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false")
-    @Pattern(regexp = "(true|false|on|off)")
+    @Pattern(regexp = "(true|false|on|off)", message = "Valid values: true|false")
     String getSsoEnabled();
 
     /**
@@ -119,7 +130,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
         }
 
         public static List<String> getNonAdminVirtualServerList(HttpService target) {
-            List<String> nonAdminVSList = new ArrayList<String>();
+            List<String> nonAdminVSList = new ArrayList<>();
             for (VirtualServer v : target.getVirtualServer()) {
                 if (!v.getId().equals("__asadmin")) {
                     nonAdminVSList.add(v.getId());
@@ -162,6 +173,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
         }
     }
 
+    @Override
     @PropertiesDesc(props = {
             @PropertyDesc(name = "monitoring-cache-enabled", defaultValue = "true", dataType = Boolean.class, description = "Enables the monitoring cache"),
 

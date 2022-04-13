@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,30 +21,38 @@ import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-import org.glassfish.internal.api.ServerContext;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.ServerContext;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author jasonlee
  */
 @Service(name = "__get-jmsdest")
@@ -68,7 +77,6 @@ import org.glassfish.hk2.api.PerLookup;
         })
 })
 public class GetJmsPhysicalDestinationCommand extends JMSDestination implements AdminCommand {
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetJmsPhysicalDestinationCommand.class);
 
     @Param(name = "desttype", shortName = "t", optional = false)
     String destType;
@@ -95,14 +103,13 @@ public class GetJmsPhysicalDestinationCommand extends JMSDestination implements 
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        logger.entering(getClass().getName(), "__getJmsPhysicalDestination",
-                new Object[]{destName, destType});
+        logger.entering(getClass().getName(), "__getJmsPhysicalDestination", new Object[] {destName, destType});
 
         try {
             validateJMSDestName(destName);
             validateJMSDestType(destType);
 
-            Map entity = getJMSDestination();
+            Map<String, Object> entity = getJMSDestination();
             Properties ep = new Properties();
             ep.put("entity", entity);
             report.setExtraProperties(ep);
@@ -110,20 +117,14 @@ public class GetJmsPhysicalDestinationCommand extends JMSDestination implements 
         } catch (Exception e) {
             report.setMessage(e.getMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;
         }
     }
 
-    protected Map<String, Object> getJMSDestination()
-            throws Exception {
 
-        logger.log(Level.FINE, "__getJmsPhysicalDestination ...");
-        MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
-        Map<String, Object> destAttrs = new HashMap<String, Object>();
-
-        try {
+    protected Map<String, Object> getJMSDestination() throws Exception {
+        logger.log(Level.FINE, "getJMSDestination ...");
+        try (MQJMXConnectorInfo mqInfo = createMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime)) {
             MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-
             if (destType.equalsIgnoreCase("topic")) {
                 destType = DESTINATION_TYPE_TOPIC;
             } else if (destType.equalsIgnoreCase("queue")) {
@@ -131,22 +132,13 @@ public class GetJmsPhysicalDestinationCommand extends JMSDestination implements 
             }
             ObjectName on = new ObjectName(MBEAN_DOMAIN_NAME + ":type=Destination,subtype=Config,desttype=" + destType +",name=\"" + destName + "\"");
             MBeanAttributeInfo[] attribs = mbsc.getMBeanInfo(on).getAttributes();
+            Map<String, Object> destAttrs = new HashMap<>();
             for (MBeanAttributeInfo attrib: attribs){
                 destAttrs.put(attrib.getName(), mbsc.getAttribute(on, attrib.getName()));
             }
             return destAttrs;
         } catch (Exception e) {
-            //log JMX Exception trace as WARNING
-            logAndHandleException(e, "admin.mbeans.rmb.error_getting_jms_dest");
-        } finally {
-            try {
-                if (mqInfo != null) {
-                    mqInfo.closeMQMBeanServerConnection();
-                }
-            } catch (Exception e) {
-                handleException(e);
-            }
+            throw logAndHandleException(e, "admin.mbeans.rmb.error_getting_jms_dest");
         }
-        return destAttrs;
     }
 }

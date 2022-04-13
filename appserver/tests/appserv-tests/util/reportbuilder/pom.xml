@@ -21,18 +21,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.eclipse.ee4j</groupId>
-        <artifactId>project</artifactId>
-        <version>1.0</version>
+        <groupId>org.glassfish.main.tests</groupId>
+        <artifactId>ant-tests</artifactId>
+        <version>7.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.devtests</groupId>
-        <version>4.0-SNAPSHOT</version>
     <artifactId>report-builder</artifactId>
     <packaging>jar</packaging>
     <name>report-builder</name>
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
@@ -42,7 +41,7 @@
                         <phase>install</phase>
                         <configuration>
                             <tasks>
-                                <copy file="target/${artifactId}.jar" tofile="../../lib/reportbuilder.jar"/>
+                                <copy file="target/${project.artifactId}.jar" tofile="../../lib/reportbuilder.jar"/>
                             </tasks>
                         </configuration>
                         <goals>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,8 @@
 
 package org.glassfish.admin.rest.client;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.client.Invocation.Builder;
@@ -30,10 +27,15 @@ import jakarta.ws.rs.core.Configuration;
 import jakarta.ws.rs.core.Link;
 import jakarta.ws.rs.core.UriBuilder;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.jettison.JettisonFeature;
@@ -45,7 +47,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
  *
  * @author jdlee
  */
-public class ClientWrapper implements Client {
+public class ClientWrapper implements Client, Closeable {
     protected Client realClient;
 
     public ClientWrapper() {
@@ -63,11 +65,11 @@ public class ClientWrapper implements Client {
     }
 
     public ClientWrapper(final Map<String, String> headers, String userName, String password) {
-        realClient = JerseyClientBuilder.newClient();
+        realClient = ClientBuilder.newClient();
         realClient.register(new MultiPartFeature());
         realClient.register(new JettisonFeature());
         realClient.register(new CsrfProtectionFilter());
-        if ((userName != null) && (password != null)) {
+        if (userName != null && password != null) {
             realClient.register(HttpAuthenticationFeature.basic(userName, password));
         }
         realClient.register(new ClientRequestFilter() {

@@ -19,6 +19,8 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
 import com.sun.enterprise.admin.remote.writer.ProprietaryWriterFactory;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +61,7 @@ public class AdminMain {
     private String command;
     private ProgramOptions po;
     private CLIContainer cliContainer;
-    private Environment env = new Environment();
+    private final Environment env = new Environment();
     protected Logger logger;
     private final static int ERROR = 1;
     private final static int CONNECTION_ERROR = 2;
@@ -121,14 +123,15 @@ public class AdminMain {
      * @return set of JAR files or directories with JAR files
      */
     protected Set<File> getExtensions() {
-        Set<File> result = new HashSet<File>();
+        Set<File> result = new HashSet<>();
         final File inst = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         final File ext = new File(new File(inst, "lib"), "asadmin");
         if (ext.exists() && ext.isDirectory()) {
             result.add(ext);
         } else {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer(strings.get("ExtDirMissing", ext));
+            }
         }
         result.add(new File(new File(inst, "modules"), "admin-cli.jar"));
         return result;
@@ -147,8 +150,8 @@ public class AdminMain {
      */
     private static class CLILoggerHandler extends ConsoleHandler {
 
-        private CLILoggerHandler() {
-            setFormatter(new CLILoggerFormatter());
+        private CLILoggerHandler(boolean printStacktraces) {
+            setFormatter(new CLILoggerFormatter(printStacktraces));
         }
 
         @Override
@@ -156,16 +159,35 @@ public class AdminMain {
             if (!isLoggable(logRecord)) {
                 return;
             }
-            final PrintStream ps = (logRecord.getLevel() == Level.SEVERE) ? System.err : System.out;
+            @SuppressWarnings("resource")
+            final PrintStream ps = logRecord.getLevel() == Level.SEVERE ? System.err : System.out;
             ps.println(getFormatter().format(logRecord));
         }
     }
 
     private static class CLILoggerFormatter extends SimpleFormatter {
 
+        private final boolean printStacktraces;
+
+        CLILoggerFormatter(boolean printStacktraces) {
+            this.printStacktraces = printStacktraces;
+        }
+
         @Override
         public synchronized String format(LogRecord record) {
-            return formatMessage(record);
+            if (record.getThrown() == null || !printStacktraces) {
+                return formatMessage(record);
+            }
+            return formatMessage(record) + printStackTrace(record.getThrown());
+        }
+
+        private String printStackTrace(Throwable throwable) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            pw.println();
+            throwable.printStackTrace(pw);
+            pw.close();
+            return sw.toString();
         }
     }
 
@@ -209,7 +231,7 @@ public class AdminMain {
             logger.setLevel(Level.FINE);
         }
         logger.setUseParentHandlers(false);
-        Handler h = new CLILoggerHandler();
+        Handler h = new CLILoggerHandler(trace);
         h.setLevel(logger.getLevel());
         logger.addHandler(h);
 
@@ -223,9 +245,10 @@ public class AdminMain {
 
         if (debug) {
             System.setProperty(CLIConstants.WALL_CLOCK_START_PROP, "" + System.currentTimeMillis());
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.log(Level.FINER, "CLASSPATH= {0}\nCommands: {1}",
                         new Object[] { System.getProperty("java.class.path"), Arrays.toString(args) });
+            }
         }
         /*
          * Set the thread's context class loader so that everyone can load from
@@ -278,8 +301,9 @@ public class AdminMain {
             break;
 
         case WARNING:
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine(strings.get("CommandSuccessfulWithWarnings", command));
+            }
             exitCode = SUCCESS;
             break;
 

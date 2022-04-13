@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,21 +20,15 @@ package org.glassfish.osgi.cli.remote;
 import com.sun.enterprise.admin.remote.ServerRemoteAdminCommand;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+
+import jakarta.inject.Inject;
+
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import org.apache.felix.service.command.CommandProcessor;
-import org.apache.felix.service.command.CommandSession;
-import org.apache.felix.service.command.Result;
-import org.apache.felix.shell.ShellService;
+import java.util.stream.Collectors;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -50,11 +45,15 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.osgi.cli.remote.impl.OsgiShellService;
+import org.glassfish.osgi.cli.remote.impl.SessionOperation;
 import org.jvnet.hk2.annotations.Service;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleReference;
-import org.osgi.framework.ServiceReference;
+
+import static org.glassfish.osgi.cli.remote.impl.OsgiShellService.ASADMIN_OSGI_SHELL;
+import static org.glassfish.osgi.cli.remote.impl.OsgiShellServiceProvider.detectService;
 
 /**
  * A simple AdminCommand that bridges to the Felix Shell Service.
@@ -77,15 +76,12 @@ import org.osgi.framework.ServiceReference;
 @AccessRequired(resource="domain/osgi/shell", action="execute")
 public class OSGiShellCommand implements AdminCommand, PostConstruct {
 
-    private static final Logger log = Logger.getLogger(OSGiShellCommand.class.getPackage().getName());
-
-    private static final Map<String, RemoteCommandSession> sessions =
-            new ConcurrentHashMap<String, RemoteCommandSession>();
+    private static final Logger LOG = Logger.getLogger(OSGiShellCommand.class.getPackage().getName());
 
     @Param(name = "command-line", primary = true, optional = true, multiple = true, defaultValue = "help")
     private Object commandLine;
 
-    @Param(name = "session", optional = true)
+    @Param(name = "session", optional = true, acceptableValues = "new,list,execute,stop")
     private String sessionOp;
 
     @Param(name = "session-id", optional = true)
@@ -102,234 +98,94 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
     @Inject
     Domain domain;
 
-    @Override
-    public void execute(AdminCommandContext context) {
-        ActionReport report = context.getActionReport();
-
-        if(instance != null) {
-            Server svr = domain.getServerNamed(instance);
-            if(svr == null) {
-                report.setMessage("No server target found for "
-                        + instance);
-                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                return;
-            }
-            String host = svr.getAdminHost();
-            int port = svr.getAdminPort();
-
-            try {
-                ServerRemoteAdminCommand remote =
-                        new ServerRemoteAdminCommand(
-                                locator,
-                                "osgi",
-                                host,
-                                port,
-                                false,
-                                "admin",
-                                "",
-                                log);
-
-                ParameterMap params = new ParameterMap();
-
-                if(commandLine == null) {
-                    params.set("DEFAULT".toLowerCase(Locale.US), "asadmin-osgi-shell");
-                } else if(commandLine instanceof String) {
-                    params.set("DEFAULT".toLowerCase(Locale.US), (String) commandLine);
-                } else if(commandLine instanceof List) {
-                    params.set("DEFAULT".toLowerCase(Locale.US), (List<String>) commandLine);
-                }
-
-                if(sessionOp != null) {
-                    params.set("session", sessionOp);
-                }
-
-                if(sessionId != null) {
-                    params.set("session-id", sessionId);
-                }
-
-                report.setMessage(remote.executeCommand(params));
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-                return;
-            } catch(CommandException x) {
-                report.setMessage("Remote execution failed: "
-                        + x.getMessage());
-                report.setFailureCause(x);
-                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                return;
-            }
-        }
-
-        String cmdName = "";
-        String cmd = "";
-        if(commandLine == null) {
-            cmd = "asadmin-osgi-shell";
-            cmdName = cmd;
-        } else if(commandLine instanceof String) {
-            cmd = (String) commandLine;
-            cmdName = cmd;
-        } else if(commandLine instanceof List) {
-            for(Object arg : (List) commandLine) {
-                if(cmd.length() == 0) {
-                    // first arg
-                    cmd = (String) arg;
-                    cmdName = cmd;
-                } else {
-                    cmd += " " + (String) arg;
-                }
-            }
-        } else if(commandLine instanceof String[]) {
-            for(Object arg : (String[]) commandLine) {
-                if(cmd.length() == 0) {
-                    // first arg
-                    cmd = (String) arg;
-                    cmdName = cmd;
-                } else {
-                    cmd += " " + (String) arg;
-                }
-            }
-        } else {
-            // shouldn't happen...
-            report.setMessage("Unable to deal with argument list of type "
-                    + commandLine.getClass().getName());
-            report.setActionExitCode(ActionReport.ExitCode.WARNING);
-            return;
-        }
-
-        // standard output...
-        ByteArrayOutputStream bOut = new ByteArrayOutputStream(512);
-        PrintStream out = new PrintStream(bOut);
-
-        // error output...
-        ByteArrayOutputStream bErr = new ByteArrayOutputStream(512);
-        PrintStream err = new PrintStream(bErr);
-
-        try {
-            Object shell = null;
-
-            ServiceReference sref = ctx.getServiceReference(
-                    "org.apache.felix.service.command.CommandProcessor");
-            if(sref != null) {
-                shell = ctx.getService(sref);
-            }
-
-            if(shell == null) {
-                // try with felix...
-                sref = ctx.getServiceReference("org.apache.felix.shell.ShellService");
-                if(sref != null) {
-                    shell = ctx.getService(sref);
-                }
-
-                if(shell == null) {
-                    report.setMessage("No Shell Service available");
-                    report.setActionExitCode(ActionReport.ExitCode.WARNING);
-                    return;
-                } else if("asadmin-osgi-shell".equals(cmdName)) {
-                    out.println("felix");
-                } else {
-                    ShellService s = (ShellService) shell;
-                    s.executeCommand(cmd, out, err);
-                }
-            } else {
-                // try with gogo...
-
-                // GLASSFISH-19126 - prepare fake input stream...
-                InputStream in = new InputStream() {
-
-                    @Override
-                    public int read() throws IOException {
-                        return -1;
-                    }
-
-                    @Override
-                    public int available() throws IOException {
-                        return 0;
-                    }
-
-                    @Override
-                    public int read(byte[] b) throws IOException {
-                        return -1;
-                    }
-
-                    @Override
-                    public int read(byte[] b, int off, int len) throws IOException {
-                        return -1;
-                    }
-                };
-
-                CommandProcessor cp = (CommandProcessor) shell;
-                if (sessionOp == null) {
-                    if("asadmin-osgi-shell".equals(cmdName)) {
-                        out.println("gogo");
-                    } else {
-                        CommandSession session = cp.createSession(in, out, err);
-                        Object result = session.execute(cmd);
-
-                        if (result instanceof String) {
-                            out.println(result.toString());
-                        }
-
-                        session.close();
-                    }
-                } else if("new".equals(sessionOp)) {
-                    CommandSession session = cp.createSession(in, out, err);
-                    RemoteCommandSession remote = new RemoteCommandSession(session);
-
-                    log.log(Level.FINE, "Remote session established: {0}",
-                            remote.getId());
-
-                    sessions.put(remote.getId(), remote);
-                    out.println(remote.getId());
-                } else if("list".equals(sessionOp)) {
-                    for(String id : sessions.keySet()) {
-                        out.println(id);
-                    }
-                } else if("execute".equals(sessionOp)) {
-                    RemoteCommandSession remote = sessions.get(sessionId);
-                    CommandSession session = remote.attach(in, out, err);
-                    Object result = session.execute(cmd);
-
-                    if (result instanceof String) {
-                        out.println(result.toString());
-                    }
-
-                    remote.detach();
-                } else if("stop".equals(sessionOp)) {
-                    RemoteCommandSession remote = sessions.remove(sessionId);
-                    CommandSession session = remote.attach(in, out, err);
-                    session.close();
-
-                    log.log(Level.FINE, "Remote session closed: {0}",
-                            remote.getId());
-                }
-            }
-
-            out.flush();
-            err.flush();
-
-            String output = bOut.toString("UTF-8");
-            String errors = bErr.toString("UTF-8");
-            report.setMessage(output);
-
-            if(errors.length() > 0) {
-                report.setMessage(errors);
-                report.setActionExitCode(ActionReport.ExitCode.WARNING);
-            } else {
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-            }
-        } catch (Exception ex) {
-            report.setMessage(ex.getMessage());
-            report.setActionExitCode(ActionReport.ExitCode.WARNING);
-        } finally {
-            out.close();
-            err.close();
-        }
-    }
 
     @Override
     public void postConstruct() {
-        if(ctx == null) {
-            Bundle me = BundleReference.class.cast(getClass().getClassLoader()).getBundle();
+        if (ctx == null) {
+            final Bundle me = BundleReference.class.cast(getClass().getClassLoader()).getBundle();
             ctx = me.getBundleContext();
+        }
+    }
+
+
+    @Override
+    public void execute(final AdminCommandContext context) {
+        final ActionReport report = context.getActionReport();
+
+        if (instance != null) {
+            final Server server = domain.getServerNamed(instance);
+            if (server == null) {
+                report.setMessage("No server target found for " + instance);
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                return;
+            }
+            final String host = server.getAdminHost();
+            final int port = server.getAdminPort();
+            try {
+                final ServerRemoteAdminCommand remote
+                    = new ServerRemoteAdminCommand(locator, "osgi", host, port, false, "admin", "", LOG);
+
+                final ParameterMap params = new ParameterMap();
+                if (commandLine == null) {
+                    params.set("default", ASADMIN_OSGI_SHELL);
+                } else if (commandLine instanceof String) {
+                    params.set("default", (String) commandLine);
+                } else if (commandLine instanceof List) {
+                    params.set("default", (List<String>) commandLine);
+                }
+                if (sessionOp != null) {
+                    params.set("session", sessionOp);
+                }
+                if (sessionId != null) {
+                    params.set("session-id", sessionId);
+                }
+                report.setMessage(remote.executeCommand(params));
+                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
+                return;
+            } catch(final CommandException e) {
+                report.setMessage("Remote execution failed: " + e.getMessage());
+                report.setFailureCause(e);
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                return;
+            }
+        }
+
+        // must not be null, called services forbid it.
+        final String cmdName;
+        final String cmd;
+        if (commandLine == null) {
+            cmdName = ASADMIN_OSGI_SHELL;
+            cmd = ASADMIN_OSGI_SHELL;
+        } else if (commandLine instanceof String) {
+            cmdName = (String) commandLine;
+            cmd = cmdName;
+        } else if (commandLine instanceof List) {
+            @SuppressWarnings("unchecked")
+            final List<String> list = (List<String>) commandLine;
+            cmdName = list.isEmpty() ? "" : list.get(0);
+            cmd = list.isEmpty() ? "" : list.stream().collect(Collectors.joining(" "));
+        } else if (commandLine instanceof String[]) {
+            final String[] list = (String[]) commandLine;
+            cmdName = list.length == 0 ? "" : list[0];
+            cmd = list.length == 0 ? "" : Arrays.stream(list).collect(Collectors.joining(" "));
+        } else {
+            report.setMessage("Unable to deal with argument list of type " + commandLine.getClass().getName());
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            return;
+        }
+        try {
+            final SessionOperation sessionOperation = SessionOperation.parse(sessionOp);
+            final OsgiShellService service = detectService(ctx, sessionOperation, sessionId, report);
+            if (service == null) {
+                report.setMessage("No Shell Service available");
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                return;
+            }
+            service.exec(cmdName, cmd);
+        } catch (final Exception ex) {
+            LOG.log(Level.SEVERE, ex.getMessage());
+            report.setMessage(ex.getMessage());
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
     }
 }

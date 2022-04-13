@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -138,7 +139,7 @@ public class JmsHandlers {
         Map valueMap = new HashMap();
         try {
             String objectName = getJmsDestinationObjectName(SUBTYPE_CONFIG, name, type);
-            AttributeList attributes = (AttributeList) JMXUtil.getMBeanServer().getAttributes(new ObjectName(objectName), ATTRS_CONFIG);
+            AttributeList attributes = JMXUtil.getMBeanServer().getAttributes(new ObjectName(objectName), ATTRS_CONFIG);
             for (Attribute attribute : attributes.asList()) {
                 valueMap.put(attribute.getName(), (attribute.getValue() != null) ? attribute.getValue().toString() : null);
             }
@@ -168,7 +169,7 @@ public class JmsHandlers {
             insureJmsBrokerIsRunning();
 
             String objectName = getJmsDestinationObjectName(SUBTYPE_MONITOR, name, type);
-            AttributeList attributes = (AttributeList) getMBeanServerConnection(target).getAttributes(new ObjectName(objectName), ATTRS_MONITOR);
+            AttributeList attributes = getMBeanServerConnection(target).getAttributes(new ObjectName(objectName), ATTRS_MONITOR);
             ResourceBundle bundle = GuiUtil.getBundle("org.glassfish.jms.admingui.Strings");
             statsList.add(createRow("Name", name, ""));
             statsList.add(createRow("Type", type.substring(0, 1).toUpperCase(GuiUtil.guiLocale) + type.substring(1), ""));
@@ -208,12 +209,12 @@ public class JmsHandlers {
             List<Map> selectedList = (List) handlerCtx.getInputValue("selectedRows");
             boolean hasOrig = (selectedList == null || selectedList.size() == 0) ? false : true;
 
-            for (int i = 0; i < objectNames.length; i++) {
+            for (ObjectName objectName : objectNames) {
                 // getAttributes for the given objectName...
                 HashMap oneRow = new HashMap();
-                oneRow.put("name", objectNames[i].getKeyProperty(PROP_NAME).replaceAll("\"", ""));
-                oneRow.put("type", "t".equals(objectNames[i].getKeyProperty(PROP_DEST_TYPE)) ? "topic" : "queue");
-                oneRow.put("selected", (hasOrig) ? isSelected(objectNames[i].getKeyProperty(PROP_NAME), selectedList) : false);
+                oneRow.put("name", objectName.getKeyProperty(PROP_NAME).replaceAll("\"", ""));
+                oneRow.put("type", "t".equals(objectName.getKeyProperty(PROP_DEST_TYPE)) ? "topic" : "queue");
+                oneRow.put("selected", (hasOrig) ? isSelected(objectName.getKeyProperty(PROP_NAME), selectedList) : false);
                 result.add(oneRow);
             }
 
@@ -287,7 +288,7 @@ public class JmsHandlers {
     public static void deleteJMSDest(HandlerContext handlerCtx) {
 //        String configName = ((String) handlerCtx.getInputValue("targetName"));
         List obj = (List) handlerCtx.getInputValue("selectedRows");
-        List<Map> selectedRows = (List) obj;
+        List<Map> selectedRows = obj;
         try {
             for (Map oneRow : selectedRows) {
                 String name = (String) oneRow.get("name");
@@ -403,7 +404,7 @@ public class JmsHandlers {
         list.add(new Attribute(ATTR_MAX_NUM_MSGS, Long.parseLong((String) attrMap.get(ATTR_MAX_NUM_MSGS))));
         list.add(new Attribute(ATTR_MAX_BYTES_PER_MSG, Long.parseLong((String) attrMap.get(ATTR_MAX_BYTES_PER_MSG))));
         list.add(new Attribute(ATTR_MAX_TOTAL_MSG_BYTES, Long.parseLong((String) attrMap.get(ATTR_MAX_TOTAL_MSG_BYTES))));
-        list.add(new Attribute(ATTR_LIMIT_BEHAVIOR, (String) attrMap.get(ATTR_LIMIT_BEHAVIOR)));
+        list.add(new Attribute(ATTR_LIMIT_BEHAVIOR, attrMap.get(ATTR_LIMIT_BEHAVIOR)));
         list.add(new Attribute(ATTR_MAX_NUM_PRODUCERS, Integer.parseInt((String) attrMap.get(ATTR_MAX_NUM_PRODUCERS))));
         if ("queue".equals(type)) {
             list.add(new Attribute(ATTR_MAX_NUM_ACTIVE_CONSUMERS, Integer.parseInt((String) attrMap.get(ATTR_MAX_NUM_ACTIVE_CONSUMERS))));
@@ -413,7 +414,7 @@ public class JmsHandlers {
         list.add(new Attribute(ATTR_CONSUMER_FLOW_LIMIT, Long.parseLong((String) attrMap.get(ATTR_CONSUMER_FLOW_LIMIT))));
         list.add(new Attribute(ATTR_USE_DMQ, Boolean.valueOf((String) attrMap.get(ATTR_USE_DMQ))));
         list.add(new Attribute(ATTR_VALIDATE_XML_SCHEMA_ENABLED, Boolean.valueOf((String) attrMap.get(ATTR_VALIDATE_XML_SCHEMA_ENABLED))));
-        list.add(new Attribute(ATTR_XML_SCHEMA_URI_LIST, (String) attrMap.get(ATTR_XML_SCHEMA_URI_LIST)));
+        list.add(new Attribute(ATTR_XML_SCHEMA_URI_LIST, attrMap.get(ATTR_XML_SCHEMA_URI_LIST)));
     }
 
     protected static void insureJmsBrokerIsRunning() throws ConnectorRuntimeException {
@@ -444,14 +445,15 @@ public class JmsHandlers {
         }
 
         PhysicalDestinations pd = new PhysicalDestinations();
-        MQJMXConnectorInfo mqInfo = pd.getConnectorInfo(target, configRef, habitat, domain);
-
-        return mqInfo.getMQMBeanServerConnection();
+        try (MQJMXConnectorInfo mqInfo = pd.createConnectorInfo(target, configRef, habitat, domain)) {
+            // fyi, the connection is just a description, not closeable.
+            return mqInfo.getMQMBeanServerConnection();
+        }
     }
 
     private static class PhysicalDestinations extends JMSDestination {
-        public MQJMXConnectorInfo getConnectorInfo(String target, String configName, ServiceLocator habitat, Domain domain) throws Exception {
-            return getMQJMXConnectorInfo(target, domain.getConfigNamed(configName), habitat.<ServerContext>getService(ServerContext.class),
+        public MQJMXConnectorInfo createConnectorInfo(String target, String configName, ServiceLocator habitat, Domain domain) throws Exception {
+            return createMQJMXConnectorInfo(target, domain.getConfigNamed(configName), habitat.<ServerContext>getService(ServerContext.class),
                 domain, habitat.<ConnectorRuntime>getService(ConnectorRuntime.class));
         }
     }

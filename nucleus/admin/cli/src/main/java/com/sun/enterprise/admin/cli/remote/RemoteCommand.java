@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,29 +21,50 @@ import com.sun.appserv.management.client.prefs.LoginInfo;
 import com.sun.appserv.management.client.prefs.LoginInfoStore;
 import com.sun.appserv.management.client.prefs.LoginInfoStoreFactory;
 import com.sun.appserv.management.client.prefs.StoreException;
-import com.sun.enterprise.admin.cli.*;
+import com.sun.enterprise.admin.cli.CLICommand;
+import com.sun.enterprise.admin.cli.DirectoryClassLoader;
+import com.sun.enterprise.admin.cli.Environment;
+import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation;
 import com.sun.enterprise.admin.remote.RemoteAdminCommand;
-import com.sun.enterprise.admin.util.*;
+import com.sun.enterprise.admin.util.CachedCommandModel;
+import com.sun.enterprise.admin.util.CommandModelData;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.module.*;
+import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.net.URLConnection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.ManPageFinder;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
-import org.jvnet.hk2.component.*;
 
 /**
  * A remote command handled by the asadmin CLI.
@@ -128,17 +150,20 @@ public class RemoteCommand extends CLICommand {
                 if (programOpts.getUser() == null) {
                     cons.printf("%s ", strings.get("AdminUserPrompt"));
                     user = cons.readLine();
-                    if (user == null)
+                    if (user == null) {
                         return false;
+                    }
                 }
                 char[] password;
                 String puser = ok(user) ? user : programOpts.getUser();
-                if (ok(puser))
+                if (ok(puser)) {
                     password = readPassword(strings.get("AdminUserPasswordPrompt", puser));
-                else
+                } else {
                     password = readPassword(strings.get("AdminPasswordPrompt"));
-                if (password == null)
+                }
+                if (password == null) {
                     return false;
+                }
                 if (ok(user)) { // if none entered, don't change
                     programOpts.setUser(user);
                     this.user = user;
@@ -188,8 +213,9 @@ public class RemoteCommand extends CLICommand {
                 }
             }
 
-            if (msg == null)
+            if (msg == null) {
                 msg = strings.get("InvalidCredentials", programOpts.getUser());
+            }
             return msg;
         }
 
@@ -227,8 +253,9 @@ public class RemoteCommand extends CLICommand {
             try {
                 ((ClientCookieStore) cookieManager.getCookieStore()).load();
             } catch (IOException e) {
-                if (logger.isLoggable(Level.FINER))
-                    logger.finer("Unable to load cookies: " + e.toString());
+                if (logger.isLoggable(Level.FINER)) {
+                    logger.finer("Unable to load cookies: " + e);
+                }
                 return;
             }
 
@@ -268,8 +295,9 @@ public class RemoteCommand extends CLICommand {
                     if (cookie.getName().equals(JSESSIONID)) {
                         if ((creationTime / 1000 + cookie.getMaxAge()) < System.currentTimeMillis() / 1000) {
                             return true;
-                        } else
+                        } else {
                             return false;
+                        }
                     }
                 }
             }
@@ -288,7 +316,7 @@ public class RemoteCommand extends CLICommand {
 
         private void processCookieHeaders(final URLConnection urlConnection) {
 
-            CookieManager systemCookieManager = (CookieManager) CookieManager.getDefault();
+            CookieManager systemCookieManager = (CookieManager) CookieHandler.getDefault();
 
             if (systemCookieManager == null) {
                 logger.finer("Assertion failed: null system CookieManager");
@@ -327,16 +355,18 @@ public class RemoteCommand extends CLICommand {
                     cookieManager.put(((ClientCookieStore) cookieManager.getCookieStore()).getStaticURI(), urlConnection.getHeaderFields());
                 } catch (IOException e) {
                     // Thrown by cookieManger.put()
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("Unable to save cookies: " + e.toString());
+                    }
                     return;
                 }
 
                 try {
                     ((ClientCookieStore) cookieManager.getCookieStore()).store();
                 } catch (IOException e) {
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("Unable to store cookies: " + e.toString());
+                    }
                 }
                 return;
             }
@@ -347,8 +377,9 @@ public class RemoteCommand extends CLICommand {
                 try {
                     ((ClientCookieStore) cookieManager.getCookieStore()).load();
                 } catch (IOException e) {
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("Unable to load cookies: " + e.toString());
+                    }
                     return;
                 }
             }
@@ -389,14 +420,16 @@ public class RemoteCommand extends CLICommand {
                                 urlConnection.getHeaderFields());
                     } catch (IOException e) {
                         // Thrown by cookieManger.put()
-                        if (logger.isLoggable(Level.FINER))
+                        if (logger.isLoggable(Level.FINER)) {
                             logger.finer("Unable to save cookies: " + e.toString());
+                        }
                         return;
                     }
                     ((ClientCookieStore) cookieManager.getCookieStore()).store();
                 } catch (IOException e) {
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("Unable to store cookies: " + e.toString());
+                    }
                 }
             } else {
                 // No cookies changed.  Update the modification time on the store.
@@ -466,7 +499,7 @@ public class RemoteCommand extends CLICommand {
         if (eTag != null && eTag.equals(newETag)) {
             return; //Nothing change in command model
         }
-        logger.log(Level.WARNING, "Command signature of {0} command was changed. " + "Reexecuting with new metadata.", name);
+        logger.log(Level.WARNING, "Command signature of {0} command was changed. Reexecuting with new metadata.", name);
         //clean state of this instance
         this.options = null;
         this.operands = null;
@@ -537,16 +570,13 @@ public class RemoteCommand extends CLICommand {
 
             if (programOpts.isNotifyCommand()) {
                 commandModel.add(new ParamModelData("notify", boolean.class, true, "false"));
-
             }
-        } catch (CommandException cex) {
-            if (logger.isLoggable(Level.FINER))
-                logger.finer("RemoteCommand.prepare throws " + cex);
-            throw cex;
+        } catch (CommandException e) {
+            logger.log(Level.SEVERE, "RemoteCommand.prepare throws exception.", e);
+            throw e;
         } catch (Exception e) {
-            if (logger.isLoggable(Level.FINER))
-                logger.finer("RemoteCommand.prepare throws " + e);
-            throw new CommandException(e.getMessage());
+            logger.log(Level.SEVERE, "RemoteCommand.prepare throws exception.", e);
+            throw new CommandException(e.getMessage(), e);
         }
     }
 
@@ -602,9 +632,9 @@ public class RemoteCommand extends CLICommand {
         try {
             options.set("DEFAULT", operands);
             output = rac.executeCommand(options);
-            if (returnAttributes)
+            if (returnAttributes) {
                 attrs = rac.getAttributes();
-            else if (!returnOutput) {
+            } else if (!returnOutput) {
                 if (output.length() > 0) {
                     logger.info(output);
                 }
@@ -623,8 +653,9 @@ public class RemoteCommand extends CLICommand {
                         PrintWriter pw = new PrintWriter(System.out);
                         char[] buf = new char[8192];
                         int cnt;
-                        while ((cnt = br.read(buf)) > 0)
+                        while ((cnt = br.read(buf)) > 0) {
                             pw.write(buf, 0, cnt);
+                        }
                         pw.flush();
                         return SUCCESS;
                     }
@@ -632,8 +663,9 @@ public class RemoteCommand extends CLICommand {
                     // ignore it and throw original exception
                 } finally {
                     try {
-                        if (br != null)
+                        if (br != null) {
                             br.close();
+                        }
                     } catch (IOException ioex3) {
                         // ignore it
                     }
@@ -643,8 +675,9 @@ public class RemoteCommand extends CLICommand {
         }
         final Map<String, String> racAttrs = rac.getAttributes();
         String returnVal = racAttrs != null ? racAttrs.get("exit-code") : null;
-        if (returnVal != null && "WARNING".equals(returnVal))
+        if (returnVal != null && "WARNING".equals(returnVal)) {
             return WARNING;
+        }
         return SUCCESS;
     }
 
@@ -696,8 +729,9 @@ public class RemoteCommand extends CLICommand {
             }
             usage = rac.getUsage();
         }
-        if (usage == null)
+        if (usage == null) {
             return super.getUsage();
+        }
 
         StringBuilder usageText = new StringBuilder();
         usageText.append(strings.get("Usage", getBriefCommandUsage()));
@@ -710,6 +744,7 @@ public class RemoteCommand extends CLICommand {
      * Get the man page from the server. If the man page isn't available, e.g., because the server is down, try to find it
      * locally by looking in the modules directory.
      */
+    @Override
     public BufferedReader getManPage() {
         try {
             initializeRemoteAdminCommand();
@@ -767,8 +802,9 @@ public class RemoteCommand extends CLICommand {
         try {
             LoginInfoStore store = LoginInfoStoreFactory.getDefaultStore();
             li = store.read(programOpts.getHost(), programOpts.getPort());
-            if (li == null)
+            if (li == null) {
                 return;
+            }
         } catch (StoreException se) {
             logger.finer("Login info could not be read from ~/.asadminpass file");
             return;
@@ -785,8 +821,9 @@ public class RemoteCommand extends CLICommand {
          */
         if (programOpts.getUser() == null) {
             // not on command line and in .asadminpass
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Getting user name from ~/.asadminpass: " + li.getUser());
+            }
             programOpts.setUser(li.getUser());
             if (programOpts.getPassword() == null) {
                 // not in passwordfile and in .asadminpass
@@ -833,8 +870,9 @@ public class RemoteCommand extends CLICommand {
      * Return a ServiceLocator used just for reading man pages from the modules in the modules directory.
      */
     private static synchronized ServiceLocator getManHabitat() {
-        if (manServiceLocator != null)
+        if (manServiceLocator != null) {
             return manServiceLocator;
+        }
 
         ModulesRegistry registry = new StaticModulesRegistry(getModuleClassLoader());
         ServiceLocator serviceLocator = registry.createServiceLocator("default");
@@ -846,8 +884,9 @@ public class RemoteCommand extends CLICommand {
      * Return a ClassLoader that loads classes from all the modules (jar files) in the <INSTALL_ROOT>/modules directory.
      */
     private static synchronized ClassLoader getModuleClassLoader() {
-        if (moduleClassLoader != null)
+        if (moduleClassLoader != null) {
             return moduleClassLoader;
+        }
         try {
             File installDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
             File modulesDir = new File(installDir, "modules");

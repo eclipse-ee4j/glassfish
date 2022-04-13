@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.glassfish.main.admin.test.tool.AsadminResultMatcher;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -102,9 +104,11 @@ public class OSGiCommandsITest {
         try (PrintStream ps = new PrintStream(new FileOutputStream(cmdFile))) {
             ps.println("help");
             ps.println("lb");
-            AsadminResult value = ASADMIN.exec("osgi-shell", "--file", cmdFile.getAbsolutePath());
-            assertTrue(value.getStdOut().contains("System Bundle"));
         }
+        AsadminResult result = ASADMIN.exec("osgi-shell", "--file", cmdFile.getAbsolutePath());
+        assertThat(result.getStdOut(),
+            stringContainsInOrder("cm:createFactoryConfiguration", "System Bundle", "Apache Felix Gogo Runtime"));
+        assertThat(result, AsadminResultMatcher.asadminOK());
     }
 
 

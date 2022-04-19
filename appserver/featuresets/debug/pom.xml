@@ -45,6 +45,11 @@
     <name>Debug</name>
 
     <dependencies>
+    	<dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+        </dependency>
+    
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>

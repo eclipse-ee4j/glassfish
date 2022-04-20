@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2022 Oracle and/or its affiliates. All rights reserved.
     Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
@@ -264,7 +264,7 @@
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
-                <include>javaee.jar</include>
+                <include>jakartaee.jar</include>
                 <include>appserv-rt.jar</include>
                 <include>gf-client.jar</include>
                 <include>grizzly-npn-api.jar</include>

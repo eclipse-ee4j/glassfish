@@ -74,7 +74,7 @@
 
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
-        <expressly.version>5.0.0-M1</expressly.version>
+        <expressly.version>5.0.0-M2</expressly.version>
 
         <!-- Jakarta Servlet -->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>

@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +50,7 @@
 
 <target name="compile-client">
     <javac srcdir="." destdir="${env.APS_HOME}/build/module/classes"
-        classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/client"
+        classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${build.classes.dir}/client"
         includes="${client-src-name}"/>
 </target>
 

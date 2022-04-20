@@ -226,8 +226,8 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                                 <tck-setting key="report.dir" value="${tck.home}/expression-languagereport/expression-language"/>
                                 <tck-setting key="work.dir" value="${tck.home}/expression-languagework/expression-language"/>
                           
-                                <mkdir dir="${tck.home}/expression-languagetckreport"/>
-                                <mkdir dir="${tck.home}/expression-languagetckreport/expression-languagetck"/>
+                                <mkdir dir="${tck.home}/expression-languagereport"/>
+                                <mkdir dir="${tck.home}/expression-languagetckreport/expression-language"/>
                                 
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>

@@ -36,6 +36,7 @@
         <module>jakarta-faces-tck</module>
         <module>jakarta-authentication-tck</module>
         <module>jakarta-authorization-tck</module>
+        <module>jakarta-expression-language-tck</module>
         <module>tsharness</module>
         <module>javatest</module>
     </modules>

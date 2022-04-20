@@ -61,7 +61,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
     <artifactId>glassfish-external-tck-expression-language</artifactId>
     <packaging>jar</packaging>
 
-    <name>TCK: expression-language</name>
+    <name>TCK: Expression Language</name>
 
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
@@ -158,8 +158,8 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                        	<overWriteSnapshots>true</overWriteSnapshots>
-                        	<overWriteIfNewer>true</overWriteIfNewer>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
                             <includeArtifactIds>glassfish</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
@@ -258,25 +258,25 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
 
-								<sequential unless:set="tck.standalone">
-	                                <echo level="info" message="Start running all tests" />
-	                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
-	                                    <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-	                                    <arg value="run.all" unless:set="run.test"/>
-	                                    <arg value="runclient" if:set="run.test" />
-	                                    <arg value="-Dkeywords=all" />
-	                                    <env key="LC_ALL" value="C" />
-	                                </exec>
-	
-	                                <if>
-	                                    <not>
-	                                        <equals arg1="${testResult}" arg2="0" />
-	                                    </not>
-	                                    <then>
-	                                        <echo message="Running tests failed." />
-	                                    </then>
-	                                </if>
-								</sequential>
+                                <sequential unless:set="tck.standalone">
+                                    <echo level="info" message="Start running all tests" />
+                                    <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
+                                        <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
+                                        <arg value="run.all" unless:set="run.test"/>
+                                        <arg value="runclient" if:set="run.test" />
+                                        <arg value="-Dkeywords=all" />
+                                        <env key="LC_ALL" value="C" />
+                                    </exec>
+    
+                                    <if>
+                                        <not>
+                                            <equals arg1="${testResult}" arg2="0" />
+                                        </not>
+                                        <then>
+                                            <echo message="Running tests failed." />
+                                        </then>
+                                    </if>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>

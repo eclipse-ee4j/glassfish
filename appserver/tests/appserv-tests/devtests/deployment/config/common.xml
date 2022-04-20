@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -138,7 +138,7 @@
     </path>
 
     <path id="test.compile.classpath">
-        <pathelement location="${inst}/lib/javaee.jar"/>
+        <pathelement location="${inst}/lib/jakartaee.jar"/>
         <pathelement location="${java.home}/lib/tools.jar"/>
     </path>
 
@@ -1184,7 +1184,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <jvmarg value="-Djava.library.path=${inst}/lib"/>
         <jvmarg value="-Dcom.sun.aas.configRoot=${inst}/config"/>
         <classpath>
-            <pathelement path="${build}:${inst}/lib/javaee.jar:${inst}/lib/appserv-rt.jar"/>
+            <pathelement path="${build}:${inst}/lib/jakartaee.jar:${inst}/lib/appserv-rt.jar"/>
         </classpath>
         <arg value="${deployablearchive}"/>
         <arg value="${deploymentplan}"/>

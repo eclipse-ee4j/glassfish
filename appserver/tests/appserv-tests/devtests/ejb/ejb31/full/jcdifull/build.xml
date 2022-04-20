@@ -2,7 +2,7 @@
 <!DOCTYPE project [
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,7 +37,7 @@
 
     <target name="compile" depends="clean">
       <mkdir dir="${build.classes.dir}"/>
-      <javac classpath="${env.S1AS_HOME}/modules/weld-osgi-bundle.jar:${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="ejb" destdir="${build.classes.dir}" debug="on" failonerror="true" includeantruntime="false" >
+      <javac classpath="${env.S1AS_HOME}/modules/weld-osgi-bundle.jar:${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="ejb" destdir="${build.classes.dir}" debug="on" failonerror="true" includeantruntime="false" >
         </javac>
     </target>
 
@@ -71,7 +71,7 @@
     <target name="run_se" depends="init-common">
        <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />

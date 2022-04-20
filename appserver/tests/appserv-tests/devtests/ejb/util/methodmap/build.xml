@@ -2,7 +2,7 @@
 <!DOCTYPE project [
 <!--
 
-    Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,7 +48,7 @@
   <target name="runclient" depends="init-common">
     <java  fork="on"
           failonerror="true"
-          classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+          classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
           classname="${simple.client}">
     </java>
   </target>
@@ -57,7 +57,7 @@
   <target name="perf" depends="init-common">
     <java  fork="on"
           failonerror="true"
-          classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+          classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/appserv-rt.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
           classname="${perf.client}">
       <arg value="javax.xml.rpc.Service"/>
       <arg value="100000"/>

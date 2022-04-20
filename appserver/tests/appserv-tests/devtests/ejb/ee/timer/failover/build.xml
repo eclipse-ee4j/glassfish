@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
-    Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2010, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,7 +56,7 @@
         <echo message="Starting cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <arg line="prepare"/>
         </java>
@@ -66,7 +66,7 @@
         <echo message="deploying application"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
            <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
            <arg line="deploy"/>
@@ -91,7 +91,7 @@
         <echo message="Stopping cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="clean"/>
         </java>
@@ -101,7 +101,7 @@
         <echo message="Stopping cluster"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="undeploy"/>
            <arg line="${appname}-web"/>
@@ -159,7 +159,7 @@
         <echo message="Verifying timeouts"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify2"/>
            <arg line="${appname}-web"/>
@@ -190,7 +190,7 @@
         <loadfile property="port-fail" srcFile="error"/>
         <java  fork="on"
               failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
+              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}"
               classname="${se.client}">
            <arg line="verify1"/>
            <arg line="${appname}-web"/>

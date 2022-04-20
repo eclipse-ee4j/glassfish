@@ -415,7 +415,7 @@ Variables used:
     <mkdir dir="${env.APS_HOME}/build/util"/>
     <javac srcdir="${env.APS_HOME}/devtestsNG/common/src"
         destdir="${env.APS_HOME}/build/util"
-        classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/appserv-ext.jar">
+        classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/appserv-ext.jar">
     </javac>
     <delete file="${env.APS_HOME}/lib/myutil.jar"/>
     <jar destfile="${env.APS_HOME}/lib/myutil.jar"

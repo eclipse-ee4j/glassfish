@@ -14,7 +14,7 @@ following is a summary of the TCK results for releases of Jakarta Connectors.
 - [x] Specification Name, Version and download URL: <br/>
   [Jakarta Connectors 2.1](https://jakarta.ee/specifications/connectors/2.1/)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Connectors TCK 2.1.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-connectors-tck-2.1.0.zip), SHA-256: 6b044e8361e1fd6e5ab46f3dfc3850332b23a192a1b872f878b3380aa9561bcc
+  [Jakarta Connectors TCK 2.1.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-connectors-tck-2.1.0.zip), SHA-256: 9af19fb2401b6faee29640d2063db85ec85e97283934b5bcb77c89fa3ca53958
 - [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](https://eclipse-ee4j.github.io/glassfish/certifications/jakarta-connectors/2.1/TCK-Results)
 - [x] Any Additional Specification Certification Requirements: <br/>

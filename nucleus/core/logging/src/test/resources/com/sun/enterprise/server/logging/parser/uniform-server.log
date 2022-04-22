@@ -243,7 +243,7 @@
 [#|2012-10-19T15:29:24.601-0400|WARNING|44.0|com.oracle.logging|_ThreadID=114;_ThreadName=http-listener-1(1);_TimeMillis=1350674964601;_LevelValue=900;|Hello World XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0
 java.lang.Exception
 	at org.apache.jsp.hello_jsp._jspService(hello_jsp.java:71)
-	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:111)
+	at org.glassfish.wasp.runtime.HttpJspBase.service(HttpJspBase.java:111)
 	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
 	at org.glassfish.wasp.servlet.JspServletWrapper.service(JspServletWrapper.java:411)
 	at org.glassfish.wasp.servlet.JspServlet.serviceJspFile(JspServlet.java:473)

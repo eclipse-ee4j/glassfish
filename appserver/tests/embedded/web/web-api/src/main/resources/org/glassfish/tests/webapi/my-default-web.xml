@@ -265,7 +265,7 @@
   <!-- * Set the "classpath" initialization parameter appropriately         -->
   <!--   for this web application.                                          -->
   <!-- * Set the "jspCompilerPlugin" initialization parameter to            -->
-  <!--   "org.apache.jasper.compiler.JikesJavaCompiler".                    -->
+  <!--   "org.glassfish.wasp.compiler.JikesJavaCompiler".                    -->
 
   <servlet>
     <servlet-name>jsp</servlet-name>

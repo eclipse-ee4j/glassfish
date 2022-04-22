@@ -24,4 +24,4 @@ set JSTL_IMPL=%AS_INSTALL_LIB%\jakarta.servlet.jsp.jstl.jar
 set AS_LIB=%~dp0..\lib
 set JAKARTAEE_API=%AS_LIB%\jakartaee.jar
 
-java -cp "%JSP_IMPL%;%JAKARTAEE_API%;%AS_LIB%" org.apache.jasper.JspC -sysClasspath "%JSP_IMPL%;%EL_IMPL%;%JSTL_IMPL%;%JAKARTAEE_API%;%AS_LIB%" -schemas "/schemas/" -dtds "/dtds/" %*
+java -cp "%JSP_IMPL%;%JAKARTAEE_API%;%AS_LIB%" org.glassfish.wasp.JspC -sysClasspath "%JSP_IMPL%;%EL_IMPL%;%JSTL_IMPL%;%JAKARTAEE_API%;%AS_LIB%" -schemas "/schemas/" -dtds "/dtds/" %*

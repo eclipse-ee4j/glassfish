@@ -37,7 +37,7 @@
 Hello World XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0
 java.lang.Exception
 	at org.apache.jsp.hello_jsp._jspService(hello_jsp.java:71)
-	at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:111)
+	at org.glassfish.wasp.runtime.HttpJspBase.service(HttpJspBase.java:111)
 	at javax.servlet.http.HttpServlet.service(HttpServlet.java:790)
 	at org.glassfish.wasp.servlet.JspServletWrapper.service(JspServletWrapper.java:411)
 	at org.glassfish.wasp.servlet.JspServlet.serviceJspFile(JspServlet.java:473)

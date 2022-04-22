@@ -268,7 +268,7 @@ jakarta.enterprise.system.webservices.saaj      <INFO>
 javax     <INFO>
 org.apache.catalina    <INFO>
 org.apache.coyote      <INFO>
-org.apache.jasper      <INFO>
+org.glassfish.wasp      <INFO>
 org.jvnet.hk2.osgiadapter   <INFO>
 ----
 

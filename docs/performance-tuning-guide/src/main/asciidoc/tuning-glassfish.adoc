@@ -237,7 +237,7 @@ a JSP file to look like this:
 ----
 <servlet>
   <servlet-name>jsp</servlet-name>
-  <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+  <servlet-class>org.glassfish.wasp.servlet.JspServlet</servlet-class>
   <init-param>
     <param-name>development</param-name>
     <param-value>false</param-value>

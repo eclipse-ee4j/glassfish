@@ -101,9 +101,11 @@ public class GlassFishMain {
                 try {
                     System.out.println("command = " + command);
                     if ("start".equalsIgnoreCase(command)) {
-                        if (gf.getStatus() != GlassFish.Status.STARTED || gf.getStatus() == GlassFish.Status.STOPPING || gf.getStatus() == GlassFish.Status.STARTING)
+                        if (gf.getStatus() != GlassFish.Status.STARTED || gf.getStatus() == GlassFish.Status.STOPPING || gf.getStatus() == GlassFish.Status.STARTING) {
                             gf.start();
-                        else System.out.println("Already started or stopping or starting");
+                        } else {
+                            System.out.println("Already started or stopping or starting");
+                        }
                     } else if ("stop".equalsIgnoreCase(command)) {
                         if (gf.getStatus() != GlassFish.Status.STARTED) {
                             System.out.println("GlassFish is not started yet. Please execute start first.");
@@ -174,9 +176,12 @@ public class GlassFishMain {
 
         private void addShutdownHook() {
             Runtime.getRuntime().addShutdownHook(new Thread("GlassFish Shutdown Hook") {
+                @Override
                 public void run() {
                     try {
-                        gfr.shutdown();
+                        if (gfr != null) {
+                            gfr.shutdown();
+                        }
                     }
                     catch (Exception ex) {
                         System.err.println("Error stopping framework: " + ex);

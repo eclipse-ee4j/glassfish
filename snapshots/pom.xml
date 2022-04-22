@@ -39,6 +39,11 @@
     <name>GlassFish Snapshots Parent</name>
     <description>Temporary snapshot modules</description>
 
+    <modules>
+        <module>felix-framework</module>
+        <module>felix-main</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>
@@ -89,6 +94,8 @@
                                 </pomIncludes>
                                 <!-- source:jar - ie. metro uses sources of other modules -->
                                 <goals>clean source:jar install</goals>
+                                <!-- Felix uses ianal plugin made in 2008 which requires this -->
+                                <mavenOpts>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED</mavenOpts>
                                 <settingsFile>${basedir}/../settings.xml</settingsFile>
                                 <profiles>staging,default</profiles>
                                 <parallelThreads>4</parallelThreads>

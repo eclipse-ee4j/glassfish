@@ -40,16 +40,16 @@
 
     In the IDE, for instance, Eclipse, go to run - debug configurations - remote java application - project
     And add this project there.
-  </description>
+    </description>
 
     <name>Debug</name>
 
     <dependencies>
-    	<dependency>
+        <dependency>
             <groupId>jakarta.el</groupId>
             <artifactId>jakarta.el-api</artifactId>
         </dependency>
-    
+
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
@@ -65,9 +65,9 @@
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.framework</artifactId>
+            <artifactId>org.apache.felix.main</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-framework</artifactId>

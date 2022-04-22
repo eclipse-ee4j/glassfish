@@ -462,10 +462,17 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- framework is transitive dependency of others, but it is aggregated in main too -->
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>7.0.3</version>
+                <version>7.1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>7.1.0-SNAPSHOT</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -523,12 +530,6 @@
                         <artifactId>org.osgi.core</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>org.apache.felix.framework</artifactId>
-                <version>7.0.3</version>
-                <scope>provided</scope>
             </dependency>
             <!-- This is currently used by osgi-shell cmd -->
             <dependency>

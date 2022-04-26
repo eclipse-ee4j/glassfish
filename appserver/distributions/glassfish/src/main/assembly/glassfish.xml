@@ -330,7 +330,7 @@
                 <exclude>cluster-cli.jar</exclude>
                 <exclude>glassfish-embedded-shell.jar</exclude>
                 <exclude>glassfish-embedded-static-shell.jar</exclude>
-                <exclude>javaee.jar</exclude>
+                <exclude>jakartaee.jar</exclude>
                 <exclude>appserv-rt.jar</exclude>
                 <exclude>descriptors.jar</exclude>
                 <exclude>templates.jar</exclude>

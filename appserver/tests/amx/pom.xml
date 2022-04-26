@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,7 @@
 
         <dependency>
             <groupId>org.glassfish.common</groupId>
-            <artifactId>amx-javaee</artifactId>
+            <artifactId>amx-jakartaee</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

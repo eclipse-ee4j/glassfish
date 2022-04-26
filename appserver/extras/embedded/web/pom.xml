@@ -439,7 +439,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
-            <artifactId>amx-javaee</artifactId>
+            <artifactId>amx-jakartaee</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -463,7 +463,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>deployment-javaee-core</artifactId>
+            <artifactId>deployment-jakartaee-core</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -872,7 +872,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
-            <artifactId>javaee-kernel</artifactId>
+            <artifactId>jakartaee-kernel</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

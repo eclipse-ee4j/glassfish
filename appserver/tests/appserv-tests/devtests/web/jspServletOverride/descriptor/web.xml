@@ -25,10 +25,6 @@
   <servlet>
     <servlet-name>jsp</servlet-name>
     <servlet-class>org.glassfish.wasp.servlet.JspServlet</servlet-class>
-    <init-param>
-      <param-name>ieClassId</param-name>
-      <param-value>ABCD</param-value>
-    </init-param>
   </servlet>
 
 </web-app>

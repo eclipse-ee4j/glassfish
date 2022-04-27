@@ -51,6 +51,8 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <skipCache>true</skipCache>
+                    <overwrite>true</overwrite>
                     <url>${tck.test.pages.url}</url>
                     <unpack>false</unpack>
                     <outputDirectory>${project.build.directory}</outputDirectory>

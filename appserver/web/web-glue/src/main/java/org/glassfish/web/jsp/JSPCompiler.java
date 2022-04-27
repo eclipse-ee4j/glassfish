@@ -272,8 +272,6 @@ public final class JSPCompiler {
             jspc.setClassDebugInfo(Boolean.valueOf(pValue).booleanValue());
         } else if ("enablePooling".equals(pName)) {
             jspc.setPoolingEnabled(Boolean.valueOf(pValue).booleanValue());
-        } else if ("ieClassId".equals(pName)) {
-            jspc.setIeClassId(pValue);
         } else if ("trimSpaces".equals(pName)) {
             jspc.setTrimSpaces(Boolean.valueOf(pValue).booleanValue());
         } else if ("genStrAsCharArray".equals(pName)) {

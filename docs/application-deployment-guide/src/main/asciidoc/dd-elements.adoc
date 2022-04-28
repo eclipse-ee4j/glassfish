@@ -5855,10 +5855,6 @@ as `char` arrays, which improves performance in some cases.
 |`httpMethods` |`*` for all methods |Specifies a comma separated list of
 HTTP methods supported by the `JspServlet`.
 
-|`ieClassId` |`clsid:8AD9C840-``044E-11D1-B3E9-``00805F499D93`
-|Specifies the Java plug-in COM class ID for Internet Explorer. Used by
-the `<jsp:plugin>` tags.
-
 |`ignoreJspFragmentErrors` |`false` |If set to `true`, instructs the
 compiler to ignore any JSP precompilation errors pertaining to
 statically included JSP segments that, despite not being top level JSP

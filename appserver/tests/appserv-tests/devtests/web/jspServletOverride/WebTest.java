@@ -22,10 +22,6 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for Bugtraq 5027440 ("Impossible for webapp to override global
  * JspServlet settings").
  *
- * Note that for test "jsp-servlet-override-ieClassId" to work, JSP
- * precompilation must be turned off (see build.properties in this directory),
- * so that the value of the 'ieClassId' property is gotten from the JspServlet
- * (instead of from the JspC command line).
  */
 public class WebTest {
 
@@ -50,7 +46,6 @@ public class WebTest {
         stat.addDescription("Unit test for Bugtraq 5027440");
         WebTest webTest = new WebTest(args);
         try {
-            webTest.overrideIeClassId();
             webTest.jspInclude();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -60,52 +55,6 @@ public class WebTest {
         }
 
         stat.printSummary();
-    }
-
-    private void overrideIeClassId() throws Exception {
-        URL url = new URL("http://" + host  + ":" + port +
-            contextRoot + "/jsp/overrideIeClassId.jsp");
-        System.out.println("Connecting to: " + url.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.connect();
-        int responseCode = conn.getResponseCode();
-        if (responseCode != 200) {
-            throw new Exception("Wrong response code. Expected: 200" +
-                ", received: " + responseCode);
-        }
-
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(
-                conn.getInputStream()));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("<OBJECT")) {
-                    break;
-                }
-            }
-
-            if (line != null) {
-                // Check <OBJECT> classid comment
-                System.out.println(line);
-                String classid = getAttributeValue(line, "classid");
-                if (classid != null) {
-                    if (!classid.equals(OBJECT_CLASSID)) {
-                        throw new Exception("Wrong classid: " + classid +
-                            ", expected: " + OBJECT_CLASSID);
-                    }
-                } else {
-                    throw new Exception("Missing classid");
-                }
-
-            } else {
-                throw new Exception("Missing OBJECT element in response body");
-            }
-        } finally {
-            try {
-                if (br != null) br.close();
-            } catch (IOException ex) {}
-        }
     }
 
     private void jspInclude() throws Exception {

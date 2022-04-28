@@ -11,13 +11,13 @@ following is a summary of the TCK results for releases of Jakarta Server Pages.
   Eclipse Foundation
   
 - [x] Product Name, Version and download URL (if applicable): <br/>
-  Eclipse WaSP 3.1.0-M2 provides Jakarta Server Pages 3.1
+  Eclipse WaSP 3.1.0-M3 provides Jakarta Server Pages 3.1
   [Eclipse WaSP Project](https://github.com/eclipse-ee4j/wasp)
-  [Eclipse Glassfish 7.0.0-M4](https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0-M4/glassfish-7.0.0-M4.zip) 
+  [Eclipse Glassfish 7.0.0-28-04-2022](https://github.com/eclipse-ee4j/glassfish/releases/download/7.0.0-28-04-2022/glassfish.zip) 
 - [x] Specification Name, Version and download URL: <br/>
   [Jakarta Server Pages 3.1](https://jakarta.ee/specifications/pages/3.1/)
 - [x] TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Server Pages TCK 3.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-pages-tck-3.1.0.zip),  SHA-256: `065686f2915b540e42b9b119e0a8d3b69134710479c55084c5e0fb1c0d8d8060`
+  [Jakarta Server Pages TCK 3.1](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-pages-tck-3.1.0.zip),  SHA-256: `e9f33d463ca35bdf8a9985cc8871858d7e6ea8a6e90adb00a91a001b1e43e025`
 - [x] Public URL of TCK Results Summary: <br/>
   [TCK results summary](./TCK-Results)
 - [x] Any Additional Specification Certification Requirements: <br/>
@@ -37,12 +37,13 @@ Test results:
 
 -----
 SHA256_API=
-SHA256_IMPL=1a73e7c4145ba39dc1862c9e928ecceb7b76c16240095137e9eb44f2a4d12a12
-SHA256_TCK=065686f2915b540e42b9b119e0a8d3b69134710479c55084c5e0fb1c0d8d8060
+SHA256_IMPL=119d3e9c7237a54226723faa90ab087b0eb8c0ad755ce84e5c5032a9abe24e73
+SHA256_TCK=e9f33d463ca35bdf8a9985cc8871858d7e6ea8a6e90adb00a91a001b1e43e025
 -----
 API_download=https://jakarta.oss.sonatype.org/content/repositories/staging/jakarta/servlet/jsp/jakarta.servlet.jsp-api/3.1.0/jakarta.servlet.jsp-api-3.1.0.jar
-IMPL_download=https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/wasp/wasp/3.1.0-M2/wasp-3.1.0-M2.jar
-Product_download=https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0-M4/glassfish-7.0.0-M4.zip
+IMPL_download=https://jakarta.oss.sonatype.org/content/repositories/staging/org/glassfish/wasp/wasp/3.1.0-M3/wasp-3.1.0-M3.jar
+Product_download=https://github.com/eclipse-ee4j/glassfish/releases/download/7.0.0-28-04-2022/glassfish.zip
+Product_download_orig=https://ci.eclipse.org/glassfish/view/GlassFish/job/glassfish_build-and-test-using-jenkinsfile/job/master/697/artifact/bundles/glassfish.zip
 TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-pages-tck-3.1.0.zip
 -----
 OS2=Debian GNU/Linux 10

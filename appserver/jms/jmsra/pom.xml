@@ -81,10 +81,9 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                        <phase>generate-resources</phase>
+                        <phase>process-resources</phase>
                         <configuration>
                             <target>
-                                <!-- FIXME: ra.xml inside 6.2.0 is too old, that is why we patch it by our won -->
                                 <unzip
                                     src="${project.build.directory}/imqjmsra.rar"
                                     dest="${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra"

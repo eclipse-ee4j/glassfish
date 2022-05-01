@@ -8,6 +8,7 @@ following is a summary of the TCK results for releases of Jakarta Authorization.
 # Eclipse GlassFish 7.0 Certification Request
 
 - Product Name, Version and download URL (if applicable): <br/>
+  [Exousia 2.1.0-M1](https://github.com/eclipse-ee4j/exousia/releases/download/2.1.0-M1-RELEASE/exousia-2.1.0-M1.jar)
   [Eclipse Glassfish 7.0.0-M4](https://github.com/eclipse-ee4j/glassfish/releases/download/7.0.0-M4/glassfish-7.0.0-M4.zip)
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authorization 2.1](https://jakarta.ee/specifications/authorization/2.1/)

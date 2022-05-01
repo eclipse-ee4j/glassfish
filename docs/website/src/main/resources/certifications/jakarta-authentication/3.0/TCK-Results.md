@@ -12,7 +12,7 @@ following is a summary of the TCK results for releases of Jakarta Authentication
 - Specification Name, Version and download URL: <br/>
   [Jakarta Authentication 3.0](https://jakarta.ee/specifications/authentication/3.0/)
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Authentication TCK, 3.0.0](https://download.eclipse.org/es/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0-dist.zip), SHA-256: `f970fce5dd3883934ef4f1162c747c527f98cf88fcacc8d7af6ae4cf444c9ef8`
+  [Jakarta Authentication TCK, 3.0](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0-dist.zip), SHA-256: `50b50e789ba4a4ab2c19d6b81e18d2a2dc2a2a11c44f77a9ac816c417770e52e`
 - Public URL of TCK Results Summary: <br/>
   [TCK results summary](TCK-Results.html)
 - Any Additional Specification Certification Requirements: <br/>
@@ -180,11 +180,11 @@ Number of Tests with Errors = 0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  21:10 min
-[INFO] Finished at: 2022-04-30T23:20:43Z
+[INFO] Total time:  12:54 min
+[INFO] Finished at: 2022-05-01T19:14:13Z
 [INFO] ------------------------------------------------------------------------
-SHA256_TCK=f970fce5dd3883934ef4f1162c747c527f98cf88fcacc8d7af6ae4cf444c9ef8
-TCK_download=https://download.eclipse.org/es/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0-dist.zip
+SHA256_TCK=50b50e789ba4a4ab2c19d6b81e18d2a2dc2a2a11c44f77a9ac816c417770e52e
+TCK_download=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0-dist.zip
 OS2=Debian GNU/Linux 10
 OS3=10.12
 OS4=PRETTY_NAME="Debian GNU/Linux 10 (buster)" NAME="Debian GNU/Linux" VERSION_ID="10" VERSION="10 (buster)" VERSION_CODENAME=buster ID=debian HOME_URL="https://www.debian.org/" SUPPORT_URL="https://www.debian.org/support" BUG_REPORT_URL="https://bugs.debian.org/"

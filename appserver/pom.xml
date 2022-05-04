@@ -128,7 +128,7 @@
         <!-- Jakarta JSON -->
         <jakarta.jsonp-api.version>2.1.0</jakarta.jsonp-api.version>
         <parsson.version>1.1.0</parsson.version>
-        <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
+        <jsonp-jaxrs.version>1.1.0</jsonp-jaxrs.version>
         <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
         <yasson.version>3.0.0-RC1</yasson.version>
 
@@ -438,8 +438,8 @@
                 <version>${yasson.version}</version>
             </dependency>
              <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jsonp-jaxrs</artifactId>
+                 <groupId>org.eclipse.parsson</groupId>
+                 <artifactId>parsson-media</artifactId>
                 <version>${jsonp-jaxrs.version}</version>
             </dependency>
 

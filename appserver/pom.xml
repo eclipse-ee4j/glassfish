@@ -100,7 +100,7 @@
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
         <soteria.version>3.0.0-M5</soteria.version>
         <exousia.version>2.1.0-M1</exousia.version>
-        <nimbus.version>9.21</nimbus.version>
+        <nimbus.version>9.22</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -123,14 +123,14 @@
         <jbatch.version>2.1.0-M2</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->
-        <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
+        <jakarta.ejb-api.version>4.0.1</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
         <jakarta.jsonp-api.version>2.1.0</jakarta.jsonp-api.version>
         <parsson.version>1.1.0</parsson.version>
         <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
         <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
-        <yasson.version>3.0.0-RC1</yasson.version>
+        <yasson.version>3.0.0-RC2</yasson.version>
 
         <!-- Jakarta Pages -->
         <jakarta.pages-api.version>3.1.0</jakarta.pages-api.version>

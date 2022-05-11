@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,9 +28,13 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static javassist.Modifier.PUBLIC;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.Permission;
 import java.security.Policy;
+import java.security.ProtectionDomain;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,6 +53,11 @@ import com.sun.enterprise.util.i18n.StringManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 /**
  * Loads the Default Policy File into the system.
@@ -73,6 +83,7 @@ public class PolicyLoader {
     private static final String POLICY_PROVIDER = "jakarta.security.jacc.policy.provider";
     private static final String POLICY_CONF_FACTORY = "jakarta.security.jacc.PolicyConfigurationFactory.provider";
     private static final String POLICY_PROP_PREFIX = "com.sun.enterprise.jaccprovider.property.";
+    private static final String POLICY_PROXY = "com.sun.enterprise.jaccprovider.proxy";
     private boolean isPolicyInstalled;
 
     /**
@@ -104,8 +115,6 @@ public class PolicyLoader {
             javaPolicyClassName = authorizationModule.getPolicyProvider();
         }
 
-        // TEMP TEMP TEMP
-
         if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
             System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
                 "com.sun.enterprise.security.web.integration.GlassfishRoleMapper");
@@ -117,7 +126,15 @@ public class PolicyLoader {
             try {
                 LOGGER.log(INFO, policyLoading, javaPolicyClassName);
 
-                Policy policy = loadPolicy(javaPolicyClassName);
+                boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true"));
+
+                Policy policy = null;
+                if (usePolicyProxy && System.getSecurityManager() != null) {
+                    policy = loadPolicyAsProxy(javaPolicyClassName);
+                } else {
+                    policy = loadPolicy(javaPolicyClassName);
+                }
+
                 Policy.setPolicy(policy);
 
                 // TODO: causing ClassCircularity error when SM ON and
@@ -143,14 +160,91 @@ public class PolicyLoader {
         }
     }
 
-    private Policy loadPolicy(String javaPolicyClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        Object javaPolicyInstance = Thread.currentThread().getContextClassLoader().loadClass(javaPolicyClassName).getDeclaredConstructor()
-            .newInstance();
+    @SuppressWarnings("unchecked")
+    public static <T> T createPolicyProxy(Class<T> targetClass) throws Exception {
+        ProxyFactory factory = new ProxyFactory();
+        factory.setSuperclass(targetClass);
+
+        ProxyObject instance = (ProxyObject) factory.createClass().getDeclaredConstructor().newInstance();
+        instance.setHandler(new JakartaAuthenticationGuardHandler(Policy.getPolicy()));
+
+        return (T) instance;
+    }
+
+    private static class JakartaAuthenticationGuardHandler implements MethodHandler {
+
+        public final static Method impliesMethod = getMethod(
+            Policy.class, "implies", ProtectionDomain.class, Permission.class);
+
+        private final Policy javaSePolicy;
+
+        public JakartaAuthenticationGuardHandler(Policy javaSePolicy) {
+            this.javaSePolicy = javaSePolicy;
+        }
+
+        @Override
+        public Object invoke(Object self, Method overridden, Method forwarder, Object[] args) throws Throwable {
+            if (isImplementationOf(overridden, impliesMethod)) {
+                Permission permission = (Permission) args[1];
+                if (!permission.getClass().getName().startsWith("jakarta.")) {
+                    return javaSePolicy.implies((ProtectionDomain)args[0], permission);
+                }
+            }
+
+            return forwarder.invoke(self, args);
+        }
+
+        public static boolean isImplementationOf(Method implementationMethod, Method interfaceMethod) {
+            return
+                interfaceMethod.getDeclaringClass().isAssignableFrom(implementationMethod.getDeclaringClass()) &&
+                interfaceMethod.getName().equals(implementationMethod.getName()) &&
+                Arrays.equals(interfaceMethod.getParameterTypes(), implementationMethod.getParameterTypes());
+        }
+
+       public static Method getMethod(Class<?> base, String name, Class<?>... parameterTypes) {
+            try {
+                // Method literals in Java would be nice
+                return base.getMethod(name, parameterTypes);
+            } catch (NoSuchMethodException | SecurityException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+    }
+
+    private Policy loadPolicy(String javaPolicyClassName) throws ReflectiveOperationException, SecurityException {
+        Object javaPolicyInstance =
+                Thread.currentThread()
+                      .getContextClassLoader()
+                      .loadClass(javaPolicyClassName)
+                      .getDeclaredConstructor()
+                      .newInstance();
 
         if (!(javaPolicyInstance instanceof Policy)) {
             throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
         }
+
+        return (Policy) javaPolicyInstance;
+    }
+
+    private Policy loadPolicyAsProxy(String javaPolicyClassName) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(javaPolicyClassName);
+        clazz.defrost();
+        clazz.setModifiers(PUBLIC);
+
+        Object javaPolicyInstance =
+            createPolicyProxy(
+                clazz.toClass(
+                    Thread.currentThread()
+                          .getContextClassLoader()
+                          .loadClass(System.getProperty(POLICY_CONF_FACTORY))));
+
+        if (!(javaPolicyInstance instanceof Policy)) {
+            throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
+        }
+
+        javaPolicyInstance.toString();
 
         return (Policy) javaPolicyInstance;
     }

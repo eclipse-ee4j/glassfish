@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,6 +14,43 @@
     https://www.gnu.org/software/classpath/license.html.
 
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+
+Usage:
+
+Run full TCK:
+
+mvn clean clean
+
+
+Run full TCK, debugging remote GlassFish (suspends on port 9009)
+
+mvn clean install -Dglassfish.suspend
+
+
+Run full TCK, debugging client TCK
+
+mvn clean install -Dsuspend-tck
+
+
+Run full TCK with security manager (deprecated in principal, but still needed for EE 10 to pass) 
+
+mvn clean install -Dglassfish.security.manager
+
+
+Run all tests in test class
+
+mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpression/ELClient.java"
+
+
+Run single test:
+
+mvn clean install -Drun.test="com/sun/ts/tests/jacc/web/toolsContracts/Client.java#validateNoInvalidStates_from_standalone"
+
+
 
 -->
 
@@ -185,6 +222,10 @@
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="work\.dir=.*"
                                     replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
+                                    
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="work\.dir=.*"
+                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
 
                                 <!-- Run just selected subset tests -->
                                 <replaceregexp file="${tck.home}/bin/build.xml" byline="true"
@@ -205,6 +246,12 @@
                                     </exec>
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
+                                    </exec>
+                                    
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" if:set="glassfish.security.manager">
+                                        <arg value="create-jvm-options" />
+                                        <arg value="--port=${port.admin}" />
+                                        <arg value="&quot;-Djava.security.manager&quot;" />
                                     </exec>
 
                                     <if>
@@ -250,7 +297,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 <limit maxwait="20">
@@ -266,6 +313,18 @@
                                     <arg value="enable.jacc"  />
                                     <env key="tck.home" value="${tck.home}"/>
                                 </exec>
+                                
+                                <!-- Restart GlassFish in debug mode if so requested -->
+                                <sequential if:set="glassfish.suspend">
+	                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+	                                    <arg value="stop-domain" />
+	                                </exec>
+	                                <echo message="Starting GlassFish in suspended mode, waiting on port 9009" />
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
+                                    </exec>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>
@@ -285,7 +344,8 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
                                     <arg value="deploy"/>
-                                    <arg value="run.all"/>
+                                    <arg value="run.all" unless:set="run.test"/>
+                                    <arg value="runclient" if:set="run.test" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 

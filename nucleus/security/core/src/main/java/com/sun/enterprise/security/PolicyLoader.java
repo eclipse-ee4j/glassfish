@@ -125,8 +125,8 @@ public class PolicyLoader {
 
             try {
                 LOGGER.log(INFO, policyLoading, javaPolicyClassName);
-                
-                boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true")); 
+
+                boolean usePolicyProxy = Boolean.parseBoolean(System.getProperty(POLICY_PROXY, "true"));
 
                 Policy policy = null;
                 if (usePolicyProxy && System.getSecurityManager() != null) {
@@ -232,7 +232,7 @@ public class PolicyLoader {
         CtClass clazz = pool.get(javaPolicyClassName);
         clazz.defrost();
         clazz.setModifiers(PUBLIC);
-        
+
         Object javaPolicyInstance =
             createPolicyProxy(
                 clazz.toClass(
@@ -243,7 +243,7 @@ public class PolicyLoader {
         if (!(javaPolicyInstance instanceof Policy)) {
             throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
         }
-        
+
         javaPolicyInstance.toString();
 
         return (Policy) javaPolicyInstance;

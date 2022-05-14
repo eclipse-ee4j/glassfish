@@ -15,20 +15,21 @@
 #
 
 -exportcontents: \
-                        com.sun.enterprise.v3.admin; \
-                        com.sun.enterprise.v3.admin.adapter; \
-                        com.sun.enterprise.v3.admin.commands; \
-                        com.sun.enterprise.v3.bootstrap; \
-                        com.sun.enterprise.v3.common; \
-                        com.sun.enterprise.v3.server; \
-                        com.sun.enterprise.v3.services.impl; \
-                        org.glassfish.kernel.embedded; \
-                        org.glassfish.kernel.event; version=${project.osgi.version}
+    com.sun.enterprise.v3.admin; \
+    com.sun.enterprise.v3.admin.adapter; \
+    com.sun.enterprise.v3.admin.commands; \
+    com.sun.enterprise.v3.bootstrap; \
+    com.sun.enterprise.v3.common; \
+    com.sun.enterprise.v3.server; \
+    com.sun.enterprise.v3.services.impl; \
+    org.glassfish.kernel.embedded; \
+    org.glassfish.kernel.event; version=${project.osgi.version}
 
 # dependent flashlight package resolved at runtime
-DynamicImport-Package: org.glassfish.flashlight.provider, \
-                       org.objectweb.asm, \
-                       org.objectweb.asm.commons
+DynamicImport-Package: \
+    org.glassfish.flashlight.provider, \
+    org.objectweb.asm, \
+    org.objectweb.asm.commons
 
 # Only in non-OSGi embedded mode, kernel depends on logging package, so
 # optionally depend on that pkg. This way, when GF is embedded in

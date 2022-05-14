@@ -120,7 +120,7 @@
 
         <!-- Jakarta Batch -->
         <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>
-        <jbatch.version>2.1.0</jbatch.version>
+        <jbatch.version>2.1.1</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->
         <jakarta.ejb-api.version>4.0.1</jakarta.ejb-api.version>

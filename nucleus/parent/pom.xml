@@ -755,7 +755,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.4</version>
+                    <version>5.1.6</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -1166,17 +1166,17 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <!-- By default, we don't export anything. -->
-                    <Export-Package />
-                    <instructions>
-                        <_include>-osgi.bundle</_include>
-                    </instructions>
                     <excludeDependencies>tools-jar</excludeDependencies>
+                    <niceManifest>true</niceManifest>
                     <supportedProjectTypes>
                         <supportedProjectType>glassfish-jar</supportedProjectType>
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
-                    <niceManifest>true</niceManifest>
+                    <instructions>
+                        <_include>-osgi.bundle</_include>
+                        <_noimportjava>true</_noimportjava>
+                        <_runee>JavaSE-11</_runee>
+                    </instructions>
                 </configuration>
             </plugin>
 

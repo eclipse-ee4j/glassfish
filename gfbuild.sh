@@ -71,9 +71,6 @@ dev_build(){
 }
 
 build_re_dev(){
-  if [ -f "${WORKSPACE}/snapshots/pom.xml" ]; then
-    mvn clean install -T2C -s "${WORKSPACE}/snapshots/settings.xml" -f "${WORKSPACE}/snapshots/pom.xml" ${MVN_EXTRA}
-  fi
   dev_build
   archive_bundles
   merge_junits

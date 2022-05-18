@@ -1440,8 +1440,8 @@
             <id>staging</id>
             <repositories>
                 <repository>
-                    <id>omnifish-github</id>
-                    <url>https://maven.pkg.github.com/OmniFish-EE/maven-repo</url>
+                    <id>omnifish-prereleases</id>
+                    <url>https://omnifish.jfrog.io/artifactory/prereleases</url>
                 </repository>
             </repositories>
         </profile>

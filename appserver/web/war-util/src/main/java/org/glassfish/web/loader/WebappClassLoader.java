@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,6 +115,7 @@ public class WebappClassLoader extends URLClassLoader
      * class loader without delegating first.
      */
     private static final String[] packageTriggers = {
+        "jakarta",                                   // Jakarta classes
         "javax",                                     // Java extensions
         // START PE 4985680
         "sun",                                       // Sun classes

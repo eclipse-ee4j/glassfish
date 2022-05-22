@@ -40,6 +40,7 @@
         <module>faces</module>
         <module>authentication</module>
         <module>authorization</module>
+        <module>cdi</module>
     </modules>
 
     <build>

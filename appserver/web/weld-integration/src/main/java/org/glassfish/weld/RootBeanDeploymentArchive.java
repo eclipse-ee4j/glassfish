@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -92,7 +93,7 @@ public class RootBeanDeploymentArchive extends BeanDeploymentArchiveImpl {
 
     @Override
     public BeansXml getBeansXml() {
-        return null;
+        return getModuleBda().getBeansXml();
     }
 
     @Override

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -905,6 +906,20 @@ public class ASURLClassLoader
             }
         }
         return stream;
+    }
+
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+        final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
+        return locator.getResources(name);
+    }
+
+    private ClassLoader getParentClassLoader() {
+        final ClassLoader parent = getParent();
+        if (parent == null) {
+            return getSystemClassLoader();
+        }
+        return parent;
     }
 
     /**

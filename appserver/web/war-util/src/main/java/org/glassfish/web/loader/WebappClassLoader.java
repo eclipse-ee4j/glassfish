@@ -1,7 +1,7 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.glassfish.web.loader;
 
 import com.sun.appserv.BytecodePreprocessor;
 import com.sun.appserv.server.util.PreprocessorUtil;
+import com.sun.enterprise.loader.ResourceLocator;
 import com.sun.enterprise.util.io.FileUtils;
 import org.apache.naming.JndiPermission;
 import org.apache.naming.resources.DirContextURLStreamHandler;
@@ -1215,9 +1216,10 @@ public class WebappClassLoader extends URLClassLoader
          * (1) Delegate to parent if requested, or if the requested resource
          * belongs to one of the packages that are part of the Java EE platform
          */
-        if (isResourceDelegate(name)) {
-            if (logger.isLoggable(Level.FINER))
+        if (isDelegateFirstResource(name)) {
+            if (logger.isLoggable(Level.FINER)) {
                 logger.log(Level.FINER, "  Delegating to parent classloader " + parent);
+            }
             ClassLoader loader = parent;
             if (loader == null)
                 loader = system;
@@ -1303,9 +1305,10 @@ public class WebappClassLoader extends URLClassLoader
          * (1) Delegate to parent if requested, or if the requested resource
          * belongs to one of the packages that are part of the Java EE platform
          */
-        if (isResourceDelegate(name)) {
-            if (logger.isLoggable(Level.FINER))
+        if (isDelegateFirstResource(name)) {
+            if (logger.isLoggable(Level.FINER)) {
                 logger.log(Level.FINER, "  Delegating to parent classloader " + parent);
+            }
             ClassLoader loader = parent;
             if (loader == null)
                 loader = system;
@@ -1361,56 +1364,11 @@ public class WebappClassLoader extends URLClassLoader
     }
 
 
-    /**
-     * Finds all the resources with the given name.
-     */
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
-
-        final Enumeration[] enums = new Enumeration[2];
-
-        Enumeration<URL> localResources = findResources(name);
-        Enumeration<URL> parentResources = null;
-        if (parent != null) {
-            parentResources = parent.getResources(name);
-        } else {
-            parentResources = system.getResources(name);
-        }
-
-        if (delegate) {
-            enums[0] = parentResources;
-            enums[1] = localResources;
-        } else {
-            enums[0] = localResources;
-            enums[1] = parentResources;
-        }
-
-        return new Enumeration<URL>() {
-
-            int index = 0;
-
-            private boolean next() {
-                while (index < enums.length) {
-                    if (enums[index] != null &&
-                            enums[index].hasMoreElements()) {
-                        return true;
-                    }
-                    index++;
-                }
-                return false;
-            }
-
-            public boolean hasMoreElements() {
-                return next();
-            }
-
-            public URL nextElement() {
-                if (!next()) {
-                    throw new NoSuchElementException();
-                }
-                return (URL)enums[index].nextElement();
-            }
-        };
+        final ClassLoader parentClassLoader = parent == null ? system : parent;
+        final ResourceLocator locator = new ResourceLocator(this, parentClassLoader, delegate);
+        return locator.getResources(name);
     }
 
 
@@ -1456,14 +1414,11 @@ public class WebappClassLoader extends URLClassLoader
      * @exception ClassNotFoundException if the class was not found
      */
     @Override
-    protected synchronized Class<?> loadClass(String name, boolean resolve)
-        throws ClassNotFoundException {
-
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "loadClass(" + name + ")");
+    protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        if (name == null) {
+            return null;
         }
-
-        Class<?> clazz = null;
+        logger.log(Level.FINER, "loadClass({0})", name);
 
         // Don't load classes if class loader is stopped
         if (!started) {
@@ -1472,7 +1427,7 @@ public class WebappClassLoader extends URLClassLoader
         }
 
         // (0) Check our previously loaded local class cache
-        clazz = findLoadedClass0(name);
+        Class<?> clazz = findLoadedClass0(name);
         if (clazz != null) {
             if (logger.isLoggable(Level.FINER)) {
                 logger.log(Level.FINER, "  Returning class from cache");
@@ -1514,7 +1469,7 @@ public class WebappClassLoader extends URLClassLoader
             delegateLoader = system;
         }
 
-        boolean delegateLoad = delegate || filter(name);
+        boolean delegateLoad = isDelegateFirstClass(name);
 
         // (1) Delegate to our parent if requested
         if (delegateLoad) {
@@ -3028,48 +2983,6 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Filter classes.
-     *
-     * @param name class name
-     * @return true if the class should be filtered
-     */
-    protected boolean filter(String name) {
-
-        if (name == null)
-            return false;
-
-        // START PE 4985680
-        // Special case for performance reason.
-        if (name.startsWith("java."))
-            return true;
-        // END PE 4985680
-
-        // Looking up the package
-        String packageName = null;
-        int pos = name.lastIndexOf('.');
-        if (pos != -1)
-            packageName = name.substring(0, pos);
-        else
-            return false;
-
-        if (overridablePackages != null){
-            for (String overridePkg : overridablePackages) {
-                if (packageName.startsWith(overridePkg))
-                    return false;
-            }
-        }
-
-        for (int i = 0; i < packageTriggers.length; i++) {
-            if (packageName.startsWith(packageTriggers[i]))
-                return true;
-        }
-
-        return false;
-
-    }
-
-
-    /**
      * Validate a classname. As per SRV.9.7.2, we must restrict loading of
      * classes from J2SE (java.*) and classes of the servlet API
      * (jakarta.servlet.*). That should enhance robustness and prevent a number
@@ -3317,20 +3230,57 @@ public class WebappClassLoader extends URLClassLoader
     }
 
     /**
+     * @return true if the class should be first located by the delegating classloader.
+     */
+    private boolean isDelegateFirstClass(String className) {
+        if (delegate) {
+            return true;
+        }
+        // Special case for performance reason.
+        if (className.startsWith("java.")) {
+            return true;
+        }
+        // Looking up the package
+        int pos = className.lastIndexOf('.');
+        if (pos == -1) {
+            return false;
+        }
+        String packageName = className.substring(0, pos);
+        if (overridablePackages != null){
+            for (String overridePkg : overridablePackages) {
+                if (packageName.startsWith(overridePkg)) {
+                    return false;
+                }
+            }
+        }
+        for (String packageTrigger : packageTriggers) {
+            if (packageName.startsWith(packageTrigger)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * To determine whether one should delegate to parent for loading
      * resource of the given resource name.
      *
      * @param name
      */
-    private boolean isResourceDelegate(String name) {
-        return (delegate
-                || (name.startsWith("javax") &&
-                    (!name.startsWith("jakarta.faces") || !useMyFaces))
-                || name.startsWith("sun")
-                || (name.startsWith("com/sun/faces") &&
-                    !name.startsWith("com/sun/faces/extensions") &&
-                    !useMyFaces)
-                || name.startsWith("org/apache/taglibs/standard"));
+    private boolean isDelegateFirstResource(String name) {
+        if (delegate) {
+            return true;
+        }
+        if (name.startsWith("javax") || name.startsWith("jakarta")) {
+            return !useMyFaces && !name.startsWith("jakarta/faces");
+        }
+        if (name.startsWith("com/sun/faces")) {
+            return !useMyFaces && !name.startsWith("com/sun/faces/extensions");
+        }
+        if (name.startsWith("org/apache/taglibs/standard")) {
+            return true;
+        }
+        return name.startsWith("sun");
     }
 
     private static String getString(String key, Object ... arguments) {

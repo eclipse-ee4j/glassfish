@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
  *
@@ -18,6 +18,8 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.enterprise.loader.ResourceLocator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +33,7 @@ import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -40,6 +43,7 @@ import org.glassfish.appclient.common.ClientClassLoaderDelegate;
 import static java.security.AccessController.doPrivileged;
 
 /**
+ * Application client classloader
  *
  * @author tjquinn
  */
@@ -156,7 +160,7 @@ public class ACCClassLoader extends URLClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         if (!shouldTransform) {
-            return super.findClass(name);
+            return findClassUnshadowed(name);
         }
 
         return copyClass(shadow().findClassUnshadowed(name));
@@ -227,4 +231,17 @@ public class ACCClassLoader extends URLClassLoader {
         }
     }
 
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+        final ResourceLocator locator = new ResourceLocator(this, getParentClassLoader(), true);
+        return locator.getResources(name);
+    }
+
+    private ClassLoader getParentClassLoader() {
+        final ClassLoader parent = getParent();
+        if (parent == null) {
+            return getSystemClassLoader();
+        }
+        return parent;
+    }
 }

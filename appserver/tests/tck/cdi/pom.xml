@@ -20,29 +20,30 @@
     <modelVersion>4.0.0</modelVersion>
     
     <parent>
-        <groupId>org.jboss.weld</groupId>
-        <artifactId>weld-core-parent</artifactId>
-        <version>5.0.0.SP1</version>
-        <relativePath/>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
+        <version>7.0.0-SNAPSHOT</version>
     </parent>
     
     <groupId>org.glassfish.main.tests.tck</groupId>
-    <artifactId>glassfish-external-tck-pages</artifactId>
+    <artifactId>glassfish-external-tck-cdi</artifactId>
     
     <name>CDI TCK runner 4.0 for Weld (GlassFish)</name>
-    <description>Aggregates dependencies and runs the CDI TCK (both standalone and on GlassFish AS)</description>
+    <description>Aggregates dependencies and runs the CDI TCK (both standalone and on GlassFish)</description>
 
     <properties>
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     
+        <cdi.tck-4-0.version>4.0.1</cdi.tck-4-0.version>
+    
         <!-- This matches the htmlunit version in TCK -->
         <htmlunit.version>2.50.0</htmlunit.version>
         <excluded.groups>se</excluded.groups>
         
-        <glassfish.version>7.0.0-M4</glassfish.version>
-        <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+        <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.root>${project.build.directory}</glassfish.root>
         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
     </properties>
 
@@ -66,6 +67,7 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-core-impl</artifactId>
+            <version>${weld.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.testng</groupId>
@@ -87,16 +89,19 @@
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-porting-package-tck</artifactId>
+            <version>${weld.version}</version>
         </dependency> 
         
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-lite-extension-translator</artifactId>
+            <version>${weld.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.jboss.weld.module</groupId>
             <artifactId>weld-jsf</artifactId>
+            <version>${weld.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.testng</groupId>
@@ -108,6 +113,7 @@
         <dependency>
             <groupId>org.jboss.weld.module</groupId>
             <artifactId>weld-ejb</artifactId>
+            <version>${weld.version}</version>
         </dependency>
         
         
@@ -232,6 +238,11 @@
             <artifactId>arquillian-glassfish-server-managed</artifactId>
             <version>1.1</version>
         </dependency>
+        
+          <dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -338,7 +349,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
                 <configuration>
                     <argLine>
                         -Xmx768m 
@@ -395,7 +405,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>${surefire.version}</version>
+                <version>3.0.0-M6</version>
                 <executions>
                     <execution>
                         <id>generate-test-report</id>

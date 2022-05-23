@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2021 Contributors to the Eclipse Foundation
  *
@@ -17,7 +18,19 @@
 
 package org.glassfish.weld.connector;
 
-import com.sun.enterprise.config.serverbeans.Config;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.xml.parsers.SAXParserFactory;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -32,6 +45,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.sun.enterprise.config.serverbeans.Config;
+
 import jakarta.decorator.Decorator;
 import jakarta.ejb.MessageDriven;
 import jakarta.ejb.Stateful;
@@ -45,21 +60,6 @@ import jakarta.enterprise.inject.Stereotype;
 import jakarta.inject.Scope;
 import jakarta.inject.Singleton;
 import jakarta.interceptor.Interceptor;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 public class WeldUtils {
 
@@ -78,8 +78,8 @@ public class WeldUtils {
     // We don't want this connector module to depend on CDI API, as connector can be present in a distribution
     // which does not have CDI implementation. So, we use the class name as a string.
     private static final String SERVICES_CLASSNAME = "jakarta.enterprise.inject.spi.Extension";
-    public static final String META_INF_SERVICES_EXTENSION =
-        "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR + SERVICES_CLASSNAME;
+    public static final String META_INF_SERVICES_EXTENSION = "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR
+            + SERVICES_CLASSNAME;
 
     public static final String CLASS_SUFFIX = ".class";
     public static final String JAR_SUFFIX = ".jar";
@@ -87,7 +87,9 @@ public class WeldUtils {
     public static final String EXPANDED_RAR_SUFFIX = "_rar";
     public static final String EXPANDED_JAR_SUFFIX = "_jar";
 
-    public static enum BDAType { WAR, JAR, RAR, UNKNOWN };
+    public static enum BDAType {
+        WAR, JAR, RAR, UNKNOWN
+    };
 
     // The name of the deployment context property used to disable implicit bean discovery for a
     // particular application deployment.
@@ -113,9 +115,9 @@ public class WeldUtils {
         cdiEnablingAnnotations.addAll(cdiScopeAnnotations);
 
         // 1.2 updates
-       cdiEnablingAnnotations.add(Decorator.class.getName());
-       cdiEnablingAnnotations.add(Interceptor.class.getName());
-       cdiEnablingAnnotations.add(Stereotype.class.getName());
+        cdiEnablingAnnotations.add(Decorator.class.getName());
+        cdiEnablingAnnotations.add(Interceptor.class.getName());
+        cdiEnablingAnnotations.add(Stereotype.class.getName());
 
         // EJB annotations
         cdiEnablingAnnotations.add(MessageDriven.class.getName());
@@ -127,26 +129,20 @@ public class WeldUtils {
     /**
      * Determine whether the specified archive is an implicit bean deployment archive.
      *
-     * @param context  The deployment context
-     * @param archive  The archive in question
+     * @param context The deployment context
+     * @param archive The archive in question
      *
      * @return true, if it is an implicit bean deployment archive; otherwise, false.
      */
-    public static boolean isImplicitBeanArchive(DeploymentContext context, ReadableArchive archive)
-            throws IOException {
+    public static boolean isImplicitBeanArchive(DeploymentContext context, ReadableArchive archive) throws IOException {
         boolean result = false;
 
-         //refer CDI 2.0 spec section 12.1
+        // Refer CDI 2.0 spec section 12.1
         // Archives with extensions and no beans.xml file are not candidates for implicit bean discovery
         if (!archive.exists(META_INF_SERVICES_EXTENSION)) {
-          result = isImplicitBeanArchive(context, archive.getURI());
-        } else {
-
-            if (archive.exists(META_INF_BEANS_XML)) {
-
-                result = isImplicitBeanArchive(context, archive.getURI());
-            }
-
+            result = isImplicitBeanArchive(context, archive.getURI());
+        } else if (archive.exists(META_INF_BEANS_XML)) {
+            result = isImplicitBeanArchive(context, archive.getURI());
         }
 
         return result;
@@ -155,22 +151,21 @@ public class WeldUtils {
     /**
      * Determine whether the specified archive is an implicit bean deployment archive.
      *
-     * @param context     The deployment context
+     * @param context The deployment context
      * @param archivePath The URI of the archive
      *
      * @return true, if it is an implicit bean deployment archive; otherwise, false.
      */
     public static boolean isImplicitBeanArchive(DeploymentContext context, URI archivePath) {
-        return (isImplicitBeanDiscoveryEnabled(context) && hasCDIEnablingAnnotations(context, archivePath));
+        return isImplicitBeanDiscoveryEnabled(context) && hasCDIEnablingAnnotations(context, archivePath);
     }
 
-
     /**
-     * Determine whether there are any beans annotated with annotations that should enable CDI
-     * processing even in the absence of a beans.xml descriptor.
+     * Determine whether there are any beans annotated with annotations that should enable CDI processing even in the
+     * absence of a beans.xml descriptor.
      *
      * @param context The DeploymentContext
-     * @param path    The path to check for annotated beans
+     * @param path The path to check for annotated beans
      *
      * @return true, if there is at least one bean annotated with a qualified annotation in the specified path
      */
@@ -180,13 +175,12 @@ public class WeldUtils {
         return hasCDIEnablingAnnotations(context, paths);
     }
 
-
     /**
-     * Determine whether there are any beans annotated with annotations that should enable CDI
-     * processing even in the absence of a beans.xml descriptor.
+     * Determine whether there are any beans annotated with annotations that should enable CDI processing even in the
+     * absence of a beans.xml descriptor.
      *
      * @param context The DeploymentContext
-     * @param paths   The paths to check for annotated beans
+     * @param paths The paths to check for annotated beans
      *
      * @return true, if there is at least one bean annotated with a qualified annotation in the specified paths
      */
@@ -195,17 +189,13 @@ public class WeldUtils {
 
         Types types = getTypes(context);
         if (types != null) {
-            Iterator<Type> typesIter = types.getAllTypes().iterator();
-            while (typesIter.hasNext()) {
-                Type type = typesIter.next();
+            for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
-                    Iterator<AnnotationModel> annotations = type.getAnnotations().iterator();
-                    while (annotations.hasNext()) {
-                        AnnotationModel am = annotations.next();
-                        AnnotationType at = am.getType();
-                        if (isCDIEnablingAnnotation(at) && type.wasDefinedIn(paths)) {
-                            if (!result.contains(at.getName())) {
-                                result.add(at.getName());
+                    for (AnnotationModel annotationModel : type.getAnnotations()) {
+                        AnnotationType annotationType = annotationModel.getType();
+                        if (isCDIEnablingAnnotation(annotationType) && type.wasDefinedIn(paths)) {
+                            if (!result.contains(annotationType.getName())) {
+                                result.add(annotationType.getName());
                             }
                         }
                     }
@@ -213,13 +203,12 @@ public class WeldUtils {
             }
         }
 
-        return !(result.isEmpty());
+        return !result.isEmpty();
     }
 
-
     /**
-     * Get the names of any annotation types that are applied to beans, which should enable CDI
-     * processing even in the absence of a beans.xml descriptor.
+     * Get the names of any annotation types that are applied to beans, which should enable CDI processing even in the
+     * absence of a beans.xml descriptor.
      *
      * @param context The DeploymentContext
      *
@@ -251,10 +240,9 @@ public class WeldUtils {
         return result.toArray(new String[result.size()]);
     }
 
-
     /**
-     * Get the names of any classes that are annotated with bean-defining annotations, which should
-     * enable CDI processing even in the absence of a beans.xml descriptor.
+     * Get the names of any classes that are annotated with bean-defining annotations, which should enable CDI processing
+     * even in the absence of a beans.xml descriptor.
      *
      * @param context The DeploymentContext
      *
@@ -286,18 +274,16 @@ public class WeldUtils {
         return result;
     }
 
-
     /**
      * Determine whether the specified class is annotated with a CDI scope annotation.
      *
-     * @param clazz  The class to check.
+     * @param clazz The class to check.
      *
      * @return true, if the specified class has a CDI scope annotation; Otherwise, false.
      */
-    public static boolean hasScopeAnnotation(Class clazz) {
+    public static boolean hasScopeAnnotation(Class<?> clazz) {
         return hasValidAnnotation(clazz, cdiScopeAnnotations, null);
     }
-
 
     /**
      * Determine whether the specified class is annotated with a CDI-enabling annotation.
@@ -306,10 +292,9 @@ public class WeldUtils {
      *
      * @return true, if the specified class has a CDI scope annotation; Otherwise, false.
      */
-    public static boolean hasCDIEnablingAnnotation(Class clazz) {
+    public static boolean hasCDIEnablingAnnotation(Class<?> clazz) {
         return hasValidAnnotation(clazz, cdiEnablingAnnotations, null);
     }
-
 
     /**
      * Determine if the specified annotation type is a CDI-enabling annotation
@@ -322,19 +307,15 @@ public class WeldUtils {
         return isCDIEnablingAnnotation(annotationType, null);
     }
 
-
     /**
      * Determine if the specified annotation type is a CDI-enabling annotation
      *
-     * @param annotationType    The annotation type to check
+     * @param annotationType The annotation type to check
      * @param excludedTypeNames The Set of annotation type names that should be excluded from the analysis
      *
      * @return true, if the specified annotation type qualifies as a CDI enabler; Otherwise, false
      */
-    private static boolean isCDIEnablingAnnotation(AnnotationType annotationType,
-                                                   Set<String>    excludedTypeNames) {
-        boolean result = false;
-
+    private static boolean isCDIEnablingAnnotation(AnnotationType annotationType, Set<String> excludedTypeNames) {
         Set<String> exclusions = new HashSet<String>();
         if (excludedTypeNames != null) {
             exclusions.addAll(excludedTypeNames);
@@ -342,67 +323,58 @@ public class WeldUtils {
 
         String annotationTypeName = annotationType.getName();
         if (cdiEnablingAnnotations.contains(annotationTypeName) && !exclusions.contains(annotationTypeName)) {
-            result = true;
-        } else if (!exclusions.contains(annotationTypeName)) {
+            return true;
+        }
+
+        if (!exclusions.contains(annotationTypeName)) {
             // If the annotation type itself is not an excluded type, then check it's annotation
             // types, less itself (to avoid infinite recursion)
             exclusions.add(annotationTypeName);
             for (AnnotationModel parent : annotationType.getAnnotations()) {
                 if (isCDIEnablingAnnotation(parent.getType(), exclusions)) {
-                    result = true;
-                    break;
+                    return true;
                 }
             }
         }
 
-        return result;
+        return false;
     }
 
-
     /**
-     * Determine whether the specified class is annotated with one of the annotations in the specified
-     * validScopes collection, but not with any of the annotations in the specified exclusion set.
+     * Determine whether the specified class is annotated with one of the annotations in the specified validScopes
+     * collection, but not with any of the annotations in the specified exclusion set.
      *
-     * @param annotatedClass          The class to check.
-     * @param validScopes    A collection of valid CDI scope type names
+     * @param annotatedClass The class to check.
+     * @param validScopes A collection of valid CDI scope type names
      * @param excludedScopes A collection of excluded CDI scope type names
      *
-     * @return true, if the specified class has at least one of the annotations specified in
-     *         validScopes, and none of the annotations specified in excludedScopes; Otherwise, false.
+     * @return true, if the specified class has at least one of the annotations specified in validScopes, and none of the
+     * annotations specified in excludedScopes; Otherwise, false.
      */
-    public static boolean hasValidAnnotation(Class              annotatedClass,
-                                             Collection<String> validScopes,
-                                             Collection<String> excludedScopes) {
-        boolean result = false;
-
+    public static boolean hasValidAnnotation(Class<?> annotatedClass, Collection<String> validScopes, Collection<String> excludedScopes) {
         // Check all the annotations on the specified Class to determine if the class is annotated
         // with a supported CDI scope
         for (Annotation annotation : annotatedClass.getAnnotations()) {
-            if (WeldUtils.isValidAnnotation(annotation.annotationType(),
-                                            validScopes,
-                                            excludedScopes)) {
-                result =true;
-                break;
+            if (isValidAnnotation(annotation.annotationType(), validScopes, excludedScopes)) {
+                return true;
             }
         }
 
-        return result;
+        return false;
     }
 
     /**
-     * Determine whether the specified annotation type is one of the specified valid types and not
-     * in the specified exclusion list. Positive results include those annotations which are themselves
-     * annotated with types in the valid list.
+     * Determine whether the specified annotation type is one of the specified valid types and not in the specified
+     * exclusion list. Positive results include those annotations which are themselves annotated with types in the valid
+     * list.
      *
-     * @param annotationType     The annotation type to check
-     * @param validTypeNames     The valid annotation type names
-     * @param excludedTypeNames  The excluded annotation type names
+     * @param annotationType The annotation type to check
+     * @param validTypeNames The valid annotation type names
+     * @param excludedTypeNames The excluded annotation type names
      *
      * @return true, if the specified type is in the valid list and not in the excluded list; Otherwise, false.
      */
-    protected static boolean isValidAnnotation(Class<? extends Annotation> annotationType,
-                                               Collection<String>          validTypeNames,
-                                               Collection<String>          excludedTypeNames) {
+    protected static boolean isValidAnnotation(Class<? extends Annotation> annotationType, Collection<String> validTypeNames, Collection<String> excludedTypeNames) {
         boolean result = false;
 
         if (validTypeNames != null && !validTypeNames.isEmpty()) {
@@ -415,7 +387,7 @@ public class WeldUtils {
             String annotationTypeName = annotationType.getName();
             if (validTypeNames.contains(annotationTypeName) && !excludedScopes.contains(annotationTypeName)) {
                 result = true;
-            } else if (!excludedScopes.contains(annotationTypeName)){
+            } else if (!excludedScopes.contains(annotationTypeName)) {
                 // If the annotation type itself is not an excluded type, then check it's annotation
                 // types, less itself (to avoid infinite recursion)
                 excludedScopes.add(annotationTypeName);
@@ -430,7 +402,6 @@ public class WeldUtils {
 
         return result;
     }
-
 
     private static Types getTypes(DeploymentContext context) {
         String metadataKey = Types.class.getName();
@@ -448,7 +419,6 @@ public class WeldUtils {
         return types;
     }
 
-
     public static boolean isImplicitBeanDiscoveryEnabled() {
         boolean result = false;
 
@@ -464,126 +434,114 @@ public class WeldUtils {
         return result;
     }
 
-
     public static boolean isImplicitBeanDiscoveryEnabled(DeploymentContext context) {
-        boolean result = false;
-
-        if (isImplicitBeanDiscoveryEnabled()) {
-            // If implicit discovery is enabled for the server, then check if it's disabled for the
-            // deployment of this application.
-            Object propValue = context.getAppProps().get(IMPLICIT_CDI_ENABLED_PROP);
-
-            // If the property is not set, or it's value is true, then implicit discovery is enabled
-            result = (propValue == null || Boolean.parseBoolean((String) propValue));
+        if (!isImplicitBeanDiscoveryEnabled()) {
+            return false;
         }
 
-        return result;
+        // If implicit discovery is enabled for the server, then check if it's disabled for the
+        // deployment of this application.
+        Object propValue = context.getAppProps().get(IMPLICIT_CDI_ENABLED_PROP);
+
+        // If the property is not set, or it's value is true, then implicit discovery is enabled
+        return propValue == null || Boolean.parseBoolean((String) propValue);
     }
 
+    public static InputStream getBeansXmlInputStream(DeploymentContext context) {
+        return getBeansXmlInputStream(context.getSource());
+    }
 
-  public static InputStream getBeansXmlInputStream(DeploymentContext context) {
-    return getBeansXmlInputStream( context.getSource() );
-  }
+    /**
+     * Determine if an archive is a valid bda based on what the spec says about extensions. See section 12.1 which states
+     * that if an archive contains an extension but no beans.xml then it is NOT a valid bean deployment archive.
+     *
+     * @param archive The archive to check.
+     * @return false if there is an extension and no beans.xml true otherwise
+     */
+    public static boolean isValidBdaBasedOnExtensionAndBeansXml(ReadableArchive archive) {
+        try {
+            if (archive.exists(META_INF_SERVICES_EXTENSION)) {
+                try (InputStream inputStream = getBeansXmlInputStream(archive)) {
+                    if (inputStream != null) {
+                        return true; // extension and beans.xml: it is a valid bda
+                    }
 
-  /**
-   * Determine if an archive is a valid bda based on what the spec says about extensions.
-   * See section 12.1 which states that if an archive contains an extension but no beans.xml then it is NOT
-   * a valid bean deployment archive.
-   *
-   * @param archive The archive to check.
-   * @return false if there is an extension and no beans.xml
-   *         true otherwise
-   */
-  public static boolean isValidBdaBasedOnExtensionAndBeansXml( ReadableArchive archive ) {
-    boolean retVal = true;
+                    return false; // extension and no beans.xml: no a bda
+                }
 
-    try {
-      if ( archive.exists(META_INF_SERVICES_EXTENSION)) {
-        retVal = false;
-        InputStream inputStream = getBeansXmlInputStream( archive );
-        if ( inputStream != null ) {
-          retVal = true;  // is a valid bda
-          try {
-            inputStream.close();
-          } catch (IOException ignore) {
-          }
+            }
+        } catch (IOException ignore) {
         }
-      }
-    } catch (IOException ignore) {
+
+        return true;
     }
 
-    return retVal;
-  }
+    public static InputStream getBeansXmlInputStream(ReadableArchive archive) {
+        InputStream inputStream = null;
 
-
-  public static InputStream getBeansXmlInputStream( ReadableArchive archive ) {
-    InputStream inputStream = null;
-
-    try {
-      if (archive.exists(WeldUtils.WEB_INF)) {
-        inputStream = archive.getEntry(WeldUtils.WEB_INF_BEANS_XML);
-        if (inputStream == null) {
-          inputStream = archive.getEntry(WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML);
+        try {
+            if (archive.exists(WEB_INF)) {
+                inputStream = archive.getEntry(WEB_INF_BEANS_XML);
+                if (inputStream == null) {
+                    inputStream = archive.getEntry(WEB_INF_CLASSES_META_INF_BEANS_XML);
+                }
+            } else {
+                inputStream = archive.getEntry(META_INF_BEANS_XML);
+            }
+        } catch (IOException e) {
+            return null;
         }
-      } else {
-        inputStream = archive.getEntry(WeldUtils.META_INF_BEANS_XML);
-      }
-    } catch (IOException e) {
-      return null;
+
+        return inputStream;
     }
-    return inputStream;
-  }
 
-  /**
-   * Get the "bean-discovery-mode" from the "beans" element if it exists in beans.xml
-   * From section 12.1 of CDI spec:
-   * A bean archive has a bean discovery mode of all, annotated or none. A bean archive which
-   * contains a beans.xml file with no version has a default bean discovery mode of all. A bean
-   * archive which contains a beans.xml file with version 1.1 (or later) must specify the bean-
-   * discovey-mode attribute. The default value for the attribute is annotated.
-   *
-   * @param beansXmlInputStream The InputStream for the beans.xml to check.
-   * @return "annotated" if there is no beans.xml
-   *         "all" if the bean-discovery-mode is missing
-   *         "annotated" if the bean-discovery-mode is empty
-   *         The value of bean-discovery-mode in all other cases.
-   */
-    public static String getBeanDiscoveryMode( InputStream beansXmlInputStream ) {
-      if ( beansXmlInputStream == null ) {
-        // there is no beans.xml.
-        return "annotated";
-      }
+    /**
+     * Get the "bean-discovery-mode" from the "beans" element if it exists in beans.xml From section 12.1 of CDI spec: A
+     * bean archive has a bean discovery mode of all, annotated or none. A bean archive which contains a beans.xml file with
+     * no version has a default bean discovery mode of all. A bean archive which contains a beans.xml file with version 1.1
+     * (or later) must specify the bean- discovey-mode attribute. The default value for the attribute is annotated.
+     *
+     * @param beansXmlInputStream The InputStream for the beans.xml to check.
+     * @return "annotated" if there is no beans.xml "all" if the bean-discovery-mode is missing "annotated" if the
+     * bean-discovery-mode is empty The value of bean-discovery-mode in all other cases.
+     */
+    public static String getBeanDiscoveryMode(InputStream beansXmlInputStream) {
+        if (beansXmlInputStream == null) {
+            // there is no beans.xml.
+            return "annotated";
+        }
 
-      String beanDiscoveryMode = null;
-      LocalDefaultHandler handler = new LocalDefaultHandler();
-      try {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser = factory.newSAXParser();
-        saxParser.parse(beansXmlInputStream, handler);
-      } catch ( SAXStoppedIntentionallyException exc ) {
-        beanDiscoveryMode = handler.getBeanDiscoveryMode();
-      } catch (Exception ignore) {
-      }
+        String beanDiscoveryMode = null;
+        LocalDefaultHandler handler = new LocalDefaultHandler();
+        try {
+            SAXParserFactory.newInstance().newSAXParser().parse(beansXmlInputStream, handler);
+        } catch (SAXStoppedIntentionallyException exc) {
+            beanDiscoveryMode = handler.getBeanDiscoveryMode();
+        } catch (Exception ignore) {
+        }
 
-      if (beanDiscoveryMode == null ) {
-        return "all";
-      } else if (beanDiscoveryMode.equals("")) {
-        return "annotated";
-      } else {
+        if (beanDiscoveryMode == null) {
+            return "all";
+        }
+
+        if (beanDiscoveryMode.equals("")) {
+            return "annotated";
+        }
+
         return beanDiscoveryMode;
-      }
     }
 
     private static class LocalDefaultHandler extends DefaultHandler {
         String beanDiscoveryMode = null;
 
-        public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
-            if ( qName.equals( "beans" ) ) {
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+            if (qName.equals("beans")) {
                 beanDiscoveryMode = attributes.getValue("bean-discovery-mode");
-                if ( beanDiscoveryMode != null ) {
-                  if ( beanDiscoveryMode.equals( "" ) ) {
-                    beanDiscoveryMode = "annotated";
-                  }
+                if (beanDiscoveryMode != null) {
+                    if (beanDiscoveryMode.equals("")) {
+                        beanDiscoveryMode = "annotated";
+                    }
                 }
                 throw new SAXStoppedIntentionallyException();
             }
@@ -595,10 +553,10 @@ public class WeldUtils {
     }
 
     private static class SAXStoppedIntentionallyException extends SAXException {
+        private static final long serialVersionUID = 1L;
         private SAXStoppedIntentionallyException() {
             super();
         }
     }
-
 
 }

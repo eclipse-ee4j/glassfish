@@ -17,6 +17,7 @@
 
 package org.glassfish.weld.connector;
 
+import static java.util.logging.Level.FINE;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_JAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_RAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
@@ -36,6 +37,7 @@ import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionA
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
@@ -53,6 +55,7 @@ import jakarta.inject.Singleton;
 public class WeldSniffer extends GenericSniffer {
 
     private static final String[] containers = { "org.glassfish.weld.WeldContainer" };
+    private static final Logger logger = Logger.getLogger(WeldSniffer.class.getName());
 
     public WeldSniffer() {
         // We do not haGenericSniffer(String containerName, String appStigma, String urlPattern
@@ -124,6 +127,7 @@ public class WeldSniffer extends GenericSniffer {
                         entryPresent = isArchiveCDIEnabled(context, jarInLib, META_INF_BEANS_XML);
                         jarInLib.close();
                     } catch (IOException e) {
+                        logger.log(FINE, "", e);
                     }
                 }
             }
@@ -137,7 +141,8 @@ public class WeldSniffer extends GenericSniffer {
         try {
             entryPresent = archive.exists(entry);
         } catch (IOException e) {
-            // ignore
+            // do not ignore
+            logger.log(FINE, "", e);
         }
         return entryPresent;
     }
@@ -153,7 +158,8 @@ public class WeldSniffer extends GenericSniffer {
                 } finally {
                     try {
                         beansXmlInputStream.close();
-                    } catch (Exception ignore) {
+                    } catch (Exception notignore) {
+                        logger.log(FINE, "", notignore);
                     }
                 }
             }
@@ -227,7 +233,8 @@ public class WeldSniffer extends GenericSniffer {
             } finally {
                 try {
                     beansXmlInputStream.close();
-                } catch (IOException ignore) {
+                } catch (IOException notignore) {
+                    logger.log(FINE, "", notignore);
                 }
             }
         }

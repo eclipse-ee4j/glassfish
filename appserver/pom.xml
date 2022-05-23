@@ -146,7 +146,7 @@
         <jstl-impl.version>3.0.0</jstl-impl.version>
 
         <!-- Jakarta CDI -->
-        <jakarta.cdi-api.version>4.0.0</jakarta.cdi-api.version>
+        <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
         <weld.version>5.0.0.SP1</weld.version>
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 

@@ -43,6 +43,7 @@ import static org.apache.catalina.Globals.WRAPPED_REQUEST;
 import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -154,6 +155,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
     private static final Logger _logger = LogDomains.getLogger(RealmAdapter.class, WEB_LOGGER);
     private static final ResourceBundle resourceBundle = _logger.getResourceBundle();
+    private static final boolean debug = isDebug();
 
     private static final String SERVER_AUTH_CONTEXT = "__jakarta.security.auth.message.ServerAuthContext";
     private static final String MESSAGE_INFO = "__jakarta.security.auth.message.MessageInfo";
@@ -1346,14 +1348,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 httpServletRequest.setAttribute(MESSAGE_INFO, messageInfo);
             }
         } catch (AuthException ae) {
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "Jakarta Authentication: http msg authentication fail", ae);
-            }
+            _logger.log(debug? SEVERE : FINE, "Jakarta Authentication: http msg authentication fail", ae);
             httpServletResponse.setStatus(SC_INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "Jakarta Authentication: Exception during validateRequest", e);
-            }
+            _logger.log(debug? SEVERE : FINE, "Jakarta Authentication: Exception during validateRequest", e);
             httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR);
         }
 
@@ -1786,6 +1784,14 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         }
 
         throw new RuntimeException("No key found in parameters");
+    }
+
+    private static boolean isDebug() {
+        try {
+            return ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
 }

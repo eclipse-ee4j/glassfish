@@ -175,15 +175,24 @@ public class RestTestBase {
         assertEquals(404, response.getStatus());
     }
 
+    /*
+     * Arguments contextRoot and name can be null, then they are not set in the deploy command
+     */
     public Map<String, String> deployApp(final File archive, final String contextRoot, final String name) {
-        Map<String, Object> app = Map.of(
-            "id", archive,
-            "contextroot", contextRoot,
-            "name", name
-        );
+        Map<String, Object> app = new HashMap<>();
+        app.put("id", archive);
+        putIfNotNull("contextroot", contextRoot, app);
+        putIfNotNull("name", name, app);
+        
         Response response = managementClient.postWithUpload(URL_APPLICATION_DEPLOY, app);
         assertThat(response.getStatus(), equalTo(200));
         return getEntityValues(managementClient.get(URL_APPLICATION_DEPLOY + "/" + app.get("name")));
+    }
+
+    private void putIfNotNull(final String key, Object value, Map<String, Object> app) {
+        if (value != null) {
+            app.put(key, value);
+        }
     }
 
     public void addAppRef(final String applicationName, final String targetName){

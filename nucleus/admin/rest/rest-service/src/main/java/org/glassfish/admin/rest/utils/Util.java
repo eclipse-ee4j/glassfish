@@ -43,6 +43,8 @@ import javax.security.auth.Subject;
 import jakarta.ws.rs.core.PathSegment;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.HttpHeaders;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.glassfish.admin.rest.Constants;
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
@@ -468,8 +470,7 @@ public class Util {
     public static File saveTemporaryFile(String fileName, InputStream fileStream) {
         File file;
         try {
-            String[] parts = getNameAndSuffix(fileName);
-            file = File.createTempFile(parts[0], parts[1]);
+            file = Files.createTempDirectory("gf_uploads").resolve(fileName).toFile();
         } catch (IOException e) {
             throw new IllegalStateException("Could not create a temp file for " + fileName, e);
         }
@@ -479,6 +480,7 @@ public class Util {
             while ((bytesRead = fileStream.read(buffer)) != -1) {
                 out.write(buffer, 0, bytesRead);
             }
+            file.deleteOnExit();
             return file;
         } catch (IOException e) {
             throw new IllegalStateException("Could not write to a temp file " + file, e);

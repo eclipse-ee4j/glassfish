@@ -1346,14 +1346,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 httpServletRequest.setAttribute(MESSAGE_INFO, messageInfo);
             }
         } catch (AuthException ae) {
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "Jakarta Authentication: http msg authentication fail", ae);
-            }
+            _logger.log(FINE, "Jakarta Authentication: http msg authentication fail", ae);
             httpServletResponse.setStatus(SC_INTERNAL_SERVER_ERROR);
         } catch (RuntimeException e) {
-            if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, "Jakarta Authentication: Exception during validateRequest", e);
-            }
+            _logger.log(SEVERE , "Jakarta Authentication: Exception during validateRequest", e);
             httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR);
         }
 

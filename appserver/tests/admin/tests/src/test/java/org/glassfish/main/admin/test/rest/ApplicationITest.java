@@ -18,6 +18,7 @@
 package org.glassfish.main.admin.test.rest;
 
 import jakarta.ws.rs.core.Response;
+import java.io.File;
 
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -66,6 +67,26 @@ public class ApplicationITest extends RestTestBase {
         }
     }
 
+    @Test
+    public void testApplicationDeploymentWithDefaultContextRoot() throws URISyntaxException {
+        try {
+            final File war = getWar("test");
+            String expectedContextRoot = getFileNameWithoutSuffix(war.getName());
+            Map<String, String> deployedApp = deployApp(war, null, appName);
+            assertEquals(appName, deployedApp.get("name"));
+            assertEquals("/" + expectedContextRoot, deployedApp.get("contextRoot"));
+        } finally {
+            undeployApp(appName);
+        }
+    }
+
+    private static String getFileNameWithoutSuffix(final String filename) {
+        if (filename.contains(".")) {
+            return filename.substring(0, filename.lastIndexOf("."));
+        } else {
+            return filename;
+        }
+    }
 
     @Test
     public void testApplicationDisableEnable() throws URISyntaxException {

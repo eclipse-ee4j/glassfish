@@ -1,7 +1,6 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,9 +24,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.SAXParserFactory;
 
@@ -63,6 +63,8 @@ import jakarta.interceptor.Interceptor;
 
 public class WeldUtils {
 
+    private static Logger logger = Logger.getLogger(WeldUtils.class.getName());
+
     public static final char SEPARATOR_CHAR = '/';
     public static final String WEB_INF = "WEB-INF";
     public static final String WEB_INF_CLASSES = WEB_INF + SEPARATOR_CHAR + "classes";
@@ -77,9 +79,23 @@ public class WeldUtils {
 
     // We don't want this connector module to depend on CDI API, as connector can be present in a distribution
     // which does not have CDI implementation. So, we use the class name as a string.
-    private static final String SERVICES_CLASSNAME = "jakarta.enterprise.inject.spi.Extension";
-    public static final String META_INF_SERVICES_EXTENSION = "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR
-            + SERVICES_CLASSNAME;
+    private static final String SERVICES_PORTABLE_CLASSNAME = "jakarta.enterprise.inject.spi.Extension";
+    private static final String SERVICES_BUILD_CLASSNAME = "jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension";
+
+
+    public static final String META_INF_SERVICES_PORTABLE_EXTENSION =
+        "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR + SERVICES_PORTABLE_CLASSNAME;
+
+    public static final String META_INF_SERVICES_BUILD_EXTENSION =
+        "META-INF" + SEPARATOR_CHAR + SERVICES_DIR + SEPARATOR_CHAR + SERVICES_BUILD_CLASSNAME;
+
+    public static final String WEB_INF_SERVICES_PORTABLE_EXTENSION =
+        WEB_INF_CLASSES + SEPARATOR_CHAR + META_INF_SERVICES_PORTABLE_EXTENSION;
+
+    public static final String WEB_INF_SERVICES_BUILD_EXTENSION =
+        WEB_INF_CLASSES + SEPARATOR_CHAR + META_INF_SERVICES_BUILD_EXTENSION;
+
+
 
     public static final String CLASS_SUFFIX = ".class";
     public static final String JAR_SUFFIX = ".jar";
@@ -135,17 +151,13 @@ public class WeldUtils {
      * @return true, if it is an implicit bean deployment archive; otherwise, false.
      */
     public static boolean isImplicitBeanArchive(DeploymentContext context, ReadableArchive archive) throws IOException {
-        boolean result = false;
-
-        // Refer CDI 2.0 spec section 12.1
-        // Archives with extensions and no beans.xml file are not candidates for implicit bean discovery
-        if (!archive.exists(META_INF_SERVICES_EXTENSION)) {
-            result = isImplicitBeanArchive(context, archive.getURI());
-        } else if (archive.exists(META_INF_BEANS_XML)) {
-            result = isImplicitBeanArchive(context, archive.getURI());
+        if (!isValidBdaBasedOnExtensionAndBeansXml(archive)) {
+            // Refer CDI 2.0 spec section 12.1
+            // Archives with extensions and no beans.xml file are not candidates for implicit bean discovery
+            return false;
         }
 
-        return result;
+        return isImplicitBeanArchive(context, archive.getURI());
     }
 
     /**
@@ -170,9 +182,7 @@ public class WeldUtils {
      * @return true, if there is at least one bean annotated with a qualified annotation in the specified path
      */
     public static boolean hasCDIEnablingAnnotations(DeploymentContext context, URI path) {
-        Set<URI> paths = new HashSet<URI>();
-        paths.add(path);
-        return hasCDIEnablingAnnotations(context, paths);
+        return hasCDIEnablingAnnotations(context, Set.of(path));
     }
 
     /**
@@ -219,17 +229,13 @@ public class WeldUtils {
 
         Types types = getTypes(context);
         if (types != null) {
-            Iterator<Type> typesIter = types.getAllTypes().iterator();
-            while (typesIter.hasNext()) {
-                Type type = typesIter.next();
+            for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
-                    Iterator<AnnotationModel> annotations = type.getAnnotations().iterator();
-                    while (annotations.hasNext()) {
-                        AnnotationModel am = annotations.next();
-                        AnnotationType at = am.getType();
-                        if (isCDIEnablingAnnotation(at)) {
-                            if (!result.contains(at.getName())) {
-                                result.add(at.getName());
+                    for (AnnotationModel annotationModel : type.getAnnotations()) {
+                        AnnotationType annotationType = annotationModel.getType();
+                        if (isCDIEnablingAnnotation(annotationType)) {
+                            if (!result.contains(annotationType.getName())) {
+                                result.add(annotationType.getName());
                             }
                         }
                     }
@@ -253,16 +259,12 @@ public class WeldUtils {
 
         Types types = getTypes(context);
         if (types != null) {
-            Iterator<Type> typesIter = types.getAllTypes().iterator();
-            while (typesIter.hasNext()) {
-                Type type = typesIter.next();
+            for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
-                    Iterator<AnnotationModel> annotations = type.getAnnotations().iterator();
-                    while (annotations.hasNext()) {
-                        AnnotationModel am = annotations.next();
-                        AnnotationType at = am.getType();
-                        if (isCDIEnablingAnnotation(at)) {
-                            if (!result.contains(at.getName())) {
+                    for (AnnotationModel annotationModel : type.getAnnotations()) {
+                        AnnotationType annotationType = annotationModel.getType();
+                        if (isCDIEnablingAnnotation(annotationType)) {
+                            if (!result.contains(annotationType.getName())) {
                                 result.add(type.getName());
                             }
                         }
@@ -460,20 +462,46 @@ public class WeldUtils {
      */
     public static boolean isValidBdaBasedOnExtensionAndBeansXml(ReadableArchive archive) {
         try {
-            if (archive.exists(META_INF_SERVICES_EXTENSION)) {
-                try (InputStream inputStream = getBeansXmlInputStream(archive)) {
-                    if (inputStream != null) {
-                        return true; // extension and beans.xml: it is a valid bda
-                    }
-
-                    return false; // extension and no beans.xml: no a bda
-                }
-
+            if (hasExtension(archive) && !hasBeansXMl(archive)) {
+                // Extension and no beans.xml: not a bda
+                return false;
             }
         } catch (IOException ignore) {
         }
 
         return true;
+    }
+
+    public static boolean hasExtension(ReadableArchive archive) {
+        try {
+            if (isWar(archive)) {
+                return
+                    archive.exists(WEB_INF_SERVICES_PORTABLE_EXTENSION) ||
+                    archive.exists(WEB_INF_SERVICES_BUILD_EXTENSION);
+            }
+
+            return
+                archive.exists(META_INF_SERVICES_PORTABLE_EXTENSION) ||
+                archive.exists(META_INF_SERVICES_BUILD_EXTENSION);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "", e);
+            return false;
+        }
+    }
+
+    public static boolean hasBeansXMl(ReadableArchive archive) throws IOException {
+        if (isWar(archive)) {
+            return
+                archive.exists(WEB_INF_BEANS_XML) ||
+                archive.exists(WEB_INF_CLASSES_META_INF_BEANS_XML);
+        }
+
+        return
+            archive.exists(META_INF_BEANS_XML);
+    }
+
+    public static boolean isWar(ReadableArchive archive) throws IOException {
+        return archive.exists(WEB_INF);
     }
 
     public static InputStream getBeansXmlInputStream(ReadableArchive archive) {
@@ -496,14 +524,16 @@ public class WeldUtils {
     }
 
     /**
-     * Get the "bean-discovery-mode" from the "beans" element if it exists in beans.xml From section 12.1 of CDI spec: A
-     * bean archive has a bean discovery mode of all, annotated or none. A bean archive which contains a beans.xml file with
-     * no version has a default bean discovery mode of all. A bean archive which contains a beans.xml file with version 1.1
-     * (or later) must specify the bean- discovey-mode attribute. The default value for the attribute is annotated.
+     * Get the "bean-discovery-mode" from the "beans" element if it exists in beans.xml
+     *
+     * From section 12.1 of CDI spec:
+     * A bean archive has a bean discovery mode of all, annotated or none. A bean archive which contains a beans.xml file with
+     * no version has a default bean discovery mode of annotated. A bean archive which contains a beans.xml file with version 1.1
+     * (or later) must specify the bean-discovery-mode attribute. The default value for the attribute is annotated.
      *
      * @param beansXmlInputStream The InputStream for the beans.xml to check.
-     * @return "annotated" if there is no beans.xml "all" if the bean-discovery-mode is missing "annotated" if the
-     * bean-discovery-mode is empty The value of bean-discovery-mode in all other cases.
+     * @return "annotated" if there is no beans.xml, "annotated" if the bean-discovery-mode is missing, "annotated" if the
+     * bean-discovery-mode is empty. The value of bean-discovery-mode in all other cases.
      */
     public static String getBeanDiscoveryMode(InputStream beansXmlInputStream) {
         if (beansXmlInputStream == null) {
@@ -521,7 +551,8 @@ public class WeldUtils {
         }
 
         if (beanDiscoveryMode == null) {
-            return "all";
+            // Empty beans.xml or bean-discovery-mode attribute not specified
+            return "annotated";
         }
 
         if (beanDiscoveryMode.equals("")) {
@@ -538,11 +569,6 @@ public class WeldUtils {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             if (qName.equals("beans")) {
                 beanDiscoveryMode = attributes.getValue("bean-discovery-mode");
-                if (beanDiscoveryMode != null) {
-                    if (beanDiscoveryMode.equals("")) {
-                        beanDiscoveryMode = "annotated";
-                    }
-                }
                 throw new SAXStoppedIntentionallyException();
             }
         }
@@ -554,9 +580,6 @@ public class WeldUtils {
 
     private static class SAXStoppedIntentionallyException extends SAXException {
         private static final long serialVersionUID = 1L;
-        private SAXStoppedIntentionallyException() {
-            super();
-        }
     }
 
 }

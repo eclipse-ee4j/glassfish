@@ -63,6 +63,24 @@ public class WeldSniffer extends GenericSniffer {
     }
 
     /**
+    *
+    * This API is used to help determine if the sniffer should recognize the current archive. If the sniffer does not
+    * support the archive type associated with the current deployment, the sniffer should not recognize the archive.
+    *
+    * @param archiveType the archive type to check
+    * @return whether the sniffer supports the archive type
+    *
+    */
+   @Override
+   public boolean supportsArchiveType(ArchiveType archiveType) {
+       if (archiveType.toString().equals("war") || archiveType.toString().equals("ejb") || archiveType.toString().equals("rar")) {
+           return true;
+       }
+
+       return false;
+   }
+
+    /**
      * Returns true if the archive contains beans.xml as defined by packaging rules of Weld
      */
     @Override
@@ -75,11 +93,13 @@ public class WeldSniffer extends GenericSniffer {
         ReadableArchive archive = context.getSource();
 
         boolean isWeldArchive = false;
-        // scan for beans.xml in expected locations. If at least one is found without bean-discovery-mode="none", this is
+
+        // Scan for beans.xml in expected locations. If at least one is found without bean-discovery-mode="none", this is
         // a Weld archive
         if (isEntryPresent(archive, WEB_INF)) {
-            isWeldArchive = isArchiveCDIEnabled(context, archive, WEB_INF_BEANS_XML)
-                    || isArchiveCDIEnabled(context, archive, WEB_INF_CLASSES_META_INF_BEANS_XML);
+            isWeldArchive =
+                isArchiveCDIEnabled(context, archive, WEB_INF_BEANS_XML) ||
+                isArchiveCDIEnabled(context, archive, WEB_INF_CLASSES_META_INF_BEANS_XML);
 
             if (!isWeldArchive) {
                 // Check jars under WEB_INF/lib
@@ -112,6 +132,41 @@ public class WeldSniffer extends GenericSniffer {
 
         return isWeldArchive;
     }
+
+    @Override
+    public String[] getContainersNames() {
+        return containers;
+    }
+
+    @Override
+    public String[] getAnnotationNames(DeploymentContext context) {
+        // First see if bean-discovery-mode is explicitly set to "none".
+        InputStream beansXmlInputStream = getBeansXmlInputStream(context);
+        if (beansXmlInputStream != null) {
+            try {
+                String beanDiscoveryMode = getBeanDiscoveryMode(beansXmlInputStream);
+                if (beanDiscoveryMode.equals("none")) {
+                    return null;
+                }
+            } finally {
+                try {
+                    beansXmlInputStream.close();
+                } catch (IOException notignore) {
+                    logger.log(FINE, "", notignore);
+                }
+            }
+        }
+
+        // Make sure it's not an extension
+        if (!isValidBdaBasedOnExtensionAndBeansXml(context.getSource())) {
+            return null;
+        }
+
+        return isImplicitBeanDiscoveryEnabled(context) ? getCDIEnablingAnnotations(context) : null;
+    }
+
+
+    // ### Private and protected methods
 
     private boolean scanLibDir(DeploymentContext context, ReadableArchive archive, String libLocation) {
         boolean entryPresent = false;
@@ -197,53 +252,4 @@ public class WeldSniffer extends GenericSniffer {
         }
     }
 
-    @Override
-    public String[] getContainersNames() {
-        return containers;
-    }
-
-    /**
-     *
-     * This API is used to help determine if the sniffer should recognize the current archive. If the sniffer does not
-     * support the archive type associated with the current deployment, the sniffer should not recognize the archive.
-     *
-     * @param archiveType the archive type to check
-     * @return whether the sniffer supports the archive type
-     *
-     */
-    @Override
-    public boolean supportsArchiveType(ArchiveType archiveType) {
-        if (archiveType.toString().equals("war") || archiveType.toString().equals("ejb") || archiveType.toString().equals("rar")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public String[] getAnnotationNames(DeploymentContext context) {
-        // First see if bean-discovery-mode is explicitly set to "none".
-        InputStream beansXmlInputStream = getBeansXmlInputStream(context);
-        if (beansXmlInputStream != null) {
-            try {
-                String beanDiscoveryMode = getBeanDiscoveryMode(beansXmlInputStream);
-                if (beanDiscoveryMode.equals("none")) {
-                    return null;
-                }
-            } finally {
-                try {
-                    beansXmlInputStream.close();
-                } catch (IOException notignore) {
-                    logger.log(FINE, "", notignore);
-                }
-            }
-        }
-
-        // make sure it's not an extension
-        if (!isValidBdaBasedOnExtensionAndBeansXml(context.getSource())) {
-            return null;
-        }
-
-        return isImplicitBeanDiscoveryEnabled(context) ? getCDIEnablingAnnotations(context) : null;
-    }
 }

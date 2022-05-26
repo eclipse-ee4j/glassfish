@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,22 +19,21 @@ package org.glassfish.internal.data;
 
 import org.glassfish.hk2.api.HK2Loader;
 import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.bootstrap.PopulatorPostProcessor;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
 /**
- * If there has been no other PopulatorPostProcessor that has set the descriptors
- * HK2Loader then this one will set it to an appropriate loader for the application,
- * using the application classloader
+ * If there has been no other PopulatorPostProcessor that has set the descriptors HK2Loader then this one will set it to
+ * an appropriate loader for the application, using the application classloader
+ *
  * @author jwells
  *
  */
-public class ApplicationClassLoadingPostProcessor implements
-        PopulatorPostProcessor {
+public class ApplicationClassLoadingPostProcessor implements PopulatorPostProcessor {
+
     private final HK2Loader applicationLoader;
 
-    /* package */
     ApplicationClassLoadingPostProcessor(final ClassLoader appClassLoader) {
         applicationLoader = new HK2Loader() {
 
@@ -41,8 +41,7 @@ public class ApplicationClassLoadingPostProcessor implements
             public Class<?> loadClass(String className) throws MultiException {
                 try {
                     return appClassLoader.loadClass(className);
-                }
-                catch (Throwable th) {
+                } catch (Throwable th) {
                     throw new MultiException(th);
                 }
             }
@@ -50,13 +49,17 @@ public class ApplicationClassLoadingPostProcessor implements
         };
     }
 
-    /* (non-Javadoc)
-     * @see org.glassfish.hk2.bootstrap.PopulatorPostProcessor#process(org.glassfish.hk2.api.ServiceLocator, org.glassfish.hk2.utilities.DescriptorImpl)
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.glassfish.hk2.bootstrap.PopulatorPostProcessor#process(org.glassfish.hk2.api.ServiceLocator,
+     * org.glassfish.hk2.utilities.DescriptorImpl)
      */
     @Override
-    public DescriptorImpl process(ServiceLocator serviceLocator,
-            DescriptorImpl descriptorImpl) {
-        if (descriptorImpl.getLoader() != null) return descriptorImpl;
+    public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
+        if (descriptorImpl.getLoader() != null) {
+            return descriptorImpl;
+        }
 
         descriptorImpl.setLoader(applicationLoader);
         return descriptorImpl;

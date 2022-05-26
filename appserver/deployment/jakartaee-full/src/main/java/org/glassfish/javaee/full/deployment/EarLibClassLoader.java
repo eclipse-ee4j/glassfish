@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +18,14 @@
 package org.glassfish.javaee.full.deployment;
 
 import java.net.URL;
+
 import com.sun.enterprise.loader.ASURLClassLoader;
 
 /**
  * Classloader that is responsible to load the ear libraries (lib/*.jar etc)
  *
  */
-public class EarLibClassLoader extends ASURLClassLoader
-{
+public class EarLibClassLoader extends ASURLClassLoader {
 
     public EarLibClassLoader(URL[] urls, ClassLoader classLoader) {
         super(classLoader);

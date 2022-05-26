@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,37 +17,35 @@
 
 package org.glassfish.internal.data;
 
-import com.sun.enterprise.config.serverbeans.ApplicationConfig;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.api.deployment.ApplicationContainer;
-import org.glassfish.api.deployment.Deployer;
-import org.glassfish.api.deployment.ApplicationContext;
-import org.glassfish.api.ActionReport;
-import org.jvnet.hk2.config.TransactionFailure;
+import static java.util.logging.Level.WARNING;
 
-import java.util.logging.Level;
 import java.beans.PropertyVetoException;
 
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import com.sun.enterprise.config.serverbeans.ApplicationConfig;
 import com.sun.enterprise.config.serverbeans.Engine;
 
 /**
- * When a module is attached to a LoadedEngine, it creates an Engine reference. Each module
- * of an application can be loaded in several engines, however, a particular module can
- * only be loaded once in a particular engine.
+ * When a module is attached to a LoadedEngine, it creates an Engine reference. Each module of an application can be
+ * loaded in several engines, however, a particular module can only be loaded once in a particular engine.
  *
  * @author Jerome Dochez
  */
 public class EngineRef {
 
-    final private EngineInfo ctrInfo;
+    final private EngineInfo<?, ?> engineInfo;
+    private ApplicationContainer<?> applicationContainer;
+    private ApplicationConfig appConfig;
 
-    private ApplicationContainer appCtr;
-
-    private ApplicationConfig appConfig = null;
-
-    public EngineRef(EngineInfo container,  ApplicationContainer appCtr) {
-        this.ctrInfo = container;
-        this.appCtr = appCtr;
+    public EngineRef(EngineInfo<?, ?> container, ApplicationContainer<?> appCtr) {
+        this.engineInfo = container;
+        this.applicationContainer = appCtr;
     }
 
     /**
@@ -54,24 +53,26 @@ public class EngineRef {
      *
      * @return the container for this application
      */
-    public EngineInfo getContainerInfo() {
-        return ctrInfo;
+    public EngineInfo<?, ?> getContainerInfo() {
+        return engineInfo;
     }
 
     /**
      * Set the contaier associated with this application
-     * @param appCtr the container for this application
+     *
+     * @param applicationContainer the container for this application
      */
-    public void setApplicationContainer(ApplicationContainer appCtr) {
-        this.appCtr = appCtr;
+    public void setApplicationContainer(ApplicationContainer<?> applicationContainer) {
+        this.applicationContainer = applicationContainer;
     }
 
     /**
      * Returns the contaier associated with this application
+     *
      * @return the container for this application
      */
-    public ApplicationContainer getApplicationContainer() {
-        return appCtr;
+    public ApplicationContainer<?> getApplicationContainer() {
+        return applicationContainer;
     }
 
     public void setApplicationConfig(final ApplicationConfig config) {
@@ -85,17 +86,15 @@ public class EngineRef {
     public void load(ExtendedDeploymentContext context, ProgressTracker tracker) {
         getContainerInfo().load(context);
         tracker.add("loaded", EngineRef.class, this);
-
     }
 
-    public boolean start(ApplicationContext context, ProgressTracker tracker)
-        throws Exception {
-
-        if (appCtr==null) {
+    public boolean start(ApplicationContext context, ProgressTracker tracker) throws Exception {
+        if (applicationContainer == null) {
             // the container does not care to be started or stopped
             return true;
         }
-        if (!appCtr.start(context)) {
+
+        if (!applicationContainer.start(context)) {
             return false;
         }
 
@@ -110,45 +109,43 @@ public class EngineRef {
      * @return
      */
     public boolean unload(ExtendedDeploymentContext context) {
-
         ActionReport report = context.getActionReport();
+
         // then remove the application from the container
-        Deployer deployer = ctrInfo.getDeployer();
+        Deployer deployer = engineInfo.getDeployer();
         try {
-            deployer.unload(appCtr, context);
-            ctrInfo.unload(context);
-        } catch(Exception e) {
+            deployer.unload(applicationContainer, context);
+            engineInfo.unload(context);
+        } catch (Exception e) {
             report.failure(context.getLogger(), "Exception while shutting down application container", e);
             return false;
         }
-        appCtr=null;
+
+        applicationContainer = null;
         return true;
     }
 
     /**
-     * Stops a module, meaning that components implemented by this module should not be accessed
-     * by external modules
+     * Stops a module, meaning that components implemented by this module should not be accessed by external modules
      *
      * @param context stopping context
      * @return
      */
     public boolean stop(ApplicationContext context) {
-
-       return appCtr.stop(context);
+        return applicationContainer.stop(context);
     }
 
     public void clean(ExtendedDeploymentContext context) {
-
         try {
             getContainerInfo().clean(context);
         } catch (Exception e) {
-            context.getLogger().log(Level.WARNING, "Exception while cleaning module '" + this + "'" + e, e);
+            context.getLogger().log(WARNING, "Exception while cleaning module '" + this + "'" + e, e);
         }
     }
 
     /**
-     * Saves its state to the configuration. this method must be called within a transaction
-     * to the configured engine instance.
+     * Saves its state to the configuration. this method must be called within a transaction to the configured engine
+     * instance.
      *
      * @param engine the engine configuration being persisted
      */
@@ -159,4 +156,8 @@ public class EngineRef {
         }
     }
 
+    @Override
+    public String toString() {
+        return engineInfo.toString() + " " + super.toString();
+    }
 }

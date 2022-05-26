@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -149,7 +149,7 @@ public class JCDIServiceImpl implements JCDIService {
         // E.g. allows EjbBundleDescriptor from a .war to be handled correctly.
         BundleDescriptor topLevelBundleDesc = (BundleDescriptor) bundle.getModuleDescriptor().getDescriptor();
 
-        return weldDeployer.is299Enabled(topLevelBundleDesc);
+        return weldDeployer.isCdiEnabled(topLevelBundleDesc);
 
     }
 

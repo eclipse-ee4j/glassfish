@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,22 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.internal.api.DelegatingClassLoader;
 
 import com.sun.enterprise.loader.ASURLClassLoader;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.hk2.api.PreDestroy;
 
 /**
- * Simplistic class loader which will delegate to each module class loader in the order
- * they were added to the instance
+ * Simplistic class loader which will delegate to each module class loader in the order they were added to the instance
  *
  * @author Jerome Dochez
  */
-public class EarClassLoader extends ASURLClassLoader
-{
+public class EarClassLoader extends ASURLClassLoader {
 
-    private List<ClassLoaderHolder> moduleClassLoaders = new LinkedList<ClassLoaderHolder>();
+    private List<ClassLoaderHolder> moduleClassLoaders = new LinkedList<>();
     boolean isPreDestroyCalled = false;
 
     public EarClassLoader(ClassLoader classLoader) {
@@ -48,6 +49,7 @@ public class EarClassLoader extends ASURLClassLoader
                 return clh.loader;
             }
         }
+
         return null;
     }
 
@@ -60,9 +62,7 @@ public class EarClassLoader extends ASURLClassLoader
         try {
             for (ClassLoaderHolder clh : moduleClassLoaders) {
                 // destroy all the module classloaders
-                if ( !(clh.loader instanceof EarLibClassLoader) &&
-                     !(clh.loader instanceof EarClassLoader) &&
-                     !isRARCL(clh.loader)) {
+                if (!(clh.loader instanceof EarLibClassLoader) && !(clh.loader instanceof EarClassLoader) && !isRARCL(clh.loader)) {
                     try {
                         PreDestroy.class.cast(clh.loader).preDestroy();
                     } catch (Exception e) {
@@ -75,9 +75,9 @@ public class EarClassLoader extends ASURLClassLoader
             // destroy itself
             super.preDestroy();
 
-            //now destroy embedded Connector CLs
-            DelegatingClassLoader dcl = (DelegatingClassLoader)this.getParent();
-            for(DelegatingClassLoader.ClassFinder cf : dcl.getDelegates()){
+            // now destroy embedded Connector CLs
+            DelegatingClassLoader dcl = (DelegatingClassLoader) this.getParent();
+            for (DelegatingClassLoader.ClassFinder cf : dcl.getDelegates()) {
                 try {
                     PreDestroy.class.cast(cf).preDestroy();
                 } catch (Exception e) {
@@ -102,7 +102,7 @@ public class EarClassLoader extends ASURLClassLoader
         if (!(loader instanceof DelegatingClassLoader.ClassFinder)) {
             return false;
         }
-        return connectorCL.getDelegates().contains((DelegatingClassLoader.ClassFinder)loader);
+        return connectorCL.getDelegates().contains(loader);
     }
 
     private static class ClassLoaderHolder {

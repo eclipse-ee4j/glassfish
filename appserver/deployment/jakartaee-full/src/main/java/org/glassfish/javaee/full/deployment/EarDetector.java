@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,26 @@
 
 package org.glassfish.javaee.full.deployment;
 
+import static com.sun.enterprise.deployment.deploy.shared.Util.getURIName;
+
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.deployment.EarType;
-import com.sun.enterprise.deployment.deploy.shared.Util;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
- * Detects ear type archives.
- * It's rank can be set using system property {@link #EAR_DETECTOR_RANK_PROP}.
- * Default rank is {@link #DEFAULT_EAR_DETECTOR_RANK}.
+ * Detects ear type archives. It's rank can be set using system property {@link #EAR_DETECTOR_RANK_PROP}. Default rank
+ * is {@link #DEFAULT_EAR_DETECTOR_RANK}.
  *
  * @author sanjeeb.sahoo@oracle.com
  */
@@ -48,10 +48,7 @@ public class EarDetector implements ArchiveDetector {
     public static final int DEFAULT_EAR_DETECTOR_RANK = 100;
     public static final String ARCHIVE_TYPE = EarType.ARCHIVE_TYPE;
 
-    @Inject private ServiceLocator serviceLocator;
-    @Inject private EarSniffer sniffer;
-    @Inject private EarType archiveType;
-    private ArchiveHandler archiveHandler;
+    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
 
     private static final String APPLICATION_XML = "META-INF/application.xml";
     private static final String SUN_APPLICATION_XML = "META-INF/sun-application.xml";
@@ -61,8 +58,20 @@ public class EarDetector implements ArchiveDetector {
     private static final String EXPANDED_RAR_SUFFIX = "_rar";
     private static final String EXPANDED_JAR_SUFFIX = "_jar";
 
+    @Inject
+    private ServiceLocator serviceLocator;
 
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    @Inject
+    private EarSniffer sniffer;
+
+    @Inject
+    private EarType archiveType;
+
+    private ArchiveHandler archiveHandler;
+
+
+
+
 
     @Override
     public int rank() {
@@ -72,34 +81,33 @@ public class EarDetector implements ArchiveDetector {
     @Override
     public boolean handles(ReadableArchive archive) throws IOException {
         boolean isEar = false;
-        try{
-            if (Util.getURIName(archive.getURI()).endsWith(EAR_EXTENSION)) {
+        try {
+            if (getURIName(archive.getURI()).endsWith(EAR_EXTENSION)) {
                 return true;
             }
 
-            isEar = archive.exists(APPLICATION_XML) ||
-                    archive.exists(SUN_APPLICATION_XML) ||
-                    archive.exists(GF_APPLICATION_XML);
+            isEar = archive.exists(APPLICATION_XML) || archive.exists(SUN_APPLICATION_XML) || archive.exists(GF_APPLICATION_XML);
 
             if (!isEar) {
                 isEar = isEARFromIntrospecting(archive);
             }
-        }catch(IOException ioe){
-            //ignore
+        } catch (IOException ioe) {
+            // ignore
         }
+
         return isEar;
     }
 
     @Override
     public ArchiveHandler getArchiveHandler() {
         synchronized (this) {
-            if(archiveHandler == null) {
+            if (archiveHandler == null) {
                 try {
                     sniffer.setup(null, logger);
                 } catch (IOException e) {
                     throw new RuntimeException(e); // TODO(Sahoo): Proper Exception Handling
                 }
-                archiveHandler = serviceLocator.getService(ArchiveHandler.class,ARCHIVE_TYPE);
+                archiveHandler = serviceLocator.getService(ArchiveHandler.class, ARCHIVE_TYPE);
             }
             return archiveHandler;
         }
@@ -112,18 +120,16 @@ public class EarDetector implements ArchiveDetector {
 
     // introspecting the sub archives to see if any of them
     // ended with expected suffix
-    private static boolean isEARFromIntrospecting(ReadableArchive archive)
-        throws IOException {
+    private static boolean isEARFromIntrospecting(ReadableArchive archive) throws IOException {
         for (String entryName : archive.getDirectories()) {
             // we don't have other choices but to look if any of
             // the subdirectories is ended with expected suffix
-            if ( entryName.endsWith(EXPANDED_WAR_SUFFIX) ||
-                 entryName.endsWith(EXPANDED_RAR_SUFFIX) ||
-                 entryName.endsWith(EXPANDED_JAR_SUFFIX) ) {
+            if (entryName.endsWith(EXPANDED_WAR_SUFFIX) || entryName.endsWith(EXPANDED_RAR_SUFFIX)
+                    || entryName.endsWith(EXPANDED_JAR_SUFFIX)) {
                 return true;
             }
         }
+
         return false;
     }
 }
-

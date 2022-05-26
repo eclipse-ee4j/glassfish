@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,36 @@
 
 package org.glassfish.internal.deployment;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.HK2Module;
 import java.io.ByteArrayOutputStream;
-import jakarta.inject.Inject;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import java.lang.annotation.Annotation;
+
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.StartDocument;
+import javax.xml.stream.events.XMLEvent;
+
+import org.glassfish.api.container.Sniffer;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.ServiceLocator;
+
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
+
+import jakarta.inject.Inject;
 
 /**
  * Generic implementation of the Sniffer service that can be programmatically instantiated
@@ -73,6 +80,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @param context deployment context
      * @return true if the location is recognized by this sniffer
      */
+    @Override
     public boolean handles(DeploymentContext context) {
         ArchiveType archiveType = habitat.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
         if (archiveType != null && !supportsArchiveType(archiveType)) {
@@ -91,6 +99,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @param context deployment context
      * @return list of annotations this sniffer is interested in or an empty array
      */
+    @Override
     public String[] getAnnotationNames(DeploymentContext context) {
         List<String> annotationNames = new ArrayList<String>();
         for (Class<? extends Annotation> annotationType : getAnnotationTypes())  {
@@ -106,6 +115,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @param location the file or directory to explore
      * @return true if this sniffer handles this application type
      */
+    @Override
     public boolean handles(ReadableArchive location) {
         if (appStigma != null) {
             try {
@@ -126,6 +136,7 @@ public abstract class GenericSniffer implements Sniffer {
      *
      * @return pattern instance
      */
+    @Override
     public String[] getURLPatterns() {
         if (urlPattern!=null) {
             return new String[] {urlPattern};
@@ -139,6 +150,7 @@ public abstract class GenericSniffer implements Sniffer {
      *
      * @return the container name
      */
+    @Override
     public String getModuleType() {
         return containerName;
     }
@@ -158,6 +170,7 @@ public abstract class GenericSniffer implements Sniffer {
      *
      * @throws java.io.IOException exception if something goes sour
      */
+    @Override
     public synchronized HK2Module[] setup(String containerHome, Logger logger) throws IOException {   // TODO(Sahoo): Change signature to not accept containerHome or logger
         if (modules != null) {
             if (logger.isLoggable(Level.FINE)) {
@@ -186,6 +199,7 @@ public abstract class GenericSniffer implements Sniffer {
      * subsystem.
      *
      */
+    @Override
     public void tearDown() {
         // It is not safe to uninstall modules in a running server as there might be existing
         // references to objects loaded from those modules, so we don't uninstall modules at this point of time.
@@ -200,6 +214,7 @@ public abstract class GenericSniffer implements Sniffer {
      *
      * @return list of annotations this sniffer is interested in.
      */
+    @Override
     public Class<? extends Annotation>[] getAnnotationTypes() {
         return new Class[0];
     }
@@ -208,6 +223,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @return whether this sniffer should be visible to user
      *
      */
+    @Override
     public boolean isUserVisible() {
         return false;
     }
@@ -216,6 +232,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @return whether this sniffer represents a Java EE container type
      *
      */
+    @Override
     public boolean isJavaEE() {
         return false;
     }
@@ -263,6 +280,7 @@ public abstract class GenericSniffer implements Sniffer {
      * @throws java.io.IOException in case of errors retrieving an entry or
      * reading the archive contents at an entry
      */
+    @Override
     public Map<String,String> getDeploymentConfigurations(final ReadableArchive location) throws IOException {
         final Map<String,String> deploymentConfigs = new HashMap<String,String>();
 
@@ -309,6 +327,7 @@ public abstract class GenericSniffer implements Sniffer {
      * lists for a certain module
      *
      */
+    @Override
     public String[] getIncompatibleSnifferTypes() {
         return null;
     }

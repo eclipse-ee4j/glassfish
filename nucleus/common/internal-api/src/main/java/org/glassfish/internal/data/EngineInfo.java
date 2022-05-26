@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,33 @@
 
 package org.glassfish.internal.data;
 
-import org.glassfish.api.container.Sniffer;
+import static java.util.logging.Level.FINE;
+
+import java.util.logging.Logger;
+
 import org.glassfish.api.container.Container;
-import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.Deployer;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-
 /**
- * This class holds information about a particular container such as a reference
- * to the sniffer, the container itself and the list of applications deployed in
- * that container.
+ * This class holds information about a particular container such as a reference to the sniffer, the container itself
+ * and the list of applications deployed in that container.
  *
  * @author Jerome Dochez
  */
-public class EngineInfo<T extends Container, U extends ApplicationContainer> {
+public class EngineInfo<T extends Container, U extends ApplicationContainer<?>> {
 
     final ServiceHandle<T> container;
     final Sniffer sniffer;
-    ContainerRegistry registry = null;
-    Deployer deployer;
+    ContainerRegistry registry;
+    Deployer<T, U> deployer;
 
     /**
-     * Creates a new ContractProvider info with references to the container, the sniffer
-     * and the connector module implementing the ContractProvider/Deployer interfaces.
+     * Creates a new ContractProvider info with references to the container, the sniffer and the connector module
+     * implementing the ContractProvider/Deployer interfaces.
      *
      * @param container instance of the container
      * @param sniffer sniffer associated with that container
@@ -56,6 +55,7 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
 
     /**
      * Returns the container instance
+     *
      * @return the container instance
      */
     public T getContainer() {
@@ -64,6 +64,7 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
 
     /**
      * Returns the sniffer associated with this container
+     *
      * @return the sniffer instance
      */
     public Sniffer getSniffer() {
@@ -100,6 +101,7 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
 
     /*
      * Sets the registry this container belongs to
+     *
      * @param the registry owning me
      */
     public void setRegistry(ContainerRegistry registry) {
@@ -107,22 +109,27 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
     }
 
     // Todo : take care of Deployer when unloading...
-    public void stop(Logger logger)
-    {
-        if (getDeployer()!=null) {
-            ServiceHandle<?> i = registry.habitat.getServiceHandle(getDeployer().getClass());
-            if (i!=null) {
-                i.destroy();
+    public void stop(Logger logger) {
+        if (getDeployer() != null) {
+            ServiceHandle<?> serviceHandle = registry.serviceLocator.getServiceHandle(getDeployer().getClass());
+            if (serviceHandle != null) {
+                serviceHandle.close();
             }
         }
 
         if (container != null && container.isActive()) {
-            container.destroy();
+            container.close();
         }
 
         registry.removeContainer(this);
-        if (logger.isLoggable(Level.FINE)) {
+
+        if (logger.isLoggable(FINE)) {
             logger.fine("Container " + getContainer().getName() + " stopped");
         }
+    }
+
+    @Override
+    public String toString() {
+        return (deployer != null? deployer.toString() : "")  + super.toString();
     }
 }

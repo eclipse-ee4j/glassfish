@@ -20,8 +20,10 @@ package org.glassfish.weld;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 import static org.glassfish.cdi.CDILoggerInfo.ADD_BEAN_CLASS;
 import static org.glassfish.cdi.CDILoggerInfo.ADD_BEAN_CLASS_ERROR;
+import static org.glassfish.cdi.CDILoggerInfo.ERROR_LOADING_BEAN_CLASS;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_BDA_JAR;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_BEANS_XML;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_BECAUSE_SCOPE_ANNOTATION;
@@ -41,6 +43,7 @@ import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getCDIAnnotatedClassNames;
+import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
 
 import java.io.File;
@@ -373,20 +376,27 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 } else {
                     addBeansXMLURL(archive, beansXMLURL);
                 }
-            } else if (archive.exists(WEB_INF_CLASSES)) { // If WEB-INF/classes exists, check for CDI beans there
+            } else if (archive.exists(WEB_INF_CLASSES)) { // If WEB-INF/classes exists, check for extension and CDI beans there
 
-                // Check WEB-INF/classes for CDI-enabling annotations
-                URI webinfclasses = new File(context.getSourceDir().getAbsolutePath(), WEB_INF_CLASSES).toURI();
-                if (isImplicitBeanArchive(context, webinfclasses)) {
-                    webinfbda = true;
-                    if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, PROCESSING_CDI_ENABLED_ARCHIVE, new Object[] { archive.getURI() });
+                // Check if the war has an extension in WEB-INF/classes. Such an extension in combination with no beans.xml
+                // makes the war an empty "BDA" (technically not a BDA).
+                // This is implicitly introduced in CDI 4.0 via the ChangeObserverQualifierTest
+                if (hasExtension(archive)) {
+                    bdaType = BDAType.WAR;
+                } else {
+                    // Check WEB-INF/classes for CDI-enabling annotations
+
+                    URI webinfclasses = new File(context.getSourceDir().getAbsolutePath(), WEB_INF_CLASSES).toURI();
+                    if (isImplicitBeanArchive(context, webinfclasses)) {
+                        webinfbda = true;
+                        if (logger.isLoggable(FINE)) {
+                            logger.log(FINE, PROCESSING_CDI_ENABLED_ARCHIVE, new Object[] { archive.getURI() });
+                        }
                     }
                 }
             }
 
             if (webinfbda) {
-
                 bdaType = BDAType.WAR;
 
                 Enumeration<String> entries = archive.entries();
@@ -406,8 +416,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                             }
                             moduleClassNames.add(className);
                         } catch (Throwable t) {
-                            if (logger.isLoggable(Level.WARNING)) {
-                                logger.log(Level.WARNING, CDILoggerInfo.ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
+                            if (logger.isLoggable(WARNING)) {
+                                logger.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
                             }
                         }
                     } else if (entry.endsWith(BEANS_XML_FILENAME)) {
@@ -587,8 +597,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 // Add the class as a module class
                 moduleClassNames.add(className);
             } catch (Throwable t) {
-                if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, CDILoggerInfo.ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
+                if (logger.isLoggable(WARNING)) {
+                    logger.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
                 }
             }
         } else if (entry.endsWith("/beans.xml")) {

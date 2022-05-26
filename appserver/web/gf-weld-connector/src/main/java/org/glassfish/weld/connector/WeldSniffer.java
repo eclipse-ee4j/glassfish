@@ -30,6 +30,7 @@ import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getBeanDiscoveryMode;
 import static org.glassfish.weld.connector.WeldUtils.getBeansXmlInputStream;
 import static org.glassfish.weld.connector.WeldUtils.getCDIEnablingAnnotations;
+import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanDiscoveryEnabled;
 import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionAndBeansXml;
@@ -106,6 +107,14 @@ public class WeldSniffer extends GenericSniffer {
                 if (isEntryPresent(archive, WEB_INF_LIB)) {
                     isWeldArchive = scanLibDir(context, archive, WEB_INF_LIB);
                 }
+            }
+
+            // Test for extension present.
+            // The CDI 4.0 TCK introduced the requirement of war archive having an extension in
+            // WEB-INF/classes/META-INF/services with no beans.xml being no BDA, but do need to
+            // have the bean manager in JNDI.
+            if (!isWeldArchive) {
+                isWeldArchive = hasExtension(archive);
             }
         }
 

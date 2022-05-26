@@ -183,7 +183,7 @@ public class RestTestBase {
         app.put("id", archive);
         putIfNotNull("contextroot", contextRoot, app);
         putIfNotNull("name", name, app);
-        
+
         Response response = managementClient.postWithUpload(URL_APPLICATION_DEPLOY, app);
         assertThat(response.getStatus(), equalTo(200));
         return getEntityValues(managementClient.get(URL_APPLICATION_DEPLOY + "/" + app.get("name")));

@@ -158,6 +158,6 @@ public class EngineRef {
 
     @Override
     public String toString() {
-        return engineInfo.toString() + " " + super.toString();
+        return engineInfo + ", " + super.toString();
     }
 }

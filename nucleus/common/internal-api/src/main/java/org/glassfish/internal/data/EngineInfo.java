@@ -130,6 +130,6 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer<?>> 
 
     @Override
     public String toString() {
-        return (deployer != null? deployer.toString() : "")  + super.toString();
+        return deployer + ", " + super.toString();
     }
 }

@@ -83,21 +83,38 @@ public class WebContainerStarter implements PostConstruct, ConfigListener {
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.kernel.javaee.LogMessages";
 
-    @LoggerInfo(subsystem = "AS-CORE", description = "Java EE Core Kernel", publish = true)
+    @LoggerInfo(
+        subsystem = "AS-CORE",
+        description = "Java EE Core Kernel",
+        publish = true)
     private static final String ASCORE_LOGGER = "jakarta.enterprise.system.core.ee";
     private static final Logger logger = Logger.getLogger(ASCORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
     private static final ResourceBundle rb = logger.getResourceBundle();
 
-    @LogMessageInfo(message = "Web Container not installed", cause = "The web container does not install properly.", action = "Please check the web container libraries are installed properly.", level = "INFO")
+    @LogMessageInfo(
+        message = "Web Container not installed",
+        cause = "The web container does not install properly.",
+        action = "Please check the web container libraries are installed properly.",
+        level = "INFO")
     public static final String mWebContainerNotInstalled = LOGMSG_PREFIX + "-0001";
 
-    @LogMessageInfo(message = "Done with starting {0} container.", level = "INFO")
+    @LogMessageInfo(
+        message = "Done with starting {0} container.",
+        level = "INFO")
     public static final String mStartContainerDone = LOGMSG_PREFIX + "-0002";
 
-    @LogMessageInfo(message = "Unable to start container (no exception provided)", cause = "The web container does not start properly.", action = "Please check the web container libraries are installed properly.", level = "SEVERE")
+    @LogMessageInfo(
+        message = "Unable to start container (no exception provided)",
+        cause = "The web container does not start properly.",
+        action = "Please check the web container libraries are installed properly.",
+        level = "SEVERE")
     public static final String mUnableStartContainerNoException = LOGMSG_PREFIX + "-0003";
 
-    @LogMessageInfo(message = "Unable to start container {0}", cause = "The web container does not start properly. Most probably, there is a class loading issue.", action = "Please resolve issues mentioned in the stack trace.", level = "SEVERE")
+    @LogMessageInfo(
+        message = "Unable to start container {0}",
+        cause = "The web container does not start properly. Most probably, there is a class loading issue.",
+        action = "Please resolve issues mentioned in the stack trace.",
+        level = "SEVERE")
     public static final String mUnableStartContainer = LOGMSG_PREFIX + "-0004";
 
     private static final String AUTH_PASSTHROUGH_ENABLED_PROP = "authPassthroughEnabled";

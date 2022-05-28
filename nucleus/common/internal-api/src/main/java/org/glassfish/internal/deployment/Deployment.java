@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,20 @@
 
 package org.glassfish.internal.deployment;
 
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.deployment.archive.ReadableArchive;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.api.ActionReport;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.data.ApplicationInfo;
@@ -31,19 +38,12 @@ import org.glassfish.internal.data.EngineInfo;
 import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.internal.data.ProgressTracker;
 import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
-
-import java.io.IOException;
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Collection;
-import java.util.logging.Logger;
 
 /**
  * Deployment facility
@@ -55,216 +55,201 @@ public interface Deployment {
     /**
      * This synchronous event is sent right after initial deployment context is created
      */
-    public final EventTypes<DeploymentContext> INITIAL_CONTEXT_CREATED = EventTypes.create("Initial_Context_Created", DeploymentContext.class);
+    EventTypes<DeploymentContext> INITIAL_CONTEXT_CREATED = EventTypes.create("Initial_Context_Created",
+            DeploymentContext.class);
     /**
-     * This synchronous event is sent when a new deployment or loading of an already deployed application start. It is invoked
-     * once before any sniffer is invoked.
+     * This synchronous event is sent when a new deployment or loading of an already deployed application start. It is
+     * invoked once before any sniffer is invoked.
      */
-    public final EventTypes<DeploymentContext> DEPLOYMENT_START = EventTypes.create("Deployment_Start", DeploymentContext.class);
+    EventTypes<DeploymentContext> DEPLOYMENT_START = EventTypes.create("Deployment_Start", DeploymentContext.class);
 
     /**
      * The name of the Deployment Failure event
      */
-    public static final String DEPLOYMENT_FAILURE_NAME = "Deployment_Failed";
+    String DEPLOYMENT_FAILURE_NAME = "Deployment_Failed";
     /**
-     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed application)
-     * failed.
+     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed
+     * application) failed.
      */
-    public final EventTypes<DeploymentContext> DEPLOYMENT_FAILURE = EventTypes.create(DEPLOYMENT_FAILURE_NAME, DeploymentContext.class);
+    EventTypes<DeploymentContext> DEPLOYMENT_FAILURE = EventTypes.create(DEPLOYMENT_FAILURE_NAME, DeploymentContext.class);
     /**
      * This synchronous event is sent after creation of deployment classloader.
      */
-    public final EventTypes<DeploymentContext> AFTER_DEPLOYMENT_CLASSLOADER_CREATION =
-            EventTypes.create("After_Deployment_ClassLoader_Creation", DeploymentContext.class);
+    EventTypes<DeploymentContext> AFTER_DEPLOYMENT_CLASSLOADER_CREATION = EventTypes
+            .create("After_Deployment_ClassLoader_Creation", DeploymentContext.class);
     /**
      * This synchronous event is sent before prepare phase of deployment.
      */
-    public final EventTypes<DeploymentContext> DEPLOYMENT_BEFORE_CLASSLOADER_CREATION =
-            EventTypes.create("Deployment_ClassLoader_Creation", DeploymentContext.class);
+    EventTypes<DeploymentContext> DEPLOYMENT_BEFORE_CLASSLOADER_CREATION = EventTypes.create("Deployment_ClassLoader_Creation",
+            DeploymentContext.class);
     /**
      * This synchronous event is sent after creation of application classloader.
      */
-    public final EventTypes<DeploymentContext> AFTER_APPLICATION_CLASSLOADER_CREATION =
-            EventTypes.create("After_Application_ClassLoader_Creation", DeploymentContext.class);
+    EventTypes<DeploymentContext> AFTER_APPLICATION_CLASSLOADER_CREATION = EventTypes
+            .create("After_Application_ClassLoader_Creation", DeploymentContext.class);
 
     /**
-     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed application)
-     * succeeded.
+     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed
+     * application) succeeded.
      */
-    public final EventTypes<ApplicationInfo> DEPLOYMENT_SUCCESS = EventTypes.create("Deployment_Success", ApplicationInfo.class);
+    EventTypes<ApplicationInfo> DEPLOYMENT_SUCCESS = EventTypes.create("Deployment_Success", ApplicationInfo.class);
 
     /**
-     * This asynchronous event is sent when a new deployment or loading of an already deployed application start. It is invoked
-     * once before any sniffer is invoked.
+     * This asynchronous event is sent when a new deployment or loading of an already deployed application start. It is
+     * invoked once before any sniffer is invoked.
      */
-    public final EventTypes<ApplicationInfo> UNDEPLOYMENT_START = EventTypes.create("Undeployment_Start", ApplicationInfo.class);
+    EventTypes<ApplicationInfo> UNDEPLOYMENT_START = EventTypes.create("Undeployment_Start", ApplicationInfo.class);
     /**
-     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed application)
-     * failed.
+     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed
+     * application) failed.
      */
-    public final EventTypes<DeploymentContext> UNDEPLOYMENT_FAILURE = EventTypes.create("Undeployment_Failed", DeploymentContext.class);
+    EventTypes<DeploymentContext> UNDEPLOYMENT_FAILURE = EventTypes.create("Undeployment_Failed", DeploymentContext.class);
 
     /**
-     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed application)
-     * succeeded.
+     * This asynchronous event is sent when a deployment activity (first time deploy or loading of an already deployed
+     * application) succeeded.
      */
-    public final EventTypes<DeploymentContext> UNDEPLOYMENT_SUCCESS = EventTypes.create("Undeployment_Success", DeploymentContext.class);
+    EventTypes<DeploymentContext> UNDEPLOYMENT_SUCCESS = EventTypes.create("Undeployment_Success", DeploymentContext.class);
 
     /**
      * The following synchronous events are sent after each change in a module state.
      */
-    public final EventTypes<DeploymentContext> MODULE_PREPARED = EventTypes.create("Module_Prepared", DeploymentContext.class);
-    public final EventTypes<ModuleInfo> MODULE_LOADED = EventTypes.create("Module_Loaded", ModuleInfo.class);
-    public final EventTypes<ModuleInfo> MODULE_STARTED = EventTypes.create("Module_Running", ModuleInfo.class);
-    public final EventTypes<ModuleInfo> MODULE_STOPPED = EventTypes.create("Module_Stopped", ModuleInfo.class);
-    public final EventTypes<ModuleInfo> MODULE_UNLOADED = EventTypes.create("Module_Unloaded", ModuleInfo.class);
-    public final EventTypes<DeploymentContext> MODULE_CLEANED= EventTypes.create("Module_Cleaned", DeploymentContext.class);
+    EventTypes<DeploymentContext> MODULE_PREPARED = EventTypes.create("Module_Prepared", DeploymentContext.class);
+    EventTypes<ModuleInfo> MODULE_LOADED = EventTypes.create("Module_Loaded", ModuleInfo.class);
+    EventTypes<ModuleInfo> MODULE_STARTED = EventTypes.create("Module_Running", ModuleInfo.class);
+    EventTypes<ModuleInfo> MODULE_STOPPED = EventTypes.create("Module_Stopped", ModuleInfo.class);
+    EventTypes<ModuleInfo> MODULE_UNLOADED = EventTypes.create("Module_Unloaded", ModuleInfo.class);
+    EventTypes<DeploymentContext> MODULE_CLEANED = EventTypes.create("Module_Cleaned", DeploymentContext.class);
 
     /**
-     * The following synchronous events are sent after each change in an application stated (An application contains
-     * 1 to many modules)
+     * The following synchronous events are sent after each change in an application stated (An application contains 1 to
+     * many modules)
      */
-    public final EventTypes<DeploymentContext> APPLICATION_PREPARED = EventTypes.create("Application_Prepared", DeploymentContext.class);
-    public final EventTypes<ApplicationInfo> APPLICATION_LOADED = EventTypes.create("Application_Loaded", ApplicationInfo.class);
-    public final EventTypes<ApplicationInfo> APPLICATION_STARTED = EventTypes.create("Application_Running", ApplicationInfo.class);
-    public final EventTypes<ApplicationInfo> APPLICATION_STOPPED = EventTypes.create("Application_Stopped", ApplicationInfo.class);
-    public final EventTypes<ApplicationInfo> APPLICATION_UNLOADED = EventTypes.create("Application_Unloaded", ApplicationInfo.class);
-    public final EventTypes<DeploymentContext> APPLICATION_CLEANED= EventTypes.create("Application_Cleaned", DeploymentContext.class);
-    public final EventTypes<ApplicationInfo> APPLICATION_DISABLED = EventTypes.create("Application_Disabled", ApplicationInfo.class);
-
+    EventTypes<DeploymentContext> APPLICATION_PREPARED = EventTypes.create("Application_Prepared", DeploymentContext.class);
+    EventTypes<ApplicationInfo> APPLICATION_LOADED = EventTypes.create("Application_Loaded", ApplicationInfo.class);
+    EventTypes<ApplicationInfo> APPLICATION_STARTED = EventTypes.create("Application_Running", ApplicationInfo.class);
+    EventTypes<ApplicationInfo> APPLICATION_STOPPED = EventTypes.create("Application_Stopped", ApplicationInfo.class);
+    EventTypes<ApplicationInfo> APPLICATION_UNLOADED = EventTypes.create("Application_Unloaded", ApplicationInfo.class);
+    EventTypes<DeploymentContext> APPLICATION_CLEANED = EventTypes.create("Application_Cleaned", DeploymentContext.class);
+    EventTypes<ApplicationInfo> APPLICATION_DISABLED = EventTypes.create("Application_Disabled", ApplicationInfo.class);
 
     /**
-     * The following synchronous event is sent before the application is
-     * undeployed so various listeners could validate the undeploy operation
-     * and decide whether to abort undeployment
+     * The following synchronous event is sent before the application is undeployed so various listeners could validate the
+     * undeploy operation and decide whether to abort undeployment
      */
-    public final EventTypes<DeploymentContext> UNDEPLOYMENT_VALIDATION = EventTypes.create("Undeployment_Validation", DeploymentContext.class);
-
+    EventTypes<DeploymentContext> UNDEPLOYMENT_VALIDATION = EventTypes.create("Undeployment_Validation",
+            DeploymentContext.class);
 
     public interface DeploymentContextBuilder {
 
-        public DeploymentContextBuilder source(File source);
-        public DeploymentContextBuilder source(ReadableArchive archive);
-        public File sourceAsFile();
-        public ReadableArchive sourceAsArchive();
-        public ArchiveHandler archiveHandler();
-        public DeploymentContextBuilder archiveHandler(ArchiveHandler handler);
+        DeploymentContextBuilder source(File source);
 
-        public Logger logger();
-        public ActionReport report();
-        public OpsParams params();
+        DeploymentContextBuilder source(ReadableArchive archive);
 
-        public ExtendedDeploymentContext build() throws IOException;
+        File sourceAsFile();
 
-        public abstract ExtendedDeploymentContext build(ExtendedDeploymentContext initialContext)
-                throws IOException;
+        ReadableArchive sourceAsArchive();
+
+        ArchiveHandler archiveHandler();
+
+        DeploymentContextBuilder archiveHandler(ArchiveHandler handler);
+
+        Logger logger();
+
+        ActionReport report();
+
+        OpsParams params();
+
+        ExtendedDeploymentContext build() throws IOException;
+
+        ExtendedDeploymentContext build(ExtendedDeploymentContext initialContext) throws IOException;
 
     }
 
-
-
     /**
-     * The following asynchronous event is sent after all applications are
-     * started in server start up.
+     * The following asynchronous event is sent after all applications are started in server start up.
      */
-    public final EventTypes<DeploymentContext> ALL_APPLICATIONS_PROCESSED= EventTypes.create("All_Applications_Processed", DeploymentContext.class);
+    EventTypes<DeploymentContext> ALL_APPLICATIONS_PROCESSED = EventTypes.create("All_Applications_Processed",
+            DeploymentContext.class);
 
-    public DeploymentContextBuilder getBuilder(Logger loggger, OpsParams params, ActionReport report);
+    DeploymentContextBuilder getBuilder(Logger loggger, OpsParams params, ActionReport report);
 
-    public ArchiveHandler getArchiveHandler(ReadableArchive archive) throws IOException;
+    ArchiveHandler getArchiveHandler(ReadableArchive archive) throws IOException;
 
-    public ArchiveHandler getArchiveHandler(ReadableArchive archive, String type) throws IOException;
+    ArchiveHandler getArchiveHandler(ReadableArchive archive, String type) throws IOException;
 
-    public ModuleInfo prepareModule(
-        List<EngineInfo> sortedEngineInfos, String moduleName,
-        DeploymentContext context,
-        ProgressTracker tracker) throws Exception;
+    ModuleInfo prepareModule(List<EngineInfo<?, ?>> sortedEngineInfos, String moduleName, DeploymentContext context, ProgressTracker tracker) throws Exception;
 
-    public ApplicationInfo deploy(final ExtendedDeploymentContext context);
-    public ApplicationInfo deploy(final Collection<? extends Sniffer> sniffers, final ExtendedDeploymentContext context);
+    ApplicationInfo deploy(final ExtendedDeploymentContext context);
 
-    public void undeploy(String appName, ExtendedDeploymentContext context);
+    ApplicationInfo deploy(final Collection<? extends Sniffer> sniffers, final ExtendedDeploymentContext context);
 
-    public Transaction prepareAppConfigChanges(final DeploymentContext context)
-        throws TransactionFailure;
+    void undeploy(String appName, ExtendedDeploymentContext context);
 
-    public void registerAppInDomainXML(final ApplicationInfo
-        applicationInfo, final DeploymentContext context, Transaction t)
-        throws TransactionFailure;
+    Transaction prepareAppConfigChanges(final DeploymentContext context) throws TransactionFailure;
 
-    public void unregisterAppFromDomainXML(final String appName,
-        final String target)
-        throws TransactionFailure;
+    void registerAppInDomainXML(final ApplicationInfo applicationInfo, final DeploymentContext context, Transaction t) throws TransactionFailure;
 
-    public void registerAppInDomainXML(final ApplicationInfo
-        applicationInfo, final DeploymentContext context, Transaction t,
-        boolean appRefOnly)
-        throws TransactionFailure;
+    void unregisterAppFromDomainXML(final String appName, final String target) throws TransactionFailure;
 
-    public void unregisterAppFromDomainXML(final String appName,
-        final String target, boolean appRefOnly)
-        throws TransactionFailure;
+    void registerAppInDomainXML(final ApplicationInfo applicationInfo, final DeploymentContext context, Transaction t,
+            boolean appRefOnly) throws TransactionFailure;
 
-    public void registerTenantWithAppInDomainXML(final String appName, final ExtendedDeploymentContext context)
-            throws TransactionFailure;
+    void unregisterAppFromDomainXML(final String appName, final String target, boolean appRefOnly) throws TransactionFailure;
 
-    public void unregisterTenantWithAppInDomainXML(final String appName, final String tenantName)
+    void registerTenantWithAppInDomainXML(final String appName, final ExtendedDeploymentContext context) throws TransactionFailure;
+
+    void unregisterTenantWithAppInDomainXML(final String appName, final String tenantName)
             throws TransactionFailure, RetryableException;
 
-    public void updateAppEnabledAttributeInDomainXML(final String appName,
-        final String target, final boolean enabled) throws TransactionFailure;
+    void updateAppEnabledAttributeInDomainXML(final String appName, final String target, final boolean enabled)
+            throws TransactionFailure;
 
-    public List<EngineInfo> setupContainerInfos(
+    List<EngineInfo<?, ?>> setupContainerInfos(DeploymentContext context) throws Exception;
+
+    List<EngineInfo<?, ?>> setupContainerInfos(final ArchiveHandler handler, Collection<? extends Sniffer> sniffers,
             DeploymentContext context) throws Exception;
 
-    public List<EngineInfo> setupContainerInfos(final ArchiveHandler handler,
-            Collection<? extends Sniffer> sniffers, DeploymentContext context)
-             throws Exception;
+    boolean isRegistered(String appName);
 
-    public boolean isRegistered(String appName);
+    ApplicationInfo get(String appName);
 
-    public ApplicationInfo get(String appName);
+    ParameterMap prepareInstanceDeployParamMap(DeploymentContext dc) throws Exception;
 
-    public ParameterMap prepareInstanceDeployParamMap(DeploymentContext dc) throws Exception;
+    void validateDeploymentTarget(String target, String name, boolean isRedeploy);
 
-    public void validateDeploymentTarget(String target, String name,
-        boolean isRedeploy);
+    void validateUndeploymentTarget(String target, String name);
 
-    public void validateUndeploymentTarget(String target, String name);
+    void validateSpecifiedTarget(String target);
 
-    public void validateSpecifiedTarget(String target);
+    boolean isAppEnabled(Application app);
 
-    public boolean isAppEnabled(Application app);
+    ApplicationInfo unload(ApplicationInfo appInfo, ExtendedDeploymentContext context);
 
-    public ApplicationInfo unload(ApplicationInfo appInfo,
-        ExtendedDeploymentContext context);
+    DeploymentContext disable(UndeployCommandParameters commandParams, Application app, ApplicationInfo appInfo, ActionReport report,
+            Logger logger) throws Exception;
 
-    public DeploymentContext disable(UndeployCommandParameters commandParams,
-        Application app, ApplicationInfo appInfo, ActionReport report,
-        Logger logger) throws Exception;
-
-    public DeploymentContext enable(String target, Application app, ApplicationRef appRef,
-        ActionReport report, Logger logger) throws Exception;
+    DeploymentContext enable(String target, Application app, ApplicationRef appRef, ActionReport report, Logger logger)
+            throws Exception;
 
     /**
-     * Scans the source of the deployment operation for all types
-     * and store the result in the deployment context.
-     * Subsequent calls will return the cached copy from the context
+     * Scans the source of the deployment operation for all types and store the result in the deployment context. Subsequent
+     * calls will return the cached copy from the context
      *
      * @param context deployment context
      * @return the types information from the deployment artifacts
      * @throws IOException if the scanning fails due to an I/O exception
      */
-    public Types getDeployableTypes(DeploymentContext context) throws IOException;
+    Types getDeployableTypes(DeploymentContext context) throws IOException;
 
-    public List<Sniffer> getSniffersFromApp(Application app);
+    List<Sniffer> getSniffersFromApp(Application app);
 
-    public Collection<? extends Sniffer> getSniffers(ArchiveHandler archiveHandler, Collection<? extends Sniffer> sniffers, DeploymentContext context);
+    Collection<? extends Sniffer> getSniffers(ArchiveHandler archiveHandler, Collection<? extends Sniffer> sniffers, DeploymentContext context);
 
     // sets the default target when the target is not specified
-    public String getDefaultTarget(String appName, OpsParams.Origin origin, Boolean isClassicStyle);
+    String getDefaultTarget(String appName, OpsParams.Origin origin, Boolean isClassicStyle);
 
     // gets the default target when no target is specified for non-paas case
-    public String getDefaultTarget(Boolean isClassicStyle);
+    String getDefaultTarget(Boolean isClassicStyle);
 
 }

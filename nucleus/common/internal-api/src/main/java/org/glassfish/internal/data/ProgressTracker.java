@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,12 @@
 
 package org.glassfish.internal.data;
 
-import java.util.*;
+import static java.util.Collections.emptyList;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -26,19 +32,10 @@ import java.util.logging.Logger;
  */
 public abstract class ProgressTracker {
 
-    Map<String, List<Object>> subjects = new HashMap<String, List<Object>>();
+    Map<String, List<Object>> subjects = new HashMap<>();
 
     public synchronized <T> void add(String name, Class<T> type, T subject) {
-        if (!subjects.containsKey(name)) {
-            subjects.put(name, new ArrayList());
-        }
-        subjects.get(name).add(subject);
-
-    }
-
-
-    public <T> void add(Class<T> type, T subject) {
-        add(type.getName(), type, subject);
+        subjects.computeIfAbsent(name, e -> new ArrayList<Object>()).add(subject);
     }
 
     public <T> void addAll(Class<T> type, Iterable<T> subjects) {
@@ -47,19 +44,21 @@ public abstract class ProgressTracker {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> List<T> get(String name, Class<T> type) {
-        if (subjects.containsKey(name)) {
-            return (List<T>) subjects.get(name);
-        } else {
-            return Collections.emptyList();
-        }
+    public <T> void add(Class<T> type, T subject) {
+        add(type.getName(), type, subject);
     }
 
-
-    @SuppressWarnings("unchecked")
     public <T> List<T> get(Class<T> type) {
         return get(type.getName(), type);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> get(String name, Class<T> type) {
+        if (!subjects.containsKey(name)) {
+            return emptyList();
+        }
+
+        return (List<T>) subjects.get(name);
     }
 
     public abstract void actOn(Logger logger);

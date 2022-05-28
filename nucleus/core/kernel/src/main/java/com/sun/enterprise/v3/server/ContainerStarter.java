@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package com.sun.enterprise.v3.server;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
 
 import org.glassfish.api.container.Container;
 import org.glassfish.api.container.Sniffer;
@@ -37,6 +38,8 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.module.HK2Module;
+
+import jakarta.inject.Inject;
 
 /**
  * This class is responsible for starting containers.
@@ -50,53 +53,48 @@ public class ContainerStarter {
     ServiceLocator serviceLocator;
 
     @Inject
-    ServiceLocator habitat;
-
-    @Inject
     Logger logger;
 
     @Inject
-    ServerEnvironmentImpl env;
+    ServerEnvironmentImpl serverEnvironment;
 
-    @Inject ContainerRegistry registry;
+    @Inject
+    ContainerRegistry containerRegistry;
 
-    public Collection<EngineInfo> startContainer(Sniffer sniffer) {
+    public Collection<EngineInfo<?, ?>> startContainer(Sniffer sniffer) {
 
-        assert sniffer!=null;
-        String containerName = sniffer.getModuleType();
-        assert containerName!=null;
-
-        // I do the container setup first so the code has a chance to set up
+        // Do the container setup first so the code has a chance to set up
         // repositories which would allow access to the container module.
         try {
-
             HK2Module[] modules = sniffer.setup(null, logger);
-            logger.logp(Level.FINE, "ContainerStarter", "startContainer", "Sniffer {0} set up following modules: {1}",
+            logger.logp(FINE,
+                "ContainerStarter", "startContainer", "Sniffer {0} set up following modules: {1}",
                 new Object[]{sniffer, modules != null ? Arrays.toString(modules): ""});
         } catch(FileNotFoundException fnf) {
-            logger.log(Level.SEVERE, fnf.getMessage());
+            logger.log(SEVERE, fnf.getMessage());
             return null;
         } catch(IOException ioe) {
-            logger.log(Level.SEVERE, ioe.getMessage(), ioe);
+            logger.log(SEVERE, ioe.getMessage(), ioe);
             return null;
-
         }
 
-        // first the right container from that module.
-        Map<String, EngineInfo> containers = new HashMap<String, EngineInfo>();
+        // Find the right container from that module.
+        Map<String, EngineInfo<?, ?>> containers = new HashMap<>();
         for (String name : sniffer.getContainersNames()) {
             ServiceHandle<Container> provider = serviceLocator.getServiceHandle(Container.class, name);
             if (provider == null) {
                 logger.severe("Cannot find Container named " + name + ", so unable to start " + sniffer.getModuleType() + " container");
                 return null;
             }
-            EngineInfo info = new EngineInfo(provider, sniffer, null /* never used */);
-            containers.put(name, info);
+
+            containers.put(name, new EngineInfo<>(provider, sniffer, null));
         }
+
         // Now that we have successfully created all containers, let's register them as well.
-        for (Map.Entry<String, EngineInfo> entry : containers.entrySet()) {
-            registry.addContainer(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, EngineInfo<?, ?>> entry : containers.entrySet()) {
+            containerRegistry.addContainer(entry.getKey(), entry.getValue());
         }
+
         return containers.values();
     }
 

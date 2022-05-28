@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,14 @@
 
 package com.sun.enterprise.v3.services.impl;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.v3.server.ContainerStarter;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.kernel.KernelLoggerInfo.snifferAdapterContainerStarted;
+
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
@@ -34,11 +37,15 @@ import org.glassfish.internal.data.EngineInfo;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.v3.server.ContainerStarter;
+
+import jakarta.inject.Inject;
+
 /**
- * These adapters are temporarily registered to the mapper to handle static
- * pages request that a container would like to process rather than serving
- * them statically unchanged. This is useful for things like .jsp or .php
- * files saved in the context root of the application server.
+ * These adapters are temporarily registered to the mapper to handle static pages request that a container would like to
+ * process rather than serving them statically unchanged. This is useful for things like .jsp or .php files saved in the
+ * context root of the application server.
  *
  * @author Jerome Dochez
  * @author Jeanfrancois Arcand
@@ -46,6 +53,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @PerLookup
 public class SnifferAdapter extends HttpHandler {
+
+    private static final Logger LOGGER = KernelLoggerInfo.getLogger();
 
     @Inject
     ContainerRegistry containerRegistry;
@@ -55,8 +64,6 @@ public class SnifferAdapter extends HttpHandler {
 
     @Inject
     ModulesRegistry modulesRegistry;
-
-    private static final Logger LOGGER = KernelLoggerInfo.getLogger();
 
     private Sniffer sniffer;
     private ContainerMapper mapper;
@@ -72,23 +79,22 @@ public class SnifferAdapter extends HttpHandler {
     // pending requests.
     @Override
     public void service(Request req, Response resp) throws Exception {
-
         if (adapter != null) {
-            // this is not supposed to happen, however due to multiple requests coming in, I would
+            // This is not supposed to happen, however due to multiple requests coming in, I would
             // not be surprised...
             adapter.service(req, resp);
             return;
         }
 
-        // bingo, we found a sniffer that wants to handle this requested
+        // We found a sniffer that wants to handle this requested
         // page, let's get to the container or start it.
         // start all the containers associated with sniffers.
 
-        // need to synchronize on the registry to not end up starting the same container from
+        // Need to synchronize on the registry to not end up starting the same container from
         // different threads.
         synchronized (containerRegistry) {
             if (adapter != null) {
-                // I got started in the meantime
+                // Got started in the meantime
                 adapter.service(req, resp);
                 return;
             }
@@ -98,36 +104,34 @@ public class SnifferAdapter extends HttpHandler {
                 containerRegistry.getContainer(sniffer.getContainersNames()[0]).getContainer();
             } else {
                 final long startTime = System.currentTimeMillis();
-                LOGGER.log(Level.INFO, KernelLoggerInfo.snifferAdapterStartingContainer, sniffer.getModuleType());
+                LOGGER.log(INFO, KernelLoggerInfo.snifferAdapterStartingContainer, sniffer.getModuleType());
                 try {
-                    Collection<EngineInfo> containersInfo = containerStarter.startContainer(sniffer);
+                    Collection<EngineInfo<?, ?>> containersInfo = containerStarter.startContainer(sniffer);
                     if (containersInfo != null && !containersInfo.isEmpty()) {
-                        // force the start on each container
-                        for (EngineInfo info : containersInfo) {
-                            if (LOGGER.isLoggable(Level.FINE)) {
-                                LOGGER.log(Level.FINE, "Got container, deployer is {0}", info.getDeployer());
+
+                        // Force the start on each container
+                        for (EngineInfo<?, ?> info : containersInfo) {
+                            if (LOGGER.isLoggable(FINE)) {
+                                LOGGER.log(FINE, "Got container, deployer is {0}", info.getDeployer());
                             }
                             info.getContainer();
-                            LOGGER.log(Level.INFO, KernelLoggerInfo.snifferAdapterContainerStarted,
-                                    new Object[]{sniffer.getModuleType(), System.currentTimeMillis() - startTime});
+                            LOGGER.log(INFO, snifferAdapterContainerStarted, new Object[] { sniffer.getModuleType(), System.currentTimeMillis() - startTime });
                         }
                     } else {
                         LOGGER.severe(KernelLoggerInfo.snifferAdapterNoContainer);
                     }
                 } catch (Exception e) {
-                    LOGGER.log(Level.SEVERE,
-                               KernelLoggerInfo.snifferAdapterExceptionStarting,
-                               new Object[] { sniffer.getContainersNames()[0], e });
+                    LOGGER.log(SEVERE, KernelLoggerInfo.snifferAdapterExceptionStarting, new Object[] { sniffer.getContainersNames()[0], e });
                 }
             }
 
-            // at this point the post construct should have been called.
+            // At this point the post construct should have been called.
             // seems like there is some possibility that the container is not synchronously started
             // preventing the calls below to succeed...
             DataChunk decodedURI = req.getRequest().getRequestURIRef().getDecodedRequestURIBC();
             try {
                 // Clear the previous mapped information.
-                MappingData mappingData = (MappingData) req.getNote(ContainerMapper.MAPPING_DATA);
+                MappingData mappingData = req.getNote(ContainerMapper.MAPPING_DATA);
                 mappingData.recycle();
 
                 adapter = mapper.mapUriWithSemicolon(req, decodedURI, 0, null);
@@ -138,7 +142,7 @@ public class SnifferAdapter extends HttpHandler {
                     throw new RuntimeException("SnifferAdapter cannot map themself.");
                 }
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, KernelLoggerInfo.snifferAdapterExceptionMapping, e);
+                LOGGER.log(SEVERE, KernelLoggerInfo.snifferAdapterExceptionMapping, e);
                 throw e;
             }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +21,15 @@ import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.Deployer;
 import org.jvnet.hk2.annotations.Service;
 
-@Service(name="org.glassfish.javaee.full.deployment.EarContainer")
+@Service(name = "org.glassfish.javaee.full.deployment.EarContainer")
 public class EarContainer implements Container {
 
+    @Override
     public Class<? extends Deployer> getDeployer() {
         return EarDeployer.class;
     }
 
+    @Override
     public String getName() {
         return "application";
     }

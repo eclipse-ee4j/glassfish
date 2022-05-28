@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,12 @@
 
 package org.glassfish.kernel.javaee;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.VirtualServer;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.v3.server.ContainerStarter;
+import static com.sun.enterprise.config.serverbeans.ConfigBeansUtilities.toBoolean;
+import static java.util.logging.Level.INFO;
+import static org.jvnet.hk2.config.Changed.TYPE.ADD;
+import static org.jvnet.hk2.config.Changed.TYPE.CHANGE;
+import static org.jvnet.hk2.config.ConfigSupport.sortAndDispatch;
+
 import java.beans.PropertyChangeEvent;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
+
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
@@ -56,60 +54,70 @@ import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.v3.server.ContainerStarter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+
 /**
  * Startup service for the web container.
  *
- * This service checks if any domain.xml configuration, or changes in
- * such configuration, that can be handled only by the web container
- * (e.g., access logging) have been specified, and if so, starts the
- * web container (unless already started).
+ * This service checks if any domain.xml configuration, or changes in such configuration, that can be handled only by
+ * the web container (e.g., access logging) have been specified, and if so, starts the web container (unless already
+ * started).
  *
  * @author jluehe
  */
 @Service
 @RunLevel(StartupRunLevel.VAL)
-public class WebContainerStarter
-        implements PostConstruct, ConfigListener {
+public class WebContainerStarter implements PostConstruct, ConfigListener {
 
     private static final String LOGMSG_PREFIX = "AS-CORE-JAVAEE";
 
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.kernel.javaee.LogMessages";
 
-    @LoggerInfo(subsystem = "AS-CORE", description = "Java EE Core Kernel", publish = true)
+    @LoggerInfo(
+        subsystem = "AS-CORE",
+        description = "Java EE Core Kernel",
+        publish = true)
     private static final String ASCORE_LOGGER = "jakarta.enterprise.system.core.ee";
-    private static final Logger logger = Logger.getLogger(
-                ASCORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger logger = Logger.getLogger(ASCORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
     private static final ResourceBundle rb = logger.getResourceBundle();
 
     @LogMessageInfo(
-            message = "Web Container not installed",
-            cause = "The web container does not install properly.",
-            action = "Please check the web container libraries are installed properly.",
-            level = "INFO")
+        message = "Web Container not installed",
+        cause = "The web container does not install properly.",
+        action = "Please check the web container libraries are installed properly.",
+        level = "INFO")
     public static final String mWebContainerNotInstalled = LOGMSG_PREFIX + "-0001";
 
     @LogMessageInfo(
-            message = "Done with starting {0} container.",
-            level = "INFO")
+        message = "Done with starting {0} container.",
+        level = "INFO")
     public static final String mStartContainerDone = LOGMSG_PREFIX + "-0002";
 
     @LogMessageInfo(
-            message = "Unable to start container (no exception provided)",
-            cause = "The web container does not start properly.",
-            action = "Please check the web container libraries are installed properly.",
-            level = "SEVERE")
+        message = "Unable to start container (no exception provided)",
+        cause = "The web container does not start properly.",
+        action = "Please check the web container libraries are installed properly.",
+        level = "SEVERE")
     public static final String mUnableStartContainerNoException = LOGMSG_PREFIX + "-0003";
 
     @LogMessageInfo(
-            message = "Unable to start container {0}",
-            cause = "The web container does not start properly. Most probably, there is a class loading issue.",
-            action = "Please resolve issues mentioned in the stack trace.",
-            level = "SEVERE")
+        message = "Unable to start container {0}",
+        cause = "The web container does not start properly. Most probably, there is a class loading issue.",
+        action = "Please resolve issues mentioned in the stack trace.",
+        level = "SEVERE")
     public static final String mUnableStartContainer = LOGMSG_PREFIX + "-0004";
 
-    private static final String AUTH_PASSTHROUGH_ENABLED_PROP =
-        "authPassthroughEnabled";
+    private static final String AUTH_PASSTHROUGH_ENABLED_PROP = "authPassthroughEnabled";
 
     private static final String PROXY_HANDLER_PROP = "proxyHandler";
 
@@ -127,17 +135,19 @@ public class WebContainerStarter
     @Inject
     private ModulesRegistry modulesRegistry;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Provider<Config> serverConfigProvider;
 
-    @Inject @Named("web")
+    @Inject
+    @Named("web")
     private Provider<Sniffer> webSnifferProvider;
 
     /**
-     * Scans the domain.xml to see if it specifies any configuration
-     * that can be handled only by the web container, and if so, starts
-     * the web container
+     * Scans the domain.xml to see if it specifies any configuration that can be handled only by the web container, and if
+     * so, starts the web container
      */
+    @Override
     public void postConstruct() {
         domainProvider.get();
         Config serverConfig = serverConfigProvider.get();
@@ -162,24 +172,25 @@ public class WebContainerStarter
         }
     }
 
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-        return ConfigSupport.sortAndDispatch(events, new Changed() {
-            public <T extends ConfigBeanProxy> NotProcessed changed(
-                    TYPE type, Class<T> tClass, T t) {
+        return sortAndDispatch(events, new Changed() {
+            @Override
+            public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> tClass, T t) {
                 if (tClass == HttpService.class) {
-                    if (type == TYPE.CHANGE) {
+                    if (type == CHANGE) {
                         if (isStartNeeded((HttpService) t)) {
                             startWebContainer();
                         }
                     }
                 } else if (tClass == VirtualServer.class) {
-                    if (type == TYPE.ADD || type == TYPE.CHANGE) {
+                    if (type == ADD || type == CHANGE) {
                         if (isStartNeeded((VirtualServer) t)) {
                             startWebContainer();
                         }
                     }
                 } else if (tClass == NetworkListener.class) {
-                    if (type == TYPE.ADD || type == TYPE.CHANGE) {
+                    if (type == ADD || type == CHANGE) {
                         if (isStartNeeded((NetworkListener) t)) {
                             startWebContainer();
                         }
@@ -187,8 +198,7 @@ public class WebContainerStarter
                 }
                 return null;
             }
-        }
-        , logger);
+        }, logger);
     }
 
     /**
@@ -196,28 +206,24 @@ public class WebContainerStarter
      */
     private void startWebContainer() {
         Sniffer webSniffer = webSnifferProvider.get();
-        if (webSniffer==null) {
-            if (logger.isLoggable(Level.INFO)) {
+        if (webSniffer == null) {
+            if (logger.isLoggable(INFO)) {
                 logger.info(mWebContainerNotInstalled);
             }
             return;
         }
 
-        if (containerRegistry.getContainer(
-                    webSniffer.getContainersNames()[0]) != null) {
-            containerRegistry.getContainer(
-                    webSniffer.getContainersNames()[0]).getContainer();
+        if (containerRegistry.getContainer(webSniffer.getContainersNames()[0]) != null) {
+            containerRegistry.getContainer(webSniffer.getContainersNames()[0]).getContainer();
         } else {
             try {
-                Collection<EngineInfo> containersInfo =
-                    containerStarter.startContainer(webSniffer);
+                Collection<EngineInfo<?, ?>> containersInfo = containerStarter.startContainer(webSniffer);
                 if (containersInfo != null && !containersInfo.isEmpty()) {
                     // Start each container
-                    for (EngineInfo info : containersInfo) {
+                    for (EngineInfo<?, ?> info : containersInfo) {
                         info.getContainer();
-                        if (logger.isLoggable(Level.INFO)) {
-                            logger.log(Level.INFO, mStartContainerDone,
-                                webSniffer.getModuleType());
+                        if (logger.isLoggable(INFO)) {
+                            logger.log(INFO, mStartContainerDone, webSniffer.getModuleType());
                         }
                     }
                 } else {
@@ -225,8 +231,8 @@ public class WebContainerStarter
                 }
             } catch (Exception e) {
                 String msg;
-                if ( rb != null ) {
-                    msg = MessageFormat.format( rb.getString(mUnableStartContainer), webSniffer.getContainersNames()[0]);
+                if (rb != null) {
+                    msg = MessageFormat.format(rb.getString(mUnableStartContainer), webSniffer.getContainersNames()[0]);
                 } else {
                     msg = "Unable to start Web Container: " + webSniffer.getContainersNames()[0];
                 }
@@ -236,19 +242,15 @@ public class WebContainerStarter
     }
 
     /*
-     * @return true if the given HttpService contains any configuration
-     * that can be handled only by the web container and therefore requires
-     * the web container to be started, false otherwise
+     * @return true if the given HttpService contains any configuration that can be handled only by the web container and
+     * therefore requires the web container to be started, false otherwise
      */
     private boolean isStartNeeded(HttpService httpService) {
         if (httpService == null) {
             return false;
         }
 
-        if (ConfigBeansUtilities.toBoolean(
-                    httpService.getAccessLoggingEnabled()) ||
-                ConfigBeansUtilities.toBoolean(
-                    httpService.getSsoEnabled())) {
+        if (toBoolean(httpService.getAccessLoggingEnabled()) || toBoolean(httpService.getSsoEnabled())) {
             return true;
         }
 
@@ -258,13 +260,13 @@ public class WebContainerStarter
                 String propName = prop.getName();
                 String propValue = prop.getValue();
                 if (AUTH_PASSTHROUGH_ENABLED_PROP.equals(propName)) {
-                    if (ConfigBeansUtilities.toBoolean(propValue)) {
+                    if (toBoolean(propValue)) {
                         return true;
                     }
                 } else if (PROXY_HANDLER_PROP.equals(propName)) {
                     return true;
                 } else if (TRACE_ENABLED_PROP.equals(propName)) {
-                    if (!ConfigBeansUtilities.toBoolean(propValue)) {
+                    if (!toBoolean(propValue)) {
                         return true;
                     }
                 }
@@ -284,24 +286,20 @@ public class WebContainerStarter
     }
 
     /*
-     * @return true if the given VirtualServer contains any configuration
-     * that can be handled only by the web container and therefore requires
-     * the web container to be started, false otherwise
+     * @return true if the given VirtualServer contains any configuration that can be handled only by the web container and
+     * therefore requires the web container to be started, false otherwise
      */
     private boolean isStartNeeded(VirtualServer host) {
         if (host == null) {
             return false;
         }
 
-        if (ConfigBeansUtilities.toBoolean(host.getAccessLoggingEnabled()) ||
-                ConfigBeansUtilities.toBoolean(host.getSsoEnabled())) {
+        if (toBoolean(host.getAccessLoggingEnabled()) || toBoolean(host.getSsoEnabled())) {
             return true;
         }
 
         String state = host.getState();
-        if (state != null &&
-                ("disabled".equals(state) ||
-                    !ConfigBeansUtilities.toBoolean(state))) {
+        if (state != null && ("disabled".equals(state) || !toBoolean(state))) {
             return true;
         }
 
@@ -314,9 +312,8 @@ public class WebContainerStarter
     }
 
     /*
-     * @return true if the given NetworkConfig contains any configuration
-     * that can be handled only by the web container and therefore requires
-     * the web container to be started, false otherwise
+     * @return true if the given NetworkConfig contains any configuration that can be handled only by the web container and
+     * therefore requires the web container to be started, false otherwise
      */
     private boolean isStartNeeded(NetworkConfig networkConfig) {
         if (networkConfig == null) {
@@ -338,15 +335,14 @@ public class WebContainerStarter
     }
 
     /*
-     * @return true if the given NetworkListener contains any configuration
-     * that can be handled only by the web container and therefore requires
-     * the web container to be started, false otherwise
+     * @return true if the given NetworkListener contains any configuration that can be handled only by the web container
+     * and therefore requires the web container to be started, false otherwise
      */
     private boolean isStartNeeded(NetworkListener networkListener) {
         if (networkListener == null) {
             return false;
         }
 
-        return ConfigBeansUtilities.toBoolean(networkListener.getJkEnabled());
+        return toBoolean(networkListener.getJkEnabled());
     }
 }

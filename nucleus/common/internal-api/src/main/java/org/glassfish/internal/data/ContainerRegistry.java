@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,17 @@
 
 package org.glassfish.internal.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 import jakarta.inject.Inject;
-import java.util.*;
+import jakarta.inject.Singleton;
 
 /**
  * The container Registry holds references to the currently running containers.
@@ -35,43 +39,41 @@ import java.util.*;
 public class ContainerRegistry {
 
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator serviceLocator;
 
-    Map<String, EngineInfo> containers = new HashMap<String, EngineInfo>();
+    Map<String, EngineInfo<?, ?>> containers = new HashMap<>();
 
-
-    public synchronized void addContainer(String name, EngineInfo info) {
+    public synchronized void addContainer(String name, EngineInfo<?, ?> info) {
         containers.put(name, info);
         info.setRegistry(this);
     }
 
     public List<Sniffer> getStartedContainersSniffers() {
+        List<Sniffer> sniffers = new ArrayList<>();
 
-        ArrayList<Sniffer> sniffers = new ArrayList<Sniffer>();
-
-        for (EngineInfo info : getContainers() ) {
+        for (EngineInfo<?, ?> info : getContainers()) {
             sniffers.add(info.getSniffer());
         }
+
         return sniffers;
     }
 
-    public synchronized EngineInfo getContainer(String containerType) {
+    public synchronized EngineInfo<?, ?> getContainer(String containerType) {
         return containers.get(containerType);
     }
 
-    public synchronized EngineInfo removeContainer(EngineInfo container) {
-        for (Map.Entry<String, EngineInfo> entry : containers.entrySet()) {
+    public synchronized EngineInfo<?, ?> removeContainer(EngineInfo<?, ?> container) {
+        for (Map.Entry<String, EngineInfo<?, ?>> entry : containers.entrySet()) {
             if (entry.getValue().equals(container)) {
                 return containers.remove(entry.getKey());
             }
         }
+
         return null;
     }
 
-    public Iterable<EngineInfo> getContainers() {
-        ArrayList<EngineInfo> copy = new ArrayList<EngineInfo>(containers.size());
-        copy.addAll(containers.values());
-        return copy;
+    public Iterable<EngineInfo<?, ?>> getContainers() {
+        return new ArrayList<>(containers.values());
     }
 
 }

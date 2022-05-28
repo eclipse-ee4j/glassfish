@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,43 +17,41 @@
 
 package org.glassfish.internal.data;
 
-
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Singleton;
+
 /**
  * Registry for deployed Applications
  *
- * TODO : dochez
- * this class needs to go, I think we should use the configured tree (applications)
- * to store this list. This could be achieve once hk2 configured support Transient
- * objects attachment.
+ * TODO : dochez this class needs to go, I think we should use the configured tree (applications) to store this list.
+ * This could be achieve once hk2 configured support Transient objects attachment.
+ * [narrator: and 15 years later this class is still there]
  */
 @Service
 @Singleton
 public class ApplicationRegistry {
 
-    private Map<String, ApplicationInfo> apps = new HashMap<String, ApplicationInfo>();
+    private Map<String, ApplicationInfo> deployedApplications = new HashMap<>();
 
     public synchronized void add(String name, ApplicationInfo info) {
-        apps.put(name, info);
+        deployedApplications.put(name, info);
     }
 
     public ApplicationInfo get(String name) {
-        return apps.get(name);
+        return deployedApplications.get(name);
     }
 
     public synchronized void remove(String name) {
-
-        apps.remove(name);
+        deployedApplications.remove(name);
     }
 
     public Set<String> getAllApplicationNames() {
-        return apps.keySet();
+        return deployedApplications.keySet();
     }
 
 }

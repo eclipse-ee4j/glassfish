@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,41 +17,49 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import org.jvnet.hk2.annotations.Service;
+import static org.glassfish.deployment.common.DeploymentUtils.isArchiveOfType;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.deployment.GenericSniffer;
-import org.glassfish.deployment.common.DeploymentUtils;
-import com.sun.enterprise.deployment.EarType;
-import jakarta.inject.Inject;
+import org.jvnet.hk2.annotations.Service;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.sun.enterprise.deployment.EarType;
+
+import jakarta.inject.Inject;
 
 /**
  * Ear sniffers snifs ear files.
  *
  * @author Jerome Dochez
  */
-@Service(name="ear")
+@Service(name = "ear")
 public class EarSniffer extends GenericSniffer {
 
-    @Inject EarType earType;
-    @Inject ServiceLocator locator;
+    @Inject
+    EarType earType;
+
+    @Inject
+    ServiceLocator locator;
 
     public EarSniffer() {
         super("ear", "META-INF/application.xml", null);
     }
 
+    @Override
     public String[] getContainersNames() {
-        return new String[] { "org.glassfish.javaee.full.deployment.EarContainer"};
+        return new String[] { "org.glassfish.javaee.full.deployment.EarContainer" };
     }
 
     /**
-     * Returns true if the passed file or directory is recognized by this
-     * composite sniffer.
+     * Returns true if the passed file or directory is recognized by this composite sniffer.
+     *
      * @param context deployment context
      * @return true if the location is recognized by this sniffer
      */
@@ -60,12 +69,12 @@ public class EarSniffer extends GenericSniffer {
         if (archiveType != null && !supportsArchiveType(archiveType)) {
             return false;
         }
-        return DeploymentUtils.isArchiveOfType(context.getSource(), earType, context, locator);
+
+        return isArchiveOfType(context.getSource(), earType, context, locator);
     }
 
     /**
-     * Returns true if the passed file or directory is recognized by this
-     * instance.
+     * Returns true if the passed file or directory is recognized by this instance.
      *
      * @param location the file or directory to explore
      * @return true if this sniffer handles this application type
@@ -79,6 +88,7 @@ public class EarSniffer extends GenericSniffer {
      * @return whether this sniffer should be visible to user
      *
      */
+    @Override
     public boolean isUserVisible() {
         return true;
     }
@@ -87,21 +97,21 @@ public class EarSniffer extends GenericSniffer {
      * @return whether this sniffer represents a Java EE container type
      *
      */
+    @Override
     public boolean isJavaEE() {
         return true;
     }
 
     /**
      *
-     * This API is used to help determine if the sniffer should recognize
-     * the current archive.
-     * If the sniffer does not support the archive type associated with
-     * the current deployment, the sniffer should not recognize the archive.
+     * This API is used to help determine if the sniffer should recognize the current archive. If the sniffer does not
+     * support the archive type associated with the current deployment, the sniffer should not recognize the archive.
      *
      * @param archiveType the archive type to check
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(earType)) {
             return true;
@@ -109,8 +119,7 @@ public class EarSniffer extends GenericSniffer {
         return false;
     }
 
-    private static final List<String> deploymentConfigurationPaths =
-            initDeploymentConfigurationPaths();
+    private static final List<String> deploymentConfigurationPaths = initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
         final List<String> result = new ArrayList<String>();
@@ -122,8 +131,7 @@ public class EarSniffer extends GenericSniffer {
     }
 
     /**
-     * Returns the descriptor paths that might exist at the root of the
-     * ear.
+     * Returns the descriptor paths that might exist at the root of the ear.
      *
      * @return list of the deployment descriptor paths
      */

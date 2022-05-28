@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.v3.server;
 
-import static java.util.Collections.emptyList;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -120,7 +118,7 @@ public class SnifferManagerImpl implements SnifferManager {
 
         // In their natural order.
         // Scan for registered annotations and retrieve applicable sniffers
-        List<Sniffer> appSniffers = this.getApplicableSniffers(context, uris, types, regularSniffers, true);
+        List<Sniffer> appSniffers = getApplicableSniffers(context, uris, types, regularSniffers, true);
 
         // Call handles method of the sniffers
         for (Sniffer sniffer : regularSniffers) {
@@ -133,16 +131,11 @@ public class SnifferManagerImpl implements SnifferManager {
     }
 
     private <T extends Sniffer> List<T> getApplicableSniffers(DeploymentContext context, List<URI> uris, Types types, Collection<T> sniffers, boolean checkPath) {
+        if (sniffers == null || sniffers.isEmpty() || types == null || types.getAllTypes().isEmpty()) {
+            return new ArrayList<T>();
+        }
+
         ArchiveType archiveType = serviceLocator.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
-
-        if (sniffers == null || sniffers.isEmpty()) {
-            return emptyList();
-        }
-
-        if (types == null || types.getAllTypes().isEmpty()) {
-            return emptyList();
-        }
-
         List<T> applicableSniffers = new ArrayList<T>();
 
         for (T sniffer : sniffers) {

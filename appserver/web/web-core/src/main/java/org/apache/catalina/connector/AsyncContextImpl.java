@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,6 @@
 
 package org.apache.catalina.connector;
 
-import org.apache.catalina.ContainerEvent;
-import org.apache.catalina.LogFacade;
-import org.apache.catalina.Globals;
-import org.apache.catalina.core.*;
-
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.EventListener;
@@ -38,6 +32,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.ApplicationDispatcher;
+import org.apache.catalina.core.ApplicationHttpRequest;
+import org.apache.catalina.core.ApplicationHttpResponse;
+import org.apache.catalina.core.DispatchTargetsInfo;
+import org.apache.catalina.core.StandardContext;
+
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncEvent;
+import jakarta.servlet.AsyncListener;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 class AsyncContextImpl implements AsyncContext {
     // Note...this constant is also defined in org.glassfish.weld.WeldDeployer.  If it changes here it must
@@ -614,6 +631,12 @@ class AsyncContextImpl implements AsyncContext {
                     AsyncEvent asyncEvent = new AsyncEvent(
                         this, asyncListenerContext.getRequest(),
                         asyncListenerContext.getResponse(), t);
+
+                    if (asyncListenerContext.getResponse() instanceof HttpServletResponse) {
+                        ((HttpServletResponse)asyncListenerContext.getResponse()).setStatus(
+                            HttpServletResponse.SC_OK);
+                    }
+
                     try {
                         switch (asyncEventType) {
                             case COMPLETE:

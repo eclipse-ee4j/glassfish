@@ -80,7 +80,7 @@
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation-api.version>3.0.1</jakarta.validation-api.version>
+        <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
         <hibernate-validator.version>8.0.0.Alpha3</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
@@ -101,11 +101,11 @@
 
         <!-- Jakarta XML Binding -->
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
-        <jakarta.jaxb-impl.version>4.0.0-M4</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-impl.version>4.0.0</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.0-M5</jersey.version>
+        <jersey.version>3.1.0-M6</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
@@ -138,18 +138,18 @@
 
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.4.3.Final</jboss.logging.version>
-        <javassist.version>3.28.0-GA</javassist.version>
+        <javassist.version>3.29.0-GA</javassist.version>
         <asm.version>9.3</asm.version>
         <jsch.version>0.1.56</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.13.2</jackson.version>
-        <jackson-databind.version>2.13.2.2</jackson-databind.version>
+        <jackson.version>2.13.3</jackson.version>
+        <jackson-databind.version>2.13.3</jackson-databind.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.4.1</jettison.version>
-        <mimepull.version>1.9.15</mimepull.version>
+        <mimepull.version>1.10.0</mimepull.version>
 
         <commons-io.version>2.11.0</commons-io.version>
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
@@ -477,7 +477,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.7.2</version>
+                <version>4.8.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>

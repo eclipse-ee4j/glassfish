@@ -394,10 +394,6 @@
                         
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>target/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
-                        <org.jboss.cdi.tck.testDataSource>jdbc/__default</org.jboss.cdi.tck.testDataSource>
-                        <org.jboss.cdi.tck.testJmsConnectionFactory>java:comp/DefaultJMSConnectionFactory</org.jboss.cdi.tck.testJmsConnectionFactory>
-                        <org.jboss.cdi.tck.testJmsQueue>queue_test</org.jboss.cdi.tck.testJmsQueue>
-                        <org.jboss.cdi.tck.testJmsTopic>topic_test</org.jboss.cdi.tck.testJmsTopic>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

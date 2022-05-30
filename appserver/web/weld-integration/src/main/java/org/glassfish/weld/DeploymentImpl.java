@@ -23,6 +23,7 @@ import static java.lang.System.getSecurityManager;
 import static java.security.AccessController.doPrivileged;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.FINE;
+import static java.util.stream.Collectors.toList;
 import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
 import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
 import static org.glassfish.cdi.CDILoggerInfo.GET_BEAN_DEPLOYMENT_ARCHIVES;
@@ -54,6 +55,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.ServiceLoader.Provider;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -71,14 +74,15 @@ import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeansXml;
 import org.jboss.weld.bootstrap.spi.CDI11Deployment;
 import org.jboss.weld.bootstrap.spi.Metadata;
+import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
+import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.EjbDescriptor;
 
+import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
+import jakarta.enterprise.inject.build.compatible.spi.SkipIfPortableExtensionPresent;
 import jakarta.enterprise.inject.spi.Extension;
-import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
-import org.jboss.weld.lite.extension.translator.BuildCompatibleExtensionLoader;
-import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 
 /*
  * Represents a deployment of a CDI (Weld) application.
@@ -251,14 +255,17 @@ public class DeploymentImpl implements CDI11Deployment {
         List<Metadata<Extension>> extensionsList = new ArrayList<>();
         // Register org.jboss.weld.lite.extension.translator.LiteExtensionTranslator in order to be able to execute build compatible extensions
         // Note that we only register this if we discovered at least one implementation of BuildCompatibleExtension
-        if (!BuildCompatibleExtensionLoader.getBuildCompatibleExtensions().isEmpty()) {
+
+        List<Class<? extends BuildCompatibleExtension>> buildExtensions = getBuildCompatibleExtensions();
+
+        if (!buildExtensions.isEmpty()) {
             try {
                 LiteExtensionTranslator extension = getSecurityManager() != null ? doPrivileged(new PrivilegedAction<LiteExtensionTranslator>() {
                     @Override
                     public LiteExtensionTranslator run() {
-                        return new LiteExtensionTranslator();
+                        return new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
                     }
-                }) : new LiteExtensionTranslator();
+                }) : new LiteExtensionTranslator(buildExtensions, Thread.currentThread().getContextClassLoader());
                 extensionsList.add(new MetadataImpl<>(extension));
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -281,7 +288,6 @@ public class DeploymentImpl implements CDI11Deployment {
 
         return extensionsList;
     }
-
     @Override
     public List<BeanDeploymentArchive> getBeanDeploymentArchives() {
         if (logger.isLoggable(FINE)) {
@@ -557,6 +563,15 @@ public class DeploymentImpl implements CDI11Deployment {
 
     // #### Private methods
 
+    private List<Class<? extends BuildCompatibleExtension>> getBuildCompatibleExtensions() {
+        return
+            ServiceLoader.load(BuildCompatibleExtension.class, Thread.currentThread().getContextClassLoader())
+                         .stream()
+                         .map(Provider::get)
+                         .map(e -> e.getClass())
+                         .filter(e -> !e.isAnnotationPresent(SkipIfPortableExtensionPresent.class))
+                         .collect(toList());
+    }
 
     private void addBeanDeploymentArchives(RootBeanDeploymentArchive bda) {
         BDAType moduleBDAType = bda.getModuleBDAType();

@@ -136,7 +136,7 @@ public class ClassPathUtils {
         final List<Path> result = new ArrayList<>();
         try {
             for (String classPathElement : classPath.split(File.pathSeparator)) {
-                result.add(new File(classPathElement).toPath());
+                result.add(new File(classPathElement.trim()).toPath());
             }
             return result;
         } catch (Exception e) {

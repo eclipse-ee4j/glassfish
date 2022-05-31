@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -748,16 +749,24 @@ public class DeploymentImpl implements CDI11Deployment {
         try {
             // Each appLib in context.getAppLibs is a URI of the form
             // "file:/glassfish/runtime/trunk/glassfish7/glassfish/domains/domain1/lib/applibs/mylib.jar"
-            List<URI> appLibs = context.getAppLibs();
-            Set<String> installedLibraries = getInstalledLibraries(archive);
+            // parentArchiveAppLibs are the app libs in the manifest of the root archive and any embedded
+            // archives.
+            List<URI> rootArchiveAppLibs = context.getAppLibs();
 
-            if (!isAnyEmpty(appLibs, installedLibraries)) {
-                for (URI appLib : appLibs) {
-                    for (String installedLibrary : installedLibraries) {
-                        if (appLib.getPath().endsWith(installedLibrary)) {
+            // Each appLib in getInstalledLibraries(archive) is a String of the form
+            // "mylib.jar"
+            // currentArchiveAppLibNames are the app libs from the manifest of only the current archive.
+            // This may therefor be a subset of the rootArchiveAppLibs when the root archive has multiple
+            // embedded libs with their own app lib references in their manifest.
+            Set<String> currentArchiveAppLibNames = getInstalledLibraries(archive);
+
+            if (!isAnyEmpty(rootArchiveAppLibs, currentArchiveAppLibNames)) {
+                for (URI rootArchiveAppLib : rootArchiveAppLibs) {
+                    for (String currentArchiveAppLibName : currentArchiveAppLibNames) {
+                        if (rootArchiveAppLib.getPath().endsWith(currentArchiveAppLibName)) {
                             ReadableArchive libArchive = null;
                             try {
-                                libArchive = archiveFactory.openArchive(appLib);
+                                libArchive = archiveFactory.openArchive(rootArchiveAppLib);
                                 if (libArchive.exists(META_INF_BEANS_XML)) {
                                     libBdas.add(new RootBeanDeploymentArchive(
                                         libArchive,

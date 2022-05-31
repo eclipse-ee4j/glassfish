@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,221 +17,207 @@
 
 package org.glassfish.loader.util;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.api.admin.ServerEnvironment;
-import com.sun.enterprise.deployment.deploy.shared.Util;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.enterprise.util.io.FileUtils.isJar;
+import static com.sun.enterprise.util.io.FileUtils.isZip;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+
 import java.io.File;
-import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.jar.Attributes;
-import java.util.*;
+import java.util.jar.Attributes.Name;
+import java.util.jar.Manifest;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import com.sun.enterprise.deployment.deploy.shared.Util;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModulesRegistry;
 
 public class ASClassLoaderUtil {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    public static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "Cannot convert classpath to URL {0}", level="WARNING")
+    @LogMessageInfo(message = "Cannot convert classpath to URL {0}", level = "WARNING")
     private static final String CLASSPATH_ERROR = "NCLS-DEPLOYMENT-00045";
 
-    @LogMessageInfo(message = "Exception:  {0}", level="WARNING")
+    @LogMessageInfo(message = "Exception:  {0}", level = "WARNING")
     private static final String EXCEPTION = "NCLS-DEPLOYMENT-00017";
 
-    @LogMessageInfo(message = "unexpected error in getting urls", level="WARNING")
+    @LogMessageInfo(message = "unexpected error in getting urls", level = "WARNING")
     private static final String UNEXPECTED_EXCEPTION = "NCLS-DEPLOYMENT-00018";
 
-    private static String modulesClassPath = null;
+    private static String modulesClassPath;
 
     /** The manifest file name from an archive. */
-    private static final String MANIFEST_ENTRY  =
-                    "META-INF" + File.separator + "MANIFEST.MF";
+    private static final String MANIFEST_ENTRY = "META-INF" + separator + "MANIFEST.MF";
 
     /**
-     * Gets the classpath associated with a module, suffixing libraries
-     * defined [if any] for the application
+     * Gets the classpath associated with a module, suffixing libraries defined [if any] for the application
      *
-     * @param habitat the habitat the application resides in.
+     * @param serviceLocator the habitat the application resides in.
      * @param moduleId HK2Module id of the module
      * @param deploymentLibs libraries option passed through deployment
-     * @return A <code>File.pathSeparator</code> separated list of classpaths
-     *         for the passed in module, including the module specified
-     *         "libraries" defined for the module.
+     * @return A <code>File.pathSeparator</code> separated list of classpaths for the passed in module, including the module
+     * specified "libraries" defined for the module.
      */
-    public static String getModuleClassPath
-        (ServiceLocator habitat, String moduleId, String deploymentLibs) {
+    public static String getModuleClassPath(ServiceLocator serviceLocator, String moduleId, String deploymentLibs) {
+        deplLogger.log(FINE, () -> "ASClassLoaderUtil.getModuleClassPath " + "for module Id : " + moduleId);
 
-        if (deplLogger.isLoggable(Level.FINE)) {
-          deplLogger.log(Level.FINE,
-                         "ASClassLoaderUtil.getModuleClassPath " + "for module Id : " + moduleId);
+        StringBuilder classpath = new StringBuilder(getModulesClasspath(serviceLocator));
+
+        String commonClassPath = serviceLocator.getService(ClassLoaderHierarchy.class).getCommonClassPath();
+        if (!isEmpty(commonClassPath)) {
+            classpath.append(commonClassPath).append(pathSeparator);
         }
 
-        StringBuilder classpath = new StringBuilder(getModulesClasspath(habitat));
-        ClassLoaderHierarchy clh =
-                habitat.getService(ClassLoaderHierarchy.class);
-        final String commonClassPath = clh.getCommonClassPath();
-        if (commonClassPath != null && commonClassPath.length() > 0) {
-            classpath.append(commonClassPath).append(File.pathSeparator);
-        }
-        addDeployParamLibrariesForModule(classpath, moduleId, deploymentLibs, habitat);
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.log(Level.FINE,
-                           "Final classpath: " + classpath.toString());
-        }
+        addDeployParamLibrariesForModule(classpath, moduleId, deploymentLibs, serviceLocator);
+        deplLogger.log(FINE, () -> "Final classpath: " + classpath.toString());
+
         return classpath.toString();
-
     }
 
-    public static String getModuleClassPath (ServiceLocator habitat,
-        DeploymentContext context) {
-        DeployCommandParameters params =
-            context.getCommandParameters(DeployCommandParameters.class);
+    public static String getModuleClassPath(ServiceLocator habitat, DeploymentContext context) {
+        DeployCommandParameters params = context.getCommandParameters(DeployCommandParameters.class);
+
         return getModuleClassPath(habitat, params.name(), params.libraries());
     }
 
-
-    private static void addDeployParamLibrariesForModule(StringBuilder sb,
-        String moduleId, String deploymentLibs, ServiceLocator habitat) {
+    private static void addDeployParamLibrariesForModule(StringBuilder sb, String moduleId, String deploymentLibs, ServiceLocator serviceLocator) {
         if (moduleId.indexOf("#") != -1) {
             moduleId = moduleId.substring(0, moduleId.indexOf("#"));
         }
 
         if (deploymentLibs == null) {
-            ApplicationInfo appInfo =
-                habitat.<ApplicationRegistry>getService(ApplicationRegistry.class).get(moduleId);
+            ApplicationInfo appInfo = serviceLocator.getService(ApplicationRegistry.class).get(moduleId);
             if (appInfo == null) {
-                // this might be an internal container app,
-                // like _default_web_app, ignore.
+                // This might be an internal container app, like _default_web_app, ignore.
                 return;
             }
             deploymentLibs = appInfo.getLibraries();
         }
-        final URL[] libs =
-            getDeployParamLibrariesAsURLs(deploymentLibs, habitat);
+
+        final URL[] libs = getDeployParamLibrariesAsURLs(deploymentLibs, serviceLocator);
         if (libs != null) {
-            for (final URL u : libs) {
-                sb.append(u.getPath());
-                sb.append(File.pathSeparator);
+            for (URL libUrl : libs) {
+                sb.append(libUrl.getPath());
+                sb.append(pathSeparator);
             }
         }
     }
 
-    private static URL[] getDeployParamLibrariesAsURLs(String librariesStr,
-        ServiceLocator habitat) {
-            return getDeployParamLibrariesAsURLs(librariesStr,
-                habitat.<ServerEnvironment>getService(ServerEnvironment.class));
+    private static URL[] getDeployParamLibrariesAsURLs(String librariesStr, ServiceLocator serviceLocator) {
+        return getDeployParamLibrariesAsURLs(librariesStr, serviceLocator.getService(ServerEnvironment.class));
     }
 
+    /**
+     * converts libraries specified via EXTENSION_LIST entry in MANIFEST.MF of all of the libraries of the deployed archive
+     * to The libraries are made available to the application in the order specified.
+     *
+     * @param libraries is a comma-separated list of library JAR files
+     * @param env the server environment
+     * @return array of URL
+     */
+    public static URL[] getLibrariesAsURLs(Set<String> libraries, ServerEnvironment env) {
+        if (libraries == null) {
+            return null;
+        }
+
+        return getDeployParamLibrariesAsURLs(env, libraries.toArray(new String[libraries.size()]), new URL[libraries.size()]);
+    }
 
     /**
-     * converts libraries specified via EXTENSION_LIST entry in MANIFEST.MF of
-     * all of the libraries of the deployed archive to
-     * The libraries  are made available to
-     * the application in the order specified.
+     * converts libraries specified via the --libraries deployment option to URL[]. The library JAR files are specified by
+     * either relative or absolute paths. The relative path is relative to instance-root/lib/applibs. The libraries are made
+     * available to the application in the order specified.
      *
      * @param librariesStr is a comma-separated list of library JAR files
      * @param env the server environment
      * @return array of URL
      */
-    public static URL[] getLibrariesAsURLs(Set<String> librariesStr,
-        ServerEnvironment env) {
-        if(librariesStr == null)
+    public static URL[] getDeployParamLibrariesAsURLs(String librariesStr, ServerEnvironment env) {
+        if (librariesStr == null) {
             return null;
-        final URL [] urls = new URL[librariesStr.size()];
-        String [] librariesStrArray  = new String[librariesStr.size()];
-        librariesStrArray  = librariesStr.toArray(librariesStrArray);
-        return getDeployParamLibrariesAsURLs(env, librariesStrArray, urls);
+        }
+
+        String[] librariesStrArray = librariesStr.split(",");
+        return getDeployParamLibrariesAsURLs(env, librariesStrArray, new URL[librariesStrArray.length]);
     }
 
-    /**
-     * converts libraries specified via the --libraries deployment option to
-     * URL[].  The library JAR files are specified by either relative or
-     * absolute paths.  The relative path is relative to
-     * instance-root/lib/applibs. The libraries  are made available to
-     * the application in the order specified.
-     *
-     * @param librariesStr is a comma-separated list of library JAR files
-     * @param env the server environment
-     * @return array of URL
-     */
-    public static URL[] getDeployParamLibrariesAsURLs(String librariesStr,
-        ServerEnvironment env) {
-        if(librariesStr == null)
-            return null;
-        String [] librariesStrArray = librariesStr.split(",");
-        final URL [] urls = new URL[librariesStrArray.length];
-        return getDeployParamLibrariesAsURLs(env, librariesStrArray, urls);
-    }
+    private static URL[] getDeployParamLibrariesAsURLs(ServerEnvironment env, String[] libraries, URL[] urls) {
+        final String appLibsDir = env.getLibPath() + File.separator + "applibs";
 
-    private static URL[] getDeployParamLibrariesAsURLs(ServerEnvironment env, String[] librariesStrArray,
-                                                       URL[] urls) {
-        final String appLibsDir = env.getLibPath()
-                + File.separator + "applibs";
-
-        int i=0;
-        for(final String libraryStr:librariesStrArray){
+        int i = 0;
+        for (final String libraryStr : libraries) {
             try {
-                File f = new File(libraryStr);
-                if(!f.isAbsolute())
-                    f = new File(appLibsDir, libraryStr);
-                URL url =f.toURI().toURL();
+                File libraryFile = new File(libraryStr);
+                if (!libraryFile.isAbsolute()) {
+                    libraryFile = new File(appLibsDir, libraryStr);
+                }
+
+                URL url = libraryFile.toURI().toURL();
                 urls[i++] = url;
             } catch (MalformedURLException malEx) {
-                deplLogger.log(Level.WARNING,
-                               CLASSPATH_ERROR,
-                               libraryStr);
-                LogRecord lr = new LogRecord(Level.WARNING, EXCEPTION);
+                deplLogger.log(WARNING, CLASSPATH_ERROR, libraryStr);
+                LogRecord lr = new LogRecord(WARNING, EXCEPTION);
                 lr.setParameters(new Object[] { malEx.getMessage() });
                 lr.setThrown(malEx);
                 deplLogger.log(lr);
             }
         }
+
         return urls;
     }
 
-    private static synchronized String getModulesClasspath(ServiceLocator habitat) {
+    private static synchronized String getModulesClasspath(ServiceLocator serviceLocator) {
         synchronized (ASClassLoaderUtil.class) {
             if (modulesClassPath == null) {
-                final StringBuilder tmpString = new StringBuilder();
-                ModulesRegistry mr = habitat.getService(ModulesRegistry.class);
-                if (mr != null) {
-                    for (HK2Module module : mr.getModules()) {
+                final StringBuilder modulesClassPathBuilder = new StringBuilder();
+                ModulesRegistry modulesRegistry = serviceLocator.getService(ModulesRegistry.class);
+                if (modulesRegistry != null) {
+                    for (HK2Module module : modulesRegistry.getModules()) {
                         for (URI uri : module.getModuleDefinition().getLocations()) {
-                            tmpString.append(uri.getPath());
-                            tmpString.append(File.pathSeparator);
+                            modulesClassPathBuilder.append(uri.getPath());
+                            modulesClassPathBuilder.append(pathSeparator);
                         }
                     }
                 }
 
-                //set shared classpath for module so that it doesn't need to be
-                //recomputed for every other invocation
-                modulesClassPath = tmpString.toString();
+                // Set shared classpath for module so that it doesn't need to be
+                // recomputed for every other invocation
+                modulesClassPath = modulesClassPathBuilder.toString();
             }
         }
+
         return modulesClassPath;
     }
 
     /**
      * Returns an array of urls that contains ..
+     *
      * <pre>
      *    i.   all the valid directories from the given directory (dirs) array
      *    ii.  all jar files from the given directory (jarDirs) array
@@ -238,22 +225,20 @@ public class ASClassLoaderUtil {
      *         not ignoring zip file (ignoreZip is false).
      * </pre>
      *
-     * @param    dirs     array of directory path names
-     * @param    jarDirs  array of path name to directories that contains
-     *                    JAR & ZIP files.
-     * @param    ignoreZip whether to ignore zip files
-     * @return   an array of urls that contains all the valid dirs,
-     *           *.jar & *.zip
+     * @param dirs array of directory path names
+     * @param jarDirs array of path name to directories that contains JAR & ZIP files.
+     * @param ignoreZip whether to ignore zip files
+     * @return an array of urls that contains all the valid dirs, *.jar & *.zip
      *
-     * @throws  IOException  if an i/o error while constructing the urls
+     * @throws IOException if an i/o error while constructing the urls
      */
-    public static URL[] getURLs(File[] dirs, File[] jarDirs,
-        boolean ignoreZip) throws IOException {
+    public static URL[] getURLs(File[] dirs, File[] jarDirs, boolean ignoreZip) throws IOException {
         return convertURLListToArray(getURLsAsList(dirs, jarDirs, ignoreZip));
     }
 
     /**
      * Returns a list of urls that contains ..
+     *
      * <pre>
      *    i.   all the valid directories from the given directory (dirs) array
      *    ii.  all jar files from the given directory (jarDirs) array
@@ -261,59 +246,54 @@ public class ASClassLoaderUtil {
      *         not ignoring zip file (ignoreZip is false).
      * </pre>
      *
-     * @param    dirs     array of directory path names
-     * @param    jarDirs  array of path name to directories that contains
-     *                    JAR & ZIP files.
-     * @param    ignoreZip whether to ignore zip files
-     * @return   an array of urls that contains all the valid dirs,
-     *           *.jar & *.zip
+     * @param dirs array of directory path names
+     * @param jarDirs array of path name to directories that contains JAR & ZIP files.
+     * @param ignoreZip whether to ignore zip files
+     * @return an array of urls that contains all the valid dirs, *.jar & *.zip
      *
-     * @throws  IOException  if an i/o error while constructing the urls
+     * @throws IOException if an i/o error while constructing the urls
      */
-    public static List<URL> getURLsAsList(File[] dirs, File[] jarDirs,
-        boolean ignoreZip) throws IOException {
+    public static List<URL> getURLsAsList(File[] dirs, File[] jarDirs, boolean ignoreZip) throws IOException {
         List<URL> list = new ArrayList<URL>();
 
-        // adds all directories
+        // Adds all directories
         if (dirs != null) {
-            for (int i=0; i<dirs.length; i++) {
+            for (int i = 0; i < dirs.length; i++) {
                 File dir = dirs[i];
                 if (dir.isDirectory() || dir.canRead()) {
                     URL url = dir.toURI().toURL();
                     list.add(url);
 
-                    if (deplLogger.isLoggable(Level.FINE)) {
-                       deplLogger.log(Level.FINE,
-                                      "Adding directory to class path:" + url.toString());
+                    if (deplLogger.isLoggable(FINE)) {
+                        deplLogger.log(FINE, "Adding directory to class path:" + url.toString());
                     }
                 }
             }
         }
 
-        // adds all the jars
+        // Adds all the jars
         if (jarDirs != null) {
-            for (int i=0; i<jarDirs.length; i++) {
-                File jarDir =  jarDirs[i];
+            for (int i = 0; i < jarDirs.length; i++) {
+                File jarDir = jarDirs[i];
 
                 if (jarDir.isDirectory() || jarDir.canRead()) {
                     File[] files = jarDir.listFiles();
 
-                    for (int j=0; j<files.length; j++) {
+                    for (int j = 0; j < files.length; j++) {
                         File jar = files[j];
 
-                        if ( FileUtils.isJar(jar) ||
-                            (!ignoreZip && FileUtils.isZip(jar)) ) {
+                        if (isJar(jar) || (!ignoreZip && isZip(jar))) {
                             list.add(jar.toURI().toURL());
 
-                            if (deplLogger.isLoggable(Level.FINE)) {
-                                deplLogger.log(Level.FINE,
-                                               "Adding jar to class path:" + jar.toURL());
+                            if (deplLogger.isLoggable(FINE)) {
+                                deplLogger.log(FINE, "Adding jar to class path:" + jar.toURI().toURL());
                             }
                         }
                     }
                 }
             }
         }
+
         return list;
     }
 
@@ -322,37 +302,35 @@ public class ASClassLoaderUtil {
         URL[] urls = new URL[0];
         if (list != null && list.size() > 0) {
             urls = new URL[list.size()];
-            urls = (URL[]) list.toArray(urls);
+            urls = list.toArray(urls);
         }
         return urls;
     }
 
     /**
      * get URL list from classpath
+     *
      * @param classpath classpath string containing the classpaths
-     * @param delimiter delimiter to separate the classpath components
-     *                  in the classpath string
+     * @param delimiter delimiter to separate the classpath components in the classpath string
      * @param rootPath root path of the classpath if the paths are relative
-
+     *
      * @return urlList URL list from the given classpath
      */
-    public static List<URL> getURLsFromClasspath(String classpath,
-        String delimiter, String rootPath) {
-        final List<URL> urls  = new ArrayList<URL>();
+    public static List<URL> getURLsFromClasspath(String classpath, String delimiter, String rootPath) {
+        final List<URL> urls = new ArrayList<URL>();
 
-        if (classpath == null || classpath.length() == 0) {
+        if (isEmpty(classpath)) {
             return urls;
         }
 
-        // tokenize classpath
-        final StringTokenizer st = new StringTokenizer(classpath, delimiter);
-        while (st.hasMoreTokens()) {
+        // Tokenize classpath
+        final StringTokenizer classpathTokenizer = new StringTokenizer(classpath, delimiter);
+        while (classpathTokenizer.hasMoreTokens()) {
             try {
-                String path = st.nextToken();
+                String path = classpathTokenizer.nextToken();
                 try {
-                    // try to see if the path is absolute
-                    URL url = new URL(path);
-                    URI uri = url.toURI();
+                    // Try to see if the path is absolute
+                    URI uri = new URL(path).toURI();
                     if (uri.isAbsolute()) {
                         urls.add(uri.toURL());
                         continue;
@@ -364,89 +342,62 @@ public class ASClassLoaderUtil {
                 if (rootPath != null && rootPath.length() != 0) {
                     path = rootPath + File.separator + path;
                 }
-                File f = new File(path);
-                urls.add(f.toURI().toURL());
-            } catch(Exception e) {
-                  deplLogger.log(Level.WARNING,
-                                 UNEXPECTED_EXCEPTION,
-                                 e);
+
+                urls.add(new File(path).toURI().toURL());
+            } catch (Exception e) {
+                deplLogger.log(WARNING, UNEXPECTED_EXCEPTION, e);
             }
         }
+
         return urls;
     }
 
-   /**
+    /**
      * Returns the manifest file for the given root path.
      *
-     * <xmp>
-     *    Example:
-     *     |--repository/
-     *     |   |--applications/
-     *     |        |--converter/
-     *     |            |--ejb-jar-ic_jar/        <---- rootPath
-     *     |                 |--META-INF/
-     *     |                     |--MANIFEST.MF
-     * </xmp>
+     * <xmp> Example: |--repository/ | |--applications/ | |--converter/ | |--ejb-jar-ic_jar/ <---- rootPath | |--META-INF/ |
+     * |--MANIFEST.MF </xmp>
      *
-     * @param    rootPath    absolute path to the module
+     * @param rootPath absolute path to the module
      *
-     * @return   the manifest file for the given module
+     * @return the manifest file for the given module
      */
     public static Manifest getManifest(String rootPath) {
-
-        InputStream in  = null;
-        Manifest mf     = null;
-
-        // gets the input stream to the MANIFEST.MF file
-        try {
-            in = new FileInputStream(rootPath+File.separator+MANIFEST_ENTRY);
-
-            if (in != null) {
-                mf = new Manifest(in);
-            }
+        // Gets the input stream to the MANIFEST.MF file
+        try (InputStream in = new FileInputStream(rootPath + separator + MANIFEST_ENTRY)) {
+           return new Manifest(in);
         } catch (IOException ioe) {
             // ignore
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException ioe) {
-                    // Ignore
-                }
-            }
+            return null;
         }
-        return mf;
     }
 
-
     /**
-     * Returns the class path (if any) from the given manifest file as an
-     * URL list.
+     * Returns the class path (if any) from the given manifest file as an URL list.
      *
-     * @param    manifest    manifest file of an archive
-     * @param    rootPath    root path to the module
+     * @param manifest manifest file of an archive
+     * @param rootPath root path to the module
      *
-     * @return   a list of URLs
-     *           an empty list if given manifest is null
+     * @return a list of URLs an empty list if given manifest is null
      */
-    public static List<URL> getManifestClassPathAsURLs(Manifest manifest,
-            String rootPath) {
-        List<URL> urlList = new ArrayList<URL>();
-        if (manifest != null) {
-            Attributes mainAttributes  = manifest.getMainAttributes();
+    public static List<URL> getManifestClassPathAsURLs(Manifest manifest, String rootPath) {
+        List<URL> urls = new ArrayList<>();
+        if (manifest == null) {
+            return urls;
+        }
 
-            for (Map.Entry entry : mainAttributes.entrySet()) {
+        Attributes mainAttributes = manifest.getMainAttributes();
 
-                Attributes.Name next = (Attributes.Name) entry.getKey();
+        for (Entry<Object, Object> entry : mainAttributes.entrySet()) {
+            Name next = (Name) entry.getKey();
 
-                if (next.equals(Attributes.Name.CLASS_PATH)) {
-                    String classpathString = (String) entry.getValue();
-                    urlList = getURLsFromClasspath(classpathString, " ",
-                        rootPath);
-                }
+            if (next.equals(Name.CLASS_PATH)) {
+                String classpathString = (String) entry.getValue();
+                urls = getURLsFromClasspath(classpathString, " ", rootPath);
             }
         }
-        return urlList;
+
+        return urls;
     }
 
     /**
@@ -454,25 +405,19 @@ public class ASClassLoaderUtil {
      *
      * @param appRoot the application root
      * @param appLibDir the Application library directory
-     * @param compatibilityProp the version of the release that we need to
-     *        maintain backward compatibility
+     * @param compatibilityProp the version of the release that we need to maintain backward compatibility
      * @return an array of URL
      */
-    public static URL[] getAppLibDirLibraries(File appRoot, String appLibDir,
-        String compatibilityProp)
-        throws IOException {
-        return convertURLListToArray(
-            getAppLibDirLibrariesAsList(appRoot, appLibDir, compatibilityProp));
+    public static URL[] getAppLibDirLibraries(File appRoot, String appLibDir, String compatibilityProp) throws IOException {
+        return convertURLListToArray(getAppLibDirLibrariesAsList(appRoot, appLibDir, compatibilityProp));
     }
 
-    public static List<URL> getAppLibDirLibrariesAsList(File appRoot, String appLibDir, String compatibilityProp)
-        throws IOException {
+    public static List<URL> getAppLibDirLibrariesAsList(File appRoot, String appLibDir, String compatibilityProp) throws IOException {
         URL[] libDirLibraries = new URL[0];
         // get all the app lib dir libraries
         if (appLibDir != null) {
             String libPath = appLibDir.replace('/', File.separatorChar);
-            libDirLibraries =  getURLs(null,
-                new File[] {new File(appRoot, libPath)}, true);
+            libDirLibraries = getURLs(null, new File[] { new File(appRoot, libPath) }, true);
         }
 
         List<URL> allLibDirLibraries = new ArrayList<URL>();
@@ -480,23 +425,20 @@ public class ASClassLoaderUtil {
             allLibDirLibraries.add(url);
         }
 
-        // if the compatibility property is set to "v2", we should add all the
+        // If the compatibility property is set to "v2", we should add all the
         // jars under the application root to maintain backward compatibility
         // of v2 jar visibility
         if (compatibilityProp != null && compatibilityProp.equals("v2")) {
-            List<URL> appRootLibraries = getURLsAsList(null, new File[] {appRoot}, true);
+            List<URL> appRootLibraries = getURLsAsList(null, new File[] { appRoot }, true);
             allLibDirLibraries.addAll(appRootLibraries);
         }
+
         return allLibDirLibraries;
     }
 
     public static List<URI> getLibDirectoryJarURIs(File moduleLibDirectory) throws Exception {
         List<URI> libLibraryURIs = new ArrayList<URI>();
-        File[] jarFiles = moduleLibDirectory.listFiles(new FileFilter() {
-            public boolean accept(File pathname) {
-                return (pathname.getAbsolutePath().endsWith(".jar"));
-            }
-        });
+        File[] jarFiles = moduleLibDirectory.listFiles(pathname -> pathname.getAbsolutePath().endsWith(".jar"));
 
         if (jarFiles != null && jarFiles.length > 0) {
             for (File jarFile : jarFiles) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,19 @@
 
 package com.sun.enterprise.deployment.deploy.shared;
 
-
+import java.io.IOException;
 import java.net.URI;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+import java.util.jar.JarEntry;
+
 import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.jar.JarEntry;
-import java.io.IOException;
 
 /**
- * This abstract class contains all common implementation of the
- * Archive/WritableArchive interfaces for Jar files
+ * This abstract class contains all common implementation of the Archive/WritableArchive interfaces for Jar files
  *
  * @author Jerome Dochez
  */
@@ -38,19 +37,18 @@ public abstract class JarArchive implements Archive {
 
     protected ReadableArchive parentArchive;
 
-    protected Map<Class<?>, Object> extraData=new HashMap<Class<?>, Object>();
+    protected Map<Class<?>, Object> extraData = new HashMap<Class<?>, Object>();
 
     protected Map<String, Object> archiveMetaData = new HashMap<String, Object>();
 
     /**
-     * Returns an enumeration of the module file entries with the
-     * specified prefix.  All elements in the enumeration are of
-     * type String.  Each String represents a file name relative
-     * to the root of the module.
+     * Returns an enumeration of the module file entries with the specified prefix. All elements in the enumeration are of
+     * type String. Each String represents a file name relative to the root of the module.
      *
      * @param prefix the prefix of entries to be included
      * @return an enumeration of the archive file entries.
      */
+    @Override
     public Enumeration<String> entries(String prefix) {
         Enumeration<String> allEntries = entries();
         Vector<String> entries = new Vector<String>();
@@ -63,45 +61,47 @@ public abstract class JarArchive implements Archive {
         return entries.elements();
     }
 
-   /**
+    /**
      * Returns the name portion of the archive's URI.
      * <p>
-     * For JarArhive the name is all of the path that follows
-     * the last slash up to but not including the last dot.
+     * For JarArhive the name is all of the path that follows the last slash up to but not including the last dot.
      * <p>
      * Here are some example archive names for the specified JarArchive paths:
      * <ul>
      * <li>/a/b/c/d.jar -> d
-     * <li>/a/b/c/d  -> d
+     * <li>/a/b/c/d -> d
      * <li>/x/y/z.html -> z
      * </ul>
+     *
      * @return the name of the archive
      *
      */
+    @Override
     public String getName() {
-         return JarArchive.getName(getURI());
+        return JarArchive.getName(getURI());
     }
 
     abstract protected JarEntry getJarEntry(String entryName);
 
     /**
-     * Returns the existence of the given entry name
-     * The file name must be relative to the root of the module.
+     * Returns the existence of the given entry name The file name must be relative to the root of the module.
      *
-     * @param name the file name relative to the root of the module.          * @return the existence the given entry name.
+     * @param name the file name relative to the root of the module. * @return the existence the given entry name.
      */
     public boolean exists(String name) throws IOException {
-        return getJarEntry(name)!=null;
+        return getJarEntry(name) != null;
     }
 
     /**
      * Returns true if the entry is a directory or a plain file
+     *
      * @param name name is one of the entries returned by {@link #entries()}
      * @return true if the entry denoted by the passed name is a directory
      */
+    @Override
     public boolean isDirectory(String name) {
         JarEntry entry = getJarEntry(name);
-        if (entry==null) {
+        if (entry == null) {
             throw new IllegalArgumentException(name);
         }
         return entry.isDirectory();
@@ -134,12 +134,10 @@ public abstract class JarArchive implements Archive {
     }
 
     /**
-     * Returns any data that could have been calculated as part of
-     * the descriptor loading.
+     * Returns any data that could have been calculated as part of the descriptor loading.
      *
      * @param dataType the type of the extra data
-     * @return the extra data or null if there are not an instance of
-     * type dataType registered.
+     * @return the extra data or null if there are not an instance of type dataType registered.
      */
     public synchronized <U> U getExtraData(Class<U> dataType) {
         return dataType.cast(extraData.get(dataType));
@@ -154,7 +152,7 @@ public abstract class JarArchive implements Archive {
     }
 
     public void addArchiveMetaData(String metaDataKey, Object metaData) {
-        if (metaData!=null) {
+        if (metaData != null) {
             archiveMetaData.put(metaDataKey, metaData);
         }
     }

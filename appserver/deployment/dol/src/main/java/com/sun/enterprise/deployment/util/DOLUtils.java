@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.deployment.util;
 
+import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
+import static java.util.Collections.emptyList;
+import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +30,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
@@ -42,7 +46,6 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -55,7 +58,9 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.internal.deployment.SnifferManager;
-import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 import org.xml.sax.SAXException;
 
 import com.sun.enterprise.config.serverbeans.Applications;
@@ -70,17 +75,12 @@ import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
-import com.sun.enterprise.deployment.deploy.shared.Util;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 /**
  * Utility class for convenience methods
@@ -151,36 +151,36 @@ public class DOLUtils {
     }
 
     public static boolean equals(Object a, Object b) {
-        return ((a == null && b == null) ||
-            (a != null && a.equals(b)));
+        return ((a == null && b == null) || (a != null && a.equals(b)));
     }
 
     public static List<URI> getLibraryJarURIs(BundleDescriptor bundleDesc, ReadableArchive archive) throws Exception {
         if (bundleDesc == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
+
         ModuleDescriptor moduleDesc = bundleDesc.getModuleDescriptor();
         Application app = ((BundleDescriptor)moduleDesc.getDescriptor()).getApplication();
         return getLibraryJarURIs(app, archive);
     }
 
     public static List<URI> getLibraryJarURIs(Application app, ReadableArchive archive) throws Exception {
-        List<URL> libraryURLs = new ArrayList<>();
         List<URI> libraryURIs = new ArrayList<>();
 
-        // add libraries referenced through manifest
-        libraryURLs.addAll(DeploymentUtils.getManifestLibraries(archive));
+        // Add libraries referenced through manifest
+        List<URL> libraryURLs = new ArrayList<>(getManifestLibraries(archive));
         ReadableArchive parentArchive = archive.getParentArchive();
         if (parentArchive == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
 
         File appRoot = new File(parentArchive.getURI());
-        // add libraries jars inside application lib directory
-        libraryURLs.addAll(ASClassLoaderUtil.getAppLibDirLibrariesAsList(appRoot, app.getLibraryDirectory(), null));
+        // Add libraries jars inside application lib directory
+        libraryURLs.addAll(getAppLibDirLibrariesAsList(appRoot, app.getLibraryDirectory(), null));
         for (URL url : libraryURLs) {
-            libraryURIs.add(Util.toURI(url));
+            libraryURIs.add(toURI(url));
         }
+
         return libraryURIs;
     }
 
@@ -188,9 +188,10 @@ public class DOLUtils {
         ExtendedDeploymentContext ctx = (ExtendedDeploymentContext)context;
         Application application = context.getModuleMetaData(Application.class);
         if (application == null) {
-            // this can happen for non-JavaEE type deployment. e.g., issue 15869
+            // This can happen for non-JavaEE type deployment. e.g., issue 15869
             return null;
         }
+
         if (ctx.getParentContext() == null) {
             if (application.isVirtual()) {
                 // standalone module
@@ -199,6 +200,7 @@ public class DOLUtils {
             // top level
             return application;
         }
+
         // a sub module of ear
         return application.getModuleByUri(ctx.getModuleUri());
     }

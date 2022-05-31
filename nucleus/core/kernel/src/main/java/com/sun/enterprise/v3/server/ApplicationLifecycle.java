@@ -666,6 +666,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             externalLibArchives.add(archiveFactory.openArchive(new File(externalLib.getPath())));
         }
 
+        // Get the libraries referenced in the manifest extension-list
+        for (URI externalLib : context.getAppLibs()) {
+            externalLibArchives.add(archiveFactory.openArchive(new File(externalLib.getPath())));
+        }
+
         return externalLibArchives;
     }
 

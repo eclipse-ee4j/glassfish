@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,47 +17,52 @@
 
 package org.glassfish.deployment.common;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.deployment.archive.ArchiveDetector;
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.api.admin.ServerEnvironment;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.loader.util.ASClassLoaderUtil;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.io.FileUtils.makeFriendlyFilenameExtension;
+import static com.sun.enterprise.util.io.FileUtils.makeLegalNoBlankFileName;
+import static com.sun.enterprise.util.io.FileUtils.safeIsDirectory;
+import static java.util.jar.JarFile.MANIFEST_NAME;
+import static java.util.logging.Level.WARNING;
 
-
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.BufferedInputStream;
-import java.util.Enumeration;
-import java.util.Properties;
 import java.net.URI;
-import java.net.URL;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.zip.Adler32;
+import java.util.Properties;
 import java.util.jar.Manifest;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
 import java.util.logging.LogRecord;
-import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.Adler32;
 
-
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
 
 /**
  * Utility methods for deployment.
@@ -64,9 +70,9 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 public class DeploymentUtils {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    public static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "Exception caught {0}", level="WARNING")
+    @LogMessageInfo(message = "Exception caught {0}", level = "WARNING")
     private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00010";
 
     public static final String DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
@@ -98,19 +104,18 @@ public class DeploymentUtils {
      * @return checksum calculated from URIs of files in the directory
      */
     public static long checksum(final File directory) {
-        if ( ! directory.isDirectory()) {
-            final String msg = localStrings.getLocalString(
-                    "enterprise.deployment.remoteDirPathUnusable",
-                    "The directory deployment path {0} is not a directory or is inaccessible",
-                    directory.getAbsolutePath());
+        if (!directory.isDirectory()) {
+            final String msg = localStrings.getLocalString("enterprise.deployment.remoteDirPathUnusable",
+                    "The directory deployment path {0} is not a directory or is inaccessible", directory.getAbsolutePath());
             throw new IllegalArgumentException(msg);
         }
+
         final List<URI> uris = new ArrayList<URI>();
         scanDirectory(directory.toURI(), directory, uris);
+
         /*
-         * Sort the URIs.  File.listFiles does not guarantee any particular
-         * ordering of the visited files, and for two checksums to match we
-         * need to process the URIs in the same order.
+         * Sort the URIs. File.listFiles does not guarantee any particular ordering of the visited files, and for two checksums
+         * to match we need to process the URIs in the same order.
          */
         Collections.sort(uris);
 
@@ -118,22 +123,24 @@ public class DeploymentUtils {
         for (URI uri : uris) {
             checksum.update(uri.toASCIIString().getBytes());
         }
+
         return checksum.getValue();
     }
 
     /**
-     * Returns the downloadable artifacts object from the specified deployment
-     * context, creating it there if it does not already exist.
-     * @param dc the deployment context from which to fetch the downloadable Artifacts object
+     * Returns the downloadable artifacts object from the specified deployment context, creating it there if it does not
+     * already exist.
+     *
+     * @param deploymentContext the deployment context from which to fetch the downloadable Artifacts object
      * @return
      */
-    public static Artifacts downloadableArtifacts(final DeploymentContext dc) {
-        return Artifacts.get(dc, DOWNLOADABLE_ARTIFACTS_KEY_PREFIX);
+    public static Artifacts downloadableArtifacts(final DeploymentContext deploymentContext) {
+        return Artifacts.get(deploymentContext, DOWNLOADABLE_ARTIFACTS_KEY_PREFIX);
     }
 
     /**
-     * Returns the downloadable artifacts object derived from the properties
-     * saved with the specified Application
+     * Returns the downloadable artifacts object derived from the properties saved with the specified Application
+     *
      * @param app the Application config object with (possibly) properties describing downloadable artifacts
      * @return
      */
@@ -142,18 +149,19 @@ public class DeploymentUtils {
     }
 
     /**
-     * Returns the generated artifacts object from the specified deployment
-     * context, creating it there if it does not already exist.
+     * Returns the generated artifacts object from the specified deployment context, creating it there if it does not
+     * already exist.
+     *
      * @param app
      * @return
      */
-    public static Artifacts generatedArtifacts(final DeploymentContext dc) {
-        return Artifacts.get(dc, GENERATED_ARTIFACTS_KEY_PREFIX);
+    public static Artifacts generatedArtifacts(final DeploymentContext deploymentContext) {
+        return Artifacts.get(deploymentContext, GENERATED_ARTIFACTS_KEY_PREFIX);
     }
 
     /**
-     * Returns the generated artifacts object derived from the properties
-     * saved with the specified Application
+     * Returns the generated artifacts object derived from the properties saved with the specified Application
+     *
      * @param app the Application config object with (possibly) properties describing generated artifacts
      * @return
      */
@@ -161,38 +169,41 @@ public class DeploymentUtils {
         return Artifacts.get(app.getDeployProperties(), GENERATED_ARTIFACTS_KEY_PREFIX);
     }
 
-    private static void scanDirectory(final URI anchorDirURI,
-            final File directory, final List<URI> uris) {
-        for (File f : directory.listFiles()) {
-            uris.add(anchorDirURI.relativize(f.toURI()));
-            if (f.isDirectory()) {
-                scanDirectory(anchorDirURI, f, uris);
+    private static void scanDirectory(final URI anchorDirURI, final File directory, final List<URI> uris) {
+        for (File file : directory.listFiles()) {
+            uris.add(anchorDirURI.relativize(file.toURI()));
+            if (file.isDirectory()) {
+                scanDirectory(anchorDirURI, file, uris);
             }
         }
     }
 
-    // check if the archive matches the specified archive type
+    // Check if the archive matches the specified archive type
     public static boolean isArchiveOfType(ReadableArchive archive, ArchiveType archiveType, DeploymentContext context, ServiceLocator locator) {
-        if (archive == null || archiveType == null) {
+        if (isAnyNull(archive, archiveType)) {
             return false;
         }
+
         String type = archiveType.toString();
         if (context != null && context.getArchiveHandler() != null) {
-            // first check the current context for the current archive type
+            // First check the current context for the current archive type
             return type.equals(context.getArchiveHandler().getArchiveType());
         }
+
         try {
             ArchiveDetector detector = locator.getService(ArchiveDetector.class, type);
             if (detector == null) {
                 return false;
             }
+
             return detector.handles(archive);
         } catch (IOException ioe) {
-            LogRecord lr = new LogRecord(Level.WARNING, EXCEPTION_CAUGHT);
+            LogRecord lr = new LogRecord(WARNING, EXCEPTION_CAUGHT);
             Object args[] = { ioe.getMessage() };
             lr.setParameters(args);
             lr.setThrown(ioe);
             deplLogger.log(lr);
+
             return false;
         }
     }
@@ -201,11 +212,10 @@ public class DeploymentUtils {
         return isArchiveOfType(archive, archiveType, null, locator);
     }
 
-   /**
+    /**
      * @param pathName
-     * @return the default value of the EE name.
-     * The default name is the pathname with any filename extension
-     * (.jar, .war, .rar) removed, but with any directory names included.
+     * @return the default value of the EE name. The default name is the pathname with any filename extension (.jar, .war,
+     * .rar) removed, but with any directory names included.
      */
     public static String getDefaultEEName(String pathName) {
         if (pathName == null) {
@@ -218,82 +228,74 @@ public class DeploymentUtils {
             pathName = pathName.substring(0, pathName.length() - 1);
         }
         if (pathName.lastIndexOf("/") != -1) {
-            pathName = pathName.substring(pathName.lastIndexOf(
-                "/") + 1);
+            pathName = pathName.substring(pathName.lastIndexOf("/") + 1);
         }
-        if (pathName.endsWith(".jar") || pathName.endsWith(".war")
-            || pathName.endsWith(".rar") || pathName.endsWith(".ear")) {
+
+        if (pathName.endsWith(".jar") || pathName.endsWith(".war") || pathName.endsWith(".rar") || pathName.endsWith(".ear")) {
             return pathName.substring(0, pathName.length() - 4);
-        } else {
-            return pathName;
         }
+
+        return pathName;
     }
 
     /**
-     * This method returns the relative file path of an embedded module to
-     * the application root.
-     * For example, if the module is expanded/located at
-     * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar,
-     * this method will return fooEJB_jar
+     * This method returns the relative file path of an embedded module to the application root. For example, if the module
+     * is expanded/located at $domain_dir/applications/ee-apps/foo/fooEJB_jar, this method will return fooEJB_jar
      *
-     *@param appRootPath The path of the application root which
-     *                   contains the module
-     *                   e.g. $domain_dir/applications/j2ee-apps/foo
-     *@param moduleUri The module uri
-     *                 e.g. fooEJB.jar
-     *@return The relative file path of the module to the application root
+     * @param appRootPath The path of the application root which contains the module e.g.
+     * $domain_dir/applications/ee-apps/foo
+     * @param moduleUri The module uri e.g. fooEJB.jar
+     * @return The relative file path of the module to the application root
      */
-    public static String getRelativeEmbeddedModulePath(String appRootPath,
-        String moduleUri) {
-        moduleUri = FileUtils.makeLegalNoBlankFileName(moduleUri);
-        if (FileUtils.safeIsDirectory(new File(appRootPath, moduleUri))) {
+    public static String getRelativeEmbeddedModulePath(String appRootPath, String moduleUri) {
+        moduleUri = makeLegalNoBlankFileName(moduleUri);
+        if (safeIsDirectory(new File(appRootPath, moduleUri))) {
             return moduleUri;
-        } else {
-            return FileUtils.makeFriendlyFilenameExtension(moduleUri);
         }
+
+        return makeFriendlyFilenameExtension(moduleUri);
     }
 
     /**
-     * This method returns the file path of an embedded module.
-     * For example, if the module is expanded/located at
-     * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar,
-     * this method will return
-     * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar
+     * This method returns the file path of an embedded module. For example, if the module is expanded/located at
+     * $domain_dir/applications/ee-apps/foo/fooEJB_jar, this method will return
+     * $domain_dir/applications/ee-apps/foo/fooEJB_jar
      *
-     *@param appRootPath The path of the application root which
-     *                   contains the module
-     *                   e.g. $domain_dir/applications/j2ee-apps/foo
-     *@param moduleUri The module uri
-     *                 e.g. fooEJB.jar
-     *@return The file path of the module
+     * @param appRootPath The path of the application root which contains the module e.g.
+     * $domain_dir/applications/ee-apps/foo
+     * @param moduleUri The module uri e.g. fooEJB.jar
+     * @return The file path of the module
      */
-    public static String getEmbeddedModulePath(String appRootPath,
-        String moduleUri) {
-        return appRootPath + File.separator + getRelativeEmbeddedModulePath(appRootPath, moduleUri) ;
+    public static String getEmbeddedModulePath(String appRootPath, String moduleUri) {
+        return appRootPath + File.separator + getRelativeEmbeddedModulePath(appRootPath, moduleUri);
     }
 
     public static boolean useV2Compatibility(DeploymentContext context) {
         return V2_COMPATIBILITY.equals(context.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY));
     }
 
-    public static String relativizeWithinDomainIfPossible(
-            final URI absURI) throws URISyntaxException {
-        URI instanceRootURI = new URI(System.getProperty(INSTANCE_ROOT_URI_PROPERTY_NAME));
-        URI appURI = instanceRootURI.relativize(absURI);
-        String appLocation = (appURI.isAbsolute()) ?
-            appURI.toString() :
-            "${" + INSTANCE_ROOT_URI_PROPERTY_NAME + "}/" + appURI.toString();
-        return appLocation;
+    public static String relativizeWithinDomainIfPossible(final URI absURI) throws URISyntaxException {
+        URI appURI = new URI(System.getProperty(INSTANCE_ROOT_URI_PROPERTY_NAME)).relativize(absURI);
+
+        return (appURI.isAbsolute()) ? appURI.toString() : "${" + INSTANCE_ROOT_URI_PROPERTY_NAME + "}/" + appURI.toString();
     }
 
     public static void validateApplicationName(String name) {
         if (name.indexOf('/') != -1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "/", name));
-        } else if (name.indexOf('#') != -1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "#", name));
-        } else if (name.indexOf(';') != -1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", ";", name));
+            throw new IllegalArgumentException(
+                    localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "/", name));
         }
+
+        if (name.indexOf('#') != -1) {
+            throw new IllegalArgumentException(
+                    localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "#", name));
+        }
+
+        if (name.indexOf(';') != -1) {
+            throw new IllegalArgumentException(
+                    localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", ";", name));
+        }
+
         return;
     }
 
@@ -304,9 +306,7 @@ public class DeploymentUtils {
      * @param target of the expanding
      * @throws IOException when the archive is corrupted
      */
-    public static void expand(ReadableArchive source, WritableArchive target)
-        throws IOException {
-
+    public static void expand(ReadableArchive source, WritableArchive target) throws IOException {
         Enumeration<String> e = source.entries();
         while (e.hasMoreElements()) {
             String entryName = e.nextElement();
@@ -316,46 +316,48 @@ public class DeploymentUtils {
                 os = target.putNextEntry(entryName);
                 FileUtils.copy(is, os, source.getEntrySize(entryName));
             } finally {
-                if (os!=null) {
+                if (os != null) {
                     target.closeEntry();
                 }
                 is.close();
             }
         }
 
-        // last is manifest is existing.
-        Manifest m = source.getManifest();
-        if (m!=null) {
-            OutputStream os  = target.putNextEntry(JarFile.MANIFEST_NAME);
-            m.write(os);
+        // Last is manifest if exists
+        Manifest manifest = source.getManifest();
+        if (manifest != null) {
+            manifest.write(target.putNextEntry(MANIFEST_NAME));
             target.closeEntry();
         }
     }
 
-    public static String getInternalNameForTenant(String appname,
-        String tenantname) {
+    public static String getInternalNameForTenant(String appname, String tenantname) {
         return appname + "___" + tenantname;
     }
 
     public static String propertiesValue(final Properties props, final char sep) {
         final StringBuilder sb = new StringBuilder();
+
         String currentSep = "";
-        for (Enumeration en = props.propertyNames(); en.hasMoreElements();) {
-            final Object key = en.nextElement();
-            final Object v = props.get(key);
-            sb.append(currentSep).append(key.toString()).append("=").append(v.toString());
+        for (Enumeration<?> propertyNames = props.propertyNames(); propertyNames.hasMoreElements();) {
+            final Object key = propertyNames.nextElement();
+            final Object value = props.get(key);
+            sb.append(currentSep)
+              .append(key.toString())
+              .append("=")
+              .append(value.toString());
+
             currentSep = String.valueOf(sep);
         }
+
         return sb.toString();
     }
 
-    public static List<URL> getManifestLibraries(DeploymentContext context)
-        throws IOException {
+    public static List<URL> getManifestLibraries(DeploymentContext context) throws IOException {
         return getManifestLibraries(context.getSource());
     }
 
-    public static List<URL> getManifestLibraries(DeploymentContext context,
-        Manifest manifest) throws IOException {
+    public static List<URL> getManifestLibraries(DeploymentContext context, Manifest manifest) throws IOException {
         return getManifestLibraries(context.getSource(), manifest);
     }
 
@@ -377,9 +379,8 @@ public class DeploymentUtils {
             }
         }
 
-        // add libraries referenced through manifest
-        return ASClassLoaderUtil.getManifestClassPathAsURLs(
-            manifest, appRootPath);
+        // Add libraries referenced through manifest
+        return ASClassLoaderUtil.getManifestClassPathAsURLs(manifest, appRootPath);
     }
 
     public static List<URI> getExternalLibraries(ReadableArchive archive) {
@@ -390,6 +391,7 @@ public class DeploymentUtils {
             if (archive.getParentArchive() != null) {
                 archiveURI = archive.getParentArchive().getURI();
             }
+
             for (URL manifestURL : manifestURLs) {
                 URI manifestLibURI = archiveURI.relativize(manifestURL.toURI());
                 if (manifestLibURI.isAbsolute()) {
@@ -400,13 +402,15 @@ public class DeploymentUtils {
                 }
             }
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, e.getMessage(), e);
+            Logger.getAnonymousLogger().log(WARNING, e.getMessage(), e);
         }
+
         return externalLibURIs;
     }
 
     /**
      * Opens the specified file as an archive, using the provided archive factory.
+     *
      * @param dir directory to be opened as an archive
      * @param archiveFactory ArchiveFactory to use to create the archive object
      * @return FileArchive opened for the directory
@@ -417,8 +421,7 @@ public class DeploymentUtils {
     }
 
     /*
-     * @return comma-separated list of all defined virtual servers (exclusive
-     * of __asadmin) on the specified target
+     * @return comma-separated list of all defined virtual servers (exclusive of __asadmin) on the specified target
      */
     public static String getVirtualServers(String target, ServerEnvironment env, Domain domain) {
         if (target == null) {
@@ -431,21 +434,21 @@ public class DeploymentUtils {
         if (env.isDas() && DeploymentUtils.isDomainTarget(target)) {
             target = "server";
         }
-        StringBuilder sb = new StringBuilder();
+
+
         boolean first = true;
         Server server = domain.getServerNamed(target);
         Config config = null;
         if (server != null) {
-            config = domain.getConfigs().getConfigByName(
-                server.getConfigRef());
+            config = domain.getConfigs().getConfigByName(server.getConfigRef());
         } else {
             Cluster cluster = domain.getClusterNamed(target);
             if (cluster != null) {
-                config = domain.getConfigs().getConfigByName(
-                    cluster.getConfigRef());
+                config = domain.getConfigs().getConfigByName(cluster.getConfigRef());
             }
         }
 
+        StringBuilder virtualServers = new StringBuilder();
         if (config != null) {
             HttpService httpService = config.getHttpService();
             if (httpService != null) {
@@ -456,18 +459,18 @@ public class DeploymentUtils {
                             continue;
                         }
                         if (first) {
-                            sb.append(host.getId());
+                            virtualServers.append(host.getId());
                             first = false;
                         } else {
-                            sb.append(",");
-                            sb.append(host.getId());
+                            virtualServers.append(",");
+                            virtualServers.append(host.getId());
                         }
                     }
                 }
             }
         }
 
-        return sb.toString();
+        return virtualServers.toString();
     }
 
     public static void copyStream(InputStream in, OutputStream out) throws IOException {
@@ -475,6 +478,6 @@ public class DeploymentUtils {
         int len;
         while ((len = in.read(buf)) >= 0) {
             out.write(buf, 0, len);
-}
+        }
     }
 }

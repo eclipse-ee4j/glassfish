@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,41 +17,48 @@
 
 package org.glassfish.deployment.common;
 
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import org.glassfish.deployment.versioning.VersioningUtils;
-import java.lang.instrument.ClassFileTransformer;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.api.deployment.OpsParams;
+import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
+import static com.sun.enterprise.util.io.FileUtils.whack;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.deployment.*;
-import org.glassfish.loader.util.ASClassLoaderUtil;
-
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.io.File;
 import java.io.IOException;
+import java.lang.instrument.ClassFileTransformer;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
 
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.InstrumentableClassLoader;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.PreDestroy;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.hk2.classmodel.reflect.Types;
-
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  *
@@ -63,14 +71,12 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     // Reserve this range [NCLS-DEPLOYMENT-00001, NCLS-DEPLOYMENT-02000]
     // for message ids used in this deployment common module
-    @LoggerInfo(subsystem = "DEPLOYMENT", description="Deployment logger for common module", publish=true)
+    @LoggerInfo(subsystem = "DEPLOYMENT", description = "Deployment logger for common module", publish = true)
     private static final String DEPLOYMENT_LOGGER = "jakarta.enterprise.system.tools.deployment.common";
 
-    public static final Logger deplLogger =
-        Logger.getLogger(DEPLOYMENT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+    public static final Logger deplLogger = Logger.getLogger(DEPLOYMENT_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentContextImpl.class);
-
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentContextImpl.class);
     private static final String INTERNAL_DIR_NAME = "__internal";
     private static final String APP_TENANTS_SUBDIR_NAME = "__app-tenants";
 
@@ -85,27 +91,28 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     Map<String, Object> modulesMetaData = new HashMap<String, Object>();
     List<ClassFileTransformer> transformers = new ArrayList<ClassFileTransformer>();
     Phase phase = Phase.UNKNOWN;
-    ClassLoader sharableTemp = null;
+    ClassLoader sharableTemp;
     Map<String, Properties> modulePropsMap = new HashMap<String, Properties>();
     Map<String, Object> transientAppMetaData = new HashMap<String, Object>();
     Map<String, ArchiveHandler> moduleArchiveHandlers = new HashMap<String, ArchiveHandler>();
     Map<String, ExtendedDeploymentContext> moduleDeploymentContexts = new HashMap<String, ExtendedDeploymentContext>();
-    ExtendedDeploymentContext parentContext = null;
-    String moduleUri = null;
-    private String tenant = null;
-    private String originalAppName = null;
-    private File tenantDir = null;
+    ExtendedDeploymentContext parentContext;
+    String moduleUri;
+    private String tenant;
+    private String originalAppName;
+    private File tenantDir;
 
     /** Creates a new instance of DeploymentContext */
     public DeploymentContextImpl(Deployment.DeploymentContextBuilder builder, ServerEnvironment env) {
-        this(builder.report(),  builder.sourceAsArchive(), builder.params(), env);
+        this(builder.report(), builder.sourceAsArchive(), builder.params(), env);
     }
-    public DeploymentContextImpl(ActionReport actionReport, Logger logger,
-        ReadableArchive source, OpsParams params, ServerEnvironment env) {
-      this(actionReport, source, params, env);
+
+    public DeploymentContextImpl(ActionReport actionReport, Logger logger, ReadableArchive source, OpsParams params,
+            ServerEnvironment env) {
+        this(actionReport, source, params, env);
     }
-    public DeploymentContextImpl(ActionReport actionReport,
-        ReadableArchive source, OpsParams params, ServerEnvironment env) {
+
+    public DeploymentContextImpl(ActionReport actionReport, ReadableArchive source, OpsParams params, ServerEnvironment env) {
         this.originalSource = source;
         this.source = source;
         this.actionReport = actionReport;
@@ -113,23 +120,27 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
         this.env = env;
     }
 
-    public Phase getPhase()
-    {
+    @Override
+    public Phase getPhase() {
         return phase;
     }
 
+    @Override
     public void setPhase(Phase newPhase) {
         this.phase = newPhase;
     }
 
+    @Override
     public ReadableArchive getSource() {
         return source;
     }
 
+    @Override
     public void setSource(ReadableArchive source) {
         this.source = source;
     }
 
+    @Override
     public <U extends OpsParams> U getCommandParameters(Class<U> commandParametersType) {
         try {
             return commandParametersType.cast(parameters);
@@ -138,275 +149,272 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
         }
     }
 
+    @Override
     public Logger getLogger() {
         return deplLogger;
     }
 
+    @Override
     public synchronized void preDestroy() {
         try {
             PreDestroy.class.cast(sharableTemp).preDestroy();
         } catch (Exception e) {
-          // ignore, the classloader does not need to be destroyed
+            // ignore, the classloader does not need to be destroyed
         }
         try {
             PreDestroy.class.cast(cloader).preDestroy();
         } catch (Exception e) {
-          // ignore, the classloader does not need to be destroyed
+            // ignore, the classloader does not need to be destroyed
         }
     }
 
     /**
-     * Returns the class loader associated to this deployment request.
-     * ClassLoader instances are usually obtained by the getClassLoader API on
-     * the associated ArchiveHandler for the archive type being deployed.
+     * Returns the class loader associated to this deployment request. ClassLoader instances are usually obtained by the
+     * getClassLoader API on the associated ArchiveHandler for the archive type being deployed.
      * <p/>
-     * This can return null and the container should allocate a ClassLoader
-     * while loading the application.
+     * This can return null and the container should allocate a ClassLoader while loading the application.
      *
-     * @return a class loader capable of loading classes and resources from the
-     *         source
+     * @return a class loader capable of loading classes and resources from the source
      * @link {org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
      */
+    @Override
     public ClassLoader getFinalClassLoader() {
         return cloader;
     }
 
     /**
-     * Returns the class loader associated to this deployment request.
-     * ClassLoader instances are usually obtained by the getClassLoader API on
-     * the associated ArchiveHandler for the archive type being deployed.
+     * Returns the class loader associated to this deployment request. ClassLoader instances are usually obtained by the
+     * getClassLoader API on the associated ArchiveHandler for the archive type being deployed.
      * <p/>
-     * This can return null and the container should allocate a ClassLoader
-     * while loading the application.
+     * This can return null and the container should allocate a ClassLoader while loading the application.
      *
-     * @return a class loader capable of loading classes and resources from the
-     *         source
+     * @return a class loader capable of loading classes and resources from the source
      * @link {org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
      */
+    @Override
     public ClassLoader getClassLoader() {
-      /* TODO -- Replace this method with another that does not imply it is
-       * an accessor and conveys that the result may change depending on the
-       * current lifecycle. For instance contemporaryClassLoader()
-       * Problem was reported by findbug
-       */
-      return getClassLoader(true);
+        /*
+         * TODO -- Replace this method with another that does not imply it is an accessor and conveys that the result may change
+         * depending on the current lifecycle. For instance contemporaryClassLoader() Problem was reported by findbug
+         */
+        return getClassLoader(true);
     }
 
+    @Override
     public synchronized void setClassLoader(ClassLoader cloader) {
         this.cloader = cloader;
     }
 
-
-    // this classloader will be used for sniffer retrieval, metadata parsing
+    // This classloader will be used for sniffer retrieval, metadata parsing
     // and the prepare
-    public synchronized void createDeploymentClassLoader(ClassLoaderHierarchy clh, ArchiveHandler handler)
-            throws URISyntaxException, MalformedURLException {
-        this.addTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER, Boolean.TRUE);
+    @Override
+    public synchronized void createDeploymentClassLoader(ClassLoaderHierarchy clh, ArchiveHandler handler) throws URISyntaxException, MalformedURLException {
+        this.addTransientAppMetaData(IS_TEMP_CLASSLOADER, TRUE);
         this.sharableTemp = createClassLoader(clh, handler, null);
     }
 
-    // this classloader will used to load and start the application
-    public void createApplicationClassLoader(ClassLoaderHierarchy clh, ArchiveHandler handler)
-            throws URISyntaxException, MalformedURLException {
-        this.addTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER, Boolean.FALSE);
-        if (this.cloader == null) {
-            this.cloader = createClassLoader(clh, handler, parameters.name());
+    // This classloader will used to load and start the application
+    @Override
+    public void createApplicationClassLoader(ClassLoaderHierarchy classLoaderHierarchy, ArchiveHandler handler) throws URISyntaxException, MalformedURLException {
+        addTransientAppMetaData(IS_TEMP_CLASSLOADER, FALSE);
+
+        if (cloader == null) {
+            cloader = createClassLoader(classLoaderHierarchy, handler, parameters.name());
         }
     }
 
-    private ClassLoader createClassLoader(ClassLoaderHierarchy clh, ArchiveHandler handler, String appName)
-            throws URISyntaxException, MalformedURLException {
+    private ClassLoader createClassLoader(ClassLoaderHierarchy classLoaderHierarchy, ArchiveHandler handler, String appName) throws URISyntaxException, MalformedURLException {
         // first we create the appLib class loader, this is non shared libraries class loader
-        ClassLoader applibCL = clh.getAppLibClassLoader(appName, getAppLibs());
-
-        ClassLoader parentCL = clh.createApplicationParentCL(applibCL, this);
+        ClassLoader applibCL = classLoaderHierarchy.getAppLibClassLoader(appName, getAppLibs());
+        ClassLoader parentCL = classLoaderHierarchy.createApplicationParentCL(applibCL, this);
 
         return handler.getClassLoader(parentCL, this);
     }
 
     public synchronized ClassLoader getClassLoader(boolean sharable) {
-        // if we are in prepare phase, we need to return our sharable temporary class loader
+        // If we are in prepare phase, we need to return our sharable temporary class loader
         // otherwise, we return the final one.
-        if (phase==Phase.PREPARE) {
+        if (phase == Phase.PREPARE) {
             if (sharable) {
                 return sharableTemp;
-            } else {
-                InstrumentableClassLoader cl = InstrumentableClassLoader.class.cast(sharableTemp);
-                return cl.copy();
             }
-        } else {
-            // we are out of the prepare phase, destroy the shareableTemp and
-            // return the final classloader
-            if (sharableTemp!=null) {
-                try {
-                    PreDestroy.class.cast(sharableTemp).preDestroy();
-                } catch (Exception e) {
-                    // ignore, the classloader does not need to be destroyed
-                }
-                sharableTemp=null;
-            }
-            return cloader;
+
+            return InstrumentableClassLoader.class.cast(sharableTemp).copy();
         }
+
+        // we are out of the prepare phase, destroy the shareableTemp and
+        // return the final classloader
+        if (sharableTemp != null) {
+            try {
+                PreDestroy.class.cast(sharableTemp).preDestroy();
+            } catch (Exception e) {
+                // ignore, the classloader does not need to be destroyed
+            }
+            sharableTemp = null;
+        }
+
+        return cloader;
     }
 
     /**
-     * Returns a scratch directory that can be used to store things in.
-     * The scratch directory will be persisted accross server restart but
-     * not accross redeployment of the same application
+     * Returns a scratch directory that can be used to store things in. The scratch directory will be persisted accross
+     * server restart but not accross redeployment of the same application
      *
      * @param subDirName the sub directory name of the scratch dir
-     * @return the scratch directory for this application based on
-     *         passed in subDirName. Returns the root scratch dir if the
-     *         passed in value is null.
+     * @return the scratch directory for this application based on passed in subDirName. Returns the root scratch dir if the
+     * passed in value is null.
      */
+    @Override
     public File getScratchDir(String subDirName) {
         File rootScratchDir = env.getApplicationStubPath();
+
         if (tenant != null && originalAppName != null) {
-            // multi-tenant case
+            // Multi-tenant case
             rootScratchDir = getRootScratchTenantDirForApp(originalAppName);
             rootScratchDir = new File(rootScratchDir, tenant);
-            if (subDirName != null ) {
+            if (subDirName != null) {
                 rootScratchDir = new File(rootScratchDir, subDirName);
             }
+
             return rootScratchDir;
-        } else {
-            // regular case
-            if (subDirName != null ) {
-                rootScratchDir = new File(rootScratchDir, subDirName);
-            }
-            String appDirName = VersioningUtils.getRepositoryName(parameters.name());
-            return new File(rootScratchDir, appDirName);
         }
+
+        // Regular case
+        if (subDirName != null) {
+            rootScratchDir = new File(rootScratchDir, subDirName);
+        }
+
+        return new File(rootScratchDir, VersioningUtils.getRepositoryName(parameters.name()));
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public File getSourceDir() {
-
         return new File(getSource().getURI());
     }
 
+    @Override
     public void addModuleMetaData(Object metaData) {
-        if (metaData!=null) {
+        if (metaData != null) {
             modulesMetaData.put(metaData.getClass().getName(), metaData);
         }
     }
 
+    @Override
     public <T> T getModuleMetaData(Class<T> metadataType) {
         Object moduleMetaData = modulesMetaData.get(metadataType.getName());
         if (moduleMetaData != null) {
             return metadataType.cast(moduleMetaData);
-        } else {
-            for (Object metadata : modulesMetaData.values()) {
-                try {
-                    return metadataType.cast(metadata);
-                } catch (ClassCastException e) {
-                }
-            }
-            return null;
         }
+
+        for (Object metadata : modulesMetaData.values()) {
+            try {
+                return metadataType.cast(metadata);
+            } catch (ClassCastException e) {
+            }
+        }
+
+        return null;
     }
 
+    @Override
     public Collection<Object> getModuleMetadata() {
-        List<Object> copy = new ArrayList<Object>();
-        copy.addAll(modulesMetaData.values());
-        return copy;
+        return new ArrayList<>(modulesMetaData.values());
     }
 
+    @Override
     public Map<String, Object> getTransientAppMetadata() {
-        HashMap<String, Object> copy = new HashMap<String, Object>();
-        copy.putAll(transientAppMetaData);
-        return copy;
+        return new HashMap<String, Object>(transientAppMetaData);
     }
 
+    @Override
     public void addTransientAppMetaData(String metaDataKey, Object metaData) {
-        if (metaData!=null) {
+        if (metaData != null) {
             transientAppMetaData.put(metaDataKey, metaData);
         }
     }
 
+    @Override
     public <T> T getTransientAppMetaData(String key, Class<T> metadataType) {
         Object metaData = transientAppMetaData.get(key);
-        if (metaData != null) {
-            return metadataType.cast(metaData);
+        if (metaData == null) {
+            return null;
         }
-        return null;
+
+        return metadataType.cast(metaData);
     }
 
     /**
-     * Returns the application level properties that will be persisted as a
-     * key value pair at then end of deployment. That allows individual
-     * Deployers implementation to store some information at the
-     * application level that should be available upon server restart.
-     * Application level propertries are shared by all the modules.
+     * Returns the application level properties that will be persisted as a key value pair at then end of deployment. That
+     * allows individual Deployers implementation to store some information at the application level that should be
+     * available upon server restart. Application level propertries are shared by all the modules.
      *
      * @return the application's properties.
      */
+    @Override
     public Properties getAppProps() {
-        if (props==null) {
+        if (props == null) {
             props = new Properties();
         }
+
         return props;
     }
 
     /**
-     * Returns the module level properties that will be persisted as a
-     * key value pair at then end of deployment. That allows individual
-     * Deployers implementation to store some information at the module
-     * level that should be available upon server restart.
-     * Module level properties are only visible to the current module.
+     * Returns the module level properties that will be persisted as a key value pair at then end of deployment. That allows
+     * individual Deployers implementation to store some information at the module level that should be available upon
+     * server restart. Module level properties are only visible to the current module.
+     *
      * @return the module's properties.
      */
+    @Override
     public Properties getModuleProps() {
-        // for standalone case, it would return the same as application level
-        // properties
-        // for composite case, the composite deployer will return proper
-        // module level properties
-        if (props==null) {
+        // For standalone case, it would return the same as application level properties
+        // For composite case, the composite deployer will return proper module level properties
+        if (props == null) {
             props = new Properties();
         }
+
         return props;
     }
 
     /**
      * Add a new ClassFileTransformer to the context
      *
-     * @param transformer the new class file transformer to register to the new application
-     * class loader
-     * @throws UnsupportedOperationException if the class loader we use does not support the
-     * registration of a ClassFileTransformer. In such case, the deployer should either fail
-     * deployment or revert to a mode without the byteocode enhancement feature.
+     * @param transformer the new class file transformer to register to the new application class loader
+     * @throws UnsupportedOperationException if the class loader we use does not support the registration of a
+     * ClassFileTransformer. In such case, the deployer should either fail deployment or revert to a mode without the
+     * byteocode enhancement feature.
      */
+    @Override
     public void addTransformer(ClassFileTransformer transformer) {
+        InstrumentableClassLoader instrumentableClassLoader = InstrumentableClassLoader.class.cast(getFinalClassLoader());
+        String isComposite = getAppProps().getProperty(IS_COMPOSITE);
 
-        InstrumentableClassLoader icl = InstrumentableClassLoader.class.cast(getFinalClassLoader());
-        String isComposite = getAppProps().getProperty(ServerTags.IS_COMPOSITE);
-
-        if (Boolean.valueOf(isComposite) && icl instanceof URLClassLoader) {
-            URLClassLoader urlCl = (URLClassLoader)icl;
+        if (Boolean.valueOf(isComposite) && instrumentableClassLoader instanceof URLClassLoader) {
+            URLClassLoader urlClassLoader = (URLClassLoader) instrumentableClassLoader;
             boolean isAppLevel = (getParentContext() == null);
             if (isAppLevel) {
-                // for ear lib PUs, let's install the
-                // tranformers with the EarLibClassLoader
-                icl = InstrumentableClassLoader.class.cast(urlCl.getParent().getParent());
+                // For ear lib PUs, let's install the tranformers with the EarLibClassLoader
+                instrumentableClassLoader = InstrumentableClassLoader.class.cast(urlClassLoader.getParent().getParent());
             } else {
-                // for modules inside the ear, let's install the
-                // transformers with the EarLibClassLoader in
+                // For modules inside the ear, let's install the transformers with the EarLibClassLoader in
                 // addition to installing them to module classloader
-                ClassLoader libCl = urlCl.getParent().getParent();
-                if (!(libCl instanceof URLClassLoader)) {
-                    // web module
-                    libCl = libCl.getParent();
+                ClassLoader libClassLoader = urlClassLoader.getParent().getParent();
+                if (!(libClassLoader instanceof URLClassLoader)) {
+                    // Web module
+                    libClassLoader = libClassLoader.getParent();
                 }
-                if (libCl instanceof URLClassLoader) {
-                    InstrumentableClassLoader libIcl = InstrumentableClassLoader.class.cast(libCl);
-                    libIcl.addTransformer(transformer);
+                if (libClassLoader instanceof URLClassLoader) {
+                    InstrumentableClassLoader.class.cast(libClassLoader).addTransformer(transformer);
                 }
 
             }
         }
-        icl.addTransformer(transformer);
+
+        instrumentableClassLoader.addTransformer(transformer);
     }
 
     /**
@@ -414,97 +422,92 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return the transformers list
      */
+    @Override
     public List<ClassFileTransformer> getTransformers() {
         return transformers;
     }
 
-    public List<URI> getAppLibs()
-            throws URISyntaxException {
+    @Override
+    public List<URI> getAppLibs() throws URISyntaxException {
         List<URI> libURIs = new ArrayList<URI>();
         if (parameters.libraries() != null) {
-            URL[] urls =
-                ASClassLoaderUtil.getDeployParamLibrariesAsURLs(
-                    parameters.libraries(), env);
+            URL[] urls = ASClassLoaderUtil.getDeployParamLibrariesAsURLs(parameters.libraries(), env);
             for (URL url : urls) {
                 File file = new File(url.getFile());
-                deplLogger.log(Level.FINE, "Specified library jar: "+file.getAbsolutePath());
-                if (file.exists()){
+                deplLogger.log(FINE, "Specified library jar: " + file.getAbsolutePath());
+                if (file.exists()) {
                     libURIs.add(url.toURI());
                 } else {
-                    throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.nonexist.libraries", "Specified library jar {0} does not exist: {1}", file.getName(), file.getAbsolutePath()));
+                    throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.nonexist.libraries",
+                            "Specified library jar {0} does not exist: {1}", file.getName(), file.getAbsolutePath()));
                 }
             }
         }
 
         Set<String> extensionList = null;
-        try{
+        try {
             extensionList = InstalledLibrariesResolver.getInstalledLibraries(source);
-        }catch(IOException ioe){
+        } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
+
         URL[] extensionListLibraries = ASClassLoaderUtil.getLibrariesAsURLs(extensionList, env);
         for (URL url : extensionListLibraries) {
             libURIs.add(url.toURI());
-            if (deplLogger.isLoggable(Level.FINEST)) {
-                deplLogger.log(Level.FINEST, "Detected [EXTENSION_LIST]" +
-                               " installed-library [ " + url + " ] for archive [ "+source.getName()+ "]");
+            if (deplLogger.isLoggable(FINEST)) {
+                deplLogger.log(FINEST,
+                        "Detected [EXTENSION_LIST]" + " installed-library [ " + url + " ] for archive [ " + source.getName() + "]");
             }
         }
 
         return libURIs;
     }
 
+    @Override
     public void clean() {
-        if (parameters.origin == OpsParams.Origin.undeploy ||
-            parameters.origin == OpsParams.Origin.deploy ) {
-            // for undeploy or deploy failure roll back
+        if (parameters.origin == OpsParams.Origin.undeploy || parameters.origin == OpsParams.Origin.deploy) {
+            // For undeploy or deploy failure roll back we need to remove generated/xml, generated/ejb, generated/jsp,
 
-            // need to remove the generated directories...
-            // need to remove generated/xml, generated/ejb, generated/jsp,
+            // Remove generated/xml
+            whack(getScratchDir("xml"));
 
-            // remove generated/xml
-            File generatedXmlRoot = getScratchDir("xml");
-            FileUtils.whack(generatedXmlRoot);
+            // Remove generated/ejb
+            whack(getScratchDir("ejb"));
 
-            // remove generated/ejb
-            File generatedEjbRoot = getScratchDir("ejb");
-            // recursively delete...
-            FileUtils.whack(generatedEjbRoot);
+            // Remove generated/jsp
+            whack(getScratchDir("jsp"));
 
-            // remove generated/jsp
-            File generatedJspRoot = getScratchDir("jsp");
-            // recursively delete...
-            FileUtils.whack(generatedJspRoot);
-
-            // remove the internal archive directory which holds the original
+            // Remove the internal archive directory which holds the original
             // archive (and possibly deployment plan) that cluster sync can use
-            FileUtils.whack(getAppInternalDir());
+            whack(getAppInternalDir());
 
-            FileUtils.whack(getAppAltDDDir());
+            whack(getAppAltDDDir());
 
-             // remove the root tenant dir for this application
-            FileUtils.whack(getRootTenantDirForApp(parameters.name()));
+            // Remove the root tenant dir for this application
+            whack(getRootTenantDirForApp(parameters.name()));
 
-            // remove the root tenant generated dir root for this application
-            FileUtils.whack(getRootScratchTenantDirForApp(parameters.name()));
+            // Remove the root tenant generated dir root for this application
+            whack(getRootScratchTenantDirForApp(parameters.name()));
         } else if (parameters.origin == OpsParams.Origin.mt_unprovision) {
             // for unprovision application, remove the tenant dir
-            FileUtils.whack(tenantDir);
+            whack(tenantDir);
 
-            // and remove the generated dir
-            File generatedRoot = getScratchDir(null);
-            FileUtils.whack(generatedRoot);
+            // And remove the generated dir
+            whack(getScratchDir(null));
         }
     }
 
+    @Override
     public ArchiveHandler getArchiveHandler() {
         return archiveHandler;
     }
 
+    @Override
     public void setArchiveHandler(ArchiveHandler archiveHandler) {
         this.archiveHandler = archiveHandler;
     }
 
+    @Override
     public ReadableArchive getOriginalSource() {
         return originalSource;
     }
@@ -514,6 +517,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return a map containing module properties
      */
+    @Override
     public Map<String, Properties> getModulePropsMap() {
         return modulePropsMap;
     }
@@ -523,6 +527,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @param modulePropsMap
      */
+    @Override
     public void setModulePropsMap(Map<String, Properties> modulePropsMap) {
         this.modulePropsMap = modulePropsMap;
     }
@@ -532,6 +537,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @param parentContext
      */
+    @Override
     public void setParentContext(ExtendedDeploymentContext parentContext) {
         this.parentContext = parentContext;
     }
@@ -542,6 +548,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return the parent context
      */
+    @Override
     public ExtendedDeploymentContext getParentContext() {
         return parentContext;
     }
@@ -551,25 +558,27 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return the module uri
      */
+    @Override
     public String getModuleUri() {
         return moduleUri;
     }
 
-   /**
+    /**
      * Sets the module uri for this module context
      *
      * @param moduleUri
      */
+    @Override
     public void setModuleUri(String moduleUri) {
         this.moduleUri = moduleUri;
     }
-
 
     /**
      * Gets the archive handlers for modules
      *
      * @return a map containing module archive handlers
      */
+    @Override
     public Map<String, ArchiveHandler> getModuleArchiveHandlers() {
         return moduleArchiveHandlers;
     }
@@ -579,6 +588,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return a map containing module deployment contexts
      */
+    @Override
     public Map<String, ExtendedDeploymentContext> getModuleDeploymentContexts() {
         return moduleDeploymentContexts;
     }
@@ -588,57 +598,36 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *
      * @return an action report
      */
+    @Override
     public ActionReport getActionReport() {
         return actionReport;
     }
 
+    @Override
     public File getAppInternalDir() {
         final File internalDir = new File(env.getApplicationRepositoryPath(), INTERNAL_DIR_NAME);
         return new File(internalDir, VersioningUtils.getRepositoryName(parameters.name()));
     }
 
+    @Override
     public File getAppAltDDDir() {
         final File altDDDir = env.getApplicationAltDDPath();
         return new File(altDDDir, VersioningUtils.getRepositoryName(parameters.name()));
     }
 
+    @Override
     public void setTenant(final String tenant, final String appName) {
         this.tenant = tenant;
         this.originalAppName = appName;
         tenantDir = initTenantDir();
     }
 
-    private File initTenantDir() {
-        if (tenant == null || originalAppName == null) {
-            return null;
-        }
-        File f = getRootTenantDirForApp(originalAppName);
-        f = new File(f, tenant);
-        if (!f.exists() && !f.mkdirs()) {
-          if (deplLogger.isLoggable(Level.FINEST)) {
-              deplLogger.log(Level.FINEST, "Unable to create directory " + f.getAbsolutePath());
-          }
-
-        }
-        return f;
-    }
-
-    private File getRootTenantDirForApp(String appName) {
-        File rootTenantDir = new File(env.getApplicationRepositoryPath(), APP_TENANTS_SUBDIR_NAME);
-        File rootTenantDirForApp = new File(rootTenantDir, appName);
-        return rootTenantDirForApp;
-    }
-
-    private File getRootScratchTenantDirForApp(String appName) {
-        File rootScratchTenantDir = new File(env.getApplicationStubPath(), APP_TENANTS_SUBDIR_NAME);
-        File rootScratchTenantDirForApp = new File(rootScratchTenantDir, appName);
-        return rootScratchTenantDirForApp;
-    }
-
+    @Override
     public String getTenant() {
         return tenant;
     }
 
+    @Override
     public File getTenantDir() {
         return tenantDir;
     }
@@ -649,28 +638,62 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
             if (isFinalClean) {
                 transientAppMetaData.clear();
             } else {
-                final String [] classNamesToClean = {Types.class.getName(), Parser.class.getName()};
+                final String[] classNamesToClean = { Types.class.getName(), Parser.class.getName() };
 
                 for (String className : classNamesToClean) {
                     transientAppMetaData.remove(className);
                 }
             }
         }
+
         actionReport = null;
     }
 
+    @Override
+    public String toString() {
+        return (source == null ? "" : source.toString()) + " " + (originalSource == null ? "" : originalSource.getURI());
+    }
+
     /**
-     * Prepare the scratch directories, creating the directories
-     * if they do not exist
+     * Prepare the scratch directories, creating the directories if they do not exist
      */
+    @Override
     public void prepareScratchDirs() throws IOException {
         prepareScratchDir(getScratchDir("ejb"));
         prepareScratchDir(getScratchDir("xml"));
         prepareScratchDir(getScratchDir("jsp"));
     }
 
-    private void prepareScratchDir(File f) throws IOException {
-        if (!f.isDirectory() && !f.mkdirs())
-            throw new IOException("Cannot create scratch directory : " + f.getAbsolutePath());
+
+    // ### Private methods
+
+    private File initTenantDir() {
+        if (tenant == null || originalAppName == null) {
+            return null;
+        }
+
+        File tenantDir = new File(getRootTenantDirForApp(originalAppName), tenant);
+        if (!tenantDir.exists() && !tenantDir.mkdirs()) {
+            if (deplLogger.isLoggable(FINEST)) {
+                deplLogger.log(FINEST, "Unable to create directory " + tenantDir.getAbsolutePath());
+            }
+
+        }
+
+        return tenantDir;
+    }
+
+    private File getRootTenantDirForApp(String appName) {
+        return new File(new File(env.getApplicationRepositoryPath(), APP_TENANTS_SUBDIR_NAME), appName);
+    }
+
+    private File getRootScratchTenantDirForApp(String appName) {
+        return new File(new File(env.getApplicationStubPath(), APP_TENANTS_SUBDIR_NAME), appName);
+    }
+
+    private void prepareScratchDir(File scratchDir) throws IOException {
+        if (!scratchDir.isDirectory() && !scratchDir.mkdirs()) {
+            throw new IOException("Cannot create scratch directory : " + scratchDir.getAbsolutePath());
+        }
     }
 }

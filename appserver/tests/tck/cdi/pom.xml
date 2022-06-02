@@ -394,6 +394,7 @@
                         
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>target/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
+                        <debugMode>true</debugMode>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

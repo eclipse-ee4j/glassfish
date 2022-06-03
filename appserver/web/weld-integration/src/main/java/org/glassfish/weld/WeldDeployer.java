@@ -34,7 +34,11 @@ import static org.jboss.weld.bootstrap.api.Environments.SERVLET;
 import static org.jboss.weld.bootstrap.spi.EEModuleDescriptor.ModuleType.CONNECTOR;
 import static org.jboss.weld.bootstrap.spi.EEModuleDescriptor.ModuleType.EJB_JAR;
 import static org.jboss.weld.bootstrap.spi.EEModuleDescriptor.ModuleType.WEB;
+import static org.jboss.weld.manager.BeanManagerLookupService.lookupBeanManager;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,12 +76,15 @@ import org.glassfish.weld.services.SecurityServicesImpl;
 import org.glassfish.weld.services.TransactionServicesImpl;
 import org.glassfish.weld.util.Util;
 import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.api.ServiceRegistry;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
 import org.jboss.weld.bootstrap.spi.EEModuleDescriptor;
 import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.ejb.spi.EjbServices;
 import org.jboss.weld.injection.spi.InjectionServices;
+import org.jboss.weld.manager.BeanManagerImpl;
+import org.jboss.weld.module.EjbSupport;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.serialization.spi.ProxyServices;
@@ -353,6 +360,71 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 try {
                     bootstrap.startExtensions(deploymentImpl.getExtensions());
                     bootstrap.startContainer(appInfo.getName(), SERVLET, deploymentImpl);
+
+                    // Install support for delegating some EJB tasks to the right bean archive.
+                    // Without this, when the a bean manager for the root bean archive is used, it will not
+                    // find the EJB definitions in a sub-archive, and will treat the bean as a normal CDI bean.
+                    //
+                    // For EJB beans a few special rules have to be taken into account, and without applying these
+                    // rules CreateBeanAttributesTest#testBeanAttributesForSessionBean fails.
+                    if (!deploymentImpl.getBeanDeploymentArchives().isEmpty()) {
+
+                        BeanDeploymentArchive rootArchive = deploymentImpl.getBeanDeploymentArchives().get(0);
+                        ServiceRegistry rootServices = bootstrap.getManager(rootArchive).getServices();
+
+                        EjbSupport originalEjbSupport = rootServices.get(EjbSupport.class);
+                        if (originalEjbSupport != null) {
+
+                            // We need to create a proxy instead of a simple wrapper, since EjbSupport
+                            // references the type "EnhancedAnnotatedType", which the Weld OSGi bundle doesn't
+                            // export.
+                            EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
+                                    new Class[] { EjbSupport.class }, new InvocationHandler() {
+
+                                        @Override
+                                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                                            if (method.getName().equals("isEjb")) {
+
+                                                    EjbSupport targetEjbSupport = getTargetEjbSupport((Class<?>) args[0]);
+
+                                                    // Unlikely to be null, but let's check to be sure.
+                                                    if (targetEjbSupport != null) {
+                                                        return method.invoke(targetEjbSupport, args);
+                                                    }
+
+                                            } else if (method.getName().equals("createSessionBeanAttributes")) {
+                                                Object enhancedAnnotated = args[0];
+
+                                                Class<?> beanClass = (Class<?>)
+                                                        enhancedAnnotated.getClass()
+                                                                         .getMethod("getJavaClass")
+                                                                         .invoke(enhancedAnnotated);
+
+                                                EjbSupport targetEjbSupport = getTargetEjbSupport(beanClass);
+                                                if (targetEjbSupport != null) {
+                                                    return method.invoke(targetEjbSupport, args);
+                                                }
+                                            }
+
+                                            return method.invoke(originalEjbSupport, args);
+                                       }
+
+                                    private EjbSupport getTargetEjbSupport(Class<?> beanClass) {
+                                        BeanDeploymentArchive ejbArchive = deploymentImpl.getBeanDeploymentArchive(beanClass);
+                                        if (ejbArchive == null) {
+                                            return null;
+                                        }
+
+                                        BeanManagerImpl ejbBeanManager = lookupBeanManager(beanClass, bootstrap.getManager(ejbArchive));
+
+                                        return ejbBeanManager.getServices().get(EjbSupport.class);
+                                    }
+                            });
+
+                            rootServices.add(EjbSupport.class, proxyEjbSupport);
+                        }
+                    }
+
                     bootstrap.startInitialization();
                     fireProcessInjectionTargetEvents(bootstrap, deploymentImpl);
                     bootstrap.deployBeans();

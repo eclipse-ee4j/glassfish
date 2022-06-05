@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,23 +21,23 @@ import org.jvnet.hk2.annotations.Contract;
 
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
 
-
 /**
- * A factory for creating an interceptor builder. An interceptor builder abstracts out
- * the resources needed to create a proxy for invoking a target object with interceptors.
- * There is typically one instance of an interceptor builder per target class ,and one
- * interceptor invoker per target class instance.
+ * A factory for creating an interceptor builder.
+ *
+ * <p>
+ * An interceptor builder abstracts out the resources needed to create a
+ * proxy for invoking a target object with interceptors. There is typically one instance of an interceptor builder per
+ * target class ,and one interceptor invoker per target class instance.
  */
 
 @Contract
 public interface JavaEEInterceptorBuilderFactory {
 
-    public JavaEEInterceptorBuilder createBuilder(InterceptorInfo info) throws Exception;
+    JavaEEInterceptorBuilder createBuilder(InterceptorInfo info) throws Exception;
 
     /**
      * Tests if a given object is a client proxy associated with an interceptor invoker.
      */
-    public boolean isClientProxy(Object obj);
-
+    boolean isClientProxy(Object obj);
 
 }

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -109,9 +109,9 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
 
         if( !isStatefulBean ) {
 
-             // TODO 299 impl may incorrectly call this for stateless/singleton
+             // TODO CDI impl may incorrectly call this for stateless/singleton
             // beans.  Until it's fixed just treat it as a no-op. Otherwise, any app acquiring
-            // stateless/singleton references via 299 could fail until bug is fixed.
+            // stateless/singleton references via CDI could fail until bug is fixed.
             return;
 
             // TODO reenable this after bug is fixed
@@ -151,9 +151,9 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
 
         if( !isStatefulBean ) {
 
-            // TODO 299 impl is incorrectly calling isRemoved for stateless/singleton
+            // TODO CDI impl is incorrectly calling isRemoved for stateless/singleton
             // beans.  Until it's fixed just return false. Otherwise, any app acquiring
-            // stateless/singleton references via 299 will fail until bug is fixed.
+            // stateless/singleton references via CDI will fail until bug is fixed.
             return false;
 
             // TODO reenable this per SessionObjectReference.isRemoved SPI

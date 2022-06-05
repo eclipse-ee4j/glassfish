@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,7 +90,7 @@ public class HelloServlet extends HttpServlet {
                      throw new RuntimeException("invalid returned env entry prefix");
                  }
             }
-            // assumes 299 enabled new InitialContext().lookup("java:comp/BeanManager");
+            // Assumes CDI enabled new InitialContext().lookup("java:comp/BeanManager");
         } catch(Exception e) {
             throw new ServletException(e);
         }

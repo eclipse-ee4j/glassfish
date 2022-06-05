@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,36 +40,38 @@ public class SingletonBean implements SingletonRemote {
     @Inject
     private Event<SomeEvent> someEvent;
 
-    @Inject Foo foo;
+    @Inject
+    Foo foo;
 
     @EJB
-        private StatelessLocal statelessEE;
+    private StatelessLocal statelessEE;
 
     @Inject
-        private StatelessLocal2 sl2;
+    private StatelessLocal2 sl2;
 
-    @Inject private TranslatorController tc;
+    @Inject
+    private TranslatorController tc;
 
-    @Resource(lookup="java:module/FooManagedBean")
+    @Resource(lookup = "java:module/FooManagedBean")
     private FooManagedBean fmb;
 
     @Resource
     private BeanManager beanManagerInject;
 
-    @Resource SessionContext sesCtx;
+    @Resource
+    SessionContext sesCtx;
 
     @PostConstruct
     public void init() {
         System.out.println("In SingletonBean::init()");
-        if( beanManagerInject == null ) {
+        if (beanManagerInject == null) {
             throw new EJBException("BeanManager is null");
         }
         System.out.println("Bean manager inject = " + beanManagerInject);
         testIMCreateDestroyMO();
 
-
         System.out.println("Sending some event...");
-        someEvent.fire( new SomeEvent(2) );
+        someEvent.fire(new SomeEvent(2));
     }
 
     public void hello() {
@@ -78,23 +81,13 @@ public class SingletonBean implements SingletonRemote {
 
         fmb.hello();
 
-        BeanManager beanMgr = (BeanManager)
-            sesCtx.lookup("java:comp/BeanManager");
+        BeanManager beanMgr = (BeanManager) sesCtx.lookup("java:comp/BeanManager");
 
-
-        System.out.println("Successfully retrieved bean manager " +
-                           beanMgr + " for JCDI enabled app");
-
-        /**
-        StatefulBean sb = (StatefulBean) sesCtx.lookup("java:module/StatefulBean");
-        System.out.println("In SingletonBean sb = " + sb);
-        sb.hello();
-        **/
-
+        System.out.println("Successfully retrieved bean manager " + beanMgr + " for CDI enabled app");
     }
 
-    @Schedule(second="*/10", minute="*", hour="*")
-        private void timeout() {
+    @Schedule(second = "*/10", minute = "*", hour = "*")
+    private void timeout() {
         System.out.println("In SingletonBean::timeout() " + foo);
 
         System.out.println("tc.getText() = " + tc.getText());
@@ -118,24 +111,19 @@ public class SingletonBean implements SingletonRemote {
             FooManagedBean f2 = (FooManagedBean) createManagedMethod.invoke(injectionMgr, FooManagedBean.class);
             f2.hello();
 
-
             Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
             System.out.println("destroy managed object method = " + destroyManagedMethod);
             destroyManagedMethod.invoke(injectionMgr, f2);
 
-             FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-             System.out.println("FooNonManagedBean = " + nonF);
-             nonF.hello();
-             destroyManagedMethod.invoke(injectionMgr, nonF);
+            FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
+            System.out.println("FooNonManagedBean = " + nonF);
+            nonF.hello();
+            destroyManagedMethod.invoke(injectionMgr, nonF);
 
-
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new EJBException(e);
         }
 
-
     }
-
-
 
 }

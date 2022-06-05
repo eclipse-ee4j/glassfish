@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ package com.sun.enterprise.web;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.WARNING;
+import static org.glassfish.web.LogFacade.CLASS_CAST_EXCEPTION;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ import org.glassfish.web.deployment.runtime.WebProperty;
 import org.glassfish.web.deployment.util.WebValidatorWithCL;
 
 import com.sun.appserv.web.cache.CacheManager;
-import com.sun.enterprise.container.common.spi.JCDIService;
+import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
@@ -64,12 +66,10 @@ import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
 import jakarta.servlet.ServletContext;
 
 /**
- * Startup event listener for a <b>Context</b> that configures the properties
- * of that Jsp Servlet from sun-web.xml
+ * Startup event listener for a <b>Context</b> that configures the properties of that Jsp Servlet from sun-web.xml
  */
 
-final class WebModuleListener
-    implements LifecycleListener {
+final class WebModuleListener implements LifecycleListener {
 
     /**
      * The logger used to log messages
@@ -77,11 +77,9 @@ final class WebModuleListener
     private static final Logger _logger = LogFacade.getLogger();
 
     /**
-     * Descriptor object associated with this web application.
-     * Used for loading persistence units.
+     * Descriptor object associated with this web application. Used for loading persistence units.
      */
-    private WebBundleDescriptor wbd;
-
+    private WebBundleDescriptor webBundleDescriptor;
     private WebContainer webContainer;
 
     /**
@@ -91,62 +89,55 @@ final class WebModuleListener
      * @param explodedLocation The location where this web module is exploded
      * @param wbd descriptor for this module.
      */
-    public WebModuleListener(WebContainer webContainer,
-                             WebBundleDescriptor wbd) {
+    public WebModuleListener(WebContainer webContainer, WebBundleDescriptor wbd) {
         this.webContainer = webContainer;
-        this.wbd = wbd;
+        this.webBundleDescriptor = wbd;
     }
-
 
     /**
      * Process the START event for an associated WebModule
+     *
      * @param event The lifecycle event that has occurred
      */
     @Override
     public void lifecycleEvent(LifecycleEvent event) {
-
         // Identify the context we are associated with
         WebModule webModule;
         try {
             webModule = (WebModule) event.getLifecycle();
         } catch (ClassCastException e) {
-            _logger.log(WARNING, LogFacade.CLASS_CAST_EXCEPTION, event.getLifecycle());
+            _logger.log(WARNING, CLASS_CAST_EXCEPTION, event.getLifecycle());
             return;
         }
 
         // Process the event that has occurred
         if (event.getType().equals(Lifecycle.START_EVENT)) {
             // post processing DOL object for standalone web module
-            if (wbd != null && wbd.getApplication() != null &&
-                wbd.getApplication().isVirtual()) {
-                wbd.setClassLoader(webModule.getLoader().getClassLoader());
-                wbd.visit(new WebValidatorWithCL());
+            if (webBundleDescriptor != null && webBundleDescriptor.getApplication() != null && webBundleDescriptor.getApplication().isVirtual()) {
+                webBundleDescriptor.setClassLoader(webModule.getLoader().getClassLoader());
+                webBundleDescriptor.visit(new WebValidatorWithCL());
             }
 
-            //loadPersistenceUnits(webModule);
+            // loadPersistenceUnits(webModule);
             configureDefaultServlet(webModule);
             configureJsp(webModule);
             startCacheManager(webModule);
         } else if (event.getType().equals(Lifecycle.STOP_EVENT)) {
-            //unloadPersistenceUnits(webModule);
+            // unloadPersistenceUnits(webModule);
             stopCacheManager(webModule);
         }
     }
 
-
-    //------------------------------------------------------- Private Methods
+    // ------------------------------------------------------- Private Methods
 
     /**
-     * Configure all JSP related aspects of the web module, including
-     * any relevant TLDs as well as the jsp config settings of the
-     * JspServlet (using the values from sun-web.xml's jsp-config).
+     * Configure all JSP related aspects of the web module, including any relevant TLDs as well as the jsp config settings
+     * of the JspServlet (using the values from sun-web.xml's jsp-config).
      */
     private void configureJsp(WebModule webModule) {
 
         ServletContext servletContext = webModule.getServletContext();
-        servletContext.setAttribute(
-            "org.glassfish.jsp.isStandaloneWebapp",
-            Boolean.valueOf(webModule.isStandalone()));
+        servletContext.setAttribute("org.glassfish.jsp.isStandaloneWebapp", Boolean.valueOf(webModule.isStandalone()));
 
         // Find tld URI and set it to ServletContext attribute
         List<URI> appLibUris = webModule.getDeployAppLibs();
@@ -154,20 +145,18 @@ final class WebModuleListener
         if (appLibUris != null && appLibUris.size() > 0) {
             Pattern pattern = Pattern.compile("META-INF/.*\\.tld");
             for (URI uri : appLibUris) {
-                List<String> entries =  JarURIPattern.getJarEntries(uri, pattern);
+                List<String> entries = JarURIPattern.getJarEntries(uri, pattern);
                 if (entries != null && entries.size() > 0) {
                     appLibTldMap.put(uri, entries);
                 }
             }
         }
 
-        Collection<TldProvider> tldProviders =
-            webContainer.getTldProviders();
+        Collection<TldProvider> tldProviders = webContainer.getTldProviders();
         Map<URI, List<String>> tldMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
             // Skip any JSF related TLDs for non-JSF apps
-            if ("jsfTld".equals(tldProvider.getName()) &&
-                    !webModule.isJsfApplication()) {
+            if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
                 continue;
             }
             Map<URI, List<String>> tmap = tldProvider.getTldMap();
@@ -176,20 +165,16 @@ final class WebModuleListener
             }
         }
         tldMap.putAll(appLibTldMap);
-        servletContext.setAttribute(
-                "com.sun.appserv.tld.map", tldMap);
+        servletContext.setAttribute("com.sun.appserv.tld.map", tldMap);
 
         /*
-         * Discover all TLDs that are known to contain listener
-         * declarations, and store the resulting map as a
-         * ServletContext attribute
+         * Discover all TLDs that are known to contain listener declarations, and store the resulting map as a ServletContext
+         * attribute
          */
-        Map<URI, List<String>> tldListenerMap =
-            new HashMap<>();
+        Map<URI, List<String>> tldListenerMap = new HashMap<>();
         for (TldProvider tldProvider : tldProviders) {
             // Skip any JSF related TLDs for non-JSF apps
-            if ("jsfTld".equals(tldProvider.getName()) &&
-                    !webModule.isJsfApplication()) {
+            if ("jsfTld".equals(tldProvider.getName()) && !webModule.isJsfApplication()) {
                 continue;
             }
             Map<URI, List<String>> tmap = tldProvider.getTldListenerMap();
@@ -198,21 +183,17 @@ final class WebModuleListener
             }
         }
         tldListenerMap.putAll(appLibTldMap);
-        servletContext.setAttribute(
-            "com.sun.appserv.tldlistener.map", tldListenerMap);
+        servletContext.setAttribute("com.sun.appserv.tldlistener.map", tldListenerMap);
 
-        ServiceLocator defaultServices =
-                webContainer.getServerContext().getDefaultServices();
+        ServiceLocator defaultServices = webContainer.getServerContext().getDefaultServices();
 
         // set services for jsf injection
-        servletContext.setAttribute(
-                Constants.HABITAT_ATTRIBUTE, defaultServices);
+        servletContext.setAttribute(Constants.HABITAT_ATTRIBUTE, defaultServices);
 
         SunWebAppImpl bean = webModule.getIasWebAppConfigBean();
 
         // Find the default jsp servlet
-        Wrapper wrapper = (Wrapper) webModule.findChild(
-            org.apache.catalina.core.Constants.JSP_SERVLET_NAME);
+        Wrapper wrapper = (Wrapper) webModule.findChild(org.apache.catalina.core.Constants.JSP_SERVLET_NAME);
         if (wrapper == null) {
             return;
         }
@@ -220,50 +201,41 @@ final class WebModuleListener
         if (webModule.getTldValidation()) {
             wrapper.addInitParameter("enableTldValidation", "true");
         }
-        if (bean != null && bean.getJspConfig()  != null) {
-            WebProperty[]  props = bean.getJspConfig().getWebProperty();
+        if (bean != null && bean.getJspConfig() != null) {
+            WebProperty[] props = bean.getJspConfig().getWebProperty();
             for (int i = 0; i < props.length; i++) {
                 String pname = props[i].getAttributeValue("name");
                 String pvalue = props[i].getAttributeValue("value");
                 if (_logger.isLoggable(FINE)) {
-                    _logger.log(FINE,
-                            LogFacade.JSP_CONFIG_PROPERTY,
-                            "[" + webModule.getID() + "] is [" + pname + "] = [" + pvalue + "]");
+                    _logger.log(FINE, LogFacade.JSP_CONFIG_PROPERTY, "[" + webModule.getID() + "] is [" + pname + "] = [" + pvalue + "]");
                 }
                 wrapper.addInitParameter(pname, pvalue);
             }
         }
 
         // Override any log setting with the container wide logging level
-        wrapper.addInitParameter("logVerbosityLevel",getWaspLogLevel());
+        wrapper.addInitParameter("logVerbosityLevel", getWaspLogLevel());
 
-        ResourceInjectorImpl resourceInjector = new ResourceInjectorImpl(
-            webModule);
-        servletContext.setAttribute(
-                "com.sun.appserv.jsp.resource.injector",
-                resourceInjector);
+        ResourceInjectorImpl resourceInjector = new ResourceInjectorImpl(webModule);
+        servletContext.setAttribute("com.sun.appserv.jsp.resource.injector", resourceInjector);
 
-        // START SJSAS 6311155
-        String sysClassPath = ASClassLoaderUtil.getModuleClassPath(
-            defaultServices,
-            webModule.getID(), null
-        );
+        String sysClassPath = ASClassLoaderUtil.getModuleClassPath(defaultServices, webModule.getID(), null);
+
         // If the configuration flag usMyFaces is set, remove jakarta.faces.jar
         // from the system class path
-        Boolean useMyFaces = (Boolean)
-            servletContext.getAttribute("com.sun.faces.useMyFaces");
+        Boolean useMyFaces = (Boolean) servletContext.getAttribute("com.sun.faces.useMyFaces");
         if (useMyFaces != null && useMyFaces) {
-            sysClassPath =
-                sysClassPath.replace("jakarta.faces.jar", "$disabled$.raj");
+            sysClassPath = sysClassPath.replace("jakarta.faces.jar", "$disabled$.raj");
             // jsf-connector.jar manifest has a Class-Path to jakarta.faces.jar
-            sysClassPath =
-                sysClassPath.replace("jsf-connector.jar", "$disabled$.raj");
+            sysClassPath = sysClassPath.replace("jsf-connector.jar", "$disabled$.raj");
         }
+
         // TODO: combine with classpath from
         // servletContext.getAttribute(("org.apache.catalina.jsp_classpath")
         if (_logger.isLoggable(FINE)) {
             _logger.log(FINE, LogFacade.SYS_CLASSPATH, webModule.getID() + " is " + sysClassPath);
         }
+
         if (sysClassPath.equals("")) {
             // In embedded mode, services returns SingleModulesRegistry and
             // it has no modules.
@@ -271,31 +243,27 @@ final class WebModuleListener
             sysClassPath = System.getProperty("java.class.path");
         }
         sysClassPath = trimSysClassPath(sysClassPath);
-        wrapper.addInitParameter("com.sun.appserv.jsp.classpath",
-            sysClassPath);
-        // END SJSAS 6311155
+        wrapper.addInitParameter("com.sun.appserv.jsp.classpath", sysClassPath);
 
-        // Configure JSP monitoring
-        servletContext.setAttribute(
-            "org.glassfish.jsp.monitor.probeEmitter",
-            new JspProbeEmitterImpl(webModule));
+        // Configure Jakarta Pages monitoring
+        servletContext.setAttribute("org.glassfish.jsp.monitor.probeEmitter", new JspProbeEmitterImpl(webModule));
 
-        // Pass BeanManager's ELResolver as ServletContext attribute
-        // (see IT 11168)
-        InvocationManager invocationMgr =
-            webContainer.getInvocationManager();
-        WebComponentInvocation inv = new WebComponentInvocation(webModule);
+        // Pass BeanManager's ELResolver as ServletContext attribute (see IT 11168)
+        InvocationManager invocationManager = webContainer.getInvocationManager();
+        WebComponentInvocation webComponentInvocation = new WebComponentInvocation(webModule);
         try {
-            invocationMgr.preInvoke(inv);
-            JCDIService jcdiService = defaultServices.getService(JCDIService.class);
-            // JCDIService can be absent if weld integration is missing in the runtime, so check for null is needed.
-            if (jcdiService != null && jcdiService.isCurrentModuleJCDIEnabled()) {
-                jcdiService.setELResolver(servletContext);
+            invocationManager.preInvoke(webComponentInvocation);
+
+            CDIService cdiService = defaultServices.getService(CDIService.class);
+
+            // CDIService can be absent if weld integration is missing in the runtime, so check for null is needed.
+            if (cdiService != null && cdiService.isCurrentModuleCDIEnabled()) {
+                cdiService.setELResolver(servletContext);
             }
         } catch (NamingException e) {
             // Ignore
         } finally {
-            invocationMgr.postInvoke(inv);
+            invocationManager.postInvoke(webComponentInvocation);
         }
 
     }
@@ -309,10 +277,9 @@ final class WebModuleListener
         }
 
         String includeJarsString = null;
-        for (WebComponentDescriptor wcd: wbd.getWebComponentDescriptors()) {
+        for (WebComponentDescriptor wcd : webBundleDescriptor.getWebComponentDescriptors()) {
             if ("jsp".equals(wcd.getCanonicalName())) {
-                InitializationParameter initp =
-                    wcd.getInitializationParameterByName("system-jar-includes");
+                InitializationParameter initp = wcd.getInitializationParameterByName("system-jar-includes");
                 if (initp != null) {
                     includeJarsString = initp.getValue();
                     break;
@@ -332,7 +299,7 @@ final class WebModuleListener
     }
 
     private boolean included(String path) {
-        for (String item: includeJars) {
+        for (String item : includeJars) {
             if (path.contains(item)) {
                 return true;
             }
@@ -369,12 +336,11 @@ final class WebModuleListener
     }
 
     /**
-     * Determine the debug setting for JspServlet based on the iAS log
-     * level.
+     * Determine the debug setting for JspServlet based on the iAS log level.
      */
     private String getWaspLogLevel() {
         Level level = _logger.getLevel();
-        if (level == null ) {
+        if (level == null) {
             return "warning";
         }
 
@@ -395,7 +361,7 @@ final class WebModuleListener
 
     private void startCacheManager(WebModule webModule) {
 
-        SunWebApp bean  = webModule.getIasWebAppConfigBean();
+        SunWebApp bean = webModule.getIasWebAppConfigBean();
 
         // Configure the cache, cache-mapping and other settings
         if (bean != null) {
@@ -419,8 +385,7 @@ final class WebModuleListener
                     ctxt.setAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME, cm);
 
                 } catch (LifecycleException ee) {
-                    _logger.log(WARNING, ee.getMessage(),
-                                               ee.getCause());
+                    _logger.log(WARNING, ee.getMessage(), ee.getCause());
                 }
             }
         }
@@ -428,8 +393,7 @@ final class WebModuleListener
 
     private void stopCacheManager(WebModule webModule) {
         ServletContext ctxt = webModule.getServletContext();
-        CacheManager cm = (CacheManager)ctxt.getAttribute(
-                                        CacheManager.CACHE_MANAGER_ATTR_NAME);
+        CacheManager cm = (CacheManager) ctxt.getAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME);
         if (cm != null) {
             try {
                 cm.stop();
@@ -443,22 +407,19 @@ final class WebModuleListener
         }
     }
 
-
     /**
-     * Configures the given web module's DefaultServlet with the
-     * applicable web properties from sun-web.xml.
+     * Configures the given web module's DefaultServlet with the applicable web properties from sun-web.xml.
      */
     private void configureDefaultServlet(WebModule webModule) {
 
         // Find the DefaultServlet
-        Wrapper wrapper = (Wrapper)webModule.findChild("default");
+        Wrapper wrapper = (Wrapper) webModule.findChild("default");
         if (wrapper == null) {
             return;
         }
 
         String servletClass = wrapper.getServletClassName();
-        if (servletClass == null
-                || !servletClass.equals(Globals.DEFAULT_SERVLET_CLASS_NAME)) {
+        if (servletClass == null || !servletClass.equals(Globals.DEFAULT_SERVLET_CLASS_NAME)) {
             return;
         }
 

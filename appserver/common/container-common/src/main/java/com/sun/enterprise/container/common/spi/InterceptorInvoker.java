@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,20 @@
 
 package com.sun.enterprise.container.common.spi;
 
-
-import java.lang.reflect.Method;
-
 /**
  */
-
 public interface InterceptorInvoker {
 
-    public Object getProxy();
+    Object getProxy();
 
-    public Object getTargetInstance();
+    Object getTargetInstance();
 
-    public Object[] getInterceptorInstances();
+    Object[] getInterceptorInstances();
 
-    public void invokeAroundConstruct() throws Exception;
+    void invokeAroundConstruct() throws Exception;
 
-    public void invokePostConstruct() throws Exception;
+    void invokePostConstruct() throws Exception;
 
-    public void invokePreDestroy() throws Exception;
+    void invokePreDestroy() throws Exception;
 
 }

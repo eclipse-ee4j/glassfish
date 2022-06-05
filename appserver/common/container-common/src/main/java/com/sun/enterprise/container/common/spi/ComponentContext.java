@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,10 +22,10 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ComponentContext {
 
-    public JavaEEContainer getContainer();
+    JavaEEContainer getContainer();
 
-    public Object getComponent();
+    Object getComponent();
 
-    public Object getTransaction();
+    Object getTransaction();
 
 }

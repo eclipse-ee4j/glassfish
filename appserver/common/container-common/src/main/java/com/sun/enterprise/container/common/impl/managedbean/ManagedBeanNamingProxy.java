@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,40 +17,41 @@
 
 package com.sun.enterprise.container.common.impl.managedbean;
 
+import javax.naming.Context;
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.NamingObjectProxy;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
 /**
  */
+public class ManagedBeanNamingProxy implements NamingObjectProxy {
 
-public class ManagedBeanNamingProxy implements org.glassfish.api.naming.NamingObjectProxy {
+    private final ServiceLocator serviceLocator;
+    private final ManagedBeanDescriptor managedBeanDescriptor;
 
-    private ServiceLocator habitat;
-
-    private ManagedBeanDescriptor managedBeanDesc;
-
-    public ManagedBeanNamingProxy(ManagedBeanDescriptor desc, ServiceLocator h) {
-        managedBeanDesc = desc;
-        habitat = h;
+    public ManagedBeanNamingProxy(ManagedBeanDescriptor managedBeanDescriptor, ServiceLocator serviceLocator) {
+        this.managedBeanDescriptor = managedBeanDescriptor;
+        this.serviceLocator = serviceLocator;
     }
 
-    public Object create(javax.naming.Context ic) throws javax.naming.NamingException {
-        Object managedBean = null;
+    @Override
+    public Object create(Context ic) throws javax.naming.NamingException {
         try {
-            ManagedBeanManager managedBeanMgr = habitat.getService(ManagedBeanManager.class);
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
             // Create managed bean instance
-            Class managedBeanClass = loader.loadClass(managedBeanDesc.getBeanClassName());
-            managedBean = managedBeanMgr.createManagedBean(managedBeanDesc, managedBeanClass);
-        } catch(Exception e) {
-            javax.naming.NamingException ne = new javax.naming.NamingException(e.getMessage());
+            return serviceLocator.getService(ManagedBeanManager.class)
+                                 .createManagedBean(
+                                     managedBeanDescriptor,
+                                     Thread.currentThread()
+                                           .getContextClassLoader()
+                                           .loadClass(managedBeanDescriptor.getBeanClassName()));
+        } catch (Exception e) {
+            NamingException ne = new NamingException(e.getMessage());
             ne.initCause(e);
             throw ne;
         }
-
-        return managedBean;
     }
 }

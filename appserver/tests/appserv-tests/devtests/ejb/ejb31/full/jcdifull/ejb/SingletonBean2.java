@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,27 +46,31 @@ public class SingletonBean2 {
 
     }
 
-    @Inject Foo foo;
+    @Inject
+    Foo foo;
 
     @EJB
-        private StatelessLocal statelessEE;
+    private StatelessLocal statelessEE;
 
-    @Inject private TranslatorController tc;
+    @Inject
+    private TranslatorController tc;
 
-    @Inject StatelessLocal2 sl2;
+    @Inject
+    StatelessLocal2 sl2;
 
-    @Resource(lookup="java:module/FooManagedBean")
+    @Resource(lookup = "java:module/FooManagedBean")
     private FooManagedBean fmb;
 
     @Resource
     private BeanManager beanManagerInject;
 
-    @Resource SessionContext sesCtx;
+    @Resource
+    SessionContext sesCtx;
 
     @PostConstruct
     public void init() {
         System.out.println("In SingletonBean2::init()");
-        if( beanManagerInject == null ) {
+        if (beanManagerInject == null) {
             throw new EJBException("BeanManager is null");
         }
         System.out.println("Bean manager inject = " + beanManagerInject);
@@ -73,7 +78,7 @@ public class SingletonBean2 {
         testSingletonWithInjectionConstructor();
 
         System.out.println("Sending some event...");
-        someEvent.fire( new SomeEvent(2) );
+        someEvent.fire(new SomeEvent(2));
     }
 
     public void hello() {
@@ -82,17 +87,14 @@ public class SingletonBean2 {
 
         fmb.hello();
 
-        BeanManager beanMgr = (BeanManager)
-            sesCtx.lookup("java:comp/BeanManager");
+        BeanManager beanMgr = (BeanManager) sesCtx.lookup("java:comp/BeanManager");
 
-        System.out.println("Successfully retrieved bean manager " +
-                           beanMgr + " for JCDI enabled app");
-
+        System.out.println("Successfully retrieved bean manager " + beanMgr + " for CDI enabled app");
 
     }
 
-    @Schedule(second="*/10", minute="*", hour="*")
-        private void timeout() {
+    @Schedule(second = "*/10", minute = "*", hour = "*")
+    private void timeout() {
         System.out.println("In SingletonBean::timeout() " + foo);
 
         System.out.println("tc.getText() = " + tc.getText());
@@ -106,16 +108,13 @@ public class SingletonBean2 {
     }
 
     private void testIMCreateDestroyMO() {
-
         try {
-
             // Test InjectionManager managed bean functionality
             Object injectionMgr = new InitialContext().lookup("com.sun.enterprise.container.common.spi.util.InjectionManager");
             Method createManagedMethod = injectionMgr.getClass().getMethod("createManagedObject", java.lang.Class.class);
             System.out.println("create managed object method = " + createManagedMethod);
             FooManagedBean f2 = (FooManagedBean) createManagedMethod.invoke(injectionMgr, FooManagedBean.class);
             f2.hello();
-
 
             Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
             System.out.println("destroy managed object method = " + destroyManagedMethod);
@@ -126,28 +125,22 @@ public class SingletonBean2 {
             nonF.hello();
             destroyManagedMethod.invoke(injectionMgr, nonF);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new EJBException(e);
         }
 
-
     }
 
-
     private void testSingletonWithInjectionConstructor() {
-
         try {
-
-            SingletonBeanA b= (SingletonBeanA) sesCtx.lookup("java:module/SingletonBeanA");
+            SingletonBeanA b = (SingletonBeanA) sesCtx.lookup("java:module/SingletonBeanA");
             if (b.getBar() == null) {
                 throw new Exception("Bar is null");
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new EJBException(e);
         }
-
-
     }
 
 }

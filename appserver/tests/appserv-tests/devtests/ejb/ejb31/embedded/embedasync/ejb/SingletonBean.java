@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,13 +27,16 @@ import jakarta.enterprise.inject.spi.BeanManager;
 @Singleton
 @Startup
 @LocalBean
-    public class SingletonBean /* implements HelloRemote */ {
+public class SingletonBean /* implements HelloRemote */ {
 
-    @EJB SingletonBean me;
+    @EJB
+    SingletonBean me;
 
-    @EJB StatefulBean sf;
+    @EJB
+    StatefulBean sf;
 
-    @Resource SessionContext sesCtx;
+    @Resource
+    SessionContext sesCtx;
 
     private boolean gotAsyncCall = false;
 
@@ -43,15 +47,12 @@ import jakarta.enterprise.inject.spi.BeanManager;
         me.fooAsync();
 
         try {
-                BeanManager beanMgr = (BeanManager)
-                    new InitialContext().lookup("java:comp/BeanManager");
-        System.out.println("Successfully retrieved bean manager " +
-                           beanMgr + " for JCDI enabled app");
-        } catch(Exception e) {
+            BeanManager beanMgr = (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
+            System.out.println("Successfully retrieved bean manager " + beanMgr + " for CDI enabled app");
+        } catch (Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
-
 
     }
 
@@ -75,7 +76,5 @@ import jakarta.enterprise.inject.spi.BeanManager;
     public void destroy() {
         System.out.println("In SingletonBean::destroy()");
     }
-
-
 
 }

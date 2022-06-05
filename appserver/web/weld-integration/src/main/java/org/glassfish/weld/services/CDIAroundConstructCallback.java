@@ -34,7 +34,7 @@ import jakarta.enterprise.inject.spi.AnnotatedConstructor;
  * This calls back into the ejb container to perform the around construct interception. When that's finished the ejb
  * itself is then created.
  */
-public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T> {
+public class CDIAroundConstructCallback<T> implements AroundConstructCallback<T> {
     private BaseContainer container;
     private EJBContextImpl ejbContext;
 
@@ -45,7 +45,7 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
     private ConstructionHandle<T> handle;
     private Object[] parameters;
 
-    public JCDIAroundConstructCallback(BaseContainer container, EJBContextImpl ejbContext) {
+    public CDIAroundConstructCallback(BaseContainer container, EJBContextImpl ejbContext) {
         this.container = container;
         this.ejbContext = ejbContext;
     }
@@ -55,6 +55,7 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
         this.handle = handle;
         this.parameters = parameters;
         T ejb;
+
         try {
             container.intercept(LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT, ejbContext);
 
@@ -68,15 +69,17 @@ public class JCDIAroundConstructCallback<T> implements AroundConstructCallback<T
         } catch (Throwable e) {
             throw new WeldException(e);
         }
+
         return target.get();
     }
 
     public T createEjb() {
         T instance = null;
-        if (null != handle) {
+        if (handle != null) {
             instance = handle.proceed(parameters, new HashMap<String, Object>());
         }
         target.set(instance);
+
         return instance;
     }
 }

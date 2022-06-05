@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -170,10 +171,10 @@ public class CDILoggerInfo {
     @LogMessageInfo(message = "getBDAForBeanClass -- search in {0} for {1}", level = "FINE")
     public static final String GET_BDA_FOR_BEAN_CLASS_SEARCH = CDI_LOGMSG_PREFIX + "-00043";
 
-    @LogMessageInfo(message = "JCDIServiceImpl.getBDAForBeanClass: TopLevelBDA {0} contains beanClassName: {1}.", level = "FINE")
+    @LogMessageInfo(message = "CDIServiceImpl.getBDAForBeanClass: TopLevelBDA {0} contains beanClassName: {1}.", level = "FINE")
     public static final String TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME = CDI_LOGMSG_PREFIX + "-00044";
 
-    @LogMessageInfo(message = "JCDIServiceImpl.getBDAForBeanClass: subBDA {0} contains beanClassName: {1}.", level = "FINE")
+    @LogMessageInfo(message = "CDIServiceImpl.getBDAForBeanClass: subBDA {0} contains beanClassName: {1}.", level = "FINE")
     public static final String SUB_BDA_CONTAINS_BEAN_CLASS_NAME = CDI_LOGMSG_PREFIX + "-00045";
 
 }

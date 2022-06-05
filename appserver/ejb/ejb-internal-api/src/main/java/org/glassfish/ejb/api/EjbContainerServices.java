@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package org.glassfish.ejb.api;
 
-
-
 /**
  *
  * @author Kenneth Saks
@@ -28,20 +27,18 @@ import org.jvnet.hk2.annotations.Contract;
 import java.io.Serializable;
 
 /**
- * Various container services needed by other modules. E.g., the
- * JSR 299 integration module.
+ * Various container services needed by other modules. E.g., the CDI integration module.
  */
 
 @Contract
 public interface EjbContainerServices extends Serializable {
 
+    <S> S getBusinessObject(Object ejbRef, java.lang.Class<S> sClass);
 
-    public <S> S  getBusinessObject(Object ejbRef, java.lang.Class<S> sClass);
+    void remove(Object ejbRef);
 
-    public void remove(Object ejbRef);
+    boolean isRemoved(Object ejbRef);
 
-    public boolean isRemoved(Object ejbRef);
-
-    public boolean isEjbManagedObject(Object ejbDesc, Class c);
+    boolean isEjbManagedObject(Object ejbDesc, Class c);
 
 }

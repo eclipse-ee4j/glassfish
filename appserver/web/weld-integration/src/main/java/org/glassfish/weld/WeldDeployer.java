@@ -562,7 +562,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     /*
      * We are only firing ProcessInjectionTarget<X> for non-contextual EE
      * components and not using the InjectionTarget<X> from the event during
-     * instance creation in JCDIServiceImpl.java
+     * instance creation in CDIServiceImpl.java
      * TODO weld would provide a better way to do this, otherwise we may need
      * TODO to store InjectionTarget<X> to be used in instance creation
      */

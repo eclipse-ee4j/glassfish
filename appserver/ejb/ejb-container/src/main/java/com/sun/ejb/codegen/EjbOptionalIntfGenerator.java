@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -190,7 +190,7 @@ public class EjbOptionalIntfGenerator {
         fv.visitEnd();
 
         // Generate constructor. The EJB spec only allows no-arg constructors, but
-        // JSR 299 added requirements that allow a single constructor to define
+        // CDI added requirements that allow a single constructor to define
         // parameters injected by CDI.
         {
 

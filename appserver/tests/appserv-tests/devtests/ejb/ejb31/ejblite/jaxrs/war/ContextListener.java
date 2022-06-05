@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import javax.naming.InitialContext;
 
 import java.lang.reflect.Method;
 
-
 @WebListener
 public class ContextListener implements ServletContextListener {
 
@@ -33,9 +33,7 @@ public class ContextListener implements ServletContextListener {
         System.out.println("In ContextListener::contextInitialized");
 
         try {
-
-            FooManagedBean f = (FooManagedBean)
-                new InitialContext().lookup("java:module/FooManagedBean");
+            FooManagedBean f = (FooManagedBean) new InitialContext().lookup("java:module/FooManagedBean");
             f.hello();
 
             Object jaxrsEjbGlue = new InitialContext().lookup("java:org.glassfish.ejb.container.interceptor_binding_spi");
@@ -44,7 +42,6 @@ public class ContextListener implements ServletContextListener {
             System.out.println("register interceptor method = " + m);
 
             m.invoke(jaxrsEjbGlue, new com.sun.jersey.JerseyInterceptor());
-
 
             // Test InjectionManager managed bean functionality
             Object injectionMgr = new InitialContext().lookup("com.sun.enterprise.container.common.spi.util.InjectionManager");
@@ -58,12 +55,12 @@ public class ContextListener implements ServletContextListener {
             System.out.println("destroy managed object method = " + destroyManagedMethod);
             destroyManagedMethod.invoke(injectionMgr, f2);
 
-             FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-             System.out.println("FooNonManagedBean = " + nonF);
-             nonF.hello();
-             destroyManagedMethod.invoke(injectionMgr, nonF);
+            FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
+            System.out.println("FooNonManagedBean = " + nonF);
+            nonF.hello();
+            destroyManagedMethod.invoke(injectionMgr, nonF);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -75,9 +72,7 @@ public class ContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
-
         System.out.println("In ContextListener::contextDestroyed");
-
     }
 
 }

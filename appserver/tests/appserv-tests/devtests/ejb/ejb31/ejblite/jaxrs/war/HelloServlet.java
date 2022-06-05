@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,12 +34,17 @@ import jakarta.servlet.annotation.WebServlet;
 import javax.naming.*;
 import jakarta.annotation.Resource;
 
-@WebServlet(urlPatterns="/HelloServlet", loadOnStartup=1)
+@WebServlet(urlPatterns = "/HelloServlet", loadOnStartup = 1)
 public class HelloServlet extends HttpServlet {
 
-    @EJB private SingletonBean simpleSingleton;
-    @EJB private StatelessBean simpleStateless;
-    @Resource private FooManagedBean fooManagedBean;
+    @EJB
+    private SingletonBean simpleSingleton;
+    
+    @EJB
+    private StatelessBean simpleStateless;
+    
+    @Resource
+    private FooManagedBean fooManagedBean;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -48,9 +54,7 @@ public class HelloServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-    throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
@@ -69,15 +73,12 @@ public class HelloServlet extends HttpServlet {
         System.out.println("FooManagedBean interceptor binding asserted");
         fooManagedBean.hello();
 
-
         out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
-            out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
-            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
-            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
-            out.println("</BODY> </HTML> ");
-
+        out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> ");
+        out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>");
+        out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>");
+        out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>");
+        out.println("</BODY> </HTML> ");
     }
-
 
 }

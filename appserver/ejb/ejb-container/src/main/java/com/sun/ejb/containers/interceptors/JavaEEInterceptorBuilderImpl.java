@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,13 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
-import com.sun.enterprise.container.common.spi.InterceptorInvoker;
-import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
+import java.lang.reflect.Proxy;
 
 import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
-import com.sun.logging.LogDomains;
-
-import java.lang.reflect.Proxy;
-import java.util.logging.Logger;
+import com.sun.enterprise.container.common.spi.InterceptorInvoker;
+import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
+import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
 
 /**
  *
@@ -33,60 +31,40 @@ import java.util.logging.Logger;
 
 public class JavaEEInterceptorBuilderImpl implements JavaEEInterceptorBuilder {
 
-    private static Logger _logger = LogDomains.getLogger(JavaEEInterceptorBuilderImpl.class,
-            LogDomains.CORE_LOGGER);
-
     private InterceptorInfo interceptorInfo;
-
     private InterceptorManager interceptorManager;
 
-    private EjbOptionalIntfGenerator gen;
+    private Class<?> subClassInterface;
+    private Class<?> subClass;
 
-    private Class subClassIntf;
-
-    private Class subClass;
-
-    public JavaEEInterceptorBuilderImpl(InterceptorInfo intInfo, InterceptorManager manager,
-                                        EjbOptionalIntfGenerator gen, Class subClassIntf,
-                                        Class subClass) {
+    public JavaEEInterceptorBuilderImpl(InterceptorInfo intInfo, InterceptorManager manager, EjbOptionalIntfGenerator gen, Class<?> subClassIntf, Class<?> subClass) {
         interceptorInfo = intInfo;
         interceptorManager = manager;
-        this.gen = gen;
-        this.subClassIntf = subClassIntf;
+        this.subClassInterface = subClassIntf;
         this.subClass = subClass;
     }
 
+    @Override
     public InterceptorInvoker createInvoker(Object instance) throws Exception {
-
         interceptorInfo.setTargetObjectInstance(instance);
-
 
         // Proxy invocation handler. Also implements InterceptorInvoker.
         InterceptorInvocationHandler invoker = new InterceptorInvocationHandler();
 
-        Proxy proxy = (Proxy) Proxy.newProxyInstance(
-            subClass.getClassLoader(), new Class[] { subClassIntf }, invoker);
-
+        Proxy proxy = (Proxy) Proxy.newProxyInstance(subClass.getClassLoader(), new Class[] { subClassInterface }, invoker);
 
         // Object passed back to the caller.
-        OptionalLocalInterfaceProvider provider =
-            (OptionalLocalInterfaceProvider) subClass.newInstance();
+        OptionalLocalInterfaceProvider provider = (OptionalLocalInterfaceProvider) subClass.getDeclaredConstructor().newInstance();
         provider.setOptionalLocalIntfProxy(proxy);
 
-        invoker.init(instance, interceptorManager.createInterceptorInstances(),
-                provider, interceptorManager);
+        invoker.init(instance, interceptorManager.createInterceptorInstances(), provider, interceptorManager);
 
         return invoker;
-
     }
 
+    @Override
     public void addRuntimeInterceptor(Object interceptor) {
-
         interceptorManager.registerRuntimeInterceptor(interceptor);
-
     }
-
 
 }
-
-

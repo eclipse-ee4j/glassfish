@@ -2,6 +2,7 @@
 <!DOCTYPE project [
 <!--
 
+    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -29,54 +30,50 @@
     &commonBuild;
     &testproperties;
 
-    <target name="all" depends="build,deploy,run,undeploy"/>
+    <target name="all" depends="build,deploy,run,undeploy" />
 
-    <target name="clean" depends="init-common">
-      <antcall  target="clean-common"/>
-    </target>
+	<target name="clean" depends="init-common">
+		<antcall target="clean-common" />
+	</target>
 
-    <target name="compile" depends="clean">
-        <antcall target="compile-common">
-            <param name="src" value="war"/>
-        </antcall>
-    </target>
+	<target name="compile" depends="clean">
+		<antcall target="compile-common">
+			<param name="src" value="war" />
+		</antcall>
+	</target>
 
-    <target name="build" depends="compile">
-      <antcall target="webclient-war-common">
-          <param name="hasWebclient" value="false"/>
-          <param name="beans.xml"    value="docroot/WEB-INF/beans.xml"/>
-        </antcall>
-        <antcall target="compile-common">
-            <param name="src" value="client"/>
-        </antcall>
-    </target>
+	<target name="build" depends="compile">
+		<antcall target="webclient-war-common">
+			<param name="hasWebclient" value="false" />
+			<param name="beans.xml" value="docroot/WEB-INF/beans.xml" />
+		</antcall>
+		<antcall target="compile-common">
+			<param name="src" value="client" />
+		</antcall>
+	</target>
 
-    <target name="deploy"
-            depends="init-common">
-        <antcall target="deploy-war-common"/>
-    </target>
+	<target name="deploy" depends="init-common">
+		<antcall target="deploy-war-common" />
+	</target>
 
-    <target name="run" depends="init-common">
-        <antcall target="run_se"/>
-    </target>
+	<target name="run" depends="init-common">
+		<antcall target="run_se" />
+	</target>
 
-    <target name="run_se" depends="init-common">
-       <java  fork="on"
-              failonerror="true"
-              classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
-              classname="${se.client}">
-           <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-           <arg line="${contextroot}"/>
-           <arg line="${http.host}"/>
-           <arg line="${http.port}"/>
-        </java>
-    </target>
+	<target name="run_se" depends="init-common">
+		<java fork="on" failonerror="true" classpath="${env.S1AS_HOME}/lib/jakartaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" classname="${se.client}">
+			<jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
+			<arg line="${contextroot}" />
+			<arg line="${http.host}" />
+			<arg line="${http.port}" />
+		</java>
+	</target>
 
-    <target name="undeploy" depends="init-common">
-        <antcall target="undeploy-war-common"/>
-    </target>
+	<target name="undeploy" depends="init-common">
+		<antcall target="undeploy-war-common" />
+	</target>
 
-    <target name="usage">
-        <antcall target="usage-common"/>
-    </target>
+	<target name="usage">
+		<antcall target="usage-common" />
+	</target>
 </project>

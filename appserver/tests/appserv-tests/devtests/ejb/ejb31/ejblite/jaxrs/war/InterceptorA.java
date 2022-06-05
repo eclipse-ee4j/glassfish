@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,6 @@ import jakarta.annotation.Resource;
 import jakarta.interceptor.InvocationContext;
 import jakarta.interceptor.AroundInvoke;
 
-
 public class InterceptorA {
 
     @PostConstruct
@@ -31,7 +31,6 @@ public class InterceptorA {
         System.out.println("In InterceptorA::init() ");
         c.proceed();
     }
-
 
     @AroundInvoke
     private Object roundInvoke(InvocationContext c) throws Exception {

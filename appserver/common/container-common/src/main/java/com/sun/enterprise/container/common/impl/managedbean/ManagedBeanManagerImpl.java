@@ -277,7 +277,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
         for (ManagedBeanDescriptor managedBeanDescriptor : bundle.getManagedBeans()) {
             JavaEEInterceptorBuilder interceptorBuilder = (JavaEEInterceptorBuilder) managedBeanDescriptor.getInterceptorBuilder();
 
-            interceptorBuilder.addRuntimeInterceptor(managedBeanDescriptor.getInterceptorBuilder());
+            interceptorBuilder.addRuntimeInterceptor(interceptorInstance);
         }
     }
 

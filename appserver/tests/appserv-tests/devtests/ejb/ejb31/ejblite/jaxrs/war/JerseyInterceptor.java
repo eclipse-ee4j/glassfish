@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,15 +31,13 @@ public class JerseyInterceptor {
 
         Object beanInstance = context.getTarget();
 
-        System.out.println("In JerseyInterceptor::init() : " +
-                           beanInstance);
+        System.out.println("In JerseyInterceptor::init() : " + beanInstance);
 
-
-        if( beanInstance instanceof SingletonBean ) {
+        if (beanInstance instanceof SingletonBean) {
             ((SingletonBean) beanInstance).interceptorWasHere = true;
-        } else if( beanInstance instanceof StatelessBean ) {
+        } else if (beanInstance instanceof StatelessBean) {
             ((StatelessBean) beanInstance).interceptorWasHere = true;
-        } else if( beanInstance instanceof FooManagedBean ) {
+        } else if (beanInstance instanceof FooManagedBean) {
             ((FooManagedBean) beanInstance).interceptorWasHere = true;
         }
 
@@ -46,8 +45,6 @@ public class JerseyInterceptor {
 
         // Invoke next interceptor in chain
         context.proceed();
-
     }
-
 
 }

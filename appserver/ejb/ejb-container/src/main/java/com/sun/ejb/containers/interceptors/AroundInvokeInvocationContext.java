@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,29 +18,20 @@
 package com.sun.ejb.containers.interceptors;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-
+import java.lang.reflect.Method;
 
 /**
- * Concrete InvocationContext implementation passed to callback methods
- * defined in interceptor classes.
+ * Concrete InvocationContext implementation passed to callback methods defined in interceptor classes.
  */
-public class AroundInvokeInvocationContext extends CallbackInvocationContext
-    implements InterceptorManager.AroundInvokeContext {
+public class AroundInvokeInvocationContext extends CallbackInvocationContext implements InterceptorManager.AroundInvokeContext {
 
     private Method method;
     private int interceptorIndex = 0;
     private InterceptorManager.InterceptorChain chain;
     private Object[] parameters;
 
-
-    public AroundInvokeInvocationContext(Object targetObjectInstance,
-                                     Object[] interceptorInstances,
-                                     InterceptorManager.InterceptorChain chain,
-                                     Method m,
-                                     Object[] params
-                                     ) {
+    public AroundInvokeInvocationContext(Object targetObjectInstance, Object[] interceptorInstances, InterceptorManager.InterceptorChain chain, Method m, Object[] params) {
         super(targetObjectInstance, interceptorInstances, null);
         method = m;
         this.chain = chain;
@@ -57,9 +49,7 @@ public class AroundInvokeInvocationContext extends CallbackInvocationContext
     }
 
     @Override
-    public Object proceed()
-        throws Exception
-    {
+    public Object proceed() throws Exception {
         try {
             interceptorIndex++;
             return chain.invokeNext(interceptorIndex, this);
@@ -84,28 +74,19 @@ public class AroundInvokeInvocationContext extends CallbackInvocationContext
 
     }
 
-
     /**
-      * Called from Interceptor Chain to invoke the actual bean method.
-      * This method must throw any exception from the bean method *as is*,
-      * without being wrapped in an InvocationTargetException.  The exception
-      * thrown from this method will be propagated through the application's
-      * interceptor code, so it must not be changed in order for any exception
-      * handling logic in that code to function properly.
-      */
-    public  Object invokeBeanMethod() throws Throwable {
-
+     * Called from Interceptor Chain to invoke the actual bean method. This method must throw any exception from the bean
+     * method *as is*, without being wrapped in an InvocationTargetException. The exception thrown from this method will be
+     * propagated through the application's interceptor code, so it must not be changed in order for any exception handling
+     * logic in that code to function properly.
+     */
+    @Override
+    public Object invokeBeanMethod() throws Throwable {
         try {
-
             return method.invoke(getTarget(), parameters);
-
-        } catch(InvocationTargetException ite) {
+        } catch (InvocationTargetException ite) {
             throw ite.getCause();
         }
-
     }
 
-
-
 }
-

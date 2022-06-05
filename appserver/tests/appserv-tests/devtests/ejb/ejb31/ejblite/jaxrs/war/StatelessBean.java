@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,9 +39,8 @@ public class StatelessBean {
         System.out.println("In StatelessBean::hello()");
     }
 
-
     public void assertInterceptorBinding() {
-        if( !interceptorWasHere ) {
+        if (!interceptorWasHere) {
             throw new EJBException("interceptor was not here");
         }
     }
@@ -49,6 +49,5 @@ public class StatelessBean {
     private void destroy() {
         System.out.println("In StatelessBean:destroy()");
     }
-
 
 }

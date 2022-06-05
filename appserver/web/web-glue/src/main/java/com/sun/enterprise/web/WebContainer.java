@@ -1,5 +1,5 @@
 /*
- * 
+ *
  * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *

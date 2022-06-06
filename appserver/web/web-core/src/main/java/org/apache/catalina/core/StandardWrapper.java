@@ -1114,6 +1114,23 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         initServlet(instance);
     }
 
+    @Override
+    public synchronized void tryLoad() throws ServletException {
+        try {
+            instance = loadServlet();
+            initServlet(instance);
+        } catch (Throwable t) {
+            instance = null;
+            available = 0l;
+            classLoadTime = 0;
+            loadTime = 0l;
+            instanceInitialized = false;
+
+            throw t;
+        }
+    }
+
+
     /**
      * Creates an instance of the servlet, if there is not already at least one initialized instance.
      */

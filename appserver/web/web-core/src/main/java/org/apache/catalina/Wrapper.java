@@ -341,6 +341,8 @@ public interface Wrapper extends Container {
      */
     public void load() throws ServletException;
 
+    public void tryLoad() throws ServletException;
+
 
     /**
      * Remove the specified initialization parameter from this servlet.

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,47 +19,43 @@ package com.sun.enterprise.container.common.spi;
 
 import org.jvnet.hk2.annotations.Contract;
 
-import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
 /**
- * ManagedBeanManager provides an interface to various Java EE Managed Bean
- * component operations.
+ * ManagedBeanManager provides an interface to various Java EE Managed Bean component operations.
  */
 
 @Contract
 public interface ManagedBeanManager {
 
-    public void loadManagedBeans(Application app);
+    void loadManagedBeans(Application app);
 
-    public void unloadManagedBeans(Application app);
+    void unloadManagedBeans(Application app);
 
-    public Object getManagedBean(String globalJndiName) throws Exception;
+    Object getManagedBean(String globalJndiName) throws Exception;
 
-    public <T> T createManagedBean(Class<T> managedBean) throws Exception;
+    <T> T createManagedBean(Class<T> managedBean) throws Exception;
 
-    public <T> T createManagedBean(Class<T> managedBean, boolean invokePostConstruct) throws Exception;
+    <T> T createManagedBean(Class<T> managedBean, boolean invokePostConstruct) throws Exception;
 
-    public <T> T createManagedBean(ManagedBeanDescriptor managedBeanDesc, Class<T> managedBeanClass) throws Exception;
+    <T> T createManagedBean(ManagedBeanDescriptor managedBeanDesc, Class<T> managedBeanClass) throws Exception;
 
-    public <T> T createManagedBean(ManagedBeanDescriptor managedBeanDesc, Class<T> managedBeanClass,
-        boolean invokePostConstruct) throws Exception;
+    <T> T createManagedBean(ManagedBeanDescriptor managedBeanDesc, Class<T> managedBeanClass, boolean invokePostConstruct) throws Exception;
 
-    public boolean isManagedBean(Object object);
+    boolean isManagedBean(Object object);
 
-    public void destroyManagedBean(Object managedBean);
+    void destroyManagedBean(Object managedBean);
 
-    public void destroyManagedBean(Object managedBean, boolean validate);
+    void destroyManagedBean(Object managedBean, boolean validate);
 
     /**
      * Register an interceptor instance for all managed beans in the given module
      *
      * @param interceptorInstance
-     * @param bundle BundleDescriptor (passed as object because we can't
-     *        add a dependency on the DOL
+     * @param bundle BundleDescriptor (passed as object because we can't add a dependency on the DOL
      */
-    public void registerRuntimeInterceptor(Object interceptorInstance, BundleDescriptor bundle);
-
+    void registerRuntimeInterceptor(Object interceptorInstance, BundleDescriptor bundle);
 
 }

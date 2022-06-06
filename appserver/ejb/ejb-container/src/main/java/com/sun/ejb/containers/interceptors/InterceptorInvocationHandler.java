@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,24 @@
 
 package com.sun.ejb.containers.interceptors;
 
+import static com.sun.ejb.containers.InvocationHandlerUtil.invokeJavaObjectMethod;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-
-import com.sun.ejb.containers.InvocationHandlerUtil;
-
-
 import com.sun.enterprise.container.common.spi.InterceptorInvoker;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 
 /**
  *
  * @author Kenneth Saks
  */
 
-public final class InterceptorInvocationHandler
-    implements InvocationHandler, InterceptorInvoker {
+public final class InterceptorInvocationHandler implements InvocationHandler, InterceptorInvoker {
 
     // The actual instance of the application class
     private Object targetInstance;
@@ -47,10 +47,7 @@ public final class InterceptorInvocationHandler
 
     private static Object[] emptyArray = new Object[] {};
 
-
-    public void init(Object targetInstance, Object[] interceptorInstances,
-                     Object clientProxy, InterceptorManager manager)
-                     {
+    public void init(Object targetInstance, Object[] interceptorInstances, Object clientProxy, InterceptorManager manager) {
         this.targetInstance = targetInstance;
         this.interceptorInstances = interceptorInstances;
         this.clientProxy = clientProxy;
@@ -58,84 +55,75 @@ public final class InterceptorInvocationHandler
 
     }
 
+    @Override
     public Object getProxy() {
         return clientProxy;
     }
 
+    @Override
     public Object getTargetInstance() {
         return targetInstance;
     }
 
+    @Override
     public Object[] getInterceptorInstances() {
         return interceptorInstances;
     }
 
+    @Override
     public void invokeAroundConstruct() throws Exception {
-
-         invokeCallback(CallbackType.AROUND_CONSTRUCT);
-         targetInstance = interceptorManager.getTargetInstance();
+        invokeCallback(AROUND_CONSTRUCT);
+        targetInstance = interceptorManager.getTargetInstance();
 
     }
 
+    @Override
     public void invokePostConstruct() throws Exception {
-
-         invokeCallback(CallbackType.POST_CONSTRUCT);
-
+        invokeCallback(POST_CONSTRUCT);
     }
 
+    @Override
     public void invokePreDestroy() throws Exception {
-
-         invokeCallback(CallbackType.PRE_DESTROY);
+        invokeCallback(PRE_DESTROY);
     }
 
     private void invokeCallback(CallbackType type) throws Exception {
-
         try {
-            interceptorManager.intercept(type, targetInstance,
-                    interceptorInstances);
-        } catch(Exception e) {
+            interceptorManager.intercept(type, targetInstance, interceptorInstances);
+        } catch (Exception e) {
             throw e;
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             throw new Exception(t);
         }
 
     }
 
-
-    public Object invoke(Object proxy, Method method, Object[] args)
-        throws Throwable {
-
-
-        Class methodClass = method.getDeclaringClass();
-        if( methodClass == java.lang.Object.class )  {
-            return InvocationHandlerUtil.
-                invokeJavaObjectMethod(this, method, args);
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Class<?> methodClass = method.getDeclaringClass();
+        if (methodClass == Object.class) {
+            return invokeJavaObjectMethod(this, method, args);
         }
 
         Object returnValue = null;
 
         try {
+            Method beanClassMethod = targetInstance.getClass().getMethod(method.getName(), method.getParameterTypes());
 
-
-            Method beanClassMethod = targetInstance.getClass().getMethod
-                (method.getName(), method.getParameterTypes());
-
-            InterceptorManager.InterceptorChain chain =
-                    interceptorManager.getAroundInvokeChain(null, beanClassMethod);
+            InterceptorManager.InterceptorChain chain = interceptorManager.getAroundInvokeChain(null, beanClassMethod);
 
             Object[] theArgs = (args == null) ? emptyArray : args;
 
-            // Create context for around invoke invocation.  Make sure method set on
+            // Create context for around invoke invocation. Make sure method set on
             // InvocationContext is from bean class.
             AroundInvokeInvocationContext invContext =
-                    new AroundInvokeInvocationContext(targetInstance, interceptorInstances, chain,
-                            beanClassMethod, theArgs );
+                new AroundInvokeInvocationContext(targetInstance, interceptorInstances, chain, beanClassMethod, theArgs);
 
             returnValue = interceptorManager.intercept(chain, invContext);
 
-        } catch(NoSuchMethodException nsme) {
+        } catch (NoSuchMethodException nsme) {
             throw new RuntimeException(nsme);
-        } catch(InvocationTargetException ite) {
+        } catch (InvocationTargetException ite) {
             throw ite.getCause();
         }
 
@@ -145,7 +133,7 @@ public final class InterceptorInvocationHandler
 
     @Override
     public String toString() {
-        return (targetInstance != null)? targetInstance.toString() : super.toString();
+        return targetInstance != null ? targetInstance.toString() : super.toString();
     }
 
 }

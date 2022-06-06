@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,14 @@
 
 package com.sun.enterprise.container.common.spi;
 
-
 /**
- * Provides an abstraction for invoking jakarta.interceptor
- * callbacks and around invoke methods on a target instance.
+ * Provides an abstraction for invoking jakarta.interceptor callbacks and around invoke methods on a target instance.
  */
 
 public interface JavaEEInterceptorBuilder {
 
-    public InterceptorInvoker createInvoker(Object targetInstance) throws Exception;
+    InterceptorInvoker createInvoker(Object targetInstance) throws Exception;
 
-    public void addRuntimeInterceptor(Object interceptor);
-
+    void addRuntimeInterceptor(Object interceptor);
 
 }

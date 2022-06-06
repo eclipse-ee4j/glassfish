@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -17,9 +18,6 @@
 
 package org.apache.catalina.deploy;
 
-import java.io.Serializable;
-
-
 /**
  * Representation of an EJB resource reference for a web application, as
  * represented in a <code>&lt;ejb-ref&gt;</code> element in the
@@ -31,6 +29,34 @@ import java.io.Serializable;
 
 public class ContextEjb extends ResourceBase {
 
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The name of the EJB home implementation class.
+     */
+    private String home;
+
+    /**
+     * The link to a EE EJB definition.
+     */
+    private String link;
+
+    /**
+     * The name of this EJB.
+     */
+    private String name;
+
+    /**
+     * The name of the EJB remote implementation class.
+     */
+    private String remote;
+
+    /**
+     * The name of the EJB bean implementation class.
+     */
+    private String type;
+
+
 
     // ------------------------------------------------------------- Properties
 
@@ -38,96 +64,69 @@ public class ContextEjb extends ResourceBase {
     /**
      * The description of this EJB.
      */
-    private String description = null;
+    private String description;
 
+    @Override
     public String getDescription() {
-        return (this.description);
+        return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
-
-    /**
-     * The name of the EJB home implementation class.
-     */
-    private String home = null;
-
     public String getHome() {
-        return (this.home);
+        return home;
     }
 
     public void setHome(String home) {
         this.home = home;
     }
 
-
-    /**
-     * The link to a J2EE EJB definition.
-     */
-    private String link = null;
-
     public String getLink() {
-        return (this.link);
+        return link;
     }
 
     public void setLink(String link) {
         this.link = link;
     }
 
-
-    /**
-     * The name of this EJB.
-     */
-    private String name = null;
-
+    @Override
     public String getName() {
-        return (this.name);
+        return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
-
-    /**
-     * The name of the EJB remote implementation class.
-     */
-    private String remote = null;
-
     public String getRemote() {
-        return (this.remote);
+        return remote;
     }
 
     public void setRemote(String remote) {
         this.remote = remote;
     }
 
-
-    /**
-     * The name of the EJB bean implementation class.
-     */
-    private String type = null;
-
+    @Override
     public String getType() {
-        return (this.type);
+        return type;
     }
 
+    @Override
     public void setType(String type) {
         this.type = type;
     }
 
-
-    // --------------------------------------------------------- Public Methods
-
-
     /**
      * Return a String representation of this object.
      */
+    @Override
     public String toString() {
-
         StringBuilder sb = new StringBuilder("ContextEjb[");
+
         sb.append("name=");
         sb.append(name);
         if (description != null) {
@@ -151,8 +150,8 @@ public class ContextEjb extends ResourceBase {
             sb.append(link);
         }
         sb.append("]");
-        return (sb.toString());
 
+        return sb.toString();
     }
 
 }

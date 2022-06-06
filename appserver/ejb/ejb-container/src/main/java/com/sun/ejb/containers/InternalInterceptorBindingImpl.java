@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -78,7 +79,7 @@ public class InternalInterceptorBindingImpl  {
         }
 
         // Register interceptor for any managed beans
-        // TODO Handle 299-enabled case
+        // TODO Handle CDI-enabled case
         ManagedBeanManager managedBeanManager = services.getService(ManagedBeanManager.class,
                 "ManagedBeanManagerImpl");
         managedBeanManager.registerRuntimeInterceptor(systemInterceptor, webBundle);

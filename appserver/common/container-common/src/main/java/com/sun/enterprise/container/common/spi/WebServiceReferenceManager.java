@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,25 @@
 
 package com.sun.enterprise.container.common.spi;
 
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-
-import javax.naming.NamingException;
 import javax.naming.Context;
+import javax.naming.NamingException;
 
 import org.jvnet.hk2.annotations.Contract;
 
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+
 /**
- * This class acts as a contract to resolve the
- * </code>jakarta.xml.ws.WebServiceRef</code> references
- * and also <code>jakarta.xml.ws.WebServiceContext</code>
- * Whenever a lookup is done from GlassfishNamingManagerImpl
- * these methods are invoked to resolve the references
+ * This class acts as a contract to resolve the </code>jakarta.xml.ws.WebServiceRef</code> references and also
+ * <code>jakarta.xml.ws.WebServiceContext</code> Whenever a lookup is done from GlassfishNamingManagerImpl these methods
+ * are invoked to resolve the references
  *
  * @author Bhakti Mehta
  */
 @Contract
 public interface WebServiceReferenceManager {
 
+    Object resolveWSReference(ServiceReferenceDescriptor serviceRefDesc, Context namingContext) throws NamingException;
 
-    public Object resolveWSReference(ServiceReferenceDescriptor serviceRefDesc, Context namingContext)
-            throws NamingException;
-
-
-    public Object getWSContextObject();
+    Object getWSContextObject();
 
 }

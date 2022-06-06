@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,8 +27,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat =
-        new SimpleReporterAdapter("appserv-tests");
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 
     private static String appName;
     private String host;
@@ -47,34 +47,32 @@ public class Client {
     }
 
     public void doTest() {
-
         try {
-
-            String url = "http://" + host + ":" + port +
-                "/" + appName + "/HelloServlet";
+            String url = "http://" + host + ":" + port + "/" + appName + "/HelloServlet";
 
             System.out.println("invoking webclient servlet at " + url);
 
             URL u = new URL(url);
 
-            HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
+            HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
             int code = c1.getResponseCode();
             InputStream is = c1.getInputStream();
-            BufferedReader input = new BufferedReader (new InputStreamReader(is));
+            BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = null;
-            while((line = input.readLine()) != null)
+            while ((line = input.readLine()) != null) {
                 System.out.println(line);
-            if(code != 200) {
+            }
+            
+            if (code != 200) {
                 throw new RuntimeException("Incorrect return code: " + code);
             }
 
             stat.addStatus("local main", stat.PASS);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             stat.addStatus("local main", stat.FAIL);
             e.printStackTrace();
         }
     }
-
 
 }

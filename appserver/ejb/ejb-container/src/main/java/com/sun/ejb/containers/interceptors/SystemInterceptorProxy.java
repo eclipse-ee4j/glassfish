@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,32 @@
 
 package com.sun.ejb.containers.interceptors;
 
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.AROUND_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType.PRE_DESTROY;
+import static java.security.AccessController.doPrivileged;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.PrivilegedExceptionAction;
+
+import com.sun.enterprise.deployment.InterceptorDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.interceptor.AroundConstruct;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.InvocationContext;
-import com.sun.enterprise.deployment.InterceptorDescriptor;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  *
  * @author Kenneth Saks
  */
+public class SystemInterceptorProxy {
 
-public class SystemInterceptorProxy
-{
     // Won't actually be Serialized since it only applies to Stateless/Singleton
-
     public Object delegate;
 
     private Method aroundConstruct;
@@ -45,52 +51,31 @@ public class SystemInterceptorProxy
     private Method aroundInvoke;
     private Method aroundTimeout;
 
-
-    public void setDelegate(Object d) {
-
-        Class delegateClass = d.getClass();
-
+    public void setDelegate(Object delegate) {
         try {
-
-           for(Method m : delegateClass.getDeclaredMethods() ) {
-
-               if( m.getAnnotation(PostConstruct.class) != null ) {
-                   postConstruct = m;
-                   prepareMethod(m);
-               } else if( m.getAnnotation(PreDestroy.class) != null ) {
-                   preDestroy = m;
-                   prepareMethod(m);
-               } else if( m.getAnnotation(AroundInvoke.class) != null ) {
-                   aroundInvoke = m;
-                   prepareMethod(m);
-               } else if( m.getAnnotation(AroundTimeout.class) != null ) {
-                   aroundTimeout = m;
-                   prepareMethod(m);
-               } else if( m.getAnnotation(AroundConstruct.class) != null ) {
-                   aroundConstruct = m;
-                   prepareMethod(m);
-               }
-           }
-
-        } catch(Exception e) {
+            for (Method delegateMethod : delegate.getClass().getDeclaredMethods()) {
+                if (delegateMethod.getAnnotation(PostConstruct.class) != null) {
+                    postConstruct = delegateMethod;
+                    prepareMethod(delegateMethod);
+                } else if (delegateMethod.getAnnotation(PreDestroy.class) != null) {
+                    preDestroy = delegateMethod;
+                    prepareMethod(delegateMethod);
+                } else if (delegateMethod.getAnnotation(AroundInvoke.class) != null) {
+                    aroundInvoke = delegateMethod;
+                    prepareMethod(delegateMethod);
+                } else if (delegateMethod.getAnnotation(AroundTimeout.class) != null) {
+                    aroundTimeout = delegateMethod;
+                    prepareMethod(delegateMethod);
+                } else if (delegateMethod.getAnnotation(AroundConstruct.class) != null) {
+                    aroundConstruct = delegateMethod;
+                    prepareMethod(delegateMethod);
+                }
+            }
+        } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
 
-         delegate = d;
-
-    }
-
-    private void prepareMethod(final Method m) throws Exception {
-
-         java.security.AccessController
-                        .doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    public java.lang.Object run() throws Exception {
-                        if (!m.isAccessible()) {
-                            m.setAccessible(true);
-                        }
-                        return null;
-                    }});
-
+        this.delegate = delegate;
     }
 
     @PostConstruct
@@ -118,13 +103,13 @@ public class SystemInterceptorProxy
         return doCall(ctx, aroundTimeout);
     }
 
-    private Object doCall(InvocationContext ctx, Method m) throws Exception {
+    private Object doCall(InvocationContext ctx, Method method) throws Exception {
         Object returnValue = null;
 
-        if( (delegate != null) && (m != null) ) {
+        if (delegate != null && method != null) {
             try {
-                returnValue = m.invoke(delegate, ctx);
-            } catch(InvocationTargetException ite) {
+                returnValue = method.invoke(delegate, ctx);
+            } catch (InvocationTargetException ite) {
                 Throwable cause = ite.getCause();
                 if (cause instanceof Exception) {
                     throw (Exception) cause;
@@ -141,53 +126,62 @@ public class SystemInterceptorProxy
     }
 
     public static InterceptorDescriptor createInterceptorDesc() {
-
         InterceptorDescriptor interceptor = new InterceptorDescriptor();
 
-        Class interceptorClass = SystemInterceptorProxy.class;
+        Class<?> interceptorClass = SystemInterceptorProxy.class;
         String interceptorName = interceptorClass.getName();
 
         interceptor.setInterceptorClass(interceptorClass);
 
         {
-               LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
-               desc.setLifecycleCallbackClass(interceptorName);
-               desc.setLifecycleCallbackMethod("create");
-               interceptor.addCallbackDescriptor(CallbackType.AROUND_CONSTRUCT, desc);
+            LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
+            desc.setLifecycleCallbackClass(interceptorName);
+            desc.setLifecycleCallbackMethod("create");
+            interceptor.addCallbackDescriptor(AROUND_CONSTRUCT, desc);
         }
 
         {
-               LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
-               desc.setLifecycleCallbackClass(interceptorName);
-               desc.setLifecycleCallbackMethod("init");
-               interceptor.addCallbackDescriptor(CallbackType.POST_CONSTRUCT, desc);
+            LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
+            desc.setLifecycleCallbackClass(interceptorName);
+            desc.setLifecycleCallbackMethod("init");
+            interceptor.addCallbackDescriptor(POST_CONSTRUCT, desc);
         }
 
         {
-               LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
-               desc.setLifecycleCallbackClass(interceptorName);
-               desc.setLifecycleCallbackMethod("destroy");
-               interceptor.addCallbackDescriptor(CallbackType.PRE_DESTROY, desc);
+            LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
+            desc.setLifecycleCallbackClass(interceptorName);
+            desc.setLifecycleCallbackMethod("destroy");
+            interceptor.addCallbackDescriptor(PRE_DESTROY, desc);
         }
 
         {
-               LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
-               desc.setLifecycleCallbackClass(interceptorName);
-               desc.setLifecycleCallbackMethod("aroundInvoke");
-               interceptor.addAroundInvokeDescriptor(desc);
+            LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
+            desc.setLifecycleCallbackClass(interceptorName);
+            desc.setLifecycleCallbackMethod("aroundInvoke");
+            interceptor.addAroundInvokeDescriptor(desc);
         }
 
         {
-               LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
-               desc.setLifecycleCallbackClass(interceptorName);
-               desc.setLifecycleCallbackMethod("aroundTimeout");
-               interceptor.addAroundTimeoutDescriptor(desc);
+            LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
+            desc.setLifecycleCallbackClass(interceptorName);
+            desc.setLifecycleCallbackMethod("aroundTimeout");
+            interceptor.addAroundTimeoutDescriptor(desc);
         }
-
 
         return interceptor;
 
     }
 
+    private void prepareMethod(final Method m) throws Exception {
+        doPrivileged(new PrivilegedExceptionAction<Object>() {
+            @Override
+            public Object run() throws Exception {
+                if (!m.isAccessible()) {
+                    m.setAccessible(true);
+                }
+                return null;
+            }
+        });
+    }
 
 }

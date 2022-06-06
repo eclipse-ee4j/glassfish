@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,24 +19,24 @@ package com.sun.ejb.containers;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.EjbInvocation;
 import com.sun.enterprise.security.SecurityManager;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 
 /**
  * @author Mahesh Kannan
  */
-public class BMCSingletonContainer
-        extends AbstractSingletonContainer {
+public class BMCSingletonContainer extends AbstractSingletonContainer {
 
     private AtomicInteger invCount = new AtomicInteger(0);
 
-    public BMCSingletonContainer(EjbDescriptor desc, ClassLoader cl, SecurityManager sm)
-            throws Exception {
+    public BMCSingletonContainer(EjbDescriptor desc, ClassLoader cl, SecurityManager sm) throws Exception {
         super(desc, cl, sm);
     }
 
+    @Override
     protected ComponentContext _getContext(EjbInvocation inv) {
         checkInit();
 
@@ -44,10 +45,11 @@ public class BMCSingletonContainer
             ((SingletonContextImpl) singletonCtx).setState(EJBContextImpl.BeanState.INVOKING);
         }
 
-        //For now return this as we support only BMC
+        // For now return this as we support only BMC
         return singletonCtx;
     }
 
+    @Override
     public void releaseContext(EjbInvocation inv) {
         synchronized (invCount) {
             int val = invCount.decrementAndGet();

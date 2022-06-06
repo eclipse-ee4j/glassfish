@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,12 +25,12 @@ import jakarta.persistence.EntityManagerFactory;
 @Contract
 public interface JavaEEContainer {
 
-    public ClassLoader getContainerClassLoader();
+    ClassLoader getContainerClassLoader();
 
-    public String getComponentId();
+    String getComponentId();
 
-    public <D> D getDescriptor();
+    <D> D getDescriptor();
 
-    public EntityManager lookupExtendedEntityManager(EntityManagerFactory emf);
+    EntityManager lookupExtendedEntityManager(EntityManagerFactory entityManagerFactory);
 
 }

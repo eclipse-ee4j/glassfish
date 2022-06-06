@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,18 @@
 
 package com.sun.ejb.containers.interceptors;
 
+import static com.sun.ejb.EJBUtils.getGeneratedOptionalInterfaceName;
+
+import java.util.logging.Logger;
+
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
+import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilderFactory;
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
-
-import org.jvnet.hk2.annotations.Service;
-import com.sun.ejb.EJBUtils;
-import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
-import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.logging.LogDomains;
-
-import java.util.logging.Logger;
 
 /**
  *
@@ -34,59 +36,43 @@ import java.util.logging.Logger;
 @Service
 public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBuilderFactory {
 
+    private static Logger _logger = LogDomains.getLogger(JavaEEInterceptorBuilderImpl.class, LogDomains.CORE_LOGGER);
 
-    private static Logger _logger = LogDomains.getLogger(JavaEEInterceptorBuilderImpl.class,
-            LogDomains.CORE_LOGGER);
-
+    @Override
     public JavaEEInterceptorBuilder createBuilder(InterceptorInfo info) throws Exception {
-
-        Class targetObjectClass = info.getTargetClass();
+        Class<?> targetObjectClass = info.getTargetClass();
 
         // Create an interface with all public methods of the target class
         // in order to create a dynamic proxy
-        String subClassIntfName = EJBUtils.getGeneratedOptionalInterfaceName(targetObjectClass.getName());
+        String subClassInterfaceName = getGeneratedOptionalInterfaceName(targetObjectClass.getName());
 
-        EjbOptionalIntfGenerator gen = new EjbOptionalIntfGenerator(targetObjectClass.getClassLoader());
-        gen.generateOptionalLocalInterface(targetObjectClass, subClassIntfName);
-        Class subClassIntf = gen.loadClass(subClassIntfName);
+        EjbOptionalIntfGenerator interfaceGenerator = new EjbOptionalIntfGenerator(targetObjectClass.getClassLoader());
+        interfaceGenerator.generateOptionalLocalInterface(targetObjectClass, subClassInterfaceName);
+        Class<?> subClassInterface = interfaceGenerator.loadClass(subClassInterfaceName);
 
-        String beanSubClassName = subClassIntfName + "__Bean__";
+        String beanSubClassName = subClassInterfaceName + "__Bean__";
 
-        // Generate a sub-class of the application's class.  Use an instance of this subclass
-        // as the actual object passed back to the application.  The sub-class instance
+        // Generate a sub-class of the application's class. Use an instance of this subclass
+        // as the actual object passed back to the application. The sub-class instance
         // delegates all public methods to the dyanamic proxy, which calls the
         // InvocationHandler.
-        gen.generateOptionalLocalInterfaceSubClass(
-            targetObjectClass, beanSubClassName, subClassIntf);
+        interfaceGenerator.generateOptionalLocalInterfaceSubClass(targetObjectClass, beanSubClassName, subClassInterface);
 
-        Class subClass = gen.loadClass(beanSubClassName);
-
+        Class<?> subClass = interfaceGenerator.loadClass(beanSubClassName);
 
         // TODO do interceptor builder once per managed bean
-        InterceptorManager interceptorManager = new InterceptorManager(_logger,
-                targetObjectClass.getClassLoader(), targetObjectClass.getName(),
-                info);
+        InterceptorManager interceptorManager =
+            new InterceptorManager(_logger, targetObjectClass.getClassLoader(), targetObjectClass.getName(), info);
 
-
-        JavaEEInterceptorBuilderImpl builderImpl =
-                new JavaEEInterceptorBuilderImpl(info, interceptorManager,
-                        gen, subClassIntf, subClass);
-
-        return builderImpl;
-
+        return new JavaEEInterceptorBuilderImpl(info, interceptorManager, interfaceGenerator, subClassInterface, subClass);
     }
 
     /**
-      * Tests if a given object is a client proxy associated with an interceptor invoker.
-      */
+     * Tests if a given object is a client proxy associated with an interceptor invoker.
+     */
+    @Override
     public boolean isClientProxy(Object obj) {
-
-        Class clazz = obj.getClass();
-
-        return (OptionalLocalInterfaceProvider.class.isAssignableFrom(clazz));
+        return OptionalLocalInterfaceProvider.class.isAssignableFrom(obj.getClass());
     }
 
-
 }
-
-

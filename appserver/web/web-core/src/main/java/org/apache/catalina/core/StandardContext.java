@@ -4977,37 +4977,58 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      */
     public void loadOnStartup(Container children[]) throws LifecycleException {
         // Collect "load on startup" servlets that need to be initialized
-        Map<Integer, List<Wrapper>> map = new TreeMap<>();
+        Map<Integer, List<Wrapper>> loadOnStartupServlets = new TreeMap<>();
+        List<Wrapper> nonLoadOnStartupServlets = new ArrayList<>();
+
         for (Container aChildren : children) {
             Wrapper wrapper = (Wrapper) aChildren;
+
             int loadOnStartup = wrapper.getLoadOnStartup();
             if (loadOnStartup < 0) {
-                continue;
+                nonLoadOnStartupServlets.add(wrapper);
+            } else {
+                loadOnStartupServlets.computeIfAbsent(loadOnStartup, e -> new ArrayList<>())
+                                     .add(wrapper);
             }
+        }
 
-            Integer key = loadOnStartup;
-            List<Wrapper> list = map.get(key);
-            if (list == null) {
-                list = new ArrayList<>();
-                map.put(key, list);
+        // Combine the load on startup and non load on startup in one list, with the
+        // latter loading after the ones with an explicit priority (load level).
+        List<Wrapper> allServlets = new ArrayList<>();
+        for (List<Wrapper> samePriorityServlets : loadOnStartupServlets.values()) {
+            for (Wrapper wrapper : samePriorityServlets) {
+                allServlets.add(wrapper);
             }
-            list.add(wrapper);
         }
 
         // Load the collected "load on startup" servlets
-        for (List<Wrapper> list : map.values()) {
-            for (Wrapper wrapper : list) {
-                try {
-                    wrapper.load();
-                } catch (ServletException e) {
-                    getServletContext().log(
-                        format(rb.getString(SERVLET_LOAD_EXCEPTION), neutralizeForLog(getName())),
-                        StandardWrapper.getRootCause(e));
+        for (Wrapper wrapper : allServlets) {
+            try {
+                wrapper.load();
+            } catch (ServletException e) {
+                getServletContext().log(
+                    format(rb.getString(SERVLET_LOAD_EXCEPTION), neutralizeForLog(getName())),
+                    StandardWrapper.getRootCause(e));
 
                     // NOTE: load errors (including a servlet that throws
                     // UnavailableException from the init() method) are NOT
                     // fatal to application startup
                     throw new LifecycleException(StandardWrapper.getRootCause(e));
+            }
+        }
+
+        if (Boolean.parseBoolean(System.getProperty("glassfish.try.preload.servlets", "true"))) {
+            // Also load the other servlets, which is one way to pass the CDI TCK, specifically
+            // ContainerEventTest#testProcessInjectionTargetEventFiredForServlet and adhere to the rule
+            // that injection points for Servlets have to be processed during start.
+            for (Wrapper wrapper : nonLoadOnStartupServlets) {
+                try {
+                    wrapper.tryLoad();
+                } catch (Throwable t) {
+                    // Only log errors, don't fail anything.
+                    getServletContext().log(
+                            format(rb.getString(SERVLET_LOAD_EXCEPTION), neutralizeForLog(getName())),
+                            t);
                 }
             }
         }

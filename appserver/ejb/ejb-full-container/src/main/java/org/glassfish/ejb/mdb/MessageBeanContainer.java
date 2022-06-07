@@ -1091,7 +1091,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
 
         if (invocation == null && _logger.isLoggable(FINEST)) {
             if (containerState != CONTAINER_STARTED) {
-                _logger.log(FINEST, "No invocation in onMessage " + " (container closing)");
+                _logger.log(FINEST, "No invocation in onMessage (container closing)");
             } else {
                 _logger.log(FINEST, "No invocation in onMessage : ");
             }

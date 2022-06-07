@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,22 @@
 
 package org.glassfish.ejb.mdb;
 
-import com.sun.ejb.containers.BaseContainerFactory;
-import jakarta.inject.Singleton;
 import org.glassfish.api.deployment.DeploymentContext;
-import com.sun.enterprise.security.SecurityManager;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.jvnet.hk2.annotations.Service;
+
 import com.sun.ejb.Container;
 import com.sun.ejb.ContainerFactory;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import com.sun.ejb.containers.BaseContainerFactory;
+
+import jakarta.inject.Singleton;
 
 @Service(name = "MessageBeanContainerFactory")
 @Singleton
 public final class MessageBeanContainerFactory extends BaseContainerFactory implements ContainerFactory {
 
     @Override
-    public Container createContainer(EjbDescriptor ejbDescriptor, ClassLoader loader, DeploymentContext deployContext)
-        throws Exception {
-        SecurityManager sm = getSecurityManager(ejbDescriptor);
-        MessageBeanContainer mdbContainer = new MessageBeanContainer(ejbDescriptor, loader, sm);
-        return mdbContainer;
+    public Container createContainer(EjbDescriptor ejbDescriptor, ClassLoader loader, DeploymentContext deployContext) throws Exception {
+        return new MessageBeanContainer(ejbDescriptor, loader, getSecurityManager(ejbDescriptor));
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +23,6 @@
 
 package com.sun.ejb.containers.util.pool;
 
-import java.util.Properties;
-
 /**
  * An object factory that 'knows' how to create / destroy objects
  */
@@ -32,12 +31,11 @@ public interface ObjectFactory {
     /**
      * Create an object. Called from Pool.getObject(param)
      */
-    public Object create(Object param)
-        throws PoolException;
+    Object create(Object param) throws PoolException;
 
     /**
      * Destroy an object. Called from Pool.destroyObject.
      */
-    public void destroy(Object object);
+    void destroy(Object object);
 
 }

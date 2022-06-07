@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,13 @@
 
 package org.glassfish.ejb.mdb;
 
-import java.lang.reflect.Method;
-import com.sun.appserv.connectors.internal.api.ResourceHandle;
-import org.glassfish.ejb.api.MessageBeanListener;
-import org.glassfish.ejb.mdb.MessageBeanContainer.MessageDeliveryType;
+import static org.glassfish.ejb.mdb.MessageBeanContainer.MessageDeliveryType.Message;
 
+import java.lang.reflect.Method;
+
+import org.glassfish.ejb.api.MessageBeanListener;
+
+import com.sun.appserv.connectors.internal.api.ResourceHandle;
 
 /**
  *
@@ -29,39 +32,43 @@ import org.glassfish.ejb.mdb.MessageBeanContainer.MessageDeliveryType;
  */
 public class MessageBeanListenerImpl implements MessageBeanListener {
 
-    private MessageBeanContainer container_;
-    private ResourceHandle resourceHandle_;
+    private MessageBeanContainer messageBeanContainer;
+    private ResourceHandle resourceHandle;
 
-    MessageBeanListenerImpl(MessageBeanContainer container,
-                            ResourceHandle handle) {
-        container_ = container;
+    MessageBeanListenerImpl(MessageBeanContainer container, ResourceHandle handle) {
+        messageBeanContainer = container;
 
         // can be null
-        resourceHandle_ = handle;
+        resourceHandle = handle;
     }
 
+    @Override
     public void setResourceHandle(ResourceHandle handle) {
-        resourceHandle_ = handle;
+        resourceHandle = handle;
     }
 
+    @Override
     public ResourceHandle getResourceHandle() {
-        return resourceHandle_;
+        return resourceHandle;
     }
 
+    @Override
     public void beforeMessageDelivery(Method method, boolean txImported) {
-        container_.onEnteringContainer();   //Notify Callflow Agent
-        container_.beforeMessageDelivery(method, MessageDeliveryType.Message, txImported, resourceHandle_);
+        messageBeanContainer.onEnteringContainer(); // Notify Callflow Agent
+        messageBeanContainer.beforeMessageDelivery(method, Message, txImported, resourceHandle);
     }
 
+    @Override
     public Object deliverMessage(Object[] params) throws Throwable {
-        return container_.deliverMessage(params);
+        return messageBeanContainer.deliverMessage(params);
     }
 
+    @Override
     public void afterMessageDelivery() {
         try {
-            container_.afterMessageDelivery(resourceHandle_);
+            messageBeanContainer.afterMessageDelivery(resourceHandle);
         } finally {
-            container_.onLeavingContainer();    //Notify Callflow Agent
+            messageBeanContainer.onLeavingContainer(); // Notify Callflow Agent
         }
     }
 

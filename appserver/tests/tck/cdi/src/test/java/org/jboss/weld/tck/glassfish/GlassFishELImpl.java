@@ -39,9 +39,9 @@ import org.jboss.weld.module.web.el.WeldExpressionFactory;
 
 public class GlassFishELImpl implements EL {
 
-    public static final ExpressionFactory EXPRESSION_FACTORY = new WeldExpressionFactory(ExpressionFactory.newInstance());
+    private static final ExpressionFactory EXPRESSION_FACTORY = new WeldExpressionFactory(ExpressionFactory.newInstance());
 
-    public static final ELContextListener[] EL_CONTEXT_LISTENERS = { new WeldELContextListener() };
+    private static final ELContextListener[] EL_CONTEXT_LISTENERS = { new WeldELContextListener() };
 
     @Override
     @SuppressWarnings("unchecked")

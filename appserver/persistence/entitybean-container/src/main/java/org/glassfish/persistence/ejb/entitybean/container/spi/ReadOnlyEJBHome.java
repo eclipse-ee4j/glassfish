@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,16 @@
 
 package org.glassfish.persistence.ejb.entitybean.container.spi;
 
+import java.rmi.RemoteException;
+
 /**
  * Home interface for all Remote ReadOnly Beans
  *
  * @author Mahesh Kannan
  */
-public interface ReadOnlyEJBHome
-    extends jakarta.ejb.EJBHome
-{
+public interface ReadOnlyEJBHome extends jakarta.ejb.EJBHome {
 
-    public void _refresh_com_sun_ejb_containers_read_only_bean_(Object primaryKey)
-        throws java.rmi.RemoteException;
+    void _refresh_com_sun_ejb_containers_read_only_bean_(Object primaryKey) throws RemoteException;
 
-    public void _refresh_All() throws java.rmi.RemoteException;
+    void _refresh_All() throws java.rmi.RemoteException;
 }

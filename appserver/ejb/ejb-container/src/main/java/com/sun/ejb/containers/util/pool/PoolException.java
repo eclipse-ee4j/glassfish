@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +26,10 @@ package com.sun.ejb.containers.util.pool;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
-public class PoolException
-    extends RuntimeException
-{
-    Throwable throwable = null;
+public class PoolException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    Throwable throwable;
 
     public PoolException() {
         super();
@@ -47,14 +48,17 @@ public class PoolException
         return this.throwable;
     }
 
+    @Override
     public void printStackTrace() {
         printStackTrace(new PrintWriter(System.err));
     }
 
+    @Override
     public void printStackTrace(PrintStream ps) {
         printStackTrace(new PrintWriter(ps));
     }
 
+    @Override
     public void printStackTrace(PrintWriter pw) {
         if (throwable != null) {
             pw.println("PoolException: " + getMessage());

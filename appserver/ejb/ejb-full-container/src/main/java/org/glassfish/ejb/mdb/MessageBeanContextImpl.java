@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package org.glassfish.ejb.mdb;
 
+import org.glassfish.api.invocation.ComponentInvocation;
+
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
@@ -23,8 +26,6 @@ import com.sun.ejb.containers.EJBObjectImpl;
 import com.sun.ejb.containers.EJBTimerService;
 import com.sun.ejb.containers.EJBTimerServiceWrapper;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
-
-import org.glassfish.api.invocation.ComponentInvocation;
 
 import jakarta.ejb.EJBHome;
 import jakarta.ejb.EJBObject;
@@ -38,34 +39,29 @@ import jakarta.transaction.UserTransaction;
  * @author Kenneth Saks
  */
 public final class MessageBeanContextImpl extends EJBContextImpl implements MessageDrivenContext {
-
-    private boolean afterSetContext = false;
+    private static final long serialVersionUID = 1L;
+    private boolean afterSetContext;
 
     MessageBeanContextImpl(Object ejb, BaseContainer container) {
         super(ejb, container);
     }
 
-
     void setEJBStub(EJBObject ejbStub) {
         throw new RuntimeException("No stubs for Message-driven beans");
     }
 
-
     void setEJBObjectImpl(EJBObjectImpl ejbo) {
         throw new RuntimeException("No EJB Object for Message-driven beans");
     }
-
 
     // FIXME later
     EJBObjectImpl getEJBObjectImpl() {
         throw new RuntimeException("No EJB Object for Message-driven beans");
     }
 
-
     public void setContextCalled() {
         this.afterSetContext = true;
     }
-
 
     /*****************************************************************
      * The following are implementations of EJBContext methods.
@@ -86,18 +82,14 @@ public final class MessageBeanContextImpl extends EJBContextImpl implements Mess
         return ((BaseContainer) getContainer()).getUserTransaction();
     }
 
-
     /**
-     * Doesn't make any sense to get EJBHome object for
-     * a message-driven ejb.
+     * Doesn't make any sense to get EJBHome object for a message-driven ejb.
      */
     @Override
     public EJBHome getEJBHome() {
-        RuntimeException exception = new java.lang.IllegalStateException(
-            "getEJBHome not allowed for message-driven beans");
+        RuntimeException exception = new java.lang.IllegalStateException("getEJBHome not allowed for message-driven beans");
         throw exception;
     }
-
 
     @Override
     protected void checkAccessToCallerSecurity() throws java.lang.IllegalStateException {
@@ -108,7 +100,6 @@ public final class MessageBeanContextImpl extends EJBContextImpl implements Mess
         }
 
     }
-
 
     @Override
     public boolean isCallerInRole(String roleRef) {
@@ -133,7 +124,6 @@ public final class MessageBeanContextImpl extends EJBContextImpl implements Mess
         return sm.isCallerInRole(roleRef);
     }
 
-
     @Override
     public TimerService getTimerService() throws java.lang.IllegalStateException {
         if (!afterSetContext) {
@@ -144,41 +134,33 @@ public final class MessageBeanContextImpl extends EJBContextImpl implements Mess
         return new EJBTimerServiceWrapper(timerService, this);
     }
 
-
     @Override
     public void checkTimerServiceMethodAccess() throws java.lang.IllegalStateException {
         // A message-driven ejb's state transitions past UNINITIALIZED
         // AFTER ejbCreate
         if (!operationsAllowed()) {
-            throw new java.lang.IllegalStateException(
-                "EJB Timer Service method calls cannot be called in " + " this context");
+            throw new java.lang.IllegalStateException("EJB Timer Service method calls cannot be called in " + " this context");
         }
     }
-
 
     boolean isInState(BeanState value) {
         return getState() == value;
     }
 
-
     void setState(BeanState s) {
         state = s;
     }
-
 
     void setInEjbRemove(boolean beingRemoved) {
         inEjbRemove = beingRemoved;
     }
 
-
     boolean operationsAllowed() {
         return !(isUnitialized() || inEjbRemove);
     }
 
-
     /**
-     * Returns true if this context has NOT progressed past its initial
-     * state.
+     * Returns true if this context has NOT progressed past its initial state.
      */
     private boolean isUnitialized() {
         return (state == EJBContextImpl.BeanState.CREATED);

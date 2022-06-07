@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,56 +24,38 @@
 package com.sun.ejb.containers.util.pool;
 
 /**
- * Pool defines the methods that can be used by the application to access
- * pooled objects. The basic assumption is that all objects in the pool are
- * identical (homogeneous). This interface defines methods for a) getting an
- * object from the pool, b) returning an object back to the pool
- * and, c) destroying (instead of reusing) an object. In addition to these
- * methods, the Pool has methods for adding and removing PoolEventListeners.
- * There are six overloaded methods for getting objects from a pool.
+ * Pool defines the methods that can be used by the application to access pooled objects. The basic assumption is that
+ * all objects in the pool are identical (homogeneous). This interface defines methods for a) getting an object from the
+ * pool, b) returning an object back to the pool and, c) destroying (instead of reusing) an object. In addition to these
+ * methods, the Pool has methods for adding and removing PoolEventListeners. There are six overloaded methods for
+ * getting objects from a pool.
  *
  */
 public interface Pool {
 
     /**
-       @deprecated
-    */
-    public Object getObject(boolean canWait, Object param)
-        throws PoolException;
-
-    /**
-       @deprecated
-    */
-    public Object getObject(long maxWaitTime, Object param)
-        throws PoolException;
-
-    /**
      * Get an object from the pool within the specified time.
+     *
      * @param The amount of time the calling thread agrees to wait.
      * @param Some value that might be used while creating the object
-     * @return an Object or null if an object could not be returned in
-     *   'waitForMillis' millisecond.
+     * @return an Object or null if an object could not be returned in 'waitForMillis' millisecond.
      * @exception Throws PoolException if an object cannot be created
      */
-    public Object getObject(Object param)
-        throws PoolException;
+    Object getObject(Object param) throws PoolException;
 
     /**
-     * Return an object back to the pool. An object that is obtained through
-     *    getObject() must always be returned back to the pool using either
-     *    returnObject(obj) or through destroyObject(obj).
+     * Return an object back to the pool. An object that is obtained through getObject() must always be returned back to the
+     * pool using either returnObject(obj) or through destroyObject(obj).
      */
-    public void returnObject(Object obj);
+    void returnObject(Object obj);
 
     /**
-     * Destroys an Object. Note that applications should not ignore the
-     * reference to the object that they got from getObject(). An object
-     * that is obtained through getObject() must always be returned back to
-     * the pool using either returnObject(obj) or through destroyObject(obj).
-     * This method tells that the object should be destroyed and cannot be
+     * Destroys an Object. Note that applications should not ignore the reference to the object that they got from
+     * getObject(). An object that is obtained through getObject() must always be returned back to the pool using either
+     * returnObject(obj) or through destroyObject(obj). This method tells that the object should be destroyed and cannot be
      * reused.
      *
      */
-    public void destroyObject(Object obj);
+    void destroyObject(Object obj);
 
 }

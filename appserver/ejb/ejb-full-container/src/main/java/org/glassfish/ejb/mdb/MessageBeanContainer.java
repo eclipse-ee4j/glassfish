@@ -901,7 +901,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
             if (addedAsyncTask) {
                 synchronized (task) {
                     if (!task.isDone()) {
-                        _logger.log(FINE, "[MDBContainer] " + "Going to wait for a maximum of " + timeout + " mili-seconds.");
+                        _logger.log(FINE, "[MDBContainer] Going to wait for a maximum of {0} mili-seconds.", timeout);
                         long maxWaitTime = System.currentTimeMillis() + timeout;
                         // wait in loop to guard against spurious wake-up
                         do {

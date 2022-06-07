@@ -894,7 +894,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
                     // we will have to do the cleanup in the current thread itself.
                     addedAsyncTask = false;
                     _logger.log(WARNING, "[MDBContainer] Got exception while trying "
-                            + "to add task to ContainerWorkPool. Will execute " + "cleanupResources on current thread", th);
+                            + "to add task to ContainerWorkPool. Will execute cleanupResources on current thread", th);
                 }
             }
 

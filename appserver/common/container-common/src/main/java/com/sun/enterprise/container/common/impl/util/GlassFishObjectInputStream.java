@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,15 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
-
 import com.sun.enterprise.container.common.spi.util.GlassFishInputStreamHandler;
+import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import com.sun.logging.LogDomains;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
+import java.io.StreamCorruptedException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
@@ -38,56 +42,45 @@ import org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory;
  */
 class GlassFishObjectInputStream extends ObjectInputStream
 {
-    private ClassLoader appLoader;
+    private static final Logger _logger = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER);
 
-    private static Logger _logger = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER);
+    private final ClassLoader appLoader;
+    private final ObjectInputOutputStreamFactory inputStreamHelper;
+    private final Collection<GlassFishInputStreamHandler> handlers;
 
-    private ObjectInputOutputStreamFactory inputStreamHelper;
-
-    private Collection<GlassFishInputStreamHandler> handlers;
-
-    GlassFishObjectInputStream(Collection<GlassFishInputStreamHandler> handlers,  InputStream in, ClassLoader appCl, boolean resolve)
-        throws IOException, StreamCorruptedException
-    {
+    GlassFishObjectInputStream(Collection<GlassFishInputStreamHandler> handlers, InputStream in, ClassLoader appLoader,
+        boolean resolve) throws IOException, StreamCorruptedException {
         super(in);
-        appLoader = appCl;
+        this.appLoader = appLoader;
         this.handlers = handlers;
-
         if (resolve) {
             enableResolveObject(resolve);
-
         }
-
         inputStreamHelper = ObjectInputOutputStreamFactoryFactory.getFactory();
     }
 
     @Override
-    protected Object resolveObject(Object obj)
-        throws IOException
-    {
-        Object result = obj;
+    protected Object resolveObject(Object obj) throws IOException {
         try {
             if (obj instanceof SerializableObjectFactory) {
                 return ((SerializableObjectFactory) obj).createObject();
-            } else {
-                for (GlassFishInputStreamHandler handler : handlers) {
-                    Object r = handler.resolveObject(obj);
-                    if (r != null) {
-                        result = r == GlassFishInputStreamHandler.NULL_OBJECT ? null : r;
-                        break;
-                    }
-                }
-
-                return result;
             }
+            for (GlassFishInputStreamHandler handler : handlers) {
+                final Object r = handler.resolveObject(obj);
+                if (r != null) {
+                    if (r == GlassFishInputStreamHandler.NULL_OBJECT) {
+                        return null;
+                    }
+                    return r;
+                }
+            }
+            return obj;
         } catch (IOException ioEx ) {
             _logger.log(Level.SEVERE, "ejb.resolve_object_exception", ioEx);
             throw ioEx;
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, "ejb.resolve_object_exception", ex);
-            IOException ioe = new IOException();
-            ioe.initCause(ex);
-            throw ioe;
+            throw new IOException("Could not resolve object: " + obj, ex);
         }
     }
 
@@ -102,35 +95,29 @@ class GlassFishObjectInputStream extends ObjectInputStream
             // implementation of resolveProxyClass.
             if ((cl.getModifiers() & Modifier.PUBLIC) == 0) {
                 return super.resolveProxyClass(interfaces);
-            } else {
-                classObjs[i] = cl;
             }
+            classObjs[i] = cl;
         }
         try {
-            return Proxy.getProxyClass(appLoader, classObjs);
+            @SuppressWarnings("deprecation")
+            Class<?> proxyClass = Proxy.getProxyClass(appLoader, classObjs);
+            return proxyClass;
         } catch (IllegalArgumentException e) {
             throw new ClassNotFoundException(null, e);
         }
     }
 
     @Override
-    protected Class<?> resolveClass(ObjectStreamClass desc)
-                throws IOException, ClassNotFoundException
-    {
-        Class<?> clazz = inputStreamHelper.resolveClass(this, desc);
-        if( clazz == null ) {
-            try {
-                // First try app class loader
-                clazz = appLoader.loadClass(desc.getName());
-            }  catch (ClassNotFoundException e) {
-
-                clazz = super.resolveClass(desc);
-            }
-
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+        final Class<?> clazz = inputStreamHelper.resolveClass(this, desc);
+        if (clazz != null) {
+            return clazz;
         }
-
-        return clazz;
+        try {
+            // First try app class loader
+            return appLoader.loadClass(desc.getName());
+        } catch (ClassNotFoundException e) {
+            return super.resolveClass(desc);
+        }
     }
-
-
 }

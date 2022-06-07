@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,68 +17,50 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import com.sun.logging.LogDomains;
+import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
+import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
+import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 
-import com.sun.enterprise.util.Utility;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.internal.api.Globals;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.io.ObjectOutputStream;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
-import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
-import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
-
 import org.glassfish.common.util.ObjectInputOutputStreamFactory;
 import org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory;
+import org.glassfish.internal.api.Globals;
 
 /**
  * A class that is used to save conversational state
  *
  * @author Mahesh Kannan
  */
-class GlassFishObjectOutputStream extends java.io.ObjectOutputStream {
-    private static Logger _logger = LogDomains.getLogger(
-            GlassFishObjectOutputStream.class, LogDomains.JNDI_LOGGER);
+class GlassFishObjectOutputStream extends ObjectOutputStream {
 
-    static final int EJBID_OFFSET = 0;
-    static final int INSTANCEKEYLEN_OFFSET = 8;
-    static final int INSTANCEKEY_OFFSET = 12;
+    private final ObjectInputOutputStreamFactory outputStreamHelper;
+    private final Collection<GlassFishOutputStreamHandler> handlers;
 
-    private static final byte HOME_KEY = (byte) 0xff;
-
-    private ObjectInputOutputStreamFactory outputStreamHelper;
-
-    private Collection<GlassFishOutputStreamHandler> handlers;
-
-    GlassFishObjectOutputStream(Collection<GlassFishOutputStreamHandler> handlers, OutputStream out, boolean replaceObject)
-            throws IOException {
+    GlassFishObjectOutputStream(Collection<GlassFishOutputStreamHandler> handlers, OutputStream out,
+        boolean replaceObject) throws IOException {
         super(out);
         this.handlers = handlers;
 
-        if (replaceObject == true) {
+        if (replaceObject) {
             enableReplaceObject(replaceObject);
         }
-
         outputStreamHelper = ObjectInputOutputStreamFactoryFactory.getFactory();
-
     }
 
     /**
      * This code is needed to serialize non-Serializable objects that can be
      * part of a bean's state. See EJB2.0 section 7.4.1.
      */
+    @Override
     protected Object replaceObject(Object obj) throws IOException {
         Object result = obj;
 
@@ -106,6 +89,7 @@ class GlassFishObjectOutputStream extends java.io.ObjectOutputStream {
 }
 
 final class SerializableJNDIContext implements SerializableObjectFactory {
+    private static final long serialVersionUID = 1L;
     private String name;
 
     SerializableJNDIContext(Context ctx) throws IOException {
@@ -119,25 +103,21 @@ final class SerializableJNDIContext implements SerializableObjectFactory {
             // throw an exception during deserialization.
             this.name = ctx.getNameInNamespace();
         } catch (NamingException ex) {
-            IOException ioe = new IOException();
-            ioe.initCause(ex);
-            throw ioe;
+            throw new IOException("Unable to get a name in the namespace", ex);
         }
     }
 
+    @Override
     public Object createObject() throws IOException {
         try {
-            if ((name == null) || (name.length() == 0)) {
+            if (name == null || name.isEmpty()) {
                 return new InitialContext();
-            } else {
-                return Globals.getDefaultHabitat()
-                        .<GlassfishNamingManager>getService(GlassfishNamingManager.class)
-                        .restoreJavaCompEnvContext(name);
             }
+            return Globals.getDefaultHabitat()
+                    .<GlassfishNamingManager>getService(GlassfishNamingManager.class)
+                    .restoreJavaCompEnvContext(name);
         } catch (NamingException namEx) {
-            IOException ioe = new IOException();
-            ioe.initCause(namEx);
-            throw ioe;
+            throw new IOException("Unable to create a context named " + name, namEx);
         }
     }
 

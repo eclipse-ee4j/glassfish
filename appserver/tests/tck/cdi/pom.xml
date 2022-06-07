@@ -224,7 +224,7 @@
         <dependency>
             <groupId>org.omnifaces.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
@@ -356,6 +356,10 @@
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                         <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
+                        
+                        <glassfish.systemProperties>
+                            cdiTckExcludeDummy=true
+                        </glassfish.systemProperties>
 
                         <glassfish.postBootCommands>
                             create-jms-resource --restype jakarta.jms.Queue --property Name=queue_test queue_test

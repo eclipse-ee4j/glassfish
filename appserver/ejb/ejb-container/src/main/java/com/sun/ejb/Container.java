@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,10 @@ package com.sun.ejb;
 
 import java.rmi.Remote;
 
+import javax.naming.spi.NamingManager;
+
+import com.sun.enterprise.security.SecurityManager;
+
 import jakarta.ejb.CreateException;
 import jakarta.ejb.EJBContext;
 import jakarta.ejb.EJBException;
@@ -26,67 +31,67 @@ import jakarta.ejb.EJBLocalObject;
 import jakarta.ejb.EJBMetaData;
 import jakarta.ejb.EJBObject;
 import jakarta.ejb.FinderException;
+import jakarta.transaction.TransactionManager;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.enterprise.iiop.api.ProtocolManager;
 
 /**
- * A Container stores EJB instances and is responsible for
- * the lifecycle, state management, concurrency, transactions, security,
- * naming, resource management, etc.
- * It does the above by interposing actions before
- * and after invocations on EJBs.
- * It uses the ProtocolManager, SecurityManager, TransactionManager,
- * NamingManager for help with the above responsibilities.
- * There are four types of Containers:
- * StatefulSessionContainer, StatelessSessionContainer,
- * EntityContainer, and MessageBeanContainer.
- * Note: the term "Container" here refers
- * to an instance of one of the above container classes.
- * In the EJB spec "container" refers to a process or JVM which
- * hosts EJB instances.
+ * A Container stores EJB instances and is responsible for the lifecycle, state management,
+ * concurrency, transactions, security, naming, resource management, etc.
+ * It does the above by interposing actions before and after invocations on EJBs.
+ * It uses the {@link ProtocolManager}, {@link SecurityManager}, {@link TransactionManager},
+ * {@link NamingManager} for help with the above responsibilities.
+ * <p>
+ * Note: the term "Container" here refers to an instance of one of the above container classes.
+ * In the EJB spec "container" refers to a process or JVM which hosts EJB instances.
  * <p>
  * There is one instance of the Container for each EJB type (deployment desc).
  * When a JAR is deployed on the EJB server, a Container instance is created
  * for each EJB declared in the ejb-jar.xml for the EJB JAR.
  * <p>
- * The Container interface provides methods called from other parts of
- * the RI as well as from generated EJBHome/EJBObject implementations.
- *
+ * The {@link Container} interface provides methods called from other parts of
+ * the server as well as from generated {@link EJBHome}/{@link EJBObject} implementations.
  */
 public interface Container {
 
     // These values are for the transaction attribute of a bean method
-    public int TX_NOT_INITIALIZED = 0; // default
-    public int TX_NOT_SUPPORTED = 1;
-    public int TX_BEAN_MANAGED = 2;
-    public int TX_REQUIRED = 3;
-    public int TX_SUPPORTS = 4;
-    public int TX_REQUIRES_NEW = 5;
-    public int TX_MANDATORY = 6;
-    public int TX_NEVER = 7;
+    /** default */
+    int TX_NOT_INITIALIZED = 0;
+    int TX_NOT_SUPPORTED = 1;
+    int TX_BEAN_MANAGED = 2;
+    int TX_REQUIRED = 3;
+    int TX_SUPPORTS = 4;
+    int TX_REQUIRES_NEW = 5;
+    int TX_MANDATORY = 6;
+    int TX_NEVER = 7;
 
     // Must match the values of the tx attributes above.
-    public String[] txAttrStrings = { "TX_NOT_INITIALIZED",
-                                      "TX_NOT_SUPPORTED",
-                                      "TX_BEAN_MANAGED",
-                                      "TX_REQUIRED",
-                                      "TX_SUPPORTS",
-                                      "TX_REQUIRES_NEW",
-                                      "TX_MANDATORY",
-                                      "TX_NEVER" };
+    String[] txAttrStrings = {
+        "TX_NOT_INITIALIZED",
+        "TX_NOT_SUPPORTED",
+        "TX_BEAN_MANAGED",
+        "TX_REQUIRED",
+        "TX_SUPPORTS",
+        "TX_REQUIRES_NEW",
+        "TX_MANDATORY",
+        "TX_NEVER",
+    };
 
     // These values are for the security attribute of a bean method
-    public int SEC_NOT_INITIALIZED = 0; // default
-    public int SEC_UNCHECKED = 1;
-    public int SEC_EXCLUDED = 2;
-    public int SEC_CHECKED = 3;
+    /** default */
+    int SEC_NOT_INITIALIZED = 0;
+    int SEC_UNCHECKED = 1;
+    int SEC_EXCLUDED = 2;
+    int SEC_CHECKED = 3;
 
-    public String[] secAttrStrings = { "SEC_NOT_INITIALIZED",
-                                       "SEC_UNCHECKED",
-                                       "SEC_EXCLUDED",
-                                       "SEC_CHECKED" };
-
+    String[] secAttrStrings = {
+        "SEC_NOT_INITIALIZED",
+        "SEC_UNCHECKED",
+        "SEC_EXCLUDED",
+        "SEC_CHECKED",
+    };
 
 
     /**
@@ -107,13 +112,13 @@ public interface Container {
      * Performs pre external invocation setup such as setting application
      * context class loader.  Called by getTargetObject() and web service inv
      */
-    public void externalPreInvoke();
+    void externalPreInvoke();
 
     /**
      * Performs post external invocation cleanup such as restoring the original
      * class loader.  Called by releaseTargetObject() and web service inv
      */
-    public void externalPostInvoke();
+    void externalPostInvoke();
 
     /**
      * Obtain an Entity EJBObject corresponding to the primary key.
@@ -237,7 +242,7 @@ public interface Container {
     /**
      * @return A SecurityManager object for this container.
      */
-    com.sun.enterprise.security.SecurityManager getSecurityManager();
+    SecurityManager getSecurityManager();
 
     /**
      * EJB spec makes a distinction between access to the UserTransaction
@@ -273,6 +278,16 @@ public interface Container {
      * Called when server instance is Ready
      */
     void onReady();
+
+    /**
+     * Called when the request started it's processing in the container
+     */
+    void onEnteringContainer();
+
+    /**
+     * Called when the request finished it's processing in the container
+     */
+    void onLeavingContainer();
 
     /**
      * Called when server instance is shuting down

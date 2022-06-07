@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,21 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.ejb.PersistentTimerService;
+import com.sun.enterprise.admin.monitor.callflow.Agent;
+import com.sun.enterprise.admin.monitor.callflow.RequestType;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.ScheduleExpression;
+import jakarta.ejb.TimerConfig;
+import jakarta.transaction.Status;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.Transaction;
+
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -31,26 +47,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.ejb.CreateException;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.FinderException;
-import jakarta.ejb.ScheduleExpression;
-import jakarta.ejb.TimerConfig;
-import jakarta.transaction.Status;
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.Transaction;
 
-import com.sun.enterprise.admin.monitor.callflow.Agent;
-import com.sun.enterprise.admin.monitor.callflow.RequestType;
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.logging.LogDomains;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.glassfish.server.ServerEnvironmentImpl;
-import com.sun.ejb.PersistentTimerService;
 
 /*
  * EJBTimerService is the central controller of the EJB timer service.
@@ -64,11 +67,11 @@ import com.sun.ejb.PersistentTimerService;
  */
 public class EJBTimerService {
 
-    protected EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
+    protected final EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
 
     private long nextTimerIdMillis_ = 0;
     private long nextTimerIdCounter_ = 0;
-    private String domainName_;
+    private final String domainName_;
 
     protected boolean isDas;
 
@@ -122,7 +125,7 @@ public class EJBTimerService {
     private static final String TIMER_SERVICE_DOWNTIME_FORMAT =
         "yyyy/MM/dd HH:mm:ss";
 
-    private Agent agent = ejbContainerUtil.getCallFlowAgent();
+    private final Agent agent = ejbContainerUtil.getCallFlowAgent();
 
     // Allow to reschedule a failed timer for the next delivery
     private static final String RESCHEDULE_FAILED_TIMER = "reschedule-failed-timer";
@@ -756,7 +759,7 @@ public class EJBTimerService {
             Map<Method, List<ScheduledTimerDescriptor>> schedules,
             boolean deploy) {
 
-        Map<TimerPrimaryKey, Method> result = new HashMap<TimerPrimaryKey, Method>();
+        Map<TimerPrimaryKey, Method> result = new HashMap<>();
         try {
             createSchedules(containerId, applicationId, schedules, result, ownerIdOfThisServer_, true, (deploy && isDas));
 
@@ -870,7 +873,7 @@ public class EJBTimerService {
     protected Collection<TimerPrimaryKey> getTimerIds(long containerId, Object timedObjectPrimaryKey) {
 
         Collection<TimerPrimaryKey> timerIdsForTimedObject =
-                new HashSet<TimerPrimaryKey>();
+                new HashSet<>();
 
         // Add active non-persistent timer ids
         timerIdsForTimedObject.addAll(
@@ -884,7 +887,7 @@ public class EJBTimerService {
      * @return Collection of Timer Ids.
      */
     protected Collection<TimerPrimaryKey> getTimerIds(Collection<Long> containerIds) {
-        Collection<TimerPrimaryKey> timerIds = new HashSet<TimerPrimaryKey>();
+        Collection<TimerPrimaryKey> timerIds = new HashSet<>();
         for (long containerId : containerIds) {
             timerIds.addAll(timerCache_.getNonPersistentActiveTimerIdsForContainer(containerId));
         }
@@ -1112,26 +1115,23 @@ public class EJBTimerService {
         BaseContainer container = getContainer(timerState.getContainerId());
 
         synchronized(timerState) {
-            if( container == null ) {
-                logger.log(Level.FINE, "Unknown container for timer " +
-                           timerId + " in deliverTimeout.  Expunging timer.");
+            if (container == null) {
+                logger.log(Level.FINE,
+                    "Unknown container for timer " + timerId + " in deliverTimeout.  Expunging timer.");
                 expungeTimer(timerId, true);
                 return;
-            } else if ( !timerState.isBeingDelivered() ) {
-                logger.log(Level.FINE, "Timer state = " +
-                           timerState.stateToString() +
-                           "for timer " + timerId + " before callEJBTimeout");
+            } else if (!timerState.isBeingDelivered()) {
+                logger.log(Level.FINE,
+                    "Timer state = " + timerState.stateToString() + "for timer " + timerId + " before callEJBTimeout");
                 return;
             } else {
-                if( logger.isLoggable(Level.FINE) ) {
-                    logger.log(Level.FINE, "Calling ejbTimeout for timer " +
-                               timerState);
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.log(Level.FINE, "Calling ejbTimeout for timer " + timerState);
                 }
             }
         }
 
         try {
-
             agent.requestStart(RequestType.TIMER_EJB);
             container.onEnteringContainer();
 
@@ -1172,18 +1172,14 @@ public class EJBTimerService {
             // Do not deliver bogus timeout, but continue processing and
             // cancel such timer
 
-            boolean redeliver = (timerState.isExpired())? false :
-                    container.callEJBTimeout(timerState, this);
+            boolean redeliver = timerState.isExpired() ? false : container.callEJBTimeout(timerState, this);
 
-            if( shutdown_ ) {
+            if (shutdown_) {
                 // Server is shutting down so we can't finish processing
                 // the timer expiration.
-                if( logger.isLoggable(Level.FINE) ) {
-                    logger.log(Level.FINE, "Cancelling timeout for " + timerId
-                               +
-                               " due to server shutdown. Expiration will " +
-                               " occur on server restart");
-                }
+                logger.log(Level.FINE,
+                    "Cancelling timeout for {0} due to server shutdown. Expiration will occur on server restart",
+                    timerId);
                 return;
             }
 
@@ -1192,11 +1188,10 @@ public class EJBTimerService {
 
             timerState = getTimerState(timerId);
 
-            if( timerState == null ) {
+            if (timerState == null) {
                 // This isn't an error case.  The most likely reason is that
                 // the ejbTimeout method itself cancelled the timer or the bean was disabled.
-                logger.log(Level.FINE, "Timer no longer exists for " +
-                           timerId + " after callEJBTimeout");
+                logger.log(Level.FINE, "Timer no longer exists for {0} after callEJBTimeout", timerId);
                 return;
             }
 
@@ -1205,18 +1200,17 @@ public class EJBTimerService {
                 Date now = new Date();
                 boolean reschedule = false;
 
-                if( timerState.isCancelled() ) {
+                if (timerState.isCancelled()) {
                     // nothing more to do.
                 } else if (timerState.isExpired()) {
                     // schedule-based timer without valid expiration
                     cancelTimer(timerId);
-                } else if( redeliver ) {
+                } else if (redeliver) {
                     int numDeliv = timerState.getNumFailedDeliveries() + 1;
-                    if( redeliverTimeout(timerState) ) {
-                        Date redeliveryTimeout = new Date
-                            (now.getTime() + getRedeliveryInterval());
-                        if( logger.isLoggable(Level.FINE) ) {
-                            logger.log(Level.FINE,"Redelivering " + timerState);
+                    if (redeliverTimeout(timerState)) {
+                        Date redeliveryTimeout = new Date(now.getTime() + getRedeliveryInterval());
+                        if (logger.isLoggable(Level.FINE)) {
+                            logger.log(Level.FINE, "Redelivering " + timerState);
                         }
                         rescheduleTask(timerId, redeliveryTimeout);
                     } else if (stopOnFailure()) {
@@ -1224,17 +1218,17 @@ public class EJBTimerService {
                         shutdown();
                     } else if (rescheduleFailedTimer) {
                         logger.log(Level.INFO, "ejb.timer_reschedule_after_max_deliveries",
-                           new Object[] { timerState.toString(), numDeliv});
+                            new Object[] {timerState.toString(), numDeliv});
                         reschedule = true;
                     } else {
                         logger.log(Level.INFO, "ejb.timer_exceeded_max_deliveries",
-                           new Object[] { timerState.toString(), numDeliv});
+                            new Object[] {timerState.toString(), numDeliv});
                         expungeTimer(timerId, true);
                     }
                 } else {
                     reschedule = true;
                 }
-                if( reschedule && (redeliver || timerState.isPeriodic()) ) {
+                if (reschedule && (redeliver || timerState.isPeriodic())) {
 
                     // Any necessary transactional operations would have
                     // been handled in postEjbTimeout callback.  Here, we
@@ -1248,7 +1242,6 @@ public class EJBTimerService {
                         cancelTimer(timerId);
                     }
                 } else {
-
                     // Any necessary transactional operations would have
                     // been handled above or in postEjbTimeout callback.  Nothing
                     // more to do for this single-action timer that was
@@ -1257,8 +1250,7 @@ public class EJBTimerService {
             }
 
         } catch(Exception e) {
-            logger.log(Level.INFO, "callEJBTimeout threw exception " +
-                       "for timer id " + timerId , e);
+            logger.log(Level.INFO, "callEJBTimeout threw exception for timer id " + timerId, e);
             expungeTimer(timerId, true);
         } finally {
             container.onLeavingContainer();
@@ -1692,7 +1684,7 @@ public class EJBTimerService {
     public static class TimerCache {
 
         // Maps timer id to timer state.
-        private Map timers_;
+        private final Map timers_;
 
         // Map of timer information per container.
         //
@@ -1706,17 +1698,17 @@ public class EJBTimerService {
         // in the case where the same entity bean identity has more
         // than one associated timer.
 
-        private Map containerTimers_;
+        private final Map containerTimers_;
 
         // Map of non-persistent timer id to timer state.
-        private Map<TimerPrimaryKey, RuntimeTimerState> nonpersistentTimers_;
+        private final Map<TimerPrimaryKey, RuntimeTimerState> nonpersistentTimers_;
 
         public TimerCache() {
             // Create unsynchronized collections.  TimerCache will
             // provide concurrency control.
             timers_ = new HashMap();
             containerTimers_ = new HashMap();
-            nonpersistentTimers_ = new HashMap<TimerPrimaryKey, RuntimeTimerState>();
+            nonpersistentTimers_ = new HashMap<>();
         }
 
         public synchronized void addTimer(TimerPrimaryKey timerId,
@@ -1810,7 +1802,7 @@ public class EJBTimerService {
 
         public synchronized RuntimeTimerState getNonPersistentTimerState(
                               TimerPrimaryKey timerId) {
-            return (RuntimeTimerState) nonpersistentTimers_.get(timerId);
+            return nonpersistentTimers_.get(timerId);
         }
 
         // True if the given entity bean has any timers and false otherwise.
@@ -1834,7 +1826,7 @@ public class EJBTimerService {
         // Returns a Set of non-persistent timer ids for this container
         public synchronized Set<TimerPrimaryKey> getNonPersistentTimerIdsForContainer(
                                         long containerId_) {
-            Set<TimerPrimaryKey> result = new HashSet<TimerPrimaryKey>();
+            Set<TimerPrimaryKey> result = new HashSet<>();
             for (Map.Entry<TimerPrimaryKey, RuntimeTimerState> entry : nonpersistentTimers_.entrySet()) {
                 TimerPrimaryKey key = entry.getKey();
                 RuntimeTimerState rt = entry.getValue();
@@ -1849,7 +1841,7 @@ public class EJBTimerService {
         // Returns a Set of active non-persistent timer ids for this container
         public synchronized Set<TimerPrimaryKey> getNonPersistentActiveTimerIdsForContainer(
                                         long containerId_) {
-            Set<TimerPrimaryKey> result = new HashSet<TimerPrimaryKey>();
+            Set<TimerPrimaryKey> result = new HashSet<>();
             for (Map.Entry<TimerPrimaryKey, RuntimeTimerState> entry : nonpersistentTimers_.entrySet()) {
                 TimerPrimaryKey key = entry.getKey();
                 RuntimeTimerState rt = entry.getValue();
@@ -1862,7 +1854,7 @@ public class EJBTimerService {
 
         // Returns a Set of active non-persistent timer ids for this server
         public synchronized Set<TimerPrimaryKey> getNonPersistentActiveTimerIdsByThisServer() {
-            Set<TimerPrimaryKey> result = new HashSet<TimerPrimaryKey>();
+            Set<TimerPrimaryKey> result = new HashSet<>();
             for (Map.Entry<TimerPrimaryKey, RuntimeTimerState> entry : nonpersistentTimers_.entrySet()) {
                 TimerPrimaryKey key = entry.getKey();
                 RuntimeTimerState rt = entry.getValue();
@@ -1881,8 +1873,8 @@ public class EJBTimerService {
      * ejbTimeout invocation will be made.
      */
     private static class TaskExpiredWork implements Runnable {
-        private EJBTimerService timerService_;
-        private TimerPrimaryKey timerId_;
+        private final EJBTimerService timerService_;
+        private final TimerPrimaryKey timerId_;
 
         public TaskExpiredWork(EJBTimerService timerService,
                                TimerPrimaryKey timerId) {
@@ -1890,6 +1882,7 @@ public class EJBTimerService {
             timerId_ = timerId;
         }
 
+        @Override
         public void run() {
             // Delegate to Timer Service.
             timerService_.deliverTimeout(timerId_);
@@ -1899,11 +1892,11 @@ public class EJBTimerService {
 
     private static class TimerSynch implements Synchronization {
 
-        private TimerPrimaryKey timerId_;
-        private int state_;
-        private Date timeout_;
-        private BaseContainer container_;
-        private EJBTimerService timerService_;
+        private final TimerPrimaryKey timerId_;
+        private final int state_;
+        private final Date timeout_;
+        private final BaseContainer container_;
+        private final EJBTimerService timerService_;
 
         public TimerSynch(TimerPrimaryKey timerId, int state, Date timeout,
                           BaseContainer container, EJBTimerService timerService) {
@@ -1914,6 +1907,7 @@ public class EJBTimerService {
             timerService_ = timerService;
         }
 
+        @Override
         public void afterCompletion(int status) {
             if( logger.isLoggable(Level.FINE) ) {
                     logger.log(Level.FINE, "TimerSynch::afterCompletion. " +
@@ -1955,6 +1949,7 @@ public class EJBTimerService {
             }
         }
 
+        @Override
         public void beforeCompletion() {}
 
     }

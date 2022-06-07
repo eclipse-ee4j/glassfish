@@ -880,7 +880,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
                                           .getService(ConnectorRuntime.class)
                                           .getShutdownTimeout();
         } catch (Throwable th) {
-            _logger.log(WARNING, "[MDBContainer] Got exception while trying " + " to get shutdown timeout", th);
+            _logger.log(WARNING, "[MDBContainer] Got exception while trying to get shutdown timeout", th);
         }
 
         try {

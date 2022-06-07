@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -18,27 +19,17 @@
 package org.apache.catalina.loader;
 
 
-import org.apache.catalina.*;
-import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.util.LifecycleSupport;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import org.apache.catalina.util.StringManager;
-import org.apache.naming.resources.DirContextURLStreamHandler;
-import org.apache.naming.resources.DirContextURLStreamHandlerFactory;
-import org.apache.naming.resources.Resource;
-import org.glassfish.web.loader.WebappClassLoader;
-
-import javax.management.ObjectName;
-import javax.naming.Binding;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.DirContext;
 import jakarta.servlet.ServletContext;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilePermission;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -55,6 +46,32 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.management.ObjectName;
+import javax.naming.Binding;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.DirContext;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
+import org.apache.catalina.Lifecycle;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Loader;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.util.LifecycleSupport;
+import org.apache.catalina.util.StringManager;
+import org.apache.naming.resources.DirContextURLStreamHandler;
+import org.apache.naming.resources.DirContextURLStreamHandlerFactory;
+import org.apache.naming.resources.Resource;
+import org.glassfish.web.loader.WebappClassLoader;
+
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static org.apache.catalina.LogFacade.SET_RELOADABLE_PROPERTY_EXCEPTION;
 
 /**
  * Classloader implementation which is specialized for handling web
@@ -138,7 +155,7 @@ public class WebappLoader
      * The "follow standard delegation model" flag that will be used to
      * configure our ClassLoader.
      */
-    private boolean delegate = false;
+    private boolean delegate = WebappClassLoader.DELEGATE_DEFAULT;
 
 
     /**
@@ -159,9 +176,7 @@ public class WebappLoader
      * This class should extend WebappClassLoader, otherwise, a different
      * loader implementation must be used.
      */
-    private String loaderClass =
-        "org.glassfish.web.loader.WebappClassLoader";
-
+    private String loaderClass = WebappClassLoader.class.getName();
 
     /**
      * The parent class loader of the class loader we will create.
@@ -228,6 +243,7 @@ public class WebappLoader
     /**
      * Return the Java class loader to be used by this Container.
      */
+    @Override
     public ClassLoader getClassLoader() {
         return classLoader;
     }
@@ -236,6 +252,7 @@ public class WebappLoader
     /**
      * Return the Container with which this Logger has been associated.
      */
+    @Override
     public Container getContainer() {
         return (container);
     }
@@ -246,11 +263,13 @@ public class WebappLoader
      *
      * @param container The associated Container
      */
+    @Override
     public void setContainer(Container container) {
 
         // Deregister from the old Container (if any)
-        if ((this.container != null) && (this.container instanceof Context))
+        if ((this.container != null) && (this.container instanceof Context)) {
             ((Context) this.container).removePropertyChangeListener(this);
+        }
 
         // Process this property change
         Container oldContainer = this.container;
@@ -290,8 +309,9 @@ public class WebappLoader
      * Return the "follow standard delegation model" flag used to configure
      * our ClassLoader.
      */
+    @Override
     public boolean getDelegate() {
-        return (this.delegate);
+        return this.delegate;
     }
 
 
@@ -301,6 +321,7 @@ public class WebappLoader
      *
      * @param delegate The new flag
      */
+    @Override
     public void setDelegate(boolean delegate) {
         boolean oldDelegate = this.delegate;
         this.delegate = delegate;
@@ -314,6 +335,7 @@ public class WebappLoader
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
+    @Override
     public String getInfo() {
         return (info);
     }
@@ -340,6 +362,7 @@ public class WebappLoader
     /**
      * Return the reloadable flag for this Loader.
      */
+    @Override
     public boolean getReloadable() {
         return (this.reloadable);
     }
@@ -350,6 +373,7 @@ public class WebappLoader
      *
      * @param reloadable The new reloadable flag
      */
+    @Override
     public void setReloadable(boolean reloadable) {
 
         // Process this property change
@@ -374,6 +398,7 @@ public class WebappLoader
      *
      * @param listener The listener to add
      */
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
@@ -384,18 +409,22 @@ public class WebappLoader
      *
      * @param repository Repository to be added
      */
+    @Override
     public void addRepository(String repository) {
 
-        if (log.isLoggable(Level.FINEST))
+        if (log.isLoggable(Level.FINEST)) {
             log.log(Level.FINEST, "Adding repository " + repository);
+        }
 
-        for (int i = 0; i < repositories.length; i++) {
-            if (repository.equals(repositories[i]))
+        for (String element : repositories) {
+            if (repository.equals(element)) {
                 return;
+            }
         }
         String results[] = new String[repositories.length + 1];
-        for (int i = 0; i < repositories.length; i++)
+        for (int i = 0; i < repositories.length; i++) {
             results[i] = repositories[i];
+        }
         results[repositories.length] = repository;
         repositories = results;
 
@@ -413,6 +442,7 @@ public class WebappLoader
      * For security reason, returns a clone of the Array (since
      * String are immutable).
      */
+    @Override
     public String[] findRepositories() {
         return repositories.clone();
     }
@@ -437,6 +467,7 @@ public class WebappLoader
      * Has the internal repository associated with this Loader been modified,
      * such that the loaded classes should be reloaded?
      */
+    @Override
     public boolean modified() {
         return (classLoader.modified());
     }
@@ -457,6 +488,7 @@ public class WebappLoader
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
@@ -465,10 +497,12 @@ public class WebappLoader
     /**
      * Return a String representation of this component.
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("WebappLoader[");
-        if (container != null)
+        if (container != null) {
             sb.append(container.getName());
+        }
         sb.append("]");
         return (sb.toString());
     }
@@ -482,6 +516,7 @@ public class WebappLoader
      *
      * @param listener The listener to add
      */
+    @Override
     public void addLifecycleListener(LifecycleListener listener) {
         lifecycle.addLifecycleListener(listener);
     }
@@ -491,6 +526,7 @@ public class WebappLoader
      * Gets the (possibly empty) list of lifecycle listeners associated
      * with this WebappLoader.
      */
+    @Override
     public List<LifecycleListener> findLifecycleListeners() {
         return lifecycle.findLifecycleListeners();
     }
@@ -501,6 +537,7 @@ public class WebappLoader
      *
      * @param listener The listener to remove
      */
+    @Override
     public void removeLifecycleListener(LifecycleListener listener) {
         lifecycle.removeLifecycleListener(listener);
     }
@@ -576,21 +613,21 @@ public class WebappLoader
      *
      * @exception LifecycleException if a lifecycle error occurs
      */
+    @Override
     public void start() throws LifecycleException {
         // Validate and update our current component state
-        if( ! initialized ) init();
-        if (started)
-            throw new LifecycleException
-                (rb.getString(LogFacade.LOADER_ALREADY_STARTED_EXCEPTION));
-        if (log.isLoggable(Level.FINEST))
-            log.log(Level.FINEST, "Starting this Loader");
+        if (!initialized) {
+            init();
+        }
+        if (started) {
+            throw new LifecycleException(rb.getString(LogFacade.LOADER_ALREADY_STARTED_EXCEPTION));
+        }
+        log.log(Level.FINEST, "Starting this Loader");
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
         if (container.getResources() == null) {
-            if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, LogFacade.NO_RESOURCE_INFO, container);
-            }
+            log.log(Level.INFO, LogFacade.NO_RESOURCE_INFO, container);
             return;
         }
         // Register a stream handler factory for the JNDI protocol
@@ -611,18 +648,16 @@ public class WebappLoader
                 });
             }
             classLoader.setResources(container.getResources());
-            classLoader.setDebug(this.debug);
             classLoader.setDelegate(this.delegate);
 
-            for (int i = 0; i < repositories.length; i++) {
-                classLoader.addRepository(repositories[i]);
+            for (String element : repositories) {
+                classLoader.addRepository(element);
             }
 
             // START OF PE 4985680
             if (overridablePackages != null){
-                for (int i = 0; i < overridablePackages.size(); i++) {
-                    classLoader.addOverridablePackage(
-                                            overridablePackages.get(i));
+                for (String overridablePackage : overridablePackages) {
+                    classLoader.addOverridablePackage(overridablePackage);
                 }
                 overridablePackages = null;
             }
@@ -635,8 +670,7 @@ public class WebappLoader
             setPermissions();
 
             // Binding the Webapp class loader to the directory context
-            DirContextURLStreamHandler.bind(classLoader,
-                    this.container.getResources());
+            DirContextURLStreamHandler.bind(classLoader, this.container.getResources());
 
         } catch (Throwable t) {
             log.log(Level.SEVERE, LogFacade.LIFECYCLE_EXCEPTION, t);
@@ -651,22 +685,21 @@ public class WebappLoader
      *
      * @exception LifecycleException if a lifecycle error occurs
      */
+    @Override
     public void stop() throws LifecycleException {
 
         // Validate and update our current component state
-        if (!started)
-            throw new LifecycleException
-                (rb.getString(LogFacade.LOADER_NOT_STARTED_EXCEPTION));
-        if (log.isLoggable(Level.FINEST))
-            log.log(Level.FINEST, "Stopping this Loader");
+        if (!started) {
+            throw new LifecycleException(rb.getString(LogFacade.LOADER_NOT_STARTED_EXCEPTION));
+        }
+        log.log(Level.FINEST, "Stopping this Loader");
 
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 
         // Remove context attributes as appropriate
         if (container instanceof Context) {
-            ServletContext servletContext =
-                ((Context) container).getServletContext();
+            ServletContext servletContext = ((Context) container).getServletContext();
             servletContext.removeAttribute(Globals.CLASS_PATH_ATTR);
         }
 
@@ -700,26 +733,26 @@ public class WebappLoader
      *
      * @param event The property change event that has occurred
      */
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
 
         // Validate the source of this event
-        if (!(event.getSource() instanceof Context))
+        if (!(event.getSource() instanceof Context)) {
             return;
+        }
 
         // Process a relevant property change
         String propName = event.getPropertyName();
         if ("reloadable".equals(propName)) {
             try {
-                setReloadable
-                    ( ((Boolean) event.getNewValue()).booleanValue() );
+                setReloadable(((Boolean) event.getNewValue()).booleanValue() );
             } catch (NumberFormatException e) {
-                log.log(Level.SEVERE, LogFacade.SET_RELOADABLE_PROPERTY_EXCEPTION, neutralizeForLog(event.getNewValue().toString()));
+                log.log(Level.SEVERE, SET_RELOADABLE_PROPERTY_EXCEPTION, neutralizeForLog(event.getNewValue().toString()));
             }
         } else if ("antiJARLocking".equals(propName)) {
             ClassLoader cloader = Thread.currentThread().getContextClassLoader();
             if (cloader instanceof WebappClassLoader) {
-                ((WebappClassLoader)cloader).setAntiJARLocking(
-                        ((Boolean)event.getNewValue()).booleanValue());
+                ((WebappClassLoader) cloader).setAntiJARLocking(((Boolean) event.getNewValue()).booleanValue());
             }
         }
     }
@@ -731,11 +764,9 @@ public class WebappLoader
     /**
      * Create associated classLoader.
      */
-    protected ClassLoader createClassLoader()
-        throws Exception {
+    protected ClassLoader createClassLoader() throws Exception {
 
         Class<?> clazz = Class.forName(loaderClass);
-        WebappClassLoader classLoader = null;
 
         if (parentClassLoader == null) {
             parentClassLoader = Thread.currentThread().getContextClassLoader();
@@ -743,8 +774,7 @@ public class WebappLoader
         Class<?>[] argTypes = { ClassLoader.class };
         Object[] args = { parentClassLoader };
         Constructor<?> constr = clazz.getConstructor(argTypes);
-        classLoader = (WebappClassLoader) constr.newInstance(args);
-
+        WebappClassLoader classLoader = (WebappClassLoader) constr.newInstance(args);
         classLoader.setUseMyFaces(useMyFaces);
 
         /*
@@ -762,32 +792,7 @@ public class WebappLoader
         }
 
         return classLoader;
-
     }
-
-
-    /**
-     * Log a message on the Logger associated with our Container (if any)
-     *
-     * @param message Message to be logged
-     *
-    private void log(String message) {
-        org.apache.catalina.Logger logger = null;
-        String containerName = null;
-        if (container != null) {
-            logger = container.getLogger();
-            containerName = container.getName();
-        }
-        if (logger != null) {
-            logger.log("WebappLoader[" + containerName + "]: " +
-                message);
-        } else {
-            if (log.isLoggable(Level.INFO)) {
-                log.info("WebappLoader[" + containerName + "]: " + message);
-            }
-        }
-    }
-    */
 
 
     /**
@@ -822,14 +827,17 @@ public class WebappLoader
      */
     private void setPermissions() {
 
-        if (!Globals.IS_SECURITY_ENABLED)
+        if (!Globals.IS_SECURITY_ENABLED) {
             return;
-        if (!(container instanceof Context))
+        }
+        if (!(container instanceof Context)) {
             return;
+        }
 
         try {
             AccessController.doPrivileged(
                   new PrivilegedExceptionAction<Object>() {
+                    @Override
                     public Object run() throws SecurityException {
                         setPermissions_priv();
                         return null;
@@ -931,12 +939,14 @@ public class WebappLoader
      */
     private void setRepositories() throws IOException {
 
-        if (!(container instanceof Context))
+        if (!(container instanceof Context)) {
             return;
+        }
         ServletContext servletContext =
             ((Context) container).getServletContext();
-        if (servletContext == null)
+        if (servletContext == null) {
             return;
+        }
 
         // Loading the work directory
         File workDir =
@@ -947,9 +957,10 @@ public class WebappLoader
             }
         }
 
-        if (log.isLoggable(Level.FINEST) && workDir != null)
+        if (log.isLoggable(Level.FINEST) && workDir != null) {
             log.log(Level.FINEST, "Deploying class repositories to work directory"
                     + workDir.getAbsolutePath());
+        }
 
         DirContext resources = container.getResources();
 
@@ -992,10 +1003,11 @@ public class WebappLoader
 
             }
 
-            if (log.isLoggable(Level.FINEST))
+            if (log.isLoggable(Level.FINEST)) {
                 log.log(Level.FINEST, "Deploy class files "
                         +classesPath+" to "
                         + classRepository.getAbsolutePath());
+            }
         }
 
         // Setting up the JAR repository (/WEB-INF/lib), if it exists
@@ -1008,8 +1020,9 @@ public class WebappLoader
         // Looking up directory /WEB-INF/lib in the context
         try {
             Object object = resources.lookup(libPath);
-            if (object instanceof DirContext)
+            if (object instanceof DirContext) {
                 libDir = (DirContext) object;
+            }
         } catch(NamingException e) {
             // Silent catch: it's valid that no /WEB-INF/lib collection
             // exists
@@ -1046,9 +1059,10 @@ public class WebappLoader
                     String filename = libPath + "/" + binding.getName();
                     // START OF IASRI 4657979
                     if (!filename.endsWith(".jar") &&
-                        !filename.endsWith(".zip"))
-                    // END OF IASRI 4657979
+                        !filename.endsWith(".zip")) {
+                        // END OF IASRI 4657979
                         continue;
+                    }
 
                     // START PWC 1.1 6314481
                     if (binding.getName() != null
@@ -1066,8 +1080,9 @@ public class WebappLoader
 
                     Object obj = binding.getObject();
 
-                    if (!(obj instanceof Resource))
+                    if (!(obj instanceof Resource)) {
                         continue;
+                    }
 
                     Resource jarResource = (Resource) obj;
 
@@ -1094,12 +1109,14 @@ public class WebappLoader
     private void setClassPath() {
 
         // Validate our current state information
-        if (!(container instanceof Context))
+        if (!(container instanceof Context)) {
             return;
+        }
         ServletContext servletContext =
             ((Context) container).getServletContext();
-        if (servletContext == null)
+        if (servletContext == null) {
             return;
+        }
 
         if (container instanceof StandardContext) {
             String baseClasspath =
@@ -1129,11 +1146,11 @@ public class WebappLoader
                 }
             } else {
                 URL[] repositories = ((URLClassLoader) loader).getURLs();
-                for (int i = 0; i < repositories.length; i++) {
-                    if (repositories[i] == null) {
+                for (URL element : repositories) {
+                    if (element == null) {
                         continue;
                     }
-                    String repository = repositories[i].toString();
+                    String repository = element.toString();
                     if (repository.startsWith("file://")) {
                         repository = repository.substring(7);
                     } else if (repository.startsWith("file:")) {
@@ -1170,17 +1187,21 @@ public class WebappLoader
     private String getClasspath( ClassLoader loader ) {
         try {
             Method m=loader.getClass().getMethod("getClasspath", new Class[] {});
-            if (log.isLoggable(Level.FINEST))
+            if (log.isLoggable(Level.FINEST)) {
                 log.log(Level.FINEST, "getClasspath " + m);
+            }
             Object o=m.invoke( loader, new Object[] {} );
-            if (log.isLoggable(Level.FINEST))
+            if (log.isLoggable(Level.FINEST)) {
                 log.log(Level.FINEST, "gotClasspath " + o);
-            if (o instanceof String )
+            }
+            if (o instanceof String ) {
                 return (String)o;
+            }
             return null;
         } catch (Exception ex) {
-            if (log.isLoggable(Level.FINEST))
+            if (log.isLoggable(Level.FINEST)) {
                 log.log(Level.FINEST, "getClasspath ", ex);
+            }
         }
         return null;
     }
@@ -1201,17 +1222,21 @@ public class WebappLoader
                 if (object instanceof Resource) {
                     InputStream is = ((Resource) object).streamContent();
                     OutputStream os = new FileOutputStream(currentFile);
-                    if (!copy(is, os))
+                    if (!copy(is, os)) {
                         return false;
+                    }
                 } else if (object instanceof InputStream) {
                     OutputStream os = new FileOutputStream(currentFile);
-                    if (!copy((InputStream) object, os))
+                    if (!copy((InputStream) object, os)) {
                         return false;
+                    }
                 } else if (object instanceof DirContext) {
-                    if (!currentFile.isDirectory() && !currentFile.mkdir())
+                    if (!currentFile.isDirectory() && !currentFile.mkdir()) {
                         return false;
-                    if (!copyDir((DirContext) object, currentFile))
+                    }
+                    if (!copyDir((DirContext) object, currentFile)) {
                         return false;
+                    }
                 }
             }
 
@@ -1236,8 +1261,9 @@ public class WebappLoader
             byte[] buf = new byte[4096];
             while (true) {
                 int len = is.read(buf);
-                if (len < 0)
+                if (len < 0) {
                     break;
+                }
                 os.write(buf, 0, len);
             }
         } catch (IOException e) {
@@ -1272,17 +1298,18 @@ public class WebappLoader
      * Adds the given package name to the list of packages that may always be
      * overriden, regardless of whether they belong to a protected namespace
      */
+    @Override
     public void addOverridablePackage(String packageName){
-       if ( overridablePackages == null){
-           overridablePackages = new ArrayList<String>();
-       }
-
-       overridablePackages.add( packageName );
+        if (overridablePackages == null) {
+            overridablePackages = new ArrayList<>();
+        }
+        overridablePackages.add(packageName);
     }
     // END OF PE 4985680
 
 
     // START PWC 1.1 6314481
+    @Override
     public void setIgnoreHiddenJarFiles(boolean ignoreHiddenJarFiles) {
         this.ignoreHiddenJarFiles = ignoreHiddenJarFiles;
     }

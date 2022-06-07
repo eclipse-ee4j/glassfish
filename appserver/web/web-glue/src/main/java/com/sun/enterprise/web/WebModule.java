@@ -16,35 +16,43 @@
  */
 
 package com.sun.enterprise.web;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.ServletFilterMapping;
+import com.sun.enterprise.deployment.web.UserDataConstraint;
+import com.sun.enterprise.deployment.web.WebResourceCollection;
+import com.sun.enterprise.security.integration.RealmInitializer;
+import com.sun.enterprise.universal.GFBase64Decoder;
+import com.sun.enterprise.universal.GFBase64Encoder;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.Utility;
+import com.sun.enterprise.web.deploy.LoginConfigDecorator;
+import com.sun.enterprise.web.pwc.PwcWebModule;
+import com.sun.enterprise.web.session.PersistenceType;
+import com.sun.enterprise.web.session.SessionCookieConfig;
+import com.sun.web.security.RealmAdapter;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.DIRECTORY_DEPLOYED;
-import static com.sun.enterprise.deployment.web.UserDataConstraint.CONFIDENTIAL_TRANSPORT;
-import static com.sun.enterprise.deployment.web.UserDataConstraint.NONE_TRANSPORT;
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.enterprise.web.Constants.DEPLOYMENT_CONTEXT_ATTRIBUTE;
-import static com.sun.enterprise.web.Constants.ENABLE_HA_ATTRIBUTE;
-import static com.sun.enterprise.web.Constants.IS_DISTRIBUTABLE_ATTRIBUTE;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.emptyMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.embeddable.web.config.TransportGuarantee.CONFIDENTIAL;
-import static org.glassfish.web.LogFacade.ALTERNATE_DOC_BASE_NULL_PROPERTY_NAME_VALVE;
-import static org.glassfish.web.LogFacade.ALT_DD_NAME;
-import static org.glassfish.web.LogFacade.CONFIGURE_SESSION_MANAGER;
-import static org.glassfish.web.LogFacade.CREATE_CUSTOM_BOJECT_OUTPUT_STREAM_ERROR;
-import static org.glassfish.web.LogFacade.NULL_WEB_MODULE_PROPERTY;
-import static org.glassfish.web.LogFacade.PERSISTENCE_STRATEGY_BUILDER;
-import static org.glassfish.web.LogFacade.UNABLE_TO_LOAD_EXTENSION;
-import static org.glassfish.web.LogFacade.VALVE_MISSING_PROPERTY_NAME;
-import static org.glassfish.web.LogFacade.VALVE_SETTER_CAUSED_EXCEPTION;
-import static org.glassfish.web.LogFacade.VALVE_SPECIFIED_METHOD_MISSING;
-import static org.glassfish.web.deployment.annotation.handlers.ServletSecurityHandler.createSecurityConstraint;
-import static org.glassfish.web.deployment.annotation.handlers.ServletSecurityHandler.getUrlPatternsWithoutSecurityConstraint;
-import static org.glassfish.web.loader.ServletContainerInitializerUtil.getServletContainerInitializers;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
+import jakarta.servlet.Filter;
+import jakarta.servlet.HttpMethodConstraintElement;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletSecurityElement;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.ServletSecurity;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpUpgradeHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -125,46 +133,38 @@ import org.glassfish.web.deployment.runtime.SessionManager;
 import org.glassfish.web.deployment.runtime.SessionProperties;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
+import org.glassfish.web.deployment.runtime.WebPropertyContainer;
 import org.glassfish.web.valve.GlassFishValve;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
-import com.sun.enterprise.deployment.web.ServletFilterMapping;
-import com.sun.enterprise.deployment.web.UserDataConstraint;
-import com.sun.enterprise.deployment.web.WebResourceCollection;
-import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.universal.GFBase64Decoder;
-import com.sun.enterprise.universal.GFBase64Encoder;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.Utility;
-import com.sun.enterprise.web.deploy.LoginConfigDecorator;
-import com.sun.enterprise.web.pwc.PwcWebModule;
-import com.sun.enterprise.web.session.PersistenceType;
-import com.sun.enterprise.web.session.SessionCookieConfig;
-import com.sun.web.security.RealmAdapter;
-
-import jakarta.annotation.security.DeclareRoles;
-import jakarta.annotation.security.RunAs;
-import jakarta.servlet.Filter;
-import jakarta.servlet.HttpMethodConstraintElement;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletSecurityElement;
-import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.annotation.ServletSecurity;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpUpgradeHandler;
+import static com.sun.enterprise.config.serverbeans.ServerTags.DIRECTORY_DEPLOYED;
+import static com.sun.enterprise.deployment.web.UserDataConstraint.CONFIDENTIAL_TRANSPORT;
+import static com.sun.enterprise.deployment.web.UserDataConstraint.NONE_TRANSPORT;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.enterprise.web.Constants.DEPLOYMENT_CONTEXT_ATTRIBUTE;
+import static com.sun.enterprise.web.Constants.ENABLE_HA_ATTRIBUTE;
+import static com.sun.enterprise.web.Constants.IS_DISTRIBUTABLE_ATTRIBUTE;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.emptyMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.embeddable.web.config.TransportGuarantee.CONFIDENTIAL;
+import static org.glassfish.web.LogFacade.ALTERNATE_DOC_BASE_NULL_PROPERTY_NAME_VALVE;
+import static org.glassfish.web.LogFacade.ALT_DD_NAME;
+import static org.glassfish.web.LogFacade.CONFIGURE_SESSION_MANAGER;
+import static org.glassfish.web.LogFacade.CREATE_CUSTOM_BOJECT_OUTPUT_STREAM_ERROR;
+import static org.glassfish.web.LogFacade.NULL_WEB_MODULE_PROPERTY;
+import static org.glassfish.web.LogFacade.PERSISTENCE_STRATEGY_BUILDER;
+import static org.glassfish.web.LogFacade.UNABLE_TO_LOAD_EXTENSION;
+import static org.glassfish.web.LogFacade.VALVE_MISSING_PROPERTY_NAME;
+import static org.glassfish.web.LogFacade.VALVE_SETTER_CAUSED_EXCEPTION;
+import static org.glassfish.web.LogFacade.VALVE_SPECIFIED_METHOD_MISSING;
+import static org.glassfish.web.deployment.annotation.handlers.ServletSecurityHandler.createSecurityConstraint;
+import static org.glassfish.web.deployment.annotation.handlers.ServletSecurityHandler.getUrlPatternsWithoutSecurityConstraint;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getServletContainerInitializers;
 
 /**
  * Class representing a web module for use by the Application Server.
@@ -207,7 +207,7 @@ public class WebModule extends PwcWebModule implements Context {
     private final Map<String, AdHocServletInfo> adHocSubtrees;
     private boolean hasAdHocSubtrees;
 
-    private StandardPipeline adHocPipeline;
+    private final StandardPipeline adHocPipeline;
 
     // File encoding of static resources
     private String fileEncoding;
@@ -242,7 +242,7 @@ public class WebModule extends PwcWebModule implements Context {
     // true if standalone WAR, false if embedded in EAR file
     private boolean isStandalone = true;
 
-    private ServiceLocator services;
+    private final ServiceLocator services;
 
     /**
      * Constructor.
@@ -254,8 +254,8 @@ public class WebModule extends PwcWebModule implements Context {
     public WebModule(ServiceLocator services) {
         super();
         this.services = services;
-        this.adHocPaths = new HashMap<String, AdHocServletInfo>();
-        this.adHocSubtrees = new HashMap<String, AdHocServletInfo>();
+        this.adHocPaths = new HashMap<>();
+        this.adHocSubtrees = new HashMap<>();
 
         this.adHocPipeline = new StandardPipeline(this);
         this.adHocPipeline.setBasic(new AdHocContextValve(this));
@@ -1046,7 +1046,7 @@ public class WebModule extends PwcWebModule implements Context {
      * @param valveDescriptor the object containing the information to create the valve.
      */
     protected void addValve(org.glassfish.web.deployment.runtime.Valve valveDescriptor) {
-        String valveName = valveDescriptor.getAttributeValue(org.glassfish.web.deployment.runtime.Valve.NAME);
+        String valveName = valveDescriptor.getAttributeValue(WebPropertyContainer.NAME);
         String className = valveDescriptor.getAttributeValue(org.glassfish.web.deployment.runtime.Valve.CLASS_NAME);
         if (valveName == null) {
             logger.log(WARNING, LogFacade.VALVE_MISSING_NAME, getName());
@@ -1106,8 +1106,9 @@ public class WebModule extends PwcWebModule implements Context {
     protected void addCatalinaListener(String listenerName) {
         Object listener = loadInstance(listenerName);
 
-        if (listener == null)
+        if (listener == null) {
             return;
+        }
 
         if (listener instanceof ContainerListener) {
             addContainerListener((ContainerListener) listener);
@@ -1416,7 +1417,7 @@ public class WebModule extends PwcWebModule implements Context {
             // creates the list of endpoint addresses
             String[] endpointAddresses;
             WebServicesDescriptor webService = webBundleDescriptor.getWebServices();
-            Vector<String> endpointList = new Vector<String>();
+            Vector<String> endpointList = new Vector<>();
             for (WebServiceEndpoint webServiceEndpoint : webService.getEndpoints()) {
                 if (webBundleDescriptor.getContextRoot() != null) {
                     endpointList.add(webBundleDescriptor.getContextRoot() + "/" + webServiceEndpoint.getEndpointAddressUri());
@@ -1455,7 +1456,7 @@ public class WebModule extends PwcWebModule implements Context {
         }
 
         String stubPath = webModuleConfig.getStubPath();
-        if (stubPath != null && stubPath.length() > 0) {
+        if (stubPath != null && !stubPath.isEmpty()) {
             if (stubPath.charAt(0) != '/') {
                 stubPath = "/" + stubPath;
             }
@@ -1467,7 +1468,6 @@ public class WebModule extends PwcWebModule implements Context {
          * to a protected namespace
          */
         String packagesName = System.getProperty("com.sun.enterprise.overrideablejavaxpackages");
-
         if (packagesName != null) {
             List<String> overridablePackages = StringUtils.parseStringList(packagesName, " ,");
             for (String overridablePackage : overridablePackages) {
@@ -1619,9 +1619,7 @@ public class WebModule extends PwcWebModule implements Context {
                     }
 
                     try {
-                        @SuppressWarnings("unused")
-                        URL url = new URL(path);
-
+                        new URL(path);
                         loader.addRepository(path);
                     } catch (MalformedURLException mue1) {
                         // Not a URL, interpret as file
@@ -2102,9 +2100,9 @@ public class WebModule extends PwcWebModule implements Context {
             }
 
             GlassFishValve valves[] = pipeline.getValves();
-            for (int i = 0; i < valves.length; i++) {
-                if (valves[i] instanceof Authenticator) {
-                    removeValve(valves[i]);
+            for (GlassFishValve element : valves) {
+                if (element instanceof Authenticator) {
+                    removeValve(element);
                 }
             }
         }
@@ -2187,9 +2185,9 @@ class WebServletRegistrationImpl extends ServletRegistrationImpl {
  */
 class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
 
-    private WebBundleDescriptor wbd;
+    private final WebBundleDescriptor wbd;
     private WebComponentDescriptor wcd;
-    private WebModule webModule;
+    private final WebModule webModule;
 
     private String runAsRoleName = null;
     private ServletSecurityElement servletSecurityElement = null;
@@ -2266,7 +2264,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
     public Set<String> setServletSecurity(ServletSecurityElement constraint) {
         this.servletSecurityElement = constraint;
 
-        Set<String> conflictUrls = new HashSet<String>(wcd.getUrlPatternsSet());
+        Set<String> conflictUrls = new HashSet<>(wcd.getUrlPatternsSet());
         conflictUrls.removeAll(ServletSecurityHandler.getUrlPatternsWithoutSecurityConstraint(wcd));
         conflictUrls.addAll(super.setServletSecurity(constraint));
         return conflictUrls;

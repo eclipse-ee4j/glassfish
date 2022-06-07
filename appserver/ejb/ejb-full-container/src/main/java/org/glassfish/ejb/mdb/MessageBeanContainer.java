@@ -914,7 +914,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
 
                     if (!task.isDone()) {
                         _logger.log(WARNING,
-                                "[MDBContainer] ASync task has not finished. " + "Giving up after " + timeout + " mili-seconds.");
+                                "[MDBContainer] ASync task has not finished. Giving up after {0} mili-seconds.", timeout);
                     } else {
                         _logger.log(FINE, "[MDBContainer] ASync task has completed");
                     }

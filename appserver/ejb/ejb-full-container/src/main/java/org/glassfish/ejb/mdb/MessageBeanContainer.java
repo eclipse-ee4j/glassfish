@@ -126,7 +126,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
     private static final String DEFAULT_MESSAGE_BEAN_CLIENT_FACTORY = ConnectorConstants.CONNECTOR_MESSAGE_BEAN_CLIENT_FACTORY;
 
     private static final int DEFAULT_RESIZE_QUANTITY = 8;
-    private static final int DEFAULT_STEADY_SIZE = 0;
+    private static final int DEFAULT_STEADY_SIZE = 1;
     private static final int DEFAULT_MAX_POOL_SIZE = 32;
     private static final int DEFAULT_IDLE_TIMEOUT = 600;
 
@@ -250,6 +250,11 @@ public final class MessageBeanContainer extends BaseContainer implements Message
     @Override
     public void startApplication(boolean deploy) {
         super.startApplication(deploy);
+
+        if (messageBeanPool instanceof NonBlockingPool) {
+            NonBlockingPool nonBlockingPool = (NonBlockingPool) messageBeanPool;
+            nonBlockingPool.prepopulate(beanPoolDescriptor.getSteadyPoolSize());
+        }
 
         // Start delivery of messages to message bean instances.
         try {

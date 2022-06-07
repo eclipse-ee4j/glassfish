@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,30 @@
 
 package org.glassfish.appclient.server.core.jws;
 
+import jakarta.inject.Inject;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import jakarta.inject.Inject;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.appclient.server.core.AppClientDeployerHelper;
 import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -151,16 +152,10 @@ public class DeveloperContentHandler {
     }
 
     private synchronized Document developerDOMFromPath(final String devJNLPDoc) throws SAXException, IOException {
-        Document result = null;
         if (devJNLPDoc != null) {
-            final InputStream devJNLPStream = JavaWebStartInfo.openEntry(appClientArchive, devJNLPDoc);
-            if (devJNLPStream != null) {
-                result = db.parse(devJNLPStream);
-            } else {
-                throw new FileNotFoundException(devJNLPDoc);
-            }
+            return JavaWebStartInfo.parseEntry(appClientArchive, devJNLPDoc, db::parse);
         }
-        return result;
+        return null;
     }
 
     private synchronized Document developerDOMFromContent(final String devContent) throws SAXException, IOException {

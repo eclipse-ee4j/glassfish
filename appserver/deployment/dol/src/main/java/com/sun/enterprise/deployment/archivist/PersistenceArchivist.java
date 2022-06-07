@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,6 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import java.util.logging.LogRecord;
 import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -47,12 +46,18 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
 
     public static final Logger deplLogger = com.sun.enterprise.deployment.util.DOLUtils.deplLogger;
 
-  @LogMessageInfo(message = "Exception caught:  {0} for the subarchve indicated by the path:  {1}.", cause="An exception was caught when the subarchive was opened because the subarchive was not present.", action="Correct the archive so that the subarchive is present.", level="SEVERE")
-      private static final String EXCEPTION_CAUGHT = "AS-DEPLOYMENT-00004";
+    @LogMessageInfo(
+        message = "Exception caught:  {0} for the subarchve indicated by the path:  {1}.",
+        cause = "An exception was caught when the subarchive was opened because the subarchive was not present.",
+        action = "Correct the archive so that the subarchive is present.",
+        level = "SEVERE")
+    private static final String EXCEPTION_CAUGHT = "AS-DEPLOYMENT-00004";
 
-  public PersistenceArchivist() {
-  }
+    public PersistenceArchivist() {
+    }
 
+
+    @Override
     public DeploymentDescriptorFile getStandardDDFile(RootDeploymentDescriptor descriptor) {
         if (standardDD == null) {
              standardDD = new PersistenceDeploymentDescriptorFile();
@@ -64,6 +69,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles(RootDeploymentDescriptor descriptor) {
         return Collections.emptyList();
     }
@@ -129,6 +135,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
         return persistenceUnitsDescriptor;
     }
 
+    @Override
     public <T extends RootDeploymentDescriptor> T getDefaultDescriptor() {
         return null;
     }
@@ -141,7 +148,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
      * @return Map of puroot path to probable puroot archive.
      */
     protected static Map<String, ReadableArchive> getProbablePersistenceRoots(ReadableArchive parentArchive, SubArchivePURootScanner subArchivePURootScanner) {
-        Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<String, ReadableArchive>();
+        Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
         ReadableArchive  archiveToScan = subArchivePURootScanner.getSubArchiveToScan(parentArchive);
         if(archiveToScan != null) { // The subarchive exists
             Enumeration<String> entries = archiveToScan.entries();
@@ -162,9 +169,8 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
     }
 
     private static ReadableArchive getSubArchive(ReadableArchive parentArchive, String path, boolean expectAbscenceOfSubArchive) {
-        ReadableArchive returnedArchive = null;
         try {
-            returnedArchive = parentArchive.getSubArchive(path);
+            return parentArchive.getSubArchive(path);
         } catch (IOException ioe) {
             // if there is any problem in opening the subarchive, and the subarchive is expected to be present, log the exception
             if(!expectAbscenceOfSubArchive) {
@@ -175,7 +181,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
               deplLogger.log(lr);
             }
         }
-        return returnedArchive;
+        return null;
     }
 
     protected String getPuRoot(ReadableArchive archive) {

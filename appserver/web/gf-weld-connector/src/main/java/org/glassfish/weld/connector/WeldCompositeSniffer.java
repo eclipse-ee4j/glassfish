@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package org.glassfish.weld.connector;
 
+import jakarta.inject.Singleton;
+
 import java.io.IOException;
 import java.util.Enumeration;
 
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
-
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 
 /**
@@ -35,6 +36,7 @@ import jakarta.inject.Singleton;
 @Singleton
 public class WeldCompositeSniffer extends WeldSniffer {
 
+    @Override
     public boolean handles(DeploymentContext context) {
         ArchiveType archiveType = habitat.getService(ArchiveType.class, context.getArchiveHandler().getArchiveType());
         if (archiveType != null && !supportsArchiveType(archiveType)) {
@@ -62,6 +64,7 @@ public class WeldCompositeSniffer extends WeldSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.toString().equals("ear")) {
             return true;
@@ -81,14 +84,14 @@ public class WeldCompositeSniffer extends WeldSniffer {
                 // if a jar in lib dir and not WEB-INF/lib/foo/bar.jar
                 if (entryName.endsWith(WeldUtils.JAR_SUFFIX) &&
                     entryName.indexOf(WeldUtils.SEPARATOR_CHAR, libLocation.length() + 1 ) == -1 ) {
-                    try {
-                        ReadableArchive jarInLib = archive.getSubArchive(entryName);
+                    try (ReadableArchive jarInLib = archive.getSubArchive(entryName)) {
                         entryPresent = isArchiveCDIEnabled(context, jarInLib, WeldUtils.META_INF_BEANS_XML);
                         if (!entryPresent) {
                             entryPresent = WeldUtils.isImplicitBeanArchive(context, jarInLib);
                         }
-                        jarInLib.close();
-                        if (entryPresent) break;
+                        if (entryPresent) {
+                            break;
+                        }
                     } catch (IOException e) {
                     }
                 }

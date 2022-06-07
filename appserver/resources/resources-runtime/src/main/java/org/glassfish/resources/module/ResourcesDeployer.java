@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,56 +17,85 @@
 
 package org.glassfish.resources.module;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.resource.ResourceException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.event.*;
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.api.ResourcesBinder;
+import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.glassfish.resources.admin.cli.ResourceManager;
 import org.glassfish.resources.admin.cli.ResourcesXMLParser;
 import org.glassfish.resources.admin.cli.SunResourcesXML;
-import org.glassfish.resources.api.*;
-import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resources.api.ResourcesRegistry;
 import org.glassfish.resources.util.ResourceUtil;
-import org.glassfish.resourcebase.resources.api.ResourcesBinder;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.api.ServiceLocator;
-import com.sun.enterprise.config.serverbeans.Module;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.ConfigSupport;
 
-import org.glassfish.api.event.EventListener;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.resource.ResourceException;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
-import static org.glassfish.resources.api.Resource.*;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.*;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_META_DATA_RESOURCES;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_JNDI_NAMES;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_MAP;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_RA_NAMES;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.CONNECTOR_RESOURCES;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_APP_SCOPE_PREFIX;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_MODULE_SCOPE_PREFIX;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.NON_CONNECTOR_RESOURCES;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER_NAME;
+import static org.glassfish.resources.api.Resource.ADMIN_OBJECT_RESOURCE;
+import static org.glassfish.resources.api.Resource.CONNECTOR_CONNECTION_POOL;
+import static org.glassfish.resources.api.Resource.CONNECTOR_RESOURCE;
+import static org.glassfish.resources.api.Resource.CONNECTOR_WORK_SECURITY_MAP;
+import static org.glassfish.resources.api.Resource.RESOURCE_ADAPTER_CONFIG;
 
 /**
  * ResourcesDeployer to handle "glassfish-resources.xml(s)" bundled in the application.
@@ -103,7 +133,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
     private final Applications applications;
 
-    private static Map<String, Application> preservedApps = new HashMap<String, Application>();
+    private static Map<String, Application> preservedApps = new HashMap<>();
 
     private final static Logger _logger = LogDomains.getLogger(ResourcesDeployer.class, LogDomains.RSR_LOGGER);
 
@@ -123,10 +153,12 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         applications = applicationsParam;
     }
 
+    @Override
     public void postConstruct() {
         events.register(this);
     }
 
+    @Override
     public void preDestroy(){
         events.unregister(this);
     }
@@ -149,6 +181,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         return application;
     }
 
+    @Override
     public void unload(ResourcesApplication appContainer, DeploymentContext context) {
         //TODO unregistering resources, removing resources configuration.
         debug("Resources-Deployer :unload() called");
@@ -169,8 +202,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                                              Map<org.glassfish.resources.api.Resource, ResourcesXMLParser> resourceXmlParsers) {
         try {
             if (ResourceUtil.hasResourcesXML(archive, locator)) {
-                Map<String, Map<String, List>> appScopedResources = new HashMap<String, Map<String, List>>();
-                Map<String, String> fileNames = new HashMap<String, String>();
+                Map<String, Map<String, List>> appScopedResources = new HashMap<>();
+                Map<String, String> fileNames = new HashMap<>();
                 //using appName as it is possible that "deploy --name=APPNAME" will
                 //be different than the archive name.
                 retrieveAllResourcesXMLs(fileNames, archive, appName);
@@ -226,10 +259,10 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
             if (ResourceUtil.hasResourcesXML(archive, locator)) {
 
-                Map<String,Map<String, List>> appScopedResources = new HashMap<String,Map<String,List>>();
-                Map<String, List<String>> jndiNames = new HashMap<String, List<String>>();
+                Map<String,Map<String, List>> appScopedResources = new HashMap<>();
+                Map<String, List<String>> jndiNames = new HashMap<>();
                 List<Map.Entry<String, String>> raNames = new ArrayList<>();
-                Map<String, String> fileNames = new HashMap<String, String>();
+                Map<String, String> fileNames = new HashMap<>();
 
                 String appName = getAppNameFromDeployCmdParams(dc);
                 //using appName as it is possible that "deploy --name=APPNAME" will
@@ -256,8 +289,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
                     List list = parser.getResourcesList();
 
-                    Map<String, List> resourcesList = new HashMap<String, List>();
-                    List<String> jndiNamesList = new ArrayList<String>();
+                    Map<String, List> resourcesList = new HashMap<>();
+                    List<String> jndiNamesList = new ArrayList<>();
                     List<org.glassfish.resources.api.Resource> nonConnectorResources =
                             ResourcesXMLParser.getNonConnectorResourcesList(list, false, true);
                     resourcesList.put(NON_CONNECTOR_RESOURCES, nonConnectorResources);
@@ -328,16 +361,17 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      * @return resource adapter name
      */
     private String extractRAName(org.glassfish.resources.api.Resource resource) {
-        if (resource.getType().equals(ADMIN_OBJECT_RESOURCE))
+        if (resource.getType().equals(ADMIN_OBJECT_RESOURCE)) {
             return (String)resource.getAttributes().get(RES_ADAPTER);
-        else
+        } else {
             return (String)resource.getAttributes().get(RES_ADAPTER_NAME);
+        }
     }
 
     private static void validateResourcesXML(File file, ResourcesXMLParser parser) throws ResourceConflictException {
         String filePath = file.getPath();
         SunResourcesXML sunResourcesXML = new SunResourcesXML(filePath, parser.getResourcesList());
-        List<SunResourcesXML> resourcesXMLList = new ArrayList<SunResourcesXML>();
+        List<SunResourcesXML> resourcesXMLList = new ArrayList<>();
         resourcesXMLList.add(sunResourcesXML);
         ResourceUtilities.resolveResourceDuplicatesConflictsWithinArchive(resourcesXMLList);
     }
@@ -447,7 +481,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                  boolean embedded)
     throws ResourceException {
         List<Resource> resourceConfigs =
-                new ArrayList<Resource>();
+                new ArrayList<>();
         for (org.glassfish.resources.api.Resource resource : resourcesToRegister) {
             final HashMap attrList = resource.getAttributes();
             final Properties props = resource.getProperties();
@@ -581,7 +615,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         if(allResources != null){
             allResources.put(moduleName, resources);
         }else{
-            allResources = new HashMap<String, Resources>();
+            allResources = new HashMap<>();
             allResources.put(moduleName, resources);
             ResourcesRegistry.putResources(appName, allResources);
         }
@@ -650,18 +684,21 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             }
         }
     }
+
+
     public void deployResources(String applicationName, String moduleName,
-                                Collection<com.sun.enterprise.config.serverbeans.Resource> resources,
-                                boolean postDeployPhase) throws Exception {
-        for(Resource resource : resources){
-            if(resource instanceof BindableResource) {
-                BindableResource bindableResource = (BindableResource)resource;
-                ResourceInfo resourceInfo = new ResourceInfo(bindableResource.getJndiName(), applicationName, moduleName);
-                if(getResourceDeployer(bindableResource).canDeploy(postDeployPhase, resources, bindableResource)){
+        Collection<com.sun.enterprise.config.serverbeans.Resource> resources, boolean postDeployPhase)
+        throws Exception {
+        for (Resource resource : resources) {
+            if (resource instanceof BindableResource) {
+                BindableResource bindableResource = (BindableResource) resource;
+                ResourceInfo resourceInfo = new ResourceInfo(bindableResource.getJndiName(), applicationName,
+                    moduleName);
+                if (getResourceDeployer(bindableResource).canDeploy(postDeployPhase, resources, bindableResource)) {
                     resourcesBinder.deployResource(resourceInfo, bindableResource);
                 }
-            } else{
-                if(getResourceDeployer(resource).canDeploy(postDeployPhase, resources, resource)){
+            } else {
+                if (getResourceDeployer(resource).canDeploy(postDeployPhase, resources, resource)) {
                     getResourceDeployer(resource).deployResource(resource, applicationName, moduleName);
                 }
             }
@@ -673,52 +710,55 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
         return commandParams.name();
     }
 
-    public void retrieveAllResourcesXMLs(Map<String, String> fileNames, ReadableArchive archive,
-                                         String actualArchiveName) throws IOException {
 
-        if(DeploymentUtils.isArchiveOfType(archive, DOLUtils.earType(), locator)){
-            //Look for top-level META-INF/glassfish-resources.xml
-            if(archive.exists(RESOURCES_XML_META_INF)){
+    public void retrieveAllResourcesXMLs(Map<String, String> fileNames, ReadableArchive archive,
+        String actualArchiveName) throws IOException {
+        if (DeploymentUtils.isArchiveOfType(archive, DOLUtils.earType(), locator)) {
+            // Look for top-level META-INF/glassfish-resources.xml
+            if (archive.exists(RESOURCES_XML_META_INF)) {
                 String archivePath = archive.getURI().getPath();
                 String fileName = archivePath + RESOURCES_XML_META_INF;
-                if(_logger.isLoggable(Level.FINEST)){
-                    _logger.finest("GlassFish-Resources Deployer - fileName : " + fileName +
-                            " - parent : " + archive.getName());
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.finest(
+                        "GlassFish-Resources Deployer - fileName : " + fileName + " - parent : " + archive.getName());
                 }
                 fileNames.put(actualArchiveName, fileName);
             }
 
-            //Lok for sub-module level META-INF/glassfish-resources.xml and WEB-INF/glassfish-resources.xml
+            // Lok for sub-module level META-INF/glassfish-resources.xml and
+            // WEB-INF/glassfish-resources.xml
             Enumeration<String> entries = archive.entries();
-            while(entries.hasMoreElements()){
+            while (entries.hasMoreElements()) {
                 String element = entries.nextElement();
-                if(element.endsWith(".jar") || element.endsWith(".war") || element.endsWith(".rar") ||
-                        element.endsWith("_jar") || element.endsWith("_war") || element.endsWith("_rar")){
-                    ReadableArchive subArchive = archive.getSubArchive(element);
-                    if(subArchive != null ){
-                        retrieveResourcesXMLFromArchive(fileNames, subArchive, subArchive.getName());
+                if (element.endsWith(".jar") || element.endsWith(".war") || element.endsWith(".rar")
+                    || element.endsWith("_jar") || element.endsWith("_war") || element.endsWith("_rar")) {
+                    try (ReadableArchive subArchive = archive.getSubArchive(element)) {
+                        if (subArchive != null) {
+                            retrieveResourcesXMLFromArchive(fileNames, subArchive, subArchive.getName());
+                        }
                     }
                 }
             }
-        }else{
-            //Look for standalone archive's META-INF/glassfish-resources.xml and WEB-INF/glassfish-resources.xml
+        } else {
+            // Look for standalone archive's META-INF/glassfish-resources.xml and
+            // WEB-INF/glassfish-resources.xml
             retrieveResourcesXMLFromArchive(fileNames, archive, actualArchiveName);
         }
     }
 
     private void retrieveResourcesXMLFromArchive(Map<String, String> fileNames, ReadableArchive archive,
                                                  String actualArchiveName) {
-        if(ResourceUtil.hasResourcesXML(archive, locator)){
+        if (ResourceUtil.hasResourcesXML(archive, locator)) {
             String archivePath = archive.getURI().getPath();
-            String fileName ;
-            if(DeploymentUtils.isArchiveOfType(archive, DOLUtils.warType(), locator)){
-                fileName = archivePath +  RESOURCES_XML_WEB_INF;
-            }else{
+            String fileName;
+            if (DeploymentUtils.isArchiveOfType(archive, DOLUtils.warType(), locator)) {
+                fileName = archivePath + RESOURCES_XML_WEB_INF;
+            } else {
                 fileName = archivePath + RESOURCES_XML_META_INF;
             }
-            if(_logger.isLoggable(Level.FINEST)){
-                _logger.finest("GlassFish-Resources Deployer - fileName : " + fileName +
-                        " - parent : " + archive.getName());
+            if (_logger.isLoggable(Level.FINEST)) {
+                _logger.finest(
+                    "GlassFish-Resources Deployer - fileName : " + fileName + " - parent : " + archive.getName());
             }
 
             fileNames.put(actualArchiveName, fileName);
@@ -740,6 +780,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      * if <i>preserveResources</i> flag is set, cache the &lt;resources&gt;
      * config for persisting it in domain.xml
      */
+    @Override
     public void event(Event event) {
         if (event.is(Deployment.DEPLOYMENT_BEFORE_CLASSLOADER_CREATION)) {
             DeploymentContext dc = (DeploymentContext) event.hook();
@@ -985,7 +1026,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
     private void preserveResources(Application app) {
         String appName = app.getName();
-        Map<String, Resources> allResources = new HashMap<String, Resources>();
+        Map<String, Resources> allResources = new HashMap<>();
         Resources appScopedResources = app.getResources();
         if(appScopedResources != null){
             allResources.put(appName, appScopedResources);

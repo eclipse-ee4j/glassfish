@@ -186,10 +186,8 @@ public class WeldSniffer extends GenericSniffer {
                 String entryName = entries.nextElement();
                 // If a jar in lib dir and not WEB-INF/lib/foo/bar.jar
                 if (entryName.endsWith(JAR_SUFFIX) && entryName.indexOf(SEPARATOR_CHAR, libLocation.length() + 1) == -1) {
-                    try {
-                        ReadableArchive jarInLib = archive.getSubArchive(entryName);
+                    try (ReadableArchive jarInLib = archive.getSubArchive(entryName)) {
                         entryPresent = isArchiveCDIEnabled(context, jarInLib, META_INF_BEANS_XML);
-                        jarInLib.close();
                     } catch (IOException e) {
                         logger.log(FINE, "", e);
                     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,32 +18,34 @@
 package org.glassfish.deployment.admin;
 
 import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
+import java.io.IOException;
+import java.util.Map;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.MessagePart;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandLock;
-import org.glassfish.api.Param;
 import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.data.ModuleInfo;
-import org.glassfish.internal.data.EngineRef;
-import org.glassfish.deployment.common.DeploymentProperties;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.ActionReport;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
-
-import java.util.Map;
-import java.io.IOException;
-import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.container.Sniffer;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.data.EngineRef;
+import org.glassfish.internal.data.ModuleInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Get deployment configurations command
@@ -63,8 +66,8 @@ public class GetDeploymentConfigurationsCommand implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetDeploymentConfigurationsCommand.class);
 
-    @Param(primary=true)
-    private String appname = null;
+    @Param(primary = true)
+    private String appname;
 
     @Inject
     ApplicationRegistry appRegistry;
@@ -73,62 +76,49 @@ public class GetDeploymentConfigurationsCommand implements AdminCommand {
      * Entry point from the framework into the command execution
      * @param context context for the command.
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-
-        ActionReport.MessagePart part = report.getTopMessagePart();
-
+        final MessagePart part = report.getTopMessagePart();
         final ApplicationInfo appInfo = appRegistry.get(appname);
-
         if (appInfo == null) {
             return;
         }
-
-        try
-        {
-            if (appInfo.getEngineRefs().size() > 0)
-            {
+        try {
+            if (appInfo.getEngineRefs().isEmpty()) {
+                // standalone module
+                for (Sniffer sniffer : appInfo.getSniffers()) {
+                    addToResultDDList(appname, sniffer.getDeploymentConfigurations(appInfo.getSource()), part);
+                }
+            } else {
                 // composite archive case, i.e. ear
-                for (EngineRef ref : appInfo.getEngineRefs())
-                {
+                for (EngineRef ref : appInfo.getEngineRefs()) {
                     Sniffer appSniffer = ref.getContainerInfo().getSniffer();
                     addToResultDDList("", appSniffer.getDeploymentConfigurations(appInfo.getSource()), part);
                 }
 
-                for (ModuleInfo moduleInfo : appInfo.getModuleInfos())
-                {
-                    for (Sniffer moduleSniffer : moduleInfo.getSniffers())
-                    {
-                        ReadableArchive moduleArchive = appInfo.getSource().getSubArchive(moduleInfo.getName());
-                        addToResultDDList(moduleInfo.getName(), moduleSniffer.getDeploymentConfigurations(moduleArchive), part);
+                for (ModuleInfo moduleInfo : appInfo.getModuleInfos()) {
+                    for (Sniffer moduleSniffer : moduleInfo.getSniffers()) {
+                        try (ReadableArchive moduleArchive = appInfo.getSource().getSubArchive(moduleInfo.getName())) {
+                            addToResultDDList(moduleInfo.getName(),
+                                moduleSniffer.getDeploymentConfigurations(moduleArchive), part);
+                        }
                     }
                 }
             }
-            else
-            {
-                // standalone module
-                for (Sniffer sniffer : appInfo.getSniffers())
-                {
-                    addToResultDDList(appname, sniffer.getDeploymentConfigurations(appInfo.getSource()), part);
-                }
-            }
-        }
-        catch ( final IOException e)
-        {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void addToResultDDList(String moduleName, Map<String, String> snifferConfigs, ActionReport.MessagePart part)
-    {
+
+    private void addToResultDDList(String moduleName, Map<String, String> snifferConfigs,
+        ActionReport.MessagePart part) {
         for (Map.Entry<String, String> pathEntry : snifferConfigs.entrySet()) {
             ActionReport.MessagePart childPart = part.addChild();
-            childPart.addProperty(DeploymentProperties.MODULE_NAME,
-                moduleName);
-            childPart.addProperty(DeploymentProperties.DD_PATH,
-                pathEntry.getKey());
-            childPart.addProperty(DeploymentProperties.DD_CONTENT,
-                pathEntry.getValue());
+            childPart.addProperty(DeploymentProperties.MODULE_NAME, moduleName);
+            childPart.addProperty(DeploymentProperties.DD_PATH, pathEntry.getKey());
+            childPart.addProperty(DeploymentProperties.DD_CONTENT, pathEntry.getValue());
         }
     }
 }

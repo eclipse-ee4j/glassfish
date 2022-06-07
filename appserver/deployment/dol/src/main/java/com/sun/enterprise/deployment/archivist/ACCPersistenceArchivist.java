@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,11 @@ package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -32,8 +34,9 @@ import java.util.logging.Level;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import jakarta.inject.Inject;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
@@ -62,14 +65,12 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        if(deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist",
-                    "readPersistenceDeploymentDescriptors", "archive = {0}",
-                    archive.getURI());
+        if (deplLogger.isLoggable(Level.FINE)) {
+            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors",
+                "archive = {0}", archive.getURI());
         }
 
-        final Map<String,ReadableArchive> candidatePersistenceArchives =
-                new HashMap<String,ReadableArchive>();
+        final Map<String, ReadableArchive> candidatePersistenceArchives = new HashMap<>();
 
         /*
          * The descriptor had better be an ApplicationClientDescriptor!
@@ -79,7 +80,6 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         }
 
         final ApplicationClientDescriptor acDescr = ApplicationClientDescriptor.class.cast(descriptor);
-
         try {
             final Manifest mf = archive.getManifest();
             final Attributes mainAttrs = mf.getMainAttributes();
@@ -101,22 +101,20 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
              * EAR).
              */
             if (isDeployed(mainAttrs)) {
-                if ( ! isDeployedClientAlsoStandAlone(mainAttrs)) {
+                if (!isDeployedClientAlsoStandAlone(mainAttrs)) {
                     addOtherDeployedScanTargets(archive, mainAttrs, candidatePersistenceArchives);
                 }
-            } else if ( ! isStandAlone(acDescr)) {
+            } else if (!isStandAlone(acDescr)) {
                 addOtherNondeployedScanTargets(archive, acDescr, candidatePersistenceArchives);
             }
 
             for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main,
-                        pathToArchiveEntry.getValue(),
-                        pathToArchiveEntry.getKey(),
-                        descriptor);
+                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
+                    descriptor);
             }
         } finally {
-            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                //pathToArchiveEntry.getValue().close();
+            for (ReadableArchive value : candidatePersistenceArchives.values()) {
+                value.close();
             }
         }
         return null;
@@ -206,9 +204,9 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     }
 
-    private void addScanTargetsFromURIList(final ReadableArchive archive,
-            final String relativeURIList,
-            final Map<String,ReadableArchive> candidates) throws IOException {
+
+    private void addScanTargetsFromURIList(final ReadableArchive archive, final String relativeURIList,
+        final Map<String, ReadableArchive> candidates) throws IOException {
         if (relativeURIList == null || relativeURIList.isEmpty()) {
             return;
         }

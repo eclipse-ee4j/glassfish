@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,21 +19,27 @@ package com.sun.enterprise.deployment.deploy.shared;
 
 import com.sun.enterprise.util.io.FileUtils;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Vector;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.jar.JarEntry;
 import java.util.zip.ZipEntry;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 
 /**
  * This Archive offers an abstraction for jsr88
@@ -43,29 +50,35 @@ import java.util.zip.ZipEntry;
  */
 public class DeploymentPlanArchive extends JarArchive implements ReadableArchive {
 
-    // the deployment plan jar file...
-    JarFile jarFile = null;
-
-    // original archive uri
-    URI uri = null;
-
-    // cached list of elements
-    Vector elements=null;
-
-    String subArchiveUri=null;
-
     private final static ServiceLocator locator = Globals.getDefaultHabitat();
 
-    /** Creates a new instance of DeploymentPlanArchive
+    /** the deployment plan jar file */
+    JarFile jarFile;
+
+    /** original archive uri */
+    URI uri;
+
+    /** cached list of elements */
+    Vector<String> elements;
+
+    String subArchiveUri;
+
+
+    /**
+     * Creates a new instance of DeploymentPlanArchive
      * package private
      */
     public DeploymentPlanArchive() {
     }
 
-    /** Open an existing DeploymentPlan archive and return
+
+    /**
+     * Open an existing DeploymentPlan archive and return
      * a abstraction for reading from it.
+     *
      * @param uri the path to the archive
      */
+    @Override
     public void open(URI uri) throws IOException {
         this.uri = uri;
         File f = new File(uri);
@@ -74,27 +87,33 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
         }
     }
 
+
     /**
      * Get the size of the archive
+     *
      * @return tje the size of this archive or -1 on error
      */
+    @Override
     public long getArchiveSize() throws NullPointerException, SecurityException {
-        if(uri == null) {
+        if (uri == null) {
             return -1;
         }
         File tmpFile = new File(uri);
-        return(tmpFile.length());
+        return tmpFile.length();
     }
+
 
     /**
      * Closes the current jar file
      */
-    public void close() throws java.io.IOException {
-        if (jarFile!=null) {
+    @Override
+    public void close() throws IOException {
+        if (jarFile != null) {
             jarFile.close();
-            jarFile=null;
+            jarFile = null;
         }
     }
+
 
     /**
      * Closes the output jar file entry
@@ -103,6 +122,7 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
         // nothing to do
     }
 
+
     /**
      * Closes the output sub archive entry
      */
@@ -110,9 +130,11 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
         // nothing to do...
     }
 
+
     /**
      * Deletes the underlying jar file
      */
+    @Override
     public boolean delete() {
         File f = new File(uri);
         if (f.exists()) {
@@ -121,28 +143,34 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
         return false;
     }
 
+
+    @Override
     public JarEntry getJarEntry(String name) {
-        if (jarFile!=null) {
+        if (jarFile != null) {
             return jarFile.getJarEntry(name);
         }
         return null;
     }
 
+
+    @Override
     public Collection<String> getDirectories() throws IOException {
-        return new Vector<String>();
+        return new Vector<>();
     }
+
 
     /**
      * @return an Enumeration of entries for this archive
      */
-    public Enumeration entries() {
+    @Override
+    public Enumeration<String> entries() {
         // Deployment Plan are organized flatly,
 
-        if (elements==null) {
-            synchronized(this) {
-                elements = new Vector();
-                for (Enumeration e = jarFile.entries();e.hasMoreElements();) {
-                    ZipEntry ze = (ZipEntry) e.nextElement();
+        if (elements == null) {
+            synchronized (this) {
+                elements = new Vector<>();
+                for (Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements();) {
+                    JarEntry ze = e.nextElement();
                     if (!ze.isDirectory() && !ze.getName().startsWith("META-INF/")) {
                         elements.add(ze.getName());
                     }
@@ -150,11 +178,8 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
             }
         }
 
-        Vector entries = new Vector();
-        for (Enumeration e = elements.elements();e.hasMoreElements();) {
-
-            String entryName = (String) e.nextElement();
-
+        List<String> entries = new ArrayList<>();
+        for (String entryName : elements) {
             String mangledName = entryName;
             String prefix = "META-INF/";
             ArchiveType warType = locator.getService(ArchiveType.class, "war");
@@ -176,11 +201,11 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
                 mangledName = prefix + mangledName;
             }
 
-            if (subArchiveUri==null) {
+            if (subArchiveUri == null) {
                 // top level archive
-                if ((entryName.indexOf(".jar.")!=-1) ||
-                    (entryName.indexOf(".war.")!=-1) ||
-                    (entryName.indexOf(".rar."))!=-1) {
+                if (entryName.indexOf(".jar.") != -1
+                    || entryName.indexOf(".war.") != -1
+                    || entryName.indexOf(".rar.") != -1) {
 
                     // this element is in a sub archive
                     continue;
@@ -193,7 +218,7 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
                 }
             }
         }
-        return entries.elements();
+        return Collections.enumeration(entries);
     }
 
     /**
@@ -207,6 +232,7 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
     /**
      * @return true if the underlying archive exists
      */
+    @Override
     public boolean exists() {
         File f = new File(uri);
         return f.exists();
@@ -215,8 +241,9 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
     /**
      * @return a sub archive giving the name
      */
+    @Override
     public ReadableArchive getSubArchive(String name) throws java.io.IOException {
-        if (jarFile==null) {
+        if (jarFile == null) {
             return null;
         }
         DeploymentPlanArchive dpArchive = new DeploymentPlanArchive();
@@ -233,21 +260,24 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
         return dpArchive;
     }
 
+
     /**
      * Returns the existence of the given entry name
      * The file name must be relative to the root of the module.
      *
-     * @param name the file name relative to the root of the module.          * @return the existence the given entry name.
+     * @param name the file name relative to the root of the module.
+     * @return the existence the given entry name.
      */
+    @Override
     public boolean exists(String name) throws IOException {
-        return (getEntry(name) != null);
+        return getEntry(name) != null;
     }
 
     /**
      * @return an input stream giving its entry name
      */
+    @Override
     public InputStream getEntry(String name) throws IOException {
-
         // we are just interested in the file name, not the
         // relative path
         if (name.endsWith(".dbschema")) {
@@ -256,18 +286,14 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
             name = name.substring(name.lastIndexOf('/')+1);
         }
 
-        if (subArchiveUri==null) {
+        if (subArchiveUri == null) {
             // we are at the "top level"
-
             return getElement(name);
-        } else {
-            // we are in a sub archive...
-            // now let's mangle the name...
-            String mangledName = subArchiveUri + "." +
-                name;
-            return getElement(mangledName);
-
         }
+        // we are in a sub archive...
+        // now let's mangle the name...
+        String mangledName = subArchiveUri + "." + name;
+        return getElement(mangledName);
     }
 
     /**
@@ -276,26 +302,26 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
      * @param name the entry name
      * @return the entry size
      */
+    @Override
     public long getEntrySize(String name) {
         if (elements.contains(name)) {
             ZipEntry je = jarFile.getEntry(name);
             return je.getSize();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     private InputStream getElement(String name) throws IOException {
         if (elements.contains(name)) {
             return jarFile.getInputStream(jarFile.getEntry(name));
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
      * @return the manifest
      */
+    @Override
     public java.util.jar.Manifest getManifest() throws java.io.IOException {
         // no manifest in DeploymentPlan
         return new Manifest();
@@ -306,6 +332,7 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
      *
      * @return the path for this archive.
      */
+    @Override
     public URI getURI() {
         return uri;
     }
@@ -313,6 +340,7 @@ public class DeploymentPlanArchive extends JarArchive implements ReadableArchive
     /**
      * rename the underlying archive
      */
+    @Override
     public boolean renameTo(String name) {
         File f = new File(uri);
         File to  = new File(name);

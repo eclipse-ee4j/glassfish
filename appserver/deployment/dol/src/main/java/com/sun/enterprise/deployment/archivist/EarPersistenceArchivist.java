@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,32 +46,32 @@ public class EarPersistenceArchivist extends PersistenceArchivist {
      * Spec defined pu roots are - (1)Non component jars in root of ear (2)jars in lib of ear
      */
     @Override
-    public Object open(Archivist main, ReadableArchive earArchive, final RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-
-        if(deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "EarArchivist",
-                    "readPersistenceDeploymentDescriptors", "archive = {0}",
-                    earArchive.getURI());
+    public Object open(Archivist main, ReadableArchive earArchive, final RootDeploymentDescriptor descriptor)
+        throws IOException, SAXException {
+        if (deplLogger.isLoggable(Level.FINE)) {
+            deplLogger.logp(Level.FINE, "EarArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",
+                earArchive.getURI());
         }
 
-
-        Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<String,  ReadableArchive>();
+        Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
         try {
-            if (! (descriptor instanceof Application)) {
+            if (!(descriptor instanceof Application)) {
                 return null;
             }
             final Application app = Application.class.cast(descriptor);
 
-            // TODO: need to compute includeRoot, not hard-code it, in the next invocation. The flag should be set to true if operating in v2 compatibility mode false otherwise.
+            // TODO: need to compute includeRoot, not hard-code it, in the next invocation. The flag
+            // should be set to true if operating in v2 compatibility mode false otherwise.
             // Check with Hong how to get hold of the flag here?
-            EARBasedPersistenceHelper.addLibraryAndTopLevelCandidates(earArchive, app, true /* includeRoot */,
-                    probablePersitenceArchives);
+            EARBasedPersistenceHelper.addLibraryAndTopLevelCandidates(earArchive, app,
+                true /* includeRoot */, probablePersitenceArchives);
 
-            for(Map.Entry<String, ReadableArchive> pathToArchiveEntry : probablePersitenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(), descriptor);
+            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : probablePersitenceArchives.entrySet()) {
+                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
+                    descriptor);
             }
         } finally {
-            for(Archive subArchive : probablePersitenceArchives.values()) {
+            for (Archive subArchive : probablePersitenceArchives.values()) {
                 subArchive.close();
             }
         }

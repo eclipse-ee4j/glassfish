@@ -100,17 +100,17 @@ public class DeploymentImpl implements CDI11Deployment {
     private DeploymentContext context;
 
     // A convenience Map to get a BeanDeploymentArchive for a given BeanDeploymentArchive ID
-    private Map<String, BeanDeploymentArchive> idToBeanDeploymentArchive = new HashMap<>();
+    private final Map<String, BeanDeploymentArchive> idToBeanDeploymentArchive = new HashMap<>();
     private SimpleServiceRegistry simpleServiceRegistry = null;
 
-    private Logger logger = CDILoggerInfo.getLogger();
+    private final Logger logger = CDILoggerInfo.getLogger();
 
     // Holds BeanDeploymentArchives created for extensions
-    private Map<ClassLoader, BeanDeploymentArchive> extensionBDAMap = new HashMap<>();
+    private final Map<ClassLoader, BeanDeploymentArchive> extensionBDAMap = new HashMap<>();
 
     private Iterable<Metadata<Extension>> extensions;
 
-    private Collection<EjbDescriptor> deployedEjbs = new LinkedList<>();
+    private final Collection<EjbDescriptor> deployedEjbs = new LinkedList<>();
     private ArchiveFactory archiveFactory;
 
     private boolean earContextAppLibBdasProcessed;
@@ -618,8 +618,8 @@ public class DeploymentImpl implements CDI11Deployment {
     // This method creates and returns a List of BeanDeploymentArchives for each
     // Weld enabled jar under /lib of an existing Archive.
     private List<RootBeanDeploymentArchive> scanForLibJars(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext context) {
-        List<ReadableArchive> libJars = null;
-        ApplicationHolder holder = context.getModuleMetaData(ApplicationHolder.class);
+        final List<ReadableArchive> libJars = new ArrayList<>();
+        final ApplicationHolder holder = context.getModuleMetaData(ApplicationHolder.class);
         if (holder != null && holder.app != null) {
             String libDir = holder.app.getLibraryDirectory();
             if (!isEmpty(libDir)) {
@@ -630,12 +630,11 @@ public class DeploymentImpl implements CDI11Deployment {
                     // If a jar is directly in lib dir and not WEB-INF/lib/foo/bar.jar
                     if (entryName.endsWith(JAR_SUFFIX) && entryName.indexOf(SEPARATOR_CHAR, libDir.length() + 1) == -1) {
                         try {
-                            ReadableArchive jarInLib = archive.getSubArchive(entryName);
+                            final ReadableArchive jarInLib = archive.getSubArchive(entryName);
                             if (jarInLib.exists(META_INF_BEANS_XML) || isImplicitBeanArchive(context, jarInLib)) {
-                                if (libJars == null) {
-                                    libJars = new ArrayList<>();
-                                }
                                 libJars.add(jarInLib);
+                            } else {
+                                jarInLib.close();
                             }
                         } catch (IOException e) {
                             logger.log(FINE, EXCEPTION_SCANNING_JARS, new Object[] { e });
@@ -645,16 +644,19 @@ public class DeploymentImpl implements CDI11Deployment {
             }
         }
 
-        if (libJars != null) {
-            String libDir = holder.app.getLibraryDirectory();
-            for (ReadableArchive libJarArchive : libJars) {
-                createLibJarBda(libJarArchive, ejbs, libDir);
-            }
+        if (holder == null || libJars.isEmpty()) {
+            return libJarRootBdas;
         }
-
+        String libDir = holder.app.getLibraryDirectory();
+        for (ReadableArchive libJarArchive : libJars) {
+            createLibJarBda(libJarArchive, ejbs, libDir);
+        }
         return libJarRootBdas;
     }
 
+    /**
+     * @param libJarArchive - this method uses and closes the archive
+     */
     private void createLibJarBda(ReadableArchive libJarArchive, Collection<EjbDescriptor> ejbs, String libDir) {
         createLibJarBda(
             new RootBeanDeploymentArchive(

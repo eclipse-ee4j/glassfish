@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,6 +19,9 @@ package org.glassfish.appclient.server.core.jws;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +39,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -53,16 +56,17 @@ import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.StreamedAutoSignedStaticContent;
 import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.DeploymentUtils;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * Encapsulates information related to Java Web Start support for a single
@@ -310,18 +314,22 @@ public class JavaWebStartInfo implements ConfigListener {
         }
     }
 
-    static InputStream openEntry(final ReadableArchive appClientArchive,
-                final String pathToContent) throws IOException {
-            final int bang = pathToContent.indexOf('!');
-            if (bang == -1) {
-                return appClientArchive.getEntry(pathToContent);
-            } else {
-                if (appClientArchive.getParentArchive() == null) {
-                    throw new IllegalArgumentException(pathToContent);
-                }
-                return appClientArchive.getParentArchive()
-                        .getSubArchive(pathToContent.substring(0, bang))
-                        .getEntry(pathToContent.substring(bang + 1));
+
+    static Document parseEntry(final ReadableArchive appClientArchive, final String pathToContent,
+        final InputStreamToDocument parser) throws IOException, SAXException {
+        final int bang = pathToContent.indexOf('!');
+        if (bang == -1) {
+            return parser.parse(appClientArchive.getEntry(pathToContent));
+        }
+        if (appClientArchive.getParentArchive() == null) {
+            throw new IllegalArgumentException(pathToContent);
+        }
+        try (ReadableArchive subArchive = appClientArchive.getParentArchive()
+            .getSubArchive(pathToContent.substring(0, bang))) {
+            if (subArchive == null) {
+                throw new FileNotFoundException(pathToContent);
+            }
+            return parser.parse(subArchive.getEntry(pathToContent.substring(bang + 1)));
         }
     }
 
@@ -974,4 +982,8 @@ public class JavaWebStartInfo implements ConfigListener {
         }
     }
 
+    @FunctionalInterface
+    interface InputStreamToDocument {
+        Document parse(InputStream t) throws IOException, SAXException;
+    }
 }

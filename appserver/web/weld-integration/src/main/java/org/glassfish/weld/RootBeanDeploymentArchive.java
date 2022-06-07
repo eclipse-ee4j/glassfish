@@ -49,10 +49,16 @@ public class RootBeanDeploymentArchive extends BeanDeploymentArchiveImpl {
 
     private BeanDeploymentArchiveImpl moduleBda;
 
+    /**
+     * @param archive - this constructor uses and closes the archive
+     */
     public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext) {
         this(archive, ejbs, deploymentContext, null);
     }
 
+    /**
+     * @param archive - this constructor uses and closes the archive
+     */
     public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext, String moduleBdaID) {
         super("root_" + archive.getName(), emptyList(), emptyList(), emptyList(), deploymentContext);
         createModuleBda(archive, ejbs, deploymentContext, moduleBdaID);

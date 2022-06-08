@@ -50,8 +50,6 @@ import org.xml.sax.SAXException;
 @ExtensionsArchivistFor("jpa")
 public class ACCPersistenceArchivist extends PersistenceArchivist {
 
-
-
     @Inject
     private ProcessEnvironment env;
 
@@ -70,52 +68,42 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
                 "archive = {0}", archive.getURI());
         }
 
-        final Map<String, ReadableArchive> candidatePersistenceArchives = new HashMap<>();
-
-        /*
-         * The descriptor had better be an ApplicationClientDescriptor!
-         */
+        // The descriptor had better be an ApplicationClientDescriptor!
         if ( ! (descriptor instanceof ApplicationClientDescriptor)) {
             return null;
         }
 
+        final Map<String, ReadableArchive> candidatePersistenceArchives = new HashMap<>();
         final ApplicationClientDescriptor acDescr = ApplicationClientDescriptor.class.cast(descriptor);
-        try {
-            final Manifest mf = archive.getManifest();
-            final Attributes mainAttrs = mf.getMainAttributes();
-            /*
-             * We must scan the app client archive itself.
-             */
-            URI clientURI = clientURI(archive, acDescr);
-            candidatePersistenceArchives.put(clientURI.toASCIIString(), archive);
+        final Manifest mf = archive.getManifest();
+        final Attributes mainAttrs = mf.getMainAttributes();
+        /*
+         * We must scan the app client archive itself.
+         */
+        URI clientURI = clientURI(archive, acDescr);
+        candidatePersistenceArchives.put(clientURI.toASCIIString(), archive);
 
-            /*
-             * If this app client
-             * was deployed as part of an EAR then scan any library JARs and, if the
-             * client was also deployed or launched in v2-compatibility mode, any
-             * top-level JARs in the EAR.
-             *
-             * Exactly how we do this depends on whether this is a deployed client
-             * (which will reside in a client download directory) or a non-deployed
-             * one (which will reside either as a stand-alone client or within an
-             * EAR).
-             */
-            if (isDeployed(mainAttrs)) {
-                if (!isDeployedClientAlsoStandAlone(mainAttrs)) {
-                    addOtherDeployedScanTargets(archive, mainAttrs, candidatePersistenceArchives);
-                }
-            } else if (!isStandAlone(acDescr)) {
-                addOtherNondeployedScanTargets(archive, acDescr, candidatePersistenceArchives);
+        /*
+         * If this app client
+         * was deployed as part of an EAR then scan any library JARs and, if the
+         * client was also deployed or launched in v2-compatibility mode, any
+         * top-level JARs in the EAR.
+         * Exactly how we do this depends on whether this is a deployed client
+         * (which will reside in a client download directory) or a non-deployed
+         * one (which will reside either as a stand-alone client or within an
+         * EAR).
+         */
+        if (isDeployed(mainAttrs)) {
+            if (!isDeployedClientAlsoStandAlone(mainAttrs)) {
+                addOtherDeployedScanTargets(archive, mainAttrs, candidatePersistenceArchives);
             }
+        } else if (!isStandAlone(acDescr)) {
+            addOtherNondeployedScanTargets(archive, acDescr, candidatePersistenceArchives);
+        }
 
-            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
-                    descriptor);
-            }
-        } finally {
-            for (ReadableArchive value : candidatePersistenceArchives.values()) {
-                value.close();
-            }
+        for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
+            readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
+                descriptor);
         }
         return null;
     }

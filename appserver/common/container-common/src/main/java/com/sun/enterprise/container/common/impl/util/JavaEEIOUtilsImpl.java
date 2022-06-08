@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,16 +28,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINEST;
 
 /**
  * A contract that defines a set of methods to serialize / deserialze Java EE
@@ -48,96 +50,62 @@ import org.jvnet.hk2.annotations.Service;
  * serializable) StatefulSessionBeans
  *
  * @author Mahesh Kannan
- *
  */
 @Service
 public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
 
-    private static Logger _logger = LogDomains.getLogger(
-            JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER);
-
-    @Inject
-    ServiceLocator habitat;
+    private static final Logger LOG = LogDomains.getLogger(JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER);
 
     private final Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<>();
-
     private final Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<>();
 
+    @Inject
+    private ServiceLocator habitat;
+
     @Override
-    public ObjectInputStream createObjectInputStream(InputStream is,
-            boolean resolveObject, ClassLoader loader) throws Exception {
+    public ObjectInputStream createObjectInputStream(InputStream is, boolean resolveObject, ClassLoader loader)
+        throws Exception {
         return new GlassFishObjectInputStream(inputHandlers, is, loader, resolveObject);
     }
 
+
     @Override
-    public ObjectOutputStream createObjectOutputStream(OutputStream os,
-            boolean replaceObject) throws IOException {
+    public ObjectOutputStream createObjectOutputStream(OutputStream os, boolean replaceObject) throws IOException {
         return new GlassFishObjectOutputStream(outputHandlers, os, replaceObject);
     }
 
+
     @Override
-    public byte[] serializeObject(Object obj, boolean replaceObject)
-            throws java.io.IOException {
-
-        byte[] data = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = null;
-        try {
-            oos = createObjectOutputStream(bos, replaceObject);
-
+    public byte[] serializeObject(Object obj, boolean replaceObject) throws IOException {
+        if (LOG.isLoggable(FINEST)) {
+            LOG.log(FINEST, "serializeObject(object={0}, replaceObject={1})", new Object[] {obj, replaceObject});
+        }
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = createObjectOutputStream(bos, replaceObject)) {
             oos.writeObject(obj);
             oos.flush();
-            data = bos.toByteArray();
-        } catch (java.io.NotSerializableException notSerEx) {
+            return bos.toByteArray();
+        } catch (NotSerializableException notSerEx) {
             throw notSerEx;
         } catch (Exception th) {
-            IOException ioEx = new IOException(th.toString());
-            ioEx.initCause(th);
-            throw ioEx;
-        } finally {
-            if (oos != null) {
-                try {
-                    oos.close();
-                } catch (Exception ex) {
-                }
-            }
-            try {
-                bos.close();
-            } catch (Exception ex) {
-            }
+            throw new IOException("Serialization failed.", th);
         }
-
-        return data;
     }
+
 
     @Override
-    public Object deserializeObject(byte[] data, boolean resolveObject,
-            ClassLoader appClassLoader) throws Exception {
-
-        Object obj = null;
-        ByteArrayInputStream bis = null;
-        ObjectInputStream ois = null;
-        try {
-            bis = new ByteArrayInputStream(data);
-            ois = createObjectInputStream(bis, resolveObject, appClassLoader);
-            obj = ois.readObject();
-        } catch (Exception ex) {
-            _logger.log(Level.FINE, "Error during deserialization", ex);
-            throw ex;
-        } finally {
-            try {
-                ois.close();
-            } catch (Exception ex) {
-                _logger.log(Level.FINEST, "Error during ois.close()", ex);
-            }
-            try {
-                bis.close();
-            } catch (Exception ex) {
-                _logger.log(Level.FINEST, "Error during bis.close()", ex);
-            }
+    public Object deserializeObject(byte[] data, boolean resolveObject, ClassLoader appClassLoader) throws Exception {
+        if (LOG.isLoggable(FINEST)) {
+            LOG.log(FINEST, "deserializeObject(data, resolveObject={1}, classLoader)", resolveObject);
         }
-        return obj;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+            ObjectInputStream ois = createObjectInputStream(bis, resolveObject, appClassLoader)) {
+            return ois.readObject();
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
+
 
     @Override
     public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
@@ -145,21 +113,21 @@ public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
 
     }
 
+
     @Override
     public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
         outputHandlers.remove(handler);
     }
 
+
     @Override
-    public void addGlassFishInputStreamHandler(
-            GlassFishInputStreamHandler handler) {
+    public void addGlassFishInputStreamHandler(GlassFishInputStreamHandler handler) {
         inputHandlers.add(handler);
     }
 
+
     @Override
-    public void removeGlassFishInputStreamHandler(
-            GlassFishInputStreamHandler handler) {
+    public void removeGlassFishInputStreamHandler(GlassFishInputStreamHandler handler) {
         inputHandlers.remove(handler);
     }
-
 }

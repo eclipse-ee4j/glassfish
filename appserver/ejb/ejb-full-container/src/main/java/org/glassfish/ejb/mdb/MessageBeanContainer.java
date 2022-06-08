@@ -87,8 +87,8 @@ import jakarta.ejb.RemoveException;
 import jakarta.resource.spi.endpoint.MessageEndpoint;
 
 /**
- * This class provides container functionality specific to message-driven EJBs. At deployment time, one instance of the
- * MessageBeanContainer is created for each message-driven bean in an application.
+ * This class provides container functionality specific to message-driven EJBs. At deployment time, one instance of this
+ * class is created for each message-driven bean in an application.
  * <P>
  * The 3 states of a Message-driven EJB (an EJB can be in only 1 state at a time):
  * <pre>

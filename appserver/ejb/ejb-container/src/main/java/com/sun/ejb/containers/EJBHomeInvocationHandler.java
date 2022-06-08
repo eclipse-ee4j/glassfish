@@ -122,11 +122,11 @@ public class EJBHomeInvocationHandler extends EJBHomeImpl implements InvocationH
             }
 
             // Use optimized version of get that takes param count as an argument.
-            InvocationInfo invInfo = invocationInfoMap_.get(method, args.length);
+            InvocationInfo invInfo = invocationInfoMap_.get(method, args == null ? 0 : args.length);
 
             if (invInfo == null) {
-                throw new RemoteException("Unknown Home interface method :" + method);
-            } else if ((methodClass == jakarta.ejb.EJBHome.class) || invInfo.ejbIntfOverride) {
+                throw new RemoteException("Unknown Home interface method: " + method);
+            } else if (methodClass == EJBHome.class || invInfo.ejbIntfOverride) {
                 return invokeEJBHomeMethod(method.getName(), args);
             } else if (GenericEJBHome.class.isAssignableFrom(methodClass)) {
                 if (method.getName().equals("create")) {

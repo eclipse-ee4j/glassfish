@@ -16,35 +16,45 @@
 
 package org.jboss.weld.tck.glassfish;
 
-import com.sun.enterprise.container.common.impl.util.JavaEEIOUtilsImpl;
-
 import java.io.IOException;
-
+import java.util.Arrays;
 import org.jboss.cdi.tck.spi.Beans;
 
 /**
+ * CDI TCK tests use this class as an adapter between the test application and server container.
+ * Then it's implementation can simplify the behavior, ie. explicit passivation, while
+ * in a real application the decision to passivate/activate some object is on the container
+ * and cannot be requested by the application.
+ * <p>
+ * Until GlassFish provides standalone utility to do that, we have to fake
+ * the passivation/activation.
+ *
  * @author David Matejcek
  */
 public class GlassFishBeansImpl implements Beans {
+
+    private Object fakeSerialized;
 
     @Override
     public boolean isProxy(Object instance) {
         return instance.getClass().getName().indexOf("_$$_Weld") > 0;
     }
 
+
     @Override
     public byte[] passivate(Object instance) throws IOException {
-        JavaEEIOUtilsImpl utils = new JavaEEIOUtilsImpl();
-        return utils.serializeObject(instance, true);
+        fakeSerialized = instance;
+        return instance.toString().getBytes();
     }
+
 
     @Override
     public Object activate(byte[] bytes) throws IOException, ClassNotFoundException {
-        JavaEEIOUtilsImpl utils = new JavaEEIOUtilsImpl();
-        try {
-            return utils.deserializeObject(bytes, true, Thread.currentThread().getContextClassLoader());
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not deserialize the object.", e);
+        if (Arrays.equals(fakeSerialized.toString().getBytes(), bytes)) {
+            Object result = fakeSerialized;
+            fakeSerialized = null;
+            return result;
         }
+        return null;
     }
 }

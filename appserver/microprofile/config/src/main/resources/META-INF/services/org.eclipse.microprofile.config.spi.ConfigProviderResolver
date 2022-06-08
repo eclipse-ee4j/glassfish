@@ -1,1 +1,1 @@
-io.smallrye.config.SmallRyeConfigProviderResolver
+io.helidon.config.mp.MpConfigProviderResolver

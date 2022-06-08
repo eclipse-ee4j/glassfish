@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,8 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import org.glassfish.hk2.api.PostConstruct;
-
-import java.io.ObjectOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 
@@ -32,9 +27,6 @@ import java.util.Collection;
  */
 public class JavaEEObjectOutputStream
     extends ObjectOutputStream {
-
-    private static final JavaEEObjectStreamHandler[] _empty =
-            new JavaEEObjectStreamHandler[0];
 
     Collection<JavaEEObjectStreamHandler> handlers;
 
@@ -46,9 +38,8 @@ public class JavaEEObjectOutputStream
         this.handlers = handlers;
     }
 
-    protected Object replaceObject(Object obj)
-        throws IOException {
-
+    @Override
+    protected Object replaceObject(Object obj) throws IOException {
         Object result = obj;
         for (JavaEEObjectStreamHandler handler : handlers) {
             result = handler.replaceObject(obj);
@@ -56,7 +47,6 @@ public class JavaEEObjectOutputStream
                 break;
             }
         }
-
         return result;
     }
 }

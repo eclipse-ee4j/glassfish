@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,6 @@ import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.xml.sax.SAXException;
 import org.jvnet.hk2.annotations.Contract;
 
@@ -122,45 +122,34 @@ public abstract class ExtensionsArchivist  {
         extension.setModuleDescriptor(root.getModuleDescriptor());
     }
 
-   /**
+
+    /**
      * Read the standard deployment descriptor of the extension
+     *
      * @param archivist the primary archivist for this archive
      * @param archive the archive
      * @param descriptor the main deployment descriptor
      * @return the extension descriptor object
-     *
      */
     public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
-            throws IOException, SAXException {
-
-
-         getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
-         if (archive.getURI() != null) {
-             standardDD.setErrorReportingString(archive.getURI().getSchemeSpecificPart());
-         }
-         InputStream is = null;
-         try {
-             is = archive.getEntry(standardDD.getDeploymentDescriptorPath());
-             if (is == null) {
-                if (deplLogger.isLoggable(Level.FINE)) {
-                    deplLogger.log(Level.FINE, "Deployment descriptor: " +
-                                   standardDD.getDeploymentDescriptorPath(),
-                                   " does not exist in archive: " +
-                                   archive.getURI().getSchemeSpecificPart());
-                }
-
-             } else {
-                 standardDD.setXMLValidation(main.getXMLValidation());
-                 standardDD.setXMLValidationLevel(main.getXMLValidationLevel());
-                 return standardDD.read(descriptor, is);
-             }
-         } finally {
-             if (is != null) {
-                 is.close();
-             }
-         }
-         return null;
-     }
+       throws IOException, SAXException {
+       getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
+       if (archive.getURI() != null) {
+           standardDD.setErrorReportingString(archive.getURI().getSchemeSpecificPart());
+       }
+       try (InputStream is = archive.getEntry(standardDD.getDeploymentDescriptorPath())) {
+           if (is == null) {
+               if (deplLogger.isLoggable(Level.FINE)) {
+                   deplLogger.log(Level.FINE, "Deployment descriptor: " + standardDD.getDeploymentDescriptorPath(),
+                       " does not exist in archive: " + archive.getURI().getSchemeSpecificPart());
+               }
+               return null;
+           }
+           standardDD.setXMLValidation(main.getXMLValidation());
+           standardDD.setXMLValidationLevel(main.getXMLValidationLevel());
+           return standardDD.read(descriptor, is);
+       }
+   }
 
     /**
      * Read the runtime deployment descriptors of the extension

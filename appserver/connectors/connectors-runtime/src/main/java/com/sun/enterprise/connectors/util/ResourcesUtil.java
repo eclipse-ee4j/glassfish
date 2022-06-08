@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,18 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
 import com.sun.enterprise.connectors.DeferredResourceConfig;
@@ -28,14 +37,6 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.connectors.config.*;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.RelativePathResolver;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.resources.api.ResourcesRegistry;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -43,6 +44,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.connectors.config.WorkSecurityMap;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.RelativePathResolver;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resources.api.ResourcesRegistry;
+import org.jvnet.hk2.config.ConfigBeanProxy;
 
 
 public class ResourcesUtil {
@@ -567,7 +582,7 @@ public class ResourcesUtil {
             return false;
         }else if (resource instanceof BindableResource) {
             BindableResource bindableResource = (BindableResource)resource;
-            if(bindableResource.getJndiName().contains(ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
+            if(bindableResource.getJndiName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
                 return Boolean.valueOf(bindableResource.getEnabled());
             }
             ResourceRef resRef = getServer().getResourceRef(
@@ -607,7 +622,7 @@ public class ResourcesUtil {
         boolean resourceEnabled = ConnectorsUtil.parseBoolean(br.getEnabled());
 
         //TODO can we also check whether the application in which it is defined is enabled (app and app-ref) ?
-        if(resourceInfo.getName().contains(ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
+        if(resourceInfo.getName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
             return resourceEnabled;
         }
 
@@ -642,8 +657,9 @@ public class ResourcesUtil {
     }
 
     private boolean isRarEnabled(String raName) {
-        if(raName == null || raName.length() == 0)
+        if(raName == null || raName.length() == 0) {
             return false;
+        }
         Application application = getDomain().getApplications().getApplication(raName);
         if(application != null) {
             return isApplicationReferenceEnabled(raName);
@@ -675,7 +691,7 @@ public class ResourcesUtil {
     }
 
     public Collection<AdminObjectResource> getEnabledAdminObjectResources(String raName)  {
-        Collection<AdminObjectResource> allResources = new ArrayList<AdminObjectResource>();
+        Collection<AdminObjectResource> allResources = new ArrayList<>();
 
         allResources.addAll(getEnabledAdminObjectResources(raName, getGlobalResources()));
 
@@ -700,21 +716,24 @@ public class ResourcesUtil {
     //TODO can be made generic
     //TODO probably, DuckTyped for resources
     public Collection<AdminObjectResource> getEnabledAdminObjectResources(String raName, Resources resources)  {
-        List<AdminObjectResource> adminObjectResources = new ArrayList<AdminObjectResource>();
+        List<AdminObjectResource> adminObjectResources = new ArrayList<>();
         for(Resource resource : resources.getResources(AdminObjectResource.class)) {
 
             AdminObjectResource adminObjectResource = (AdminObjectResource)resource;
             String resourceAdapterName = adminObjectResource.getResAdapter();
 
-            if(resourceAdapterName == null)
+            if(resourceAdapterName == null) {
                 continue;
-            if(raName!= null && !raName.equals(resourceAdapterName))
+            }
+            if(raName!= null && !raName.equals(resourceAdapterName)) {
                 continue;
+            }
 
 
             // skips the admin resource if it is not referenced by the server
-            if(!isEnabled(adminObjectResource))
+            if(!isEnabled(adminObjectResource)) {
                 continue;
+            }
             adminObjectResources.add(adminObjectResource);
         }
         //AdminObjectResource[] allAdminObjectResources =
@@ -725,12 +744,14 @@ public class ResourcesUtil {
 
     private boolean belongToEmbeddedRarAndEnabled(String resourceAdapterName)  {
         String appName = getAppNameToken(resourceAdapterName);
-        if(appName==null)
+        if(appName==null) {
             return false;
+        }
         Applications apps = getDomain().getApplications();
         Application app = apps.getApplication(appName);
-        if(app == null || !ConnectorsUtil.parseBoolean(app.getEnabled()))
+        if(app == null || !ConnectorsUtil.parseBoolean(app.getEnabled())) {
             return false;
+        }
         return isApplicationReferenceEnabled(appName);
     }
 
@@ -739,7 +760,7 @@ public class ResourcesUtil {
             return null;
         }
         int index = rarName.indexOf(
-                ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
+                ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
         if(index != -1) {
             return rarName.substring(0,index);
         } else {
@@ -787,49 +808,12 @@ public class ResourcesUtil {
         return ConnectorsUtil.parseBoolean(enabled);
     }
 
-    /**
-     * Gets a JDBC resource on the basis of its jndi name
-     * @param jndiName the jndi name of the JDBC resource to lookup
-     * @param checkReference if true, returns this JDBC resource only if it is referenced in
-     *                       this server. If false, returns the JDBC resource irrespective of
-     *                       whether it is referenced or not.
-     * @return JdbcResource resource
-     */
-/*
-    public JdbcResource getJdbcResourceByJndiName( String jndiName, boolean checkReference) {
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ResourcesUtil :: looking up jdbc resource, jndiName is : " + jndiName );
-        }
-
-        JdbcResource jdbcResource = (JdbcResource) getResources().getResourceByName(JdbcResource.class, jndiName);
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ResourcesUtil :: looked up jdbc resource:" + jdbcResource );
-        }
-
-        //does the isReferenced method throw NPE for null value? Better be safe
-        if (jdbcResource == null) {
-            return null;
-        }
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ResourcesUtil :: looked up jdbc resource name:" + jdbcResource.getJndiName() );
-        }
-
-        if(checkReference){
-            return isReferenced( jndiName ) ? jdbcResource : null;
-        }else{
-            return jdbcResource;
-        }
-    }
-*/
 
     public String getResourceType(ConfigBeanProxy cb) {
         if (cb instanceof ConnectorConnectionPool) {
-            return ConnectorConstants.RES_TYPE_CCP;
+            return ResourceConstants.RES_TYPE_CCP;
         } else if (cb instanceof ConnectorResource) {
-            return ConnectorConstants.RES_TYPE_CR;
+            return ResourceConstants.RES_TYPE_CR;
         }
         Collection<ConnectorRuntimeExtension> extensions =
                 Globals.getDefaultHabitat().getAllServices(ConnectorRuntimeExtension.class);
@@ -845,10 +829,9 @@ public class ResourcesUtil {
 
     public ConnectorDescriptor getConnectorDescriptorFromUri(String rarName, String raLoc) {
         try {
-            String appName = rarName.substring(0, rarName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER));
+            String appName = rarName.substring(0, rarName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER));
             //String actualRarName = rarName.substring(rarName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER) + 1);
             String appDeployLocation = ResourcesUtil.createInstance().getApplicationDeployLocation(appName);
-
             FileArchive in = ConnectorRuntime.getRuntime().getFileArchive();
             in.open(new URI(appDeployLocation));
             ApplicationArchivist archivist = ConnectorRuntime.getRuntime().getApplicationArchivist();

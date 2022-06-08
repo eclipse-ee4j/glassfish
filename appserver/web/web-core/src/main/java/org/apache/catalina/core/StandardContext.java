@@ -104,6 +104,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -235,7 +236,7 @@ import jakarta.servlet.http.HttpUpgradeHandler;
  */
 
 public class StandardContext extends ContainerBase implements Context, ServletContext {
-    private static final String DEFAULT_RESPONSE_CHARACTER_ENCODING = "ISO-8859-1";
+    private static final String DEFAULT_RESPONSE_CHARACTER_ENCODING = StandardCharsets.ISO_8859_1.name();
     private static final ClassLoader standardContextClassLoader = StandardContext.class.getClassLoader();
     private static final Set<SessionTrackingMode> DEFAULT_SESSION_TRACKING_MODES = EnumSet.of(SessionTrackingMode.COOKIE);
 
@@ -5328,7 +5329,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                                 "Calling ServletContainerInitializer [" + initializer + "] onStartup with classes " + e.getValue());
                     }
 
-                    ServletContainerInitializer iniInstance = initializer.newInstance();
+                    ServletContainerInitializer iniInstance = initializer.getDeclaredConstructor().newInstance();
                     fireContainerEvent(BEFORE_CONTEXT_INITIALIZER_ON_STARTUP, iniInstance);
                     iniInstance.onStartup(initializerList.get(initializer), ctxt);
                     fireContainerEvent(AFTER_CONTEXT_INITIALIZER_ON_STARTUP, iniInstance);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,18 @@
 
 package com.sun.enterprise.deployment.archivist;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.io.IOException;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Collection;
 
 /**
  * This class is responsible for writing deployment descriptors
@@ -45,24 +45,25 @@ public class DescriptorArchivist {
     private  Provider<ApplicationArchivist> archivistProvider;
 
     /**
-     * writes an application deployment descriptors
-     * @param the application object
-     * @param the abstract archive
+     * Writes an application deployment descriptors
+     *
+     * @param application object
+     * @param in abstract archive
      */
-    public void write(Application application, ReadableArchive in,
-        WritableArchive out) throws IOException {
+    public void write(Application application, ReadableArchive in, WritableArchive out) throws IOException {
         if (application.isVirtual()) {
-            ModuleDescriptor aModule = (ModuleDescriptor) application.getModules().iterator().next();
+            ModuleDescriptor aModule = application.getModules().iterator().next();
             Archivist moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
-            write((BundleDescriptor)aModule.getDescriptor(), moduleArchivist, in, out);
+            write((BundleDescriptor) aModule.getDescriptor(), moduleArchivist, in, out);
         } else {
             // this is a real application.
             // let's start by writing out all submodules deployment descriptors
             for (ModuleDescriptor aModule : application.getModules()) {
                 Archivist moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
                 WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
-                ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri());
-                write((BundleDescriptor)aModule.getDescriptor(),  moduleArchivist, moduleArchive2, moduleArchive);
+                try (ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
+                    write((BundleDescriptor) aModule.getDescriptor(), moduleArchivist, moduleArchive2, moduleArchive);
+                }
             }
 
             // now let's write the application descriptor
@@ -73,14 +74,15 @@ public class DescriptorArchivist {
     }
 
     /**
-     * writes a bundle descriptor
-     * @param the bundle descriptor
-     * @param the archivist responsible for writing such bundle type
-     * @param the archive to write to
+     * Writes a bundle descriptor
+     *
+     * @param bundle descriptor
+     * @param archivist responsible for writing such bundle type
+     * @param in archive to read from
+     * @param out archive to write to
      */
     protected void write(BundleDescriptor bundle, Archivist archivist, ReadableArchive in, WritableArchive out)
-        throws IOException
-    {
+        throws IOException {
         archivist.setDescriptor(bundle);
         archivist.writeDeploymentDescriptors(in, out);
     }

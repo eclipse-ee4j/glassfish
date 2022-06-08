@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
+import com.sun.enterprise.deployment.EjbDescriptor;
+
 import java.lang.reflect.Method;
 
 import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
-import com.sun.ejb.containers.util.MethodMap;
-import com.sun.enterprise.deployment.EjbDescriptor;
 
 /**
  * Implementation of the EJBHome interface for ReadOnly Entity Beans.
@@ -31,55 +32,47 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  *
  * @author Mahesh Kannan
  */
+public final class ReadOnlyEJBHomeImpl extends EntityBeanHomeImpl implements ReadOnlyEJBHome {
 
-public final class ReadOnlyEJBHomeImpl
-    extends EntityBeanHomeImpl
-    implements ReadOnlyEJBHome
-{
     // robContainer initialized in ReadOnlyBeanContainer.initializeHome()
     private ReadOnlyBeanContainer robContainer;
 
-    ReadOnlyEJBHomeImpl(EjbDescriptor ejbDescriptor,
-                             Class homeIntfClass)
-            throws Exception {
+    ReadOnlyEJBHomeImpl(EjbDescriptor ejbDescriptor, Class homeIntfClass) throws Exception {
         super(ejbDescriptor, homeIntfClass);
     }
+
 
     /**
      * Called from ReadOnlyBeanContainer only.
      */
-    final void setReadOnlyBeanContainer(ReadOnlyBeanContainer container) {
+    void setReadOnlyBeanContainer(ReadOnlyBeanContainer container) {
         this.robContainer = container;
     }
 
 
-    /***********************************************/
-    /** Implementation of ReadOnlyEJBHome methods **/
-    /***********************************************/
-
-    public void _refresh_com_sun_ejb_containers_read_only_bean_(Object primaryKey)
-        throws java.rmi.RemoteException
-    {
+    @Override
+    public void _refresh_com_sun_ejb_containers_read_only_bean_(Object primaryKey) throws java.rmi.RemoteException {
         if (robContainer != null) {
             robContainer.setRefreshFlag(primaryKey);
         }
     }
 
-    public void _refresh_All() throws java.rmi.RemoteException
-    {
+
+    @Override
+    public void _refresh_All() throws java.rmi.RemoteException {
         if (robContainer != null) {
             robContainer.refreshAll();
         }
     }
 
-    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass,
-            Object[] args) throws Exception {
-        if( methodClass == ReadOnlyEJBHome.class ) {
-            if( method.getName().equals("_refresh_All") ) {
+
+    @Override
+    protected boolean invokeSpecialEJBHomeMethod(Method method, Class<?> methodClass, Object[] args) throws Exception {
+        if (methodClass == ReadOnlyEJBHome.class) {
+            if (method.getName().equals("_refresh_All")) {
                 _refresh_All();
             } else {
-                _refresh_com_sun_ejb_containers_read_only_bean_
-                    (args[0]);
+                _refresh_com_sun_ejb_containers_read_only_bean_(args[0]);
             }
 
             return true;
@@ -87,4 +80,3 @@ public final class ReadOnlyEJBHomeImpl
         return false;
     }
 }
-

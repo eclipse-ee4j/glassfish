@@ -251,6 +251,11 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${project.build.directory}/dependency/lib</outputDirectory>
+                            <archive>
+                                <manifest>
+                                  <addClasspath>false</addClasspath>
+                                </manifest>
+                            </archive>
                         </configuration>
                     </execution>
                 </executions>

@@ -109,6 +109,9 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter implements Au
         logger.log(level, () -> "Finished parsing " + uri);
     }
 
+    /**
+     * Closes archive.
+     */
     @Override
     public void close() throws IOException {
         releaseCount();

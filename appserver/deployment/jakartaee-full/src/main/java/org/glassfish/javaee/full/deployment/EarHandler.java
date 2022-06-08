@@ -73,6 +73,7 @@ import com.sun.enterprise.connectors.connector.module.RarDetector;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.JarArchive;
@@ -325,11 +326,13 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
 
             if (System.getSecurityManager() != null) {
                 addEEOrDeclaredPermissions(earLibCl, earDeclaredPC, false);
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.fine("added declaredPermissions to earlib: " + earDeclaredPC);
+                }
                 addEEOrDeclaredPermissions(earLibCl, eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear), true);
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.fine("added all ee permissions to earlib: " + eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear));
+                }
             }
 
             embeddedConnCl = AccessController.doPrivileged(new PrivilegedAction<DelegatingClassLoader>() {
@@ -353,12 +356,14 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             if (System.getSecurityManager() != null) {
                 // push declared permissions to ear classloader
                 addEEOrDeclaredPermissions(cl, earDeclaredPC, false);
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.fine("declaredPermissions added: " + earDeclaredPC);
+                }
                 // push ejb permissions to ear classloader
                 addEEOrDeclaredPermissions(cl, eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ejb), true);
-                if (_logger.isLoggable(Level.FINE))
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.fine("ee permissions added: " + eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ejb));
+                }
             }
 
         } catch (Exception e) {
@@ -366,116 +371,104 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             throw new RuntimeException(e);
         }
 
-        for (ModuleDescriptor md : holder.app.getModules()) {
-            ReadableArchive sub = null;
+        for (ModuleDescriptor<BundleDescriptor> md : holder.app.getModules()) {
             String moduleUri = md.getArchiveUri();
-            try {
-                sub = archive.getSubArchive(moduleUri);
+            try (ReadableArchive sub = archive.getSubArchive(moduleUri)) {
                 if (sub instanceof InputJarArchive) {
                     throw new IllegalArgumentException(strings.get("wrongArchType", moduleUri));
                 }
-            } catch (IOException e) {
-                _logger.log(Level.FINE, "Sub archive " + moduleUri + " seems unreadable", e);
-            }
-            if (sub != null) {
-                try {
-                    ArchiveHandler handler = context.getModuleArchiveHandlers().get(moduleUri);
+                ArchiveHandler handler = context.getModuleArchiveHandlers().get(moduleUri);
+                if (handler == null) {
+                    handler = getArchiveHandlerFromModuleType(md.getModuleType());
                     if (handler == null) {
-                        handler = getArchiveHandlerFromModuleType(md.getModuleType());
-                        if (handler == null) {
-                            handler = deployment.getArchiveHandler(sub);
+                        handler = deployment.getArchiveHandler(sub);
+                    }
+                    context.getModuleArchiveHandlers().put(moduleUri, handler);
+                }
+
+                if (handler != null) {
+                    ActionReport subReport = context.getActionReport().addSubActionsReport();
+                    // todo : this is a hack, once again,
+                    // the handler is assuming a file:// url
+                    ExtendedDeploymentContext subContext = new DeploymentContextImpl(subReport, sub,
+                            context.getCommandParameters(DeployCommandParameters.class), env) {
+
+                        @Override
+                        public File getScratchDir(String subDirName) {
+                            String modulePortion = Util.getURIName(getSource().getURI());
+                            return (new File(super.getScratchDir(subDirName), modulePortion));
                         }
-                        context.getModuleArchiveHandlers().put(moduleUri, handler);
+                    };
+
+                    // sub context will store the root archive handler also
+                    // so we can figure out the enclosing archive type
+                    subContext.setArchiveHandler(context.getArchiveHandler());
+                    subContext.setParentContext((ExtendedDeploymentContext) context);
+                    sub.setParentArchive(context.getSource());
+                    ClassLoader subCl = handler.getClassLoader(cl, subContext);
+                    if (System.getSecurityManager() != null && (subCl instanceof DDPermissionsLoader)) {
+                        addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
+                        if (_logger.isLoggable(Level.FINE)) {
+                            _logger.fine("added declared permissions to sub module of " + subCl);
+                        }
                     }
 
-                    if (handler != null) {
-                        ActionReport subReport = context.getActionReport().addSubActionsReport();
-                        // todo : this is a hack, once again,
-                        // the handler is assuming a file:// url
-                        ExtendedDeploymentContext subContext = new DeploymentContextImpl(subReport, sub,
-                                context.getCommandParameters(DeployCommandParameters.class), env) {
-
-                            @Override
-                            public File getScratchDir(String subDirName) {
-                                String modulePortion = Util.getURIName(getSource().getURI());
-                                return (new File(super.getScratchDir(subDirName), modulePortion));
-                            }
-                        };
-
-                        // sub context will store the root archive handler also
-                        // so we can figure out the enclosing archive type
-                        subContext.setArchiveHandler(context.getArchiveHandler());
-
-                        subContext.setParentContext((ExtendedDeploymentContext) context);
-
-                        sub.setParentArchive(context.getSource());
-
-                        ClassLoader subCl = handler.getClassLoader(cl, subContext);
-
-                        if ((System.getSecurityManager() != null) && (subCl instanceof DDPermissionsLoader)) {
-                            addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
-                            if (_logger.isLoggable(Level.FINE))
-                                _logger.fine("added declared permissions to sub module of " + subCl);
+                    if (md.getModuleType().equals(DOLUtils.ejbType())) {
+                        // for ejb module, we just add the ejb urls
+                        // to EarClassLoader and use that to load
+                        // ejb module
+                        URL[] moduleURLs = ((URLClassLoader) subCl).getURLs();
+                        for (URL moduleURL : moduleURLs) {
+                            cl.addURL(moduleURL);
                         }
-
-                        if (md.getModuleType().equals(DOLUtils.ejbType())) {
-                            // for ejb module, we just add the ejb urls
-                            // to EarClassLoader and use that to load
-                            // ejb module
+                        cl.addModuleClassLoader(moduleUri, cl);
+                        PreDestroy.class.cast(subCl).preDestroy();
+                    } else if (md.getModuleType().equals(DOLUtils.rarType())) {
+                        embeddedConnCl.addDelegate((DelegatingClassLoader.ClassFinder) subCl);
+                        cl.addModuleClassLoader(moduleUri, subCl);
+                    } else {
+                        Boolean isTempClassLoader = context.getTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER,
+                                Boolean.class);
+                        if (subCl instanceof URLClassLoader && (isTempClassLoader != null) && isTempClassLoader) {
+                            // for temp classloader, we add all the module
+                            // urls to the top level EarClassLoader
                             URL[] moduleURLs = ((URLClassLoader) subCl).getURLs();
                             for (URL moduleURL : moduleURLs) {
                                 cl.addURL(moduleURL);
                             }
-                            cl.addModuleClassLoader(moduleUri, cl);
-                            PreDestroy.class.cast(subCl).preDestroy();
-                        } else if (md.getModuleType().equals(DOLUtils.rarType())) {
-                            embeddedConnCl.addDelegate((DelegatingClassLoader.ClassFinder) subCl);
-                            cl.addModuleClassLoader(moduleUri, subCl);
-                        } else {
-                            Boolean isTempClassLoader = context.getTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER,
-                                    Boolean.class);
-                            if (subCl instanceof URLClassLoader && (isTempClassLoader != null) && isTempClassLoader) {
-                                // for temp classloader, we add all the module
-                                // urls to the top level EarClassLoader
-                                URL[] moduleURLs = ((URLClassLoader) subCl).getURLs();
-                                for (URL moduleURL : moduleURLs) {
-                                    cl.addURL(moduleURL);
-                                }
-                            }
-                            cl.addModuleClassLoader(moduleUri, subCl);
                         }
+                        cl.addModuleClassLoader(moduleUri, subCl);
                     }
-                } catch (IOException e) {
-                    _logger.log(Level.SEVERE, strings.get("noClassLoader", moduleUri), e);
                 }
+            } catch (IOException e) {
+                _logger.log(Level.SEVERE, strings.get("noClassLoader", moduleUri), e);
             }
         }
         return cl;
     }
 
     protected void processEEPermissions(DeploymentContext dc) {
-
         EarEEPermissionsProcessor eePp = new EarEEPermissionsProcessor(dc);
-
         eeGarntsMap = eePp.getAllAdjustedEEPermission();
-
     }
 
     // set ee or declared permissions
     private void addEEOrDeclaredPermissions(ClassLoader cloader, final PermissionCollection pc, final boolean isEEPermission) {
 
-        if (!(cloader instanceof DDPermissionsLoader))
+        if (!(cloader instanceof DDPermissionsLoader)) {
             return;
+        }
 
         final DDPermissionsLoader ddpl = (DDPermissionsLoader) cloader;
         try {
             AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
                 @Override
                 public Object run() throws SecurityException {
-                    if (isEEPermission)
+                    if (isEEPermission) {
                         ddpl.addEEPermissions(pc);
-                    else
+                    } else {
                         ddpl.addDeclaredPermissions(pc);
+                    }
 
                     return null;
                 }

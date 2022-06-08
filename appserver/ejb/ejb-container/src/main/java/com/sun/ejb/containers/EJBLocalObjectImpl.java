@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,9 +19,6 @@ package com.sun.ejb.containers;
 
 import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
-
 import jakarta.ejb.EJBException;
 import jakarta.ejb.EJBLocalHome;
 import jakarta.ejb.EJBLocalObject;
@@ -28,8 +26,8 @@ import jakarta.ejb.RemoveException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -41,26 +39,18 @@ import java.util.logging.Logger;
  *
  * @author Mahesh Kannan
  */
-public abstract class EJBLocalObjectImpl
-    extends EJBLocalRemoteObject
-    implements EJBLocalObject, IndirectlySerializable
-{
+public abstract class EJBLocalObjectImpl extends EJBLocalRemoteObject
+    implements EJBLocalObject, IndirectlySerializable {
+
     private static final Logger _logger = EjbContainerUtilImpl.getLogger();
+    private static final Method REMOVE_METHOD = getRemoveMethod();
 
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(EJBLocalObjectImpl.class);
-
-    private static Class[] NO_PARAMS = new Class[] {};
-    private static Method REMOVE_METHOD = null;
-
-    static {
+    private static Method getRemoveMethod() {
         try {
-            REMOVE_METHOD =
-                EJBLocalObject.class.getMethod("remove", NO_PARAMS);
-        } catch ( NoSuchMethodException e ) {
-            _logger.log(Level.FINE, "Exception retrieving remove method", e);
+            return EJBLocalObject.class.getMethod("remove",  new Class[0]);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("Exception retrieving remove method", e);
         }
-
     }
 
     // True this local object instance represents the LocalHome view
@@ -74,9 +64,8 @@ public abstract class EJBLocalObjectImpl
 
     private Object optionalLocalBusinessClientObject;
 
+    private final HashMap<String, Object> clientObjectMap = new HashMap<>();
 
-    private HashMap<String, Object> clientObjectMap =
-        new HashMap<String, Object>();
     /**
      * Get the client object corresponding to an EJBLocalObjectImpl.
      * Users of this class cannot
@@ -133,89 +122,69 @@ public abstract class EJBLocalObjectImpl
      *
      */
     public static EJBLocalObjectImpl toEJBLocalObjectImpl(EJBLocalObject localObj) {
-        EJBLocalObjectImpl localObjectImpl;
-
-        if( localObj instanceof EJBLocalObjectImpl ) {
-            localObjectImpl = (EJBLocalObjectImpl) localObj;
-        } else {
-            localObjectImpl = (EJBLocalObjectImpl)
-                Proxy.getInvocationHandler(localObj);
+        if (localObj instanceof EJBLocalObjectImpl) {
+            return (EJBLocalObjectImpl) localObj;
         }
-
-        return localObjectImpl;
+        return (EJBLocalObjectImpl) Proxy.getInvocationHandler(localObj);
     }
 
+    @Override
     public EJBLocalHome getEJBLocalHome() throws EJBException {
-        container.authorizeLocalMethod(
-            BaseContainer.EJBLocalObject_getEJBLocalHome);
+        container.authorizeLocalMethod(BaseContainer.EJBLocalObject_getEJBLocalHome);
         container.checkExists(this);
-
         return container.getEJBLocalHome();
     }
 
+    @Override
     public void remove() throws RemoveException, EJBException {
-
         // authorization is performed within container
-
         try {
             container.removeBean(this, REMOVE_METHOD, true);
-        }  catch(java.rmi.RemoteException re) {
+        } catch (RemoteException re) {
             // This should never be thrown for local invocations, but it's
-            // part of the removeBean signature.  If for some strange
+            // part of the removeBean signature. If for some strange
             // reason it happens, convert to EJBException
-            EJBException ejbEx =new EJBException("unexpected RemoteException");
-            ejbEx.initCause(re);
-            throw ejbEx;
+            throw new EJBException("unexpected RemoteException", re);
         }
     }
 
-    public Object getPrimaryKey()
-        throws EJBException
-    {
-            container.authorizeLocalGetPrimaryKey(this);
-            return primaryKey;
+    @Override
+    public Object getPrimaryKey() throws EJBException {
+        container.authorizeLocalGetPrimaryKey(this);
+        return primaryKey;
     }
 
-    public boolean isIdentical(EJBLocalObject other)
-        throws EJBException
-    {
-        container.authorizeLocalMethod(
-            BaseContainer.EJBLocalObject_isIdentical);
+    @Override
+    public boolean isIdentical(EJBLocalObject other) throws EJBException {
+        container.authorizeLocalMethod(BaseContainer.EJBLocalObject_isIdentical);
         container.checkExists(this);
 
         // For all types of beans (entity, stful/stless session),
         // there is exactly one EJBLocalObject instance per bean identity.
-        if ( this == other )
-            return true;
-        else
-            return false;
+        return this == other;
     }
 
     /**
      * Called from EJBUtils.EJBObjectOutputStream.replaceObject
      */
+    @Override
     public SerializableObjectFactory getSerializableObjectFactory() {
         // Note: for stateful SessionBeans, the EJBLocalObjectImpl contains
         // a pointer to the EJBContext. We should not serialize it here.
 
-        return new SerializableLocalObject
-            (container.getEjbDescriptor().getUniqueId(), isLocalHomeView,
-             isOptionalLocalBusinessView, primaryKey, getSfsbClientVersion());
+        return new SerializableLocalObject(container.getEjbDescriptor().getUniqueId(), isLocalHomeView,
+            isOptionalLocalBusinessView, primaryKey, getSfsbClientVersion());
     }
 
-    private static final class SerializableLocalObject
-        implements SerializableObjectFactory
-    {
-        private long containerId;
-        private boolean localHomeView;
-        private boolean optionalLocalBusView;
-        private Object primaryKey;
-        private long version;   //Used only for SFSBs
-        private transient static Logger _logger;
+    private static final class SerializableLocalObject implements SerializableObjectFactory {
 
-        static {
-            _logger=LogDomains.getLogger(SerializableLocalObject.class, LogDomains.EJB_LOGGER);
-        }
+        private static final long serialVersionUID = 1L;
+        private final long containerId;
+        private final boolean localHomeView;
+        private final boolean optionalLocalBusView;
+        private final Object primaryKey;
+        // Used only for SFSBs
+        private final long version;
 
         SerializableLocalObject(long containerId,
                                 boolean localHomeView,
@@ -232,27 +201,22 @@ public abstract class EJBLocalObjectImpl
             return version;
         }
 
-        public Object createObject()
-            throws IOException
-        {
+        @Override
+        public Object createObject() throws IOException {
             BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
-
-            if( localHomeView ) {
-                EJBLocalObjectImpl ejbLocalObjectImpl =
-                    container.getEJBLocalObjectImpl(primaryKey);
+            if (localHomeView) {
+                EJBLocalObjectImpl ejbLocalObjectImpl = container.getEJBLocalObjectImpl(primaryKey);
                 ejbLocalObjectImpl.setSfsbClientVersion(version);
                 // Return the client EJBLocalObject.
                 return ejbLocalObjectImpl.getClientObject();
-            } else {
-                EJBLocalObjectImpl ejbLocalBusinessObjectImpl = optionalLocalBusView ?
-                    container.getOptionalEJBLocalBusinessObjectImpl(primaryKey) :
-                    container.getEJBLocalBusinessObjectImpl(primaryKey);
-                ejbLocalBusinessObjectImpl.setSfsbClientVersion(version);
-                // Return the client EJBLocalObject.
-                return ejbLocalBusinessObjectImpl.getClientObject();
             }
+            EJBLocalObjectImpl ejbLocalBusinessObjectImpl = optionalLocalBusView
+                ? container.getOptionalEJBLocalBusinessObjectImpl(primaryKey)
+                : container.getEJBLocalBusinessObjectImpl(primaryKey);
+            ejbLocalBusinessObjectImpl.setSfsbClientVersion(version);
+            // Return the client EJBLocalObject.
+            return ejbLocalBusinessObjectImpl.getClientObject();
         }
-
     }
 
 }

@@ -17,22 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import java.lang.reflect.Method;
-import java.security.Identity;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-
 import com.sun.appserv.connectors.internal.api.ResourceHandle;
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
@@ -49,12 +33,29 @@ import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.UserTransaction;
 
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.security.Identity;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+
 /**
  * Implementation of jakarta.ejb.EJBContext for the J2EE Reference Implementation.
- *
  */
+public abstract class EJBContextImpl implements EJBContext, ComponentContext, Serializable {
+    private static final long serialVersionUID = 1L;
 
-public abstract class EJBContextImpl implements EJBContext, ComponentContext, java.io.Serializable {
     static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
     public enum BeanState {
@@ -64,8 +65,7 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
     private Object ejb;
 
     // These are all transient to prevent serialization during passivation
-    // Note: all these will be initialized to default values during
-    // deserialization.
+    // Note: all these will be initialized to default values during deserialization.
     transient protected BaseContainer container;
 
     transient protected Transaction transaction;
@@ -221,7 +221,7 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
     }
 
     @Override
-    public Container getContainer() {
+    public final Container getContainer() {
         return container;
     }
 
@@ -229,8 +229,9 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
      * Register a resource opened by the EJB instance associated with this Context.
      */
     public void registerResource(ResourceHandle h) {
-        if (resources == null)
+        if (resources == null) {
             resources = new ArrayList();
+        }
         resources.add(h);
     }
 
@@ -412,8 +413,9 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
      */
     @Override
     public boolean isCallerInRole(String roleRef) {
-        if (roleRef == null)
+        if (roleRef == null) {
             throw new IllegalStateException("Argument is null");
+        }
 
         checkAccessToCallerSecurity();
 
@@ -441,13 +443,15 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
      */
     @Override
     public void setRollbackOnly() throws IllegalStateException {
-        if (state == BeanState.CREATED)
+        if (state == BeanState.CREATED) {
             throw new IllegalStateException("EJB not in READY state");
+        }
 
         // EJB2.0 section 7.5.2: only EJBs with container managed transactions
         // can use this method.
-        if (container.isBeanManagedTran)
+        if (container.isBeanManagedTran) {
             throw new IllegalStateException("Illegal operation for bean-managed transactions");
+        }
 
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
 
@@ -480,13 +484,15 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
      */
     @Override
     public boolean getRollbackOnly() throws IllegalStateException {
-        if (state == BeanState.CREATED)
+        if (state == BeanState.CREATED) {
             throw new IllegalStateException("EJB not in READY state");
+        }
 
         // EJB2.0 section 7.5.2: only EJBs with container managed transactions
         // can use this method.
-        if (container.isBeanManagedTran)
+        if (container.isBeanManagedTran) {
             throw new IllegalStateException("Illegal operation for bean-managed transactions");
+        }
 
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
 
@@ -501,10 +507,11 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, ja
 
             doGetSetRollbackTxAttrCheck();
 
-            if (status == Status.STATUS_MARKED_ROLLBACK || status == Status.STATUS_ROLLEDBACK || status == Status.STATUS_ROLLING_BACK)
+            if (status == Status.STATUS_MARKED_ROLLBACK || status == Status.STATUS_ROLLEDBACK || status == Status.STATUS_ROLLING_BACK) {
                 return true;
-            else
+            } else {
                 return false;
+            }
         } catch (Exception ex) {
             _logger.log(Level.FINE, "Exception in method getRollbackOnly()", ex);
             IllegalStateException illEx = new IllegalStateException(ex.toString());

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,12 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import java.lang.reflect.Method;
-
 import com.sun.ejb.Container;
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.InvocationInfo;
 import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EJBLocalObjectImpl;
 import com.sun.ejb.containers.EJBLocalHomeInvocationHandler;
+import com.sun.ejb.containers.EJBLocalObjectImpl;
 import com.sun.enterprise.deployment.EjbDescriptor;
 
 /**
@@ -33,14 +32,12 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  *
  * @author mvatkina
  */
+public class EntityBeanLocalHomeImpl extends EJBLocalHomeInvocationHandler {
 
-public class EntityBeanLocalHomeImpl
-    extends EJBLocalHomeInvocationHandler
-{
-    protected EntityBeanLocalHomeImpl(EjbDescriptor ejbDescriptor,
-                                  Class localHomeIntf) throws Exception {
+    protected EntityBeanLocalHomeImpl(EjbDescriptor ejbDescriptor, Class localHomeIntf) throws Exception {
         super(ejbDescriptor, localHomeIntf);
     }
+
 
     /**
      * EJBLocalObjectImpl is created directly by the container, not by this call
@@ -50,14 +47,11 @@ public class EntityBeanLocalHomeImpl
         return null;
     }
 
+
     @Override
-    protected void postCreate(Container container, EjbInvocation inv,
-            InvocationInfo invInfo, Object primaryKey, Object[] args)
-            throws Throwable {
+    protected void postCreate(Container container, EjbInvocation inv, InvocationInfo invInfo, Object primaryKey,
+        Object[] args) throws Throwable {
         container.postCreate(inv, primaryKey);
-        invokeTargetBeanMethod((BaseContainer)container, invInfo.targetMethod2,
-                 inv, inv.ejb, args);
-
+        invokeTargetBeanMethod((BaseContainer) container, invInfo.targetMethod2, inv, inv.ejb, args);
     }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,44 +18,73 @@
 package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.annotation.factory.AnnotatedElementHandlerFactory;
 import com.sun.enterprise.deployment.annotation.factory.SJSASFactory;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.DescriptorConstants;
-import static com.sun.enterprise.deployment.io.DescriptorConstants.PERSISTENCE_DD_ENTRY;
-import static com.sun.enterprise.deployment.io.DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY;
-import static com.sun.enterprise.deployment.io.DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY;
-import com.sun.enterprise.deployment.util.*;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
+import com.sun.enterprise.deployment.util.ComponentPostVisitor;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.util.TracerVisitor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.shared.ArchivistUtils;
-import org.glassfish.apf.*;
-import org.glassfish.apf.Scanner;
-import org.glassfish.apf.impl.DefaultErrorHandler;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.Archive;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.*;
-import org.glassfish.hk2.api.MultiException;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.classmodel.reflect.*;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.annotations.Optional;
-import org.xml.sax.SAXException;
 
-import java.io.*;
-import java.util.*;
+import jakarta.inject.Inject;
+
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationProcessor;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.ErrorHandler;
+import org.glassfish.apf.ProcessingContext;
+import org.glassfish.apf.ProcessingResult;
+import org.glassfish.apf.ResultType;
+import org.glassfish.apf.Scanner;
+import org.glassfish.apf.impl.DefaultErrorHandler;
+import org.glassfish.api.deployment.archive.Archive;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.DescriptorVisitor;
+import org.glassfish.deployment.common.InstalledLibrariesResolver;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.classmodel.reflect.Parser;
+import org.jvnet.hk2.annotations.Contract;
+import org.xml.sax.SAXException;
+
+import static com.sun.enterprise.deployment.io.DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY;
+import static com.sun.enterprise.deployment.io.DescriptorConstants.PERSISTENCE_DD_ENTRY;
+import static com.sun.enterprise.deployment.io.DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY;
 
 /**
  * This abstract class contains all common behaviour for Achivisits. Archivists
@@ -251,21 +281,20 @@ public abstract class Archivist<T extends BundleDescriptor> {
         return descriptor;
     }
 
-    public T open(ReadableArchive archive,
-            Application app) throws IOException, SAXException {
+
+    public T open(ReadableArchive archive, Application app) throws IOException, SAXException {
         return open(archive, archive, app);
     }
 
+
     // fill in the rest of the application with an application object
     // populated from previus reading of the standard deployment descriptor
-    public Application openWith(Application app, ReadableArchive archive)
-            throws IOException, SAXException {
-
+    public Application openWith(Application app, ReadableArchive archive) throws IOException, SAXException {
         setManifest(archive.getManifest());
 
         // application archivist will override this method
         if (app.isVirtual()) {
-            T descriptor = readRestDeploymentDescriptors((T)app.getStandaloneBundleDescriptor(), archive, archive, app);
+            T descriptor = readRestDeploymentDescriptors((T) app.getStandaloneBundleDescriptor(), archive, archive, app);
             if (descriptor != null) {
                 postOpen(descriptor, archive);
                 descriptor.setApplication(app);
@@ -282,9 +311,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param path the archive file path
      * @return the deployment descriptor for this archive
      */
-    public T open(String path)
-            throws IOException, SAXException {
-
+    public T open(String path) throws IOException, SAXException {
         this.path = path;
         File file = new File(path);
         if (!file.exists()) {
@@ -372,21 +399,22 @@ public abstract class Archivist<T extends BundleDescriptor> {
         return readRestDeploymentDescriptors(descriptor, descriptorArchive, contentArchive, app);
     }
 
-    private T readRestDeploymentDescriptors (T descriptor,
-        ReadableArchive descriptorArchive, ReadableArchive contentArchive,
-        Application app) throws IOException, SAXException {
-        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions = new HashMap<ExtensionsArchivist, RootDeploymentDescriptor>();
-        if (extensionsArchivists!=null) {
+
+    private T readRestDeploymentDescriptors(T descriptor, ReadableArchive descriptorArchive,
+        ReadableArchive contentArchive, Application app) throws IOException, SAXException {
+        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions = new HashMap<>();
+        if (extensionsArchivists != null) {
             for (ExtensionsArchivist extension : extensionsArchivists) {
-                    Object o = extension.open(this, descriptorArchive, descriptor);
-                    if (o instanceof RootDeploymentDescriptor) {
-                        if (o != descriptor) {
-                            extension.addExtension(descriptor, (RootDeploymentDescriptor) o);
-                        }
-                        extensions.put(extension, (RootDeploymentDescriptor) o);
-                    } else {
-                        extensions.put(extension, null); // maybe annotation processing will yield results
+                Object o = extension.open(this, descriptorArchive, descriptor);
+                if (o instanceof RootDeploymentDescriptor) {
+                    if (o != descriptor) {
+                        extension.addExtension(descriptor, (RootDeploymentDescriptor) o);
                     }
+                    extensions.put(extension, (RootDeploymentDescriptor) o);
+                } else {
+                    // maybe annotation processing will yield results
+                    extensions.put(extension, null);
+                }
             }
         }
 
@@ -462,7 +490,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
                             processAnnotations(o, extension.getKey().getScanner(), archive);
                             if (o!=null && !o.isEmpty()) {
                                 extension.getKey().addExtension(descriptor, o);
-                                extensions.put(extension.getKey(), (RootDeploymentDescriptor) o);
+                                extensions.put(extension.getKey(), o);
                             }
                         }
                     } else{
@@ -823,7 +851,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param out archive output stream to write to
      * @param entriesToSkip files to not write from the original archive
      */
-    protected void writeContents(ReadableArchive in, WritableArchive out, Vector entriesToSkip)
+    protected void writeContents(ReadableArchive in, WritableArchive out, Set<String> entriesToSkip)
             throws IOException {
 
         // Copy original jarFile elements
@@ -980,18 +1008,13 @@ public abstract class Archivist<T extends BundleDescriptor> {
         Vector<String> libs = getLibraries(archive);
         if (libs != null) {
             for (String libUri : libs) {
-                JarInputStream jis = null;
-                try {
-                    jis = new JarInputStream(archive.getEntry(libUri));
+                try (JarInputStream jis = new JarInputStream(archive.getEntry(libUri))) {
                     m = jis.getManifest();
                     if (m != null) {
                         if (!InstalledLibrariesResolver.resolveDependencies(m, libUri)) {
                             dependenciesSatisfied = false;
                         }
                     }
-                } finally {
-                    if (jis != null)
-                        jis.close();
                 }
             }
         }
@@ -1230,8 +1253,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
     public Vector getLibraries(Archive archive) {
 
         Enumeration<String> entries = archive.entries();
-        if (entries == null)
+        if (entries == null) {
             return null;
+        }
 
         Vector libs = new Vector();
         while (entries.hasMoreElements()) {
@@ -1278,9 +1302,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @return the list of files that should not be copied from the old archive
      *         when a save is performed.
      */
-    public Vector getListOfFilesToSkip(ReadableArchive archive) throws IOException {
+    public Set<String> getListOfFilesToSkip(ReadableArchive archive) throws IOException {
 
-        Vector filesToSkip = new Vector();
+        Set<String> filesToSkip = new HashSet<>();
         filesToSkip.add(getDeploymentDescriptorPath());
         if (manifest != null) {
             filesToSkip.add(JarFile.MANIFEST_NAME);
@@ -1291,8 +1315,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
 
         // Can't depend on having a descriptor, so skip all possible
         // web service deployment descriptor paths.
-        filesToSkip.addAll(
-                getAllWebservicesDeploymentDescriptorPaths());
+        filesToSkip.addAll(getAllWebservicesDeploymentDescriptorPaths());
 
         return filesToSkip;
     }
@@ -1339,8 +1362,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
             ArchivistUtils.copyWithoutClose(is, os);
         } finally {
             try {
-                if (is!=null)
+                if (is!=null) {
                     is.close();
+                }
             } catch(IOException e) {
                 archive.closeEntry();
                 throw e;
@@ -1355,21 +1379,19 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *
      * @param in  jar file
      * @param out jar file
-     * @param ignoreList vector of entry name to not copy from to source jar file
+     * @param ignored entry names to not copy from to source jar file
      */
-    protected void copyJarElements(ReadableArchive in, WritableArchive out, Vector ignoreList)
-            throws IOException {
-
-        Enumeration entries = in.entries();
+    protected void copyJarElements(ReadableArchive in, WritableArchive out, Set<String> ignored) throws IOException {
+        Enumeration<String> entries = in.entries();
         if (entries != null) {
             for (; entries.hasMoreElements();) {
-                String anEntry = (String) entries.nextElement();
-                if (ignoreList == null || !ignoreList.contains(anEntry)) {
-                    InputStream is = in.getEntry(anEntry);
-                    if (is != null) {
-                      OutputStream os = out.putNextEntry(anEntry);
-                      ArchivistUtils.copyWithoutClose(is, os);
-                      is.close();
+                String anEntry = entries.nextElement();
+                if (ignored == null || !ignored.contains(anEntry)) {
+                    try (InputStream is = in.getEntry(anEntry)) {
+                        if (is != null) {
+                            OutputStream os = out.putNextEntry(anEntry);
+                            ArchivistUtils.copyWithoutClose(is, os);
+                        }
                     }
                     out.closeEntry();
                 }
@@ -1559,7 +1581,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param target        the target archive to copy to
      * @param entriesToSkip the entries that will be skipped by target archive
      */
-    public void copyInto(ReadableArchive source, WritableArchive target, Vector entriesToSkip)
+    public void copyInto(ReadableArchive source, WritableArchive target, Set<String> entriesToSkip)
             throws IOException {
         copyInto(source, target, entriesToSkip, true);
     }
@@ -1573,10 +1595,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param overwriteManifest if true, the manifest in source archive
      *                          overwrites the one in target archive
      */
-    public void copyInto(ReadableArchive source, WritableArchive target,
-                         Vector entriesToSkip, boolean overwriteManifest)
-            throws IOException {
-
+    public void copyInto(ReadableArchive source, WritableArchive target, Set<String> entriesToSkip,
+        boolean overwriteManifest) throws IOException {
         copyJarElements(source, target, entriesToSkip);
         if (overwriteManifest) {
             Manifest m = source.getManifest();
@@ -1588,10 +1608,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
         }
     }
 
+
     // only copy the entry if the destination archive does not have this entry
-    public void copyAnEntry(ReadableArchive in,
-                                   WritableArchive out, String entryName)
-        throws IOException {
+    public void copyAnEntry(ReadableArchive in, WritableArchive out, String entryName) throws IOException {
         InputStream is = null;
         InputStream is2 = null;
         ReadableArchive in2 = archiveFactory.openArchive(out.getURI());

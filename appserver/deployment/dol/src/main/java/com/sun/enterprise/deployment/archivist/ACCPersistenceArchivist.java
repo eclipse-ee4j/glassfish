@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,11 @@ package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
@@ -32,8 +34,9 @@ import java.util.logging.Level;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import jakarta.inject.Inject;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
@@ -46,8 +49,6 @@ import org.xml.sax.SAXException;
 @Service
 @ExtensionsArchivistFor("jpa")
 public class ACCPersistenceArchivist extends PersistenceArchivist {
-
-
 
     @Inject
     private ProcessEnvironment env;
@@ -62,62 +63,47 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        if(deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist",
-                    "readPersistenceDeploymentDescriptors", "archive = {0}",
-                    archive.getURI());
+        if (deplLogger.isLoggable(Level.FINE)) {
+            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors",
+                "archive = {0}", archive.getURI());
         }
 
-        final Map<String,ReadableArchive> candidatePersistenceArchives =
-                new HashMap<String,ReadableArchive>();
-
-        /*
-         * The descriptor had better be an ApplicationClientDescriptor!
-         */
+        // The descriptor had better be an ApplicationClientDescriptor!
         if ( ! (descriptor instanceof ApplicationClientDescriptor)) {
             return null;
         }
 
+        final Map<String, ReadableArchive> candidatePersistenceArchives = new HashMap<>();
         final ApplicationClientDescriptor acDescr = ApplicationClientDescriptor.class.cast(descriptor);
+        final Manifest mf = archive.getManifest();
+        final Attributes mainAttrs = mf.getMainAttributes();
+        /*
+         * We must scan the app client archive itself.
+         */
+        URI clientURI = clientURI(archive, acDescr);
+        candidatePersistenceArchives.put(clientURI.toASCIIString(), archive);
 
-        try {
-            final Manifest mf = archive.getManifest();
-            final Attributes mainAttrs = mf.getMainAttributes();
-            /*
-             * We must scan the app client archive itself.
-             */
-            URI clientURI = clientURI(archive, acDescr);
-            candidatePersistenceArchives.put(clientURI.toASCIIString(), archive);
+        /*
+         * If this app client
+         * was deployed as part of an EAR then scan any library JARs and, if the
+         * client was also deployed or launched in v2-compatibility mode, any
+         * top-level JARs in the EAR.
+         * Exactly how we do this depends on whether this is a deployed client
+         * (which will reside in a client download directory) or a non-deployed
+         * one (which will reside either as a stand-alone client or within an
+         * EAR).
+         */
+        if (isDeployed(mainAttrs)) {
+            if (!isDeployedClientAlsoStandAlone(mainAttrs)) {
+                addOtherDeployedScanTargets(archive, mainAttrs, candidatePersistenceArchives);
+            }
+        } else if (!isStandAlone(acDescr)) {
+            addOtherNondeployedScanTargets(archive, acDescr, candidatePersistenceArchives);
+        }
 
-            /*
-             * If this app client
-             * was deployed as part of an EAR then scan any library JARs and, if the
-             * client was also deployed or launched in v2-compatibility mode, any
-             * top-level JARs in the EAR.
-             *
-             * Exactly how we do this depends on whether this is a deployed client
-             * (which will reside in a client download directory) or a non-deployed
-             * one (which will reside either as a stand-alone client or within an
-             * EAR).
-             */
-            if (isDeployed(mainAttrs)) {
-                if ( ! isDeployedClientAlsoStandAlone(mainAttrs)) {
-                    addOtherDeployedScanTargets(archive, mainAttrs, candidatePersistenceArchives);
-                }
-            } else if ( ! isStandAlone(acDescr)) {
-                addOtherNondeployedScanTargets(archive, acDescr, candidatePersistenceArchives);
-            }
-
-            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main,
-                        pathToArchiveEntry.getValue(),
-                        pathToArchiveEntry.getKey(),
-                        descriptor);
-            }
-        } finally {
-            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                //pathToArchiveEntry.getValue().close();
-            }
+        for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
+            readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
+                descriptor);
         }
         return null;
     }
@@ -206,9 +192,9 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     }
 
-    private void addScanTargetsFromURIList(final ReadableArchive archive,
-            final String relativeURIList,
-            final Map<String,ReadableArchive> candidates) throws IOException {
+
+    private void addScanTargetsFromURIList(final ReadableArchive archive, final String relativeURIList,
+        final Map<String, ReadableArchive> candidates) throws IOException {
         if (relativeURIList == null || relativeURIList.isEmpty()) {
             return;
         }

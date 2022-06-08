@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,16 +29,16 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface GlassFishInputStreamHandler {
 
-        public static final Object NULL_OBJECT = new Object();
+    /** Represents null in serialized objects */
+    Object NULL_OBJECT = new Object();
 
     /**
-     * Called from JavaEEIOUtils' replaceObject. The implementation
-     *  must return the object that needs to be written out to the
-     *  stream OR null if it cannot handle the serialization of this
-     *  object
-     *
+     * The implementation must return the object that needs to be written out
+     * to the stream OR null if it cannot handle the serialization of this object
+     * @param obj
+     * @return obj to be deserialized or null
+     * @throws IOException
      */
-    public Object resolveObject(Object obj) throws IOException;
-
+    Object resolveObject(Object obj) throws IOException;
 
 }

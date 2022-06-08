@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,45 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+
 import org.jvnet.hk2.annotations.Contract;
 
-import java.io.*;
-
 /**
- * A contract that defines a set of methods to serialize / deserialze Java EE
- *  objects (even if they are not directly serializable).
- *
- * Some of the objects that are expected to be serialized / de-serialized are
- *   a) Local EJB references
- *   b) EJB Handles
- *   c) JNDI (sub) contexts
- *   d) (Non serializable) StatefulSessionBeans
+ * A contract that defines a set of methods to serialize / deserialize Java EE
+ * objects (even if they are not directly serializable).
+ * Some of the objects that are expected to be serialized / deserialized are
+ * <ol>
+ * <li>Local EJB references
+ * <li>EJB Handles
+ * <li>JNDI (sub) contexts
+ * <li>(Non serializable) StatefulSessionBeans
+ * </ol>
  *
  * @author Mahesh Kannan
- *
  */
 @Contract
 public interface JavaEEIOUtils {
 
-    public ObjectInputStream createObjectInputStream(InputStream is, boolean resolveObject, ClassLoader loader)
+    ObjectInputStream createObjectInputStream(InputStream is, boolean resolveObject, ClassLoader loader)
         throws Exception;
 
-    public ObjectOutputStream createObjectOutputStream(OutputStream os, boolean replaceObject)
-        throws IOException;
+    ObjectOutputStream createObjectOutputStream(OutputStream os, boolean replaceObject) throws IOException;
 
-    public byte[] serializeObject(Object obj, boolean replaceObject)
-        throws java.io.IOException;
+    byte[] serializeObject(Object obj, boolean replaceObject) throws java.io.IOException;
 
-    public Object deserializeObject(byte[] data, boolean resolveObject, ClassLoader appClassLoader)
-            throws Exception;
+    Object deserializeObject(byte[] data, boolean resolveObject, ClassLoader appClassLoader) throws Exception;
 
-    public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
+    void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
 
-    public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
+    void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
 
-    public void addGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
+    void addGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
 
-    public void removeGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
+    void removeGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
 
 }

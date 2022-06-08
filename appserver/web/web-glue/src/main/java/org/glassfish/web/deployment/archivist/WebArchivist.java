@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,45 +18,48 @@
 package org.glassfish.web.deployment.archivist;
 
 import com.sun.enterprise.deployment.Application;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
-import org.glassfish.web.deployment.annotation.impl.WarScanner;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFor;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivist;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.util.*;
-import org.glassfish.api.deployment.archive.Archive;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.WarType;
-import org.glassfish.web.deployment.descriptor.*;
-import org.glassfish.web.deployment.io.WebDeploymentDescriptorFile;
-import org.glassfish.web.deployment.util.*;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import jakarta.inject.Inject;
 
-import org.xml.sax.SAXException;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.deployment.archive.Archive;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.WarType;
+import org.glassfish.web.deployment.annotation.impl.WarScanner;
+import org.glassfish.web.deployment.descriptor.OrderingDescriptor;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
+import org.glassfish.web.deployment.io.WebDeploymentDescriptorFile;
+import org.glassfish.web.deployment.util.WebBundleValidator;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -98,10 +102,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         java.util.Set webBundles = descriptor.getBundleDescriptors(WebBundleDescriptorImpl.class);
         if (webBundles.size()>0) {
             this.descriptor = (WebBundleDescriptorImpl) webBundles.iterator().next();
-            if (this.descriptor.getModuleDescriptor().isStandalone())
+            if (this.descriptor.getModuleDescriptor().isStandalone()) {
                 return;
-            else
+            } else {
                 this.descriptor=null;
+            }
         }
     }
 
@@ -215,10 +220,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      */
     protected URL getDefaultWebXML() throws IOException {
         File file = new File(env.getConfigDirPath(),DEFAULT_WEB_XML);
-        if (file.exists())
+        if (file.exists()) {
             return file.toURI().toURL();
-        else
+        } else {
             return null;
+        }
     }
 
 
@@ -273,13 +279,15 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     /**
      * @return a list of libraries included in the archivist
      */
+    @Override
     public Vector<String> getLibraries(Archive archive) {
 
         Enumeration<String> entries = archive.entries();
-        if (entries==null)
+        if (entries==null) {
             return null;
+        }
 
-        Vector<String> libs = new Vector<String>();
+        Vector<String> libs = new Vector<>();
         while (entries.hasMoreElements()) {
 
             String entryName = entries.nextElement();
@@ -305,7 +313,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         // extension annotation processing will be done in top level
         if (isProcessAnnotation(descriptor)) {
             Map<ExtensionsArchivist, RootDeploymentDescriptor> localExtensions =
-                    new HashMap<ExtensionsArchivist, RootDeploymentDescriptor>();
+                    new HashMap<>();
             for (WebFragmentDescriptor wfDesc : wfList) {
                 // if web.xml specifies metadata-complete=true,
                 // all web fragment metadata-complete
@@ -347,14 +355,13 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      * This method will return the list of web fragment in the desired order.
      */
     private List<WebFragmentDescriptor> readStandardFragments(WebBundleDescriptorImpl descriptor,
-            ReadableArchive archive) throws IOException {
+        ReadableArchive archive) throws IOException {
+        List<WebFragmentDescriptor> wfList = new ArrayList<>();
+        Vector<String> libs = getLibraries(archive);
+        if (libs != null && !libs.isEmpty()) {
 
-        List<WebFragmentDescriptor> wfList = new ArrayList<WebFragmentDescriptor>();
-        Vector libs = getLibraries(archive);
-        if (libs != null && libs.size() > 0) {
-
-            for (int i = 0; i < libs.size(); i++) {
-                String lib = (String)libs.get(i);
+            for (Object lib2 : libs) {
+                String lib = (String)lib2;
                 Archivist wfArchivist = new WebFragmentArchivist(this, habitat);
                 wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
                 wfArchivist.setRuntimeXMLValidationLevel(
@@ -362,8 +369,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                 wfArchivist.setAnnotationProcessingRequested(false);
 
                 WebFragmentDescriptor wfDesc = null;
-                ReadableArchive embeddedArchive = archive.getSubArchive(lib);
-                try {
+                try (ReadableArchive embeddedArchive = archive.getSubArchive(lib)) {
                     if (embeddedArchive != null &&
                             wfArchivist.hasStandardDeploymentDescriptor(embeddedArchive)) {
                         try {
@@ -376,10 +382,6 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                     } else {
                         wfDesc = new WebFragmentDescriptor();
                     }
-                } finally {
-                    if (embeddedArchive != null) {
-                        embeddedArchive.close();
-                    }
                 }
                 wfDesc.setJarName(lib.substring(lib.lastIndexOf('/') + 1));
                 wfList.add(wfDesc);
@@ -388,8 +390,8 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
             }
 
-            if (((WebBundleDescriptorImpl)descriptor).getAbsoluteOrderingDescriptor() != null) {
-                wfList = ((WebBundleDescriptorImpl)descriptor).getAbsoluteOrderingDescriptor().order(wfList);
+            if (descriptor.getAbsoluteOrderingDescriptor() != null) {
+                wfList = descriptor.getAbsoluteOrderingDescriptor().order(wfList);
             } else {
                 OrderingDescriptor.sort(wfList);
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.deployment.archivist;
 
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.Archive;
-import org.xml.sax.SAXException;
-import org.jvnet.hk2.annotations.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.glassfish.api.deployment.archive.Archive;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
 
 @Service
 @ExtensionsArchivistFor("jpa")
@@ -44,32 +46,36 @@ public class WarPersistenceArchivist extends PersistenceArchivist {
     public Object open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
         final String CLASSES_DIR = "WEB-INF/classes/";
 
-        if(deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "WarPersistenceArchivist",
-                    "readPersistenceDeploymentDescriptors", "archive = {0}",
-                    warArchive.getURI());
+        if (deplLogger.isLoggable(Level.FINE)) {
+            deplLogger.logp(Level.FINE, "WarPersistenceArchivist", "readPersistenceDeploymentDescriptors",
+                "archive = {0}", warArchive.getURI());
         }
-        Map<String, ReadableArchive> probablePersitenceArchives =  new HashMap<String, ReadableArchive>();
+        Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
         try {
             SubArchivePURootScanner warLibScanner = new SubArchivePURootScanner() {
+
+                @Override
                 String getPathOfSubArchiveToScan() {
                     return "WEB-INF/lib";
                 }
             };
             probablePersitenceArchives = getProbablePersistenceRoots(warArchive, warLibScanner);
 
-            final String pathOfPersistenceXMLInsideClassesDir = CLASSES_DIR+ DescriptorConstants.PERSISTENCE_DD_ENTRY;
-            InputStream is = warArchive.getEntry(pathOfPersistenceXMLInsideClassesDir);
-            if (is!=null) {
-                is.close();
+            final String pathOfPersistenceXMLInsideClassesDir = CLASSES_DIR + DescriptorConstants.PERSISTENCE_DD_ENTRY;
+            final boolean isNull;
+            try (InputStream is = warArchive.getEntry(pathOfPersistenceXMLInsideClassesDir)) {
+                isNull = is == null;
+            }
+            if (!isNull) {
                 probablePersitenceArchives.put(CLASSES_DIR, warArchive.getSubArchive(CLASSES_DIR));
             }
 
-            for(Map.Entry<String, ReadableArchive> pathToArchiveEntry : probablePersitenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(), descriptor);
+            for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : probablePersitenceArchives.entrySet()) {
+                readPersistenceDeploymentDescriptor(main, pathToArchiveEntry.getValue(), pathToArchiveEntry.getKey(),
+                    descriptor);
             }
         } finally {
-            for(Archive probablePersitenceArchive : probablePersitenceArchives.values()) {
+            for (Archive probablePersitenceArchive : probablePersitenceArchives.values()) {
                 probablePersitenceArchive.close();
             }
         }

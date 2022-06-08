@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,43 @@
 
 package com.sun.ejb.containers.util;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Iterator;
+import com.sun.ejb.InvocationInfo;
+
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * This is an optimized map for resolving java.lang.reflect.Method objects.
+ * This is an optimized map for resolving {@link Method} objects.
+ * <p>
  * Doing a method lookup, even on an unsynchronized Map, can be an
  * expensive operation, in many cases taking multiple microseconds.
  * In most situations this overhead is negligible, but it can be noticeable
  * when performed in the common path of a local ejb invocation, where our
  * goal is to be as fast as a raw java method call.
- *
+ * <p>
  * A MethodMap must be created with an existing Map and is immutable after
  * construction(except for clear()).
+ * <p>
  * It does not support the optional Map operations
- * put, putAll, and remove.  NOTE that these operations could
+ * put, putAll, and remove. NOTE that these operations could
  * be implemented but are not necessary at this point since the main use
  * is for the container's method info, which is invariant after initialization.
- *
+ * <p>
  * As this is a map for Method objects, null keys are not supported.
  * This map is unsynchronized.
  */
-public final class MethodMap extends HashMap {
+public final class MethodMap extends HashMap<Method, InvocationInfo> {
+
+    private static final long serialVersionUID = 1L;
 
     // If bucket size is not specified by caller, this is the number
     // of buckets per method that will be created.
     private static final int DEFAULT_BUCKET_MULTIPLIER = 20;
 
-    private int numBuckets_;
+    private final int numBuckets_;
 
     // Sparse array of method info.  Each element represents one method
     // or is null.  Array is hashed by a combination of the
@@ -59,7 +65,7 @@ public final class MethodMap extends HashMap {
     // returns new Method instances.
     private MethodInfo[] methodInfo_;
 
-    public MethodMap(Map methodMap) {
+    public MethodMap(Map<Method, InvocationInfo> methodMap) {
         super(methodMap);
 
         numBuckets_ = methodMap.size() * DEFAULT_BUCKET_MULTIPLIER;
@@ -67,126 +73,114 @@ public final class MethodMap extends HashMap {
         buildLookupTable(methodMap);
     }
 
-    public MethodMap(Map methodMap, int numBuckets) {
+
+    public MethodMap(Map<Method, InvocationInfo> methodMap, int numBuckets) {
         super(methodMap);
 
-        if( numBuckets <= 0 ) {
-            throw new IllegalArgumentException
-                ("Invalid value of numBuckets = " + numBuckets);
+        if (numBuckets <= 0) {
+            throw new IllegalArgumentException("Invalid value of numBuckets = " + numBuckets);
         }
 
         numBuckets_ = numBuckets;
         buildLookupTable(methodMap);
     }
 
-    public Object put(Object key, Object value) {
-        throw new UnsupportedOperationException();
-    }
-    public void putAll(Map t) {
-        throw new UnsupportedOperationException();
-    }
-    public Object remove(Object key) {
+
+    @Override
+    public InvocationInfo put(Method key, InvocationInfo value) {
         throw new UnsupportedOperationException();
     }
 
-    public Object get(Object key) {
 
-        if( key instanceof Method ) {
+    @Override
+    public void putAll(Map<? extends Method, ? extends InvocationInfo> t) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public InvocationInfo remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public InvocationInfo get(Object key) {
+        if (key instanceof Method) {
             Method m = (Method) key;
-            Class[] paramTypes = m.getParameterTypes();
+            Class<?>[] paramTypes = m.getParameterTypes();
             return get(m, paramTypes.length);
         }
-
         return null;
     }
 
-    public Object get(Method m, int numParams) {
-
-        if( methodInfo_ == null ) {
+    public InvocationInfo get(Method m, int numParams) {
+        if (methodInfo_ == null) {
             return null;
-        } else if( numParams < 0 ) {
-            throw new IllegalStateException
-                ("invalid numParams = " + numParams);
+        } else if (numParams < 0) {
+            throw new IllegalStateException("invalid numParams = " + numParams);
         }
 
-        Object value = null;
-
+        InvocationInfo value = null;
         MethodInfo methodInfo = methodInfo_[getBucket(m, numParams)];
-
-        if( methodInfo != null) {
+        if (methodInfo != null) {
             // Declaring classes must be the same for methods to be equal.
-            if(methodInfo.declaringClass == m.getDeclaringClass()) {
+            if (methodInfo.declaringClass == m.getDeclaringClass()) {
                 value = methodInfo.value;
             }
         }
-
-        return (value != null) ? value : super.get(m);
-
+        return value == null ? super.get(m) : value;
     }
 
+    @Override
     public void clear() {
-
-        if( methodInfo_ != null ) {
+        if (methodInfo_ != null) {
             methodInfo_ = null;
             super.clear();
         }
-
     }
 
-    private void buildLookupTable(Map methodMap) {
-
+    private void buildLookupTable(Map<Method, InvocationInfo> methodMap) {
         methodInfo_ = new MethodInfo[numBuckets_];
-
-        Set occupied = new HashSet();
-
-        for(Iterator iter = methodMap.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry)iter.next();
+        Set<Integer> occupied = new HashSet<>();
+        for (Entry<Method, InvocationInfo> entry : methodMap.entrySet()) {
             Object nextObj = entry.getKey();
             Method next = null;
-
-            if( nextObj == null ) {
+            if (nextObj == null) {
                 throw new IllegalStateException("null keys not supported");
-            } else if( nextObj instanceof Method ) {
+            } else if (nextObj instanceof Method) {
                 next = (Method) nextObj;
             } else {
-                throw new IllegalStateException
-                    ("invalid key type = " + nextObj.getClass() +
-                     " key must be of type java.lang.reflect.Method");
+                throw new IllegalStateException(
+                    "invalid key type = " + nextObj.getClass() + " key must be of type java.lang.reflect.Method");
             }
 
             int bucket = getBucket(next);
-
-            if( !occupied.contains(bucket) ) {
-
+            if (occupied.contains(bucket)) {
+                // there's a clash for this bucket, so null it out and
+                // defer to backing HashMap for results.
+                methodInfo_[bucket] = null;
+            } else {
                 MethodInfo methodInfo = new MethodInfo();
                 methodInfo.value = entry.getValue();
 
                 // cache declaring class so we can avoid the method call
                 // during lookup operation.
                 methodInfo.declaringClass = next.getDeclaringClass();
-
                 methodInfo_[bucket] = methodInfo;
-
                 occupied.add(bucket);
-
-            } else {
-                // there's a clash for this bucket, so null it out and
-                // defer to backing HashMap for results.
-                methodInfo_[bucket] = null;
             }
         }
     }
 
-    private final int getBucket(Method m) {
-
+    private int getBucket(Method m) {
         // note : getParameterTypes is guaranteed to be 0-length array
         // (as opposed to null) for a method with no arguments.
-        Class[] paramTypes = m.getParameterTypes();
-
+        Class<?>[] paramTypes = m.getParameterTypes();
         return getBucket(m, paramTypes.length);
     }
 
-    private final int getBucket(Method m, int numParams) {
+    private int getBucket(Method m, int numParams) {
 
         String methodName = m.getName();
 
@@ -220,7 +214,7 @@ public final class MethodMap extends HashMap {
 
 
     private static class MethodInfo {
-        public Class declaringClass;
-        public Object value;
+        public Class<?> declaringClass;
+        public InvocationInfo value;
     }
 }

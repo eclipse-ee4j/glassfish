@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,14 +30,12 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  *
  * @author mvatkina
  */
-
 public class EntityBeanHomeImpl extends EJBHomeInvocationHandler {
 
-    EntityBeanHomeImpl(EjbDescriptor ejbDescriptor,
-                             Class homeIntfClass)
-            throws Exception {
+    EntityBeanHomeImpl(EjbDescriptor ejbDescriptor, Class homeIntfClass) throws Exception {
         super(ejbDescriptor, homeIntfClass);
     }
+
 
     /**
      * EJBObjectImpl is created directly by the container, not by this call
@@ -46,14 +45,11 @@ public class EntityBeanHomeImpl extends EJBHomeInvocationHandler {
         return null;
     }
 
-    @Override
-    protected void postCreate(Container container, EjbInvocation inv,
-            InvocationInfo invInfo, Object primaryKey, Object[] args)
-            throws Throwable {
-        container.postCreate(inv, primaryKey);
-        invokeTargetBeanMethod((BaseContainer)container, invInfo.targetMethod2,
-                 inv, inv.ejb, args);
 
+    @Override
+    protected void postCreate(Container container, EjbInvocation inv, InvocationInfo invInfo, Object primaryKey,
+        Object[] args) throws Throwable {
+        container.postCreate(inv, primaryKey);
+        invokeTargetBeanMethod((BaseContainer) container, invInfo.targetMethod2, inv, inv.ejb, args);
     }
 }
-

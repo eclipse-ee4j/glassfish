@@ -48,7 +48,6 @@ import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -87,23 +86,23 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
  */
 public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
-    private Logger logger = CDILoggerInfo.getLogger();
+    private final Logger logger = CDILoggerInfo.getLogger();
 
     private ReadableArchive archive;
     private String id;
-    private List<String> moduleClassNames; // Names of classes in the module
-    private List<String> beanClassNames; // Names of bean classes in the module
-    private List<Class<?>> moduleClasses; // Classes in the module
-    private List<Class<?>> beanClasses; // Classes identified as Beans through Weld SPI
-    private List<URL> beansXmlURLs;
+    private final List<String> moduleClassNames; // Names of classes in the module
+    private final List<String> beanClassNames; // Names of bean classes in the module
+    private final List<Class<?>> moduleClasses; // Classes in the module
+    private final List<Class<?>> beanClasses; // Classes identified as Beans through Weld SPI
+    private final List<URL> beansXmlURLs;
     private final Collection<EjbDescriptor<?>> ejbDescImpls;
-    private List<BeanDeploymentArchive> beanDeploymentArchives;
+    private final List<BeanDeploymentArchive> beanDeploymentArchives;
 
     private SimpleServiceRegistry simpleServiceRegistry;
 
     private BDAType bdaType = BDAType.UNKNOWN;
 
-    private DeploymentContext context;
+    private final DeploymentContext context;
 
     private final Map<AnnotatedType<?>, InjectionTarget<?>> itMap = new HashMap<>();
 
@@ -123,13 +122,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         this(archive, ejbs, ctx, null);
     }
 
+    /**
+     * @param archive - archive is consumed by the constructor and closed.
+     */
     public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx, String bdaID) {
         this.beanClasses = new ArrayList<>();
         this.beanClassNames = new ArrayList<>();
         this.moduleClasses = new ArrayList<>();
         this.moduleClassNames = new ArrayList<>();
         this.beansXmlURLs = new CopyOnWriteArrayList<>();
-        this.archive = archive;
         if (bdaID == null) {
             this.id = archive.getName();
         } else {
@@ -141,14 +142,18 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         this.beanDeploymentArchives = new ArrayList<>();
         this.context = ctx;
 
-        populate(ejbs);
-        populateEJBsForThisBDA(ejbs);
+        // FIXME: cleanup. populate methods use the archive field.
         try {
-            this.archive.close();
-        } catch (Exception e) {
+            this.archive = archive;
+            populate(ejbs);
+            populateEJBsForThisBDA(ejbs);
+        } finally {
+            try {
+                this.archive.close();
+            } catch (Exception e) {
+            }
+            this.archive = null;
         }
-        this.archive = null;
-
         // This assigns moduleClassLoaderForBDA
         getClassLoader();
     }
@@ -441,39 +446,44 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 List<ReadableArchive> weblibJarsThatAreBeanArchives = new ArrayList<>();
                 while (entries.hasMoreElements()) {
                     String entry = entries.nextElement();
-                    //if directly under WEB-INF/lib
+                    // if directly under WEB-INF/lib
                     if (entry.endsWith(JAR_SUFFIX) && entry.indexOf(SEPARATOR_CHAR, WEB_INF_LIB.length() + 1) == -1) {
+                        boolean closeArchive = true;
                         ReadableArchive weblibJarArchive = archive.getSubArchive(entry);
-                        if (weblibJarArchive.exists(META_INF_BEANS_XML)) {
-                            // Parse the descriptor to determine if CDI is disabled
-                            BeansXml beansXML = parseBeansXML(weblibJarArchive, META_INF_BEANS_XML);
-                            BeanDiscoveryMode bdMode = beansXML.getBeanDiscoveryMode();
-                            if (!bdMode.equals(BeanDiscoveryMode.NONE)) {
-                                if (logger.isLoggable(FINE)) {
-                                    logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, new Object[] { entry });
+                        try {
+                            if (weblibJarArchive.exists(META_INF_BEANS_XML)) {
+                                // Parse the descriptor to determine if CDI is disabled
+                                BeansXml beansXML = parseBeansXML(weblibJarArchive, META_INF_BEANS_XML);
+                                BeanDiscoveryMode bdMode = beansXML.getBeanDiscoveryMode();
+                                if (!bdMode.equals(BeanDiscoveryMode.NONE)) {
+                                    logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
+                                    if (!bdMode.equals(BeanDiscoveryMode.ANNOTATED)
+                                        || isImplicitBeanArchive(context, weblibJarArchive)) {
+                                        closeArchive = false;
+                                        weblibJarsThatAreBeanArchives.add(weblibJarArchive);
+                                    }
                                 }
-
-                                if (!bdMode.equals(BeanDiscoveryMode.ANNOTATED) || isImplicitBeanArchive(context, weblibJarArchive)) {
-                                    weblibJarsThatAreBeanArchives.add(weblibJarArchive);
-                                }
+                                // Check for classes annotated with qualified annotations
+                            } else if (WeldUtils.isImplicitBeanArchive(context, weblibJarArchive)) {
+                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
+                                closeArchive = false;
+                                weblibJarsThatAreBeanArchives.add(weblibJarArchive);
+                            } else {
+                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_SKIPPING_BEAN_ARCHIVE, archive.getName());
                             }
-                        } else // Check for classes annotated with qualified annotations
-                        if (WeldUtils.isImplicitBeanArchive(context, weblibJarArchive)) {
-                            if (logger.isLoggable(FINE)) {
-                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, new Object[] { entry });
-                            }
-                            weblibJarsThatAreBeanArchives.add(weblibJarArchive);
-                        } else {
-                            if (logger.isLoggable(FINE)) {
-                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_SKIPPING_BEAN_ARCHIVE, new Object[] { archive.getName() });
+                        } finally {
+                            if (closeArchive) {
+                                // unclosed archives continue for further processing in the list.
+                                weblibJarArchive.close();
                             }
                         }
+
                     }
                 }
 
                 // Process all web-inf lib JARs and create BDAs for them
                 List<BeanDeploymentArchiveImpl> webLibBDAs = new ArrayList<>();
-                if (weblibJarsThatAreBeanArchives.size() > 0) {
+                if (!weblibJarsThatAreBeanArchives.isEmpty()) {
                     ListIterator<ReadableArchive> libJarIterator = weblibJarsThatAreBeanArchives.listIterator();
                     while (libJarIterator.hasNext()) {
                         ReadableArchive libJarArchive = libJarIterator.next();
@@ -581,8 +591,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         }
     }
 
-    private void handleEntry(ReadableArchive archive, String entry, boolean isBeanArchive, boolean hasBeansXml)
-            throws ClassNotFoundException {
+    private void handleEntry(ReadableArchive archive, String entry, boolean isBeanArchive, boolean hasBeansXml) {
         if (legalClassName(entry)) {
             String className = filenameToClassname(entry);
             try {
@@ -604,12 +613,14 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         } else if (entry.endsWith("/beans.xml")) {
             try {
                 // use a throwaway classloader to load the application's beans.xml
-                ClassLoader throwAwayClassLoader = new URLClassLoader(new URL[] { archive.getURI().toURL() }, null);
-                URL beansXmlUrl = throwAwayClassLoader.getResource(entry);
-                if (beansXmlUrl != null && !beansXmlURLs.contains(beansXmlUrl)) { // http://java.net/jira/browse/GLASSFISH-17157
+                final URL beansXmlUrl;
+                try (URLClassLoader throwAwayClassLoader = new URLClassLoader(new URL[] { archive.getURI().toURL() }, null)) {
+                    beansXmlUrl = throwAwayClassLoader.getResource(entry);
+                }
+                if (beansXmlUrl != null && !beansXmlURLs.contains(beansXmlUrl)) {
                     beansXmlURLs.add(beansXmlUrl);
                 }
-            } catch (MalformedURLException e) {
+            } catch (IOException e) {
                 if (logger.isLoggable(Level.SEVERE)) {
                     logger.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_READING_ARCHIVE, new Object[] { e.getMessage() });
                 }
@@ -629,8 +640,9 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         while (entries.hasMoreElements()) {
             String entry = entries.nextElement();
             if (entry.endsWith(JAR_SUFFIX)) {
-                ReadableArchive jarArchive = archive.getSubArchive(entry);
-                collectJarInfo(jarArchive, true, true);
+                try (ReadableArchive jarArchive = archive.getSubArchive(entry)) {
+                    collectJarInfo(jarArchive, true, true);
+                }
             } else {
                 handleEntry(archive, entry, true, true);
             }

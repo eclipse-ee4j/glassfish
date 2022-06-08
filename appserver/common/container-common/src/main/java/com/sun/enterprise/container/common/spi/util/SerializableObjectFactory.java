@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,21 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * An interface that creates an Object that was serialized using
- * IndirectlySerializable
+ * An interface that creates an Object implementing {@link IndirectlySerializable}
  *
  * @author Mahesh Kannan
  */
-
 public interface SerializableObjectFactory extends Serializable {
 
-    public Object createObject() throws java.io.IOException;
-
+    /**
+     * Creates an Object implementing {@link IndirectlySerializable}
+     *
+     * @return an instance
+     * @throws IOException
+     */
+    Object createObject() throws IOException;
 }

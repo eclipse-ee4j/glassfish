@@ -17,6 +17,20 @@
 
 package org.apache.catalina.connector;
 
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.AsyncEvent;
+import jakarta.servlet.AsyncListener;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.EventListener;
@@ -42,20 +56,6 @@ import org.apache.catalina.core.ApplicationHttpResponse;
 import org.apache.catalina.core.DispatchTargetsInfo;
 import org.apache.catalina.core.StandardContext;
 
-import jakarta.servlet.AsyncContext;
-import jakarta.servlet.AsyncEvent;
-import jakarta.servlet.AsyncListener;
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestEvent;
-import jakarta.servlet.ServletRequestListener;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 class AsyncContextImpl implements AsyncContext {
     // Note...this constant is also defined in org.glassfish.weld.WeldDeployer.  If it changes here it must
     // change there as well.  The reason it is duplicated is so that a dependency from web-core to gf-weld-connector
@@ -63,21 +63,24 @@ class AsyncContextImpl implements AsyncContext {
     private static final String WELD_LISTENER = "org.jboss.weld.module.web.servlet.WeldListener";
 
 
-    /*
+    /**
      * Event notification types for async mode
      */
-    static enum AsyncEventType { COMPLETE, TIMEOUT, ERROR, START_ASYNC }
+    enum AsyncEventType {
+        COMPLETE,
+        TIMEOUT,
+        ERROR,
+        START_ASYNC
+    }
 
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
-
 
     // Default timeout for async operations
     private static final long DEFAULT_ASYNC_TIMEOUT_MILLIS = 30000L;
 
     // Thread pool for async dispatches
-    private static final ExecutorService pool =
-        Executors.newCachedThreadPool(new AsyncPoolThreadFactory());
+    private static final ExecutorService pool = Executors.newCachedThreadPool(new AsyncPoolThreadFactory());
 
     // The original (unwrapped) request
     private Request origRequest;
@@ -93,9 +96,9 @@ class AsyncContextImpl implements AsyncContext {
     private boolean isStartAsyncWithZeroArg = false;
 
     // defaults to false
-    private AtomicBoolean isDispatchInProgress = new AtomicBoolean();
+    private final AtomicBoolean isDispatchInProgress = new AtomicBoolean();
 
-    private ThreadLocal<Boolean> isDispatchInScope = new ThreadLocal<Boolean>() {
+    private final ThreadLocal<Boolean> isDispatchInScope = new ThreadLocal<>() {
         @Override
         protected Boolean initialValue() {
             return Boolean.FALSE;
@@ -104,32 +107,32 @@ class AsyncContextImpl implements AsyncContext {
 
     private volatile boolean hasDispatch = false;
 
-    private AtomicBoolean isOkToConfigure = new AtomicBoolean(true);
+    private final AtomicBoolean isOkToConfigure = new AtomicBoolean(true);
 
     private long asyncTimeoutMillis = DEFAULT_ASYNC_TIMEOUT_MILLIS;
 
-    private final Queue<AsyncListener> listenerQueue = new ConcurrentLinkedQueue<AsyncListener>();
+    private final Queue<AsyncListener> listenerQueue = new ConcurrentLinkedQueue<>();
 
     private final LinkedList<AsyncListenerContext> asyncListenerContexts =
-        new LinkedList<AsyncListenerContext>();
+        new LinkedList<>();
 
     // The number of times this AsyncContext has been reinitialized via a call
     // to ServletRequest#startAsync
-    private AtomicInteger startAsyncCounter = new AtomicInteger(0);
+    private final AtomicInteger startAsyncCounter = new AtomicInteger(0);
     // Has AsyncContext.complete been called?
     private final AtomicBoolean isAsyncCompleteCalled = new AtomicBoolean();
     // Has AsyncContext.complete been really completed?
     private final AtomicBoolean isAsyncCompleted = new AtomicBoolean();
     private volatile boolean delayAsyncDispatchAndComplete = true;
 
-    private ThreadLocal<Boolean> isStartAsyncInScope = new ThreadLocal<Boolean>() {
+    private final ThreadLocal<Boolean> isStartAsyncInScope = new ThreadLocal<>() {
         @Override
         protected Boolean initialValue() {
             return Boolean.FALSE;
         }
     };
 
-    private Handler handler = null;
+    private Handler handler;
 
     /**
      * Constructor
@@ -142,11 +145,8 @@ class AsyncContextImpl implements AsyncContext {
      * @param isStartAsyncWithZeroArg true if the zero-arg version of
      * startAsync was called, false otherwise
      */
-    AsyncContextImpl(Request origRequest,
-                            ServletRequest servletRequest,
-                            Response origResponse,
-                            ServletResponse servletResponse,
-                            boolean isStartAsyncWithZeroArg) {
+    AsyncContextImpl(Request origRequest, ServletRequest servletRequest, Response origResponse,
+        ServletResponse servletResponse, boolean isStartAsyncWithZeroArg) {
         this.origRequest = origRequest;
         init(servletRequest, servletResponse, isStartAsyncWithZeroArg);
     }
@@ -170,43 +170,49 @@ class AsyncContextImpl implements AsyncContext {
         return isOriginalRequestAndResponse;
     }
 
+
     @Override
     public void dispatch() {
-        ApplicationDispatcher dispatcher =
-            (ApplicationDispatcher)getZeroArgDispatcher(
-                origRequest, servletRequest, isStartAsyncWithZeroArg);
-
+        ApplicationDispatcher dispatcher
+            = (ApplicationDispatcher) getZeroArgDispatcher(origRequest, servletRequest, isStartAsyncWithZeroArg);
         dispatch(dispatcher, null, null);
     }
+
 
     @Override
     public void dispatch(String path) {
         if (path == null) {
             throw new IllegalArgumentException("Null path");
         }
-        ApplicationDispatcher dispatcher = (ApplicationDispatcher)
-            servletRequest.getRequestDispatcher(path);
-
+        ApplicationDispatcher dispatcher = (ApplicationDispatcher) servletRequest.getRequestDispatcher(path);
         dispatch(dispatcher, null, path);
     }
+
 
     @Override
     public void dispatch(ServletContext context, String path) {
         if (path == null || context == null) {
             throw new IllegalArgumentException("Null context or path");
         }
-        ApplicationDispatcher dispatcher = (ApplicationDispatcher)
-            context.getRequestDispatcher(path);
-
+        ApplicationDispatcher dispatcher = (ApplicationDispatcher) context.getRequestDispatcher(path);
         dispatch(dispatcher, context, path);
     }
 
-    private void dispatch(ApplicationDispatcher dispatcher,
-            ServletContext context, String path) {
 
+    private void dispatch(ApplicationDispatcher dispatcher, ServletContext context, String path) {
         isDispatchInScope.set(true);
         hasDispatch = true;
-        if (dispatcher != null) {
+        if (dispatcher == null) {
+            // Should never happen, because any unmapped paths will be mapped to the DefaultServlet
+            if (context == null && path == null) {
+                log.log(Level.WARNING, LogFacade.UNABLE_DETERMINE_TARGET_OF_DISPATCHER);
+            } else if (context == null && path != null) {
+                log.log(Level.WARNING, LogFacade.UNABLE_ACQUIRE_REQUEST_DISPATCHER, path);
+            } else if (context != null) {
+                log.log(Level.WARNING, LogFacade.UNABLE_ACQUIRE_REQUEST_DISPATCHER_IN_SERVLET_CONTEXT,
+                        new Object[] {path, context.getContextPath()});
+            }
+        } else {
             if (isDispatchInProgress.compareAndSet(false, true)) {
                 if (delayAsyncDispatchAndComplete) {
                     handler = new Handler(this, dispatcher);
@@ -216,17 +222,6 @@ class AsyncContextImpl implements AsyncContext {
             } else {
                 String msg = rb.getString(LogFacade.ASYNC_DISPATCH_ALREADY_IN_PROGRESS_EXCEPTION);
                 throw new IllegalStateException(msg);
-            }
-        } else {
-            // Should never happen, because any unmapped paths will be
-            // mapped to the DefaultServlet
-            if (context == null && path == null) {
-                log.log(Level.WARNING, LogFacade.UNABLE_DETERMINE_TARGET_OF_DISPATCHER);
-            } else if (context == null && path != null) {
-                log.log(Level.WARNING, LogFacade.UNABLE_ACQUIRE_REQUEST_DISPATCHER, path);
-            } else {
-                log.log(Level.WARNING, LogFacade.UNABLE_ACQUIRE_REQUEST_DISPATCHER_IN_SERVLET_CONTEXT,
-                        new Object[] {path, context.getContextPath()});
             }
         }
     }
@@ -270,8 +265,7 @@ class AsyncContextImpl implements AsyncContext {
 
             doComplete();
         } else {
-            throw new IllegalStateException(rb.getString(
-                    LogFacade.REQUEST_ALREADY_RELEASED_EXCEPTION));
+            throw new IllegalStateException(rb.getString(LogFacade.REQUEST_ALREADY_RELEASED_EXCEPTION));
         }
     }
 
@@ -340,17 +334,15 @@ class AsyncContextImpl implements AsyncContext {
         addListener(listener, this.servletRequest, this.servletResponse);
     }
 
+
     @Override
-    public void addListener(AsyncListener listener,
-                            ServletRequest servletRequest,
-                            ServletResponse servletResponse) {
+    public void addListener(AsyncListener listener, ServletRequest servletRequest, ServletResponse servletResponse) {
         if (listener == null) {
             throw new IllegalArgumentException("Null listener");
         }
 
         if (servletRequest == null || servletResponse == null) {
-            throw new IllegalArgumentException(
-                "Null request, or response");
+            throw new IllegalArgumentException("Null request, or response");
         }
 
         if (!isOkToConfigure.get()) {
@@ -358,15 +350,14 @@ class AsyncContextImpl implements AsyncContext {
             throw new IllegalStateException(msg);
         }
 
-        synchronized(asyncListenerContexts) {
-            asyncListenerContexts.add(new AsyncListenerContext(
-                listener, servletRequest, servletResponse));
+        synchronized (asyncListenerContexts) {
+            asyncListenerContexts.add(new AsyncListenerContext(listener, servletRequest, servletResponse));
         }
     }
 
+
     @Override
-    public <T extends AsyncListener> T createListener(Class<T> clazz)
-            throws ServletException {
+    public <T extends AsyncListener> T createListener(Class<T> clazz) throws ServletException {
         T listener = null;
         StandardContext ctx = (StandardContext) origRequest.getContext();
         if (ctx != null) {
@@ -380,6 +371,7 @@ class AsyncContextImpl implements AsyncContext {
         return listener;
     }
 
+
     @Override
     public void setTimeout(long timeout) {
         if (!isOkToConfigure.get()) {
@@ -387,7 +379,6 @@ class AsyncContextImpl implements AsyncContext {
             throw new IllegalStateException(msg);
         }
         asyncTimeoutMillis = timeout;
-//        origRequest.setAsyncTimeout(timeout);
     }
 
     @Override
@@ -395,20 +386,18 @@ class AsyncContextImpl implements AsyncContext {
         return asyncTimeoutMillis;
     }
 
-    /*
+
+    /**
      * Reinitializes this AsyncContext with the given request and response.
      *
      * @param servletRequest the ServletRequest with which to initialize
-     * the AsyncContext
+     *            the AsyncContext
      * @param servletResponse the ServletResponse with which to initialize
-     * the AsyncContext
+     *            the AsyncContext
      * @param isStartAsyncWithZeroArg true if the zero-arg version of
-     * startAsync was called, false otherwise
+     *            startAsync was called, false otherwise
      */
-    void reinitialize(ServletRequest servletRequest,
-                      ServletResponse servletResponse,
-                      boolean isStartAsyncWithZeroArg) {
-
+    void reinitialize(ServletRequest servletRequest, ServletResponse servletResponse, boolean isStartAsyncWithZeroArg) {
         init(servletRequest, servletResponse, isStartAsyncWithZeroArg);
         isDispatchInProgress.set(false);
         setOkToConfigure(true);
@@ -434,22 +423,20 @@ class AsyncContextImpl implements AsyncContext {
         isOkToConfigure.set(value);
     }
 
-    private void init(ServletRequest servletRequest,
-            ServletResponse servletResponse, boolean isStartAsyncWithZeroArg) {
 
+    private void init(ServletRequest servletRequest, ServletResponse servletResponse, boolean isStartAsyncWithZeroArg) {
         this.servletRequest = servletRequest;
         this.servletResponse = servletResponse;
         // If original or container-wrapped request and response,
         // AsyncContext#hasOriginalRequestAndResponse must return true;
         // false otherwise (i.e., if application-wrapped)
         this.isOriginalRequestAndResponse =
-                ((servletRequest instanceof RequestFacade ||
-                servletRequest instanceof ApplicationHttpRequest) &&
-                (servletResponse instanceof ResponseFacade ||
-                servletResponse instanceof ApplicationHttpResponse));
+            ((servletRequest instanceof RequestFacade || servletRequest instanceof ApplicationHttpRequest)
+            && (servletResponse instanceof ResponseFacade || servletResponse instanceof ApplicationHttpResponse));
 
         this.isStartAsyncWithZeroArg = isStartAsyncWithZeroArg;
     }
+
 
     /**
      * Determines the dispatcher of a zero-argument async dispatch for the
@@ -457,20 +444,17 @@ class AsyncContextImpl implements AsyncContext {
      *
      * @return the dispatcher of the zero-argument async dispatch
      */
-    private RequestDispatcher getZeroArgDispatcher(
-            Request origRequest, ServletRequest servletRequest,
-            boolean isStartAsyncWithZeroArg) {
-
+    private RequestDispatcher getZeroArgDispatcher(Request origRequest, ServletRequest servletRequest,
+        boolean isStartAsyncWithZeroArg) {
         String dispatchTarget = null;
         boolean isNamed = false;
-        if ((!isStartAsyncWithZeroArg) &&
-                servletRequest instanceof HttpServletRequest) {
+        if ((!isStartAsyncWithZeroArg) && servletRequest instanceof HttpServletRequest) {
 
-            HttpServletRequest req = (HttpServletRequest)servletRequest;
+            HttpServletRequest req = (HttpServletRequest) servletRequest;
             dispatchTarget = getCombinedPath(req);
         } else {
-            DispatchTargetsInfo dtInfo = (DispatchTargetsInfo)origRequest.getAttribute(
-                    ApplicationDispatcher.LAST_DISPATCH_REQUEST_PATH_ATTR);
+            DispatchTargetsInfo dtInfo = (DispatchTargetsInfo) origRequest
+                .getAttribute(ApplicationDispatcher.LAST_DISPATCH_REQUEST_PATH_ATTR);
             if (dtInfo != null) {
                 dispatchTarget = dtInfo.getLastDispatchTarget();
                 isNamed = dtInfo.isLastNamedDispatchTarget();
@@ -482,9 +466,8 @@ class AsyncContextImpl implements AsyncContext {
 
         RequestDispatcher dispatcher = null;
         if (dispatchTarget != null) {
-            dispatcher = ((isNamed) ?
-                    servletRequest.getServletContext().getNamedDispatcher(dispatchTarget) :
-                    servletRequest.getRequestDispatcher(dispatchTarget));
+            dispatcher = isNamed ? servletRequest.getServletContext().getNamedDispatcher(dispatchTarget)
+                : servletRequest.getRequestDispatcher(dispatchTarget);
         }
 
         return dispatcher;
@@ -507,18 +490,17 @@ class AsyncContextImpl implements AsyncContext {
         private final AsyncContextImpl asyncContext;
         private final ApplicationDispatcher dispatcher;
 
-        Handler(AsyncContextImpl asyncContext,
-                ApplicationDispatcher dispatcher) {
+        Handler(AsyncContextImpl asyncContext, ApplicationDispatcher dispatcher) {
             this.asyncContext = asyncContext;
             this.dispatcher = dispatcher;
         }
+
 
         @Override
         public void run() {
             asyncContext.isStartAsyncInScope.set(Boolean.TRUE);
             Request origRequest = asyncContext.getOriginalRequest();
-            origRequest.setAttribute(Globals.DISPATCHER_TYPE_ATTR,
-                                     DispatcherType.ASYNC);
+            origRequest.setAttribute(Globals.DISPATCHER_TYPE_ATTR, DispatcherType.ASYNC);
             origRequest.setAsyncStarted(false);
             int startAsyncCurrent = asyncContext.startAsyncCounter.get();
             ClassLoader oldCL;
@@ -539,16 +521,12 @@ class AsyncContextImpl implements AsyncContext {
                 }
 
                 asyncContext.setDelayAsyncDispatchAndComplete(true);
-                dispatcher.dispatch(asyncContext.getRequest(),
-                    asyncContext.getResponse(), DispatcherType.ASYNC);
-
+                dispatcher.dispatch(asyncContext.getRequest(), asyncContext.getResponse(), DispatcherType.ASYNC);
                 asyncContext.setDelayAsyncDispatchAndComplete(false);
-
                 asyncContext.processAsyncOperations();
 
-                if ((!asyncContext.isAsyncComplete()) &&
-                        asyncContext.startAsyncCounter.compareAndSet(
-                        startAsyncCurrent, startAsyncCurrent)) {
+                if ((!asyncContext.isAsyncComplete())
+                    && asyncContext.startAsyncCounter.compareAndSet(startAsyncCurrent, startAsyncCurrent)) {
                     /*
                      * Close the response after the dispatch target has
                      * completed execution, unless the dispatch target has called
@@ -567,7 +545,6 @@ class AsyncContextImpl implements AsyncContext {
                 origRequest.errorDispatchAndComplete(t);
             } finally {
                 asyncContext.isStartAsyncInScope.set(Boolean.FALSE);
-
                 if (Globals.IS_SECURITY_ENABLED) {
                     PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
                     AccessController.doPrivileged(pa);
@@ -582,7 +559,7 @@ class AsyncContextImpl implements AsyncContext {
         return isStartAsyncInScope.get().booleanValue();
     }
 
-    /*
+    /**
      * Notifies all AsyncListeners of the given async event type
      */
     void notifyAsyncListeners(AsyncEventType asyncEventType, Throwable t) {
@@ -591,14 +568,13 @@ class AsyncContextImpl implements AsyncContext {
             if (asyncListenerContexts.isEmpty()) {
                 return;
             }
-            clone =
-                new LinkedList<AsyncListenerContext>(asyncListenerContexts);
+            clone = new LinkedList<>(asyncListenerContexts);
             if (asyncEventType.equals(AsyncEventType.START_ASYNC)) {
                 asyncListenerContexts.clear();
             }
         }
 
-        ClassLoader oldCL;
+        final ClassLoader oldCL;
         if (Globals.IS_SECURITY_ENABLED) {
             PrivilegedAction<ClassLoader> pa = new PrivilegedGetTccl();
             oldCL = AccessController.doPrivileged(pa);
@@ -607,7 +583,7 @@ class AsyncContextImpl implements AsyncContext {
         }
 
         try {
-            ClassLoader newCL = origRequest.getContext().getLoader().getClassLoader();
+            final ClassLoader newCL = origRequest.getContext().getLoader().getClassLoader();
             if (Globals.IS_SECURITY_ENABLED) {
                 PrivilegedAction<Void> pa = new PrivilegedSetTccl(newCL);
                 AccessController.doPrivileged(pa);
@@ -616,7 +592,7 @@ class AsyncContextImpl implements AsyncContext {
             }
 
             ServletRequestListener weldListener = getWeldListener();
-            if ( weldListener != null ) {
+            if (weldListener != null) {
                 // must fire a request initialized so CDI can associate a request with the request and session contexts
                 ServletRequestEvent event = new ServletRequestEvent(origRequest.getContext().getServletContext(), origRequest);
                 weldListener.requestInitialized(event);
@@ -626,15 +602,13 @@ class AsyncContextImpl implements AsyncContext {
             try {
                 setDelayAsyncDispatchAndComplete(true);
                 for (AsyncListenerContext asyncListenerContext : clone) {
-                    AsyncListener asyncListener =
-                        asyncListenerContext.getAsyncListener();
-                    AsyncEvent asyncEvent = new AsyncEvent(
-                        this, asyncListenerContext.getRequest(),
-                        asyncListenerContext.getResponse(), t);
-
-                    if (asyncListenerContext.getResponse() instanceof HttpServletResponse) {
-                        ((HttpServletResponse)asyncListenerContext.getResponse()).setStatus(
-                            HttpServletResponse.SC_OK);
+                    AsyncListener asyncListener = asyncListenerContext.getAsyncListener();
+                    ServletResponse response = asyncListenerContext.getResponse();
+                    AsyncEvent asyncEvent = new AsyncEvent(this, asyncListenerContext.getRequest(), response, t);
+                    response.reset();
+                    if (response instanceof HttpServletResponse) {
+                        HttpServletResponse httpResponse = (HttpServletResponse) response;
+                        httpResponse.setStatus(HttpServletResponse.SC_OK);
                     }
 
                     try {
@@ -655,13 +629,12 @@ class AsyncContextImpl implements AsyncContext {
                                 break;
                         }
                     } catch (Throwable throwable) {
-                        log.log(Level.WARNING, LogFacade.ERROR_INVOKE_ASYNCLISTENER,
-                                throwable);
+                        log.log(Level.WARNING, LogFacade.ERROR_INVOKE_ASYNCLISTENER, throwable);
                     }
                 }
             } finally {
                 setDelayAsyncDispatchAndComplete(oldDelay);
-                if ( weldListener != null ) {
+                if (weldListener != null) {
                     ServletRequestEvent event = new ServletRequestEvent(origRequest.getContext().getServletContext(), origRequest);
                     weldListener.requestDestroyed(event);
                 }
@@ -670,19 +643,20 @@ class AsyncContextImpl implements AsyncContext {
 
         } finally {
             if (Globals.IS_SECURITY_ENABLED) {
-                PrivilegedAction<Void> pa = new PrivilegedSetTccl(oldCL);
-                AccessController.doPrivileged(pa);
+                PrivilegedAction<Void> action = new PrivilegedSetTccl(oldCL);
+                AccessController.doPrivileged(action);
             } else {
                 Thread.currentThread().setContextClassLoader(oldCL);
             }
         }
     }
 
+
     private ServletRequestListener getWeldListener() {
         List<EventListener> eventListeners = origRequest.getContext().getApplicationEventListeners();
-        if ( eventListeners != null ) {
-            for ( EventListener listener : eventListeners ) {
-                if ( listener.getClass().getName().equals( WELD_LISTENER ) ) {
+        if (eventListeners != null) {
+            for (EventListener listener : eventListeners) {
+                if (listener.getClass().getName().equals(WELD_LISTENER)) {
                     return (ServletRequestListener) listener;
                 }
             }
@@ -695,8 +669,9 @@ class AsyncContextImpl implements AsyncContext {
         return pool;
     }
 
+
     void clear() {
-        synchronized(asyncListenerContexts) {
+        synchronized (asyncListenerContexts) {
             asyncListenerContexts.clear();
         }
 
@@ -718,13 +693,11 @@ class AsyncContextImpl implements AsyncContext {
      */
     private static class AsyncListenerContext {
 
-        private AsyncListener listener;
-        private ServletRequest request;
-        private ServletResponse response;
+        private final AsyncListener listener;
+        private final ServletRequest request;
+        private final ServletResponse response;
 
-        public AsyncListenerContext(AsyncListener listener,
-                                    ServletRequest request,
-                                    ServletResponse response) {
+        public AsyncListenerContext(AsyncListener listener, ServletRequest request, ServletResponse response) {
             this.listener = listener;
             this.request = request;
             this.response = response;
@@ -749,28 +722,23 @@ class AsyncContextImpl implements AsyncContext {
         private final ThreadFactory defaultFactory = Executors.defaultThreadFactory();
         private final AtomicInteger counter = new AtomicInteger(0);
 
-
-        // ------------------------------------------ Methods from ThreadFactory
-
-
         @Override
         public Thread newThread(Runnable r) {
-
             final Thread t = defaultFactory.newThread(r);
             t.setName("glassfish-web-async-thread-" + counter.incrementAndGet());
             return t;
 
         }
-
     } // END AsyncPoolThreadFactory
 
     private static class PrivilegedSetTccl implements PrivilegedAction<Void> {
 
-        private ClassLoader cl;
+        private final ClassLoader cl;
 
         PrivilegedSetTccl(ClassLoader cl) {
             this.cl = cl;
         }
+
 
         @Override
         public Void run() {
@@ -779,8 +747,7 @@ class AsyncContextImpl implements AsyncContext {
         }
     }
 
-    private static class PrivilegedGetTccl
-            implements PrivilegedAction<ClassLoader> {
+    private static class PrivilegedGetTccl implements PrivilegedAction<ClassLoader> {
 
         @Override
         public ClassLoader run() {

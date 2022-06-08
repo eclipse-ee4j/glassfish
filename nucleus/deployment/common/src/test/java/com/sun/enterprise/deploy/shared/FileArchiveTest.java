@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -186,9 +186,7 @@ public class FileArchiveTest {
 
     private void createAndPopulateAndCheckArchive(final Set<String> entryNames) throws Exception {
         final ReadableArchive instance = createAndPopulateArchive(entryNames);
-
         checkArchive(instance, usualExpectedEntryNames);
-
     }
 
 
@@ -258,9 +256,10 @@ public class FileArchiveTest {
 
     @Test
     public void testSubarchive() throws Exception {
-        final ArchiveAndSubarchive archives = createAndPopulateArchiveAndSubarchive();
-        checkArchive(archives.parent, archives.fullExpectedEntryNames);
-        checkArchive(archives.subarchive, usualExpectedSubarchiveEntryNames);
+        try (ArchiveAndSubarchive archives = createAndPopulateArchiveAndSubarchive()) {
+            checkArchive(archives.parent, archives.fullExpectedEntryNames);
+            checkArchive(archives.subarchive, usualExpectedSubarchiveEntryNames);
+        }
     }
 
     @Test
@@ -289,19 +288,22 @@ public class FileArchiveTest {
 
         //  Now create the archive and subarchive on top of the directories
         //  which already exist and contain the stale file and directory.
-        final ArchiveAndSubarchive archives = createAndPopulateArchiveAndSubarchive();
-
-        checkArchive(archives.parent, archives.fullExpectedEntryNames);
-        checkArchive(archives.subarchive, usualExpectedSubarchiveEntryNames);
-
-        getListOfFilesCheckForLogRecord((FileArchive) archives.parent, archives.fullExpectedEntryNames);
-
+        try (ArchiveAndSubarchive archives = createAndPopulateArchiveAndSubarchive()) {
+            checkArchive(archives.parent, archives.fullExpectedEntryNames);
+            checkArchive(archives.subarchive, usualExpectedSubarchiveEntryNames);
+            getListOfFilesCheckForLogRecord((FileArchive) archives.parent, archives.fullExpectedEntryNames);
+        }
     }
 
-    private static class ArchiveAndSubarchive {
+    private static class ArchiveAndSubarchive implements AutoCloseable {
         ReadableArchive parent;
         ReadableArchive subarchive;
         Set<String> fullExpectedEntryNames;
+        @Override
+        public void close() throws Exception {
+            parent.close();
+            subarchive.close();
+        }
     }
 
     private ArchiveAndSubarchive createAndPopulateArchiveAndSubarchive() throws Exception {

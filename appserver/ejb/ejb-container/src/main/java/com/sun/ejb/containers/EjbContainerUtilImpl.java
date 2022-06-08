@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,71 +19,68 @@ package com.sun.ejb.containers;
 
 import com.sun.ejb.base.io.EJBObjectInputStreamHandler;
 import com.sun.ejb.base.io.EJBObjectOutputStreamHandler;
-import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import com.sun.enterprise.transaction.api.JavaEETransaction;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.admin.monitor.callflow.Agent;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
 import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.admin.monitor.callflow.Agent;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.transaction.api.JavaEETransaction;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
-import org.glassfish.ejb.spi.CMPDeployer;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.admin.config.ReferenceContainer;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.server.ServerEnvironmentImpl;
-import org.glassfish.flashlight.provider.ProbeProviderFactory;
-
-import org.jvnet.hk2.annotations.Optional;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
 import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
-import jakarta.transaction.Synchronization;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.Timer;
+import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.util.Vector;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.SynchronousQueue;
 
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.config.ReferenceContainer;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
+import org.glassfish.ejb.spi.CMPDeployer;
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.flashlight.provider.ProbeProviderFactory;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Optional;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan
  *         Date: Feb 10, 2008
  */
 @Service
-public class EjbContainerUtilImpl
-    implements PostConstruct, PreDestroy, EjbContainerUtil {
+public class EjbContainerUtilImpl implements PostConstruct, PreDestroy, EjbContainerUtil {
 
     private static Logger _logger = LogDomains.getLogger(EjbContainerUtilImpl.class, LogDomains.EJB_LOGGER);
 
@@ -98,29 +95,29 @@ public class EjbContainerUtilImpl
     @Inject
     JavaEEIOUtils javaEEIOUtils;
 
-    private  Map<Long, BaseContainer> id2Container
-            = new ConcurrentHashMap<Long, BaseContainer>();
+    private final Map<Long, BaseContainer> id2Container = new ConcurrentHashMap<>();
 
-    private  Timer _timer;
+    private Timer _timer;
 
-    private  boolean _insideContainer = true;
-
-    @Inject
-    private  InvocationManager _invManager;
+    private boolean _insideContainer = true;
 
     @Inject
-    private  InjectionManager _injectionManager;
+    private InvocationManager _invManager;
 
     @Inject
-    private  GlassfishNamingManager _gfNamingManager;
+    private InjectionManager _injectionManager;
 
     @Inject
-    private  ComponentEnvManager _compEnvManager;
+    private GlassfishNamingManager _gfNamingManager;
+
+    @Inject
+    private ComponentEnvManager _compEnvManager;
 
     @Inject
     private JavaEETransactionManager txMgr;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config serverConfig;
 
     private EjbContainer ejbContainer;
@@ -154,6 +151,7 @@ public class EjbContainerUtilImpl
 
     private  static EjbContainerUtil _me;
 
+    @Override
     public void postConstruct() {
         ejbContainer = serverConfig.getExtensionByType(EjbContainer.class);
 
@@ -162,6 +160,7 @@ public class EjbContainerUtilImpl
             callFlowAgent = (Agent) Proxy.newProxyInstance(ejbImplClassLoader,
                     new Class[] {Agent.class},
                     new InvocationHandler() {
+                        @Override
                         public Object invoke(Object proxy, Method m, Object[] args) {
                             return null;
                         }
@@ -189,8 +188,9 @@ public class EjbContainerUtilImpl
         _me = this;
     }
 
+    @Override
     public void preDestroy() {
-        if( defaultThreadPoolExecutor != null ) {
+        if (defaultThreadPoolExecutor != null) {
             defaultThreadPoolExecutor.shutdown();
             defaultThreadPoolExecutor = null;
         }
@@ -198,10 +198,12 @@ public class EjbContainerUtilImpl
         EJBTimerService.unsetEJBTimerService();
     }
 
+    @Override
     public GlassFishORBHelper getORBHelper() {
         return orbHelper;
     }
 
+    @Override
     public ServiceLocator getServices() {
         return services;
     }
@@ -229,68 +231,84 @@ public class EjbContainerUtilImpl
         return _logger;
     }
 
+    @Override
     public  void registerContainer(BaseContainer container) {
         id2Container.put(container.getContainerId(), container);
     }
 
+    @Override
     public  void unregisterContainer(BaseContainer container) {
         id2Container.remove(container.getContainerId());
     }
 
+    @Override
     public  BaseContainer getContainer(long id) {
         return id2Container.get(id);
     }
 
+    @Override
     public  EjbDescriptor getDescriptor(long id) {
         BaseContainer container = id2Container.get(id);
         return (container != null) ? container.getEjbDescriptor() : null;
     }
 
+    @Override
     public  ClassLoader getClassLoader(long id) {
         BaseContainer container = id2Container.get(id);
         return (container != null) ? container.getClassLoader() : null;
     }
 
+    @Override
     public  Timer getTimer() {
         return _timer;
     }
 
+    @Override
     public  void setInsideContainer(boolean bool) {
         _insideContainer = bool;
     }
 
+    @Override
     public  boolean isInsideContainer() {
         return _insideContainer;
     }
 
+    @Override
     public  InvocationManager getInvocationManager() {
         return _invManager;
     }
 
+    @Override
     public  InjectionManager getInjectionManager() {
         return _injectionManager;
     }
 
+    @Override
     public  GlassfishNamingManager getGlassfishNamingManager() {
         return _gfNamingManager;
     }
 
+    @Override
     public  ComponentEnvManager getComponentEnvManager() {
         return _compEnvManager;
     }
 
+    @Override
     public  ComponentInvocation getCurrentInvocation() {
         return _invManager.getCurrentInvocation();
     }
 
+    @Override
     public JavaEETransactionManager getTransactionManager() {
         return txMgr;
     }
 
+    @Override
     public ServerContext getServerContext() {
         return serverContext;
     }
 
+    @Override
     public EjbAsyncInvocationManager getEjbAsyncInvocationManager() {
         return ejbAsyncInvocationManager;
     }
@@ -306,6 +324,7 @@ public class EjbContainerUtilImpl
         return txData;
     }
 
+    @Override
     public  ContainerSynchronization getContainerSync(Transaction jtx)
         throws RollbackException, SystemException
     {
@@ -320,24 +339,29 @@ public class EjbContainerUtilImpl
         return txData.sync;
     }
 
+    @Override
     public void removeContainerSync(Transaction tx) {
         //No op
     }
 
+    @Override
     public void registerPMSync(Transaction jtx, Synchronization sync)
             throws RollbackException, SystemException {
 
         getContainerSync(jtx).addPMSynchronization(sync);
     }
 
+    @Override
     public EjbContainer getEjbContainer() {
         return ejbContainer;
     }
 
+    @Override
     public ServerEnvironmentImpl getServerEnvironment() {
         return env;
     }
 
+    @Override
     public  Vector getBeans(Transaction jtx) {
         JavaEETransaction tx = (JavaEETransaction) jtx;
         TxData txData = getTxData(tx);
@@ -350,6 +374,7 @@ public class EjbContainerUtilImpl
 
     }
 
+    @Override
     public Object getActiveTxCache(Transaction jtx) {
         JavaEETransaction tx = (JavaEETransaction) jtx;
         TxData txData = getTxData(tx);
@@ -357,6 +382,7 @@ public class EjbContainerUtilImpl
         return txData.activeTxCache;
     }
 
+    @Override
     public void setActiveTxCache(Transaction jtx, Object cache) {
         JavaEETransaction tx = (JavaEETransaction) jtx;
         TxData txData = getTxData(tx);
@@ -364,28 +390,34 @@ public class EjbContainerUtilImpl
         txData.activeTxCache = cache;
     }
 
+    @Override
     public Agent getCallFlowAgent() {
         return callFlowAgent;
     }
 
+    @Override
     public void addWork(Runnable task) {
         if (defaultThreadPoolExecutor != null) {
             defaultThreadPoolExecutor.submit(task);
         }
     }
 
+    @Override
     public EjbDescriptor ejbIdToDescriptor(long ejbId) {
         throw new RuntimeException("Not supported yet");
     }
 
+    @Override
     public boolean isEJBLite() {
         return (cmpDeployerProvider.get() == null);
     }
 
+    @Override
     public boolean isEmbeddedServer() {
         return processEnv.getProcessType().isEmbedded();
     }
 
+    @Override
     public Deployment getDeployment() {
         return deploymentProvider.get();
     }
@@ -398,6 +430,7 @@ public class EjbContainerUtilImpl
         Object activeTxCache;
     }
 
+    @Override
     public EjbTimerService getEjbTimerService(String target) {
         EjbTimerService ejbt = null;
         if (target == null) {
@@ -424,6 +457,7 @@ public class EjbContainerUtilImpl
         return ejbt;
     }
 
+    @Override
     public ProbeProviderFactory getProbeProviderFactory() {
         return probeProviderFactory;
     }
@@ -431,6 +465,7 @@ public class EjbContainerUtilImpl
    /**
     * Embedded is a single-instance like DAS
     */
+    @Override
     public boolean isDas() {
         return env.isDas() || env.isEmbedded();
     }
@@ -551,6 +586,7 @@ public class EjbContainerUtilImpl
         return keepAliveSeconds;
     }
 
+    @Override
     public ThreadPoolExecutor getThreadPoolExecutor(String poolName) {
         if(poolName == null) {
             return defaultThreadPoolExecutor;
@@ -559,6 +595,7 @@ public class EjbContainerUtilImpl
 //        TODO retrieve the named ThreadPoolExecutor
     }
 
+    @Override
     public JavaEEIOUtils getJavaEEIOUtils() {
         return javaEEIOUtils;
     }

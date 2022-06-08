@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,29 +17,27 @@
 
 package org.glassfish.deployment.common;
 
-import javassist.bytecode.Opcode;
-import org.objectweb.asm.*;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.ArrayList;
-
-import java.io.InputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.logging.Level;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import org.glassfish.internal.api.Globals;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 /**
  * This class will detect whether an archive contains specified annotations.
@@ -59,7 +58,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     @LogMessageInfo(message = "Failed to scan archive for annotations: {0}", level="WARNING")
     private static final String FAILED_ANNOTATION_SCAN = "NCLS-DEPLOYMENT-00009";
     boolean found = false;
-    List<String> annotations = new ArrayList<String>();;
+    List<String> annotations = new ArrayList<>();
 
     public GenericAnnotationDetector(Class[] annotationClasses) {
         super(Opcodes.ASM7);
@@ -100,6 +99,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
         return found;
     }
 
+    @Override
     public AnnotationVisitor visitAnnotation(String s, boolean b) {
         if (annotations.contains(s)) {
             found = true;
@@ -110,53 +110,37 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     @Override
     public void scanArchive(ReadableArchive archive) {
         try {
-            int crFlags = ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG
-                | ClassReader.SKIP_FRAMES;
+            int crFlags = ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES;
             Enumeration<String> entries = archive.entries();
             while (entries.hasMoreElements()) {
                 String entryName = entries.nextElement();
                 if (entryName.endsWith(".class")) {
                     // scan class files
-                    InputStream is = archive.getEntry(entryName);
-                    try {
+                    try (InputStream is = archive.getEntry(entryName)) {
                         ClassReader cr = new ClassReader(is);
                         cr.accept(this, crFlags);
                         if (found) {
                             return;
                         }
-                    } finally {
-                        is.close();
                     }
-                } else if (entryName.endsWith(".jar") &&
-                    entryName.indexOf('/') == -1) {
+                } else if (entryName.endsWith(".jar") && entryName.indexOf('/') == -1) {
                     // scan class files inside top level jar
-                    try {
-                        ReadableArchive jarSubArchive = null;
-                        try {
-                            jarSubArchive = archive.getSubArchive(entryName);
-                            Enumeration<String> jarEntries =
-                                jarSubArchive.entries();
-                            while (jarEntries.hasMoreElements()) {
-                                String jarEntryName = jarEntries.nextElement();
-                                if (jarEntryName.endsWith(".class")) {
-                                    InputStream is =
-                                        jarSubArchive.getEntry(jarEntryName);
-                                    try {
-                                        ClassReader cr = new ClassReader(is);
-                                        cr.accept(this, crFlags);
-                                        if (found) {
-                                            return;
-                                        }
-                                    } finally {
-                                        is.close();
+                    try (ReadableArchive jarSubArchive = archive.getSubArchive(entryName)) {
+                        Enumeration<String> jarEntries = jarSubArchive.entries();
+                        while (jarEntries.hasMoreElements()) {
+                            String jarEntryName = jarEntries.nextElement();
+                            if (jarEntryName.endsWith(".class")) {
+                                try (InputStream is = jarSubArchive.getEntry(jarEntryName)) {
+                                    ClassReader cr = new ClassReader(is);
+                                    cr.accept(this, crFlags);
+                                    if (found) {
+                                        return;
                                     }
                                 }
                             }
-                        } finally {
-                            jarSubArchive.close();
                         }
                     } catch (IOException ioe) {
-                        Object args[] = { entryName, ioe.getMessage() };
+                        Object args[] = {entryName, ioe.getMessage()};
                         deplLogger.log(Level.WARNING, JAR_ENTRY_ERROR, args);
                     }
                 }

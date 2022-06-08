@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,27 @@
 
 package org.glassfish.webservices.archivist;
 
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivist;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivistFor;
-import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.runtime.WLSWebServicesDeploymentDescriptorFile;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.webservices.io.WebServicesDeploymentDescriptorFile;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
-import org.glassfish.hk2.api.PerLookup;
+import java.util.List;
 
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.webservices.io.WebServicesDeploymentDescriptorFile;
+import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
 /**
@@ -47,6 +48,7 @@ import org.xml.sax.SAXException;
 @ExtensionsArchivistFor("webservices")
 public class WebServicesArchivist extends ExtensionsArchivist {
 
+    @Override
     public DeploymentDescriptorFile getStandardDDFile(RootDeploymentDescriptor descriptor) {
         if (standardDD == null) {
             standardDD = new WebServicesDeploymentDescriptorFile(descriptor);
@@ -58,14 +60,16 @@ public class WebServicesArchivist extends ExtensionsArchivist {
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles(RootDeploymentDescriptor descriptor) {
         if (confDDFiles == null) {
-            confDDFiles = new ArrayList<ConfigurationDeploymentDescriptorFile>();
+            confDDFiles = new ArrayList<>();
             confDDFiles.add(new WLSWebServicesDeploymentDescriptorFile(descriptor));
         }
         return confDDFiles;
     }
 
+    @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
         return (DOLUtils.warType().equals(moduleType) || DOLUtils.ejbType().equals(moduleType));
     }
@@ -79,9 +83,12 @@ public class WebServicesArchivist extends ExtensionsArchivist {
             return bundleDescriptor.getWebServices();
         } else if (descriptor instanceof BundleDescriptor) {
             return BundleDescriptor.class.cast(descriptor).getWebServices();
-        } else throw new IllegalArgumentException("" + descriptor + " is not instance of BundleDescriptor");
+        } else {
+            throw new IllegalArgumentException("" + descriptor + " is not instance of BundleDescriptor");
+        }
     }
 
+    @Override
     public RootDeploymentDescriptor getDefaultDescriptor() {
         return new WebServicesDescriptor();
     }

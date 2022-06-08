@@ -1058,33 +1058,30 @@ public class EntityContainer
      *
      */
     @Override
-    public EJBLocalObject getEJBLocalObjectForPrimaryKey
-        (Object pkey, EJBContext ctx) {
-        // EntityContextImpl should always be used in conjunction with EntityContainer so we can always cast
+    public EJBLocalObject getEJBLocalObjectForPrimaryKey(Object pkey, EJBContext ctx) {
+        // EntityContextImpl should always be used in conjunction with EntityContainer so we can
+        // always cast
         assert ctx instanceof EntityContextImpl;
         EntityContextImpl context = (EntityContextImpl) ctx;
-        EJBLocalObjectImpl ejbLocalObjectImpl =
-            internalGetEJBLocalObjectImpl(pkey);
+        EJBLocalObjectImpl ejbLocalObjectImpl = internalGetEJBLocalObjectImpl(pkey);
 
         if (context.isCascadeDeleteBeforeEJBRemove()) {
-            JavaEETransaction current = null;
+            final JavaEETransaction current;
             try {
                 current = (JavaEETransaction) transactionManager.getTransaction();
-            } catch ( SystemException ex ) {
+            } catch (SystemException ex) {
                 throw new EJBException(ex);
             }
-        ActiveTxCache activeTxCache = (current == null) ? null :
-        (ActiveTxCache) (ejbContainerUtilImpl.getActiveTxCache(current));
+            ActiveTxCache activeTxCache = current == null ? null
+                : (ActiveTxCache) ejbContainerUtilImpl.getActiveTxCache(current);
             if (activeTxCache != null) {
-        EntityContextImpl ctx2 = activeTxCache.get(this, pkey);
-        if ((ctx2 != null) &&
-            (ctx2.isCascadeDeleteAfterSuperEJBRemove())) {
-            return null;
+                EntityContextImpl ctx2 = activeTxCache.get(this, pkey);
+                if (ctx2 != null && ctx2.isCascadeDeleteAfterSuperEJBRemove()) {
+                    return null;
+                }
+            }
+            return (EJBLocalObject) ejbLocalObjectImpl.getClientObject();
         }
-        }
-        return (EJBLocalObject) ejbLocalObjectImpl.getClientObject();
-        }
-
         return (EJBLocalObject) ejbLocalObjectImpl.getClientObject();
     }
 
@@ -1097,24 +1094,20 @@ public class EntityContainer
      */
     @Override
     public EJBLocalObject getEJBLocalObjectForPrimaryKey(Object pkey) {
-        EJBLocalObjectImpl localObjectImpl =
-            internalGetEJBLocalObjectImpl(pkey);
-    return (localObjectImpl != null) ?
-            (EJBLocalObject) localObjectImpl.getClientObject() : null;
+        EJBLocalObjectImpl localObjectImpl = internalGetEJBLocalObjectImpl(pkey);
+        return localObjectImpl == null ? null : (EJBLocalObject) localObjectImpl.getClientObject();
     }
+
 
     // Called from EJBHomeImpl.remove(primaryKey),
     // EJBLocalHomeImpl.remove(primaryKey)
     @Override
-    protected void doEJBHomeRemove(Object primaryKey, Method removeMethod,
-        boolean local)
-        throws RemoveException, EJBException, RemoteException
-    {
+    protected void doEJBHomeRemove(Object primaryKey, Method removeMethod, boolean local)
+        throws RemoveException, EJBException, RemoteException {
         EJBLocalRemoteObject ejbo;
-        if ( local ) {
+        if (local) {
             ejbo = internalGetEJBLocalObjectImpl(primaryKey, false, true);
-        }
-        else { // may be remote-only bean
+        } else { // may be remote-only bean
             ejbo = internalGetEJBObjectImpl(primaryKey, null, false, true);
         }
         removeBean(ejbo, removeMethod, local);
@@ -1123,10 +1116,8 @@ public class EntityContainer
     // Called from EJBObjectImpl.remove, EJBLocalObjectImpl.remove,
     // and removeBean above.
     @Override
-    protected void removeBean(EJBLocalRemoteObject ejbo, Method removeMethod,
-            boolean local)
-        throws RemoveException, EJBException, RemoteException
-    {
+    protected void removeBean(EJBLocalRemoteObject ejbo, Method removeMethod, boolean local)
+        throws RemoveException, EJBException, RemoteException {
         EjbInvocation i = super.createEjbInvocation();
         i.ejbObject = ejbo;
         i.isLocal = local;
@@ -1151,17 +1142,14 @@ public class EntityContainer
             postInvoke(i);
         }
 
-        if(i.exception != null) {
-            if(i.exception instanceof RemoveException) {
-                throw (RemoveException)i.exception;
-            }
-            else if(i.exception instanceof RuntimeException) {
-                throw (RuntimeException)i.exception;
-            }
-            else if(i.exception instanceof Exception) {
-                throw new EJBException((Exception)i.exception);
-            }
-            else {
+        if (i.exception != null) {
+            if (i.exception instanceof RemoveException) {
+                throw (RemoveException) i.exception;
+            } else if (i.exception instanceof RuntimeException) {
+                throw (RuntimeException) i.exception;
+            } else if (i.exception instanceof Exception) {
+                throw new EJBException((Exception) i.exception);
+            } else {
                 EJBException ejbEx = new EJBException();
                 ejbEx.initCause(i.exception);
                 throw ejbEx;
@@ -1175,11 +1163,9 @@ public class EntityContainer
      * So this will be called with the proper Tx context.
      * @exception RemoveException if an error occurs while removing the bean
      */
-    protected void removeBean(EjbInvocation inv)
-        throws RemoveException
-    {
+    protected void removeBean(EjbInvocation inv) throws RemoveException {
         try {
-        ejbProbeNotifier.ejbBeanDestroyedEvent(
+            ejbProbeNotifier.ejbBeanDestroyedEvent(
                     getContainerId(), containerInfo.appName, containerInfo.modName,
                     containerInfo.ejbName);
             // Note: if there are concurrent invocations/transactions in
@@ -1194,11 +1180,11 @@ public class EntityContainer
 
             // inv.ejbObject could be a EJBObject or a EJBLocalObject
             Object primaryKey = getInvocationKey(inv);
-            if ( isRemote ) {
+            if (isRemote) {
                 removeEJBObjectFromStore(primaryKey);
             }
 
-            if ( isLocal ) {
+            if (isLocal) {
                 // Remove the EJBLocalObject from ejbLocalObjectStore
                 ejbLocalObjectStore.remove(primaryKey);
             }
@@ -1208,15 +1194,14 @@ public class EntityContainer
 
             // Remove any timers for this entity bean identity.
             cancelTimers(primaryKey);
-        } catch ( RemoveException ex ) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,"entitybean.container.local_remove_exception", containerInfo);
-                _logger.log(Level.FINE,"",ex);
+        } catch (RemoveException ex) {
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "entitybean.container.local_remove_exception", containerInfo);
+                _logger.log(Level.FINE, "", ex);
             }
             throw ex;
-        }
-        catch ( Exception ex ) {
-            if(_logger.isLoggable(Level.FINE)) {
+        } catch (Exception ex) {
+            if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"entitybean.container.remove_bean_exception", containerInfo);
                 _logger.log(Level.FINE,"",ex);
             }
@@ -1235,18 +1220,16 @@ public class EntityContainer
     private void removeEJBObjectFromStore(Object primaryKey, boolean decrementRefCount) {
         // Remove the EJBObject from ejbObjectStore so future lookups
         // in internalGetEJBObject will not get it.
-        EJBObjectImpl ejbObjImpl =
-            (EJBObjectImpl)ejbObjectStore.remove(primaryKey, decrementRefCount);
-
-        if ( ejbObjImpl != null ) {
-            synchronized ( ejbObjImpl ) {
+        EJBObjectImpl ejbObjImpl = (EJBObjectImpl) ejbObjectStore.remove(primaryKey, decrementRefCount);
+        if (ejbObjImpl != null) {
+            synchronized (ejbObjImpl) {
                 // disconnect the EJBObject from the ProtocolManager
                 // so that no remote invocations can reach the EJBObject
-                remoteHomeRefFactory.destroyReference(ejbObjImpl.getStub(),
-                                                  ejbObjImpl.getEJBObject());
+                remoteHomeRefFactory.destroyReference(ejbObjImpl.getStub(), ejbObjImpl.getEJBObject());
             }
         }
     }
+
 
     /**
      * Remove a bean. Used by the PersistenceManager.
@@ -1255,8 +1238,7 @@ public class EntityContainer
     @Override
     public void removeBeanUnchecked(EJBLocalObject localObj) {
         // First convert client EJBLocalObject to EJBLocalObjectImpl
-        EJBLocalObjectImpl localObjectImpl =
-            EJBLocalObjectImpl.toEJBLocalObjectImpl(localObj);
+        EJBLocalObjectImpl localObjectImpl = EJBLocalObjectImpl.toEJBLocalObjectImpl(localObj);
         internalRemoveBeanUnchecked(localObjectImpl, true);
     }
 
@@ -1267,12 +1249,11 @@ public class EntityContainer
      */
     @Override
     public void removeBeanUnchecked(Object primaryKey) {
-        EJBLocalRemoteObject ejbo;
-        if ( isLocal ) {
+        final EJBLocalRemoteObject ejbo;
+        if (isLocal) {
             ejbo = internalGetEJBLocalObjectImpl(primaryKey);
             internalRemoveBeanUnchecked(ejbo, true);
-        }
-        else { // remote-only bean
+        } else { // remote-only bean
             ejbo = internalGetEJBObjectImpl(primaryKey, null);
             internalRemoveBeanUnchecked(ejbo, false);
         }
@@ -1282,8 +1263,7 @@ public class EntityContainer
      * Remove a bean. Used by the PersistenceManager.
      * This is needed because the PM's remove must bypass tx/security checks.
      */
-    private void internalRemoveBeanUnchecked(EJBLocalRemoteObject localRemoteObj,
-            boolean local) {
+    private void internalRemoveBeanUnchecked(EJBLocalRemoteObject localRemoteObj, boolean local) {
         EjbInvocation inv = super.createEjbInvocation();
         inv.ejbObject = localRemoteObj;
         inv.isLocal = local;
@@ -1297,7 +1277,7 @@ public class EntityContainer
         }
         inv.method = method;
 
-        inv.invocationInfo = (InvocationInfo) invocationInfoMap.get(method);
+        inv.invocationInfo = invocationInfoMap.get(method);
 
         try {
             // First get a bean instance on which ejbRemove can be invoked.
@@ -1338,28 +1318,23 @@ public class EntityContainer
             try {
                 context.setCascadeDeleteBeforeEJBRemove(true);
                 removeBean(inv);
-            } catch ( Exception ex ) {
-                _logger.log(Level.FINE,
-                    "Exception in internalRemoveBeanUnchecked()", ex);
+            } catch (Exception ex) {
+                _logger.log(Level.FINE, "Exception in internalRemoveBeanUnchecked()", ex);
                 // if system exception mark the tx for rollback
                 inv.exception = checkExceptionClientTx(context, ex);
             }
-            if ( inv.exception != null ) {
+            if (inv.exception != null) {
                 throw inv.exception;
             }
-        }
-        catch ( RuntimeException ex ) {
+        } catch (RuntimeException ex) {
             throw ex;
-        }
-        catch ( Exception ex ) {
+        } catch (Exception ex) {
             throw new EJBException(ex);
-        }
-        catch ( Throwable ex ) {
+        } catch (Throwable ex) {
             EJBException ejbEx = new EJBException();
             ejbEx.initCause(ex);
             throw ejbEx;
-        }
-        finally {
+        } finally {
             invocationManager.postInvoke(inv);
             releaseContext(inv);
         }
@@ -3012,24 +2987,21 @@ public class EntityContainer
         }
     } //LocalEJBObjectCacheVictimHandler{}
 
-    protected class EJBObjectCacheVictimHandler
-        extends LocalEJBObjectCacheVictimHandler
-    {
+protected class EJBObjectCacheVictimHandler extends LocalEJBObjectCacheVictimHandler {
 
-        protected EJBObjectCacheVictimHandler() {
-        }
+    protected EJBObjectCacheVictimHandler() {
+    }
 
-        @Override
-        protected void doCleanup(Object key) {
-            removeEJBObjectFromStore(key, false);
-        }
-    } //EJBObjectCacheVictimHandler{}
+    @Override
+    protected void doCleanup(Object key) {
+        removeEJBObjectFromStore(key, false);
+    }
+}
 
 
 
-    class EntityCacheStatsProvider
-    implements EjbCacheStatsProviderDelegate
-    {
+class EntityCacheStatsProvider implements EjbCacheStatsProviderDelegate {
+
     private final BaseCache cache;
     private final int confMaxCacheSize;
 
@@ -3090,91 +3062,95 @@ public class EntityContainer
     }
 
     }//End of class EntityCacheStatsProvider
-
 }
 
 //No need to sync...
 class ActiveTxCache {
 
-    private EntityContextImpl[]        buckets;
-    private final int                bucketMask;
+    private EntityContextImpl[] buckets;
+    private final int bucketMask;
 
     ActiveTxCache(int numBuckets) {
-    this.bucketMask = numBuckets - 1;
-    initialize();
+        this.bucketMask = numBuckets - 1;
+        initialize();
     }
+
 
     EntityContextImpl get(BaseContainer container, Object pk) {
-    int pkHashCode = pk.hashCode();
-    int index = getIndex(pkHashCode);
+        int pkHashCode = pk.hashCode();
+        int index = getIndex(pkHashCode);
 
-    EntityContextImpl ctx = buckets[index];
-    while (ctx != null) {
-        if (ctx.doesMatch(container, pkHashCode, pk)) {
-        return ctx;
+        EntityContextImpl ctx = buckets[index];
+        while (ctx != null) {
+            if (ctx.doesMatch(container, pkHashCode, pk)) {
+                return ctx;
+            }
+            ctx = ctx._getNext();
         }
-        ctx = ctx._getNext();
+
+        return null;
     }
 
-    return null;
-    }
 
     void add(EntityContextImpl ctx) {
-    ctx.cachePrimaryKey();
-    int index = getIndex(ctx._getPKHashCode());
-    ctx._setNext(buckets[index]);
-    buckets[index] = ctx;
+        ctx.cachePrimaryKey();
+        int index = getIndex(ctx._getPKHashCode());
+        ctx._setNext(buckets[index]);
+        buckets[index] = ctx;
     }
+
 
     EntityContextImpl remove(BaseContainer container, Object pk) {
-    int pkHashCode = pk.hashCode();
-    int index = getIndex(pkHashCode);
+        int pkHashCode = pk.hashCode();
+        int index = getIndex(pkHashCode);
 
-    EntityContextImpl ctx = buckets[index];
-    for (EntityContextImpl prev = null; ctx != null; ctx = ctx._getNext()) {
-        if (ctx.doesMatch(container, pkHashCode, pk)) {
-        if (prev == null) {
-            buckets[index] = ctx._getNext();
-        } else {
-            prev._setNext(ctx._getNext());
+        EntityContextImpl ctx = buckets[index];
+        for (EntityContextImpl prev = null; ctx != null; ctx = ctx._getNext()) {
+            if (ctx.doesMatch(container, pkHashCode, pk)) {
+                if (prev == null) {
+                    buckets[index] = ctx._getNext();
+                } else {
+                    prev._setNext(ctx._getNext());
+                }
+                ctx._setNext(null);
+                break;
+            }
+            prev = ctx;
         }
-        ctx._setNext(null);
-        break;
-        }
-        prev = ctx;
+
+        return ctx;
     }
 
-    return ctx;
-    }
 
-    //One remove method is enough
+    // One remove method is enough
     EntityContextImpl remove(Object pk, EntityContextImpl existingCtx) {
-    int pkHashCode = pk.hashCode();
-    int index = getIndex(pkHashCode);
+        int pkHashCode = pk.hashCode();
+        int index = getIndex(pkHashCode);
 
-    EntityContextImpl ctx = buckets[index];
-    for (EntityContextImpl prev = null; ctx != null; ctx = ctx._getNext()) {
-        if (ctx == existingCtx) {
-        if (prev == null) {
-            buckets[index] = ctx._getNext();
-        } else {
-            prev._setNext(ctx._getNext());
+        EntityContextImpl ctx = buckets[index];
+        for (EntityContextImpl prev = null; ctx != null; ctx = ctx._getNext()) {
+            if (ctx == existingCtx) {
+                if (prev == null) {
+                    buckets[index] = ctx._getNext();
+                } else {
+                    prev._setNext(ctx._getNext());
+                }
+                ctx._setNext(null);
+                break;
+            }
+            prev = ctx;
         }
-        ctx._setNext(null);
-        break;
-        }
-        prev = ctx;
+
+        return ctx;
     }
 
-    return ctx;
-    }
 
     private void initialize() {
-    buckets = new EntityContextImpl[bucketMask+1];
+        buckets = new EntityContextImpl[bucketMask + 1];
     }
+
 
     private final int getIndex(int hashCode) {
-    return (hashCode & bucketMask);
+        return (hashCode & bucketMask);
     }
-
 }

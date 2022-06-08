@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,30 +19,30 @@ package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.io.AppClientDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.runtime.AppClientRuntimeDDFile;
 import com.sun.enterprise.deployment.io.runtime.GFAppClientRuntimeDDFile;
 import com.sun.enterprise.deployment.util.AppClientValidator;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
 
 /**
  * This class is responsible for handling J2EE app client files.
@@ -97,10 +98,11 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
         java.util.Set appClientBundles = application.getBundleDescriptors(ApplicationClientDescriptor.class);
         if (appClientBundles.size() > 0) {
             this.descriptor = (ApplicationClientDescriptor) appClientBundles.iterator().next();
-            if (this.descriptor.getModuleDescriptor().isStandalone())
+            if (this.descriptor.getModuleDescriptor().isStandalone()) {
                 return;
-            else
+            } else {
                 this.descriptor = null;
+            }
         }
         DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.descriptorFailure", new Object[]{this});
         throw new RuntimeException("Error setting descriptor " + descriptor + " in " + this);
@@ -123,9 +125,10 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles() {
         if (confDDFiles == null) {
-            confDDFiles = new ArrayList<ConfigurationDeploymentDescriptorFile>();
+            confDDFiles = new ArrayList<>();
             confDDFiles.add(new GFAppClientRuntimeDDFile());
             confDDFiles.add(new AppClientRuntimeDDFile());
         }
@@ -203,7 +206,7 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
      * @param entriesToSkip the files to not write from the original archive
      */
     @Override
-    protected void writeContents(ReadableArchive in, WritableArchive out, Vector entriesToSkip)
+    protected void writeContents(ReadableArchive in, WritableArchive out, Set<String> entriesToSkip)
             throws IOException {
 
         // prepare the manifest file to add the main class entry
@@ -211,8 +214,7 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
             manifest = new Manifest();
         }
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, MANIFEST_VERSION_VALUE);
-        manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS,
-                ((ApplicationClientDescriptor) getDescriptor()).getMainClassName());
+        manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, getDescriptor().getMainClassName());
 
         super.writeContents(in, out, entriesToSkip);
     }
@@ -221,23 +223,19 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
      * @return the manifest attribute Main-class
      */
     public String getMainClassName(Manifest m) {
-        if (m != null) {
-            return m.getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
+        if (m == null) {
+            return null;
         }
-        return null;
+        return m.getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
     }
 
     @Override
-    protected boolean postHandles(ReadableArchive archive)
-            throws IOException {
-        //check the main-class attribute
-        if (getMainClassName(archive.getManifest()) != null) {
-            return true;
-        }
-
-        return false;
+    protected boolean postHandles(ReadableArchive archive) throws IOException {
+        // check the main-class attribute
+        return getMainClassName(archive.getManifest()) != null;
     }
 
+    @Override
     protected String getArchiveExtension() {
         return APPCLIENT_EXTENSION;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,13 +19,16 @@ package com.sun.enterprise.connectors.util;
 
 import com.sun.enterprise.loader.ASURLClassLoader;
 import com.sun.logging.LogDomains;
-import org.glassfish.internal.api.DelegatingClassLoader;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,39 +40,39 @@ import java.util.logging.Logger;
  *
  * @author Tony Ng, Sivakumar Thyagarajan
  */
-public class ConnectorClassLoader extends ASURLClassLoader
-{
+public class ConnectorClassLoader extends ASURLClassLoader {
 
     private static final Logger _logger = LogDomains.getLogger(ConnectorClassLoader.class, LogDomains.RSR_LOGGER);
 
-    private volatile static ConnectorClassLoader classLoader = null;
+    private volatile static ConnectorClassLoader classLoader;
 
     /**
      * A linked list of URL classloaders representing each deployed connector
      * module
      */
-    private final List classLoaderChain = new LinkedList();
+    private final List<ASURLClassLoader> classLoaderChain = new LinkedList<>();
 
     /**
      * The parent class loader for the connector Class Loader [ie the common
      * Classloader]
      */
-    private ClassLoader parent = null;
+    private ClassLoader parent;
 
     /**
      * Maintains a mapping between rar name and a classloader that has services
      * that RAR module.
      */
-    private final Map rarModuleClassLoaders = new HashMap();
+    private final Map<String, ASURLClassLoader> rarModuleClassLoaders = new HashMap<>();
 
     public static synchronized ConnectorClassLoader getInstance() {
         if (classLoader == null) {
-            classLoader =
-                    AccessController.doPrivileged(new PrivilegedAction<ConnectorClassLoader>() {
-                        public ConnectorClassLoader run() {
-                            return new ConnectorClassLoader();
-                        }
-                    });
+            classLoader = AccessController.doPrivileged(new PrivilegedAction<ConnectorClassLoader>() {
+
+                @Override
+                public ConnectorClassLoader run() {
+                    return new ConnectorClassLoader();
+                }
+            });
         }
         return classLoader;
     }
@@ -94,6 +98,7 @@ public class ConnectorClassLoader extends ASURLClassLoader
             synchronized (ConnectorClassLoader.class) {
                 if (classLoader == null) {
                     classLoader = AccessController.doPrivileged(new PrivilegedAction<ConnectorClassLoader>() {
+                        @Override
                         public ConnectorClassLoader run() {
                             return new ConnectorClassLoader(parent);
                         }
@@ -117,10 +122,12 @@ public class ConnectorClassLoader extends ASURLClassLoader
         try {
             File file = new File(moduleDir);
             ASURLClassLoader cl = AccessController.doPrivileged(new PrivilegedAction<ASURLClassLoader>() {
-                        public ASURLClassLoader run() {
-                            return new ASURLClassLoader(parent);
-                        }
-                    });
+
+                @Override
+                public ASURLClassLoader run() {
+                    return new ASURLClassLoader(parent);
+                }
+            });
 
             cl.appendURL(file.toURI().toURL());
             appendJars(file, cl);
@@ -154,33 +161,28 @@ public class ConnectorClassLoader extends ASURLClassLoader
      * @param moduleName the connector module that needs to be removed.
      */
     public void removeResourceAdapter(String moduleName) {
-        ASURLClassLoader classLoaderToRemove =
-                (ASURLClassLoader) rarModuleClassLoaders.get(moduleName);
+        ASURLClassLoader classLoaderToRemove = rarModuleClassLoaders.get(moduleName);
         if (classLoaderToRemove != null) {
             classLoaderChain.remove(classLoaderToRemove);
             rarModuleClassLoaders.remove(moduleName);
-            _logger.log(
-                    Level.WARNING,
-                    "enterprise_util.remove_connector",
-                    moduleName);
+            _logger.log(Level.WARNING, "enterprise_util.remove_connector", moduleName);
         }
     }
 
 
-    /*
-      * Loads the class with the specified name and resolves it if specified.
-      *
-      * @see java.lang.ClassLoader#loadClass(java.lang.String, boolean)
-      */
-    public synchronized Class loadClass(String name, boolean resolve)
-            throws ClassNotFoundException {
-        Class clz = null;
-        //Use the delegation model to service class requests that could be
-        //satisfied by parent [common class loader].
+    /**
+     * Loads the class with the specified name and resolves it if specified.
+     *
+     * @see java.lang.ClassLoader#loadClass(java.lang.String, boolean)
+     */
+    @Override
+    public synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        // Use the delegation model to service class requests that could be
+        // satisfied by parent [common class loader].
 
         if (parent != null) {
             try {
-                clz = parent.loadClass(name);
+                Class<?> clz = parent.loadClass(name);
                 if (clz != null) {
                     if (resolve) {
                         resolveClass(clz);
@@ -188,19 +190,18 @@ public class ConnectorClassLoader extends ASURLClassLoader
                     return clz;
                 }
             } catch (ClassNotFoundException e) {
-                //ignore and try the connector modules classloader
-                //chain.
+                // ignore and try the connector modules classloader
+                // chain.
             }
         } else {
             return super.loadClass(name, resolve);
         }
 
-        //Going through the connector module classloader chain to find
+        // Going through the connector module classloader chain to find
         // class and return the first match.
-        for (Iterator iter = classLoaderChain.iterator(); iter.hasNext();) {
-            ASURLClassLoader ccl = (ASURLClassLoader) iter.next();
+        for (ASURLClassLoader ccl : classLoaderChain) {
             try {
-                clz = ccl.loadClass(name);
+                Class<?> clz = ccl.loadClass(name);
                 if (clz != null) {
                     if (resolve) {
                         resolveClass(clz);
@@ -208,8 +209,7 @@ public class ConnectorClassLoader extends ASURLClassLoader
                     return clz;
                 }
             } catch (ClassNotFoundException cnfe) {
-                //ignore this exception and continue with next classloader in
-                // chain
+                // ignore this exception and continue with next classloader in chain
                 continue;
             }
         }
@@ -229,14 +229,17 @@ public class ConnectorClassLoader extends ASURLClassLoader
      * @return Classpath string containing all the resources of the connectors
      *         in the chain. An empty string if there exists no connectors in the chain.
      */
-
+    @Override
     public String getClasspath() {
-        StringBuffer strBuf = new StringBuffer();
-        for (int i = 0; i < classLoaderChain.size(); i++) {
-            ASURLClassLoader ecl = (ASURLClassLoader) classLoaderChain.get(i);
-            String eclClasspath = ecl.getClasspath();
+        StringBuilder strBuf = new StringBuilder();
+        boolean first = true;
+        for (ASURLClassLoader loader : classLoaderChain) {
+            String eclClasspath = loader.getClasspath();
             if (eclClasspath != null) {
-                if (i > 0) strBuf.append(File.pathSeparator);
+                if (!first) {
+                    strBuf.append(File.pathSeparator);
+                    first = false;
+                }
                 strBuf.append(eclClasspath);
             }
         }

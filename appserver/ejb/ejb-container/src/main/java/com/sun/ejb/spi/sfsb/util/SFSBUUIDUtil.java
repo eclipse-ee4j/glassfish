@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package com.sun.ejb.spi.sfsb.util;
 
-import java.io.Serializable;
-
 /**
  *
  * An instance of this class will be used by the Stateful SessionBean
@@ -31,13 +30,13 @@ public interface SFSBUUIDUtil<T> {
     * Create and return the sessionKey.
     * @return the sessionKey object
     */
-    public T createSessionKey();
+    T createSessionKey();
 
    /**
     * Called from the Container before publishing an IOR. The method must convert the sessionKey into a byte[]
     * @return A byte[] representation of the key. The byte[] could be created using serialization.
     */
-    public byte[] keyToByteArray(T sessionKey);
+    byte[] keyToByteArray(T sessionKey);
 
     /**
      * Return the sessionKey that represents the sessionKey. This has to be super efficient as the container
@@ -45,6 +44,5 @@ public interface SFSBUUIDUtil<T> {
      *    satisfy both o1.equals(o2) and o1.hashCode() == o2.hashCode()
      * @return the sessionKey object
      */
-     public T byteArrayToKey(byte[] array, int startIndex, int len);
-
+     T byteArrayToKey(byte[] array, int startIndex, int len);
 }

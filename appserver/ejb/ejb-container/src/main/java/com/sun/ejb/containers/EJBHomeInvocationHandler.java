@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,23 @@
 
 package com.sun.ejb.containers;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import java.util.logging.Level;
-
-
-import java.rmi.RemoteException;
-import jakarta.ejb.EJBHome;
-
+import com.sun.ejb.Container;
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.InvocationInfo;
-import com.sun.ejb.Container;
 import com.sun.ejb.containers.util.MethodMap;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
 
+import jakarta.ejb.EJBHome;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 
 /**
@@ -43,12 +41,9 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Kenneth Saks
  */
+public class EJBHomeInvocationHandler extends EJBHomeImpl implements InvocationHandler {
 
-public class EJBHomeInvocationHandler
-    extends EJBHomeImpl  implements InvocationHandler {
-
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(EJBHomeInvocationHandler.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EJBHomeInvocationHandler.class);
 
     private boolean isStatelessSession_;
 
@@ -68,13 +63,9 @@ public class EJBHomeInvocationHandler
     private final EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
 
 
-    protected EJBHomeInvocationHandler(EjbDescriptor ejbDescriptor,
-                             Class homeIntfClass)
-        throws Exception {
-
-        if( ejbDescriptor instanceof EjbSessionDescriptor ) {
-            isStatelessSession_ =
-                ((EjbSessionDescriptor)ejbDescriptor).isStateless();
+    protected EJBHomeInvocationHandler(EjbDescriptor ejbDescriptor, Class homeIntfClass) throws Exception {
+        if (ejbDescriptor instanceof EjbSessionDescriptor) {
+            isStatelessSession_ = ((EjbSessionDescriptor) ejbDescriptor).isStateless();
         } else {
             isStatelessSession_ = false;
         }
@@ -102,15 +93,13 @@ public class EJBHomeInvocationHandler
      * Called by EJBHome proxy.
      */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args)
-        throws Throwable {
-
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         ClassLoader originalClassLoader = null;
 
         // NOTE : be careful with "args" parameter.  It is null
         //        if method signature has 0 arguments.
         try {
-            ((BaseContainer) getContainer()).onEnteringContainer();
+            getContainer().onEnteringContainer();
 
             // In some cases(e.g. if the Home/Remote interfaces appear in
             // a parent of the application's classloader),
@@ -125,102 +114,71 @@ public class EJBHomeInvocationHandler
                 originalClassLoader = Utility.setContextClassLoader(getContainer().getClassLoader());
             }
 
-            Class methodClass = method.getDeclaringClass();
-
-            if (methodClass == java.lang.Object.class) {
+            Class<?> methodClass = method.getDeclaringClass();
+            if (methodClass == Object.class) {
                 return InvocationHandlerUtil.invokeJavaObjectMethod(this, method, args);
             } else if (invokeSpecialEJBHomeMethod(method, methodClass, args)) {
                 return null;
             }
 
-            // Use optimized version of get that takes param count as an
-            // argument.
-            InvocationInfo invInfo = (InvocationInfo)
-                invocationInfoMap_.get(method,
-                                       ((args != null) ? args.length : 0) );
+            // Use optimized version of get that takes param count as an argument.
+            InvocationInfo invInfo = invocationInfoMap_.get(method, args == null ? 0 : args.length);
 
-            if( invInfo == null ) {
-
-                throw new RemoteException("Unknown Home interface method :"
-                                          + method);
-
-            } else if( (methodClass == jakarta.ejb.EJBHome.class) ||
-                       invInfo.ejbIntfOverride ) {
-
+            if (invInfo == null) {
+                throw new RemoteException("Unknown Home interface method: " + method);
+            } else if (methodClass == EJBHome.class || invInfo.ejbIntfOverride) {
                 return invokeEJBHomeMethod(method.getName(), args);
-
-            } else if( GenericEJBHome.class.isAssignableFrom(methodClass) ) {
-
-                if( method.getName().equals("create")) {
+            } else if (GenericEJBHome.class.isAssignableFrom(methodClass)) {
+                if (method.getName().equals("create")) {
                     // This is an internal creation request through the EJB 3.0
                     // client view, so just create an business object and return it
                     EJBObjectImpl busObjectImpl = createRemoteBusinessObjectImpl();
                     return busObjectImpl.getStub((String) args[0]);
-                } else {
-
-                     EjbAsyncInvocationManager asyncManager =
-                        ((EjbContainerUtilImpl) ejbContainerUtil).
-                        getEjbAsyncInvocationManager();
-
-                    Long asyncTaskID = (Long) args[0];
-                    RemoteAsyncResult asyncResult = null;
-
-                    if( method.getName().equals("cancel")) {
-
-                        asyncResult = asyncManager.remoteCancel(asyncTaskID);
-
-                    } else if( method.getName().equals("get") ) {
-
-                        asyncResult = asyncManager.remoteGet(asyncTaskID);
-
-                    } else if( method.getName().equals("isDone")) {
-
-                        asyncResult = asyncManager.remoteIsDone(asyncTaskID);
-
-                    } else if( method.getName().equals("getWithTimeout")) {
-
-                        Long timeout = (Long) args[1];
-                        TimeUnit unit = TimeUnit.valueOf((String)args[2]);
-                        asyncResult = asyncManager.remoteGetWithTimeout(asyncTaskID, timeout, unit);
-                    }
-
-                    return asyncResult;
-
                 }
-
+                EjbAsyncInvocationManager asyncManager = ((EjbContainerUtilImpl) ejbContainerUtil)
+                    .getEjbAsyncInvocationManager();
+                Long asyncTaskID = (Long) args[0];
+                RemoteAsyncResult asyncResult = null;
+                if (method.getName().equals("cancel")) {
+                    asyncResult = asyncManager.remoteCancel(asyncTaskID);
+                } else if (method.getName().equals("get")) {
+                    asyncResult = asyncManager.remoteGet(asyncTaskID);
+                } else if (method.getName().equals("isDone")) {
+                    asyncResult = asyncManager.remoteIsDone(asyncTaskID);
+                } else if (method.getName().equals("getWithTimeout")) {
+                    Long timeout = (Long) args[1];
+                    TimeUnit unit = TimeUnit.valueOf((String) args[2]);
+                    asyncResult = asyncManager.remoteGetWithTimeout(asyncTaskID, timeout, unit);
+                }
+                return asyncResult;
             }
 
             // Process finder, create method, or home method.
-            EJBObjectImpl ejbObjectImpl = null;
             Object returnValue = null;
 
-            if( invInfo.startsWithCreate ) {
+            final EJBObjectImpl ejbObjectImpl;
+            if (invInfo.startsWithCreate) {
                 ejbObjectImpl = createEJBObjectImpl();
                 if (ejbObjectImpl != null) {
                     // Entity beans are created differently
                     returnValue = ejbObjectImpl.getStub();
                 }
+            } else {
+                ejbObjectImpl = null;
             }
 
-            if( !isStatelessSession_ ) {
-
-                if( invInfo.targetMethod1 == null ) {
-
-                    _logger.log(Level.SEVERE,
-                            "ejb.bean_class_method_not_found", new Object[] {
-                                    invInfo.ejbName, "Home",
-                                    invInfo.method.toString() });
-                    //in exception use message without ID
-                    String errorMsg = localStrings.getLocalString
-                        ("ejb.bean_class_method_not_found", "", new Object[]
-                            { invInfo.ejbName, "Home",
-                              invInfo.method.toString() });
+            if (!isStatelessSession_) {
+                if (invInfo.targetMethod1 == null) {
+                    _logger.log(Level.SEVERE, "ejb.bean_class_method_not_found",
+                        new Object[] {invInfo.ejbName, "Home", invInfo.method.toString()});
+                    // in exception use message without ID
+                    String errorMsg = localStrings.getLocalString("ejb.bean_class_method_not_found", "",
+                        new Object[] {invInfo.ejbName, "Home", invInfo.method.toString()});
                     throw new RemoteException(errorMsg);
-
                 }
 
-                EjbInvocation inv = ((BaseContainer) getContainer()).createEjbInvocation();
-
+                BaseContainer container = (BaseContainer) getContainer();
+                EjbInvocation inv = container.createEjbInvocation();
 
                 inv.isRemote = true;
                 inv.method  = method;
@@ -234,43 +192,25 @@ public class EJBHomeInvocationHandler
                 inv.transactionAttribute = invInfo.txAttr;
                 inv.invocationInfo = invInfo;
 
-                if( ejbObjectImpl != null && invInfo.startsWithCreate ) {
+                if (ejbObjectImpl != null && invInfo.startsWithCreate) {
                     inv.ejbObject = ejbObjectImpl;
                 }
-
-                BaseContainer container = (BaseContainer) getContainer();
-
                 try {
-
                     container.preInvoke(inv);
-
-                    if( invInfo.startsWithCreate ) {
-
-                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container,
-                                                   invInfo.targetMethod1,
-                                                   inv, inv.ejb, args);
+                    if (invInfo.startsWithCreate) {
+                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1, inv,
+                            inv.ejb, args);
                         postCreate(container, inv, invInfo, ejbCreateReturnValue, args);
-                        if( inv.ejbObject != null ) {
-                            returnValue = ((EJBObjectImpl)inv.ejbObject).
-                                getStub();
+                        if (inv.ejbObject != null) {
+                            returnValue = ((EJBObjectImpl) inv.ejbObject).getStub();
                         }
-
                     } else if (invInfo.startsWithFindByPrimaryKey) {
-
-                        returnValue = container.invokeFindByPrimaryKey
-                            (invInfo.targetMethod1, inv, args);
-
+                        returnValue = container.invokeFindByPrimaryKey(invInfo.targetMethod1, inv, args);
                     } else if ( invInfo.startsWithFind ) {
-
-                        Object pKeys = invokeTargetBeanMethod(container,
-                                 invInfo.targetMethod1, inv, inv.ejb, args);
-
+                        Object pKeys = invokeTargetBeanMethod(container, invInfo.targetMethod1, inv, inv.ejb, args);
                         returnValue = container.postFind(inv, pKeys, null);
-
                     } else {
-
-                        returnValue = invokeTargetBeanMethod(container,
-                                 invInfo.targetMethod1, inv, inv.ejb, args);
+                        returnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1, inv, inv.ejb, args);
                     }
                 } catch(InvocationTargetException ite) {
                     inv.exception = ite.getCause();
@@ -281,47 +221,48 @@ public class EJBHomeInvocationHandler
                 }
 
                 if (inv.exception != null) {
-                    InvocationHandlerUtil.throwRemoteException
-                        (inv.exception, method.getExceptionTypes());
+                    InvocationHandlerUtil.throwRemoteException(inv.exception, method.getExceptionTypes());
                 }
             }
 
             return returnValue;
         } finally {
-
-            if( originalClassLoader != null ) {
+            if (originalClassLoader != null) {
                 Utility.setContextClassLoader(originalClassLoader);
             }
-
-            ((BaseContainer) getContainer()).onLeavingContainer();
+            getContainer().onLeavingContainer();
         }
     }
 
-    // default impl to be overridden in subclass if necessary
-    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass,
-            Object[] args) throws Exception {
+    /**
+     * Default impl to be overridden in subclass if necessary
+     * @return false
+     */
+    protected boolean invokeSpecialEJBHomeMethod(Method method, Class<?> methodClass, Object[] args) throws Exception {
         return false;
     }
 
-    // default impl to be overridden in subclass if necessary
-    protected void postCreate(Container container, EjbInvocation inv,
-            InvocationInfo invInfo, Object primaryKey, Object[] args)
-            throws Throwable {
+    /**
+     * Default impl to be overridden in subclass if necessary.
+     * Doesn't do anything.
+     */
+    protected void postCreate(Container container, EjbInvocation inv, InvocationInfo invInfo, Object primaryKey,
+        Object[] args) throws Throwable {
     }
 
-    // allow subclasses to execute a protected method in BaseContainer
-    protected Object invokeTargetBeanMethod(BaseContainer container,
-            Method beanClassMethod, EjbInvocation inv, Object target, Object[] params)
-            throws Throwable {
 
+    /**
+     * Allow subclasses to execute a protected method in BaseContainer
+     */
+    protected Object invokeTargetBeanMethod(BaseContainer container, Method beanClassMethod, EjbInvocation inv,
+        Object target, Object[] params) throws Throwable {
         return container.invokeTargetBeanMethod(beanClassMethod, inv, target, params, null);
     }
 
-    private Object invokeEJBHomeMethod(String methodName, Object[] args)
-        throws Exception
-    {
+
+    private Object invokeEJBHomeMethod(String methodName, Object[] args) throws Exception {
         // Return value is null if target method returns void.
-        Object returnValue = null;
+        final Object returnValue;
 
         // NOTE : Might be worth optimizing this method check if it
         // turns out to be a bottleneck.  I don't think these methods
@@ -332,34 +273,27 @@ public class EJBHomeInvocationHandler
         Exception caughtException = null;
         BaseContainer container = (BaseContainer) getContainer();
         try {
-            if( methodName.equals("getEJBMetaData") ) {
-
+            if (methodName.equals("getEJBMetaData")) {
                 methodIndex = BaseContainer.EJBHome_getEJBMetaData;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getEJBMetaData();
-
-            } else if( methodName.equals("getHomeHandle") ) {
-
+            } else if (methodName.equals("getHomeHandle")) {
                 methodIndex = BaseContainer.EJBHome_getHomeHandle;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getHomeHandle();
-
-            } else if( methodName.equals("remove") ) {
-
-                if( args[0] instanceof jakarta.ejb.Handle ) {
+            } else if (methodName.equals("remove")) {
+                if (args[0] instanceof jakarta.ejb.Handle) {
                     methodIndex = BaseContainer.EJBHome_remove_Handle;
                     container.onEjbMethodStart(methodIndex);
-                    super.remove((jakarta.ejb.Handle)args[0]);
+                    super.remove((jakarta.ejb.Handle) args[0]);
                 } else {
                     methodIndex = BaseContainer.EJBHome_remove_Pkey;
                     container.onEjbMethodStart(methodIndex);
                     super.remove(args[0]);
                 }
-
+                returnValue = null;
             } else {
-
-               throw new RemoteException("unknown EJBHome method = " + methodName);
-
+                throw new RemoteException("unknown EJBHome method = " + methodName);
             }
         } catch (Exception ex) {
             caughtException = ex;
@@ -369,7 +303,6 @@ public class EJBHomeInvocationHandler
                 container.onEjbMethodEnd(methodIndex, caughtException);
             }
         }
-
         return returnValue;
     }
 }

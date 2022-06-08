@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,19 +23,32 @@ import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.archivist.*;
+import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
+import com.sun.enterprise.deployment.archivist.ApplicationFactory;
+import com.sun.enterprise.deployment.archivist.Archivist;
+import com.sun.enterprise.deployment.archivist.ArchivistFactory;
+import com.sun.enterprise.deployment.archivist.DescriptorArchivist;
 import com.sun.enterprise.deployment.deploy.shared.DeploymentPlanArchive;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.Util;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.ResourceValidator;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.v3.common.HTMLActionReporter;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.ApplicationMetaDataProvider;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -42,8 +56,12 @@ import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.deployment.common.*;
+import org.glassfish.deployment.common.DeploymentContextImpl;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
@@ -52,19 +70,7 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.DeploymentTracing;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PreDestroy;
 import org.xml.sax.SAXException;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * ApplicationMetada
@@ -106,12 +112,12 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
     @Inject
     ResourceValidator resourceValidator;
 
-    private static String WRITEOUT_XML = System.getProperty(
-        "writeout.xml");
+    private static final String WRITEOUT_XML = System.getProperty("writeout.xml");
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DolProvider.class);
 
 
+    @Override
     public MetaData getMetaData() {
         return new MetaData(false, new Class[] { Application.class }, null);
     }
@@ -201,6 +207,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         return application;
     }
 
+    @Override
     public Application load(DeploymentContext dc) throws IOException {
         DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
         Application application = processDOL(dc);
@@ -228,6 +235,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
     /**
      * return the name for the given application
      */
+    @Override
     public String getNameFor(ReadableArchive archive,
                              DeploymentContext context) {
         if (context == null) {
@@ -340,41 +348,39 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         }
     }
 
-    protected void handleDeploymentPlan(File deploymentPlan,
-        Archivist archivist, ReadableArchive sourceArchive, ApplicationHolder holder) throws IOException {
-        //Note in copying of deployment plan to the portable archive,
-        //we should make sure the manifest in the deployment plan jar
-        //file does not overwrite the one in the original archive
-        if (deploymentPlan != null) {
-            DeploymentPlanArchive dpa = new DeploymentPlanArchive();
+
+    protected void handleDeploymentPlan(File deploymentPlan, Archivist archivist, ReadableArchive sourceArchive,
+        ApplicationHolder holder) throws IOException {
+        if (deploymentPlan == null) {
+            return;
+        }
+        try (DeploymentPlanArchive dpa = new DeploymentPlanArchive()) {
             dpa.setParentArchive(sourceArchive);
             dpa.open(deploymentPlan.toURI());
             // need to revisit for ear case
-            WritableArchive targetArchive = archiveFactory.createArchive(
-                sourceArchive.getURI());
+            WritableArchive targetArchive = archiveFactory.createArchive(sourceArchive.getURI());
             if (archivist instanceof ApplicationArchivist) {
-                ((ApplicationArchivist)archivist).copyInto(holder.app, dpa, targetArchive, false);
+                ((ApplicationArchivist) archivist).copyInto(holder.app, dpa, targetArchive, false);
             } else {
-               archivist.copyInto(dpa, targetArchive, false);
+                archivist.copyInto(dpa, targetArchive, false);
             }
         }
     }
 
-    protected void saveAppDescriptor(Application application,
-        DeploymentContext context) throws IOException {
+
+    protected void saveAppDescriptor(Application application, DeploymentContext context) throws IOException {
         if (application != null) {
-            ReadableArchive archive = archiveFactory.openArchive(
-                context.getSourceDir());
+            ReadableArchive archive = archiveFactory.openArchive(context.getSourceDir());
             boolean isMkdirs = context.getScratchDir("xml").mkdirs();
             if (isMkdirs) {
-                WritableArchive archive2 = archiveFactory.createArchive(
-                    context.getScratchDir("xml"));
+                WritableArchive archive2 = archiveFactory.createArchive(context.getScratchDir("xml"));
                 descriptorArchivist.write(application, archive, archive2);
 
                 // copy the additional webservice elements etc
                 applicationArchivist.copyExtraElements(archive, archive2);
             } else {
-                context.getLogger().log(Level.WARNING, "Error in creating directory " + context.getScratchDir("xml").getAbsolutePath());
+                context.getLogger().log(Level.WARNING,
+                    "Error in creating directory " + context.getScratchDir("xml").getAbsolutePath());
             }
         }
     }

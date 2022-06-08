@@ -223,7 +223,7 @@ public class EarDeployer implements Deployer {
 
     private void doOnAllBundles(Application application, BundleBlock runnable) throws Exception {
 
-        Collection<ModuleDescriptor> bundles = new LinkedHashSet<ModuleDescriptor>();
+        Collection<ModuleDescriptor> bundles = new LinkedHashSet<>();
         bundles.addAll(application.getModules());
 
         // if the initialize-in-order flag is set
@@ -311,6 +311,7 @@ public class EarDeployer implements Deployer {
             return moduleContext;
         }
 
+        // FIXME: never closed
         final ReadableArchive subArchive;
         try {
             subArchive = context.getSource().getSubArchive(moduleUri);

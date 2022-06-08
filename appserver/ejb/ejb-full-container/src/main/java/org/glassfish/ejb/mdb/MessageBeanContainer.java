@@ -303,7 +303,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
     }
 
     @Override
-    protected final boolean isCreateHomeFinder(Method method) {
+    protected boolean isCreateHomeFinder(Method method) {
         return false;
     }
 

@@ -39,7 +39,6 @@ import jakarta.persistence.Query;
 import jakarta.persistence.PersistenceContext;
 
 import jakarta.annotation.Resource;
-import jakarta.annotation.PreDestroy;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import java.sql.Connection;

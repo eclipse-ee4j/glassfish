@@ -248,11 +248,6 @@ public class TimerBean implements TimerLocal {
     // some immutable fields.
     //
 
-    // deserialized state from blob
-    private boolean blobLoaded_;
-    private Object timedObjectPrimaryKey_;
-    private transient Serializable info_;
-
     public TimerState createTimer
         (String timerId, long containerId, long applicationId, String ownerId,
          Object timedObjectPrimaryKey,

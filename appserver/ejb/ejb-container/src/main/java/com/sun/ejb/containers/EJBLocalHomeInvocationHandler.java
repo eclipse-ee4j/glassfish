@@ -122,7 +122,7 @@ public class EJBLocalHomeInvocationHandler extends EJBLocalHomeImpl implements I
             }
 
             // Use optimized version of get that takes param count as an argument.
-            InvocationInfo invInfo = (InvocationInfo) invocationInfoMap_.get(method, args.length);
+            InvocationInfo invInfo = invocationInfoMap_.get(method, args == null ? 0 : args.length);
             if (invInfo == null) {
                 throw new IllegalStateException("Unknown method :" + method);
             }

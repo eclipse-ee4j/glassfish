@@ -675,7 +675,7 @@ public final class StatefulSessionContainer
     @Override
     protected Object _constructEJBInstance() throws Exception {
         if (sfsbSerializedClass == null) {
-            ejbClass.getDeclaredConstructor().newInstance();
+            return ejbClass.getDeclaredConstructor().newInstance();
         }
         return sfsbSerializedClass.getDeclaredConstructor().newInstance();
     }

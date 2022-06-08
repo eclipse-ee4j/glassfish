@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,15 @@
 
 package org.glassfish.appclient.client.acc;
 
-import org.glassfish.appclient.common.ACCAppClientArchivist;
-import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
+import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
 import com.sun.enterprise.module.bootstrap.BootException;
-import com.sun.enterprise.util.LocalStringManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -42,8 +41,11 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.stream.XMLStreamException;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.appclient.common.ACCAppClientArchivist;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
 
@@ -69,27 +71,25 @@ public class FacadeLaunchable implements Launchable {
     /** name of manifest entry in facade conveying the app name */
     public static final Attributes.Name GLASSFISH_APP_NAME = new Attributes.Name("GlassFish-App-Name");
 
-    public static final ArchiveFactory archiveFactory = ACCModulesManager.getService(ArchiveFactory.class);
-    private static final Logger logger = LogDomains.getLogger(FacadeLaunchable.class,
-            LogDomains.ACC_LOGGER);
+    private static final ArchiveFactory archiveFactory = ACCModulesManager.getService(ArchiveFactory.class);
+    private static final Logger logger = LogDomains.getLogger(FacadeLaunchable.class, LogDomains.ACC_LOGGER);
 
-    private static final LocalStringManager localStrings = new LocalStringManagerImpl(FacadeLaunchable.class);
     private static final boolean isJWSLaunch = Boolean.getBoolean("appclient.is.jws");
 
     private final String mainClassNameToLaunch;
     private final URI[] classPathURIs;
-    private ReadableArchive facadeClientRA;
-    private MultiReadableArchive combinedRA;
-    private static AppClientArchivist facadeArchivist = null;
-    private ApplicationClientDescriptor acDesc = null;
-    private ClassLoader classLoader = null;
+    private final ReadableArchive facadeClientRA;
+    private final MultiReadableArchive combinedRA;
+    private static AppClientArchivist facadeArchivist;
+    private ApplicationClientDescriptor acDesc;
+    private ClassLoader classLoader;
     private final ServiceLocator habitat;
     private final String anchorDir;
 
     FacadeLaunchable(
             final ServiceLocator habitat,
             final Attributes mainAttrs, final ReadableArchive facadeRA,
-            final String anchorDir) throws IOException, URISyntaxException {
+            final String anchorDir) throws IOException {
         this(habitat,
                 facadeRA, mainAttrs,
                 openOriginalArchive(facadeRA, mainAttrs.getValue(GLASSFISH_APPCLIENT)),
@@ -97,7 +97,7 @@ public class FacadeLaunchable implements Launchable {
                 anchorDir);
     }
 
-    private static ReadableArchive openOriginalArchive(final ReadableArchive facadeArchive, final String relativeURIToOriginalJar) throws IOException, URISyntaxException {
+    private static ReadableArchive openOriginalArchive(final ReadableArchive facadeArchive, final String relativeURIToOriginalJar) throws IOException {
         URI uriToOriginal = facadeArchive.getURI().resolve(relativeURIToOriginalJar);
         return archiveFactory.openArchive(uriToOriginal);
     }
@@ -118,10 +118,12 @@ public class FacadeLaunchable implements Launchable {
         this.anchorDir = anchorDir;
     }
 
+    @Override
     public URI getURI() {
         return facadeClientRA.getURI();
     }
 
+    @Override
     public String getAnchorDir() {
         return anchorDir;
     }
@@ -155,6 +157,7 @@ public class FacadeLaunchable implements Launchable {
         return facadeArchivist;
     }
 
+    @Override
     public void validateDescriptor() {
         getArchivist().validate(classLoader);
     }
@@ -197,32 +200,26 @@ public class FacadeLaunchable implements Launchable {
                     new File(facadeRA.getURI().getPath()).getAbsolutePath()));
         }
         final Attributes mainAttrs = mf.getMainAttributes();
-        FacadeLaunchable result = null;
         if (mainAttrs.containsKey(GLASSFISH_APPCLIENT)) {
-            if ( ! (facadeRA instanceof HTTPInputArchive)) {
-                result = new FacadeLaunchable(habitat, mainAttrs, facadeRA,
-                        dirContainingStandAloneFacade(facadeRA));
-            } else {
-                result = new JWSFacadeLaunchable(habitat, mainAttrs, facadeRA);
+            if (facadeRA instanceof HTTPInputArchive) {
+                return new JWSFacadeLaunchable(habitat, mainAttrs, facadeRA);
             }
-        } else {
-            /*
-             * The facade does not contain GlassFish-AppClient so if it is
-             * a facade it must be an app client group facade.  Select
-             * which app client facade within the group, if any, matches
-             * the caller's selection criteria.
-             */
-            final String facadeGroupURIs = mainAttrs.getValue(GLASSFISH_APPCLIENT_GROUP);
-            if (facadeGroupURIs != null) {
-                result = selectFacadeFromGroup(
-                        habitat, facadeRA.getURI(), archiveFactory,
-                        facadeGroupURIs, callerSuppliedMainClassName,
-                        callerSuppliedAppName, dirContainingClientFacadeInGroup(facadeRA));
-            } else {
-                return null;
-            }
+            return new FacadeLaunchable(habitat, mainAttrs, facadeRA, dirContainingStandAloneFacade(facadeRA));
         }
-        return result;
+        /*
+         * The facade does not contain GlassFish-AppClient so if it is
+         * a facade it must be an app client group facade.  Select
+         * which app client facade within the group, if any, matches
+         * the caller's selection criteria.
+         */
+        final String facadeGroupURIs = mainAttrs.getValue(GLASSFISH_APPCLIENT_GROUP);
+        if (facadeGroupURIs == null) {
+            return null;
+        }
+        return selectFacadeFromGroup(
+                habitat, facadeRA.getURI(), archiveFactory,
+                facadeGroupURIs, callerSuppliedMainClassName,
+                callerSuppliedAppName, dirContainingClientFacadeInGroup(facadeRA));
     }
 
     private static String dirContainingStandAloneFacade(final ReadableArchive facadeRA) throws URISyntaxException {
@@ -236,6 +233,7 @@ public class FacadeLaunchable implements Launchable {
         return new File(fileURI).getAbsolutePath();
     }
 
+    @Override
     public Class getMainClass() throws ClassNotFoundException {
         return Class.forName(mainClassNameToLaunch, true, Thread.currentThread().getContextClassLoader());
     }
@@ -248,6 +246,7 @@ public class FacadeLaunchable implements Launchable {
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXException
      */
+    @Override
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         if (acDesc == null) {
             /*
@@ -310,7 +309,7 @@ public class FacadeLaunchable implements Launchable {
             final URI groupFacadeURI, final ArchiveFactory af,
             final String groupURIs, final String callerSpecifiedMainClassName,
             final String callerSpecifiedAppClientName,
-            final String anchorDir) throws IOException, BootException, URISyntaxException, SAXException, UserError {
+            final String anchorDir) throws IOException, SAXException, UserError {
         String[] archiveURIs = groupURIs.split(" ");
         /*
          * Search the app clients in the group in order, checking each for
@@ -328,8 +327,8 @@ public class FacadeLaunchable implements Launchable {
          * Save the client names and main classes in case we need them in an
          * error to the user.
          */
-        final List<String> knownClientNames = new ArrayList<String>();
-        final List<String> knownMainClasses = new ArrayList<String>();
+        final List<String> knownClientNames = new ArrayList<>();
+        final List<String> knownMainClasses = new ArrayList<>();
 
         for (String uriText : archiveURIs) {
             URI clientFacadeURI = groupFacadeURI.resolve(uriText);
@@ -484,17 +483,13 @@ public class FacadeLaunchable implements Launchable {
          * client as an error.
          */
         String msg;
-        if ((callerSpecifiedAppClientName == null) &&
-            (callerSpecifiedMainClassName == null)) {
-            final String format = logger.getResourceBundle().getString(
-                    "appclient.multClientsNoChoice");
+        if (callerSpecifiedAppClientName == null && callerSpecifiedMainClassName == null) {
+            final String format = logger.getResourceBundle().getString("appclient.multClientsNoChoice");
             msg = MessageFormat.format(format, knownMainClasses.toString(), knownClientNames.toString());
         } else {
-            final String format = logger.getResourceBundle().getString(
-                    "appclient.noMatchingClientInGroup");
+            final String format = logger.getResourceBundle().getString("appclient.noMatchingClientInGroup");
             msg = MessageFormat.format(format, groupFacadeURI, callerSpecifiedMainClassName,
-                        callerSpecifiedAppClientName, knownMainClasses.toString(),
-                        knownClientNames.toString());
+                callerSpecifiedAppClientName, knownMainClasses.toString(), knownClientNames.toString());
         }
         throw new UserError(msg);
     }

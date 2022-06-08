@@ -45,8 +45,10 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -279,21 +281,20 @@ public abstract class Archivist<T extends BundleDescriptor> {
         return descriptor;
     }
 
-    public T open(ReadableArchive archive,
-            Application app) throws IOException, SAXException {
+
+    public T open(ReadableArchive archive, Application app) throws IOException, SAXException {
         return open(archive, archive, app);
     }
 
+
     // fill in the rest of the application with an application object
     // populated from previus reading of the standard deployment descriptor
-    public Application openWith(Application app, ReadableArchive archive)
-            throws IOException, SAXException {
-
+    public Application openWith(Application app, ReadableArchive archive) throws IOException, SAXException {
         setManifest(archive.getManifest());
 
         // application archivist will override this method
         if (app.isVirtual()) {
-            T descriptor = readRestDeploymentDescriptors((T)app.getStandaloneBundleDescriptor(), archive, archive, app);
+            T descriptor = readRestDeploymentDescriptors((T) app.getStandaloneBundleDescriptor(), archive, archive, app);
             if (descriptor != null) {
                 postOpen(descriptor, archive);
                 descriptor.setApplication(app);
@@ -310,9 +311,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param path the archive file path
      * @return the deployment descriptor for this archive
      */
-    public T open(String path)
-            throws IOException, SAXException {
-
+    public T open(String path) throws IOException, SAXException {
         this.path = path;
         File file = new File(path);
         if (!file.exists()) {
@@ -400,21 +399,22 @@ public abstract class Archivist<T extends BundleDescriptor> {
         return readRestDeploymentDescriptors(descriptor, descriptorArchive, contentArchive, app);
     }
 
-    private T readRestDeploymentDescriptors (T descriptor,
-        ReadableArchive descriptorArchive, ReadableArchive contentArchive,
-        Application app) throws IOException, SAXException {
+
+    private T readRestDeploymentDescriptors(T descriptor, ReadableArchive descriptorArchive,
+        ReadableArchive contentArchive, Application app) throws IOException, SAXException {
         Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions = new HashMap<>();
-        if (extensionsArchivists!=null) {
+        if (extensionsArchivists != null) {
             for (ExtensionsArchivist extension : extensionsArchivists) {
-                    Object o = extension.open(this, descriptorArchive, descriptor);
-                    if (o instanceof RootDeploymentDescriptor) {
-                        if (o != descriptor) {
-                            extension.addExtension(descriptor, (RootDeploymentDescriptor) o);
-                        }
-                        extensions.put(extension, (RootDeploymentDescriptor) o);
-                    } else {
-                        extensions.put(extension, null); // maybe annotation processing will yield results
+                Object o = extension.open(this, descriptorArchive, descriptor);
+                if (o instanceof RootDeploymentDescriptor) {
+                    if (o != descriptor) {
+                        extension.addExtension(descriptor, (RootDeploymentDescriptor) o);
                     }
+                    extensions.put(extension, (RootDeploymentDescriptor) o);
+                } else {
+                    // maybe annotation processing will yield results
+                    extensions.put(extension, null);
+                }
             }
         }
 
@@ -851,7 +851,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param out archive output stream to write to
      * @param entriesToSkip files to not write from the original archive
      */
-    protected void writeContents(ReadableArchive in, WritableArchive out, Vector entriesToSkip)
+    protected void writeContents(ReadableArchive in, WritableArchive out, Set<String> entriesToSkip)
             throws IOException {
 
         // Copy original jarFile elements
@@ -1302,9 +1302,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @return the list of files that should not be copied from the old archive
      *         when a save is performed.
      */
-    public Vector getListOfFilesToSkip(ReadableArchive archive) throws IOException {
+    public Set<String> getListOfFilesToSkip(ReadableArchive archive) throws IOException {
 
-        Vector filesToSkip = new Vector();
+        Set<String> filesToSkip = new HashSet<>();
         filesToSkip.add(getDeploymentDescriptorPath());
         if (manifest != null) {
             filesToSkip.add(JarFile.MANIFEST_NAME);
@@ -1315,8 +1315,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
 
         // Can't depend on having a descriptor, so skip all possible
         // web service deployment descriptor paths.
-        filesToSkip.addAll(
-                getAllWebservicesDeploymentDescriptorPaths());
+        filesToSkip.addAll(getAllWebservicesDeploymentDescriptorPaths());
 
         return filesToSkip;
     }
@@ -1380,21 +1379,19 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *
      * @param in  jar file
      * @param out jar file
-     * @param ignoreList vector of entry name to not copy from to source jar file
+     * @param ignored entry names to not copy from to source jar file
      */
-    protected void copyJarElements(ReadableArchive in, WritableArchive out, Vector ignoreList)
-            throws IOException {
-
-        Enumeration entries = in.entries();
+    protected void copyJarElements(ReadableArchive in, WritableArchive out, Set<String> ignored) throws IOException {
+        Enumeration<String> entries = in.entries();
         if (entries != null) {
             for (; entries.hasMoreElements();) {
-                String anEntry = (String) entries.nextElement();
-                if (ignoreList == null || !ignoreList.contains(anEntry)) {
-                    InputStream is = in.getEntry(anEntry);
-                    if (is != null) {
-                      OutputStream os = out.putNextEntry(anEntry);
-                      ArchivistUtils.copyWithoutClose(is, os);
-                      is.close();
+                String anEntry = entries.nextElement();
+                if (ignored == null || !ignored.contains(anEntry)) {
+                    try (InputStream is = in.getEntry(anEntry)) {
+                        if (is != null) {
+                            OutputStream os = out.putNextEntry(anEntry);
+                            ArchivistUtils.copyWithoutClose(is, os);
+                        }
                     }
                     out.closeEntry();
                 }
@@ -1584,7 +1581,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param target        the target archive to copy to
      * @param entriesToSkip the entries that will be skipped by target archive
      */
-    public void copyInto(ReadableArchive source, WritableArchive target, Vector entriesToSkip)
+    public void copyInto(ReadableArchive source, WritableArchive target, Set<String> entriesToSkip)
             throws IOException {
         copyInto(source, target, entriesToSkip, true);
     }
@@ -1598,10 +1595,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param overwriteManifest if true, the manifest in source archive
      *                          overwrites the one in target archive
      */
-    public void copyInto(ReadableArchive source, WritableArchive target,
-                         Vector entriesToSkip, boolean overwriteManifest)
-            throws IOException {
-
+    public void copyInto(ReadableArchive source, WritableArchive target, Set<String> entriesToSkip,
+        boolean overwriteManifest) throws IOException {
         copyJarElements(source, target, entriesToSkip);
         if (overwriteManifest) {
             Manifest m = source.getManifest();
@@ -1613,10 +1608,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
         }
     }
 
+
     // only copy the entry if the destination archive does not have this entry
-    public void copyAnEntry(ReadableArchive in,
-                                   WritableArchive out, String entryName)
-        throws IOException {
+    public void copyAnEntry(ReadableArchive in, WritableArchive out, String entryName) throws IOException {
         InputStream is = null;
         InputStream is2 = null;
         ReadableArchive in2 = archiveFactory.openArchive(out.getURI());

@@ -89,8 +89,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     protected void writeContents(ReadableArchive in, WritableArchive out) throws IOException {
 
-        Vector filesToSkip = new Vector();
-
+        Set<String> filesToSkip = new HashSet<>();
         if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
         }
@@ -116,9 +115,9 @@ public class ApplicationArchivist extends Archivist<Application> {
             // we need to copy the old archive to a temp file so
             // the save method can copy its original contents from
 
-            File tmpFile=null;
+            File tmpFile = null;
             BufferedOutputStream bos = null;
-            try (InputStream is = in.getEntry(aModule.getArchiveUri())){
+            try (InputStream is = in.getEntry(aModule.getArchiveUri())) {
                 if (in instanceof WritableArchive) {
                     subArchivist.setArchiveUri(internalJar.getURI().getSchemeSpecificPart());
                 } else {
@@ -132,17 +131,18 @@ public class ApplicationArchivist extends Archivist<Application> {
                 subArchivist.writeContents(internalJar);
                 out.closeEntry(internalJar);
             } finally {
-                if (tmpFile!=null) {
+                if (tmpFile != null) {
                     boolean ok = tmpFile.delete();
-                    if (! ok) {
-                      logger.log(Level.WARNING, localStrings.getLocalString("enterprise.deployment.cantDelete", "Error deleting file {0}", new Object[]{tmpFile.getAbsolutePath()}));
+                    if (!ok) {
+                        logger.log(Level.WARNING, localStrings.getLocalString("enterprise.deployment.cantDelete",
+                            "Error deleting file {0}", new Object[] {tmpFile.getAbsolutePath()}));
                     }
                 }
-                if ( bos != null) {
+                if (bos != null) {
                     try {
                         bos.close();
                     } catch (IOException ioe) {
-                        //ignore
+                        // ignore
                     }
                 }
             }
@@ -777,12 +777,11 @@ public class ApplicationArchivist extends Archivist<Application> {
      * @param target the target archive
      * @param overwriteManifest if true, the manifest in source archive overwrites the one in target
      */
-    public void copyInto(Application a, ReadableArchive source,
-                         WritableArchive target, boolean overwriteManifest)
+    public void copyInto(Application a, ReadableArchive source, WritableArchive target, boolean overwriteManifest)
         throws IOException {
-        Vector entriesAdded = new Vector();
+        Set<String> entriesToSkip = new HashSet<>();
         for (ModuleDescriptor aModule : a.getModules()) {
-            entriesAdded.add(aModule.getArchiveUri());
+            entriesToSkip.add(aModule.getArchiveUri());
             try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri())) {
                 WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri());
                 Archivist newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
@@ -796,13 +795,13 @@ public class ApplicationArchivist extends Archivist<Application> {
                         subModulePath = subModulePath.substring(parentPath.length() + File.separator.length());
                         for (Enumeration<String> subEntries = subSource.entries(); subEntries.hasMoreElements();) {
                             String anEntry = subEntries.nextElement();
-                            entriesAdded.add(subModulePath + "/" + anEntry);
+                            entriesToSkip.add(subModulePath + "/" + anEntry);
                         }
                     }
                 }
             }
         }
-        super.copyInto(source, target, entriesAdded, overwriteManifest);
+        super.copyInto(source, target, entriesToSkip, overwriteManifest);
     }
 
 

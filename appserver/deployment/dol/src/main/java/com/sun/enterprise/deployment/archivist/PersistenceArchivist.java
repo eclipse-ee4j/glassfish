@@ -102,38 +102,33 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
     }
 
 
-    protected PersistenceUnitsDescriptor readPersistenceDeploymentDescriptor(Archivist main,
-            ReadableArchive subArchive, String puRoot, RootDeploymentDescriptor descriptor)
-            throws IOException, SAXException {
-
+    protected PersistenceUnitsDescriptor readPersistenceDeploymentDescriptor(Archivist main, ReadableArchive subArchive,
+        String puRoot, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
         final String subArchiveURI = subArchive.getURI().getSchemeSpecificPart();
         if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "Archivist",
-                    "readPersistenceDeploymentDescriptor",
-                    "PURoot = [{0}] subArchive = {1}",
-                    new Object[]{puRoot, subArchiveURI});
+            deplLogger.logp(Level.FINE, "Archivist", "readPersistenceDeploymentDescriptor",
+                "PURoot = [{0}] subArchive = {1}", new Object[] {puRoot, subArchiveURI});
         }
         if (descriptor.getExtensionsDescriptors(PersistenceUnitsDescriptor.class, puRoot) != null) {
             if (deplLogger.isLoggable(Level.FINE)) {
-                deplLogger.logp(Level.FINE, "Archivist",
-                        "readPersistenceDeploymentDescriptor",
-                        "PU has been already read for = {0}",
-                        subArchiveURI);
+                deplLogger.logp(Level.FINE, "Archivist", "readPersistenceDeploymentDescriptor",
+                    "PU has been already read for = {0}", subArchiveURI);
             }
             return null;
         }
-        PersistenceUnitsDescriptor persistenceUnitsDescriptor =
-                    PersistenceUnitsDescriptor.class.cast(super.open(main, subArchive, descriptor));
+        PersistenceUnitsDescriptor persistenceUnitsDescriptor = PersistenceUnitsDescriptor.class
+            .cast(super.open(main, subArchive, descriptor));
 
-        if (persistenceUnitsDescriptor!=null) {
+        if (persistenceUnitsDescriptor != null) {
 
             persistenceUnitsDescriptor.setParent(descriptor);
             persistenceUnitsDescriptor.setPuRoot(puRoot);
-            descriptor.addExtensionDescriptor(PersistenceUnitsDescriptor.class,persistenceUnitsDescriptor, puRoot);
+            descriptor.addExtensionDescriptor(PersistenceUnitsDescriptor.class, persistenceUnitsDescriptor, puRoot);
         }
 
         return persistenceUnitsDescriptor;
     }
+
 
     @Override
     public <T extends RootDeploymentDescriptor> T getDefaultDescriptor() {

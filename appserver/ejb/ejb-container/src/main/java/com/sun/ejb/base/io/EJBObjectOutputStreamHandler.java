@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,35 +17,33 @@
 
 package com.sun.ejb.base.io;
 
-import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.EJBUtils;
 import com.sun.ejb.codegen.RemoteGenerator;
+import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.ejb.containers.RemoteBusinessWrapperBase;
+import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
+import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
 
-
-import com.sun.enterprise.util.Utility;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.enterprise.iiop.api.ProtocolManager;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.internal.api.Globals;
 
 import static com.sun.logging.LogDomains.EJB_LOGGER;
-
-import org.glassfish.api.naming.GlassfishNamingManager;
-
-import com.sun.enterprise.container.common.spi.util.GlassFishOutputStreamHandler;
-import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 
 /**
  * A class that is used to passivate SFSB conversational state

@@ -1261,6 +1261,6 @@ public final class MessageBeanContainer extends BaseContainer implements Message
 
     public enum MessageDeliveryType {
         Message, Timer
-    };
+    }
 
 }

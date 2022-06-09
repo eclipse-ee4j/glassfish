@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  /*
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
@@ -15,7 +16,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 -->
-<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -94,6 +95,7 @@
             <scope>test</scope>
         </dependency>
         
+        <!-- Utility classes for TestNG and Arquillian, used in suite.xml -->
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>cdi-tck-core-impl</artifactId>
@@ -194,18 +196,18 @@
                         </property>
                     </properties>
                     <forkMode>once</forkMode>
+                    
                     <!-- System Properties -->
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
-                        
-                        <glassfish.systemProperties>
-                            cdiTckExcludeDummy=true
-                        </glassfish.systemProperties>
-
-                        
                     </systemPropertyVariables>
+                    
+                    <glassfish.postBootCommands>
+                        create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/2ee.pass j2ee
+                        create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
+                    </glassfish.postBootCommands>
                 </configuration>
             </plugin>
 
@@ -229,6 +231,5 @@
             </plugin>
         </plugins>
     </build>
-
     
 </project>

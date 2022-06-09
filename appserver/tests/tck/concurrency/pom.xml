@@ -155,6 +155,25 @@
                             </artifactItems>
                         </configuration>
                      </execution>
+                     <execution>
+                        <id>copy</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.testng</groupId>
+                                    <artifactId>testng</artifactId>
+                                    <version>7.4.0</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

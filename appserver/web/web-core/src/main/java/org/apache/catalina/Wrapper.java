@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -16,7 +17,6 @@
  */
 
 package org.apache.catalina;
-
 
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
@@ -59,7 +59,7 @@ public interface Wrapper extends Container {
      * the servlet is currently available.  A value equal to Long.MAX_VALUE
      * is considered to mean that unavailability is permanent.
      */
-    public long getAvailable();
+    long getAvailable();
 
 
     /**
@@ -70,13 +70,13 @@ public interface Wrapper extends Container {
      *
      * @param available The new available date/time
      */
-    public void setAvailable(long available);
+    void setAvailable(long available);
 
 
     /**
      * Return the context-relative URI of the JSP file for this servlet.
      */
-    public String getJspFile();
+    String getJspFile();
 
 
     /**
@@ -84,14 +84,14 @@ public interface Wrapper extends Container {
      *
      * @param jspFile JSP file URI
      */
-    public void setJspFile(String jspFile);
+    void setJspFile(String jspFile);
 
 
     /**
      * Return the load-on-startup order value (negative value means
      * load on first call).
      */
-    public int getLoadOnStartup();
+    int getLoadOnStartup();
 
 
     /**
@@ -100,13 +100,13 @@ public interface Wrapper extends Container {
      *
      * @param value New load-on-startup value
      */
-    public void setLoadOnStartup(int value);
+    void setLoadOnStartup(int value);
 
 
     /**
      * Return the run-as identity for this servlet.
      */
-    public String getRunAs();
+    String getRunAs();
 
 
     /**
@@ -114,19 +114,19 @@ public interface Wrapper extends Container {
      *
      * @param runAs New run-as identity value
      */
-    public void setRunAs(String runAs);
+    void setRunAs(String runAs);
 
 
     /**
      * Return the fully qualified servlet class name for this servlet.
      */
-    public String getServletClassName();
+    String getServletClassName();
 
 
     /**
      * Gets the name of the wrapped servler.
      */
-    public String getServletName();
+    String getServletName();
 
 
     /**
@@ -134,7 +134,7 @@ public interface Wrapper extends Container {
      *
      * @param className Servlet class name
      */
-    public void setServletClassName(String className);
+    void setServletClassName(String className);
 
 
     /**
@@ -143,7 +143,7 @@ public interface Wrapper extends Container {
      * @param servletClass the class object from which the servlet will be
      * instantiated
      */
-    public void setServletClass(Class <? extends Servlet> servletClass);
+    void setServletClass(Class <? extends Servlet> servletClass);
 
 
     /**
@@ -156,73 +156,73 @@ public interface Wrapper extends Container {
      * @return Array of names of the methods supported by the underlying
      * servlet
      */
-    public String[] getServletMethods() throws ServletException;
+    String[] getServletMethods() throws ServletException;
 
 
     /**
      * Is this servlet currently unavailable?
      */
-    public boolean isUnavailable();
+    boolean isUnavailable();
 
 
     /**
      * Sets the description of this servlet.
      */
-    public void setDescription(String description);
+    void setDescription(String description);
 
 
     /**
      * Gets the description of this servlet.
      */
-    public String getDescription();
+    String getDescription();
 
 
     /**
      * Sets the multipart location
      */
-    public void setMultipartLocation(String location);
+    void setMultipartLocation(String location);
 
 
     /**
      * Gets the multipart location
      */
-    public String getMultipartLocation();
+    String getMultipartLocation();
 
 
     /**
      * Sets the multipart max-file-size
      */
-    public void setMultipartMaxFileSize(long maxFileSize);
+    void setMultipartMaxFileSize(long maxFileSize);
 
 
     /**
      * Gets the multipart max-file-size
      */
-    public long getMultipartMaxFileSize();
+    long getMultipartMaxFileSize();
 
 
     /**
      * Sets the multipart max-request-size
      */
-    public void setMultipartMaxRequestSize(long maxRequestSize);
+    void setMultipartMaxRequestSize(long maxRequestSize);
 
 
     /**
      * Gets the multipart max-request-Size
      */
-    public long getMultipartMaxRequestSize();
+    long getMultipartMaxRequestSize();
 
 
     /**
      * Sets the multipart file-size-threshold
      */
-    public void setMultipartFileSizeThreshold(int fileSizeThreshold);
+    void setMultipartFileSizeThreshold(int fileSizeThreshold);
 
 
     /**
      * Gets the multipart file-size-threshol
      */
-    public int getMultipartFileSizeThreshold();
+    int getMultipartFileSizeThreshold();
 
 
     // --------------------------------------------------------- Public Methods
@@ -234,7 +234,7 @@ public interface Wrapper extends Container {
      * @param name Name of this initialization parameter to add
      * @param value Value of this initialization parameter to add
      */
-    public void addInitParameter(String name, String value);
+    void addInitParameter(String name, String value);
 
 
     /**
@@ -242,7 +242,7 @@ public interface Wrapper extends Container {
      *
      * @param listener The new listener
      */
-    public void addInstanceListener(InstanceListener listener);
+    void addInstanceListener(InstanceListener listener);
 
 
     /**
@@ -250,7 +250,7 @@ public interface Wrapper extends Container {
      *
      * @param mapping The new wrapper mapping
      */
-    public void addMapping(String mapping);
+    void addMapping(String mapping);
 
 
     /**
@@ -260,7 +260,7 @@ public interface Wrapper extends Container {
      * @param name Role name used within this servlet
      * @param link Role name used within the web application
      */
-    public void addSecurityReference(String name, String link);
+    void addSecurityReference(String name, String link);
 
 
     /**
@@ -272,11 +272,11 @@ public interface Wrapper extends Container {
      * that this instance is not allocated again until it is deallocated by a
      * call to <code>deallocate()</code>.
      *
-     * @exception ServletException if the servlet init() method threw
+     * @throws ServletException if the servlet init() method threw
      *  an exception
-     * @exception ServletException if a loading error occurs
+     * @throws ServletException if a loading error occurs
      */
-    public Servlet allocate() throws ServletException;
+    Servlet allocate() throws ServletException;
 
 
     /**
@@ -286,9 +286,9 @@ public interface Wrapper extends Container {
      *
      * @param servlet The servlet to be returned
      *
-     * @exception ServletException if a deallocation error occurs
+     * @throws ServletException if a deallocation error occurs
      */
-    public void deallocate(Servlet servlet) throws ServletException;
+    void deallocate(Servlet servlet) throws ServletException;
 
 
     /**
@@ -297,20 +297,20 @@ public interface Wrapper extends Container {
      *
      * @param name Name of the requested initialization parameter
      */
-    public String findInitParameter(String name);
+    String findInitParameter(String name);
 
 
     /**
      * Return the names of all defined initialization parameters for this
      * servlet.
      */
-    public String[] findInitParameters();
+    String[] findInitParameters();
 
 
     /**
      * Return the mappings associated with this wrapper.
      */
-    public String[] findMappings();
+    String[] findMappings();
 
 
     /**
@@ -319,29 +319,26 @@ public interface Wrapper extends Container {
      *
      * @param name Security role reference used within this servlet
      */
-    public String findSecurityReference(String name);
+    String findSecurityReference(String name);
 
 
     /**
      * Return the set of security role reference names associated with
      * this servlet, if any; otherwise return a zero-length array.
      */
-    public String[] findSecurityReferences();
+    String[] findSecurityReferences();
 
 
     /**
      * Load and initialize an instance of this servlet, if there is not already
-     * at least one initialized instance.  This can be used, for example, to
+     * at least one initialized instance. This can be used, for example, to
      * load servlets that are marked in the deployment descriptor to be loaded
      * at server startup time.
      *
-     * @exception ServletException if the servlet init() method threw
-     *  an exception
-     * @exception ServletException if some other loading problem occurs
+     * @throws ServletException if the servlet init() method threw an exception
+     * @throws ServletException if some other loading problem occurs
      */
-    public void load() throws ServletException;
-
-    public void tryLoad() throws ServletException;
+    void load() throws ServletException;
 
 
     /**
@@ -349,7 +346,7 @@ public interface Wrapper extends Container {
      *
      * @param name Name of the initialization parameter to remove
      */
-    public void removeInitParameter(String name);
+    void removeInitParameter(String name);
 
 
     /**
@@ -357,7 +354,7 @@ public interface Wrapper extends Container {
      *
      * @param listener The listener to remove
      */
-    public void removeInstanceListener(InstanceListener listener);
+    void removeInstanceListener(InstanceListener listener);
 
 
     /**
@@ -365,7 +362,7 @@ public interface Wrapper extends Container {
      *
      * @param mapping The pattern to remove
      */
-    public void removeMapping(String mapping);
+    void removeMapping(String mapping);
 
 
     /**
@@ -373,7 +370,7 @@ public interface Wrapper extends Container {
      *
      * @param name Security role used within this servlet to be removed
      */
-    public void removeSecurityReference(String name);
+    void removeSecurityReference(String name);
 
 
     /**
@@ -383,7 +380,7 @@ public interface Wrapper extends Container {
      * @param unavailable The exception that occurred, or <code>null</code>
      *  to mark this servlet as permanently unavailable
      */
-    public void unavailable(UnavailableException unavailable);
+    void unavailable(UnavailableException unavailable);
 
 
     /**
@@ -393,9 +390,9 @@ public interface Wrapper extends Container {
      * prior to reloading all of the classes from the Loader associated with
      * our Loader's repository.
      *
-     * @exception ServletException if an unload error occurs
+     * @throws ServletException if an unload error occurs
      */
-    public void unload() throws ServletException;
+    void unload() throws ServletException;
 
 
     /**
@@ -405,7 +402,7 @@ public interface Wrapper extends Container {
      * @param isAsyncSupported true if the wrapped servlet supports
      * asynchronous operations, false otherwise
      */
-    public void setIsAsyncSupported(boolean isAsyncSupported);
+    void setIsAsyncSupported(boolean isAsyncSupported);
 
 
     /**
@@ -415,5 +412,5 @@ public interface Wrapper extends Container {
      * @return true if the wrapped servlet supports async operations, and
      * false otherwise
      */
-    public boolean isAsyncSupported();
+    boolean isAsyncSupported();
 }

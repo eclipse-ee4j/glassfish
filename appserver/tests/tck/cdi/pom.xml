@@ -361,7 +361,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <argLine>-Xmx768m</argLine>
-
                     <!-- Surefire / TestNG Properties -->
                     <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
                     <suiteXmlFiles>
@@ -385,11 +384,10 @@
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                         <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
-                        
                         <glassfish.systemProperties>
                             cdiTckExcludeDummy=true
+                            glassfish.servlet.loadAllOnStartup=true
                         </glassfish.systemProperties>
-
                         <glassfish.postBootCommands>
                             create-jms-resource --restype jakarta.jms.Queue --property Name=queue_test queue_test
                             create-jms-resource --restype jakarta.jms.Topic --property Name=topic_test topic_test
@@ -398,7 +396,6 @@
                             create-file-user --groups printer --passwordfile ${project.build.directory}/test-classes/password.txt printer
                             create-file-user --groups student:alarm --passwordfile ${project.build.directory}/test-classes/password.txt alarm
                         </glassfish.postBootCommands>
-
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
                         <debugMode>true</debugMode>

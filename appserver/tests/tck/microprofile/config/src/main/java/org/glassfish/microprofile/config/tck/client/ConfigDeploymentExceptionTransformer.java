@@ -20,15 +20,14 @@ import org.jboss.arquillian.container.spi.client.container.DeploymentExceptionTr
 
 /**
  * The common GlassFishClientCommon handler will always throw a GlassfishClientException,
- * with a message from the response. Since Glassfish prefixes errors with "CDI deployment failure"
- * when a CDI deployment error is thrown, we can safely convert this error to the expected
+ * with a message from the response. Deployment errors can safely be converted to the expected
  * exception type.
  */
 public class ConfigDeploymentExceptionTransformer implements DeploymentExceptionTransformer {
 
     @Override
     public Throwable transform(Throwable throwable) {
-        if (throwable != null && throwable.getMessage().contains("CDI deployment failure")) {
+        if (throwable != null && throwable.getMessage().contains("Error occurred during deployment")) {
             return new DeploymentException(throwable);
         }
         return throwable;

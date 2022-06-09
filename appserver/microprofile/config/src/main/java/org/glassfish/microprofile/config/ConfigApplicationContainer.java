@@ -15,11 +15,16 @@
  */
 package org.glassfish.microprofile.config;
 
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeploymentContext;
 
+import java.net.JarURLConnection;
+
 public class ConfigApplicationContainer implements ApplicationContainer<Object> {
+
+    private static final String JAR_URL_PROTOCOL = "jar";
 
     private final DeploymentContext deploymentContext;
 
@@ -34,6 +39,17 @@ public class ConfigApplicationContainer implements ApplicationContainer<Object> 
 
     @Override
     public boolean start(ApplicationContext startupContext) throws Exception {
+
+        // Set the JAR caching behaviour for config init
+        // (to prevent using cached microprofile-config file contents)
+        final var shouldCacheJarContents = JarURLConnection.getDefaultUseCaches(JAR_URL_PROTOCOL);
+        JarURLConnection.setDefaultUseCaches(JAR_URL_PROTOCOL, false);
+
+        ConfigProvider.getConfig(startupContext.getClassLoader());
+
+        // Reset the JAR caching behaviour
+        JarURLConnection.setDefaultUseCaches(JAR_URL_PROTOCOL, shouldCacheJarContents);
+
         return true;
     }
 

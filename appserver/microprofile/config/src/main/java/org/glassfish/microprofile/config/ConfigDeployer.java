@@ -15,7 +15,6 @@
  */
 package org.glassfish.microprofile.config;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 import org.glassfish.api.container.Container;
 import org.glassfish.api.deployment.ApplicationContainer;

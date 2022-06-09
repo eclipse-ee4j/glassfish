@@ -202,12 +202,12 @@
                         <glassfish.home>${glassfish.root}/glassfish7</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
+                        
+                        <glassfish.postBootCommands>
+                            create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee
+                            create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
+                        </glassfish.postBootCommands>
                     </systemPropertyVariables>
-                    
-                    <glassfish.postBootCommands>
-                        create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/2ee.pass j2ee
-                        create-file-user --groups Manager --passwordfile ${project.build.directory}/test-classes/javajoe.pass javajoe
-                    </glassfish.postBootCommands>
                 </configuration>
             </plugin>
 

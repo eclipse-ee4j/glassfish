@@ -5004,7 +5004,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             loadServlet(wrapper);
         }
 
-        if (Boolean.parseBoolean(System.getProperty("glassfish.servlet.loadAllOnStartup", "false"))) {
+        if (Boolean.getBoolean("glassfish.servlet.loadAllOnStartup")) {
             // Also load the other servlets, which is one way to pass the CDI TCK, specifically
             // ContainerEventTest#testProcessInjectionTargetEventFiredForServlet and adhere to the rule
             // that injection points for Servlets have to be processed during start.

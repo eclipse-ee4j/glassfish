@@ -18,24 +18,17 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableList;
-import static java.util.logging.Level.FINEST;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_DESTROY_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_INIT_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.AFTER_SERVICE_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_DESTROY_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_INIT_EVENT;
-import static org.apache.catalina.InstanceEvent.EventType.BEFORE_SERVICE_EVENT;
-import static org.apache.catalina.LogFacade.CANNOT_ALLOCATE_SERVLET_EXCEPTION;
-import static org.apache.catalina.LogFacade.CANNOT_FIND_SERVLET_CLASS_EXCEPTION;
-import static org.apache.catalina.LogFacade.ERROR_ALLOCATE_SERVLET_INSTANCE_EXCEPTION;
-import static org.apache.catalina.LogFacade.ERROR_LOADING_INFO;
-import static org.apache.catalina.LogFacade.PARENT_CONTAINER_MUST_BE_CONTEXT_EXCEPTION;
-import static org.apache.catalina.LogFacade.WRAPPER_CONTAINER_NO_CHILD_EXCEPTION;
-import static org.apache.catalina.core.Constants.JSP_SERVLET_CLASS;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+// END GlassFish 1343
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -72,17 +65,24 @@ import org.apache.catalina.util.Enumerator;
 import org.apache.catalina.util.InstanceSupport;
 import org.glassfish.web.valve.GlassFishValve;
 
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.UnavailableException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-// END GlassFish 1343
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableList;
+import static java.util.logging.Level.FINEST;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_DESTROY_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_INIT_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_SERVICE_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_DESTROY_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_INIT_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_SERVICE_EVENT;
+import static org.apache.catalina.LogFacade.CANNOT_ALLOCATE_SERVLET_EXCEPTION;
+import static org.apache.catalina.LogFacade.CANNOT_FIND_SERVLET_CLASS_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_ALLOCATE_SERVLET_INSTANCE_EXCEPTION;
+import static org.apache.catalina.LogFacade.ERROR_LOADING_INFO;
+import static org.apache.catalina.LogFacade.PARENT_CONTAINER_MUST_BE_CONTEXT_EXCEPTION;
+import static org.apache.catalina.LogFacade.WRAPPER_CONTAINER_NO_CHILD_EXCEPTION;
+import static org.apache.catalina.core.Constants.JSP_SERVLET_CLASS;
 
 /**
  * Standard implementation of the <b>Wrapper</b> interface that represents an individual servlet definition. No child
@@ -125,7 +125,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
      * The count of allocations that are currently active (even if they are for the same instance, as will be true on a
      * non-STM servlet).
      */
-    private AtomicInteger countAllocated = new AtomicInteger(0);
+    private final AtomicInteger countAllocated = new AtomicInteger(0);
 
     /**
      * The debugging detail level for this component.
@@ -135,7 +135,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * The facade associated with this wrapper.
      */
-    private StandardWrapperFacade facade = new StandardWrapperFacade(this);
+    private final StandardWrapperFacade facade = new StandardWrapperFacade(this);
 
     /**
      * The descriptive information string for this implementation.
@@ -155,7 +155,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * The support object for our instance listeners.
      */
-    private InstanceSupport instanceSupport = new InstanceSupport(this);
+    private final InstanceSupport instanceSupport = new InstanceSupport(this);
 
     /**
      * The context-relative URI of the JSP file for this servlet.
@@ -170,18 +170,18 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     /**
      * Mappings associated with the wrapper.
      */
-    private ArrayList<String> mappings = new ArrayList<String>();
+    private final ArrayList<String> mappings = new ArrayList<>();
 
     /**
      * The initialization parameters for this servlet, keyed by parameter name.
      */
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private final Map<String, String> parameters = new HashMap<>();
 
     /**
      * The security role references for this servlet, keyed by role name used in the servlet. The corresponding value is the
      * role name of the web application itself.
      */
-    private HashMap<String, String> references = new HashMap<String, String>();
+    private final HashMap<String, String> references = new HashMap<>();
 
     /**
      * The run-as identity for this servlet.
@@ -240,7 +240,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
 
 
     // To support jmx attributes
-    private StandardWrapperValve swValve;
+    private final StandardWrapperValve swValve;
     private long loadTime = 0;
     private int classLoadTime = 0;
 
@@ -652,7 +652,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             return DEFAULT_SERVLET_METHODS;
         }
 
-        HashSet<String> allow = new HashSet<String>();
+        HashSet<String> allow = new HashSet<>();
         allow.add("TRACE");
         allow.add("OPTIONS");
 
@@ -788,8 +788,9 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         do {
             loops++;
             rootCauseCheck = rootCause.getCause();
-            if (rootCauseCheck != null)
+            if (rootCauseCheck != null) {
                 rootCause = rootCauseCheck;
+            }
         } while (rootCauseCheck != null && (loops < 20));
         return rootCause;
     }
@@ -864,7 +865,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
 
                 if (parameters.containsKey(e.getKey())) {
                     if (conflicts == null) {
-                        conflicts = new HashSet<String>();
+                        conflicts = new HashSet<>();
                     }
                     conflicts.add(e.getKey());
                 }
@@ -1105,29 +1106,13 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
      * current web application. This gives such classes access to Catalina internals, which are prevented for classes loaded
      * for web applications.
      *
-     * @exception ServletException if the servlet init() method threw an exception
-     * @exception ServletException if some other loading problem occurs
+     * @throws ServletException if the servlet init() method threw an exception
+     * @throws ServletException if some other loading problem occurs
      */
     @Override
     public synchronized void load() throws ServletException {
         instance = loadServlet();
         initServlet(instance);
-    }
-
-    @Override
-    public synchronized void tryLoad() throws ServletException {
-        try {
-            instance = loadServlet();
-            initServlet(instance);
-        } catch (Throwable t) {
-            instance = null;
-            available = 0l;
-            classLoadTime = 0;
-            loadTime = 0l;
-            instanceInitialized = false;
-
-            throw t;
-        }
     }
 
 
@@ -1160,8 +1145,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             throw new ServletException(msg, e);
         }
 
-        // Check if loading the servlet in this web application should be
-        // allowed
+        // Check if loading the servlet in this web application should be allowed
         if (!isServletAllowed(servlet)) {
             String msg = format(rb.getString(LogFacade.PRIVILEGED_SERVLET_CANNOT_BE_LOADED_EXCEPTION),
                     servletClass.getName());
@@ -1519,14 +1503,15 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     public void unavailable(UnavailableException unavailable) {
         String msg = format(rb.getString(LogFacade.MARK_SERVLET_UNAVAILABLE), neutralizeForLog(getName()));
         getServletContext().log(msg);
-        if (unavailable == null)
+        if (unavailable == null) {
             setAvailable(Long.MAX_VALUE);
-        else if (unavailable.isPermanent())
+        } else if (unavailable.isPermanent()) {
             setAvailable(Long.MAX_VALUE);
-        else {
+        } else {
             int unavailableSeconds = unavailable.getUnavailableSeconds();
-            if (unavailableSeconds <= 0)
+            if (unavailableSeconds <= 0) {
                 unavailableSeconds = 60; // Arbitrary default
+            }
             setAvailable(System.currentTimeMillis() + (unavailableSeconds * 1000L));
         }
 
@@ -1543,8 +1528,9 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     public synchronized void unload() throws ServletException {
 
         // Nothing to do if we have never loaded the instance
-        if (!singleThreadModel && (instance == null))
+        if (!singleThreadModel && instance == null) {
             return;
+        }
         unloading = true;
 
         // Loaf a while if the current instance is allocated
@@ -1552,11 +1538,11 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         if (countAllocated.get() > 0) {
             int nRetries = 0;
             long delay = unloadDelay / 20;
-            while ((nRetries < 21) && (countAllocated.get() > 0)) {
+            while (nRetries < 21 && countAllocated.get() > 0) {
                 if ((nRetries % 10) == 0) {
                     if (log.isLoggable(Level.FINE)) {
                         log.log(Level.FINE, LogFacade.WAITING_INSTANCE_BE_DEALLOCATED,
-                                new Object[] { countAllocated.toString(), instance.getClass().getName() });
+                            new Object[] {countAllocated.toString(), instance.getClass().getName()});
                     }
                 }
                 try {
@@ -1665,7 +1651,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     @Override
     public Enumeration<String> getInitParameterNames() {
         synchronized (parameters) {
-            return (new Enumerator<String>(parameters.keySet()));
+            return new Enumerator<>(parameters.keySet());
         }
     }
 
@@ -1809,8 +1795,9 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
         // Start up this component
         super.start();
 
-        if (oname != null)
+        if (oname != null) {
             registerJMX((StandardContext) getParent());
+        }
 
         // Load and initialize an instance of this servlet if requested
         // MOVED TO StandardContext START() METHOD

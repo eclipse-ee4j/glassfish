@@ -17,15 +17,29 @@
 
 package org.glassfish.concurrent.runtime;
 
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.LogFacade;
 import org.glassfish.concurrent.runtime.deployer.ContextServiceConfig;
 import org.glassfish.concurrent.runtime.deployer.ManagedExecutorServiceConfig;
 import org.glassfish.concurrent.runtime.deployer.ManagedScheduledExecutorServiceConfig;
 import org.glassfish.concurrent.runtime.deployer.ManagedThreadFactoryConfig;
-import org.glassfish.enterprise.concurrent.*;
+import org.glassfish.enterprise.concurrent.AbstractManagedExecutorService;
+import org.glassfish.enterprise.concurrent.AbstractManagedThread;
+import org.glassfish.enterprise.concurrent.ContextServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedExecutorServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.data.ApplicationRegistry;
@@ -33,13 +47,11 @@ import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class provides API to create various Concurrency Utilities objects
@@ -294,6 +306,10 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
                     contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.SECURITY);
                 } else if (CONTEXT_INFO_WORKAREA.equalsIgnoreCase(token)) {
                     contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.WORKAREA);
+                } else {
+                    logger.log(Level.SEVERE, "Unrecognized context info: ''{0}'', must be one of {1}, {2}, {3} or {4}",
+                            new Object[]{token, CONTEXT_INFO_CLASSLOADER, CONTEXT_INFO_JNDI,
+                                CONTEXT_INFO_SECURITY, CONTEXT_INFO_WORKAREA});
                 }
             }
         }
@@ -339,6 +355,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
             this.logOnce = logOnce;
         }
 
+        @Override
         public void run() {
             ArrayList<ManagedExecutorServiceImpl> executorServices = new ArrayList();
             ArrayList<ManagedScheduledExecutorServiceImpl> scheduledExecutorServices = new ArrayList();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -94,7 +95,7 @@ public interface ResourceConstants {
 
     //TODO should be refactored to non-resources module
     /**
-     *  Reserved sub-context where datasource-definition objets (resource and pool) are bound with generated names.
+     *  Reserved sub-context where datasource-definition objects (resource and pool) are bound with generated names.
      */
     public static String DATASOURCE_DEFINITION_JNDINAME_PREFIX = "__datasource_definition/";
     public static String MAILSESSION_DEFINITION_JNDINAME_PREFIX="__mailsession_definition/";
@@ -102,6 +103,7 @@ public interface ResourceConstants {
     public static String JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX = "__jms_connection_factory_definition/";
     public static String JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX = "__jms_destination_definition/";
     public static String ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX="__administered_object_definition/";
+    public static String CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX = "__context_service_definition/";
 
     public static final String JAVA_SCOPE_PREFIX = "java:";
     public static final String JAVA_APP_SCOPE_PREFIX = "java:app/";

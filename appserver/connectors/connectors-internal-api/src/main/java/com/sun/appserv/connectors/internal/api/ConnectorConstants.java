@@ -16,11 +16,11 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 
 
 /**
@@ -179,6 +179,7 @@ public interface ConnectorConstants extends ResourceConstants {
     public static String MONITORING_CONNECTION_FACTORIES = "connection-factories";
     public static String MONITORING_SEPARATOR = "/";
 
+    public static String CONCURRENT_JNDINAME_PREFIX = "concurrent/";
 
     /**
      *  Reserved sub-context where pool objets are bound with generated names.

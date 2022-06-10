@@ -23,10 +23,17 @@ import org.glassfish.concurrent.config.ContextService;
  */
 public class ContextServiceConfig extends BaseConfig {
 
+    private static final long serialVersionUID = 1L;
+
     public ContextServiceConfig(ContextService config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
     }
 
+    public ContextServiceConfig(String jndiName, String contextInfo, String contextInfoEnabled) {
+        super(jndiName, contextInfo, contextInfoEnabled);
+    }
+
+    @Override
     public TYPE getType() {
         return TYPE.CONTEXT_SERVICE;
     }

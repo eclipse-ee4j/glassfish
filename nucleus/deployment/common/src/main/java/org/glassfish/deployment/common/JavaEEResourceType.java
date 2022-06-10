@@ -17,11 +17,7 @@
 package org.glassfish.deployment.common;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 5/9/12
- * Time: 2:33 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
 public enum JavaEEResourceType {
     /**
@@ -35,5 +31,5 @@ public enum JavaEEResourceType {
      * JMSDD: JMSDestinationDefinitionDescriptor
      * AODD: AdministeredObjectDefinitionDescriptor
      */
-    MSD, DSD, DSDPOOL, CFD, CFDPOOL, JMSCFDD, JMSCFDDPOOL, JMSDD, AODD;
+    MSD, DSD, DSDPOOL, CFD, CFDPOOL, JMSCFDD, JMSCFDDPOOL, JMSDD, AODD, CONTEXT_SERVICE_DEFINITION_DESCRIPTOR;
 }

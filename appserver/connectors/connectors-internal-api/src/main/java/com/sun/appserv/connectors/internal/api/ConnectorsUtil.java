@@ -16,18 +16,41 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.connectors.config.*;
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.connectors.config.ConnectorService;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.connectors.config.WorkSecurityMap;
 import org.glassfish.deployment.common.InstalledLibrariesResolver;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -41,16 +64,19 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
 
 /**
  * Util class for connector related classes
@@ -416,7 +442,7 @@ public class ConnectorsUtil {
             while (iter.hasNext()) {
                 EnvironmentProperty entry = (EnvironmentProperty) iter.next();
                 mergedProps.add(entry);
-                String propName = (String) entry.getName();
+                String propName = entry.getName();
                 runtimePropNames.add(propName);
             }
         }
@@ -426,7 +452,7 @@ public class ConnectorsUtil {
             Iterator iter = standardProps.iterator();
             while (iter.hasNext()) {
                 EnvironmentProperty entry = (EnvironmentProperty) iter.next();
-                String propName = (String) entry.getName();
+                String propName = entry.getName();
                 if (runtimePropNames.contains(propName))
                     continue;
                 mergedProps.add(entry);
@@ -573,6 +599,10 @@ public class ConnectorsUtil {
                 case AODD:
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
                     prefixPart2 = ConnectorConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
+                    break;
+                case CONTEXT_SERVICE_DEFINITION_DESCRIPTOR:
+                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
+                    prefixPart2 = ConnectorConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
                     break;
             }
         }

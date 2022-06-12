@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,41 +21,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>tests</artifactId>
+        <groupId>org.glassfish.main</groupId>
+        <artifactId>glassfish-parent</artifactId>
         <version>7.0.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.glassfish.main.tests.tck</groupId>
-    <artifactId>tck</artifactId>
+    <groupId>org.glassfish.main.microprofile</groupId>
+    <artifactId>microprofile-parent</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: Parent</name>
+    <name>GlassFish MicroProfile modules</name>
 
     <modules>
-        <module>embedded_ejb_smoke</module>
-        <module>tck-download</module>
-        <module>expression_language</module>
-        <module>rest</module>
-        <module>faces</module>
-        <module>authentication</module>
-        <module>authorization</module>
-        <module>cdi</module>
-        <module>microprofile</module>
-        <module>concurrency</module>
+        <module>config</module>
+        <module>connectors</module>
     </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>disabled</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

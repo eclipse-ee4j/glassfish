@@ -17,6 +17,7 @@
 package org.glassfish.concurrent.runtime;
 
 import static java.util.Collections.emptyList;
+import static java.util.logging.Level.SEVERE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -217,7 +217,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     @Override
     public ContextHandle setup(ContextHandle contextHandle) throws IllegalStateException {
         if (! (contextHandle instanceof InvocationContext)) {
-            logger.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
+            logger.log(SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return null;
         }
         InvocationContext handle = (InvocationContext) contextHandle;
@@ -290,23 +290,31 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
 
     @Override
     public void reset(ContextHandle contextHandle) {
-        if (! (contextHandle instanceof InvocationContext)) {
-            logger.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
+        if (!(contextHandle instanceof InvocationContext)) {
+            logger.log(SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return;
         }
-        InvocationContext handle = (InvocationContext) contextHandle;
-        if (handle.getContextClassLoader() != null) {
-            Utility.setContextClassLoader(handle.getContextClassLoader());
+
+        InvocationContext invocationContext = (InvocationContext) contextHandle;
+
+        // Restore the thread context for every provider
+        for (ThreadContextRestorer threadContextRestorer : invocationContext.getThreadContextRestorers()) {
+            threadContextRestorer.endContext();
         }
-        if (handle.getSecurityContext() != null) {
-            SecurityContext.setCurrent(handle.getSecurityContext());
+
+        if (invocationContext.getContextClassLoader() != null) {
+            Utility.setContextClassLoader(invocationContext.getContextClassLoader());
         }
-        if (handle.getInvocation() != null && !handle.isUseTransactionOfExecutionThread()) {
-            invocationManager.postInvoke(((InvocationContext)contextHandle).getInvocation());
+        if (invocationContext.getSecurityContext() != null) {
+            SecurityContext.setCurrent(invocationContext.getSecurityContext());
         }
-        if (transactionManager != null) {
-            // clean up after user if a transaction is still active
-            // This is not required by the Concurrency spec
+        if (invocationContext.getInvocation() != null && !invocationContext.isUseTransactionOfExecutionThread()) {
+            invocationManager.postInvoke(((InvocationContext) contextHandle).getInvocation());
+        }
+
+        if (transactionManager != null && contextClear.contains(CONTEXT_TYPE_WORKAREA)) {
+            // Clean up after user if a transaction is still active and indicated by the context clear attribute.
+            // This is now required by the Concurrency spec
             Transaction transaction = transactionManager.getCurrentTransaction();
             if (transaction != null) {
                 try {
@@ -317,11 +325,13 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
                         transactionManager.rollback();
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.toString());
+                    Logger.getLogger(this.getClass().getName()).log(SEVERE, ex.toString());
                 }
             }
-          transactionManager.clearThreadTx();
+
+            transactionManager.clearThreadTx();
         }
+
     }
 
     private void verifyProviders(Set<String> providers) {

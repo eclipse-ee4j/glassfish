@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="https://jakarta.ee/xml/ns/jakartaee" xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="10">
+<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="10">
   <xsd:annotation>
     <xsd:documentation>
 
@@ -75,7 +81,8 @@
 
 <!-- **************************************************** -->
 
-  <xsd:element name="application" type="jakartaee:applicationType">
+  <xsd:element name="application"
+               type="jakartaee:applicationType">
     <xsd:annotation>
       <xsd:documentation>
 
@@ -123,9 +130,14 @@
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="application-name" type="jakartaee:string" minOccurs="0"/>
+      <xsd:element name="application-name"
+                   type="jakartaee:string"
+                   minOccurs="0"/>
       <xsd:group ref="jakartaee:descriptionGroup"/>
-      <xsd:element name="initialize-in-order" type="jakartaee:generic-booleanType" minOccurs="0" maxOccurs="1">
+      <xsd:element name="initialize-in-order"
+                   type="jakartaee:generic-booleanType"
+                   minOccurs="0"
+                   maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -139,7 +151,9 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="module" type="jakartaee:moduleType" maxOccurs="unbounded">
+      <xsd:element name="module"
+                   type="jakartaee:moduleType"
+                   maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -151,8 +165,14 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="security-role" type="jakartaee:security-roleType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="library-directory" type="jakartaee:pathType" minOccurs="0" maxOccurs="1">
+      <xsd:element name="security-role"
+                   type="jakartaee:security-roleType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="library-directory"
+                   type="jakartaee:pathType"
+                   minOccurs="0"
+                   maxOccurs="1">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -168,24 +188,88 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="env-entry" type="jakartaee:env-entryType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="ejb-ref" type="jakartaee:ejb-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="ejb-local-ref" type="jakartaee:ejb-local-refType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="env-entry"
+                   type="jakartaee:env-entryType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="ejb-ref"
+                   type="jakartaee:ejb-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="ejb-local-ref"
+                   type="jakartaee:ejb-local-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
       <xsd:group ref="jakartaee:service-refGroup"/>
-      <xsd:element name="resource-ref" type="jakartaee:resource-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="resource-env-ref" type="jakartaee:resource-env-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="message-destination-ref" type="jakartaee:message-destination-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="persistence-context-ref" type="jakartaee:persistence-context-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="persistence-unit-ref" type="jakartaee:persistence-unit-refType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="message-destination" type="jakartaee:message-destinationType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="data-source" type="jakartaee:data-sourceType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="jms-connection-factory" type="jakartaee:jms-connection-factoryType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="jms-destination" type="jakartaee:jms-destinationType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="mail-session" type="jakartaee:mail-sessionType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="connection-factory" type="jakartaee:connection-factory-resourceType" minOccurs="0" maxOccurs="unbounded"/>
-      <xsd:element name="administered-object" type="jakartaee:administered-objectType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="resource-ref"
+                   type="jakartaee:resource-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="resource-env-ref"
+                   type="jakartaee:resource-env-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="message-destination-ref"
+                   type="jakartaee:message-destination-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="persistence-context-ref"
+                   type="jakartaee:persistence-context-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="persistence-unit-ref"
+                   type="jakartaee:persistence-unit-refType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="message-destination"
+                   type="jakartaee:message-destinationType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="data-source"
+                   type="jakartaee:data-sourceType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="jms-connection-factory"
+                   type="jakartaee:jms-connection-factoryType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="jms-destination"
+                   type="jakartaee:jms-destinationType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="mail-session"
+                   type="jakartaee:mail-sessionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="connection-factory"
+                   type="jakartaee:connection-factory-resourceType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="administered-object"
+                   type="jakartaee:administered-objectType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="context-service"
+                   type="jakartaee:context-serviceType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="managed-executor"
+                   type="jakartaee:managed-executorType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="managed-scheduled-executor"
+                   type="jakartaee:managed-scheduled-executorType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="managed-thread-factory"
+                   type="jakartaee:managed-thread-factoryType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="version" type="jakartaee:dewey-versionType" fixed="10" use="required">
+    <xsd:attribute name="version"
+                   type="jakartaee:dewey-versionType"
+                   fixed="10"
+                   use="required">
       <xsd:annotation>
         <xsd:documentation>
 
@@ -194,7 +278,8 @@
         </xsd:documentation>
       </xsd:annotation>
     </xsd:attribute>
-    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
   </xsd:complexType>
 
 
@@ -214,7 +299,8 @@
     </xsd:annotation>
     <xsd:sequence>
       <xsd:choice>
-        <xsd:element name="connector" type="jakartaee:pathType">
+        <xsd:element name="connector"
+                     type="jakartaee:pathType">
           <xsd:annotation>
             <xsd:documentation>
 
@@ -225,7 +311,8 @@
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="ejb" type="jakartaee:pathType">
+        <xsd:element name="ejb"
+                     type="jakartaee:pathType">
           <xsd:annotation>
             <xsd:documentation>
 
@@ -236,7 +323,8 @@
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="java" type="jakartaee:pathType">
+        <xsd:element name="java"
+                     type="jakartaee:pathType">
           <xsd:annotation>
             <xsd:documentation>
 
@@ -247,9 +335,12 @@
             </xsd:documentation>
           </xsd:annotation>
         </xsd:element>
-        <xsd:element name="web" type="jakartaee:webType"/>
+        <xsd:element name="web"
+                     type="jakartaee:webType"/>
       </xsd:choice>
-      <xsd:element name="alt-dd" type="jakartaee:pathType" minOccurs="0">
+      <xsd:element name="alt-dd"
+                   type="jakartaee:pathType"
+                   minOccurs="0">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -267,7 +358,8 @@
         </xsd:annotation>
       </xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
   </xsd:complexType>
 
 
@@ -283,7 +375,8 @@
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
-      <xsd:element name="web-uri" type="jakartaee:pathType">
+      <xsd:element name="web-uri"
+                   type="jakartaee:pathType">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -294,7 +387,8 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="context-root" type="jakartaee:string">
+      <xsd:element name="context-root"
+                   type="jakartaee:string">
         <xsd:annotation>
           <xsd:documentation>
 
@@ -305,7 +399,8 @@
         </xsd:annotation>
       </xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="id" type="xsd:ID"/>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
   </xsd:complexType>
 
 </xsd:schema>

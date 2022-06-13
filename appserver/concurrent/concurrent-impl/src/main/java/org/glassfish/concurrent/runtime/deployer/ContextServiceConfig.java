@@ -16,6 +16,19 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
+import static org.glassfish.concurrent.runtime.ConcurrentRuntime.CONTEXT_INFO_CLASSLOADER;
+import static org.glassfish.concurrent.runtime.ConcurrentRuntime.CONTEXT_INFO_JNDI;
+import static org.glassfish.concurrent.runtime.ConcurrentRuntime.CONTEXT_INFO_SECURITY;
+import static org.glassfish.concurrent.runtime.ConcurrentRuntime.CONTEXT_INFO_WORKAREA;
+import static org.glassfish.concurrent.runtime.ContextSetupProviderImpl.CONTEXT_TYPE_CLASSLOADING;
+import static org.glassfish.concurrent.runtime.ContextSetupProviderImpl.CONTEXT_TYPE_NAMING;
+import static org.glassfish.concurrent.runtime.ContextSetupProviderImpl.CONTEXT_TYPE_SECURITY;
+import static org.glassfish.concurrent.runtime.ContextSetupProviderImpl.CONTEXT_TYPE_WORKAREA;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import org.glassfish.concurrent.config.ContextService;
 
 /**
@@ -25,16 +38,74 @@ public class ContextServiceConfig extends BaseConfig {
 
     private static final long serialVersionUID = 1L;
 
-    public ContextServiceConfig(ContextService config) {
-        super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
+    private final Set<String> propagatedContexts;
+    private final Set<String> clearedContexts;
+    private final Set<String> uchangedContexts;
+
+    public ContextServiceConfig(String jndiName) {
+        super(jndiName, null, "true");
+        this.propagatedContexts = parseContextInfo(this.contextInfo, this.isContextInfoEnabledBoolean());
+        this.clearedContexts = new HashSet<>();
+        this.uchangedContexts = new HashSet<>();
     }
 
-    public ContextServiceConfig(String jndiName, String contextInfo, String contextInfoEnabled) {
+    public ContextServiceConfig(ContextService config) {
+        super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
+        this.propagatedContexts = parseContextInfo(this.contextInfo, this.isContextInfoEnabledBoolean());
+        this.clearedContexts = new HashSet<>();
+        this.uchangedContexts = new HashSet<>();
+    }
+
+    public ContextServiceConfig(String jndiName, String contextInfo, String contextInfoEnabled, Set<String> propagatedContexts, Set<String> clearedContexts, Set<String> uchangedContexts) {
         super(jndiName, contextInfo, contextInfoEnabled);
+        this.propagatedContexts = propagatedContexts;
+        this.clearedContexts = clearedContexts;
+        this.uchangedContexts = uchangedContexts;
     }
 
     @Override
     public TYPE getType() {
         return TYPE.CONTEXT_SERVICE;
+    }
+
+    public Set<String> getPropagatedContexts() {
+        return propagatedContexts;
+    }
+
+    public Set<String> getClearedContexts() {
+        return clearedContexts;
+    }
+
+    public Set<String> getUchangedContexts() {
+        return uchangedContexts;
+    }
+
+    public static Set<String> parseContextInfo(String contextInfo, boolean isContextInfoEnabled) {
+        Set<String> contextTypeArray = new HashSet<>();
+        if (contextInfo == null) {
+            // By default, if no context info is passed, we propagate all context types
+            contextTypeArray.add(CONTEXT_TYPE_CLASSLOADING);
+            contextTypeArray.add(CONTEXT_TYPE_NAMING);
+            contextTypeArray.add(CONTEXT_TYPE_SECURITY);
+            contextTypeArray.add(CONTEXT_TYPE_WORKAREA);
+        } else if (isContextInfoEnabled) {
+            StringTokenizer st = new StringTokenizer(contextInfo, ",", false);
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken().trim();
+                if (CONTEXT_INFO_CLASSLOADER.equalsIgnoreCase(token)) {
+                    contextTypeArray.add(CONTEXT_TYPE_CLASSLOADING);
+                } else if (CONTEXT_INFO_JNDI.equalsIgnoreCase(token)) {
+                    contextTypeArray.add(CONTEXT_TYPE_NAMING);
+                } else if (CONTEXT_INFO_SECURITY.equalsIgnoreCase(token)) {
+                    contextTypeArray.add(CONTEXT_TYPE_SECURITY);
+                } else if (CONTEXT_INFO_WORKAREA.equalsIgnoreCase(token)) {
+                    contextTypeArray.add(CONTEXT_TYPE_WORKAREA);
+                } else {
+                    contextTypeArray.add(token); // custom context
+                }
+            }
+        }
+
+        return contextTypeArray;
     }
 }

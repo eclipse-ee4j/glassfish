@@ -13,12 +13,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.concurrent.runtime.deployer;
+package org.glassfish.concurrent.runtime.deployment.annotation.handlers;
 
-import java.util.logging.Level;
+import static java.util.logging.Level.INFO;
+
 import java.util.logging.Logger;
 
-import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -33,7 +33,7 @@ import jakarta.enterprise.concurrent.ContextServiceDefinition;
 /**
  * Handler for list of @ContextServiceDefinition annotations.
  *
- * @author Petr Aubrecht <aubrecht@asoftware.cz>
+ * @author Petr Aubrecht &lt;aubrecht@asoftware.cz&gt;
  */
 @Service
 @AnnotationHandlerFor(ContextServiceDefinition.List.class)
@@ -41,11 +41,8 @@ public class ContextServiceDefinitionListHandler extends AbstractResourceHandler
     private static final Logger logger = Logger.getLogger(ContextServiceDefinitionListHandler.class.getName());
 
     @Override
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo annotationInfo,
-            ResourceContainerContext[] resourceContainerContexts)
-            throws AnnotationProcessorException {
-        logger.log(Level.INFO, "Entering ContextServiceDefinitionListHandler.processAnnotation");
-        AnnotatedElementHandler aeHandler = annotationInfo.getProcessingContext().getHandler();
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo annotationInfo, ResourceContainerContext[] resourceContainerContexts) throws AnnotationProcessorException {
+        logger.log(INFO, "Entering ContextServiceDefinitionListHandler.processAnnotation");
         ContextServiceDefinition.List contextServiceListDefinition = (ContextServiceDefinition.List) annotationInfo.getAnnotation();
 
         ContextServiceDefinition[] definitions = contextServiceListDefinition.value();

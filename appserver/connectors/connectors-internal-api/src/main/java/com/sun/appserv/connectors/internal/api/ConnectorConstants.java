@@ -179,6 +179,9 @@ public interface ConnectorConstants extends ResourceConstants {
     public static String MONITORING_CONNECTION_FACTORIES = "connection-factories";
     public static String MONITORING_SEPARATOR = "/";
 
+    /**
+     * Reserved sub-context where concurrent objects are bound with generated names.
+     */
     public static String CONCURRENT_JNDINAME_PREFIX = "concurrent/";
 
     /**

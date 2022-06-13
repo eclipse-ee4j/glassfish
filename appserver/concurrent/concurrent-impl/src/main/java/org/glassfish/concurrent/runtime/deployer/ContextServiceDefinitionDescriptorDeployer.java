@@ -1,37 +1,59 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License v. 2.0, which is available at
- * http://www.eclipse.org/legal/epl-2.0.
+ * Copyright (c) [2022] Payara Foundation and/or its affiliates. All rights reserved.
  *
- * This Source Code may also be made available under the following Secondary
- * Licenses when the conditions for such availability set forth in the
- * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
- * version 2 with the GNU Classpath Exception, which is available at
- * https://www.gnu.org/software/classpath/license.html.
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common Development
+ * and Distribution License("CDDL") (collectively, the "License").  You
+ * may not use this file except in compliance with the License.  You can
+ * obtain a copy of the License at
+ * https://github.com/payara/Payara/blob/master/LICENSE.txt
+ * See the License for the specific
+ * language governing permissions and limitations under the License.
  *
- * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ * When distributing the software, include this License Header Notice in each
+ * file and include the License file at glassfish/legal/LICENSE.txt.
+ *
+ * GPL Classpath Exception:
+ * The Payara Foundation designates this particular file as subject to the "Classpath"
+ * exception as provided by the Payara Foundation in the GPL Version 2 section of the License
+ * file that accompanied this code.
+ *
+ * Modifications:
+ * If applicable, add the following below the License Header, with the fields
+ * enclosed by brackets [] replaced by your own identifying information:
+ * "Portions Copyright [year] [name of copyright owner]"
+ *
+ * Contributor(s):
+ * If you wish your version of this file to be governed by only the CDDL or
+ * only the GPL Version 2, indicate your decision by adding "[Contributor]
+ * elects to include this software in this distribution under the [CDDL or GPL
+ * Version 2] license."  If you don't indicate a single choice of license, a
+ * recipient has the option to distribute your version of this file under
+ * either the CDDL, the GPL Version 2 or to extend the choice of license to
+ * its licensees as provided above.  However, if you add GPL Version 2 code
+ * and therefore, elected the GPL Version 2 license, then the option applies
+ * only if the new code is made subject to such option by the copyright
+ * holder.
  */
 package org.glassfish.concurrent.runtime.deployer;
 
 import java.util.Collection;
-import java.util.logging.Level;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
+import java.util.stream.Collectors;
 
 import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.logging.LogHelper;
-import org.glassfish.concurrent.LogFacade;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
+import org.glassfish.concurrent.runtime.ContextSetupProviderImpl;
+import org.glassfish.enterprise.concurrent.ContextServiceImpl;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -40,6 +62,7 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 
+import jakarta.enterprise.concurrent.ContextServiceDefinition;
 import jakarta.inject.Inject;
 
 /**
@@ -63,42 +86,34 @@ public class ContextServiceDefinitionDescriptorDeployer implements ResourceDeplo
     ConcurrentRuntime concurrentRuntime;
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        //not implemented
+    public void deployResource(Object resource) throws Exception {
+        String applicationName = invocationManager.getCurrentInvocation().getAppName();
+        String moduleName = invocationManager.getCurrentInvocation().getModuleName();
+        deployResource(resource, applicationName, moduleName);
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
-        ContextServiceDefinitionDescriptor concurrentDefinitionDescriptor = (ContextServiceDefinitionDescriptor) resource;
-        ContextServiceConfig contextServiceConfig
-                = new ContextServiceConfig(concurrentDefinitionDescriptor.getName(), null, "true");
-        String applicationName = invocationManager.getCurrentInvocation().getAppName();
-        String customNameOfResource = ConnectorsUtil.deriveResourceName(concurrentDefinitionDescriptor.getResourceId(), concurrentDefinitionDescriptor.getName(), concurrentDefinitionDescriptor.getResourceType());
-        ResourceInfo resourceInfo = new ResourceInfo(customNameOfResource, applicationName, null);
-        javax.naming.Reference ref = new javax.naming.Reference(
-                jakarta.enterprise.concurrent.ContextServiceDefinition.class.getName(),
-                "org.glassfish.concurrent.runtime.deployer.ConcurrentObjectFactory",
-                null);
-        RefAddr addr = new SerializableObjectRefAddr(ContextServiceConfig.class.getName(), contextServiceConfig);
-        ref.add(addr);
-        RefAddr resAddr = new SerializableObjectRefAddr(ResourceInfo.class.getName(), resourceInfo);
-        ref.add(resAddr);
+    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+        ContextServiceDefinitionDescriptor descriptor = (ContextServiceDefinitionDescriptor) resource;
+        validateContextServiceDescriptor(descriptor);
+        String propageContexts = renameBuiltinContexts(descriptor.getPropagated()).stream().collect(Collectors.joining(", "));
+        ContextServiceConfig contextServiceConfig = new ContextServiceConfig(descriptor.getName(), propageContexts, "true",
+                renameBuiltinContexts(descriptor.getPropagated()), renameBuiltinContexts(descriptor.getCleared()),
+                renameBuiltinContexts(descriptor.getUnchanged()));
+        String customNameOfResource = ConnectorsUtil.deriveResourceName(descriptor.getResourceId(), descriptor.getName(),
+                descriptor.getResourceType());
+        ResourceInfo resourceInfo = new ResourceInfo(customNameOfResource, applicationName, moduleName);
 
-        try {
-            // Publish the object ref
-            namingService.publishObject(resourceInfo, ref, true);
-        } catch (NamingException ex) {
-            LogHelper.log(logger, Level.SEVERE, LogFacade.UNABLE_TO_BIND_OBJECT, ex,
-                    "ContextService", contextServiceConfig.getJndiName());
-        }
+        ContextServiceImpl contextService = concurrentRuntime.createContextService(resourceInfo, contextServiceConfig);
+        namingService.publishObject(resourceInfo, customNameOfResource, contextService, true);
     }
 
     @Override
     public void undeployResource(Object resource) throws Exception {
+        String applicationName = invocationManager.getCurrentInvocation().getAppName();
+        String moduleName = invocationManager.getCurrentInvocation().getModuleName();
         ContextServiceDefinitionDescriptor concurrentDefinitionDescriptor = (ContextServiceDefinitionDescriptor) resource;
-        throw new UnsupportedOperationException("undeployResource not supported yet.");
-//        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(concurrentDefinitionDescriptor);
-//        undeployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+        undeployResource(resource, applicationName, moduleName);
     }
 
     @Override
@@ -153,7 +168,49 @@ public class ContextServiceDefinitionDescriptorDeployer implements ResourceDeplo
     }
 
     @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources) throws ResourceConflictException {
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
+            throws ResourceConflictException {
 
+    }
+
+    private void validateContextServiceDescriptor(ContextServiceDefinitionDescriptor descriptor) {
+
+        if (descriptor.getCleared() == null) {
+            HashSet<String> defaultSetCleared = new HashSet<>();
+            defaultSetCleared.add(ContextServiceDefinition.TRANSACTION);
+            descriptor.setCleared(defaultSetCleared);
+        }
+
+        if (descriptor.getPropagated() == null) {
+            HashSet<String> defaultSetPropagated = new HashSet<>();
+            defaultSetPropagated.add(ContextServiceDefinition.ALL_REMAINING);
+            descriptor.setPropagated(defaultSetPropagated);
+        }
+
+        if (descriptor.getUnchanged() == null) {
+            descriptor.setUnchanged(new HashSet<>());
+        }
+    }
+
+    private Set<String> renameBuiltinContexts(Set<String> definitions) {
+        Set<String> contexts = new HashSet<>();
+        Set<String> unusedDefinitions = new HashSet<>(definitions);
+        if (unusedDefinitions.contains(ContextServiceDefinition.TRANSACTION)) {
+            contexts.add(ContextSetupProviderImpl.CONTEXT_TYPE_WORKAREA);
+            unusedDefinitions.remove(ContextServiceDefinition.TRANSACTION);
+        }
+        if (unusedDefinitions.contains(ContextServiceDefinition.SECURITY)) {
+            contexts.add(ContextSetupProviderImpl.CONTEXT_TYPE_SECURITY);
+            unusedDefinitions.remove(ContextServiceDefinition.SECURITY);
+        }
+        if (unusedDefinitions.contains(ContextServiceDefinition.APPLICATION)) {
+            contexts.add(ContextSetupProviderImpl.CONTEXT_TYPE_CLASSLOADING);
+            contexts.add(ContextSetupProviderImpl.CONTEXT_TYPE_NAMING);
+            unusedDefinitions.remove(ContextServiceDefinition.APPLICATION);
+        }
+
+        // add all the remaining, custom definitions
+        contexts.addAll(unusedDefinitions);
+        return contexts;
     }
 }

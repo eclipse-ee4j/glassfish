@@ -24,6 +24,8 @@ import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
  */
 public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
 
+    private static final long serialVersionUID = 1L;
+
     private int hungAfterSeconds;
     private boolean hungLoggerPrintOnce;
     private long hungLoggerInitialDelaySeconds;
@@ -33,6 +35,7 @@ public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
     private int corePoolSize;
     private long keepAliveSeconds;
     private long threadLifeTimeSeconds;
+    private String context;
 
     public ManagedScheduledExecutorServiceConfig(ManagedScheduledExecutorService config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
@@ -45,6 +48,7 @@ public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
         keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60);
         threadLifeTimeSeconds = parseLong(config.getThreadLifetimeSeconds(), 0L);
+        context = config.getContext();
     }
 
     public int getHungAfterSeconds() {
@@ -81,6 +85,10 @@ public class ManagedScheduledExecutorServiceConfig extends BaseConfig {
 
     public long getThreadLifeTimeSeconds() {
         return threadLifeTimeSeconds;
+    }
+
+    public String getContext() {
+        return context;
     }
 
     @Override

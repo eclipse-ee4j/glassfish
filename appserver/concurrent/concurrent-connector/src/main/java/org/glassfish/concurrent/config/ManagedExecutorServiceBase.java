@@ -184,4 +184,19 @@ public interface ManagedExecutorServiceBase extends ConfigBeanProxy,
      * @param value allowed object is {@link String }
      */
     void setThreadLifetimeSeconds(String value) throws PropertyVetoException;
+    
+    /**
+     * Gets the value of the context property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "", dataType = String.class)
+    String getContext();
+    
+    /**
+     * Sets the value of the context property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setContext(String value) throws PropertyVetoException;
 }

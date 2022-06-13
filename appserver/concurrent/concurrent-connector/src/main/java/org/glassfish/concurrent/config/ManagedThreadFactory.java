@@ -16,23 +16,28 @@
 
 package org.glassfish.concurrent.config;
 
+import java.beans.PropertyVetoException;
+
+import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+
 import com.sun.enterprise.config.modularity.ConfigBeanInstaller;
 import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
-import org.glassfish.admin.cli.resources.ResourceConfigCreator;
-import org.glassfish.api.admin.RestRedirect;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Min;
-import java.beans.PropertyVetoException;
 
 /**
  * Concurrency managed thread factory resource definition
@@ -69,8 +74,24 @@ public interface ManagedThreadFactory extends ConfigBeanProxy, Resource,
      */
     void setThreadPriority(String value) throws PropertyVetoException;
 
+    @Override
     @DuckTyped
     String getIdentity();
+
+    /**
+     * Gets the value of the context property.
+     *
+     * @return possible object is {@link String }
+     */
+    @Attribute(defaultValue = "", dataType = String.class)
+    String getContext();
+
+    /**
+     * Sets the value of the context property.
+     *
+     * @param value allowed object is {@link String }
+     */
+    void setContext(String value) throws PropertyVetoException;
 
     class Duck {
         public static String getIdentity(ManagedThreadFactory resource){

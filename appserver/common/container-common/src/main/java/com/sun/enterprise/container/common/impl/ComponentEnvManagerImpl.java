@@ -23,7 +23,16 @@ import static com.sun.enterprise.deployment.util.DOLUtils.getModuleName;
 import static com.sun.enterprise.deployment.util.DOLUtils.getTreatComponentAsModule;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
+import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
+import static org.glassfish.deployment.common.JavaEEResourceType.CONTEXT_SERVICE_DEFINITION_DESCRIPTOR;
 import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR;
+import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -323,20 +332,26 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private void addAllDescriptorBindings(JndiNameEnvironment JndiEnvironment, ScopeType scope, Collection<JNDIBinding> jndiBindings) {
         Set<ResourceDescriptor> allDescriptors = new HashSet<ResourceDescriptor>();
-        Set<ResourceDescriptor> dataSourceDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.DSD);
-        Set<ResourceDescriptor> messagingConnectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.JMSCFDD);
-        Set<ResourceDescriptor> mailSessionDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.MSD);
-        Set<ResourceDescriptor> messagingDestinationDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.JMSDD);
+        Set<ResourceDescriptor> dataSourceDefinitions = JndiEnvironment.getResourceDescriptors(DSD);
+        Set<ResourceDescriptor> messagingConnectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(JMSCFDD);
+        Set<ResourceDescriptor> mailSessionDefinitions = JndiEnvironment.getResourceDescriptors(MSD);
+        Set<ResourceDescriptor> messagingDestinationDefinitions = JndiEnvironment.getResourceDescriptors(JMSDD);
+
+        Set<ResourceDescriptor> managedExecutorDefinitions = JndiEnvironment.getResourceDescriptors(MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR);
+        Set<ResourceDescriptor> managedScheduledDefinitions = JndiEnvironment.getResourceDescriptors(MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR);
+        Set<ResourceDescriptor> managedThreadfactoryDefintions = JndiEnvironment.getResourceDescriptors(MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR);
+        Set<ResourceDescriptor> contextServiceDefinitions = JndiEnvironment.getResourceDescriptors(CONTEXT_SERVICE_DEFINITION_DESCRIPTOR);
+
 
         if (!(JndiEnvironment instanceof ApplicationClientDescriptor)) {
-            Set<ResourceDescriptor> connectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.CFD);
+            Set<ResourceDescriptor> connectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(CFD);
             allDescriptors.addAll(connectionFactoryDefinitions);
         } else {
             _logger.fine("Do not support connection-factory in client module.");
         }
 
         if (!(JndiEnvironment instanceof ApplicationClientDescriptor)) {
-            Set<ResourceDescriptor> administeredObjectDefinitions = JndiEnvironment.getResourceDescriptors(JavaEEResourceType.AODD);
+            Set<ResourceDescriptor> administeredObjectDefinitions = JndiEnvironment.getResourceDescriptors(AODD);
             allDescriptors.addAll(administeredObjectDefinitions);
         } else {
             _logger.fine("Do not support administered-object in client module.");
@@ -346,6 +361,12 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         allDescriptors.addAll(messagingConnectionFactoryDefinitions);
         allDescriptors.addAll(mailSessionDefinitions);
         allDescriptors.addAll(messagingDestinationDefinitions);
+
+        allDescriptors.addAll(managedExecutorDefinitions);
+        allDescriptors.addAll(managedScheduledDefinitions);
+        allDescriptors.addAll(managedThreadfactoryDefintions);
+        allDescriptors.addAll(contextServiceDefinitions);
+
 
         for (ResourceDescriptor descriptor : allDescriptors) {
             if (!dependencyAppliesToScope(descriptor, scope)) {

@@ -24,6 +24,9 @@ import static org.glassfish.deployment.common.JavaEEResourceType.CONTEXT_SERVICE
 import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
 import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDD;
 import static org.glassfish.deployment.common.JavaEEResourceType.JMSDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR;
+import static org.glassfish.deployment.common.JavaEEResourceType.MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR;
 import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
 
 import java.io.Serializable;
@@ -61,6 +64,9 @@ public class ResourceDescriptorRegistry implements Serializable {
         invalidResourceTypeScopes.put(CFD, new HashSet<>(asList(ApplicationClientDescriptor.class)));
         invalidResourceTypeScopes.put(AODD, new HashSet<>(asList(ApplicationClientDescriptor.class)));
         invalidResourceTypeScopes.put(CONTEXT_SERVICE_DEFINITION_DESCRIPTOR, new HashSet<>());
+        invalidResourceTypeScopes.put(MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR, new HashSet<>());
+        invalidResourceTypeScopes.put(MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR, new HashSet<>());
+        invalidResourceTypeScopes.put(MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR, new HashSet<>());
     }
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ResourceDescriptorRegistry.class);
@@ -82,6 +88,9 @@ public class ResourceDescriptorRegistry implements Serializable {
         allResourceDescriptors.addAll(getResourceDescriptors(JMSCFDD));
         allResourceDescriptors.addAll(getResourceDescriptors(JMSDD));
         allResourceDescriptors.addAll(getResourceDescriptors(CONTEXT_SERVICE_DEFINITION_DESCRIPTOR));
+        allResourceDescriptors.addAll(getResourceDescriptors(MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR));
+        allResourceDescriptors.addAll(getResourceDescriptors(MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR));
+        allResourceDescriptors.addAll(getResourceDescriptors(MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR));
 
         return allResourceDescriptors;
     }

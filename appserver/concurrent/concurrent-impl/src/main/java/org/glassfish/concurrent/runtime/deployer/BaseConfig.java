@@ -21,6 +21,8 @@ import java.io.Serializable;
 
 public abstract class BaseConfig implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public int parseInt(String strValue, int defaultValue) {
         if (strValue != null) {
             try {
@@ -72,6 +74,10 @@ public abstract class BaseConfig implements Serializable {
 
     public String getContextInfoEnabled() {
         return contextInfoEnabled;
+    }
+
+    public boolean isContextInfoEnabledBoolean() {
+        return Boolean.valueOf(contextInfoEnabled);
     }
 
     abstract TYPE getType();

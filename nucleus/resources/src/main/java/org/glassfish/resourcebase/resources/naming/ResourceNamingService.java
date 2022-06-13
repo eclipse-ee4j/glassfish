@@ -16,28 +16,27 @@
 
 package org.glassfish.resourcebase.resources.naming;
 
-import com.sun.logging.LogDomains;
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.naming.ComponentNamingUtil;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.api.naming.JNDIBinding;
-import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
-import org.glassfish.logging.annotation.LoggerInfo;
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.naming.ComponentNamingUtil;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Inject;
 
 
 /**
@@ -80,7 +79,7 @@ public class ResourceNamingService {
         String moduleName = resourceInfo.getModuleName();
         moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleName(moduleName);
 
-        if(!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null ){
+        if (resourceInfo.getName().startsWith(JAVA_MODULE_SCOPE_PREFIX) && applicationName != null && moduleName != null) {
 
             Object alreadyBoundObject = null;
             if(rebind){

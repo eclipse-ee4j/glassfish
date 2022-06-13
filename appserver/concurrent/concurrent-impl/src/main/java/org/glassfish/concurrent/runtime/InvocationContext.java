@@ -16,30 +16,42 @@
 
 package org.glassfish.concurrent.runtime;
 
-import com.sun.enterprise.security.SecurityContext;
+import java.io.IOException;
+import java.util.List;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 
-import javax.security.auth.Subject;
-import java.io.IOException;
+import com.sun.enterprise.security.SecurityContext;
+
+import jakarta.enterprise.concurrent.spi.ThreadContextRestorer;
+import jakarta.enterprise.concurrent.spi.ThreadContextSnapshot;
 
 public class InvocationContext implements ContextHandle {
+
+    static final long serialVersionUID = 5642415011655486579L;
 
     private transient ComponentInvocation invocation;
     private transient ClassLoader contextClassLoader;
     private transient SecurityContext securityContext;
     private boolean useTransactionOfExecutionThread;
 
-    static final long serialVersionUID = 5642415011655486579L;
+    private List<ThreadContextSnapshot> threadContextSnapshots;
+    private List<ThreadContextRestorer> threadContextRestorers;
 
     public InvocationContext(ComponentInvocation invocation, ClassLoader contextClassLoader, SecurityContext securityContext,
-                             boolean useTransactionOfExecutionThread) {
+            boolean useTransactionOfExecutionThread, List<ThreadContextSnapshot> threadContextSnapshots,
+            List<ThreadContextRestorer> threadContextRestorers) {
         this.invocation = invocation;
         this.contextClassLoader = contextClassLoader;
         this.securityContext = securityContext;
         this.useTransactionOfExecutionThread = useTransactionOfExecutionThread;
+        this.threadContextSnapshots = threadContextSnapshots;
+        this.threadContextRestorers = threadContextRestorers;
     }
 
     public ComponentInvocation getInvocation() {
@@ -56,6 +68,14 @@ public class InvocationContext implements ContextHandle {
 
     public boolean isUseTransactionOfExecutionThread() {
         return useTransactionOfExecutionThread;
+    }
+
+    public List<ThreadContextSnapshot> getThreadContextSnapshots() {
+        return threadContextSnapshots;
+    }
+
+    public List<ThreadContextRestorer> getThreadContextRestorers() {
+        return threadContextRestorers;
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -91,8 +111,11 @@ public class InvocationContext implements ContextHandle {
         out.writeObject(principalName);
         out.writeBoolean(defaultSecurityContext);
         out.writeObject(subject);
+        out.writeObject(threadContextSnapshots);
+        out.writeObject(threadContextRestorers);
     }
 
+    @SuppressWarnings("unchecked")
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         useTransactionOfExecutionThread = in.readBoolean();
         // reconstruct invocation
@@ -120,6 +143,8 @@ public class InvocationContext implements ContextHandle {
                 contextClassLoader = applicationInfo.getAppClassLoader();
             }
         }
+        threadContextSnapshots = (List<ThreadContextSnapshot>) in.readObject();
+        threadContextRestorers = (List<ThreadContextRestorer>) in.readObject();
     }
 
     private ComponentInvocation createComponentInvocation(String componentId, String appName, String moduleName) {

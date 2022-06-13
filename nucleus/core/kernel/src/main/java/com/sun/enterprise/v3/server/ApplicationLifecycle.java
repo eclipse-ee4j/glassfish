@@ -1063,6 +1063,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             try {
                 container = engineInfo.getContainer();
             } catch (Exception e) {
+                if (e instanceof MultiException) {
+                    for (Throwable se : ((MultiException) e).getErrors()) {
+                        logger.log(SEVERE, se.getMessage(), se);
+                    }
+                }
                 logger.log(SEVERE, KernelLoggerInfo.cantStartContainer, new Object[] { engineInfo.getSniffer().getModuleType(), e });
                 return false;
             }

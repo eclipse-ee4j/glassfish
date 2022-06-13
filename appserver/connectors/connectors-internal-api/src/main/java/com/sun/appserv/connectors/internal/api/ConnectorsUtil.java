@@ -600,10 +600,17 @@ public class ConnectorsUtil {
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
                     prefixPart2 = ConnectorConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
                     break;
+                case MANAGED_EXECUTOR_DEFINITION_DESCRIPTOR:
+                case MANAGED_SCHEDULED_EXECUTOR_DEFINITION_DESCRIPTOR:
+                case MANAGED_THREADFACTORY_DEFINITION_DESCRIPTOR:
+                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
+                    prefixPart2 = "";
+                    break;
                 case CONTEXT_SERVICE_DEFINITION_DESCRIPTOR:
                     prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
                     prefixPart2 = ConnectorConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
                     break;
+
             }
         }
 

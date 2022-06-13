@@ -16,21 +16,69 @@
 
 package org.glassfish.web.deployment.node;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.node.*;
+import static com.sun.enterprise.deployment.xml.TagNames.CONTEXT_SERVICE;
+import static com.sun.enterprise.deployment.xml.TagNames.MANAGED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.TagNames.MANAGED_SCHEDULED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.TagNames.MANAGED_THREAD_FACTORY;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
+import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
+import org.glassfish.web.deployment.descriptor.MimeMappingDescriptor;
+import org.glassfish.web.deployment.descriptor.SecurityConstraintImpl;
+import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
+import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
+import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;
+import org.glassfish.web.deployment.descriptor.TagLibConfigurationDescriptor;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
+
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
+import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.node.AbstractBundleNode;
+import com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode;
+import com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.ContextServiceDefinitionNode;
+import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
+import com.sun.enterprise.deployment.node.EjbLocalReferenceNode;
+import com.sun.enterprise.deployment.node.EjbReferenceNode;
+import com.sun.enterprise.deployment.node.EntityManagerFactoryReferenceNode;
+import com.sun.enterprise.deployment.node.EntityManagerReferenceNode;
+import com.sun.enterprise.deployment.node.EnvEntryNode;
+import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
+import com.sun.enterprise.deployment.node.JndiEnvRefNode;
+import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
+import com.sun.enterprise.deployment.node.MailSessionNode;
+import com.sun.enterprise.deployment.node.ManagedExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedScheduledExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedThreadFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.MessageDestinationNode;
+import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
+import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
+import com.sun.enterprise.deployment.node.ResourceRefNode;
+import com.sun.enterprise.deployment.node.SecurityRoleNode;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.SessionConfig;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.glassfish.web.deployment.descriptor.*;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
-
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This node is responsible for handling the web-common xml tree
@@ -96,6 +144,11 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.ADMINISTERED_OBJECT), AdministeredObjectDefinitionNode.class, "addResourceDescriptor");
+
+        registerElementHandler(new XMLElement(MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
     }
 
     /**
@@ -104,6 +157,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      *
      * @param newDescriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object  newDescriptor) {
         Logger logger = DOLUtils.getDefaultLogger();
         if (newDescriptor instanceof EjbReference) {
@@ -162,6 +216,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (WebTagNames.WELCOME_FILE.equals(element.getQName())) {
             descriptor.addWelcomeFile(value);
@@ -181,7 +236,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
             servletMappings = new HashMap<String, Vector<String>>();
         }
         if (servletMappings.containsKey(servletName)) {
-            ((Vector<String>) servletMappings.get(servletName)).add(urlPattern);
+            servletMappings.get(servletName).add(urlPattern);
         } else {
             Vector<String> mappings = new Vector<String>();
             mappings.add(urlPattern);
@@ -195,6 +250,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      * @param element the xml tag identification
      * @return true if this node is done processing the XML sub tree
      */
+    @Override
     public boolean endElement(XMLElement element) {
         if (WebTagNames.DISTRIBUTABLE.equals(element.getQName())) {
             descriptor.setDistributable(true);
@@ -226,6 +282,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      * @param webBundleDesc descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent,
         T webBundleDesc) {
         Node jarNode = super.writeDescriptor(parent, webBundleDesc);
@@ -429,6 +486,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
     /**
      * @return the default spec version level this node complies to
      */
+    @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }

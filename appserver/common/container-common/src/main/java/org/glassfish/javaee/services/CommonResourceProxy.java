@@ -16,9 +16,12 @@
 
 package org.glassfish.javaee.services;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import java.io.Serializable;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.NamingObjectProxy;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
@@ -26,10 +29,10 @@ import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.deployment.ResourceDescriptor;
+
 import jakarta.inject.Inject;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,11 +45,14 @@ import java.io.Serializable;
 @PerLookup
 public class CommonResourceProxy implements NamingObjectProxy.InitializationNamingObjectProxy, Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Inject
     protected transient ServiceLocator serviceLocator;
     protected ResourceDescriptor desc;
     protected String actualResourceName;
 
+    @Override
     public synchronized Object create(Context ic) throws NamingException {
         if (actualResourceName == null) {
 
@@ -68,7 +74,13 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
                 throw ne;
             }
         }
-        return ic.lookup(actualResourceName);
+
+        Object resource = ic.lookup(actualResourceName);
+        if (resource instanceof JndiLookupNotifier) {
+            ((JndiLookupNotifier) resource).notifyJndiLookup();
+        }
+
+        return resource;
     }
 
     protected ResourceDeployer getResourceDeployer(Object resource) {

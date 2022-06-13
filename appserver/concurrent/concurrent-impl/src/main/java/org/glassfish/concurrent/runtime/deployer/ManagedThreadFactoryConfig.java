@@ -23,17 +23,25 @@ import org.glassfish.concurrent.config.ManagedThreadFactory;
  */
 public class ManagedThreadFactoryConfig extends BaseConfig {
 
+    private static final long serialVersionUID = 1L;
     private int threadPriority;
+    private String context;
 
     public ManagedThreadFactoryConfig(ManagedThreadFactory config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
+        context = config.getContext();
     }
 
     public int getThreadPriority() {
         return threadPriority;
     }
 
+    public String getContext() {
+        return context;
+    }
+
+    @Override
     public TYPE getType() {
         return TYPE.MANAGED_THREAD_FACTORY;
     }

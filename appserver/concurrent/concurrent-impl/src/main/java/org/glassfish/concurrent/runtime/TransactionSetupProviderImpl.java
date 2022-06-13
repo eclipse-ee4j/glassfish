@@ -16,31 +16,46 @@
 
 package org.glassfish.concurrent.runtime;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.enterprise.concurrent.spi.TransactionHandle;
 import org.glassfish.enterprise.concurrent.spi.TransactionSetupProvider;
+
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 import jakarta.enterprise.concurrent.ManagedTask;
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TransactionSetupProviderImpl implements TransactionSetupProvider {
 
-    private transient JavaEETransactionManager transactionManager;
-
     static final long serialVersionUID = -856400645253308289L;
 
-    public TransactionSetupProviderImpl(JavaEETransactionManager transactionManager) {
+    private transient JavaEETransactionManager transactionManager;
+
+    private final boolean keepTransactionUnchanged;
+    private final boolean clearTransaction;
+
+    public TransactionSetupProviderImpl(JavaEETransactionManager transactionManager, boolean keepTransactionUnchanged, boolean clearTransaction) {
         this.transactionManager = transactionManager;
+        this.keepTransactionUnchanged = keepTransactionUnchanged;
+        this.clearTransaction = clearTransaction;
     }
 
     @Override
     public TransactionHandle beforeProxyMethod(String transactionExecutionProperty) {
         // suspend current transaction if not using transaction of execution thread
-        if (! ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD.equals(transactionExecutionProperty)) {
+        boolean doSuspend = !ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD.equals(transactionExecutionProperty);
+        if (keepTransactionUnchanged) {
+            doSuspend = false;
+        }
+        if (clearTransaction) {
+            doSuspend = true;
+        }
+        if (doSuspend) {
             try {
                 Transaction suspendedTxn = transactionManager.suspend();
                 return new TransactionHandleImpl(suspendedTxn);
@@ -66,11 +81,12 @@ public class TransactionSetupProviderImpl implements TransactionSetupProvider {
         }
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) {
-        // no field to be written
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 
-    private void readObject(java.io.ObjectInputStream in) {
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
         // re-initialize these fields
         ConcurrentRuntime concurrentRuntime = ConcurrentRuntime.getRuntime();
         transactionManager = concurrentRuntime.getTransactionManager();

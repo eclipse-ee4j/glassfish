@@ -35,6 +35,7 @@ public class ManagedExecutorServiceConfig extends BaseConfig  {
     private int maximumPoolSize;
     private int taskQueueCapacity;
     private long threadLifeTimeSeconds;
+    private String context;
 
     public ManagedExecutorServiceConfig(ManagedExecutorService config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
@@ -49,6 +50,7 @@ public class ManagedExecutorServiceConfig extends BaseConfig  {
         maximumPoolSize = parseInt(config.getMaximumPoolSize(), Integer.MAX_VALUE);
         taskQueueCapacity = parseInt(config.getTaskQueueCapacity(), Integer.MAX_VALUE);
         threadLifeTimeSeconds = parseLong(config.getThreadLifetimeSeconds(), 0L);
+        context = config.getContext();
     }
 
     public int getHungAfterSeconds() {
@@ -93,6 +95,10 @@ public class ManagedExecutorServiceConfig extends BaseConfig  {
 
     public long getThreadLifeTimeSeconds() {
         return threadLifeTimeSeconds;
+    }
+
+    public String getContext() {
+        return context;
     }
 
     @Override

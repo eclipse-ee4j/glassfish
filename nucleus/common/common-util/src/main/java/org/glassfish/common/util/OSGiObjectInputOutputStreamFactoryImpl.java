@@ -16,6 +16,19 @@
 
 package org.glassfish.common.util;
 
+import static com.sun.enterprise.util.Utility.getClassLoader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -25,13 +38,6 @@ import org.osgi.util.tracker.BundleTracker;
 import org.osgi.util.tracker.BundleTrackerCustomizer;
 
 import com.sun.enterprise.util.CULoggerInfo;
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -105,13 +111,18 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         return bundle.getSymbolicName() + ":" + bundle.getVersion();
     }
 
+    @Override
     public ObjectInputStream createObjectInputStream(InputStream in)
             throws IOException
     {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+            loader = getClassLoader();
+        }
         return new OSGiObjectInputStream(in, loader);
     }
 
+    @Override
     public ObjectOutputStream createObjectOutputStream(OutputStream out)
             throws IOException
     {
@@ -157,6 +168,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         }
     }
 
+    @Override
     public Class<?> resolveClass(ObjectInputStream in, final ObjectStreamClass desc)
             throws IOException, ClassNotFoundException
     {
@@ -178,6 +190,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         return null;
     }
 
+    @Override
     public void annotateClass(ObjectOutputStream out, Class<?> cl) throws IOException
     {
         String key = NOT_A_BUNDLE_KEY;
@@ -211,6 +224,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl
             try {
                 return (Class) java.security.AccessController.doPrivileged(
                         new java.security.PrivilegedExceptionAction() {
+                            @Override
                             public java.lang.Object run() throws ClassNotFoundException {
                                 return b.loadClass(cname);
                             }

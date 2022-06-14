@@ -76,6 +76,7 @@
                         <Export-Package>
                             org.glassfish.microprofile.config,
                             io.helidon.config.mp,
+                            io.helidon.config,
                         </Export-Package>
                         <!-- A list of dependencies to include in the bundle (as they're not native OSGI bundles) -->
                         <Embed-Dependency>

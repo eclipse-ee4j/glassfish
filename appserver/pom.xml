@@ -152,8 +152,8 @@
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
-        <jakarta.mvc-api.version>2.0.1</jakarta.mvc-api.version>
-        <krazo.version>2.0.2</krazo.version>
+        <jakarta.mvc-api.version>2.0.0</jakarta.mvc-api.version>
+        <krazo.version>2.0.1</krazo.version>
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.1</microprofile.config-api.version>

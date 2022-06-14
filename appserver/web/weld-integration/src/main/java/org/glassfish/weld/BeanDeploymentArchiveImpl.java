@@ -253,6 +253,11 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     }
 
     @Override
+    public Collection<String> getKnownClasses() {
+        return moduleClassNames;
+    }
+
+    @Override
     public BeansXml getBeansXml() {
         WeldBootstrap weldBootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
         if (beansXmlURLs.size() == 1) {

@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -115,6 +116,7 @@ public class RootBeanDeploymentArchiveTest {
         assertEquals(WeldUtils.BDAType.UNKNOWN, rootBeanDeploymentArchive.getBDAType());
         assertEquals(0, rootBeanDeploymentArchive.getBeanClasses().size());
         assertEquals(0, rootBeanDeploymentArchive.getBeanClassObjects().size());
+        assertNull(rootBeanDeploymentArchive.getBeansXml());
 
         BeanDeploymentArchiveImpl moduleBda = (BeanDeploymentArchiveImpl) rootBeanDeploymentArchive.getModuleBda();
         assertNotNull(moduleBda);

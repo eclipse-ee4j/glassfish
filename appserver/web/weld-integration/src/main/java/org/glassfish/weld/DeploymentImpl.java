@@ -320,7 +320,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             BeanDeploymentArchiveImpl beanDeploymentArchiveImpl = (BeanDeploymentArchiveImpl) beanDeploymentArchive;
-            if (beanDeploymentArchiveImpl.getBeanClassObjects().contains(beanClass)) {
+            if (beanDeploymentArchiveImpl.getKnownClasses().contains(beanClass.getName())) {
                 return beanDeploymentArchive;
             }
         }

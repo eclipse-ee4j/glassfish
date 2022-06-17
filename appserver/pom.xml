@@ -91,6 +91,7 @@
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.0</jakarta.concurrent-api.version>
         <concurrent.version>3.0.0-RC1</concurrent.version>
+        <concurrent2.version>3.0.0-RC1</concurrent2.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
@@ -227,17 +228,32 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Jakarta Concurrency -->
-            <dependency>
-                <groupId>jakarta.enterprise.concurrent</groupId>
-                <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-                <version>${jakarta.concurrent-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.enterprise.concurrent</artifactId>
-                <version>${concurrent.version}</version>
-            </dependency>
+			<!-- Jakarta Concurrency -->
+			<dependency>
+				<groupId>jakarta.enterprise.concurrent</groupId>
+				<artifactId>jakarta.enterprise.concurrent-api</artifactId>
+				<version>${jakarta.concurrent-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish</groupId>
+				<artifactId>jakarta.enterprise.concurrent</artifactId>
+				<version>${concurrent.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.omnifaces</groupId>
+				<artifactId>concurrent-connector</artifactId>
+				<version>${concurrent2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.omnifaces</groupId>
+				<artifactId>concurrent-impl</artifactId>
+				<version>${concurrent2.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.omnifaces</groupId>
+				<artifactId>concurrent-extras</artifactId>
+				<version>${concurrent2.version}</version>
+			</dependency>
 
             <!-- Jakarta Interceptors -->
             <dependency>

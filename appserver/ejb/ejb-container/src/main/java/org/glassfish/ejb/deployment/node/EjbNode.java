@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,23 @@
 
 package org.glassfish.ejb.deployment.node;
 
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.glassfish.ejb.deployment.EjbTagNames;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.omnifaces.concurrent.node.ContextServiceDefinitionNode;
+import org.omnifaces.concurrent.node.ManagedExecutorDefinitionNode;
+import org.omnifaces.concurrent.node.ManagedScheduledExecutorDefinitionNode;
+import org.omnifaces.concurrent.node.ManagedThreadFactoryDefinitionNode;
+import org.w3c.dom.Node;
 
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
@@ -27,16 +42,16 @@ import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode;
 import com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode;
 import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
-import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
-import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
-import com.sun.enterprise.deployment.node.MailSessionNode;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.EjbLocalReferenceNode;
 import com.sun.enterprise.deployment.node.EjbReferenceNode;
 import com.sun.enterprise.deployment.node.EntityManagerFactoryReferenceNode;
 import com.sun.enterprise.deployment.node.EntityManagerReferenceNode;
 import com.sun.enterprise.deployment.node.EnvEntryNode;
+import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
 import com.sun.enterprise.deployment.node.JndiEnvRefNode;
+import com.sun.enterprise.deployment.node.MailSessionNode;
 import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
 import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
 import com.sun.enterprise.deployment.node.ResourceRefNode;
@@ -46,10 +61,6 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.glassfish.ejb.deployment.EjbTagNames;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.w3c.dom.Node;
 
 /**
  * This class is responsible for handling all common information
@@ -71,8 +82,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-            ResourceRefNode.class, "addResourceReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class, "addResourceReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.CONNECTION_FACTORY), ConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
@@ -81,14 +91,18 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
 
         registerElementHandler(new XMLElement(EjbTagNames.SECURITY_IDENTITY), SecurityIdentityNode.class);
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
 
         // Use special method for overrides because more than one schedule can be specified on a single method
         registerElementHandler(new XMLElement(EjbTagNames.TIMER), ScheduledTimerNode.class, "addScheduledTimerDescriptorFromDD");
+
+        registerElementHandler(new XMLElement(MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
     }
 
     @Override

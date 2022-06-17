@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,22 @@
 
 package org.glassfish.common.util;
 
+import static com.sun.enterprise.util.Utility.getClassLoader;
+import static java.security.AccessController.doPrivileged;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.WARNING;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.security.PrivilegedExceptionAction;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -26,17 +43,10 @@ import org.osgi.util.tracker.BundleTrackerCustomizer;
 
 import com.sun.enterprise.util.CULoggerInfo;
 
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class OSGiObjectInputOutputStreamFactoryImpl
-        implements ObjectInputOutputStreamFactory {
+public class OSGiObjectInputOutputStreamFactoryImpl implements ObjectInputOutputStreamFactory {
 
     private static final Logger logger = CULoggerInfo.getLogger();
 
@@ -49,53 +59,41 @@ public class OSGiObjectInputOutputStreamFactoryImpl
 //    private static final long NOT_A_BUNDLE_ID = -1;
     private static final String NOT_A_BUNDLE_KEY = ":";
 
-    public OSGiObjectInputOutputStreamFactoryImpl(BundleContext ctx)
-    {
+    public OSGiObjectInputOutputStreamFactoryImpl(BundleContext ctx) {
         this.ctx = ctx;
         ServiceReference ref = ctx.getServiceReference(PackageAdmin.class.getName());
         pkgAdm = PackageAdmin.class.cast(ctx.getService(ref));
 
-        BundleTracker bt = new BundleTracker(ctx, Bundle.INSTALLED | Bundle.RESOLVED | Bundle.STARTING | Bundle.ACTIVE, new BundleTrackerCustomizer() {
+        BundleTracker bt = new BundleTracker(ctx, Bundle.INSTALLED | Bundle.RESOLVED | Bundle.STARTING | Bundle.ACTIVE,
+                new BundleTrackerCustomizer() {
 
-            @Override
-            public void modifiedBundle(Bundle bundle, BundleEvent bundleEvent, Object o) {
-            }
+                    @Override
+                    public void modifiedBundle(Bundle bundle, BundleEvent bundleEvent, Object o) {
+                    }
 
-            @Override
-            public Object addingBundle(Bundle bundle, BundleEvent bundleEvent) {
-                String key = makeKey(bundle);
-                name2Id.put(key, bundle.getBundleId());
-                if (logger != null && logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "BundleTracker.addingBundle BUNDLE " + key + " ==> " + bundle.getBundleId() + "  for " + bundle.getSymbolicName());
-                }
-                return null;
-            }
+                    @Override
+                    public Object addingBundle(Bundle bundle, BundleEvent bundleEvent) {
+                        String key = makeKey(bundle);
+                        name2Id.put(key, bundle.getBundleId());
+                        if (logger != null && logger.isLoggable(FINER)) {
+                            logger.log(FINER, "BundleTracker.addingBundle BUNDLE " + key + " ==> " + bundle.getBundleId() + "  for "
+                                    + bundle.getSymbolicName());
+                        }
+                        return null;
+                    }
 
-            @Override
-            public void removedBundle(Bundle bundle, BundleEvent bundleEvent, Object o) {
-                String key = makeKey(bundle);
-                Long bundleID = name2Id.remove(key);
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER, "BundleTracker.removedBundle BUNDLE " + key + "  ==> " + bundle.getSymbolicName());
-                }
-                if (bundleID == null) {
-                    logger.log(Level.WARNING, CULoggerInfo.NULL_BUNDLE, key);
-                }
-            }
-            /*
-            @Override
-            public Object addingBundle(Bundle bundle, BundleEvent event) {
-                System.out.println("ADDING BUNDLE ==> " + bundle.getSymbolicName());
-                return super.addingBundle(bundle, event);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void removedBundle(Bundle bundle, BundleEvent event, Object object) {
-                System.out.println("REMOVING BUNDLE ==> " + bundle.getSymbolicName());
-                super.removedBundle(bundle, event, object);    //To change body of overridden methods use File | Settings | File Templates.
-            }
-            */
-        });
+                    @Override
+                    public void removedBundle(Bundle bundle, BundleEvent bundleEvent, Object o) {
+                        String key = makeKey(bundle);
+                        Long bundleID = name2Id.remove(key);
+                        if (logger.isLoggable(FINER)) {
+                            logger.log(FINER, "BundleTracker.removedBundle BUNDLE " + key + "  ==> " + bundle.getSymbolicName());
+                        }
+                        if (bundleID == null) {
+                            logger.log(WARNING, CULoggerInfo.NULL_BUNDLE, key);
+                        }
+                    }
+                });
 
         bt.open();
 
@@ -105,33 +103,29 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         return bundle.getSymbolicName() + ":" + bundle.getVersion();
     }
 
-    public ObjectInputStream createObjectInputStream(InputStream in)
-            throws IOException
-    {
+    @Override
+    public ObjectInputStream createObjectInputStream(InputStream in) throws IOException {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader == null) {
+            loader = getClassLoader();
+        }
         return new OSGiObjectInputStream(in, loader);
     }
 
-    public ObjectOutputStream createObjectOutputStream(OutputStream out)
-            throws IOException
-    {
+    @Override
+    public ObjectOutputStream createObjectOutputStream(OutputStream out) throws IOException {
         return new OSGiObjectOutputStream(out);
     }
 
-    private class OSGiObjectInputStream extends ObjectInputStreamWithLoader
-    {
+    private class OSGiObjectInputStream extends ObjectInputStreamWithLoader {
 
-        public OSGiObjectInputStream(InputStream in, ClassLoader loader) throws IOException
-        {
+        public OSGiObjectInputStream(InputStream in, ClassLoader loader) throws IOException {
             super(in, loader);
         }
 
         @Override
-        protected Class<?> resolveClass(ObjectStreamClass desc)
-                throws IOException, ClassNotFoundException
-        {
-            Class clazz =
-                OSGiObjectInputOutputStreamFactoryImpl.this.resolveClass(this, desc);
+        protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+            Class clazz = OSGiObjectInputOutputStreamFactoryImpl.this.resolveClass(this, desc);
 
             if (clazz == null) {
                 clazz = super.resolveClass(desc);
@@ -144,25 +138,21 @@ public class OSGiObjectInputOutputStreamFactoryImpl
 
     private class OSGiObjectOutputStream extends ObjectOutputStream {
 
-
-        private OSGiObjectOutputStream(OutputStream out) throws IOException
-        {
+        private OSGiObjectOutputStream(OutputStream out) throws IOException {
             super(out);
         }
 
         @Override
-        protected void annotateClass(Class<?> cl) throws IOException
-        {
+        protected void annotateClass(Class<?> cl) throws IOException {
             OSGiObjectInputOutputStreamFactoryImpl.this.annotateClass(this, cl);
         }
     }
 
-    public Class<?> resolveClass(ObjectInputStream in, final ObjectStreamClass desc)
-            throws IOException, ClassNotFoundException
-    {
+    @Override
+    public Class<?> resolveClass(ObjectInputStream in, final ObjectStreamClass desc) throws IOException, ClassNotFoundException {
         String key = in.readUTF();
 
-        if (! NOT_A_BUNDLE_KEY.equals(key)) {
+        if (!NOT_A_BUNDLE_KEY.equals(key)) {
             Long bundleId = name2Id.get(key);
             if (bundleId != null) {
                 final Bundle b = ctx.getBundle(bundleId);
@@ -178,8 +168,8 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         return null;
     }
 
-    public void annotateClass(ObjectOutputStream out, Class<?> cl) throws IOException
-    {
+    @Override
+    public void annotateClass(ObjectOutputStream out, Class<?> cl) throws IOException {
         String key = NOT_A_BUNDLE_KEY;
         Bundle b = pkgAdm.getBundle(cl);
         if (b != null) {
@@ -190,12 +180,12 @@ public class OSGiObjectInputOutputStreamFactoryImpl
 
     private Class loadArrayClass(Bundle b, String cname) throws ClassNotFoundException {
         // We are never called with primitive types, so we don't have to check for primitive types.
-        assert(cname.charAt(0) == 'L'); // An array
-        Class component;        // component class
-        int dcount;            // dimension
-        for (dcount = 1; cname.charAt(dcount) == '['; dcount++){
+        assert (cname.charAt(0) == 'L'); // An array
+        Class component; // component class
+        int dcount; // dimension
+        for (dcount = 1; cname.charAt(dcount) == '['; dcount++) {
         }
-        assert(cname.charAt(dcount) == 'L');
+        assert (cname.charAt(dcount) == 'L');
         component = loadClassFromBundle(b, cname.substring(dcount + 1, cname.length() - 1));
         int dim[] = new int[dcount];
         for (int i = 0; i < dcount; i++) {
@@ -209,12 +199,12 @@ public class OSGiObjectInputOutputStreamFactoryImpl
             return b.loadClass(cname);
         } else {
             try {
-                return (Class) java.security.AccessController.doPrivileged(
-                        new java.security.PrivilegedExceptionAction() {
-                            public java.lang.Object run() throws ClassNotFoundException {
-                                return b.loadClass(cname);
-                            }
-                        });
+                return (Class) doPrivileged(new PrivilegedExceptionAction<Object>() {
+                    @Override
+                    public Object run() throws ClassNotFoundException {
+                        return b.loadClass(cname);
+                    }
+                });
             } catch (java.security.PrivilegedActionException pae) {
                 throw (ClassNotFoundException) pae.getException();
             }

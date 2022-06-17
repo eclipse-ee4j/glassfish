@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2022, 2022 Contributors to Eclipse Foundation.
     Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -64,9 +64,8 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
+            <groupId>org.omnifaces</groupId>
             <artifactId>concurrent-connector</artifactId>
-            <version>${project.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -75,9 +74,18 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
+            <groupId>org.omnifaces</groupId>
             <artifactId>concurrent-impl</artifactId>
-            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>concurrent-extras</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

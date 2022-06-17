@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -69,6 +70,8 @@ import org.eclipse.microprofile.config.ConfigValue;
 import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.config.spi.Converter;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * Extension to enable config injection in CDI container (all of {@link io.helidon.config.Config},
@@ -140,20 +143,13 @@ public class ConfigCdiExtension implements Extension {
         // Synthetic events won't have an annotated method
         if (event instanceof ProcessSyntheticObserverMethod) return;
 
-        AnnotatedMethod<X> annotatedMethod = event.getAnnotatedMethod();
-        List<AnnotatedParameter<X>> annotatedParameters = annotatedMethod.getParameters();
-
-        if (annotatedParameters != null) {
-            for (AnnotatedParameter<?> annotatedParameter : annotatedParameters) {
-                if ((annotatedParameter != null)
-                        && !annotatedParameter.isAnnotationPresent(Observes.class)
-                        && annotatedParameter.isAnnotationPresent(ConfigProperty.class)) {
-
-                    final var injectionPoint = beanManager.createInjectionPoint(annotatedParameter);
-                    ips.add(injectionPoint);
-                }
-            }
-        }
+        ofNullable(event.getAnnotatedMethod())
+                .map(AnnotatedMethod::getParameters)
+                .stream().flatMap(Collection::stream)
+                .filter(parameter -> !parameter.isAnnotationPresent(Observes.class)
+                                && parameter.isAnnotationPresent(ConfigProperty.class))
+                .map(beanManager::createInjectionPoint)
+                .forEach(ips::add);
     }
 
     /**
@@ -378,10 +374,9 @@ public class ConfigCdiExtension implements Extension {
                                                    Class<?> typeArg2) {
         if (Optional.class.isAssignableFrom(rawType)) {
             if (typeArg.equals(typeArg2)) {
-                return Optional.ofNullable(withDefault(config, configKey, typeArg, defaultValue, false));
+                return ofNullable(withDefault(config, configKey, typeArg, defaultValue, false));
             } else {
-                return Optional
-                        .ofNullable(parameterizedConfigValue(config,
+                return ofNullable(parameterizedConfigValue(config,
                                 configKey,
                                 defaultValue,
                                 typeArg,

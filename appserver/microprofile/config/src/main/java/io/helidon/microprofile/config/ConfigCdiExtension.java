@@ -142,19 +142,15 @@ public class ConfigCdiExtension implements Extension {
 
         AnnotatedMethod<X> annotatedMethod = event.getAnnotatedMethod();
         List<AnnotatedParameter<X>> annotatedParameters = annotatedMethod.getParameters();
+
         if (annotatedParameters != null) {
             for (AnnotatedParameter<?> annotatedParameter : annotatedParameters) {
                 if ((annotatedParameter != null)
-                        && !annotatedParameter.isAnnotationPresent(Observes.class)) {
-                    InjectionPoint injectionPoint = beanManager.createInjectionPoint(annotatedParameter);
-                    Set<Annotation> qualifiers = injectionPoint.getQualifiers();
-                    assert qualifiers != null;
-                    for (Annotation qualifier : qualifiers) {
-                        if (qualifier instanceof ConfigProperty) {
-                            ips.add(injectionPoint);
-                            break;
-                        }
-                    }
+                        && !annotatedParameter.isAnnotationPresent(Observes.class)
+                        && annotatedParameter.isAnnotationPresent(ConfigProperty.class)) {
+
+                    final var injectionPoint = beanManager.createInjectionPoint(annotatedParameter);
+                    ips.add(injectionPoint);
                 }
             }
         }

@@ -16,7 +16,9 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.*;
 
 import java.util.Iterator;

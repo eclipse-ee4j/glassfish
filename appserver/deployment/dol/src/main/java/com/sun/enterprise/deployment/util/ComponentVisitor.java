@@ -22,7 +22,8 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import org.glassfish.deployment.common.DescriptorVisitor;

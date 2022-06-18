@@ -55,10 +55,10 @@ import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -89,8 +89,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  */
 public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
-
-    protected ServiceLocator habitat = Globals.getDefaultHabitat();
+    protected ServiceLocator serviceLocator = Globals.getDefaultHabitat();
 
     private static final String QNAME_SEPARATOR = ":";
 
@@ -325,7 +324,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     }
 
     private Class getExtensionHandler(final XMLElement element) {
-        DeploymentDescriptorNode extNode = (DeploymentDescriptorNode) habitat.getService(XMLNode.class,
+        DeploymentDescriptorNode extNode = (DeploymentDescriptorNode) serviceLocator.getService(XMLNode.class,
             element.getQName());
         if (extNode == null) {
             return null;
@@ -841,7 +840,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
 
-        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             while (refs.hasNext()) {
                 ServiceReferenceDescriptor next = (ServiceReferenceDescriptor) refs.next();

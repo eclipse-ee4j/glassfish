@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.*;
-
 import java.util.Iterator;
+
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.core.*;
 
 public interface ManagedBeanVisitor extends ComponentVisitor {
 

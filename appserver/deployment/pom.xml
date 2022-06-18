@@ -24,7 +24,6 @@
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>7.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.main.deployment</groupId>
@@ -36,6 +35,7 @@
     <modules>
         <module>dtds</module>
         <module>schemas</module>
+        <module>dol-core</module>
         <module>dol</module>
         <module>jakartaee-core</module>
         <module>jakartaee-full</module>

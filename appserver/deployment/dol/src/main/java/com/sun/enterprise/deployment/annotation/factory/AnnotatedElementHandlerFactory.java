@@ -16,10 +16,14 @@
 
 package com.sun.enterprise.deployment.annotation.factory;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.AppClientContext;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;

@@ -16,7 +16,12 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.NameValuePairDescriptor;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.NameValuePairNode;
 import com.sun.enterprise.deployment.node.XMLElement;

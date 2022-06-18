@@ -16,7 +16,10 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.util.LocalStringManagerImpl;

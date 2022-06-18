@@ -16,8 +16,11 @@
 
 package com.sun.enterprise.deployment.node;
 
-import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import java.util.Collection;
 import java.util.Collections;

@@ -16,7 +16,10 @@
 
 package com.sun.enterprise.deployment.node.ws;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;

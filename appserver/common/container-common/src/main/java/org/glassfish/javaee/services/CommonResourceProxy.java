@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.omnifaces.concurrent.services.JndiLookupNotifier;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
 import jakarta.inject.Inject;
 

@@ -38,6 +38,7 @@ import java.util.Set;
 
 import org.glassfish.deployment.common.JavaEEResourceType;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**

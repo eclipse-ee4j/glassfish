@@ -16,7 +16,8 @@
 
 package org.glassfish.web.deployment.node;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -87,7 +88,7 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         final Map<String,Class> result = new HashMap<String,Class>();
         for (ConfigurationDeploymentDescriptorFile wddFile :
                 DOLUtils.getConfigurationDeploymentDescriptorFiles(
-                        habitat, WarType.ARCHIVE_TYPE)) {
+                        serviceLocator, WarType.ARCHIVE_TYPE)) {
 
             wddFile.registerBundle(result, publicIDToDTD, versionUpgrades);
         }

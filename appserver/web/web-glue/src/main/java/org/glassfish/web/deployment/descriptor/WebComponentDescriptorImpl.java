@@ -17,7 +17,12 @@
 package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.OrderedSet;
+import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.MultipartConfig;
 import com.sun.enterprise.deployment.web.SecurityRoleReference;

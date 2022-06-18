@@ -34,10 +34,6 @@ import java.util.logging.Level;
 
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.concurrent.node.ContextServiceDefinitionNode;
-import org.omnifaces.concurrent.node.ManagedExecutorDefinitionNode;
-import org.omnifaces.concurrent.node.ManagedScheduledExecutorDefinitionNode;
-import org.omnifaces.concurrent.node.ManagedThreadFactoryDefinitionNode;
 import org.w3c.dom.Node;
 
 import com.sun.enterprise.deployment.Application;
@@ -116,7 +112,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     @Override
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
         final Map<String,Class> result = new HashMap<String,Class>();
-        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, EarType.ARCHIVE_TYPE)) {
+        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils.getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
           confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
         return result;
@@ -147,7 +143,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }

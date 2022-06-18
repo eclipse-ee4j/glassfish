@@ -16,7 +16,13 @@
 
 package com.sun.enterprise.deployment.node.connector;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.AdminObject;
+import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.MessageListener;
+import com.sun.enterprise.deployment.OutboundResourceAdapter;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;

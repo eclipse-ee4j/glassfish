@@ -214,7 +214,6 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>concurrent-extras</artifactId>
-            <version>0.1-SNAPSHOT</version>
             <optional>true</optional>
         </dependency>
         <dependency>

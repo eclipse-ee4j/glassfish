@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,55 +17,43 @@
 
 package org.glassfish.resourcebase.resources.naming;
 
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINEST;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.naming.ComponentNamingUtil;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-
 
 /**
- * Resource naming service which helps to bind resources and internal resource objects
- * to appropriate namespace in JNDI. Supports "java:app", "java:module" and normal(physical)
- * names.
+ * Resource naming service which helps to bind resources and internal resource objects to appropriate namespace in JNDI.
+ * Supports "java:app", "java:module" and normal(physical) names.
+ *
  * @author Jagadish Ramu
  *
  */
 @Service
 public class ResourceNamingService {
 
-    //TODO ASR introduce contract for this service and refactor this service to connector-runtime ?
-    @Inject
-    private GlassfishNamingManager namingManager;
-
-    @Inject
-    private ComponentNamingUtil cnu;
-
-    @Inject
-    private ProcessEnvironment pe;
-
     @LogMessagesResourceBundle
     public static final String LOGMESSAGE_RESOURCE = "org.glassfish.resourcebase.resources.LogMessages";
 
-    @LoggerInfo(subsystem="RESOURCE", description="Nucleus Resource", publish=true)
-
+    @LoggerInfo(subsystem = "RESOURCE", description = "Nucleus Resource", publish = true)
     public static final String LOGGER = "jakarta.enterprise.resources.naming";
     private static final Logger _logger = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
 
@@ -73,177 +62,169 @@ public class ResourceNamingService {
     public static final String JAVA_MODULE_SCOPE_PREFIX = "java:module/";
     public static final String JAVA_GLOBAL_SCOPE_PREFIX = "java:global/";
 
+    // TODO ASR introduce contract for this service and refactor this service to connector-runtime ?
+    @Inject
+    private GlassfishNamingManager namingManager;
 
-    public void publishObject(GenericResourceInfo resourceInfo, String jndiName, Object object,boolean rebind)
-            throws NamingException{
+    @Inject
+    private ComponentNamingUtil componentNamingUtil;
+
+    @Inject
+    private ProcessEnvironment processEnvironment;
+
+    public void publishObject(GenericResourceInfo resourceInfo, String jndiName, Object object, boolean rebind) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = resourceInfo.getModuleName();
         moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleName(moduleName);
 
-        if(!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null ){
+        if (resourceInfo.getName().startsWith(JAVA_MODULE_SCOPE_PREFIX) && applicationName != null && moduleName != null) {
 
             Object alreadyBoundObject = null;
-            if(rebind){
-                try{
-                    namingManager.unbindModuleObject(applicationName, moduleName, getModuleScopedName(jndiName));
-                }catch(NameNotFoundException e){
-                    //ignore
-                }
-            }else{
+            if (rebind) {
                 try {
-                    alreadyBoundObject = namingManager.lookupFromModuleNamespace(applicationName,
-                            moduleName, getModuleScopedName(jndiName), null);
+                    namingManager.unbindModuleObject(applicationName, moduleName, getModuleScopedName(jndiName));
                 } catch (NameNotFoundException e) {
-                    //ignore
+                    // ignore
                 }
+            } else {
+                try {
+                    alreadyBoundObject =
+                        namingManager.lookupFromModuleNamespace(
+                                applicationName, moduleName, getModuleScopedName(jndiName), null);
+                } catch (NameNotFoundException e) {
+                    // ignore
+                }
+
                 if (alreadyBoundObject != null) {
-                    throw new NamingException("Object already bound for jndiName " +
-                            "[ " + jndiName + " ] of  module namespace [" + moduleName+ "] " +
-                            "of application ["+applicationName+"] ");
+                    throw new NamingException("Object already bound for jndiName " + "[ " + jndiName + " ] of  module namespace ["
+                            + moduleName + "] " + "of application [" + applicationName + "] ");
                 }
             }
 
             JNDIBinding bindings = new ModuleScopedResourceBinding(getModuleScopedName(jndiName), object);
             List<JNDIBinding> list = new ArrayList<JNDIBinding>();
             list.add(bindings);
-            if(_logger.isLoggable(Level.FINEST)){
-                debug("application=" + applicationName + ", module name=" +moduleName+", binding name=" + jndiName);
+            if (_logger.isLoggable(FINEST)) {
+                debug("application=" + applicationName + ", module name=" + moduleName + ", binding name=" + jndiName);
             }
             namingManager.bindToModuleNamespace(applicationName, moduleName, list);
-        }else if(!isGlobalName(resourceInfo.getName()) && applicationName != null ) {
+        } else if (!isGlobalName(resourceInfo.getName()) && applicationName != null) {
 
             Object alreadyBoundObject = null;
-            if(rebind){
-                try{
-                    namingManager.unbindAppObject(applicationName, getAppScopedName(jndiName));
-                }catch(NameNotFoundException e){
-                    //ignore
-                }
-            }else{
+            if (rebind) {
                 try {
-                    alreadyBoundObject = namingManager.lookupFromAppNamespace(applicationName,
-                            getAppScopedName(jndiName), null);
+                    namingManager.unbindAppObject(applicationName, getAppScopedName(jndiName));
                 } catch (NameNotFoundException e) {
-                    //ignore
+                    // ignore
+                }
+            } else {
+                try {
+                    alreadyBoundObject = namingManager.lookupFromAppNamespace(applicationName, getAppScopedName(jndiName), null);
+                } catch (NameNotFoundException e) {
+                    // ignore
                 }
                 if (alreadyBoundObject != null) {
-                    throw new NamingException("Object already bound for jndiName " +
-                            "[ " + jndiName + " ] of application's namespace [" + applicationName + "]");
+                    throw new NamingException("Object already bound for jndiName " + "[ " + jndiName + " ] of application's namespace ["
+                            + applicationName + "]");
                 }
             }
 
             JNDIBinding bindings = new ApplicationScopedResourceBinding(getAppScopedName(jndiName), object);
             List<JNDIBinding> list = new ArrayList<JNDIBinding>();
             list.add(bindings);
-            if(_logger.isLoggable(Level.FINEST)){
+            if (_logger.isLoggable(FINEST)) {
                 debug("application=" + applicationName + ", binding name=" + jndiName);
             }
             namingManager.bindToAppNamespace(applicationName, list);
             bindAppScopedNameForAppclient(object, jndiName, applicationName);
-        }else{
+        } else {
             namingManager.publishObject(jndiName, object, true);
         }
     }
 
-    public void publishObject(ResourceInfo resourceInfo, Object object,boolean rebind) throws NamingException{
+    public void publishObject(ResourceInfo resourceInfo, Object object, boolean rebind) throws NamingException {
         String jndiName = resourceInfo.getName();
         publishObject(resourceInfo, jndiName, object, rebind);
     }
 
-    private void bindAppScopedNameForAppclient(Object object, String jndiName, String applicationName)
-            throws NamingException {
-        String internalGlobalJavaAppName =
-                cnu.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(jndiName));
-        if(_logger.isLoggable(Level.FINEST)){
+    private void bindAppScopedNameForAppclient(Object object, String jndiName, String applicationName) throws NamingException {
+        String internalGlobalJavaAppName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(jndiName));
+        if (_logger.isLoggable(FINEST)) {
             debug("binding app-scoped-resource for appclient : " + internalGlobalJavaAppName);
         }
         namingManager.publishObject(internalGlobalJavaAppName, object, true);
     }
-
 
     public void unpublishObject(GenericResourceInfo resourceInfo, String jndiName) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = resourceInfo.getModuleName();
         moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleName(moduleName);
 
-        if(!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null){
+        if (!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null) {
             namingManager.unbindModuleObject(applicationName, moduleName, getModuleScopedName(jndiName));
-        }else if(!isGlobalName(resourceInfo.getName()) && applicationName != null) {
+        } else if (!isGlobalName(resourceInfo.getName()) && applicationName != null) {
             namingManager.unbindAppObject(applicationName, getAppScopedName(jndiName));
             unbindAppScopedNameForAppclient(jndiName, applicationName);
-        }else{
+        } else {
             namingManager.unpublishObject(jndiName);
         }
     }
 
     private void unbindAppScopedNameForAppclient(String jndiName, String applicationName) throws NamingException {
-        String internalGlobalJavaAppName =
-                cnu.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(jndiName));
+        String internalGlobalJavaAppName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(jndiName));
         namingManager.unpublishObject(internalGlobalJavaAppName);
     }
 
     private boolean isGlobalName(String jndiName) {
         return jndiName.startsWith(JAVA_GLOBAL_SCOPE_PREFIX) ||
-                (!jndiName.startsWith(JAVA_APP_SCOPE_PREFIX) &&
-                !jndiName.startsWith(JAVA_MODULE_SCOPE_PREFIX));
+                (!jndiName.startsWith(JAVA_APP_SCOPE_PREFIX) && !jndiName.startsWith(JAVA_MODULE_SCOPE_PREFIX));
     }
 
-    public Object lookup(GenericResourceInfo resourceInfo, String name, Hashtable env) throws NamingException{
+    public Object lookup(GenericResourceInfo resourceInfo, String name, Hashtable env) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = resourceInfo.getModuleName();
         moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleName(moduleName);
 
-        if(!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null){
+        if (!isGlobalName(resourceInfo.getName()) && applicationName != null && moduleName != null) {
             return namingManager.lookupFromModuleNamespace(applicationName, moduleName, getModuleScopedName(name), env);
-        }else if(!isGlobalName(resourceInfo.getName()) && applicationName != null) {
-            if(pe.getProcessType().isServer() || pe.getProcessType().isEmbedded()){
-                return namingManager.lookupFromAppNamespace(applicationName, getAppScopedName(name), env);
-            }else{
-                String internalGlobalJavaAppName =
-                        cnu.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(name));
-                if(_logger.isLoggable(Level.FINEST)){
-                    debug("appclient lookup : " + internalGlobalJavaAppName);
-                }
-                return namingManager.getInitialContext().lookup(internalGlobalJavaAppName);
-            }
-        }else{
-            if(env != null){
-                InitialContext ic = new InitialContext(env);
-                return ic.lookup(name);
-            }else{
-                return namingManager.getInitialContext().lookup(name);
-            }
         }
+
+        if (!isGlobalName(resourceInfo.getName()) && applicationName != null) {
+            if (processEnvironment.getProcessType().isServer() || processEnvironment.getProcessType().isEmbedded()) {
+                return namingManager.lookupFromAppNamespace(applicationName, getAppScopedName(name), env);
+            }
+
+            String internalGlobalJavaAppName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, getAppScopedName(name));
+            if (_logger.isLoggable(FINEST)) {
+                debug("appclient lookup : " + internalGlobalJavaAppName);
+            }
+
+            return namingManager.getInitialContext().lookup(internalGlobalJavaAppName);
+
+        }
+
+        if (env != null) {
+            return new InitialContext(env).lookup(name);
+        }
+
+        return namingManager.getInitialContext().lookup(name);
+
     }
 
-    public Object lookup(GenericResourceInfo resourceInfo, String name) throws NamingException{
+    public Object lookup(GenericResourceInfo resourceInfo, String name) throws NamingException {
         return lookup(resourceInfo, name, null);
     }
 
-    private String getModuleScopedName(String name){
-
-/*
-        if(!name.startsWith(JAVA_MODULE_SCOPE_PREFIX) && !name.startsWith(JAVA_GLOBAL_SCOPE_PREFIX)){
-            return JAVA_MODULE_SCOPE_PREFIX+name;
-        }
-*/
-
+    private String getModuleScopedName(String name) {
         return name;
     }
 
-    private String getAppScopedName(String name){
-
-/*
-        if(!name.startsWith(JAVA_APP_SCOPE_PREFIX) && !name.startsWith(JAVA_GLOBAL_SCOPE_PREFIX)){
-            return JAVA_APP_SCOPE_PREFIX+name;
-        }
-*/
-
+    private String getAppScopedName(String name) {
         return name;
     }
 
     private void debug(String message) {
-        if(_logger.isLoggable(Level.FINEST)) {
+        if (_logger.isLoggable(FINEST)) {
             _logger.finest("[ASR] [ResourceNamingService] : " + message);
         }
     }

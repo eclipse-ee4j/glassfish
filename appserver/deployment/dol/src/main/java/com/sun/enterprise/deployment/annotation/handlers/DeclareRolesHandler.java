@@ -16,10 +16,15 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.RoleReference;
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.core.*;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

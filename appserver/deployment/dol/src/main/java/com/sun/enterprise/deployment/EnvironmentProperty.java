@@ -16,6 +16,7 @@
 
  package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
 import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.EnvironmentEntry;

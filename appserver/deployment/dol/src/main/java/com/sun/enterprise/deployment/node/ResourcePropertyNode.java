@@ -16,7 +16,12 @@
 
 package com.sun.enterprise.deployment.node;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.xml.TagNames;
 import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;

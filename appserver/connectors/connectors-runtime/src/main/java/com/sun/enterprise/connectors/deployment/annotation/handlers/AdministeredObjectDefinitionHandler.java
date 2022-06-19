@@ -17,9 +17,13 @@
 
 package com.sun.enterprise.connectors.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.annotation.context.*;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -28,16 +32,25 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.deployment.core.MetadataSource;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.Interceptors;
 import jakarta.resource.AdministeredObjectDefinition;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * @author Dapeng Hu

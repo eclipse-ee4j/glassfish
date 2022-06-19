@@ -16,7 +16,17 @@
 
 package com.sun.enterprise.web;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
+import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.web.*;
 import com.sun.enterprise.web.deploy.*;

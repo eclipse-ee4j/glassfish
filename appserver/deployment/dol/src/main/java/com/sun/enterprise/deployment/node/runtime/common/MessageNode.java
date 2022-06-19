@@ -16,7 +16,13 @@
 
 package com.sun.enterprise.deployment.node.runtime.common;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;

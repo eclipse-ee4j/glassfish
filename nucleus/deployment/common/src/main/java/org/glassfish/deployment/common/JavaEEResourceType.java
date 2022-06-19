@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,7 @@
 package org.glassfish.deployment.common;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 5/9/12
- * Time: 2:33 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
 public enum JavaEEResourceType {
     /**
@@ -35,5 +32,13 @@ public enum JavaEEResourceType {
      * JMSDD: JMSDestinationDefinitionDescriptor
      * AODD: AdministeredObjectDefinitionDescriptor
      */
-    MSD, DSD, DSDPOOL, CFD, CFDPOOL, JMSCFDD, JMSCFDDPOOL, JMSDD, AODD;
+    MSD, DSD, DSDPOOL, CFD, CFDPOOL, JMSCFDD, JMSCFDDPOOL, JMSDD, AODD,
+
+    CSDD,
+
+    MEDD,
+
+    MTFDD,
+
+    MSEDD,
 }

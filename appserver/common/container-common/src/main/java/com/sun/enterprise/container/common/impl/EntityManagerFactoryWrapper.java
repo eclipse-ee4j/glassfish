@@ -17,7 +17,12 @@
 package com.sun.enterprise.container.common.impl;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.logging.LogDomains;
 import org.glassfish.api.invocation.ComponentInvocation;
 import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;

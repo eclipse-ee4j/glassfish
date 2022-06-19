@@ -16,7 +16,24 @@
 
 package org.glassfish.web.deployment.descriptor;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.LoginConfiguration;

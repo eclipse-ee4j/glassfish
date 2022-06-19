@@ -19,7 +19,7 @@ package com.sun.s1asdev.aod;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.loader.ASURLClassLoader;

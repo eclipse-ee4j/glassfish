@@ -18,6 +18,8 @@ package com.sun.enterprise.deployment;
 
 import java.util.Properties;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+
 /**
  * @author Dapeng Hu
  */

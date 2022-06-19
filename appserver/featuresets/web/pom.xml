@@ -31,7 +31,7 @@
     <packaging>pom</packaging>
 
     <name>Glassfish Web Featureset</name>
-    <description>This pom defines the set of packages for GlassFish Web distribution</description>
+    <description>This pom defines the set of packages for the Web Profile</description>
 
     <dependencies>
         <!-- pull nucleus featureset -->
@@ -661,7 +661,7 @@
             </exclusions>
         </dependency>
 
-
+        <!-- Jakarta Authentication -->
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>
@@ -672,6 +672,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Jakarta Athorization -->
         <dependency>
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
@@ -692,6 +694,59 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Jakarta Concurrency -->
+        <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.enterprise.concurrent</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>concurrent-connector</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>concurrent-impl</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>concurrent-extras</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
 
         <dependency>
             <groupId>org.glassfish.main.transaction</groupId>

@@ -81,12 +81,12 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>4.0.0</jakarta.faces-api.version>
+        <jakarta.faces-api.version>4.0.1</jakarta.faces-api.version>
         <mojarra.version>4.0.0</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.1.0</jakarta.websocket-api.version>
-        <tyrus.version>2.1.0-M3</tyrus.version>
+        <tyrus.version>2.1.0-M4</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.0</jakarta.concurrent-api.version>
@@ -121,7 +121,7 @@
         <jakarta.resource-api.version>2.1.0</jakarta.resource-api.version>
 
         <!-- Jakarta Batch -->
-        <jakarta.batch-api.version>2.1.0</jakarta.batch-api.version>
+        <jakarta.batch-api.version>2.1.1</jakarta.batch-api.version>
         <jbatch.version>2.1.1</jbatch.version>
 
         <!-- Jakarta Enterprise beans -->
@@ -132,7 +132,7 @@
         <parsson.version>1.1.0</parsson.version>
         <parsson-media.version>1.1.0</parsson-media.version>
         <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
-        <yasson.version>3.0.0-RC2</yasson.version>
+        <yasson.version>3.0.0</yasson.version>
 
         <!-- Jakarta Pages -->
         <jakarta.pages-api.version>3.1.0</jakarta.pages-api.version>
@@ -153,8 +153,8 @@
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
-        <jakarta.mvc-api.version>2.0.0</jakarta.mvc-api.version>
-        <krazo.version>2.0.1</krazo.version>
+        <jakarta.mvc-api.version>2.1.0.M1</jakarta.mvc-api.version>
+        <krazo.version>2.0.2</krazo.version>
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.1</microprofile.config-api.version>

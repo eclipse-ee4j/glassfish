@@ -171,6 +171,14 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.beust</groupId>
+                                    <artifactId>jcommander</artifactId>
+                                    <version>1.78</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

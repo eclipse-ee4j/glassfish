@@ -327,6 +327,7 @@
         webservices-osgi.jar
         weld-osgi-bundle.jar
         jersey-mvc-jsp.jar
+        jakarta.enterprise.concurrent-api.jar
       </param-value>
     </init-param>
     <load-on-startup>3</load-on-startup>

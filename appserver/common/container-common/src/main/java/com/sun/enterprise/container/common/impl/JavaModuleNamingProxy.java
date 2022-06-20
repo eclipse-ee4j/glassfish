@@ -23,9 +23,6 @@ import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 
-import com.sun.enterprise.deployment.*;
-
-
 import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
@@ -34,6 +31,11 @@ import org.glassfish.hk2.api.ServiceLocator;
 import javax.naming.NamingException;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.logging.LogDomains;
 

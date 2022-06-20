@@ -40,7 +40,7 @@ public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDes
     public AppClientRuntimeNode(ApplicationClientDescriptor descriptor) {
         super(descriptor);
         // trigger registration in standard node, if it hasn't happened
-        habitat.getService(AppClientNode.class);
+        serviceLocator.getService(AppClientNode.class);
     }
 
 

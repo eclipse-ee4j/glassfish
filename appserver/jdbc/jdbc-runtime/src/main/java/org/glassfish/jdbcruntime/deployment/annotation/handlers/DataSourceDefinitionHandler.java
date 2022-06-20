@@ -37,8 +37,6 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.MetadataSource;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
@@ -48,6 +46,8 @@ import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.deployment.core.MetadataSource;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.interceptor.AroundInvoke;
@@ -66,14 +66,12 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
     }
 
     @Override
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
         DataSourceDefinition dataSourceDefnAn = (DataSourceDefinition) ainfo.getAnnotation();
         return processAnnotation(dataSourceDefnAn, ainfo, rcContexts);
     }
 
-    protected HandlerProcessingResult processAnnotation(DataSourceDefinition dataSourceDefnAn, AnnotationInfo aiInfo,
-            ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
+    protected HandlerProcessingResult processAnnotation(DataSourceDefinition dataSourceDefnAn, AnnotationInfo aiInfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
         Class annotatedClass = (Class) aiInfo.getAnnotatedElement();
         Annotation[] annotations = annotatedClass.getAnnotations();
         boolean warClass = isAWebComponentClass(annotations);

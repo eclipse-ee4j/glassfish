@@ -18,6 +18,8 @@ package com.sun.enterprise.deployment;
 
 import org.glassfish.deployment.common.JavaEEResourceType;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+
 import java.util.HashSet;
 import java.util.Set;
 

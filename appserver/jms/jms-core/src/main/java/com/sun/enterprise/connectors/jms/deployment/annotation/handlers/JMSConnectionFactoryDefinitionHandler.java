@@ -16,9 +16,13 @@
 
 package com.sun.enterprise.connectors.jms.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.annotation.context.*;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -27,16 +31,25 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.context.EjbInterceptorContext;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.deployment.core.MetadataSource;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.Interceptors;
 import jakarta.jms.JMSConnectionFactoryDefinition;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
 @Service
 @AnnotationHandlerFor(JMSConnectionFactoryDefinition.class)
@@ -45,17 +58,14 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
     public JMSConnectionFactoryDefinitionHandler() {
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
-        JMSConnectionFactoryDefinition jmsConnectionFactoryDefnAn =
-                (JMSConnectionFactoryDefinition)ainfo.getAnnotation();
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
+        JMSConnectionFactoryDefinition jmsConnectionFactoryDefnAn = (JMSConnectionFactoryDefinition) ainfo.getAnnotation();
         return processAnnotation(jmsConnectionFactoryDefnAn, ainfo, rcContexts);
     }
 
-    protected HandlerProcessingResult processAnnotation(JMSConnectionFactoryDefinition jmsConnectionFactoryDefnAn, AnnotationInfo aiInfo,
-                                                        ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
-        Class<?> annotatedClass = (Class<?>)aiInfo.getAnnotatedElement();
+    protected HandlerProcessingResult processAnnotation(JMSConnectionFactoryDefinition jmsConnectionFactoryDefnAn, AnnotationInfo aiInfo, ResourceContainerContext[] rcContexts) throws AnnotationProcessorException {
+        Class<?> annotatedClass = (Class<?>) aiInfo.getAnnotatedElement();
         Annotation[] annotations = annotatedClass.getAnnotations();
         boolean warClass = isAWebComponentClass(annotations);
         boolean ejbClass = isAEjbComponentClass(annotations);
@@ -89,9 +99,8 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
     }
 
     /**
-     * To take care of the case where an ejb is provided in a .war and
-     * annotation processor will process this class twice (once for ejb and
-     * once for web-bundle-context, which is a bug).<br>
+     * To take care of the case where an ejb is provided in a .war and annotation processor will process this class twice
+     * (once for ejb and once for web-bundle-context, which is a bug).<br>
      * This method helps to overcome the issue, partially.<br>
      * Checks whether both the annotated class and the context are either ejb or web.
      *
@@ -101,16 +110,12 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
      * @param context resource-container-context
      * @return boolean indicates whether the annotation can be processed.
      */
-    private boolean canProcessAnnotation(Class<?> annotatedClass, boolean ejbClass, boolean warClass,
-                                         ResourceContainerContext context) {
+    private boolean canProcessAnnotation(Class<?> annotatedClass, boolean ejbClass, boolean warClass, ResourceContainerContext context) {
         if (ejbClass) {
-            if (!(context instanceof EjbBundleContext ||
-                    context instanceof EjbContext ||
-                    context instanceof EjbInterceptorContext
-            )) {
+            if (!(context instanceof EjbBundleContext || context instanceof EjbContext || context instanceof EjbInterceptorContext)) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class is " +
-                            "an EJB class and context is not one of EJBContext");
+                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class is "
+                            + "an EJB class and context is not one of EJBContext");
                 }
                 return false;
             }
@@ -120,18 +125,17 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
             EjbDescriptor[] ejbDescriptor = ejbBundleDescriptor.getEjbByClassName(annotatedClass.getName());
             if (ejbDescriptor == null || ejbDescriptor.length == 0) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class " +
-                            "[ " + annotatedClass + " ] is " +
-                            "not an EJB class and the context is EJBContext");
+                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class " + "[ "
+                            + annotatedClass + " ] is " + "not an EJB class and the context is EJBContext");
                 }
                 return false;
             }
         } else if (warClass) {
             if (!(context instanceof WebBundleContext || context instanceof WebComponentsContext
-                    || context instanceof WebComponentContext )) {
+                    || context instanceof WebComponentContext)) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class is " +
-                            "an Web class and context is not one of WebContext");
+                    logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class is "
+                            + "an Web class and context is not one of WebContext");
                 }
                 return false;
             }
@@ -141,36 +145,33 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
             Collection<RootDeploymentDescriptor> extDesc = webBundleDescriptor.getExtensionsDescriptors();
             for (RootDeploymentDescriptor desc : extDesc) {
                 if (desc instanceof EjbBundleDescriptor) {
-                    EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor)desc;
+                    EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) desc;
                     EjbDescriptor[] ejbDescs = ejbBundleDesc.getEjbByClassName(annotatedClass.getName());
                     if (ejbDescs != null && ejbDescs.length > 0) {
                         if (logger.isLoggable(Level.FINEST)) {
-                            logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class " +
-                                    "[ " + annotatedClass + " ] is " +
-                                    "not an Web class and the context is WebContext");
+                            logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing as the class " + "[ "
+                                    + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
                         }
                         return false;
                     } else if (ejbBundleDesc.getInterceptorByClassName(annotatedClass.getName()) != null) {
-                            if (logger.isLoggable(Level.FINEST)) {
-                                logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing " +
-                                        "as the class " +
-                                        "[ " + annotatedClass + " ] is " +
-                                        "not an Web class and the context is WebContext");
-                            }
-                            return false;
+                        if (logger.isLoggable(Level.FINEST)) {
+                            logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing " + "as the class "
+                                    + "[ " + annotatedClass + " ] is " + "not an Web class and the context is WebContext");
+                        }
+                        return false;
                     } else {
                         Method[] methods = annotatedClass.getDeclaredMethods();
                         for (Method method : methods) {
                             Annotation annotations[] = method.getAnnotations();
                             for (Annotation annotation : annotations) {
-                                if (annotation.annotationType().equals(AroundInvoke.class) ||
-                                        annotation.annotationType().equals(AroundTimeout.class) ||
-                                        annotation.annotationType().equals(Interceptors.class)) {
+                                if (annotation.annotationType().equals(AroundInvoke.class)
+                                        || annotation.annotationType().equals(AroundTimeout.class)
+                                        || annotation.annotationType().equals(Interceptors.class)) {
                                     if (logger.isLoggable(Level.FINEST)) {
-                                        logger.log(Level.FINEST, "Ignoring @JMSConnectionFactoryDefinition annotation processing " +
-                                                "as the class " +
-                                                "[ " + annotatedClass + " ] is " +
-                                                "not an Web class, an interceptor and the context is WebContext");
+                                        logger.log(Level.FINEST,
+                                                "Ignoring @JMSConnectionFactoryDefinition annotation processing " + "as the class " + "[ "
+                                                        + annotatedClass + " ] is "
+                                                        + "not an Web class, an interceptor and the context is WebContext");
                                     }
                                     return false;
                                 }
@@ -183,8 +184,7 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
         return true;
     }
 
-    private boolean isDefinitionAlreadyPresent(Set<ResourceDescriptor> jmscfdDescs,
-                                               JMSConnectionFactoryDefinitionDescriptor desc) {
+    private boolean isDefinitionAlreadyPresent(Set<ResourceDescriptor> jmscfdDescs, JMSConnectionFactoryDefinitionDescriptor desc) {
         for (ResourceDescriptor descriptor : jmscfdDescs) {
             if (descriptor.equals(desc)) {
                 return true;
@@ -197,7 +197,7 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
 
         for (ResourceDescriptor descriptor : jmscfdDescs) {
             if (descriptor instanceof JMSConnectionFactoryDefinitionDescriptor) {
-                JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor)descriptor;
+                JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor) descriptor;
                 if (desc.getName().equals(defn.name())) {
 
                     if (desc.getInterfaceName() == null) {
@@ -229,7 +229,7 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
                     }
 
                     if (desc.getPassword() == null) {
-                        if (defn.password() != null /*ALLOW EMPTY PASSWORDS && !defn.password().equals("")*/) {
+                        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
                             desc.setPassword(defn.password());
                         }
                     }
@@ -266,7 +266,7 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
                             if (index > 0 && index < property.length() - 1) {
                                 String name = property.substring(0, index).trim();
                                 String value = property.substring(index + 1).trim();
-                                //add to properties only when not already present
+                                // add to properties only when not already present
                                 if (properties.get(name) == null) {
                                     properties.put(name, value);
                                 }
@@ -304,7 +304,7 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
             desc.setUser(defn.user());
         }
 
-        if (defn.password() != null /*ALLOW EMPTY PASSWORDS && !defn.password().equals("")*/) {
+        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
             desc.setPassword(defn.password());
         }
 

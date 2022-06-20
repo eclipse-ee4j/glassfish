@@ -17,7 +17,7 @@
 package com.sun.s1asdev.jmsdd;
 
 import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import org.glassfish.internal.api.Globals;
 
 import java.util.Map;

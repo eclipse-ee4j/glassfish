@@ -16,9 +16,14 @@
 
 package org.glassfish.web.deployment.util;
 
-import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.deployment.web.MultipartConfig;
 import com.sun.enterprise.deployment.web.ServletFilter;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.InjectionCapable;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.util.ApplicationValidator;
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
 import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;

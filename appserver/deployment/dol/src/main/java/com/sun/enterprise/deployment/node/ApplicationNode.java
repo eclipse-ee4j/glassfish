@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.enterprise.deployment.node;
 
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,18 +32,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Node;
+
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EarType;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.ApplicationTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.jvnet.hk2.annotations.Service;
-import org.w3c.dom.Node;
 
 /**
  * This class is responsible for loading and saving XML elements
@@ -65,8 +72,10 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public final static String SCHEMA_ID_16 = "application_6.xsd";
     public final static String SCHEMA_ID_17 = "application_7.xsd";
     public final static String SCHEMA_ID_18 = "application_8.xsd";
-    public final static String SCHEMA_ID = "application_9.xsd";
-    public final static String SPEC_VERSION = "9";
+    public final static String SCHEMA_ID_19 = "application_9.xsd";
+    public final static String SCHEMA_ID = "application_10.xsd";
+    public final static String SPEC_VERSION = "10";
+
     private final static List<String> systemIDs = initSystemIDs();
 
     // The XML tag associated with this Node
@@ -80,6 +89,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         systemIDs.add(SCHEMA_ID_16);
         systemIDs.add(SCHEMA_ID_17);
         systemIDs.add(SCHEMA_ID_18);
+        systemIDs.add(SCHEMA_ID_19);
         return Collections.unmodifiableList(systemIDs);
     }
 
@@ -92,6 +102,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
      * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
+    @Override
     public String registerBundle(Map publicIDToDTD) {
         publicIDToDTD.put(PUBLIC_DTD_ID, SYSTEM_ID);
         publicIDToDTD.put(PUBLIC_DTD_ID_12, SYSTEM_ID_12);
@@ -101,7 +112,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     @Override
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
         final Map<String,Class> result = new HashMap<String,Class>();
-        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils.getConfigurationDeploymentDescriptorFiles(habitat, EarType.ARCHIVE_TYPE)) {
+        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils.getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
           confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
         return result;
@@ -132,21 +143,17 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
 
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-                                                             ResourceRefNode.class, "addResourceReferenceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class, "addResourceReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class, "addMessageDestinationReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION),
-                               MessageDestinationNode.class,
-                               "addMessageDestination");
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION), MessageDestinationNode.class, "addMessageDestination");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.CONNECTION_FACTORY), ConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
@@ -154,12 +161,18 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         registerElementHandler(new XMLElement(TagNames.JMS_CONNECTION_FACTORY), JMSConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
 
+        registerElementHandler(new XMLElement(MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
+
         SaxParserHandler.registerBundleNode(this, ApplicationTagNames.APPLICATION);
     }
 
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return tag;
     }
@@ -170,6 +183,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         Application application = getDescriptor();
         if (element.getQName().equals(
@@ -191,6 +205,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
      *
      * @param newDescriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof BundleDescriptor) {
             if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
@@ -206,6 +221,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
    /**
     * @return the descriptor instance to associate with this XMLNode
     */
+    @Override
     public Application getDescriptor() {
         if (descriptor==null) {
             descriptor = Application.createApplication();
@@ -216,6 +232,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     /**
      * @return the DOCTYPE  of the XML file
      */
+    @Override
     public String getDocType() {
         return null;
     }
@@ -223,6 +240,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
@@ -230,6 +248,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     /**
      * @return the list of SystemID of the XML schema supported
      */
+    @Override
     public List<String> getSystemIDs() {
         return systemIDs;
     }
@@ -241,6 +260,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
      * @param application  to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, Application application) {
         Node appNode = super.writeDescriptor(parent, application);
 
@@ -300,6 +320,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     /**
      * @return the default spec version level this node complies to
      */
+    @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }

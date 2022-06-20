@@ -22,7 +22,12 @@
 
 package com.sun.enterprise.deployment.annotation.context;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
 import org.glassfish.apf.AnnotatedElementHandler;

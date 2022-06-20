@@ -16,7 +16,12 @@
 
 package com.sun.enterprise.deployment.io;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.PersistenceNode;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import org.glassfish.deployment.common.Descriptor;

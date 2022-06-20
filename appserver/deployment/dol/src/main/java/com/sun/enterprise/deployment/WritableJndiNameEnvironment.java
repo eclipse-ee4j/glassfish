@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 
 /**

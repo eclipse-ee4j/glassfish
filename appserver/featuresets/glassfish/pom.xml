@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022 Contributors to Eclipse Foundation.
+    Copyright (c) 2022, 2022 Contributors to Eclipse Foundation.
     Copyright (c) 2015, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -33,57 +33,12 @@
     <description>This pom defines the set of packages for the full GlassFish distribution</description>
 
     <dependencies>
-        <!-- Pull web packages -->
+        <!-- Pull Web Profile packages -->
         <dependency>
             <groupId>org.glassfish.main.featuresets</groupId>
             <artifactId>web</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
-        </dependency>
-      
-        
-        <!-- Jakarta Concurrency -->
-        <dependency>
-            <groupId>jakarta.enterprise.concurrent</groupId>
-            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.enterprise.concurrent</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-connector</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.concurrent</groupId>
-            <artifactId>concurrent-impl</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         

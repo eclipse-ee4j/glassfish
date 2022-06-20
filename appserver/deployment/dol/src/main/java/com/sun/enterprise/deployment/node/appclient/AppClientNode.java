@@ -80,7 +80,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }

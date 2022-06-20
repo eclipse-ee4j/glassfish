@@ -17,7 +17,8 @@
 package org.glassfish.javaee.services;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.deployment.ResourceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;

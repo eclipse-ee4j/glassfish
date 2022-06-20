@@ -17,8 +17,9 @@
 package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-import com.sun.enterprise.deployment.MetadataSource;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.core.MetadataSource;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;

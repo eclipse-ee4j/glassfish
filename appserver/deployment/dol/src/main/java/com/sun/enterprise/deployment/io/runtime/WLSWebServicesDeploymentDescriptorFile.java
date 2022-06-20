@@ -16,8 +16,12 @@
 
 package com.sun.enterprise.deployment.io.runtime;
 
-import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.ws.WLDescriptorConstants;

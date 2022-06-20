@@ -17,9 +17,29 @@
 package com.sun.enterprise.deployment.util;
 
 import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.deployment.AbstractConnectorResourceDescriptor;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.core.*;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;

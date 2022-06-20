@@ -46,7 +46,7 @@ public class EjbBundleRuntimeNode extends
     public EjbBundleRuntimeNode(EjbBundleDescriptorImpl descriptor) {
         super(descriptor);
         //trigger registration in standard node, if it hasn't happened
-        habitat.getService(EjbBundleNode.class);
+        serviceLocator.getService(EjbBundleNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING),
                 SecurityRoleMappingNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.EJBS),

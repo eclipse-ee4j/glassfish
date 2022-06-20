@@ -16,8 +16,12 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.core.*;
+import com.sun.enterprise.deployment.InterceptorDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ManagedBeanContext;
 import com.sun.enterprise.deployment.util.TypeUtil;
 import org.glassfish.apf.*;

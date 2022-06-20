@@ -16,7 +16,19 @@
 
 package com.sun.enterprise.deployment.annotation.context;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.*;
 import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.deployment.common.Descriptor;

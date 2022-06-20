@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
 import java.io.Serializable;

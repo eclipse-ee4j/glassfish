@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,32 +17,48 @@
 
 package org.glassfish.concurrent.admin;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
-import org.glassfish.concurrent.config.ManagedExecutorService;
-import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
-import org.glassfish.resources.admin.cli.ResourceManager;
-import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CORE_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_AFTER_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_PRINT_ONCE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.KEEP_ALIVE_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LONG_RUNNING_TASKS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
+import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_LIFETIME_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
 
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.concurrent.config.ManagedExecutorService;
+import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
+import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
+import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resources.admin.cli.ResourceManager;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
 
 /**
  *
@@ -79,8 +95,10 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
     @Inject
     protected BindableResourcesHelper resourcesHelper;
 
+    @Override
     public abstract String getResourceType();
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
 
@@ -94,6 +112,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         try {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
 
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     return createResource(param, properties);
                 }
@@ -176,9 +195,6 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setContextInfo(contextInfo);
         managedExecutorService.setThreadPriority(threadPriority);
         managedExecutorService.setHungAfterSeconds(hungAfterSeconds);
-        managedExecutorService.setHungLoggerPrintOnce(hungLoggerPrintOnce);
-        managedExecutorService.setHungLoggerInitialDelaySeconds(hungLoggerInitialDelaySeconds);
-        managedExecutorService.setHungLoggerIntervalSeconds(hungLoggerIntervalSeconds);
         managedExecutorService.setCorePoolSize(corePoolSize);
         managedExecutorService.setKeepAliveSeconds(keepAliveSeconds);
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);
@@ -196,6 +212,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
     }
 
+    @Override
     public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties, boolean validate) throws Exception{
         setAttributes(attributes, null);
         ResourceStatus status = null;
@@ -279,6 +296,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
             // delete managed executor service
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     ManagedExecutorServiceBase resource = null;
                     if (getResourceType().equals(ServerTags.MANAGED_EXECUTOR_SERVICE)) {

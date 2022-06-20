@@ -18,7 +18,14 @@ package com.sun.enterprise.deployment.util;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
-import com.sun.enterprise.deployment.*;
+
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.MessageDestinationDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.*;
 
 import java.util.Iterator;

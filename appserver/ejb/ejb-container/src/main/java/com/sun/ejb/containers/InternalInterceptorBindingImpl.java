@@ -18,10 +18,14 @@
 package com.sun.ejb.containers;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.core.*;
+
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.deployment.*;
 import org.glassfish.api.invocation.ComponentInvocation;
 import java.util.Collection;
 

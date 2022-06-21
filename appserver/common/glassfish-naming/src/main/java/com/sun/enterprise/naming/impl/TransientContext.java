@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,33 @@
 
 package com.sun.enterprise.naming.impl;
 
-import javax.naming.*;
+import static com.sun.enterprise.naming.util.LogFacade.logger;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
-import static com.sun.enterprise.naming.util.LogFacade.logger;
+import javax.naming.Binding;
+import javax.naming.CompositeName;
+import javax.naming.Context;
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
+import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.NotContextException;
+import javax.naming.OperationNotSupportedException;
 
 /**
  * Class to implement multiple level of subcontexts in SerialContext. To use this
@@ -296,7 +316,7 @@ public class TransientContext implements Context, Serializable {
         if (!rebind) {
             if (bindings.get(name) != null) {
                 throw new NameAlreadyBoundException(
-                        "Use rebind to override");
+                        "Use rebind to override name" + name);
             }
         }
         bindings.put(name, obj);

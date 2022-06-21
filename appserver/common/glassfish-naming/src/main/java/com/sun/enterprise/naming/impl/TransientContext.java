@@ -316,7 +316,7 @@ public class TransientContext implements Context, Serializable {
         if (!rebind) {
             if (bindings.get(name) != null) {
                 throw new NameAlreadyBoundException(
-                        "Use rebind to override name" + name);
+                        "Use rebind to override name " + name);
             }
         }
         bindings.put(name, obj);

@@ -68,7 +68,6 @@
         <module>orb</module>
         <module>appclient</module>
         <module>ant-tasks</module>
-        <module>microprofile</module>
     </modules>
 
     <scm>
@@ -1002,4 +1001,16 @@
             </plugin>
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+           <modules>
+               <module>microprofile</module>
+           </modules>
+        </profile>
+    </profiles>
 </project>

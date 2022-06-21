@@ -256,7 +256,6 @@
         </dependency>
 
         <!-- Jakarta MVC -->
-        <!-- TMP disable until EE 10 versions
         <dependency>
             <groupId>jakarta.mvc</groupId>
             <artifactId>jakarta.mvc-api</artifactId>
@@ -287,7 +286,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
 
         <!-- glassfish-grizzly-full -->
         <dependency>

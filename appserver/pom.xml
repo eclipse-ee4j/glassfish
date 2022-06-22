@@ -152,7 +152,7 @@
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
-        <jakarta.mvc-api.version>2.1.0.M1</jakarta.mvc-api.version>
+        <jakarta.mvc-api.version>2.0.1</jakarta.mvc-api.version>
         <krazo.version>2.0.2</krazo.version>
 
         <!-- MicroProfile Config -->
@@ -1001,7 +1001,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <profiles>
         <profile>
             <id>jdk17</id>

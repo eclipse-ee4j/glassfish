@@ -36,5 +36,46 @@
             <package name="ee.jakarta.tck.concurrent.api.*"/>
             <package name="ee.jakarta.tck.concurrent.spec.*"/>
         </packages>
+        
+        <classes>
+            <class name="ee.jakarta.tck.concurrent.spec.ManagedExecutorService.resourcedef.ManagedExecutorDefinitionTests">
+                <methods>
+                    <exclude name="testCompletedFuture"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.spec.ManagedScheduledExecutorService.resourcedef.ManagedScheduledExecutorDefinitionTests">
+                <methods>
+                    <exclude name="testCompletedFutureMSE"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.api.Trigger.TriggerTests">
+                <methods>
+                    <exclude name="triggerGetNextRunTimeTest"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.spec.ManagedExecutorService.security.SecurityTests">
+                <methods>
+                    <exclude name="managedExecutorServiceAPISecurityTest"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.spec.ManagedScheduledExecutorService.security.SecurityTests">
+                <methods>
+                    <exclude name="managedScheduledExecutorServiceAPISecurityTest"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.spec.ManagedThreadFactory.resourcedef.ManagedThreadFactoryDefinitionTests">
+                <methods>
+                    <exclude name="testManagedThreadFactoryDefinitionAllAttributes"></exclude>
+                    <exclude name="testManagedThreadFactoryDefinitionAllAttributesEJB"></exclude>
+                    <exclude name="testParallelStreamBackedByManagedThreadFactory"></exclude>
+                    <exclude name="testParallelStreamBackedByManagedThreadFactoryEJB"></exclude>
+                </methods>
+            </class>
+            <class name="ee.jakarta.tck.concurrent.spec.Platform.dd.DeploymentDescriptorTests">
+                <methods>
+                    <exclude name="testDeploymentDescriptorDefinesManagedThreadFactory"></exclude>
+                </methods>
+            </class>
+        </classes>
     </test>
 </suite>

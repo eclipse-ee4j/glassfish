@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <cdi.tck-4-0.version>4.0.4</cdi.tck-4-0.version>
+        <cdi.tck-4-0.version>4.0.5</cdi.tck-4-0.version>
 
         <!-- This matches the htmlunit version in TCK -->
         <htmlunit.version>2.50.0</htmlunit.version>
@@ -213,6 +213,26 @@
                     <artifactId>container-se-api</artifactId>
                     <groupId>org.jboss.arquillian.container</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.test-audit</groupId>
+                    <artifactId>jboss-test-audit-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jboss.test-audit</groupId>
+                    <artifactId>jboss-test-audit-impl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Signature test file for CDI -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>cdi-tck-core-impl</artifactId>
+            <version>${cdi.tck-4-0.version}</version>
+            <type>sig</type>
+            <classifier>jdk11</classifier>
+            <scope>test</scope>
+            <exclusions>
                 <exclusion>
                     <groupId>org.jboss.test-audit</groupId>
                     <artifactId>jboss-test-audit-api</artifactId>
@@ -424,4 +444,110 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>cdi-signature-test</id>
+            <!-- API jars from the GlassFish distribution -->
+            <dependencies>
+                <dependency>
+                    <groupId>jakarta.annotation</groupId>
+                    <artifactId>jakarta.annotation-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.annotation-api.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.el</groupId>
+                    <artifactId>jakarta.el-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.el-api.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.interceptor</groupId>
+                    <artifactId>jakarta.interceptor-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.interceptor-api.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.inject</groupId>
+                    <artifactId>jakarta.inject-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.inject-api.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.lang-model</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.lang-model.jar</systemPath>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.enterprise</groupId>
+                    <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                    <scope>system</scope>
+                    <systemPath>${glassfish.home}/glassfish/modules/jakarta.enterprise.cdi-api.jar</systemPath>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-jars</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>unpack-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <outputDirectory>target/cdi-sigtest-classes</outputDirectory>
+                                    <includeScope>system</includeScope>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-cdi-sigtest</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>jakarta.enterprise</includeGroupIds>
+                                    <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
+                                    <type>sig</type>
+                                    <classifier>jdk11</classifier>
+                                    <stripVersion>true</stripVersion>
+                                    <overWriteReleases>true</overWriteReleases>
+                                    <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.netbeans.tools</groupId>
+                        <artifactId>sigtest-maven-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sigtest</id>
+                                <phase>process-test-sources</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <sigfile>target/sigtest/cdi-tck-core-impl-jdk11.sig</sigfile>
+                            <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
+                            <classes>target/cdi-sigtest-classes</classes>
+                            <report>target/cdi-sig-report.txt</report>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

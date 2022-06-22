@@ -179,6 +179,14 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.netbeans.tools</groupId>
+                                    <artifactId>sigtest-maven-plugin</artifactId>
+                                    <version>1.6</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${glassfish.root}/glassfish7/glassfish/lib</outputDirectory>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -216,10 +224,10 @@
                         <!--
                         <java.util.logging.config.file>${project.build.directory}/test-classes/logging.properties</java.util.logging.config.file>
                         
-                        <glassfish.systemProperties>
-                            java.util.logging.config.file=${project.build.directory}/test-classes/logging.properties
-                        </glassfish.systemProperties>
                         -->
+                        <glassfish.systemProperties>
+                            jimage.dir=${project.build.directory}/jimage
+                        </glassfish.systemProperties>
                         
                         <glassfish.postBootCommands>
                             create-file-user --groups staff:mgr --passwordfile ${project.build.directory}/test-classes/j2ee.pass j2ee

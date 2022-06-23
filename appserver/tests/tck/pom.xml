@@ -43,6 +43,7 @@
         <module>cdi</module>
         <module>microprofile</module>
         <module>concurrency</module>
+        <module>validation</module>
     </modules>
 
     <build>

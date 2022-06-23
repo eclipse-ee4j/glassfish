@@ -150,8 +150,8 @@ public class WebappClassLoader extends URLClassLoader
         // END PE 4985680
         "org.xml.sax",                               // SAX 1 & 2
         "org.w3c.dom",                               // DOM 1 & 2
-        "org.apache.taglibs.standard",               // JSTL (Java EE 5)
-        "com.sun.faces",                             // JSF (Java EE 5)
+        "org.apache.taglibs.standard",               // JSTL
+        "com.sun.faces",                             // Faces
         "org.apache.commons.logging"                 // Commons logging
     };
 
@@ -1187,7 +1187,7 @@ public class WebappClassLoader extends URLClassLoader
 
         /*
          * (1) Delegate to parent if requested, or if the requested resource
-         * belongs to one of the packages that are part of the Java EE platform
+         * belongs to one of the packages that are part of the Jakarta EE platform
          */
         if (isDelegateFirstResource(name)) {
             logger.log(Level.FINER, "  Delegating to parent classloader {0}", parent);
@@ -1266,7 +1266,7 @@ public class WebappClassLoader extends URLClassLoader
 
         /*
          * (1) Delegate to parent if requested, or if the requested resource
-         * belongs to one of the packages that are part of the Java EE platform
+         * belongs to one of the packages that are part of the Jakarta EE platform
          */
         if (isDelegateFirstResource(name)) {
             logger.log(Level.FINER, "  Delegating to parent classloader {0}", parent);

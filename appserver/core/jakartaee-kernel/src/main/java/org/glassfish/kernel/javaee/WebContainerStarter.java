@@ -85,7 +85,7 @@ public class WebContainerStarter implements PostConstruct, ConfigListener {
 
     @LoggerInfo(
         subsystem = "AS-CORE",
-        description = "Java EE Core Kernel",
+        description = "Jakarta EE Core Kernel",
         publish = true)
     private static final String ASCORE_LOGGER = "jakarta.enterprise.system.core.ee";
     private static final Logger logger = Logger.getLogger(ASCORE_LOGGER, SHARED_LOGMESSAGE_RESOURCE);

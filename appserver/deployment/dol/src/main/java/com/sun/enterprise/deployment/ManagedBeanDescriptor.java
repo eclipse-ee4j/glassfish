@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,25 +15,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.util.ManagedBeanVisitor;
-import com.sun.enterprise.deployment.util.ApplicationValidator;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+import com.sun.enterprise.deployment.util.ApplicationValidator;
+import com.sun.enterprise.deployment.util.ManagedBeanVisitor;
 
-import java.util.*;
 import java.lang.reflect.Constructor;
-
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
 
 /**
- * Descriptor representing a Java EE Managed Bean.
+ * Descriptor representing a Jakarta EE Managed Bean.
  *
  * @author Kenneth Saks
  */
-
 public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     // *Optional* managed bean name.  Only non-null if the
@@ -47,12 +52,12 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     private BundleDescriptor enclosingBundle;
 
     private Object interceptorBuilder = null;
-    private Collection beanInstances = new HashSet();
-    private Map<Object, Object> beanSupportingInfo = new HashMap<Object, Object>();
+    private final Collection beanInstances = new HashSet();
+    private final Map<Object, Object> beanSupportingInfo = new HashMap<>();
 
-    private List<InterceptorDescriptor> classInterceptorChain = new LinkedList<InterceptorDescriptor>();
+    private List<InterceptorDescriptor> classInterceptorChain = new LinkedList<>();
 
-    private Set<LifecycleCallbackDescriptor> aroundInvokeDescs = new HashSet<LifecycleCallbackDescriptor>();
+    private final Set<LifecycleCallbackDescriptor> aroundInvokeDescs = new HashSet<>();
 
     //
     // Interceptor info per business method.  If the map does not
@@ -65,18 +70,19 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     // method.  An empty list would mean all the interceptors have been
     // disabled for that particular business method.
     //
-    private Map<MethodDescriptor, List<InterceptorDescriptor>> methodInterceptorsMap =
-            new HashMap<MethodDescriptor, List<InterceptorDescriptor>>();
+    private final Map<MethodDescriptor, List<InterceptorDescriptor>> methodInterceptorsMap = new HashMap<>();
 
     /**
     * Default constructor.
     */
     public ManagedBeanDescriptor() {}
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -149,7 +155,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
     public Set<String> getAllInterceptorClasses() {
-        Set<String> classes = new HashSet<String>();
+        Set<String> classes = new HashSet<>();
 
         for(InterceptorDescriptor desc : classInterceptorChain) {
             classes.add(desc.getInterceptorClassName());
@@ -166,7 +172,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
     public void setClassInterceptorChain(List<InterceptorDescriptor> chain) {
-        classInterceptorChain = new LinkedList<InterceptorDescriptor>(chain);
+        classInterceptorChain = new LinkedList<>(chain);
     }
 
     public void setMethodLevelInterceptorChain(MethodDescriptor m, List<InterceptorDescriptor> chain) {
@@ -180,12 +186,11 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
      */
     public List<InterceptorDescriptor> getAroundConstructCallbackInterceptors(Class clz, Constructor ctor) {
         LinkedList<InterceptorDescriptor> callbackInterceptors =
-                new LinkedList<InterceptorDescriptor>();
+                new LinkedList<>();
 
         Class[] ctorParamTypes = ctor.getParameterTypes();
         String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
-        MethodDescriptor mDesc = new MethodDescriptor(clz.getSimpleName(), null,
-                parameterClassNames, MethodDescriptor.EJB_BEAN);
+        MethodDescriptor mDesc = new MethodDescriptor(clz.getSimpleName(), null, parameterClassNames, EJB_BEAN);
 
         List<InterceptorDescriptor> interceptors = methodInterceptorsMap.get(mDesc);
         if (interceptors == null) {
@@ -193,7 +198,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         }
 
         for (InterceptorDescriptor next : interceptors) {
-            if (next.getCallbackDescriptors(CallbackType.AROUND_CONSTRUCT).size() > 0) {
+            if (!next.getCallbackDescriptors(CallbackType.AROUND_CONSTRUCT).isEmpty()) {
                 callbackInterceptors.add(next);
             }
         }
@@ -212,10 +217,10 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     public List<InterceptorDescriptor> getCallbackInterceptors(CallbackType type) {
 
         LinkedList<InterceptorDescriptor> callbackInterceptors =
-                new LinkedList<InterceptorDescriptor>();
+                new LinkedList<>();
 
         for (InterceptorDescriptor next : classInterceptorChain) {
-            if (next.getCallbackDescriptors(type).size() > 0) {
+            if (!next.getCallbackDescriptors(type).isEmpty()) {
                 callbackInterceptors.add(next);
             }
         }
@@ -223,10 +228,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         if (this.hasCallbackDescriptor(type)) {
             InterceptorDescriptor beanClassCallbackInfo = new InterceptorDescriptor();
             beanClassCallbackInfo.setFromBeanClass(true);
-            beanClassCallbackInfo.addCallbackDescriptors(type,
-                 this.getCallbackDescriptors(type));
-
-
+            beanClassCallbackInfo.addCallbackDescriptors(type, this.getCallbackDescriptors(type));
             beanClassCallbackInfo.setInterceptorClassName(getBeanClassName());
             callbackInterceptors.add(beanClassCallbackInfo);
         }
@@ -238,12 +240,11 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         return aroundInvokeDescs;
     }
 
-    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor
-            aroundInvokeDesc) {
+
+    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor aroundInvokeDesc) {
         String className = aroundInvokeDesc.getLifecycleCallbackClass();
         boolean found = false;
-        for (LifecycleCallbackDescriptor next :
-                getAroundInvokeDescriptors()) {
+        for (LifecycleCallbackDescriptor next : getAroundInvokeDescriptors()) {
             if (next.getLifecycleCallbackClass().equals(className)) {
                 found = true;
                 break;
@@ -254,9 +255,8 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         }
     }
 
-    public LifecycleCallbackDescriptor
-    getAroundInvokeDescriptorByClass(String className) {
 
+    public LifecycleCallbackDescriptor getAroundInvokeDescriptorByClass(String className) {
         for (LifecycleCallbackDescriptor next :
                 getAroundInvokeDescriptors()) {
             if (next.getLifecycleCallbackClass().equals(className)) {
@@ -276,18 +276,15 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
      * on any bean class interceptor.  If present, this would always be the
      * last element in the list because of the precedence defined by the spec.
      */
-    public List<InterceptorDescriptor> getAroundInvokeInterceptors
-            (Method m) {
-
+    public List<InterceptorDescriptor> getAroundInvokeInterceptors(Method m) {
         MethodDescriptor mDesc = new MethodDescriptor(m);
 
         // See if there's any method-level setting (either a chain
         // or a empty list ).  If not, use class-level chain
-        List<InterceptorDescriptor> aroundInvokeInterceptors =
-                methodInterceptorsMap.get(mDesc);
+        List<InterceptorDescriptor> aroundInvokeInterceptors = methodInterceptorsMap.get(mDesc);
 
         if( aroundInvokeInterceptors == null ) {
-            aroundInvokeInterceptors = new LinkedList<InterceptorDescriptor>();
+            aroundInvokeInterceptors = new LinkedList<>();
             for(InterceptorDescriptor desc : classInterceptorChain) {
                 if( desc.hasAroundInvokeDescriptor() ) {
                     aroundInvokeInterceptors.add(desc);
@@ -314,8 +311,9 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String appName = null;
 
-        if (enclosingBundle == null)
-          return null;
+        if (enclosingBundle == null) {
+            return null;
+        }
 
         Application app = enclosingBundle.getApplication();
         if ( !app.isVirtual()  ) {
@@ -340,8 +338,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         // name since we'll still need a way to register and lookup the bean
         // from within the container.
 
-        String componentName = isNamed() ? name :
-                "___internal_managed_bean_" + beanClassName;
+        String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaGlobalPrefix.append(componentName);
 
 
@@ -350,12 +347,13 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     public String getAppJndiName() {
 
-        if (enclosingBundle == null)
+        if (enclosingBundle == null) {
             return null;
+        }
 
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
 
-        StringBuffer javaAppPrefix = new StringBuffer("java:app/");
+        StringBuilder javaAppPrefix = new StringBuilder("java:app/");
 
         javaAppPrefix.append(modName);
         javaAppPrefix.append("/");
@@ -366,8 +364,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         // name since we'll still need a way to register and lookup the bean
         // from within the container.
 
-        String componentName = isNamed() ? name :
-                "___internal_managed_bean_" + beanClassName;
+        String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaAppPrefix.append(componentName);
 
 
@@ -379,6 +376,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     /**
     * Returns a formatted String of the attributes of this object.
     */
+    @Override
     public void print(StringBuffer toStringBuffer) {
 
     // toStringBuffer.append("\n homeClassName ").append(homeClassName);
@@ -387,7 +385,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     public void validate() {
 
-        visit((ManagedBeanVisitor)new ApplicationValidator());
+        visit(new ApplicationValidator());
 
     }
 
@@ -398,12 +396,10 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
 
-        List<InjectionCapable> injectables = new LinkedList<InjectionCapable>();
+        List<InjectionCapable> injectables = new LinkedList<>();
 
-        for (Iterator envEntryItr = getEnvironmentProperties().iterator();
-             envEntryItr.hasNext();) {
-            EnvironmentProperty envEntry = (EnvironmentProperty)
-                    envEntryItr.next();
+        for (Object element : getEnvironmentProperties()) {
+            EnvironmentProperty envEntry = (EnvironmentProperty) element;
             // Only env-entries that have been assigned a value are
             // eligible for injection.
             if (envEntry.hasAValue()) {
@@ -420,8 +416,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         injectables.addAll(getEntityManagerFactoryReferenceDescriptors());
         injectables.addAll(getEntityManagerReferenceDescriptors());
 
-        List<InjectionCapable> injectablesByClass =
-                new LinkedList<InjectionCapable>();
+        List<InjectionCapable> injectablesByClass = new LinkedList<>();
 
         for (InjectionCapable next : injectables ) {
             if (next.isInjectable()) {
@@ -443,17 +438,12 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String className = clazz.getName();
 
-        LifecycleCallbackDescriptor postConstructDesc =
-                getPostConstructDescriptorByClass(className);
-        String postConstructMethodName = (postConstructDesc != null) ?
-                postConstructDesc.getLifecycleCallbackMethod() : null;
-        LifecycleCallbackDescriptor preDestroyDesc =
-                getPreDestroyDescriptorByClass(className);
-        String preDestroyMethodName = (preDestroyDesc != null) ?
-                preDestroyDesc.getLifecycleCallbackMethod() : null;
-        InjectionInfo injectionInfo = new InjectionInfo(className,
-                postConstructMethodName, preDestroyMethodName,
-                getInjectableResourcesByClass(className));
+        LifecycleCallbackDescriptor postConstructDesc = getPostConstructDescriptorByClass(className);
+        String postConstructMethodName = postConstructDesc == null ? null : postConstructDesc.getLifecycleCallbackMethod();
+        LifecycleCallbackDescriptor preDestroyDesc = getPreDestroyDescriptorByClass(className);
+        String preDestroyMethodName = preDestroyDesc == null ? null : preDestroyDesc.getLifecycleCallbackMethod();
+        InjectionInfo injectionInfo = new InjectionInfo(className, postConstructMethodName, preDestroyMethodName,
+            getInjectableResourcesByClass(className));
 
         return injectionInfo;
     }
@@ -477,7 +467,5 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         }
         return null;
     }
-
-
 }
 

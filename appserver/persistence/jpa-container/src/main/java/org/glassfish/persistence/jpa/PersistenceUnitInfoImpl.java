@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,15 @@
 
 package org.glassfish.persistence.jpa;
 
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.deployment.common.DeploymentUtils.getRelativeEmbeddedModulePath;
-import static org.glassfish.persistence.jpa.PersistenceUnitLoader.isNullOrEmpty;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.persistence.SharedCacheMode;
+import jakarta.persistence.ValidationMode;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -35,15 +42,9 @@ import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.persistence.SharedCacheMode;
-import jakarta.persistence.ValidationMode;
-import jakarta.persistence.spi.ClassTransformer;
-import jakarta.persistence.spi.PersistenceUnitInfo;
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.deployment.common.DeploymentUtils.getRelativeEmbeddedModulePath;
+import static org.glassfish.persistence.jpa.PersistenceUnitLoader.isNullOrEmpty;
 
 /**
  * This class implements {@link PersistenceUnitInfo} interface.
@@ -61,12 +62,12 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     // We allow the default provider to be specified using -D option.
     private static String defaultProvider;
 
-    private PersistenceUnitDescriptor persistenceUnitDescriptor;
-    private ProviderContainerContractInfo providerContainerContractInfo;
+    private final PersistenceUnitDescriptor persistenceUnitDescriptor;
+    private final ProviderContainerContractInfo providerContainerContractInfo;
     private File absolutePuRootFile;
     private DataSource jtaDataSource;
     private DataSource nonJtaDataSource;
-    private List<URL> jarFiles;
+    private final List<URL> jarFiles;
 
     public PersistenceUnitInfoImpl(PersistenceUnitDescriptor persistenceUnitDescriptor, ProviderContainerContractInfo providerContainerContractInfo) {
         this.persistenceUnitDescriptor = persistenceUnitDescriptor;
@@ -207,8 +208,8 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     }
 
     private List<URL> _getJarFiles() {
-        List<String> jarFileNames = new ArrayList<String>(persistenceUnitDescriptor.getJarFiles());
-        List<URL> jarFiles = new ArrayList<URL>(jarFileNames.size() + 1);
+        List<String> jarFileNames = new ArrayList<>(persistenceUnitDescriptor.getJarFiles());
+        List<URL> jarFiles = new ArrayList<>(jarFileNames.size() + 1);
         String absolutePuRoot = getAbsolutePuRootFile().getAbsolutePath();
         for (String jarFileName : jarFileNames) {
             String nativeJarFileName = jarFileName.replace('/', File.separatorChar);
@@ -274,7 +275,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     /**
      * This method calculates the absolute path of the root of a PU. Absolute path
      * is not the path with regards to root of file system. It is the path from the
-     * root of the Java EE application this persistence unit belongs to. Returned
+     * root of the Jakarta EE application this persistence unit belongs to. Returned
      * path always uses '/' as path separator.
      *
      * @return the absolute path of the root of this persistence unit

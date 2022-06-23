@@ -58,6 +58,7 @@ public class EjbSniffer  extends GenericSniffer {
             "org.glassfish.ejb.startup.EjbContainerStarter",
     };
 
+    @Override
     public String[] getContainersNames() {
         return containers;
     }
@@ -98,30 +99,20 @@ public class EjbSniffer  extends GenericSniffer {
         return ejbAnnotations;
     }
 
-    /**
-     * @return whether this sniffer should be visible to user
-     *
-     */
+    @Override
     public boolean isUserVisible() {
         return true;
     }
 
-    /**
-     * @return whether this sniffer represents a Java EE container type
-     *
-     */
-    public boolean isJavaEE() {
+    @Override
+    public boolean isJakartaEE() {
         return true;
     }
 
     /**
-     * @return the set of the sniffers that should not co-exist for the
-     * same module. For example, ejb and connector sniffers should not
-     * be returned in the sniffer list for a certain module.
-     * This method will be used to validate and filter the retrieved sniffer
-     * lists for a certain module
-     *
+     * @return connector
      */
+    @Override
     public String[] getIncompatibleSnifferTypes() {
         return new String[] {"connector"};
     }
@@ -137,6 +128,7 @@ public class EjbSniffer  extends GenericSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(ejbType) ||
             archiveType.toString().equals("war")) {
@@ -149,7 +141,7 @@ public class EjbSniffer  extends GenericSniffer {
             initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add("META-INF/ejb-jar.xml");
         result.add("META-INF/sun-ejb-jar.xml");
         result.add("META-INF/glassfish-ejb-jar.xml");

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,18 +42,14 @@ import java.util.stream.Stream;
 import com.sun.logging.LogDomains;
 
 /**
- *
  * Utility class to load the EE permissions, EE restrictions, and check restrictions for a given permission set
- *
  */
 public class SMGlobalPolicyUtil {
 
     static Logger logger = Logger.getLogger(LogDomains.SECURITY_LOGGER);
 
     /**
-     *
-     * Java EE Component type supporting the use of declared permissions
-     *
+     * Jakarta EE Component type supporting the use of declared permissions
      */
     public enum CommponentType {
         ear, ejb, war, rar, car
@@ -119,13 +115,13 @@ public class SMGlobalPolicyUtil {
 
     public static final String EAR_CLASS_LOADER = "org.glassfish.javaee.full.deployment.EarClassLoader";
 
-    // map recording the 'Java EE component type' to its EE granted permissions
+    // map recording the 'Jakarta EE component type' to its EE granted permissions
     private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<>();
 
-    // map recording the 'Java EE component type' to its EE restricted permissions
+    // map recording the 'Jakarta EE component type' to its EE restricted permissions
     private static final Map<CommponentType, PermissionCollection> compTypeToEERestrictedMap = new HashMap<>();
 
-    // map recording the 'Java EE component type' to its allowed permissions
+    // map recording the 'Jakarta EE component type' to its allowed permissions
     private static final Map<CommponentType, PermissionCollection> compTypeToServAllowedMap = new HashMap<>();
 
     private static boolean eeGrantedPolicyInitDone = false;
@@ -148,7 +144,7 @@ public class SMGlobalPolicyUtil {
     /**
      * Get the default granted permissions of a specified component type
      *
-     * @param type Java EE component type
+     * @param type Jakarta EE component type
      * @return the permission set granted to the specified component
      */
     public static PermissionCollection getEECompGrantededPerms(CommponentType type) {
@@ -159,7 +155,7 @@ public class SMGlobalPolicyUtil {
     /**
      * Get the default granted permissions of a specified component type
      *
-     * @param type Java EE component type such as ejb, war, rar, car, ear
+     * @param type Jakarta EE component type such as ejb, war, rar, car, ear
      * @return
      */
     public static PermissionCollection getEECompGrantededPerms(String type) {
@@ -170,7 +166,7 @@ public class SMGlobalPolicyUtil {
     /**
      * Get the restricted permission set of a specified component type on the server
      *
-     * @param type Java EE component type
+     * @param type Jakarta EE component type
      * @return the restricted permission set of the specified component type on the server
      */
     public static PermissionCollection getCompRestrictedPerms(CommponentType type) {

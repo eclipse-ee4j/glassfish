@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,11 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.xml.PersistenceTagNames;
-import org.xml.sax.Attributes;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.xml.sax.Attributes;
 
 /**
  * This node is responsible for reading details about one <persistence-unit/>
@@ -39,14 +41,16 @@ public class PersistenceUnitNode extends DeploymentDescriptorNode {
      * constructors of this class. Inside this constructor, we clear the
      * handlers set up by super classes' constructors because they are
      * not applicable in the context of PersistenceNode because
-     * unlike standard Java EE schemas, persistence.xsd does not include
-     * javaee_5.xsd for things like description, version etc.
+     * unlike standard Jakarta EE schemas, persistence.xsd does not include
+     * jakartaee xsd for things like description, version etc.
      */
     public PersistenceUnitNode() {
         // clear all the handlers set up by super classes
         // because that sets up a handler for description which we are not
         // interested in.
-        if (handlers != null) handlers.clear();
+        if (handlers != null) {
+            handlers.clear();
+        }
         initDispatchTable();
     }
 
@@ -71,28 +75,29 @@ public class PersistenceUnitNode extends DeploymentDescriptorNode {
 
     /**
      * This returns the dispatch table for this node.
-     * Please note, unlike Java EE schemas persistence.xsd does not include
+     * Please note, unlike Jakarta EE schemas persistence.xsd does not include
      * standard elements or attributes (e.g. version, descriptionGroupRef etc.)
-     * from javaee_5.xsd, we don't use super classes' dispatch table.
+     * from jakartaee xsd, we don't use super classes' dispatch table.
      * @return map of element names to method names in PersistenceUnitDescriptor
-     * @see super#getDispatchTable()
+     * @see DeploymentDescriptorNode#getDispatchTable()
      * @see #initDispatchTable()
      */
+    @Override
     protected Map getDispatchTable() {
         return dispatchTable;
     }
 
     /**
-     * Please note, unlike Java EE schemas persistence.xsd does not include
+     * Please note, unlike Jakarta EE schemas persistence.xsd does not include
      * standard elements or attributes (e.g. version, descriptionGroupRef etc.)
-     * from javaee_5.xsd, we don't use super classes' dispatch table.
+     * from jakartaee xsd, we don't use super classes' dispatch table.
      */
     private void initDispatchTable() {
         assert(dispatchTable == null);
 
         // we don't do super.getDispatchTable() because we are not
         // interested in any of super classes' disptcah table entries.
-        Map<String, String> table = new HashMap<String, String>();
+        Map<String, String> table = new HashMap<>();
 
         // the values being put into the map represent method names
         // in PersistenceUnitDescriptor class.

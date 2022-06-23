@@ -75,7 +75,7 @@ public class InjectionPointHelper {
         Annotation envAnnotation = getEnvAnnotation(annotations);
 
         if (envAnnotation == null) {
-            throw new IllegalArgumentException("No Java EE env dependency annotation found on " + member);
+            throw new IllegalArgumentException("No Jakarta EE env dependency annotation found on " + member);
         }
 
         String envAnnotationName = null;

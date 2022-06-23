@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,7 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import java.util.Set;
 
 /**
- * This interface defines the behaviour of a Java EE component containaing
+ * This interface defines the behaviour of a Jakarta EE component containaing
  * web service references
  * Note from the author, I hate being so verbose with method names but
  * I follow the current design pattern. should be fixed one day

@@ -84,23 +84,18 @@ public class WebSniffer  extends GenericSniffer {
 
     private static final String[] containers = { "com.sun.enterprise.web.WebContainer" };
 
+    @Override
     public String[] getContainersNames() {
         return containers;
     }
 
-    /**
-     * @return whether this sniffer should be visible to user
-     *
-     */
+    @Override
     public boolean isUserVisible() {
         return true;
     }
 
-    /**
-     * @return whether this sniffer represents a Java EE container type
-     *
-     */
-    public boolean isJavaEE() {
+    @Override
+    public boolean isJakartaEE() {
         return true;
     }
 
@@ -108,7 +103,7 @@ public class WebSniffer  extends GenericSniffer {
             initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add("WEB-INF/web.xml");
         result.add("WEB-INF/sun-web.xml");
         result.add("WEB-INF/glassfish-web.xml");
@@ -135,6 +130,7 @@ public class WebSniffer  extends GenericSniffer {
      * lists for a certain module
      *
      */
+    @Override
     public String[] getIncompatibleSnifferTypes() {
         return new String[] {"connector"};
     }
@@ -150,6 +146,7 @@ public class WebSniffer  extends GenericSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(warType)) {
             return true;
@@ -159,7 +156,7 @@ public class WebSniffer  extends GenericSniffer {
 
     // TODO(Sahoo): Ideally we should have separate sniffer for JSP, but since WebSniffer is already
     // handling JSPs, we must make sure that all JSP related modules get installed by WebSniffer as well.
-    private String[] containerModuleNames = {"org.glassfish.main.web.glue",
+    private final String[] containerModuleNames = {"org.glassfish.main.web.glue",
             "org.glassfish.wasp.wasp"
     };
 

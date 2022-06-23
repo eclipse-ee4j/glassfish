@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,24 @@
 
 package com.sun.enterprise.connectors.connector.module;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.deployment.GenericSniffer;
-import com.sun.enterprise.module.HK2Module;
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.DeploymentUtils;
+import com.sun.enterprise.module.HK2Module;
 
-import org.jvnet.hk2.annotations.Service;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.DeploymentUtils;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.deployment.GenericSniffer;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Sniffer for detecting resource-adapter modules
@@ -81,6 +82,7 @@ public class ConnectorSniffer extends GenericSniffer {
      *
      * @return list of container names known to the habitat for this sniffer
      */
+    @Override
     public String[] getContainersNames() {
         return containerNames;
     }
@@ -90,6 +92,7 @@ public class ConnectorSniffer extends GenericSniffer {
      *
      * @return the container name
      */
+    @Override
     public String getModuleType() {
         return ConnectorConstants.CONNECTOR_MODULE;
     }
@@ -108,30 +111,23 @@ public class ConnectorSniffer extends GenericSniffer {
         return connectorAnnotations;
     }
 
-    /**
-     * @return whether this sniffer should be visible to user
-     *
-     */
+    @Override
     public boolean isUserVisible() {
         return true;
     }
 
     /**
-     * @return whether this sniffer represents a Java EE container type
-     *
+     * @return true
      */
-    public boolean isJavaEE() {
+    @Override
+    public boolean isJakartaEE() {
         return true;
     }
 
     /**
-     * @return the set of the sniffers that should not co-exist for the
-     * same module. For example, ejb and appclient sniffers should not
-     * be returned in the sniffer list for a certain module.
-     * This method will be used to validate and filter the retrieved sniffer
-     * lists for a certain module
-     *
+     * @return ejb and web
      */
+    @Override
     public String[] getIncompatibleSnifferTypes() {
         return new String[] {"ejb", "web"};
     }
@@ -162,6 +158,7 @@ public class ConnectorSniffer extends GenericSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(rarType)) {
             return true;
@@ -173,7 +170,7 @@ public class ConnectorSniffer extends GenericSniffer {
             initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add("META-INF/ra.xml");
         result.add("META-INF/sun-ra.xml");
         result.add("META-INF/weblogic-ra.xml");

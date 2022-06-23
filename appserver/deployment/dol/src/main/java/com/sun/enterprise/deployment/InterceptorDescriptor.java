@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,11 +30,9 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
- * Contains information about 1 Java EE interceptor.
+ * Contains information about 1 Jakarta EE interceptor.
  */
-
-public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
-{
+public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(InterceptorDescriptor.class);
 
@@ -76,7 +75,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
         if (aroundInvokeDescriptors == null) {
             aroundInvokeDescriptors =
-                new HashSet<LifecycleCallbackDescriptor>();
+                new HashSet<>();
         }
         return aroundInvokeDescriptors;
     }
@@ -95,7 +94,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     public Set<LifecycleCallbackDescriptor> getAroundTimeoutDescriptors() {
         if (aroundTimeoutDescriptors == null) {
             aroundTimeoutDescriptors =
-                new HashSet<LifecycleCallbackDescriptor>();
+                new HashSet<>();
         }
         return aroundTimeoutDescriptors;
     }
@@ -207,10 +206,10 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
     {
 
         LinkedList<LifecycleCallbackDescriptor> orderedDescs =
-            new LinkedList<LifecycleCallbackDescriptor>();
+            new LinkedList<>();
 
         Map<String, LifecycleCallbackDescriptor> map =
-            new HashMap<String, LifecycleCallbackDescriptor>();
+            new HashMap<>();
 
         for(LifecycleCallbackDescriptor next : lcds) {
             map.put(next.getLifecycleCallbackClass(), next);

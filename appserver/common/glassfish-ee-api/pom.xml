@@ -29,7 +29,7 @@
     <artifactId>glassfish-ee-api</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Java EE dependent public APIs of Glassfish</name>
+    <name>Jakarta EE dependent public APIs of Glassfish</name>
 
     <developers>
         <developer>

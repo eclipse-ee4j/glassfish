@@ -29,7 +29,7 @@
     <artifactId>programmatic-authentication-jacc-api</artifactId>
     <packaging>war</packaging>
 
-    <name>Java EE 7 Sample: Programmatic-authentication with Jacc api</name>
+    <name>Jakarta EE Sample: Programmatic-authentication with Jacc api</name>
     <build>
       <finalName>prog-auth</finalName>
     </build>

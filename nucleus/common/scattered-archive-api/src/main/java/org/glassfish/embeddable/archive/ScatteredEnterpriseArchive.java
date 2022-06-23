@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +21,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Abstraction for a Scattered Java EE Application.
+ * Abstraction for a Scattered Jakarta EE Application.
  * <p/>
  * <p/>
  * Usage example :
@@ -74,8 +73,8 @@ public class ScatteredEnterpriseArchive {
 
     String name;
     static final String type = "ear";
-    Map<String, File> archives = new HashMap<String, File>();
-    Map<String, File> metadatas = new HashMap<String, File>();
+    Map<String, File> archives = new HashMap<>();
+    Map<String, File> metadatas = new HashMap<>();
 
     /**
      * Construct a new scattered enterprise archive.
@@ -110,7 +109,7 @@ public class ScatteredEnterpriseArchive {
      * <pre>
      *      ScatteredArchive URI obtained via {@link ScatteredArchive#toURI()}.
      *      Location of a library JAR file. Must be a File URI.
-     *      Location of a Java EE module. Must be a File URI.
+     *      Location of a Jakarta EE module. Must be a File URI.
      * </pre>
      * If the specified name is null, then the name is computed as the name of the
      * File as located by archiveURI.
@@ -167,7 +166,7 @@ public class ScatteredEnterpriseArchive {
      * The specified archive location should be one of the following:
      * <pre>
      *      Location of a library JAR file.
-     *      Location of a Java EE module.
+     *      Location of a Jakarta EE module.
      * </pre>
      * If the specified name is null, then the name is computed as archive.getName()
      *

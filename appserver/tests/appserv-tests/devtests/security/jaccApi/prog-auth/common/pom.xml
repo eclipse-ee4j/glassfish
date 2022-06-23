@@ -29,7 +29,7 @@
     <artifactId>jaccApi-common</artifactId>
 
     <packaging>jar</packaging>
-    <name>Java EE 7 Sample: jaccApi- common</name>
+    <name>Jakarta EE Sample: jaccApi- common</name>
 
     <dependencies>
         <dependency>

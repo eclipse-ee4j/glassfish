@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -225,7 +225,6 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
             String jndiName;
             if (metadata.getLookup() == null) {
                 // Use platform default connection factory
-                // Java EE 7: see http://java.net/jira/browse/JAVAEE_SPEC-2
                 jndiName = JMSContextMetadata.DEFAULT_CONNECTION_FACTORY;
             } else {
                 jndiName = metadata.getLookup();

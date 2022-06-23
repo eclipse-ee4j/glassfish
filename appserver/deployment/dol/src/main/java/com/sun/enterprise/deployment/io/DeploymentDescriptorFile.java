@@ -412,13 +412,13 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
     /**
      * @return the location of the deployment descriptor file for a
-     * particular type of Java EE Archive
+     * particular type of Jakarta EE Archive
      */
     public abstract String getDeploymentDescriptorPath();
 
     /**
      * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this Java EE module
+     * descriptors associated with this Jakarta EE module
      *
      * @param descriptor the descriptor for which we need the node
      */

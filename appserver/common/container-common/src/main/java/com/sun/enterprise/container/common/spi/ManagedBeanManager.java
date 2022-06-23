@@ -24,9 +24,8 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
 /**
- * ManagedBeanManager provides an interface to various Java EE Managed Bean component operations.
+ * ManagedBeanManager provides an interface to various Jakarta EE Managed Bean component operations.
  */
-
 @Contract
 public interface ManagedBeanManager {
 

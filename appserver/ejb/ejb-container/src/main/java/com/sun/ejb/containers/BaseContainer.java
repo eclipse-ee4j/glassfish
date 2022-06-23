@@ -159,7 +159,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected static final Logger _logger = LogFacade.getLogger();
 
-    @LogMessageInfo(message = "The feature {0} requires Full Java EE Profile to be supported", level = "WARNING")
+    @LogMessageInfo(message = "The feature {0} requires Full Jakarta EE Profile to be supported", level = "WARNING")
     private static final String WARN_FEATURE_REQUIRES_FULL_PROFILE = "AS-EJB-00053";
 
     @LogMessageInfo(message = "Portable JNDI names for EJB {0}: {1}", level = "INFO")

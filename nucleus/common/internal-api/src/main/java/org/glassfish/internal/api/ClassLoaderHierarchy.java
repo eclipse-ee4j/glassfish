@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,7 +36,7 @@ import com.sun.enterprise.module.ResolveError;
 public interface ClassLoaderHierarchy {
     /**
      * Returns a ClassLoader that can load classes exported by any OSGi bundle
-     * in the system for public use. Such classes include Java EE API, AMX API,
+     * in the system for public use. Such classes include Jakarta EE API, AMX API,
      * appserv-ext API, etc. CommonClassLoader delegates to this class loader.
      * @return a ClassLoader that can load classes exported by any bundles
      */

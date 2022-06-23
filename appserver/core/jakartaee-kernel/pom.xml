@@ -30,7 +30,7 @@
     <artifactId>jakartaee-kernel</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Java EE related distributions kernel Classes</name>
+    <name>Jakarta EE related distributions kernel Classes</name>
 
     <developers>
         <developer>

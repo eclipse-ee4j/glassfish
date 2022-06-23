@@ -67,7 +67,7 @@
             For an embedded app client, the default path the app server will
             recognize is
 
-                ${module ID of the Java EE app}/${URI to the appclient jar}
+                ${module ID of the Jakarta EE app}/${URI to the appclient jar}
 
             The URI to the app client jar is the text value of the <java> element
             for this app client in the ear's application.xml.

@@ -84,32 +84,22 @@ public class EarSniffer extends GenericSniffer {
         return DeploymentUtils.isArchiveOfType(location, earType, locator);
     }
 
-    /**
-     * @return whether this sniffer should be visible to user
-     *
-     */
     @Override
     public boolean isUserVisible() {
         return true;
     }
 
-    /**
-     * @return whether this sniffer represents a Java EE container type
-     *
-     */
     @Override
-    public boolean isJavaEE() {
+    public boolean isJakartaEE() {
         return true;
     }
 
     /**
-     *
      * This API is used to help determine if the sniffer should recognize the current archive. If the sniffer does not
      * support the archive type associated with the current deployment, the sniffer should not recognize the archive.
      *
      * @param archiveType the archive type to check
      * @return whether the sniffer supports the archive type
-     *
      */
     @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
@@ -122,7 +112,7 @@ public class EarSniffer extends GenericSniffer {
     private static final List<String> deploymentConfigurationPaths = initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add("META-INF/application.xml");
         result.add("META-INF/sun-application.xml");
         result.add("META-INF/glassfish-application.xml");

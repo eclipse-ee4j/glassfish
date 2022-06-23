@@ -382,7 +382,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     }
 
     /**
-     * Read all Java EE deployment descriptors and annotations
+     * Read all Jakarta EE deployment descriptors and annotations
      *
      * @return the initialized descriptor
      */
@@ -442,7 +442,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     }
 
     /**
-     * Read all Java EE annotations
+     * Read all Jakarta EE annotations
      */
     protected void readAnnotations(ReadableArchive archive, T descriptor,
                                  Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions)
@@ -609,7 +609,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
                 throw new AnnotationProcessorException(
                         localStrings.getLocalString(
                                 "enterprise.deployment.oldDDwithAnnotation",
-                                "{0} in archive {1} is of version {2}, which cannot support annotations in an application.  Please upgrade the deployment descriptor to be a version supported by Java EE 5.0 (or later).",
+                                "{0} in archive {1} is of version {2}, which cannot support annotations in an application."
+                                + "  Please upgrade the deployment descriptor to be a version supported by Jakarta EE 10 (or later).",
                                 new Object[]{ddName, archiveName, bundleDesc.getSpecVersion()}));
             }
             boolean isFullAttribute = false;
@@ -1107,8 +1108,6 @@ public abstract class Archivist<T extends BundleDescriptor> {
                     hasRuntimeDeploymentDescriptor(archive)) {
                 return true;
             }
-
-            // Java EE 5 Specification: Section EE.8.4.2.1
 
             //second, check file extension if any, excluding .jar as it needs
             //additional processing

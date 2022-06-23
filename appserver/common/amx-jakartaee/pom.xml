@@ -30,7 +30,7 @@
     <packaging>glassfish-jar</packaging>
 
     <name>AMX JavaEE</name>
-    <description>AMX Java EE Management (JSR 77) API and Implementation</description>
+    <description>AMX Jakarta EE Management (JSR 77) API and Implementation</description>
 
     <developers>
         <developer>

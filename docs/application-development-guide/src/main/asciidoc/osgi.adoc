@@ -29,7 +29,8 @@ latest Jakarta EE APIs and frameworks. It is built using OSGi technology,
 and includes as its OSGi module management subsystem the
 http://felix.apache.org[Apache Felix OSGi framework]
 (`http://felix.apache.org`), which is a fully-compliant implementation
-of the OSGi Service Platform R4 Version 4.3 specification. {productName} supports deployment of OSGi-based applications using this
+of the OSGi Service Platform R4 Version 4.3 specification. {productName}
+supports deployment of OSGi-based applications using this
 framework. OSGi applications can make use of core as well as enterprise
 OSGi features. {productName} makes available many of its Jakarta EE
 platform services, such as the transaction service, HTTP service, JDBC
@@ -44,8 +45,8 @@ OSGi applications are deployed as one or more OSGi bundles, and the
 you to deploy and manage your OSGi bundles. This chapter classifies OSGi
 bundles into two categories based on the features they use:
 
-* Plain OSGi Application Bundles - bundles that do not contain any Java
-EE components. See link:#gkupd[Developing Plain OSGi Bundles].
+* Plain OSGi Application Bundles - bundles that do not contain any Jakarta EE
+components. See link:#gkupd[Developing Plain OSGi Bundles].
 * Hybrid Application Bundles - bundles that are an OSGi bundle as wells
 as a Jakarta EE module. At runtime, such modules have both an OSGi bundle
 context and a Jakarta EE context. {productName} supports the following
@@ -96,13 +97,14 @@ unavailable to applications built using just one of the two platforms.
 === Developing OSGi Application Bundles for {productName}
 
 {productName} enables interaction between OSGi components and Jakarta EE
-components. OSGi services managed by the OSGi framework can invoke Java
-EE components managed by the Jakarta EE container and vice versa. For
-example, developers can declaratively export EJBs as OSGi services
+components. OSGi services managed by the OSGi framework can invoke Jakarta EE
+components managed by the Jakarta EE container and vice versa.
+For example, developers can declaratively export EJBs as OSGi services
 without having to write any OSGi code. This allows any plain OSGi
 component, which is running without the Jakarta EE context, to discover the
 EJB and invoke it. Similarly, Jakarta EE components can locate OSGi
-services provided by plain OSGi bundles and use them as well. {productName} extends the Jakarta EE Context and Dependency Injection (CDI)
+services provided by plain OSGi bundles and use them as well.
+{productName} extends the Jakarta EE Context and Dependency Injection (CDI)
 framework to make it easier for Jakarta EE components to consume dynamic
 OSGi services in a type-safe manner.
 
@@ -120,8 +122,8 @@ code can rely on the Jakarta EE container to inject the required services
 as well. Unfortunately, neither of them works when the code runs outside
 a Jakarta EE context. An example of such code is the `BundleActivator` of
 an OSGi bundle. For such code to access Jakarta EE platform services,
-{productName} makes key services and resources of the underlying Java
-EE platform available as OSGi services. Thus, an OSGi bundle deployed in
+{productName} makes key services and resources of the underlying Jakarta EE
+platform available as OSGi services. Thus, an OSGi bundle deployed in
 {productName} can access these services using OSGi Service look-up
 APIs or by using a white board pattern. The following Jakarta EE services
 are available as OSGi services:

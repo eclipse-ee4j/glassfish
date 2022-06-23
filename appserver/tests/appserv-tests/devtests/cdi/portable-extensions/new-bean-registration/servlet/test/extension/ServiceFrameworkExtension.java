@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -79,9 +80,9 @@ public class ServiceFrameworkExtension implements Extension{
 
     /**
      * Observer for <code>ProcessInjectionTarget</code> events. This event is
-     * fired for every Java EE component class supporting injection that may be
+     * fired for every Jakarta EE component class supporting injection that may be
      * instantiated by the container at runtime. Injections points of every
-     * discovered enabled Java EE component is checked to see if there is a
+     * discovered enabled Jakarta EE component is checked to see if there is a
      * request for injection of a framework service.
      */
     void afterProcessInjectionTarget(@Observes ProcessInjectionTarget<?> pb){
@@ -94,7 +95,7 @@ public class ServiceFrameworkExtension implements Extension{
      * Observer for <code>ProcessInjectionTarget</code> events. This event is
      * fired fire an event for each enabled bean, interceptor or decorator
      * deployed in a bean archive, before registering the Bean object.
-     * Injections points of every discovered enabled Java EE component is
+     * Injections points of every discovered enabled Jakarta EE component is
      * checked to see if there is a request for injection of a framework
      * service.
      */

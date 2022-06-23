@@ -449,7 +449,7 @@ final class RegistrationSupport
         final Application app = appInfo.getMetaData(Application.class);
         if ( app == null )
         {
-            if ( appInfo.isJavaEEApp() )
+            if ( appInfo.isJakartaEEApp() )
             {
                 mLogger.log(Level.WARNING, AMXEELoggerInfo.nullAppinfo, appName);
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2004, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,8 +22,8 @@ import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 
 /**
- * FedTax WebService endpoint using the Java EE 5 annotations.
- * Used for testing Web Services Security tests on Java EE 5 platform.
+ * FedTax WebService endpoint using the Jakarta EE annotations.
+ * Used for testing Web Services Security tests on Jakarta EE platform.
  *
  * @version 1.1  08 Aug 2005
  * @author Jagadesh Munta

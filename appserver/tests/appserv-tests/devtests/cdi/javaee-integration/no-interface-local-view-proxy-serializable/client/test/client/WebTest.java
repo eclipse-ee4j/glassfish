@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@ import java.net.URL;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
-/*
+/**
  * Unit test for @WebServlet
  */
 @SuppressWarnings("deprecation")
@@ -48,7 +49,7 @@ public class WebTest {
     }
 
     public static void main(String[] args) {
-        stat.addDescription("Unit test for Java EE resource injection");
+        stat.addDescription("Unit test for Jakarta EE resource injection");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
         stat.printSummary(TEST_NAME);

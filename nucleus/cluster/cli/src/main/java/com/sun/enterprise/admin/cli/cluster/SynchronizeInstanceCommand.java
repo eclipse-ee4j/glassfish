@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,23 +18,29 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import java.io.*;
-import java.net.ConnectException;
-import java.text.DateFormat;
-import java.util.*;
-import java.util.logging.*;
-import java.util.zip.*;
-import jakarta.xml.bind.*;
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-
 import com.sun.enterprise.util.cluster.SyncRequest;
 import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Synchronize a local server instance.
@@ -51,15 +58,16 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
 
     private RemoteCLICommand syncCmd = null;
 
-    private static enum SyncLevel { TOP, FILES, DIRECTORY, RECURSIVE };
+    private enum SyncLevel { TOP, FILES, DIRECTORY, RECURSIVE }
 
     // the name of the sync state file, relative to the instance directory
     private static final String SYNC_STATE_FILE = ".syncstate";
 
     @Override
     protected void validate() throws CommandException {
-        if (ok(instanceName0))
+        if (ok(instanceName0)) {
             instanceName = instanceName0;
+        }
         super.validate();
     }
 
@@ -68,9 +76,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
     @Override
     protected int executeCommand() throws CommandException {
 
-        if (synchronizeInstance())
+        if (synchronizeInstance()) {
             return SUCCESS;
-        else {
+        } else {
             logger.info(Strings.get("Sync.failed",
                                     programOpts.getHost(),
                                     Integer.toString(programOpts.getPort())));
@@ -88,8 +96,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
     protected boolean synchronizeInstance() throws CommandException {
 
         File dasProperties = getServerDirs().getDasPropertiesFile();
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("das.properties: " + dasProperties);
+        }
 
         if (!dasProperties.exists()) {
             logger.info(
@@ -150,8 +159,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
          * instance-private state) are left alone.
          */
         if (sync.equals("full") || doFullSync) {
-            if (logger.isLoggable(Level.FINE))
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine(Strings.get("Instance.fullsync", instanceName));
+            }
             removeSubdirectory("config");
             removeSubdirectory("applications");
             removeSubdirectory("generated");
@@ -177,11 +187,13 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
              * If not, we're all done.
              */
             if (domainXml.lastModified() == dtime) {
-                if (logger.isLoggable(Level.FINE))
+                if (logger.isLoggable(Level.FINE)) {
                     logger.fine(Strings.get("Sync.alreadySynced"));
-                if (!syncState.delete())
+                }
+                if (!syncState.delete()) {
                     logger.warning(
                         Strings.get("Sync.cantDeleteSyncState", syncState));
+                }
                 /*
                  * Note that we earlier marked the token for reuse.  It's OK
                  * to return immediately here with the DAS still willing to
@@ -208,15 +220,17 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             for (File adir : FileUtils.listFiles(archiveDir)) {
                 File[] af = FileUtils.listFiles(adir);
                 if (af.length != 1) {
-                    if (logger.isLoggable(Level.FINER))
+                    if (logger.isLoggable(Level.FINER)) {
                         logger.finer("IGNORING " + adir + ", # files " +
                                                                     af.length);
+                    }
                     continue;
                 }
                 File archive = af[0];
                 File appDir = new File(appsDir, adir.getName());
-                if (logger.isLoggable(Level.FINER))
+                if (logger.isLoggable(Level.FINER)) {
                     logger.finer("UNZIP " + archive + " TO " + appDir);
+                }
                 try {
                     expand(appDir, archive);
                 } catch (Exception ex) { }
@@ -253,8 +267,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             sr.dir = "config-specific";
             File configDir = new File(instanceDir, "config");
             for (File f : configDir.listFiles()) {
-                if (!f.isDirectory())
+                if (!f.isDirectory()) {
                     continue;
+                }
                 getFileModTimes(f, configDir, sr, SyncLevel.DIRECTORY);
             }
             /*
@@ -267,8 +282,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             }
             synchronizeFiles(sr);
         } catch (ConnectException cex) {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Couldn't connect to DAS: " + cex);
+            }
             /*
              * Don't chain the exception, otherwise asadmin will think it
              * it was a connect failure and will list the closest matching
@@ -277,8 +293,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             exc = new CommandException(
                         Strings.get("Sync.connectFailed", cex.getMessage()));
         } catch (CommandException ex) {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Exception during synchronization: " + ex);
+            }
             exc = ex;
         }
 
@@ -294,9 +311,10 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             if (domainXml.exists() && domainXml.lastModified() == dtime &&
                     docroot.isDirectory()) {
                 // nothing changed and sync has completed at least once
-                if (!syncState.delete())
+                if (!syncState.delete()) {
                     logger.warning(
                         Strings.get("Sync.cantDeleteSyncState", syncState));
+                }
                 return false;
             }
             throw exc;
@@ -305,8 +323,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
         /*
          * Success!  Remove sync state file.
          */
-        if (!syncState.delete())
+        if (!syncState.delete()) {
             logger.warning(Strings.get("Sync.cantDeleteSyncState", syncState));
+        }
         return true;
     }
 
@@ -319,8 +338,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
         sr.instance = instanceName;
         sr.dir = dir;
         File fdir = new File(instanceDir, dir);
-        if (!fdir.exists())
+        if (!fdir.exists()) {
             return sr;
+        }
         getFileModTimes(fdir, fdir, sr, level);
         return sr;
     }
@@ -342,23 +362,27 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
         for (String file : dir.list()) {
             File f = new File(dir, file);
             long time = f.lastModified();
-            if (time == 0)
+            if (time == 0) {
                 continue;
+            }
             if (f.isDirectory()) {
                 if (level == SyncLevel.RECURSIVE) {
                     getFileModTimes(f, baseDir, sr, level);
                     continue;
-                } else if (level == SyncLevel.FILES)
+                } else if (level == SyncLevel.FILES) {
                     continue;
+                }
             }
             String name = baseDir.toURI().relativize(f.toURI()).getPath();
             // if name is a directory, it will end with "/"
-            if (name.endsWith("/"))
+            if (name.endsWith("/")) {
                 name = name.substring(0, name.length() - 1);
+            }
             SyncRequest.ModTime mt = new SyncRequest.ModTime(name, time);
             sr.files.add(mt);
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer(f + ": mod time " + mt.time);
+            }
         }
     }
 
@@ -376,12 +400,14 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty("jaxb.formatted.output", Boolean.TRUE);
             marshaller.marshal(sr, tempFile);
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 marshaller.marshal(sr, System.out);
+            }
 
             File syncdir = new File(instanceDir, sr.dir);
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Sync directory: " + syncdir);
+            }
             // _synchronize-files takes a single operand of type File
             // Note: we throw the output away to avoid printing a blank line
             syncCmd.executeAndReturnOutput("_synchronize-files",
@@ -389,13 +415,15 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
 
             // the returned files are automatically saved by the command
         } catch (IOException ex) {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Got exception: " + ex);
+            }
             throw new CommandException(
                 Strings.get("Sync.dirFailed", sr.dir, ex.toString()), ex);
         } catch (JAXBException jex) {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer("Got exception: " + jex);
+            }
             throw new CommandException(
                 Strings.get("Sync.dirFailed", sr.dir, jex.toString()), jex);
         } catch (CommandException cex) {
@@ -404,16 +432,18 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
                 logger.finer("Got exception: " + cex);
                 logger.finer("  cause: " + cause);
             }
-            if (cause instanceof ConnectException)
+            if (cause instanceof ConnectException) {
                 throw (ConnectException)cause;
+            }
             throw new CommandException(
                 Strings.get("Sync.dirFailed", sr.dir, cex.getMessage()), cex);
         } finally {
             // remove tempFile
             if (tempFile != null) {
-                if (!tempFile.delete())
+                if (!tempFile.delete()) {
                     logger.warning(
                         Strings.get("Sync.cantDeleteTempFile", tempFile));
+                }
             }
         }
     }
@@ -423,20 +453,22 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
      */
     private void removeSubdirectory(String name) {
         File subdir = new File(instanceDir, name);
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Removing: " + subdir);
+        }
         FileUtils.whack(subdir);
     }
 
     /**
      * Expand the archive to the specified directory.
-     * XXX - this doesn't handle all the cases required for a Java EE app,
+     * XXX - this doesn't handle all the cases required for a Jakarta EE app,
      * but it's good enough for now for some performance testing
      */
     private static void expand(File dir, File archive) throws Exception {
-        if (!dir.mkdir())
+        if (!dir.mkdir()) {
             logger.warning(
                 Strings.get("Sync.cantCreateDirectory", dir));
+        }
         long modtime = archive.lastModified();
         ZipFile zf = new ZipFile(archive);
         try {
@@ -445,9 +477,10 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
                 ZipEntry ze = e.nextElement();
                 File entry = new File(dir, ze.getName());
                 if (ze.isDirectory()) {
-                    if (!entry.mkdir())
+                    if (!entry.mkdir()) {
                         logger.warning(
                             Strings.get("Sync.cantCreateDirectory", dir));
+                    }
                 } else {
                     FileUtils.copy(zf.getInputStream(ze),
                                     new FileOutputStream(entry), 0);
@@ -458,8 +491,9 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
                 zf.close();
             } catch (IOException ex) { }
         }
-        if (!dir.setLastModified(modtime))
+        if (!dir.setLastModified(modtime)) {
             logger.warning(
                 Strings.get("Sync.cantSetModTime", dir));
+        }
     }
 }

@@ -27,5 +27,5 @@
     </parent>
     <artifactId>release-notes</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Release Notes, Release 7</name>
+    <name>Eclipse GlassFish Release Notes, Release 7</name>
 </project>

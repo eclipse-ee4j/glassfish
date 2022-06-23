@@ -27,5 +27,5 @@
     </parent>
     <artifactId>application-development-guide</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Application Development Guide, Release 7</name>
+    <name>Eclipse GlassFish Application Development Guide, Release 7</name>
 </project>

@@ -818,6 +818,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.0.0-M6</version>
                     <configuration>
+                        <environmentVariables>
+                            <LANG>en</LANG>
+                        </environmentVariables>
                         <argLine>${surefire.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>
@@ -833,6 +836,9 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.0.0-M6</version>
                     <configuration>
+                        <environmentVariables>
+                            <LANG>en</LANG>
+                        </environmentVariables>
                         <argLine>${failsafe.argLine}</argLine>
                         <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>

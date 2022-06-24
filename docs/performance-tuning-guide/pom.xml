@@ -27,5 +27,5 @@
     </parent>
     <artifactId>performance-tuning-guide</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Performance Tuning Guide, Release 7</name>
+    <name>Eclipse GlassFish Performance Tuning Guide, Release 7</name>
 </project>

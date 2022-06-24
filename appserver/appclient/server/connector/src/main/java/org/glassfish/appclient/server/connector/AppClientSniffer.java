@@ -85,29 +85,18 @@ public class AppClientSniffer extends GenericSniffer {
         return false;
     }
 
-    /**
-     * @return whether this sniffer should be visible to user
-     */
     @Override
     public boolean isUserVisible() {
         return true;
     }
 
-    /**
-     * @return whether this sniffer represents a Java EE container type
-     *
-     */
-    public boolean isJavaEE() {
+    @Override
+    public boolean isJakartaEE() {
         return true;
     }
 
     /**
-     * @return the set of the sniffers that should not co-exist for the
-     * same module. For example, ejb and connector sniffers should not
-     * be returned in the sniffer list for a certain module.
-     * This method will be used to validate and filter the retrieved sniffer
-     * lists for a certain module
-     *
+     * @return empty array
      */
     @Override
     public String[] getIncompatibleSnifferTypes() {
@@ -125,6 +114,7 @@ public class AppClientSniffer extends GenericSniffer {
      * @return whether the sniffer supports the archive type
      *
      */
+    @Override
     public boolean supportsArchiveType(ArchiveType archiveType) {
         if (archiveType.equals(carType)) {
             return true;
@@ -136,7 +126,7 @@ public class AppClientSniffer extends GenericSniffer {
             initDeploymentConfigurationPaths();
 
     private static List<String> initDeploymentConfigurationPaths() {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         result.add("META-INF/application-client.xml");
         result.add("META-INF/sun-application-client.xml");
         result.add("META-INF/glassfish-application-client.xml");

@@ -16,7 +16,7 @@ of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links ar
 
 GlassFish 6.2.5 compiles and run with JDK 11 to JDK 18-EA releases.
 
-Note this release requires at least JDK 11. 
+Note this release requires at least JDK 11.
 
 ## January 10, 2022 -- Eclipse GlassFish 6.2.4 Available
 
@@ -25,7 +25,7 @@ of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links ar
 
 GlassFish 6.2.4 compiles and run with JDK 11 to JDK 18-EA releases.
 
-Note this release requires at least JDK 11. 
+Note this release requires at least JDK 11.
 
 ## November 18, 2021 -- Eclipse GlassFish 6.2.3 Available
 
@@ -34,7 +34,7 @@ of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links ar
 
 GlassFish 6.2.3 compiles with JDK 11 to JDK 17 and runs on JDK 11 to JDK 17. GlassFish 6.2.3 also compiles and runs on JDK 18-EA releases.
 
-Note this release requires at least JDK 11. 
+Note this release requires at least JDK 11.
 
 ## October 1, 2021 -- Eclipse GlassFish 6.2.2 Available
 
@@ -43,7 +43,7 @@ of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links ar
 
 GlassFish 6.2.2 compiles with JDK 11 to JDK 17 and runs on JDK 11 to JDK 17. GlassFish 6.2.2 has been briefly tested with JDK 18-EA releases.
 
-Note this release requires at least JDK 11. 
+Note this release requires at least JDK 11.
 
 ## August 28, 2021 -- Eclipse GlassFish 6.2.1 Available
 
@@ -73,7 +73,7 @@ of the Jakarta EE 9 Platform and Web Profile specifications. Download links are 
 ### October 24, 2020 -- Eclipse GlassFish 6.0 Release Candidate 1 is released
 
 This is the first release candidate of Eclipse GlassFish 6.0 and is available for [download](https://glassfish.org/download).
-This first Release Candidate is functionally complete and is the first version to pass the in progress Jakarta EE 9 Platform CTS and standalone TCKs for both Full Platform and Web Platform. Further development will be carried out before final release but no major functinal changes will be made. 
+This first Release Candidate is functionally complete and is the first version to pass the in progress Jakarta EE 9 Platform CTS and standalone TCKs for both Full Platform and Web Platform. Further development will be carried out before final release but no major functinal changes will be made.
 
 ### June 23, 2020 -- Eclipse GlassFish 6.0 Milestone 1 is released
 

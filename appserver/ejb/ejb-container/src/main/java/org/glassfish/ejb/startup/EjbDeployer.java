@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,24 @@
 
 package org.glassfish.ejb.startup;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
+import com.sun.ejb.codegen.StaticRmiStubGenerator;
+import com.sun.ejb.containers.EJBTimerService;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.security.PolicyLoader;
+import com.sun.enterprise.security.ee.SecurityUtil;
+import com.sun.enterprise.security.util.IASSecurityException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -54,24 +71,8 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.ejb.codegen.StaticRmiStubGenerator;
-import com.sun.ejb.containers.EJBTimerService;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.security.PolicyLoader;
-import com.sun.enterprise.security.ee.SecurityUtil;
-import com.sun.enterprise.security.util.IASSecurityException;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Ejb module deployer.
@@ -101,7 +102,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
     @Inject
     StartupContext startupContext;
 
-    private Object lock = new Object();
+    private final Object lock = new Object();
     private volatile CMPDeployer cmpDeployer = null;
 
     private static SecureRandom random = new SecureRandom();
@@ -110,7 +111,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
     static final String APP_UNIQUE_ID_PROP = "org.glassfish.ejb.container.application_unique_id";
     static final String IS_TIMEOUT_APP_PROP = "org.glassfish.ejb.container.is_timeout_application";
 
-    private AtomicLong uniqueIdCounter;
+    private final AtomicLong uniqueIdCounter;
 
     private static final Logger _logger = LogDomains.getLogger(EjbDeployer.class, LogDomains.EJB_LOGGER);
 
@@ -426,7 +427,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
             ApplicationInfo appInfo = appRegistry.get(opsparams.name());
             Application app = appInfo.getMetaData(Application.class);
             if (app == null) {
-                // Not a Java EE application
+                // Not a Jakarta EE application
                 return;
             }
 

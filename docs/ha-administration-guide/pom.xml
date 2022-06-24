@@ -27,5 +27,5 @@
     </parent>
     <artifactId>ha-administration-guide</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server High Availability Administration Guide, Release 7</name>
+    <name>Eclipse GlassFish High Availability Administration Guide, Release 7</name>
 </project>

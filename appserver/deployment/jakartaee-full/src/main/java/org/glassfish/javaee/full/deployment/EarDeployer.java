@@ -71,10 +71,11 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.inject.Inject;
 
 /**
- * EarDeployer to deploy composite Java EE applications. todo : could be generified into any composite applications.
+ * EarDeployer to deploy composite Jakarta EE applications.
  *
  * @author Jerome Dochez
  */
+// TODO: could be generified into any composite applications.
 @Service
 @PerLookup
 public class EarDeployer implements Deployer {

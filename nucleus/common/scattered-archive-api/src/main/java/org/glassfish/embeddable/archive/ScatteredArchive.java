@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Abstraction for a Scattered Java EE module (parts disseminated in various directories).
+ * Abstraction for a Scattered Jakarta EE module (parts disseminated in various directories).
  * <p/>
  * <p/>
  * Usage example :
@@ -65,9 +66,9 @@ public class ScatteredArchive {
     String name;
     Type type;
     File rootDirectory;
-    List<File> classpaths = new ArrayList<File>();
+    List<File> classpaths = new ArrayList<>();
 //    File resourcespath;
-    Map<String, File> metadatas = new HashMap<String, File>();
+    Map<String, File> metadatas = new HashMap<>();
     String metadataEntryPrefix;
 
     /**
@@ -363,7 +364,7 @@ public class ScatteredArchive {
     }
 
     /**
-     * Enumeration values for the scattered Java EE module types.
+     * Enumeration values for the scattered Jakarta EE module types.
      *
      * @author bhavanishankar@java.net
      */

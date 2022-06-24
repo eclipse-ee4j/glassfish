@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,21 @@
 
 package com.sun.enterprise.security.ee;
 
-import static com.sun.enterprise.deployment.WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
-import static com.sun.enterprise.security.ee.SecurityUtil.getContextID;
-import static com.sun.enterprise.security.ee.SecurityUtil.removeRoleMapper;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
-import static org.glassfish.internal.deployment.Deployment.MODULE_LOADED;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.security.AppCNonceCacheMap;
+import com.sun.enterprise.security.CNonceCacheFactory;
+import com.sun.enterprise.security.EjbSecurityPolicyProbeProvider;
+import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
+import com.sun.enterprise.security.web.integration.WebSecurityManager;
+import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,21 +58,13 @@ import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.HAUtil;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.security.AppCNonceCacheMap;
-import com.sun.enterprise.security.CNonceCacheFactory;
-import com.sun.enterprise.security.EjbSecurityPolicyProbeProvider;
-import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
-import com.sun.enterprise.security.web.integration.WebSecurityManager;
-import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
+import static com.sun.enterprise.deployment.WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
+import static com.sun.enterprise.security.ee.SecurityUtil.getContextID;
+import static com.sun.enterprise.security.ee.SecurityUtil.removeRoleMapper;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
+import static org.glassfish.internal.deployment.Deployment.MODULE_LOADED;
 
 /**
  * Security Deployer which generate and clean the security policies
@@ -126,7 +127,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                 ApplicationInfo applicationInfo = (ApplicationInfo) event.hook();
                 application = applicationInfo.getMetaData(Application.class);
                 if (application == null) {
-                    // this is not a Java EE module, just return
+                    // this is not a Jakarta EE module, just return
                     return;
                 }
 
@@ -316,7 +317,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
                 WebSecurityManager manager = webSecurityManagerFactory.getManager(contextId);
                 if (manager != null) {
-                    lastInService = manager.linkPolicy(contextId, linkedContextId, lastInService);
+                    lastInService = WebSecurityManager.linkPolicy(contextId, linkedContextId, lastInService);
                     linkedContextId = contextId;
                 }
             }
@@ -327,7 +328,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
                 WebSecurityManager manager = webSecurityManagerFactory.getManager(contextId);
                 if (manager != null) {
-                    lastInService = manager.linkPolicy(contextId, linkedContextId, lastInService);
+                    lastInService = WebSecurityManager.linkPolicy(contextId, linkedContextId, lastInService);
                     linkedContextId = contextId;
                 }
             }

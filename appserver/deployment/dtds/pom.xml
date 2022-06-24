@@ -29,7 +29,7 @@
     <artifactId>appserver-dtds</artifactId>
     <packaging>distribution-fragment</packaging>
 
-    <name>Set of DTDs for GlassFish Java EE distributions</name>
+    <name>Set of DTDs for GlassFish Jakarta EE distributions</name>
 
     <developers>
         <developer>

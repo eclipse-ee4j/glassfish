@@ -30,7 +30,7 @@
     <packaging>glassfish-jar</packaging>
 
     <name>GlassFish Connectors Connector</name>
-    <description>Connector (gluecode) for GlassFish Java EE Connector Architecture Runtime</description>
+    <description>Connector (gluecode) for GlassFish Jakarta EE Connector Architecture Runtime</description>
 
     <developers>
         <developer>

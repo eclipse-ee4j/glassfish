@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -117,7 +118,7 @@ public class ScaleServicePaaSTest {
             result = commandRunner.run("list-services");
             System.out.println("Output of list-services after scaling up [ " + result.getOutput() + "]");
             String[] strings = result.getOutput().split("JavaEE");
-            System.out.println("Number of Java EE services " + strings.length);
+            System.out.println("Number of Jakarta EE services " + strings.length);
             Assert.assertEquals(4, strings.length);
 
             // test scale down. TODO :: make sure app is no longer accessible from the scaled down instance
@@ -127,7 +128,7 @@ public class ScaleServicePaaSTest {
             result = commandRunner.run("list-services");
             System.out.println("Output of list-services after scaling down [ " + result.getOutput() + "]");
             strings = result.getOutput().split("JavaEE");
-            System.out.println("Number of Java EE services " + strings.length);
+            System.out.println("Number of Jakarta EE services " + strings.length);
             Assert.assertEquals(3, strings.length);
 
             // 4. Undeploy the PaaS application . TODO :: use cloud-undeploy??

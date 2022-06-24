@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
  * @author sanjeeb.sahoo@oracle.com
  */
 public class GlassFishBrandingPlugin implements BrandingPlugin {
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    private final Logger logger = Logger.getLogger(getClass().getPackage().getName());
 
     private final String brandName;
     private final String prouctName;
@@ -50,15 +51,15 @@ public class GlassFishBrandingPlugin implements BrandingPlugin {
 
     // default values
     private static final String NAME = "GlassFish OSGi Administration Console";
-    private static final String PROD_NAME = "GlassFish Server";
-    private static final String PROD_IMAGE = "http://java.net/projects/glassfish/sources/svn/content/trunk/main/appserver/osgi-platforms/felix-webconsole-extension/src/main/resources/res/glassfish/logo.png";
-    private static final String PROD_URL = "http://GlassFish.org";
-    private static final String VENDOR = "GlassFish community";
+    private static final String PROD_NAME = "Eclipse GlassFish";
+    private static final String PROD_IMAGE = "https://projects.eclipse.org/sites/default/files/glassfish_logo_475_475_transparent.png";
+    private static final String PROD_URL = "http://glassfish.org";
+    private static final String VENDOR = "Eclipse Foundation";
     private static final String VENDOR_URL = PROD_URL;
     private static final String VENDOR_IMAGE = PROD_IMAGE;
 
     // This is where we look for any custom/localized branding information Must be made available via a fragment
-    private String path = "/META-INF/webconsole.properties";
+    private final String path = "/META-INF/webconsole.properties";
     Properties branding = new Properties();
 
     public GlassFishBrandingPlugin() {

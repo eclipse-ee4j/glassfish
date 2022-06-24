@@ -29,7 +29,7 @@
     <artifactId>security-ee</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Java EE Security Core Classes</name>
+    <name>Jakarta EE Security Core Classes</name>
 
     <developers>
         <developer>

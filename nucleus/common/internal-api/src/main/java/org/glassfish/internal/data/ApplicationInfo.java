@@ -71,7 +71,7 @@ public class ApplicationInfo extends ModuleInfo {
     private final static String APPLICATION_LOADER_FILES = DescriptorFileFinder.RESOURCE_BASE + "application";
     private final static String WEB_LOADER_FILES = "hk2-locator/application";
 
-    final private Collection<ModuleInfo> modules = new ArrayList<ModuleInfo>();
+    final private Collection<ModuleInfo> modules = new ArrayList<>();
 
     // The reversed modules contain the same elements as modules but just in
     // reversed order, they are used when stopping/unloading the application.
@@ -83,7 +83,7 @@ public class ApplicationInfo extends ModuleInfo {
     final private Map<String, Object> transientAppMetaData = new HashMap<>();
 
     private String libraries;
-    private boolean isJavaEEApp;
+    private boolean jakartaEEApp;
     private ClassLoader appClassLoader;
     private boolean isLoaded;
 
@@ -207,20 +207,20 @@ public class ApplicationInfo extends ModuleInfo {
      *
      * @return the isJavaEEApp flag
      */
-    public boolean isJavaEEApp() {
-        return isJavaEEApp;
+    public boolean isJakartaEEApp() {
+        return jakartaEEApp;
     }
 
     /**
-     * Sets whether this application is a JavaEE application
+     * Sets whether this application is a Jakarta EE application
      *
      * @param engineInfos the engine info list
      */
-    public void setIsJavaEEApp(List<EngineInfo<?, ?>> engineInfos) {
+    public void detectIfJakartaEEApp(List<EngineInfo<?, ?>> engineInfos) {
         for (EngineInfo<?, ?> engineInfo : engineInfos) {
             Sniffer sniffer = engineInfo.getSniffer();
-            if (sniffer.isJavaEE()) {
-                isJavaEEApp = true;
+            if (sniffer.isJakartaEE()) {
+                jakartaEEApp = true;
                 break;
             }
         }
@@ -329,7 +329,7 @@ public class ApplicationInfo extends ModuleInfo {
         }
 
         if (events != null) {
-            events.send(new Event<ApplicationInfo>(Deployment.APPLICATION_LOADED, this), false);
+            events.send(new Event<>(Deployment.APPLICATION_LOADED, this), false);
         }
 
         if (tracing != null) {
@@ -361,7 +361,7 @@ public class ApplicationInfo extends ModuleInfo {
         }
 
         if (events != null) {
-            events.send(new Event<ApplicationInfo>(Deployment.APPLICATION_STARTED, this), false);
+            events.send(new Event<>(Deployment.APPLICATION_STARTED, this), false);
         }
 
         if (tracing != null) {
@@ -384,7 +384,7 @@ public class ApplicationInfo extends ModuleInfo {
             }
 
             if (events != null) {
-                events.send(new Event<ApplicationInfo>(APPLICATION_STOPPED, this), false);
+                events.send(new Event<>(APPLICATION_STOPPED, this), false);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -412,7 +412,7 @@ public class ApplicationInfo extends ModuleInfo {
 
             isLoaded = false;
             if (events != null) {
-                events.send(new Event<ApplicationInfo>(APPLICATION_UNLOADED, this), false);
+                events.send(new Event<>(APPLICATION_UNLOADED, this), false);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
@@ -489,7 +489,7 @@ public class ApplicationInfo extends ModuleInfo {
         disposeServiceLocator();
 
         if (events != null) {
-            events.send(new EventListener.Event<DeploymentContext>(Deployment.APPLICATION_CLEANED, context), false);
+            events.send(new EventListener.Event<>(Deployment.APPLICATION_CLEANED, context), false);
         }
     }
 
@@ -550,7 +550,7 @@ public class ApplicationInfo extends ModuleInfo {
         HK2Populator.populate(appServiceLocator, new ApplicationDescriptorFileFinder(appClassLoader, APPLICATION_LOADER_FILES),
                 allProcessors);
 
-        HashSet<ClassLoader> treatedLoaders = new HashSet<ClassLoader>();
+        HashSet<ClassLoader> treatedLoaders = new HashSet<>();
         treatedLoaders.add(appClassLoader);
 
         for (ModuleInfo module : modules) {
@@ -580,13 +580,15 @@ public class ApplicationInfo extends ModuleInfo {
 
         @Override
         public void event(@RestrictTo(Deployment.DEPLOYMENT_FAILURE_NAME) Event event) {
-            if (!event.is(Deployment.DEPLOYMENT_FAILURE))
+            if (!event.is(Deployment.DEPLOYMENT_FAILURE)) {
                 return;
+            }
 
             DeploymentContext dc = Deployment.DEPLOYMENT_FAILURE.getHook(event);
 
-            if (!archive.equals(dc.getSource()))
+            if (!archive.equals(dc.getSource())) {
                 return;
+            }
 
             // Will destroy all underlying services
             disposeServiceLocator();

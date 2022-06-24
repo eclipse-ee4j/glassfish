@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -126,20 +127,22 @@ public interface Sniffer {
     boolean isUserVisible();
 
     /**
-     * @return whether this sniffer represents a Java EE container type
+     * @return whether this sniffer represents a Jakarta EE container type
      *
      */
-    boolean isJavaEE();
+    boolean isJakartaEE();
 
     /**
      * Returns a map of deployment configurations for this Sniffer from the specific archive source.
      * <p>
-     * Many sniffers (esp. Java EE sniffers) will choose to set the key of each map entry to the relative path within the
-     * ReadableArchive of the deployment descriptor and the value of that map entry to the descriptor's contents.
+     * Many sniffers (esp. Jakarta EE sniffers) will choose to set the key of each map entry to the
+     * relative path within the {@link ReadableArchive} of the deployment descriptor and the value
+     * of that map entry to the descriptor's contents.
      *
      * @param source the contents of the application's archive
      * @return map of configuration names to configurations for the application
-     * @throws java.io.IOException in case of errors searching or reading the archive for the deployment configuration(s)
+     * @throws java.io.IOException in case of errors searching or reading the archive for the
+     *             deployment configuration(s)
      */
     Map<String, String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
 

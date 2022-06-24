@@ -32,7 +32,7 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Connectors Runtime</name>
-    <description>Java EE Connector Architecture Runtime for GlassFish</description>
+    <description>Jakarta EE Connector Architecture Runtime for GlassFish</description>
 
     <developers>
         <developer>

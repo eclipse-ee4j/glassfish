@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,6 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * InvocationManager provides interface to keep track of component context on a per-thread basis
  */
-
 @Contract
 public interface InvocationManager {
 
@@ -64,7 +64,7 @@ public interface InvocationManager {
     void registerComponentInvocationHandler(ComponentInvocationType type, RegisteredComponentInvocationHandler handler);
 
     /**
-     * To be called by the infrastructure to indicate that some user code not associated with any Java EE specification may
+     * To be called by the infrastructure to indicate that some user code not associated with any Jakarta EE specification may
      * be called. In particular must be called by the Weld integration layer to indicate the application environment in
      * which the portable extensions are running
      * <p>
@@ -82,7 +82,7 @@ public interface InvocationManager {
     ApplicationEnvironment peekAppEnvironment();
 
     /**
-     * To be called by the infrastructure to indicate that some user code not associated with any Java EE specification is
+     * To be called by the infrastructure to indicate that some user code not associated with any Jakarta EE specification is
      * finished being called. In particular must be called by the Weld integration layer to indicate the application
      * environment in which the portable extensions are running
      * <p>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,37 @@
 
 package com.sun.enterprise.naming.impl;
 
+import java.rmi.RemoteException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.logging.Level;
+
+import javax.naming.Binding;
+import javax.naming.CommunicationException;
+import javax.naming.CompositeName;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.NotContextException;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.naming.spi.ObjectFactory;
+import javax.rmi.PortableRemoteObject;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.naming.NamingClusterInfo;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NameComponent;
@@ -32,16 +55,6 @@ import org.omg.CosNaming.NamingContext;
 import org.omg.CosNaming.NamingContextHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
-
-import javax.naming.*;
-import javax.naming.spi.ObjectFactory;
-import javax.rmi.PortableRemoteObject;
-import java.rmi.RemoteException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.logging.Level;
 
 import static com.sun.enterprise.naming.util.LogFacade.logger;
 
@@ -76,10 +89,10 @@ public class SerialContext implements Context {
     private static final NameParser myParser = new SerialNameParser();
 
     private static final Map<ProviderCacheKey, SerialContextProvider> providerCache =
-            new HashMap<ProviderCacheKey, SerialContextProvider>();
+            new HashMap<>();
 
     private static final ThreadLocal<ThreadLocalIC> stickyContext =
-        new ThreadLocal<ThreadLocalIC>() {
+        new ThreadLocal<>() {
             @Override
             protected ThreadLocalIC initialValue() {
                 return new ThreadLocalIC() ;
@@ -100,7 +113,7 @@ public class SerialContext implements Context {
 
     private ProcessType processType = ProcessType.Server;
 
-    private ORB orbFromEnv;
+    private final ORB orbFromEnv;
 
     private String targetHost;
     private String targetPort;
@@ -110,7 +123,7 @@ public class SerialContext implements Context {
     // True if we're running in the server and no orb,host, or port
     // properties have been explicitly set in the properties
     // Allows special optimized intra-server naming service access
-    private boolean intraServerLookups;
+    private final boolean intraServerLookups;
 
     // Common Class Loader. It is used as a fallback classloader to locate
     // GlassFish object factories.
@@ -508,7 +521,7 @@ public class SerialContext implements Context {
             // when it can't find the factory class. Since NamingManager
             // uses Thread's context class loader to locate factory classes,
             // it may not be able to locate the various GlassFish factories
-            // when lookup is performed outside of a Java EE context like
+            // when lookup is performed outside of a Jakarta EE context like
             // inside an OSGi bundle's activator.
             // So, let's see if using CommonClassLoader helps or not.
             // We will only try with CommonClassLoader when the passed object
@@ -748,7 +761,7 @@ public class SerialContext implements Context {
             // listing this context
             try {
                 Hashtable bindings = getProvider().list(myName);
-                return new RepNames<NameClassPair>(bindings);
+                return new RepNames<>(bindings);
             } catch (RemoteException ex) {
                 throw new CommunicationException(ex.toString());
             }
@@ -793,7 +806,7 @@ public class SerialContext implements Context {
             // listing this context
             try {
                 Hashtable bindings = getProvider().list(myName);
-                return new RepBindings<Binding>(bindings);
+                return new RepBindings<>(bindings);
             } catch (RemoteException ex) {
                 CommunicationException ce = new CommunicationException(ex
                         .toString());

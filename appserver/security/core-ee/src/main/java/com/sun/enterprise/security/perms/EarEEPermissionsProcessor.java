@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,7 +32,7 @@ import com.sun.enterprise.security.perms.SMGlobalPolicyUtil.CommponentType;
 
 public class EarEEPermissionsProcessor extends PermissionsProcessor {
 
-    // map recording the 'Java EE component type' to its EE adjusted granted permissions
+    // map recording the 'Jakarta EE component type' to its EE adjusted granted permissions
     private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<>();
 
     public EarEEPermissionsProcessor(DeploymentContext dc) throws SecurityException {

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -64,6 +64,7 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
@@ -101,9 +102,9 @@ public class AppSpecificConnectorClassLoaderUtil {
         }
         Application app = appInfo.getMetaData(Application.class);
 
-        if(!appInfo.isJavaEEApp()){
+        if(!appInfo.isJakartaEEApp()){
             if(_logger.isLoggable(Level.FINEST)){
-                _logger.finest("Application ["+appName+"] is not a Java EE application, skipping " +
+                _logger.finest("Application ["+appName+"] is not a Jakarta EE application, skipping " +
                         "resource-adapter references detection");
             }
             return;
@@ -196,11 +197,11 @@ public class AppSpecificConnectorClassLoaderUtil {
         ApplicationInfo appInfo = appRegistry.get(appName);
         if (appInfo != null) {
             Application app = appInfo.getMetaData(Application.class);
-            if(appInfo.isJavaEEApp()){
+            if(appInfo.isJakartaEEApp()){
                 return app.getResourceAdapters();
             }
         }
-        return new HashSet<String>();
+        return new HashSet<>();
     }
 
     private void processDescriptorForRAReferences(com.sun.enterprise.deployment.Application app,
@@ -230,10 +231,10 @@ public class AppSpecificConnectorClassLoaderUtil {
         //domain.xml
         Resource res = null;
 
-        if(jndiName.startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/  ){
+        if(jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/  ){
             ApplicationInfo appInfo = appRegistry.get(app.getName());
             res = getApplicationScopedResource(jndiName, BindableResource.class, appInfo);
-        }else if(jndiName.startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX)){
+        }else if(jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
             ApplicationInfo appInfo = appRegistry.get(app.getName());
             res = getModuleScopedResource(jndiName, moduleName, BindableResource.class, appInfo);
         }else{
@@ -247,9 +248,9 @@ public class AppSpecificConnectorClassLoaderUtil {
                 String poolName = connResource.getPoolName();
                 Resource pool ;
                 ApplicationInfo appInfo = appRegistry.get(app.getName());
-                if(jndiName.startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/){
+                if(jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/){
                     pool = getApplicationScopedResource(poolName, ResourcePool.class, appInfo);
-                } else if(jndiName.startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX)){
+                } else if(jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
                     pool = getModuleScopedResource(poolName, moduleName, ResourcePool.class, appInfo);
                 } else{
                     pool = ConnectorsUtil.getResourceByName(getResources(), ResourcePool.class, poolName);
@@ -343,13 +344,13 @@ public class AppSpecificConnectorClassLoaderUtil {
                         resourceName = ((WorkSecurityMap)res).getName();
                     }
                     if(resourceName != null){
-                        if(!(resourceName.startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX) /*||
+                        if(!(resourceName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*||
                                 resourceName.startsWith(ConnectorConstants.JAVA_GLOBAL_SCOPE_PREFIX)*/)){
-                            resourceName = ConnectorConstants.JAVA_APP_SCOPE_PREFIX + resourceName;
+                            resourceName = ResourceConstants.JAVA_APP_SCOPE_PREFIX + resourceName;
                         }
-                        if(!(name.startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX) /*||
+                        if(!(name.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*||
                          name.startsWith(ConnectorConstants.JAVA_GLOBAL_SCOPE_PREFIX)*/)){
-                            name = ConnectorConstants.JAVA_APP_SCOPE_PREFIX + name;
+                            name = ResourceConstants.JAVA_APP_SCOPE_PREFIX + name;
                         }
                         if(name.equals(resourceName)){
                             foundRes = res;
@@ -404,11 +405,11 @@ public class AppSpecificConnectorClassLoaderUtil {
                     resourceName = ((WorkSecurityMap)res).getName();
                 }
                 if(resourceName != null){
-                    if(!(resourceName.startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| resourceName.startsWith("java:global/")*/)){
-                        resourceName = ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX + resourceName;
+                    if(!(resourceName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| resourceName.startsWith("java:global/")*/)){
+                        resourceName = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + resourceName;
                     }
-                    if(!(name.startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| name.startsWith("java:global/")*/)){
-                        name = ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX + name;
+                    if(!(name.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| name.startsWith("java:global/")*/)){
+                        name = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + name;
                     }
                     if(name.equals(resourceName)){
                         foundRes = res;
@@ -444,7 +445,7 @@ public class AppSpecificConnectorClassLoaderUtil {
     }
 
     public Collection<String> getRequiredResourceAdapters(String appName) {
-        List<String> requiredRars = new ArrayList<String>();
+        List<String> requiredRars = new ArrayList<>();
         if (appName != null) {
             ConnectorService connectorService = connectorServiceProvider.get();
             //it is possible that connector-service is not yet defined in domain.xml

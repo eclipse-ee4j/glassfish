@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +38,6 @@ import java.util.regex.Pattern;
 /**
  * @author bhavanishankar@dev.java.net
  */
-
 public class BookStoreTest {
 
     @Test
@@ -64,7 +64,7 @@ public class BookStoreTest {
         String appName = null;
         CommandRunner commandRunner = glassfish.getCommandRunner();
         try {
-            // Create Java EE shared service.
+            // Create Jakarta EE shared service.
             CommandResult createSharedServiceResult = commandRunner.run(
                     "create-shared-service", "--characteristics", "service-type=JavaEE",
                     "--configuration", "min.clustersize=2:max.clustersize=4",

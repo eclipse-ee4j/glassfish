@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,7 +55,7 @@ public class TestServlet extends HttpServlet {
     private transient org.jboss.logging.Logger log;
     @Inject BeanManager bm_at_inj;
 
-    /*Injection of Java EE resources*/
+    /*Injection of Jakarta EE resources*/
     @PersistenceUnit(unitName = "pu1")
     private EntityManagerFactory emf_at_pu;
 

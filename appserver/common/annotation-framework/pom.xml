@@ -29,7 +29,7 @@
     <artifactId>annotation-framework</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>GlassFish Java EE Annotation Framework</name>
+    <name>GlassFish Jakarta EE Annotation Framework</name>
 
     <developers>
         <developer>

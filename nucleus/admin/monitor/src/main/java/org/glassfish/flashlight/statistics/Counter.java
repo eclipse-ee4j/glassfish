@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,35 +15,30 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.glassfish.flashlight.statistics;
 
 import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.flashlight.datatree.TreeNode;
-import org.glassfish.flashlight.datatree.TreeElement;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * TBD Implement Java EE Statistics
+ * TBD Implement Jakarta EE Statistics
  *
  * @author Harpreet Singh
  */
 @Contract
 public interface Counter extends TreeNode, CountStatistic {
 
-    public void decrement();
+    void decrement();
 
-    public long getCount();
+    @Override
+    long getCount();
 
-    public void increment();
+    void increment();
 
-    public void setCount(long count);
+    void setCount(long count);
 
-    public void setReset(boolean reset);
+    void setReset(boolean reset);
 
-    public void increment(long delta);
+    void increment(long delta);
 }

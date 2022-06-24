@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,7 @@ package org.glassfish.api.deployment;
  * Supported Requirements : invalidatesClassLoader Deployer can load classes that need to be reloaded for the
  * application to run successfully hence requiring the class loader to be flushed and reinitialized between the prepare
  * and load phase. componentAPIs Components can use APIs that are defined outside of the component's bundle. These
- * component's APIs (eg. Java EE APIs) must be imported by the application class loader before any application code is
+ * component's APIs (eg. Jakarta EE APIs) must be imported by the application class loader before any application code is
  * loaded.
  */
 public class MetaData {

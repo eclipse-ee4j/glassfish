@@ -251,7 +251,7 @@ public class ApplicationArchivist extends Archivist<Application> {
 
     /**
      * This method introspect an ear file and populate the Application object.
-     * We follow the Java EE platform specification, Section EE.8.4.2
+     * We follow the Jakarta EE platform specification, Section EE.8.4.2
      * to determine the type of the modules included in this application.
      *
      * @param archive   the archive representing the application root
@@ -826,7 +826,7 @@ public class ApplicationArchivist extends Archivist<Application> {
         // Only try to make a guess if the archive is a directory
 
         // We will try to conclude if a directory represents an application
-        // by looking at if it contains any Java EE modules.
+        // by looking at if it contains any Jakarta EE modules.
         // We are supporting directory names with both "_suffix" and ".suffix".
         File file = new File(abstractArchive.getURI());
         if (file.isDirectory()) {

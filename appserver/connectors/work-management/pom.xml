@@ -30,7 +30,7 @@
     <packaging>glassfish-jar</packaging>
 
     <name>Work Management</name>
-    <description>Java EE Connector Architecture Work Management module</description>
+    <description>Jakarta EE Connector Architecture Work Management module</description>
 
     <developers>
         <developer>

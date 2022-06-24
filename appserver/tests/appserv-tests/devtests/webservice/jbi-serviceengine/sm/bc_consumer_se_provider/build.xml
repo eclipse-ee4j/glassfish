@@ -88,13 +88,13 @@
                 <echo message="Installing SunWSDLSharedLibrary..."/>
                 <sleep seconds="10"/>
                 <copy file="${env.S1AS_HOME}/jbi/components/javaeeserviceengine/installer/appserv-jbise.jar" todir="${servicemix-autodeploy-dir}"/>
-                <echo message="Installing Java EE Service Engine..."/>
+                <echo message="Installing Jakarta EE Service Engine..."/>
                 <sleep seconds="15"/>
         </target>
 
         <target name="uninstall" depends="init-common">
                 <delete file="${servicemix-autodeploy-dir}/appserv-jbise.jar"/>
-                <echo message="Uninstalling Java EE Service Engine..."/>
+                <echo message="Uninstalling Jakarta EE Service Engine..."/>
                 <sleep seconds="10"/>
                 <delete file="${servicemix-autodeploy-dir}/wsdlsl.jar"/>
                 <echo message="Uninstalling SunWSDLSharedLibrary..."/>

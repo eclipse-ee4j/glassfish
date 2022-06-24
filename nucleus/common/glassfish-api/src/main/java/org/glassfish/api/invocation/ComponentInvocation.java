@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -247,7 +248,7 @@ public class ComponentInvocation implements Cloneable {
 
     /**
      * Returns the moduleName for the current invocation, equivalent to the value bound to java:module/ModuleName, without
-     * the cost of lookup. For invocations that are not on Java EE components, returns null.
+     * the cost of lookup. For invocations that are not on Jakarta EE components, returns null.
      */
     public String getModuleName() {
         return moduleName;

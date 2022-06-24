@@ -101,7 +101,7 @@ public abstract class GenericSniffer implements Sniffer {
      */
     @Override
     public String[] getAnnotationNames(DeploymentContext context) {
-        List<String> annotationNames = new ArrayList<String>();
+        List<String> annotationNames = new ArrayList<>();
         for (Class<? extends Annotation> annotationType : getAnnotationTypes())  {
             annotationNames.add(annotationType.getName());
         }
@@ -178,7 +178,7 @@ public abstract class GenericSniffer implements Sniffer {
             }
             return modules;
         }
-        List<HK2Module> tmp = new ArrayList<HK2Module>();
+        List<HK2Module> tmp = new ArrayList<>();
         for (String moduleName : getContainerModuleNames()) {
             HK2Module m = modulesRegistry.makeModuleFor(moduleName, null);
             if (m != null) {
@@ -220,8 +220,7 @@ public abstract class GenericSniffer implements Sniffer {
     }
 
     /**
-     * @return whether this sniffer should be visible to user
-     *
+     * @return false
      */
     @Override
     public boolean isUserVisible() {
@@ -229,11 +228,10 @@ public abstract class GenericSniffer implements Sniffer {
     }
 
     /**
-     * @return whether this sniffer represents a Java EE container type
-     *
+     * @return false
      */
     @Override
-    public boolean isJavaEE() {
+    public boolean isJakartaEE() {
         return false;
     }
 
@@ -255,7 +253,7 @@ public abstract class GenericSniffer implements Sniffer {
 
     /**
      * Returns a map of deployment configurations composed by reading from a
-     * list of paths in the readable archive.  (For Java EE applications the
+     * list of paths in the readable archive.  (For Jakarta EE applications the
      * deployment configurations correspond to the deployment descriptors.)  The
      * {@link #getDeploymentConfigurationPaths} method returns this list of paths
      * which might exist in archives that this sniffer handles.
@@ -282,7 +280,7 @@ public abstract class GenericSniffer implements Sniffer {
      */
     @Override
     public Map<String,String> getDeploymentConfigurations(final ReadableArchive location) throws IOException {
-        final Map<String,String> deploymentConfigs = new HashMap<String,String>();
+        final Map<String,String> deploymentConfigs = new HashMap<>();
 
         for (String path : getDeploymentConfigurationPaths()) {
             InputStream is = null;
@@ -305,9 +303,9 @@ public abstract class GenericSniffer implements Sniffer {
      * Returns a list of paths within an archive that represents deployment
      * configuration files.
      * <p>
-     * Sniffers that recognize Java EE applications typically override this
+     * Sniffers that recognize Jakarta EE applications typically override this
      * default implementation to return a list of the deployment descriptors
-     * that might appear in the type of Java EE application which the sniffer
+     * that might appear in the type of Jakarta EE application which the sniffer
      * recognizes.  For example, the WebSniffer implementation of this method
      * returns WEB-INF/web.xml, WEB-INF/glassfish-web.xml and
      * WEB-INF/sun-web.xml.

@@ -17,19 +17,24 @@
 
 package com.sun.enterprise.v3.server;
 
-import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
-import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
-import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
-import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
-import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
+import com.sun.enterprise.config.serverbeans.AppTenant;
+import com.sun.enterprise.config.serverbeans.AppTenants;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationConfig;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Engine;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 import java.beans.PropertyVetoException;
 import java.io.BufferedInputStream;
@@ -48,7 +53,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,30 +122,26 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.RetryableException;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.AppTenant;
-import com.sun.enterprise.config.serverbeans.AppTenants;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationConfig;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import static com.sun.enterprise.config.serverbeans.ServerTags.IS_COMPOSITE;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.deployment.common.DeploymentProperties.ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.RUNTIME_ALT_DD;
+import static org.glassfish.deployment.common.DeploymentProperties.SKIP_SCAN_EXTERNAL_LIB;
+import static org.glassfish.deployment.common.DeploymentUtils.getVirtualServers;
+import static org.glassfish.kernel.KernelLoggerInfo.inconsistentLifecycleState;
 
 /**
  * Application Loader is providing useful methods to load applications
@@ -154,7 +154,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
     private static final String[] UPLOADED_GENERATED_DIRS = new String[] { "policy", "xml", "ejb", "jsp" };
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ApplicationLifecycle.class);
-    protected Logger logger = KernelLoggerInfo.getLogger();
+    private static final Logger LOG = KernelLoggerInfo.getLogger();
 
     @Inject
     protected SnifferManagerImpl snifferManager;
@@ -235,7 +235,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             return serviceLocator.<ArchiveDetector>getService(ArchiveDetector.class, type).getArchiveHandler();
         }
 
-        List<ArchiveDetector> detectors = new ArrayList<ArchiveDetector>(serviceLocator.<ArchiveDetector>getAllServices(ArchiveDetector.class));
+        List<ArchiveDetector> detectors = new ArrayList<>(serviceLocator.<ArchiveDetector>getAllServices(ArchiveDetector.class));
         Collections.sort(detectors, new Comparator<ArchiveDetector>() {
             // rank 2 is considered lower than rank 1, let's sort them in inceasing order
             @Override
@@ -262,7 +262,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     public ApplicationInfo deploy(Collection<? extends Sniffer> sniffers, final ExtendedDeploymentContext context) {
         long operationStartTime = Calendar.getInstance().getTimeInMillis();
 
-        events.send(new Event<DeploymentContext>(Deployment.DEPLOYMENT_START, context), false);
+        events.send(new Event<>(Deployment.DEPLOYMENT_START, context), false);
         final ActionReport report = context.getActionReport();
 
         final DeployCommandParameters commandParams = context.getCommandParameters(DeployCommandParameters.class);
@@ -324,7 +324,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     ApplicationInfo appInfo = appRegistry.get(appName);
                     if (appInfo != null) {
                         // send the event to close necessary resources
-                        events.send(new Event<ApplicationInfo>(Deployment.APPLICATION_DISABLED, appInfo));
+                        events.send(new Event<>(Deployment.APPLICATION_DISABLED, appInfo));
                     }
                 } catch (Exception e) {
                     // ignore
@@ -385,9 +385,9 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             // containers that are started are not stopped even if
             // the deployment fail, the main reason
             // is that some container do not support to be restarted.
-            if (sniffers != null && logger.isLoggable(FINE)) {
+            if (sniffers != null && LOG.isLoggable(FINE)) {
                 for (Sniffer sniffer : sniffers) {
-                    logger.fine("Before Sorting" + sniffer.getModuleType());
+                    LOG.fine("Before Sorting" + sniffer.getModuleType());
                 }
             }
 
@@ -399,7 +399,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             }
 
             context.createDeploymentClassLoader(classLoaderHierarchy, handler);
-            events.send(new Event<DeploymentContext>(AFTER_DEPLOYMENT_CLASSLOADER_CREATION, context), false);
+            events.send(new Event<>(AFTER_DEPLOYMENT_CLASSLOADER_CREATION, context), false);
 
             if (tracing != null) {
                 tracing.addMark(DeploymentTracing.Mark.CLASS_LOADER_CREATED);
@@ -415,16 +415,16 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     tracing.addMark(DeploymentTracing.Mark.CONTAINERS_SETUP_DONE);
                 }
 
-                if (logger.isLoggable(FINE)) {
+                if (LOG.isLoggable(FINE)) {
                     for (EngineInfo info : sortedEngineInfos) {
-                        logger.fine("After Sorting " + info.getSniffer().getModuleType());
+                        LOG.fine("After Sorting " + info.getSniffer().getModuleType());
                     }
                 }
 
                 if (sortedEngineInfos == null || sortedEngineInfos.isEmpty()) {
-                    report.failure(logger, localStrings.getLocalString("unknowncontainertype",
+                    report.failure(LOG, localStrings.getLocalString("unknowncontainertype",
                             "There is no installed container capable of handling this application {0}", context.getSource().getName()));
-                    tracker.actOn(logger);
+                    tracker.actOn(LOG);
                     return null;
                 }
 
@@ -436,27 +436,25 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     tempAppInfo.addMetaData(m);
                 }
 
-                tempAppInfo.setIsJavaEEApp(sortedEngineInfos);
-                // set the flag on the archive to indicate whether it's
-                // a JavaEE archive or not
-                context.getSource().setExtraData(Boolean.class, tempAppInfo.isJavaEEApp());
+                tempAppInfo.detectIfJakartaEEApp(sortedEngineInfos);
+                context.getSource().setExtraData(Boolean.class, tempAppInfo.isJakartaEEApp());
                 appRegistry.add(appName, tempAppInfo);
 
                 try {
                     notifyLifecycleInterceptorsBefore(ExtendedDeploymentContext.Phase.PREPARE, context);
                 } catch (Throwable interceptorException) {
-                    report.failure(logger, "Exception while invoking the lifecycle interceptor", null);
+                    report.failure(LOG, "Exception while invoking the lifecycle interceptor", null);
                     report.setFailureCause(interceptorException);
-                    logger.log(SEVERE, KernelLoggerInfo.lifecycleException, interceptorException);
-                    tracker.actOn(logger);
+                    LOG.log(SEVERE, KernelLoggerInfo.lifecycleException, interceptorException);
+                    tracker.actOn(LOG);
                     return null;
                 }
 
-                events.send(new Event<DeploymentContext>(Deployment.DEPLOYMENT_BEFORE_CLASSLOADER_CREATION, context), false);
+                events.send(new Event<>(Deployment.DEPLOYMENT_BEFORE_CLASSLOADER_CREATION, context), false);
 
                 context.createApplicationClassLoader(classLoaderHierarchy, handler);
 
-                events.send(new Event<DeploymentContext>(Deployment.AFTER_APPLICATION_CLASSLOADER_CREATION, context), false);
+                events.send(new Event<>(Deployment.AFTER_APPLICATION_CLASSLOADER_CREATION, context), false);
 
                 if (tracing != null) {
                     tracing.addMark(DeploymentTracing.Mark.CLASS_LOADER_CREATED);
@@ -478,10 +476,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     cjw.run();
                 } catch (Throwable prepareException) {
                     prepareException.printStackTrace();
-                    report.failure(logger, "Exception while preparing the app", null);
+                    report.failure(LOG, "Exception while preparing the app", null);
                     report.setFailureCause(prepareException);
-                    logger.log(SEVERE, KernelLoggerInfo.lifecycleException, prepareException);
-                    tracker.actOn(logger);
+                    LOG.log(SEVERE, KernelLoggerInfo.lifecycleException, prepareException);
+                    tracker.actOn(LOG);
                     return null;
                 }
 
@@ -505,7 +503,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 // remove the temp application info from the registry
                 // first, then register the real one
                 appRegistry.remove(appName);
-                appInfo.setIsJavaEEApp(sortedEngineInfos);
+                appInfo.detectIfJakartaEEApp(sortedEngineInfos);
                 appRegistry.add(appName, appInfo);
 
                 notifyLifecycleInterceptorsAfter(ExtendedDeploymentContext.Phase.PREPARE, context);
@@ -520,7 +518,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 context.setPhase(DeploymentContextImpl.Phase.PREPARED);
                 Thread.currentThread().setContextClassLoader(context.getClassLoader());
                 appInfo.setAppClassLoader(context.getClassLoader());
-                events.send(new Event<DeploymentContext>(Deployment.APPLICATION_PREPARED, context), false);
+                events.send(new Event<>(Deployment.APPLICATION_PREPARED, context), false);
 
                 // now were falling back into the mainstream loading/starting sequence, at this
                 // time the containers are set up, all the modules have been prepared in their
@@ -536,10 +534,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                         appInfo.start(context, tracker);
                         notifyLifecycleInterceptorsAfter(ExtendedDeploymentContext.Phase.START, context);
                     } catch (Throwable loadException) {
-                        logger.log(SEVERE, KernelLoggerInfo.lifecycleException, loadException);
-                        report.failure(logger, "Exception while loading the app", null);
+                        LOG.log(SEVERE, KernelLoggerInfo.lifecycleException, loadException);
+                        report.failure(LOG, "Exception while loading the app", null);
                         report.setFailureCause(loadException);
-                        tracker.actOn(logger);
+                        tracker.actOn(LOG);
                         return null;
                     }
                 }
@@ -551,22 +549,22 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             }
 
         } catch (Throwable e) {
-            report.failure(logger, localStrings.getLocalString("error.deploying.app", "Exception while deploying the app [{0}]", appName),
+            report.failure(LOG, localStrings.getLocalString("error.deploying.app", "Exception while deploying the app [{0}]", appName),
                     null);
             report.setFailureCause(e);
-            logger.log(SEVERE, KernelLoggerInfo.lifecycleException, e);
-            tracker.actOn(logger);
+            LOG.log(SEVERE, KernelLoggerInfo.lifecycleException, e);
+            tracker.actOn(LOG);
             return null;
         } finally {
             if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
-                events.send(new Event<ApplicationInfo>(Deployment.DEPLOYMENT_SUCCESS, appInfo));
+                events.send(new Event<>(Deployment.DEPLOYMENT_SUCCESS, appInfo));
                 long operationTime = Calendar.getInstance().getTimeInMillis() - operationStartTime;
                 if (appInfo != null) {
                     deploymentLifecycleProbeProvider.applicationDeployedEvent(appName, getApplicationType(appInfo),
                             String.valueOf(operationTime));
                 }
             } else {
-                events.send(new Event<DeploymentContext>(Deployment.DEPLOYMENT_FAILURE, context));
+                events.send(new Event<>(Deployment.DEPLOYMENT_FAILURE, context));
             }
         }
     }
@@ -651,7 +649,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     }
 
     private List<ReadableArchive> getExternalLibraries(DeploymentContext context) throws IOException, URISyntaxException {
-        List<ReadableArchive> externalLibArchives = new ArrayList<ReadableArchive>();
+        List<ReadableArchive> externalLibArchives = new ArrayList<>();
 
         String skipScanExternalLibProp = context.getAppProps().getProperty(SKIP_SCAN_EXTERNAL_LIB);
 
@@ -685,7 +683,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         ApplicationInfo appInfo = appRegistry.get(appName);
         if (appInfo != null) {
-            isSuccess = appInfo.suspend(logger);
+            isSuccess = appInfo.suspend(LOG);
         }
 
         return isSuccess;
@@ -702,7 +700,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         ApplicationInfo appInfo = appRegistry.get(appName);
         if (appInfo != null) {
-            isSuccess = appInfo.resume(logger);
+            isSuccess = appInfo.resume(LOG);
         }
 
         return isSuccess;
@@ -741,11 +739,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         DeploymentTracing tracing = context.getModuleMetaData(DeploymentTracing.class);
 
-        Map<Deployer, EngineInfo> containerInfosByDeployers = new LinkedHashMap<Deployer, EngineInfo>();
+        Map<Deployer, EngineInfo> containerInfosByDeployers = new LinkedHashMap<>();
 
         for (Sniffer sniffer : sniffers) {
             if (sniffer.getContainersNames() == null || sniffer.getContainersNames().length == 0) {
-                report.failure(logger, "no container associated with application of type : " + sniffer.getModuleType(), null);
+                report.failure(LOG, "no container associated with application of type : " + sniffer.getModuleType(), null);
                 return null;
             }
 
@@ -766,23 +764,23 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                             tracing.addContainerMark(DeploymentTracing.ContainerMark.BEFORE_CONTAINER_SETUP, containerName);
                         }
 
-                        containersInfo = setupContainer(sniffer, logger, context);
+                        containersInfo = setupContainer(sniffer, LOG, context);
                         if (tracing != null) {
                             tracing.addContainerMark(DeploymentTracing.ContainerMark.AFTER_CONTAINER_SETUP, containerName);
                         }
 
                         if (isEmpty(containersInfo)) {
                             String msg = "Cannot start container(s) associated to application of type : " + sniffer.getModuleType();
-                            report.failure(logger, msg, null);
+                            report.failure(LOG, msg, null);
                             throw new Exception(msg);
                         }
                     }
                 }
 
                 // Now start all containers, by now, they should be all setup...
-                if (containersInfo != null && !startContainers(containersInfo, logger, context)) {
+                if (containersInfo != null && !startContainers(containersInfo, LOG, context)) {
                     final String msg = "Aborting, Failed to start container " + containerName;
-                    report.failure(logger, msg, null);
+                    report.failure(LOG, msg, null);
                     throw new Exception(msg);
                 }
             }
@@ -793,21 +791,21 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
             if (engineInfo == null) {
                 final String msg = "Aborting, Failed to start container " + containerName;
-                report.failure(logger, msg, null);
+                report.failure(LOG, msg, null);
                 throw new Exception(msg);
             }
 
             Deployer deployer = getDeployer(engineInfo);
             if (deployer == null) {
-                if (!startContainers(Collections.singleton(engineInfo), logger, context)) {
+                if (!startContainers(Collections.singleton(engineInfo), LOG, context)) {
                     final String msg = "Aborting, Failed to start container " + containerName;
-                    report.failure(logger, msg, null);
+                    report.failure(LOG, msg, null);
                     throw new Exception(msg);
                 }
                 deployer = getDeployer(engineInfo);
 
                 if (deployer == null) {
-                    report.failure(logger, "Got a null deployer out of the " + engineInfo.getContainer().getClass()
+                    report.failure(LOG, "Got a null deployer out of the " + engineInfo.getContainer().getClass()
                             + " container, is it annotated with @Service ?");
                     return null;
                 }
@@ -840,7 +838,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     if (!typeByProvider.containsKey(dependency)) {
                         // at this point, we only log problems, because it maybe that what I am deploying now
                         // will not require this application metadata.
-                        logger.log(WARNING, KernelLoggerInfo.applicationMetaDataProvider, new Object[] { provider, dependency });
+                        LOG.log(WARNING, KernelLoggerInfo.applicationMetaDataProvider, new Object[] { provider, dependency });
                     }
                 }
             }
@@ -868,7 +866,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                             serviceName = deployer.getClass().getSimpleName();
                         }
 
-                        report.failure(logger, serviceName + " deployer requires " + dependency + " but no other deployer provides it",
+                        report.failure(LOG, serviceName + " deployer requires " + dependency + " but no other deployer provides it",
                                 null);
 
                         return null;
@@ -880,16 +878,16 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         // ok everything is satisfied, just a matter of running things in order
         List<Deployer> orderedDeployers = new ArrayList<>();
         for (Deployer deployer : containerInfosByDeployers.keySet()) {
-            if (logger.isLoggable(FINE)) {
-                logger.fine("Keyed Deployer " + deployer.getClass());
+            if (LOG.isLoggable(FINE)) {
+                LOG.fine("Keyed Deployer " + deployer.getClass());
             }
             loadDeployer(orderedDeployers, deployer, typeByDeployer, (Map) typeByProvider, context);
         }
 
         // Now load metadata from deployers.
         for (Deployer deployer : orderedDeployers) {
-            if (logger.isLoggable(FINE)) {
-                logger.fine("Ordered Deployer " + deployer.getClass());
+            if (LOG.isLoggable(FINE)) {
+                LOG.fine("Ordered Deployer " + deployer.getClass());
             }
 
             final MetaData metadata = deployer.getMetaData();
@@ -910,7 +908,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     deployer.loadMetaData(null, context);
                 }
             } catch (Exception e) {
-                report.failure(logger, "Exception while invoking " + deployer.getClass() + " prepare method", e);
+                report.failure(LOG, "Exception while invoking " + deployer.getClass() + " prepare method", e);
                 throw e;
             }
 
@@ -937,9 +935,9 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 } else {
                     ApplicationMetaDataProvider provider = typeByProvider.get(required);
                     if (provider == null) {
-                        logger.log(SEVERE, inconsistentLifecycleState, required);
+                        LOG.log(SEVERE, inconsistentLifecycleState, required);
                     } else {
-                        LinkedList<ApplicationMetaDataProvider> providers = new LinkedList<ApplicationMetaDataProvider>();
+                        LinkedList<ApplicationMetaDataProvider> providers = new LinkedList<>();
 
                         addRecursively(providers, typeByProvider, provider);
                         for (ApplicationMetaDataProvider p : providers) {
@@ -964,7 +962,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     @Override
     public ModuleInfo prepareModule(List<EngineInfo<?, ?>> sortedEngineInfos, String moduleName, DeploymentContext context, ProgressTracker tracker) throws Exception {
         ActionReport report = context.getActionReport();
-        List<EngineRef> addedEngines = new ArrayList<EngineRef>();
+        List<EngineRef> addedEngines = new ArrayList<>();
 
         DeploymentTracing tracing = context.getModuleMetaData(DeploymentTracing.class);
 
@@ -994,7 +992,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
                 tracker.add(Deployer.class, deployer);
             } catch (Exception e) {
-                report.failure(logger, "Exception while invoking " + deployer.getClass() + " prepare method", e);
+                report.failure(LOG, "Exception while invoking " + deployer.getClass() + " prepare method", e);
                 throw e;
             }
         }
@@ -1003,7 +1001,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
 
         if (events != null) {
-            events.send(new Event<DeploymentContext>(Deployment.MODULE_PREPARED, context), false);
+            events.send(new Event<>(Deployment.MODULE_PREPARED, context), false);
         }
 
         if (tracing != null) {
@@ -1117,7 +1115,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             notifyLifecycleInterceptorsAfter(ExtendedDeploymentContext.Phase.UNLOAD, context);
         }
 
-        events.send(new Event<ApplicationInfo>(Deployment.APPLICATION_DISABLED, info), false);
+        events.send(new Event<>(Deployment.APPLICATION_DISABLED, info), false);
 
         try {
             notifyLifecycleInterceptorsBefore(ExtendedDeploymentContext.Phase.CLEAN, context);
@@ -1173,7 +1171,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         try {
             // prepare the application element
-            ConfigBean newBean = ((ConfigBean) ConfigBean.unwrap(applications)).allocate(Application.class);
+            ConfigBean newBean = ((ConfigBean) Dom.unwrap(applications)).allocate(Application.class);
             Application app = newBean.createProxy();
             Application app_w = t.enroll(app);
             setInitialAppAttributes(app_w, deployParams, appProps, context);
@@ -1215,7 +1213,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     }
                 }
 
-                List<String> targets = new ArrayList<String>();
+                List<String> targets = new ArrayList<>();
                 if (!DeploymentUtils.isDomainTarget(deployParams.target)) {
                     targets.add(deployParams.target);
                 } else {
@@ -1416,8 +1414,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         // property element
         // trim the properties that have been written as attributes
         // the rest properties will be written as property element
-        for (Iterator itr = appProps.keySet().iterator(); itr.hasNext();) {
-            String propName = (String) itr.next();
+        for (Object element : appProps.keySet()) {
+            String propName = (String) element;
             if (!propName.equals(ServerTags.LOCATION) && !propName.equals(ServerTags.CONTEXT_ROOT)
                     && !propName.equals(ServerTags.OBJECT_TYPE) && !propName.equals(ServerTags.DIRECTORY_DEPLOYED)
                     && !propName.startsWith(DeploymentProperties.APP_CONFIG)) {
@@ -1444,7 +1442,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 // get the transaction
                 Transaction t = Transaction.getTransaction(param);
                 if (t != null) {
-                    List<String> targets = new ArrayList<String>();
+                    List<String> targets = new ArrayList<>();
                     if (!DeploymentUtils.isDomainTarget(tgt)) {
                         targets.add(tgt);
                     } else {
@@ -1536,7 +1534,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
                     }
 
-                    List<String> targets = new ArrayList<String>();
+                    List<String> targets = new ArrayList<>();
                     if (!DeploymentUtils.isDomainTarget(target)) {
                         targets.add(target);
                     } else {
@@ -1705,17 +1703,17 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         @Override
         public Logger logger() {
             return logger;
-        };
+        }
 
         @Override
         public ActionReport report() {
             return report;
-        };
+        }
 
         @Override
         public OpsParams params() {
             return params;
-        };
+        }
 
         @Override
         public ExtendedDeploymentContext build(ExtendedDeploymentContext initialContext) throws IOException {
@@ -1830,28 +1828,28 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                  * On Windows especially a previous directory might have remainded after an earlier undeployment, for example if a JAR
                  * file in the earlier deployment had been locked. Warn but do not fail in such a case.
                  */
-                logger.fine(localStrings.getLocalString("deploy.cannotcreateexpansiondir",
+                LOG.fine(localStrings.getLocalString("deploy.cannotcreateexpansiondir",
                         "Error while creating directory for jar expansion: {0}", expansionDir));
             }
             try {
                 Long start = System.currentTimeMillis();
                 final WritableArchive expandedArchive = archiveFactory.createArchive(expansionDir);
                 archiveHandler.expand(archive, expandedArchive, initial);
-                if (logger.isLoggable(FINE)) {
-                    logger.fine("Deployment expansion took " + (System.currentTimeMillis() - start));
+                if (LOG.isLoggable(FINE)) {
+                    LOG.fine("Deployment expansion took " + (System.currentTimeMillis() - start));
                 }
 
                 // Close the JAR archive before losing the reference to it or else the JAR remains locked.
                 try {
                     archive.close();
                 } catch (IOException e) {
-                    logger.log(SEVERE, KernelLoggerInfo.errorClosingArtifact, new Object[] { archive.getURI().getSchemeSpecificPart(), e });
+                    LOG.log(SEVERE, KernelLoggerInfo.errorClosingArtifact, new Object[] { archive.getURI().getSchemeSpecificPart(), e });
                     throw e;
                 }
                 archive = (FileArchive) expandedArchive;
                 initial.setSource(archive);
             } catch (IOException e) {
-                logger.log(SEVERE, KernelLoggerInfo.errorExpandingFile, e);
+                LOG.log(SEVERE, KernelLoggerInfo.errorExpandingFile, e);
                 throw e;
             }
         }
@@ -1882,7 +1880,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     @Override
     public ParameterMap prepareInstanceDeployParamMap(DeploymentContext dc) throws Exception {
         final DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
-        final Collection<String> excludedParams = new ArrayList<String>();
+        final Collection<String> excludedParams = new ArrayList<>();
         excludedParams.add(DeploymentProperties.PATH);
         excludedParams.add(DeploymentProperties.DEPLOYMENT_PLAN);
         excludedParams.add(DeploymentProperties.ALT_DD);
@@ -2248,7 +2246,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
     @Override
     public List<Sniffer> getSniffersFromApp(Application app) {
-        List<String> snifferTypes = new ArrayList<String>();
+        List<String> snifferTypes = new ArrayList<>();
         for (com.sun.enterprise.config.serverbeans.Module module : app.getModule()) {
             for (Engine engine : module.getEngines()) {
                 snifferTypes.add(engine.getSniffer());
@@ -2261,18 +2259,18 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             return null;
         }
 
-        List<Sniffer> sniffers = new ArrayList<Sniffer>();
+        List<Sniffer> sniffers = new ArrayList<>();
         if (app.isStandaloneModule()) {
             for (String snifferType : snifferTypes) {
                 Sniffer sniffer = snifferManager.getSniffer(snifferType);
                 if (sniffer != null) {
                     sniffers.add(sniffer);
                 } else {
-                    logger.log(SEVERE, KernelLoggerInfo.cantFindSniffer, snifferType);
+                    LOG.log(SEVERE, KernelLoggerInfo.cantFindSniffer, snifferType);
                 }
             }
             if (sniffers.isEmpty()) {
-                logger.log(SEVERE, KernelLoggerInfo.cantFindSnifferForApp, app.getName());
+                LOG.log(SEVERE, KernelLoggerInfo.cantFindSnifferForApp, app.getName());
                 return null;
             }
         } else {

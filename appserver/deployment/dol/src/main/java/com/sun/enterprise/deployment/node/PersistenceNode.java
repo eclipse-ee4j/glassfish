@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +56,7 @@ public class PersistenceNode extends AbstractBundleNode {
     private static final String SPEC_VERSION = "2.0";
 
     private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_1_0);
         return Collections.unmodifiableList(systemIDs);
@@ -66,12 +67,14 @@ public class PersistenceNode extends AbstractBundleNode {
      * constructors of this class. Inside this constructor, we clear the
      * handlers set up by super classes' constructors because they are
      * not applicable in the context of PersistenceNode because
-     * unlike standard Java EE schemas, persistence.xsd does not include
-     * javaee_5.xsd for things like description, version etc.
+     * unlike standard Jakarta EE schemas, persistence.xsd does not include
+     * jakartaee xsd for things like description, version etc.
      */
     public PersistenceNode() {
         // clear all the handlers set up by super classes.
-        if (handlers != null) handlers.clear();
+        if (handlers != null) {
+            handlers.clear();
+        }
         registerElementHandler(
                 new XMLElement(PersistenceTagNames.PERSISTENCE_UNIT),
                 PersistenceUnitNode.class);
@@ -105,10 +108,12 @@ public class PersistenceNode extends AbstractBundleNode {
         return Collections.EMPTY_MAP;
     }
 
+    @Override
     public String getDocType() {
         return null;
     }
 
+    @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
@@ -120,14 +125,17 @@ public class PersistenceNode extends AbstractBundleNode {
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
 
+    @Override
     public List<String> getSystemIDs() {
         return systemIDs;
     }
 
+    @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }

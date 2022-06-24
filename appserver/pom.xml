@@ -148,7 +148,7 @@
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
-        <weld.version>5.0.0.SP2</weld.version>
+        <weld.version>5.0.1.Final</weld.version>
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->

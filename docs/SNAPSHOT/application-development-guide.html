@@ -17855,7 +17855,8 @@ latest Jakarta EE APIs and frameworks. It is built using OSGi technology,
 and includes as its OSGi module management subsystem the
 <a href="http://felix.apache.org">Apache Felix OSGi framework</a>
 (<code><a href="http://felix.apache.org" class="bare">http://felix.apache.org</a></code>), which is a fully-compliant implementation
-of the OSGi Service Platform R4 Version 4.3 specification. Eclipse GlassFish supports deployment of OSGi-based applications using this
+of the OSGi Service Platform R4 Version 4.3 specification. Eclipse GlassFish
+supports deployment of OSGi-based applications using this
 framework. OSGi applications can make use of core as well as enterprise
 OSGi features. Eclipse GlassFish makes available many of its Jakarta EE
 platform services, such as the transaction service, HTTP service, JDBC
@@ -17874,8 +17875,8 @@ bundles into two categories based on the features they use:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Plain OSGi Application Bundles - bundles that do not contain any Java
-EE components. See <a href="#gkupd">Developing Plain OSGi Bundles</a>.</p>
+<p>Plain OSGi Application Bundles - bundles that do not contain any Jakarta EE
+components. See <a href="#gkupd">Developing Plain OSGi Bundles</a>.</p>
 </li>
 <li>
 <p>Hybrid Application Bundles - bundles that are an OSGi bundle as wells
@@ -17944,13 +17945,14 @@ unavailable to applications built using just one of the two platforms.</p>
 <h3 id="developing-osgi-application-bundles-for-eclipse-glassfish"><a class="anchor" href="#developing-osgi-application-bundles-for-eclipse-glassfish"></a>Developing OSGi Application Bundles for Eclipse GlassFish</h3>
 <div class="paragraph">
 <p>Eclipse GlassFish enables interaction between OSGi components and Jakarta EE
-components. OSGi services managed by the OSGi framework can invoke Java
-EE components managed by the Jakarta EE container and vice versa. For
-example, developers can declaratively export EJBs as OSGi services
+components. OSGi services managed by the OSGi framework can invoke Jakarta EE
+components managed by the Jakarta EE container and vice versa.
+For example, developers can declaratively export EJBs as OSGi services
 without having to write any OSGi code. This allows any plain OSGi
 component, which is running without the Jakarta EE context, to discover the
 EJB and invoke it. Similarly, Jakarta EE components can locate OSGi
-services provided by plain OSGi bundles and use them as well. Eclipse GlassFish extends the Jakarta EE Context and Dependency Injection (CDI)
+services provided by plain OSGi bundles and use them as well.
+Eclipse GlassFish extends the Jakarta EE Context and Dependency Injection (CDI)
 framework to make it easier for Jakarta EE components to consume dynamic
 OSGi services in a type-safe manner.</p>
 </div>
@@ -17979,8 +17981,8 @@ code can rely on the Jakarta EE container to inject the required services
 as well. Unfortunately, neither of them works when the code runs outside
 a Jakarta EE context. An example of such code is the <code>BundleActivator</code> of
 an OSGi bundle. For such code to access Jakarta EE platform services,
-Eclipse GlassFish makes key services and resources of the underlying Java
-EE platform available as OSGi services. Thus, an OSGi bundle deployed in
+Eclipse GlassFish makes key services and resources of the underlying Jakarta EE
+platform available as OSGi services. Thus, an OSGi bundle deployed in
 Eclipse GlassFish can access these services using OSGi Service look-up
 APIs or by using a white board pattern. The following Jakarta EE services
 are available as OSGi services:</p>
@@ -21613,7 +21615,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-06-23 23:46:04 UTC
+Last updated 2022-06-24 12:33:23 UTC
 </div>
 </div>
 </body>

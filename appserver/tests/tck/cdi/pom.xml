@@ -230,7 +230,7 @@
             <artifactId>cdi-tck-core-impl</artifactId>
             <version>${cdi.tck-4-0.version}</version>
             <type>sig</type>
-            <classifier>jdk11</classifier>
+            <classifier>sigtest-jdk11</classifier>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

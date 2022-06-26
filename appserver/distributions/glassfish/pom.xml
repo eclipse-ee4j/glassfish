@@ -34,6 +34,7 @@
 
     <properties>
         <glassfish.modules>${project.build.directory}/stage/glassfish7/glassfish/modules</glassfish.modules>
+        <glassfish.appclient>${project.build.directory}/stage/glassfish7/glassfish/lib/appclient</glassfish.appclient>
         <patches>${basedir}/src/main/patches</patches>
     </properties>
 
@@ -78,6 +79,65 @@
                             <goal>exec</goal>
                         </goals>
                         <phase>process-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-common</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>jakarta.annotation</groupId>
+                                    <artifactId>jakarta.annotation-api</artifactId>
+                                    <version>${jakarta.annotation-api.version}</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/common-annotations</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                     </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>do stuff</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <macrodef name="jarupdate">
+                                    <attribute name="basedir"/> 
+                                    <attribute name="includes"/>
+                                    <attribute name="destfile"/>
+                                    <sequential>
+                                        <zip destfile="@{destfile}.tmp">
+                                            <zipfileset src="@{destfile}" excludes="@{includes}"/>
+                                        </zip>
+                                        <move file="@{destfile}.tmp" tofile="@{destfile}" />
+                                        <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
+                                    </sequential>
+                                </macrodef>
+                            
+                                <jarupdate 
+                                    basedir="${project.build.directory}/common-annotations" includes="jakarta/annotation/ManagedBean.class"
+                                    destfile="${glassfish.appclient}/weld-se-shaded.jar"
+                                />
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

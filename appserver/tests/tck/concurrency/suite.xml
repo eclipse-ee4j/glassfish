@@ -65,6 +65,7 @@
             </class>
             <class name="ee.jakarta.tck.concurrent.spec.ManagedThreadFactory.resourcedef.ManagedThreadFactoryDefinitionTests">
                 <methods>
+                    <exclude name="testManagedThreadFactoryDefinitionDefaultsEJB"></exclude>
                     <exclude name="testManagedThreadFactoryDefinitionAllAttributes"></exclude>
                     <exclude name="testManagedThreadFactoryDefinitionAllAttributesEJB"></exclude>
                     <exclude name="testParallelStreamBackedByManagedThreadFactory"></exclude>

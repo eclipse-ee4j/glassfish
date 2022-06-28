@@ -343,7 +343,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>glassfish</artifactId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
                                     <version>${glassfish.version}</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
@@ -547,6 +547,24 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <excluded.groups>se</excluded.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <excluded.groups>javaee-full,se</excluded.groups>
+            </properties>
         </profile>
     </profiles>
 

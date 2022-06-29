@@ -343,7 +343,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>glassfish</artifactId>
+                                    <artifactId>${glassfish-artifact-id}</artifactId>
                                     <version>${glassfish.version}</version>
                                     <type>zip</type>
                                     <overWrite>false</overWrite>
@@ -386,7 +386,7 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>target/suites/tck-web-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
-                    <excludedGroups>se</excludedGroups>
+                    <excludedGroups>${excluded.groups}</excludedGroups>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
                         <dependency>jakarta.enterprise:cdi-tck-web-impl</dependency>
@@ -495,7 +495,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>unpack-jars</id>
+                                <id>unpack-jars-sigtest</id>
                                 <phase>validate</phase>
                                 <goals>
                                     <goal>unpack-dependencies</goal>
@@ -516,7 +516,7 @@
                                     <includeGroupIds>jakarta.enterprise</includeGroupIds>
                                     <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
                                     <type>sig</type>
-                                    <classifier>jdk11</classifier>
+                                    <classifier>sigtest-jdk11</classifier>
                                     <stripVersion>true</stripVersion>
                                     <overWriteReleases>true</overWriteReleases>
                                     <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -528,7 +528,7 @@
                     <plugin>
                         <groupId>org.netbeans.tools</groupId>
                         <artifactId>sigtest-maven-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sigtest</id>
@@ -539,7 +539,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <sigfile>target/sigtest/cdi-tck-core-impl-jdk11.sig</sigfile>
+                            <sigfile>target/sigtest/cdi-tck-core-impl-sigtest-jdk11.sig</sigfile>
                             <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
                             <classes>target/cdi-sigtest-classes</classes>
                             <report>target/cdi-sig-report.txt</report>
@@ -547,6 +547,24 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        
+        <profile>
+            <id>full</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <excluded.groups>se</excluded.groups>
+            </properties>
+        </profile>
+        <profile>
+            <id>web</id>
+            <properties>
+                <glassfish-artifact-id>web</glassfish-artifact-id>
+                <excluded.groups>javaee-full,se</excluded.groups>
+            </properties>
         </profile>
     </profiles>
 

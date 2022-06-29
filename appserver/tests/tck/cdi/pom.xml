@@ -495,7 +495,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>unpack-jars</id>
+                                <id>unpack-jars-sigtest</id>
                                 <phase>validate</phase>
                                 <goals>
                                     <goal>unpack-dependencies</goal>
@@ -516,7 +516,7 @@
                                     <includeGroupIds>jakarta.enterprise</includeGroupIds>
                                     <includeArtifactIds>cdi-tck-core-impl</includeArtifactIds>
                                     <type>sig</type>
-                                    <classifier>jdk11</classifier>
+                                    <classifier>sigtest-jdk11</classifier>
                                     <stripVersion>true</stripVersion>
                                     <overWriteReleases>true</overWriteReleases>
                                     <outputDirectory>${project.build.directory}/sigtest</outputDirectory>
@@ -528,7 +528,7 @@
                     <plugin>
                         <groupId>org.netbeans.tools</groupId>
                         <artifactId>sigtest-maven-plugin</artifactId>
-                        <version>1.5</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sigtest</id>
@@ -539,7 +539,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <sigfile>target/sigtest/cdi-tck-core-impl-jdk11.sig</sigfile>
+                            <sigfile>target/sigtest/cdi-tck-core-impl-sigtest-jdk11.sig</sigfile>
                             <packages>jakarta.decorator,jakarta.enterprise,jakarta.interceptor</packages>
                             <classes>target/cdi-sigtest-classes</classes>
                             <report>target/cdi-sig-report.txt</report>

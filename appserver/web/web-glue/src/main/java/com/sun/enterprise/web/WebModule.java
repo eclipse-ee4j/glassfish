@@ -33,7 +33,6 @@ import com.sun.enterprise.deployment.web.WebResourceCollection;
 import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.universal.GFBase64Decoder;
 import com.sun.enterprise.universal.GFBase64Encoder;
-import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.web.deploy.LoginConfigDecorator;
 import com.sun.enterprise.web.pwc.PwcWebModule;
@@ -69,6 +68,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -80,8 +80,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.ContainerListener;
@@ -172,11 +174,11 @@ import static org.glassfish.web.loader.ServletContainerInitializerUtil.getServle
 
 public class WebModule extends PwcWebModule implements Context {
 
-    // ----------------------------------------------------- Class Variables
 
     private static final Logger logger = LogFacade.getLogger();
-
     protected static final ResourceBundle rb = logger.getResourceBundle();
+
+    private static final String SYS_PROP_OVERRIDABLE_PACKAGES = "org.glassfish.main.webappCL.overridablePackages";
 
     private static final String ALTERNATE_FROM = "from=";
     private static final String ALTERNATE_DOCBASE = "dir=";
@@ -1439,20 +1441,22 @@ public class WebModule extends PwcWebModule implements Context {
      * Configure the class loader for the web module based on the settings in sun-web.xml's class-loader element (if any).
      */
     Loader configureLoader(SunWebApp bean) {
-        org.glassfish.web.deployment.runtime.ClassLoader clBean = null;
 
         WebappLoader loader = new V3WebappLoader(webModuleConfig.getAppClassLoader());
         loader.setUseMyFaces(isUseMyFaces());
 
-        if (bean != null) {
+        final org.glassfish.web.deployment.runtime.ClassLoader clBean;
+        if (bean == null) {
+            clBean = null;
+        } else {
             clBean = ((SunWebAppImpl) bean).getClassLoader();
         }
 
-        if (clBean != null) {
+        if (clBean == null) {
+            loader.setDelegate(true);
+        } else {
             configureLoaderAttributes(loader, clBean);
             configureLoaderProperties(loader, clBean);
-        } else {
-            loader.setDelegate(true);
         }
 
         String stubPath = webModuleConfig.getStubPath();
@@ -1463,16 +1467,13 @@ public class WebModule extends PwcWebModule implements Context {
             loader.addRepository("file:" + stubPath + File.separator);
         }
 
-        /**
-         * Adds the given package name to the list of packages that may always be overriden, regardless of whether they belong
-         * to a protected namespace
-         */
-        String packagesName = System.getProperty("com.sun.enterprise.overrideablejavaxpackages");
-        if (packagesName != null) {
-            List<String> overridablePackages = StringUtils.parseStringList(packagesName, " ,");
-            for (String overridablePackage : overridablePackages) {
-                loader.addOverridablePackage(overridablePackage);
-            }
+        // Adds the given package name to the list of packages that may always be overriden,
+        // regardless of whether they belong to a protected namespace
+        String overridablePackageNames = System.getProperty(SYS_PROP_OVERRIDABLE_PACKAGES);
+        if (overridablePackageNames != null) {
+            Set<String> packages = Arrays.stream(overridablePackageNames.split(",")).map(String::trim)
+                .filter(Predicate.not(String::isEmpty)).collect(Collectors.toUnmodifiableSet());
+            loader.setOverridablePackages(packages);
         }
 
         setLoader(loader);

@@ -41,9 +41,9 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,9 +110,7 @@ public class WebappLoader
      * (so that the actual parent will be the system class loader).
      */
     public WebappLoader() {
-
         this(null);
-
     }
 
 
@@ -136,7 +134,7 @@ public class WebappLoader
     /**
      * The class loader being managed by this Loader component.
      */
-    private WebappClassLoader classLoader = null;
+    private WebappClassLoader classLoader;
 
 
     /**
@@ -199,9 +197,7 @@ public class WebappLoader
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm =
-        StringManager.getManager(WebappLoader.class.getPackage().getName());
-
+    protected static final StringManager sm = StringManager.getManager(WebappLoader.class.getPackage().getName());
 
     /**
      * Has this component been started?
@@ -221,19 +217,14 @@ public class WebappLoader
     private String classpath = null;
 
 
-    // START PE 4985680`
     /**
-     * List of packages that may always be overridden, regardless of whether
+     * Set of packages that may always be overridden, regardless of whether
      * they belong to a protected namespace (i.e., a namespace that may never
      * be overridden by a webapp)
      */
-    private ArrayList<String> overridablePackages;
-    // END PE 4985680
+    private Set<String> overridablePackages = Set.of();
 
-
-    // START PWC 1.1 6314481
     private boolean ignoreHiddenJarFiles;
-    // END PWC 1.1 6314481
 
     private boolean useMyFaces;
 
@@ -285,7 +276,7 @@ public class WebappLoader
 
 
     /**
-     * Return the debugging detail level for this component.
+     * @return the debugging detail level for this component.
      */
     public int getDebug() {
         return (this.debug);
@@ -300,8 +291,7 @@ public class WebappLoader
     public void setDebug(int debug) {
         int oldDebug = this.debug;
         this.debug = debug;
-        support.firePropertyChange("debug", Integer.valueOf(oldDebug),
-                                   Integer.valueOf(this.debug));
+        support.firePropertyChange("debug", Integer.valueOf(oldDebug), Integer.valueOf(this.debug));
     }
 
 
@@ -325,8 +315,7 @@ public class WebappLoader
     public void setDelegate(boolean delegate) {
         boolean oldDelegate = this.delegate;
         this.delegate = delegate;
-        support.firePropertyChange("delegate", Boolean.valueOf(oldDelegate),
-                                   Boolean.valueOf(this.delegate));
+        support.firePropertyChange("delegate", Boolean.valueOf(oldDelegate), Boolean.valueOf(this.delegate));
     }
 
 
@@ -379,9 +368,7 @@ public class WebappLoader
         // Process this property change
         boolean oldReloadable = this.reloadable;
         this.reloadable = reloadable;
-        support.firePropertyChange("reloadable",
-                                   Boolean.valueOf(oldReloadable),
-                                   Boolean.valueOf(this.reloadable));
+        support.firePropertyChange("reloadable", Boolean.valueOf(oldReloadable), Boolean.valueOf(this.reloadable));
     }
 
 
@@ -654,14 +641,7 @@ public class WebappLoader
                 classLoader.addRepository(element);
             }
 
-            // START OF PE 4985680
-            if (overridablePackages != null){
-                for (String overridablePackage : overridablePackages) {
-                    classLoader.addOverridablePackage(overridablePackage);
-                }
-                overridablePackages = null;
-            }
-            // END OF PE 4985680
+            classLoader.setOverridablePackages(overridablePackages);
 
             // Configure our repositories
             setRepositories();
@@ -1293,26 +1273,14 @@ public class WebappLoader
         this.controller = controller;
     }
 
-    // START OF PE 4985680
-    /**
-     * Adds the given package name to the list of packages that may always be
-     * overriden, regardless of whether they belong to a protected namespace
-     */
     @Override
-    public void addOverridablePackage(String packageName){
-        if (overridablePackages == null) {
-            overridablePackages = new ArrayList<>();
-        }
-        overridablePackages.add(packageName);
+    public void setOverridablePackages(Set<String> packageNames){
+        overridablePackages = packageNames;
     }
-    // END OF PE 4985680
 
 
-    // START PWC 1.1 6314481
     @Override
     public void setIgnoreHiddenJarFiles(boolean ignoreHiddenJarFiles) {
         this.ignoreHiddenJarFiles = ignoreHiddenJarFiles;
     }
-    // END PWC 1.1 6314481
-
 }

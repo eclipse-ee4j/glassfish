@@ -66,6 +66,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
@@ -73,6 +74,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
@@ -133,28 +135,29 @@ import org.glassfish.web.util.IntrospectionUtils;
 public class WebappClassLoader extends URLClassLoader
     implements Reloader, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader, JarFileResourcesProvider {
 
+    /** First try parent classloader, then own resources. */
     public static final boolean DELEGATE_DEFAULT = true;
     private static final Logger logger = LogFacade.getLogger();
 
     private static final ResourceBundle rb = logger.getResourceBundle();
 
+    private static final Function<String, String> PACKAGE_TO_PATH = pkg -> pkg.replace('.', '/');
+
     /**
      * Set of package names which are not allowed to be loaded from a webapp
      * class loader without delegating first.
      */
-    private static final String[] packageTriggers = {
-        "jakarta",                                   // Jakarta classes
+    private static final Set<String> DELEGATED_PACKAGES = Set.of(
+        "jakarta",                                   // Jakarta EE classes
         "javax",                                     // Java extensions
-        // START PE 4985680
-        "sun",                                       // Sun classes
-        // END PE 4985680
-        "org.xml.sax",                               // SAX 1 & 2
-        "org.w3c.dom",                               // DOM 1 & 2
-        "org.apache.taglibs.standard",               // JSTL
-        "com.sun.faces",                             // Faces
-        "org.apache.commons.logging"                 // Commons logging
-    };
-
+        "sun",                                       // Sun classes (JRE internals)
+        "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
+        "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
+        "org.apache.taglibs.standard",               // jakarta.servlet.jsp.jstl.jar
+        "com.sun.faces"                              // jakarta.faces.jar
+    );
+    private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
+        .map(PACKAGE_TO_PATH).collect(Collectors.toUnmodifiableSet());
 
     /**
      * All permission.
@@ -263,8 +266,7 @@ public class WebappClassLoader extends URLClassLoader
      * A list of read File and Jndi Permission's required if this loader
      * is for a web application context.
      */
-    private final ConcurrentLinkedQueue<Permission> permissionList =
-        new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Permission> permissionList = new ConcurrentLinkedQueue<>();
 
     //holder for declared and ee permissions
     private PermsHolder permissionsHolder;
@@ -272,9 +274,9 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Path where resources loaded from JARs will be extracted.
      */
-    protected File loaderDir = null;
+    protected File loaderDir;
 
-    protected String canonicalLoaderDir = null;
+    protected String canonicalLoaderDir;
 
     /**
      * The PermissionCollection for each CodeSource for a web
@@ -307,21 +309,20 @@ public class WebappClassLoader extends URLClassLoader
      */
     protected boolean hasExternalRepositories = false;
 
-    // START SJSAS 6344989
     /**
      * List of byte code pre-processors per webapp class loader.
      */
     private final ConcurrentLinkedQueue<BytecodePreprocessor> byteCodePreprocessors = new ConcurrentLinkedQueue<>();
-    // END SJSAS 6344989
 
+    /** myfaces-api uses jakarta.faces packages */
     private boolean useMyFaces;
 
     /**
-     * List of packages that may always be overridden by the application,
+     * Set of packages that may always be overridden by the application,
      * regardless of whether they belong to a protected namespace
      * (i.e., a namespace that may never be overridden by any webapp)
      */
-    private ConcurrentLinkedQueue<String> overridablePackages;
+    private Set<String> overridablePackages = Set.of();
 
     private volatile boolean resourcesExtracted = false;
 
@@ -424,18 +425,13 @@ public class WebappClassLoader extends URLClassLoader
         }
     }
 
-    // START PE 4985680
     /**
-     * Adds the given package name to the list of packages that may always be
-     * overriden, regardless of whether they belong to a protected namespace
+     * Sets the given package names that may always be overriden, regardless of whether they belong
+     * to a protected namespace
      */
-    public synchronized void addOverridablePackage(String packageName){
-        if (overridablePackages == null){
-            overridablePackages = new ConcurrentLinkedQueue<>();
-        }
-        overridablePackages.add(packageName);
+    public void setOverridablePackages(Set<String> packageNames){
+        overridablePackages = packageNames;
     }
-    // END PE 4985680
 
 
     /**
@@ -469,9 +465,7 @@ public class WebappClassLoader extends URLClassLoader
      * Return the context name for this class loader.
      */
     public String getContextName() {
-
-        return (this.contextName);
-
+        return this.contextName;
     }
 
 
@@ -710,9 +704,7 @@ public class WebappClassLoader extends URLClassLoader
             return;
         }
 
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "addRepository(" + repository + ")");
-        }
+        logger.log(Level.FINER, "addRepository({0})", repository);
 
         int i;
 
@@ -748,16 +740,14 @@ public class WebappClassLoader extends URLClassLoader
             return;
         }
 
-        if (logger.isLoggable(Level.FINER)) {
-            logger.log(Level.FINER, "addJar(" + jar + ")");
-        }
+        logger.log(Level.FINER, "addJar({0})", jar);
 
         // See IT 11417
         super.addURL(getURL(file));
 
         int i;
 
-        if ((jarPath != null) && (jar.startsWith(jarPath))) {
+        if (jarPath != null && jar.startsWith(jarPath)) {
 
             String jarName = jar.substring(jarPath.length());
             while (jarName.startsWith("/")) {
@@ -2840,8 +2830,7 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Returns true if the specified package name is sealed according to the
-     * given manifest.
+     * @return true if the specified package name is sealed according to the given manifest.
      */
     protected boolean isPackageSealed(String name, Manifest man) {
 
@@ -3186,44 +3175,38 @@ public class WebappClassLoader extends URLClassLoader
         if (className.startsWith("java.")) {
             return true;
         }
-        // Looking up the package
-        int pos = className.lastIndexOf('.');
-        if (pos == -1) {
+        final String packageName = getPackageName(className);
+        if (overridablePackages.stream().anyMatch(packageName::startsWith)) {
             return false;
         }
-        String packageName = className.substring(0, pos);
-        if (overridablePackages != null){
-            for (String overridePkg : overridablePackages) {
-                if (packageName.startsWith(overridePkg)) {
-                    return false;
-                }
-            }
+        if (className.startsWith("jakarta.faces.")) {
+            // myfaces-api uses jakarta.faces packages
+            return !useMyFaces;
         }
-        for (String packageTrigger : packageTriggers) {
-            if (packageName.startsWith(packageTrigger)) {
-                return true;
-            }
+        if (DELEGATED_PACKAGES.stream().anyMatch(packageName::startsWith)) {
+            return true;
         }
         return false;
     }
 
     /**
-     * To determine whether one should delegate to parent for loading
-     * resource of the given resource name.
-     *
-     * @param name
+     * @return true if the resource should be first located by the delegating classloader.
      */
     private boolean isDelegateFirstResource(String name) {
         if (delegate) {
             return true;
         }
-        if (name.startsWith("jakarta/faces") || name.startsWith("com/sun/faces")) {
-            return !useMyFaces;
-        }
-        if (name.startsWith("jakarta") || name.startsWith("javax")) {
+        if (name.startsWith("java/")) {
             return true;
         }
-        if (name.startsWith("sun")) {
+        if (overridablePackages.stream().map(PACKAGE_TO_PATH).anyMatch(name::startsWith)) {
+            return false;
+        }
+        if (name.startsWith("jakarta/faces/")) {
+            // myfaces-api uses jakarta.faces packages
+            return !useMyFaces;
+        }
+        if (DELEGATED_RESOURCE_PATHS.stream().anyMatch(name::startsWith)) {
             return true;
         }
         return false;
@@ -3232,5 +3215,14 @@ public class WebappClassLoader extends URLClassLoader
     private static String getString(String key, Object... arguments) {
         String msg = rb.getString(key);
         return MessageFormat.format(msg, arguments);
+    }
+
+    private static String getPackageName(final String className) {
+        int pos = className.lastIndexOf('.');
+        if (pos == -1) {
+            // same as Class.getPackageName
+            return "";
+        }
+        return className.substring(0, pos);
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -19,6 +20,7 @@ package org.apache.catalina;
 
 
 import java.beans.PropertyChangeListener;
+import java.util.Set;
 
 
 /**
@@ -61,13 +63,13 @@ public interface Loader {
     /**
      * Return the Java class loader to be used by this Container.
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
 
     /**
      * Return the Container with which this Loader has been associated.
      */
-    public Container getContainer();
+    Container getContainer();
 
 
     /**
@@ -75,14 +77,14 @@ public interface Loader {
      *
      * @param container The associated Container
      */
-    public void setContainer(Container container);
+    void setContainer(Container container);
 
 
     /**
      * Return the "follow standard delegation model" flag used to configure
      * our ClassLoader.
      */
-    public boolean getDelegate();
+    boolean getDelegate();
 
 
     /**
@@ -91,7 +93,7 @@ public interface Loader {
      *
      * @param delegate The new flag
      */
-    public void setDelegate(boolean delegate);
+    void setDelegate(boolean delegate);
 
 
     /**
@@ -99,13 +101,13 @@ public interface Loader {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the reloadable flag for this Loader.
      */
-    public boolean getReloadable();
+    boolean getReloadable();
 
 
     /**
@@ -113,7 +115,7 @@ public interface Loader {
      *
      * @param reloadable The new reloadable flag
      */
-    public void setReloadable(boolean reloadable);
+    void setReloadable(boolean reloadable);
 
 
     // --------------------------------------------------------- Public Methods
@@ -124,7 +126,7 @@ public interface Loader {
      *
      * @param listener The listener to add
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener);
+    void addPropertyChangeListener(PropertyChangeListener listener);
 
 
     /**
@@ -132,21 +134,21 @@ public interface Loader {
      *
      * @param repository Repository to be added
      */
-    public void addRepository(String repository);
+    void addRepository(String repository);
 
 
     /**
      * Return the set of repositories defined for this class loader.
      * If none are defined, a zero-length array is returned.
      */
-    public String[] findRepositories();
+    String[] findRepositories();
 
 
     /**
      * Has the internal repository associated with this Loader been modified,
      * such that the loaded classes should be reloaded?
      */
-    public boolean modified();
+    boolean modified();
 
 
     /**
@@ -154,20 +156,18 @@ public interface Loader {
      *
      * @param listener The listener to remove
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
 
 
-    // START PE 4985680
     /**
-     * Adds the given package name to the list of packages that may always be
-     * overriden, regardless of whether they belong to a protected namespace
+     * Sets the given set of package names that may always be overriden, regardless of whether they
+     * belong to a protected namespace. Rules apply to subpackages too.
+     *
+     * @param packageNames
      */
-    public void addOverridablePackage(String packageName);
-    // END PE 4985680
+    void setOverridablePackages(Set<String> packageNames);
 
 
-    // START PWC 1.1 6314481
-    public void setIgnoreHiddenJarFiles(boolean ignoreHiddenJarFiles);
-    // END PWC 1.1 6314481
+    void setIgnoreHiddenJarFiles(boolean ignoreHiddenJarFiles);
 }
 

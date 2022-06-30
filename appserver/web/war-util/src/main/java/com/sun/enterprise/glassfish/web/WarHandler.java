@@ -168,14 +168,8 @@ public class WarHandler extends AbstractArchiveHandler {
 
         } catch(XMLStreamException xse) {
             logger.log(Level.SEVERE, xse.getMessage(), xse);
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, xse.getMessage(), xse);
-            }
         } catch(IOException ioe) {
             logger.log(Level.SEVERE, ioe.getMessage(), ioe);
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, ioe.getMessage(), ioe);
-            }
         }
         cloader.start();
         return cloader;

@@ -136,6 +136,21 @@
                                     basedir="${project.build.directory}/common-annotations" includes="jakarta/annotation/ManagedBean.class"
                                     destfile="${glassfish.appclient}/weld-se-shaded.jar"
                                 />
+                                
+                                
+                                <jarupdate 
+                                    basedir="${patches}/webservices-api-osgi" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/webservices-api-osgi.jar"
+                                />
+                                <jarupdate 
+                                    basedir="${patches}/webservices-extra-xmlsec" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/webservices-extra-xmlsec.jar"
+                                />
+                                <jarupdate 
+                                    basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/webservices-osgi.jar"
+                                />
+                                
                             </target>
                         </configuration>
                     </execution>

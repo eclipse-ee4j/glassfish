@@ -61,7 +61,7 @@ public class ResourceLocator {
      * @return true if the resource present in the current classloader can shadow parent's resource.
      */
     public boolean isOverridableResource(String name) {
-        if (name.startsWith("META-INF/services/jakarta.json.spi.JsonProvider")) {
+        if ("META-INF/services/jakarta.json.spi.JsonProvider".equals(name)) {
             return true;
         }
         return false;

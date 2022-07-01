@@ -73,7 +73,7 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Expression Language -->
-        <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
+        <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
         <expressly.version>5.0.0-M2</expressly.version>
 
         <!-- Jakarta Servlet -->

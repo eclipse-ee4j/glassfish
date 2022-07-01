@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -23,8 +24,6 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import java.util.logging.Logger;
 
 /**
-/**
- *
  * Provides the logging facilities.
  *
  * @author Shing Wai Chan
@@ -186,11 +185,6 @@ public class LogFacade {
             message = "Unable to read data for class with name [{0}]",
             level = "WARNING")
     public static final String READ_CLASS_ERROR = prefix + "00025";
-
-    @LogMessageInfo(
-            message = "Unable to purge bean classes from BeanELResolver",
-            level = "WARNING")
-    public static final String UNABLE_PURGE_BEAN_CLASSES = prefix + "00026";
 
     @LogMessageInfo(
             message = "extra-class-path component [{0}] is not a valid pathname",

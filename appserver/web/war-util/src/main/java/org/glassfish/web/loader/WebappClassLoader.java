@@ -1615,24 +1615,16 @@ public class WebappClassLoader extends URLClassLoader
     /**
      * Stop the class loader.
      *
-     * @exception LifecycleException if a lifecycle error occurs
+     * @throws LifecycleException if a lifecycle error occurs
      */
     public void stop() throws Exception {
-
         if (!started) {
             return;
         }
 
-        // START GlassFish Issue 587
-        purgeELBeanClasses();
-        // END GlassFish Issue 587
-
-        /*
-         * Clearing references should be done before setting started to
-         * false, due to possible side effects.
-         * In addition, set this classloader as the Thread's context
-         * classloader, see IT 9894 for details
-         */
+        // Clearing references should be done before setting started to
+        // false, due to possible side effects.
+        // In addition, set this classloader as the Thread's context classloader
         ClassLoader curCl = null;
         try {
             curCl = Thread.currentThread().getContextClassLoader();
@@ -1644,9 +1636,7 @@ public class WebappClassLoader extends URLClassLoader
             }
         }
 
-        // START SJSAS 6258619
         close();
-        // END SJSAS 6258619
 
         started = false;
 
@@ -3001,80 +2991,23 @@ public class WebappClassLoader extends URLClassLoader
 
     }
 
-    // START SJSAS 6344989
     public void addByteCodePreprocessor(BytecodePreprocessor preprocessor) {
         byteCodePreprocessors.add(preprocessor);
     }
-    // END SJSAS 6344989
 
 
-    // START GlassFish Issue 587
-    /*
-     * Purges all bean classes that were loaded by this WebappClassLoader
-     * from the caches maintained by jakarta.el.BeanELResolver, in order to
-     * avoid this WebappClassLoader from leaking.
-     */
-    private void purgeELBeanClasses() {
-
-        Field fieldlist[] = jakarta.el.BeanELResolver.class.getDeclaredFields();
-        for (Field fld : fieldlist) {
-            if (fld.getName().equals("properties")) {
-                purgeELBeanClasses(fld);
-                break;
-            }
-        }
-    }
-
-    /*
-     * Purges all bean classes that were loaded by this WebappClassLoader
-     * from the cache represented by the given reflected field.
-     *
-     * @param fld The reflected field from which to remove the bean classes
-     * that were loaded by this WebappClassLoader
-     */
-    private void purgeELBeanClasses(final Field fld) {
-
-        setAccessible(fld);
-
-        Map<Class, ?> m = null;
-        try {
-            m = getBeanELResolverProperties(fld);
-        } catch (IllegalAccessException iae) {
-            logger.log(Level.WARNING, LogFacade.UNABLE_PURGE_BEAN_CLASSES, iae);
-            return;
-        }
-
-        if (m.size() == 0) {
-            return;
-        }
-
-        Iterator<Class> iter = m.keySet().iterator();
-        while (iter.hasNext()) {
-            Class<?> mbeanClass = iter.next();
-            if (this.equals(mbeanClass.getClassLoader())) {
-                iter.remove();
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Map<Class, ?> getBeanELResolverProperties(Field fld) throws IllegalAccessException {
-        return (Map<Class, ?>)fld.get(null);
-    }
-    // END GlassFish Issue 587
-
-     /**
+    /**
      * Create and return a temporary loader with the same visibility
-      * as this loader. The temporary loader may be used to load
-      * resources or any other application classes for the purposes of
-      * introspecting them for annotations. The persistence provider
-      * should not maintain any references to the temporary loader,
-      * or any objects loaded by it.
-      *
-      * @return A temporary classloader with the same classpath as this loader
-      */
-     @Override
-     public ClassLoader copy() {
+     * as this loader. The temporary loader may be used to load
+     * resources or any other application classes for the purposes of
+     * introspecting them for annotations. The persistence provider
+     * should not maintain any references to the temporary loader,
+     * or any objects loaded by it.
+     *
+     * @return A temporary classloader with the same classpath as this loader
+     */
+    @Override
+    public ClassLoader copy() {
          logger.entering("WebModuleListener$InstrumentableWebappClassLoader", "copy");
          // set getParent() as the parent of the cloned class loader
          return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {

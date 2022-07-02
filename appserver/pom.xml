@@ -138,7 +138,7 @@
         <wasp.version>3.1.0-M7</wasp.version>
 
         <!-- Used for Jakarta SOAP (XML Web Services) -->
-        <xmlsec.version>2.3.0</xmlsec.version>
+        <xmlsec.version>3.0.0</xmlsec.version>
         <woodstox.version>6.2.8</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 

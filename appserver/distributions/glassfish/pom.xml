@@ -84,31 +84,6 @@
             </plugin>
             
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-common</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>jakarta.annotation</groupId>
-                                    <artifactId>jakarta.annotation-api</artifactId>
-                                    <version>${jakarta.annotation-api.version}</version>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/common-annotations</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                     </execution>
-                </executions>
-            </plugin>
-            
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -131,26 +106,11 @@
                                         <zip update="true" basedir="@{basedir}" includes="@{includes}" destfile="@{destfile}" />
                                     </sequential>
                                 </macrodef>
-                            
-                                <jarupdate 
-                                    basedir="${project.build.directory}/common-annotations" includes="jakarta/annotation/ManagedBean.class"
-                                    destfile="${glassfish.appclient}/weld-se-shaded.jar"
-                                />
-                                
                                 
                                 <jarupdate 
-                                    basedir="${patches}/webservices-api-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-api-osgi.jar"
+                                    basedir="${patches}/xmlsec" includes="META-INF/MANIFEST.MF"
+                                    destfile="${glassfish.modules}/xmlsec.jar"
                                 />
-                                <jarupdate 
-                                    basedir="${patches}/webservices-extra-xmlsec" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-extra-xmlsec.jar"
-                                />
-                                <jarupdate 
-                                    basedir="${patches}/webservices-osgi" includes="META-INF/MANIFEST.MF"
-                                    destfile="${glassfish.modules}/webservices-osgi.jar"
-                                />
-                                
                             </target>
                         </configuration>
                     </execution>

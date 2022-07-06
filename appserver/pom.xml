@@ -88,9 +88,9 @@
         <tyrus.version>2.1.0-M4</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.0.0</jakarta.concurrent-api.version>
-        <concurrent.version>3.0.0-RC1</concurrent.version>
-        <concurrent2.version>3.0.0-RC4</concurrent2.version>
+        <jakarta.concurrent-api.version>3.0.1</jakarta.concurrent-api.version>
+        <concurrent.version>3.0.0</concurrent.version>
+        <concurrent2.version>3.0.0-RC5</concurrent2.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>

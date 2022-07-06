@@ -99,7 +99,7 @@
         <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
         <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
-        <soteria.version>3.0.0-M5</soteria.version>
+        <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0-M2</exousia.version>
         <nimbus.version>9.23</nimbus.version>
         <jcip.version>1.0.2</jcip.version>

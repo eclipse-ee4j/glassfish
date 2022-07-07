@@ -81,7 +81,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.0.2</jakarta.validation-api.version>
-        <hibernate-validator.version>8.0.0.Alpha3</hibernate-validator.version>
+        <hibernate-validator.version>8.0.0.CR1</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <!--
@@ -91,7 +91,7 @@
         Jakarta SOAP (with Attachments)
         <jakarta.xml.soap-api.version>3.0.0-RC2</jakarta.xml.soap-api.version>
          -->
-        <webservices.version>4.0.0-M4</webservices.version>
+        <webservices.version>4.0.1</webservices.version>
 
         <!-- Jakarta Inject -->
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
@@ -148,7 +148,7 @@
         <jackson-databind.version>2.13.3</jackson-databind.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.4.1</jettison.version>
+        <jettison.version>1.5.0</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
 
         <commons-io.version>2.11.0</commons-io.version>
@@ -810,7 +810,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M6</version>
+                    <version>3.0.0-M7</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -828,7 +828,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M6</version>
+                    <version>3.0.0-M7</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -886,7 +886,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.2</version>
+                            <version>10.3.1</version>
                         </dependency>
                     </dependencies>
                     <executions>

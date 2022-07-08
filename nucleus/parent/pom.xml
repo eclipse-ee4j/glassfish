@@ -70,8 +70,6 @@
     </issueManagement>
 
     <properties>
-        <!-- Jakarta API Versions -->
-
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
         <expressly.version>5.0.0-M2</expressly.version>
@@ -151,7 +149,6 @@
         <jettison.version>1.5.0</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
 
-        <commons-io.version>2.11.0</commons-io.version>
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>4.3</easymock.version>
@@ -676,7 +673,13 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.12.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -867,7 +870,7 @@
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
                         <logViolationsToConsole>true</logViolationsToConsole>
-                        <excludes>**/generated-sources/**/*</excludes>
+                        <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                             adds all property files in the tree -->
                         <resourceExcludes>

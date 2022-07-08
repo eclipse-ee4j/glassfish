@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2022 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,44 +22,32 @@
 
     <parent>
         <groupId>org.glassfish.main</groupId>
-        <artifactId>glassfish-nucleus-parent</artifactId>
+        <artifactId>nucleus-parent</artifactId>
         <version>7.0.0-SNAPSHOT</version>
+        <relativePath>../parent</relativePath>
     </parent>
 
-    <artifactId>test-utils</artifactId>
+    <artifactId>glassfish-jul-extension</artifactId>
+    <packaging>glassfish-jar</packaging>
 
-    <name>Test Utilities</name>
+    <name>GlassFish Java Util Logging Extension</name>
+
+    <properties>
+        <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.hk2</groupId>
-            <artifactId>hk2-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.common</groupId>
-            <artifactId>glassfish-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.core</groupId>
-            <artifactId>glassfish</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.shrinkwrap.resolver</groupId>
-            <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 </project>

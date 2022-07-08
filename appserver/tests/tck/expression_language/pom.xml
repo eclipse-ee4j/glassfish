@@ -66,16 +66,16 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
+
         <tck.home>${project.build.directory}/expression-language-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home> 
-         
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <glassfish.modules>${glassfish.home}/glassfish/modules</glassfish.modules>
-        
+
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
-       
+
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
     </properties>
 
@@ -93,7 +93,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>javatest</artifactId>
@@ -109,7 +109,6 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
         </dependency>
 
         <dependency>
@@ -120,7 +119,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -202,14 +201,14 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                     <skip>${skipITs}</skip>
                 </configuration>
                 <executions>
-                    
+
                     <execution>
                         <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                         
+
                                 <macrodef name="tck-setting">
                                     <attribute name="key" /> <attribute name="value" />
                                     <sequential>
@@ -217,24 +216,24 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                                         match="@{key}=.*" replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
-                                
+
 
                                 <!-- Change configuration -->
-                                
+
                                 <tck-setting key="el.classes" value="${tck.home}/lib/javatest.jar:${glassfish.modules}/jakarta.el.jar:${glassfish.modules}/jakarta.el-api.jar:${glassfish.modules}/expressly.jar"/>
-                                
+
                                 <tck-setting key="report.dir" value="${tck.home}/expression-languagereport/expression-language"/>
                                 <tck-setting key="work.dir" value="${tck.home}/expression-languagework/expression-language"/>
-                          
+
                                 <mkdir dir="${tck.home}/expression-languagereport"/>
                                 <mkdir dir="${tck.home}/expression-languagetckreport/expression-language"/>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
-                                
+
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
@@ -267,7 +266,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                                         <arg value="-Dkeywords=all" />
                                         <env key="LC_ALL" value="C" />
                                     </exec>
-    
+
                                     <if>
                                         <not>
                                             <equals arg1="${testResult}" arg2="0" />
@@ -282,7 +281,7 @@ mvn clean install -Drun.test="com/sun/ts/tests/el/api/jakarta_el/methodexpressio
                     </execution>
                 </executions>
             </plugin>
-             
+
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>

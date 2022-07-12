@@ -641,8 +641,8 @@ Jakarta Batch 2.1 TCK <br/>
 Jakarta Activation 2.1 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Activation 2.1 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-activation-tck-2.1.0.zip), <br/>
-  SHA-256: `b567db2446d41d6a4b796e4997329427b814c80f8b2a584c9d266bb080f16277`
+  [Jakarta Activation 2.1 TCK](https://download.eclipse.org/jakartaee/activation/2.1/jakarta-activation-tck-2.1.0.zip), <br/>
+  SHA-256: `6c4aad27e45761dd9f3e0f8506f37edea41f42401465db750689145718b27a0b`
 
 ```
 [javatest.batch] ***************************************************************

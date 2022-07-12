@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,35 @@
 
 package org.glassfish.resources.mail.deployer;
 
-
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.MailConfiguration;
 import com.sun.enterprise.repository.ResourceProperty;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.resources.api.*;
-import org.glassfish.resources.mail.config.MailResource;
-import org.glassfish.resources.mail.naming.MailNamingObjectFactory;
-import org.glassfish.resources.naming.SerializableObjectRefAddr;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.naming.NamingException;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.api.GlobalResourceDeployer;
+import org.glassfish.resources.mail.config.MailResource;
+import org.glassfish.resources.mail.naming.MailNamingObjectFactory;
+import org.glassfish.resources.naming.SerializableObjectRefAddr;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles mail resource events in the server instance.
@@ -60,30 +62,21 @@ import java.util.logging.Logger;
 @Service
 @ResourceDeployerInfo(MailResource.class)
 @Singleton
-public class MailResourceDeployer extends GlobalResourceDeployer
-        implements ResourceDeployer {
+public class MailResourceDeployer extends GlobalResourceDeployer implements ResourceDeployer {
 
+    private static final Logger LOG = LogDomains.getLogger(MailResourceDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private ResourceNamingService namingService;
 
-    // StringManager for this deployer
-    private static final StringManager localStrings =
-            StringManager.getManager(MailResourceDeployer.class);
-
-    // logger for this deployer
-    private static Logger _logger = LogDomains.getLogger(MailResourceDeployer.class, LogDomains.RSR_LOGGER);
-
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        MailResource mailRes =
-                (MailResource) resource;
-
-
+        MailResource mailRes = (MailResource) resource;
         if (mailRes == null) {
-            _logger.log(Level.INFO, "core.resourcedeploy_error");
+            LOG.log(Level.INFO, "Error in resource deploy.");
         } else {
             ResourceInfo resourceInfo = new ResourceInfo(mailRes.getJndiName(), applicationName, moduleName);
             //registers the jsr77 object for the mail resource deployed
@@ -100,6 +93,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource) throws Exception {
         MailResource mailResource =
                 (MailResource) resource;
@@ -127,6 +121,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
         MailResource mailRes =
                 (MailResource) resource;
@@ -139,6 +134,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void undeployResource(Object resource) throws Exception {
         MailResource mailRes =
                 (MailResource) resource;
@@ -164,6 +160,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void redeployResource(Object resource)
             throws Exception {
 
@@ -174,6 +171,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof MailResource;
     }
@@ -181,6 +179,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -188,6 +187,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * @inheritDoc
      */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
@@ -195,6 +195,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void enableResource(Object resource) throws Exception {
         deployResource(resource);
     }
@@ -202,6 +203,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void disableResource(Object resource) throws Exception {
         undeployResource(resource);
     }
@@ -226,8 +228,8 @@ public class MailResourceDeployer extends GlobalResourceDeployer
             // Publish the object
             namingService.publishObject(resourceInfo, ref, true);
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "mailrsrc.create_obj_error", resourceInfo);
-            _logger.log(Level.SEVERE, "mailrsrc.create_obj_error_excp", ex);
+            LOG.log(Level.SEVERE, "mailrsrc.create_obj_error", resourceInfo);
+            LOG.log(Level.SEVERE, "mailrsrc.create_obj_error_excp", ex);
         }
     }
 
@@ -272,6 +274,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
         if (handles(resource)) {
             if (!postApplicationDeployment) {
@@ -284,6 +287,7 @@ public class MailResourceDeployer extends GlobalResourceDeployer
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
                                           Resources allResources)
             throws ResourceConflictException {

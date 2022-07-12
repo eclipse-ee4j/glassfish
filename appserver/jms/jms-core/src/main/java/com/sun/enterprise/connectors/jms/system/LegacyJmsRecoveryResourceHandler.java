@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +41,6 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Recovery Handler for JMS Resources
- *
  */
 @Service
 public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler {
@@ -58,16 +58,17 @@ public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LegacyJmsRecoveryResourceHandler.class);
 
 
-     public void loadXAResourcesAndItsConnections(List xaresList, List connList)
-     {
-            try {
+    @Override
+    public void loadXAResourcesAndItsConnections(List xaresList, List connList)
+    {
+        try {
             Collection<ExternalJndiResource> jndiResources = resources.getResources(ExternalJndiResource.class);
             InitialContext ic = new InitialContext();
             for (ExternalJndiResource jndiResource : jndiResources) {
                 if (isEnabled(jndiResource)) {
                     try {
                         ic.lookup(jndiResource.getJndiName());
-                         if (!isJMSConnectionFactory(jndiResource)) {
+                        if (!isJMSConnectionFactory(jndiResource)) {
                             continue;
                         }
 
@@ -78,20 +79,20 @@ public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler
                         Object objext = ic.lookup(jndiName);
                         if (!instanceOf(objext, "ConnectionFactory")) {
                             throw new NamingException(localStrings.getLocalString("recovery.unexpected_objtype",
-                            "Unexpected object type "+objext.getClass().getName()+" for "+ jndiName,
-                            new Object[]{objext.getClass().getName(), jndiName}));
+                                "Unexpected object type "+objext.getClass().getName()+" for "+ jndiName,
+                                new Object[]{objext.getClass().getName(), jndiName}));
                         }
                         jmsXAConnectionFactory = wrapJMSConnectionFactoryObject(objext);
                         isQueue = instanceOf(objext, "QueueConnectionFactory");
 
                         recoverJMSXAResource(xaresList, connList, jmsXAConnectionFactory, isQueue);
-                    //} catch (NamingException ne) {
+                        //} catch (NamingException ne) {
                         //If you are here then it is most probably an embedded RAR resource
                         //So we need to explicitly load that rar and create the resources
 
                     } catch (Exception ex) {
                         _logger.log(Level.SEVERE, JMSLoggerInfo.LOAD_RESOURCES_ERROR,
-                                new Object[]{jndiResource.getJndiName()});
+                            new Object[]{jndiResource.getJndiName()});
                         if (_logger.isLoggable(Level.FINE)) {
                             _logger.log(Level.FINE, ex.toString(), ex);
                         }
@@ -104,84 +105,53 @@ public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler
                 _logger.log(Level.FINE, ne.toString(), ne);
             }
         }
-     }
-     public void closeConnections(List connList) {
+    }
+    @Override
+    public void closeConnections(List connList) {
         for (Object obj : connList) {
             try {
-                 closeXAConnection(obj);
+                closeXAConnection(obj);
             } catch (Exception ex) {
                 LogHelper.log(_logger, Level.WARNING, JMSLoggerInfo.CLOSE_CONNECTION_FAILED, ex);
             }
         }
     }
-  private boolean isEnabled(ExternalJndiResource resource) {
+    private boolean isEnabled(ExternalJndiResource resource) {
         return Boolean.valueOf(resource.getEnabled());
     }
 
- public boolean isJMSConnectionFactory(ExternalJndiResource resType_) {
-        if (resType_ == null) return false;
+    public boolean isJMSConnectionFactory(ExternalJndiResource resType_) {
+        if (resType_ == null) {
+            return false;
+        }
 
         return (JMS_QUEUE_CONNECTION_FACTORY.equals(resType_.getResType()) ||
-                JMS_TOPIC_CONNECTION_FACTORY.equals(resType_.getResType()));
+            JMS_TOPIC_CONNECTION_FACTORY.equals(resType_.getResType()));
     }
 
-  private boolean instanceOf(Object obj, String interfaceName)
-  {
-      if(obj==null) return false;
+    private boolean instanceOf(Object obj, String interfaceName)
+    {
+        if(obj==null) {
+            return false;
+        }
         //Class jmsXAQueueConnectionFactory = Class.forName("JMSXAQueueConnectionFactory");
         Class[] classes = obj.getClass().getInterfaces();
         for (Class aClass : classes) {
             String aClassName = aClass.getName();
-            if (aClassName.indexOf(interfaceName) != -1)
+            if (aClassName.indexOf(interfaceName) != -1) {
                 return true;
-        }
-
-      return false;
-
-  }
- //-------------------------
-
-   /* private void recoverJMSXAResources(Context ic,
-    Vector xaresList, Vector connList, Set jmsRes) {
-        for(Iterator iter = jmsRes.iterator(); iter.hasNext();) {
-            J2EEResource next = (J2EEResource)iter.next();
-            if (next instanceof ExternalJndiResource) {
-                if (!((ExternalJndiResource)next).isJMSConnectionFactory()) {
-                    continue;
-                }
-            }
-
-            String jndiName = next.getName();
-            try {
-                Object jmsXAConnectionFactory;
-                boolean isQueue;
-                if (next instanceof ExternalJndiResource) {
-                    Object objext = ic.lookup(jndiName);
-                    if (!(objext instanceof jakarta.jms.ConnectionFactory)) {
-                        throw new NamingException(localStrings.getLocalString("recovery.unexpected_objtype",
-                        "Unexpected object type "+objext.getClass().getName()+" for "+ jndiName,
-                        new Object[]{objext.getClass().getName(), jndiName}));
-                    }
-                    jmsXAConnectionFactory = wrapJMSConnectionFactoryObject(objext);
-                    isQueue = (objext instanceof jakarta.jms.QueueConnectionFactory);
-                }
-                else {
-                    jmsXAConnectionFactory = ic.lookup(getXAConnectionFactoryName(jndiName));
-                    isQueue = (jmsXAConnectionFactory instanceof JMSXAQueueConnectionFactory);
-                }
-                recoverJMSXAResource(xaresList, connList, jmsXAConnectionFactory, isQueue);
-            } catch (Exception ex) {
-                _logger.log(Level.SEVERE,"datasource.xadatasource_error",jndiName);
-                _logger.log(Level.SEVERE,"datasource.xadatasource_error_excp",ex);
             }
         }
-    }  */
+
+        return false;
+
+    }
 
 
     private void recoverJMSXAResource(List xaresList, List connList,
-    Object jmsXAConnectionFactory, boolean isQueue ) throws Exception {
+        Object jmsXAConnectionFactory, boolean isQueue ) throws Exception {
         if (isQueue) {
-           // JMSXAQueueConnectionFactory fac =
+            // JMSXAQueueConnectionFactory fac =
             //(JMSXAQueueConnectionFactory) obj;
 
             Object jmsXAQueueConnection = getXAConnection (jmsXAConnectionFactory, "createXAQueueConnection");
@@ -206,17 +176,19 @@ public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler
     private Object jmsAdmin = null;
     private Object getJmsAdmin()
     {
-        if (jmsAdmin != null)  return jmsAdmin;
+        if (jmsAdmin != null) {
+            return jmsAdmin;
+        }
         try{
-               Class jmsAdminFactoryClass = Class.forName("com.sun.messaging.jmq.admin.jmsspi.JMSAdminFactoryImpl");
-               Object jmsAdminFactory = jmsAdminFactoryClass.newInstance();
+            Class jmsAdminFactoryClass = Class.forName("com.sun.messaging.jmq.admin.jmsspi.JMSAdminFactoryImpl");
+            Object jmsAdminFactory = jmsAdminFactoryClass.newInstance();
 
-               Method m = jmsAdminFactoryClass.getMethod("getJMSAdmin", null);
-               jmsAdmin = m.invoke(jmsAdminFactory, null);
-               return jmsAdmin;
-           }catch (Exception ex){
-                  throw new RuntimeException ("Unable to create an JmsAdmin object. Cause - " + ex.getMessage(), ex);
-           }
+            Method m = jmsAdminFactoryClass.getMethod("getJMSAdmin", null);
+            jmsAdmin = m.invoke(jmsAdminFactory, null);
+            return jmsAdmin;
+        }catch (Exception ex){
+            throw new RuntimeException ("Unable to create an JmsAdmin object. Cause - " + ex.getMessage(), ex);
+        }
 
     }
 
@@ -234,40 +206,40 @@ public class LegacyJmsRecoveryResourceHandler implements RecoveryResourceHandler
         Method m = getJmsAdmin().getClass().getMethod("wrapJMSConnectionFactoryObject", obj.getClass());
         return  m.invoke(getJmsAdmin(), obj);
     }
-   private Object getXAConnection(Object XAconnectionFactory, String methodName)
-   {
-       try{
-         Class connectionFactoryClass = XAconnectionFactory.getClass();
-         Method m = connectionFactoryClass.getMethod(methodName, null);
-         return m.invoke(XAconnectionFactory, null);
-       }catch(Exception e){
-           //todo: need to handle this better
-       }
-       return null;
+    private Object getXAConnection(Object XAconnectionFactory, String methodName)
+    {
+        try{
+            Class connectionFactoryClass = XAconnectionFactory.getClass();
+            Method m = connectionFactoryClass.getMethod(methodName, null);
+            return m.invoke(XAconnectionFactory, null);
+        }catch(Exception e){
+            //todo: need to handle this better
+        }
+        return null;
 
-   }
-   private XAResource getXAResource(Object XAConnection, String methodName)
-   {
-       try{
-         Class connectionClass = XAConnection.getClass();
-         Class[] paramtypes = {boolean.class, int.class};
-         Method m = connectionClass.getMethod(methodName, paramtypes);
-         Object jmsXASession = m.invoke(XAConnection, new Object[]{true, 1}); //Session.AUTO_ACKNOWLEDGE});
+    }
+    private XAResource getXAResource(Object XAConnection, String methodName)
+    {
+        try{
+            Class connectionClass = XAConnection.getClass();
+            Class[] paramtypes = {boolean.class, int.class};
+            Method m = connectionClass.getMethod(methodName, paramtypes);
+            Object jmsXASession = m.invoke(XAConnection, new Object[]{true, 1}); //Session.AUTO_ACKNOWLEDGE});
 
-         Class xaSessionClass =  jmsXASession.getClass();
-         Method m1 = xaSessionClass.getMethod("getXAResource", null);
-         return (XAResource) m1.invoke(jmsXASession, null);
-       }catch(Exception e){
-           //todo: need to handle this better
-       }
-       return null;
-   }
+            Class xaSessionClass =  jmsXASession.getClass();
+            Method m1 = xaSessionClass.getMethod("getXAResource", null);
+            return (XAResource) m1.invoke(jmsXASession, null);
+        }catch(Exception e){
+            //todo: need to handle this better
+        }
+        return null;
+    }
     private void closeXAConnection(Object jmsXAConnection){
 
         try{
-        Class jmsXAConnectionClass = jmsXAConnection.getClass();
-        Method m = jmsXAConnectionClass.getMethod("close", null);
-        m.invoke(jmsXAConnection, null);
+            Class jmsXAConnectionClass = jmsXAConnection.getClass();
+            Method m = jmsXAConnectionClass.getMethod("close", null);
+            m.invoke(jmsXAConnection, null);
         }catch (Exception e){
             //todo: need to handle this better
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,18 +23,23 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.EntityManagerMethod;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.jvnet.hk2.annotations.Service;
 
-import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
-import static jakarta.persistence.SynchronizationType.UNSYNCHRONIZED;
-import jakarta.persistence.criteria.*;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.LockModeType;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.Query;
+import jakarta.persistence.StoredProcedureQuery;
+import jakarta.persistence.SynchronizationType;
+import jakarta.persistence.TransactionRequiredException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 import jakarta.transaction.TransactionManager;
 
@@ -45,6 +51,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocationHandler;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.jvnet.hk2.annotations.Service;
+
+import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
+import static jakarta.persistence.SynchronizationType.UNSYNCHRONIZED;
 
 /**
  * Implementation of a container-managed entity manager.
@@ -58,7 +75,7 @@ import java.util.logging.Logger;
  */
 public class EntityManagerWrapper implements EntityManager, Serializable {
 
-    static Logger _logger=LogDomains.getLogger(EntityManagerWrapper.class, LogDomains.UTIL_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(EntityManagerWrapper.class, LogDomains.UTIL_LOGGER, false);
 
     // Serializable state
 
@@ -109,10 +126,8 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
         entityManagerFactory = EntityManagerFactoryWrapper.
             lookupEntityManagerFactory(invMgr, compEnvMgr, unitName);
 
-        if( entityManagerFactory == null ) {
-            throw new IllegalStateException
-                ("Unable to retrieve EntityManagerFactory for unitName "
-                 + unitName);
+        if (entityManagerFactory == null) {
+            throw new IllegalStateException("Unable to retrieve EntityManagerFactory for unitName " + unitName);
         }
 
     }
@@ -207,12 +222,9 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         }
 
-        if( _logger.isLoggable(Level.FINE) ) {
-            _logger.fine("In EntityManagerWrapper::_getDelegate(). " +
-                         "Logical entity manager  = " + this);
-            _logger.fine("Physical entity manager = " + delegate);
-        }
-
+        LOG.log(Level.FINE,
+            "In EntityManagerWrapper::_getDelegate(). Logical entity manager={0}. Physical entity manager={1}",
+            new Object[] {this, delegate});
         return delegate;
 
     }
@@ -1041,6 +1053,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
         return returnValue;
     }
 
+    @Override
     public Query createQuery(CriteriaUpdate updateQuery) {
         // Unlike other create*Query() methods, there is not need to create a QueryWrapper for non trnsactional case here.
         // QueryWrappers are created to ensure that entities returned by query are detatched. This is an update query and thus will not return any entities.

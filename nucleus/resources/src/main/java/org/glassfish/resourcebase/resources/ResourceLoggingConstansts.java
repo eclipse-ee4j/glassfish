@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,11 @@
 
 package org.glassfish.resourcebase.resources;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 18/3/13
- * Time: 12:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman 18/3/13
  */
 public class ResourceLoggingConstansts {
     @LogMessageInfo(

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,22 @@
 
 package com.sun.enterprise.connectors.jms.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.connectors.jms.JMSLoggerInfo;
+import com.sun.enterprise.connectors.jms.config.JmsService;
+import com.sun.enterprise.connectors.jms.inflow.MdbContainerProps;
+import com.sun.enterprise.connectors.jms.system.MQAddressList;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.zip.ZipFile;
+import com.sun.enterprise.util.zip.ZipFileException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
@@ -24,28 +41,11 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.connectors.jms.JMSLoggerInfo;
-import com.sun.enterprise.connectors.jms.config.JmsService;
-import com.sun.enterprise.connectors.jms.inflow.MdbContainerProps;
-import com.sun.enterprise.connectors.jms.system.MQAddressList;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.zip.ZipFile;
-import com.sun.enterprise.util.zip.ZipFileException;
 import org.glassfish.ejb.config.MdbContainer;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.RelativePathResolver;
-import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.config.types.Property;
 
-/**
- *
- * @author
- */
 public class JmsRaUtil {
 
     private final static String MQ_RAR = "imqjmsra.rar";
@@ -95,7 +95,7 @@ public class JmsRaUtil {
             if (js != null) {
             this.js = js;
             } else {
-                  this.js = (JmsService) Globals.get(JmsService.class);
+                  this.js = Globals.get(JmsService.class);
             }
             list = new MQAddressList(this.js);
 //            if (isClustered() && ! this.js.getType().equals(
@@ -139,13 +139,13 @@ public class JmsRaUtil {
     public static Cluster getClusterForServer(List clusters, String instanceName){
         //Return the server only if it is part of a cluster (i.e. only if a cluster
         //has a reference to it).
-        for (int i = 0; i < clusters.size(); i++) {
-            final List servers = ((Cluster)clusters.get(i)).getInstances();
-            for (int j = 0; j < servers.size(); j++) {
-                if (((Server)servers.get(j)).getName().equals(instanceName)) {
+        for (Object cluster : clusters) {
+            final List servers = ((Cluster)cluster).getInstances();
+            for (Object server : servers) {
+                if (((Server)server).getName().equals(instanceName)) {
                     // check to see if the server exists as a sanity check.
                     // NOTE: we are not checking for duplicate server instances here.
-                    return (Cluster) clusters.get(i);
+                    return (Cluster) cluster;
                 }
             }
         }
@@ -165,7 +165,7 @@ public class JmsRaUtil {
                 return false;
             }
         } catch (Exception e) {
-            ;
+
         }
         _logger.log(Level.FINE, "Enabling Sun MQ Auto Clustering");
         return true;
@@ -216,14 +216,20 @@ public class JmsRaUtil {
         if (mdbc != null) {
             List props = mdbc.getProperty();//        getElementProperty();
             if (props != null) {
-                for (int i = 0; i < props.size(); i++) {
-                    Property p = (Property) props.get(i);
-                    if (p == null) continue;
+                for (Object prop : props) {
+                    Property p = (Property) prop;
+                    if (p == null) {
+                        continue;
+                    }
                     String name = p.getName();
-                    if (name == null) continue;
+                    if (name == null) {
+                        continue;
+                    }
                     try {
                         if (name.equals(propName_reconnect_enabled)) {
-                            if (p.getValue() == null) continue;
+                            if (p.getValue() == null) {
+                                continue;
+                            }
                             reconnectEnabled =
                                 Boolean.valueOf(p.getValue()).booleanValue();
                         }
@@ -292,8 +298,8 @@ public class JmsRaUtil {
 
         Object[] envProps = cd.getConfigProperties().toArray();
 
-        for (int i = 0; i < envProps.length; i++) {
-            ConnectorConfigProperty  envProp = (ConnectorConfigProperty ) envProps[i];
+        for (Object envProp2 : envProps) {
+            ConnectorConfigProperty  envProp = (ConnectorConfigProperty ) envProp2;
             String name = envProp.getName();
         if (!name.equals("ConnectionURL")) {
             continue;
@@ -417,19 +423,26 @@ public class JmsRaUtil {
     public static String getJMSPropertyValue(Server as){
 
         SystemProperty sp = as.getSystemProperty("JMS_PROVIDER_PORT");
-        if (sp != null) return sp.getValue();
+        if (sp != null) {
+            return sp.getValue();
+        }
 
         Cluster cluster = as.getCluster();
         if (cluster != null) {
             sp = cluster.getSystemProperty("JMS_PROVIDER_PORT");
-            if (sp != null) return sp.getValue();
+            if (sp != null) {
+                return sp.getValue();
+            }
         }
 
         Config config = as.getConfig();
-        if (config != null)
+        if (config != null) {
             sp = config.getSystemProperty("JMS_PROVIDER_PORT");
+        }
 
-        if (sp != null) return sp.getValue();
+        if (sp != null) {
+            return sp.getValue();
+        }
 
         return null;
     }
@@ -437,8 +450,9 @@ public class JmsRaUtil {
     public static String getUnAliasedPwd(String alias){
         try{
             String unalisedPwd = RelativePathResolver.getRealPasswordFromAlias(alias);
-            if (unalisedPwd != null && "".equals(unalisedPwd))
-               return unalisedPwd;
+            if (unalisedPwd != null && "".equals(unalisedPwd)) {
+                return unalisedPwd;
+            }
 
         }catch(Exception e){
 

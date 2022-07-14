@@ -512,7 +512,7 @@ Total tests run: 149, Passes: 149, Failures: 0, Skips: 0
 Jakarta JSON Processing 2.1 TCK
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta JSON Processing 2.1.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-jsonp-tck-2.1.0.zip), <br/>
+  [Jakarta JSON Processing 2.1.0 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.0.zip), <br/>
   SHA-256: `6ee953382ff965627fe20dd7e3bfce6c968ed829d611cf4990988ab54bfe8b54`
 
 ```
@@ -529,7 +529,7 @@ Jakarta JSON Processing 2.1 TCK
 Jakarta JSON Binding 3.0 TCK
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-jsonb-tck-3.0.0.zip), <br/>
+  [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip), <br/>
   SHA-256: `954fd9a3a67059ddeabe5f51462a6a3b542c94fc798094dd8c312a6a28ef2d0b`
 
 ```
@@ -542,7 +542,7 @@ Jakarta JSON Binding 3.0 TCK
 Jakarta RESTful Web Services 3.1 TCK
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta RESTful Web Services 3.1.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-restful-ws-tck-3.1.0.zip), <br/>
+  [Jakarta RESTful Web Services 3.1.0 TCK](https://download.eclipse.org/jakartaee/restful-ws/3.1/jakarta-restful-ws-tck-3.1.0.zip), <br/>
   SHA-256: `ea8cd6cc857af55f19468bbb09e8a30f41c60e8f7413a093e7007c3902a49070`
  
 ```
@@ -559,7 +559,7 @@ Jakarta RESTful Web Services 3.1 TCK
 Jakarta Security 3.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Security 3.0.0 TCK](https://download.eclipse.org/es/jakartaee10/staged/eftl/jakarta-security-tck-3.0.0.zip), <br/>
+  [Jakarta Security 3.0.0 TCK](https://download.eclipse.org/jakartaee/security/3.0/jakarta-security-tck-3.0.0.zip), <br/>
   SHA-256: `696776046dfeaed74266a5d1c4dac7fea5437b6f51743b7fe10962dde755ff8f`
 
 
@@ -577,7 +577,7 @@ Number of Tests with Errors = 0
 Jakarta Authentication 3.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Security 3.0.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0-dist.zip), <br/>
+  [Jakarta Authentication 3.0.0 TCK](https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.0-dist.zip), <br/>
   SHA-256: `50b50e789ba4a4ab2c19d6b81e18d2a2dc2a2a11c44f77a9ac816c417770e52e`
 
 ```
@@ -595,7 +595,7 @@ Number of Tests with Errors = 0
 Jakarta Faces 4.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Faces 4.0.1 TCK](https://download.eclipse.org/faces/jakartaee10/staged/eftl/jakarta-faces-tck-4.0.1.zip), <br/>
+  [Jakarta Faces 4.0.1 TCK](https://download.eclipse.org/jakartaee/faces/4.0/jakarta-faces-tck-4.0.1.zip), <br/>
   SHA-256: `117fdbf8aee14ee162cc913ae055621f7e067b0be4dd14c4591be76b90a0dde5`
 
 ```
@@ -625,7 +625,7 @@ Total tests run: 1831, Passes: 1831, Failures: 0, Skips: 0
 Jakarta Batch 2.1 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Batch 2.1.1 TCK](https://download.eclipse.org/jakartabatch/tck/eftl/jakarta.batch.official.tck-2.1.1.zip), <br/>
+  [Jakarta Batch 2.1.1 TCK](https://download.eclipse.org/jakartaee/batch/2.1/jakarta.batch.official.tck-2.1.1.zip), <br/>
   SHA-256: `0dd8ca0f35cc696ea86d0dffaa1301cf2786806832ea1b2a491d528eaa57b3b7`
   
 ```
@@ -664,7 +664,7 @@ Jakarta Activation 2.1 TCK <br/>
 Jakarta Mail 2.1 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Mail 2.1.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-mail-tck-2.1.0.zip), <br/>
+  [Jakarta Mail 2.1.0 TCK](https://download.eclipse.org/jakartaee/mail/2.1/jakarta-mail-tck-2.1.0.zip), <br/>
   SHA-256: `6f02a92e0a5ef60260e65f95938cc566da2f93a3d269c3b321da0d787a3448a5`
   
 ```
@@ -687,7 +687,7 @@ Jakarta Mail 2.1 TCK <br/>
 Jakarta XML Binding 4.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta XML Binding 4.0.0 TCK](https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-xml-binding-tck-4.0.0.zip), <br/>
+  [Jakarta XML Binding 4.0.0 TCK](https://download.eclipse.org/jakartaee/xml-binding/4.0/jakarta-xml-binding-tck-4.0.0.zip), <br/>
   SHA-256: `33fa6a39e6ac6b767316efc2f71fed3577c3d364dd1f532d410915c30a0b5b67`
   
 ```
@@ -720,8 +720,8 @@ Jakarta XML Binding 4.0 TCK <br/>
 Jakarta Bean Validation 3.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Bean Validation 3.0.1 TCK](https://download.eclipse.org/ee4j/bean-validation/3.0/beanvalidation-tck-dist-3.0.1.zip), <br/>
-  SHA-256: `d7eb55a4e8e74cda7e4d2bee5deb10d6fe60c043`
+  [Jakarta Bean Validation 3.0.1 TCK](https://download.eclipse.org/jakartaee/bean-validation/3.0/beanvalidation-tck-dist-3.0.1.zip), <br/>
+  SHA-256: `9da36d2d6e2eb8d413f886f15711820008419d210ce4c51af04f96e1ffd583b3`
   
 ```
 [INFO] 
@@ -733,7 +733,7 @@ Jakarta Bean Validation 3.0 TCK <br/>
 Jakarta Dependency Injection 2.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Dependency Injection 2.0.2 TCK](https://download.eclipse.org/ee4j/cdi/inject/2.0/jakarta.inject-tck-2.0.2-bin.zip), <br/>
+  [Jakarta Dependency Injection 2.0.2 TCK](https://download.eclipse.org/jakartaee/dependency-injection/2.0/jakarta.inject-tck-2.0.2-bin.zip), <br/>
   SHA-256: `23bce4317ca061c3de648566cdf65c74b57e1264d6891f366567955d6b834972`
 
 ```  

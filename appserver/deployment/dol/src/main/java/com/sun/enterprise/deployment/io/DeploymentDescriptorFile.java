@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,6 +32,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXParseException;
+
+import static com.sun.enterprise.deployment.node.SaxParserHandler.JAXP_SCHEMA_LANGUAGE;
+import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SHORT;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -110,8 +114,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             // this is a hack for a few days so people can continue runnning
             // with crimson
             if (spf.getClass().getName().indexOf("xerces")!=-1) {
-                spf.setFeature(
-                    "http://apache.org/xml/features/allow-java-encodings", true);
+                spf.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
             } else {
                 DOLUtils.getDefaultLogger().log(Level.WARNING, "SAXParserFactory should be xerces, but was not.");
             }
@@ -132,34 +135,28 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
                 // put the default schema for this deployment file type
                 String path = getDefaultSchemaSource();
-                if (path!=null) {
+                if (path != null) {
                     sp.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",path);
                 }
 
                 // Set Xerces feature to allow dynamic validation. This prevents
                 // SAX errors from being reported when no schemaLocation attr
                 // is seen for a DTD based (J2EE1.3) XML descriptor.
-                sp.getXMLReader().setFeature(
-                    "http://apache.org/xml/features/validation/dynamic", validating);
-
+                sp.getXMLReader().setFeature("http://apache.org/xml/features/validation/dynamic", validating);
                 return sp;
 
             } catch (SAXNotRecognizedException x) {
                 // This can happen if the parser does not support JAXP 1.2
                 DOLUtils.getDefaultLogger().log(Level.SEVERE,
-                    "INFO: JAXP SAXParser property not recognized: "
-                    + SaxParserHandler.JAXP_SCHEMA_LANGUAGE);
-                 DOLUtils.getDefaultLogger().log(Level.SEVERE,
-                    "Check to see if parser conforms to JAXP 1.2 spec.");
+                    "INFO: JAXP SAXParser property not recognized: " + JAXP_SCHEMA_LANGUAGE);
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, "Check to see if parser conforms to JAXP 1.2 spec.");
 
             }
         } catch (Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                new Object[]{e.getMessage()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALILD_DESCRIPTOR_SHORT, e.getMessage());
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
-
         } finally {
-                Thread.currentThread().setContextClassLoader(currentLoader);
+            Thread.currentThread().setContextClassLoader(currentLoader);
         }
         return null;
     }
@@ -193,15 +190,12 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             } catch (ParserConfigurationException x) {
                 // This can happen if the parser does not support JAXP 1.2
                 DOLUtils.getDefaultLogger().log(Level.SEVERE,
-                    "Error: JAXP DOMParser property not recognized: "
-                    + SaxParserHandler.JAXP_SCHEMA_LANGUAGE);
-                DOLUtils.getDefaultLogger().log(Level.SEVERE,
-                    "Check to see if parser conforms to JAXP 1.2 spec.");
+                    "Error: JAXP DOMParser property not recognized: " + JAXP_SCHEMA_LANGUAGE);
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, "Check to see if parser conforms to JAXP 1.2 spec.");
 
             }
         } catch (Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                new Object[]{e.getMessage()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALILD_DESCRIPTOR_SHORT, e.getMessage());
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
         }
         return null;
@@ -285,8 +279,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         try {
             sp.parse(input,dh);
         } catch(SAXParseException e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                new Object[]{e.getMessage()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALILD_DESCRIPTOR_SHORT, e.getMessage());
 
             errorReporting += "  " + e.getLocalizedMessage();
             SAXParseException spe = new SAXParseException(errorReporting,
@@ -298,13 +291,11 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
             throw spe;
         } catch(SAXException e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                new Object[]{e.getMessage()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALILD_DESCRIPTOR_SHORT, e.getMessage());
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "Error occurred", e);
             throw e;
         } catch (IOException e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                e.getMessage() == null ? "" : new Object[]{e.getMessage()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALILD_DESCRIPTOR_SHORT, e.getMessage());
 
             // Let's check if the root cause of this IOException is failing to
             // connect. If yes, it means two things:

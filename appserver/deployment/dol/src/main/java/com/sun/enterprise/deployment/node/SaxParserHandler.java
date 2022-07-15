@@ -269,7 +269,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     @Override
     public void error(SAXParseException spe) throws SAXParseException {
-        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR,
+        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
             new Object[] {errorReportingString, String.valueOf(spe.getLineNumber()),
                 String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
         if (stopOnXMLErrors) {
@@ -280,7 +280,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     @Override
     public void fatalError(SAXParseException spe) throws SAXParseException {
-        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR,
+        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
             new Object[] {errorReportingString, String.valueOf(spe.getLineNumber()),
                 String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
         if (stopOnXMLErrors) {

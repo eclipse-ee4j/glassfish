@@ -577,8 +577,8 @@ Number of Tests with Errors = 0
 Jakarta Authentication 3.0 TCK <br/>
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
-  [Jakarta Authentication 3.0.0 TCK](https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.0-dist.zip), <br/>
-  SHA-256: `50b50e789ba4a4ab2c19d6b81e18d2a2dc2a2a11c44f77a9ac816c417770e52e`
+  [Jakarta Authentication 3.0.1 TCK](https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.1.zip), <br/>
+  SHA-256: `8b916f1b4aed828337bd88b34bb39b133f04611c2dfe71541c2ec5d2dd22cd54`
 
 ```
 ********************************************************************************

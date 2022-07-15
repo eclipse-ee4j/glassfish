@@ -286,7 +286,7 @@ public class LogDomains {
      * <ol>
      * <li>If the loggerNamePrefix starts with <code>jakarta.</code>, this prefix is replaced
      * by <code>com.sun.logging.</code>
-     * <li>If the resource bundle is not found, method tries to go through classes package hierarchy
+     * <li>If the resource bundle is not found, method tries to go through class's package hierarchy
      * to find the closest LogStrings.properties file.
      * </ol>
      *
@@ -311,7 +311,7 @@ public class LogDomains {
      * <ol>
      * <li>If the loggerNamePrefix starts with <code>jakarta.</code>, this prefix is replaced
      * by <code>com.sun.logging.</code>
-     * <li>If the resource bundle is not found, method tries to go through classes package hierarchy
+     * <li>If the resource bundle is not found, method tries to go through class's package hierarchy
      * to find the closest LogStrings.properties file.
      * </ol>
      *
@@ -334,7 +334,7 @@ public class LogDomains {
      * <li>Uses provided classloader, which allows to use resource bundle from another jar file
      * <li>If the loggerNamePrefix starts with <code>jakarta.</code>, this prefix is replaced
      * by <code>com.sun.logging.</code>
-     * <li>If the resource bundle is not found, method tries to go through classes package hierarchy
+     * <li>If the resource bundle is not found, method tries to go through class's package hierarchy
      * to find the closest LogStrings.properties file.
      * </ol>
      *

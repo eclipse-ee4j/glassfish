@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,22 +26,23 @@ import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.util.AnnotationDetector;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.xml.sax.SAXParseException;
 
 import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
 import java.util.logging.Logger;
+
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXParseException;
 
 /**
  * Represents an app client that is in a stand-alone archive, not inside an
@@ -66,6 +68,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         appClientArchive = archive;
     }
 
+    @Override
     public void postConstruct() {
         Archivist archivist = archivistFactory.getArchivist("car", getClassLoader());
         if (!(archivist instanceof AppClientArchivist)) {
@@ -142,29 +145,28 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         ApplicationClientDescriptor ac = getAppClient();
         URI uri = (new File(getAppClientRoot(appClientArchive, ac))).toURI();
         File moduleFile = new File(uri);
-        for (Iterator itr = ac.getServiceReferenceDescriptors().iterator();
-                    itr.hasNext();) {
-            ServiceReferenceDescriptor serviceRef =
-                    (ServiceReferenceDescriptor) itr.next();
-            if (serviceRef.getWsdlFileUri()!=null) {
-                // In case WebServiceRef does not specify wsdlLocation, we get
-                // wsdlLocation from @WebClient in wsimport generated source;
-                // If wsimport was given a local WSDL file, then WsdlURI will
-                // be an absolute path - in that case it should not be prefixed
-                // with modileFileDir
-                String wsdlURI = serviceRef.getWsdlFileUri();
-                File wsdlFile = new File(wsdlURI);
-                if(wsdlFile.isAbsolute()) {
-                    serviceRef.setWsdlFileUrl(wsdlFile.toURI().toURL());
-                } else {
-                    // This is the case where WsdlFileUri is a relative path
-                    // (hence relative to the root of this module or wsimport
-                    // was executed with WSDL in HTTP URL form
-                    serviceRef.setWsdlFileUrl(getEntryAsUrl(
-                        moduleFile, serviceRef.getWsdlFileUri()));
-                }
+        for (Object element : ac.getServiceReferenceDescriptors()) {
+         ServiceReferenceDescriptor serviceRef =
+        (ServiceReferenceDescriptor) element;
+         if (serviceRef.getWsdlFileUri()!=null) {
+            // In case WebServiceRef does not specify wsdlLocation, we get
+            // wsdlLocation from @WebClient in wsimport generated source;
+            // If wsimport was given a local WSDL file, then WsdlURI will
+            // be an absolute path - in that case it should not be prefixed
+            // with modileFileDir
+            String wsdlURI = serviceRef.getWsdlFileUri();
+            File wsdlFile = new File(wsdlURI);
+            if(wsdlFile.isAbsolute()) {
+        serviceRef.setWsdlFileUrl(wsdlFile.toURI().toURL());
+            } else {
+        // This is the case where WsdlFileUri is a relative path
+        // (hence relative to the root of this module or wsimport
+        // was executed with WSDL in HTTP URL form
+        serviceRef.setWsdlFileUrl(getEntryAsUrl(
+            moduleFile, serviceRef.getWsdlFileUri()));
             }
-        }
+         }
+      }
     }
 
     /**
@@ -291,26 +293,15 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
             String entry, AnnotationDetector detector,
             ReadableArchive archive, ApplicationClientDescriptor descriptor)
             throws FileNotFoundException, IOException {
-//        JarFile jar = null;
         try {
             return detector.containsAnnotation(archive, entry);
         } catch (Throwable thr) {
             throw new RuntimeException(getLocalString(
                 "appclient.errorCheckingAnnos",
                 "Error checking for persistence unit annotations in the main class"), thr);
-        } finally {
-//            if (jar != null) {
-//                try {
-//                    jar.close();
-//                } catch (IOException ioe) {
-//                    throw new RuntimeException(getLocalString(
-//                        "appclient.errorClosingJar",
-//                        "Error closing archive {0} used in checking for persistence unit annotations",
-//                        archive.getURI().toASCIIString()), ioe);
-//                }
-//            }
         }
     }
+
     @Override
     public String toString() {
         String lineSep = System.getProperty("line.separator");

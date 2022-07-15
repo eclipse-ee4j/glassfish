@@ -295,52 +295,25 @@ public final class GlassFishORBManager {
      * to a different ORB than the RMI-IIOP delegates.
      */
     private void setORBSystemProperties() {
-        java.security.AccessController.doPrivileged(
-            new java.security.PrivilegedAction<Object>() {
-                @Override
-                public java.lang.Object run() {
-                    if (System.getProperty(OMG_ORB_CLASS_PROPERTY) == null) {
-                        // set ORB based on JVM vendor
-                        if (System.getProperty("java.vendor").equals(
-                            "Sun Microsystems Inc.")) {
-                            System.setProperty(OMG_ORB_CLASS_PROPERTY,
-                                ORB_SE_CLASS);
-                        } else {
-                            // if not Sun, then set to EE class
-                            System.setProperty(OMG_ORB_CLASS_PROPERTY,
-                                ORB_CLASS);
-                        }
-                    }
+        java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Object>() {
 
-                    if (System.getProperty(
-                        OMG_ORB_SINGLETON_CLASS_PROPERTY) == null) {
-                        // set ORBSingleton based on JVM vendor
-                        if (System.getProperty("java.vendor").equals(
-                            "Sun Microsystems Inc.")) {
-                            System.setProperty(
-                                OMG_ORB_SINGLETON_CLASS_PROPERTY,
-                                ORB_SE_SINGLETON_CLASS);
-                        } else {
-                            // if not Sun, then set to EE class
-                            System.setProperty(
-                                OMG_ORB_SINGLETON_CLASS_PROPERTY,
-                                ORB_SINGLETON_CLASS);
-                        }
-                    }
-
-                    System.setProperty(ORB_UTIL_CLASS_PROPERTY,
-                            RMI_UTIL_CLASS);
-
-                    System.setProperty(RMIIIOP_STUB_DELEGATE_CLASS_PROPERTY,
-                            RMI_STUB_CLASS);
-
-                    System.setProperty(RMIIIOP_PRO_DELEGATE_CLASS_PROPERTY,
-                            RMI_PRO_CLASS);
-
-                    return null;
+            @Override
+            public java.lang.Object run() {
+                if (System.getProperty(OMG_ORB_CLASS_PROPERTY) == null) {
+                    System.setProperty(OMG_ORB_CLASS_PROPERTY, ORB_CLASS);
                 }
+
+                if (System.getProperty(OMG_ORB_SINGLETON_CLASS_PROPERTY) == null) {
+                    System.setProperty(OMG_ORB_SINGLETON_CLASS_PROPERTY, ORB_SINGLETON_CLASS);
+                }
+
+                System.setProperty(ORB_UTIL_CLASS_PROPERTY, RMI_UTIL_CLASS);
+                System.setProperty(RMIIIOP_STUB_DELEGATE_CLASS_PROPERTY, RMI_STUB_CLASS);
+                System.setProperty(RMIIIOP_PRO_DELEGATE_CLASS_PROPERTY, RMI_PRO_CLASS);
+
+                return null;
             }
-        );
+        });
     }
 
     /**

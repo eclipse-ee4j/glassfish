@@ -15,13 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * BaseContainerCallbackHandler.java
- *
- * Created on April 21, 2004, 11:56 AM
- */
-
 package com.sun.enterprise.security.jmac.callback;
+
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.SecurityServicesUtil;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.auth.login.common.LoginException;
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
+import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
+import com.sun.enterprise.security.jmac.config.HandlerContext;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.security.store.PasswordAdapter;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.auth.message.callback.CallerPrincipalCallback;
+import jakarta.security.auth.message.callback.CertStoreCallback;
+import jakarta.security.auth.message.callback.GroupPrincipalCallback;
+import jakarta.security.auth.message.callback.PasswordValidationCallback;
+import jakarta.security.auth.message.callback.PrivateKeyCallback;
+import jakarta.security.auth.message.callback.SecretKeyCallback;
+import jakarta.security.auth.message.callback.TrustStoreCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -56,40 +74,18 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.x500.X500Principal;
 
 import org.glassfish.internal.api.Globals;
-//V3:Commented import com.sun.enterprise.Switch;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.MasterPassword;
 import org.glassfish.security.common.PrincipalImpl;
 
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.SecurityServicesUtil;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.auth.login.common.LoginException;
-import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.jmac.config.CallbackHandlerConfig;
-import com.sun.enterprise.security.jmac.config.GFServerConfigProvider;
-import com.sun.enterprise.security.jmac.config.HandlerContext;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.auth.message.callback.CallerPrincipalCallback;
-import jakarta.security.auth.message.callback.CertStoreCallback;
-import jakarta.security.auth.message.callback.GroupPrincipalCallback;
-import jakarta.security.auth.message.callback.PasswordValidationCallback;
-import jakarta.security.auth.message.callback.PrivateKeyCallback;
-import jakarta.security.auth.message.callback.SecretKeyCallback;
-import jakarta.security.auth.message.callback.TrustStoreCallback;
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
  * Base Callback Handler for Jakarta Authentication
  *
  * @author Harpreet Singh
  * @author Shing Wai Chan
+ * Created on April 21, 2004, 11:56 AM
  */
 abstract class BaseContainerCallbackHandler implements CallbackHandler, CallbackHandlerConfig {
 
@@ -97,7 +93,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
     private static final String CLIENT_SECRET_KEYSTORE = "com.sun.appserv.client.secretKeyStore";
     private static final String CLIENT_SECRET_KEYSTORE_PASSWORD = "com.sun.appserv.client.secretKeyStorePassword";
 
-    protected final static Logger _logger = LogDomains.getLogger(BaseContainerCallbackHandler.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(BaseContainerCallbackHandler.class, SECURITY_LOGGER, false);
 
     protected HandlerContext handlerContext;
 
@@ -141,8 +137,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
         for (Callback callback : callbacks) {
             if (!isSupportedCallback(callback)) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "JMAC: UnsupportedCallback : " + callback.getClass().getName());
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "JMAC: UnsupportedCallback : " + callback.getClass().getName());
                 }
                 throw new UnsupportedCallbackException(callback);
             }
@@ -165,8 +161,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             processPrivateKey((PrivateKeyCallback) callback);
         } else if (callback instanceof TrustStoreCallback) {
             TrustStoreCallback tstoreCallback = (TrustStoreCallback) callback;
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC: In TrustStoreCallback Processor");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "JMAC: In TrustStoreCallback Processor");
             }
             tstoreCallback.setTrustStore(sslUtils.getMergedTrustStore());
 
@@ -177,8 +173,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         } else {
             // sanity check =- should never come here.
             // the isSupportedCallback method already takes care of this case
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC: UnsupportedCallback : " + callback.getClass().getName());
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "JMAC: UnsupportedCallback : " + callback.getClass().getName());
             }
             throw new UnsupportedCallbackException(callback);
         }
@@ -419,9 +415,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
         // if (Switch.getSwitch().getContainerType() == Switch.APPCLIENT_CONTAINER) {
         if (SecurityServicesUtil.getInstance().isACC()) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC: In PasswordValidationCallback Processor for appclient - will do nothing");
-            }
+            LOG.log(Level.FINE, "JMAC: In PasswordValidationCallback Processor for appclient - will do nothing");
             pwdCallback.setResult(true);
             return;
         }
@@ -429,9 +423,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
         char[] passwd = pwdCallback.getPassword();
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMAC: In PasswordValidationCallback Processor");
-        }
+        LOG.log(Level.FINE, "JMAC: In PasswordValidationCallback Processor");
         try {
             String realmName = null;
             if (handlerContext != null) {
@@ -439,9 +431,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             }
             Subject s = LoginContextDriver.jmacLogin(pwdCallback.getSubject(), username, passwd, realmName);
             GFServerConfigProvider.setValidateRequestSubject(s);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC: authentication succeeded for user = ", username);
-            }
+            LOG.log(Level.FINE, "JMAC: authentication succeeded for user = {0}", username);
             // explicitly ditch the password
             if (passwd != null) {
                 for (int i = 0; i < passwd.length; i++) {
@@ -451,16 +441,14 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             pwdCallback.setResult(true);
         } catch (LoginException le) {
             // login failed
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, "jmac.loginfail", username);
-            }
+            LOG.log(Level.INFO, "JMAC: login failed for {0}", username);
             pwdCallback.setResult(false);
         }
     }
 
     private void processPrivateKey(PrivateKeyCallback privKeyCallback) {
         KeyStore[] keyStores = securitySupport.getKeyStores();
-        _logger.log(Level.FINE, "JMAC: In PrivateKeyCallback Processor");
+        LOG.log(Level.FINE, "JMAC: In PrivateKeyCallback Processor");
 
         // make sure we have a keystore
         if (keyStores == null || keyStores.length == 0) {
@@ -578,16 +566,14 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                     privateKey = privateKeyEntry.getPrivateKey();
                     certificateChain = privateKeyEntry.getCertificateChain();
                 }
-            } else if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "invalid request type: " + request.getClass().getName());
+            } else if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "invalid request type: " + request.getClass().getName());
             }
         } catch (Exception e) {
             // UnrecoverableKeyException
             // NoSuchAlgorithmException
             // KeyStoreException
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC: In PrivateKeyCallback Processor: " + " Error reading key !", e);
-            }
+            LOG.log(Level.FINE, "JMAC: In PrivateKeyCallback Processor: Error reading key !", e);
         } finally {
             privKeyCallback.setKey(privateKey, certificateChain);
         }
@@ -670,9 +656,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             // UnrecoverableKeyException
             // NoSuchAlgorithmException
             // KeyStoreException
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Exception in getDefaultPrivateKeyEntry", e);
-            }
+            LOG.log(Level.FINE, "Exception in getDefaultPrivateKeyEntry", e);
         }
 
         return new PrivateKeyEntry(privateKey, certificates);
@@ -704,8 +688,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             // UnrecoverableKeyException
             // NoSuchAlgorithmException
             // KeyStoreException
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Exception in getPrivateKeyEntry for Digest", e);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Exception in getPrivateKeyEntry for Digest", e);
             }
         }
 
@@ -713,8 +697,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
     }
 
     private void processCertStore(CertStoreCallback certStoreCallback) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMAC: In CertStoreCallback Processor");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "JMAC: In CertStoreCallback Processor");
         }
 
         KeyStore certStore = sslUtils.getMergedTrustStore();
@@ -734,8 +718,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                             list.add(cert);
                         } catch (KeyStoreException kse) {
                             // ignore and move to next
-                            if (_logger.isLoggable(Level.FINE)) {
-                                _logger.log(Level.FINE, "JMAC: Cannot retrieve certificate for alias " + alias);
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.log(Level.FINE, "JMAC: Cannot retrieve certificate for alias " + alias);
                             }
                         }
                     }
@@ -745,19 +729,19 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             CertStore certstore = CertStore.getInstance("Collection", ccsp);
             certStoreCallback.setCertStore(certstore);
         } catch (KeyStoreException kse) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC:  Cannot determine truststore aliases", kse);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "JMAC:  Cannot determine truststore aliases", kse);
             }
         } catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException nsape) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "JMAC:  Cannot instantiate CertStore", nsape);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "JMAC:  Cannot instantiate CertStore", nsape);
             }
         }
     }
 
     private void processSecretKey(SecretKeyCallback secretKeyCallback) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMAC: In SecretKeyCallback Processor");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "JMAC: In SecretKeyCallback Processor");
         }
 
         String alias = ((SecretKeyCallback.AliasRequest) secretKeyCallback.getRequest()).getAlias();
@@ -775,8 +759,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
                 secretKeyCallback.setKey(passwordAdapter.getPasswordSecretKeyForAlias(alias));
             } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "JMAC: In SecretKeyCallback Processor: " + " Error reading key ! for alias " + alias, e);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "JMAC: In SecretKeyCallback Processor: " + " Error reading key ! for alias " + alias, e);
                 }
                 secretKeyCallback.setKey(null);
             }
@@ -786,8 +770,8 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
             // used in an environment with kerberos
             // Principal p = secretKeyCallback.getPrincipal();
             secretKeyCallback.setKey(null);
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "jmac.unsupportreadprinciple");
+            if (LOG.isLoggable(Level.WARNING)) {
+                LOG.log(Level.WARNING, "No support to read Principals in SecretKeyCallback.");
             }
         }
     }

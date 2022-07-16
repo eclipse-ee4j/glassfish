@@ -17,28 +17,6 @@
 
 package com.sun.enterprise.security.jmac.config;
 
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 
@@ -69,6 +47,28 @@ import jakarta.security.auth.message.config.ServerAuthContext;
 import jakarta.security.auth.message.module.ClientAuthModule;
 import jakarta.security.auth.message.module.ServerAuthModule;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.internal.api.Globals;
+
 /**
  * This class implements the interface AuthConfigProvider.
  *
@@ -84,8 +84,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
     protected static final String SERVER = "server";
     protected static final String MANAGES_SESSIONS_OPTION = "managessessions";
 
-    private static Logger logger = LogDomains.getLogger(GFServerConfigProvider.class, LogDomains.SECURITY_LOGGER);
-    private static final String DEFAULT_HANDLER_CLASS = "com.sun.enterprise.security.jmac.callback.ContainerCallbackHandler";
+    private static final Logger LOG = LogDomains.getLogger(GFServerConfigProvider.class, LogDomains.SECURITY_LOGGER, false);
     private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.jmac.config.ConfigDomainParser";
 
     // since old api does not have subject in PasswordValdiationCallback,
@@ -287,8 +286,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
         InterceptEntry intEntry = (InterceptEntry) configMap.get(intercept);
         if (intEntry == null || intEntry.idMap == null) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("module config has no IDs configured for [" + intercept + "]");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("module config has no IDs configured for [" + intercept + "]");
             }
             return null;
         }
@@ -304,8 +303,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
             //
             // in either case, look for a default ID in the module config
 
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("DD did not specify ID, " + "or DD-specified ID for [" + intercept + "] not found in config -- "
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("DD did not specify ID, " + "or DD-specified ID for [" + intercept + "] not found in config -- "
                         + "attempting to look for default ID");
             }
 
@@ -321,8 +320,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
                 // did not find a default provider ID
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("no default config ID for [" + intercept + "]");
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("no default config ID for [" + intercept + "]");
                 }
                 return null;
             }
@@ -333,8 +332,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
         // check provider-type
         if (idEntry.type.indexOf(type) < 0) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("request type [" + type + "] does not match config type [" + idEntry.type + "]");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("request type [" + type + "] does not match config type [" + idEntry.type + "]");
             }
             return null;
         }
@@ -346,8 +345,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
         // optimization: if policy was not set, return null
         if (reqP == null && respP == null) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("no policy applies");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("no policy applies");
             }
             return null;
         }
@@ -356,8 +355,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
 
         Entry entry = new Entry(idEntry.moduleClassName, reqP, respP, idEntry.options);
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("getEntry for: " + intercept + " -- " + id + "\n    module class: " + entry.moduleClassName + "\n    options: "
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("getEntry for: " + intercept + " -- " + id + "\n    module class: " + entry.moduleClassName + "\n    options: "
                     + entry.options + "\n    request policy: " + entry.requestPolicy + "\n    response policy: " + entry.responsePolicy);
         }
 
@@ -446,8 +445,8 @@ public class GFServerConfigProvider implements AuthConfigProvider {
                 Constructor constructor = c.getConstructor(PARAMS);
                 return constructor.newInstance(ARGS);
             } catch (Exception e) {
-                if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, "jmac.provider_unable_to_load_authmodule", new String[] { moduleClassName, e.toString() });
+                if (LOG.isLoggable(Level.WARNING)) {
+                    LOG.log(Level.WARNING, "Unable to load auth module {0}: {1}", new Object[] {moduleClassName, e});
                 }
 
                 AuthException ae = new AuthException();
@@ -640,18 +639,16 @@ public class GFServerConfigProvider implements AuthConfigProvider {
     public static void loadConfigContext(Object config) {
 
         boolean hasSlaveFactory = false;
-        boolean hasSlaveProvider = false;
         rwLock.readLock().lock();
         try {
             hasSlaveFactory = slaveFactory != null;
-            hasSlaveProvider = slaveProvider != null;
         } finally {
             rwLock.readLock().unlock();
         }
 
         if (slaveProvider == null) {
-            if (logger.isLoggable(Level.SEVERE)) {
-                logger.severe("unableToLoad.noSlaveProvider");
+            if (LOG.isLoggable(Level.SEVERE)) {
+                LOG.severe("No slave provider set.");
             }
             return;
         }

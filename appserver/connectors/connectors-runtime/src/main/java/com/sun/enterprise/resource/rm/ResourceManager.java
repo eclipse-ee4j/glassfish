@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +38,7 @@ public interface ResourceManager {
      *          If there is any error in getting the
      *          transaction
      */
-    public Transaction getTransaction() throws PoolingException;
+    Transaction getTransaction() throws PoolingException;
 
     /**
      * Get the component involved in invocation. Returns null , if there is
@@ -45,7 +46,7 @@ public interface ResourceManager {
      *
      * @return object handle
      */
-    public Object getComponent();
+    Object getComponent();
 
     /**
      * Enlist the Resource handle to the transaction.
@@ -54,7 +55,7 @@ public interface ResourceManager {
      * @throws PoolingException
      *          If there is any error in enlisting.
      */
-    public void enlistResource(ResourceHandle h) throws PoolingException;
+    void enlistResource(ResourceHandle h) throws PoolingException;
 
     /**
      * Register the resource for a transaction's house keeping activities.
@@ -62,12 +63,12 @@ public interface ResourceManager {
      * @param handle Resource to be registered.
      * @throws PoolingException If there is any error in registering.
      */
-    public void registerResource(ResourceHandle handle) throws PoolingException;
+    void registerResource(ResourceHandle handle) throws PoolingException;
 
     /**
      * Set the transaction for rolling back.
      */
-    public void rollBackTransaction();
+    void rollBackTransaction();
 
     /**
      * Delist the resource from the transaction.
@@ -75,7 +76,7 @@ public interface ResourceManager {
      * @param resource  Resource to be delisted.
      * @param xaresFlag XA Flag
      */
-    public void delistResource(ResourceHandle resource, int xaresFlag);
+    void delistResource(ResourceHandle resource, int xaresFlag);
 
     /**
      * Unregister the resource from a transaction's list.
@@ -83,5 +84,5 @@ public interface ResourceManager {
      * @param resource  Resource to be unregistered.
      * @param xaresFlag XA Flag
      */
-    public void unregisterResource(ResourceHandle resource, int xaresFlag);
+    void unregisterResource(ResourceHandle resource, int xaresFlag);
 }

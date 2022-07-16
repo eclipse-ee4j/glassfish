@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,78 +17,69 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import org.glassfish.internal.grizzly.LazyServiceInitializer;
+import com.sun.logging.LogDomains;
 
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-import org.glassfish.hk2.api.PostConstruct;
-
-import org.omg.CORBA.ORB;
-
-import javax.naming.NamingException;
 import java.nio.channels.SelectableChannel;
 import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import java.util.logging.Logger;
 
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.internal.grizzly.LazyServiceInitializer;
+import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.logging.LogDomains.SERVER_LOGGER;
 
 /**
- *
  * @author Ken Saks
  */
 @Service
 @Named("iiop-service")
 public class ORBLazyServiceInitializer implements LazyServiceInitializer, PostConstruct {
 
-static Logger logger = LogDomains.getLogger(ORBLazyServiceInitializer.class, LogDomains.SERVER_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ORBLazyServiceInitializer.class, SERVER_LOGGER, false);
 
 
     @Inject
     private GlassFishORBHelper orbHelper;
 
-    boolean initializedSuccessfully = false;
+    boolean initializedSuccessfully;
 
+    @Override
     public void postConstruct() {
     }
 
     public String getServiceName() {
-
         return "iiop-service";
     }
 
 
+    @Override
     public boolean initializeService() {
-
         try {
-
             orbHelper.getORB();
-
             initializedSuccessfully = true;
 
             // TODO add check to ensure that lazy init is enabled for the orb
             // and throw exception if not
 
         } catch(Exception e) {
-            logger.log(Level.WARNING, "ORB initialization failed in lazy init", e);
+            LOG.log(Level.WARNING, "ORB initialization failed in lazy init", e);
         }
 
         return initializedSuccessfully;
     }
 
 
+    @Override
     public void handleRequest(SelectableChannel channel) {
-        if( initializedSuccessfully) {
+        if (initializedSuccessfully) {
             orbHelper.getSelectableChannelDelegate().handleRequest(channel);
         } else {
-            logger.log(Level.WARNING, "Cannot handle SelectableChannel request in ORBLazyServiceInitializer. " +
-                    "ORB did not initialize successfully");
+            LOG.log(Level.WARNING, "Cannot handle SelectableChannel request in ORBLazyServiceInitializer. "
+                + "ORB did not initialize successfully");
         }
     }
-
-
-
-
 }

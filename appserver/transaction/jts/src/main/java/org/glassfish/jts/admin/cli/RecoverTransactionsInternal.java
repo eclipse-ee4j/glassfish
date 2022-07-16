@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,23 @@
 
 package org.glassfish.jts.admin.cli;
 
+import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
+import com.sun.jts.CosTransactions.Configuration;
+
+import jakarta.inject.Inject;
+
+import java.util.logging.Level;
+
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 import org.glassfish.hk2.api.PerLookup;
-
-import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
-import com.sun.jts.CosTransactions.Configuration;
-
-import java.util.logging.Level;
+import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "_recover-transactions-internal")
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
@@ -46,11 +47,12 @@ public class RecoverTransactionsInternal extends RecoverTransactionsBase impleme
     @Inject
     ResourceRecoveryManager recoveryManager;
 
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        if (_logger.isLoggable(Level.INFO)) {
-            _logger.info("==> internal target: " + destinationServer + " ... server: " + serverToRecover);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("==> internal target: " + destinationServer + " ... server: " + serverToRecover);
         }
 
         if (Configuration.isDBLoggingEnabled() && !serverToRecover.equals(destinationServer)) {
@@ -74,17 +76,18 @@ public class RecoverTransactionsInternal extends RecoverTransactionsBase impleme
                 result = recoveryManager.recoverIncompleteTx(false, null);
             }
 
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.info("==> recovery completed successfuly: " + result);
+            if (LOG.isLoggable(Level.INFO)) {
+                LOG.info("==> recovery completed successfuly: " + result);
             }
 
-            if (result)
+            if (result) {
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-            else
+            } else {
                 throw new IllegalStateException();
+            }
         } catch (Exception e) {
-            _logger.log(Level.WARNING, localStrings.getString("recover.transactions.failed"), e);
-            report.setMessage(localStrings.getString("recover.transactions.failed"));
+            LOG.log(Level.WARNING, MESSAGES.getString("recover.transactions.failed"), e);
+            report.setMessage(MESSAGES.getString("recover.transactions.failed"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
         }

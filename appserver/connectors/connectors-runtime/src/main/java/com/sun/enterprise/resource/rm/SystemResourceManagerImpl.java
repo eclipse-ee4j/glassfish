@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,17 @@
 
 package com.sun.enterprise.resource.rm;
 
-import java.util.logging.*;
-
-import jakarta.transaction.Transaction;
-import jakarta.transaction.SystemException;
-
-import com.sun.logging.*;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.resource.*;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * SystemResourceManagerImpl manages the resource requests from system
@@ -34,25 +36,21 @@ import com.sun.enterprise.resource.*;
  */
 public class SystemResourceManagerImpl implements ResourceManager {
 
-
-    private static Logger _logger ;
-    static {
-        _logger = LogDomains.getLogger(SystemResourceManagerImpl.class, LogDomains.RSR_LOGGER);
-    }
+    private static final Logger LOG = LogDomains.getLogger(SystemResourceManagerImpl.class, LogDomains.RSR_LOGGER);
 
 
     /**
      * Returns the transaction component is participating.
      *
      * @return Handle to the <code>Transaction</code> object.
-     * @exception <code>PoolingException<code> If exception is thrown
-     *         while getting the transaction.
+     * @throws PoolingException If exception is thrown while getting the transaction.
      */
+    @Override
     public Transaction getTransaction() throws PoolingException {
         try {
             return ConnectorRuntime.getRuntime().getTransaction();
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE,"poolmgr.unexpected_exception",ex);
+            LOG.log(Level.SEVERE,"poolmgr.unexpected_exception",ex);
             throw new PoolingException(ex.toString(), ex);
         }
     }
@@ -60,26 +58,28 @@ public class SystemResourceManagerImpl implements ResourceManager {
     /**
      * Return null for System Resource.
      */
+    @Override
     public Object getComponent() {
         return null;
     }
 
+
     /**
      * Register the <code>ResourceHandle</code> in the transaction
      *
-     * @param handle    <code>ResourceHandle</code> object
-     * @exception <code>PoolingException</code> If there is any error while
-     *        enlisting.
+     * @param handle <code>ResourceHandle</code> object
+     * @throws PoolingException If there is any error while enlisting.
      */
-    public void enlistResource(ResourceHandle handle) throws PoolingException{
+    @Override
+    public void enlistResource(ResourceHandle handle) throws PoolingException {
         try {
             JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-        if (tran != null) {
+            if (tran != null) {
                 tm.enlistResource(tran, handle);
             }
-    } catch (Exception ex) {
-            _logger.log(Level.SEVERE,"poolmgr.unexpected_exception",ex);
+        } catch (Exception ex) {
+            LOG.log(Level.SEVERE, "poolmgr.unexpected_exception", ex);
             throw new PoolingException(ex.toString(), ex);
         }
     }
@@ -87,50 +87,53 @@ public class SystemResourceManagerImpl implements ResourceManager {
     /**
      * Dont do any thing for System Resource.
      */
+    @Override
     public void registerResource(ResourceHandle handle)
          throws PoolingException {
     }
 
+    @Override
     public void rollBackTransaction() {
         try {
             JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-        if ( tran != null ) {
+            if (tran != null) {
                 tran.setRollbackOnly();
-        }
+            }
         } catch (SystemException ex) {
-            _logger.log(Level.WARNING,"poolmgr.system_exception",ex);
+            LOG.log(Level.WARNING,"poolmgr.system_exception",ex);
         } catch (IllegalStateException ex) {
-            // ignore
+            LOG.log(Level.FINEST,"Ignoring IllegalStateException.", ex);
         }
     }
+
 
     /**
      * delist the <code>ResourceHandle</code> from the transaction
      *
-     * @param h    <code>ResourceHandle</code> object
+     * @param h <code>ResourceHandle</code> object
      * @param xaresFlag flag indicating transaction success. This can
-     *        be XAResource.TMSUCCESS or XAResource.TMFAIL
-     * @exception <code>PoolingException</code>
+     *            be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
+    @Override
     public void delistResource(ResourceHandle h, int xaresFlag) {
         try {
-        JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
+            JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-        if (tran != null) {
+            if (tran != null) {
                 tm.delistResource(tran, h, xaresFlag);
             }
         } catch (SystemException ex) {
-            _logger.log(Level.WARNING,"poolmgr.system_exception",ex);
+            LOG.log(Level.WARNING,"poolmgr.system_exception",ex);
         } catch (IllegalStateException ex) {
-            // ignore
+            LOG.log(Level.FINEST,"Ignoring IllegalStateException.", ex);
         }
     }
 
     /**
      * Dont do any thing for System Resource.
      */
-    public void unregisterResource(ResourceHandle resource,
-                                   int xaresFlag) {
+    @Override
+    public void unregisterResource(ResourceHandle resource, int xaresFlag) {
     }
 }

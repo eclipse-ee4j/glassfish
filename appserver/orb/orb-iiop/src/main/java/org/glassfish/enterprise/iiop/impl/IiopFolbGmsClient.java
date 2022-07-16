@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,22 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
+import com.sun.corba.ee.impl.folb.GroupInfoServiceBase;
+import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
+import com.sun.corba.ee.spi.folb.GroupInfoService;
+import com.sun.corba.ee.spi.folb.GroupInfoServiceObserver;
+import com.sun.corba.ee.spi.folb.SocketInfo;
+import com.sun.corba.ee.spi.misc.ORBConstants;
+import com.sun.corba.ee.spi.orb.ORB ;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Nodes;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.ee.cms.core.CallBack;
 import com.sun.enterprise.ee.cms.core.FailureNotificationSignal;
 import com.sun.enterprise.ee.cms.core.JoinedAndReadyNotificationSignal;
 import com.sun.enterprise.ee.cms.core.PlannedShutdownSignal;
@@ -30,43 +41,31 @@ import com.sun.enterprise.ee.cms.core.SignalAcquireException;
 import com.sun.enterprise.ee.cms.core.SignalReleaseException;
 import com.sun.logging.LogDomains;
 
-import com.sun.corba.ee.spi.orb.ORB ;
-import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
-import com.sun.corba.ee.spi.folb.GroupInfoService;
-import com.sun.corba.ee.impl.folb.GroupInfoServiceBase;
-import com.sun.corba.ee.spi.folb.GroupInfoServiceObserver;
-import com.sun.corba.ee.spi.folb.SocketInfo;
-import com.sun.corba.ee.spi.misc.ORBConstants;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.orb.admin.config.IiopListener;
-import org.glassfish.orb.admin.config.IiopService;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Servers;
-import com.sun.enterprise.config.serverbeans.Nodes;
-import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.ee.cms.core.CallBack;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.config.support.PropertyResolver;
 import org.glassfish.gms.bootstrap.GMSAdapter;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.orb.admin.config.IiopListener;
+import org.glassfish.orb.admin.config.IiopService;
 import org.omg.CORBA.ORBPackage.InvalidName;
 
-// REVISIT impl
-//import com.sun.corba.ee.impl.folb.ServerGroupManager;
 
 /**
  * @author Harold Carr
  */
 public class IiopFolbGmsClient implements CallBack {
 
-    private static final Logger _logger = LogDomains.getLogger(IiopFolbGmsClient.class, LogDomains.CORBA_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(IiopFolbGmsClient.class, LogDomains.CORBA_LOGGER, false);
 
     private ServiceLocator services;
 

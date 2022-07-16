@@ -40,7 +40,7 @@ public class IIOPImplLogFacade {
     }
 
     public static Logger getLogger(final Class<?> clazz) {
-        return LogDomains.getLogger(clazz, LOGGER_NAME_PREFIX);
+        return Logger.getLogger(clazz.getName(), BUNDLE_NAME);
     }
 
 

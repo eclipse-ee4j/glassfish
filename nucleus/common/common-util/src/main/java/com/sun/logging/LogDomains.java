@@ -21,8 +21,11 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import static java.util.logging.Level.CONFIG;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.WARNING;
 
 /**
@@ -347,6 +350,7 @@ public class LogDomains {
         final String loggerName = loggerNamePrefix + "." + clazz.getPackageName();
         final Logger cachedLogger = MANAGER.getLogger(loggerName);
         if (cachedLogger != null) {
+            LOG.log(FINEST, "Cached logger: {0}", cachedLogger);
             return cachedLogger;
         }
 
@@ -364,6 +368,7 @@ public class LogDomains {
         // a race condition has already created one
         boolean added = MANAGER.addLogger(newLogger);
         if (added) {
+            LOG.log(CONFIG, "Registered new logger: {0}", newLogger);
             return newLogger;
         }
 
@@ -427,11 +432,39 @@ public class LogDomains {
 
     private static class LogDomainsLogger extends Logger {
 
+        // FIXME: setResourceBundle doesn't work for some reason, breaks
+        // test.jms.injection.ClientTestNG.testTransactionScopedJMSContextInjection
+        // As GF swallows exceptions in critical code, it is hard to find out why.
+        private final ResourceBundle resourceBundle;
+
         public LogDomainsLogger(String loggerName, ResourceBundle resourceBundle) {
             super(loggerName, null);
-            if (resourceBundle != null) {
-                setResourceBundle(resourceBundle);
-            }
+            this.resourceBundle = resourceBundle;
+        }
+
+
+        @Override
+        public void log(LogRecord record) {
+            record.setResourceBundle(resourceBundle);
+            super.log(record);
+        }
+
+
+        @Override
+        public ResourceBundle getResourceBundle() {
+            return this.resourceBundle;
+        }
+
+
+        @Override
+        public String getResourceBundleName() {
+            return resourceBundle == null ? null : resourceBundle.getBaseBundleName();
+        }
+
+
+        @Override
+        public String toString() {
+            return super.toString() + "[name=" + getName() + ", bundleName=" + getResourceBundleName() + "]";
         }
     }
 }

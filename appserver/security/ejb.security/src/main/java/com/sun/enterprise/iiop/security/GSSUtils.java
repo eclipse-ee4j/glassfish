@@ -466,7 +466,7 @@ public class GSSUtils {
                 ret = (ret << 8) + (token[index++] & 0x00FF);
             }
         } else { // value > 128
-        	ret = sf;
+            ret = sf;
         }
 
         return (ret);

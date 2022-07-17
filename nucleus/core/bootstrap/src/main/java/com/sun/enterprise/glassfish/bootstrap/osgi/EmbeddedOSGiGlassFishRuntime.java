@@ -158,9 +158,15 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
         shutdownInternal();
     }
 
-    private String findBundleMessage(MultiException ex) {
-        for (Throwable error : ex.getErrors()) {
 
+    private String findBundleMessage(MultiException ex) {
+        for (final Throwable error : ex.getErrors()) {
+            if (error instanceof MultiException) {
+                final String message = findBundleMessage((MultiException) error);
+                if (message != null) {
+                    return message;
+                }
+            }
             Throwable currentThrowable = error;
             while (currentThrowable != null) {
                 if (currentThrowable instanceof BundleException) {

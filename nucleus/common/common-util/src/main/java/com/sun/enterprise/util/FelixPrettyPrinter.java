@@ -140,7 +140,7 @@ public class FelixPrettyPrinter {
             bundleIds.add(Integer.valueOf(number));
         }
 
-        return new ArrayList<Integer>(bundleIds);
+        return new ArrayList<>(bundleIds);
     }
 
     private static void printLn(StringBuilder messageBuilder, int indent, String message) {

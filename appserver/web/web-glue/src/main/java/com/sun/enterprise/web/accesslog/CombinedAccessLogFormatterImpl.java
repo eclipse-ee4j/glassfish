@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,8 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.nio.CharBuffer;
 
 /**
- * Access log formatter using the <i>combined</i> access log format from
- * Apache.
+ * Access log formatter using the <i>combined</i> access log format from Apache.
  */
 public class CombinedAccessLogFormatterImpl extends CommonAccessLogFormatterImpl {
 
@@ -37,17 +37,15 @@ public class CombinedAccessLogFormatterImpl extends CommonAccessLogFormatterImpl
      * @param response The response object from which to obtain access log info
      * @param charBuffer The CharBuffer to which to append access log info
      */
-    public void appendLogEntry(Request request,
-                               Response response,
-                               CharBuffer charBuffer) {
-
+    @Override
+    public void appendLogEntry(Request request, Response response, CharBuffer charBuffer) {
         super.appendLogEntry(request, response, charBuffer);
 
         ServletRequest req = request.getRequest();
         HttpServletRequest hreq = (HttpServletRequest) req;
 
         appendReferer(charBuffer, hreq);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendUserAgent(charBuffer, hreq);
     }
@@ -58,13 +56,13 @@ public class CombinedAccessLogFormatterImpl extends CommonAccessLogFormatterImpl
      * the given char buffer.
      */
     private void appendReferer(CharBuffer cb, HttpServletRequest hreq) {
-        cb.put("\"");
+        cb.put('"');
         String referer = hreq.getHeader("referer");
         if (referer == null) {
             referer = NULL_VALUE;
         }
         cb.put(referer);
-        cb.put("\"");
+        cb.put('"');
     }
 
 
@@ -73,13 +71,13 @@ public class CombinedAccessLogFormatterImpl extends CommonAccessLogFormatterImpl
      * the given char buffer.
      */
     private void appendUserAgent(CharBuffer cb, HttpServletRequest hreq) {
-        cb.put("\"");
+        cb.put('"');
         String ua = hreq.getHeader("user-agent");
         if (ua == null) {
             ua = NULL_VALUE;
         }
         cb.put(ua);
-        cb.put("\"");
+        cb.put('"');
     }
 
 }

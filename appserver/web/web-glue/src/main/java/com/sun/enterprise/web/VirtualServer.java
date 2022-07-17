@@ -17,32 +17,32 @@
 
 package com.sun.enterprise.web;
 
-import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
-import static com.sun.enterprise.web.Constants.ERROR_REPORT_VALVE;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
-import static org.glassfish.web.LogFacade.ALLOW_ACCESS;
-import static org.glassfish.web.LogFacade.CODE_FILTERS_NULL;
-import static org.glassfish.web.LogFacade.DENY_ACCESS;
-import static org.glassfish.web.LogFacade.ENABLE_SSO;
-import static org.glassfish.web.LogFacade.IGNORE_INVALID_REALM;
-import static org.glassfish.web.LogFacade.INVALID_AUTH_REALM;
-import static org.glassfish.web.LogFacade.INVALID_LISTENER_VIRTUAL_SERVER;
-import static org.glassfish.web.LogFacade.MODIFYING_WEB_XML;
-import static org.glassfish.web.LogFacade.NOT_A_VALVE;
-import static org.glassfish.web.LogFacade.NULL_VIRTUAL_SERVER_PROPERTY;
-import static org.glassfish.web.LogFacade.REDIRECT_BOTH_URL_AND_URL_PREFIX;
-import static org.glassfish.web.LogFacade.REDIRECT_MISSING_URL_OR_URL_PREFIX;
-import static org.glassfish.web.LogFacade.REDIRECT_MULTIPLE_ELEMENT;
-import static org.glassfish.web.LogFacade.SEND_ERROR_MULTIPLE_ELEMENT;
-import static org.glassfish.web.LogFacade.SSO_MAX_INACTIVE_SET;
-import static org.glassfish.web.LogFacade.SSO_REAP_INTERVAL_SET;
-import static org.glassfish.web.LogFacade.UNABLE_RECONFIGURE_ACCESS_LOG;
-import static org.glassfish.web.LogFacade.UNABLE_TO_LOAD_EXTENSION_SEVERE;
-import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE;
-import static org.glassfish.web.LogFacade.VS_DEFAULT_WEB_MODULE_DISABLED;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.security.web.GlassFishSingleSignOn;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.v3.common.PlainTextActionReporter;
+import com.sun.enterprise.v3.services.impl.GrizzlyProxy;
+import com.sun.enterprise.v3.services.impl.GrizzlyService;
+import com.sun.enterprise.web.logger.CatalinaLogger;
+import com.sun.enterprise.web.logger.FileLoggerHandler;
+import com.sun.enterprise.web.logger.FileLoggerHandlerFactory;
+import com.sun.enterprise.web.logger.VirtualServerGlassFishLogger;
+import com.sun.enterprise.web.pluggable.WebContainerFeatureFactory;
+import com.sun.enterprise.web.session.SessionCookieConfig;
+import com.sun.web.security.RealmAdapter;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,11 +53,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
@@ -120,6 +121,8 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.main.jul.GlassFishLogManager;
+import org.glassfish.main.jul.handler.GlassFishLogHandler;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.admin.monitor.RequestProbeProvider;
 import org.glassfish.web.deployment.archivist.WebArchivist;
@@ -134,32 +137,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.security.web.GlassFishSingleSignOn;
-import com.sun.enterprise.server.logging.GFFileHandler;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.v3.common.PlainTextActionReporter;
-import com.sun.enterprise.v3.services.impl.GrizzlyProxy;
-import com.sun.enterprise.v3.services.impl.GrizzlyService;
-import com.sun.enterprise.web.logger.CatalinaLogger;
-import com.sun.enterprise.web.logger.FileLoggerHandler;
-import com.sun.enterprise.web.logger.FileLoggerHandlerFactory;
-import com.sun.enterprise.web.pluggable.WebContainerFeatureFactory;
-import com.sun.enterprise.web.session.SessionCookieConfig;
-import com.sun.web.security.RealmAdapter;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+import static com.sun.enterprise.web.Constants.DEFAULT_WEB_MODULE_NAME;
+import static com.sun.enterprise.web.Constants.ERROR_REPORT_VALVE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
+import static org.glassfish.web.LogFacade.*;
 
 /**
  * Standard implementation of a virtual server (aka virtual host) in the iPlanet Application Server.
@@ -201,7 +185,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      *
      * - state (disabled/off) - redirects
      */
-    private VirtualServerPipeline vsPipeline;
+    private final VirtualServerPipeline vsPipeline;
 
     /*
      * The original (standard) pipeline of this VirtualServer.
@@ -209,7 +193,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * Only one (custom or original) pipeline may be active at any given time. Any updates (such as adding or removing
      * valves) to the currently active pipeline are propagated to the other.
      */
-    private Pipeline origPipeline;
+    private final Pipeline origPipeline;
 
     /**
      * The id of this virtual server as specified in the configuration.
@@ -224,7 +208,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     /**
      * The descriptive information about this implementation.
      */
-    private static final String _info = "com.sun.enterprise.web.VirtualServer/1.0";
+    private static final String _info = VirtualServer.class.getName() + "/1.0";
 
     /**
      * The config bean associated with this VirtualServer
@@ -261,7 +245,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      * This valve is activated, that is, added to this virtual server's pipeline, only when access logging has been enabled.
      * When acess logging has been disabled, this valve is removed from this virtual server's pipeline.
      */
-    private PEAccessLogValve accessLogValve;
+    private final PEAccessLogValve accessLogValve;
 
     // The value of the ssoCookieSecure property
     private String ssoCookieSecure;
@@ -355,21 +339,21 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Gets the config bean associated with this VirtualServer.
+     * @return the config bean associated with this VirtualServer.
      */
     public com.sun.enterprise.config.serverbeans.VirtualServer getBean() {
         return vsBean;
     }
 
     /**
-     * Sets the config bean for this VirtualServer
+     * @param vsBean the config bean for this VirtualServer
      */
     public void setBean(com.sun.enterprise.config.serverbeans.VirtualServer vsBean) {
         this.vsBean = vsBean;
     }
 
     /**
-     * Gets the mime map associated with this VirtualServer.
+     * @return the mime map associated with this VirtualServer.
      */
     public MimeMap getMimeMap() {
         return mimeMap;
@@ -382,11 +366,10 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         this.mimeMap = mimeMap;
     }
 
+
     /**
-     * Gets the Cache-Control configuration of this VirtualServer.
-     *
-     * @return Cache-Control configuration of this VirtualServer, or null if no such configuration exists for this
-     * VirtualServer
+     * @return the Cache-Control configuration of this VirtualServer or null if no such
+     *         configuration exists for this VirtualServer
      */
     public String[] getCacheControls() {
         return cacheControls;
@@ -532,9 +515,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             WebModuleConfig wmInfo = findWebModuleInJ2eeApp(appsBean, webModuleID, appRegistry);
             if (wmInfo == null) {
                 ConfigBeansUtilities cbu = getConfigBeansUtilities();
-                if (cbu == null) {
-                    contextRoot = null;
-                } else {
+                if (cbu != null) {
                     contextRoot = cbu.getContextRoot(webModuleID);
                 }
             } else {
@@ -543,7 +524,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
 
             if (contextRoot == null) {
                 Object[] params = { webModuleID, getID() };
-                _logger.log(SEVERE, LogFacade.VS_DEFAULT_WEB_MODULE_NOT_FOUND, params);
+                _logger.log(SEVERE, VS_DEFAULT_WEB_MODULE_NOT_FOUND, params);
             }
         }
 
@@ -587,7 +568,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             }
 
             if (webModuleConfig == null) {
-                _logger.log(SEVERE, LogFacade.VS_DEFAULT_WEB_MODULE_NOT_FOUND, new Object[] { webModuleID, getID() });
+                _logger.log(SEVERE, VS_DEFAULT_WEB_MODULE_NOT_FOUND, new Object[] { webModuleID, getID() });
             }
         }
 
@@ -783,7 +764,6 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         _logger = newLogger;
         // wrap into a cataline logger
         CatalinaLogger catalinaLogger = new CatalinaLogger(newLogger);
-        catalinaLogger.setLevel(logLevel);
         setLogger(catalinaLogger);
     }
 
@@ -874,135 +854,107 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         }
     }
 
-    /*
+    /**
      * Configures this virtual server with the specified log file.
      *
      * @param logFile The value of the virtual server's log-file attribute in the domain.xml
      */
     synchronized void setLogFile(String logFile, String logLevel, String logServiceFile) {
+        _logger.log(Level.CONFIG, "setLogFile(logFile={0}, logServiceFile={1})",
+            new Object[] {logFile, logServiceFile});
 
         /*
          * Configure separate logger for this virtual server only if 'log-file' attribute of this <virtual-server> and 'file'
          * attribute of <log-service> are different (See 6189219).
          */
-        boolean noCustomLog = (logFile == null || (logServiceFile != null && new File(logFile).equals(new File(logServiceFile))));
+        boolean customLog = (logFile != null && logServiceFile != null
+            && !new File(logFile).equals(new File(logServiceFile)));
 
-        if ((fileLoggerHandler == null && noCustomLog)
-                || (fileLoggerHandler != null && logFile != null && logFile.equals(fileLoggerHandler.getLogFile()))) {
+        boolean logFileChanged = logFile != null
+            && ((fileLoggerHandler != null && !logFile.equals(fileLoggerHandler.getLogFile()))
+                || fileLoggerHandler == null);
+
+        /*
+         * Exit early if the log file isn't being changed.
+         */
+        if (!logFileChanged) {
             return;
         }
 
-        Logger newLogger = null;
-        FileLoggerHandler oldHandler = fileLoggerHandler;
-        // remove old handler
-        if (oldHandler != null) {
-            _logger.removeHandler(oldHandler);
-        }
-
-        if (noCustomLog) {
+        // As it is being changed, close the old file handler
+        if (fileLoggerHandler != null) {
+            _logger.removeHandler(fileLoggerHandler);
+            close(fileLoggerHandler);
             fileLoggerHandler = null;
-            newLogger = _logger;
-        } else {
-            // append the _logger name with "._vs.<virtual-server-id>"
-            String lname = _logger.getName() + "._vs." + getID();
-            newLogger = LogManager.getLogManager().getLogger(lname);
-            if (newLogger == null) {
-                newLogger = new Logger(lname, null) {
-                    // set thread id, see LogDomains.getLogger method
-                    @Override
-                    public void log(LogRecord record) {
-                        if (record.getResourceBundle() == null) {
-                            ResourceBundle bundle = getResourceBundle();
-                            if (bundle != null) {
-                                record.setResourceBundle(bundle);
-                            }
-                        }
-                        record.setThreadID((int) Thread.currentThread().getId());
-                        super.log(record);
-                    }
-
-                    // use the same resource bundle as default vs logger
-                    @Override
-                    public ResourceBundle getResourceBundle() {
-                        return rb;
-                    }
-
-                    @Override
-                    public synchronized void addHandler(Handler handler) {
-                        super.addHandler(handler);
-                        if (handler instanceof FileLoggerHandler) {
-                            ((FileLoggerHandler) handler).associate();
-                        }
-                    }
-
-                    @Override
-                    public synchronized void removeHandler(Handler handler) {
-                        if (!(handler instanceof FileLoggerHandler)) {
-                            super.removeHandler(handler);
-                        } else {
-                            boolean hasHandler = false;
-                            Handler[] hs = getHandlers();
-                            if (hs != null) {
-                                for (Handler h : hs) {
-                                    if (h == handler) {
-                                        hasHandler = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (hasHandler) {
-                                super.removeHandler(handler);
-                                ((FileLoggerHandler) handler).disassociate();
-                            }
-                        }
-                    }
-                };
-
-                synchronized (Logger.class) {
-                    LogManager.getLogManager().addLogger(newLogger);
-                }
-            }
-
-            // remove old handlers if necessary
-            Handler[] handlers = newLogger.getHandlers();
-            if (handlers != null) {
-                for (Handler h : handlers) {
-                    newLogger.removeHandler(h);
-                }
-            }
-
-            // add handlers from root that is not GFFileHandler
-            Logger rootLogger = Logger.global.getParent();
-            if (rootLogger != null) {
-                Handler[] rootHandlers = rootLogger.getHandlers();
-                if (rootHandlers != null) {
-                    for (Handler h : rootHandlers) {
-                        if (!(h instanceof GFFileHandler)) {
-                            newLogger.addHandler(h);
-                        }
-                    }
-                }
-            }
-
-            // create and add new handler
-            fileLoggerHandler = fileLoggerHandlerFactory.getHandler(logFile);
-            newLogger.addHandler(fileLoggerHandler);
-            newLogger.setUseParentHandlers(false);
         }
 
-        setLogger(newLogger, logLevel);
-        close(oldHandler);
+        // Store new logger to replace current one
+        // append the _logger name with ".vs.<virtual-server-id>" if it doesn't already have it
+        final LogManager logManager = LogManager.getLogManager();
+        final String lname = DEFAULT_LOGGER.getName() + ".vs." + getID();
+        if (logManager.getLogger(lname) == null) {
+            final Logger newLogger = new VirtualServerGlassFishLogger(lname, rb);
+            logManager.addLogger(newLogger);
+        }
+        final Logger newLogger = Objects.requireNonNull(logManager.getLogger(lname),
+            "Failed to get or create a logger " + lname);
+        if (!customLog) {
+            for (Handler h : _logger.getHandlers()) {
+                newLogger.removeHandler(h);
+            }
+            newLogger.setUseParentHandlers(true);
+            setLogger(newLogger);
+            return;
+        }
+
+        // remove old handlers if necessary
+        // FIXME: does not respect the configuration - why?
+        final Handler[] originalLoggerHandlers = newLogger.getHandlers();
+        if (originalLoggerHandlers != null) {
+            for (Handler h : originalLoggerHandlers) {
+                newLogger.removeHandler(h);
+            }
+        }
+
+        // FIXME: takes handlers only from root logger! What about intermediate?
+        // add all handlers from root which are not GlassFishLogHandlers
+        final Logger rootLogger = logManager.getLogger(GlassFishLogManager.ROOT_LOGGER_NAME);
+        _logger.finest(() -> "rootLogger=" + rootLogger);
+        if (rootLogger != null) {
+            final Handler[] rootHandlers = rootLogger.getHandlers();
+            if (rootHandlers != null) {
+                for (Handler h : rootHandlers) {
+                    // FIXME: controversial.
+                    // FIXME: Don't use parent handlers (setUseParentHandlers(false)), but uses them.
+                    if (!(h instanceof GlassFishLogHandler)) {
+                        newLogger.addHandler(h);
+                    }
+                }
+            }
+        }
+
+        // create and add new handler
+        fileLoggerHandler = fileLoggerHandlerFactory.getHandler(logFile);
+        newLogger.addHandler(fileLoggerHandler);
+        newLogger.setUseParentHandlers(false);
+        setLogger(newLogger);
+    }
+
+    private void setLogger(Logger newLogger) {
+        _logger = newLogger;
+        // wrap into a cataline logger
+        CatalinaLogger catalinaLogger = new CatalinaLogger(newLogger);
+        setLogger(catalinaLogger);
     }
 
     /**
      * Adds each host name from the 'hosts' attribute as an alias
      */
     void configureAliases() {
-        List hosts = StringUtils.parseStringList(vsBean.getHosts(), ",");
-        for (Object host : hosts) {
-            String alias = host.toString();
-            if (!alias.equalsIgnoreCase("localhost") && !alias.equalsIgnoreCase("localhost.localdomain")) {
-                addAlias(alias);
+        List<String> hosts = StringUtils.parseStringList(vsBean.getHosts(), ",");
+        for (String host : hosts) {
+            if (!host.equalsIgnoreCase("localhost") && !host.equalsIgnoreCase("localhost.localdomain")) {
+                addAlias(host);
             }
         }
     }
@@ -1025,7 +977,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
      */
     void configureAuthRealm(SecurityService securityService) {
         List<Property> properties = vsBean.getProperty();
-        if (properties != null && properties.size() > 0) {
+        if (properties != null && !properties.isEmpty()) {
             for (Property p : properties) {
                 if (p != null && "authRealm".equals(p.getName())) {
                     authRealmName = p.getValue();
@@ -1051,11 +1003,10 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         }
     }
 
+
     /**
-     * Gets the value of the authRealm property of this virtual server.
-     *
-     * @return The value of the authRealm property of this virtual server, or null of this virtual server does not have any
-     * such property
+     * @return the value of the authRealm property of this virtual server or null of this virtual
+     *         server does not have any such property
      */
     String getAuthRealmName() {
         return authRealmName;
@@ -1172,7 +1123,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             }
 
             if (path == null || path.length() == 0) {
-                _logger.log(WARNING, LogFacade.SEND_ERROR_MISSING_PATH, new Object[] { propValue, getID() });
+                _logger.log(WARNING, SEND_ERROR_MISSING_PATH, new Object[] { propValue, getID() });
             }
 
             errorPage = new ErrorPage();
@@ -1268,7 +1219,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                 } else if ("no".equalsIgnoreCase(escape)) {
                     escapeURI = false;
                 } else {
-                    _logger.log(WARNING, LogFacade.REDIRECT_INVALID_ESCAPE, new Object[] { propValue, getID() });
+                    _logger.log(WARNING, REDIRECT_INVALID_ESCAPE, new Object[] { propValue, getID() });
                 }
             }
 
@@ -1294,7 +1245,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
              * Disable SSO
              */
             if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, LogFacade.DISABLE_SSO, getID());
+                _logger.log(FINE, DISABLE_SSO, getID());
             }
 
             boolean hasExistingSSO = false;
@@ -1541,11 +1492,11 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                     });
 
                 } else {
-                    _logger.log(SEVERE, LogFacade.PROXY_NULL, new Object[] { listener.getName() });
+                    _logger.log(SEVERE, PROXY_NULL, new Object[] { listener.getName() });
                 }
 
             } catch (Exception ex) {
-                _logger.log(SEVERE, LogFacade.ADD_HTTP_PROBES_ERROR, ex);
+                _logger.log(SEVERE, ADD_HTTP_PROBES_ERROR, ex);
             }
         }
     }
@@ -1723,7 +1674,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         String cookieSecure = vsBean.getSsoCookieSecure();
         if (!"true".equalsIgnoreCase(cookieSecure) && !"false".equalsIgnoreCase(cookieSecure)
                 && !cookieSecure.equalsIgnoreCase(SessionCookieConfig.DYNAMIC_SECURE)) {
-            _logger.log(WARNING, LogFacade.INVALID_SSO_COOKIE_SECURE, new Object[] { cookieSecure, getID() });
+            _logger.log(WARNING, INVALID_SSO_COOKIE_SECURE, new Object[] { cookieSecure, getID() });
         } else {
             ssoCookieSecure = cookieSecure;
         }
@@ -1778,9 +1729,6 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         this.setAppBase(docRoot.getPath());
     }
 
-    /**
-     * Gets the docroot of this <tt>VirtualServer</tt>.
-     */
     @Override
     public File getDocRoot() {
         return new File(getAppBase());
@@ -1798,11 +1746,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         }
     }
 
-    /**
-     * Gets the collection of <tt>WebListener</tt> instances from which this <tt>VirtualServer</tt> receives requests.
-     *
-     * @return the collection of <tt>WebListener</tt> instances from which this <tt>VirtualServer</tt> receives requests.
-     */
+
     @Override
     public Collection<WebListener> getWebListeners() {
         return listeners;
@@ -1818,7 +1762,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     public void addContext(Context context, String contextRoot) throws ConfigException, GlassFishException {
 
         if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, LogFacade.VS_ADDED_CONTEXT);
+            _logger.log(FINE, VS_ADDED_CONTEXT);
         }
 
         if (!(context instanceof ContextFacade)) {
@@ -1874,16 +1818,15 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             if (appInfo != null && appRef != null) {
                 if (appRef.getVirtualServers().contains(getName())) {
                     throw new ConfigException("Context with name " + params.name + " is already registered on virtual server " + getName());
-                } else {
-                    String virtualServers = appRef.getVirtualServers();
-                    virtualServers = virtualServers + "," + getName();
-                    params.virtualservers = virtualServers;
-                    params.force = Boolean.TRUE;
-                    if (_logger.isLoggable(FINE)) {
-                        _logger.log(FINE, "Virtual server " + getName() + " added to context " + params.name);
-                    }
-                    return;
                 }
+                String virtualServers = appRef.getVirtualServers();
+                virtualServers = virtualServers + "," + getName();
+                params.virtualservers = virtualServers;
+                params.force = Boolean.TRUE;
+                if (_logger.isLoggable(FINE)) {
+                    _logger.log(FINE, "Virtual server " + getName() + " added to context " + params.name);
+                }
+                return;
             }
 
             deploymentContext = deployment.getBuilder(_logger, params, report).source(archive).archiveHandler(archiveHandler)
@@ -1916,7 +1859,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             if (appInfo != null) {
                 facade.setAppName(appInfo.getName());
                 if (_logger.isLoggable(FINE)) {
-                    _logger.log(FINE, LogFacade.VS_ADDED_CONTEXT, new Object[] { getName(), appInfo.getName() });
+                    _logger.log(FINE, VS_ADDED_CONTEXT, new Object[] { getName(), appInfo.getName() });
                 }
                 deployment.registerAppInDomainXML(appInfo, deploymentContext, t);
             } else {
@@ -1936,7 +1879,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                 }
                 updateWebXml(facade, file);
             } else {
-                _logger.log(SEVERE, LogFacade.APP_NOT_FOUND);
+                _logger.log(SEVERE, APP_NOT_FOUND);
             }
 
             ReadableArchive source = appInfo.getSource();
@@ -1965,14 +1908,14 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             deployment.updateAppEnabledAttributeInDomainXML(params.name, params.target, true);
 
             if (_logger.isLoggable(FINE)) {
-                _logger.log(FINE, LogFacade.VS_ENABLED_CONTEXT, new Object[] { getName(), params.name() });
+                _logger.log(FINE, VS_ENABLED_CONTEXT, new Object[] { getName(), params.name() });
             }
 
             if (delete) {
                 if (file != null) {
                     if (file.exists() && !file.delete()) {
                         String path = file.toString();
-                        _logger.log(WARNING, LogFacade.UNABLE_TO_DELETE, path);
+                        _logger.log(WARNING, UNABLE_TO_DELETE, path);
                     }
                 }
             }
@@ -2043,7 +1986,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
             deployment.undeploy(name, deploymentContext);
             deployment.unregisterAppFromDomainXML(name, "server");
         } catch (IOException e) {
-            _logger.log(SEVERE, LogFacade.REMOVE_CONTEXT_ERROR, e);
+            _logger.log(SEVERE, REMOVE_CONTEXT_ERROR, e);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             throw new GlassFishException("Cannot create context for undeployment ", e);
         } catch (TransactionFailure e) {
@@ -2055,7 +1998,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         }
 
         if (_logger.isLoggable(FINE)) {
-            _logger.log(FINE, LogFacade.REMOVED_CONTEXT, name);
+            _logger.log(FINE, REMOVED_CONTEXT, name);
         }
     }
 
@@ -2070,9 +2013,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         return (Context) findChild(contextRoot);
     }
 
-    /**
-     * Gets the collection of <tt>Context</tt> instances registered with this <tt>VirtualServer</tt>.
-     */
+
     @Override
     public Collection<Context> getContexts() {
         Collection<Context> ctxs = new ArrayList<>();
@@ -2110,9 +2051,6 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
 
     }
 
-    /**
-     * Gets the current configuration of this <tt>VirtualServer</tt>.
-     */
     @Override
     public VirtualServerConfig getConfig() {
         return config;

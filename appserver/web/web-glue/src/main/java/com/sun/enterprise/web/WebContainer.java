@@ -18,9 +18,43 @@
 
 package com.sun.enterprise.web;
 
-import static java.text.MessageFormat.format;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.DasConfig;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.SystemProperty;
+import com.sun.enterprise.container.common.spi.CDIService;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.container.common.spi.util.InjectionManager;
+import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.security.integration.RealmInitializer;
+import com.sun.enterprise.server.logging.ServerLogFileManager;
+import com.sun.enterprise.util.Result;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.services.impl.ContainerMapper;
+import com.sun.enterprise.v3.services.impl.GrizzlyService;
+import com.sun.enterprise.web.connector.coyote.PECoyoteConnector;
+import com.sun.enterprise.web.logger.FileLoggerHandlerFactory;
+import com.sun.enterprise.web.logger.IASLogger;
+import com.sun.enterprise.web.pluggable.WebContainerFeatureFactory;
+import com.sun.enterprise.web.reconfig.WebConfigListener;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+import jakarta.servlet.Filter;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.http.HttpUpgradeHandler;
+import jakarta.servlet.jsp.JspFactory;
+import jakarta.servlet.jsp.tagext.JspTag;
 
 import java.io.File;
 import java.net.BindException;
@@ -105,43 +139,9 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.types.Property;
 import org.xml.sax.EntityResolver;
 
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Configs;
-import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.container.common.spi.CDIService;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.server.logging.LoggingRuntime;
-import com.sun.enterprise.util.Result;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.v3.services.impl.ContainerMapper;
-import com.sun.enterprise.v3.services.impl.GrizzlyService;
-import com.sun.enterprise.web.connector.coyote.PECoyoteConnector;
-import com.sun.enterprise.web.logger.FileLoggerHandlerFactory;
-import com.sun.enterprise.web.logger.IASLogger;
-import com.sun.enterprise.web.pluggable.WebContainerFeatureFactory;
-import com.sun.enterprise.web.reconfig.WebConfigListener;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-import jakarta.servlet.Filter;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.http.HttpUpgradeHandler;
-import jakarta.servlet.jsp.JspFactory;
-import jakarta.servlet.jsp.tagext.JspTag;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * Web container service
@@ -233,9 +233,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     private Transactions transactions;
 
     @Inject
-    private LoggingRuntime loggingRuntime;
+    private ServerLogFileManager serverLogFileManager;
 
-    private HashMap<String, WebConnector> connectorMap = new HashMap<String, WebConnector>();
+    private final HashMap<String, WebConnector> connectorMap = new HashMap<>();
 
     private EmbeddedWebContainer _embedded;
 
@@ -398,8 +398,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             org.glassfish.web.config.serverbeans.WebContainer configWC =
                 serverConfig.getExtensionByType(org.glassfish.web.config.serverbeans.WebContainer.class);
 
-            if (configWC != null)
+            if (configWC != null) {
                 maxDepth = configWC.getPropertyValue(DISPATCHER_MAX_DEPTH);
+            }
             if (maxDepth != null) {
                 int depth = -1;
                 try {
@@ -413,7 +414,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 }
             }
 
-            File currentLogFile = loggingRuntime.getCurrentLogFile();
+            File currentLogFile = serverLogFileManager.getCurrentLogFile();
             if (currentLogFile != null) {
                 logServiceFile = currentLogFile.getAbsolutePath();
             }
@@ -432,8 +433,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             _embedded.setCatalinaHome(instance.getDomainRoot().getAbsolutePath());
             _embedded.setCatalinaBase(instance.getDomainRoot().getAbsolutePath());
             _embedded.setUseNaming(false);
-            if (_debug > 1)
+            if (_debug > 1) {
                 _embedded.setDebug(_debug);
+            }
             _embedded.setLogger(new IASLogger(logger));
             engine = _embedded.createEngine();
             engine.setParentClassLoader(EmbeddedWebContainer.class.getClassLoader());
@@ -565,7 +567,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * WebBundleDescriptor have been invoked at their contextInitialized method
      */
     void afterServletContextInitializedEvent(WebBundleDescriptor wbd) {
-        events.send(new Event<WebBundleDescriptor>(WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT, wbd), false);
+        events.send(new Event<>(WebBundleDescriptor.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT, wbd), false);
     }
 
     @Override
@@ -990,7 +992,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                 } else {
                     String msg = rb.getString(LogFacade.INVALID_HTTP_SERVICE_PROPERTY);
                     logger.log(Level.WARNING, MessageFormat.format(msg, httpServiceProp.getName()));
-                    ;
+
                 }
             }
         }
@@ -1016,7 +1018,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             for (int j = 0; vsListeners != null && j < vsListeners.size(); j++) {
                 if (listenerId.equals(vsListeners.get(j))) {
                     if (listenerVses == null) {
-                        listenerVses = new ArrayList<com.sun.enterprise.config.serverbeans.VirtualServer>();
+                        listenerVses = new ArrayList<>();
                     }
                     listenerVses.add(vse);
                     break;
@@ -1160,7 +1162,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             return;
         }
 
-        HashSet<NetworkListener> httpListeners = new HashSet<NetworkListener>();
+        HashSet<NetworkListener> httpListeners = new HashSet<>();
         for (String listener : listeners) {
             boolean found = false;
             for (NetworkListener httpListener : serverConfig.getNetworkConfig().getNetworkListeners().getNetworkListener()) {
@@ -1193,7 +1195,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
         boolean addJkListenerName = jkConnector != null && !vs.getName().equalsIgnoreCase(org.glassfish.api.web.Constants.ADMIN_VS);
 
-        List<String> listenerNames = new ArrayList<String>();
+        List<String> listenerNames = new ArrayList<>();
         for (NetworkListener listener : listeners) {
             if (Boolean.valueOf(listener.getEnabled())) {
                 listenerNames.add(listener.getName());
@@ -1446,7 +1448,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * If no virtual servers have been specified, then the web module will not be loaded.
      */
     public List<Result<WebModule>> loadWebModule(WebModuleConfig wmInfo, String j2eeApplication, Properties deploymentProperties) {
-        List<Result<WebModule>> results = new ArrayList<Result<WebModule>>();
+        List<Result<WebModule>> results = new ArrayList<>();
         String vsIDs = wmInfo.getVirtualServers();
         List<String> vsList = StringUtils.parseStringList(vsIDs, " ,");
         if (vsList == null || vsList.isEmpty()) {
@@ -1460,7 +1462,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             logger.log(FINE, LogFacade.LOADING_WEB_MODULE, vsIDs);
         }
 
-        List<String> nonProcessedVSList = new ArrayList<String>(vsList);
+        List<String> nonProcessedVSList = new ArrayList<>(vsList);
         Container[] vsArray = getEngine().findChildren();
         for (Container aVsArray : vsArray) {
             if (aVsArray instanceof VirtualServer) {
@@ -1478,7 +1480,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                     WebModule ctx = null;
                     try {
                         ctx = loadWebModule(vs, wmInfo, j2eeApplication, deploymentProperties);
-                        results.add(new Result<WebModule>(ctx));
+                        results.add(new Result<>(ctx));
                     } catch (Throwable t) {
                         if (ctx != null) {
                             ctx.setAvailable(false);
@@ -1521,7 +1523,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * Find all matched aliases. This is more expensive than verifyAlias.
      */
     private Set<String> matchAlias(List<String> vsList, VirtualServer vs) {
-        Set<String> matched = new HashSet<String>();
+        Set<String> matched = new HashSet<>();
         for (String alias : vs.getAliases()) {
             if (vsList.contains(alias)) {
                 matched.add(alias);
@@ -1559,10 +1561,11 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         wmInfo.setStubBaseDir(appsStubRoot);
 
         String displayContextPath = null;
-        if (wmContextPath.length() == 0)
+        if (wmContextPath.length() == 0) {
             displayContextPath = "/";
-        else
+        } else {
             displayContextPath = wmContextPath;
+        }
 
         Map<String, AdHocServletInfo> adHocPaths = null;
         Map<String, AdHocServletInfo> adHocSubtrees = null;
@@ -1777,7 +1780,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         ctx.setModuleName(moduleName);
         ctx.setMonitoringNodeName(monitoringNodeName);
 
-        List<String> servletNames = new ArrayList<String>();
+        List<String> servletNames = new ArrayList<>();
         if (wbd != null) {
             for (WebComponentDescriptor webCompDesc : wbd.getWebComponentDescriptors()) {
                 if (webCompDesc.isServlet()) {
@@ -2014,14 +2017,15 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      */
     private void setDebugLevel() {
         Level logLevel = logger.getLevel() != null ? logger.getLevel() : Level.INFO;
-        if (logLevel.equals(FINE))
+        if (logLevel.equals(FINE)) {
             _debug = 1;
-        else if (logLevel.equals(Level.FINER))
+        } else if (logLevel.equals(Level.FINER)) {
             _debug = 2;
-        else if (logLevel.equals(Level.FINEST))
+        } else if (logLevel.equals(Level.FINEST)) {
             _debug = 5;
-        else
+        } else {
             _debug = 0;
+        }
     }
 
     /**
@@ -2041,7 +2045,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             return null;
         }
 
-        List<VirtualServer> result = new ArrayList<VirtualServer>();
+        List<VirtualServer> result = new ArrayList<>();
 
         for (com.sun.enterprise.config.serverbeans.VirtualServer vs : httpService.getVirtualServer()) {
             List<String> listeners = StringUtils.parseStringList(vs.getNetworkListeners(), ",");
@@ -2418,7 +2422,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         List<String> oldListenerList = StringUtils.parseStringList(vsBean.getNetworkListeners(), ",");
         String[] oldListeners = (oldListenerList != null) ? oldListenerList.toArray(new String[oldListenerList.size()]) : new String[0];
         // new listener config
-        HashSet<NetworkListener> networkListeners = new HashSet<NetworkListener>();
+        HashSet<NetworkListener> networkListeners = new HashSet<>();
         if (oldListenerList != null) {
             for (String listener : oldListeners) {
                 boolean found = false;

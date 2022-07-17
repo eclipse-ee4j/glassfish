@@ -29,7 +29,7 @@
     <artifactId>jakartaee-frag</artifactId>
     <packaging>distribution-fragment</packaging>
 
-    <name>GlassFish javaee.jar distribution fragment</name>
+    <name>GlassFish jakartaee.jar distribution fragment</name>
 
     <dependencies>
         <dependency>

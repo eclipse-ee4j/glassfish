@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,129 +15,119 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- // classes in lib get all permissions by default
- grant codeBase "file:${com.sun.aas.installRoot}/lib/-" {
-     permission java.security.AllPermission;
- };
+// classes in lib get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/lib/-" {
+    permission java.security.AllPermission;
+};
 
- // Core server classes get all permissions by default
- grant codeBase "file:${com.sun.aas.installRoot}/modules/-" {
-     permission java.security.AllPermission;
- };
+// Core server classes get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/modules/-" {
+    permission java.security.AllPermission;
+};
 
- // Felix classes get all permissions by default
- grant codeBase "file:${com.sun.aas.installRoot}/osgi/felix/bin/-" {
-     permission java.security.AllPermission;
- };
+// Felix classes get all permissions by default
+grant codeBase "file:${com.sun.aas.installRoot}/osgi/felix/bin/-" {
+    permission java.security.AllPermission;
+};
 
- // iMQ classes get all permissions by default
- grant codeBase "file:${com.sun.aas.imqLib}/-" {
-     permission java.security.AllPermission;
- };
+// iMQ classes get all permissions by default
+grant codeBase "file:${com.sun.aas.imqLib}/-" {
+    permission java.security.AllPermission;
+};
 
- // Derby driver classes get all permissions by default
- grant codeBase "file:${com.sun.aas.derbyRoot}/lib/-" {
-     permission java.lang.RuntimePermission "createClassLoader";
-     permission java.io.FilePermission       "<<ALL FILES>>", "read,write";
-     permission java.security.AllPermission;
- };
+// Derby driver classes get all permissions by default
+grant codeBase "file:${com.sun.aas.derbyRoot}/lib/-" {
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.io.FilePermission       "<<ALL FILES>>", "read,write";
+    permission java.security.AllPermission;
+};
 
+grant codeBase "file:${com.sun.aas.javaRoot}/../lib/tools.jar" {
+    permission java.security.AllPermission;
+};
 
- // permission for JDK's tools.jar to enable webservice annotation processing
- // at runtime by wsgen tool:
- //       permission java.lang.RuntimePermission "createClassLoader";
- //
- // permission for JDK's tools.jar to sign JARs at runtime for
- // Java Web Start support:
- //       permissions java.security.AllPermission;
- // on the advice of the JDK tools folks.  Should be refined later.
- //Bug Glassfish-21012 - changing to the right location of tools.jar
- grant codeBase "file:${com.sun.aas.javaRoot}/../lib/tools.jar" {
-     permission java.security.AllPermission;
- };
+// Loading MBeans from anywhere, to take care of side effects of 6235678.
+grant {
+    permission javax.management.MBeanTrustPermission "register" ;
+};
 
- //Loading MBeans from anywhere, to take care of side effects of 6235678.
- grant {
-     permission javax.management.MBeanTrustPermission "register" ;
- };
- //Loading MBeans from anywhere, to take care of side effects of 6235678.
+// Basic set of required permissions granted to all remaining code
+// The permission FilePermission "<<ALL FILES>>", "read,write"
+// allows all applications to read and write any file in the filesystem.
+// It should be changed based on real deployment needs. If you know your
+// applications just need to read/write a few directories consider removing
+// this permission and adding grants indicating those specific directories.
+// against the codebase of your application(s).
+grant {
+    // Workaround for bugs #6484935, 6513799
+    permission java.lang.RuntimePermission "getProtectionDomain";
+    permission com.sun.corba.ee.impl.presentation.rmi.DynamicAccessPermission "access";
+    permission java.util.PropertyPermission "*", "read,write";
 
+    permission java.lang.RuntimePermission  "loadLibrary.*";
+    permission java.lang.RuntimePermission  "queuePrintJob";
+    permission java.net.SocketPermission    "*", "connect,resolve";
 
- // Basic set of required permissions granted to all remaining code
- // The permission FilePermission "<<ALL FILES>>", "read,write"
- // allows all applications to read and write any file in the filesystem.
- // It should be changed based on real deployment needs. If you know your
- // applications just need to read/write a few directories consider removing
- // this permission and adding grants indicating those specific directories.
- // against the codebase of your application(s).
- grant {
-     //Workaround for bugs #6484935, 6513799
-     permission java.lang.RuntimePermission "getProtectionDomain";
-     permission com.sun.corba.ee.impl.presentation.rmi.DynamicAccessPermission "access";
-     permission java.util.PropertyPermission "*", "read,write";
+    // Work-around for pointbase bug 4864405
+    permission java.io.FilePermission "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-", "delete";
+    permission java.io.FilePermission "${java.io.tmpdir}${/}-", "delete";
 
-     permission java.lang.RuntimePermission  "loadLibrary.*";
-     permission java.lang.RuntimePermission  "queuePrintJob";
-     permission java.net.SocketPermission    "*", "connect,resolve";
+    permission java.util.PropertyPermission "*", "read";
 
-         // work-around for pointbase bug 4864405
-         permission java.io.FilePermission "${com.sun.aas.instanceRoot}${/}lib${/}databases${/}-", "delete";
-         permission java.io.FilePermission "${java.io.tmpdir}${/}-", "delete";
+    permission java.lang.RuntimePermission    "modifyThreadGroup";
+    permission java.lang.RuntimePermission    "getClassLoader";
+    permission java.lang.RuntimePermission    "setContextClassLoader";
+    permission javax.management.MBeanPermission "[com.sun.messaging.jms.*:*]", "*";
 
-     permission java.util.PropertyPermission "*", "read";
+    // Following needed for CTS to pass with SM on, bug 16344201
+    permission java.lang.RuntimePermission "closeClassLoader";
+    permission java.io.SerializablePermission "enableSubstitution";
+    permission java.security.SecurityPermission "getProperty.package.definition";
+};
 
-     permission java.lang.RuntimePermission    "modifyThreadGroup";
-     permission java.lang.RuntimePermission    "getClassLoader";
-     permission java.lang.RuntimePermission    "setContextClassLoader";
-     permission javax.management.MBeanPermission "[com.sun.messaging.jms.*:*]", "*";
+// Following grant block is only required by Connectors. If Connectors
+// are not in use the recommendation is to remove this grant.
+grant {
+    permission javax.security.auth.PrivateCredentialPermission "jakarta.resource.spi.security.PasswordCredential * \"*\"","read";
+};
 
-     // Following needed for CTS to pass with SM on, bug 16344201
-     permission java.lang.RuntimePermission "closeClassLoader";
-     permission java.io.SerializablePermission "enableSubstitution";
-     permission java.security.SecurityPermission "getProperty.package.definition";
- };
+// Following grant block is only required for Reflection. If Reflection
+// is not in use the recommendation is to remove this section.
+grant {
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+};
 
- // Following grant block is only required by Connectors. If Connectors
- // are not in use the recommendation is to remove this grant.
- grant {
-         permission javax.security.auth.PrivateCredentialPermission "jakarta.resource.spi.security.PasswordCredential * \"*\"","read";
- };
+// Permissions to invoke CORBA objects in server
+grant {
+    permission com.sun.enterprise.security.CORBAObjectPermission "*", "*";
+};
 
- // Following grant block is only required for Reflection. If Reflection
- // is not in use the recommendation is to remove this section.
- grant {
-     permission java.lang.RuntimePermission "accessDeclaredMembers";
- };
+// GLASSFISH-21011
+grant {
+    permission java.io.SerializablePermission "enableSubclassImplementation";
+};
 
- // Permissions to invoke CORBA objects in server
- grant {
-     permission com.sun.enterprise.security.CORBAObjectPermission "*", "*";
- };
-     // GLASSFISH-21011
- grant {
-     permission java.io.SerializablePermission "enableSubclassImplementation";
- };
+grant  codeBase "file:${com.sun.aas.instanceRoot}/applications/-"{
+    permission java.io.FilePermission       "<<ALL FILES>>", "read,write";
+    permission org.hibernate.validator.HibernateValidatorPermission "accessPrivateMembers";
+};
 
- grant  codeBase "file:${com.sun.aas.instanceRoot}/applications/-"{
-     permission java.io.FilePermission       "<<ALL FILES>>", "read,write";
-     permission org.hibernate.validator.HibernateValidatorPermission "accessPrivateMembers";
- };
- //Added for changes proposed by Derby 10.12.1.1 (DERBY-6648) and Derby 10.14.2.0
- grant {
-      permission org.apache.derby.security.SystemPermission "engine", "usederbyinternals";
+// Added for changes proposed by Derby 10.12.1.1 (DERBY-6648) and Derby 10.14.2.0
+grant {
+    permission org.apache.derby.security.SystemPermission "engine", "usederbyinternals";
+    permission java.net.SocketPermission "*", "listen";
+    permission java.net.SocketPermission "*", "accept";
+    permission java.io.FilePermission       "<<ALL FILES>>", "write,read";
 
-      permission java.net.SocketPermission "*", "listen";
-      permission java.net.SocketPermission "*", "accept";
-      permission java.io.FilePermission       "<<ALL FILES>>", "write,read";
+    // Added for Derby 10.15.1.3 and above
+    permission org.apache.derby.shared.common.security.SystemPermission "engine", "usederbyinternals";
 
-      // Added for Derby 10.15.1.3 and above
-      permission org.apache.derby.shared.common.security.SystemPermission "engine", "usederbyinternals";
+};
 
- };
-//Added for creating stub on JDK 11
+// Added for creating stub on JDK 11
 grant codeBase "jrt:/jdk.compiler" {
-      permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
-      permission java.lang.RuntimePermission "createClassLoader";
+    permission java.lang.RuntimePermission "getenv.JDK_JAVAC_OPTIONS";
+    permission java.lang.RuntimePermission "createClassLoader";
 };
 
 // Following grant block is required for using JDK JarSigner

@@ -16,59 +16,56 @@
 
 //core server classes get all permissions by default
 grant codeBase "file:${com.sun.aas.installRoot}/lib/-" {
-	permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 grant codeBase "file:${com.sun.aas.installRoot}/modules/-" {
-        permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 //iMQ classes get all permissions by default
 grant codeBase "file:${com.sun.aas.imqLib}/-" {
-	permission java.security.AllPermission;
+     permission java.security.AllPermission;
 };
 
 // Standard extensions get all permissions by default
 grant codeBase "file:${java.home}/lib/ext/-" {
-	permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 // For Sun implementations of Java
 grant codeBase "file:${java.home}/../lib/tools.jar" {
-        permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 // For Apple implementations of Java
 grant codeBase "file:${java.home}/../Classes/classes.jar" {
-        permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 
 // default permissions granted to all domains
 grant {
-	permission java.lang.RuntimePermission "loadLibrary.*";
-	permission java.lang.RuntimePermission "accessClassInPackage.*";
-	permission java.lang.RuntimePermission "exitVM";
-	permission java.lang.RuntimePermission "queuePrintJob";
-	permission java.lang.RuntimePermission "modifyThreadGroup";
+    permission java.lang.RuntimePermission "loadLibrary.*";
+    permission java.lang.RuntimePermission "accessClassInPackage.*";
+    permission java.lang.RuntimePermission "exitVM";
+    permission java.lang.RuntimePermission "queuePrintJob";
+    permission java.lang.RuntimePermission "modifyThreadGroup";
 
-	permission java.awt.AWTPermission "accessClipboard";
-	permission java.awt.AWTPermission "accessEventQueue";
-	permission java.awt.AWTPermission "showWindowWithoutWarningBanner";
+    permission java.awt.AWTPermission "accessClipboard";
+    permission java.awt.AWTPermission "accessEventQueue";
+    permission java.awt.AWTPermission "showWindowWithoutWarningBanner";
 
-	permission java.io.FilePermission "<<ALL FILES>>", "read,write";
+    permission java.io.FilePermission "<<ALL FILES>>", "read,write";
 
-	permission java.net.SocketPermission "*", "connect,accept,resolve";
-	permission java.net.SocketPermission "localhost:1024-", "accept,listen";
+    permission java.net.SocketPermission "*", "connect,accept,resolve";
+    permission java.net.SocketPermission "localhost:1024-", "accept,listen";
 
-	// "standard" properies that can be read by anyone
-	permission java.util.PropertyPermission "*", "read";
+    // "standard" properies that can be read by anyone
+    permission java.util.PropertyPermission "*", "read";
 
-	// setting the JSSE provider for lazy authentication of app. clients.
-	// Please do not change it.
-	permission java.security.SecurityPermission "putProviderProperty.SunJSSE";
-	permission java.security.SecurityPermission "insertProvider.SunJSSE";
-
-        permission java.util.logging.LoggingPermission  "control";
-        //permission java.lang.RuntimePermission      "setSecurityManager";
+    // setting the JSSE provider for lazy authentication of app. clients.
+    // Please do not change it.
+    permission java.security.SecurityPermission "putProviderProperty.SunJSSE";
+    permission java.security.SecurityPermission "insertProvider.SunJSSE";
 };

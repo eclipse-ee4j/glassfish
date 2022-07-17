@@ -54,7 +54,7 @@ import static java.util.logging.Level.FINEST;
 @Service
 public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
 
-    private static final Logger LOG = LogDomains.getLogger(JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER, false);
 
     private final Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<>();
     private final Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<>();
@@ -96,7 +96,7 @@ public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
     @Override
     public Object deserializeObject(byte[] data, boolean resolveObject, ClassLoader appClassLoader) throws Exception {
         if (LOG.isLoggable(FINEST)) {
-            LOG.log(FINEST, "deserializeObject(data, resolveObject={1}, classLoader)", resolveObject);
+            LOG.log(FINEST, "deserializeObject(data, resolveObject={0}, appClassLoader)", resolveObject);
         }
         try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
             ObjectInputStream ois = createObjectInputStream(bis, resolveObject, appClassLoader)) {

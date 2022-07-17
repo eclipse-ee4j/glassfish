@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -116,7 +117,7 @@ public final class AMXStartupService
             }
         }
         FeatureAvailability.getInstance().deRegisterFeatures();
-        logger.log(Level.INFO,"amx.shutdown.unregistered",mMBeanServer.queryNames(allAMXPattern, null));
+        logger.log(Level.INFO, "Unregistered AMX beans: {0}", mMBeanServer.queryNames(allAMXPattern, null));
     }
 
 

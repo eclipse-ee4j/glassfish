@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * EJBSecurityManagerFactory.java
- *
- * Created on June 9, 2003, 5:42 PM
- */
-
 package org.glassfish.ejb.security.factory;
 
-import static java.util.logging.Level.FINE;
+import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
+import com.sun.enterprise.security.factory.SecurityManagerFactory;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,23 +35,20 @@ import org.glassfish.ejb.security.application.EJBSecurityManager;
 import org.glassfish.ejb.security.application.EjbSecurityProbeProvider;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.factory.SecurityManagerFactory;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
+import static java.util.logging.Level.FINE;
 
 /**
  * EJB Security Manager Factory Implementation
  *
  * @author Harpreet Singh
+ * Created on June 9, 2003, 5:42 PM
  */
 @Service
 @Singleton
 public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
 
-    private static Logger _logger = LogDomains.getLogger(EJBSecurityManagerFactory.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(EJBSecurityManagerFactory.class, SECURITY_LOGGER, false);
 
     @Inject
     InvocationManager invocationManager;
@@ -59,7 +56,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
     @Inject
     AppServerAuditManager auditManager;
 
-    private EjbSecurityProbeProvider probeProvider = new EjbSecurityProbeProvider();
+    private final EjbSecurityProbeProvider probeProvider = new EjbSecurityProbeProvider();
 
     /**
      * Creates a new instance of EJBSecurityManagerFactory
@@ -68,8 +65,8 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
     }
 
     // stores the context ids to appnames for apps
-    private Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<String, ArrayList<String>>();
-    private Map<String, Map<String, EJBSecurityManager>> SECURITY_MANAGERS = new HashMap<String, Map<String, EJBSecurityManager>>();
+    private final Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<>();
+    private final Map<String, Map<String, EJBSecurityManager>> SECURITY_MANAGERS = new HashMap<>();
 
     public <T> EJBSecurityManager getManager(String ctxId, String name, boolean remove) {
         return getManager(SECURITY_MANAGERS, ctxId, name, remove);
@@ -112,7 +109,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
                     probeProvider.securityManagerCreationEvent(ejbName);
                 }
             } catch (Exception ex) {
-                _logger.log(FINE, "[EJB-Security] FATAL Exception. Unable to create EJBSecurityManager: " + ex.getMessage());
+                LOG.log(FINE, "[EJB-Security] FATAL Exception. Unable to create EJBSecurityManager: " + ex.getMessage());
                 throw new RuntimeException(ex);
             }
         }
@@ -120,7 +117,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
         return manager;
     }
 
-    public final AppServerAuditManager getAuditManager() {
+    public AppServerAuditManager getAuditManager() {
         return auditManager;
     }
 }

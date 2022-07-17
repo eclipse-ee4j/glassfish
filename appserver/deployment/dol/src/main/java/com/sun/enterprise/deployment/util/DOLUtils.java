@@ -124,7 +124,16 @@ public class DOLUtils {
         cause = "Failed to find the resource specified in the deployment descriptor. May be because of wrong specification in the descriptor",
         action = "Ensure that the resource specified is present. Ensure that there is no typo in the resource specified in the descriptor"
     )
-    public static final String INVALILD_DESCRIPTOR = "AS-DEPLOYMENT-00118";
+    public static final String INVALILD_DESCRIPTOR_LONG = "AS-DEPLOYMENT-00118";
+
+    @LogMessageInfo(message = "Deployment Descriptor parsing failure: {0}",
+        cause="Error while parsing the deployment descriptor."
+            + " May be because of malformed descriptor or absence of all required descriptor elements.",
+        action="Ensure that the descriptor is well formed and as per specification."
+            + " Ensure that the SAX parser configuration is correct and the descriptor has right permissions."
+    )
+    public static final String INVALILD_DESCRIPTOR_SHORT = "AS-DEPLOYMENT-00120";
+
 
 
     // The system property to control the precedence between GF DD

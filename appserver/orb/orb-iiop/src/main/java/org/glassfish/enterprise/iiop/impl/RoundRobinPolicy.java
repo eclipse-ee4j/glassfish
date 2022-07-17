@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,8 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import static org.glassfish.api.naming.NamingClusterInfo.IC_BASED;
-import static org.glassfish.api.naming.NamingClusterInfo.IC_BASED_WEIGHTED;
-import static org.glassfish.api.naming.NamingClusterInfo.LOAD_BALANCING_PROPERTY;
-import static org.glassfish.enterprise.iiop.impl.NamingClusterInfoImpl.logger;
+import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
+import com.sun.corba.ee.spi.folb.SocketInfo;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -31,13 +30,18 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.jndi.cosnaming.IiopUrl;
-import org.glassfish.logging.annotation.LogMessageInfo;
 
-import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
-import com.sun.corba.ee.spi.folb.SocketInfo;
+import static org.glassfish.api.naming.NamingClusterInfo.IC_BASED;
+import static org.glassfish.api.naming.NamingClusterInfo.IC_BASED_WEIGHTED;
+import static org.glassfish.api.naming.NamingClusterInfo.LOAD_BALANCING_PROPERTY;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.COULD_NOT_FIND_ENDPOINT;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.NO_ENDPOINTS_SELECTED_PROVIDER;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.PROVIDER_EXCEPTION;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.UNKNOWN_HOST;
 
 /**
  * The list of endpoints are randomized the very first time.
@@ -109,32 +113,21 @@ import com.sun.corba.ee.spi.folb.SocketInfo;
  * @author Sheetal Vartak
  **/
 public class RoundRobinPolicy {
-
-    @LogMessageInfo(message = "Could not find an endpoint to send request to.")
-    public static final String COULD_NOT_FIND_ENDPOINT = "AS-ORB-00004";
-
-    @LogMessageInfo(message = "Unknown host: {0} Exception thrown : {1}")
-    public static final String UNKNOWN_HOST = "AS-ORB-00005";
-
-    @LogMessageInfo(message = "No Endpoints selected in com.sun.appserv.iiop.endpoints property. Using JNDI Provider URL {0} instead")
-    public static final String NO_ENDPOINTS_SELECTED_PROVIDER = "AS-ORB-00006";
-
-    @LogMessageInfo(message = "Exception : {0} thrown for bad provider URL String: {1}")
-    public static final String PROVIDER_EXCEPTION = "AS-ORB-00007";
+    private static final Logger LOG = IIOPImplLogFacade.getLogger(RoundRobinPolicy.class);
 
     // Each SocketInfo.type() must either start with SSL, or be CLEAR_TEXT
     private static final String SSL = "SSL";
     private static final String CLEAR_TEXT = "CLEAR_TEXT";
+    private static final int default_weight = 10;
 
-    private static SecureRandom rand = new SecureRandom();
+    private static final SecureRandom rand = new SecureRandom();
 
-    private List<ClusterInstanceInfo> endpointsList = new LinkedList<ClusterInstanceInfo>();
+    private List<ClusterInstanceInfo> endpointsList = new LinkedList<>();
 
     private int totalWeight;
 
     private List<String> resolvedEndpoints;
 
-    private static final int default_weight = 10;
 
     // called during bootstrapping
     public RoundRobinPolicy(List<String> list) {
@@ -143,7 +136,7 @@ public class RoundRobinPolicy {
 
     // Copy list, changing any type that does not start with SSL to CLEAR_TEXT.
     private List<SocketInfo> filterSocketInfos(List<SocketInfo> sis) {
-        final List<SocketInfo> result = new ArrayList<SocketInfo>();
+        final List<SocketInfo> result = new ArrayList<>();
         for (SocketInfo si : sis) {
             final String newType = si.type().startsWith(SSL) ? si.type() : CLEAR_TEXT;
             final SocketInfo siCopy = new SocketInfo(newType, si.host(), si.port());
@@ -160,7 +153,7 @@ public class RoundRobinPolicy {
     private List<ClusterInstanceInfo> filterClusterInfo(List<ClusterInstanceInfo> info) {
 
         boolean isw = isWeighted();
-        ArrayList<ClusterInstanceInfo> newList = new ArrayList<ClusterInstanceInfo>();
+        ArrayList<ClusterInstanceInfo> newList = new ArrayList<>();
         totalWeight = 0;
 
         for (ClusterInstanceInfo clinfo : info) {
@@ -195,7 +188,7 @@ public class RoundRobinPolicy {
     // text address that appears in the first list.
     private List<ClusterInstanceInfo> merge(List<ClusterInstanceInfo> first, List<ClusterInstanceInfo> second) {
 
-        List<ClusterInstanceInfo> result = new ArrayList<ClusterInstanceInfo>();
+        List<ClusterInstanceInfo> result = new ArrayList<>();
         result.addAll(first);
         for (ClusterInstanceInfo info : second) {
             for (SocketInfo si : info.endpoints()) {
@@ -208,7 +201,7 @@ public class RoundRobinPolicy {
     }
 
     private List<ClusterInstanceInfo> fromHostPortStrings(List<String> list) {
-        List<ClusterInstanceInfo> result = new LinkedList<ClusterInstanceInfo>();
+        List<ClusterInstanceInfo> result = new LinkedList<>();
 
         for (String elem : list) {
             ClusterInstanceInfo info = makeClusterInstanceInfo(elem, default_weight);
@@ -221,9 +214,7 @@ public class RoundRobinPolicy {
     // will be called after dynamic reconfig
     // used in GroupInfoServiceObserverImpl
     synchronized final void setClusterInstanceInfo(List<ClusterInstanceInfo> list) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "setClusterInstanceInfo: list={0}", list);
-        }
+        LOG.log(Level.FINE, "setClusterInstanceInfo: list={0}", list);
 
         List<ClusterInstanceInfo> filtered = filterClusterInfo(list);
         List<ClusterInstanceInfo> resolved = fromHostPortStrings(resolvedEndpoints);
@@ -234,9 +225,7 @@ public class RoundRobinPolicy {
     // Note: regard any addresses supplied here as a permanent part of the
     // cluster.
     synchronized final void setClusterInstanceInfoFromString(List<String> list) {
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "setClusterInstanceInfoFromString: list={0}", list);
-        }
+        LOG.log(Level.FINE, "setClusterInstanceInfoFromString: list={0}", list);
 
         List<String> newList = list;
         if (newList.isEmpty()) {
@@ -244,14 +233,14 @@ public class RoundRobinPolicy {
         }
 
         // randomize the list before adding it to linked list
-        if (!newList.isEmpty()) {
+        if (newList.isEmpty()) {
+            LOG.log(Level.FINE, "No endpoints set.");
+        } else {
             List<String> newList2 = randomize(newList);
-            resolvedEndpoints = new ArrayList<String>(newList2);
+            resolvedEndpoints = new ArrayList<>(newList2);
             endpointsList = fromHostPortStrings(newList2);
             // Put in a default for total weight; any update will correct this.
             totalWeight = 10 * endpointsList.size();
-        } else {
-            logger.log(Level.FINE, "no.endpoints");
         }
     }
 
@@ -270,7 +259,7 @@ public class RoundRobinPolicy {
         String server_identifier = ""; // for bootstrapping, can be ""
         String type = CLEAR_TEXT; // will be clear_text for bootstrapping
         SocketInfo socketInfo = new SocketInfo(type, host_port[0], Integer.parseInt(host_port[1]));
-        List<SocketInfo> sil = new ArrayList<SocketInfo>(1);
+        List<SocketInfo> sil = new ArrayList<>(1);
         sil.add(socketInfo);
 
         return new ClusterInstanceInfo(server_identifier, weight, sil);
@@ -285,29 +274,27 @@ public class RoundRobinPolicy {
             try {
                 final IiopUrl providerURL = new IiopUrl(providerURLString);
                 final List<String> newList = getAddressPortList(providerURL);
-                logger.log(Level.WARNING, NO_ENDPOINTS_SELECTED_PROVIDER, providerURLString);
+                LOG.log(Level.WARNING, NO_ENDPOINTS_SELECTED_PROVIDER, providerURLString);
                 return newList;
             } catch (MalformedURLException me) {
-                logger.log(Level.WARNING, PROVIDER_EXCEPTION, new Object[] { me, providerURLString });
+                LOG.log(Level.WARNING, PROVIDER_EXCEPTION, new Object[] { me, providerURLString });
             }
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     /**
      * randomize the list. Note: this empties its argument.
      */
     private List<String> randomize(List<String> list) {
-        List<String> result = new ArrayList<String>(list.size());
+        List<String> result = new ArrayList<>(list.size());
         while (!list.isEmpty()) {
             int random = rand.nextInt(list.size());
             String elem = list.remove(random);
             result.add(elem);
         }
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "Randomized list {0}", result);
-        }
+        LOG.log(Level.FINE, "Randomized list {0}", result);
         return result;
     }
 
@@ -338,7 +325,7 @@ public class RoundRobinPolicy {
             int upperLimit = lowerLimit + endpoint.weight();
             // fineLog( "upperLimit = {0}", upperLimit);
             if (random > lowerLimit && random <= upperLimit) {
-                List<ClusterInstanceInfo> instanceInfo = new LinkedList<ClusterInstanceInfo>();
+                List<ClusterInstanceInfo> instanceInfo = new LinkedList<>();
 
                 // add the sublist at index 0
                 instanceInfo.addAll(0, endpointsList.subList(i, endpointsList.size()));
@@ -348,22 +335,19 @@ public class RoundRobinPolicy {
 
                 endpointsList = instanceInfo;
 
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "getNextRotation: result={0}", instanceInfo);
-                }
-
+                LOG.log(Level.FINE, "getNextRotation: result={0}", instanceInfo);
                 return convertIntoCorbaloc(instanceInfo);
             }
             lowerLimit = upperLimit;
             // fineLog( "lowerLimit = {0}", lowerLimit);
             i++;
         }
-        logger.log(Level.WARNING, COULD_NOT_FIND_ENDPOINT);
-        return new ArrayList<String>();
+        LOG.log(Level.WARNING, COULD_NOT_FIND_ENDPOINT);
+        return new ArrayList<>();
     }
 
     private List<String> convertIntoCorbaloc(List<ClusterInstanceInfo> list) {
-        List<String> host_port = new ArrayList<String>();
+        List<String> host_port = new ArrayList<>();
         for (ClusterInstanceInfo endpoint : list) {
             List<SocketInfo> sinfos = endpoint.endpoints();
             for (SocketInfo si : sinfos) {
@@ -386,7 +370,7 @@ public class RoundRobinPolicy {
 
     private List<String> getAddressPortList(IiopUrl iiopUrl) {
         // Pull out the host name and port
-        IiopUrl.Address iiopUrlAddress = (IiopUrl.Address) (iiopUrl.getAddresses().elementAt(0));
+        IiopUrl.Address iiopUrlAddress = iiopUrl.getAddresses().elementAt(0);
         String host = iiopUrlAddress.host;
         int portNumber = iiopUrlAddress.port;
         String port = Integer.toString(portNumber);
@@ -399,14 +383,14 @@ public class RoundRobinPolicy {
         // XXX this currently does NOT support IPv6.
         try {
             InetAddress[] addresses = InetAddress.getAllByName(host);
-            List<InetAddress> addrs = new ArrayList<InetAddress>();
+            List<InetAddress> addrs = new ArrayList<>();
             for (InetAddress addr : addresses) {
                 if (addr instanceof Inet4Address || addr instanceof Inet6Address) {
                     addrs.add(addr);
                 }
             }
 
-            List<String> ret = new ArrayList<String>();
+            List<String> ret = new ArrayList<>();
             for (InetAddress addr : addrs) {
                 ret.add(addr.getHostAddress() + ":" + port);
             }
@@ -414,8 +398,8 @@ public class RoundRobinPolicy {
             // We return a list of <IP ADDRESS>:<PORT> values
             return ret;
         } catch (UnknownHostException ukhe) {
-            logger.log(Level.WARNING, UNKNOWN_HOST, new Object[] { host, ukhe });
-            return new ArrayList<String>();
+            LOG.log(Level.WARNING, UNKNOWN_HOST, new Object[] {host, ukhe});
+            return new ArrayList<>();
         }
     }
 

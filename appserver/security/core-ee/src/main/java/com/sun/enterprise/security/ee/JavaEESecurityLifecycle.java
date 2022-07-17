@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,14 +32,13 @@ import jakarta.inject.Singleton;
 import jakarta.security.auth.message.config.AuthConfigFactory;
 
 /**
- *
  * @author vbkumarjayanti
  */
 @Service
 @Singleton
 public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, PostConstruct {
 
-    private static final Logger _logger = LogDomains.getLogger(JavaEESecurityLifecycle.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(JavaEESecurityLifecycle.class, LogDomains.SECURITY_LOGGER, false);
 
     @Override
     public void onInitialization() {
@@ -51,7 +51,7 @@ public class JavaEESecurityLifecycle implements ContainerSecurityLifecycle, Post
             try {
                 System.setSecurityManager(mgr);
             } catch (SecurityException ex) {
-                _logger.log(Level.WARNING, "security.secmgr.could.not.override");
+                LOG.log(Level.WARNING, "Could not override SecurityManager");
             }
         }
         initializeJMAC();

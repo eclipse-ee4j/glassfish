@@ -16,8 +16,10 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import static com.sun.logging.LogDomains.CORBA_LOGGER;
-import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.nio.channels.SelectableChannel;
 import java.rmi.Remote;
@@ -36,10 +38,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
 import org.omg.PortableInterceptor.ServerRequestInfo;
 
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.logging.LogDomains.CORBA_LOGGER;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 
 /**
  * This class exposes any orb/iiop functionality needed by modules in the app server. This prevents modules from needing
@@ -50,7 +50,7 @@ import jakarta.inject.Provider;
 @Service
 public class GlassFishORBHelper implements PostConstruct, ORBLocator {
 
-    private static final Logger _logger = LogDomains.getLogger(GlassFishORBHelper.class, CORBA_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(GlassFishORBHelper.class, CORBA_LOGGER, false);
 
     @Inject
     private ServiceLocator services;
@@ -75,12 +75,13 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
 
     private GlassFishORBFactory orbFactory;
 
+    @Override
     public void postConstruct() {
         orbFactory = services.getService(GlassFishORBFactory.class);
     }
 
     public void onShutdown() {
-        _logger.log(Level.FINE, ("ORB Shutdown started"));
+        LOG.log(Level.FINE, "ORB Shutdown started");
         orb.destroy();
     }
 
@@ -106,6 +107,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
      * Get or create the default orb. This can be called for any process type. However, protocol manager and CosNaming
      * initialization only take place for the Server.
      */
+    @Override
     public ORB getORB() {
         // Use a volatile double-checked locking idiom here so that we can publish
         // a partly-initialized ORB early, so that lazy init can come into getORB()
@@ -169,8 +171,8 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
         return this.selectableChannelDelegate;
     }
 
-    public static interface SelectableChannelDelegate {
-        public void handleRequest(SelectableChannel channel);
+    public interface SelectableChannelDelegate {
+        void handleRequest(SelectableChannel channel);
     }
 
     /**
@@ -218,10 +220,12 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
         return orbFactory.getORBInitialPort();
     }
 
+    @Override
     public String getORBHost(ORB orb) {
         return orbFactory.getORBHost(orb);
     }
 
+    @Override
     public int getORBPort(ORB orb) {
         return orbFactory.getORBPort(orb);
     }

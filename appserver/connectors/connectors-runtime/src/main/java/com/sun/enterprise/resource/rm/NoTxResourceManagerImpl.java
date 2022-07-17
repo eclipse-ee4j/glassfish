@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.logging.LogDomains;
 
 import jakarta.transaction.Transaction;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -32,18 +32,14 @@ import java.util.logging.Logger;
  */
 public class NoTxResourceManagerImpl implements ResourceManager {
 
-
-    private static Logger _logger;
-
-    static {
-        _logger = LogDomains.getLogger(NoTxResourceManagerImpl.class, LogDomains.RSR_LOGGER);
-    }
+    private static final Logger LOG = LogDomains.getLogger(NoTxResourceManagerImpl.class, LogDomains.RSR_LOGGER);
 
     /**
      * Returns null since this connection is outside any tx context
      *
      * @throws PoolingException when unable to get current transaction
      */
+    @Override
     public Transaction getTransaction() throws PoolingException {
         return null;
     }
@@ -53,6 +49,7 @@ public class NoTxResourceManagerImpl implements ResourceManager {
      *
      * @return Handle to the component
      */
+    @Override
     public Object getComponent() {
         return null;
     }
@@ -64,8 +61,9 @@ public class NoTxResourceManagerImpl implements ResourceManager {
      * @param h <code>ResourceHandle</code> object
      * @throws PoolingException when unable to enlist resource
      */
+    @Override
     public void enlistResource(ResourceHandle h) throws PoolingException {
-        logFine("NoTxResourceManagerImpl :: enlistResource called");
+        LOG.fine("NoTxResourceManagerImpl :: enlistResource called");
     }
 
     /**
@@ -75,17 +73,19 @@ public class NoTxResourceManagerImpl implements ResourceManager {
      * @param handle <code>ResourceHandle</code> object
      * @throws PoolingException when unable to register resource
      */
+    @Override
     public void registerResource(ResourceHandle handle)
             throws PoolingException {
-        logFine("NoTxResourceManagerImpl :: registerResource called");
+        LOG.fine("NoTxResourceManagerImpl :: registerResource called");
     }
 
     /**
      * Get's the component's transaction and marks it for rolling back.
      * This implementation of the method is expected to be a no-op
      */
+    @Override
     public void rollBackTransaction() {
-        logFine("rollBackTransaction called in NoTxResourceManagerImpl");
+        LOG.fine("rollBackTransaction called in NoTxResourceManagerImpl");
     }
 
     /**
@@ -96,8 +96,9 @@ public class NoTxResourceManagerImpl implements ResourceManager {
      * @param xaresFlag flag indicating transaction success. This can
      *                  be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
+    @Override
     public void delistResource(ResourceHandle resource, int xaresFlag) {
-        logFine("NoTxResourceManagerImpl :: delistResource called");
+        LOG.fine("NoTxResourceManagerImpl :: delistResource called");
     }
 
     /**
@@ -108,13 +109,8 @@ public class NoTxResourceManagerImpl implements ResourceManager {
      * @param xaresFlag flag indicating transaction success. This can
      *                  be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
+    @Override
     public void unregisterResource(ResourceHandle resource, int xaresFlag) {
-        logFine("NoTxResourceManagerImpl :: unregisterResource called");
-    }
-
-    public void logFine(String message) {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine(message);
-        }
+        LOG.fine("NoTxResourceManagerImpl :: unregisterResource called");
     }
 }

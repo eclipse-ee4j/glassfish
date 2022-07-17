@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.enterprise.resource.deployer;
 
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
@@ -26,28 +28,32 @@ import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
 import com.sun.enterprise.connectors.util.ConnectorDDTransformUtils;
 import com.sun.enterprise.connectors.util.SecurityMapUtils;
 import com.sun.enterprise.deployment.ConnectionDefDescriptor;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 
 /**
  * @author Srikanth P, Sivakumar Thyagarajan
  */
-
 @Service
 @ResourceDeployerInfo(org.glassfish.connectors.config.ConnectorConnectionPool.class)
 @Singleton
@@ -56,22 +62,22 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     @Inject
     private ConnectorRuntime runtime;
 
-    private static Logger _logger = LogDomains.getLogger(ConnectorConnectionPoolDeployer.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ConnectorConnectionPoolDeployer.class, LogDomains.RSR_LOGGER);
 
-    private static StringManager localStrings =
-            StringManager.getManager(ConnectorConnectionPoolDeployer.class);
+    private static final StringManager MESSAGES = StringManager.getManager(ConnectorConnectionPoolDeployer.class);
 
     private static final Locale locale = Locale.getDefault();
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //deployResource is not synchronized as there is only one caller
         //ResourceProxy which is synchronized
 
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ConnectorConnectionPoolDeployer : deployResource ");
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.fine("ConnectorConnectionPoolDeployer : deployResource ");
         }
 
         final org.glassfish.connectors.config.ConnectorConnectionPool
@@ -112,13 +118,13 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }*/
 
 
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Calling backend to add connectorConnectionPool", domainCcp.getResourceAdapterName());
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", domainCcp.getResourceAdapterName());
         }
         runtime.createConnectorConnectionPool(ccp, defName, domainCcp.getResourceAdapterName(),
                 domainCcp.getProperty(), domainCcp.getSecurityMap());
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Added connectorConnectionPool in backend",
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Added connectorConnectionPool in backend",
                 domainCcp.getResourceAdapterName());
         }
 
@@ -127,6 +133,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public void deployResource(Object resource) throws Exception {
         org.glassfish.connectors.config.ConnectorConnectionPool ccp =
                 (org.glassfish.connectors.config.ConnectorConnectionPool)resource;
@@ -137,9 +144,10 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
         }
         final org.glassfish.connectors.config.ConnectorConnectionPool
                 domainCcp =
@@ -151,10 +159,11 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void undeployResource(Object resource)
             throws Exception {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
         }
         final org.glassfish.connectors.config.ConnectorConnectionPool
                 domainCcp =
@@ -166,12 +175,12 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
 
     private void actualUndeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
                                         PoolInfo poolInfo) throws ConnectorRuntimeException {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Calling backend to delete ConnectorConnectionPool", domainCcp);
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Calling backend to delete ConnectorConnectionPool", domainCcp);
         }
         runtime.deleteConnectorConnectionPool(poolInfo);
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Deleted ConnectorConnectionPool in backend", domainCcp);
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Deleted ConnectorConnectionPool in backend", domainCcp);
         }
 
         /*//unregister the managed object
@@ -186,6 +195,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void redeployResource(Object resource)
             throws Exception {
         //Connector connection pool reconfiguration or
@@ -199,8 +209,8 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         //server-instance earlier, reconfig this pool
         PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(domainCcp);
         if (!runtime.isConnectorConnectionPoolDeployed(poolInfo)) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("The connector connection pool " + poolInfo
+            if(LOG.isLoggable(Level.FINE)) {
+                LOG.fine("The connector connection pool " + poolInfo
                     + " is either not referred or not yet created in "
                     + "this server instance and pool and hence "
                     + "redeployment is ignored");
@@ -217,23 +227,23 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
 
         boolean poolRecreateRequired = false;
         try {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Calling reconfigure pool");
+            if(LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Calling reconfigure pool");
             }
             poolRecreateRequired = runtime.reconfigureConnectorConnectionPool(ccp,
                     new HashSet());
         } catch (ConnectorRuntimeException cre) {
             Object params[] = new Object[]{poolInfo, cre};
-            _logger.log(Level.WARNING,"error.reconfiguring.pool", params);
+            LOG.log(Level.WARNING,"error.reconfiguring.pool", params);
         }
 
         if (poolRecreateRequired) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Pool recreation required");
+            if(LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pool recreation required");
             }
             runtime.recreateConnectorConnectionPool(ccp);
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Pool recreation done");
+            if(LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pool recreation done");
             }
         }
     }
@@ -241,6 +251,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(Object resource){
         return resource instanceof org.glassfish.connectors.config.ConnectorConnectionPool;
     }
@@ -248,6 +259,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -255,6 +267,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * @inheritDoc
      */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
@@ -262,6 +275,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void disableResource(Object resource)
             throws Exception {
     }
@@ -269,6 +283,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void enableResource(Object resource)
             throws Exception {
     }
@@ -296,8 +311,8 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         if (txSupportIntVal == -1) {
             //if transaction-support attribute is null load the value
             //from the ra.xml
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Got transaction-support attr null from domain.xml");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Got transaction-support attr null from domain.xml");
             }
             txSupportIntVal = ConnectionPoolObjectsUtils.getTransactionSupportFromRaXml(
                     domainCcp.getResourceAdapterName());
@@ -310,17 +325,17 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
             if (!ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(txSupportIntVal,
                     domainCcp.getResourceAdapterName())) {
 
-                String i18nMsg = localStrings.getString("ccp_deployer.incorrect_tx_support");
+                String i18nMsg = MESSAGES.getString("ccp_deployer.incorrect_tx_support");
                 ConnectorRuntimeException cre = new
                         ConnectorRuntimeException(i18nMsg);
 
-                _logger.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
+                LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
                         ccp.getName());
                 throw cre;
             }
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("setting txSupportVal to " + txSupportIntVal +
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("setting txSupportVal to " + txSupportIntVal +
                     " in pool " + domainCcp.getName());
         }
         ccp.setTransactionSupport(txSupportIntVal);
@@ -344,10 +359,10 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
                 ccp.setLazyConnectionAssoc(true);
                 ccp.setLazyConnectionEnlist(true);
             } else {
-                _logger.log(Level.SEVERE,
+                LOG.log(Level.SEVERE,
                         "conn_pool_obj_utils.lazy_enlist-lazy_assoc-invalid-combination",
                         domainCcp.getName());
-                String i18nMsg = localStrings.getString(
+                String i18nMsg = MESSAGES.getString(
                         "cpou.lazy_enlist-lazy_assoc-invalid-combination",  domainCcp.getName());
                 throw new RuntimeException(i18nMsg);
             }
@@ -361,9 +376,9 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         if(!pooling) {
             //Throw exception if assoc with thread is set to true.
             if(Boolean.valueOf(domainCcp.getAssociateWithThread())) {
-                _logger.log(Level.SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination",
+                LOG.log(Level.SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination",
                         domainCcp.getName());
-                String i18nMsg = localStrings.getString(
+                String i18nMsg = MESSAGES.getString(
                         "cpou.pooling_disabled_assocwiththread_invalid_combination", domainCcp.getName());
                 throw new RuntimeException(i18nMsg);
             }
@@ -372,23 +387,23 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
             //Throw warning for connection validation/validate-atmost-once/
             //match-connections/max-connection-usage-count/idele-timeout
             if(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired())) {
-                _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
+                LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
                         domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getValidateAtmostOncePeriodInSeconds()) > 0) {
-                _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination",
+                LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination",
                         domainCcp.getName());
             }
             if(Boolean.valueOf(domainCcp.getMatchConnections())) {
-                _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination",
+                LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination",
                         domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getMaxConnectionUsageCount()) > 0) {
-                _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_max_conn_usage_invalid_combination",
+                LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_max_conn_usage_invalid_combination",
                         domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getIdleTimeoutInSeconds()) > 0) {
-                _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_idle_timeout_invalid_combination",
+                LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_idle_timeout_invalid_combination",
                         domainCcp.getName());
             }
         }
@@ -419,8 +434,8 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         ConnectorDescriptor connectorDescriptor = runtime.getConnectorDescriptor(rarName);
         if (connectorDescriptor == null) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException("Failed to get connection pool object");
-            _logger.log(Level.SEVERE, "rardeployment.connector_descriptor_notfound_registry", rarName);
-            _logger.log(Level.SEVERE, "", cre);
+            LOG.log(Level.SEVERE, "rardeployment.connector_descriptor_notfound_registry", rarName);
+            LOG.log(Level.SEVERE, "", cre);
             throw cre;
         }
         Set connectionDefs =
@@ -429,8 +444,9 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         Iterator it = connectionDefs.iterator();
         while (it.hasNext()) {
             cdd = (ConnectionDefDescriptor) it.next();
-            if (connectionDefinitionName.equals(cdd.getConnectionFactoryIntf()))
+            if (connectionDefinitionName.equals(cdd.getConnectionFactoryIntf())) {
                 break;
+            }
 
         }
         ConnectorDescriptorInfo cdi = new ConnectorDescriptorInfo();
@@ -446,7 +462,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         Properties properties = new Properties();
         //skip the AddressList in case of JMS RA.
         //Refer Sun Bug :6579154 - Equivalent Oracle Bug :12206278
-        if(rarName.trim().equals(ConnectorRuntime.DEFAULT_JMS_ADAPTER)){
+        if(rarName.trim().equals(ConnectorConstants.DEFAULT_JMS_ADAPTER)){
             properties.put("AddressList","localhost");
         }
         Set mergedProps = ConnectorDDTransformUtils.mergeProps(props, cdd.getConfigProperties(),properties);
@@ -475,49 +491,49 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         for (Property ep : elemProps) {
             if (ep != null) {
                 if ("MATCHCONNECTIONS".equals(ep.getName().toUpperCase(locale))) {
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.fine(" ConnectorConnectionPoolDeployer::  Setting matchConnections");
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine(" ConnectorConnectionPoolDeployer::  Setting matchConnections");
                     }
                     ccp.setMatchConnections(toBoolean(ep.getValue(), true));
                 } else if ("LAZYCONNECTIONASSOCIATION".equals(ep.getName().toUpperCase(locale))) {
                     ConnectionPoolObjectsUtils.setLazyEnlistAndLazyAssocProperties(ep.getValue(),
                             domainCcp.getProperty(), ccp);
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("LAZYCONNECTIONASSOCIATION");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("LAZYCONNECTIONASSOCIATION");
                     }
 
                 } else if ("LAZYCONNECTIONENLISTMENT".equals(ep.getName().toUpperCase(locale))) {
                     ccp.setLazyConnectionEnlist(toBoolean(ep.getValue(), false));
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("LAZYCONNECTIONENLISTMENT");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("LAZYCONNECTIONENLISTMENT");
                     }
 
                 } else if ("ASSOCIATEWITHTHREAD".equals(ep.getName().toUpperCase(locale))) {
                     ccp.setAssociateWithThread(toBoolean(ep.getValue(), false));
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("ASSOCIATEWITHTHREAD");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("ASSOCIATEWITHTHREAD");
                     }
                 } else if ("POOLDATASTRUCTURE".equals(ep.getName().toUpperCase(locale))) {
                     ccp.setPoolDataStructureType(ep.getValue());
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("POOLDATASTRUCTURE");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("POOLDATASTRUCTURE");
                     }
 
                 } else if ("POOLWAITQUEUE".equals(ep.getName().toUpperCase(locale))) {
                     ccp.setPoolWaitQueue(ep.getValue());
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("POOLWAITQUEUE");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("POOLWAITQUEUE");
                     }
 
                 } else if ("DATASTRUCTUREPARAMETERS".equals(ep.getName().toUpperCase(locale))) {
                     ccp.setDataStructureParameters(ep.getValue());
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("DATASTRUCTUREPARAMETERS");
+                    if(LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("DATASTRUCTUREPARAMETERS");
                     }
                 } else if ("PREFER-VALIDATE-OVER-RECREATE".equals(ep.getName().toUpperCase(locale))) {
                     String value = ep.getValue();
-                    if (_logger.isLoggable(Level.FINE)) {
-                        _logger.fine(" ConnectorConnectionPoolDeployer::  " +
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine(" ConnectorConnectionPoolDeployer::  " +
                                 "Setting PREFER-VALIDATE-OVER-RECREATE to " +
                                 value);
                     }

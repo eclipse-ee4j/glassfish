@@ -79,7 +79,7 @@ import jakarta.inject.Inject;
 @RunLevel(value = PostStartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
 public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct, EventListener {
 
-    private static final Logger _logger = LogDomains.getLogger(ManagedBeanManagerImpl.class, LogDomains.CORE_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ManagedBeanManagerImpl.class, LogDomains.CORE_LOGGER, false);
 
     @Inject
     private ComponentEnvManager compEnvManager;
@@ -102,10 +102,10 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
     private ProcessType processType;
 
     // Keep track of contexts for managed bean instances instantiated via CDI
-    private Map<BundleDescriptor, Map<Object, CDIInjectionContext>> cdiManagedBeanInstanceMap = new HashMap<>();
+    private final Map<BundleDescriptor, Map<Object, CDIInjectionContext>> cdiManagedBeanInstanceMap = new HashMap<>();
 
     // Used to hold managed beans in app client container
-    private Map<String, NamingObjectProxy> appClientManagedBeans = new HashMap<>();
+    private final Map<String, NamingObjectProxy> appClientManagedBeans = new HashMap<>();
 
     @Override
     public void postConstruct() {
@@ -155,7 +155,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
             try {
                 compEnvManager.unbindFromComponentNamespace(app);
             } catch (Exception e) {
-                _logger.log(FINE, "Exception unbinding app objects", e);
+                LOG.log(FINE, "Exception unbinding app objects", e);
             }
         }
     }
@@ -295,7 +295,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                     try {
                         cdiInjectionContext.cleanup(true);
                     } catch (Exception e) {
-                        _logger.log(FINE, "Exception during CDI cleanup for " + cdiInjectionContext, e);
+                        LOG.log(FINE, "Exception during CDI cleanup for " + cdiInjectionContext, e);
                     }
                 }
             }
@@ -308,7 +308,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                     try {
                         invoker.invokePreDestroy();
                     } catch (Exception e) {
-                        _logger.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " PreDestroy", e);
+                        LOG.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " PreDestroy", e);
                     }
                 }
 
@@ -317,7 +317,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                 try {
                     compEnvManager.unbindFromComponentNamespace(managedBeanDescriptor);
                 } catch (javax.naming.NamingException ne) {
-                    _logger.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " unbind", ne);
+                    LOG.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " unbind", ne);
                 }
 
                 GlassfishNamingManager namingManager = serviceLocator.getService(GlassfishNamingManager.class);
@@ -327,8 +327,8 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                     try {
                         namingManager.unpublishObject(jndiName);
                     } catch (NamingException ne) {
-                        _logger.log(FINE, "Error unpubishing managed bean " + managedBeanDescriptor.getBeanClassName() + " with jndi name "
-                                + jndiName, ne);
+                        LOG.log(FINE, "Error unpubishing managed bean " + managedBeanDescriptor.getBeanClassName()
+                            + " with jndi name " + jndiName, ne);
                     }
                 } else {
                     appClientManagedBeans.remove(jndiName);
@@ -546,17 +546,19 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
             if (bundleNonManagedObjs == null) {
                 if (validate) {
                     throw new IllegalStateException(
-                            "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
+                        "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
                 }
-                _logger.log(FINE, "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
+                LOG.log(FINE,
+                    "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
             } else {
                 CDIInjectionContext context = bundleNonManagedObjs.remove(managedBean);
                 if (context == null) {
                     if (validate) {
                         throw new IllegalStateException(
-                                "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
+                            "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
                     }
-                    _logger.log(FINE, "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
+                    LOG.log(FINE,
+                        "Unknown CDI-enabled managed bean " + managedBean + " of class " + managedBean.getClass());
                     return;
                 }
 
@@ -591,8 +593,8 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
             ManagedBeanDescriptor managedBeanDescriptor = bundle.getManagedBeanByBeanClass(managedBeanInstance.getClass().getName());
 
             if (managedBeanDescriptor == null) {
-                throw new IllegalStateException(
-                        "Could not retrieve managed bean descriptor for " + managedBean + " of class " + managedBean.getClass());
+                throw new IllegalStateException("Could not retrieve managed bean descriptor for " + managedBean
+                    + " of class " + managedBean.getClass());
             }
 
             InterceptorInvoker invoker = (InterceptorInvoker) managedBeanDescriptor.getSupportingInfoForBeanInstance(managedBeanInstance);
@@ -600,7 +602,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
             try {
                 invoker.invokePreDestroy();
             } catch (Exception e) {
-                _logger.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " PreDestroy", e);
+                LOG.log(FINE, "Managed bean " + managedBeanDescriptor.getBeanClassName() + " PreDestroy", e);
             }
 
             managedBeanDescriptor.clearBeanInstanceInfo(managedBeanInstance);

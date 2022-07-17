@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.util;
 
 import java.text.MessageFormat;
 import java.util.logging.Logger;
+
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
@@ -35,8 +37,7 @@ public class CULoggerInfo {
 
     @LoggerInfo(subsystem = "COMMON", description = "Common Utilities", publish = true)
     private static final String UTIL_LOGGER = "jakarta.enterprise.system.util";
-    private static final Logger utilLogger = Logger.getLogger(
-                UTIL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+    private static final Logger utilLogger = Logger.getLogger(UTIL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     public static Logger getLogger() {
         return utilLogger;
@@ -294,23 +295,4 @@ public class CULoggerInfo {
                     level="WARNING")
     public static final String NULL_BUNDLE = LOGMSG_PREFIX + "-00042";
 
-
-/*
-
-
-# ClassLoaderUtil messages
-classloaderutil.errorReleasingLoader=CMNUTL9001: Error releasing URLClassLoader
-classloaderutil.errorClosingJar=CMNUTL9002: Error closing JAR file {0}
-classloaderutil.errorGettingField=CMNUTL9003: Error getting information for field {0}
-classloaderutil.errorReleasingJarNoName=CMNUTL9005: Error releasing JAR file
-
-## messages used in EJBUtils.java (starts from LDR5100)
-appclient.classpath=LDR5102: Could not get classpath for appclient module
-
-enterprise_util.connector_malformed_url=UTIL6003:MalformedURLException in addResourceAdapter().
-enterprise_util.excep_in_createorb=UTIL6009:Unexpected Exception in createORB.
-enterprise_util.excep_orbmgr_numfmt=UTIL6031:Number Format Exception, Using default value(s).
-enterprise_util.excep_in_reading_fragment_size=UTIL6035: Exception converting to integer
-
-*/
 }

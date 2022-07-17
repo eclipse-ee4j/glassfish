@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,19 @@
 
 package org.glassfish.jdbcruntime.service;
 
-import static com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils.getValueFromMCF;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.connectors.ConnectorConnectionPool;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils;
+import com.sun.enterprise.connectors.service.ConnectorAdminServicesFactory;
+import com.sun.enterprise.connectors.service.ConnectorConnectionPoolAdminServiceImpl;
+import com.sun.enterprise.connectors.service.ConnectorService;
+import com.sun.enterprise.connectors.util.DriverLoader;
+
+import jakarta.inject.Singleton;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -37,19 +48,9 @@ import javax.naming.NamingException;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.ConnectorConnectionPool;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils;
-import com.sun.enterprise.connectors.service.ConnectorAdminServicesFactory;
-import com.sun.enterprise.connectors.service.ConnectorConnectionPoolAdminServiceImpl;
-import com.sun.enterprise.connectors.service.ConnectorService;
-import com.sun.enterprise.connectors.util.DriverLoader;
-
-import jakarta.inject.Singleton;
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ManagedConnection;
-import jakarta.resource.spi.ManagedConnectionFactory;
+import static com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils.getValueFromMCF;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Jdbc admin service performs Jdbc related operations for administration.
@@ -60,7 +61,7 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 @Singleton
 public class JdbcAdminServiceImpl extends ConnectorService {
 
-    private ConnectorConnectionPoolAdminServiceImpl ccPoolAdmService;
+    private final ConnectorConnectionPoolAdminServiceImpl ccPoolAdmService;
     private static final String DBVENDOR_MAPPINGS_ROOT =
         System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
         "lib" + File.separator +
@@ -201,8 +202,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
      *
      * @param poolInfo
      * @return all validation table names.
-     * @throws jakarta.resource.ResourceException
-     * @throws javax.naming.NamingException
+     * @throws ResourceException
      */
     public Set<String> getValidationTableNames(PoolInfo poolInfo) throws ResourceException {
         ManagedConnectionFactory managedConnectionFactory = null;

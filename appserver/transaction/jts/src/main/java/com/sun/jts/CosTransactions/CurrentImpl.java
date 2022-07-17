@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
  *
@@ -125,6 +126,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void begin()
         throws INVALID_TRANSACTION, SystemException, SubtransactionsUnavailable {
 
@@ -161,7 +163,7 @@ implements org.omg.CosTransactions.Current {
         // If there is a current Control object, then we should try to begin a
         // subtransaction.
 
-        if( controlImpl != null )
+        if( controlImpl != null ) {
             try {
 
                 // Get the Coordinator reference, and use it to create a subtransaction.
@@ -179,22 +181,21 @@ implements org.omg.CosTransactions.Current {
                 // result in SubtransactionsUnavailable thrown to the caller.
 
                 JControl jcontrol = JControlHelper.narrow(control);
-                if( jcontrol != null )
+                if( jcontrol != null ) {
                     controlImpl = ControlImpl.servant(jcontrol);
+                }
 
                 // If there is no local ControlImpl object for the transaction, we create one
                 // now.
 
-                if( controlImpl == null )
+                if( controlImpl == null ) {
                     controlImpl = new ControlImpl(control);
+                }
             } catch( Throwable exc ) {
                 SubtransactionsUnavailable ex2 = new SubtransactionsUnavailable();
                 throw ex2;
             }
-
-        // If there is no current ControlImpl object, create a new top-level transaction
-
-        else {
+        } else {
             //$   CurrentTransaction.report();
             //$   RecoveryManager.report();
             //$   ControlImpl.report();
@@ -208,8 +209,9 @@ implements org.omg.CosTransactions.Current {
                 // this concurrently.
 
                 synchronized(this) {
-                    if( factory == null )
+                    if( factory == null ) {
                         factory = Configuration.getFactory();
+                    }
                 }
 
                 // Create the new transaction.
@@ -257,12 +259,7 @@ implements org.omg.CosTransactions.Current {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.FactoryFailed,
                 CompletionStatus.COMPLETED_NO);
             throw exc;
-        }
-
-        // Make the new Control reference the current one, indicating that the
-        // existing one (if any) should be stacked.
-
-        else
+        } else {
             try {
                 if(_logger.isLoggable(Level.FINEST))
                 {
@@ -278,6 +275,7 @@ implements org.omg.CosTransactions.Current {
         catch( INVALID_TRANSACTION exc ) {
             controlImpl.destroy();
             throw (INVALID_TRANSACTION)exc.fillInStackTrace();
+        }
         }
 
     }
@@ -345,7 +343,7 @@ implements org.omg.CosTransactions.Current {
         // If there is a current Control object, then we should try to begin a
         // subtransaction.
 
-        if( controlImpl != null )
+        if( controlImpl != null ) {
             try {
 
                 // Get the Coordinator reference, and use it to create a subtransaction.
@@ -363,22 +361,21 @@ implements org.omg.CosTransactions.Current {
                 // result in SubtransactionsUnavailable thrown to the caller.
 
                 JControl jcontrol = JControlHelper.narrow(control);
-                if( jcontrol != null )
+                if( jcontrol != null ) {
                     controlImpl = ControlImpl.servant(jcontrol);
+                }
 
                 // If there is no local ControlImpl object for the transaction, we create one
                 // now.
 
-                if( controlImpl == null )
+                if( controlImpl == null ) {
                     controlImpl = new ControlImpl(control);
+                }
             } catch( Throwable exc ) {
                 SubtransactionsUnavailable ex2 = new SubtransactionsUnavailable();
                 throw ex2;
             }
-
-        // If there is no current ControlImpl object, create a new top-level transaction
-
-        else {
+        } else {
             //$   CurrentTransaction.report();
             //$   RecoveryManager.report();
             //$   ControlImpl.report();
@@ -392,8 +389,9 @@ implements org.omg.CosTransactions.Current {
                 // this concurrently.
 
                 synchronized(this) {
-                    if( factory == null )
+                    if( factory == null ) {
                         factory = Configuration.getFactory();
+                    }
                 }
 
                 // Create the new transaction.
@@ -437,33 +435,21 @@ implements org.omg.CosTransactions.Current {
 
         // If the new Control reference is NULL, raise an error at this point.
 
-        if( controlImpl == null ){
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.FactoryFailed,
-                CompletionStatus.COMPLETED_NO);
+        if (controlImpl == null) {
+            throw new INVALID_TRANSACTION(MinorCode.FactoryFailed, CompletionStatus.COMPLETED_NO);
+        }
+        try {
+            if (_logger.isLoggable(Level.FINEST)) {
+                _logger.logp(Level.FINEST, "CurrentImpl", "begin()",
+                    "Before invoking CurrentTransaction.setCurrent(control,true)");
+            }
+            CurrentTransaction.setCurrent(controlImpl,true);
+        } catch (INVALID_TRANSACTION exc) {
+            // The INVALID_TRANSACTION exception at this point indicates that the transaction
+            // may not be started.  Clean up the state of the objects in the transaction.
+            controlImpl.destroy();
             throw exc;
         }
-
-        // Make the new Control reference the current one, indicating that the
-        // existing one (if any) should be stacked.
-
-        else
-            try {
-                if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"CurrentImpl","begin()",
-                        "Before invoking CurrentTransaction.setCurrent(control,true)");
-                }
-                CurrentTransaction.setCurrent(controlImpl,true);
-            }
-
-        // The INVALID_TRANSACTION exception at this point indicates that the transaction
-        // may not be started.  Clean up the state of the objects in the transaction.
-
-        catch( INVALID_TRANSACTION exc ) {
-            controlImpl.destroy();
-            throw (INVALID_TRANSACTION)exc.fillInStackTrace();
-        }
-
     }
     //END RI PERFIMPROVEMENT
 
@@ -492,6 +478,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void commit( boolean reportHeuristics )
         throws NO_PERMISSION, INVALID_TRANSACTION, TRANSACTION_ROLLEDBACK,
         NoTransaction, HeuristicHazard, HeuristicMixed, SystemException {
@@ -593,8 +580,9 @@ implements org.omg.CosTransactions.Current {
                 // confused.
 
                 try {
-                    if( Configuration.getProxyChecker().isProxy(term) )
+                    if( Configuration.getProxyChecker().isProxy(term) ) {
                         CurrentTransaction.endCurrent(true);
+                    }
                 } catch( Throwable exc ) {}
             }
             // Commit the transaction.
@@ -637,6 +625,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void rollback()
         throws NoTransaction, INVALID_TRANSACTION, NO_PERMISSION,
         TRANSACTION_ROLLEDBACK, SystemException {
@@ -738,8 +727,9 @@ implements org.omg.CosTransactions.Current {
                 // confused.
 
                 try {
-                    if( Configuration.getProxyChecker().isProxy(term) )
+                    if( Configuration.getProxyChecker().isProxy(term) ) {
                         CurrentTransaction.endCurrent(true);
+                    }
                 } catch( Throwable exc ) {}
             }
             // Roll the transaction back.
@@ -775,6 +765,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void rollback_only()
         throws NoTransaction {
 
@@ -802,6 +793,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public Status get_status() {
 
         Status result = Status.StatusNoTransaction;
@@ -810,8 +802,9 @@ implements org.omg.CosTransactions.Current {
 
             // Ask the Coordinator object for its status, and return the value.
 
-            if( coord != null )
+            if( coord != null ) {
                 result = coord.get_status();
+            }
         } catch( Unavailable exc ) {
         } catch( TRANSACTION_ROLLEDBACK exc ) {
             result = Status.StatusRolledBack;
@@ -831,6 +824,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public String get_transaction_name() {
 
         String result = null;
@@ -839,8 +833,9 @@ implements org.omg.CosTransactions.Current {
 
             // Ask the Coordinator object for its name, and return the value.
 
-            if( coord != null )
+            if( coord != null ) {
                 result = coord.get_transaction_name();
+            }
         }
 
         // Ignore Unavailable (return null in this case), but allow other exceptions
@@ -859,6 +854,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void set_timeout( int timeout ) {
         // timeout < 0 will be rejected (no op).
         // timeout = 0 implies tx has no timeout or a default timeout is used.
@@ -868,6 +864,7 @@ implements org.omg.CosTransactions.Current {
         }
     }
 
+    @Override
     public int get_timeout() {
         return timeOut;
     }
@@ -884,6 +881,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public Control get_control()
         throws TRANSACTION_ROLLEDBACK {
         Control result = null;
@@ -897,7 +895,7 @@ implements org.omg.CosTransactions.Current {
         ControlImpl control = CurrentTransaction.getCurrent();
         if (control != null) {
             if (Configuration.isLocalFactory()) {
-                result = (Control) control;
+                result = control;
             } else {
                 result = control.object();
             }
@@ -915,6 +913,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public Control suspend() {
         Control result = null;
         ControlImpl cImpl = CurrentTransaction.endCurrent(false);
@@ -926,7 +925,7 @@ implements org.omg.CosTransactions.Current {
         }
 
         if (Configuration.isLocalFactory()) {
-            result = (Control) cImpl;
+            result = cImpl;
         } else {
             if (cImpl != null) {
                 result = cImpl.object();
@@ -952,6 +951,7 @@ implements org.omg.CosTransactions.Current {
      *
      * @see
      */
+    @Override
     public void resume( Control control )
         throws InvalidControl, INVALID_TRANSACTION {
 
@@ -960,9 +960,9 @@ implements org.omg.CosTransactions.Current {
         // If the Control object is NULL, then this operation is actually a suspend
         // operation, so end the current association with the thread.
 
-        if( control == null )
+        if( control == null ) {
             CurrentTransaction.endCurrent(false);
-        else {
+        } else {
 
             if (Configuration.isLocalFactory()) {
                 contImpl = (ControlImpl) control;
@@ -972,13 +972,14 @@ implements org.omg.CosTransactions.Current {
 
                 // Try to locate the local ControlImpl object for the transaction.
 
-                if( jcontrol != null )
+                if( jcontrol != null ) {
                     contImpl = ControlImpl.servant(jcontrol);
+                }
 
                 // If there is no local ControlImpl object for the transaction, we create one
                 // now.
 
-                if( contImpl == null )
+                if( contImpl == null ) {
                     try {
                         contImpl = new ControlImpl(control);
                     } catch( Exception exc ) {
@@ -986,6 +987,7 @@ implements org.omg.CosTransactions.Current {
                         InvalidControl ex2 = new InvalidControl();
                         throw ex2;
                     }
+                }
             }
 
             // End the current association regardless of whether there is one.

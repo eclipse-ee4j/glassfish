@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,23 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.appserv.connectors.internal.api.*;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.util.Utility;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import jakarta.resource.spi.ResourceAdapter;
+
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Collection;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Singleton;
 
 /**
  * Factory creating Active Resource adapters.
@@ -41,7 +43,7 @@ import jakarta.inject.Singleton;
 @Service
 @Singleton
 public class ActiveRAFactory {
-    private static Logger _logger = LogDomains.getLogger(ActiveRAFactory.class,LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ActiveRAFactory.class,LogDomains.RSR_LOGGER);
 
     @Inject
     private ServiceLocator activeRAHabitat;
@@ -87,20 +89,20 @@ public class ActiveRAFactory {
             ConnectorRuntimeException cre = new ConnectorRuntimeException(
                     "Error in creating active RAR");
             cre.initCause(Ex);
-            _logger.log(Level.SEVERE, "rardeployment.class_not_found", raClass);
-            _logger.log(Level.SEVERE, "", cre);
+            LOG.log(Level.SEVERE, "rardeployment.class_not_found", raClass);
+            LOG.log(Level.SEVERE, "", cre);
             throw cre;
         } catch (InstantiationException Ex) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException("Error in creating active RAR");
             cre.initCause(Ex);
-            _logger.log(Level.SEVERE, "rardeployment.class_instantiation_error", raClass);
-            _logger.log(Level.SEVERE, "", cre);
+            LOG.log(Level.SEVERE, "rardeployment.class_instantiation_error", raClass);
+            LOG.log(Level.SEVERE, "", cre);
             throw cre;
         } catch (IllegalAccessException Ex) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException("Error in creating active RAR");
             cre.initCause(Ex);
-            _logger.log(Level.SEVERE, "rardeployment.illegalaccess_error", raClass);
-            _logger.log(Level.SEVERE, "", cre);
+            LOG.log(Level.SEVERE, "rardeployment.illegalaccess_error", raClass);
+            LOG.log(Level.SEVERE, "", cre);
             throw cre;
         } finally {
             if (originalContextClassLoader != null) {
@@ -123,8 +125,8 @@ public class ActiveRAFactory {
         Collection<ActiveResourceAdapter> activeRAs =  activeRAHabitat.getAllServices(ActiveResourceAdapter.class);
         for(ActiveResourceAdapter activeRA : activeRAs){
             if(activeRA.handles(cd, moduleName)){
-                if(_logger.isLoggable(Level.FINEST)){
-                    _logger.log(Level.FINEST,"found active-RA for the module [ "+moduleName+" ] " +
+                if(LOG.isLoggable(Level.FINEST)){
+                    LOG.log(Level.FINEST,"found active-RA for the module [ "+moduleName+" ] " +
                         activeRA.getClass().getName());
                 }
                 return activeRA;
@@ -135,7 +137,7 @@ public class ActiveRAFactory {
             // did not find a suitable Active RA above.
             // [Possibly the profile (eg: WEB profile) does not support it]
             // Let us provide outbound support.
-            _logger.log(Level.INFO, "Deployed RAR [ "+moduleName+" ] has inbound artifacts, but the runtime " +
+            LOG.log(Level.INFO, "Deployed RAR [ "+moduleName+" ] has inbound artifacts, but the runtime " +
                     "does not support it. Providing only outbound support ");
 
             return activeRAHabitat.getService(ActiveResourceAdapter.class, ConnectorConstants.AORA);

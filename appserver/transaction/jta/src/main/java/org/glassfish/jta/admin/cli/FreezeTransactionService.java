@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +17,15 @@
 
 package org.glassfish.jta.admin.cli;
 
-import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
-import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
-import static org.glassfish.api.admin.FailurePolicy.Error;
-import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
-import static org.glassfish.api.admin.RuntimeType.INSTANCE;
-import static org.glassfish.config.support.CommandTarget.CLUSTER;
-import static org.glassfish.config.support.CommandTarget.CLUSTERED_INSTANCE;
-import static org.glassfish.config.support.CommandTarget.CONFIG;
-import static org.glassfish.config.support.CommandTarget.DAS;
-import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
 
 import java.util.logging.Logger;
 
@@ -43,15 +42,16 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.glassfish.api.admin.FailurePolicy.Error;
+import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
+import static org.glassfish.api.admin.RuntimeType.INSTANCE;
+import static org.glassfish.config.support.CommandTarget.CLUSTER;
+import static org.glassfish.config.support.CommandTarget.CLUSTERED_INSTANCE;
+import static org.glassfish.config.support.CommandTarget.CONFIG;
+import static org.glassfish.config.support.CommandTarget.DAS;
+import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
 
 @Service(name = "freeze-transaction-service")
 @TargetType({ DAS, STANDALONE_INSTANCE, CLUSTER, CLUSTERED_INSTANCE, CONFIG })
@@ -96,7 +96,7 @@ public class FreezeTransactionService implements AdminCommand {
 
     private static StringManager localStrings = StringManager.getManager(FreezeTransactionService.class);
 
-    private static final Logger logger = LogDomains.getLogger(FreezeTransactionService.class, LogDomains.JTA_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(FreezeTransactionService.class, LogDomains.JTA_LOGGER, false);
 
     @Param(optional = true)
     String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
@@ -115,7 +115,7 @@ public class FreezeTransactionService implements AdminCommand {
 
         try {
             if (transactionManager.isFrozen()) {
-                logger.info("Transaction is already frozen.");
+                LOG.info("Transaction is already frozen.");
                 return;
             }
 

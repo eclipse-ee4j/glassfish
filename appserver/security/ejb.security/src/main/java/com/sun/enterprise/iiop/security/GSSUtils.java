@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,28 +14,27 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package com.sun.enterprise.iiop.security;
 
-
-import com.sun.corba.ee.org.omg.GSSUP.GSSUPMechOID;
 import com.sun.corba.ee.org.omg.CSI.GSS_NT_Export_Name_OID;
 import com.sun.corba.ee.org.omg.CSI.GSS_NT_Scoped_Username_OID;
+import com.sun.corba.ee.org.omg.GSSUP.GSSUPMechOID;
+import com.sun.logging.LogDomains;
 
 import java.util.Arrays;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 
-import com.sun.logging.*;
-
-/*
- * @author    Sekhar Vajjhala
+/**
+ * @author Sekhar Vajjhala
  * (Almost complete rewrite of an old version)
- *
  */
 public class GSSUtils {
-    private static final java.util.logging.Logger _logger = LogDomains.getLogger(GSSUtils.class, LogDomains.CORBA_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(GSSUtils.class, LogDomains.CORBA_LOGGER, false);
 
     public static final Oid GSSUP_MECH_OID;
 
@@ -59,7 +59,7 @@ public class GSSUtils {
             x = new Oid(GSSUPMechOID.value.substring(i + 1));
         } catch (GSSException e) {
             x = null;
-            _logger.log(Level.SEVERE, "iiop.IOexception", e);
+            LOG.log(Level.SEVERE, "Invalid OID", e);
         }
         GSSUP_MECH_OID = x;
 
@@ -68,7 +68,7 @@ public class GSSUtils {
             x = new Oid(GSS_NT_Export_Name_OID.value.substring(i + 1));
         } catch (GSSException e) {
             x = null;
-            _logger.log(Level.SEVERE, "iiop.IOexception", e);
+            LOG.log(Level.SEVERE, "Invalid OID", e);
         }
         GSS_NT_EXPORT_NAME_OID = x;
 
@@ -77,18 +77,18 @@ public class GSSUtils {
             x = new Oid(GSS_NT_Scoped_Username_OID.value.substring(i + 1));
         } catch (GSSException e) {
             x = null;
-            _logger.log(Level.SEVERE, "iiop.IOexception", e);
+            LOG.log(Level.SEVERE, "Invalid OID", e);
         }
         GSS_NT_SCOPED_USERNAME_OID = x;
 
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "GSSUP_MECH_OID: " + dumpHex(getDER(GSSUP_MECH_OID)));
-                _logger.log(Level.FINE, "GSS_NT_EXPORT_NAME_OID: " + dumpHex(getDER(GSS_NT_EXPORT_NAME_OID)));
-                _logger.log(Level.FINE, "GSS_NT_SCOPED_USERNAME_OID: " + dumpHex(getDER(GSS_NT_SCOPED_USERNAME_OID)));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "GSSUP_MECH_OID: " + dumpHex(getDER(GSSUP_MECH_OID)));
+                LOG.log(Level.FINE, "GSS_NT_EXPORT_NAME_OID: " + dumpHex(getDER(GSS_NT_EXPORT_NAME_OID)));
+                LOG.log(Level.FINE, "GSS_NT_SCOPED_USERNAME_OID: " + dumpHex(getDER(GSS_NT_SCOPED_USERNAME_OID)));
             }
         } catch (GSSException e) {
-            _logger.log(Level.SEVERE, "iiop.IOexception", e);
+            LOG.log(Level.SEVERE, "Invalid OID", e);
         }
 
         try {
@@ -102,11 +102,13 @@ public class GSSUtils {
     public static String dumpHex(byte[] octets) {
         StringBuffer result = new StringBuffer("");
         for (int i = 0; i < octets.length; i++) {
-            if ((i != 0) && ((i % 16) == 0))
+            if ((i != 0) && ((i % 16) == 0)) {
                 result.append("\n    ");
+            }
             int b = octets[i];
-            if (b < 0)
+            if (b < 0) {
                 b = 256 + b;
+            }
             String hex = Integer.toHexString(b);
             if (hex.length() == 1) {
                 hex = "0" + hex;
@@ -122,25 +124,29 @@ public class GSSUtils {
      */
 
     public static byte[] importName(Oid oid, byte[] externalName) throws GSSException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Attempting to import mechanism independent name");
-            _logger.log(Level.FINE, dumpHex(externalName));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Attempting to import mechanism independent name");
+            LOG.log(Level.FINE, dumpHex(externalName));
         }
 
         GSSException e = new GSSException(GSSException.BAD_NAME);
 
-        if (externalName[0] != 0x04)
+        if (externalName[0] != 0x04) {
             throw e;
+        }
 
-        if (externalName[1] != 0x01)
+        if (externalName[1] != 0x01) {
             throw e;
+        }
 
-        int mechoidlen = (((int) externalName[2]) << 8) + (externalName[3] & 0xff);
+        int mechoidlen = ((externalName[2]) << 8) + (externalName[3] & 0xff);
 
-        if (_logger.isLoggable(Level.FINE))
-            _logger.log(Level.FINE, "Mech OID length = " + mechoidlen);
-        if (externalName.length < (4 + mechoidlen + 4))
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mech OID length = " + mechoidlen);
+        }
+        if (externalName.length < (4 + mechoidlen + 4)) {
             throw e;
+        }
 
         /*
          * get the mechanism OID and verify it is the same as oid passed as an argument.
@@ -149,25 +155,27 @@ public class GSSUtils {
         byte[] deroid = new byte[mechoidlen];
         System.arraycopy(externalName, 4, deroid, 0, mechoidlen);
         Oid oid1 = getOID(deroid);
-        if (!oid1.equals((Object) oid))
+        if (!oid1.equals(oid)) {
             throw e;
+        }
 
         int pos = 4 + mechoidlen;
 
-        int namelen = (((int) externalName[pos]) << 24) + (((int) externalName[pos + 1]) << 16) + (((int) externalName[pos + 2]) << 8)
-                + (((int) externalName[pos + 3]));
+        int namelen = ((externalName[pos]) << 24) + ((externalName[pos + 1]) << 16) + ((externalName[pos + 2]) << 8)
+                + ((externalName[pos + 3]));
 
         pos += 4; // start of the mechanism specific exported name
 
-        if (externalName.length != (4 + mechoidlen + 4 + namelen))
+        if (externalName.length != (4 + mechoidlen + 4 + namelen)) {
             throw e;
+        }
 
         byte[] name = new byte[externalName.length - pos];
         System.arraycopy(externalName, pos, name, 0, externalName.length - pos);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mechanism specific name:");
-            _logger.log(Level.FINE, dumpHex(name));
-            _logger.log(Level.FINE, "Successfully imported mechanism independent name");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mechanism specific name:");
+            LOG.log(Level.FINE, dumpHex(name));
+            LOG.log(Level.FINE, "Successfully imported mechanism independent name");
         }
         return name;
     }
@@ -175,26 +183,29 @@ public class GSSUtils {
     /* verify if exportedName is of object ObjectIdentifier. */
 
     public static boolean verifyMechOID(Oid oid, byte[] externalName) throws GSSException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Attempting to verify mechanism independent name");
-            _logger.log(Level.FINE, dumpHex(externalName));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Attempting to verify mechanism independent name");
+            LOG.log(Level.FINE, dumpHex(externalName));
         }
 
         GSSException e = new GSSException(GSSException.BAD_NAME);
 
-        if (externalName[0] != 0x04)
+        if (externalName[0] != 0x04) {
             throw e;
-
-        if (externalName[1] != 0x01)
-            throw e;
-
-        int mechoidlen = (((int) externalName[2]) << 8) + (externalName[3] & 0xff);
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mech OID length = " + mechoidlen);
         }
-        if (externalName.length < (4 + mechoidlen + 4))
+
+        if (externalName[1] != 0x01) {
             throw e;
+        }
+
+        int mechoidlen = ((externalName[2]) << 8) + (externalName[3] & 0xff);
+
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mech OID length = " + mechoidlen);
+        }
+        if (externalName.length < (4 + mechoidlen + 4)) {
+            throw e;
+        }
 
         /*
          * get the mechanism OID and verify it is the same as oid passed as an argument.
@@ -203,10 +214,11 @@ public class GSSUtils {
         byte[] deroid = new byte[mechoidlen];
         System.arraycopy(externalName, 4, deroid, 0, mechoidlen);
         Oid oid1 = getOID(deroid);
-        if (!oid1.equals((Object) oid))
+        if (!oid1.equals(oid)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
     /*
@@ -255,14 +267,14 @@ public class GSSUtils {
      */
 
     public static byte[] getDER(Oid id) throws GSSException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Returning OID in DER format");
-            _logger.log(Level.FINE, "    OID = " + id.toString());
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Returning OID in DER format");
+            LOG.log(Level.FINE, "    OID = " + id.toString());
         }
 
         byte[] oid = id.getDER();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "    DER OID: " + dumpHex(oid));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "    DER OID: " + dumpHex(oid));
         }
 
         return oid;
@@ -296,8 +308,8 @@ public class GSSUtils {
 
         byte[] token = new byte[1 // for 0x60
                 + getDERLengthSize(deroid.length + mechtok.length) + deroid.length + mechtok.length];
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Going to create a mechanism independent token");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Going to create a mechanism independent token");
         }
         int index = 0;
 
@@ -310,9 +322,9 @@ public class GSSUtils {
         index += deroid.length;
         System.arraycopy(mechtok, 0, token, index, mechtok.length);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mechanism independent token created: ");
-            _logger.log(Level.FINE, dumpHex(token));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mechanism independent token created: ");
+            LOG.log(Level.FINE, dumpHex(token));
         }
 
         return token;
@@ -325,9 +337,9 @@ public class GSSUtils {
 
     public static byte[] getMechToken(Oid oid, byte[] token) {
         byte[] mechtoken = null;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Received mechanism independent token: ");
-            _logger.log(Level.FINE, dumpHex(token));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Received mechanism independent token: ");
+            LOG.log(Level.FINE, dumpHex(token));
         }
 
         try {
@@ -335,12 +347,12 @@ public class GSSUtils {
             int mechtoklen = token.length - index;
             mechtoken = new byte[mechtoklen];
             System.arraycopy(token, index, mechtoken, 0, mechtoklen);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Mechanism specific token : ");
-                _logger.log(Level.FINE, dumpHex(mechtoken));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Mechanism specific token : ");
+                LOG.log(Level.FINE, dumpHex(mechtoken));
             }
         } catch (GSSException e) {
-            _logger.log(Level.SEVERE, "iiop.IOexception", e);
+            LOG.log(Level.SEVERE, "Invalid token header", e);
         }
         return mechtoken;
     }
@@ -357,24 +369,26 @@ public class GSSUtils {
 
     private static int verifyTokenHeader(Oid oid, byte[] token) throws GSSException {
         int index = 0;
-        _logger.log(Level.FINE, "Attempting to verify tokenheader in the mechanism independent token.");
+        LOG.log(Level.FINE, "Attempting to verify tokenheader in the mechanism independent token.");
 
         // verify header
-        if (token[index++] != 0x60)
+        if (token[index++] != 0x60) {
             throw new GSSException(GSSException.DEFECTIVE_TOKEN);
+        }
 
         int toklen = readDERLength(token, index); // derOID length + token length
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mech OID length + Mech specific length = " + toklen);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mech OID length + Mech specific length = " + toklen);
         }
         index += getDERLengthSize(toklen);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mechanism OID index : " + index);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mechanism OID index : " + index);
         }
 
-        if (token[index] != 0x06)
+        if (token[index] != 0x06) {
             throw new GSSException(GSSException.DEFECTIVE_TOKEN);
+        }
 
         // add first two bytes to the MECH_OID_LEN
         int oidlen = token[index+1] + 2;
@@ -384,38 +398,39 @@ public class GSSUtils {
 
         Oid mechoid = getOID(buf);
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Comparing mech OID in token with the expected mech OID");
-            _logger.log(Level.FINE, "mech OID: " + dumpHex(getDER(mechoid)));
-            _logger.log(Level.FINE, "expected mech OID: " + dumpHex(getDER(oid)));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Comparing mech OID in token with the expected mech OID");
+            LOG.log(Level.FINE, "mech OID: " + dumpHex(getDER(mechoid)));
+            LOG.log(Level.FINE, "expected mech OID: " + dumpHex(getDER(oid)));
         }
 
-        if (!mechoid.equals((Object) oid)) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "mech OID in token does not match expected mech OID");
+        if (!mechoid.equals(oid)) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "mech OID in token does not match expected mech OID");
             }
             throw new GSSException(GSSException.DEFECTIVE_TOKEN);
         }
         int mechoidlen = getDER(oid).length;
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Mechanism specific token index : " + index + mechoidlen);
-            _logger.log(Level.FINE, "Successfully verified header in the mechanism independent token.");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Mechanism specific token index : " + index + mechoidlen);
+            LOG.log(Level.FINE, "Successfully verified header in the mechanism independent token.");
         }
         return (index + mechoidlen); // starting position of mech specific token
     }
 
     static int getDERLengthSize(int length) {
-        if (length < (1 << 7))
+        if (length < (1 << 7)) {
             return (1);
-        else if (length < (1 << 8))
+        } else if (length < (1 << 8)) {
             return (2);
-        else if (length < (1 << 16))
+        } else if (length < (1 << 16)) {
             return (3);
-        else if (length < (1 << 24))
+        } else if (length < (1 << 24)) {
             return (4);
-        else
+        } else {
             return (5);
+        }
     }
 
     static int writeDERLength(byte[] token, int index, int length) {
@@ -423,12 +438,15 @@ public class GSSUtils {
             token[index++] = (byte) length;
         } else {
             token[index++] = (byte) (getDERLengthSize(length) + 127);
-            if (length >= (1 << 24))
+            if (length >= (1 << 24)) {
                 token[index++] = (byte) (length >> 24);
-            if (length >= (1 << 16))
+            }
+            if (length >= (1 << 16)) {
                 token[index++] = (byte) ((length >> 16) & 0xff);
-            if (length >= (1 << 8))
+            }
+            if (length >= (1 << 8)) {
                 token[index++] = (byte) ((length >> 8) & 0xff);
+            }
             token[index++] = (byte) (length & 0xff);
         }
         return (index);
@@ -444,10 +462,12 @@ public class GSSUtils {
         if ((sf & 0x80) == 0x80) { // value > 128
             // bit 8 is 1 ; bits 0-7 of first bye is the number of octets
             nooctets = (sf & 0x7f); // remove the 8th bit
-            for (; nooctets != 0; nooctets--)
+            for (; nooctets != 0; nooctets--) {
                 ret = (ret << 8) + (token[index++] & 0x00FF);
-        } else
+            }
+        } else { // value > 128
             ret = sf;
+        }
 
         return (ret);
     }
@@ -467,26 +487,28 @@ public class GSSUtils {
             len[0] = (byte) 0x82;
             len[1] = (byte) 0x01;
             len[2] = (byte) 0xd3;
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Length byte array : " + dumpHex(len));
-                _logger.log(Level.FINE, " Der length = " + readDERLength(len, 0));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Length byte array : " + dumpHex(len));
+                LOG.log(Level.FINE, " Der length = " + readDERLength(len, 0));
             }
             String name = "default";
             byte[] externalName = createExportedName(GSSUtils.GSSUP_MECH_OID, name.getBytes());
             byte[] m = importName(GSSUtils.GSSUP_MECH_OID, externalName);
-            if (_logger.isLoggable(Level.FINE))
-                _logger.log(Level.FINE, "BAR:" + new String(m));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "BAR:" + new String(m));
+            }
             String msg = "dummy_gss_export_sec_context";
             byte[] foo = createMechIndToken(GSSUtils.GSSUP_MECH_OID, msg.getBytes());
-            if (_logger.isLoggable(Level.FINE))
-                _logger.log(Level.FINE, "FOO:" + dumpHex(foo));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "FOO:" + dumpHex(foo));
+            }
             byte[] msg1 = getMechToken(GSSUtils.GSSUP_MECH_OID, foo);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "BAR:" + dumpHex(msg1));
-                _logger.log(Level.FINE, "BAR string: " + new String(msg1));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "BAR:" + dumpHex(msg1));
+                LOG.log(Level.FINE, "BAR string: " + new String(msg1));
             }
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "iiop.name_exception", e);
+            LOG.log(Level.SEVERE, "main crashed", e);
         }
     }
 

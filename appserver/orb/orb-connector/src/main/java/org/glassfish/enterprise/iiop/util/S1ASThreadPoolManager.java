@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,31 @@
 
 package org.glassfish.enterprise.iiop.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.corba.ee.spi.threadpool.NoSuchThreadPoolException;
 import com.sun.corba.ee.spi.threadpool.ThreadPool;
 import com.sun.corba.ee.spi.threadpool.ThreadPoolChooser;
 import com.sun.corba.ee.spi.threadpool.ThreadPoolFactory;
 import com.sun.corba.ee.spi.threadpool.ThreadPoolManager;
 import com.sun.logging.LogDomains;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.internal.api.Globals;
 
 public class S1ASThreadPoolManager implements ThreadPoolManager {
 
-    static Logger _logger = LogDomains.getLogger(S1ASThreadPoolManager.class,
-            LogDomains.UTIL_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(S1ASThreadPoolManager.class, LogDomains.CORBA_LOGGER, false);
 
-    private static final int DEFAULT_NUMBER_OF_QUEUES = 0;
     private static final int DEFAULT_MIN_THREAD_COUNT = 10;
     private static final int DEFAULT_MAX_THREAD_COUNT = 200;
 
-    private static HashMap idToIndexTable = new HashMap();
-    private static HashMap indexToIdTable = new HashMap();
-    private static ArrayList threadpoolList = new ArrayList();
+    private static HashMap<String, Integer> idToIndexTable = new HashMap<>();
+    private static HashMap<Integer, String> indexToIdTable = new HashMap<>();
+    private static ArrayList<ThreadPool> threadpoolList = new ArrayList<>();
     private static String defaultID;
 
     private static ThreadPoolManager s1asThreadPoolMgr = new S1ASThreadPoolManager();
@@ -60,9 +60,9 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
             for (int i = 0; i < allThreadPools.length; i++) {
                 createThreadPools(allThreadPools[i], i);
             }
-            defaultID = (String) indexToIdTable.get(Integer.valueOf(0));
+            defaultID = indexToIdTable.get(Integer.valueOf(0));
         } catch (NullPointerException npe) {
-            _logger.log(Level.FINE, "Server Context is NULL. Ignoring and proceeding.");
+            LOG.log(Level.FINE, "Server Context is NULL. Ignoring and proceeding.");
         }
 
 
@@ -79,96 +79,49 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
         int minThreads = DEFAULT_MIN_THREAD_COUNT;
         int maxThreads = DEFAULT_MAX_THREAD_COUNT;
         int idleTimeoutInSeconds = 120000;
-//        int numberOfQueues = DEFAULT_NUMBER_OF_QUEUES;
 
         try {
             threadpoolId = threadpoolBean.getName();
         } catch (NullPointerException npe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
-            }
+            LOG.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
         }
         try {
             minThreadsValue = threadpoolBean.getMinThreadPoolSize();
             minThreads = Integer.parseInt(minThreadsValue);
         } catch (NullPointerException npe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
-                _logger.log(Level.WARNING,
-                        "Using default value for steady-threadpool-size = " + minThreads);
-            }
+            LOG.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
+            LOG.log(Level.WARNING, "Using default value for steady-threadpool-size = {0}", minThreads);
         } catch (NumberFormatException nfe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "enterprise_util.excep_orbmgr_numfmt", nfe);
-                _logger.log(Level.WARNING,
-                        "Using default value for min-threadpool-size = " + minThreads);
-            }
+            LOG.log(Level.WARNING, "Number Format Exception, Using default value(s)", nfe);
+            LOG.log(Level.WARNING, "Using default value for min-threadpool-size = {0}", minThreads);
         }
         try {
             maxThreadsValue = threadpoolBean.getMaxThreadPoolSize();
             maxThreads = Integer.parseInt(maxThreadsValue);
         } catch (NullPointerException npe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
-                _logger.log(Level.WARNING,
-                        "Using default value for max-threadpool-size = " + maxThreads);
-            }
+            LOG.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
+            LOG.log(Level.WARNING, "Using default value for max-threadpool-size = " + maxThreads);
         } catch (NumberFormatException nfe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "enterprise_util.excep_orbmgr_numfmt", nfe);
-                _logger.log(Level.WARNING,
-                        "Using default value for max-threadpool-size = " + maxThreads);
-            }
+            LOG.log(Level.WARNING, "Number Format Exception, Using default value(s)", nfe);
+            LOG.log(Level.WARNING, "Using default value for max-threadpool-size = {0}", maxThreads);
         }
         try {
             timeoutValue = threadpoolBean.getIdleThreadTimeoutSeconds();
             idleTimeoutInSeconds = Integer.parseInt(timeoutValue);
         } catch (NullPointerException npe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
-                _logger.log(Level.WARNING,
-                        "Using default value for idle-thread-timeout-in-seconds = " +
-                                idleTimeoutInSeconds);
-            }
+            LOG.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
+            LOG.log(Level.WARNING, "Using default value for idle-thread-timeout-in-seconds = {0}",
+                idleTimeoutInSeconds);
         } catch (NumberFormatException nfe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "enterprise_util.excep_orbmgr_numfmt", nfe);
-                _logger.log(Level.WARNING,
-                        "Using default value for idle-thread-timeout-in-seconds = " +
-                                idleTimeoutInSeconds);
-            }
+            LOG.log(Level.WARNING, "Number Format Exception, Using default value(s)", nfe);
+            LOG.log(Level.WARNING, "Using default value for idle-thread-timeout-in-seconds = {0}",
+                idleTimeoutInSeconds);
         }
-
-        // Currently this value is not used but when multi-queue threadpools are
-        // implemented this could be used to decide which one to instantiate and
-        // number of queues in the multi-queue threadpool
-/*
-        try {
-            numberOfQueuesValue = threadpoolBean.getNumWorkQueues();
-            numberOfQueues = Integer.parseInt(numberOfQueuesValue);
-        } catch (NullPointerException npe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "ThreadPoolBean may be null ", npe);
-                _logger.log(Level.WARNING,
-                        "Using default value for num-work-queues = " +
-                                numberOfQueues);
-            }
-        } catch (NumberFormatException nfe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "enterprise_util.excep_orbmgr_numfmt", nfe);
-                _logger.log(Level.WARNING,
-                        "Using default value for num-work-queues = " +
-                                numberOfQueues);
-            }
-        }
-*/
 
         // Mutiplied the idleTimeoutInSeconds by 1000 to convert to milliseconds
         ThreadPoolFactory threadPoolFactory = new ThreadPoolFactory();
-        ThreadPool threadpool =
-                threadPoolFactory.create(minThreads, maxThreads,
-                        idleTimeoutInSeconds * 1000L, threadpoolId,
-                        _iiopUtils.getCommonClassLoader());
+        ThreadPool threadpool = threadPoolFactory.create(minThreads, maxThreads, idleTimeoutInSeconds * 1000L,
+            threadpoolId, _iiopUtils.getCommonClassLoader());
 
         // Add the threadpool instance to the threadpoolList
         threadpoolList.add(threadpool);
@@ -187,23 +140,20 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * @throws NoSuchThreadPoolException thrown when invalid threadpoolId is passed
      *                                   as a parameter
      */
-    public ThreadPool
-    getThreadPool(String id)
-            throws NoSuchThreadPoolException {
-
-        Integer i = (Integer) idToIndexTable.get(id);
+    @Override
+    public ThreadPool getThreadPool(String id) throws NoSuchThreadPoolException {
+        Integer i = idToIndexTable.get(id);
         if (i == null) {
             throw new NoSuchThreadPoolException();
         }
         try {
-            ThreadPool threadpool =
-                    (ThreadPool)
-                            threadpoolList.get(i.intValue());
+            ThreadPool threadpool = threadpoolList.get(i.intValue());
             return threadpool;
         } catch (IndexOutOfBoundsException iobe) {
             throw new NoSuchThreadPoolException();
         }
     }
+
 
     /**
      * This method will return an instance of the threadpool given a numeric threadpoolId.
@@ -213,13 +163,10 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * @throws NoSuchThreadPoolException thrown when invalidnumericIdForThreadpool is passed
      *                                   as a parameter
      */
-    public ThreadPool getThreadPool(int numericIdForThreadpool)
-            throws NoSuchThreadPoolException {
-
+    @Override
+    public ThreadPool getThreadPool(int numericIdForThreadpool) throws NoSuchThreadPoolException {
         try {
-            ThreadPool threadpool =
-                    (ThreadPool)
-                            threadpoolList.get(numericIdForThreadpool);
+            ThreadPool threadpool = threadpoolList.get(numericIdForThreadpool);
             return threadpool;
         } catch (IndexOutOfBoundsException iobe) {
             throw new NoSuchThreadPoolException();
@@ -232,31 +179,32 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * Id, as a tagged component in the IOR. This is used to provide the functionality of
      * dedicated threadpool for EJB beans
      */
+    @Override
     public int getThreadPoolNumericId(String id) {
-        Integer i = (Integer) idToIndexTable.get(id);
-        return ((i == null) ? 0 : i.intValue());
+        Integer i = idToIndexTable.get(id);
+        return i == null ? 0 : i.intValue();
     }
 
     /**
      * Return a String Id for a numericId of a threadpool managed by the threadpool
      * manager
      */
+    @Override
     public String getThreadPoolStringId(int numericIdForThreadpool) {
-        String id = (String) indexToIdTable.get(Integer.valueOf(numericIdForThreadpool));
-        return ((id == null) ? defaultID : id);
+        String id = indexToIdTable.get(Integer.valueOf(numericIdForThreadpool));
+        return id == null ? defaultID : id;
     }
 
     /**
      * Returns the first instance of ThreadPool in the ThreadPoolManager
      */
+    @Override
     public ThreadPool
     getDefaultThreadPool() {
         try {
             return getThreadPool(0);
         } catch (NoSuchThreadPoolException nstpe) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "No default ThreadPool defined ", nstpe);
-            }
+            LOG.log(Level.WARNING, "No default ThreadPool defined ", nstpe);
         }
         return null;
     }
@@ -265,6 +213,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * Return an instance of ThreadPoolChooser based on the componentId that was
      * passed as argument
      */
+    @Override
     public ThreadPoolChooser getThreadPoolChooser(String componentId) {
         //FIXME: This method is not used, but should be fixed once
         //ORB's nio select starts working and we start using ThreadPoolChooser
@@ -277,6 +226,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * passed as argument. This is added for improved performance so that the caller
      * does not have to pay the cost of computing hashcode for the componentId
      */
+    @Override
     public ThreadPoolChooser getThreadPoolChooser(int componentIndex) {
         //FIXME: This method is not used, but should be fixed once
         //ORB's nio select starts working and we start using ThreadPoolChooser
@@ -288,6 +238,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * Sets a ThreadPoolChooser for a particular componentId in the ThreadPoolManager. This
      * would enable any component to add a ThreadPoolChooser for their specific use
      */
+    @Override
     public void setThreadPoolChooser(String componentId, ThreadPoolChooser aThreadPoolChooser) {
         //FIXME: This method is not used, but should be fixed once
         //ORB's nio select starts working and we start using ThreadPoolChooser
@@ -299,6 +250,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
      * ThreadPoolChooser. This method would help the component call the more
      * efficient implementation i.e. getThreadPoolChooser(int componentIndex)
      */
+    @Override
     public int getThreadPoolChooserNumericId(String componentId) {
         //FIXME: This method is not used, but should be fixed once
         //ORB's nio select starts working and we start using ThreadPoolChooser
@@ -306,6 +258,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
         return 0;
     }
 
+    @Override
     public void close() {
         //TODO
     }

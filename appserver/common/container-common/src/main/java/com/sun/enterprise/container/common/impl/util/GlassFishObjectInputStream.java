@@ -40,9 +40,8 @@ import org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory;
  *
  * @author Mahesh Kannan
  */
-class GlassFishObjectInputStream extends ObjectInputStream
-{
-    private static final Logger _logger = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER);
+class GlassFishObjectInputStream extends ObjectInputStream {
+    private static final Logger LOG = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER, false);
 
     private final ClassLoader appLoader;
     private final ObjectInputOutputStreamFactory inputStreamHelper;
@@ -76,10 +75,10 @@ class GlassFishObjectInputStream extends ObjectInputStream
             }
             return obj;
         } catch (IOException ioEx ) {
-            _logger.log(Level.SEVERE, "ejb.resolve_object_exception", ioEx);
+            LOG.log(Level.SEVERE, "Exception resolving object", ioEx);
             throw ioEx;
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "ejb.resolve_object_exception", ex);
+            LOG.log(Level.SEVERE, "Exception resolving object", ex);
             throw new IOException("Could not resolve object: " + obj, ex);
         }
     }

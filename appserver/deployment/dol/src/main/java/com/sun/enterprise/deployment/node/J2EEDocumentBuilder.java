@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,6 @@ package com.sun.enterprise.deployment.node;
 import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -56,30 +56,22 @@ public class J2EEDocumentBuilder {
     public static Document newDocument() {
         try {
             // always use system default, see IT 8229
-            ClassLoader currentLoader =
-                Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(
-                J2EEDocumentBuilder.class.getClassLoader());
+            ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(J2EEDocumentBuilder.class.getClassLoader());
             DocumentBuilderFactory factory = null;
             try {
                 factory = DocumentBuilderFactory.newInstance();
             } finally {
                 Thread.currentThread().setContextClassLoader(currentLoader);
             }
-
             DocumentBuilder builder = factory.newDocumentBuilder();
-
-            DOMImplementation domImplementation =
-                builder.getDOMImplementation();
-
             Document document = builder.newDocument();
             return document;
         } catch (Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                    new Object[] {"JAXP configuration error"});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_SHORT, e.getMessage());
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
+            return null;
         }
-        return null;
     }
 
     /**
@@ -89,14 +81,14 @@ public class J2EEDocumentBuilder {
     public static Document getDocument(Descriptor descriptor, XMLNode node) {
         try {
             Node domNode = node.writeDescriptor(newDocument(), descriptor);
-            if (domNode instanceof Document)
+            if (domNode instanceof Document) {
                 return (Document) domNode;
-            else
-                return domNode.getOwnerDocument();
+            }
+            return domNode.getOwnerDocument();
         } catch (Exception e) {
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
+            return null;
         }
-        return null;
     }
 
     public static void write (Descriptor descriptor, final RootXMLNode node,  final File resultFile) throws Exception {
@@ -107,8 +99,9 @@ public class J2EEDocumentBuilder {
         }
         if (resultFile.getParent() != null) {
             File f = new File(resultFile.getParent());
-            if (!f.isDirectory() && !f.mkdirs())
+            if (!f.isDirectory() && !f.mkdirs()) {
                 throw new IOException("Cannot create parent directory " + f.getAbsolutePath());
+            }
         }
         FileOutputStream out = new FileOutputStream(resultFile);
         try {
@@ -118,13 +111,12 @@ public class J2EEDocumentBuilder {
         }
     }
 
-    public static void write (Descriptor descriptor, final RootXMLNode node,  final OutputStream os) throws Exception {
+    public static void write(Descriptor descriptor, final RootXMLNode node, final OutputStream os) throws Exception {
         Result output = new StreamResult(os);
         write(descriptor, node, output);
     }
 
-    public static void write (Descriptor descriptor, final RootXMLNode node,  final Result output)
-                                throws Exception {
+    public static void write(Descriptor descriptor, final RootXMLNode node, final Result output) throws Exception {
         if (node==null) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {descriptor, null});

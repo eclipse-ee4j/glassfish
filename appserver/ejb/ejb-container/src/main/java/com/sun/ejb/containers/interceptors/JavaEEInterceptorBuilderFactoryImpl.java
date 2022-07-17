@@ -17,12 +17,6 @@
 
 package com.sun.ejb.containers.interceptors;
 
-import static com.sun.ejb.EJBUtils.getGeneratedOptionalInterfaceName;
-
-import java.util.logging.Logger;
-
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.ejb.codegen.EjbOptionalIntfGenerator;
 import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
@@ -30,13 +24,17 @@ import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilderFactory;
 import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
 import com.sun.logging.LogDomains;
 
-/**
- *
- */
+import java.util.logging.Logger;
+
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.ejb.EJBUtils.getGeneratedOptionalInterfaceName;
+import static com.sun.logging.LogDomains.CORE_LOGGER;
+
 @Service
 public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBuilderFactory {
 
-    private static Logger _logger = LogDomains.getLogger(JavaEEInterceptorBuilderImpl.class, LogDomains.CORE_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(JavaEEInterceptorBuilderImpl.class, CORE_LOGGER, false);
 
     @Override
     public JavaEEInterceptorBuilder createBuilder(InterceptorInfo info) throws Exception {
@@ -62,7 +60,7 @@ public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBui
 
         // TODO do interceptor builder once per managed bean
         InterceptorManager interceptorManager =
-            new InterceptorManager(_logger, targetObjectClass.getClassLoader(), targetObjectClass.getName(), info);
+            new InterceptorManager(LOG, targetObjectClass.getClassLoader(), targetObjectClass.getName(), info);
 
         return new JavaEEInterceptorBuilderImpl(info, interceptorManager, interfaceGenerator, subClassInterface, subClass);
     }

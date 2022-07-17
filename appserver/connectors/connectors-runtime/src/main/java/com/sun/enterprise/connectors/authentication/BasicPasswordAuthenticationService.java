@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,18 +23,28 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.logging.LogDomains;
+
+import jakarta.ejb.EJBContext;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import jakarta.ejb.EJBContext;
-import javax.security.auth.Subject;
-import java.security.Principal;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static com.sun.logging.LogDomains.RSR_LOGGER;
 
 
 /**
@@ -42,15 +53,13 @@ import java.util.logging.Logger;
  *
  * @author Srikanth P
  */
-public class BasicPasswordAuthenticationService
-        implements AuthenticationService {
+public class BasicPasswordAuthenticationService implements AuthenticationService {
 
-    private String rarName_;
-    private PoolInfo poolInfo_;
-    ConnectorRegistry connectorRegistry_ = ConnectorRegistry.getInstance();
-    static Logger _logger = LogDomains.getLogger(BasicPasswordAuthenticationService.class, LogDomains.RSR_LOGGER);
-    private Object containerContext = null;
-    private SecurityRoleMapperFactory securityRoleMapperFactory;
+    private static final Logger LOG = LogDomains.getLogger(BasicPasswordAuthenticationService.class, RSR_LOGGER, false);
+
+    private final String rarName;
+    private final PoolInfo poolInfo;
+    private final ConnectorRegistry connectorRegistry = ConnectorRegistry.getInstance();
 
     /**
      * Constructor
@@ -59,11 +68,9 @@ public class BasicPasswordAuthenticationService
      * @param poolInfo Name of the pool.
      */
     public BasicPasswordAuthenticationService(String rarName, PoolInfo poolInfo) {
-        rarName_ = rarName;
-        poolInfo_ = poolInfo;
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Constructor:BasicPasswordAuthenticationService");
-        }
+        this.rarName = rarName;
+        this.poolInfo = poolInfo;
+        LOG.log(Level.FINE, "Constructor:BasicPasswordAuthenticationService");
     }
 
     /**
@@ -72,11 +79,11 @@ public class BasicPasswordAuthenticationService
      * @param callerPrincipal Name of the principal to be mapped.
      * @return Mapped Backendprincipal
      */
+    @Override
     public Principal mapPrincipal(Principal callerPrincipal, Set principalSet) {
 
         // If no security maps are associated with this pool, return empty
-        RuntimeSecurityMap runtimeSecurityMap =
-                connectorRegistry_.getRuntimeSecurityMap(poolInfo_);
+        RuntimeSecurityMap runtimeSecurityMap = connectorRegistry.getRuntimeSecurityMap(poolInfo);
         if (runtimeSecurityMap == null) {
             return null;
         }
@@ -84,7 +91,7 @@ public class BasicPasswordAuthenticationService
         String principalName = callerPrincipal.getName();
 
         // Create a list of Group Names from group Set
-        List<String> groupNames = new ArrayList<String>();
+        List<String> groupNames = new ArrayList<>();
         Iterator iter = principalSet.iterator();
         while (iter.hasNext()) {
             Principal p = (Principal) iter.next();
@@ -100,9 +107,8 @@ public class BasicPasswordAuthenticationService
         if (isContainerContextAWebModuleObject()) {
             String roleName = getRoleName(callerPrincipal);
             return doMap(principalName, groupNames, roleName, runtimeSecurityMap);
-        } else {
-            return doMap(principalName, groupNames, null, runtimeSecurityMap);
         }
+        return doMap(principalName, groupNames, null, runtimeSecurityMap);
     }
 
     /**
@@ -111,7 +117,7 @@ public class BasicPasswordAuthenticationService
      * existing mapping. If a map is found the backendPrincipal is
      * returned else null is returned .
      */
-    private Principal doMap(String principalName, List groupNames,
+    private Principal doMap(String principalName, List<String> groupNames,
             String roleName, RuntimeSecurityMap runtimeSecurityMap) {
 
         // Policy:
@@ -120,8 +126,8 @@ public class BasicPasswordAuthenticationService
         // user contains *
         // role/group contains *
 
-        HashMap userNameSecurityMap = (HashMap) runtimeSecurityMap.getUserMap();
-        HashMap groupNameSecurityMap = (HashMap) runtimeSecurityMap.getGroupMap();
+        HashMap userNameSecurityMap = runtimeSecurityMap.getUserMap();
+        HashMap groupNameSecurityMap = runtimeSecurityMap.getGroupMap();
 
         // Check if caller's user-name is preset in the User Map
         if (userNameSecurityMap.containsKey(principalName)) {
@@ -141,7 +147,7 @@ public class BasicPasswordAuthenticationService
                     ConnectorRuntime.getRuntime().getInvocationManager().getCurrentInvocation();
             EJBInvocation ejbInvocation = (EJBInvocation) componentInvocation;
             EJBContext ejbcontext = ejbInvocation.getEJBContext();
-            Set<Map.Entry> s = (Set<Map.Entry>) groupNameSecurityMap.entrySet();
+            Set<Map.Entry> s = groupNameSecurityMap.entrySet();
             Iterator i = s.iterator();
             while(i.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) i.next();
@@ -152,9 +158,7 @@ public class BasicPasswordAuthenticationService
                 try {
                     isInRole = ejbcontext.isCallerInRole(key);
                 } catch (Exception ex) {
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, "BasicPasswordAuthentication::caller not in role " + key);
-                    }
+                    LOG.log(Level.FINE, "BasicPasswordAuthentication::caller not in role {0}", key);
                 }
                 if (isInRole) {
                     return entry;
@@ -163,8 +167,7 @@ public class BasicPasswordAuthenticationService
        }
 
         // Check if caller's group(s) is/are present in the Group Map
-        for (int j = 0; j < groupNames.size(); j++) {
-            String groupName = (String) groupNames.get(j);
+        for (String groupName : groupNames) {
             if (groupNameSecurityMap.containsKey(groupName)) {
                 return (Principal) groupNameSecurityMap.get(groupName);
             }
@@ -183,21 +186,16 @@ public class BasicPasswordAuthenticationService
         return null;
     }
 
+
     private String getRoleName(Principal callerPrincipal) {
-
-        String roleName = null;
-
         WebBundleDescriptor wbd = (WebBundleDescriptor) getComponentEnvManager().getCurrentJndiNameEnvironment();
-
         SecurityRoleMapperFactory securityRoleMapperFactory = getSecurityRoleMapperFactory();
-        SecurityRoleMapper securityRoleMapper =
-                securityRoleMapperFactory.getRoleMapper(wbd.getModuleID());
-
+        SecurityRoleMapper securityRoleMapper = securityRoleMapperFactory.getRoleMapper(wbd.getModuleID());
         Map<String, Subject> map = securityRoleMapper.getRoleToSubjectMapping();
         for (Map.Entry<String, Subject> entry : map.entrySet()) {
-            roleName = entry.getKey();
+            String roleName = entry.getKey();
             Subject subject = entry.getValue();
-            Set principalSet = subject.getPrincipals();
+            Set<Principal> principalSet = subject.getPrincipals();
             if (principalSet.contains(callerPrincipal)) {
                 return roleName;
             }
@@ -228,5 +226,10 @@ public class BasicPasswordAuthenticationService
 
     public SecurityRoleMapperFactory getSecurityRoleMapperFactory() {
         return ConnectorRuntime.getRuntime().getSecurityRoleMapperFactory();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[" + rarName + "]";
     }
 }

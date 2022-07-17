@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,26 @@
 
 package com.sun.enterprise.resource.rm;
 
-import jakarta.transaction.*;
-import jakarta.resource.spi.ManagedConnection;
-import java.util.logging.Level;
-import java.util.List;
-
-import jakarta.resource.ResourceException;
-
+import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.logging.LogDomains;
 
-import com.sun.appserv.connectors.internal.api.PoolingException;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
 
+import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
+
+import static com.sun.logging.LogDomains.RSR_LOGGER;
 
 /**
  * This class is used for lazy enlistment of a resource
@@ -40,8 +44,10 @@ import org.glassfish.api.invocation.ComponentInvocation;
  * @author Aditya Gore
  */
 public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
+    private static final Logger LOG = LogDomains.getLogger(LazyEnlistableResourceManagerImpl.class, RSR_LOGGER);
 
 
+    @Override
     protected void enlist( JavaEETransactionManager tm, Transaction tran,
         ResourceHandle h ){
         //do nothing
@@ -52,21 +58,22 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
      * @param handle
      * @throws PoolingException
      */
-      public void registerResource(ResourceHandle handle)
-            throws PoolingException {
-            handle.setEnlistmentSuspended(true);
-            super.registerResource(handle);
-     }
+    @Override
+    public void registerResource(ResourceHandle handle) throws PoolingException {
+        handle.setEnlistmentSuspended(true);
+        super.registerResource(handle);
+    }
+
+
     /**
      * This is called by the PoolManager (in turn by the LazyEnlistableConnectionManager)
      * when a lazy enlistment is sought.
+     *
      * @param mc ManagedConnection
      * @throws ResourceException
      */
-    public void lazyEnlist( ManagedConnection mc ) throws ResourceException {
-        if ( _logger.isLoggable(Level.FINE) ) {
-            _logger.fine("Entering lazyEnlist");
-        }
+    public void lazyEnlist(ManagedConnection mc) throws ResourceException {
+        LOG.fine("Entering lazyEnlist");
 
         //J2EETransactionManager tm = Switch.getSwitch().getTransactionManager();
         JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
@@ -74,16 +81,13 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
 
         try {
             tran = tm.getTransaction();
-            if ( tran == null ) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine(" Transaction null - not enlisting ");
-                }
-
+            if (tran == null) {
+                LOG.fine(" Transaction null - not enlisting ");
                 return;
             }
-        } catch( SystemException se ) {
-            ResourceException re = new ResourceException( se.getMessage() );
-            re.initCause( se );
+        } catch (SystemException se) {
+            ResourceException re = new ResourceException(se.getMessage());
+            re.initCause(se);
             throw re;
         }
 
@@ -91,17 +95,17 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         List invList = ConnectorRuntime.getRuntime().getInvocationManager().getAllInvocations();
 
         ResourceHandle h = null;
-        for ( int j = invList.size(); j > 0; j-- ) {
-            ComponentInvocation inv = (ComponentInvocation) invList.get( j - 1 );
+        for (int j = invList.size(); j > 0; j--) {
+            ComponentInvocation inv = (ComponentInvocation) invList.get(j - 1);
             Object comp = inv.getInstance();
 
-            List l = tm.getResourceList( comp, inv );
+            List l = tm.getResourceList(comp, inv);
 
             ListIterator it = l.listIterator();
-            while( it.hasNext()) {
+            while (it.hasNext()) {
                 ResourceHandle hand = (ResourceHandle) it.next();
                 ManagedConnection toEnlist = (ManagedConnection) hand.getResource();
-                if ( mc.equals( toEnlist ) ) {
+                if (mc.equals(toEnlist)) {
                     h = hand;
                     break;
                 }
@@ -116,26 +120,22 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         //At this point however, we will only support the straight and narrow
         //case where a connection is acquired and then used in the same component.
         //The other case might or might not work
-        if( h != null && h.getResourceState().isUnenlisted()) {
+        if (h != null && h.getResourceState().isUnenlisted()) {
             try {
-                //Enable the suspended lazyenlistment so as to enlist the resource.
-                    h.setEnlistmentSuspended(false);
-                    tm.enlistResource( tran, h );
-                //Suspend it back
-                    h.setEnlistmentSuspended(true);
-            } catch( Exception e ) {
-                //In the rare cases where enlistResource throws exception, we
-                //should return the resource to the pool
-                    PoolManager mgr = ConnectorRuntime.getRuntime().getPoolManager();
-                    mgr.putbackDirectToPool( h, h.getResourceSpec().getPoolInfo());
-                    _logger.log(Level.WARNING,
-                                "poolmgr.err_enlisting_res_in_getconn", h
-                                .getResourceSpec().getPoolInfo());
-                if (_logger.isLoggable(Level.FINE) ) {
-                    _logger.fine("rm.enlistResource threw Exception. Returning resource to pool");
-                }
+                // Enable the suspended lazyenlistment so as to enlist the resource.
+                h.setEnlistmentSuspended(false);
+                tm.enlistResource(tran, h);
+                // Suspend it back
+                h.setEnlistmentSuspended(true);
+            } catch (Exception e) {
+                // In the rare cases where enlistResource throws exception, we
+                // should return the resource to the pool
+                PoolManager mgr = ConnectorRuntime.getRuntime().getPoolManager();
+                mgr.putbackDirectToPool(h, h.getResourceSpec().getPoolInfo());
+                LOG.log(Level.WARNING, "poolmgr.err_enlisting_res_in_getconn", h.getResourceSpec().getPoolInfo());
+                LOG.fine("rm.enlistResource threw Exception. Returning resource to pool");
                 //and rethrow the exception
-                throw new ResourceException( e );
+                throw new ResourceException(e);
             }
         }
     }

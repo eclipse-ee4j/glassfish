@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,14 @@
 
 package com.sun.enterprise.transaction.startup;
 
-import java.util.logging.Logger;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.transaction.config.TransactionService;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
+
+import java.util.logging.Logger;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
@@ -37,10 +43,6 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.logging.LogDomains;
-
 /**
  * Service wrapper to only lookup the transaction recovery when there
  * are applications deployed since the actual service has ORB dependency.
@@ -51,7 +53,9 @@ import com.sun.logging.LogDomains;
 //todo: change value=10 to a public constant
 @RunLevel( value=10 )
 public class TransactionLifecycleService implements PostConstruct, PreDestroy {
-//  public class TransactionLifecycleService implements Startup, PostConstruct, PreDestroy {
+
+    private static final Logger LOG = LogDomains.getLogger(TransactionLifecycleService.class, LogDomains.JTA_LOGGER, false);
+    private static final String USER_TX_NO_JAVA_COMP = "UserTransaction";
 
     @Inject
     ServiceLocator habitat;
@@ -62,11 +66,8 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
     @Inject @Optional
     GlassfishNamingManager nm;
 
-    static final String USER_TX_NO_JAVA_COMP = "UserTransaction";
 
-    private static Logger _logger = LogDomains.getLogger(TransactionLifecycleService.class, LogDomains.JTA_LOGGER);
-
-    private JavaEETransactionManager tm = null;
+    private JavaEETransactionManager tm;
 
     @Override
     public void postConstruct() {
@@ -74,10 +75,10 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
             @Override
             public void event(Event event) {
                 if (event.is(EventTypes.SERVER_READY)) {
-                    _logger.fine("TM LIFECYCLE SERVICE - ON READY");
+                    LOG.fine("TM LIFECYCLE SERVICE - ON READY");
                     onReady();
                 } else if (event.is(EventTypes.PREPARE_SHUTDOWN)) {
-                    _logger.fine("TM LIFECYCLE SERVICE - ON SHUTDOWN");
+                    LOG.fine("TM LIFECYCLE SERVICE - ON SHUTDOWN");
                     onShutdown();
                 }
             }
@@ -90,13 +91,15 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
                     public Object create(Context ic) throws NamingException {
                         ActiveDescriptor<?> descriptor = habitat.getBestDescriptor(
                                 BuilderHelper.createContractFilter("jakarta.transaction.UserTransaction"));
-                        if (descriptor == null) return null;
+                        if (descriptor == null) {
+                            return null;
+                        }
 
                         return habitat.getServiceHandle(descriptor).getService();
                     }
                 }, false);
             } catch (NamingException e) {
-                _logger.warning("Can't bind \"UserTransaction\" in JNDI");
+                LOG.warning("Can't bind \"UserTransaction\" in JNDI");
             }
         }
     }
@@ -107,26 +110,26 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
             try {
                 nm.unpublishObject(USER_TX_NO_JAVA_COMP);
             } catch (NamingException e) {
-                _logger.warning("Can't unbind \"UserTransaction\" in JNDI");
+                LOG.warning("Can't unbind \"UserTransaction\" in JNDI");
             }
         }
     }
 
     public void onReady() {
-        _logger.fine("ON TM READY STARTED");
+        LOG.fine("ON TM READY STARTED");
 
         TransactionService txnService = habitat.getService(TransactionService.class);
         if (txnService != null) {
             boolean isAutomaticRecovery = Boolean.valueOf(txnService.getAutomaticRecovery());
             if (isAutomaticRecovery) {
-                _logger.fine("ON TM RECOVERY START");
+                LOG.fine("ON TM RECOVERY START");
                 tm = habitat.getService(JavaEETransactionManager.class);
                 tm.initRecovery(false);
-                _logger.fine("ON TM RECOVERY END");
+                LOG.fine("ON TM RECOVERY END");
             }
         }
 
-        _logger.fine("ON TM READY FINISHED");
+        LOG.fine("ON TM READY FINISHED");
     }
 
     public void onShutdown() {
@@ -139,9 +142,9 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
             }
         }
         if (tm != null) {
-            _logger.fine("ON TM SHUTDOWN STARTED");
+            LOG.fine("ON TM SHUTDOWN STARTED");
             tm.shutdown();
-            _logger.fine("ON TM SHUTDOWN FINISHED");
+            LOG.fine("ON TM SHUTDOWN FINISHED");
         }
 
     }

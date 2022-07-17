@@ -21,7 +21,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -43,10 +42,9 @@ import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
  *
  * @author  Jerome Dochez
  */
-final public class BeanMethodCalculatorImpl {
+public final class BeanMethodCalculatorImpl {
 
-    // TODO - change logger if/when other EJB deployment classes are changed
-    static final private Logger _logger = LogDomains.getLogger(BeanMethodCalculatorImpl.class, LogDomains.DPL_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(BeanMethodCalculatorImpl.class, LogDomains.DPL_LOGGER, false);
 
     public Vector getPossibleCmpCmrFields(ClassLoader cl, String className) throws ClassNotFoundException {
         Vector fieldDescriptors = new Vector();
@@ -59,8 +57,7 @@ final public class BeanMethodCalculatorImpl {
         // will contain all cmr field accessors as well, since there
         // is no good way to distinguish between the two purely based
         // on method signature.
-        for(int mIndex = 0; mIndex < methods.length; mIndex++) {
-            Method next = methods[mIndex];
+        for (Method next : methods) {
             String nextName = next.getName();
             int nextModifiers = next.getModifiers();
             if( Modifier.isAbstract(nextModifiers) ) {
@@ -194,8 +191,8 @@ final public class BeanMethodCalculatorImpl {
                     (ejbDescriptor.getWebServiceEndpointInterfaceName());
 
                 Method[] webMethods = webServiceClass.getMethods();
-                for (int i=0;i<webMethods.length;i++) {
-                    methods.add(new MethodDescriptor(webMethods[i],
+                for (Method webMethod : webMethods) {
+                    methods.add(new MethodDescriptor(webMethod,
                                 MethodDescriptor.EJB_WEB_SERVICE));
 
                 }
@@ -209,10 +206,9 @@ final public class BeanMethodCalculatorImpl {
                         Method m = lcd.getLifecycleCallbackMethodObject(loader);
                         MethodDescriptor md = new MethodDescriptor(m, MethodDescriptor.LIFECYCLE_CALLBACK);
                         methods.add(md);
-                    } catch(Exception e) {
-                        if (_logger.isLoggable(Level.FINE)) {
-                            _logger.log(Level.FINE,
-                            "Lifecycle callback processing error", e);
+                    } catch (Exception e) {
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.log(Level.FINE, "Lifecycle callback processing error", e);
                         }
                     }
                 }
@@ -289,17 +285,19 @@ final public class BeanMethodCalculatorImpl {
 
          Vector v = new Vector();
          // no disallowed methods for this interface
-         if (methodNames.length==0)
-             return v;
+         if (methodNames.length==0) {
+            return v;
+        }
 
          Method methods[] = interfaceType.getMethods();
 
-         for (int i=0; i<methods.length; i++) {
+         for (Method method : methods) {
             // all methods of the interface are disallowed
-            if (methodNames[0].equals("*"))
-                 v.addElement(methods[i]);
-            else if (Arrays.binarySearch(methodNames, methods[i].getName())>=0)
-                 v.addElement(methods[i]);
+            if (methodNames[0].equals("*")) {
+                v.addElement(method);
+            } else if (Arrays.binarySearch(methodNames, method.getName())>=0) {
+                v.addElement(method);
+            }
          }
          return v;
      }
@@ -314,8 +312,8 @@ final public class BeanMethodCalculatorImpl {
       */
      private void transformAndAdd(Collection methods, String methodIntf, Vector globalList) {
 
-         for (Iterator itr = methods.iterator();itr.hasNext();) {
-             Method m = (Method) itr.next();
+         for (Object method : methods) {
+             Method m = (Method) method;
              MethodDescriptor md = new MethodDescriptor(m, methodIntf);
              globalList.add(md);
          }

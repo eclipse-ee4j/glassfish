@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,24 @@
 
 package org.glassfish.jts.admin.cli;
 
-import jakarta.inject.Inject;
-
-import org.glassfish.api.Param;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
-
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
-import java.util.logging.Logger;
+import jakarta.inject.Inject;
+
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.Param;
+
+import static com.sun.logging.LogDomains.TRANSACTION_LOGGER;
 
 public class RecoverTransactionsBase {
 
-    static StringManager localStrings =
-            StringManager.getManager(RecoverTransactionsBase.class);
-
-    static Logger _logger = LogDomains.getLogger(RecoverTransactionsBase.class,
-            LogDomains.TRANSACTION_LOGGER);
+    protected static final StringManager MESSAGES = StringManager.getManager(RecoverTransactionsBase.class);
+    protected static final Logger LOG = LogDomains.getLogger(RecoverTransactionsBase.class, TRANSACTION_LOGGER, false);
 
     @Inject
     Servers servers;
@@ -46,37 +46,37 @@ public class RecoverTransactionsBase {
     String serverToRecover;
 
     String validate(String destinationServer, boolean validateAllParams) {
-        if (_logger.isLoggable(Level.INFO)) {
-            _logger.info("==> validating target: " + destinationServer + " ... server: " + serverToRecover);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("==> validating target: " + destinationServer + " ... server: " + serverToRecover);
         }
 
         if (servers.getServer(serverToRecover) == null) {
-            return localStrings.getString("recover.transactions.serverBeRecoveredIsNotKnown",
+            return MESSAGES.getString("recover.transactions.serverBeRecoveredIsNotKnown",
                     serverToRecover);
         }
 
         if (isServerRunning(serverToRecover)) {
             if (destinationServer != null && !serverToRecover.equals(destinationServer)) {
-                return localStrings.getString(
+                return MESSAGES.getString(
                         "recover.transactions.runningServerBeRecoveredFromAnotherServer",
                         serverToRecover, destinationServer);
             }
             if (transactionLogDir != null) {
-                return localStrings.getString(
+                return MESSAGES.getString(
                         "recover.transactions.logDirShouldNotBeSpecifiedForSelfRecovery");
             }
         } else if (destinationServer == null) {
-            return localStrings.getString("recover.transactions.noDestinationServer");
+            return MESSAGES.getString("recover.transactions.noDestinationServer");
 
         } else if (servers.getServer(destinationServer) == null) {
-            return localStrings.getString("recover.transactions.DestinationServerIsNotKnown");
+            return MESSAGES.getString("recover.transactions.DestinationServerIsNotKnown");
 
         } else if (!isServerRunning(destinationServer)) {
-            return localStrings.getString("recover.transactions.destinationServerIsNotAlive",
+            return MESSAGES.getString("recover.transactions.destinationServerIsNotAlive",
                     destinationServer);
 
         } else if (validateAllParams && transactionLogDir == null) {
-             return localStrings.getString("recover.transactions.logDirNotSpecifiedForDelegatedRecovery");
+             return MESSAGES.getString("recover.transactions.logDirNotSpecifiedForDelegatedRecovery");
         }
 
         return null;

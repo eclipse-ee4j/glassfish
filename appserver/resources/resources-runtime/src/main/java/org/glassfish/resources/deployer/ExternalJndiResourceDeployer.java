@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,42 +21,43 @@ import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.repository.ResourceProperty;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.resources.api.*;
-import org.glassfish.resources.config.ExternalJndiResource;
-import org.glassfish.resources.naming.JndiProxyObjectFactory;
-import org.glassfish.resources.naming.ProxyRefAddr;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-import org.glassfish.resources.naming.SerializableObjectRefAddr;
-import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.InitialContextFactory;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.api.JavaEEResource;
+import org.glassfish.resources.api.ResourcePropertyImpl;
+import org.glassfish.resources.config.ExternalJndiResource;
+import org.glassfish.resources.naming.JndiProxyObjectFactory;
+import org.glassfish.resources.naming.ProxyRefAddr;
+import org.glassfish.resources.naming.SerializableObjectRefAddr;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles external-jndi resource events in the server instance.
  * <p/>
- * The external-jndi resource events from the admin instance are propagated
- * to this object.
+ * The external-jndi resource events from the admin instance are propagated to this object.
  * <p/>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
@@ -68,29 +70,20 @@ import java.util.logging.Logger;
 @Singleton
 public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
+    private static final Logger LOG = LogDomains.getLogger(ExternalJndiResourceDeployer.class, LogDomains.RSR_LOGGER);
+
     @Inject
     private ResourceNamingService namingService;
 
     @Inject
     private BindableResourcesHelper bindableResourcesHelper;
 
-
-    /**
-     * StringManager for this deployer
-     */
-    private static final StringManager localStrings =
-            StringManager.getManager(ExternalJndiResourceDeployer.class);
-    /**
-     * logger for this deployer
-     */
-    private static Logger _logger = LogDomains.getLogger(ExternalJndiResourceDeployer.class, LogDomains.RSR_LOGGER);
-
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ExternalJndiResource jndiRes =
-                (ExternalJndiResource) resource;
+        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
         ResourceInfo resourceInfo = new ResourceInfo(jndiRes.getJndiName(), applicationName, moduleName);
         createExternalJndiResource(jndiRes, resourceInfo);
     }
@@ -98,16 +91,15 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource) throws Exception {
-
-        ExternalJndiResource jndiRes =
-                (ExternalJndiResource) resource;
+        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(jndiRes);
         createExternalJndiResource(jndiRes, resourceInfo);
     }
 
-    private void createExternalJndiResource(ExternalJndiResource jndiRes,
-                                            ResourceInfo resourceInfo) {
+
+    private void createExternalJndiResource(ExternalJndiResource jndiRes, ResourceInfo resourceInfo) {
         // converts the config data to j2ee resource
         JavaEEResource j2eeRes = toExternalJndiJavaEEResource(jndiRes, resourceInfo);
 
@@ -119,9 +111,9 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ExternalJndiResource jndiRes =
-                (ExternalJndiResource) resource;
+        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
         ResourceInfo resourceInfo = new ResourceInfo(jndiRes.getJndiName(), applicationName, moduleName);
         deleteResource(jndiRes, resourceInfo);
     }
@@ -129,17 +121,15 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
-    public synchronized void undeployResource(Object resource)
-            throws Exception {
-
-        ExternalJndiResource jndiRes =
-                (ExternalJndiResource) resource;
+    @Override
+    public synchronized void undeployResource(Object resource) throws Exception {
+        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(jndiRes);
         deleteResource(jndiRes, resourceInfo);
     }
 
-    private void deleteResource(ExternalJndiResource jndiResource,
-                                ResourceInfo resourceInfo) {
+
+    private void deleteResource(ExternalJndiResource jndiResource, ResourceInfo resourceInfo) {
         // converts the config data to j2ee resource
         JavaEEResource j2eeResource = toExternalJndiJavaEEResource(jndiResource, resourceInfo);
         // un-installs the resource
@@ -150,9 +140,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
-    public synchronized void redeployResource(Object resource)
-            throws Exception {
-
+    @Override
+    public synchronized void redeployResource(Object resource) throws Exception {
         undeployResource(resource);
         deployResource(resource);
     }
@@ -160,20 +149,17 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof ExternalJndiResource;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
@@ -182,6 +168,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void enableResource(Object resource) throws Exception {
         deployResource(resource);
     }
@@ -189,6 +176,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void disableResource(Object resource) throws Exception {
         undeployResource(resource);
     }
@@ -208,8 +196,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
             String factoryClass = extJndiRes.getFactoryClass();
             String jndiLookupName = extJndiRes.getJndiLookupName();
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "installExternalJndiResources resourceName "
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "installExternalJndiResources resourceName "
                         + resourceInfo + " factoryClass " + factoryClass
                         + " jndiLookupName = " + jndiLookupName);
             }
@@ -217,36 +205,32 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
             Object factory = ResourceUtil.loadObject(factoryClass);
             if (factory == null) {
-                _logger.log(Level.WARNING, "jndi.factory_load_error", factoryClass);
+                LOG.log(Level.WARNING, "jndi.factory_load_error", factoryClass);
                 return;
 
             } else if (!(factory instanceof javax.naming.spi.InitialContextFactory)) {
-                _logger.log(Level.WARNING, "jndi.factory_class_unexpected", factoryClass);
+                LOG.log(Level.WARNING, "jndi.factory_class_unexpected", factoryClass);
                 return;
             }
 
             // Get properties to create the initial naming context
             // for the target JNDI factory
             Hashtable env = new Hashtable();
-            for (Iterator props = extJndiRes.getProperties().iterator();
-                 props.hasNext(); ) {
-
-                ResourceProperty prop = (ResourceProperty) props.next();
+            for (Object element : extJndiRes.getProperties()) {
+                ResourceProperty prop = (ResourceProperty) element;
                 env.put(prop.getName(), prop.getValue());
             }
 
             Context context = null;
             try {
-                context =
-                        ((InitialContextFactory) factory).getInitialContext(env);
-
+                context = ((InitialContextFactory) factory).getInitialContext(env);
             } catch (NamingException ne) {
-                _logger.log(Level.SEVERE, "jndi.initial_context_error", factoryClass);
-                _logger.log(Level.SEVERE, "jndi.initial_context_error_excp", ne.getMessage());
+                LOG.log(Level.SEVERE, "jndi.initial_context_error", factoryClass);
+                LOG.log(Level.SEVERE, "jndi.initial_context_error_excp", ne.getMessage());
             }
 
             if (context == null) {
-                _logger.log(Level.SEVERE, "jndi.factory_create_error", factoryClass);
+                LOG.log(Level.SEVERE, "jndi.factory_create_error", factoryClass);
                 return;
             }
 
@@ -274,9 +258,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
             namingService.publishObject(resourceInfo, ref, true);
 
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "customrsrc.create_ref_error", resourceInfo);
-            _logger.log(Level.SEVERE, "customrsrc.create_ref_error_excp", ex);
-
+            LOG.log(Level.SEVERE, "customrsrc.create_ref_error", resourceInfo);
+            LOG.log(Level.SEVERE, "customrsrc.create_ref_error_excp", ex);
         }
     }
 
@@ -302,9 +285,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
             //END OF IASRI 4660565
             */
         } catch (javax.naming.NamingException e) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                        "Error while unpublishing resource: " + resourceInfo, e);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Error while unpublishing resource: " + resourceInfo, e);
             }
         }
     }
@@ -316,15 +298,14 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
      * <p/>
      * This method gets called from the external resource
      * deployer to convert external-jndi-resource config bean into
-     * external-jndi  j2ee resource.
+     * external-jndi j2ee resource.
      *
      * @param rbean external-jndi-resource config bean
      * @return a new instance of j2ee external jndi resource
      */
-    public static org.glassfish.resources.api.JavaEEResource toExternalJndiJavaEEResource(
-            ExternalJndiResource rbean, ResourceInfo resourceInfo) {
-
-        org.glassfish.resources.beans.ExternalJndiResource jr = new org.glassfish.resources.beans.ExternalJndiResource(resourceInfo);
+    public static JavaEEResource toExternalJndiJavaEEResource(ExternalJndiResource rbean, ResourceInfo resourceInfo) {
+        org.glassfish.resources.beans.ExternalJndiResource jr = new org.glassfish.resources.beans.ExternalJndiResource(
+            resourceInfo);
 
         //jr.setDescription( rbean.getDescription() ); // FIXME: getting error
 
@@ -355,6 +336,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
         if (handles(resource)) {
             if (!postApplicationDeployment) {
@@ -367,9 +349,9 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
-                                          Resources allResources)
-            throws ResourceConflictException {
-        //do nothing.
+        Resources allResources) throws ResourceConflictException {
+        // do nothing.
     }
 }

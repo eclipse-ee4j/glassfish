@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,22 +26,23 @@ import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.util.AnnotationDetector;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.xml.sax.SAXParseException;
 
 import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Iterator;
 import java.util.logging.Logger;
+
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXParseException;
 
 /**
  * Represents an app client that is in a stand-alone archive, not inside an
@@ -58,20 +60,21 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     private AppClientArchivist appClientArchivist = null;
 
     public StandAloneAppClientInfo(
-            boolean isJWS, Logger logger, ReadableArchive archive,
-            String mainClassFromCommandLine)
-        throws IOException, ClassNotFoundException,
-               URISyntaxException, SAXParseException {
+        boolean isJWS, Logger logger, ReadableArchive archive,
+        String mainClassFromCommandLine)
+            throws IOException, ClassNotFoundException,
+            URISyntaxException, SAXParseException {
         super(isJWS, logger, mainClassFromCommandLine);
         appClientArchive = archive;
     }
 
+    @Override
     public void postConstruct() {
         Archivist archivist = archivistFactory.getArchivist("car", getClassLoader());
         if (!(archivist instanceof AppClientArchivist)) {
             throw new IllegalArgumentException("expected an app client module but " +
-                    appClientArchive.getURI().toASCIIString() +
-                    " was recognized by " + archivist.getClass().getName());
+                appClientArchive.getURI().toASCIIString() +
+                " was recognized by " + archivist.getClass().getName());
         }
         appClientArchivist = (AppClientArchivist) archivist;
         setDescriptor(appClientArchivist.getDescriptor());
@@ -93,22 +96,22 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         throws Exception {
 
         //expand if needed. initialize the appClientArchive
-//        appClientArchive = expand(appClientArchive);
+        //        appClientArchive = expand(appClientArchive);
 
         //Create the class loader to be used for persistence unit checking,
         //validation, and running the app client.
 
         // XXX The system class loader should have everything we need
 
-//        classLoader = createClassLoader(appClientArchive, persistenceURLs);
+        //        classLoader = createClassLoader(appClientArchive, persistenceURLs);
 
         //Populate the deployment descriptor without validation.
         //Note that validation is done only after the persistence handling
         //has instructed the classloader created above.
         populateDescriptor(appClientArchive, appClientArchivist, getClassLoader());
 
-         //If the selected app client depends on at least one persistence unit
-         //then handle the P.U. before proceeding.
+        //If the selected app client depends on at least one persistence unit
+        //then handle the P.U. before proceeding.
         if (appClientDependsOnPersistenceUnit(getAppClient())) {
             //@@@check to see if the descriptor is metadata-complet=true
             //if not, we would have loaded classes into the classloader
@@ -120,16 +123,16 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
             handlePersistenceUnitDependency();
         }
 
-         //Now that the persistence handling has run and instrumented the class
-         //loader - if it had to - it's ok to validate.
+        //Now that the persistence handling has run and instrumented the class
+        //loader - if it had to - it's ok to validate.
         appClientArchivist.validate(getClassLoader());
 
         fixupWSDLEntries();
 
-// XXX restore or move elsewhere
-//        if (isJWS) {
-//            grantRequestedPermissionsToUserCode();
-//        }
+        // XXX restore or move elsewhere
+        //        if (isJWS) {
+        //            grantRequestedPermissionsToUserCode();
+        //        }
     }
 
     /**
@@ -138,14 +141,13 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
      */
     protected void fixupWSDLEntries()
         throws URISyntaxException, MalformedURLException, IOException,
-               AnnotationProcessorException {
+        AnnotationProcessorException {
         ApplicationClientDescriptor ac = getAppClient();
         URI uri = (new File(getAppClientRoot(appClientArchive, ac))).toURI();
         File moduleFile = new File(uri);
-        for (Iterator itr = ac.getServiceReferenceDescriptors().iterator();
-                    itr.hasNext();) {
+        for (Object element : ac.getServiceReferenceDescriptors()) {
             ServiceReferenceDescriptor serviceRef =
-                    (ServiceReferenceDescriptor) itr.next();
+                (ServiceReferenceDescriptor) element;
             if (serviceRef.getWsdlFileUri()!=null) {
                 // In case WebServiceRef does not specify wsdlLocation, we get
                 // wsdlLocation from @WebClient in wsimport generated source;
@@ -175,33 +177,33 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     protected boolean appClientDependsOnPersistenceUnit(
         ApplicationClientDescriptor acDescr)
             throws MalformedURLException, ClassNotFoundException,
-                   IOException, URISyntaxException {
-            /*
-             *If the descriptor contains at least one reference to an entity
-             *manager then it definitely depends on a persistence unit.
-             */
-            return descriptorContainsPURefcs(acDescr)
-                    || mainClassContainsPURefcAnnotations(acDescr);
+            IOException, URISyntaxException {
+        /*
+         *If the descriptor contains at least one reference to an entity
+         *manager then it definitely depends on a persistence unit.
+         */
+        return descriptorContainsPURefcs(acDescr)
+            || mainClassContainsPURefcAnnotations(acDescr);
     }
 
     protected boolean mainClassContainsPURefcAnnotations(
         ApplicationClientDescriptor acDescr)
             throws MalformedURLException, ClassNotFoundException,
-                   IOException, URISyntaxException {
+            IOException, URISyntaxException {
         AnnotationDetector annoDetector =
-                    new AnnotationDetector(new AppClientPersistenceDependencyAnnotationScanner());
+            new AnnotationDetector(new AppClientPersistenceDependencyAnnotationScanner());
 
         //e.g. FROM a.b.Foo or Foo TO a/b/Foo.class or Foo.class
         String mainClassEntryName =
-                acDescr.getMainClassName().replace('.', '/') + ".class";
+            acDescr.getMainClassName().replace('.', '/') + ".class";
 
         return classContainsAnnotation
-                (mainClassEntryName, annoDetector, appClientArchive, acDescr);
+            (mainClassEntryName, annoDetector, appClientArchive, acDescr);
     }
 
     private RootDeploymentDescriptor populateDescriptor(
-            ReadableArchive archive, Archivist theArchivist, ClassLoader loader)
-        throws IOException, SAXParseException, Exception {
+        ReadableArchive archive, Archivist theArchivist, ClassLoader loader)
+            throws IOException, SAXParseException, Exception {
 
         //@@@ Optimize it later.
         //Here the application.xml is read twice for NestedAppClientInfo.
@@ -238,20 +240,20 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         return d;
     }
 
-//    @Override
-//    protected ReadableArchive expand(File file)
-//        throws IOException, Exception {
-//        return archiveFactory.openArchive(file);
-//    }
-//
-//    @Override
-//    protected boolean deleteAppClientDir() {
-//        return false;
-//    }
+    //    @Override
+    //    protected ReadableArchive expand(File file)
+    //        throws IOException, Exception {
+    //        return archiveFactory.openArchive(file);
+    //    }
+    //
+    //    @Override
+    //    protected boolean deleteAppClientDir() {
+    //        return false;
+    //    }
 
     @Override
     protected void massageDescriptor()
-            throws IOException, AnnotationProcessorException {
+        throws IOException, AnnotationProcessorException {
         getDescriptor().getModuleDescriptor().setStandalone(true);
     }
 
@@ -264,16 +266,16 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     protected void close() throws IOException {
         try {
             // XXX Mitesh helping to update this
-//            if (puAppInfo != null) {
-//                new PersistenceUnitLoaderImpl().unload(puAppInfo);
-//                puAppInfo = null;
-//            }
+            //            if (puAppInfo != null) {
+            //                new PersistenceUnitLoaderImpl().unload(puAppInfo);
+            //                puAppInfo = null;
+            //            }
             if (appClientArchive != null) {
                 appClientArchive.close();
             }
             ClassLoader classLoader = getClassLoader();
             if (classLoader != null &&
-                    classLoader instanceof ASURLClassLoader) {
+                classLoader instanceof ASURLClassLoader) {
                 ((ASURLClassLoader) classLoader).done();
             }
         } finally {
@@ -288,29 +290,18 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
 
     @Override
     protected boolean classContainsAnnotation(
-            String entry, AnnotationDetector detector,
-            ReadableArchive archive, ApplicationClientDescriptor descriptor)
+        String entry, AnnotationDetector detector,
+        ReadableArchive archive, ApplicationClientDescriptor descriptor)
             throws FileNotFoundException, IOException {
-//        JarFile jar = null;
         try {
             return detector.containsAnnotation(archive, entry);
         } catch (Throwable thr) {
             throw new RuntimeException(getLocalString(
                 "appclient.errorCheckingAnnos",
                 "Error checking for persistence unit annotations in the main class"), thr);
-        } finally {
-//            if (jar != null) {
-//                try {
-//                    jar.close();
-//                } catch (IOException ioe) {
-//                    throw new RuntimeException(getLocalString(
-//                        "appclient.errorClosingJar",
-//                        "Error closing archive {0} used in checking for persistence unit annotations",
-//                        archive.getURI().toASCIIString()), ioe);
-//                }
-//            }
         }
     }
+
     @Override
     public String toString() {
         String lineSep = System.getProperty("line.separator");

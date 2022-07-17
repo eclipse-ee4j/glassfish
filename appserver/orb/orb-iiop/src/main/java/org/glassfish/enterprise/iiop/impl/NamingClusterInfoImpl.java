@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,14 +22,13 @@ import org.glassfish.api.naming.NamingClusterInfo;
 import org.glassfish.api.naming.NamingObjectsProvider;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.internal.api.ORBLocator;
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.ORBPackage.InvalidName;
+
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.FAILED_TO_RESOLVE_GROUPINFOSERVICE;
+import static org.glassfish.enterprise.iiop.impl.IIOPImplLogFacade.NO_ENDPOINT_SELECTED;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -41,52 +41,34 @@ import jakarta.inject.Singleton;
 /**
  * This class is responsible for setting up naming load-balancing including RoundRobinPolicy.
  */
-
 @Service
 @Singleton
 public class NamingClusterInfoImpl implements NamingClusterInfo {
-    //move up to some class in top orb module
-    @LoggerInfo(subsystem = "orb", description = "logger for GlassFish appserver orb modules", publish = true)
-    public static final String ORB_LOGGER_NAME = "org.glassfish.orb";
 
-    @LogMessagesResourceBundle
-    public static final String ORB_LOGGER_RB = ORB_LOGGER_NAME + ".LogMessages";
-
-    public static final Logger logger = Logger.getLogger(ORB_LOGGER_NAME, ORB_LOGGER_RB);
-
-    @LogMessageInfo(message = "Exception occurred when resolving {0}",
-    cause = "org.omg.CORBA.ORBPackage.InvalidName when trying to resolve GroupInfoService",
-    action = "Check server.log for details")
-    public static final String FAILED_TO_RESOLVE_GROUPINFOSERVICE = "AS-ORB-00001";
-
-    @LogMessageInfo(
-    message = "No Endpoints selected in com.sun.appserv.iiop.endpoints property. Using {0}:{1} instead")
-    public static final String NO_ENDPOINT_SELECTED = "AS-ORB-00002";
+    private static final Logger LOG = IIOPImplLogFacade.getLogger(NamingClusterInfoImpl.class);
 
     private RoundRobinPolicy rrPolicy;
 
     private GroupInfoServiceObserverImpl giso;
 
     @Override
-    public void initGroupInfoService(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort,
-                                     ORB orb, ServiceLocator services) {
+    public void initGroupInfoService(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort, ORB orb,
+        ServiceLocator services) {
         // Always create one rrPolicy to be shared, if needed.
         final List<String> epList = getEndpointList(myEnv, defaultHost, defaultPort);
         rrPolicy = new RoundRobinPolicy(epList);
 
-        GroupInfoService gis = null ;
+        final GroupInfoService gis;
         try {
             gis = (GroupInfoService) (orb.resolve_initial_references(ORBLocator.FOLB_CLIENT_GROUP_INFO_SERVICE));
         } catch (InvalidName ex) {
-            logger.log(Level.SEVERE, FAILED_TO_RESOLVE_GROUPINFOSERVICE, ORBLocator.FOLB_CLIENT_GROUP_INFO_SERVICE);
-            logger.log(Level.SEVERE, "", ex);
+            LOG.log(Level.SEVERE, FAILED_TO_RESOLVE_GROUPINFOSERVICE, ORBLocator.FOLB_CLIENT_GROUP_INFO_SERVICE);
+            throw new IllegalStateException("Could not resolve the group info service.", ex);
         }
 
-        giso = new GroupInfoServiceObserverImpl( gis, rrPolicy );
+        giso = new GroupInfoServiceObserverImpl(gis, rrPolicy);
 
         gis.addObserver(giso);
-
-        // fineLog( "getInitialContext: rrPolicy = {0}", rrPolicy );
 
         // this should force the initialization of the resources providers
         if (services !=null) {
@@ -94,23 +76,17 @@ public class NamingClusterInfoImpl implements NamingClusterInfo {
                 provider.getService();
                 // no - op. Do nothing with the provided object
             }
-//                        for (NamingObjectsProvider provider :
-//                            services.getAllByContract(NamingObjectsProvider.class)) {
-//                            // no-op
-//                        }
         }
 
-        // Get the actual content, not just the configured
-        // endpoints.
+        // Get the actual content, not just the configured endpoints.
         giso.forceMembershipChange();
-
-        if(logger.isLoggable(Level.FINE))
-            logger.log(Level.FINE, "NamingClusterInfoImpl.initGroupInfoService RoundRobinPolicy {0}", rrPolicy);
+        LOG.log(Level.FINE, "NamingClusterInfoImpl.initGroupInfoService RoundRobinPolicy {0}", rrPolicy);
     }
+
 
     @Override
     public void setClusterInstanceInfo(Hashtable<?, ?> myEnv, String defaultHost, String defaultPort,
-                                      boolean membershipChangeForced) {
+        boolean membershipChangeForced) {
         final List<String> list = getEndpointList(myEnv, defaultHost, defaultPort) ;
         rrPolicy.setClusterInstanceInfoFromString(list);
         if (!membershipChangeForced) {
@@ -124,45 +100,41 @@ public class NamingClusterInfoImpl implements NamingClusterInfo {
     }
 
     private List<String> getEndpointList(Hashtable env, String defaultHost, String defaultPort) {
-        final List<String> list = new ArrayList<String>() ;
+        final List<String> list = new ArrayList<>() ;
         final String lbpv = getEnvSysProperty( env, LOAD_BALANCING_PROPERTY);
         final List<String> lbList = splitOnComma(lbpv) ;
-        if (lbList.size() > 0) {
-            final String first = lbList.remove( 0 ) ;
+        if (!lbList.isEmpty()) {
+            final String first = lbList.remove(0);
             if (first.equals(IC_BASED) || first.equals(IC_BASED_WEIGHTED)) {
                 // XXX concurrency issue here:  possible race on global
                 System.setProperty(LOAD_BALANCING_PROPERTY, first );
             }
         }
-        list.addAll( lbList ) ;
+        list.addAll(lbList);
 
         if (list.isEmpty()) {
             final String iepv = getEnvSysProperty( env, IIOP_ENDPOINTS_PROPERTY);
             final List<String> epList = splitOnComma(iepv) ;
-            list.addAll( epList ) ;
+            list.addAll(epList);
         }
 
         if (list.isEmpty()) {
-            final String urlValue = (String)env.get(
-                    ORBLocator.JNDI_PROVIDER_URL_PROPERTY) ;
-            list.addAll( rrPolicy.getEndpointForProviderURL( urlValue ) ) ;
+            final String urlValue = (String) env.get(ORBLocator.JNDI_PROVIDER_URL_PROPERTY);
+            list.addAll(rrPolicy.getEndpointForProviderURL(urlValue));
         }
 
         if (list.isEmpty()) {
-            String host = getEnvSysProperty( env,
-                    ORBLocator.OMG_ORB_INIT_HOST_PROPERTY) ;
-            String port = getEnvSysProperty( env,
-                    ORBLocator.OMG_ORB_INIT_PORT_PROPERTY) ;
-
+            String host = getEnvSysProperty(env, ORBLocator.OMG_ORB_INIT_HOST_PROPERTY);
+            String port = getEnvSysProperty(env, ORBLocator.OMG_ORB_INIT_PORT_PROPERTY);
             if (host != null && port != null) {
                 list.addAll(rrPolicy.getAddressPortList(host, port) ) ;
-                logger.log(Level.WARNING, NO_ENDPOINT_SELECTED, new Object[]{host, port});
+                LOG.log(Level.WARNING, NO_ENDPOINT_SELECTED, new Object[]{host, port});
             }
         }
 
         if (list.isEmpty()) {
             if (defaultHost != null && defaultPort != null) {
-                list.add( defaultHost + ":" + defaultPort ) ;
+                list.add(defaultHost + ":" + defaultPort);
             }
         }
 
@@ -170,27 +142,27 @@ public class NamingClusterInfoImpl implements NamingClusterInfo {
             throw new RuntimeException("Cannot Proceed. No Endpoints specified.");
         }
 
-        return list ;
+        return list;
     }
 
     private List<String> splitOnComma( String arg ) {
-        final List<String> result = new ArrayList<String>() ;
+        final List<String> result = new ArrayList<>() ;
         if (arg != null) {
-            final String[] splits = arg.split( "," ) ;
+            final String[] splits = arg.split(",");
             if (splits != null) {
                 for (String str : splits) {
-                    result.add( str.trim() ) ;
+                    result.add(str.trim());
                 }
             }
         }
 
-        return result ;
+        return result;
     }
 
-    private String getEnvSysProperty( Hashtable env, String pname ) {
-        String value = (String)env.get( pname ) ;
+    private String getEnvSysProperty(Hashtable env, String pname) {
+        String value = (String) env.get(pname);
         if (value == null) {
-            value = System.getProperty( pname ) ;
+            value = System.getProperty(pname);
         }
         return value ;
     }

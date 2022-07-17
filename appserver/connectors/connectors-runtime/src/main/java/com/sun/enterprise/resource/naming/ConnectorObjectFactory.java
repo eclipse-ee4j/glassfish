@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,19 +30,27 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.resource.DynamicallyReconfigurableResource;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
-import javax.naming.*;
-import javax.naming.spi.ObjectFactory;
 import jakarta.resource.spi.ManagedConnectionFactory;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.ConfigurationException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
+
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 /**
  * An object factory to handle creation of Connection Factories
@@ -50,41 +59,34 @@ import java.util.logging.Logger;
  */
 public class ConnectorObjectFactory implements ObjectFactory {
 
-    private ConnectorRuntime runtime ;
+    private static final Logger LOG = LogDomains.getLogger(ConnectorObjectFactory.class, LogDomains.JNDI_LOGGER, false);
+    private static final StringManager MESSAGES = StringManager.getManager(ConnectorRuntime.class);
 
-    private static Logger _logger = LogDomains.getLogger(ConnectorObjectFactory.class, LogDomains.JNDI_LOGGER);
-    protected final static StringManager localStrings =
-            StringManager.getManager(ConnectorRuntime.class);
+    private ConnectorRuntime runtime;
 
-    public ConnectorObjectFactory() {
-    }
 
+    @Override
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable env) throws Exception {
 
         Reference ref = (Reference) obj;
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,"ConnectorObjectFactory: " + ref +
-                " Name:" + name);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ConnectorObjectFactory: " + ref + " Name:" + name);
         }
-            PoolInfo poolInfo = (PoolInfo) ref.get(0).getContent();
-            String moduleName  = (String) ref.get(1).getContent();
-            ResourceInfo resourceInfo = (ResourceInfo) ref.get(2).getContent();
-
+        PoolInfo poolInfo = (PoolInfo) ref.get(0).getContent();
+        String moduleName = (String) ref.get(1).getContent();
+        ResourceInfo resourceInfo = (ResourceInfo) ref.get(2).getContent();
 
         if (getRuntime().isACCRuntime() || getRuntime().isNonACCRuntime()) {
             ConnectorDescriptor connectorDescriptor = null;
 
-            String descriptorJNDIName = ConnectorAdminServiceUtils.
-                    getReservePrefixedJNDINameForDescriptor(moduleName);
+            String descriptorJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor(moduleName);
             Context ic = new InitialContext(env);
             connectorDescriptor = (ConnectorDescriptor) ic.lookup(descriptorJNDIName);
             try {
                 getRuntime().createActiveResourceAdapter(connectorDescriptor, moduleName, null);
             } catch (ConnectorRuntimeException e) {
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE,
-                            "Failed to look up ConnectorDescriptor from JNDI",
-                            moduleName);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Failed to look up ConnectorDescriptor from JNDI", moduleName);
                 }
                 NamingException ne = new NamingException("Failed to look up ConnectorDescriptor from JNDI");
                 ne.setRootCause(e);
@@ -94,17 +96,14 @@ public class ConnectorObjectFactory implements ObjectFactory {
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (!getRuntime().checkAccessibility(moduleName, loader)) {
-            String msg = localStrings.getString("cof.no_access_to_embedded_rar", moduleName);
+            String msg = MESSAGES.getString("cof.no_access_to_embedded_rar", moduleName);
             throw new NamingException(msg);
         }
 
-        Object cf = null;
         try {
             ManagedConnectionFactory mcf = getRuntime().obtainManagedConnectionFactory(poolInfo, env);
             if (mcf == null) {
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Failed to create MCF ", poolInfo);
-                }
+                LOG.log(Level.FINE, "Failed to create MCF`; poolInfo: {0}", poolInfo);
                 throw new ConnectorRuntimeException("Failed to create MCF");
             }
 
@@ -128,9 +127,9 @@ public class ConnectorObjectFactory implements ObjectFactory {
 
             mgr.initialize();
 
-            cf = mcf.createConnectionFactory(mgr);
+            Object cf = mcf.createConnectionFactory(mgr);
             if (cf == null) {
-                String msg = localStrings.getString("cof.no.resource.adapter");
+                String msg = MESSAGES.getString("cof.no.resource.adapter");
                 throw new RuntimeException(new ConfigurationException(msg));
             }
 
@@ -164,17 +163,17 @@ public class ConnectorObjectFactory implements ObjectFactory {
                 }
             }
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Connection Factory:" + cf);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Connection Factory: " + cf);
             }
 
+            return cf;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return cf;
     }
 
-      protected <T> T getProxyObject(final Object actualObject, Class<T>[] ifaces, ResourceInfo resourceInfo) throws Exception {
+    protected <T> T getProxyObject(final Object actualObject, Class<T>[] ifaces, ResourceInfo resourceInfo) throws Exception {
         InvocationHandler ih = new DynamicResourceReconfigurator(actualObject, resourceInfo);
         return (T) Proxy.newProxyInstance(actualObject.getClass().getClassLoader(), ifaces, ih);
     }

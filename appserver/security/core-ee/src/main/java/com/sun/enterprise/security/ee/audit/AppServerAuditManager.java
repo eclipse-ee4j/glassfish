@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * AppServerAuditManager.java
- *
- * Created on July 28, 2003, 1:56 PM
- */
-
 package com.sun.enterprise.security.ee.audit;
-
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.hk2.api.Rank;
-import org.jvnet.hk2.annotations.Service;
 
 import com.sun.appserv.security.AuditModule;
 import com.sun.enterprise.security.BaseAuditModule;
@@ -38,6 +25,16 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Singleton;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.Rank;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
 /**
  * An EE-specific implementation of the audit manager.
@@ -57,7 +54,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     private static final String AUDIT_MGR_WS_INVOCATION_KEY = "auditmgr.webServiceInvocation";
     private static final String AUDIT_MGR_EJB_AS_WS_INVOCATION_KEY = "auditmgr.ejbAsWebServiceInvocation";
 
-    private static final Logger _logger = LogDomains.getLogger(AppServerAuditManager.class, LogDomains.SECURITY_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(AppServerAuditManager.class, SECURITY_LOGGER, false);
 
     private static final LocalStringManagerImpl _localStrings = new LocalStringManagerImpl(AppServerAuditManager.class);
 
@@ -102,7 +99,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
                     final String name = moduleName(am);
                     final String msg = _localStrings.getLocalString("auditmgr.webinvocation",
                             " Audit Module {0} threw the following exception during web invocation :", name);
-                    _logger.log(Level.INFO, msg, ex);
+                    LOG.log(Level.INFO, msg, ex);
                 }
             }
         }
@@ -122,7 +119,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
                     final String name = moduleName(am);
                     final String msg = _localStrings.getLocalString("auditmgr.ejbinvocation",
                             " Audit Module {0} threw the following exception during ejb invocation :", name);
-                    _logger.log(Level.INFO, msg, ex);
+                    LOG.log(Level.INFO, msg, ex);
                 }
             }
         }
@@ -142,7 +139,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
                     final String name = moduleName(am);
                     final String msg = _localStrings.getLocalString(AUDIT_MGR_WS_INVOCATION_KEY,
                             " Audit Module {0} threw the following exception during web service invocation :", name);
-                    _logger.log(Level.INFO, msg, ex);
+                    LOG.log(Level.INFO, msg, ex);
                 }
             }
         }
@@ -162,7 +159,7 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
                     final String name = moduleName(am);
                     final String msg = _localStrings.getLocalString(AUDIT_MGR_EJB_AS_WS_INVOCATION_KEY,
                             " Audit Module {0} threw the following exception during ejb as web service invocation :", name);
-                    _logger.log(Level.INFO, msg, ex);
+                    LOG.log(Level.INFO, msg, ex);
                 }
             }
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,178 +17,175 @@
 
 package com.sun.enterprise.server.logging.parser;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import com.sun.enterprise.server.logging.LogEvent;
 
 /**
- *
  * @author sanshriv
- *
  */
-public final class ParsedLogRecord implements LogEvent {
+public final class ParsedLogRecord implements Serializable {
 
-    public static final String DATE_TIME = "timestamp";
-    public static final String LOG_LEVEL_NAME = "level";
-    public static final String PRODUCT_ID = "productId";
-    public static final String LOGGER_NAME = "logger";
-    public static final String THREAD_ID = "threadId";
-    public static final String THREAD_NAME = "threadName";
-    public static final String USER_ID = "user";
-    public static final String EC_ID = "ecid";
-    public static final String TIME_MILLIS = "timeMillis";
-    public static final String LOG_LEVEL_VALUE = "levelValue";
-    public static final String LOG_MESSAGE = "message";
-    public static final String SUPP_ATTRS = "suppAttrs";
-    public static final String MESSAGE_ID = "msgId";
+    private static final long serialVersionUID = -5509051668657749139L;
 
-    public static final Set<String> FIELD_NAMES = new HashSet<String>() {
+    private final String formattedLogRecord;
 
-        private static final long serialVersionUID = 1L;
+    private LocalDate date;
+    private LocalTime time;
+    private ZoneOffset timezone;
+    // note: there are possible also custom levels
+    private String level;
+    private String productId;
+    private String loggerName;
+    private Long threadId;
+    private String threadName;
+    private Integer levelValue;
+    private String message;
+    private String messageKey;
 
-        {
-           add(DATE_TIME);
-           add(LOG_LEVEL_NAME);
-           add(PRODUCT_ID);
-           add(LOGGER_NAME);
-           add(THREAD_ID);
-           add(THREAD_NAME);
-           add(USER_ID);
-           add(EC_ID);
-           add(TIME_MILLIS);
-           add(LOG_LEVEL_VALUE);
-           add(SUPP_ATTRS);
-           add(LOG_MESSAGE);
-           add(MESSAGE_ID);
-        }
-
-    };
-
-    private String formattedLogRecord;
-
-    private boolean matchedLogQuery;
-
-    private Map<String, Object> fields = new HashMap<String,Object>();
-
-    public ParsedLogRecord() {
-        fields.put(SUPP_ATTRS, new Properties());
-    }
+    private final Map<String, String> supplementalAttributes = new HashMap<>(0);
 
     public ParsedLogRecord(String formattedContent) {
         formattedLogRecord = formattedContent;
-        fields.put(SUPP_ATTRS, new Properties());
     }
 
-    public String getTimestamp() {
-        return (String) fields.get(DATE_TIME);
-    }
-
-    public String getMessage() {
-        return (String) fields.get(LOG_MESSAGE);
-    }
-
-    public String getLevel() {
-        return (String) fields.get(LOG_LEVEL_NAME);
-    }
-
-    public String getLogger() {
-        return (String) fields.get(LOGGER_NAME);
-    }
-
-    public int getLevelValue() {
-        String val = (String) fields.get(LOG_LEVEL_VALUE);
-        return Integer.parseInt(val) ;
-    }
-
-    public String getComponentId() {
-        return (String) fields.get(PRODUCT_ID);
-    }
-
-    public long getTimeMillis() {
-        String val = (String) fields.get(TIME_MILLIS);
-        if (val == null || val.isEmpty()) {
-            return 0L;
-        } else {
-            return Long.parseLong(val) ;
-        }
-    }
-
-    public String getMessageId() {
-        return (String) fields.get(MESSAGE_ID);
-    }
-
-    public long getThreadId() {
-        String val = (String) fields.get(THREAD_ID);
-        return Long.parseLong(val) ;
-    }
-
-    public String getThreadName() {
-        return (String) fields.get(THREAD_NAME);
-    }
-
-    public String getUser() {
-        return (String) fields.get(USER_ID);
-    }
-
-    public String getECId() {
-        return (String) fields.get(EC_ID);
-    }
-
-    public Map<String,Object> getSupplementalAttributes() {
-        return (Map<String,Object>) fields.get(SUPP_ATTRS);
-    }
 
     public String getFormattedLogRecord() {
         return formattedLogRecord;
     }
 
-    /**
-     * @return the matchedLogQuery
-     */
-    public boolean isMatchedLogQuery() {
-        return matchedLogQuery;
+
+    public OffsetDateTime getTimestamp() {
+        if (date == null || time == null) {
+            return null;
+        }
+        return OffsetDateTime.of(date, time, timezone);
     }
 
-    /**
-     *
-     * @param name
-     * @return
-     */
-    public Object getFieldValue(String name) {
-        return fields.get(name);
+
+    public LocalTime getTime() {
+        return time;
     }
 
-    /**
-     * @param formattedLogRecord the formattedLogRecord to set
-     */
-    void setFormattedLogRecord(String formattedLogRecord) {
-        this.formattedLogRecord = formattedLogRecord;
+
+    public LocalDate getDate() {
+        return date;
     }
 
-    /**
-     * @param matchedLogQuery the matchedLogQuery to set
-     */
-    void setMatchedLogQuery(boolean matchedLogQuery) {
-        this.matchedLogQuery = matchedLogQuery;
+
+    public void setTimestamp(final OffsetDateTime timestamp) {
+        this.date = timestamp.toLocalDate();
+        this.time = timestamp.toLocalTime();
+        this.timezone = timestamp.getOffset();
     }
 
-    /**
-     *
-     * @param name
-     * @param value
-     */
-    void setFieldValue(String name, Object value) {
-        fields.put(name, value);
+
+    public void setTime(final LocalTime time) {
+        this.time = time;
     }
 
+
+    public String getMessage() {
+        return message;
+    }
+
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
+    public String getMessageKey() {
+        return messageKey;
+    }
+
+
+    public void setMessageKey(String messageKey) {
+        this.messageKey = messageKey;
+    }
+
+
+    public String getLevel() {
+        return level;
+    }
+
+
+    public void setLogLevel(String level) {
+        this.level = level;
+    }
+
+
+    public Integer getLevelValue() {
+        return levelValue;
+    }
+
+
+    public void setLogLevelValue(Integer level) {
+        this.levelValue = level;
+    }
+
+
+    public String getLogger() {
+        return loggerName;
+    }
+
+
+    public void setLogger(String loggerName) {
+        this.loggerName = loggerName;
+    }
+
+
+    public String getProductId() {
+        return productId;
+    }
+
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+
+    public Long getThreadId() {
+        return threadId;
+    }
+
+
+    public void setThreadId(Long threadId) {
+        this.threadId = threadId;
+    }
+
+
+    public String getThreadName() {
+        return threadName;
+    }
+
+
+    public void setThreadName(String threadName) {
+        this.threadName = threadName;
+    }
+
+
+    public Map<String, String> getSupplementalAttributes() {
+        return supplementalAttributes;
+    }
+
+
+    public void setSupplementalValue(String key, String value) {
+        this.supplementalAttributes.put(key, value);
+    }
+
+
+    @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Log record: <"+fields + ">" + LogParserFactory.NEWLINE);
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("Log record: <").append(formattedLogRecord).append('>').append(System.lineSeparator());
         return buffer.toString();
     }
-
 }

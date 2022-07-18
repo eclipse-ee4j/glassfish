@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,8 +47,17 @@ public abstract class GlassFishRuntime {
 
     private static final Logger logger = Logger.getLogger(GlassFishRuntime.class.getPackage().getName());
 
+
+    /**
+     * Singleton
+     */
+    private static GlassFishRuntime me;
+
+    /**
+     * Default constructor, doesn't do anything
+     */
     protected GlassFishRuntime() {
-        // Empty protected constructor so that it does not show up in the javadoc.
+        // reduced visibility
     }
 
     /**
@@ -114,22 +124,12 @@ public abstract class GlassFishRuntime {
     public abstract GlassFish newGlassFish(GlassFishProperties glassfishProperties) throws GlassFishException;
 
 
-    /*
-     * INTERNAL IMPLEMENTATION DETAILS
-     * Be careful while introducing dependencies in this class, as this is shipped as part of api jar used
-     * by users.
-     */
-
-    /**
-     * Singleton
-     */
-    private static GlassFishRuntime me;
-
     private synchronized static GlassFishRuntime _bootstrap(BootstrapProperties bootstrapProperties, ClassLoader cl) throws GlassFishException {
         if (me != null) {
             throw new GlassFishException("Already bootstrapped", null);
         }
-        RuntimeBuilder runtimeBuilder = getRuntimeBuilder(bootstrapProperties, cl != null ? cl : GlassFishRuntime.class.getClassLoader());
+        ClassLoader classLoader = cl == null ? GlassFishRuntime.class.getClassLoader() : cl;
+        RuntimeBuilder runtimeBuilder = getRuntimeBuilder(bootstrapProperties, classLoader);
         me = runtimeBuilder.build(bootstrapProperties);
         return me;
     }
@@ -139,22 +139,18 @@ public abstract class GlassFishRuntime {
             throw new GlassFishException("Already shutdown", null);
         }
         me = null;
+        System.out.println("Completed shutdown of GlassFish runtime");
     }
 
-    private static RuntimeBuilder getRuntimeBuilder(BootstrapProperties bootstrapProperties, ClassLoader cl) throws GlassFishException {
-//        StringBuilder sb = new StringBuilder("Launcher Class Loader = " + cl);
-//        if (cl instanceof URLClassLoader) {
-//            sb.append("has following Class Path: ");
-//            for (URL url : URLClassLoader.class.cast(cl).getURLs()) {
-//                sb.append(url).append(", ");
-//            }
-//        }
-//        System.out.println(sb);
-        Iterator<RuntimeBuilder> runtimeBuilders = ServiceLoader.load(RuntimeBuilder.class, cl).iterator();
+
+    private static RuntimeBuilder getRuntimeBuilder(BootstrapProperties bootstrapProperties, ClassLoader classLoader)
+        throws GlassFishException {
+        logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "classloader={0}", classLoader);
+        Iterator<RuntimeBuilder> runtimeBuilders = ServiceLoader.load(RuntimeBuilder.class, classLoader).iterator();
         while (runtimeBuilders.hasNext()) {
             try {
                 RuntimeBuilder builder = runtimeBuilders.next();
-                logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "builder = {0}", new Object[]{builder});
+                logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "builder = {0}", builder);
                 if (builder.handles(bootstrapProperties)) {
                     return builder;
                 }
@@ -168,7 +164,8 @@ public abstract class GlassFishRuntime {
                 logger.logp(Level.FINE, "GlassFishRuntime", "getRuntimeBuilder", "Ignoring", ncdfe);
             }
         }
-        throw new GlassFishException("No runtime builder available for this configuration: " + bootstrapProperties.getProperties(), null);
+        throw new GlassFishException(
+            "No runtime builder available for this configuration: " + bootstrapProperties.getProperties(), null);
     }
 
 }

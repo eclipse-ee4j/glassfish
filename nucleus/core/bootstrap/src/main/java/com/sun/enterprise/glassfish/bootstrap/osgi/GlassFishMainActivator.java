@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +18,26 @@
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
 import com.sun.enterprise.glassfish.bootstrap.Constants;
-import org.glassfish.embeddable.*;
-import org.osgi.framework.*;
 
 import java.io.File;
+import java.lang.System.Logger;
 import java.net.URI;
-import java.util.Enumeration;
+import java.nio.file.Path;
 import java.util.Properties;
-import java.util.Set;
+
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
+import org.glassfish.main.jul.JULHelperFactory;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_INSTALL_PROP;
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_START_PROP;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * This activator is used when glassfish.jar is installed and started
@@ -50,7 +60,23 @@ import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.AUTO_START_P
  * @see #prepareStartupContext(org.osgi.framework.BundleContext)
  */
 public class GlassFishMainActivator implements BundleActivator {
-    private String installRoot;
+
+    private static final Logger LOG = JULHelperFactory.getHelper().getSystemLogger(GlassFishMainActivator.class);
+
+    private static final String[] DEFAULT_INSTALLATION_LOCATIONS_RELATIVE = new String[]{
+        // Order is important.
+        "modules/",
+        "modules/autostart/"
+    };
+
+    private static final String[] DEFAULT_START_LOCATIONS_RELATIVE = new String[]{
+        // Order is important.
+        // osgi-resource-locator must come ahead of osgi-adapter
+        "modules/osgi-resource-locator.jar",
+        "modules/osgi-adapter.jar",
+        "modules/autostart/"
+    };
+
 
     /**
      * GlassFishRuntime being a singleton can't be bootstrapped more than once.
@@ -73,61 +99,86 @@ public class GlassFishMainActivator implements BundleActivator {
      */
     private GlassFish gf;
 
-    private static final String[] DEFAULT_INSTALLATION_LOCATIONS_RELATIVE = new String[]{
-            // Order is important.
-            "modules/",
-            "modules/autostart/"
-    };
-
-    private static final String[] DEFAULT_START_LOCATIONS_RELATIVE = new String[]{
-            // Order is important.
-            // osgi-resource-locator must come ahead of osgi-adapter
-            "modules/osgi-resource-locator.jar",
-            "modules/osgi-adapter.jar",
-            "modules/autostart/"
-    };
     /**
      * Are in activated in embedded or non-embedded mode?
      * Depending on the mode, either we bootstrap the runtime or just register the runtime as a service.
      */
-    private boolean nonEmbedded;
+    private boolean embedded;
+    private String installRoot;
 
+
+    @Override
     public void start(BundleContext context) throws Exception {
-        nonEmbedded = context.getProperty(Constants.BUILDER_NAME_PROPERTY) != null;
-        if (nonEmbedded) {
-            GlassFishRuntime embeddedGfr = new EmbeddedOSGiGlassFishRuntime(context);
-            context.registerService(GlassFishRuntime.class.getName(), embeddedGfr, null);
-            System.out.println("Registered " + embeddedGfr + " in service registry.");
+        embedded = context.getProperty(Constants.BUILDER_NAME_PROPERTY) == null;
+        LOG.log(DEBUG, "Starting {0}; embedded: {1}", context.getBundle(), embedded);
+        if (embedded) {
+            startEmbedded(context);
         } else {
-            Properties properties = prepareStartupContext(context);
-            final BootstrapProperties bsProperties = new BootstrapProperties(properties);
-
-            System.out.println(GlassFishRuntime.class + " is loaded by [" + GlassFishRuntime.class.getClassLoader() + "]");
-            GlassFishRuntime existingGfr = lookupGfr(context);
-            if (existingGfr == null) {
-                System.out.println("Bootstrapping a new GlassFishRuntime");
-                // Should we do the following in a separate thread?
-                gfr = GlassFishRuntime.bootstrap(bsProperties, getClass().getClassLoader());
-                existingGfr = gfr;
-            } else {
-                System.out.println("Using existing GlassFishRuntime: [" + existingGfr + "]");
-            }
-            gf = existingGfr.newGlassFish(new GlassFishProperties(properties));
-            gf.start();
+            startNonEmbedded(context);
         }
     }
 
+
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        if (!embedded) {
+            LOG.log(DEBUG, "We are in non-embedded mode, so {0} has nothing to do.", context.getBundle());
+            return;
+        }
+        try {
+            // gf can be null - especially in non-embedded mode.
+            if (gf != null && gf.getStatus() != GlassFish.Status.DISPOSED) {
+                // dispose calls stop
+                gf.dispose();
+            }
+        } finally {
+            gf = null;
+        }
+
+        if (gfr != null) {
+            // gfr is non-null only if this activator has bootstrapped, else it's null.
+            gfr.shutdown();
+            gfr = null;
+        }
+    }
+
+
+    private void startNonEmbedded(BundleContext context) {
+        GlassFishRuntime embeddedGfr = new EmbeddedOSGiGlassFishRuntime(context);
+        context.registerService(GlassFishRuntime.class.getName(), embeddedGfr, null);
+        LOG.log(DEBUG, "Registered {0} in service registry.", embeddedGfr);
+    }
+
+
+    private void startEmbedded(BundleContext context) throws GlassFishException {
+        final Properties properties = prepareStartupContext(context);
+        final BootstrapProperties bsProperties = new BootstrapProperties(properties);
+        System.out.println(GlassFishRuntime.class + " is loaded by [" + GlassFishRuntime.class.getClassLoader() + "]");
+        GlassFishRuntime existingGfr = lookupGfr(context);
+        if (existingGfr == null) {
+            LOG.log(DEBUG, "Bootstrapping a new GlassFishRuntime");
+            // Should we do the following in a separate thread?
+            gfr = GlassFishRuntime.bootstrap(bsProperties, getClass().getClassLoader());
+            existingGfr = gfr;
+        } else {
+            LOG.log(DEBUG, "Starting existing GlassFishRuntime: [{0}]", existingGfr);
+        }
+        gf = existingGfr.newGlassFish(new GlassFishProperties(properties));
+        gf.start();
+    }
+
+
     /**
-     *
      * @return an already bootstrapped GlassFishRuntime or null if no such runtime is bootstrapped
      */
     private GlassFishRuntime lookupGfr(BundleContext context) {
         if (context == null) {
             return null;
         }
-        final ServiceReference serviceReference = context.getServiceReference(GlassFishRuntime.class.getName());
-        return serviceReference != null ? (GlassFishRuntime) context.getService(serviceReference) : null;
+        final ServiceReference<?> serviceReference = context.getServiceReference(GlassFishRuntime.class.getName());
+        return serviceReference == null ? null : (GlassFishRuntime) context.getService(serviceReference);
     }
+
 
     private Properties prepareStartupContext(final BundleContext context) {
         Properties properties = new Properties();
@@ -147,24 +198,20 @@ public class GlassFishMainActivator implements BundleActivator {
             installRoot = guessInstallRoot(context);
             if (installRoot == null) {
                 throw new RuntimeException("Property named " + Constants.INSTALL_ROOT_PROP_NAME + " is not set.");
-            } else {
-                System.out.println("Deduced install root as : " + installRoot + " from location of bundle. " +
-                        "If this is not correct, set correct value in a property called " +
-                        Constants.INSTALL_ROOT_PROP_NAME);
             }
+            LOG.log(DEBUG, "Deduced install root as: {0} from location of bundle. "
+                + "If this is not correct, set correct value in a property called " + Constants.INSTALL_ROOT_PROP_NAME,
+                installRoot);
         }
         if (!new File(installRoot).exists()) {
             throw new RuntimeException("No such directory: [" + installRoot + "]");
         }
-        properties.setProperty(Constants.INSTALL_ROOT_PROP_NAME,
-                installRoot);
+        properties.setProperty(Constants.INSTALL_ROOT_PROP_NAME, installRoot);
         String instanceRoot = context.getProperty(Constants.INSTANCE_ROOT_PROP_NAME);
         if (instanceRoot == null) {
             instanceRoot = new File(installRoot, "domains/domain1/").getAbsolutePath();
         }
-        properties.setProperty(Constants.INSTANCE_ROOT_PROP_NAME,
-                instanceRoot);
-
+        properties.setProperty(Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot);
         properties.putAll(makeProvisioningOptions(context));
 
         // This property is understood by our corresponding builder.
@@ -186,7 +233,7 @@ public class GlassFishMainActivator implements BundleActivator {
             File f = new File(uri);
             // We can't assume it is glassfish/modules/glassfish.jar.
             // Bare nucleus is installed as nucleus/modules/glassfish.jar.
-            if (f.exists() && f.isFile() && f.getParentFile().getCanonicalPath().endsWith("modules")) {
+            if (f.exists() && f.isFile() && f.getParentFile().toPath().endsWith(Path.of("modules"))) {
                 return f.getParentFile().getParentFile().getAbsolutePath();
             }
         } catch (Exception e) {
@@ -201,42 +248,21 @@ public class GlassFishMainActivator implements BundleActivator {
         if (installLocations == null) {
             StringBuilder defaultInstallLocations = new StringBuilder();
             for (String entry : DEFAULT_INSTALLATION_LOCATIONS_RELATIVE) {
-                defaultInstallLocations.append(installURI.resolve(entry).toString()).append(" ");
+                defaultInstallLocations.append(installURI.resolve(entry)).append(' ');
             }
             installLocations = defaultInstallLocations.toString();
         }
         provisioningOptions.setProperty(AUTO_INSTALL_PROP, installLocations);
         String startLocations = context.getProperty(AUTO_START_PROP);
         if (startLocations == null) {
-            StringBuilder deafultStartLocations = new StringBuilder();
+            StringBuilder defaultStartLocations = new StringBuilder();
             for (String entry : DEFAULT_START_LOCATIONS_RELATIVE) {
-                deafultStartLocations.append(installURI.resolve(entry).toString()).append(" ");
+                defaultStartLocations.append(installURI.resolve(entry)).append(' ');
             }
-            startLocations = deafultStartLocations.toString();
+            startLocations = defaultStartLocations.toString();
         }
         provisioningOptions.setProperty(AUTO_START_PROP, startLocations);
-        System.out.println("Provisioning options are " + provisioningOptions);
+        LOG.log(DEBUG, "Provisioning options are {0}", provisioningOptions);
         return provisioningOptions;
     }
-
-    public void stop(BundleContext context) throws Exception {
-        if (nonEmbedded) {
-            System.out.println("We are in non-embedded mode, so " + context.getBundle() + " has nothing to do.");
-            return;
-        }
-        try {
-            // gf can be null - especially in non-embedded mode.
-            if (gf != null && gf.getStatus() != GlassFish.Status.DISPOSED) {
-                gf.dispose(); // dispose calls stop
-            }
-        } finally {
-            gf = null;
-        }
-
-        if (gfr != null) { // gfr is non-null only if this activator has bootstrapped, else it's null.
-            gfr.shutdown();
-            gfr = null;
-        }
-    }
-
 }

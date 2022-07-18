@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,10 @@
 package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
-import com.sun.enterprise.admin.util.*;
+import com.sun.enterprise.admin.util.CachedCommandModel;
+import com.sun.enterprise.admin.util.ClusterOperationUtil;
+import com.sun.enterprise.admin.util.CommandSecurityChecker;
+import com.sun.enterprise.admin.util.InstanceStateService;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.universal.collections.ManifestUtils;
@@ -27,7 +30,21 @@ import com.sun.enterprise.util.AnnotationUtil;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.v3.common.XMLContentActionReporter;
-import java.io.*;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -36,22 +53,29 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Scope;
-import jakarta.inject.Singleton;
+
 import javax.security.auth.Subject;
-import jakarta.validation.*;
+
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.*;
 import org.glassfish.api.admin.AdminCommandEventBroker.AdminCommandListener;
-import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.SupplementalCommandExecutor.SupplementalCommand;
 import org.glassfish.api.logging.LogHelper;
@@ -64,11 +88,12 @@ import org.glassfish.config.support.GenericCrudCommand;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.*;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.internal.api.UndoableCommand;
 import org.glassfish.internal.deployment.DeploymentTargetResolver;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
+import org.jvnet.hk2.component.MultiMap;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.MessageInterpolatorImpl;
@@ -109,13 +134,10 @@ public class CommandRunnerImpl implements CommandRunner {
     SupplementalCommandExecutor supplementalExecutor;
 
 
-    //private final Map<Class<? extends AdminCommand>, String> commandModelEtagMap = new WeakHashMap<Class<? extends AdminCommand>, String>();
-
     @Inject
     private CommandSecurityChecker commandSecurityChecker;
 
-    private static final LocalStringManagerImpl adminStrings =
-            new LocalStringManagerImpl(CommandRunnerImpl.class);
+    private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CommandRunnerImpl.class);
     private static volatile Validator beanValidator = null;
 
     /**
@@ -158,8 +180,7 @@ public class CommandRunnerImpl implements CommandRunner {
             String commandServiceName = (scope != null) ? scope + commandName : commandName;
             command = habitat.getService(AdminCommand.class, commandServiceName);
         } catch (MultiException e) {
-            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.cantInstantiateCommand,
-                    e, commandName);
+            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.cantInstantiateCommand, e, commandName);
             return null;
         }
         return command == null ? null : getModel(command);
@@ -199,10 +220,10 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String commandName,
-            ActionReport report, Logger logger) {
+    public AdminCommand getCommand(String commandName, ActionReport report, Logger logger) {
         return getCommand(null, commandName, report, logger);
     }
+
 
     private static Class<? extends Annotation> getScope(Class<?> onMe) {
         for (Annotation anno : onMe.getAnnotations()) {
@@ -225,12 +246,9 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return command registered under commandName or null if not found
      */
     @Override
-    public AdminCommand getCommand(String scope, String commandName,
-            ActionReport report, Logger logger) {
-
+    public AdminCommand getCommand(String scope, String commandName, ActionReport report, Logger logger) {
         AdminCommand command = null;
-        String commandServiceName = (scope != null) ? scope + commandName : commandName;
-
+        String commandServiceName = scope == null ? commandName : scope + commandName;
         try {
             command = habitat.getService(AdminCommand.class, commandServiceName);
         } catch (MultiException e) {
@@ -245,9 +263,8 @@ public class CommandRunnerImpl implements CommandRunner {
             } else {
                 // this means either a non-existent command or
                 // an ill-formed command
-                if (habitat.getServiceHandle(AdminCommand.class, commandServiceName)
-                        == null) // somehow it's in habitat
-                {
+                if (habitat.getServiceHandle(AdminCommand.class, commandServiceName) == null) {
+                    // somehow it's in habitat
                     msg = adminStrings.getLocalString("adapter.command.notfound", "Command {0} not found", commandName);
                 } else {
                     msg = adminStrings.getLocalString("adapter.command.notcreated",
@@ -274,7 +291,7 @@ public class CommandRunnerImpl implements CommandRunner {
         } else if (Singleton.class.equals(myScope)) {
             // check that there are no parameters for this command
             CommandModel model = getModel(command);
-            if (model.getParameters().size() > 0) {
+            if (!model.getParameters().isEmpty()) {
                 String msg =
                         adminStrings.getLocalString("adapter.command.hasparams",
                         "Implementation for the command {0} exists in the "
@@ -311,8 +328,7 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return a new command invocation for that command name
      */
     @Override
-    public CommandInvocation getCommandInvocation(String name,
-            ActionReport report, Subject subject,boolean isNotify) {
+    public CommandInvocation getCommandInvocation(String name, ActionReport report, Subject subject, boolean isNotify) {
         return getCommandInvocation(null, name, report, subject,false);
     }
 
@@ -329,21 +345,19 @@ public class CommandRunnerImpl implements CommandRunner {
      * @return a new command invocation for that command name
      */
     @Override
-    public CommandInvocation getCommandInvocation(String scope, String name,
-            ActionReport report, Subject subject, boolean isNotify) {
+    public CommandInvocation getCommandInvocation(String scope, String name, ActionReport report, Subject subject,
+        boolean isNotify) {
         return new ExecutionContext(scope, name, report, subject, isNotify);
     }
 
-    public static boolean injectParameters(final CommandModel model, final Object injectionTarget,
-            final InjectionResolver<Param> injector,
-            final ActionReport report) {
 
+    public static boolean injectParameters(final CommandModel model, final Object injectionTarget,
+        final InjectionResolver<Param> injector, final ActionReport report) {
         if (injectionTarget instanceof GenericCrudCommand) {
             GenericCrudCommand c = GenericCrudCommand.class.cast(injectionTarget);
             c.setInjectionResolver(injector);
         }
 
-        // inject
         try {
             injectionMgr.inject(injectionTarget, injector);
         } catch (UnsatisfiedDependencyException e) {
@@ -419,8 +433,7 @@ public class CommandRunnerImpl implements CommandRunner {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(exception.getMessage());
             report.setFailureCause(exception);
-            ActionReport.MessagePart childPart =
-                    report.getTopMessagePart().addChild();
+            ActionReport.MessagePart childPart = report.getTopMessagePart().addChild();
             childPart.setMessage(getUsageText(model));
             return false;
         }
@@ -433,9 +446,9 @@ public class CommandRunnerImpl implements CommandRunner {
         if (beanValidator != null) {
             return;
         }
-        ClassLoader cl = System.getSecurityManager() == null ?
-                Thread.currentThread().getContextClassLoader():
-                AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+        ClassLoader cl = System.getSecurityManager() == null ? Thread.currentThread().getContextClassLoader()
+            : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+
                     @Override
                     public ClassLoader run() {
                         return Thread.currentThread().getContextClassLoader();
@@ -555,7 +568,7 @@ public class CommandRunnerImpl implements CommandRunner {
             report.setMessage(e.toString());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
-            }
+        }
 
         return context.getActionReport();
     }
@@ -983,7 +996,9 @@ public class CommandRunnerImpl implements CommandRunner {
                 // This is an old prefixed password parameter being passed in.
                 // Strip the prefix and lowercase the name
                 key = key.substring(OLD_PASSWORD_PARAM_PREFIX.length()).toLowerCase(Locale.ENGLISH);
-                if (adds == null) adds = new ParameterMap();
+                if (adds == null) {
+                    adds = new ParameterMap();
+                }
                 adds.add(key, entry.getValue().get(0));
             }
 
@@ -1103,9 +1118,9 @@ public class CommandRunnerImpl implements CommandRunner {
                 job.getEventBroker(),
                 job.getId());
         context.setSubject(subject);
-        List<RuntimeType> runtimeTypes = new ArrayList<RuntimeType>();
+        List<RuntimeType> runtimeTypes = new ArrayList<>();
         FailurePolicy fp = null;
-        Set<CommandTarget> targetTypesAllowed = new HashSet<CommandTarget>();
+        Set<CommandTarget> targetTypesAllowed = new HashSet<>();
         ActionReport.ExitCode preSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         ActionReport.ExitCode postSupplementalReturn = ActionReport.ExitCode.SUCCESS;
         CommandRunnerProgressHelper progressHelper =
@@ -1461,9 +1476,6 @@ public class CommandRunnerImpl implements CommandRunner {
                 } catch (AdminCommandLockTimeoutException ex) {
                     lockTimedOut = true;
                     String lockTime = formatSuspendDate(ex.getTimeOfAcquisition());
-                    String logMsg = "Command: " + model.getCommandName()
-                            + " failed to acquire a command lock.  REASON: time out "
-                            + "(current lock acquired on " + lockTime + ")";
                     String msg = adminStrings.getLocalString("lock.timeout",
                             "Command timed out.  Unable to acquire a lock to access "
                             + "the domain.  Another command acquired exclusive access "
@@ -1475,16 +1487,6 @@ public class CommandRunnerImpl implements CommandRunner {
                     lockTimedOut = true;
                     String lockTime = formatSuspendDate(ex.getTimeOfAcquisition());
                     String lockMsg = ex.getMessage();
-                    String logMsg;
-
-                    logMsg = "Command: " + model.getCommandName()
-                            + " was blocked.  The domain was suspended by a "
-                            + "user on:" + lockTime;
-
-                    if (lockMsg != null && !lockMsg.isEmpty()) {
-                        logMsg += " Reason: " + lockMsg;
-                    }
-
                     String msg = adminStrings.getLocalString("lock.notacquired",
                             "The command was blocked.  The domain was suspended by "
                             + "a user on {0}.", lockTime);
@@ -1594,7 +1596,7 @@ public class CommandRunnerImpl implements CommandRunner {
     }
 
     private Map<String,Object> buildEnvMap(final ParameterMap params) {
-        final Map<String,Object> result = new HashMap<String,Object>();
+        final Map<String,Object> result = new HashMap<>();
         for (Map.Entry<String,List<String>> entry : params.entrySet()) {
             final List<String> values = entry.getValue();
             if (values != null && values.size() > 0) {
@@ -1621,8 +1623,8 @@ public class CommandRunnerImpl implements CommandRunner {
 
         private class NameListerPair {
 
-            private String nameRegexp;
-            private AdminCommandEventBroker.AdminCommandListener listener;
+            private final String nameRegexp;
+            private final AdminCommandEventBroker.AdminCommandListener listener;
 
             public NameListerPair(String nameRegexp, AdminCommandListener listener) {
                 this.nameRegexp = nameRegexp;
@@ -1642,7 +1644,7 @@ public class CommandRunnerImpl implements CommandRunner {
         protected ProgressStatus progressStatusChild;
         protected boolean isManagedJob;
         protected boolean isNotify;
-        private   List<NameListerPair> nameListerPairs = new ArrayList<NameListerPair>();
+        private final   List<NameListerPair> nameListerPairs = new ArrayList<>();
 
         private ExecutionContext(String scope, String name, ActionReport report, Subject subject, boolean isNotify) {
             this.scope = scope;
@@ -1954,8 +1956,8 @@ public class CommandRunnerImpl implements CommandRunner {
     /** Works as a key in ETag cache map
      */
     private static class NameCommandClassPair {
-        private String name;
-        private Class<? extends AdminCommand> clazz;
+        private final String name;
+        private final Class<? extends AdminCommand> clazz;
         private int hash; //immutable, we can cache it
 
         public NameCommandClassPair(String name, Class<? extends AdminCommand> clazz) {
@@ -2055,7 +2057,7 @@ public class CommandRunnerImpl implements CommandRunner {
              * Prepare the map of command options names to corresponding
              * uploaded files.
              */
-            optionNameToFileMap = new MultiMap<String, File>();
+            optionNameToFileMap = new MultiMap<>();
             for (Map.Entry<File, Properties> e : payloadFiles.entrySet()) {
                 final String optionName = e.getValue().getProperty("data-request-name");
                 if (optionName != null) {

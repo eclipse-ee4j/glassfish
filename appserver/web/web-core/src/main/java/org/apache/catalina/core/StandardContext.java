@@ -5285,7 +5285,6 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
     protected void callServletContainerInitializers() throws LifecycleException {
         Iterator<ServletContainerInitializer> initIterator = servletContainerInitializers.iterator();
-
         List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
         while (initIterator.hasNext()) {
             try {

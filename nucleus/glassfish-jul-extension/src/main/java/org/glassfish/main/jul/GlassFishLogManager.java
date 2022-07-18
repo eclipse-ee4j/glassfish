@@ -19,6 +19,8 @@ package org.glassfish.main.jul;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -211,12 +213,12 @@ public class GlassFishLogManager extends LogManager {
                     // reason: LogManager.ensureLogManagerInitialized ignores result of addLogger,
                     // so there is no way to override it. So leave it alone.
                     this.userRootLogger = new GlassFishLogger(ROOT_LOGGER_NAME);
-                    return super.addLogger(userRootLogger);
+                    return callJULAddLogger(userRootLogger);
                 }
                 if (Logger.GLOBAL_LOGGER_NAME.equals(logger.getName())) {
                     trace(getClass(), () -> "System global logger catched: " + logger + ")");
                     this.globalLogger = new GlassFishLoggerWrapper(Logger.getGlobal());
-                    return super.addLogger(globalLogger);
+                    return callJULAddLogger(globalLogger);
                 }
             } finally {
                 // if we go directly through constructor without initialize(cfg)
@@ -228,7 +230,7 @@ public class GlassFishLogManager extends LogManager {
         }
 
         final GlassFishLogger replacementLogger = replaceWithGlassFishLogger(logger);
-        final boolean loggerAdded = super.addLogger(replacementLogger);
+        final boolean loggerAdded = callJULAddLogger(replacementLogger);
         if (loggerAdded && replacementLogger.getParent() == null
             && !ROOT_LOGGER_NAME.equals(replacementLogger.getName())) {
             replacementLogger.setParent(getRootLogger());
@@ -476,6 +478,18 @@ public class GlassFishLogManager extends LogManager {
         loggers.forEach(remover);
         trace(getClass(), () -> "Handlers to be closed: " + handlersToClose);
         handlersToClose.forEach(Handler::close);
+    }
+
+
+    private boolean callJULAddLogger(final GlassFishLogger newLogger) {
+        if (System.getSecurityManager() == null) {
+            return super.addLogger(newLogger);
+        }
+        // CORBA and IMQ stand aside
+        PrivilegedAction<Boolean> action = () -> {
+            return super.addLogger(newLogger);
+        };
+        return AccessController.doPrivileged(action);
     }
 
 

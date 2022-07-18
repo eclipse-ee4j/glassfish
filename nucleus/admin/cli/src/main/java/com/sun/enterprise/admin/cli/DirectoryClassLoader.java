@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,72 +17,88 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class loader that loads classes from all jar files in a specified directory.
  */
 public class DirectoryClassLoader extends URLClassLoader {
-    private static final LocalStringsImpl strings = new LocalStringsImpl(DirectoryClassLoader.class);
+
+    private static final LocalStringsImpl STRINGS = new LocalStringsImpl(DirectoryClassLoader.class);
+    private static final int MAX_DEPTH = 5;
+    private static final Comparator<Path> FILENAME_COMPARATOR = Comparator.comparing(Path::getFileName);
+    private static final Function<Path, URL> MAPPER = p -> {
+        try {
+            return p.toUri().toURL();
+        } catch (final Exception e) {
+            throw new IllegalStateException(STRINGS.get("DirError", p));
+        }
+    };
+
 
     /**
-     * Create a DirectoryClassLoader to load from jar files in the specified directory, with the specified parent class
-     * loader.
+     * Initializes a new instance by the jarsAndDirs, filtered and ordered by file names.
      *
-     * @param dir the directory of jar files to load from
-     * @param parent the parent class loader
-     * @throws IOException if the directory can't be accessed
+     * @param jarsAndDirs
+     * @param parent - parent has higher priority.
      */
-    public DirectoryClassLoader(String dir, ClassLoader parent) throws IOException {
-        super(getJars(new File(dir)), parent);
-    }
-
-    public DirectoryClassLoader(Set<File> jarsAndDirs, ClassLoader parent) throws IOException {
+    public DirectoryClassLoader(final Set<File> jarsAndDirs, final ClassLoader parent) {
         super(getJars(jarsAndDirs), parent);
     }
 
+
     /**
-     * Create a DirectoryClassLoader to load from jar files in the specified directory, with the specified parent class
-     * loader.
+     * Create a DirectoryClassLoader to load from jar files in
+     * the specified directory, with the specified parent class loader.
      *
      * @param dir the directory of jar files to load from
      * @param parent the parent class loader
-     * @throws IOException if the directory can't be accessed
      */
-    public DirectoryClassLoader(File dir, ClassLoader parent) throws IOException {
+    public DirectoryClassLoader(final File dir, final ClassLoader parent) {
         super(getJars(dir), parent);
     }
 
-    private static URL[] getJars(Set<File> jarsAndDirs) throws IOException {
-        if (jarsAndDirs == null) {
-            throw new IOException(strings.get("DirError", ""));
-        }
-        Collection<URL> result = new ArrayList<URL>();
-        for (File jd : jarsAndDirs) {
-            if (jd.isDirectory()) {
-                result.addAll(Arrays.asList(getJars(jd)));
-            } else {
-                result.add(jd.toURI().toURL());
-            }
-        }
-        return result.toArray(new URL[result.size()]);
+
+    private static URL[] getJars(final Set<File> jarsAndDirs) {
+        return getJars(jarsAndDirs.toArray(new File[jarsAndDirs.size()]));
     }
 
-    private static URL[] getJars(File dir) throws IOException {
-        File[] fjars = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-        if (fjars == null)
-            throw new IOException(strings.get("DirError", dir));
-        URL[] jars = new URL[fjars.length];
-        for (int i = 0; i < fjars.length; i++)
-            jars[i] = fjars[i].toURI().toURL();
-        return jars;
+
+    private static URL[] getJars(final File... jarsAndDirs) {
+        return Arrays.stream(jarsAndDirs).map(DirectoryClassLoader::getJarPaths).flatMap(Set::stream)
+            .sorted(FILENAME_COMPARATOR).map(MAPPER).toArray(URL[]::new);
+    }
+
+
+    private static Set<Path> getJarPaths(final File dir) {
+        try (Stream<Path> stream = Files.walk(dir.toPath(), MAX_DEPTH)) {
+            return stream.filter(path -> !Files.isDirectory(path))
+                .filter(path -> path.getFileName().toString().endsWith(".jar")).collect(Collectors.toSet());
+        } catch (final IOException e) {
+            throw new IllegalStateException(STRINGS.get("DirError", dir), e);
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder b = new StringBuilder();
+        b.append(getClass().getName()).append('@').append(hashCode()).append("(\n");
+        Arrays.stream(getURLs()).forEach(u -> b.append(u).append('\n'));
+        b.append(')');
+        return b.toString();
     }
 }

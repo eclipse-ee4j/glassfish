@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,87 +19,77 @@ package com.sun.enterprise.server.logging.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.InputStreamReader;
+import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 
-import com.sun.enterprise.server.logging.LogFormatHelper;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import org.glassfish.main.jul.formatter.LogFormatDetector;
 
 public class LogParserFactory {
 
-    final private static LocalStringManagerImpl LOCAL_STRINGS =
-            new LocalStringManagerImpl(LogParserFactory.class);
+    private static final Logger LOG = Logger.getLogger(LogParserFactory.class.getName());
 
-    static final String NEWLINE = System.getProperty("line.separator");
-
-    private static enum LogFormat {
+    private enum LogFormat {
         UNIFORM_LOG_FORMAT,
         ODL_LOG_FORMAT,
+        ONELINE_LOG_FORMAT,
         UNKNOWN_LOG_FORMAT
-    };
-
-    private static final String ODL_LINE_HEADER_REGEX =
-        "\\[(\\d){4}\\-(\\d){2}\\-(\\d){2}T(\\d){2}\\:(\\d){2}\\:(\\d){2}\\.(\\d){3}[\\+|\\-](\\d){4}\\].*";
-
-    private static final boolean DEBUG = false;
-
-    private static class SingletonHolder {
-        private static final LogParserFactory SINGLETON = new LogParserFactory();
     }
+
+    private static final LogParserFactory SINGLETON = new LogParserFactory();
+    private final LogFormatDetector logFormatDetector;
 
     public static LogParserFactory getInstance() {
-        return SingletonHolder.SINGLETON;
+        return SINGLETON;
     }
 
-    private Pattern odlDateFormatPattern = null;
 
     private LogParserFactory() {
-        odlDateFormatPattern  = Pattern.compile(ODL_LINE_HEADER_REGEX);
+        logFormatDetector = new LogFormatDetector();
     }
 
-    public LogParser createLogParser(File logFile) throws LogParserException, IOException {
-        BufferedReader reader=null;
-        try {
-            reader = new BufferedReader(new FileReader(logFile));
-            String line = reader.readLine();
-            LogFormat format = detectLogFormat(line);
-            if (DEBUG) {
-                System.out.println("Log format=" + format.name() + " for line:" + line);
-            }
-            switch(format) {
+
+    public LogParser createLogParser(File logFile) throws IOException {
+        final String firstLine;
+        try (BufferedReader reader = createReader(logFile)) {
+            firstLine = reader.readLine();
+        }
+        final LogFormat format = detectLogFormat(firstLine);
+        LOG.fine(() -> "Detected log format=" + format + " for line: " + firstLine);
+        switch (format) {
             case UNIFORM_LOG_FORMAT:
-                return new UniformLogParser(logFile.getName());
+                return new UniformLogParser();
             case ODL_LOG_FORMAT:
-                return new ODLLogParser(logFile.getName());
+                return new ODLLogParser();
+            case ONELINE_LOG_FORMAT:
+                return new OneLineLogParser();
             default:
-                return new RawLogParser(logFile.getName());
-            }
-        } finally {
-            if (reader != null) {
-                reader.close();
-            }
+                return new RawLogParser();
         }
     }
 
-    Pattern getODLDateFormatPattern() {
-        return odlDateFormatPattern;
+
+    private BufferedReader createReader(File logFile) throws IOException {
+        if (logFormatDetector.isCompressedFile(logFile.getName())) {
+            return new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(logFile))));
+        }
+        return new BufferedReader(new FileReader(logFile));
     }
 
-    private LogFormat detectLogFormat(String line) {
+
+    private LogFormat detectLogFormat(final String line) {
         if (line != null) {
-            Matcher m = odlDateFormatPattern.matcher(line);
-            if (m.matches()) {
-                if (DEBUG) {
-                    System.out.println("Matched ODL pattern for line:" + line);
-                }
+            if (logFormatDetector.isODLFormatLogHeader(line)) {
                 return LogFormat.ODL_LOG_FORMAT;
-            } else if (LogFormatHelper.isUniformFormatLogHeader(line)) {
+            } else if (logFormatDetector.isUniformFormatLogHeader(line)) {
                 return LogFormat.UNIFORM_LOG_FORMAT;
+            } else if (logFormatDetector.isOneLineLFormatLogHeader(line)) {
+                return LogFormat.ONELINE_LOG_FORMAT;
             }
         }
         return LogFormat.UNKNOWN_LOG_FORMAT;
     }
-
 }

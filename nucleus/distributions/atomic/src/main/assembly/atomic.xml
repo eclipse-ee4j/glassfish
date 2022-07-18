@@ -72,6 +72,16 @@
             <outputDirectory>${install.dir.name}/common/templates/gf</outputDirectory>
         </fileSet>
 
+        <!-- lib/bootstrap -->
+        <fileSet>
+            <directory>${temp.dir}</directory>
+            <includes>
+                <include>glassfish-jul-extension.jar</include>
+                <include>grizzly-npn-api.jar</include>
+            </includes>
+            <outputDirectory>${install.dir.name}/lib/bootstrap</outputDirectory>
+        </fileSet>
+
         <!-- lib/asadmin/ -->
         <fileSet>
             <directory>${temp.dir}</directory>
@@ -90,15 +100,6 @@
                 <include>flashlight-agent.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/lib/monitor</outputDirectory>
-        </fileSet>
-
-        <!-- modules/lib -->
-        <fileSet>
-            <directory>${temp.dir}</directory>
-            <includes>
-                <include>grizzly-npn-api.jar</include>
-            </includes>
-            <outputDirectory>${install.dir.name}/lib</outputDirectory>
         </fileSet>
 
         <!-- felix -->
@@ -142,6 +143,7 @@
                 <exclude>org.osgi.util.promise.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
+                <exclude>glassfish-jul-extension.jar</exclude>
                 <exclude>grizzly-npn-api.jar</exclude>
             </excludes>
             <outputDirectory>${install.dir.name}/modules</outputDirectory>

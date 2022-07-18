@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,7 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
@@ -31,9 +29,12 @@ import java.util.logging.Logger;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.main.jul.formatter.ODLLogFormatter;
 
-import com.sun.enterprise.server.logging.ODLLogFormatter;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 /**
  * A POL (plain old logger).

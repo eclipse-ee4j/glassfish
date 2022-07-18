@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.common.util.logging;
 
+import jakarta.inject.Inject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -26,35 +29,55 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import jakarta.inject.Inject;
-
 import org.glassfish.api.admin.FileMonitoring;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.main.jul.cfg.LoggingProperties;
+import org.glassfish.main.jul.formatter.ODLLogFormatter;
+import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.ENABLED;
+import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.FORMATTER;
+import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.OUTPUT_FILE;
+import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.REDIRECT_STANDARD_STREAMS;
+import static org.glassfish.main.jul.handler.GlassFishLogHandlerProperty.ROTATION_LIMIT_SIZE;
 
 /**
  * Implementation of Logging Commands
  *
  * @author Naman Mehta
  */
-
 @Service
 @Contract
 public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
-    @Inject
-    Logger logger;
+    private static final Logger LOG = Logger.getLogger(LoggingConfigImpl.class.getName());
+
+    private static final String DEFAULT_SERVER_LOG_PATH = "${com.sun.aas.instanceRoot}/logs/server.log";
+
+    private static final Map<String, String> DEFAULT_LOG_PROPERTIES = new HashMap<>();
+    static {
+        DEFAULT_LOG_PROPERTIES.put(ENABLED.getPropertyFullName(), "true");
+        DEFAULT_LOG_PROPERTIES.put(OUTPUT_FILE.getPropertyFullName(), DEFAULT_SERVER_LOG_PATH);
+        DEFAULT_LOG_PROPERTIES.put(FORMATTER.getPropertyFullName(), ODLLogFormatter.class.getName());
+        DEFAULT_LOG_PROPERTIES.put(REDIRECT_STANDARD_STREAMS.getPropertyFullName(), "true");
+        DEFAULT_LOG_PROPERTIES.put(ROTATION_LIMIT_SIZE.getPropertyFullName(), "2");
+    }
+
 
     @Inject
     ServerEnvironmentImpl env;
@@ -70,6 +93,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
      * Constructor
      */
 
+    @Override
     public void postConstruct() {
         // set logging.properties filename
         setupConfigDir(env.getConfigDirPath(), env.getLibPath());
@@ -83,50 +107,39 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         loggingPropertiesName = ServerEnvironmentImpl.kLoggingPropertiesFileName;
     }
 
-    /*
-      Load the properties  for DAS
-      */
 
+    /**
+     * Load the properties for DAS
+     */
     private void loadLoggingProperties() throws IOException {
         props = new Properties();
         File file = getLoggingPropertiesFile();
-        InputStream fis=null;
-        try {
-            if (!file.exists()) {
-                fis = getDefaultLoggingPropertiesInputStream();
-            } else {
-                fis = new FileInputStream(file);
-            }
-            fis = new BufferedInputStream(fis);
+        try (InputStream fis = openPropertyFile(file)) {
             props.load(fis);
-        } finally {
-            if (fis != null) {
-                fis.close();
-            }
         }
     }
 
-    /*
-      Load the properties  for given target.
-      */
 
+    /**
+     * Load the properties for given target.
+     */
     private void loadLoggingProperties(String target) throws IOException {
         props = new Properties();
         File file = getLoggingPropertiesFile(target);
-        InputStream fis=null;
-        try {
-            if (!file.exists()) {
-                fis = getDefaultLoggingPropertiesInputStream();
-            } else {
-                fis = new FileInputStream(file);
-            }
-            fis = new BufferedInputStream(fis);
+        try (InputStream fis = openPropertyFile(file)) {
             props.load(fis);
-        } finally {
-            if (fis != null) {
-                fis.close();
-            }
         }
+    }
+
+
+    private InputStream openPropertyFile(File file) throws IOException {
+        final FileInputStream fis;
+        if (file.exists()) {
+            fis = new FileInputStream(file);
+        } else {
+            fis = getDefaultLoggingPropertiesInputStream();
+        }
+        return new BufferedInputStream(fis);
     }
 
     private File getLoggingPropertiesFile() {
@@ -138,16 +151,17 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         return new File(pathForLoggingFile, ServerEnvironmentImpl.kLoggingPropertiesFileName);
     }
 
+
     private FileInputStream getDefaultLoggingPropertiesInputStream() throws IOException {
-        File defaultConfig = new File(env.getConfigDirPath(),
-                ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
+        File defaultConfig = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
         return new FileInputStream(defaultConfig);
     }
 
     private void safeCloseStream(OutputStream os) {
         try {
-            if(os != null)
+            if(os != null) {
                 os.close();
+            }
         }
         catch (Exception e) {
             // nothing can be done about it...
@@ -203,10 +217,13 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
      * @param propertyValue Value to set
      * @throws IOException
      */
+    @Override
     public synchronized String setLoggingProperty(String propertyName, String propertyValue) throws IOException {
         loadLoggingProperties();
         // update the property
-        if (propertyValue == null) return null;
+        if (propertyValue == null) {
+            return null;
+        }
         // may need to map the domain.xml name to the new name in logging.properties file
         String key = LoggingXMLNames.xmltoPropsMap.get(propertyName);
         if (key == null) {
@@ -230,10 +247,13 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
      * @param propertyValue Value to set
      * @throws IOException
      */
+    @Override
     public synchronized String setLoggingProperty(String propertyName, String propertyValue, String targetConfigName) throws IOException {
         loadLoggingProperties(targetConfigName);
         // update the property
-        if (propertyValue == null) return null;
+        if (propertyValue == null) {
+            return null;
+        }
         // may need to map the domain.xml name to the new name in logging.properties file
         String key = LoggingXMLNames.xmltoPropsMap.get(propertyName);
         if (key == null) {
@@ -257,13 +277,16 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
       * @throws  IOException
       */
 
+    @Override
     public synchronized Map<String, String> updateLoggingProperties(Map<String, String> properties) throws IOException {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         loadLoggingProperties();
         // need to map the name given to the new name in logging.properties file
         String key = null;
         for (Map.Entry<String, String> e : properties.entrySet()) {
-            if (e.getValue() == null) continue;
+            if (e.getValue() == null) {
+                continue;
+            }
             key = LoggingXMLNames.xmltoPropsMap.get(e.getKey());
             if (key == null) {
                 key = e.getKey();
@@ -281,22 +304,17 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         return m;
     }
 
-    /* update the properties to new values for given target.  properties is a Map of names of properties and
-      * their cooresponding value.  If the property does not exist then it is added to the
-      * logging.properties file.
-      *
-      * @param properties Map of the name and value of property to add or update
-      *
-      * @throws  IOException
-      */
 
+    @Override
     public synchronized Map<String, String> updateLoggingProperties(Map<String, String> properties, String targetConfigName) throws IOException {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         loadLoggingProperties(targetConfigName);
         // need to map the name given to the new name in logging.properties file
         String key = null;
         for (Map.Entry<String, String> e : properties.entrySet()) {
-            if (e.getValue() == null) continue;
+            if (e.getValue() == null) {
+                continue;
+            }
             key = LoggingXMLNames.xmltoPropsMap.get(e.getKey());
             if (key == null) {
                 key = e.getKey();
@@ -318,8 +336,9 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
       * @throws  IOException
       */
 
+    @Override
     public synchronized Map<String, String> getLoggingProperties(String targetConfigName) throws IOException {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         try {
             loadLoggingProperties(targetConfigName);
             Enumeration e = props.propertyNames();
@@ -344,8 +363,9 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
       * @throws  IOException
       */
 
+    @Override
     public synchronized Map<String, String> getLoggingProperties() throws IOException {
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         try {
             loadLoggingProperties();
 
@@ -366,62 +386,63 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         }
     }
 
-    /* delete the properties from logging.properties file.  properties is a Map of names of properties and
-      * their cooresponding value.
-      *
-      * @param properties Map of the name and value of property to delete
-      *
-      * @throws  IOException
-      */
 
-    public synchronized void deleteLoggingProperties(Map<String, String> properties) throws IOException {
+    @Override
+    public synchronized Map<String, String> deleteLoggingProperties(final Collection<String> properties)
+        throws IOException {
+        LOG.log(Level.INFO, "deleteLoggingProperties(properties={0})", properties);
         loadLoggingProperties();
-
-        // need to map the name given to the new name in logging.properties file
-        String key = null;
-        for (Map.Entry<String, String> e : properties.entrySet()) {
-            key = LoggingXMLNames.xmltoPropsMap.get(e.getKey());
-            if (key == null) {
-                key = e.getKey();
-            }
-            props.remove(key);
-        }
-
-        closePropFile("");
+        remove(properties);
+        rewritePropertiesFileAndNotifyMonitoring();
+        return setMissingDefaults(getLoggingProperties());
     }
 
-    /* delete the properties from logging.properties file for given target.  properties is a Map of names of properties and
-      * their cooresponding value.
-      *
-      * @param properties Map of the name and value of property to delete
-      *
-      * @throws  IOException
-      */
 
-    public synchronized void deleteLoggingProperties(Map<String,
-            String> properties, String targetConfigName) throws IOException {
-        loadLoggingProperties(targetConfigName);
-
-        // need to map the name given to the new name in logging.properties file
-        String key = null;
-        for (Map.Entry<String, String> e : properties.entrySet()) {
-            key = LoggingXMLNames.xmltoPropsMap.get(e.getKey());
-            if (key == null) {
-                key = e.getKey();
-            }
-            props.remove(key);
-        }
-
-        closePropFile(targetConfigName);
+    @Override
+    public synchronized Map<String, String> deleteLoggingProperties(final Collection<String> properties,
+        final String target) throws IOException {
+        LOG.log(Level.INFO, "deleteLoggingProperties(properties={0}, target={1})", new Object[] {properties, target});
+        loadLoggingProperties();
+        remove(properties);
+        rewritePropertiesFileAndNotifyMonitoring();
+        return setMissingDefaults(getLoggingProperties());
     }
 
-    /*
-      * Returns the zip File Name to create for collection log files
-      *
-      * @param sourceDir Directory underneath zip file should be created.
-      *
-      */
+    private void remove(final Collection<String> keys) {
+        final Consumer<String> toRealKeyAndDelete = k -> props.remove(LoggingXMLNames.xmltoPropsMap.getOrDefault(k, k));
+        keys.stream().forEach(toRealKeyAndDelete);
+    }
 
+    private void rewritePropertiesFileAndNotifyMonitoring() throws IOException {
+        LOG.finest("rewritePropertiesFileAndNotifyMonitoring");
+        File file = getLoggingPropertiesFile();
+        File parentFile = file.getParentFile();
+        if (!parentFile.exists() && !parentFile.mkdirs()) {
+            throw new IOException(
+                "Directory '" + parentFile + "' does not exist, cannot create logging.properties file!");
+        }
+        try {
+            new LoggingProperties(props).store(file, "GlassFish logging.properties list");
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Could not store " + file, e);
+        }
+        fileMonitoring.fileModified(file);
+    }
+
+    private Map<String, String> setMissingDefaults(Map<String, String> loggingProperties) throws IOException {
+        for (Entry<String, String> entry : DEFAULT_LOG_PROPERTIES.entrySet()) {
+            if (!loggingProperties.containsKey(entry.getKey())) {
+                loggingProperties.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return loggingProperties;
+    }
+
+
+    /**
+     * @param sourceDir Directory underneath zip file should be created.
+     * @return the zip File Name to create for collection log files
+     */
     private String getZipFileName(String sourceDir) {
 
         final String DATE_FORMAT_NOW = "yyyy-MM-dd_HH-mm-ss";
@@ -463,6 +484,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
       * @throws  IOException
       */
 
+    @Override
     public String createZipFile(String sourceDir) throws IOException {
         ZipOutputStream zout = null;
         String zipFile = getZipFileName(sourceDir);
@@ -543,14 +565,14 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         //get sub-folder/files list
         File[] files = fileSource.listFiles();
         FileInputStream fin = null;
-        for (int i = 0; i < files.length; i++) {
+        for (File file : files) {
             //if the file is directory, call the function recursively
-            if (files[i].isDirectory()) {
-                addDirectory(zout, files[i], ignoreLength);
+            if (file.isDirectory()) {
+                addDirectory(zout, file, ignoreLength);
                 continue;
             }
 
-            if (files[i].getAbsolutePath().contains(".zip")) {
+            if (file.getAbsolutePath().contains(".zip")) {
                 continue;
             }
             /*
@@ -562,10 +584,10 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
                 byte[] buffer = new byte[1024];
 
                 //create object of FileInputStream
-                fin = new FileInputStream(files[i].getAbsolutePath());
+                fin = new FileInputStream(file.getAbsolutePath());
                 zout.putNextEntry(new ZipEntry(ignoreLength > -1 ?
-                        files[i].getAbsolutePath().substring(ignoreLength) :
-                        files[i].getAbsolutePath()));
+                        file.getAbsolutePath().substring(ignoreLength) :
+                        file.getAbsolutePath()));
 
                 /*
                             * After creating entry in the zip file, actually
@@ -594,79 +616,71 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         }
     }
 
-    /* Return a logging file details  in the logging.properties file.
-      * @throws  IOException
-      */
-
+    /**
+     * Return a logging file details in the logging.properties file.
+     *
+     * @throws IOException
+     */
     public synchronized String getLoggingFileDetails() throws IOException {
-        try {
-            loadLoggingProperties();
-            Enumeration e = props.propertyNames();
+        LOG.finest("getLoggingFileDetails()");
+        loadLoggingProperties();
 
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                // convert the name in domain.xml to the name in logging.properties if needed
-                if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
-                    key = LoggingXMLNames.xmltoPropsMap.get(key);
-                }
+        @SuppressWarnings("unchecked")
+        Enumeration<String> loggingPropertyNames = (Enumeration<String>) props.propertyNames();
+        while (loggingPropertyNames.hasMoreElements()) {
+            String key = loggingPropertyNames.nextElement();
 
-                if (key != null && key.equals("com.sun.enterprise.server.logging.GFFileHandler.file")) {
-                    return props.getProperty(key);
-                }
+            // Convert the name in domain.xml to the name in logging.properties if needed
+            key = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
+            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(key)) {
+                return props.getProperty(key);
             }
-        } catch (IOException ex) {
-            throw ex;
         }
+
         return null;
     }
 
-    /* Return a logging file details  in the logging.properties file for given target.
-      * @throws  IOException
-      */
 
+    /**
+     * @return a logging file details in the logging.properties file for given target.
+     * @throws IOException
+     */
     public synchronized String getLoggingFileDetails(String targetConfigName) throws IOException {
-        try {
-            loadLoggingProperties(targetConfigName);
-            Enumeration e = props.propertyNames();
+        loadLoggingProperties(targetConfigName);
+        @SuppressWarnings("unchecked")
+        Enumeration<String> loggingPropertyNames = (Enumeration<String>) props.propertyNames();
+        while (loggingPropertyNames.hasMoreElements()) {
+            String key = loggingPropertyNames.nextElement();
 
-            while (e.hasMoreElements()) {
-                String key = (String) e.nextElement();
-                // convert the name in domain.xml to the name in logging.properties if needed
-                if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
-                    key = LoggingXMLNames.xmltoPropsMap.get(key);
-                }
-
-                if (key != null && key.equals("com.sun.enterprise.server.logging.GFFileHandler.file")) {
-                    return props.getProperty(key);
-                }
-
+            // convert the name in domain.xml to the name in logging.properties if needed
+            key = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
+            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(key)) {
+                return props.getProperty(key);
             }
-        } catch (IOException ex) {
-            throw ex;
         }
         return null;
     }
 
-    /* Return a Map of all the properties and corresponding values from the logging.properties file from template..
-      * @throws  IOException
-      */
 
+    /**
+     * @return a Map of all the properties and corresponding values from the logging.properties file
+     *         from template..
+     * @throws IOException
+     */
     public Map<String, String> getDefaultLoggingProperties() throws IOException {
         FileInputStream fisForLoggingTemplate = null;
         Properties propsLoggingTempleate = new Properties();
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         try {
             File loggingTemplateFile = new File(env.getConfigDirPath(),
-                    ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
+                ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
             fisForLoggingTemplate = new java.io.FileInputStream(loggingTemplateFile);
             propsLoggingTempleate.load(fisForLoggingTemplate);
-        }
-        finally {
+        } finally {
             safeCloseStream(fisForLoggingTemplate);
         }
 
-        Enumeration e = propsLoggingTempleate.propertyNames();
-
+        Enumeration<?> e = propsLoggingTempleate.propertyNames();
         while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
             // convert the name in domain.xml to the name in logging.properties if needed

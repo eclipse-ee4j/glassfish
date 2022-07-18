@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,11 @@ package com.sun.enterprise.admin.cli;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Formatter;
 
 /**
  * The environment variables for CLI commands. An instance of this class is passed to each command to give it access to
@@ -29,16 +34,14 @@ import java.util.*;
  * @author Bill Shannon
  */
 public final class Environment {
-    // XXX - should Environment just extend HashMap?
-
     // commands that extend AsadminMain may set this as desired
     private static String PREFIX = "AS_ADMIN_";
     private static String SHORT_PREFIX = "AS_";
 
-    private Map<String, String> env = new HashMap<String, String>();
-    private boolean debug = false;
-    private boolean trace = false;
-    private File logfile = null;
+    private final Map<String, String> env = new HashMap<>();
+    private boolean debug;
+    private boolean trace;
+    private File logfile;
 
     /**
      * Set the prefix for environment variables referenced from the system environment by Environment objects.
@@ -82,8 +85,9 @@ public final class Environment {
      * Constructor that ignores the system environment, mostly used to enable repeatable tests.
      */
     public Environment(boolean ignoreEnvironment) {
-        if (ignoreEnvironment)
+        if (ignoreEnvironment) {
             return;
+        }
         // initialize it with all relevant system environment entries
         for (Map.Entry<String, String> e : System.getenv().entrySet()) {
             if (e.getKey().startsWith(PREFIX)) {
@@ -100,8 +104,9 @@ public final class Environment {
         // System Prop trumps environmental variable
         String logProp = SHORT_PREFIX + "LOGFILE";
         String fname = System.getProperty(logProp);
-        if (fname == null)
+        if (fname == null) {
             fname = System.getenv(logProp);
+        }
         if (fname != null) {
             File f = new File(fname);
 
@@ -212,5 +217,15 @@ public final class Environment {
 
     public File getDebugLogfile() {
         return logfile;
+    }
+
+    public Formatter getLogFormatter() {
+        final String formatterClass = env.get(PREFIX + "LOG_FORMATTER");
+        try {
+            return formatterClass == null ? null
+                : (Formatter) Class.forName(formatterClass).getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("This is not a formatter: " + formatterClass, e);
+        }
     }
 }

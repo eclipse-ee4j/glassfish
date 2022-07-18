@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,27 +24,30 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.config.support.TargetType;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
 /**
- * Created by IntelliJ IDEA.
- * User: naman
- * Date: 5 Apr, 2011
- * Time: 4:29:29 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
@@ -72,6 +76,7 @@ public class DeleteLogLevel implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteLogLevel.class);
 
+    @Override
     public void execute(AdminCommandContext context) {
 
 
@@ -84,7 +89,7 @@ public class DeleteLogLevel implements AdminCommand {
         boolean success = false;
         String targetConfigName = "";
 
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         try {
 
             String loggerNames[] = properties.split(":");
@@ -130,14 +135,14 @@ public class DeleteLogLevel implements AdminCommand {
             }
 
             if (isCluster || isInstance) {
-                loggingConfig.deleteLoggingProperties(m, targetConfigName);
+                loggingConfig.deleteLoggingProperties(m.keySet(), targetConfigName);
                 success = true;
             } else if (isDas) {
-                loggingConfig.deleteLoggingProperties(m);
+                loggingConfig.deleteLoggingProperties(m.keySet());
                 success = true;
             } else if (isConfig) {
                 // This loop is for the config which is not part of any target
-                loggingConfig.deleteLoggingProperties(m, targetConfigName);
+                loggingConfig.deleteLoggingProperties(m.keySet(), targetConfigName);
                 success = true;
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

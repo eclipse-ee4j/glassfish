@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.enterprise.admin.launcher;
 
+import org.glassfish.main.jul.GlassFishLogManagerInitializer;
+
 import static com.sun.enterprise.admin.launcher.GFLauncherLogger.LAUNCH_FAILURE;
 import static org.glassfish.api.admin.RuntimeType.DAS;
 
@@ -24,6 +27,14 @@ import static org.glassfish.api.admin.RuntimeType.DAS;
  * @author bnevins
  */
 public class GFLauncherMain {
+
+    static {
+        // The GlassFishLogManager must be set before the first usage of any JUL component,
+        // it cannot be done later.
+        if (!GlassFishLogManagerInitializer.tryToSetAsDefault()) {
+            throw new IllegalStateException("GlassFishLogManager is not set as the default LogManager!");
+        }
+    }
 
     /**
      *

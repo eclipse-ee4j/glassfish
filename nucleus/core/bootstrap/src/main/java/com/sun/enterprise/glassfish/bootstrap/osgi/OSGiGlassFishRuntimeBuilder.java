@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,20 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.glassfish.bootstrap.Constants;
+import com.sun.enterprise.glassfish.bootstrap.LogFacade;
+import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
@@ -26,20 +39,13 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 
-import java.io.*;
-import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import static com.sun.enterprise.glassfish.bootstrap.Constants.HK2_CACHE_DIR;
 import static com.sun.enterprise.glassfish.bootstrap.Constants.INHABITANTS_CACHE;
-import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.*;
+import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.BUNDLEIDS_FILENAME;
+import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_FILENAME;
 import static com.sun.enterprise.glassfish.bootstrap.osgi.Constants.PROVISIONING_OPTIONS_PREFIX;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
-
-import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
@@ -176,10 +182,10 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
     }
 
     private GlassFishRuntime getGlassFishRuntime() throws GlassFishException {
-        final ServiceReference reference =
-                framework.getBundleContext().getServiceReference(GlassFishRuntime.class.getName());
+        final ServiceReference<GlassFishRuntime> reference = framework.getBundleContext()
+            .getServiceReference(GlassFishRuntime.class);
         if (reference != null) {
-            GlassFishRuntime embeddedGfr = (GlassFishRuntime) framework.getBundleContext().getService(reference);
+            GlassFishRuntime embeddedGfr = framework.getBundleContext().getService(reference);
             return new OSGiGlassFishRuntime(embeddedGfr, framework);
         }
         throw new GlassFishException("No GlassFishRuntime available");
@@ -194,8 +200,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             File inhabitantsCache = new File(cacheDir, INHABITANTS_CACHE);
             if (inhabitantsCache.exists()) {
                 if (!inhabitantsCache.delete()) {
-                    throw new GlassFishException("cannot delete cache:" +
-                            inhabitantsCache.getAbsolutePath());
+                    throw new GlassFishException("cannot delete cache:" + inhabitantsCache.getAbsolutePath());
                 }
             }
         }

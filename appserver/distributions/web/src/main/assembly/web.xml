@@ -176,13 +176,14 @@
             <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
         </fileSet>
 
-        <!-- modules/lib -->
+        <!-- lib/bootstrap -->
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
+                <include>glassfish-jul-extension.jar</include>
                 <include>grizzly-npn-api.jar</include>
             </includes>
-            <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
+            <outputDirectory>${install.dir.name}/glassfish/lib/bootstrap</outputDirectory>
         </fileSet>
 
         <!-- felix -->
@@ -228,6 +229,7 @@
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>
                 <exclude>appserver-domain.jar</exclude>
+                <exclude>glassfish-jul-extension.jar</exclude>
                 <exclude>grizzly-npn-api.jar</exclude>
                 <exclude>cli-optional.jar</exclude>
                 <exclude>appserver-cli.jar</exclude>

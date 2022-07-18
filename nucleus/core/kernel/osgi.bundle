@@ -38,4 +38,6 @@ Import-Package: \
     com.sun.enterprise.server.logging.*; resolution:=optional, \
     org.jvnet.tiger_types;version="${project.version}", \
     org.hibernate.validator.*;resolution:=optional;version="[8,9)", \
+    org.glassfish.jaxb.runtime.v2.*, \
+    org.glassfish.hk2.osgiresourcelocator.*, \
     *

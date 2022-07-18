@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -290,26 +290,22 @@ public class ConfigApiLoggerInfo {
     @LogMessageInfo(message = "Problem parsing system-property element in domain.xml template", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String problemParsingSystemProperty = LOGMSG_PREFIX + "-00082";
 
-    @LogMessageInfo(message = "Startup class : ",
-
-            level = "FINE")
+    @LogMessageInfo(message = "Startup class: {0}", level = "FINE")
     public final static String startupClass = LOGMSG_PREFIX + "-00083";
 
-    @LogMessageInfo(message = "Successful cleaned domain.xml with ", level = "FINE")
+    @LogMessageInfo(message = "Successful cleaned domain.xml with {0}", level = "FINE")
     public final static String successfulCleanupWith = LOGMSG_PREFIX + "-00084";
 
-    @LogMessageInfo(message = " cleaning domain.xml failed ", cause = "unknown", action = "unknown", level = "SEVERE")
+    @LogMessageInfo(message = " cleaning domain.xml failed, service: {0}, exception: {1} ", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String cleaningDomainXmlFailed = LOGMSG_PREFIX + "-00085";
 
     @LogMessageInfo(message = "Instance {0} from environment not found in domain.xml", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String badEnv = LOGMSG_PREFIX + "-00086";
 
-    @LogMessageInfo(message = "Successful Upgrade domain.xml with ",
-
-            level = "FINE")
+    @LogMessageInfo(message = "Successful Upgrade domain.xml with {0}", level = "FINE")
     public final static String successfulUpgrade = LOGMSG_PREFIX + "-00087";
 
-    @LogMessageInfo(message = " upgrading domain.xml failed ", cause = "unknown", action = "unknown", level = "SEVERE")
+    @LogMessageInfo(message = " upgrading domain.xml failed, service: {0}, exception: {1}", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String failedUpgrade = LOGMSG_PREFIX + "-00088";
 
     @LogMessageInfo(message = " does not exist or is empty, will use backup", cause = "unknown", action = "unknown", level = "SEVERE")
@@ -318,7 +314,7 @@ public class ConfigApiLoggerInfo {
     @LogMessageInfo(message = "The domain backup file does not exist or is empty", cause = "unknown", action = "unknown", level = "SEVERE")
     public final static String noBackupFile = LOGMSG_PREFIX + "-00090";
 
-    @LogMessageInfo(message = "Total time to parse domain.xml: ", level = "FINE")
+    @LogMessageInfo(message = "Total time to parse domain.xml: {0} ns", level = "FINE")
     public final static String totalTimeToParseDomain = LOGMSG_PREFIX + "-00092";
 
     @LogMessageInfo(message = "Exception while creating the command model for the generic command {0} : {1}", cause = "unknown", action = "unknown", level = "SEVERE")

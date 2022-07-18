@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,6 +31,8 @@ import org.glassfish.api.logging.LogHelper;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.main.jul.formatter.ODLLogFormatter;
+import org.glassfish.main.jul.formatter.UniformLogFormatter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author sanshriv
- *
  */
 public class LoggingAnnotationsTest {
 
@@ -93,12 +94,16 @@ public class LoggingAnnotationsTest {
         // Add a file handler with UniformLogFormatter
         uniformFormatHandler = new FileHandler(ULF_LOG);
         uniformFormatHandler.setLevel(Level.FINE);
-        uniformFormatHandler.setFormatter(new UniformLogFormatter());
+        UniformLogFormatter uniformLogFormatter = new UniformLogFormatter();
+        uniformLogFormatter.setPrintSource(true);
+        uniformFormatHandler.setFormatter(uniformLogFormatter);
 
         // Add a file handler with ODLLogFormatter
         odlFormatHandler = new FileHandler(ODL_LOG);
         odlFormatHandler.setLevel(Level.FINE);
-        odlFormatHandler.setFormatter(new ODLLogFormatter());
+        ODLLogFormatter odlLogFormatter = new ODLLogFormatter();
+        odlLogFormatter.setPrintSource(true);
+        odlFormatHandler.setFormatter(odlLogFormatter);
 
         consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(new UniformLogFormatter());

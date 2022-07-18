@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +17,26 @@
 
 package com.sun.enterprise.server.logging;
 
+import java.io.File;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * @author sanshriv
+ * Interface to provide the runtime data in effect for the server logging.
  *
+ * @author sandeep.shrivastava
+ * @author David Matejcek
  */
 @Contract
-public interface LogEventBroadcaster {
+public interface ServerLogFileManager {
 
     /**
-     * Broadcast the log event to registered listeners.
-     * @param logEvent
+     * @return the current log file for the server.
      */
-    public void informLogEventListeners(LogEvent logEvent);
+    File getCurrentLogFile();
 
+    /**
+     * Renames currently used file and creates a new one.
+     */
+    void roll();
 }

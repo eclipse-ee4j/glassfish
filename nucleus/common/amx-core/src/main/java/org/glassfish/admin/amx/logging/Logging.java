@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,26 @@
 
 package org.glassfish.admin.amx.logging;
 
-import javax.management.MBeanOperationInfo;
-import org.glassfish.admin.amx.core.AMXProxy;
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import java.util.Map;
+
+import javax.management.MBeanOperationInfo;
+
 import org.glassfish.admin.amx.annotation.Description;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
 import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.annotation.Param;
+import org.glassfish.admin.amx.core.AMXMBeanMetadata;
+import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
  * Supports accessing logging information in multiple ways. The following are supported:
  * <ul>
- * <li>Emission of pseudo real-time JMX Notifications when a
- * log record is created--see {@link LogRecordEmitter}</li>
- * <li>Access to existing log file contents--see {@link LogFileAccess}</li>
- * <li>Querying for log entries--see {@link LogQuery}</li>
+ * <li>Emission of pseudo real-time JMX Notifications when a log record is created
+ *     - see {@link LogRecordEmitter}
+ * <li>Access to existing log file contents--see {@link LogFileAccess}
+ * <li>Querying for log entries--see {@link LogQuery}
  * </ul>
  *
  * @since AS 9.0
@@ -50,14 +53,17 @@ public interface Logging extends AMXProxy, LogQuery
      * Sets the log level of the Logger for the specified module. This operation
      * will not effect a change to the corresponding loggin configuration for that module.
      *
-     * @param module a module name as specified in {@link LogModuleNames}.
+     * @param moduleName a module name as specified in {@link LogModuleNames}.
      * @param level a log level
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
     @Description("Sets the log level of the Logger for the specified module")
-    public void setModuleLogLevel(@Param(name = "moduleName") final String moduleName,
-        @Param(name = "level") final String level);
-
+    void setModuleLogLevel(
+        @Param(name = "moduleName")
+        final String moduleName,
+        @Param(name = "level")
+        final String level
+    );
 
     /**
      * Gets the log level of the Logger for the specified module, which may or may not
@@ -67,8 +73,10 @@ public interface Logging extends AMXProxy, LogQuery
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Gets the log level of the Logger for the specified module")
-    public String getModuleLogLevel(@Param(name = "moduleName") final String moduleName);
-
+    String getModuleLogLevel(
+        @Param(name = "moduleName")
+        final String moduleName
+    );
 
     /**
      * Sets the log level of the Logger for the specified module. This operation
@@ -76,7 +84,10 @@ public interface Logging extends AMXProxy, LogQuery
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
     @Description("Sets the value of one or more logging properties")
-    public void updateLoggingProperties(@Param(name = "properties") final Map<String, String> properties);
+    void updateLoggingProperties(
+        @Param(name = "properties")
+        final Map<String, String> properties
+    );
 
 
     /**
@@ -84,7 +95,7 @@ public interface Logging extends AMXProxy, LogQuery
      */
     @ManagedAttribute
     @Description("Gets all the logging properties")
-    public Map<String, String> getLoggingProperties();
+    Map<String, String> getLoggingProperties();
 
 
     /**
@@ -92,7 +103,7 @@ public interface Logging extends AMXProxy, LogQuery
      */
     @ManagedAttribute
     @Description("Get logging configuration properties")
-    public Map<String, String> getLoggingAttributes();
+    Map<String, String> getLoggingAttributes();
 
 
     /**
@@ -100,24 +111,23 @@ public interface Logging extends AMXProxy, LogQuery
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
     @Description("Set value of the value of one or more of the logging configuration properties.")
-    public void updateLoggingAttributes(@Param(name = "properties") final Map<String, String> properties);
+    void updateLoggingAttributes(
+        @Param(name = "properties")
+        final Map<String, String> properties
+    );
 
 
     /**
-     * This method may be used to verify that your Logging listener is working
-     * correctly.
+     * This method may be used to verify that your Logging listener is working correctly.
      *
      * @param level the log level of the log message.
      * @param message the message to be placed in Notif.getMessage()
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public void testEmitLogMessage(@Param(name = "level") final String level,
-        @Param(name = "message") final String message);
+    void testEmitLogMessage(
+        @Param(name = "level")
+        final String level,
+        @Param(name = "message")
+        final String message
+    );
 }
-
-
-
-
-
-
-

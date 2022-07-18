@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,12 +31,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * HttpListener.getEnabled() API test
  *
- * User: Jerome Dochez Date: Feb 21, 2008 Time: 2:06:44 PM
+ * @author Jerome Dochez Date: Feb 21, 2008 Time: 2:06:44 PM
  */
 @ExtendWith(ConfigApiJunit5Extension.class)
 public class EnabledTest {
@@ -52,7 +53,7 @@ public class EnabledTest {
     @BeforeEach
     public void setup() {
         NetworkConfig service = locator.getService(NetworkConfig.class);
-        assertTrue(service != null);
+        assertNotNull(service);
         listeners = service.getNetworkListeners().getNetworkListener();
     }
 

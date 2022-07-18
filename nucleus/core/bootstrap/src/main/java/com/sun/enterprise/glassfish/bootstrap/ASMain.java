@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +22,11 @@ package com.sun.enterprise.glassfish.bootstrap;
  */
 public class ASMain {
 
-    /*
+    /**
      * Most of the code in this file has been moved to MainHelper
-     *and  ASMainOSGi
+     * and ASMainOSGi
      */
-
-    public static void main(final String args[]) throws Exception {
+    public static void main(final String[] args) throws Exception {
         GlassFishMain.main(args);
     }
-
 }

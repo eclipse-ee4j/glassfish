@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -110,15 +111,16 @@ public final class ConfigBeansUtilities {
      * @return List of system-applications for that server, an empty list in case there is none
      */
     public List<Application> getSystemApplicationsReferencedFrom(String sn) {
-        if (domain == null || sn == null)
+        if (domain == null || sn == null) {
             throw new IllegalArgumentException("Null argument");
+        }
         List<Application> allApps = getAllDefinedSystemApplications();
         if (allApps.isEmpty()) {
             return allApps; //if there are no sys-apps, none can reference one :)
         }
         //allApps now contains ALL the system applications
         Server s = getServerNamed(sn);
-        List<Application> referencedApps = new ArrayList<Application>();
+        List<Application> referencedApps = new ArrayList<>();
         List<ApplicationRef> appsReferenced = s.getApplicationRef();
         for (ApplicationRef ref : appsReferenced) {
             for (Application app : allApps) {
@@ -144,21 +146,24 @@ public final class ConfigBeansUtilities {
     public boolean isNamedSystemApplicationReferencedFrom(String appName, String serverName) {
         List<Application> referencedApps = getSystemApplicationsReferencedFrom(serverName);
         for (Application app : referencedApps) {
-            if (app.getName().equals(appName))
+            if (app.getName().equals(appName)) {
                 return true;
+            }
         }
         return false;
     }
 
     public List<Server> getServers() {
-        if (domain == null || domain.getServers() == null)
+        if (domain == null || domain.getServers() == null) {
             throw new IllegalArgumentException("Either domain is null or no <servers> element");
+        }
         return domain.getServers().getServer();
     }
 
     public Server getServerNamed(String name) {
-        if (domain == null || domain.getServers() == null || name == null)
+        if (domain == null || domain.getServers() == null || name == null) {
             throw new IllegalArgumentException("Either domain is null or no <servers> element");
+        }
         List<Server> servers = domain.getServers().getServer();
         for (Server s : servers) {
             if (name.equals(s.getName().trim())) {
@@ -169,12 +174,13 @@ public final class ConfigBeansUtilities {
     }
 
     public List<Application> getAllDefinedSystemApplications() {
-        List<Application> allSysApps = new ArrayList<Application>();
+        List<Application> allSysApps = new ArrayList<>();
         SystemApplications sa = domain.getSystemApplications();
         if (sa != null) {
             for (ApplicationName m : sa.getModules()) {
-                if (m instanceof Application)
+                if (m instanceof Application) {
                     allSysApps.add((Application) m);
+                }
             }
         }
         return allSysApps;
@@ -211,7 +217,7 @@ public final class ConfigBeansUtilities {
         if (theServer != null) {
             List<ApplicationName> modulesToExclude = excludeSystemApps ? domain.getSystemApplications().getModules()
                     : Collections.<ApplicationName>emptyList();
-            List<ApplicationRef> result = new ArrayList<ApplicationRef>();
+            List<ApplicationRef> result = new ArrayList<>();
             for (ApplicationRef candidateRef : theServer.getApplicationRef()) {
                 String appRefModuleName = candidateRef.getRef();
                 boolean isSystem = false;

@@ -119,6 +119,19 @@ public class GlassFishLoggerTest {
     }
 
     @Test
+    public void logExceptionInParameters() {
+        final RuntimeException exception = new RuntimeException("Kaboom!");
+        logger.log(Level.SEVERE, "It is not {0} but this happened: {1}", new Object[] {"broken", exception});
+        final GlassFishLogRecord record = handler.pop();
+        assertAll(
+            () -> assertNull(record.getMessageKey(), "messageKey"),
+            () -> assertEquals("It is not broken but this happened: java.lang.RuntimeException: Kaboom!",
+                record.getMessage()),
+            () -> assertNull(record.getThrown()),
+            () -> assertThat(handler.getAll(), IsEmptyCollection.empty()));
+    }
+
+    @Test
     public void logExceptionAndSupplier() {
         final RuntimeException exception = new RuntimeException("Kaboom!");
         logger.log(Level.SEVERE, exception, () -> "It is not broken!");

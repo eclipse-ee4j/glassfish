@@ -19,6 +19,8 @@
 package org.apache.catalina.loader;
 
 
+import com.sun.enterprise.loader.ASURLClassLoader;
+
 import jakarta.servlet.ServletContext;
 
 import java.beans.PropertyChangeEvent;
@@ -31,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -1092,18 +1093,15 @@ public class WebappLoader
         if (!(container instanceof Context)) {
             return;
         }
-        ServletContext servletContext =
-            ((Context) container).getServletContext();
+        ServletContext servletContext = ((Context) container).getServletContext();
         if (servletContext == null) {
             return;
         }
 
         if (container instanceof StandardContext) {
-            String baseClasspath =
-                ((StandardContext) container).getCompilerClasspath();
+            String baseClasspath = ((StandardContext) container).getCompilerClasspath();
             if (baseClasspath != null) {
-                servletContext.setAttribute(Globals.CLASS_PATH_ATTR,
-                                            baseClasspath);
+                servletContext.setAttribute(Globals.CLASS_PATH_ATTR, baseClasspath);
                 return;
             }
         }
@@ -1114,8 +1112,8 @@ public class WebappLoader
         ClassLoader loader = getClassLoader();
         boolean first = true;
         while (loader != null) {
-            if (!(loader instanceof URLClassLoader)) {
-                String cp = getClasspath(loader);
+            if (loader instanceof ASURLClassLoader) {
+                String cp = ASURLClassLoader.class.cast(loader).getClasspath();
                 if (cp != null) {
                     if (!first) {
                         classpath.append(File.pathSeparator);
@@ -1124,7 +1122,7 @@ public class WebappLoader
                     }
                     classpath.append(cp);
                 }
-            } else {
+            } else if (loader instanceof URLClassLoader) {
                 URL[] repositories = ((URLClassLoader) loader).getURLs();
                 for (URL element : repositories) {
                     if (element == null) {
@@ -1158,33 +1156,10 @@ public class WebappLoader
         this.classpath = classpath.toString();
 
         // Store the assembled class path as a servlet context attribute
-        servletContext.setAttribute(Globals.CLASS_PATH_ATTR,
-                                    classpath.toString());
+        servletContext.setAttribute(Globals.CLASS_PATH_ATTR, classpath.toString());
 
     }
 
-    // try to extract the classpath from a loader that is not URLClassLoader
-    private String getClasspath( ClassLoader loader ) {
-        try {
-            Method m=loader.getClass().getMethod("getClasspath", new Class[] {});
-            if (log.isLoggable(Level.FINEST)) {
-                log.log(Level.FINEST, "getClasspath " + m);
-            }
-            Object o=m.invoke( loader, new Object[] {} );
-            if (log.isLoggable(Level.FINEST)) {
-                log.log(Level.FINEST, "gotClasspath " + o);
-            }
-            if (o instanceof String ) {
-                return (String)o;
-            }
-            return null;
-        } catch (Exception ex) {
-            if (log.isLoggable(Level.FINEST)) {
-                log.log(Level.FINEST, "getClasspath ", ex);
-            }
-        }
-        return null;
-    }
 
     /**
      * Copy directory.
@@ -1192,7 +1167,6 @@ public class WebappLoader
     private boolean copyDir(DirContext srcDir, File destDir) {
 
         try {
-
             NamingEnumeration<NameClassPair> enumeration = srcDir.list("");
             while (enumeration.hasMoreElements()) {
                 NameClassPair ncPair = enumeration.nextElement();
@@ -1219,7 +1193,6 @@ public class WebappLoader
                     }
                 }
             }
-
         } catch (NamingException e) {
             return false;
         } catch (IOException e) {

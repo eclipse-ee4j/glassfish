@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,46 +19,25 @@ package com.sun.enterprise.server.logging.parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.logging.Level;
-
-import com.sun.enterprise.server.logging.LogFacade;
 
 /**
  * @author sandeep.shrivastava
- *
  */
 public class RawLogParser implements LogParser {
 
-    private String streamName;
-
-    public RawLogParser(String name) {
-        streamName = name;
-    }
-
     @Override
-    public void parseLog(BufferedReader reader, LogParserListener listener)
-            throws LogParserException {
+    public void parseLog(BufferedReader reader, LogParserListener listener) throws LogParserException {
+        String line = null;
         try {
-            String line = null;
             long position = 0L;
             while ((line = reader.readLine()) != null) {
                 ParsedLogRecord record = new ParsedLogRecord(line);
-                record.setFieldValue(ParsedLogRecord.LOG_MESSAGE, line);
+                record.setMessage(line);
                 listener.foundLogRecord(position, record);
                 position++;
             }
-        } catch(IOException e){
-            throw new LogParserException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e);
-                }
-            }
+        } catch (IOException e) {
+            throw new LogParserException(line, e);
         }
-
     }
-
 }

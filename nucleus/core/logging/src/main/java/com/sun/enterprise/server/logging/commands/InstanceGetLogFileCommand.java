@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,28 +18,33 @@
 package com.sun.enterprise.server.logging.commands;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.server.logging.GFFileHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 
 import java.io.File;
 import java.net.URI;
 import java.util.Properties;
 
-/**
- * Created by IntelliJ IDEA.
- * User: naman
- * Date: 19 Jul, 2010
- * Time: 5:02:25 PM
- * To change this template use File | Settings | File Templates.
- */
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jul.JULHelperFactory;
+import org.glassfish.main.jul.JULHelperFactory.JULHelper;
+import org.glassfish.main.jul.handler.GlassFishLogHandler;
+import org.jvnet.hk2.annotations.Service;
 
+/**
+ * @author David Matejcek
+ * @author naman
+ * Date: 19 Jul, 2010
+ */
 @ExecuteOn({RuntimeType.INSTANCE})
 @Service(name = "_get-log-file")
 @PerLookup
@@ -52,20 +58,18 @@ import java.util.Properties;
 })
 public class InstanceGetLogFileCommand implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InstanceGetLogFileCommand.class);
-
-    @Inject
-    private ServerEnvironment env;
-
-    @Inject
-    GFFileHandler gf;
-
+    private static final LocalStringManagerImpl MESSAGES = new LocalStringManagerImpl(InstanceGetLogFileCommand.class);
+    private final JULHelper julHelper = JULHelperFactory.getHelper();
 
     @Override
     public void execute(AdminCommandContext context) {
         try {
 
-            File logFile = gf.getCurrentLogFile();
+            GlassFishLogHandler handler = julHelper.findGlassFishLogHandler();
+            if (handler == null) {
+                throw new IllegalStateException("GlassFishLogHandler not found, check your logging configuration.");
+            }
+            File logFile = handler.getConfiguration().getLogFile();
 
             Payload.Outbound outboundPayload = context.getOutboundPayload();
             Properties props = new Properties();
@@ -77,10 +81,9 @@ public class InstanceGetLogFileCommand implements AdminCommand {
                     "files",
                     props,
                     logFile);
-        }
-        catch (Exception e) {
-            final String errorMsg = localStrings.getLocalString(
-                    "download.errDownloading", "Error while downloading generated files");
+        } catch (Exception e) {
+            final String errorMsg = MESSAGES.getLocalString("download.errDownloading",
+                "Error while downloading generated files");
             ActionReport report = context.getActionReport();
             boolean reportErrorsInTopReport = false;
             if (!reportErrorsInTopReport) {

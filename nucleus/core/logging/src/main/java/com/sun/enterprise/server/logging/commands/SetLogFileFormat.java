@@ -16,11 +16,21 @@
 
 package com.sun.enterprise.server.logging.commands;
 
+import com.sun.common.util.logging.LoggingConfig;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Clusters;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import jakarta.inject.Inject;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -36,21 +46,12 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.main.jul.formatter.ODLLogFormatter;
+import org.glassfish.main.jul.formatter.UniformLogFormatter;
+import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.common.util.logging.LoggingConfig;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Clusters;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Servers;
-import com.sun.enterprise.server.logging.ODLLogFormatter;
-import com.sun.enterprise.server.logging.UniformLogFormatter;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
-/*
+/**
  * Set log file format command.
  * Updates the formatter for the log file to either ODL, ULF or a custom name.
  */
@@ -90,9 +91,9 @@ public class SetLogFileFormat implements AdminCommand {
     @Inject
     ServerEnvironment env;
 
-    final private static LocalStringManagerImpl LOCAL_STRINGS = new LocalStringManagerImpl(
-            SetLogFileFormat.class);
+    private static final LocalStringManagerImpl LOCAL_STRINGS = new LocalStringManagerImpl(SetLogFileFormat.class);
 
+    @Override
     public void execute(AdminCommandContext context) {
 
         String formatterClassName = null;
@@ -108,8 +109,8 @@ public class SetLogFileFormat implements AdminCommand {
             formatterClassName = ODLLogFormatter.class.getName();
         }
 
-        Map<String, String> loggingProperties = new HashMap<String, String>();
-        loggingProperties.put("com.sun.enterprise.server.logging.GFFileHandler.formatter", formatterClassName);
+        Map<String, String> loggingProperties = new HashMap<>();
+        loggingProperties.put(GlassFishLogHandlerProperty.FORMATTER.getPropertyFullName(), formatterClassName);
 
         final ActionReport report = context.getActionReport();
         boolean isCluster = false;

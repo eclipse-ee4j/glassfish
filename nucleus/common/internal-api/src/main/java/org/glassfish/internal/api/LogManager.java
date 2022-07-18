@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,16 +19,17 @@ package org.glassfish.internal.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Map;
 import java.util.logging.Handler;
+
 import org.jvnet.hk2.annotations.Contract;
 
-/**
- */@Contract
+@Contract
 public interface LogManager {
     Map<String, String> getLoggingProperties() throws IOException;
 
-    File getLoggingFile() throws IOException;
+    File getLoggingPropertiesFile() throws IOException;
 
     /**
      * Adds a new handler to the root logger
@@ -35,4 +37,8 @@ public interface LogManager {
      * @param handler handler to be iadded.
      */
     void addHandler(Handler handler);
+
+    PrintStream getErrStream();
+
+    PrintStream getOutStream();
 }

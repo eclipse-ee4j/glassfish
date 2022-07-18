@@ -186,11 +186,20 @@
         </maven.test.jvmoptions>
         <surefire.argLine>${maven.test.jvmoptions}</surefire.argLine>
         <failsafe.argLine>${maven.test.jvmoptions}</failsafe.argLine>
+        <!-- GlassFishLogManager is a child of this module, so we cannot use it here yet. -->
+        <test.logManager>java.util.logging.LogManager</test.logManager>
+        <test.defaultLevel>INFO</test.defaultLevel>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Jakarta API dependencies -->
+            <dependency>
+                <groupId>org.glassfish.main</groupId>
+                <artifactId>glassfish-jul-extension</artifactId>
+                <version>${project.version}</version>
+                <!-- default scope; some modules have to set another -->
+                <scope>test</scope>
+            </dependency>
 
             <!-- Jakarta Expression Language -->
             <dependency>
@@ -827,6 +836,11 @@
                            <exclude>**/*ITest.java</exclude>
                            <exclude>**/*IT.java</exclude>
                         </excludes>
+                        <systemProperties>
+                            <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
+                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.defaultLevel>${test.defaultLevel}</java.util.logging.config.defaultLevel>
+                        </systemProperties>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -845,6 +859,11 @@
                            <include>**/*ITest.java</include>
                            <include>**/*IT.java</include>
                         </includes>
+                        <systemProperties>
+                            <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
+                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.defaultLevel>${test.defaultLevel}</java.util.logging.config.defaultLevel>
+                        </systemProperties>
                     </configuration>
                     <executions>
                         <execution>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,24 +26,39 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.admin.CheckpointHelper.CheckpointFilename;
 import com.sun.enterprise.v3.server.ExecutorServiceFactory;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 
-import org.glassfish.api.admin.*;
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandState;
+import org.glassfish.api.admin.AdminCommandState.State;
+import org.glassfish.api.admin.Job;
+import org.glassfish.api.admin.JobManager;
+import org.glassfish.api.admin.Payload;
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.progress.JobInfo;
 import org.glassfish.api.admin.progress.JobInfos;
 import org.glassfish.api.event.EventListener;
@@ -53,22 +69,20 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.xml.bind.Marshaller;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.AdminCommandState.State;
 
 /**
  *  This is the implementation for the JobManagerService
- *  The JobManager is responsible
- *  1. generating unique ids for jobs
- *  2. serving as a registry for jobs
- *  3. creating threadpools for jobs
- *  4.removing expired jobs
+ *  The JobManager is responsible for
+ *  <ol>
+ *  <li>generating unique ids for jobs
+ *  <li>serving as a registry for jobs
+ *  <li>creating threadpools for jobs
+ *  <li>removing expired jobs
+ *  </ol>
  *
  * @author Martin Mares
  * @author Bhakti Mehta
  */
-
 @Service(name="job-manager")
 @Singleton
 public class JobManagerService implements JobManager, PostConstruct, EventListener {
@@ -82,12 +96,11 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
 
     private static final int MAX_SIZE = 65535;
 
-    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<String, Job>();
+    private final ConcurrentHashMap<String, Job> jobRegistry = new ConcurrentHashMap<>();
 
     private final AtomicInteger lastId = new AtomicInteger(0);
 
-    protected static final LocalStringManagerImpl adminStrings =
-            new LocalStringManagerImpl(JobManagerService.class);
+    protected static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(JobManagerService.class);
 
     private final static Logger logger = KernelLoggerInfo.getLogger();
 
@@ -124,8 +137,8 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     // can be generated for new jobs. This is populated lazily the first
     // time the JobManagerService is created, it will scan the
     //jobs.xml and load the information in memory
-    private final ConcurrentHashMap<String, CompletedJob> completedJobsInfo = new ConcurrentHashMap<String, CompletedJob>();
-    private final ConcurrentHashMap<String, CheckpointFilename> retryableJobsInfo = new ConcurrentHashMap<String, CheckpointFilename>();
+    private final ConcurrentHashMap<String, CompletedJob> completedJobsInfo = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CheckpointFilename> retryableJobsInfo = new ConcurrentHashMap<>();
 
     /**
      * This will return a new id which is unused
@@ -225,7 +238,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
      * @return  list of jobs to be purged
      */
     public  ArrayList<JobInfo> getExpiredJobs(File file) {
-        ArrayList<JobInfo> expiredJobs = new ArrayList<JobInfo>();
+        ArrayList<JobInfo> expiredJobs = new ArrayList<>();
         synchronized (file)  {
             JobInfos jobInfos = getCompletedJobs(file);
             for(JobInfo job:jobInfos.getJobInfoList()) {
@@ -305,11 +318,12 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     public JobInfos getCompletedJobs(File jobsFile) {
         synchronized (jobsFile) {
             try {
-                if (jaxbContext == null)
+                if (jaxbContext == null) {
                     jaxbContext = JAXBContext.newInstance(JobInfos.class);
+                }
                 Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-                if (jobsFile != null && jobsFile.exists())  {
+                if (jobsFile.exists())  {
                     JobInfos jobInfos = (JobInfos)unmarshaller.unmarshal(jobsFile);
                     return jobInfos;
                 }
@@ -330,7 +344,7 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
     public  JobInfos purgeCompletedJobForId(String jobId, File file) {
         JobInfos completedJobInfos = getCompletedJobs(file);
         synchronized (file) {
-            CopyOnWriteArrayList<JobInfo> jobList = new CopyOnWriteArrayList<JobInfo>();
+            CopyOnWriteArrayList<JobInfo> jobList = new CopyOnWriteArrayList<>();
 
             if (completedJobInfos != null)   {
                 jobList.addAll(completedJobInfos.getJobInfoList());
@@ -346,8 +360,9 @@ public class JobManagerService implements JobManager, PostConstruct, EventListen
             JobInfos jobInfos = new JobInfos();
            // if (jobList.size() > 0)    {
                 try {
-                    if (jaxbContext == null)
+                    if (jaxbContext == null) {
                         jaxbContext = JAXBContext.newInstance(JobInfos.class);
+                    }
 
                     jobInfos.setJobInfoList(jobList);
                     Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

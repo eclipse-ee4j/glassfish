@@ -6,21 +6,20 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta EE Platform 10.0, certification summary.
 
-# Jakarta EE Platform 10.0, Eclipse GlassFish 7.0, TCK Certification Summary
+# Jakarta EE Platform 10.0, Eclipse GlassFish 7.0.0-M7, TCK Certification Summary
 
 - Product Name, Version and download URL (if applicable): <br/>
-  [Eclipse GlassFish Downloads](/glassfish/download)<br/>
-  [glassfish-7.0.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0.zip)
+  Eclipse GlassFish 7.0.0-M7: [glassfish-7.0.0-M7.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-7.0.0-M7.zip)
 
 - Specification Name, Version and download URL: <br/>
   [Jakarta EE Platform, 10.0](https://jakarta.ee/specifications/platform/10/)
 
 - TCK Version, digital SHA-256 fingerprint and download URL: <br/>
   [Jakarta EE Platform TCK 10.0](https://download.eclipse.org/jakartaee/platform/10/jakarta-jakartaeetck-10.0.0.zip), 
-  SHA-256: `930c1b5037cd60fb1f59c6473ad49170337fb3423c1d56bf34f9dcc1907ed06f`
+  SHA-256: `62a9cbbf46315ef4b5487fdbdf6e628d272fa3ace9148c5716ba57ea4415df19 `
 
 - Public URL of TCK Results Summary: <br/>
-  [TCK results summary](./TCK-Results-7.0)
+  [TCK results summary](./TCK-Results-7.0.0-M7)
   
 - Any Additional Specification Certification Requirements: <br/>
   Jakarta Concurrency 3.0 TCK <br/>

@@ -70,8 +70,6 @@
     </issueManagement>
 
     <properties>
-        <!-- Jakarta API Versions -->
-
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
         <expressly.version>5.0.0-M2</expressly.version>
@@ -151,7 +149,6 @@
         <jettison.version>1.5.0</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
 
-        <commons-io.version>2.11.0</commons-io.version>
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>4.3</easymock.version>
@@ -189,11 +186,20 @@
         </maven.test.jvmoptions>
         <surefire.argLine>${maven.test.jvmoptions}</surefire.argLine>
         <failsafe.argLine>${maven.test.jvmoptions}</failsafe.argLine>
+        <!-- GlassFishLogManager is a child of this module, so we cannot use it here yet. -->
+        <test.logManager>java.util.logging.LogManager</test.logManager>
+        <test.defaultLevel>INFO</test.defaultLevel>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Jakarta API dependencies -->
+            <dependency>
+                <groupId>org.glassfish.main</groupId>
+                <artifactId>glassfish-jul-extension</artifactId>
+                <version>${project.version}</version>
+                <!-- default scope; some modules have to set another -->
+                <scope>test</scope>
+            </dependency>
 
             <!-- Jakarta Expression Language -->
             <dependency>
@@ -676,7 +682,13 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
+                <version>2.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.12.0</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -824,6 +836,11 @@
                            <exclude>**/*ITest.java</exclude>
                            <exclude>**/*IT.java</exclude>
                         </excludes>
+                        <systemProperties>
+                            <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
+                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.defaultLevel>${test.defaultLevel}</java.util.logging.config.defaultLevel>
+                        </systemProperties>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -842,6 +859,11 @@
                            <include>**/*ITest.java</include>
                            <include>**/*IT.java</include>
                         </includes>
+                        <systemProperties>
+                            <java.util.logging.manager>${test.logManager}</java.util.logging.manager>
+                            <java.util.logging.config.useDefaults>true</java.util.logging.config.useDefaults>
+                            <java.util.logging.config.defaultLevel>${test.defaultLevel}</java.util.logging.config.defaultLevel>
+                        </systemProperties>
                     </configuration>
                     <executions>
                         <execution>
@@ -867,7 +889,7 @@
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
                         <logViolationsToConsole>true</logViolationsToConsole>
-                        <excludes>**/generated-sources/**/*</excludes>
+                        <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                             adds all property files in the tree -->
                         <resourceExcludes>

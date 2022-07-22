@@ -28,7 +28,7 @@
 
     <artifactId>jakartaee</artifactId>
 
-    <name>GlassFish javaee.jar </name>
+    <name>GlassFish jakartaee.jar </name>
 
     <build>
         <plugins>

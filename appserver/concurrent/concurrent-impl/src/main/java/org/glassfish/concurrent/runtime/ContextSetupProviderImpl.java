@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,20 +22,23 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.Utility;
+
+import jakarta.enterprise.concurrent.ContextService;
+import jakarta.enterprise.concurrent.ManagedTask;
+import jakarta.transaction.Status;
+import jakarta.transaction.Transaction;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.LogFacade;
 import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
 import org.glassfish.internal.deployment.Deployment;
-
-import jakarta.enterprise.concurrent.ContextService;
-import jakarta.enterprise.concurrent.ManagedTask;
-import jakarta.transaction.*;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ContextSetupProviderImpl implements ContextSetupProvider {
 
@@ -44,11 +48,11 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     // transactionManager should be null for ContextService since it uses TransactionSetupProviderImpl
     private transient JavaEETransactionManager transactionManager;
 
-    private static final Logger logger  = LogFacade.getLogger();
+    private static final Logger LOG  = LogFacade.getLogger();
 
     static final long serialVersionUID = -1095988075917755802L;
 
-    static enum CONTEXT_TYPE {CLASSLOADING, SECURITY, NAMING, WORKAREA}
+    enum CONTEXT_TYPE {CLASSLOADING, SECURITY, NAMING, WORKAREA}
 
     private boolean classloading, security, naming, workArea;
 
@@ -109,7 +113,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     @Override
     public ContextHandle setup(ContextHandle contextHandle) throws IllegalStateException {
         if (! (contextHandle instanceof InvocationContext)) {
-            logger.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
+            LOG.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return null;
         }
         InvocationContext handle = (InvocationContext) contextHandle;
@@ -148,7 +152,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     @Override
     public void reset(ContextHandle contextHandle) {
         if (! (contextHandle instanceof InvocationContext)) {
-            logger.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
+            LOG.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return;
         }
         InvocationContext handle = (InvocationContext) contextHandle;
@@ -174,7 +178,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
                         transactionManager.rollback();
                     }
                 } catch (Exception ex) {
-                    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.toString());
+                    LOG.log(Level.SEVERE, "Cannot commit or rollback the transaction or get it's status.", ex);
                 }
             }
           transactionManager.clearThreadTx();
@@ -184,8 +188,9 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     private boolean isApplicationEnabled(String appId) {
         if (appId != null) {
             Application app = applications.getApplication(appId);
-            if (app != null)
+            if (app != null) {
                 return deployment.isAppEnabled(app);
+            }
         }
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package org.glassfish.admin.amx.core;
 
+import java.util.Map;
+import java.util.Set;
+
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.core.proxy.AMXProxyHandler;
 import org.glassfish.external.amx.AMX;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
-import javax.management.ObjectName;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * @deprecated
  * <p>
  * An AMXProxy offers generic access to any AMX-compliant MBean, including the ability to navigate
  * upwards to the Parent MBean, find all children or those of a particular type or name, to get
@@ -39,8 +40,7 @@ import java.util.Set;
  * its sub-interfaces.
  * <p>
  * <b>Implementing handler&mdash;</b> an AMXProxy is implemented by {@link AMXProxyHandler}, but the
- * handler should be considered
- * private: do not use it as it is subject to change.
+ * handler should be considered private: do not use it as it is subject to change.
  * <p>
  * <b>Sub interfaces&mdash;</b> the base AMXProxy interface can and should be extended for specific
  * MBeans, but in
@@ -109,15 +109,15 @@ import java.util.Set;
  * {@link #childrenMap} methods.
  * <p>
  * <b>Invoking operations generically&mdash;</b> Use the {@link #invokeOp} methods to invoke an
- * arbitrary
- * operation by name.
+ * arbitrary operation by name.
  *
+ * @deprecated
  * @see Extra
  * @see MetaGetters
  * @see org.glassfish.admin.amx.config.AMXConfigProxy
  */
-@Taxonomy(stability = Stability.UNCOMMITTED)
 @Deprecated
+@Taxonomy(stability = Stability.UNCOMMITTED)
 public interface AMXProxy extends AMX_SPI {
 
     /** MBean MUST return an ObjectName. May be null for DomainRoot only. */

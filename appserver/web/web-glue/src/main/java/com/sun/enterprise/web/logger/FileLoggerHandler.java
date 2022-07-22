@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,34 @@
 
 package com.sun.enterprise.web.logger;
 
-/**
- * An implementation of FileLoggerHandler which logs to virtual-server property
- * log-file when enabled
- */
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
+/**
+ * An implementation of FileLoggerHandler which logs to virtual-server property
+ * log-file when enabled
+ */
 public class FileLoggerHandler extends Handler {
     private static final int LOG_QUEUE_SIZE = 5000;
     private static final int FLUSH_FREQUENCY = 1;
 
     private volatile PrintWriter printWriter;
-    private String logFile;
+    private final String logFile;
 
-    private AtomicInteger association = new AtomicInteger(0);
-    private AtomicBoolean done = new AtomicBoolean(false);
-    private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<LogRecord>(LOG_QUEUE_SIZE);
-    private Thread pump;
+    private final AtomicInteger association = new AtomicInteger(0);
+    private final AtomicBoolean done = new AtomicBoolean(false);
+    private final BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<>(LOG_QUEUE_SIZE);
+    private final Thread pump;
 
     FileLoggerHandler(String logFile) {
         setLevel(Level.ALL);
@@ -53,21 +53,24 @@ public class FileLoggerHandler extends Handler {
         try {
             printWriter = new PrintWriter(new FileOutputStream(logFile, true));
         } catch (IOException e) {
-            //throw new RuntimeException(e);
+            // throw new RuntimeException(e);
         }
 
         pump = new Thread() {
+
+            @Override
             public void run() {
                 try {
                     while (!done.get()) {
                         log();
                     }
-                } catch(RuntimeException ex) {
+                } catch (RuntimeException ex) {
                 }
             }
         };
         pump.start();
     }
+
 
     private void writeLogRecord(LogRecord record) {
         if (printWriter != null) {
@@ -76,22 +79,24 @@ public class FileLoggerHandler extends Handler {
         }
     }
 
+
     private void log() {
         // write the first record
         try {
             writeLogRecord(pendingRecords.take());
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             // ignore
         }
 
         // write FLUSH_FREQUENCY record(s) more
-        List<LogRecord> list = new ArrayList<LogRecord>();
+        List<LogRecord> list = new ArrayList<>();
         int numOfRecords = pendingRecords.drainTo(list, FLUSH_FREQUENCY);
         for (int i = 0; i < numOfRecords; i++) {
             writeLogRecord(list.get(i));
         }
         flush();
     }
+
 
     /**
      * Increment the associations and return the result.
@@ -100,6 +105,7 @@ public class FileLoggerHandler extends Handler {
         return association.incrementAndGet();
     }
 
+
     /**
      * Decrement the associations and return the result.
      */
@@ -107,9 +113,11 @@ public class FileLoggerHandler extends Handler {
         return association.decrementAndGet();
     }
 
+
     public boolean isAssociated() {
-        return (association.get() > 0);
+        return association.get() > 0;
     }
+
 
     /**
      * Overridden method used to capture log entries
@@ -124,18 +132,19 @@ public class FileLoggerHandler extends Handler {
 
         // first see if this entry should be filtered out
         // the filter should keep anything
-        if ( getFilter()!=null ) {
-            if ( !getFilter().isLoggable(record) )
+        if (getFilter() != null) {
+            if (!getFilter().isLoggable(record)) {
                 return;
+            }
         }
 
         try {
             pendingRecords.add(record);
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             // queue is full, start waiting
             try {
                 pendingRecords.put(record);
-            } catch(InterruptedException ex) {
+            } catch (InterruptedException ex) {
                 // too bad, record is lost...
             }
         }
@@ -153,7 +162,7 @@ public class FileLoggerHandler extends Handler {
 
         int size = pendingRecords.size();
         if (size > 0) {
-            List<LogRecord> records = new ArrayList<LogRecord>(size);
+            List<LogRecord> records = new ArrayList<>(size);
             pendingRecords.drainTo(records, size);
             for (LogRecord record : records) {
                 writeLogRecord(record);
@@ -163,7 +172,7 @@ public class FileLoggerHandler extends Handler {
         if (printWriter != null) {
             try {
                 printWriter.flush();
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 // ignore
             } finally {
                 printWriter.close();
@@ -182,6 +191,7 @@ public class FileLoggerHandler extends Handler {
             printWriter.flush();
         }
     }
+
 
     /**
      * Return location of log file associated to this handler.

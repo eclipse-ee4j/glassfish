@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -244,7 +244,7 @@ public class HK2JUnit5Extension
      * <li><code>@Inject {@link TestDocument}</code>
      */
     protected void addConstantServices(final ExtensionContext context) {
-        addOneConstant(locator, Logger.getLogger(context.getRequiredTestClass().getName()));
+        addOneConstant(locator, Logger.getLogger(context.getRequiredTestClass().getName()), "testLogger", Logger.class);
         addOneConstant(locator, mockGenerator);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, modulesRegistry);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,15 @@
 
 package org.glassfish.cluster.ssh.sftp;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
+import com.jcraft.jsch.SftpException;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.IOException;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 
-public class SFTPClient {
+public class SFTPClient implements AutoCloseable {
 
     private Session session = null;
 
@@ -44,6 +46,7 @@ public class SFTPClient {
      * Close the SFTP connection and free any resources associated with it.
      * close() should be called when you are done using the SFTPClient
      */
+    @Override
     public void close() {
         if (session != null) {
             SSHUtil.unregister(session);
@@ -66,10 +69,10 @@ public class SFTPClient {
             return sftpChannel.stat(normalizePath(path));
         } catch (SftpException e) {
             int c = e.id;
-            if (c == ChannelSftp.SSH_FX_NO_SUCH_FILE)
+            if (c == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
                 return null;
-            else
-                throw e;
+            }
+            throw e;
         }
     }
 
@@ -84,12 +87,14 @@ public class SFTPClient {
 
         path = normalizePath(path);
         SftpATTRS attrs = _stat(path);
-        if (attrs != null && attrs.isDir())
+        if (attrs != null && attrs.isDir()) {
             return;
+        }
 
         int idx = path.lastIndexOf("/");
-        if (idx>0)
+        if (idx>0) {
             mkdirs(path.substring(0,idx), posixPermission);
+        }
         sftpChannel.mkdir(path);
         sftpChannel.chmod(posixPermission, path);
     }

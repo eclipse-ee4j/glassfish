@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ package com.sun.common.util.logging;
 import org.jvnet.hk2.annotations.Contract;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -26,64 +28,68 @@ import java.util.Map;
  *
  * @author Naman Mehta
  */
-
-
 @Contract
 public interface LoggingConfig {
 
-    /* set propertyName to be propertyValue.  The logManager
-        *  readConfiguration is not called in this method.
-        */
-
+    /**
+     * Set propertyName to the propertyValue.
+     * <p>
+     * The logManager readConfiguration is not called in this method.
+     */
     String setLoggingProperty(String propertyName, String propertyValue) throws IOException;
 
-    /* set propertyName to be propertyValue.  The logManager
-        *  readConfiguration is not called in this method.
-        */
-
+    /**
+     * Set propertyName to the propertyValue.
+     * <p>
+     * The logManager readConfiguration is not called in this method.
+     */
     String setLoggingProperty(String propertyName, String propertyValue, String targetServer) throws IOException;
 
-    /* update the properties to new values.  properties is a Map of names of properties and
-       * their cooresponding value.  If the property does not exist then it is added to the
-       * logging.properties file.
-       *
-       * The readConfiguration method is called on the logManager after updating the properties.
-      */
-
+    /**
+     * Update the properties to new values. properties is a Map of names of properties and
+     * their cooresponding value. If the property does not exist then it is added to the
+     * logging.properties file.
+     * The readConfiguration method is called on the logManager after updating the properties.
+     */
     Map<String, String> updateLoggingProperties(Map<String, String> properties) throws IOException;
 
-    /* update the properties to new values for given target server..  properties is a Map of names of properties and
-         * their cooresponding value.  If the property does not exist then it is added to the
-         * logging.properties file.
-         *
-         * The readConfiguration method is called on the logManager after updating the properties.
-        */
-
+    /**
+     * Update the properties to new values for given target. properties is a Map of names of
+     * properties and their coresponding value. If the property does not exist then it is added to
+     * the logging.properties file.
+     *
+     * @param properties Map of the name and value of property to add or update
+     * @throws IOException
+     */
     Map<String, String> updateLoggingProperties(Map<String, String> properties, String targetServer) throws IOException;
 
-    /* get the properties and corresponding values in the logging.properties file for given target server..
-        */
-
+    /**
+     * @return the properties and corresponding values in the logging.properties file for given
+     *         target server.
+     */
     Map<String, String> getLoggingProperties(String targetServer) throws IOException;
 
-    /* get the properties and corresponding values in the logging.properties file.
-        */
-
+    /**
+     * @return the properties and corresponding values in the logging.properties file.
+     */
     Map<String, String> getLoggingProperties() throws IOException;
 
-    /* creates zip file for given sourceDirectory
-        */
-
+    /**
+     * Creates zip file for given sourceDirectory
+     */
     String createZipFile(String sourceDir) throws IOException;
 
-    /* delete the properties from logging.properties file for given target.
-      */
+    /**
+     * Delete the properties from logging.properties file.
+     *
+     * @throws IOException
+     */
+    Map<String, String> deleteLoggingProperties(Collection<String> properties) throws IOException;
 
-    public void deleteLoggingProperties(Map<String, String> properties, String targetConfigName) throws IOException;
-
-    /* delete the properties from logging.properties file.
-      */
-
-    public void deleteLoggingProperties(Map<String, String> properties) throws IOException;
-
+    /**
+     * Delete the properties from logging.properties file.
+     *
+     * @throws IOException
+     */
+    Map<String, String> deleteLoggingProperties(Collection<String> properties, String target) throws IOException;
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,15 @@
 
 package com.sun.enterprise.server.logging.parser;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 /**
  * @author sanshriv
- *
  */
 public interface LogParserListener {
 
     /**
      * Invoked when the parser parses a log record from an input stream.
+     *
      * @param object
      */
-    public void foundLogRecord(long position, ParsedLogRecord object);
-
-    /**
-     * Invoked to output the summary after all the records have been parsed.
-     * @param writer
-     * @param objects
-     */
-    public void outputSummary(BufferedWriter writer, Object ... objects) throws IOException;
-
-    /**
-     * Release any resources that were acquired during the initialization.
-     */
-    public void close() throws IOException;
-
+    void foundLogRecord(long position, ParsedLogRecord object);
 }

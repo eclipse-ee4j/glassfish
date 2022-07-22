@@ -23,7 +23,6 @@ import com.sun.enterprise.loader.ASURLClassLoader;
 
 /**
  * Classloader that is responsible to load the ear libraries (lib/*.jar etc)
- *
  */
 public class EarLibClassLoader extends ASURLClassLoader {
 

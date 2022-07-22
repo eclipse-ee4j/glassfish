@@ -38,6 +38,8 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jul.formatter.UniformLogFormatter;
+import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,7 +47,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,12 +91,14 @@ public class FileArchiveTest {
         locator = registry.createServiceLocator("default");
         archiveFactory = locator.getService(ArchiveFactory.class);
         handler = new RecordingHandler();
+        handler.setFormatter(new UniformLogFormatter());
         deplLogger.addHandler(handler);
     }
 
     @BeforeEach
     public void setUp() throws IOException {
         archiveDir = tempDir();
+        assertThat(deplLogger.getHandlers(), arrayContainingInAnyOrder(handler));
     }
 
     @AfterEach
@@ -145,11 +151,11 @@ public class FileArchiveTest {
             if (f.isDirectory()) {
                 clean(f);
             }
-            if ( ! f.delete()) {
+            if (!f.delete()) {
                 f.deleteOnExit();
             }
         }
-        if ( ! dir.delete()) {
+        if (!dir.delete()) {
             dir.deleteOnExit();
         }
     }
@@ -417,8 +423,9 @@ public class FileArchiveTest {
         List<LogRecord> logRecords = handler.logRecords();
         assertThat("FileArchive logged no message about being unable to list files; expected " + EXPECTED_LOG_KEY,
             logRecords, not(emptyIterable()));
-        assertEquals(EXPECTED_LOG_KEY, logRecords.get(0).getMessage(),
-            "FileArchive did not log expected message (re: being unable to list files)");
+        assertThat(logRecords.get(0), instanceOf(GlassFishLogRecord.class));
+        GlassFishLogRecord record0 = (GlassFishLogRecord) logRecords.get(0);
+        assertEquals(EXPECTED_LOG_KEY, record0.getMessageKey());
         // Change the protection back.
         lower.setExecutable(true, false);
         lower.setReadable(true, false);

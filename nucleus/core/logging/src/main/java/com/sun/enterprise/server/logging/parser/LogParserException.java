@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,16 @@
 
 package com.sun.enterprise.server.logging.parser;
 
+import java.io.IOException;
+
 /**
  * @author sanshriv
- *
  */
-public class LogParserException extends Exception {
+public class LogParserException extends IOException {
 
-    /**
-     * Initial SVUID
-     */
     private static final long serialVersionUID = -4460439362153793202L;
 
-    /**
-     * @param message
-     */
-    public LogParserException(String message) {
-        super(message);
+    public LogParserException(String line, IOException cause) {
+        super("Could not parse the line: " + line, cause);
     }
-
-    /**
-     * @param message
-     * @param cause
-     */
-    public LogParserException(Throwable cause) {
-        super(cause);
-    }
-
 }

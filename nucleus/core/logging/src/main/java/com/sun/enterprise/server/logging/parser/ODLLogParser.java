@@ -18,121 +18,84 @@ package com.sun.enterprise.server.logging.parser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
+import java.time.OffsetDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.enterprise.server.logging.LogFacade;
+import org.glassfish.main.jul.formatter.ExcludeFieldsSupport.SupplementalAttribute;
+
+import static org.glassfish.main.jul.formatter.LogFormatDetector.P_TIMESTAMP;
 
 /**
  * @author sanshriv
- *
  */
 final class ODLLogParser implements LogParser {
 
     private static final int ODL_FIXED_FIELD_COUNT = 5;
-
-    private static final String ODL_FIELD_REGEX = "(\\[[^\\[\\]]*?\\])+?";
-
-    private static final class ODLFieldPatternHolder {
-        static final Pattern ODL_FIELD_PATTERN = Pattern.compile(ODL_FIELD_REGEX);
-    }
-
-    private static final Map<String, String> ODL_STANDARD_FIELDS = new HashMap<String, String>(){
-
-        private static final long serialVersionUID = -6870456038890663569L;
-
-        {
-            put("tid", ParsedLogRecord.THREAD_ID);
-            put(ParsedLogRecord.EC_ID, ParsedLogRecord.EC_ID);
-            put(ParsedLogRecord.USER_ID, ParsedLogRecord.USER_ID);
-        }
-    };
-
-    private String streamName;
-
-    public ODLLogParser(String name) {
-        streamName = name;
-    }
+    private static final Pattern ODL_LINE_HEADER_PATTERN = Pattern.compile("\\[" + P_TIMESTAMP + "].*");
+    private static final Pattern ODL_FIELD_PATTERN = Pattern.compile("(\\[[^\\[\\]]*?\\])+?");
+    private static final Pattern ODL_TID_PATTERN = Pattern.compile("[ ]*_ThreadID=(.+) _ThreadName=(.+)");
 
     @Override
-    public void parseLog(BufferedReader reader, LogParserListener listener)
-            throws LogParserException
-    {
-
+    public void parseLog(BufferedReader reader, LogParserListener listener) throws LogParserException {
+        String line = null;
         try {
-            String line = null;
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             long position = 0L;
             while ((line = reader.readLine()) != null) {
-                Matcher m = LogParserFactory.getInstance().getODLDateFormatPattern().matcher(line);
+                Matcher m = ODL_LINE_HEADER_PATTERN.matcher(line);
                 if (m.matches()) {
                     // Construct a parsed log record from the prior content
                     String logRecord = buffer.toString();
-                    parseLogRecord(position, logRecord, listener);
+                    process(position, logRecord, listener);
                     position += logRecord.length();
-                    buffer = new StringBuffer();
+                    buffer = new StringBuilder();
                 }
                 buffer.append(line);
-                buffer.append(LogParserFactory.NEWLINE);
+                buffer.append(System.lineSeparator());
             }
             // Last record
             String logRecord = buffer.toString();
-            parseLogRecord(position, logRecord, listener);
-        } catch(IOException e){
-            throw new LogParserException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e);
-                }
-            }
+            process(position, logRecord, listener);
+        } catch (IOException e) {
+            throw new LogParserException(line, e);
         }
     }
 
-    private void parseLogRecord(long position, String logRecord, LogParserListener listener) {
-        ParsedLogRecord parsedLogRecord = new ParsedLogRecord();
-        if (initializeUniformFormatLogRecord(parsedLogRecord, logRecord)) {
+
+    private void process(long position, String logRecord, LogParserListener listener) {
+        ParsedLogRecord parsedLogRecord = parse(logRecord);
+        if (parsedLogRecord != null) {
             listener.foundLogRecord(position, parsedLogRecord);
         }
     }
 
-    private boolean initializeUniformFormatLogRecord(
-            ParsedLogRecord parsedLogRecord,
-            String logRecord)
-    {
-        parsedLogRecord.setFormattedLogRecord(logRecord);
-        Matcher matcher = ODLFieldPatternHolder.ODL_FIELD_PATTERN.matcher(logRecord);
-        int start=0;
-        int end=0;
-        int fieldIndex=0;
+
+    private ParsedLogRecord parse(String logRecord) {
+        ParsedLogRecord parsedLogRecord = new ParsedLogRecord(logRecord);
+        Matcher matcher = ODL_FIELD_PATTERN.matcher(logRecord);
+        int start = 0;
+        int end = 0;
+        int fieldIndex = 0;
         while (matcher.find()) {
             fieldIndex++;
             start = matcher.start();
-            if (end != 0 && start != end+1) {
+            if (end != 0 && start != end + 1) {
                 break;
             }
             end = matcher.end();
             String text = matcher.group();
-            text = text.substring(1, text.length()-1);
+            text = text.substring(1, text.length() - 1);
             if (fieldIndex <= ODL_FIXED_FIELD_COUNT) {
                 populateLogRecordFields(fieldIndex, text, parsedLogRecord);
             } else {
                 populateLogRecordSuppAttrs(text, parsedLogRecord);
             }
         }
-        String msg = logRecord.substring(end);
-        // System.out.println("Indexof=" + msg.indexOf("[["));
-        msg = msg.trim();
+        String msg = logRecord.substring(end).trim();
         boolean multiLineBegin = false;
         if (msg.startsWith("[[")) {
             msg = msg.replaceFirst("\\[\\[", "").trim();
-            multiLineBegin = true;
             multiLineBegin = true;
         }
         if (multiLineBegin && msg.endsWith("]]")) {
@@ -141,54 +104,53 @@ final class ODLLogParser implements LogParser {
                 msg = msg.substring(0, endIndex);
             }
         }
-        parsedLogRecord.setFieldValue(ParsedLogRecord.LOG_MESSAGE, msg);
+        parsedLogRecord.setMessage(msg);
         if (fieldIndex < ODL_FIXED_FIELD_COUNT) {
-            return false;
+            return null;
         }
-        return true;
+        return parsedLogRecord;
     }
 
-    private void populateLogRecordSuppAttrs(String text,
-            ParsedLogRecord parsedLogRecord) {
+
+    private void populateLogRecordSuppAttrs(String text, ParsedLogRecord parsedLogRecord) {
         int index = text.indexOf(':');
         if (index > 0) {
             String key = text.substring(0, index);
-            String value = text.substring(index+1);
-            value = value.trim();
-            if (ODL_STANDARD_FIELDS.containsKey(key)) {
-                parsedLogRecord.setFieldValue(ODL_STANDARD_FIELDS.get(key), value);
-            } else {
-                Properties props = (Properties) parsedLogRecord.getFieldValue(ParsedLogRecord.SUPP_ATTRS);
-                props.put(key, value);
-                if (key.equals(ParsedLogRecord.TIME_MILLIS)) {
-                    parsedLogRecord.setFieldValue(ParsedLogRecord.TIME_MILLIS, value);
+            String value = text.substring(index + 1).trim();
+            if (SupplementalAttribute.TID.getId().equals(key)) {
+                Matcher matcher = ODL_TID_PATTERN.matcher(value);
+                if (matcher.find()) {
+                    parsedLogRecord.setThreadId(LogParser.toLong(matcher.group(1)));
+                    parsedLogRecord.setThreadName(matcher.group(2));
                 }
+            } else if (SupplementalAttribute.LEVEL_VALUE.getId().equals(key)) {
+                parsedLogRecord.setLogLevelValue(LogParser.toInteger(value));
+            } else {
+                parsedLogRecord.setSupplementalValue(key, value);
             }
         }
     }
 
-    private void populateLogRecordFields(int index, String fieldData,
-            ParsedLogRecord parsedLogRecord)
-    {
-        switch(index) {
-        case 1:
-            parsedLogRecord.setFieldValue(ParsedLogRecord.DATE_TIME, fieldData);
-            break;
-        case 2:
-            parsedLogRecord.setFieldValue(ParsedLogRecord.PRODUCT_ID, fieldData);
-            break;
-        case 3:
-            parsedLogRecord.setFieldValue(ParsedLogRecord.LOG_LEVEL_NAME, fieldData);
-            break;
-        case 4:
-            parsedLogRecord.setFieldValue(ParsedLogRecord.MESSAGE_ID, fieldData);
-            break;
-        case 5:
-            parsedLogRecord.setFieldValue(ParsedLogRecord.LOGGER_NAME, fieldData);
-            break;
-        default:
-            break;
+
+    private void populateLogRecordFields(int index, String fieldData, ParsedLogRecord parsedLogRecord) {
+        switch (index) {
+            case 1:
+                parsedLogRecord.setTimestamp(OffsetDateTime.parse(fieldData, ISO_OFFSET_DATE_TIME_PARSER));
+                break;
+            case 2:
+                parsedLogRecord.setProductId(fieldData);
+                break;
+            case 3:
+                parsedLogRecord.setLogLevel(fieldData);
+                break;
+            case 4:
+                parsedLogRecord.setMessageKey(fieldData);
+                break;
+            case 5:
+                parsedLogRecord.setLogger(fieldData);
+                break;
+            default:
+                break;
         }
     }
-
  }

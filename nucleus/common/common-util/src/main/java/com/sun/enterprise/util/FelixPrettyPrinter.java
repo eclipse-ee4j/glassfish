@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,6 +14,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
 package com.sun.enterprise.util;
 
 import java.util.ArrayList;
@@ -23,16 +25,24 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.osgi.framework.BundleException;
+
+/**
+ * Tools for obtaining readable information from the {@link BundleException}
+ */
 public class FelixPrettyPrinter {
+
+    private static final Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
+
 
     /**
      * Prints exception messages from Felix bundle classloading in a more human readable way.
      *
-     * @param message
-     * @return
+     * @param message - error message from the exception
+     * @return multiline human readable string
      */
-    public static String prettyPrintExceptionMessage(String message) {
-        StringBuilder messageBuilder = new StringBuilder();
+    public static String prettyPrintExceptionMessage(final String message) {
+        StringBuilder messageBuilder = new StringBuilder(256);
         try {
             int index = message.indexOf("Unable to resolve");
             int indent = 0;
@@ -116,55 +126,36 @@ public class FelixPrettyPrinter {
 
                 index = message.indexOf("Unable to resolve", index);
             }
+            return messageBuilder.toString();
         } catch (Exception e) {
-            // too bad
+            // Usually we are processing another exception - if we failed, better return original.
             return message;
         }
-
-        return messageBuilder.toString();
     }
 
-    private static Pattern BUNDLE_PATTERN = Pattern.compile("\\[(\\d+)\\]", Pattern.MULTILINE);
 
-    public static List<Integer> findBundleIds(String message) {
-        if (message == null ||  message.isEmpty()) {
+    /**
+     * @param message - error message from the exception
+     * @return list of bundle ids (are in square brackets in the message)
+     */
+    public static List<Integer> findBundleIds(final String message) {
+        if (message == null || message.isEmpty()) {
             return Collections.emptyList();
         }
-
         Set<Integer> bundleIds = new LinkedHashSet<>();
-
         Matcher bundlePattern = BUNDLE_PATTERN.matcher(message);
         while (bundlePattern.find()) {
             String number = bundlePattern.group(1);
-
             bundleIds.add(Integer.valueOf(number));
         }
-
-        return new ArrayList<Integer>(bundleIds);
+        return new ArrayList<>(bundleIds);
     }
+
 
     private static void printLn(StringBuilder messageBuilder, int indent, String message) {
-        for (int i=0; i<(indent * 4); i++) {
+        for (int i = 0; i < (indent * 4); i++) {
             messageBuilder.append(" ");
         }
-
-        messageBuilder.append(message.trim())
-                      .append("\n");
+        messageBuilder.append(message.trim()).append("\n");
     }
-
-    public static void main(String[] args) {
-        String test = "org.osgi.framework.BundleException: Unable to resolve org.glassfish.main.webservices.connector [207](R 207.0): missing requirement [org.glassfish.main.webservices.connector [207](R 207.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.xml.ws)(version>=3.0.0)(!(version>=4.0.0))) [caused by: Unable to resolve org.glassfish.metro.webservices-api-osgi [236](R 236.0): missing requirement [org.glassfish.metro.webservices-api-osgi [236](R 236.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.xml.bind)(version>=3.0.0)(!(version>=4.0.0)))] Unresolved requirements: [[org.glassfish.main.webservices.connector [207](R 207.0)] osgi.wiring.package; (&(osgi.wiring.package=jakarta.xml.ws)(version>=3.0.0)(!(version>=4.0.0)))]"
-                + "";
-
-        String test1 = prettyPrintExceptionMessage(test);
-
-        List<Integer> ids = findBundleIds(test1);
-
-        String test2 = prettyPrintExceptionMessage("  Unable to resolve org.apache.felix.scr [304](R 304.0): missing requirement [org.apache.felix.scr [304](R 304.0)] osgi.wiring.package; (&(osgi.wiring.package=org.osgi.framework)(version>=1.10.0)(!(version>=2.0.0))) Unresolved requirements: [[org.apache.felix.scr [304](R304.0)] osgi.wiring.package; (&(osgi.wiring.package=org.osgi.framework)(version>=1.10.0)(!(version>=2.0.0)))]\n"
-                + "at org.apache.felix.framework.Felix.resolveBundleRevision(Felix.java:4398) ");
-
-
-        System.out.println(test2);
-    }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,54 +18,87 @@
 package org.glassfish.admin.amx.impl.mbean;
 
 import com.sun.common.util.logging.LoggingConfigImpl;
-import com.sun.enterprise.server.logging.GFFileHandler;
+import com.sun.enterprise.server.logging.ServerLogFileManager;
 import com.sun.enterprise.server.logging.diagnostics.MessageIdCatalog;
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
+
 import java.io.Serializable;
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.management.*;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanNotificationInfo;
+import javax.management.Notification;
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
-import static org.glassfish.admin.amx.logging.LogAnalyzer.*;
-import static org.glassfish.admin.amx.logging.LogFileAccess.*;
-import static org.glassfish.admin.amx.logging.LogRecordEmitter.*;
 import org.glassfish.admin.amx.logging.Logging;
-import org.glassfish.admin.amx.util.*;
+import org.glassfish.admin.amx.util.CollectionUtil;
+import org.glassfish.admin.amx.util.ExceptionUtil;
+import org.glassfish.admin.amx.util.ListUtil;
+import org.glassfish.admin.amx.util.SetUtil;
+import org.glassfish.admin.amx.util.ThrowableMapper;
+import org.glassfish.admin.amx.util.TypeCast;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.admin.amx.util.jmx.NotificationBuilder;
 import org.glassfish.external.amx.AMXGlassfish;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.annotations.Service;
 
-//import com.sun.enterprise.server.logging.LoggingImplHook;
-/**
- * Implementation of {@link Logging}. <p> The following is a GlassFish V2
- * comment, and needs work for v3:<br> AMX Logging MBean is hooked directly into
- * the logging subsystem via
- * com.sun.enterprise.server.logging.FileandSyslogHandler which uses
- * com.sun.enterprise.server.logging.AMXLoggingHook to instantiate and call an
- * instance of LoggingImpl.
- */
-public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ LoggingImplHook
-{
+import static org.glassfish.admin.amx.logging.LogAnalyzer.SEVERE_COUNT_KEY;
+import static org.glassfish.admin.amx.logging.LogAnalyzer.TIMESTAMP_KEY;
+import static org.glassfish.admin.amx.logging.LogAnalyzer.WARNING_COUNT_KEY;
+import static org.glassfish.admin.amx.logging.LogFileAccess.ACCESS_KEY;
+import static org.glassfish.admin.amx.logging.LogFileAccess.MOST_RECENT_NAME;
+import static org.glassfish.admin.amx.logging.LogFileAccess.SERVER_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.ALL_LOG_RECORD_NOTIFICATION_TYPES;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_AS_STRING_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_CONFIG_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_FINER_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_FINEST_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_FINE_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_INFO_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_LEVEL_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_LOGGER_NAME_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_MESSAGE_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_MILLIS_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_ROOT_CAUSE_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_SEQUENCE_NUMBER_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_SEVERE_NOTIFICATION_TYPE;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_SOURCE_CLASS_NAME_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_SOURCE_METHOD_NAME_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_THREAD_ID_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_THROWN_KEY;
+import static org.glassfish.admin.amx.logging.LogRecordEmitter.LOG_RECORD_WARNING_NOTIFICATION_TYPE;
+import static org.glassfish.main.jul.cfg.GlassFishLogManagerProperty.KEY_ROOT_HANDLERS;
+
+
+public final class LoggingImpl extends AMXImplBase {
+
+    private static MBeanNotificationInfo[] SELF_NOTIFICATION_INFOS = null;
 
     private final Map<Level, String> mLevelToNotificationTypeMap;
     private final Map<String, NotificationBuilder> mNotificationTypeToNotificationBuilderMap;
-    private static final String SERVER_LOG_NAME = "server.log";
-    private static final String ACCESS_LOG_NAME = "access.log";
     private final LoggingConfigImpl loggingConfig;
-    private final GFFileHandler gfFileHandler;
+    private final ServerLogFileManager logManagerService;
     private final LogFilter logFilter;
     private final MessageIdCatalog msgIdCatalog;
     private final Logger logger;
     private final ServiceLocator mHabitat;
-    final String FILE_SEP;
-    private final String mServerName;
 
     /**
      * Used internally to get the Logging ObjectName for a particular server
@@ -80,49 +114,22 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         return Util.newObjectName(AMXGlassfish.DEFAULT.amxJMXDomain(), props);
     }
 
-    /**
-     */
     public LoggingImpl(final ObjectName parent, final String serverName) {
         super(parent, Logging.class);
 
-        mServerName = serverName;
-        FILE_SEP = System.getProperty("file.separator");
-
         mLevelToNotificationTypeMap = initLevelToNotificationTypeMap();
-        mNotificationTypeToNotificationBuilderMap = new HashMap<String, NotificationBuilder>();
+        mNotificationTypeToNotificationBuilderMap = new HashMap<>();
         final ServerEnvironmentImpl env = InjectedValues.getInstance().getServerEnvironment();
         loggingConfig = new LoggingConfigImpl();
         loggingConfig.setupConfigDir(env.getConfigDirPath(), env.getLibPath());
         msgIdCatalog = new MessageIdCatalog();
         mHabitat = InjectedValues.getInstance().getHabitat();
-        gfFileHandler = mHabitat.getService(GFFileHandler.class);
+        logManagerService = mHabitat.getService(ServerLogFileManager.class);
         logFilter = mHabitat.getService(LogFilter.class);
         logger = Logger.getAnonymousLogger();
 
     }
-    /**
-     * Hook for subclass to modify anything in MBeanInfo.
-     *
-     * @Override
-     */
-    /*
-     @Override
-     protected MBeanInfo
-     postRegisterModifyMBeanInfo( final MBeanInfo info )
-     {
-     final MBeanOperationInfo[]  ops = info.getOperations();
 
-     final int   idx = JMXUtil.findMBeanOperationInfo( info, "queryServerLog", null);
-
-     final MBeanOperationInfo    op  = ops[idx];
-     ops[idx]    = new MBeanOperationInfo( op.getName(), op.getDescription(),
-     op.getSignature(), Map.class.getName(),
-     MBeanOperationInfo.INFO );
-
-     return JMXUtil.newMBeanInfo( info, ops );
-     }
-     */
-    private static MBeanNotificationInfo[] SELF_NOTIFICATION_INFOS = null;
 
     /**
      * getMBeanInfo() can be called frequently. By making this static, we avoid
@@ -139,26 +146,18 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         return (SELF_NOTIFICATION_INFOS);
     }
 
+    @Override
     public MBeanNotificationInfo[] getNotificationInfo() {
         final MBeanNotificationInfo[] superInfos = super.getNotificationInfo();
-
-        final MBeanNotificationInfo[] all =
-                JMXUtil.mergeMBeanNotificationInfos(superInfos, getSelfNotificationInfos());
-
-        return all;
+        return JMXUtil.mergeMBeanNotificationInfos(superInfos, getSelfNotificationInfos());
     }
 
-    /**
-     * FIXME
-     */
     private void unimplemented() {
         throw new RuntimeException("Not implemented.");
     }
 
-    public void setModuleLogLevel(
-            final String module,
-            final String level) {
 
+    public void setModuleLogLevel(final String module, final String level) {
         try {
             loggingConfig.setLoggingProperty(module + ".level", level);
         } catch (java.io.IOException e) {
@@ -210,32 +209,22 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
     }
 
     public synchronized String[] getLogFileNames(final String key) {
-        String[] result = null;
-
-        if (SERVER_KEY.equals(key)) {
-        } else {
+        if (!SERVER_KEY.equals(key)) {
             throw new IllegalArgumentException(key);
         }
-
-        return result;
+        return null;
     }
 
     public Map<String, String> getLoggingAttributes() {
-        String gfHandler = "com.sun.enterprise.server.logging.GFFileHandler";
-        String sysHandler = "com.sun.enterprise.server.logging.SyslogHandler";
         try {
-            Map<String, String> props = loggingConfig.getLoggingProperties();
+            final Map<String, String> props = loggingConfig.getLoggingProperties();
             if (props == null) {
                 return null;
             }
-            Map<String, String> attributes = new HashMap<String, String>();
-            attributes.put(gfHandler + ".file", props.get(gfHandler + ".file"));
-            attributes.put(gfHandler + ".rotationTimelimitInMinutes", props.get(gfHandler + ".rotationTimelimitInMinutes"));
-            attributes.put(gfHandler + ".rotationLimitInBytes", props.get(gfHandler + ".rotationLimitInBytes"));
-            attributes.put(gfHandler + ".logtoConsole", props.get(gfHandler + ".logtoConsole"));
-            attributes.put(gfHandler + ".flushFrequency", props.get(gfHandler + ".flushFrequency"));
-            attributes.put("handlers", props.get("handlers"));
-            attributes.put(sysHandler + ".useSystemLogging", props.get(sysHandler + ".useSystemLogging"));
+            final Map<String, String> attributes = new HashMap<>();
+            attributes.put(KEY_ROOT_HANDLERS.getPropertyName(), props.get(KEY_ROOT_HANDLERS.getPropertyName()));
+            Arrays.stream(GlassFishLogHandlerProperty.values()).map(GlassFishLogHandlerProperty::getPropertyFullName)
+                .forEach(k -> attributes.put(k, props.get(k)));
             return attributes;
         } catch (java.io.IOException e) {
             logger.log(Level.WARNING, "Can not get logging attributes");
@@ -252,16 +241,15 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
     }
 
     public synchronized void rotateAllLogFiles() {
-        gfFileHandler.rotate();
+        logManagerService.roll();
     }
 
     public synchronized void rotateLogFile(final String key) {
 
         if (ACCESS_KEY.equals(key)) {
             throw new IllegalArgumentException("not supported: " + key);
-            //getLogMBean().rotateAccessLog();
         } else if (SERVER_KEY.equals(key)) {
-            gfFileHandler.rotate();
+            logManagerService.roll();
         } else {
             throw new IllegalArgumentException("" + key);
         }
@@ -297,7 +285,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
                 ((Attribute) queryResult.get(1)).getValue());
 
         // create the new results, making the first Object[] be the field headers
-        final List<Serializable[]> results = new ArrayList<Serializable[]>(srcRecords.size());
+        final List<Serializable[]> results = new ArrayList<>(srcRecords.size());
         results.add(fieldHeaders);
 
         // extract every record
@@ -328,9 +316,8 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
             Set<String> modules,
             List<Attribute> nameValuePairs,
             String anySearch) {
-        final List<Serializable[]> result = queryServerLogInternal(
-                name, startIndex, searchForward, maximumNumberOfResults,
-                fromTime, toTime, logLevel, modules, nameValuePairs, anySearch);
+        final List<Serializable[]> result = queryServerLogInternal(name, startIndex, searchForward,
+            maximumNumberOfResults, fromTime, toTime, logLevel, modules, nameValuePairs, anySearch);
         return result;
     }
 
@@ -371,10 +358,8 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
                 Long.valueOf(startIndex),
                 searchForward, sortAscending,
                 maximumNumberOfResults,
-                fromTime == null ? null
-                : new Date(fromTime),
-                toTime == null ? null
-                : new Date(toTime),
+                fromTime == null ? null : Instant.ofEpochMilli(fromTime),
+                toTime == null ? null : Instant.ofEpochMilli(toTime),
                 logLevel, false, moduleList, props, anySearch);
 
 
@@ -397,7 +382,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
             final Integer severeCount = Integer.parseInt(info.get(SEVERE_COUNT_KEY).toString());
             final Integer warningCount = Integer.parseInt(info.get(WARNING_COUNT_KEY).toString());
 
-            final Map<String, Number> item = new HashMap<String, Number>(info.size());
+            final Map<String, Number> item = new HashMap<>(info.size());
             item.put(TIMESTAMP_KEY, timestamp);
             item.put(SEVERE_COUNT_KEY, severeCount);
             item.put(WARNING_COUNT_KEY, warningCount);
@@ -407,38 +392,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
 
         return results;
     }
-    private static final Integer INTEGER_0 = Integer.valueOf(0);
-    private static final Map<String, Integer> EMPTY_ERROR_DISTRIBUTION_MAP =
-            Collections.emptyMap();
-    private static final Set<String> LEGAL_DISTRIBUTION_LEVELS =
-            SetUtil.newUnmodifiableStringSet(
-            Level.SEVERE.toString(), Level.WARNING.toString());
 
-    public Map<String, Integer> getErrorDistribution(long timestamp, String level) {
-        if (!LEGAL_DISTRIBUTION_LEVELS.contains(level)) {
-            throw new IllegalArgumentException(level);
-        }
-
-        unimplemented();
-
-        Map<String, Integer> result =
-                null; //getLogMBean().getErrorDistribution( timestamp, Level.parse( level ) );
-
-        // query may return null instead of an empty Map
-        if (result != null) {
-            // Ensure that no module has a null count
-            for (final Map.Entry<String, Integer> me : result.entrySet()) {
-                if (me.getValue() == null) {
-                    result.put(me.getKey(), INTEGER_0);
-                }
-            }
-        } else {
-            // never return a null Map, only an empty one
-            result = EMPTY_ERROR_DISTRIBUTION_MAP;
-        }
-
-        return result;
-    }
 
     public void setKeepErrorStatisticsForIntervals(final int num) {
         unimplemented();
@@ -526,7 +480,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         Level.FINEST, LOG_RECORD_FINEST_NOTIFICATION_TYPE,};
 
     private static Map<Level, String> initLevelToNotificationTypeMap() {
-        final Map<Level, String> m = new HashMap<Level, String>();
+        final Map<Level, String> m = new HashMap<>();
 
         for (int i = 0; i < LEVELS_AND_NOTIF_TYPES.length; i += 2) {
             final Level level = (Level) LEVELS_AND_NOTIF_TYPES[ i];
@@ -541,6 +495,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         return mLevelToNotificationTypeMap.get(level);
     }
 
+    @Override
     protected void preRegisterDone()
             throws Exception {
         initNotificationTypeToNotificationBuilderMap(getObjectName());
@@ -567,7 +522,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
     private Map<String, Serializable> logRecordToMap(
             final LogRecord record,
             final String recordAsString) {
-        final Map<String, Serializable> m = new HashMap<String, Serializable>();
+        final Map<String, Serializable> m = new HashMap<>();
 
         m.put(LOG_RECORD_AS_STRING_KEY, recordAsString);
         m.put(LOG_RECORD_LEVEL_KEY, record.getLevel());
@@ -639,11 +594,10 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         }
     }
 
-    public void
-    testEmitLogMessage( final String level, final String message )
-    {
-        setMBeanLogLevel( level );
-        debug( "testEmitLogMessage: logging: message = " + message );
-        getLogger().log( Level.parse( level ), message );
+
+    public void testEmitLogMessage(final String level, final String message) {
+        setMBeanLogLevel(level);
+        debug("testEmitLogMessage: logging: message = " + message);
+        getLogger().log(Level.parse(level), message);
     }
 }

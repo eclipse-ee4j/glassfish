@@ -60,8 +60,11 @@
                         <manifest>
                             <mainClass>org.glassfish.admin.cli.AsadminMain</mainClass>
                             <addClasspath>true</addClasspath>
-+                           <classpathPrefix>../../modules</classpathPrefix>
+                            <classpathPrefix>../../modules</classpathPrefix>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>../../lib/bootstrap/glassfish-jul-extension.jar</Class-Path>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

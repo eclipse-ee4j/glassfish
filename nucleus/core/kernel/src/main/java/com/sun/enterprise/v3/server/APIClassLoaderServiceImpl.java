@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,13 @@
 
 package com.sun.enterprise.v3.server;
 
-import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
-import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
-import static java.util.Collections.enumeration;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleLifecycleListener;
+import com.sun.enterprise.module.ModuleState;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.common_impl.CompositeEnumeration;
+
+import jakarta.inject.Inject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,13 +41,11 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleLifecycleListener;
-import com.sun.enterprise.module.ModuleState;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.common_impl.CompositeEnumeration;
-
-import jakarta.inject.Inject;
+import static com.sun.enterprise.util.FelixPrettyPrinter.prettyPrintExceptionMessage;
+import static com.sun.enterprise.util.SystemPropertyConstants.DEBUG_MODE_PROPERTY;
+import static java.util.Collections.enumeration;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * This class is responsible for creating a ClassLoader that can load classes exported by the system for public use. We
@@ -66,11 +67,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
     private static final String PUNCHIN_MODULE_STATE_PROP = "glassfish.kernel.apicl.punchin.module.state"; // NOI18N
 
-    // set to NEW to maintain backward compatibility. We should change it to RESOLVED after we have
-    // done enough testing to make sure there are no regressions.
-    public final ModuleState PUNCHIN_MODULE_STATE_DEFAULT_VALUE = ModuleState.NEW;
-
-    private static final Enumeration<URL> EMPTY_URLS = new Enumeration<URL>() {
+    private static final Enumeration<URL> EMPTY_URLS = new Enumeration<>() {
 
         @Override
         public boolean hasMoreElements() {
@@ -164,10 +161,12 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
         // list of not found classes and resources.
         // the string represents resource name, so foo/Bar.class for foo.Bar
-        private Set<String> blacklist;
+        private final Set<String> blacklist;
 
-        private ModuleState punchInModuleState =
-            ModuleState.valueOf(System.getProperty(PUNCHIN_MODULE_STATE_PROP, PUNCHIN_MODULE_STATE_DEFAULT_VALUE.toString()));
+        // set to NEW to maintain backward compatibility. We should change it to RESOLVED after we have
+        // done enough testing to make sure there are no regressions.
+        private final ModuleState punchInModuleState = ModuleState
+            .valueOf(System.getProperty(PUNCHIN_MODULE_STATE_PROP, ModuleState.NEW.toString()));
 
         /**
          * This method takes two classloaders which is unusual. Both the class loaders are consulted, so they both are
@@ -251,10 +250,8 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
                                         if (cnfe2.getCause() != null) {
                                             String message = prettyPrintExceptionMessage(cnfe2.getCause().getMessage());
-
                                             if (message != null && !message.isEmpty()) {
                                                 logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass",
-
                                                     "\nFailed loading class " + name + " by API Class Loader\n\n" +
                                                     message + "\n");
                                             }

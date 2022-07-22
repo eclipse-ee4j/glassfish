@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,31 @@
 
 package com.sun.enterprise.server.logging.logviewer.backend;
 
+import com.sun.common.util.logging.LoggingConfigImpl;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Node;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.server.logging.LogFacade;
+import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 
@@ -40,15 +51,6 @@ import org.glassfish.api.logging.LogLevel;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.common.util.logging.LoggingConfigImpl;
-import com.sun.enterprise.config.serverbeans.Cluster;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.server.logging.LogFacade;
-import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 /**
  * <p/>
@@ -74,6 +76,21 @@ public class LogFilter {
 
     private static final String NV_SEPARATOR = ";";
 
+    static final String[] LOG_LEVELS = {"SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST"};
+
+    private static String[] serverLogElements = {System.getProperty("com.sun.aas.instanceRoot"), "logs", "server.log"};
+
+    private static String pL = System.getProperty("com.sun.aas.processLauncher");
+    private static String verboseMode = System.getProperty("com.sun.aas.verboseMode", "false");
+    private static String defaultLogFile = System.getProperty("com.sun.aas.defaultLogFile");
+    private final LogFile logFile = (pL != null && !verboseMode.equals("true") && defaultLogFile != null)
+        ? new LogFile(defaultLogFile)
+        : new LogFile(StringUtils.makeFilePath(serverLogElements, false));
+    private static Hashtable<String, LogFile> logFileCache = new Hashtable<>();
+
+    private static final Logger LOGGER = LogFacade.LOGGING_LOGGER;
+    private static final boolean DEBUG = false;
+
     @Inject
     Domain domain;
 
@@ -89,10 +106,6 @@ public class LogFilter {
     @Inject
     LoggingConfigImpl loggingConfig;
 
-    private static final Logger LOGGER = LogFacade.LOGGING_LOGGER;
-
-
-    private static final boolean DEBUG = false;
 
     /**
      * The public method that Log Viewer Front End will be calling on.
@@ -125,10 +138,10 @@ public class LogFilter {
      * @return
      */
     public AttributeList getLogRecordsUsingQuery(
-            String logFileName, Long fromRecord, Boolean next, Boolean forward,
-            Integer requestedCount, Date fromDate, Date toDate,
-            String logLevel, Boolean onlyLevel, List listOfModules,
-            Properties nameValueMap, String anySearch) {
+        String logFileName, Long fromRecord, Boolean next, Boolean forward,
+        Integer requestedCount, Instant fromDate, Instant toDate,
+        String logLevel, Boolean onlyLevel, List listOfModules,
+        Properties nameValueMap, String anySearch) {
 
         //      Testing code for instance setup
         //return getLogRecordsUsingQuery(logFileName, fromRecord, next, forward, requestedCount,
@@ -147,10 +160,9 @@ public class LogFilter {
         }
 
 
-        if ((logFileName != null)
-                && (logFileName.length() != 0)) {
-            logFileName = logFileDetailsForServer.substring(0, logFileDetailsForServer.lastIndexOf(File.separator)) + File.separator +
-                    logFileName.trim();
+        if (logFileName != null && logFileName.length() != 0) {
+            logFileName = logFileDetailsForServer.substring(0, logFileDetailsForServer.lastIndexOf(File.separator))
+                + File.separator + logFileName.trim();
             if (new File(logFileName).exists()) {
                 logFile = getLogFile(logFileName);
             } else {
@@ -161,10 +173,9 @@ public class LogFilter {
             logFileName = logFileDetailsForServer;
             logFile = getLogFile(logFileName);
         }
-        boolean forwd = (forward == null) ? true : forward.booleanValue();
-        boolean nxt = (next == null) ? true : next.booleanValue();
-        long reqCount = (requestedCount == null) ?
-                logFile.getIndexSize() : requestedCount.intValue();
+        boolean forwd = forward == null ? true : forward.booleanValue();
+        boolean nxt = next == null ? true : next.booleanValue();
+        long reqCount = requestedCount == null ? logFile.getIndexSize() : requestedCount.intValue();
         long startingRecord;
         if (fromRecord == -1) {
             // In this case next/previous (before/after) don't mean much since
@@ -175,14 +186,11 @@ public class LogFilter {
             // We +1 for reverse so that we see the very end of the file (the
             // query will not go past the "startingRecord", so we have to put
             // it after the end of the file)
-            startingRecord = forwd ?
-                    (-1) : ((logFile.getLastIndexNumber() + 1) * logFile.getIndexSize());
+            startingRecord = forwd ? -1 : (logFile.getLastIndexNumber() + 1) * logFile.getIndexSize();
         } else {
             startingRecord = fromRecord.longValue();
             if (startingRecord < -1) {
-
-                throw new IllegalArgumentException(
-                        "fromRecord must be greater than 0!");
+                throw new IllegalArgumentException("fromRecord must be greater than 0!");
             }
         }
 
@@ -192,21 +200,19 @@ public class LogFilter {
         // query matches.
         try {
             return fetchRecordsUsingQuery(logFile, startingRecord, nxt, forwd,
-                    reqCount, fromDate, toDate, logLevel,
-                    onlyLevel.booleanValue(), listOfModules, nameValueMap, anySearch);
+                reqCount, fromDate, toDate, logLevel,
+                onlyLevel.booleanValue(), listOfModules, nameValueMap, anySearch);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, ex);
             return new AttributeList();
         }
     }
 
-    public Vector getInstanceLogFileNames(String instanceName) {
+    public List<String> getInstanceLogFileNames(String instanceName) {
         Server targetServer = domain.getServerNamed(instanceName);
-        Vector allInstanceFileNames = new Vector();
 
         if (targetServer.isDas()) {
-            String logFileDetailsForServer = "";
-
+            String logFileDetailsForServer;
             try {
                 // getting log file attribute value from logging.properties file
                 logFileDetailsForServer = loggingConfig.getLoggingFileDetails();
@@ -214,29 +220,30 @@ public class LogFilter {
                 logFileDetailsForServer = new File(logFileDetailsForServer).getAbsolutePath();
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, ex);
-                return new Vector();
+                return List.of();
             }
 
             File logsDir = new File(logFileDetailsForServer.substring(0, logFileDetailsForServer.lastIndexOf(File.separator)));
             File allLogFileNames[] = logsDir.listFiles();
+            List<String> allInstanceFileNames = new ArrayList<>();
             for (File file : allLogFileNames) {
                 String fileName = file.getName();
-                if (file.isFile() && !fileName.equals(".") && !fileName.equals("..")
-                        && fileName.contains(".log") && !fileName.contains(".log.")) {
+                if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
+                    && !fileName.contains(".log.")) {
                     allInstanceFileNames.add(fileName);
                 }
             }
-        } else {
-            try {
-                // getting log file attribute value from logging.properties file
-                String instanceLogFileDetails = getInstanceLogFileDetails(targetServer);
-                allInstanceFileNames = new LogFilterForInstance().getInstanceLogFileNames(habitat, targetServer, domain, LOGGER, instanceName, instanceLogFileDetails);
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, ex);
-                return new Vector();
-            }
+            return allInstanceFileNames;
         }
-        return allInstanceFileNames;
+
+        try {
+            // getting log file attribute value from logging.properties file
+            String instanceLogFileDetails = getInstanceLogFileDetails(targetServer);
+            return new LogFilterForInstance().getInstanceLogFileNames(habitat, targetServer, domain, LOGGER, instanceName, instanceLogFileDetails);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, ex);
+            return List.of();
+        }
     }
 
     /*
@@ -262,8 +269,8 @@ public class LogFilter {
     }
 
     /*
-    * This method is used by LogViewerResource which is used to display raw log data like 'tail -f server.log'.
-    */
+     * This method is used by LogViewerResource which is used to display raw log data like 'tail -f server.log'.
+     */
     public String getLogFileForGivenTarget(String targetServerName) throws IOException {
         Server targetServer = domain.getServerNamed(targetServerName);
         String serverNode = targetServer.getNodeRef();
@@ -285,11 +292,11 @@ public class LogFilter {
             if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getNodeDir() != null) {
                 // this code is used if no changes made in logging.properties file
                 loggingDir = node.getNodeDir() + File.separator + serverNode
-                        + File.separator + targetServerName;
+                    + File.separator + targetServerName;
                 loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
             } else if (logFileDetailsForInstance.contains("${com.sun.aas.instanceRoot}/logs") && node.getInstallDir() != null) {
                 loggingDir = node.getInstallDir() + File.separator + "glassfish" + File.separator + "nodes"
-                        + File.separator + serverNode + File.separator + targetServerName;
+                    + File.separator + serverNode + File.separator + targetServerName;
                 loggingFile = logFileDetailsForInstance.replace("${com.sun.aas.instanceRoot}", loggingDir);
             } else {
                 loggingFile = logFileDetailsForInstance;
@@ -303,7 +310,7 @@ public class LogFilter {
                 String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
                 File instanceFile = null;
                 instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain, LOGGER,
-                        targetServerName, env.getDomainRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
+                    targetServerName, env.getDomainRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
 
                 return instanceFile.getAbsolutePath();
             }
@@ -314,10 +321,10 @@ public class LogFilter {
 
 
     public AttributeList getLogRecordsUsingQuery(
-            String logFileName, Long fromRecord, Boolean next, Boolean forward,
-            Integer requestedCount, Date fromDate, Date toDate,
-            String logLevel, Boolean onlyLevel, List listOfModules,
-            Properties nameValueMap, String anySearch, String instanceName) {
+        String logFileName, Long fromRecord, Boolean next, Boolean forward,
+        Integer requestedCount, Instant fromDate, Instant toDate,
+        String logLevel, Boolean onlyLevel, List listOfModules,
+        Properties nameValueMap, String anySearch, String instanceName) {
 
         Server targetServer = domain.getServerNamed(instanceName);
 
@@ -325,10 +332,10 @@ public class LogFilter {
 
         if (targetServer.isDas()) {
             return getLogRecordsUsingQuery(
-                    logFileName, fromRecord, next, forward,
-                    requestedCount, fromDate, toDate,
-                    logLevel, onlyLevel, listOfModules,
-                    nameValueMap, anySearch);
+                logFileName, fromRecord, next, forward,
+                requestedCount, fromDate, toDate,
+                logLevel, onlyLevel, listOfModules,
+                nameValueMap, anySearch);
         } else {
             // for Instance it's going through this loop. This will use ssh utility to get file from instance machine(remote machine) and
             // store under glassfish/domains/domain1/logs/<instance name>/ directory which is used to get LogFile object.
@@ -358,12 +365,11 @@ public class LogFilter {
                 boolean noFileFound = true;
 
                 if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
-                    for (int i = 0; i < allLogFileNames.length; i++) {
-                        File file = allLogFileNames[i];
+                    for (File file : allLogFileNames) {
                         String fileName = file.getName();
                         // code to remove . and .. file which is return
                         if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
-                                && !fileName.contains(".log.")) {
+                            && !fileName.contains(".log.")) {
                             noFileFound = false;
                             break;
                         }
@@ -397,7 +403,7 @@ public class LogFilter {
                 try {
                     // this code is used when the node is not local.
                     instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,
-                            domain, LOGGER, instanceName, env.getDomainRoot().getAbsolutePath(), logFileName, instanceLogFileName);
+                        domain, LOGGER, instanceName, env.getDomainRoot().getAbsolutePath(), logFileName, instanceLogFileName);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
                     return new AttributeList();
@@ -416,7 +422,7 @@ public class LogFilter {
         boolean forwd = (forward == null) ? true : forward.booleanValue();
         boolean nxt = (next == null) ? true : next.booleanValue();
         long reqCount = (requestedCount == null) ?
-                logFile.getIndexSize() : requestedCount.intValue();
+            logFile.getIndexSize() : requestedCount.intValue();
         long startingRecord;
         if (fromRecord == -1) {
             // In this case next/previous (before/after) don't mean much since
@@ -428,12 +434,12 @@ public class LogFilter {
             // query will not go past the "startingRecord", so we have to put
             // it after the end of the file)
             startingRecord = forwd ?
-                    (-1) : ((logFile.getLastIndexNumber() + 1) * logFile.getIndexSize());
+                (-1) : ((logFile.getLastIndexNumber() + 1) * logFile.getIndexSize());
         } else {
             startingRecord = fromRecord.longValue();
             if (startingRecord < -1) {
                 throw new IllegalArgumentException(
-                        "fromRecord must be greater than 0!");
+                    "fromRecord must be greater than 0!");
             }
         }
 
@@ -443,8 +449,8 @@ public class LogFilter {
         // query matches.
         try {
             return fetchRecordsUsingQuery(logFile, startingRecord, nxt, forwd,
-                    reqCount, fromDate, toDate, logLevel,
-                    onlyLevel.booleanValue(), listOfModules, nameValueMap, anySearch);
+                reqCount, fromDate, toDate, logLevel,
+                onlyLevel.booleanValue(), listOfModules, nameValueMap, anySearch);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, ex);
             return new AttributeList();
@@ -456,9 +462,9 @@ public class LogFilter {
      * Internal method that will be called from getLogRecordsUsingQuery()
      */
     protected AttributeList fetchRecordsUsingQuery(
-            LogFile logFile, long startingRecord, boolean next, boolean forward,
-            long requestedCount, Date fromDate, Date toDate, String logLevel,
-            boolean onlyLevel, List listOfModules, Properties nameValueMap, String anySearch) {
+        LogFile logFile, long startingRecord, boolean next, boolean forward,
+        long requestedCount, Instant fromDate, Instant toDate, String logLevel,
+        boolean onlyLevel, List listOfModules, Properties nameValueMap, String anySearch) {
         // If !next, then set to search in reverse
         boolean origForward = forward;
         if (next) {
@@ -479,7 +485,7 @@ public class LogFilter {
             // -1 because we still want to see the starting record (only if in
             // "next" mode)
             startingRecord -=
-                    ((next) ? (searchChunkIncrement - 1) : (searchChunkIncrement));
+                ((next) ? (searchChunkIncrement - 1) : (searchChunkIncrement));
             if (startingRecord < 0) {
                 // Don't go past the original startingRecord
                 searchChunkIncrement += startingRecord;
@@ -497,7 +503,7 @@ public class LogFilter {
         while (results.size() < requestedCount) {
             // The following will always return unfiltered forward records
             records = logFile.getLogEntries(
-                    startingRecord, searchChunkIncrement);
+                startingRecord, searchChunkIncrement);
             if (records == null) {
                 break;
             }
@@ -511,11 +517,11 @@ public class LogFilter {
 
             // Loop through the records, filtering and storing the matches
             for (int count = start;
-                 (count != end) && (results.size() < requestedCount);
-                 count += inc) {
+                (count != end) && (results.size() < requestedCount);
+                count += inc) {
                 entry = (LogFile.LogEntry) records.get(count);
                 if (allChecks(entry, fromDate, toDate, logLevel, onlyLevel,
-                        listOfModules, nameValueMap, anySearch)) {
+                    listOfModules, nameValueMap, anySearch)) {
                     results.add(entry);
                 }
             }
@@ -586,8 +592,7 @@ public class LogFilter {
         resultsInTemplate.add(LogRecordTemplate.getHeader());
         Iterator iterator = results.iterator();
         ArrayList listOfResults = new ArrayList();
-        Attribute resultsAttribute = new Attribute(RESULTS_ATTRIBUTE,
-                listOfResults);
+        Attribute resultsAttribute = new Attribute(RESULTS_ATTRIBUTE, listOfResults);
         resultsInTemplate.add(resultsAttribute);
         while (iterator.hasNext()) {
             LogFile.LogEntry entry = (LogFile.LogEntry) iterator.next();
@@ -610,7 +615,7 @@ public class LogFilter {
      * This provides access to the LogFile object.
      */
     public LogFile getLogFile() {
-        return _logFile;
+        return logFile;
     }
 
     /**
@@ -623,7 +628,7 @@ public class LogFilter {
         // No need to check for null or zero length string as the
         // test is already done before.
         String logFileName = fileName.trim();
-        LogFile logFile = (LogFile) logFileCache.get(fileName);
+        LogFile logFile = logFileCache.get(fileName);
         String parent = null;
         if (logFile == null) {
             try {
@@ -642,7 +647,7 @@ public class LogFilter {
                 // assume the user specified the path from the instance root and that is the parent
 
                 parent = System.getProperty(
-                        SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+                    SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
 
             } catch (Exception e) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
@@ -652,7 +657,7 @@ public class LogFilter {
                 // file.
                 String[] logFileNameParts = {parent, logFileName};
                 logFileName = StringUtils.makeFilePath(
-                        logFileNameParts, false);
+                    logFileNameParts, false);
             }
             logFile = new LogFile(logFileName);
             logFileCache.put(fileName, logFile);
@@ -664,9 +669,8 @@ public class LogFilter {
      * This method accepts the first line of the Log Record and checks
      * to see if it matches the query.
      */
-    protected boolean allChecks(LogFile.LogEntry entry,
-                                Date fromDate, Date toDate, String queryLevel, boolean onlyLevel,
-                                List listOfModules, Properties nameValueMap, String anySearch) {
+    protected boolean allChecks(LogFile.LogEntry entry, Instant fromDate, Instant toDate,
+        String queryLevel, boolean onlyLevel, List listOfModules, Properties nameValueMap, String anySearch) {
         if (DEBUG) {
             StringBuffer buf = new StringBuffer();
             buf.append(dateTimeCheck(entry.getLoggedDateTime(), fromDate, toDate));
@@ -682,10 +686,10 @@ public class LogFilter {
         }
 
         if ((dateTimeCheck(entry.getLoggedDateTime(), fromDate, toDate))
-                && (levelCheck(entry.getLoggedLevel(), queryLevel, onlyLevel))
-                && (moduleCheck(entry.getLoggedLoggerName(), listOfModules))
-                && (nameValueCheck(entry.getLoggedNameValuePairs(), nameValueMap))
-                && (messageDataCheck(entry.getLoggedMessage(), entry.getLoggedNameValuePairs(), anySearch))) {
+            && (levelCheck(entry.getLoggedLevel(), queryLevel, onlyLevel))
+            && (moduleCheck(entry.getLoggedLoggerName(), listOfModules))
+            && (nameValueCheck(entry.getLoggedNameValuePairs(), nameValueMap))
+            && (messageDataCheck(entry.getLoggedMessage(), entry.getLoggedNameValuePairs(), anySearch))) {
             return true;
         }
 
@@ -693,27 +697,22 @@ public class LogFilter {
     }
 
 
-    protected boolean dateTimeCheck(Date loggedDateTime,
-                                    Date fromDateTime, Date toDateTime) {
-        if ((fromDateTime == null) || (toDateTime == null)) {
+    protected boolean dateTimeCheck(OffsetDateTime loggedDateTime, Instant fromDateTime, Instant toDateTime) {
+        if (fromDateTime == null || toDateTime == null) {
             // If user doesn't specify fromDate and toDate, then S/He is
             // not interested in DateTime filter
             return true;
         }
         // Now do a range check
-        if (!(loggedDateTime.before(fromDateTime) ||
-                loggedDateTime.after(toDateTime))) {
-            return true;
-        }
-
-        return false;
+        return !loggedDateTime.isBefore(fromDateTime.atOffset(loggedDateTime.getOffset()))
+            && !loggedDateTime.isAfter(toDateTime.atOffset(loggedDateTime.getOffset()));
     }
 
 
     protected boolean levelCheck(
-            final String loggedLevel,
-            final String queryLevelIn,
-            final boolean isOnlyLevelFlag) {
+        final String loggedLevel,
+        final String queryLevelIn,
+        final boolean isOnlyLevelFlag) {
         // If queryLevel is null, that means user is not interested in
         // running the query on the Log Level field.
         if (queryLevelIn == null) {
@@ -752,7 +751,7 @@ public class LogFilter {
     }
 
     protected boolean nameValueCheck(String loggedNameValuePairs,
-                                     Properties queriedNameValueMap) {
+        Properties queriedNameValueMap) {
         if ((queriedNameValueMap == null) || (queriedNameValueMap.size() == 0)) {
             return true;
         }
@@ -761,12 +760,13 @@ public class LogFilter {
             return false;
         }
         StringTokenizer nvListTokenizer =
-                new StringTokenizer(loggedNameValuePairs, NV_SEPARATOR);
+            new StringTokenizer(loggedNameValuePairs, NV_SEPARATOR);
         while (nvListTokenizer.hasMoreTokens()) {
             String nameandvalue = nvListTokenizer.nextToken();
             StringTokenizer nvToken = new StringTokenizer(nameandvalue, "=");
-            if (nvToken.countTokens() < 2)
+            if (nvToken.countTokens() < 2) {
                 continue;
+            }
             String loggedName = nvToken.nextToken();
             String loggedValue = nvToken.nextToken();
 
@@ -774,11 +774,11 @@ public class LogFilter {
             // FIXME: Is there any other cleaner way to reset the iterator
             // position to zero than recreating a new iterator everytime
             Iterator queriedNameValueMapIterator =
-                    queriedNameValueMap.entrySet().iterator();
+                queriedNameValueMap.entrySet().iterator();
 
             while (queriedNameValueMapIterator.hasNext()) {
                 Map.Entry entry =
-                        (Map.Entry) queriedNameValueMapIterator.next();
+                    (Map.Entry) queriedNameValueMapIterator.next();
                 if (entry.getKey().equals(loggedName)) {
                     Object value = entry.getValue();
                     // We have a key with multiple values to match.
@@ -789,7 +789,7 @@ public class LogFilter {
                     Iterator iterator = ((java.util.List) value).iterator();
                     while (iterator.hasNext()) {
                         if (((String) iterator.next()).equals(
-                                loggedValue)) {
+                            loggedValue)) {
                             return true;
                         }
                     }
@@ -800,7 +800,7 @@ public class LogFilter {
     }
 
     protected boolean messageDataCheck(String message, String nvp,
-                                       String anySearch) {
+        String anySearch) {
 
         if (anySearch == null || ("").contains(anySearch) || anySearch.length() < 3) {
             return true;
@@ -813,22 +813,4 @@ public class LogFilter {
         return false;
     }
 
-
-    static final String[] LOG_LEVELS = {"SEVERE", "WARNING",
-            "INFO", "CONFIG", "FINE", "FINER", "FINEST"};
-
-    private static String[] serverLogElements =
-            {System.getProperty("com.sun.aas.instanceRoot"), "logs", "server.log"};
-
-    private static String pL =
-            System.getProperty("com.sun.aas.processLauncher");
-    private static String verboseMode =
-            System.getProperty("com.sun.aas.verboseMode", "false");
-    private static String defaultLogFile =
-            System.getProperty("com.sun.aas.defaultLogFile");
-    private LogFile _logFile =
-            (pL != null && !verboseMode.equals("true") && defaultLogFile != null) ?
-                    new LogFile(defaultLogFile) :
-                    new LogFile(StringUtils.makeFilePath(serverLogElements, false));
-    private static Hashtable logFileCache = new Hashtable();
 }

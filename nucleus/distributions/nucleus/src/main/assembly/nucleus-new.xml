@@ -95,13 +95,14 @@
             <outputDirectory>${install.dir.name}/lib/monitor</outputDirectory>
         </fileSet>
 
-        <!-- modules/lib -->
+        <!-- lib/bootstrap -->
         <fileSet>
             <directory>${temp.dir}</directory>
             <includes>
+                <include>glassfish-jul-extension.jar</include>
                 <include>grizzly-npn-api.jar</include>
             </includes>
-            <outputDirectory>${install.dir.name}/lib</outputDirectory>
+            <outputDirectory>${install.dir.name}/lib/bootstrap</outputDirectory>
         </fileSet>
 
         <!-- felix -->
@@ -143,6 +144,7 @@
                 <exclude>org.apache.felix.scr.jar</exclude>
                 <exclude>org.osgi.util.function.jar</exclude>
                 <exclude>org.osgi.util.promise.jar</exclude>
+                <exclude>glassfish-jul-extension.jar</exclude>
                 <exclude>grizzly-npn-api.jar</exclude>
                 <exclude>felix.jar</exclude>
                 <exclude>nucleus-domain.jar</exclude>

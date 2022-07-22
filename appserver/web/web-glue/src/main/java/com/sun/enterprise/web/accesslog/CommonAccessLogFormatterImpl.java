@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,20 @@
 
 package com.sun.enterprise.web.accesslog;
 
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.nio.CharBuffer;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.Request;
 import org.apache.catalina.Response;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import java.nio.CharBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 /**
- * Access log formatter using the <i>common</i> access log format from
- * Apache.
+ * Access log formatter using the <i>common</i> access log format from Apache.
  */
 public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
 
@@ -40,42 +41,7 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
      * Constructor.
      */
     public CommonAccessLogFormatterImpl() {
-
-        super();
-
-        final TimeZone timeZone = tz;
-        dayFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("dd");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        monthFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("MM");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        yearFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("yyyy");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        timeFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
+        super(getAccessLogPattern());
     }
 
 
@@ -87,39 +53,45 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
      * @param response The response object from which to obtain access log info
      * @param charBuffer The CharBuffer to which to append access log info
      */
-    public void appendLogEntry(Request request,
-                               Response response,
-                               CharBuffer charBuffer) {
-
+    @Override
+    public void appendLogEntry(Request request, Response response, CharBuffer charBuffer) {
         ServletRequest req = request.getRequest();
         HttpServletRequest hreq = (HttpServletRequest) req;
 
         appendClientName(charBuffer, req);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendClientId(charBuffer, req);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendAuthUserName(charBuffer, hreq);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendCurrentDate(charBuffer);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendRequestInfo(charBuffer, hreq);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendResponseStatus(charBuffer, response);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
 
         appendResponseLength(charBuffer, response);
-        charBuffer.put(SPACE);
+        charBuffer.put(' ');
     }
 
 
-    /*
-     * Appends the client host name of the given request to the given char
-     * buffer.
+    private static AccessLogPattern getAccessLogPattern() {
+        // 21/Dec/2009:07:42:45 -0800
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/LLL/uuuu:HH:mm:ss Z", Locale.ENGLISH)
+            .withZone(ZoneId.systemDefault());
+        AccessLogPattern pattern = new AccessLogPattern(dateTimeFormatter, false, null);
+        return pattern;
+    }
+
+
+    /**
+     * Appends the client host name of the given request to the given char buffer.
      */
     private void appendClientName(CharBuffer cb, ServletRequest req) {
         String value = req.getRemoteHost();
@@ -130,7 +102,7 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
     }
 
 
-    /*
+    /**
      * Appends the client's RFC 1413 identity to the given char buffer..
      */
     private void appendClientId(CharBuffer cb, ServletRequest req) {
@@ -138,7 +110,7 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
     }
 
 
-    /*
+    /**
      * Appends the authenticated user (if any) to the given char buffer.
      */
     private void appendAuthUserName(CharBuffer cb, HttpServletRequest hreq) {
@@ -150,32 +122,23 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
     }
 
 
-    /*
+    /**
      * Appends the current date to the given char buffer.
      */
     private void appendCurrentDate(CharBuffer cb) {
-        Date date = getDate();
         cb.put("[");
-        cb.put(dayFormatter.get().format(date));           // Day
-        cb.put('/');
-        cb.put(lookup(monthFormatter.get().format(date))); // Month
-        cb.put('/');
-        cb.put(yearFormatter.get().format(date));          // Year
-        cb.put(':');
-        cb.put(timeFormatter.get().format(date));          // Time
-        cb.put(SPACE);
-        cb.put(timeZone);                                  // Time Zone
+
         cb.put("]");
     }
 
 
-    /*
+    /**
      * Appends info about the given request to the given char buffer.
      */
     private void appendRequestInfo(CharBuffer cb, HttpServletRequest hreq) {
-        cb.put("\"");
+        cb.put('\"');
         cb.put(hreq.getMethod());
-        cb.put(SPACE);
+        cb.put(' ');
         String uri = hreq.getRequestURI();
         if (uri == null) {
             uri = "NULL-HTTP-URI";
@@ -185,13 +148,13 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
             cb.put('?');
             cb.put(hreq.getQueryString());
         }
-        cb.put(SPACE);
+        cb.put(' ');
         cb.put(hreq.getProtocol());
-        cb.put("\"");
+        cb.put('\"');
     }
 
 
-    /*
+    /**
      * Appends the response status to the given char buffer.
      */
     private void appendResponseStatus(CharBuffer cb, Response response) {
@@ -199,11 +162,11 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
     }
 
 
-    /*
+    /**
      * Appends the content length of the given response to the given char
      * buffer.
      */
     private void appendResponseLength(CharBuffer cb, Response response) {
-        cb.put("" + response.getContentCount());
+        cb.put(Integer.toString(response.getContentCount()));
     }
 }

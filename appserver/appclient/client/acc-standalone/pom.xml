@@ -54,8 +54,9 @@
     </developers>
 
     <properties>
-        <path.apps>../lib/install/applications</path.apps>
-        <path.appclient>../lib/appclient</path.appclient>
+        <path.lib>../lib</path.lib>
+        <path.apps>${path.lib}/install/applications</path.apps>
+        <path.appclient>${path.lib}/appclient</path.appclient>
         <path.derby>../../javadb/lib</path.derby>
         <path.mq>../../mq/lib</path.mq>
 
@@ -65,7 +66,7 @@
         <classpath.mq>${path.mq}/imq.jar ${path.mq}/imqadmin.jar ${path.mq}/imqutil.jar ${path.mq}/fscontext.jar ${path.apps}/jmsra/imqjmsra.jar</classpath.mq>
         <classpath.weld>${path.appclient}/weld-se-shaded.jar</classpath.weld>
 
-        <classpath.additions>${classpath.mq} ${classpath.derby} ${classpath.jaxrra} ${classpath.jdbcra} ${classpath.weld}</classpath.additions>
+        <classpath.additions>${path.lib}/bootstrap/glassfish-jul-extension.jar ${classpath.mq} ${classpath.derby} ${classpath.jaxrra} ${classpath.jdbcra} ${classpath.weld}</classpath.additions>
     </properties>
 
     <dependencies>

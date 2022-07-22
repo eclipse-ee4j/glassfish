@@ -17,13 +17,19 @@
 # logviewer.backend is used by REST implementation. We should be able to remove that when we move
 # REST logging code to this module.
 # logging and diagnostics are used by amx!
--exportcontents: com.sun.enterprise.server.logging.logviewer.backend, com.sun.enterprise.server.logging.diagnostics, com.sun.enterprise.server.logging
+-exportcontents: \
+          com.sun.enterprise.server.logging.logviewer.backend, \
+          com.sun.enterprise.server.logging.diagnostics, \
+          com.sun.enterprise.server.logging
+
+Import-Package: \
+          org.glassfish.main.jul.*; resolution:=optional, \
+          *
 
 DynamicImport-Package: \
-					org.glassfish.cluster.ssh.launcher, \
-                    org.glassfish.cluster.ssh.sftp, \
-					com.jcraft.jsch, \
-					com.sun.enterprise.util.cluster.windows.io, \
-					com.sun.enterprise.util.cluster.windows.process, \
-					org.glassfish.cluster.ssh.util
-
+          org.glassfish.cluster.ssh.launcher, \
+          org.glassfish.cluster.ssh.sftp, \
+          com.jcraft.jsch, \
+          com.sun.enterprise.util.cluster.windows.io, \
+          com.sun.enterprise.util.cluster.windows.process, \
+          org.glassfish.cluster.ssh.util

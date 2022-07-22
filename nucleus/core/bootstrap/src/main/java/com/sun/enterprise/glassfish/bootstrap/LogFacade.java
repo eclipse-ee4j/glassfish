@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -180,7 +181,7 @@ public class LogFacade {
 
     @LogMessageInfo(
             message = "Create bundle provisioner class = {0}.",
-            level = "INFO")
+            level = "CONFIG")
     public static final String CREATE_BUNDLE_PROVISIONER = "NCLS-BOOTSTRAP-00026";
 
     @LogMessageInfo(

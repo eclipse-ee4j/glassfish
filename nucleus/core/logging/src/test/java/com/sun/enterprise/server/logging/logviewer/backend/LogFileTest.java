@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,47 +19,67 @@ package com.sun.enterprise.server.logging.logviewer.backend;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFile.LogEntry;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.io.ObjectOutputStream;
+import java.time.OffsetDateTime;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author sanshriv
  */
 public class LogFileTest {
 
+    private static final OffsetDateTime NOW = OffsetDateTime.now();
+    private static byte[] serialized;
+
+
+    @BeforeAll
+    public static void prepareSerializedRecord() throws Exception {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            BufferedOutputStream buffer = new BufferedOutputStream(bos);
+            ObjectOutputStream objectOutput = new ObjectOutputStream(buffer)) {
+            LogFile.LogEntry entry = new LogEntry(1L);
+            entry.setLoggedDateTime(NOW);
+            entry.setLoggedLevel("DEBUG");
+            entry.setLoggedLoggerName("org.acme.coyote");
+            entry.setLoggedNameValuePairs(null);
+            entry.setLoggedProduct("Coyotus Hungrus Hungrus");
+            entry.setMessageId("org.acme.messageKey");
+            entry.setLoggedMessage("The serialization works!");
+            objectOutput.writeObject(entry);
+            objectOutput.flush();
+            serialized = bos.toByteArray();
+        }
+    }
+
+
     @Test
     public void testLogEntryDeserialization() throws Exception {
-        try (ObjectInputStream objectInput = new ObjectInputStream(
-            LogFileTest.class.getResource("logentry.bin").openStream())) {
-            // Create and initialize a LogEntry from binary file
-            LogFile.LogEntry entry = (LogEntry) objectInput.readObject();
-
-            assertNotNull(entry.getLoggedDateTime(), "DateTime");
-            ZoneId utc = ZoneId.of("Z");
-            final ZonedDateTime dateTime = ZonedDateTime.ofInstant(entry.getLoggedDateTime().toInstant(), utc);
-            final ZonedDateTime expectedDateTime = ZonedDateTime
-                .of(LocalDateTime.of(2012, 11, 8, 18, 42, 26, 763000000), utc);
-            assertEquals(expectedDateTime, dateTime, "DateTime");
-            assertEquals("INFO", entry.getLoggedLevel(), "Level");
-            assertEquals("javax.enterprise.logging", entry.getLoggedLoggerName(), "Logger");
-            assertEquals("Running GlassFish Version: Oracle GlassFish Server  4.0  (build sanshriv-private)",
-                entry.getLoggedMessage(), "Message");
-            assertThat("NameValuePairs", entry.getLoggedNameValuePairs(),
-                stringContainsInOrder("ThreadID", "ThreadName", "TimeMillis", "LevelValue", "MessageID"));
-            assertEquals("44.0", entry.getLoggedProduct(), "Product");
-            // FIXME: MessageID is not parsed.
-//            assertEquals("NCLS-LOGGING-00009", entry.getMessageId(), "MessageId");
-            assertEquals(1L, entry.getRecordNumber(), "RecordNumber");
+        final LogFile.LogEntry entry;
+        try (ObjectInputStream objectInput = new ObjectInputStream(new ByteArrayInputStream(serialized))) {
+            entry = (LogEntry) objectInput.readObject();
         }
+        assertAll(
+            () -> assertNotNull(entry.getLoggedDateTime(), "DateTime"),
+            () -> assertEquals(NOW, entry.getLoggedDateTime(), "DateTime"),
+            () -> assertEquals("DEBUG", entry.getLoggedLevel(), "Level"),
+            () -> assertEquals("org.acme.coyote", entry.getLoggedLoggerName(), "Logger"),
+            () -> assertEquals("The serialization works!", entry.getLoggedMessage(), "Message"),
+            () -> assertNull(entry.getLoggedNameValuePairs(), "NameValuePairs"),
+            () -> assertEquals("Coyotus Hungrus Hungrus", entry.getLoggedProduct(), "Product"),
+            () -> assertEquals("org.acme.messageKey", entry.getMessageId(), "MessageId"),
+            () -> assertEquals(1L, entry.getRecordNumber(), "RecordNumber")
+        );
     }
 
 }

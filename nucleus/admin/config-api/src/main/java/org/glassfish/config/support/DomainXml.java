@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,27 @@ package org.glassfish.config.support;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.Lock;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLResolver;
+import javax.xml.stream.XMLStreamException;
+
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationCleanup;
@@ -38,22 +55,16 @@ import org.jvnet.hk2.config.ConfigPopulatorException;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Populator;
 
-import jakarta.inject.Inject;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLResolver;
-import javax.xml.stream.XMLStreamException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
-import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-
-import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.*;
-import static org.glassfish.config.support.GrizzlyConfigSchemaMigrator.logger;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.badEnv;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.cleaningDomainXmlFailed;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.failedUpgrade;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.noBackupFile;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.noConfigFile;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.startupClass;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.successfulCleanupWith;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.successfulUpgrade;
+import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.totalTimeToParseDomain;
+import static java.util.logging.Level.*;
 
 /**
  * Locates and parses the portion of <tt>domain.xml</tt> that we care.
@@ -63,6 +74,8 @@ import static org.glassfish.config.support.GrizzlyConfigSchemaMigrator.logger;
  * @author Byron Nevins
  */
 public abstract class DomainXml implements Populator {
+
+    private static final Logger LOG = Logger.getLogger(DomainXml.class.getName());
 
     @Inject
     StartupContext context;
@@ -82,13 +95,11 @@ public abstract class DomainXml implements Populator {
 
     @Override
     public void run(ConfigParser parser) throws ConfigPopulatorException {
-        LogRecord lr = new LogRecord(Level.FINE, startupClass + this.getClass().getName());
-        lr.setLoggerName(getClass().getName());
-        EarlyLogHandler.earlyMessages.add(lr);
-
-        ClassLoader parentClassLoader = (registry == null) ? getClass().getClassLoader() : registry.getParentClassLoader();
-        if (parentClassLoader == null)
+        LOG.log(FINE, startupClass, this.getClass().getName());
+        ClassLoader parentClassLoader = registry == null ? getClass().getClassLoader() : registry.getParentClassLoader();
+        if (parentClassLoader == null) {
             parentClassLoader = getClass().getClassLoader();
+        }
 
         ServiceLocatorUtilities.addOneConstant(habitat, parentClassLoader, null, ClassLoader.class);
 
@@ -141,17 +152,10 @@ public abstract class DomainXml implements Populator {
         for (ServiceHandle<?> cc : habitat.getAllServiceHandles(ConfigurationCleanup.class)) {
             try {
                 cc.getService(); // run the upgrade
-                lr = new LogRecord(Level.FINE, successfulCleanupWith + cc.getClass());
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
+                LOG.log(FINE, successfulCleanupWith, cc.getClass());
             } catch (Exception e) {
-                lr = new LogRecord(Level.FINE, e.toString() + e);
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
-
-                lr = new LogRecord(Level.SEVERE, cc.getClass() + cleaningDomainXmlFailed + e);
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
+                LOG.log(SEVERE, cleaningDomainXmlFailed, new Object[] {cc.getClass(), e});
+                LOG.log(Level.FINE, "Cleaning the domain.xml failed!", e);
             }
         }
 
@@ -170,9 +174,7 @@ public abstract class DomainXml implements Populator {
 
         Server server = habitat.getService(Server.class, env.getInstanceName());
         if (server == null) {
-            LogRecord lr = new LogRecord(Level.SEVERE, badEnv);
-            lr.setLoggerName(getClass().getName());
-            EarlyLogHandler.earlyMessages.add(lr);
+            LOG.log(SEVERE, badEnv, env.getInstanceName());
             return;
         }
         ServiceLocatorUtilities.addOneConstant(habitat, server, ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
@@ -191,17 +193,10 @@ public abstract class DomainXml implements Populator {
         for (ServiceHandle<?> cu : habitat.getAllServiceHandles(ConfigurationUpgrade.class)) {
             try {
                 cu.getService(); // run the upgrade
-                LogRecord lr = new LogRecord(Level.FINE, successfulUpgrade + cu.getClass());
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
+                LOG.log(FINE, successfulUpgrade, cu.getClass());
             } catch (Exception e) {
-                LogRecord lr = new LogRecord(Level.FINE, e.toString() + e);
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
-
-                lr = new LogRecord(Level.SEVERE, cu.getClass() + failedUpgrade + e);
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
+                LOG.log(Level.SEVERE, failedUpgrade, new Object[] {cu.getClass(), e});
+                LOG.log(Level.FINE, "Upgrade of the domain.xml failed!", e);
             }
         }
     }
@@ -210,9 +205,7 @@ public abstract class DomainXml implements Populator {
         if (domainFile.exists() && domainFile.length() > 0) {
             return true;
         }
-        LogRecord lr = new LogRecord(Level.SEVERE, errorMessage.get());
-        lr.setLoggerName(getClass().getName());
-        EarlyLogHandler.earlyMessages.add(lr);
+        LOG.log(SEVERE, errorMessage.get());
         return false;
     }
 
@@ -229,6 +222,8 @@ public abstract class DomainXml implements Populator {
     }
 
     private static class NoBackupException extends IOException {
+
+        private static final long serialVersionUID = 1L;
 
         private NoBackupException(File configDirectory) {
             super(localStrings.getLocalString("NoUsableConfigFile", "No usable configuration file at {0}",
@@ -266,12 +261,13 @@ public abstract class DomainXml implements Populator {
                 }
             });
 
-            if (env.getRuntimeType() == RuntimeType.DAS || env.getRuntimeType() == RuntimeType.EMBEDDED)
+            if (env.getRuntimeType() == RuntimeType.DAS || env.getRuntimeType() == RuntimeType.EMBEDDED) {
                 xsr = new DasReaderFilter(domainXml, xif);
-            else if (env.getRuntimeType() == RuntimeType.INSTANCE)
+            } else if (env.getRuntimeType() == RuntimeType.INSTANCE) {
                 xsr = new InstanceReaderFilter(env.getInstanceName(), domainXml, xif);
-            else
+            } else {
                 throw new RuntimeException("Internal Error: Unknown server type: " + env.getRuntimeType());
+            }
 
             Lock lock = null;
             try {
@@ -291,21 +287,15 @@ public abstract class DomainXml implements Populator {
             String errorMessage = xsr.configWasFound();
 
             if (errorMessage != null) {
-                LogRecord lr = new LogRecord(Level.WARNING, errorMessage);
-                lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);
+                LOG.log(WARNING, errorMessage);
             }
         } catch (Exception e) {
-            if (e instanceof RuntimeException)
+            if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
-            else
-                throw new RuntimeException("Fatal Error.  Unable to parse " + domainXml, e);
+            }
+            throw new RuntimeException("Fatal Error. Unable to parse " + domainXml, e);
         }
-        Long l = System.nanoTime() - startNano;
-        LogRecord lr = new LogRecord(Level.FINE, totalTimeToParseDomain + l.toString());
-        lr.setLoggerName(getClass().getName());
-        EarlyLogHandler.earlyMessages.add(lr);
-
+        LOG.log(CONFIG, totalTimeToParseDomain, System.nanoTime() - startNano);
     }
 
     protected abstract DomDocument getDomDocument();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,22 +19,29 @@ package com.sun.enterprise.web.accesslog;
 
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.web.Constants;
-import org.apache.catalina.Container;
-import org.apache.catalina.HttpResponse;
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-import org.glassfish.web.LogFacade;
 
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.nio.CharBuffer;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.HttpResponse;
+import org.apache.catalina.Request;
+import org.apache.catalina.Response;
+import org.glassfish.web.LogFacade;
 
 /**
  * Access log formatter using the SJSAS format.
@@ -44,23 +52,17 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
 
     private static final String QUOTE = "\"";
 
-    /*
-     * HTTP header names
-     */
+    /** HTTP header names */
     private static final String HTTP_HEADER_ACCEPT = "Accept";
     private static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     private static final String HTTP_HEADER_DATE = "Date";
     private static final String HTTP_HEADER_IF_MODIFIED_SINCE = "If-Modified-Since";
 
-    /*
-     * Supported access log entry tokens
-     */
+    /** Supported access log entry tokens */
     private static final String ATTRIBUTE_BY_NAME_PREFIX = "attribute.";
-    private static final int ATTRIBUTE_BY_NAME_PREFIX_LEN =
-        ATTRIBUTE_BY_NAME_PREFIX.length();
+    private static final int ATTRIBUTE_BY_NAME_PREFIX_LEN = ATTRIBUTE_BY_NAME_PREFIX.length();
     private static final String SESSION_ATTRIBUTE_BY_NAME_PREFIX = "session.";
-    private static final int SESSION_ATTRIBUTE_BY_NAME_PREFIX_LEN =
-        SESSION_ATTRIBUTE_BY_NAME_PREFIX.length();
+    private static final int SESSION_ATTRIBUTE_BY_NAME_PREFIX_LEN = SESSION_ATTRIBUTE_BY_NAME_PREFIX.length();
     private static final String AUTH_USER_NAME = "auth-user-name";
     private static final String CLIENT_DNS = "client.dns";
     private static final String CLIENT_NAME = "client.name";
@@ -68,27 +70,19 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
     private static final String COOKIES = "cookies";
     private static final String COOKIE_VALUE = "cookie.value";
     private static final String COOKIE_BY_NAME_PREFIX = "cookie.";
-    private static final int COOKIE_BY_NAME_PREFIX_LEN
-        = COOKIE_BY_NAME_PREFIX.length();
+    private static final int COOKIE_BY_NAME_PREFIX_LEN = COOKIE_BY_NAME_PREFIX.length();
     private static final String COOKIES_BY_NAME_PREFIX = "cookies.";
-    private static final int COOKIES_BY_NAME_PREFIX_LEN
-        = COOKIES_BY_NAME_PREFIX.length();
+    private static final int COOKIES_BY_NAME_PREFIX_LEN = COOKIES_BY_NAME_PREFIX.length();
     private static final String DATE_TIME = "datetime";
     private static final String HEADER_ACCEPT = "header.accept";
     private static final String HEADER_BY_NAME_PREFIX = "header.";
-    private static final int HEADER_BY_NAME_PREFIX_LEN
-        = HEADER_BY_NAME_PREFIX.length();
+    private static final int HEADER_BY_NAME_PREFIX_LEN = HEADER_BY_NAME_PREFIX.length();
     private static final String HEADERS_BY_NAME_PREFIX = "headers.";
-    private static final int HEADERS_BY_NAME_PREFIX_LEN =
-        HEADERS_BY_NAME_PREFIX.length();
-    private static final String RESPONSE_HEADER_BY_NAME_PREFIX =
-        "response.header.";
-    private static final int RESPONSE_HEADER_BY_NAME_PREFIX_LEN =
-        RESPONSE_HEADER_BY_NAME_PREFIX.length();
-    private static final String RESPONSE_HEADERS_BY_NAME_PREFIX =
-        "response.headers.";
-    private static final int RESPONSE_HEADERS_BY_NAME_PREFIX_LEN =
-        RESPONSE_HEADERS_BY_NAME_PREFIX.length();
+    private static final int HEADERS_BY_NAME_PREFIX_LEN = HEADERS_BY_NAME_PREFIX.length();
+    private static final String RESPONSE_HEADER_BY_NAME_PREFIX = "response.header.";
+    private static final int RESPONSE_HEADER_BY_NAME_PREFIX_LEN = RESPONSE_HEADER_BY_NAME_PREFIX.length();
+    private static final String RESPONSE_HEADERS_BY_NAME_PREFIX = "response.headers.";
+    private static final int RESPONSE_HEADERS_BY_NAME_PREFIX_LEN = RESPONSE_HEADERS_BY_NAME_PREFIX.length();
     private static final String HEADER_AUTH = "header.auth";
     private static final String HEADER_DATE = "header.date";
     private static final String HEADER_IF_MOD_SINCE = "header.if-mod-since";
@@ -107,12 +101,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
     private static final String USER_AGENT = "user.agent";
     private static final String VS_ID = "vs.id";
 
-    private Container container;
-
-    /**
-     * List of access log pattern components
-     */
-    private LinkedList<String> patternComponents;
+    private final Container container;
 
     /**
      * Constructor.
@@ -121,50 +110,10 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
      * @param container The container associated with the access log valve
      */
     public DefaultAccessLogFormatterImpl(String pattern, Container container) {
-
-        super();
-
-        this.patternComponents = parsePattern(pattern);
-        if (patternComponents == null) {
-            // Use default format if error in pattern
-            patternComponents = parsePattern(ConfigBeansUtilities.getDefaultFormat());
-        }
+        super(getAccessLogPattern(pattern));
         this.container = container;
-
-        final TimeZone timeZone = tz;
-        dayFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("dd");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        monthFormatter =  new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("MM");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        yearFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("yyyy");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
-        timeFormatter = new ThreadLocal<SimpleDateFormat>() {
-            @Override
-            protected SimpleDateFormat initialValue() {
-                SimpleDateFormat f = new SimpleDateFormat("HH:mm:ss");
-                f.setTimeZone(timeZone);
-                return f;
-            }
-        };
     }
+
 
     /**
      * Appends an access log entry line, with info obtained from the given
@@ -174,27 +123,16 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
      * @param response The response object from which to obtain access log info
      * @param charBuffer The CharBuffer to which to append access log info
      */
-    public void appendLogEntry(Request request,
-                               Response response,
-                               CharBuffer charBuffer) {
+    @Override
+    public void appendLogEntry(Request request, Response response, CharBuffer charBuffer) {
+        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
+        HttpServletResponse hres = (HttpServletResponse) response.getResponse();
 
-        HttpServletRequest hreq = (HttpServletRequest)
-            request.getRequest();
-        HttpServletResponse hres = (HttpServletResponse)
-            response.getResponse();
-
-        for (int i=0; i<patternComponents.size(); i++) {
-            String pc = patternComponents.get(i);
+        for (String pc : getPattern().getItems()) {
             if (pc.startsWith(ATTRIBUTE_BY_NAME_PREFIX)) {
-                appendAttributeByName(
-                    charBuffer,
-                    pc.substring(ATTRIBUTE_BY_NAME_PREFIX_LEN),
-                    hreq);
+                appendAttributeByName(charBuffer, pc.substring(ATTRIBUTE_BY_NAME_PREFIX_LEN), hreq);
             } else if (pc.startsWith(SESSION_ATTRIBUTE_BY_NAME_PREFIX)) {
-                appendSessionAttributeByName(
-                    charBuffer,
-                    pc.substring(SESSION_ATTRIBUTE_BY_NAME_PREFIX_LEN),
-                    hreq);
+                appendSessionAttributeByName(charBuffer, pc.substring(SESSION_ATTRIBUTE_BY_NAME_PREFIX_LEN), hreq);
             } else if (AUTH_USER_NAME.equals(pc)) {
                 appendAuthUserName(charBuffer, hreq);
             } else if (CLIENT_DNS.equals(pc)) {
@@ -208,13 +146,9 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             } else if (COOKIE_VALUE.equals(pc)) {
                 appendCookieValue(charBuffer, hreq);
             } else if (pc.startsWith(COOKIE_BY_NAME_PREFIX)) {
-                appendCookieByName(charBuffer,
-                                   pc.substring(COOKIE_BY_NAME_PREFIX_LEN),
-                                   hreq);
+                appendCookieByName(charBuffer, pc.substring(COOKIE_BY_NAME_PREFIX_LEN), hreq);
             } else if (pc.startsWith(COOKIES_BY_NAME_PREFIX)) {
-                appendCookiesByName(charBuffer,
-                                   pc.substring(COOKIES_BY_NAME_PREFIX_LEN),
-                                   hreq);
+                appendCookiesByName(charBuffer, pc.substring(COOKIES_BY_NAME_PREFIX_LEN), hreq);
             } else if (DATE_TIME.equals(pc)) {
                 appendCurrentDate(charBuffer);
             } else if (HEADER_ACCEPT.equals(pc)) {
@@ -254,62 +188,61 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             } else if (VS_ID.equals(pc)) {
                 appendVirtualServerId(charBuffer);
             } else if (pc.startsWith(HEADER_BY_NAME_PREFIX)) {
-                appendHeaderByName(charBuffer,
-                                   pc.substring(HEADER_BY_NAME_PREFIX_LEN),
-                                   hreq);
+                appendHeaderByName(charBuffer, pc.substring(HEADER_BY_NAME_PREFIX_LEN), hreq);
             } else if (pc.startsWith(HEADERS_BY_NAME_PREFIX)) {
-                appendHeadersByName(charBuffer,
-                                    pc.substring(HEADERS_BY_NAME_PREFIX_LEN),
-                                    hreq);
+                appendHeadersByName(charBuffer, pc.substring(HEADERS_BY_NAME_PREFIX_LEN), hreq);
             } else if (pc.startsWith(RESPONSE_HEADER_BY_NAME_PREFIX)) {
-                appendResponseHeaderByName(charBuffer,
-                    pc.substring(RESPONSE_HEADER_BY_NAME_PREFIX_LEN), hres, response);
+                appendResponseHeaderByName(charBuffer, pc.substring(RESPONSE_HEADER_BY_NAME_PREFIX_LEN), hres,
+                    response);
             } else if (pc.startsWith(RESPONSE_HEADERS_BY_NAME_PREFIX)) {
-                appendResponseHeadersByName(charBuffer,
-                    pc.substring(RESPONSE_HEADERS_BY_NAME_PREFIX_LEN), hres, response);
+                appendResponseHeadersByName(charBuffer, pc.substring(RESPONSE_HEADERS_BY_NAME_PREFIX_LEN), hres,
+                    response);
             }
 
-            charBuffer.put(SPACE);
+            charBuffer.put(' ');
         }
     }
 
-    /*
+
+    private static AccessLogPattern getAccessLogPattern(String pattern) {
+        AccessLogPattern aclPattern = parsePattern(pattern);
+        if (aclPattern == null) {
+            // Use default format if error in pattern
+            return parsePattern(ConfigBeansUtilities.getDefaultFormat());
+        }
+        return aclPattern;
+    }
+
+
+    /**
      * Parses the access log pattern (that was specified via setPattern) into
      * its individual components, and returns them as a list.
      *
      * @param pattern The pattern to parse
      *
-     * @return List containing the access log pattern components
+     * @return AccessLogPattern containing the access log pattern components
      */
-    private LinkedList<String> parsePattern(String pattern) {
-
-        LinkedList<String> list = new LinkedList<String>();
-
+    private static AccessLogPattern parsePattern(String pattern) {
         int from = 0;
         int end = -1;
         int index = -1;
         boolean errorInPattern = false;
 
         if (pattern == null || pattern.indexOf('%') < 0) {
-            _logger.log(Level.SEVERE,
-                        LogFacade.ACCESS_LOG_VALVE_INVALID_ACCESS_LOG_PATTERN,
-                        pattern);
-            errorInPattern = true;
+            _logger.log(Level.SEVERE, LogFacade.ACCESS_LOG_VALVE_INVALID_ACCESS_LOG_PATTERN, pattern);
+            return null;
         }
 
+        final List<String> list = new ArrayList<>();
+        boolean needTimeTaken = false;
         while ((index = pattern.indexOf('%', from)) >= 0) {
-            end = pattern.indexOf('%', index+1);
+            end = pattern.indexOf('%', index + 1);
             if (end < 0) {
-                _logger.log(
-                    Level.SEVERE,
-                    LogFacade.MISSING_ACCESS_LOG_PATTERN_END_DELIMITER,
-                    pattern);
+                _logger.log(Level.SEVERE, LogFacade.MISSING_ACCESS_LOG_PATTERN_END_DELIMITER, pattern);
                 errorInPattern = true;
                 break;
-
             }
-            String component = pattern.substring(index+1, end);
-
+            String component = pattern.substring(index + 1, end);
             if (!component.startsWith(ATTRIBUTE_BY_NAME_PREFIX)
                     && !AUTH_USER_NAME.equals(component)
                     && !CLIENT_DNS.equals(component)
@@ -342,10 +275,8 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
                     && !component.startsWith(HEADERS_BY_NAME_PREFIX)
                     && !component.startsWith(RESPONSE_HEADER_BY_NAME_PREFIX)
                     && !component.startsWith(RESPONSE_HEADERS_BY_NAME_PREFIX)) {
-                _logger.log(
-                    Level.SEVERE,
-                    LogFacade.INVALID_ACCESS_LOG_PATTERN_COMPONENT,
-                    new Object[] { component, pattern });
+                _logger.log(Level.SEVERE, LogFacade.INVALID_ACCESS_LOG_PATTERN_COMPONENT,
+                    new Object[] {component, pattern});
                 errorInPattern = true;
             }
 
@@ -359,51 +290,54 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
 
         if (errorInPattern) {
             return null;
-        } else {
-            return list;
         }
+
+        // 21/Dec/2009:07:42:45 -0800
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/LLL/uuuu:HH:mm:ss Z", Locale.ENGLISH)
+            .withZone(ZoneId.systemDefault());
+        return new AccessLogPattern(dateTimeFormatter, needTimeTaken, list);
     }
 
-    /*
+
+    /**
      * Appends the string representation of the value of the request
      * attribute with the given name to the given char buffer, or
      * NULL-ATTRIBUTE-<attributeName> if no attribute with the given name
      * is present in the request.
      */
-    private void appendAttributeByName(CharBuffer cb,
-                                       String attributeName,
-                                       HttpServletRequest hreq) {
+    private void appendAttributeByName(CharBuffer cb, String attributeName, HttpServletRequest hreq) {
         if (attributeName == null) {
             throw new IllegalArgumentException("Null request attribute name");
         }
 
         cb.put(QUOTE);
         Object attrValue = hreq.getAttribute(attributeName);
-        if (attrValue != null) {
-            cb.put(attrValue.toString());
-        } else {
+        if (attrValue == null) {
             cb.put("NULL-ATTRIBUTE-" + attributeName.toUpperCase(Locale.ENGLISH));
+        } else {
+            cb.put(attrValue.toString());
         }
         cb.put(QUOTE);
     }
 
-    /*
+
+    /**
      * Appends the string representation of the value of the session
      * attribute with the given name to the given char buffer, or
      * NULL-SESSION-ATTRIBUTE-<attributeName> if no attribute with the
      * given name is present in the session, or NULL-SESSION if
      * no session exists.
      */
-    private void appendSessionAttributeByName(CharBuffer cb,
-                                              String attributeName,
-                                              HttpServletRequest hreq) {
+    private void appendSessionAttributeByName(CharBuffer cb, String attributeName, HttpServletRequest hreq) {
         if (attributeName == null) {
             throw new IllegalArgumentException("Null session attribute name");
         }
 
         cb.put(QUOTE);
         HttpSession session = hreq.getSession(false);
-        if (session != null) {
+        if (session == null) {
+            cb.put("NULL-SESSION");
+        } else {
             Object attrValue = session.getAttribute(attributeName);
             if (attrValue != null) {
                 cb.put(attrValue.toString());
@@ -411,13 +345,11 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
                 cb.put("NULL-SESSION-ATTRIBUTE-" +
                        attributeName.toUpperCase(Locale.ENGLISH));
             }
-        } else {
-            cb.put("NULL-SESSION");
         }
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the client host name of the given request to the given char
      * buffer.
      */
@@ -431,7 +363,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the client DNS of the given request to the given char
      * buffer.
      */
@@ -445,7 +377,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the authenticated user (if any) to the given char buffer.
      */
     private void appendAuthUserName(CharBuffer cb, HttpServletRequest hreq) {
@@ -458,31 +390,22 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the current date to the given char buffer.
      */
     private void appendCurrentDate(CharBuffer cb) {
         cb.put(QUOTE);
-        Date date = getDate();
-        cb.put(dayFormatter.get().format(date));           // Day
-        cb.put('/');
-        cb.put(lookup(monthFormatter.get().format(date))); // Month
-        cb.put('/');
-        cb.put(yearFormatter.get().format(date));          // Year
-        cb.put(':');
-        cb.put(timeFormatter.get().format(date));          // Time
-        cb.put(SPACE);
-        cb.put(timeZone);                                  // Time Zone
+        cb.put(getPattern().getDateTimeFormatter().format(getTimestamp()));
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends info about the given request to the given char buffer.
      */
     private void appendRequestInfo(CharBuffer cb, HttpServletRequest hreq) {
         cb.put(QUOTE);
         cb.put(hreq.getMethod());
-        cb.put(SPACE);
+        cb.put(' ');
         String uri = hreq.getRequestURI();
         if (uri == null) {
             uri = "NULL-HTTP-URI";
@@ -492,27 +415,27 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             cb.put('?');
             cb.put(hreq.getQueryString());
         }
-        cb.put(SPACE);
+        cb.put(' ');
         cb.put(hreq.getProtocol());
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the response status to the given char buffer.
      */
     private void appendResponseStatus(CharBuffer cb, Response response) {
         cb.put(String.valueOf(((HttpResponse) response).getStatus()));
     }
 
-    /*
+    /**
      * Appends the content length of the given response to the given char
      * buffer.
      */
     private void appendResponseLength(CharBuffer cb, Response response) {
-        cb.put("" + response.getContentCount());
+        cb.put(Integer.toString(response.getContentCount()));
     }
 
-    /*
+    /**
      * Appends the content type of the given response to the given char
      * buffer.
      */
@@ -520,7 +443,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(response.getContentType());
     }
 
-    /*
+    /**
      * Appends the value of the 'user-agent' header of the given request to
      * the given char buffer.
      */
@@ -534,17 +457,14 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the time (in milliseconds) it has taken to service the given
      * request to the given char buffer.
      */
     private void appendTimeTaken(CharBuffer cb, Request req) {
-
         String timeTaken = "NULL-TIME-TAKEN";
-
         cb.put(QUOTE);
-        Long startTimeObj = (Long) req.getNote(
-            Constants.REQUEST_START_TIME_NOTE);
+        Long startTimeObj = (Long) req.getNote(Constants.REQUEST_START_TIME_NOTE);
         if (startTimeObj != null) {
             long startTime = startTimeObj.longValue();
             long endTime = System.currentTimeMillis();
@@ -554,7 +474,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the value of the 'referer' header of the given request to
      * the given char buffer.
      */
@@ -568,7 +488,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the Accept header of the given request to the given char
      * buffer.
      */
@@ -582,7 +502,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the Authorization header of the given request to the given char
      * buffer.
      */
@@ -596,7 +516,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the Date header of the given request to the given char buffer.
      */
     private void appendHeaderDate(CharBuffer cb, HttpServletRequest hreq) {
@@ -609,12 +529,11 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the If-Modified-Since header of the given request to the
      * given char buffer.
      */
-    private void appendHeaderIfModSince(CharBuffer cb,
-                                        HttpServletRequest hreq) {
+    private void appendHeaderIfModSince(CharBuffer cb, HttpServletRequest hreq) {
         cb.put(QUOTE);
         String ifModSince = hreq.getHeader(HTTP_HEADER_IF_MODIFIED_SINCE);
         if (ifModSince == null) {
@@ -624,18 +543,16 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+
+    /**
      * Appends the value of the header with the specified name in the given
      * request to the given char buffer, or NULL-HEADER-<headerName> if no
      * header with the given name is present in the request..
      */
-    private void appendHeaderByName(CharBuffer cb,
-                                    String headerName,
-                                    HttpServletRequest hreq) {
+    private void appendHeaderByName(CharBuffer cb, String headerName, HttpServletRequest hreq) {
         if (headerName == null) {
             throw new IllegalArgumentException("Null request header name");
         }
-
         cb.put(QUOTE);
         String value = hreq.getHeader(headerName);
         if (value == null) {
@@ -645,26 +562,25 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+
+    /**
      * Appends the value of the header with the specified name in the given
      * response to the given char buffer, or
      * NULL-RESPONSE-HEADER-<headerName> if no header with the given name
      * is present in the response.
      */
-    private void appendResponseHeaderByName(CharBuffer cb,
-                                            String headerName,
-                                            HttpServletResponse hres, Response response) {
+    private void appendResponseHeaderByName(CharBuffer cb, String headerName, HttpServletResponse hres,
+        Response response) {
         if (headerName == null) {
             throw new IllegalArgumentException("Null response header name");
         }
-
         cb.put(QUOTE);
         String value = hres.getHeader(headerName);
         if (value == null) {
             if (headerName.equalsIgnoreCase("Content-Type")) {
                 value = hres.getContentType();
             } else if (headerName.equalsIgnoreCase("Content-Length")) {
-                value = ""+response.getContentLength();
+                value = Integer.toString(response.getContentLength());
             } else {
                 value = "NULL-RESPONSE-HEADER-" + headerName.toUpperCase(Locale.ENGLISH);
             }
@@ -673,28 +589,26 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the values (separated by ";") of all headers with the
      * specified name in the given request to the given char buffer, or
      * NULL-HEADERS-<headerName> if no headers with the given name are
      * present in the request..
      */
-    private void appendHeadersByName(CharBuffer cb,
-                                     String headerName,
-                                     HttpServletRequest hreq) {
+    private void appendHeadersByName(CharBuffer cb, String headerName, HttpServletRequest hreq) {
         if (headerName == null) {
             throw new IllegalArgumentException("Null request header name");
         }
 
         cb.put(QUOTE);
-        Enumeration e = hreq.getHeaders(headerName);
+        Enumeration<String> e = hreq.getHeaders(headerName);
         if (e != null) {
             boolean first = true;
             while (e.hasMoreElements()) {
                 if (first) {
                     first = false;
                 } else {
-                    cb.put(";");
+                    cb.put(';');
                 }
                 cb.put(e.nextElement().toString());
             }
@@ -707,14 +621,14 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the values (separated by ";") of all headers with the
      * specified name in the given response to the given char buffer, or
      * NULL-RESPONSE-HEADERS-<headerName> if no headers with the given name
      * are present in the response.
      */
-    private void appendResponseHeadersByName(CharBuffer cb,
-            String headerName, HttpServletResponse hres, Response response) {
+    private void appendResponseHeadersByName(CharBuffer cb, String headerName, HttpServletResponse hres,
+        Response response) {
         if (headerName == null) {
             throw new IllegalArgumentException("Null response header name");
         }
@@ -722,24 +636,24 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
         boolean first = true;
         Collection<String> values = hres.getHeaders(headerName);
-        if (!values.isEmpty()) {
+        if (values.isEmpty()) {
+            String value = null;
+            if ("Content-Type".equalsIgnoreCase(headerName)) {
+                value = hres.getContentType();
+            } else if ("Content-Length".equalsIgnoreCase(headerName)) {
+                value = Integer.toString(response.getContentLength());
+            }
+            if (value != null) {
+                first = false;
+                cb.put(value);
+            }
+        } else {
             for (String value : values) {
                 if (first) {
                     first = false;
                 } else {
                     cb.put(";");
                 }
-                cb.put(value);
-            }
-        } else {
-            String value = null;
-            if (headerName.equalsIgnoreCase("Content-Type")) {
-                value = hres.getContentType();
-            } else if (headerName.equalsIgnoreCase("Content-Length")) {
-                value = ""+response.getContentLength();
-            }
-            if (value != null) {
-                first = false;
                 cb.put(value);
             }
         }
@@ -749,7 +663,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the name and value (separated by '=') of the first cookie
      * in the given request to the given char buffer, or NULL-COOKIE if no
      * cookies are present in the request.
@@ -765,7 +679,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the name and value (separated by '=') of all cookies
      * (separated by ';') in the given request to the given char buffer,
      * or NULL-COOKIES if no cookies are present in the request.
@@ -786,7 +700,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the value of the first cookie in the given request to the
      * given char buffer, or NULL-COOKIE-VALUE if no cookies are present
      * in the request.
@@ -802,14 +716,12 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the value of the first cookie with the given cookie name to the
      * given char buffer, or NULL-COOKIE-<cookieName> if no cookies with the
      * given cookie name are present in the request.
      */
-    private void appendCookieByName(CharBuffer cb,
-                                    String cookieName,
-                                    HttpServletRequest hreq) {
+    private void appendCookieByName(CharBuffer cb, String cookieName, HttpServletRequest hreq) {
         if (cookieName == null) {
             throw new IllegalArgumentException("Null request cookie name");
         }
@@ -833,14 +745,12 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the value of all cookies with the given cookie name to the
      * given char buffer, or NULL-COOKIES-<cookieName> if no cookies with the
      * given cookie name are present in the request.
      */
-    private void appendCookiesByName(CharBuffer cb,
-                                     String cookieName,
-                                     HttpServletRequest hreq) {
+    private void appendCookiesByName(CharBuffer cb, String cookieName, HttpServletRequest hreq) {
         if (cookieName == null) {
             throw new IllegalArgumentException("Null request cookie name");
         }
@@ -849,14 +759,14 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         Cookie[] cookies = hreq.getCookies();
         if (cookies != null && cookies.length > 0) {
             boolean first = true;
-            for (int i=0; i<cookies.length; i++) {
-                if (cookieName.equals(cookies[i].getName())) {
+            for (Cookie element : cookies) {
+                if (cookieName.equals(element.getName())) {
                     if (first) {
                         first = false;
                     } else {
                         cb.put(";");
             }
-                    cb.put(cookies[i].getValue());
+                    cb.put(element.getValue());
                 }
             }
         } else {
@@ -865,7 +775,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the HTTP method of the given request to the given char buffer.
      */
     private void appendHTTPMethod(CharBuffer cb, HttpServletRequest hreq) {
@@ -878,7 +788,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the URI of the given request to the given char buffer.
      */
     private void appendHTTPUri(CharBuffer cb, HttpServletRequest hreq) {
@@ -891,7 +801,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the HTTP protocol version of the given request to the given
      * char buffer.
      */
@@ -905,7 +815,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the query string of the given request to the given char buffer.
      */
     private void appendQueryString(CharBuffer cb, HttpServletRequest hreq) {
@@ -918,7 +828,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         cb.put(QUOTE);
     }
 
-    /*
+    /**
      * Appends the id of the virtual server with which this access log valve
      * has been associated to the given char buffer.
      */
@@ -929,5 +839,4 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
         }
         cb.put(vsId);
     }
-
 }

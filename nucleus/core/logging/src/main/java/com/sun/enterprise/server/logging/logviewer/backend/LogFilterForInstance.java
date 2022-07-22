@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,24 +25,28 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Logger;
+
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Vector;
-import java.util.logging.Logger;
-
 /**
- * Created by IntelliJ IDEA.
- * User: Naman Mehta
+ * @author Naman Mehta
  * Date: 6 Aug, 2010
  * Time: 11:20:48 AM
- * To change this template use File | Settings | File Templates.
  */
 public class LogFilterForInstance {
 
@@ -65,87 +70,70 @@ public class LogFilterForInstance {
             try {
                 sshL.init(node, logger);
 
-                SFTPClient sftpClient = sshL.getSFTPClient();
-
-                File logFileDirectoryOnServer = makingDirectory(domainRoot + File.separator + "logs"
-                        + File.separator + instanceName);
-
-                boolean noFileFound = true;
-
-                String loggingDir = getLoggingDirectoryForNode(instanceLogFileName, node, sNode, instanceName);
-
-                try {
-                    Vector instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
-
-                    for (int i = 0; i < instanceLogFileNames.size(); i++) {
-                        LsEntry file = (LsEntry) instanceLogFileNames.get(i);
-                        String fileName = file.getFilename();
-                        // code to remove . and .. file which is return from sftpclient ls method
-                        if (!file.getAttrs().isDir() && !fileName.equals(".") && !fileName.equals("..")
-                                && fileName.contains(".log") && !fileName.contains(".log.")) {
-                            noFileFound = false;
-                            break;
+                try (SFTPClient sftpClient = sshL.getSFTPClient()) {
+                    File logFileDirectoryOnServer = makingDirectory(
+                        domainRoot + File.separator + "logs" + File.separator + instanceName);
+                    boolean noFileFound = true;
+                    String loggingDir = getLoggingDirectoryForNode(instanceLogFileName, node, sNode, instanceName);
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Vector<LsEntry> instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
+                        for (LsEntry file : instanceLogFileNames) {
+                            // code to remove . and .. file which is return from sftpclient ls
+                            // method
+                            if (isAcceptable(file)) {
+                                noFileFound = false;
+                                break;
+                            }
                         }
+                    } catch (Exception e) {
+                        // if directory doesn't present or missing on remote machine. It happens due
+                        // to bug 16451
+                        noFileFound = true;
                     }
-                } catch (Exception e) {
-                    // if directory doesn't present or missing on remote machine. It happens due to bug 16451
-                    noFileFound = true;
-                }
 
-                if (noFileFound) {
-                    // this loop is used when user has changed value for server.log but not restarted the server.
-                    loggingDir = getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileName, node, sNode, instanceName);
-                }
+                    if (noFileFound) {
+                        // this loop is used when user has changed value for server.log but not
+                        // restarted the server.
+                        loggingDir = getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileName, node, sNode, instanceName);
+                    }
 
-                String loggingFile = loggingDir + File.separator + logFileName;
-                if (!sftpClient.exists(loggingFile)) {
-                    loggingFile = loggingDir + File.separator + "server.log";
-                } else if (!sftpClient.exists(loggingFile)) {
-                    loggingFile = instanceLogFileName;
-                }
+                    String loggingFile = loggingDir + File.separator + logFileName;
+                    if (!sftpClient.exists(loggingFile)) {
+                        loggingFile = loggingDir + File.separator + "server.log";
+                    } else if (!sftpClient.exists(loggingFile)) {
+                        loggingFile = instanceLogFileName;
+                    }
 
-                // creating local file name on DAS
-                long instanceLogFileSize = 0;
-                instanceLogFile = new File(logFileDirectoryOnServer.getAbsolutePath() + File.separator
+                    // creating local file name on DAS
+                    long instanceLogFileSize = 0;
+                    instanceLogFile = new File(logFileDirectoryOnServer.getAbsolutePath() + File.separator
                         + loggingFile.substring(loggingFile.lastIndexOf(File.separator), loggingFile.length()));
 
-                // getting size of the file on DAS
-                if (instanceLogFile.exists())
-                    instanceLogFileSize = instanceLogFile.length();
+                    // getting size of the file on DAS
+                    if (instanceLogFile.exists()) {
+                        instanceLogFileSize = instanceLogFile.length();
+                    }
 
-                SftpATTRS sftpFileAttributes = sftpClient._stat(loggingFile);
+                    SftpATTRS sftpFileAttributes = sftpClient._stat(loggingFile);
 
-                // getting size of the file on instance machine
-                long fileSizeOnNode = sftpFileAttributes.getSize();
+                    // getting size of the file on instance machine
+                    long fileSizeOnNode = sftpFileAttributes.getSize();
 
-                // if differ both size then downloading
-                if (instanceLogFileSize != fileSizeOnNode) {
-                    BufferedInputStream in = null;
-                    FileOutputStream file = null;
-                    BufferedOutputStream out = null;
-                    try {
-                        InputStream inputStream = sftpClient.getSftpChannel().get(loggingFile);
-                        in = new BufferedInputStream(inputStream);
-                        file = new FileOutputStream(instanceLogFile);
-                        out = new BufferedOutputStream(file);
-                        int i;
-                        while ((i = in.read()) != -1) {
-                            out.write(i);
-                        }
-                        out.flush();
-                    } finally {
-                        if (out != null) try {
-                            out.close();
-                        } catch (IOException ex) {
-                        }
-                        if (in != null) try {
-                            in.close();
-                        } catch (IOException ex) {
+                    // if differ both size then downloading
+                    if (instanceLogFileSize != fileSizeOnNode) {
+                        try (InputStream inputStream = sftpClient.getSftpChannel().get(loggingFile);
+                            BufferedInputStream in = new BufferedInputStream(inputStream);
+                            FileOutputStream file = new FileOutputStream(instanceLogFile);
+                            BufferedOutputStream out = new BufferedOutputStream(file)) {
+                            int i;
+                            while ((i = in.read()) != -1) {
+                                out.write(i);
+                            }
+                            out.flush();
                         }
                     }
                 }
-
-                sftpClient.close();
             } catch (JSchException ex) {
                 throw new IOException("Unable to download instance log file from SSH Node", ex);
             } catch (SftpException ex) {
@@ -174,21 +162,19 @@ public class LogFilterForInstance {
             try {
                 sshL.init(node, logger);
 
-                Vector allInstanceLogFileName = getInstanceLogFileNames(habitat, targetServer, domain, logger, instanceName, instanceLogFileDirectory);
+                List<String> allInstanceLogFileName = getInstanceLogFileNames(habitat, targetServer, domain, logger,
+                    instanceName, instanceLogFileDirectory);
 
                 boolean noFileFound = true;
                 String sourceDir = getLoggingDirectoryForNode(instanceLogFileDirectory, node, sNode, instanceName);
                 SFTPClient sftpClient = sshL.getSFTPClient();
 
                 try {
-                    Vector instanceLogFileNames = sftpClient.getSftpChannel().ls(sourceDir);
-
-                    for (int i = 0; i < instanceLogFileNames.size(); i++) {
-                        LsEntry file = (LsEntry) instanceLogFileNames.get(i);
-                        String fileName = file.getFilename();
+                    @SuppressWarnings("unchecked")
+                    List<LsEntry> instanceLogFileNames = sftpClient.getSftpChannel().ls(sourceDir);
+                    for (LsEntry file : instanceLogFileNames) {
                         // code to remove . and .. file which is return from sftpclient ls method
-                        if (!file.getAttrs().isDir() && !fileName.equals(".") && !fileName.equals("..")
-                                && fileName.contains(".log") && !fileName.contains(".log.")) {
+                        if (isAcceptable(file)) {
                             noFileFound = false;
                             break;
                         }
@@ -203,8 +189,8 @@ public class LogFilterForInstance {
                     sourceDir = getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileDirectory, node, sNode, instanceName);
                 }
 
-                for (int i = 0; i < allInstanceLogFileName.size(); i++) {
-                    String remoteFileName = sourceDir + File.separator + allInstanceLogFileName.get(i);
+                for (Object element : allInstanceLogFileName) {
+                    String remoteFileName = sourceDir + File.separator + element;
                     InputStream inputStream = sftpClient.getSftpChannel().get(remoteFileName);
                     Files.copy(inputStream, Paths.get(tempDirectoryOnServer));
                 }
@@ -217,14 +203,13 @@ public class LogFilterForInstance {
         }
     }
 
-    public Vector getInstanceLogFileNames(ServiceLocator habitat, Server targetServer, Domain domain, Logger logger,
+    public List<String> getInstanceLogFileNames(ServiceLocator habitat, Server targetServer, Domain domain, Logger logger,
                                           String instanceName, String instanceLogFileDetails) throws IOException {
 
         // helper method to get all log file names for given instance
         String sNode = targetServer.getNodeRef();
         Node node = domain.getNodes().getNode(sNode);
-        Vector instanceLogFileNames = null;
-        Vector instanceLogFileNamesAsString = new Vector();
+        List<String> instanceLogFileNamesAsString = new ArrayList<>();
 
         // this code is used when DAS and instances are running on the same machine
         if (node.isLocal()) {
@@ -236,8 +221,7 @@ public class LogFilterForInstance {
             boolean noFileFound = true;
 
             if (allLogFileNames != null) { // This check for,  if directory doesn't present or missing on machine. It happens due to bug 16451
-                for (int i = 0; i < allLogFileNames.length; i++) {
-                    File file = allLogFileNames[i];
+                for (File file : allLogFileNames) {
                     String fileName = file.getName();
                     // code to remove . and .. file which is return
                     if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
@@ -254,8 +238,7 @@ public class LogFilterForInstance {
                 logsDir = new File(loggingDir);
                 allLogFileNames = logsDir.listFiles();
 
-                for (int i = 0; i < allLogFileNames.length; i++) {
-                    File file = allLogFileNames[i];
+                for (File file : allLogFileNames) {
                     String fileName = file.getName();
                     // code to remove . and .. file which is return
                     if (file.isFile() && !fileName.equals(".") && !fileName.equals("..") && fileName.contains(".log")
@@ -269,47 +252,42 @@ public class LogFilterForInstance {
                 // this code is used if DAS and instance are running on different machine
                 SSHLauncher sshL = getSSHL(habitat);
                 sshL.init(node, logger);
-                SFTPClient sftpClient = sshL.getSFTPClient();
+                try (SFTPClient sftpClient = sshL.getSFTPClient()) {
+                    boolean noFileFound = true;
+                    String loggingDir = getLoggingDirectoryForNode(instanceLogFileDetails, node, sNode, instanceName);
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Vector<LsEntry> instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
+                        for (LsEntry file : instanceLogFileNames) {
+                            // code to remove . and .. file which is return from sftpclient ls method
+                            if (isAcceptable(file)) {
+                                instanceLogFileNamesAsString.add(file.getFilename());
+                                noFileFound = false;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        // if directory doesn't present or missing on remote machine. It happens due
+                        // to bug 16451
+                        noFileFound = true;
+                    }
 
-                boolean noFileFound = true;
-
-                String loggingDir = getLoggingDirectoryForNode(instanceLogFileDetails, node, sNode, instanceName);
-
-                try {
-                    instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
-                    for (int i = 0; i < instanceLogFileNames.size(); i++) {
-                        LsEntry file = (LsEntry) instanceLogFileNames.get(i);
-                        String fileName = file.getFilename();
-                        // code to remove . and .. file which is return from sftpclient ls method
-                        if (!file.getAttrs().isDir() && !fileName.equals(".") && !fileName.equals("..")
-                                && fileName.contains(".log") && !fileName.contains(".log.")) {
-                            instanceLogFileNamesAsString.add(fileName);
-                            noFileFound = false;
+                    if (noFileFound) {
+                        // this loop is used when user has changed value for server.log but not
+                        // restarted the server.
+                        loggingDir = getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileDetails, node, sNode,
+                            instanceName);
+                        @SuppressWarnings("unchecked")
+                        Vector<LsEntry> instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
+                        for (LsEntry file : instanceLogFileNames) {
+                            // code to remove . and .. file which is return from sftpclient ls
+                            // method
+                            if (isAcceptable(file)) {
+                                instanceLogFileNamesAsString.add(file.getFilename());
+                            }
                         }
                     }
-                } catch (Exception ex) {
-                    // if directory doesn't present or missing on remote machine. It happens due to bug 16451
-                    noFileFound = true;
+
                 }
-
-                if (noFileFound) {
-                    // this loop is used when user has changed value for server.log but not restarted the server.
-                    loggingDir = getLoggingDirectoryForNodeWhenNoFilesFound(instanceLogFileDetails, node, sNode, instanceName);
-                    instanceLogFileNames = sftpClient.getSftpChannel().ls(loggingDir);
-
-
-                    for (int i = 0; i < instanceLogFileNames.size(); i++) {
-                        LsEntry file = (LsEntry) instanceLogFileNames.get(i);
-                        String fileName = file.getFilename();
-                        // code to remove . and .. file which is return from sftpclient ls method
-                        if (!file.getAttrs().isDir() && !fileName.equals(".") && !fileName.equals("..")
-                                && fileName.contains(".log") && !fileName.contains(".log.")) {
-                            instanceLogFileNamesAsString.add(fileName);
-                        }
-                    }
-                }
-
-                sftpClient.close();
             } catch (JSchException ex) {
                 throw new IOException("Unable to download instance log file from SSH Node", ex);
             } catch (SftpException ex) {
@@ -335,11 +313,10 @@ public class LogFilterForInstance {
 
         }
         created = targetDir.mkdir();
-        if (!created) {
-            return null;
-        } else {
+        if (created) {
             return targetDir;
         }
+        return null;
 
     }
 
@@ -383,4 +360,12 @@ public class LogFilterForInstance {
     }
 
 
+    private boolean isAcceptable(LsEntry file) {
+        if (file.getAttrs().isDir()) {
+            return false;
+        }
+        String fileName = file.getFilename();
+        return fileName.contains(".log") //
+            && !fileName.equals(".") && !fileName.equals("..") && !fileName.contains(".log.");
+    }
 }

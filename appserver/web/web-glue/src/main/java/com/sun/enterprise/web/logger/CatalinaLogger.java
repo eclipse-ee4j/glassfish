@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,10 +26,10 @@ import java.util.logging.Logger;
  * This is an adapter of java.util.logging.Logger to org.apache.catalina.Logger.
  *
  * @author Shing Wai Chan
- *
+ * @author David Matejcek
  */
 public final class CatalinaLogger extends LoggerBase {
-    private Logger logger = null;
+    private final Logger logger;
 
     /**
      * Construct a new instance of this class, that uses the specified
@@ -42,51 +43,32 @@ public final class CatalinaLogger extends LoggerBase {
 
     @Override
     protected void write(String msg, int verbosity) {
-
         if (logger == null) {
             return;
         }
 
-        Level level = Level.INFO;
-
-        if (verbosity == FATAL) {
-            level = (Level)IASLevel.FATAL;
-        } else if (verbosity == ERROR) {
-            level = Level.SEVERE;
-        } else if (verbosity == WARNING) {
-            level = Level.WARNING;
-        } else if (verbosity == INFORMATION) {
-            level = Level.INFO;
-        } else if (verbosity == DEBUG) {
-            level = Level.FINER;
+        final Level level;
+        switch (verbosity) {
+            case FATAL:
+                level = IASLevel.FATAL;
+                break;
+            case ERROR:
+                level = Level.SEVERE;
+                break;
+            case WARNING:
+                level = Level.WARNING;
+                break;
+            case INFORMATION:
+                level = Level.INFO;
+                break;
+            case DEBUG:
+                level = Level.FINER;
+                break;
+            default:
+                level = Level.INFO;
+                break;
         }
 
         logger.log(level, msg);
-    }
-
-    /**
-     * Set the verbosity level of this logger.  Messages logged with a
-     * higher verbosity than this level will be silently ignored.
-     *
-     * @param logLevel The new verbosity level, as a string
-     */
-    public void setLevel(String logLevel) {
-        if ("SEVERE".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.SEVERE);
-        } else if ("WARNING".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.WARNING);
-        } else if ("INFO".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.INFO);
-        } else if ("CONFIG".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.CONFIG);
-        } else if ("FINE".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.FINE);
-        } else if ("FINER".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.FINER);
-        } else if ("FINEST".equalsIgnoreCase(logLevel)) {
-            logger.setLevel(Level.FINEST);
-        } else {
-            logger.setLevel(Level.INFO);
-        }
     }
 }

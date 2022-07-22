@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,16 +19,17 @@ package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.MediaType;
+
+import java.io.IOException;
+import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.LogManager;
-
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.util.Vector;
-import jakarta.ws.rs.QueryParam;
 
 /**
  * REST resource to get Log Names simple wrapper around internal LogFilter class
@@ -64,11 +66,7 @@ public class LogNamesResource {
 
     }
 
-    private String quoted(String s) {
-        return "\"" + s + "\"";
-    }
-
-    private String convertQueryResult(Vector v, String type) {
+    private String convertQueryResult(List<String> files, String type) {
         StringBuilder sb = new StringBuilder();
         String sep = "";
         if (type.equals("json")) {
@@ -78,18 +76,14 @@ public class LogNamesResource {
         }
 
         // extract every record
-        for (int i = 0; i < v.size(); ++i) {
-            String name = (String) v.get(i);
-
+        for (String name : files) {
             if (type.equals("json")) {
                 sb.append(sep);
-                sb.append(quoted(name));
+                sb.append(quote(name));
                 sep = ",";
             } else {
                 sb.append("<" + name + "/>");
-
             }
-
         }
         if (type.equals("json")) {
             sb.append("]}\n");
@@ -97,7 +91,10 @@ public class LogNamesResource {
             sb.append("\n</InstanceLogFileNames>\n");
 
         }
-
         return sb.toString();
+    }
+
+    private String quote(String s) {
+        return "\"" + s + "\"";
     }
 }

@@ -208,7 +208,6 @@
         <jvm-options>-Dcom.ctc.wstx.returnNullForDefaultNamespace=true</jvm-options>
 
         <jvm-options>-XX:NewRatio=2</jvm-options>
-        <jvm-options>-Xbootclasspath/a:${com.sun.aas.installRoot}/lib/grizzly-npn-api.jar</jvm-options>
         <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>

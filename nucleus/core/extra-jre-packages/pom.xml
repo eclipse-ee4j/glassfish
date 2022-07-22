@@ -61,9 +61,9 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
-
                             <Bundle-Description>${project.description}</Bundle-Description>
-                              <Export-Package>com.ibm.security.util,
+                            <Export-Package>
+                                com.ibm.security.util,
                                 com.ibm.security.x509,
                                 com.sun.corba.se.impl.orbutil.threadpool,
                                 com.sun.corba.se.spi.orbutil.threadpool,
@@ -106,6 +106,13 @@
                                 com.sun.security.auth.callback,
                                 com.sun.tools.apt,
                                 com.sun.tools.javac,
+                                org.glassfish.main.jul,
+                                org.glassfish.main.jul.cfg,
+                                org.glassfish.main.jul.env,
+                                org.glassfish.main.jul.formatter,
+                                org.glassfish.main.jul.handler,
+                                org.glassfish.main.jul.record,
+                                org.glassfish.main.jul.tracing,
                                 org.omg.stub.java.rmi,
                                 org.w3c.dom.css,
                                 org.w3c.dom.html,
@@ -135,7 +142,8 @@
                                 sun.security.pkcs,
                                 sun.tools.javac,
                                 sunw.io,
-                                sunw.util</Export-Package>
+                                sunw.util
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

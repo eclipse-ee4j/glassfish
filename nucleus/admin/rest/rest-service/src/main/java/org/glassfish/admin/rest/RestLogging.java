@@ -46,7 +46,7 @@ public class RestLogging {
     public static final String VALUE_DOES_NOT_MATCH_TYPE = "NCLS-REST-00006";
     @LogMessageInfo(message = "Cannot marshal", cause = "The system is unable to generate XML for the given object", action = "Check the logs for more details", level = "SEVERE")
     public static final String CANNOT_MARSHAL = "NCLS-REST-00007";
-    @LogMessageInfo(message = "Unexpected exception during command execution. {0}", level = "WARNING")
+    @LogMessageInfo(message = "Unexpected exception during command execution.", level = "WARNING")
     public static final String UNEXPECTED_EXCEPTION = "NCLS-REST-00008";
     @LogMessageInfo(message = "Unable to delete directory {0}.  Will attempt deletion again upon JVM exit.", level = "WARNING")
     public static final String UNABLE_DELETE_DIRECTORY = "NCLS-REST-00009";

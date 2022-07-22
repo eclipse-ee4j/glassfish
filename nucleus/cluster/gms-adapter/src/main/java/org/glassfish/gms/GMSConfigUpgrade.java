@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,37 @@
 
 package org.glassfish.gms;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
-import com.sun.enterprise.util.EarlyLogger;
-import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Clusters;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.FailureDetection;
+import com.sun.enterprise.config.serverbeans.GroupManagementService;
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-
 /**
  * Startup service to upgrade cluster/gms elements in domain.xml
- * @author Bhakti Mehta
  *
+ * @author Bhakti Mehta
  */
 @Service(name="gmsupgrade")
 public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
+
+    private static final Logger LOG = Logger.getLogger(GMSConfigUpgrade.class.getName());
 
     @Inject
     Clusters clusters;
@@ -57,10 +64,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
             // this will upgrade all the group-management-service elements in domain.xml
             upgradeGroupManagementServiceElements();
         } catch (Exception e) {
-            LogRecord lr = new LogRecord(Level.SEVERE,
-                "Failure while upgrading cluster data from V2 to V3: " + e);
-            lr.setLoggerName(getClass().getName());
-            EarlyLogHandler.earlyMessages.add(lr);
+            LOG.log(Level.SEVERE, "Failure while upgrading cluster data.", e);
             throw new RuntimeException(e);
         }
     }
@@ -76,14 +80,13 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
         throws TransactionFailure {
         List<Config> lconfigs = configs.getConfig();
         for (Config c : lconfigs) {
-            LogRecord lr = new LogRecord(Level.FINE, "Upgrade config " + c.getName());
-            lr.setLoggerName(getClass().getName());
-            EarlyLogHandler.earlyMessages.add(lr);
+            LOG.log(Level.FINE, "Upgrade config: {0}", c.getName());
             ConfigSupport.apply(new GroupManagementServiceConfigCode(), c);
         }
     }
 
     private class ClusterConfigCode implements SingleConfigCode<Cluster> {
+        @Override
         public Object run(Cluster cluster) throws PropertyVetoException, TransactionFailure {
             //set gms-enabled (default is true incase it may not appear in upgraded
             //domain.xml)
@@ -154,6 +157,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
     }
 
     static private class GroupManagementServiceConfigCode implements SingleConfigCode<Config> {
+        @Override
         public Object run(Config config) throws PropertyVetoException, TransactionFailure {
             GroupManagementService gms = config.getGroupManagementService();
             Transaction t = Transaction.getTransaction(config);
@@ -236,7 +240,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
     private String generateHeartbeatAddress() {
         final int MAX_GMS_MULTICAST_ADDRESS_SUBRANGE = 255;
 
-        final StringBuffer heartbeatAddressBfr = new StringBuffer("228.9.");
+        final StringBuilder heartbeatAddressBfr = new StringBuilder("228.9.");
         heartbeatAddressBfr.append(Math.round(Math.random() * MAX_GMS_MULTICAST_ADDRESS_SUBRANGE))
                 .append('.')
                 .append(Math.round(Math.random() * MAX_GMS_MULTICAST_ADDRESS_SUBRANGE));

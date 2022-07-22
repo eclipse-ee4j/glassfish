@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,27 +19,30 @@ package org.glassfish.admin.rest.resources.custom;
 
 import com.sun.enterprise.server.logging.logviewer.backend.LogFilter;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.LogManager;
-
-import javax.management.Attribute;
-import javax.management.AttributeList;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Context;
+
+import javax.management.Attribute;
+import javax.management.AttributeList;
+
 import org.glassfish.admin.rest.logviewer.LogRecord;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.LogManager;
 
 /**
  * REST resource to get Log records simple wrapper around internal LogFilter query class
@@ -99,7 +103,7 @@ public class StructuredLogViewerResource {
             throw new IOException("The GlassFish LogManager Service is not available. Not installed?");
         }
 
-        List<String> modules = new ArrayList<String>();
+        List<String> modules = new ArrayList<>();
         if ((listOfModules != null) && !listOfModules.isEmpty()) {
             modules.addAll(Arrays.asList(listOfModules.split(",")));
 
@@ -112,22 +116,24 @@ public class StructuredLogViewerResource {
             sortAscending = false;
         }
         LogFilter logFilter = habitat.getService(LogFilter.class);
-        if (instanceName.equals("")) {
-            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward, sortAscending,
-                    maximumNumberOfResults, fromTime == -1 ? null : new Date(fromTime), toTime == -1 ? null : new Date(toTime), logLevel,
-                    onlyLevel, modules, nameValueMap, anySearch);
+        if (instanceName.isEmpty()) {
+            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
+                sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
+                toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
+                anySearch);
             return convertQueryResult(result, type);
         } else {
-            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward, sortAscending,
-                    maximumNumberOfResults, fromTime == -1 ? null : new Date(fromTime), toTime == -1 ? null : new Date(toTime), logLevel,
-                    onlyLevel, modules, nameValueMap, anySearch, instanceName);
+            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
+                sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
+                toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
+                anySearch, instanceName);
             return convertQueryResult(result, type);
         }
 
     }
 
     private <T> List<T> asList(final Object list) {
-        return (List<T>) List.class.cast(list);
+        return List.class.cast(list);
     }
 
     /*    private String quoted(String s) {
@@ -155,9 +161,7 @@ public class StructuredLogViewerResource {
             List<List<Serializable>> srcRecords = asList(((Attribute) queryResult.get(1)).getValue());
 
             // extract every record
-            for (int recordIdx = 0; recordIdx < srcRecords.size(); ++recordIdx) {
-                List<Serializable> record = srcRecords.get(recordIdx);
-
+            for (List<Serializable> record : srcRecords) {
                 assert (record.size() == fieldHeaders.length);
                 //Serializable[] fieldValues = new Serializable[fieldHeaders.length];
 

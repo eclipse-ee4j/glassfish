@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,23 @@
 
 package org.glassfish.admin.amx.core.proxy;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.management.*;
+
 import org.glassfish.admin.amx.annotation.ChildGetter;
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.base.Tools;
@@ -23,18 +41,29 @@ import org.glassfish.admin.amx.core.AMXProxy;
 import org.glassfish.admin.amx.core.Extra;
 import org.glassfish.admin.amx.core.PathnameParser;
 import org.glassfish.admin.amx.core.Util;
-import org.glassfish.admin.amx.util.*;
+import org.glassfish.admin.amx.util.ClassUtil;
+import org.glassfish.admin.amx.util.ExceptionUtil;
+import org.glassfish.admin.amx.util.SetUtil;
+import org.glassfish.admin.amx.util.StringUtil;
+import org.glassfish.admin.amx.util.TypeCast;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.admin.amx.util.jmx.MBeanProxyHandler;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
-import javax.management.*;
-import java.io.IOException;
-import java.lang.reflect.*;
-import java.util.*;
-
-import static org.glassfish.external.amx.AMX.*;
+import static org.glassfish.external.amx.AMX.ATTR_CHILDREN;
+import static org.glassfish.external.amx.AMX.ATTR_NAME;
+import static org.glassfish.external.amx.AMX.ATTR_PARENT;
+import static org.glassfish.external.amx.AMX.DESC_GENERIC_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_GROUP;
+import static org.glassfish.external.amx.AMX.DESC_IS_GLOBAL_SINGLETON;
+import static org.glassfish.external.amx.AMX.DESC_IS_SINGLETON;
+import static org.glassfish.external.amx.AMX.DESC_STD_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_SUB_TYPES;
+import static org.glassfish.external.amx.AMX.DESC_SUPPORTS_ADOPTION;
+import static org.glassfish.external.amx.AMX.GROUP_OTHER;
+import static org.glassfish.external.amx.AMX.NAME_KEY;
+import static org.glassfish.external.amx.AMX.PARENT_PATH_KEY;
 
 /**
  * @deprecated Extends MBeanProxyHandler by also supporting the functionality required of an AMX.
@@ -51,6 +80,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     private final String mName;
 
     /** convert to specified class. */
+    @Override
     public <T extends AMXProxy> T as(final Class<T> intf)
     {
         if (this.getClass().isAssignableFrom(intf))
@@ -70,6 +100,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     // " to interface " + intf.getName() + ", interfaceName from Descriptor = " + interfaceName());
     }
 
+    @Override
     public Extra extra()
     {
         return this;
@@ -115,7 +146,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     private final static String QUERY = "query";
 
 
-    public final DomainRoot domainRootProxy()
+    public DomainRoot domainRootProxy()
     {
         return proxyFactory().getDomainRootProxy();
     }
@@ -471,7 +502,8 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return (result);
     }
 
-    public final Object invoke(
+    @Override
+    public Object invoke(
             final Object myProxy,
             final Method method,
             final Object[] args)
@@ -507,6 +539,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         }
     }
 
+    @Override
     public Object invokeOp( final String operationName)
     {
         try
@@ -519,6 +552,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         }
     }
 
+    @Override
     public Object invokeOp( final String operationName, final Object[] args, final String[] signature )
     {
         try
@@ -632,7 +666,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
 
 
     private List<ObjectName> tentativeObjectNameList(final Collection<?> items) {
-        final List<ObjectName> objectNames = new ArrayList<ObjectName>();
+        final List<ObjectName> objectNames = new ArrayList<>();
         // verify that all items are of type ObjectName
         // do NOT throw an exception, we just want to check, not require it.
         for (final Object item : items) {
@@ -685,7 +719,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         else if ( Map.class.isAssignableFrom(returnType) && (itemsIn instanceof Map) )
         {
             final Map m = (Map)itemsIn;
-            final Map<String,AMXProxy> proxies = new HashMap<String,AMXProxy>();
+            final Map<String,AMXProxy> proxies = new HashMap<>();
             boolean ok = true;
             for( final Object  meo : m.entrySet() )
             {
@@ -878,67 +912,81 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return genericInterfaceName(mbeanInfo());
     }
 
+    @Override
     public Class<? extends AMXProxy>  genericInterface()
     {
         return ProxyFactory.genericInterface(mbeanInfo());
     }
 
+    @Override
     public boolean valid()
     {
         return isValid();
     }
 
+    @Override
     public ProxyFactory proxyFactory()
     {
         return (ProxyFactory.getInstance(getMBeanServerConnection()));
     }
 
+    @Override
     public MBeanServerConnection mbeanServerConnection()
     {
         return getMBeanServerConnection();
     }
 
+    @Override
     public ObjectName objectName()
     {
         return getObjectName();
     }
 
+    @Override
     public String nameProp()
     {
         // name as found in the ObjectName
         return Util.getNameProp(getObjectName());
     }
 
+    @Override
     public String parentPath()
     {
         return Util.unquoteIfNeeded(getObjectName().getKeyProperty(PARENT_PATH_KEY));
     }
 
+    @Override
     public String type()
     {
         return Util.getTypeProp(getObjectName());
     }
 
+    @Override
     public String getName()
     {
         // internal *unquoted* name, but we consider it invariant once fetched
         return mName;
     }
 
+    @Override
     public ObjectName getParent()
     {
         return mParentObjectName;
     }
 
+    @Override
     public AMXProxy parent()
     {
-        if ( mParentObjectName == null ) return null;
+        if ( mParentObjectName == null ) {
+            return null;
+        }
 
         final AMXProxy proxy = proxyFactory().getProxy(mParentObjectName);
 
         return proxy;
     }
 
+    @Override
     public String path()
     {
         // special case DomainRoot, which has no parent
@@ -954,6 +1002,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return PathnameParser.path(parentPath, type, singleton() ? null : Util.getNameProp(on));
     }
 
+    @Override
     public ObjectName[] getChildren()
     {
         ObjectName[] objectNames = null;
@@ -977,6 +1026,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
      * Returns an array of children, including an empty array if there are none, but children
      * are possible. Returns null if children are not possible.
      */
+    @Override
     public Set<AMXProxy> childrenSet()
     {
         return childrenSet(getChildren());
@@ -989,7 +1039,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
 
     public Set<String> childrenTypes(final ObjectName[] objectNames)
     {
-        final Set<String> types = new HashSet<String>();
+        final Set<String> types = new HashSet<>();
         for (final ObjectName o : objectNames)
         {
             final String type = Util.getTypeProp(o);
@@ -998,11 +1048,13 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return types;
     }
 
+    @Override
     public Map<String, AMXProxy> childrenMap(final String type)
     {
         return childrenMap(type, AMXProxy.class);
     }
 
+    @Override
     public <T extends AMXProxy> Map<String, T> childrenMap(final Class<T> intf)
     {
         if (!intf.isInterface())
@@ -1020,7 +1072,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
             return Collections.emptyList();
         }
 
-        final List<ObjectName> items = new ArrayList<ObjectName>();
+        final List<ObjectName> items = new ArrayList<>();
 
         for (final ObjectName objectName : objectNames)
         {
@@ -1034,7 +1086,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
 
     public <T extends AMXProxy> Map<String, T> childrenMap(final String type, final Class<T> intf)
     {
-        final Map<String, T> m = new HashMap<String, T>();
+        final Map<String, T> m = new HashMap<>();
         for (final ObjectName objectName : childrenOfType(type))
         {
             m.put( Util.unquoteIfNeeded(Util.getNameProp(objectName)), getProxy(objectName, intf));
@@ -1042,6 +1094,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return m;
     }
 
+    @Override
     public Map<String, Map<String, AMXProxy>> childrenMaps()
     {
         final ObjectName[] children = getChildren();
@@ -1052,7 +1105,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
 
         final Set<AMXProxy> childrenSet = childrenSet(children);
 
-        final Map<String, Map<String, AMXProxy>> maps = new HashMap<String, Map<String, AMXProxy>>();
+        final Map<String, Map<String, AMXProxy>> maps = new HashMap<>();
         final Set<String> types = childrenTypes(children);
         for (final String type : types)
         {
@@ -1070,14 +1123,16 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     public <T extends AMXProxy> Set<T> childrenSet(final String type, final Class<T> intf)
     {
         final Map<String, T> m = childrenMap(type, intf);
-        return new HashSet<T>(m.values());
+        return new HashSet<>(m.values());
     }
 
+    @Override
     public AMXProxy child(final String type)
     {
         return child(type, AMXProxy.class);
     }
 
+    @Override
     public <T extends AMXProxy> T child(final Class<T> intf)
     {
         final String type = Util.deduceType(intf);
@@ -1128,12 +1183,14 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return child;
     }
 
-    public final MBeanInfo mbeanInfo()
+    @Override
+    public MBeanInfo mbeanInfo()
     {
         return getMBeanInfo();
     }
 
 
+    @Override
     public Map<String, Object> attributesMap( final Set<String> attrNames )
     {
         try
@@ -1147,6 +1204,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
             throw new RuntimeException(e);
         }
     }
+    @Override
     public Map<String, Object> attributesMap()
     {
         return attributesMap( attributeNames() );
@@ -1164,6 +1222,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return null;
     }
 
+    @Override
     public Set<String> attributeNames()
     {
         final String[] names = JMXUtil.getAttributeNames(getMBeanInfo().getAttributes());
@@ -1196,41 +1255,49 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
         return getDescriptorField(getMBeanInfo(), name, defaultValue);
     }
 
+    @Override
     public boolean singleton()
     {
         return getDescriptorField(DESC_IS_SINGLETON, Boolean.FALSE);
     }
 
+    @Override
     public boolean globalSingleton()
     {
         return getDescriptorField(DESC_IS_GLOBAL_SINGLETON, Boolean.FALSE);
     }
 
+    @Override
     public String group()
     {
         return getDescriptorField(DESC_GROUP, GROUP_OTHER);
     }
 
+    @Override
     public boolean supportsAdoption()
     {
         return getDescriptorField(DESC_SUPPORTS_ADOPTION, Boolean.FALSE);
     }
     private static final String[] EMPTY_STRINGS = new String[0];
 
+    @Override
     public String[] subTypes()
     {
         return getDescriptorField(DESC_SUB_TYPES, EMPTY_STRINGS);
     }
 
+    @Override
     public String java() {
         final Tools tools  = domainRootProxy().getTools();
         return tools.java( getObjectName() );
     }
 
+    @Override
     public Descriptor descriptor() {
         return getMBeanInfo().getDescriptor();
     }
 
+    @Override
     public MBeanAttributeInfo attributeInfo(final String attrName) {
         for( final MBeanAttributeInfo info: getMBeanInfo().getAttributes() )
         {

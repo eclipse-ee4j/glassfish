@@ -887,13 +887,9 @@ public class RemoteCommand extends CLICommand {
         if (moduleClassLoader != null) {
             return moduleClassLoader;
         }
-        try {
-            File installDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
-            File modulesDir = new File(installDir, "modules");
-            moduleClassLoader = new DirectoryClassLoader(modulesDir, CLICommand.class.getClassLoader());
-            return moduleClassLoader;
-        } catch (IOException ioex) {
-            return null;
-        }
+        File installDir = new File(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+        File modulesDir = new File(installDir, "modules");
+        moduleClassLoader = new DirectoryClassLoader(modulesDir, CLICommand.class.getClassLoader());
+        return moduleClassLoader;
     }
 }

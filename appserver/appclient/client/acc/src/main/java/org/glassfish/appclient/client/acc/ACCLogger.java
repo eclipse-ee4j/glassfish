@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.glassfish.appclient.client.acc.config.LogService;
+import org.glassfish.main.jul.GlassFishLogger;
 
 /**
  * Logger that conforms to the glassfish-acc.xml config file settings for logging while, in some cases, also adjusting
@@ -50,14 +51,14 @@ import org.glassfish.appclient.client.acc.config.LogService;
  *
  * @author tjquinn
  */
-public class ACCLogger extends Logger {
+public class ACCLogger extends GlassFishLogger {
 
     private static final String ACC_LOGGER_NAME = "GlassFish.ACC";
 
     private static final Level DEFAULT_ACC_LOG_LEVEL = Level.INFO;
 
     public ACCLogger(final LogService logService) throws IOException {
-        super(ACC_LOGGER_NAME, null);
+        super(ACC_LOGGER_NAME);
         init(logService);
     }
 
@@ -66,9 +67,7 @@ public class ACCLogger extends Logger {
         final Handler configuredFileHandler = createHandler(logService, level);
         final ResourceBundle rb = ResourceBundle.getBundle(ACCLogger.class.getPackage().getName() + ".LogStrings");
 
-        /*
-         * Set existing loggers to at least the configured level.
-         */
+        // Set existing loggers to at least the configured level.
         for (Enumeration<String> names = LogManager.getLogManager().getLoggerNames(); names.hasMoreElements();) {
             final String loggerName = names.nextElement();
             final Logger logger = LogManager.getLogManager().getLogger(loggerName);
@@ -94,7 +93,7 @@ public class ACCLogger extends Logger {
         Level level = DEFAULT_ACC_LOG_LEVEL;
         if (logService != null) {
             String configLevelText = logService.getLevel();
-            if (configLevelText != null && (!configLevelText.equals(""))) {
+            if (configLevelText != null && !configLevelText.isEmpty()) {
                 try {
                     level = Level.parse(configLevelText);
                 } catch (IllegalArgumentException e) {

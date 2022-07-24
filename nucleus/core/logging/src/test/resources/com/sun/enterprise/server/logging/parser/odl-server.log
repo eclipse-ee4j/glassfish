@@ -25,8 +25,8 @@ Authorization Service has successfully initialized.]]
 [2022-06-29T19:55:58.736+0200] [glassfish 7.0] [INFO] [NCLS-CORE-00087] [jakarta.enterprise.system.core] [tid: _ThreadID=43 _ThreadName=RunLevelControllerThread-1656525357793] [timeMillis: 1656525358736] [levelValue: 800] [[
 Grizzly Framework 4.0.0 started in: 71ms - bound to [/0.0.0.0:8080]]]
 
-[2022-06-29T19:55:58.798+0200] [glassfish 7.0] [INFO] [NCLS-CORE-00087] [jakarta.enterprise.system.core] [tid: _ThreadID=43 _ThreadName=RunLevelControllerThread-1656525357793] [timeMillis: 1656525358798] [levelValue: 800] [[
-Grizzly Framework 4.0.0 started in: 2ms - bound to [/0.0.0.0:8181]]]
+[2022-06-29T19:55:58.798993+02:00] [GlassFish 7.0] [INFO] [NCLS-CORE-00087] [jakarta.enterprise.system.core] [tid: _ThreadID=43 _ThreadName=RunLevelControllerThread-1656525357793] [levelValue: 800] [[
+Grizzly Framework 4.0.0 started in: 1ms - bound to [/0.0.0.0:8181]]]
 
 [2022-06-29T19:55:58.806+0200] [glassfish 7.0] [INFO] [NCLS-CORE-00087] [jakarta.enterprise.system.core] [tid: _ThreadID=43 _ThreadName=RunLevelControllerThread-1656525357793] [timeMillis: 1656525358806] [levelValue: 800] [[
 Grizzly Framework 4.0.0 started in: 1ms - bound to [/0.0.0.0:4848]]]

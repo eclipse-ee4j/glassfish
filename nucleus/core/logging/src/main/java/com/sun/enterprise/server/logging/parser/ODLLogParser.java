@@ -31,30 +31,30 @@ import static org.glassfish.main.jul.formatter.LogFormatDetector.P_TIMESTAMP;
  */
 final class ODLLogParser implements LogParser {
 
-    private static final int ODL_FIXED_FIELD_COUNT = 5;
-    private static final Pattern ODL_LINE_HEADER_PATTERN = Pattern.compile("\\[" + P_TIMESTAMP + "].*");
-    private static final Pattern ODL_FIELD_PATTERN = Pattern.compile("(\\[[^\\[\\]]*?\\])+?");
-    private static final Pattern ODL_TID_PATTERN = Pattern.compile("[ ]*_ThreadID=(.+) _ThreadName=(.+)");
+    private static final int FIXED_FIELD_COUNT = 5;
+    private static final Pattern RECORD_START = Pattern.compile("^\\[" + P_TIMESTAMP + "\\].*");
+    private static final Pattern FIELD = Pattern.compile("(\\[[^\\[\\]\n]*\\])+");
+    private static final Pattern THREAD_FIELD = Pattern.compile("[ ]*_ThreadID=(.+) _ThreadName=(.+)");
 
     @Override
     public void parseLog(BufferedReader reader, LogParserListener listener) throws LogParserException {
         String line = null;
         try {
-            StringBuilder buffer = new StringBuilder();
+            final StringBuilder buffer = new StringBuilder();
             long position = 0L;
             while ((line = reader.readLine()) != null) {
-                Matcher m = ODL_LINE_HEADER_PATTERN.matcher(line);
+                Matcher m = RECORD_START.matcher(line);
                 if (m.matches()) {
+                    // We have found another record
                     // Construct a parsed log record from the prior content
                     String logRecord = buffer.toString();
+                    buffer.setLength(0);
                     process(position, logRecord, listener);
                     position += logRecord.length();
-                    buffer = new StringBuilder();
                 }
                 buffer.append(line);
                 buffer.append(System.lineSeparator());
             }
-            // Last record
             String logRecord = buffer.toString();
             process(position, logRecord, listener);
         } catch (IOException e) {
@@ -72,8 +72,11 @@ final class ODLLogParser implements LogParser {
 
 
     private ParsedLogRecord parse(String logRecord) {
+        if (!logRecord.startsWith("[")) {
+            return null;
+        }
         ParsedLogRecord parsedLogRecord = new ParsedLogRecord(logRecord);
-        Matcher matcher = ODL_FIELD_PATTERN.matcher(logRecord);
+        Matcher matcher = FIELD.matcher(logRecord);
         int start = 0;
         int end = 0;
         int fieldIndex = 0;
@@ -86,7 +89,7 @@ final class ODLLogParser implements LogParser {
             end = matcher.end();
             String text = matcher.group();
             text = text.substring(1, text.length() - 1);
-            if (fieldIndex <= ODL_FIXED_FIELD_COUNT) {
+            if (fieldIndex <= FIXED_FIELD_COUNT) {
                 populateLogRecordFields(fieldIndex, text, parsedLogRecord);
             } else {
                 populateLogRecordSuppAttrs(text, parsedLogRecord);
@@ -105,7 +108,7 @@ final class ODLLogParser implements LogParser {
             }
         }
         parsedLogRecord.setMessage(msg);
-        if (fieldIndex < ODL_FIXED_FIELD_COUNT) {
+        if (fieldIndex < FIXED_FIELD_COUNT) {
             return null;
         }
         return parsedLogRecord;
@@ -118,7 +121,7 @@ final class ODLLogParser implements LogParser {
             String key = text.substring(0, index);
             String value = text.substring(index + 1).trim();
             if (SupplementalAttribute.TID.getId().equals(key)) {
-                Matcher matcher = ODL_TID_PATTERN.matcher(value);
+                Matcher matcher = THREAD_FIELD.matcher(value);
                 if (matcher.find()) {
                     parsedLogRecord.setThreadId(LogParser.toLong(matcher.group(1)));
                     parsedLogRecord.setThreadName(matcher.group(2));

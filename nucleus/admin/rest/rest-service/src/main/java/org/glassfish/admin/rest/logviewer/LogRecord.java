@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,9 @@
 package org.glassfish.admin.rest.logviewer;
 
 import java.io.StringWriter;
+import java.time.OffsetDateTime;
 import java.util.Date;
-import java.util.logging.Level;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,9 +33,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.admin.rest.RestLogging;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,7 +48,7 @@ import org.w3c.dom.Node;
 public class LogRecord {
 
     long recordNumber;
-    Date loggedDateTime;
+    OffsetDateTime loggedDateTime;
     String loggedLevel;
     String productName;
     String loggerName;
@@ -62,11 +64,11 @@ public class LogRecord {
         this.message = Message;
     }
 
-    public Date getLoggedDateTime() {
+    public OffsetDateTime getLoggedDateTime() {
         return loggedDateTime;
     }
 
-    public void setLoggedDateTime(Date loggedDateTime) {
+    public void setLoggedDateTime(OffsetDateTime loggedDateTime) {
         this.loggedDateTime = loggedDateTime;
     }
 
@@ -122,13 +124,13 @@ public class LogRecord {
         JSONObject obj = new JSONObject();
         try {
             obj.put("recordNumber", recordNumber);
-            obj.put("loggedDateTimeInMS", (loggedDateTime != null) ? loggedDateTime.getTime() : null);
+            obj.put("loggedDateTimeInMS", loggedDateTime == null ? null : loggedDateTime.toInstant().toEpochMilli());
             obj.put("loggedLevel", loggedLevel);
             obj.put("productName", productName);
             obj.put("loggerName", loggerName);
             obj.put("nameValuePairs", nameValuePairs);
             obj.put("messageID", messageID);
-            obj.put("Message", message); //.replaceAll("\n", Matcher.quoteReplacement("\\\n")).replaceAll("\"", Matcher.quoteReplacement("\\\"")));
+            obj.put("Message", message);
         } catch (JSONException ex) {
             throw new RuntimeException(ex);
         }
@@ -144,8 +146,9 @@ public class LogRecord {
             Document d = db.newDocument();
 
             Element result = d.createElement("record");
-            result.setAttribute("recordNumber", "" + recordNumber);
-            result.setAttribute("loggedDateTimeInMS", (loggedDateTime != null) ? ("" + loggedDateTime.getTime()) : "");
+            result.setAttribute("recordNumber", Long.toString(recordNumber));
+            result.setAttribute("loggedDateTimeInMS",
+                loggedDateTime == null ? "" : Long.toString(loggedDateTime.toInstant().toEpochMilli()));
             result.setAttribute("loggedLevel", loggedLevel);
             result.setAttribute("productName", productName);
             result.setAttribute("loggerName", loggerName);

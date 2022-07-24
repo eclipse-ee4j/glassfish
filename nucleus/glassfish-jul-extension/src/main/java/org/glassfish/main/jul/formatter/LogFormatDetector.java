@@ -44,9 +44,9 @@ public class LogFormatDetector {
      */
     public static final String P_TIME = "\\d\\d:\\d\\d:\\d\\d\\.[\\d]{3,9}";
     /**
-     * {@link Pattern} string for usual time zone format: 02:00, 0200 or Z
+     * {@link Pattern} string for usual time zone format: +02:00, +0200 or Z
      */
-    public static final String P_TIMEZONE = "([0-9:+-]{5,6}|Z)";
+    public static final String P_TIMEZONE = "([0-9:+-]{5,8}|Z)";
     /**
      * {@link Pattern} string for usual ISO-8601 timestamp format: 2021-05-20T12:45:33.123456Z
      */

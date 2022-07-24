@@ -278,11 +278,6 @@ public class GlassFishLogManagerLifeCycleTest {
 
         private final AtomicBoolean blocker = new AtomicBoolean(true);
 
-        public void reset() {
-            blocker.set(true);
-        }
-
-
         public void unblock() throws InterruptedException {
             blocker.set(false);
             // in this time the log manager thread finishes the action and changes state

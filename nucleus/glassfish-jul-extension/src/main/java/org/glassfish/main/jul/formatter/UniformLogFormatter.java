@@ -25,7 +25,6 @@ import org.glassfish.main.jul.cfg.LogProperty;
 import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.formatter.ExcludeFieldsSupport.SupplementalAttribute;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
-import org.glassfish.main.jul.record.MessageResolver;
 
 import static java.lang.System.lineSeparator;
 import static org.glassfish.main.jul.formatter.UniformLogFormatter.UniformFormatterProperty.EXCLUDED_FIELDS;

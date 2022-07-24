@@ -64,6 +64,9 @@ public class LogCollectorHandler extends Handler {
     }
 
 
+    /**
+     * Unattaches the handler from the logger and drops all collected log records.
+     */
     @Override
     public void close() throws SecurityException {
         this.logger.removeHandler(this);

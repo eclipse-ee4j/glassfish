@@ -21,7 +21,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.SimpleFormatter;
 
 import org.glassfish.main.jul.formatter.HandlerId;
 import org.glassfish.main.jul.formatter.ODLLogFormatter;

@@ -21,7 +21,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -45,7 +44,6 @@ import static org.glassfish.main.jul.handler.SyslogHandlerProperty.PORT;
  */
 public class SyslogHandler extends Handler {
     private static final MessageResolver MSG_RESOLVER = new MessageResolver();
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM dd HH:mm:ss");
 
     private final LogRecordBuffer pendingRecords;
 

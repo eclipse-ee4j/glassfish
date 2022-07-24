@@ -68,6 +68,22 @@ public class LogParserTest {
             () -> assertEquals("RunLevelControllerThread-1656622655238", record.getThreadName()),
             () -> assertEquals("jakarta.enterprise.logging", record.getLogger())
         );
+        ParsedLogRecord oldRecord = listener.records.get(listener.records.size() - 2);
+        assertAll(
+            () -> assertEquals("NCLS-CORE-00087", oldRecord.getMessageKey()),
+            () -> assertEquals("Grizzly Framework 4.0.0 started in: 2ms - bound to [/0.0.0.0:7676]", oldRecord.getMessage()),
+            () -> assertEquals("glassfish 7.0", oldRecord.getProductId()),
+            () -> assertEquals(LocalDate.of(2022, 06, 30), oldRecord.getDate()),
+            () -> assertEquals(LocalTime.of(22, 57, 36, 381_000_000), oldRecord.getTime()),
+            () -> assertEquals(OffsetDateTime.of(oldRecord.getDate(), oldRecord.getTime(), ZoneOffset.of("+01:00")), oldRecord.getTimestamp()),
+            () -> assertEquals("INFO", oldRecord.getLevel()),
+            () -> assertEquals(800, oldRecord.getLevelValue()),
+            () -> assertThat(oldRecord.getSupplementalAttributes(), aMapWithSize(1)),
+            () -> assertEquals(43L, oldRecord.getThreadId()),
+            () -> assertEquals("RunLevelControllerThread-1656622655235", oldRecord.getThreadName()),
+            () -> assertEquals("jakarta.enterprise.system.core", oldRecord.getLogger())
+        );
+
     }
 
 

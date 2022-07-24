@@ -186,12 +186,12 @@ public class LogFacade {
 
     @LogMessageInfo(
             message = "Registered {0} as OSGi service registration: {1}.",
-            level = "INFO")
+            level = "CONFIG")
     public static final String SERVICE_REGISTERED = "NCLS-BOOTSTRAP-00027";
 
     @LogMessageInfo(
             message = "Unregistered {0} from service registry.",
-            level = "INFO")
+            level = "CONFIG")
     public static final String SERVICE_UNREGISTERED = "NCLS-BOOTSTRAP-00028";
 
     @LogMessageInfo(

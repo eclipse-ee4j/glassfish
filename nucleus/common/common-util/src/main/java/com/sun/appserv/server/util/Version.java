@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,16 +30,13 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
  * This class provides static methods to make accessible the version as well as
  * the individual parts that make up the version
- *
-*/
+ */
 public class Version {
 
     private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
     private static final String PRODUCT_NAME_KEY = "product_name";
-    private static final String BRIEF_PRODUCT_NAME_KEY = "brief_product_name";
     private static final String ABBREV_PRODUCT_NAME_KEY = "abbrev_product_name";
     private static final String MAJOR_VERSION_KEY = "major_version";
     private static final String MINOR_VERSION_KEY = "minor_version";
@@ -51,8 +49,8 @@ public class Version {
     private static final String DEFAULT_DOMAIN_TEMPLATE_JAR = "nucleus-domain.jar";
     private static final String ADMIN_CLIENT_COMMAND_NAME_KEY = "admin_client_command_name";
     private static final String INITIAL_ADMIN_GROUPS_KEY = "initial_admin_user_groups";
-    private static List<Properties> versionProps = new ArrayList<Properties>();
-    private static Map<String,Properties> versionPropsMap = new HashMap<String,Properties>();
+    private static List<Properties> versionProps = new ArrayList<>();
+    private static Map<String,Properties> versionPropsMap = new HashMap<>();
     private static Properties versionProp = getVersionProp();
 
     private static Properties getVersionProp() {
@@ -222,13 +220,6 @@ public class Version {
     public static String getProductName() {
         return getProperty(PRODUCT_NAME_KEY,
                 "Undefined Product Name - define product and version info in config/branding");
-    }
-
-    /**
-     * Returns Brief Product Name (used in manual pages)
-     */
-    public static String getBriefProductName() {
-        return getProperty(BRIEF_PRODUCT_NAME_KEY, "Undefined Product Name");
     }
 
     /**

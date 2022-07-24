@@ -39,7 +39,7 @@ import static org.glassfish.main.jul.tracing.GlassFishLoggingTracer.error;
  * The specified format is
  *
  * <pre>
- * [[timestamp] [organization ID] [Message Type/Level] [Message ID] [Logger Name] [Thread ID] [User ID] [ECID] [Extra Attributes] [Message]]\n
+ * [[Timestamp] [Product ID] [Level] [Message ID] [Logger Name] [Thread ID] [Extra Attributes] [Message]]\n
  * </pre>
  *
  * @author Naman Mehta

@@ -182,8 +182,7 @@
         <!-- Settings -->
 
         <product.name>Eclipse GlassFish</product.name>
-        <brief_product_name>GlassFish</brief_product_name>
-        <abbrev_product_name>glassfish</abbrev_product_name>
+        <abbrev_product_name>GlassFish</abbrev_product_name>
         <admin_client_command_name>asadmin</admin_client_command_name>
         <default_domain_template>appserver-domain.jar</default_domain_template>
         <version_prefix />
@@ -322,7 +321,7 @@
                 <artifactId>mq-distribution</artifactId>
                 <version>${openmq.version}</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>com.sun.messaging.mq</groupId>
                 <artifactId>imqjmx</artifactId>
                 <version>4.6-b01</version>
@@ -658,7 +657,7 @@
             </dependency>
 
 
-            <!--  Derby - embedded database -->
+            <!-- Derby - embedded database -->
             <dependency>
                 <groupId>org.glassfish.external</groupId>
                 <artifactId>derby</artifactId>

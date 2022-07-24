@@ -30,12 +30,12 @@ public class MeteredStreamTest {
 
     @Test
     public void test() throws Exception {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        final MeteredStream stream = new MeteredStream(bytes, 0);
-        stream.write(16);
-        assertEquals(1, stream.getBytesWritten());
-        stream.write("příšera z jezera".getBytes(UTF_8));
-        assertEquals(20, stream.getBytesWritten());
+        try (MeteredStream stream = new MeteredStream(new ByteArrayOutputStream(), 0)) {
+            stream.write(16);
+            assertEquals(1, stream.getBytesWritten());
+            stream.write("příšera z jezera".getBytes(UTF_8));
+            assertEquals(20, stream.getBytesWritten());
+        }
     }
 
 }

@@ -31,14 +31,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.main.jul.formatter.UniformLogFormatter;
+import org.glassfish.main.jul.handler.LogCollectorHandler;
 import org.glassfish.main.jul.record.GlassFishLogRecord;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -83,16 +82,14 @@ public class FileArchiveTest {
     private static ServiceLocator locator;
     private static ModulesRegistry registry;
     private static ArchiveFactory archiveFactory;
-    private static RecordingHandler handler;
+    private static LogCollectorHandler handler;
 
     @BeforeAll
     public static void setUpClass() throws Exception {
         registry = new StaticModulesRegistry(FileArchiveTest.class.getClassLoader());
         locator = registry.createServiceLocator("default");
         archiveFactory = locator.getService(ArchiveFactory.class);
-        handler = new RecordingHandler();
-        handler.setFormatter(new UniformLogFormatter());
-        deplLogger.addHandler(handler);
+        handler = new LogCollectorHandler(deplLogger);
     }
 
     @BeforeEach
@@ -116,6 +113,9 @@ public class FileArchiveTest {
         }
         if (registry != null) {
             registry.shutdown();
+        }
+        if (handler != null) {
+            handler.close();
         }
     }
 
@@ -212,17 +212,18 @@ public class FileArchiveTest {
     }
 
     private void getListOfFilesCheckForLogRecord(FileArchive instance, final Set<String> expectedEntryNames) throws IOException {
-        handler.flush();
+        handler.reset();
         getListOfFiles(instance, expectedEntryNames, deplLogger);
-        if (handler.logRecords().size() != 1) {
+        List<GlassFishLogRecord> records = handler.getAll();
+        if (records.size() != 1) {
             final StringBuilder sb = new StringBuilder();
-            for (LogRecord record : handler.logRecords()) {
+            for (LogRecord record : records) {
                 sb.append(record.getLevel().getLocalizedName())
                         .append(": ")
                         .append(record.getMessage())
                         .append(LINE_SEP);
             }
-            fail("Expected 1 log message but received " + handler.logRecords().size() + " as follows:" + LINE_SEP + sb);
+            fail("Expected 1 log message but received " + records.size() + " as follows:" + LINE_SEP + sb);
         }
 
         // We have a stale file under a stale directory.  Make sure a direct
@@ -417,46 +418,22 @@ public class FileArchiveTest {
 
         // Try to list the files.  This should fail with our logger getting one record.
         final Vector<String> fileList = new Vector<>();
-        handler.flush();
+        handler.reset();
         archive.getListOfFiles(lower, fileList, null /* embeddedArchives */, deplLogger);
 
-        List<LogRecord> logRecords = handler.logRecords();
+        List<GlassFishLogRecord> logRecords = handler.getAll();
         assertThat("FileArchive logged no message about being unable to list files; expected " + EXPECTED_LOG_KEY,
             logRecords, not(emptyIterable()));
         assertThat(logRecords.get(0), instanceOf(GlassFishLogRecord.class));
-        GlassFishLogRecord record0 = (GlassFishLogRecord) logRecords.get(0);
+        GlassFishLogRecord record0 = logRecords.get(0);
         assertEquals(EXPECTED_LOG_KEY, record0.getMessageKey());
         // Change the protection back.
         lower.setExecutable(true, false);
         lower.setReadable(true, false);
-        handler.flush();
+        handler.reset();
 
         archive.getListOfFiles(lower, fileList, null, deplLogger);
-        assertTrue(logRecords.isEmpty(),
-            "FileArchive was incorrectly unable to list files; error key in log record:" + logRecords);
-    }
-
-    private static class RecordingHandler extends Handler {
-        private final List<LogRecord> records = new ArrayList<>();
-
-        @Override
-        public void close() {
-            records.clear();
-        }
-
-        @Override
-        public void flush() {
-            records.clear();
-        }
-
-        @Override
-        public void publish(LogRecord record) {
-            records.add(record);
-        }
-
-        List<LogRecord> logRecords() {
-            return records;
-        }
+        assertNull(handler.pop(), "FileArchive was incorrectly unable to list files; error key in log record");
     }
 }
 

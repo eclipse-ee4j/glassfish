@@ -55,7 +55,8 @@ public interface LogParser {
     DateTimeFormatter ISO_OFFSET_DATE_TIME_PARSER = new DateTimeFormatterBuilder()
         .parseCaseInsensitive()
         .append(ISO_LOCAL_DATE_TIME_PARSER)
-        .appendPattern("X")
+        .optionalStart().appendOffsetId().optionalEnd()
+        .optionalStart().appendOffset("+HHMMss", "Z").optionalEnd()
         .toFormatter(Locale.ROOT);
 
     /**

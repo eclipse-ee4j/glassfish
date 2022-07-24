@@ -20,7 +20,6 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Service interface to define the version info for an installed product.
- *
  */
 @Contract
 public interface VersionInfo {

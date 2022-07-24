@@ -25,7 +25,6 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 
-import org.glassfish.main.jul.env.LoggingSystemEnvironment;
 import org.glassfish.main.jul.tracing.GlassFishLoggingTracer;
 
 /**

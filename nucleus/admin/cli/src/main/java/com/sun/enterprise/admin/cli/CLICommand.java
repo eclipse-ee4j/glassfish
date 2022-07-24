@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,41 +17,59 @@
 
 package com.sun.enterprise.admin.cli;
 
-import java.io.*;
-import java.util.*;
-import java.lang.annotation.Annotation;
-import java.util.logging.*;
+import com.sun.appserv.server.util.Version;
+import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
+import com.sun.enterprise.admin.cli.remote.RemoteCommand;
+import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
+import com.sun.enterprise.admin.util.LineTokenReplacer;
+import com.sun.enterprise.admin.util.TokenValue;
+import com.sun.enterprise.admin.util.TokenValueSet;
+import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Scope;
+import jakarta.inject.Singleton;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.Console;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.common.util.admin.CommandModelImpl;
+import org.glassfish.common.util.admin.ManPageFinder;
+import org.glassfish.common.util.admin.MapInjectionResolver;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.InjectionManager;
 import org.jvnet.hk2.config.InjectionResolver;
 import org.jvnet.hk2.config.UnsatisfiedDependencyException;
-
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.api.admin.CommandModel.ParamModel;
-import org.glassfish.common.util.admin.CommandModelImpl;
-import org.glassfish.common.util.admin.MapInjectionResolver;
-import org.glassfish.common.util.admin.ManPageFinder;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.admin.cli.remote.RemoteCommand;
-import com.sun.enterprise.admin.util.LineTokenReplacer;
-import com.sun.enterprise.admin.util.TokenValue;
-import com.sun.enterprise.admin.util.TokenValueSet;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.appserv.server.util.Version;
-import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.admin.remote.Metrix;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Scope;
-import jakarta.inject.Singleton;
 
 /**
  * Base class for a CLI command. An instance of a subclass of this class is created using the getCommand method with the
@@ -76,7 +95,6 @@ public abstract class CLICommand implements PostConstruct {
 
     private static final Set<String> unsupported;
     private static final String UNSUPPORTED_CMD_FILE_NAME = "unsupported-legacy-command-names";
-    private static final String PACKAGE_NAME = "com.sun.enterprise.admin.cli";
 
     private static final LocalStringsImpl strings = new LocalStringsImpl(CLICommand.class);
 
@@ -322,7 +340,7 @@ public abstract class CLICommand implements PostConstruct {
     public BufferedReader expandManPage(Reader r) {
         manpageTokenValues[0] = programOpts.getCommandName();
         manpageTokenValues[1] = Environment.getPrefix();
-        manpageTokenValues[2] = Version.getBriefProductName();
+        manpageTokenValues[2] = Version.getAbbrevProductName();
         TokenValueSet tvs = new TokenValueSet();
         for (int i = 0; i < manpageTokens.length; i++) {
             tvs.add(new TokenValue(manpageTokens[i], manpageTokenValues[i], "{", "}"));

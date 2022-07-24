@@ -59,14 +59,14 @@ public class EmbeddedOSGiGlassFishImpl extends GlassFishDecorator {
 
     private void registerService() {
         reg = getBundleContext().registerService(GlassFish.class.getName(), this, null);
-        logger.log(Level.INFO, LogFacade.SERVICE_REGISTERED, new Object[]{this, reg});
+        logger.log(Level.CONFIG, LogFacade.SERVICE_REGISTERED, new Object[]{this, reg});
     }
 
     private void unregisterService() {
         if (getBundleContext() != null) { // bundle is still active
             try {
                 reg.unregister();
-                logger.log(Level.INFO, LogFacade.SERVICE_UNREGISTERED, this);
+                logger.log(Level.CONFIG, LogFacade.SERVICE_UNREGISTERED, this);
             } catch (IllegalStateException e) {
                 LogFacade.log(logger, Level.WARNING, LogFacade.SERVICE_UNREGISTRATION_EXCEPTION, e, e);
             }

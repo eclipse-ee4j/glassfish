@@ -17,6 +17,11 @@
 
 package com.sun.enterprise.server.logging.logviewer.backend;
 
+import com.sun.enterprise.server.logging.parser.LogParser;
+import com.sun.enterprise.server.logging.parser.LogParserFactory;
+import com.sun.enterprise.server.logging.parser.LogParserListener;
+import com.sun.enterprise.server.logging.parser.ParsedLogRecord;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,24 +32,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-import com.sun.enterprise.server.logging.LogFacade;
-import com.sun.enterprise.server.logging.parser.LogParser;
-import com.sun.enterprise.server.logging.parser.LogParserFactory;
-import com.sun.enterprise.server.logging.parser.LogParserListener;
-import com.sun.enterprise.server.logging.parser.ParsedLogRecord;
+import static com.sun.enterprise.server.logging.LogFacade.LOGGING_LOGGER;
 
 
 /**
- * <P>This class encapsulates the log file so that its details are not
- * exposed.  "getLongEntries" returns an unfiltered List of LogEntry objects
- * from the requested record number.  It will always search forward.
+ * <P>
+ * This class encapsulates the log file so that its details are not
+ * exposed. "getLongEntries" returns an unfiltered List of LogEntry objects
+ * from the requested record number. It will always search forward.
  * getIndexSize() returns the number of records between each index.
- * getLastIndexNumber returns the last index.</P>
+ * getLastIndexNumber returns the last index.
+ * </P>
+ * <P>
+ * This class also contains an inner class for storing LogEntry
+ * objects.
+ * </P>
  *
- * @AUTHOR: Hemanth Puttaswamy and Ken Paulsen
- * <p/>
- * <P>This class also contains an inner class for storing LogEntry
- * objects.</P>
+ * @author Hemanth Puttaswamy
+ * @author Ken Paulsen
  */
 public class LogFile implements java.io.Serializable {
 
@@ -146,7 +151,7 @@ public class LogFile implements java.io.Serializable {
                     public void foundLogRecord(long position, ParsedLogRecord object) {
                         long modIndex = recordNumber % localIndexSize;
                         if (modIndex == 0) {
-                            _recordIdx.add(startPos+position);
+                            _recordIdx.add(startPos + position);
                         }
                         recordNumber++;
                     }
@@ -169,7 +174,7 @@ public class LogFile implements java.io.Serializable {
         // if the _indexSize is 20. We don't store '0' hence we subtract
         // from 1 to get the right index
         int index = (int) (recordNumber / getIndexSize());
-        if (index > _recordIdx.size()-1) {
+        if (index >= _recordIdx.size()) {
             return null;
         }
         Long filePosition = _recordIdx.get(index);
@@ -184,28 +189,23 @@ public class LogFile implements java.io.Serializable {
         FileInputStream file = null;
         try {
             file = new FileInputStream(getLogFileName());
-            long bytesToSkip = fromFilePosition-1;
+            long bytesToSkip = fromFilePosition - 1;
             if (bytesToSkip > 0) {
                 long bytesSkipped = file.skip(bytesToSkip);
-                if (bytesSkipped != fromFilePosition) {
-                    if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
-                        LogFacade.LOGGING_LOGGER.log(Level.FINE, "Did not skip exact bytes while positioning reader in " + getLogFileName());
-                    }
+                if (bytesSkipped != bytesToSkip) {
+                    LOGGING_LOGGER.log(Level.WARNING, "Did not skip {0} bytes while positioning reader in {1}",
+                        new Object[] {bytesToSkip, getLogFileName()});
                 }
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(file));
             return reader;
         } catch (Exception ex) {
-            if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
-                LogFacade.LOGGING_LOGGER.log(Level.FINE, "Error reading from file: " + getLogFileName(), ex);
-            }
+            LOGGING_LOGGER.log(Level.SEVERE, "Error reading from file: " + getLogFileName(), ex);
             if (file != null) {
                 try {
                     file.close();
                 } catch (Exception ex2) {
-                    if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
-                        LogFacade.LOGGING_LOGGER.log(Level.FINE, "Error closing file: " + getLogFileName(), ex2);
-                    }
+                    LOGGING_LOGGER.log(Level.SEVERE, "Error closing file: " + getLogFileName(), ex2);
                 }
             }
         }

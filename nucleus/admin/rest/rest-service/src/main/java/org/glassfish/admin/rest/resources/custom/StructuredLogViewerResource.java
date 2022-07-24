@@ -30,9 +30,9 @@ import jakarta.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -63,34 +63,44 @@ public class StructuredLogViewerResource {
     }
 
     @GET
-    @Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
-    public String getJson(@QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
-            @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
-            @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
-            @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
-            @QueryParam("onlyLevel") @DefaultValue("false") boolean onlyLevel, @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
-            @QueryParam("toTime") @DefaultValue("-1") long toTime, @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
-            @QueryParam("anySearch") @DefaultValue("") String anySearch, @QueryParam("listOfModules") String listOfModules, //default value is empty for List
-            @QueryParam("instanceName") @DefaultValue("") String instanceName) throws IOException {
+    @Produces({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+    public String getJson(
+        @QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
+        @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
+        @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
+        @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
+        @QueryParam("onlyLevel") @DefaultValue("false") boolean onlyLevel,
+        @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
+        @QueryParam("toTime") @DefaultValue("-1") long toTime,
+        @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
+        @QueryParam("anySearch") @DefaultValue("") String anySearch,
+        @QueryParam("listOfModules") String listOfModules, //default value is empty for List
+        @QueryParam("instanceName") @DefaultValue("") String instanceName)
+        throws IOException {
 
-        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel, onlyLevel, anySearch,
-                listOfModules, instanceName, "json");
+        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel,
+            onlyLevel, anySearch, listOfModules, instanceName, "json");
 
     }
 
     @GET
-    @Produces({ MediaType.APPLICATION_XML })
-    public String getXML(@QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
-            @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
-            @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
-            @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
-            @QueryParam("onlyLevel") @DefaultValue("true") boolean onlyLevel, @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
-            @QueryParam("toTime") @DefaultValue("-1") long toTime, @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
-            @QueryParam("anySearch") @DefaultValue("") String anySearch, @QueryParam("listOfModules") String listOfModules, //default value is empty for List,
-            @QueryParam("instanceName") @DefaultValue("") String instanceName) throws IOException {
+    @Produces({MediaType.APPLICATION_XML})
+    public String getXML(
+        @QueryParam("logFileName") @DefaultValue("${com.sun.aas.instanceRoot}/logs/server.log") String logFileName,
+        @QueryParam("startIndex") @DefaultValue("-1") long startIndex,
+        @QueryParam("searchForward") @DefaultValue("false") boolean searchForward,
+        @QueryParam("maximumNumberOfResults") @DefaultValue("40") int maximumNumberOfResults,
+        @QueryParam("onlyLevel") @DefaultValue("true") boolean onlyLevel,
+        @QueryParam("fromTime") @DefaultValue("-1") long fromTime,
+        @QueryParam("toTime") @DefaultValue("-1") long toTime,
+        @QueryParam("logLevel") @DefaultValue("INFO") String logLevel,
+        @QueryParam("anySearch") @DefaultValue("") String anySearch,
+        @QueryParam("listOfModules") String listOfModules, //default value is empty for List,
+        @QueryParam("instanceName") @DefaultValue("") String instanceName)
+        throws IOException {
 
-        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel, onlyLevel, anySearch,
-                listOfModules, instanceName, "xml");
+        return getWithType(logFileName, startIndex, searchForward, maximumNumberOfResults, fromTime, toTime, logLevel,
+            onlyLevel, anySearch, listOfModules, instanceName, "xml");
 
     }
 
@@ -98,15 +108,13 @@ public class StructuredLogViewerResource {
             long toTime, String logLevel, boolean onlyLevel, String anySearch, String listOfModules, String instanceName, String type)
             throws IOException {
         if (habitat.getService(LogManager.class) == null) {
-            //the logger service is not install, so we cannot rely on it.
-            //return an error
+            // the logger service is not install, so we cannot rely on it.
             throw new IOException("The GlassFish LogManager Service is not available. Not installed?");
         }
 
         List<String> modules = new ArrayList<>();
-        if ((listOfModules != null) && !listOfModules.isEmpty()) {
+        if (listOfModules != null && !listOfModules.isEmpty()) {
             modules.addAll(Arrays.asList(listOfModules.split(",")));
-
         }
 
         Properties nameValueMap = new Properties();
@@ -122,13 +130,12 @@ public class StructuredLogViewerResource {
                 toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
                 anySearch);
             return convertQueryResult(result, type);
-        } else {
-            final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
-                sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
-                toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
-                anySearch, instanceName);
-            return convertQueryResult(result, type);
         }
+        final AttributeList result = logFilter.getLogRecordsUsingQuery(logFileName, startIndex, searchForward,
+            sortAscending, maximumNumberOfResults, fromTime == -1 ? null : Instant.ofEpochMilli(fromTime),
+            toTime == -1 ? null : Instant.ofEpochMilli(toTime), logLevel, onlyLevel, modules, nameValueMap,
+            anySearch, instanceName);
+        return convertQueryResult(result, type);
 
     }
 
@@ -136,9 +143,6 @@ public class StructuredLogViewerResource {
         return List.class.cast(list);
     }
 
-    /*    private String quoted(String s) {
-        return "\"" + s + "\"";
-    }*/
 
     private String convertQueryResult(final AttributeList queryResult, String type) {
         // extract field descriptions into a String[]
@@ -168,7 +172,7 @@ public class StructuredLogViewerResource {
                 LogRecord rec = new LogRecord();
                 int fieldIdx = 0;
                 rec.setRecordNumber(((Long) record.get(fieldIdx++)).longValue());
-                rec.setLoggedDateTime((Date) record.get(fieldIdx++));
+                rec.setLoggedDateTime((OffsetDateTime) record.get(fieldIdx++));
                 rec.setLoggedLevel((String) record.get(fieldIdx++));
                 rec.setProductName((String) record.get(fieldIdx++));
                 rec.setLoggerName((String) record.get(fieldIdx++));

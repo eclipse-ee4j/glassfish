@@ -108,7 +108,7 @@ public static final Map<String, String> xmltoPropsMap = new HashMap<>() {
             put(webcontainer, LogDomains.WEB_LOGGER + LEVEL);
             put(classloader, LogDomains.LOADER_LOGGER + LEVEL);
             put(configuration, LogDomains.CONFIG_LOGGER + LEVEL);
-            put(naming, LogDomains.NAMING_LOGGER + LEVEL);
+            put(naming, LogDomains.JNDI_LOGGER + LEVEL);
             put(security, LogDomains.SECURITY_LOGGER + LEVEL);
             put(jts, LogDomains.TRANSACTION_LOGGER + LEVEL);
             put(jta, LogDomains.JTA_LOGGER + LEVEL);

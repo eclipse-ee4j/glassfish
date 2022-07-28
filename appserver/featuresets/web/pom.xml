@@ -254,10 +254,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- Jakarta MVC -->
-        <!--
-        <dependency>
+	
+	<!-- Jakarta MVC -->
+	<dependency>
             <groupId>jakarta.mvc</groupId>
             <artifactId>jakarta.mvc-api</artifactId>
             <exclusions>
@@ -287,8 +286,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
-
+	
         <!-- glassfish-grizzly-full -->
         <dependency>
             <groupId>org.glassfish.main.grizzly</groupId>

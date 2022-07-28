@@ -18,29 +18,35 @@ package org.glassfish.main.admin.test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author David Matejcek
  */
-public class LoggingITest {
+public class AsadminLoggingITest {
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
@@ -67,5 +73,44 @@ public class LoggingITest {
                 () -> assertDoesNotThrow(() -> Level.parse(replaceChars(pair[1], "<>", "")))
             );
         });
+    }
+
+
+    @Test
+    public void listLoggers() {
+        AsadminResult result = ASADMIN.exec("list-loggers");
+        assertThat(result, asadminOK());
+        String[] lines = substringBefore(result.getStdOut(), "Command list-loggers executed successfully.").split("\n");
+        assertAll(
+            () -> assertThat(lines, arrayWithSize(equalTo(61))),
+            () -> assertThat(lines[0], matchesPattern("Logger Name[ ]+Subsystem[ ]+Logger Description[ ]+"))
+        );
+        Map<String, String[]> loggers = Arrays.stream(lines).skip(1).map(line -> line.split("\\s{2,}"))
+            .collect(Collectors.toMap(line -> line[0], line -> new String[] {line[1], line[2]}));
+        for (Map.Entry<String, String[]> logger : loggers.entrySet()) {
+            assertAll(
+                () -> assertThat(logger.getKey(), matchesPattern("[a-z\\.]+")),
+                () -> assertThat(logger.getValue()[0], matchesPattern("[a-zA-Z_ \\-]+")),
+                () -> assertThat(logger.getValue()[1], matchesPattern("[a-zA-Z0-9 \\.\\/\\-]+"))
+            );
+        }
+    }
+
+
+    @Test
+    public void listLogAttributes() {
+        AsadminResult result = ASADMIN.exec("list-log-attributes");
+        assertThat(result, asadminOK());
+        String[] lines = substringBefore(result.getStdOut(), "Command list-log-attributes executed successfully.").split("\n");
+        assertThat(lines, arrayWithSize(greaterThan(25)));
+        Map<String, String> map = Arrays.stream(lines).map(line -> line.split("\\s+"))
+            .collect(Collectors.toMap(pair -> pair[0], pair -> pair[1]));
+        assertAll(
+            () -> assertEquals(map.get("handlers"), "<org.glassfish.main.jul.handler.SimpleLogHandler,"
+                + "org.glassfish.main.jul.handler.GlassFishLogHandler>"),
+            () -> assertEquals(map.get("java.util.logging.FileHandler.pattern"), "<%h/java%u.log>"),
+            () -> assertEquals(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
+                "<${com.sun.aas.instanceRoot}/logs/server.log>")
+        );
     }
 }

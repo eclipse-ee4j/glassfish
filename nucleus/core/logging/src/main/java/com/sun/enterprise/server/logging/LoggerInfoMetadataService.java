@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,34 +18,29 @@
 package com.sun.enterprise.server.logging;
 
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.Set;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
+import com.sun.enterprise.module.HK2Module;
+import com.sun.enterprise.module.ModuleChangeListener;
+import com.sun.enterprise.module.ModuleDefinition;
+import com.sun.enterprise.module.ModulesRegistry;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-//import org.glassfish.admin.mbeanserver.LogMessagesResourceBundle;
-//import org.glassfish.admin.mbeanserver.LoggerInfo;
-import org.jvnet.hk2.annotations.Service;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.ModuleChangeListener;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 @Singleton
@@ -62,7 +58,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
 
     // Reset valid flag if teh set of modules changes, so meta-data will be recomputed
     private Set<String> currentModuleNames() {
-        Set<String> currentNames = new HashSet<String>();
+        Set<String> currentNames = new HashSet<>();
         for (HK2Module module : modulesRegistry.getModules()) {
             currentNames.add(module.getName());
         }
@@ -91,7 +87,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
     private synchronized LoggersInfoMap getLoggersInfoMap(Locale locale) {
         moduleNames = currentModuleNames();
         if (!isValid()) {
-            metadataMaps = new HashMap<Locale, LoggersInfoMap>();
+            metadataMaps = new HashMap<>();
         }
         LoggersInfoMap infos = metadataMaps.get(locale);
         if (infos == null) {
@@ -134,17 +130,18 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
 
     // If a module changed in any way, reset the valid flag so meta-data will be
     // recomputed when subsequently requested.
+    @Override
     public synchronized void changed(HK2Module sender)  {
         valid = false;
     }
 
     private class LoggersInfoMap {
-        private Locale locale;
-        private Map<String, LoggerInfoData> map;
+        private final Locale locale;
+        private final Map<String, LoggerInfoData> map;
 
         LoggersInfoMap(Locale locale) {
             this.locale = locale;
-            this.map = new HashMap<String, LoggerInfoData>();
+            this.map = new HashMap<>();
             initialize();
         }
 
@@ -225,18 +222,23 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
 
     // Null classloader to avoid delegation to parent classloader(s)
     private static class NullClassLoader extends ClassLoader {
+        @Override
         protected URL findResource(String name) {
             return null;
         }
+        @Override
         protected Enumeration findResources(java.lang.String name) throws IOException {
             return null;
         }
+        @Override
         public URL getResource(String name) {
             return null;
         }
+        @Override
         protected Class findClass(java.lang.String name) throws ClassNotFoundException {
             throw new ClassNotFoundException("Class not found: " + name);
         }
+        @Override
         protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
             throw new ClassNotFoundException("Class not found: " + name);
         }

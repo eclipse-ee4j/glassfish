@@ -389,8 +389,6 @@ public class LogFilter {
                 if (!instanceLogFile.exists()) {
                     instanceLogFile = new File(loggingDir + File.separator + "server.log");
                 } else if (!instanceLogFile.exists()) {
-                    // this code is used when user changes the attributes value(com.sun.enterprise.server.logging.GFFileHandler.file) in
-                    // logging.properties file to something else.
                     loggingDir = instanceLogFileName.substring(0, instanceLogFileName.lastIndexOf(File.separator));
                     instanceLogFile = new File(loggingDir + File.separator + logFileName);
                     if (!instanceLogFile.exists()) {
@@ -399,7 +397,6 @@ public class LogFilter {
                 }
 
             } else {
-
                 try {
                     // this code is used when the node is not local.
                     instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,

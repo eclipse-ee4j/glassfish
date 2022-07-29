@@ -20,15 +20,17 @@ import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
-import java.io.*;
-import java.util.*;
+import jakarta.inject.Inject;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Properties;
 
 import org.glassfish.api.admin.RuntimeType;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.api.admin.ServerEnvironment;
-
-import jakarta.inject.Inject;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Defines various global configuration for the running GlassFish instance.
@@ -41,8 +43,6 @@ import jakarta.inject.Inject;
  */
 @Service
 public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
-    @Inject
-    StartupContext startupContext;
 
     /** folder where all generated code like compiled jsps, stubs is stored */
     public static final String kGeneratedDirName = "generated";
@@ -63,6 +63,9 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
 
     public static final String DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT = "/admin";
     public static final String DEFAULT_ADMIN_CONSOLE_APP_NAME     = "__admingui"; //same as folder
+
+    @Inject
+    StartupContext startupContext;
 
     private /*almost final*/ File root;
     private /*almost final*/ boolean verbose;
@@ -140,8 +143,9 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         asenv.getProps().put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, root.getAbsolutePath());
         for (Map.Entry<String, String> entry : asenv.getProps().entrySet()) {
 
-            if(entry.getValue() == null) // don't NPE File ctor
+            if (entry.getValue() == null) { // don't NPE File ctor
                 continue;
+            }
 
             File location = new File(entry.getValue());
             if (!location.isAbsolute()) {
@@ -158,14 +162,14 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         // ugly code because domainName & instanceName are final...
         String s = args.getProperty("-domainname");
 
-        if (!ok(s)) {
+        if (!isNotEmpty(s)) {
             s = root.getName();
         }
         domainName = s;
 
         s = args.getProperty("-instancename");
 
-        if (!ok(s)) {
+        if (!isNotEmpty(s)) {
             instanceName = "server";
         }
         else {
@@ -180,8 +184,9 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         serverType = RuntimeType.getDefault();
 
         try {
-            if(typeString != null)
+            if(typeString != null) {
                 serverType = RuntimeType.valueOf(typeString);
+            }
         }
         catch(Exception e) {
             // already handled above...
@@ -292,27 +297,11 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
      * Gets the directory to store external alternate deployment descriptors
      * Normally {@code ROOT/generated/altdd}
      */
+    @Override
     public File getApplicationAltDDPath() {
         return new File(getApplicationStubPath(), kAppAltDDDirName);
     }
 
-    /*
-     * XXX - no one is using these methods, so I'm commenting them out
-     * for now.  When they're needed, they should probably be added to
-     * the ServerEnvironment Interface.
-     *
-    public String getJavaWebStartPath() {
-        return null;
-    }
-
-    public String getApplicationBackupRepositoryPath() {
-        return null;
-    }
-
-    public String getInstanceClassPath() {
-        return null;
-    }
-     */
 
     /**
      * Return the value of one property.
@@ -411,7 +400,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment, PostConstruct {
         return verbose;
     }
 
-    private boolean ok(String s) {
-        return s != null && s.length() > 0;
+    private boolean isNotEmpty(String s) {
+        return s != null && !s.isEmpty();
     }
 }

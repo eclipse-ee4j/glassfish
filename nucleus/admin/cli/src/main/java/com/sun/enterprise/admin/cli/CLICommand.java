@@ -116,7 +116,7 @@ public abstract class CLICommand implements PostConstruct {
             "cprefix", // the environment variable prefix
             "product---name", // the product name
     };
-    private String manpageTokenValues[] = new String[manpageTokens.length];
+    private final String manpageTokenValues[] = new String[manpageTokens.length];
 
     /**
      * The name of the command. Initialized in the constructor.
@@ -164,7 +164,7 @@ public abstract class CLICommand implements PostConstruct {
     protected Map<String, String> passwords;
 
     static {
-        Set<String> unsup = new HashSet<String>();
+        Set<String> unsup = new HashSet<>();
         file2Set(UNSUPPORTED_CMD_FILE_NAME, unsup);
         unsupported = Collections.unmodifiableSet(unsup);
     }
@@ -188,8 +188,9 @@ public abstract class CLICommand implements PostConstruct {
             return cmd;
         }
         // nope, must be a remote command
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Assuming it's a remote command: " + name);
+        }
         return getRemoteCommand(name, po, serviceLocator.getService(Environment.class));
     }
 
@@ -225,15 +226,17 @@ public abstract class CLICommand implements PostConstruct {
     protected CLICommand() {
         Service service = this.getClass().getAnnotation(Service.class);
 
-        if (service == null)
+        if (service == null) {
             name = "unknown-command"; // should never happen
-        else
+        } else {
             name = service.name();
+        }
     }
 
     /**
      * Initialize the logger after being instantiated by HK2.
      */
+    @Override
     public void postConstruct() {
         initializeLogger();
     }
@@ -266,8 +269,9 @@ public abstract class CLICommand implements PostConstruct {
         processProgramOptions();
         logger.finer("Parse command options");
         parse();
-        if (checkHelp())
+        if (checkHelp()) {
             return 0;
+        }
         logger.finer("Prevalidate command options");
         prevalidate();
         logger.finer("Inject command options");
@@ -280,8 +284,9 @@ public abstract class CLICommand implements PostConstruct {
             // implementation of *this* command, we turn off echo after
             // having echoed this command.
             programOpts.setEcho(false);
-        } else if (logger.isLoggable(Level.FINER))
+        } else if (logger.isLoggable(Level.FINER)) {
             logger.finer(echoCommand());
+        }
         logger.finer("Execute command");
         return executeCommand();
     }
@@ -324,12 +329,14 @@ public abstract class CLICommand implements PostConstruct {
      */
     public BufferedReader getManPage() {
         String commandName = getName();
-        if (commandName.length() == 0)
+        if (commandName.isEmpty()) {
             throw new IllegalArgumentException("Command name cannot be empty");
+        }
 
         // special case "help" --> help for the command
-        if (commandName.equals("help"))
+        if (commandName.equals("help")) {
             commandName = programOpts.getCommandName();
+        }
 
         return ManPageFinder.getCommandManPage(commandName, getClass().getName(), Locale.getDefault(), getClass().getClassLoader(), logger);
     }
@@ -379,35 +386,43 @@ public abstract class CLICommand implements PostConstruct {
             optText.setLength(0);
             final String optName = lc(opt.getName());
             // "--terse" is part of asadmin utility options
-            if (optName.equals("terse"))
+            if (optName.equals("terse")) {
                 continue;
+            }
             // skip "hidden" options
-            if (optName.startsWith("_"))
+            if (optName.startsWith("_")) {
                 continue;
+            }
             // do not want to display password as an option
-            if (opt.getParam().password())
+            if (opt.getParam().password()) {
                 continue;
+            }
             // also do not want to display obsolete options
-            if (opt.getParam().obsolete())
+            if (opt.getParam().obsolete()) {
                 continue;
+            }
             // primary parameter is the operand, not an option
-            if (opt.getParam().primary())
+            if (opt.getParam().primary()) {
                 continue;
+            }
             boolean optional = opt.getParam().optional();
             String defValue = opt.getParam().defaultValue();
-            if (optional)
+            if (optional) {
                 optText.append("[");
+            }
             String sn = opt.getParam().shortName();
-            if (ok(sn))
+            if (ok(sn)) {
                 optText.append('-').append(sn).append('|');
+            }
             optText.append("--").append(optName);
 
             if (opt.getType() == Boolean.class || opt.getType() == boolean.class) {
                 // canonicalize default value
-                if (ok(defValue) && Boolean.parseBoolean(defValue))
+                if (ok(defValue) && Boolean.parseBoolean(defValue)) {
                     defValue = "true";
-                else
+                } else {
                     defValue = "false";
+                }
                 optText.append("[=<").append(optName);
                 optText.append(strings.get("Usage.default", defValue));
                 optText.append(">]");
@@ -416,11 +431,13 @@ public abstract class CLICommand implements PostConstruct {
                     optText.append(" <").append(optName);
                     optText.append(strings.get("Usage.default", defValue));
                     optText.append('>');
-                } else
+                } else {
                     optText.append(" <").append(optName).append('>');
+                }
             }
-            if (optional)
+            if (optional) {
                 optText.append("]");
+            }
 
             if (len + 1 + optText.length() > 80) {
                 usageText.append(lsep).append('\t');
@@ -448,8 +465,9 @@ public abstract class CLICommand implements PostConstruct {
         optText.setLength(0);
         ParamModel operandParam = getOperandModel();
         String opname = operandParam != null ? lc(operandParam.getName()) : null;
-        if (!ok(opname))
+        if (!ok(opname)) {
             opname = "operand";
+        }
 
         int operandMin = 0;
         int operandMax = 0;
@@ -460,13 +478,15 @@ public abstract class CLICommand implements PostConstruct {
         if (operandMax > 0) {
             if (operandMin == 0) {
                 optText.append("[").append(opname);
-                if (operandMax > 1)
+                if (operandMax > 1) {
                     optText.append(" ...");
+                }
                 optText.append("]");
             } else {
                 optText.append(opname);
-                if (operandMax > 1)
+                if (operandMax > 1) {
                     optText.append(" ...");
+                }
             }
         }
         if (len + 1 + optText.length() > 80) {
@@ -525,10 +545,12 @@ public abstract class CLICommand implements PostConstruct {
         // have we parsed any options yet?
         if (options != null && operands != null) {
             for (ParamModel opt : commandModel.getParameters()) {
-                if (opt.getParam().password())
+                if (opt.getParam().password()) {
                     continue; // don't print passwords
-                if (opt.getParam().primary())
+                }
+                if (opt.getParam().primary()) {
                     continue;
+                }
                 // include every option that was specified on the command line
                 // and every option that has a default value
                 if (opt.getParam().multiple()) {
@@ -543,12 +565,14 @@ public abstract class CLICommand implements PostConstruct {
                     }
                 }
             }
-            for (String o : operands)
+            for (String o : operands) {
                 sb.append(quote(o)).append(' ');
+            }
         } else if (argv != null) {
             // haven't parsed any options, include raw arguments, if any
-            for (String arg : argv)
+            for (String arg : argv) {
                 sb.append(quote(arg)).append(' ');
+            }
         }
 
         sb.setLength(sb.length() - 1); // strip trailing space
@@ -573,8 +597,9 @@ public abstract class CLICommand implements PostConstruct {
      */
     public static String quote(String value) {
         int len = value.length();
-        if (len == 0)
+        if (len == 0) {
             return "\"\""; // an empty string is handled specially
+        }
 
         /*
          * Look for any special characters.  Escape and
@@ -591,27 +616,32 @@ public abstract class CLICommand implements PostConstruct {
                 int lastc = 0;
                 for (int j = i; j < len; j++) {
                     char cc = value.charAt(j);
-                    if ((cc == '"') || (cc == '\\') || (cc == '\r') || (cc == '\n'))
-                        if (cc == '\n' && lastc == '\r')
-                            ; // do nothing, CR was already escaped
-                        else
+                    if ((cc == '"') || (cc == '\\') || (cc == '\r') || (cc == '\n')) {
+                        if (cc == '\n' && lastc == '\r') {
+                             // do nothing, CR was already escaped
+                        }
+                        else {
                             sb.append('\\'); // Escape the character
+                        }
+                    }
                     sb.append(cc);
                     lastc = cc;
                 }
                 sb.append('"');
                 return sb.toString();
-            } else if (c <= 040 || c >= 0177)
+            } else if (c <= 040 || c >= 0177) {
                 // These characters cause the string to be quoted
                 needQuoting = true;
+            }
         }
 
         if (needQuoting) {
             StringBuffer sb = new StringBuffer(len + 2);
             sb.append('"').append(value).append('"');
             return sb.toString();
-        } else
+        } else {
             return value;
+        }
     }
 
     /**
@@ -685,10 +715,11 @@ public abstract class CLICommand implements PostConstruct {
      */
     protected void initializeLogger() {
         if (!logger.isLoggable(Level.FINER)) {
-            if (programOpts.isTerse())
+            if (programOpts.isTerse()) {
                 logger.setLevel(Level.INFO);
-            else
+            } else {
                 logger.setLevel(Level.FINE);
+            }
         }
     }
 
@@ -697,7 +728,7 @@ public abstract class CLICommand implements PostConstruct {
      * program option's password if available in the password file.
      */
     protected void initializePasswords() throws CommandException {
-        passwords = new HashMap<String, String>();
+        passwords = new HashMap<>();
         String pwfile = programOpts.getPasswordFile();
 
         if (ok(pwfile)) {
@@ -706,8 +737,9 @@ public abstract class CLICommand implements PostConstruct {
             char[] password = passwords.get(Environment.getPrefix() + "PASSWORD") != null
                     ? passwords.get(Environment.getPrefix() + "PASSWORD").toCharArray()
                     : null;
-            if (password != null && programOpts.getPassword() == null)
+            if (password != null && programOpts.getPassword() == null) {
                 programOpts.setPassword(password, ProgramOptions.PasswordLocation.PASSWORD_FILE);
+            }
         }
     }
 
@@ -745,8 +777,9 @@ public abstract class CLICommand implements PostConstruct {
              * operands, the special "--" delimiter will also be
              * accepted as an operand.  We eliminate it here.
              */
-            if (commandModel.unknownOptionsAreOperands() && operands.size() > 0 && operands.get(0).equals("--"))
+            if (commandModel.unknownOptionsAreOperands() && operands.size() > 0 && operands.get(0).equals("--")) {
                 operands.remove(0);
+            }
         }
         if (logger.isLoggable(Level.FINER)) {
             logger.finer("params: " + options);
@@ -769,8 +802,9 @@ public abstract class CLICommand implements PostConstruct {
             br = expandManPage(br);
             String line;
             try {
-                while ((line = br.readLine()) != null)
+                while ((line = br.readLine()) != null) {
                     System.out.println(line);
+                }
             } catch (IOException ioex) {
                 throw new CommandException(strings.get("ManpageMissing", name), ioex);
             } finally {
@@ -780,13 +814,15 @@ public abstract class CLICommand implements PostConstruct {
                 }
             }
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
     private Class<? extends Annotation> getScope(Class<?> onMe) {
-        if (onMe == null)
+        if (onMe == null) {
             return null;
+        }
 
         for (Annotation anno : onMe.getAnnotations()) {
             if (anno.annotationType().isAnnotationPresent(Scope.class)) {
@@ -830,31 +866,38 @@ public abstract class CLICommand implements PostConstruct {
 
         boolean missingOption = false;
         for (ParamModel opt : commandModel.getParameters()) {
-            if (opt.getParam().password())
+            if (opt.getParam().password()) {
                 continue; // passwords are handled later
-            if (opt.getParam().obsolete() && getOption(opt.getName()) != null)
+            }
+            if (opt.getParam().obsolete() && getOption(opt.getName()) != null) {
                 logger.info(strings.get("ObsoleteOption", opt.getName()));
-            if (opt.getParam().optional())
+            }
+            if (opt.getParam().optional()) {
                 continue;
-            if (opt.getParam().primary())
+            }
+            if (opt.getParam().primary()) {
                 continue;
+            }
             // if option isn't set, prompt for it (if interactive)
             if (getOption(opt.getName()) == null && cons != null && !missingOption) {
                 cons.printf("%s", strings.get("optionPrompt", lc(opt.getName())));
                 String val = cons.readLine();
-                if (ok(val))
+                if (ok(val)) {
                     options.set(opt.getName(), val);
+                }
             }
             // if it's still not set, that's an error
             if (getOption(opt.getName()) == null) {
                 missingOption = true;
                 logger.info(strings.get("missingOption", "--" + opt.getName()));
             }
-            if (opt.getParam().obsolete()) // a required obsolete option?
+            if (opt.getParam().obsolete()) { // a required obsolete option?
                 logger.info(strings.get("ObsoleteOption", opt.getName()));
+            }
         }
-        if (missingOption)
+        if (missingOption) {
             throw new CommandValidationException(strings.get("missingOptions", name));
+        }
 
         int operandMin = 0;
         int operandMax = 0;
@@ -868,19 +911,21 @@ public abstract class CLICommand implements PostConstruct {
             cons.printf("%s", strings.get("operandPrompt", operandParam.getName()));
             String val = cons.readLine();
             if (ok(val)) {
-                operands = new ArrayList<String>();
+                operands = new ArrayList<>();
                 operands.add(val);
             }
         }
-        if (operands.size() < operandMin)
+        if (operands.size() < operandMin) {
             throw new CommandValidationException(strings.get("notEnoughOperands", name, operandParam.getType()));
+        }
         if (operands.size() > operandMax) {
-            if (operandMax == 0)
+            if (operandMax == 0) {
                 throw new CommandValidationException(strings.get("noOperandsAllowed", name));
-            else if (operandMax == 1)
+            } else if (operandMax == 1) {
                 throw new CommandValidationException(strings.get("tooManyOperands1", name));
-            else
+            } else {
                 throw new CommandValidationException(strings.get("tooManyOperands", name, operandMax));
+            }
         }
 
         initializeCommandPassword();
@@ -898,8 +943,9 @@ public abstract class CLICommand implements PostConstruct {
         options.set("DEFAULT", operands);
 
         // if command has a "terse" option, set it from ProgramOptions
-        if (commandModel.getModelFor("terse") != null)
+        if (commandModel.getModelFor("terse") != null) {
             options.set("terse", Boolean.toString(programOpts.isTerse()));
+        }
 
         // initialize the injector.
         InjectionResolver<Param> injector = new MapInjectionResolver(commandModel, options);
@@ -944,19 +990,22 @@ public abstract class CLICommand implements PostConstruct {
          * password as if it was a parameter.
          */
         for (ParamModel opt : commandModel.getParameters()) {
-            if (!opt.getParam().password())
+            if (!opt.getParam().password()) {
                 continue;
+            }
             String pwdname = opt.getName();
             char[] pwd = getPassword(opt, null, true);
             if (pwd == null) {
-                if (opt.getParam().optional())
+                if (opt.getParam().optional()) {
                     continue; // not required, skip it
+                }
                 // if not terse, provide more advice about what to do
                 String msg;
-                if (programOpts.isTerse())
+                if (programOpts.isTerse()) {
                     msg = strings.get("missingPassword", name, passwordName(opt));
-                else
+                } else {
                     msg = strings.get("missingPasswordAdvice", name, passwordName(opt));
+                }
                 throw new CommandValidationException(msg);
             }
             options.set(pwdname, new String(pwd));
@@ -983,14 +1032,17 @@ public abstract class CLICommand implements PostConstruct {
 
         String passwordName = passwordName(opt);
         char[] password = passwords.get(passwordName) != null ? passwords.get(passwordName).toCharArray() : null;
-        if (password != null)
+        if (password != null) {
             return password;
+        }
 
-        if (opt.getParam().optional())
+        if (opt.getParam().optional()) {
             return null; // not required
+        }
 
-        if (!programOpts.isInteractive())
+        if (!programOpts.isInteractive()) {
             return null; // can't prompt for it
+        }
 
         String prompt = null;
         String promptAgain = null;
@@ -1001,20 +1053,24 @@ public abstract class CLICommand implements PostConstruct {
         String newprompt;
         if (ok(prompt)) {
             if (defaultPassword != null) {
-                if (defaultPassword.length() == 0)
+                if (defaultPassword.length() == 0) {
                     newprompt = strings.get("NewPasswordDescriptionDefaultEmptyPrompt", prompt);
-                else
+                } else {
                     newprompt = strings.get("NewPasswordDescriptionDefaultPrompt", prompt, defaultPassword);
-            } else
+                }
+            } else {
                 newprompt = strings.get("NewPasswordDescriptionPrompt", prompt);
+            }
         } else {
             if (defaultPassword != null) {
-                if (defaultPassword.length() == 0)
+                if (defaultPassword.length() == 0) {
                     newprompt = strings.get("NewPasswordDefaultEmptyPrompt", passwordName);
-                else
+                } else {
                     newprompt = strings.get("NewPasswordDefaultPrompt", passwordName, defaultPassword);
-            } else
+                }
+            } else {
                 newprompt = strings.get("NewPasswordPrompt", passwordName);
+            }
         }
 
         char[] newpassword = readPassword(newprompt);
@@ -1025,8 +1081,9 @@ public abstract class CLICommand implements PostConstruct {
          * for validity.
          */
         if (defaultPassword != null) {
-            if (newpassword == null)
+            if (newpassword == null) {
                 newpassword = "".toCharArray();
+            }
             if (newpassword.length == 0) {
                 newpassword = defaultPassword.toCharArray();
                 passwords.put(passwordName, new String(newpassword));
@@ -1081,8 +1138,9 @@ public abstract class CLICommand implements PostConstruct {
      */
     protected ParamModel getOperandModel() {
         for (ParamModel pm : commandModel.getParameters()) {
-            if (pm.getParam().primary())
+            if (pm.getParam().primary()) {
                 return pm;
+            }
         }
         return null;
     }
@@ -1209,13 +1267,15 @@ public abstract class CLICommand implements PostConstruct {
         BufferedReader reader = null;
         try {
             InputStream is = CLICommand.class.getClassLoader().getResourceAsStream(file);
-            if (is == null)
+            if (is == null) {
                 return; // in case the resource doesn't exist
+            }
             reader = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#"))
+                if (line.startsWith("#")) {
                     continue; // # indicates comment
+                }
                 StringTokenizer tok = new StringTokenizer(line, " ");
                 // handles with or without space, rudimendary as of now
                 String cmd = tok.nextToken();
@@ -1230,7 +1290,6 @@ public abstract class CLICommand implements PostConstruct {
                 } catch (IOException ee) {
                     // ignore
                 }
-
             }
         }
     }

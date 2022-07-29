@@ -37,7 +37,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <concurrency.tck-3-0.version>3.0.0</concurrency.tck-3-0.version>
+        <concurrency.tck-3-0.version>3.0.2</concurrency.tck-3-0.version>
         
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
@@ -209,7 +209,7 @@
                     <!-- Surefire / TestNG Properties -->
                     <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>suite.xml</suiteXmlFile>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-tck</dependency>
@@ -274,12 +274,14 @@
             </activation>
             <properties>
                 <glassfish-artifact-id>glassfish</glassfish-artifact-id>
+                <suiteXmlFile>suite.xml</suiteXmlFile>
             </properties>
         </profile>
         <profile>
             <id>web</id>
             <properties>
                 <glassfish-artifact-id>web</glassfish-artifact-id>
+                <suiteXmlFile>suite-web.xml</suiteXmlFile>
             </properties>
         </profile>
     </profiles>

@@ -88,6 +88,14 @@ public class GlassFishTestEnvironment {
 
 
     /**
+     * @return domain1 directory absolute path
+     */
+    public static Path getDomain1Directory() {
+        return GF_ROOT.toPath().resolve(Paths.get("domains", "domain1"));
+    }
+
+
+    /**
      * Creates a {@link Client} instance for the domain administrator.
      * Caller is responsible for closing.
      *

@@ -132,7 +132,7 @@ public class ClusterITest {
      * @return The string returned from that URL, or empty
      * string if there was a problem contacting the URL
      */
-    public static String getURL(String urlstr) {
+    private static String getURL(String urlstr) {
         URLConnection urlc = openConnection(urlstr);
         try (
             BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(), ISO_8859_1));

@@ -17,26 +17,33 @@
 package org.glassfish.main.admin.test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.glassfish.tests.utils.junit.matcher.TextFileMatchers;
+import org.hamcrest.io.FileMatchers;
 import org.junit.jupiter.api.Test;
 
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
+import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
+import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.getterMatches;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -113,4 +120,51 @@ public class AsadminLoggingITest {
                 "<${com.sun.aas.instanceRoot}/logs/server.log>")
         );
     }
+
+
+    @Test
+    public void setLogAttributes() throws Exception {
+        AsadminResult result = ASADMIN.exec("set-log-attributes", "--target", "server",
+            "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=100"
+                + ":org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes=240");
+        assertThat(result, asadminOK());
+        File serverLogFile = new File(getDomain1Directory().resolve("logs").toFile(), "server.log");
+        assertThat("lastModified", serverLogFile,
+            getterMatches(File::lastModified, lessThan(System.currentTimeMillis() - 100L)));
+
+        File loggingProperties = new File(getDomain1Directory().resolve("config").toFile(), "logging.properties");
+        assertAll(
+            () -> assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L))),
+            () -> assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L)))
+        );
+
+        List<String> lines = Files.lines(loggingProperties.toPath()).collect(Collectors.toList());
+        List<String> keys = lines.stream().filter(line -> !line.startsWith("#"))
+            .map(line -> line.replaceFirst("=.*", "")).collect(Collectors.toList());
+        assertAll(
+            () -> assertThat(keys.get(0), equalTo(".level")),
+            () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLoggerLevel")),
+            () -> {
+                String previousKey = "";
+                for (String key : keys) {
+                    assertThat(key, greaterThan(previousKey));
+                    previousKey = key;
+                }
+            }
+        );
+    }
+
+
+    @Test
+    public void rotateLog() {
+        File serverLogFile = new File(getDomain1Directory().resolve("logs").toFile(), "server.log");
+        assertThat(serverLogFile, TextFileMatchers.hasLineCount(greaterThan(50L)));
+        AsadminResult result = ASADMIN.exec("rotate-log");
+        assertThat(result, asadminOK());
+        assertAll(
+            () -> assertThat(serverLogFile, FileMatchers.anExistingFile()),
+            () -> assertThat(serverLogFile, TextFileMatchers.hasLineCount(0L))
+        );
+    }
+
 }

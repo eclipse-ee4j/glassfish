@@ -134,7 +134,35 @@ public class DOLUtils {
     )
     public static final String INVALILD_DESCRIPTOR_SHORT = "AS-DEPLOYMENT-00120";
 
+    @LogMessageInfo(message = "DEP0001:Application validation fails for given application: {0}, and jndi-name: {1}",
+            level = "SEVERE",
+            cause = "A JNDI name used for a resource in the given app fails validation",
+            action = "This is an aggregated error. Have a look at previous log messages for more details about the errors")
+    public static final String APPLICATION_VALIDATION_FAILS = "enterprise.deployment.util.application.fail";
 
+    @LogMessageInfo(message = "DEP0002:Duplicate descriptor found for given jndi-name: {0}",
+            level = "SEVERE",
+            cause = "Two or more resource definitions use the same jndi-name in the same or related contexts",
+            action = "Make sure that all JNDI names used to define resources in application's resource annotations or desciptors are unique in each context. For example java:app/myname conflicts with java:comp:myname because myname jndi-name is defined twice in the component context")
+    public static final String DUPLICATE_DESCRIPTOR = "enterprise.deployment.util.descriptor.duplicate";
+
+    @LogMessageInfo(message = "DEP0003:The jndi-name is already used in the global tree failed for given jndi-name: {0}",
+            level = "SEVERE",
+            cause = "The JNDI name of the descriptor is already used in the global JNDI tree, probably by a resource defined on the server",
+            action = "Make sure that the JNDI name doesn't conflict with any global resource already defined on the server")
+    public static final String JNDI_LOOKUP_FAILED = "enterprise.deployment.util.application.lookup";
+
+    @LogMessageInfo(message = "DEP0004:Deployment failed because a conflict occured for jndi-name: {0} for application: {1}",
+            level="SEVERE",
+            cause = "Unknown",
+            action = "Unknown")
+    public static final String INVALID_NAMESPACE = "enterprise.deployment.util.application.invalid.namespace";
+
+    @LogMessageInfo(message = "DEP0005:Deployment failed due to the invalid scope defined for jndi-name: {0}",
+            level = "SEVERE",
+            cause = "Unknown",
+            action = "Unknown")
+    public static final String INVALID_JNDI_SCOPE = "enterprise.deployment.util.application.invalid.jndiname.scope";
 
     // The system property to control the precedence between GF DD
     // and WLS DD when they are both present. When this property is

@@ -55,19 +55,6 @@ public class LogDomains {
      */
     public static final String RESOURCE_BUNDLE = "LogStrings";
 
-    /**
-     * Field
-     */
-    public static final String STD_LOGGER = DOMAIN_ROOT + "enterprise.system.std";
-
-    /**
-     * Field
-     */
-    public static final String TOOLS_LOGGER = DOMAIN_ROOT + "enterprise.system.tools";
-
-    /**
-     * Field
-     */
     public static final String EJB_LOGGER = DOMAIN_ROOT + "enterprise.system.container.ejb";
 
     /**
@@ -76,108 +63,39 @@ public class LogDomains {
     public static final String JAVAMAIL_LOGGER = DOMAIN_ROOT + "enterprise.resource.javamail";
 
     /**
-     * IIOP Logger
-     public static final String IIOP_LOGGER = DOMAIN_ROOT + "enterprise.resource.iiop";
-     */
-
-
-    /**
      * JMS Logger
      */
     public static final String JMS_LOGGER = DOMAIN_ROOT + "enterprise.resource.jms";
 
-    /**
-     * Field
-     */
     public static final String WEB_LOGGER = DOMAIN_ROOT + "enterprise.system.container.web";
 
-    /**
-     * Field
-     */
     public static final String CMP_LOGGER = DOMAIN_ROOT + "enterprise.system.container.cmp";
 
-    /**
-     * Field
-     */
     public static final String JDO_LOGGER = DOMAIN_ROOT + "enterprise.resource.jdo";
 
-    /**
-     * Field
-     */
     public static final String ACC_LOGGER = DOMAIN_ROOT + "enterprise.system.container.appclient";
 
-    /**
-     * Field
-     */
     public static final String MDB_LOGGER = DOMAIN_ROOT + "enterprise.system.container.ejb.mdb";
 
-    /**
-     * Field
-     */
     public static final String SECURITY_LOGGER = DOMAIN_ROOT + "enterprise.system.core.security";
 
-    /**
-     * Field
-     */
-    public static final String SECURITY_SSL_LOGGER = DOMAIN_ROOT + "enterprise.system.ssl.security";
-
-    /**
-     * Field
-     */
     public static final String TRANSACTION_LOGGER = DOMAIN_ROOT + "enterprise.system.core.transaction";
 
-    /**
-     * Field
-     */
     public static final String CORBA_LOGGER = DOMAIN_ROOT + "enterprise.resource.corba";
 
-    /**
-     * Field
-     */
-    //START OF IASRI 4660742
-    /**
-     * Field
-     */
     public static final String UTIL_LOGGER = DOMAIN_ROOT + "enterprise.system.util";
-    /**
-     * Field
-     */
-    public static final String NAMING_LOGGER = DOMAIN_ROOT + "enterprise.system.core.naming";
-
-    /**
-     * Field
-     */
     public static final String JNDI_LOGGER = DOMAIN_ROOT + "enterprise.system.core.naming";
-    /**
-     * Field
-     */
-    public static final String ACTIVATION_LOGGER = DOMAIN_ROOT + "enterprise.system.activation";
-    /**
-     * Field
-     */
     public static final String JTA_LOGGER = DOMAIN_ROOT + "enterprise.resource.jta";
 
     /**
      * Resource Logger
      */
-
     public static final String RSR_LOGGER = DOMAIN_ROOT + "enterprise.resource.resourceadapter";
-    //END OF IASRI 4660742
 
     /**
      * Deployment Logger
      */
     public static final String DPL_LOGGER = DOMAIN_ROOT + "enterprise.system.tools.deployment";
-
-    /**
-     * Deployment audit logger
-     */
-    public static final String DPLAUDIT_LOGGER = DOMAIN_ROOT + "enterprise.system.tools.deployment.audit";
-
-    /**
-     * Field
-     */
-    public static final String DIAGNOSTICS_LOGGER = DOMAIN_ROOT + "enterprise.system.tools.diagnostics";
 
     /**
      * JAXRPC Logger
@@ -227,54 +145,9 @@ public class LogDomains {
     public static final String CONFIG_LOGGER = DOMAIN_ROOT + "enterprise.system.core.config";
 
     /**
-     * Process Launcher Logger
-     */
-    public static final String PROCESS_LAUNCHER_LOGGER = DOMAIN_ROOT + "enterprise.tools.launcher";
-
-    /**
-     * GMS Logger
-     */
-    public static final String GMS_LOGGER = DOMAIN_ROOT + "org.glassfish.gms";
-
-    /**
-     * AMX Logger
-     */
-    public static final String AMX_LOGGER = DOMAIN_ROOT + "enterprise.system.amx";
-
-    /**
-     * JMX Logger
-     */
-    public static final String JMX_LOGGER = DOMAIN_ROOT + "enterprise.system.jmx";
-
-    /**
-     * core/kernel Logger
-     */
-    public static final String SERVICES_LOGGER = DOMAIN_ROOT + "enterprise.system.core.services";
-
-    /**
-     * webservices logger
-     */
-    public static final String WEBSERVICES_LOGGER = DOMAIN_ROOT + "enterprise.webservices";
-
-    /**
-     * monitoring logger
-     */
-    public static final String MONITORING_LOGGER = DOMAIN_ROOT + "enterprise.system.tools.monitor";
-
-    /**
      * persistence logger
      */
     public static final String PERSISTENCE_LOGGER = DOMAIN_ROOT + "org.glassfish.persistence";
-
-    /**
-     * virtualization logger
-     */
-    public static final String VIRTUALIZATION_LOGGER = DOMAIN_ROOT + "org.glassfish.virtualization";
-
-    /**
-     * PaaS logger
-     */
-    public static final String PAAS_LOGGER = DOMAIN_ROOT + "org.glassfish.paas";
 
     private static final LogManager MANAGER = LogManager.getLogManager();
     private static final Logger LOG = Logger.getLogger(LogDomains.class.getName());

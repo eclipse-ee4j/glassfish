@@ -17,8 +17,9 @@
 
 package org.glassfish.internal.data;
 
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_STOPPED;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Engine;
+import com.sun.enterprise.config.serverbeans.Module;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
@@ -43,20 +44,19 @@ import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventListener.Event;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.event.RestrictTo;
+import org.glassfish.hk2.api.DescriptorFileFinder;
 import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
-import org.glassfish.hk2.bootstrap.DescriptorFileFinder;
 import org.glassfish.hk2.bootstrap.HK2Populator;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.DeploymentTracing;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Engine;
-import com.sun.enterprise.config.serverbeans.Module;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_STOPPED;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_UNLOADED;
 
 /**
  * Information about a running application. Applications are composed of modules. Modules run in an individual
@@ -263,7 +263,7 @@ public class ApplicationInfo extends ModuleInfo {
         return sniffers;
     }
 
-    /*
+    /**
      * Returns the EngineRef for a particular container type
      *
      * @param type the container type

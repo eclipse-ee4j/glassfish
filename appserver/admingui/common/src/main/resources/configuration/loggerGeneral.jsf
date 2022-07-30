@@ -56,8 +56,8 @@
                 onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}')) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;" >
                 <!command
                     gf.isConfigName(configName="#{pageSession.configName}" );
-                    convertArrayToCommaString(array="#{pageSession.excludeFields}"  commaString="#{requestScope.tmp}");
-                    mapPut(map="#{pageSession.logAttributes}" key="com.sun.enterprise.server.logging.GFFileHandler.excludeFields" value="#{requestScope.tmp}");
+                    convertArrayToCommaString(array="#{pageSession.excludedFields}"  commaString="#{requestScope.tmp}");
+                    mapPut(map="#{pageSession.logAttributes}" key="org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields" value="#{requestScope.tmp}");
                     prepareSuccessfulMsg();
                     saveLoggingAttributes(attrs="#{pageSession.logAttributes}" config="#{pageSession.configName}");
                     gf.redirect(page="#{request.contextPath}/common/configuration/loggerGeneral.jsf?configName=#{pageSession.configName}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
@@ -65,60 +65,59 @@
             </sun:button>
         </sun:panelGroup>
     </facet>
-        <sun:button id="loadDefaultsButton" style="margin-left: 8pt"  primary="#{false}" text="$resource{i18n.button.LoadDefaults}"
-            onClick="submitAndDisable(this, '$resource{i18n.button.Processing}'); return false;" >
-                <!command
+    <sun:button id="loadDefaultsButton" style="margin-left: 8pt"  primary="#{false}" text="$resource{i18n.button.LoadDefaults}"
+        onClick="submitAndDisable(this, '$resource{i18n.button.Processing}'); return false;" >
+        <!command
                     gf.isConfigName(configName="#{pageSession.configName}" );
                     gf.getMapKeys(Map="#{pageSession.logAttributes}" Keys="#{requestScope.attrKeys}");
                     foreach(var="attrName" list="#{requestScope.attrKeys}") {
                         mapGet(Map="#{pageSession.defaultLoggingProperties}" Key="#{attrName}"  Value="#{requestScope.temp}");
                         if("!(#{requestScope.temp}=#{null})"){
-                            mapPut(map="#{pageSession.logAttributes}", key="#{attrName}", value="#{requestScope.temp}"); 
+                            mapPut(map="#{pageSession.logAttributes}", key="#{attrName}", value="#{requestScope.temp}");
                         }
                     }
-                  />
-        </sun:button>
-      
+        />
+    </sun:button>
 </sun:title>
 
 <sun:propertySheet id="general">
 #include "/common/shared/configNameSection.inc"
     <sun:propertySheetSection id="sheetSection">
-          <sun:property id="writeSystemLogEnabledProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.WriteSystemLog}" helpText="$resource{i18nc.log.WriteSystemlogHelp}">
-                <sun:checkbox id="writeSystemLogEnabled"  selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging']}" selectedValue="true" />
-           </sun:property> 
+        <sun:property id="writeSystemLogEnabledProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.WriteSystemLog}" helpText="$resource{i18nc.log.WriteSystemlogHelp}">
+            <sun:checkbox id="writeSystemLogEnabled" selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.SyslogHandler.enabled']}" selectedValue="true" />
+        </sun:property>
 
-           <sun:property id="logtoConsole"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoConsole}" helpText="$resource{i18nc.log.LogtoConsoleHelp}">
-                <sun:checkbox  selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.logtoConsole']}"  selectedValue="true" />
-           </sun:property>
-          
-           <sun:property id="rotationOnDateChange"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.rotationOnDateChange}" helpText="$resource{i18nc.log.rotationOnDateChangeHelp}">
-                <sun:checkbox  selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.rotationOnDateChange']}"  selectedValue="true" />
-           </sun:property>
+        <sun:property id="logtoFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" helpText="$resource{i18nc.log.LogtoFileHelp}">
+            <sun:checkbox selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.enabled']}"  selectedValue="true" />
+        </sun:property>
 
-          <sun:property id="multiline"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.multiLineMode}" helpText="$resource{i18nc.log.multiLineModeHelp}">
-                <sun:checkbox  selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.multiLineMode']}"  selectedValue="true" />
-           </sun:property>
+        <sun:property id="rotationOnDateChange"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.rotationOnDateChange}" helpText="$resource{i18nc.log.rotationOnDateChangeHelp}">
+            <sun:checkbox selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.rollOnDateChange']}"  selectedValue="true" />
+        </sun:property>
 
-           <sun:property id="consoleFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.ConsoleLogFormat}" helpText="$resource{i18nc.log.ConsoleLogFormatHelp}">
-                <sun:dropDown id="consoleFormat" selected="#{pageSession.logAttributes['java.util.logging.ConsoleHandler.formatter']}"
-                    labels={ "ULF","ODL"}
-                    values={"com.sun.enterprise.server.logging.UniformLogFormatter", "com.sun.enterprise.server.logging.ODLLogFormatter"} />
-          </sun:property>
+        <sun:property id="multiline"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.multiLineMode}" helpText="$resource{i18nc.log.multiLineModeHelp}">
+            <sun:checkbox selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.multiline']}"  selectedValue="true" />
+        </sun:property>
+
+        <sun:property id="consoleFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.ConsoleLogFormat}" helpText="$resource{i18nc.log.ConsoleLogFormatHelp}">
+            <sun:dropDown id="consoleFormat" selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.SimpleLogHandler.formatter']}"
+                labels={ "ULF","ODL","OneLine"}
+                values={"org.glassfish.main.jul.formatter.UniformLogFormatter", "org.glassfish.main.jul.formatter.ODLLogFormatter", "org.glassfish.main.jul.formatter.OneLineFormatter"} />
+        </sun:property>
 
         <sun:property id="logfileFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileLogFormat}" helpText="$resource{i18nc.log.FileLogFormatHelp}">
-          <sun:dropDown id="logfileFormat" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.formatter']}"
-                labels={ "ULF","ODL"}
-                values={"com.sun.enterprise.server.logging.UniformLogFormatter", "com.sun.enterprise.server.logging.ODLLogFormatter"} />
+            <sun:dropDown id="logfileFormat" selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.formatter']}"
+                labels={ "ULF","ODL","OneLine"}
+                values={"org.glassfish.main.jul.formatter.UniformLogFormatter", "org.glassfish.main.jul.formatter.ODLLogFormatter", "org.glassfish.main.jul.formatter.OneLineFormatter"} />
         </sun:property>
 
         <sun:property id="excludeFields"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.excludeFields}" helpText="$resource{i18nc.log.excludeFieldsHelp}">
             <sun:listbox id="excludeFields" immediate="#{true}"  rows="$int{6}" multiple="#{true}"
-                labels="#{pageSession.excludeFieldsOptions}" selected="#{pageSession.excludeFields}" >
+                labels="#{pageSession.excludeFieldsOptions}" selected="#{pageSession.excludedFields}" >
                 <!beforeCreate
                     getListBoxOptions(
-                        availableList={ "tid", "userId", "ecid", "timeMillis", "levelValue" },
-                        selectedCommaString="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.excludeFields']}",
+                        availableList={ "tid", "timeMillis", "levelValue" },
+                        selectedCommaString="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields']}",
                         availableListResult="#{pageSession.excludeFieldsOptions}",
                         selectedOptions="#{pageSession.excludeFields}"
                         addEmptyFirstChoice="true");
@@ -126,32 +125,32 @@
             </sun:listbox>
         </sun:property>
 
-          
-            <sun:property id="FileRotationLimitProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileRotationLimit}" helpText="$resource{i18nc.log.FileRotationLimitHelp}">
-                <sun:textField id="FileRotationLimit" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FileRotationLimit']}" text="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes']}" />
-                <sun:staticText id="byte" style="padding: 8pt" text="$resource{i18n.common.Bytes}"/>
-            </sun:property>
 
-            <sun:property id="FileRotationTimeLimitProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileRotationTimeLimit}" helpText="$resource{i18nc.log.FileRotationTimeLimitHelp}">
-                <sun:textField id="FileRotationTimeLimit" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FileRotationTimeLimit']}" text="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes']}"/>
-                <sun:staticText id="min" style="padding: 8pt" text="$resource{i18n.common.Minutes}"/>
-            </sun:property>
+        <sun:property id="FileRotationLimitProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileRotationLimit}" helpText="$resource{i18nc.log.FileRotationLimitHelp}">
+            <sun:textField id="FileRotationLimit" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FileRotationLimit']}" text="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes']}" />
+            <sun:staticText id="byte" style="padding: 8pt" text="$resource{i18n.common.Megabytes}"/>
+        </sun:property>
 
-            <sun:property id="FlushFrequencyProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FlushFrequency}" helpText="$resource{i18nc.log.FlushFrequencyHelp}">
-                <sun:textField id="FlushFrequency" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FlushFrequency']}" text="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.flushFrequency']}"/>
-            </sun:property>
-          
-            <sun:property id="MaxHistoryFiles"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.MaxHistoryFiles}" helpText="$resource{i18nc.log.MaxHistoryFilesHelp}">
-                <sun:textField id="MaxHistoryFiles" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.MaxHistoryFiles']}" text="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles']}"/>
-            </sun:property>
+        <sun:property id="FileRotationTimeLimitProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileRotationTimeLimit}" helpText="$resource{i18nc.log.FileRotationTimeLimitHelp}">
+            <sun:textField id="FileRotationTimeLimit" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FileRotationTimeLimit']}" text="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes']}"/>
+            <sun:staticText id="min" style="padding: 8pt" text="$resource{i18n.common.Minutes}"/>
+        </sun:property>
 
-            <sun:property id="logFileProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogFile}" helpText="$resource{i18nc.log.LogFileHelp}">
-                <sun:textField id="LogFile" columns="$int{70}" maxLength="#{sessionScope.fieldLengths['maxLength.log.LogFile']}" text="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.file']}"/>
-            </sun:property>
+        <sun:property id="FlushFrequencyProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FlushFrequency}" helpText="$resource{i18nc.log.FlushFrequencyHelp}">
+            <sun:textField id="FlushFrequency" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.FlushFrequency']}" text="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency']}"/>
+        </sun:property>
 
-            <sun:property id="logHandlerProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.Handler}" helpText="$resource{i18nc.log.HandlerHelp}">
-                <sun:textField id="LogHandler" columns="$int{70}" maxLength="#{sessionScope.fieldLengths['maxLength.log.Handler']}" text="#{pageSession.logAttributes['handlers']}" />
-            </sun:property>
+        <sun:property id="MaxHistoryFiles"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.MaxHistoryFiles}" helpText="$resource{i18nc.log.MaxHistoryFilesHelp}">
+            <sun:textField id="MaxHistoryFiles" styleClass="integer" columns="$int{30}" maxLength="#{sessionScope.fieldLengths['maxLength.log.MaxHistoryFiles']}" text="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles']}"/>
+        </sun:property>
+
+        <sun:property id="logFileProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogFile}" helpText="$resource{i18nc.log.LogFileHelp}">
+            <sun:textField id="LogFile" columns="$int{70}" maxLength="#{sessionScope.fieldLengths['maxLength.log.LogFile']}" text="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.file']}"/>
+        </sun:property>
+
+        <sun:property id="logHandlerProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.Handler}" helpText="$resource{i18nc.log.HandlerHelp}">
+            <sun:textField id="LogHandler" columns="$int{70}" maxLength="#{sessionScope.fieldLengths['maxLength.log.Handler']}" text="#{pageSession.logAttributes['handlers']}" />
+        </sun:property>
 
     </sun:propertySheetSection>
 </sun:propertySheet>

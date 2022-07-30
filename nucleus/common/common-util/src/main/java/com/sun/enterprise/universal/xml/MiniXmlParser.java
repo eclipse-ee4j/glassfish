@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,19 @@
 
 package com.sun.enterprise.universal.xml;
 
-import java.io.ByteArrayInputStream;
-import javax.xml.stream.XMLResolver;
 import com.sun.common.util.logging.LoggingConfigImpl;
-import com.sun.common.util.logging.LoggingPropertyNames;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.StringUtils;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +37,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static javax.xml.stream.XMLStreamConstants.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLResolver;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
+
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * A fairly simple but very specific stax XML Parser. Give it the location of domain.xml and the name of the server
@@ -50,9 +55,41 @@ import static javax.xml.stream.XMLStreamConstants.*;
  * @author bnevins
  */
 public class MiniXmlParser {
+
+    private static final String DEFAULT_ADMIN_VS_ID = "__asadmin";
+    private static final String DEFAULT_VS_ID = "server";
+    private final LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
+    private final File domainXml;
+    private final String serverName;
+    private XMLStreamReader parser;
+    private InputStreamReader reader;
+    private String configRef;
+    private final List<String> jvmOptions = new ArrayList<>();
+    private final List<String> profilerJvmOptions = new ArrayList<>();
+    private Map<String, String> javaConfig;
+    private Map<String, String> profilerConfig = Collections.emptyMap();
+    private final Map<String, String> profilerSysProps = new HashMap<>();
+    private boolean valid = false;
+    private final List<HostAndPort> adminAddresses = new ArrayList<>();
+    private String domainName;
+    private static final LocalStringsImpl strings = new LocalStringsImpl(MiniXmlParser.class);
+    private boolean monitoringEnabled = true; // Issue 12762 Absent <monitoring-service /> element means monitoring-enabled=true by default
+    private String adminRealm = null;
+    private Map<String,String> adminRealmProperties = null;
+    private final List<Map<String, String>> vsAttributes = new ArrayList<>();
+    private final List<Map<String, String>> listenerAttributes = new ArrayList<>();
+    private final List<Map<String, String>> protocolAttributes = new ArrayList<>();
+    private boolean sawNetworkConfig;
+    private boolean sawDefaultConfig;
+    private boolean sawConfig;
+    private final SysPropsHandler sysProps = new SysPropsHandler();
+    private List<ParsedCluster> clusters = null;
+    private boolean secureAdminEnabled = false;
+
     public MiniXmlParser(File domainXml) throws MiniXmlParserException {
         this(domainXml, "server");  // default for a domain
     }
+
 
     public MiniXmlParser(File domainXml, String serverName) throws MiniXmlParserException {
         this.serverName = serverName;
@@ -60,32 +97,28 @@ public class MiniXmlParser {
         try {
             read();
 
-            if (!sawConfig)
+            if (!sawConfig) {
                 throw new EndDocumentException(); // handled just below...
+            }
 
             valid = true;
-        }
-        catch (EndDocumentException e) {
+        } catch (EndDocumentException e) {
             throw new MiniXmlParserException(strings.get("enddocument", configRef, serverName));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new MiniXmlParserException(strings.get("toplevel", e), e);
-        }
-        finally {
+        } finally {
             try {
                 if (parser != null) {
                     parser.close();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // ignore
             }
             try {
                 if (reader != null) {
                     reader.close();
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 // ignore
             }
         }
@@ -169,12 +202,11 @@ public class MiniXmlParser {
         try {
             Map<String, String> map = loggingConfig.getLoggingProperties();
             String logFileContains = "${com.sun.aas.instanceName}";
-            logFilename = map.get(LoggingPropertyNames.file);
+            logFilename = map.get(GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName());
             if (logFilename != null && logFilename.contains(logFileContains)) {
-                logFilename = replaceOld(logFilename,logFileContains,this.serverName);
+                logFilename = replaceOld(logFilename, logFileContains, this.serverName);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // just return null
         }
         return logFilename;
@@ -185,7 +217,7 @@ public class MiniXmlParser {
             final String aOldPattern,
             final String aNewPattern
     ) {
-        final StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
         //startIdx and idxOld delimit various chunks of aInput; these
         //chunks always end where aOldPattern begins
         int startIdx = 0;
@@ -264,24 +296,8 @@ public class MiniXmlParser {
                 domainXml.toURI().toString(), reader);
     }
 
-    // In JDK 1.6, StAX is part of JRE, so we use no argument variant of
-    // newInstance(), where as on JDK 1.5, we use two argument version of
-    // newInstance() so that we can pass the classloader that loads
-    // XMLInputFactory to load the factory, otherwise by default StAX uses
-    // Thread's context class loader to locate the factory. See:
-    // https://glassfish.dev.java.net/issues/show_bug.cgi?id=6428
-    //
-
     private XMLInputFactory getXmlInputFactory() {
-        Class clazz = XMLInputFactory.class;
-        ClassLoader cl = clazz.getClassLoader();
-
-        // jdk6+
-        if (cl == null)
-            return XMLInputFactory.newInstance();
-
-        // jdk5
-        return XMLInputFactory.newInstance(clazz.getName(), cl);
+        return XMLInputFactory.newFactory();
     }
 
     private void getConfigRefName() throws XMLStreamException, EndDocumentException {
@@ -298,12 +314,14 @@ public class MiniXmlParser {
             if ("servers".equals(name)) {
                 break;
             }
-            else if ("clusters".equals(name))
+            else if ("clusters".equals(name)) {
                 parseClusters();
-            else if ("system-property".equals(name))
+            } else if ("system-property".equals(name)) {
                 parseSystemProperty(SysPropsHandler.Type.DOMAIN);
-            else
+            }
+            else {
                 parseDomainProperty(); // maybe it is the domain name?
+            }
         }
         // the cursor is at the start-element of <servers>
         while (true) {
@@ -321,8 +339,8 @@ public class MiniXmlParser {
                 parseSysPropsFromServer();
                 skipToEnd("servers");
                 return;
-            } else
-                skipToEnd("server");
+            }
+            skipToEnd("server");
         }
     }
 
@@ -336,19 +354,21 @@ public class MiniXmlParser {
             if ("configs".equals(name)) {
                 break;
             }
-            if ("clusters".equals(name))
+            if ("clusters".equals(name)) {
                 parseClusters();
-            else if ("system-property".equals(name))
+            } else if ("system-property".equals(name)) {
                 parseSystemProperty(SysPropsHandler.Type.DOMAIN);
-            else
+            } else {
                 parseDomainProperty(); // maybe it is the domain name?
+            }
         }
         while (skipToButNotPast("configs", "config")) {
             // get the attributes for this <config>
             Map<String, String> map = parseAttributes();
             String thisName = map.get("name");
-            if ("default-config".equals(thisName))
+            if ("default-config".equals(thisName)) {
                 sawDefaultConfig = true;
+            }
             if (configRef.equals(thisName)) {
                 sawConfig = true;
                 parseConfig();
@@ -385,14 +405,11 @@ public class MiniXmlParser {
                     parseNetworkConfig();
                 } else if ("monitoring-service".equals(name)) {
                     parseMonitoringService();
-                }
-                else if("admin-service".equals(name)) {
+                } else if("admin-service".equals(name)) {
                     parseAdminService();
-                }
-                else if("security-service".equals(name)) {
+                } else if("security-service".equals(name)) {
                     populateAdminRealmProperties();
-                }
-                else {
+                } else {
                     skipTree(name);
                 }
             }
@@ -426,8 +443,9 @@ public class MiniXmlParser {
                     parseProtocols();
                 } else if ("network-listeners".equals(name)) {
                     parseListeners();
-                } else
+                } else {
                     skipTree(name);
+                }
             }
         }
     }
@@ -486,8 +504,9 @@ public class MiniXmlParser {
         profilerConfig = parseAttributes();
 
         // the default is true
-        if (!profilerConfig.containsKey("enabled"))
+        if (!profilerConfig.containsKey("enabled")) {
             profilerConfig.put("enabled", "true");
+        }
 
         while (skipToButNotPast("profiler", "jvm-options", "property")) {
             if ("jvm-options".equals(parser.getLocalName())) {
@@ -548,8 +567,9 @@ public class MiniXmlParser {
             // cursor is at a START_ELEMENT
             String localName = parser.getLocalName();
 
-            if (names.contains(localName))
+            if (names.contains(localName)) {
                 return;
+            }
 
             skipTree(localName);
         }
@@ -627,14 +647,15 @@ public class MiniXmlParser {
 
             while (skipToButNotPast("domain", "property", "clusters", "system-property","secure-admin")) {
                 String name = parser.getLocalName();
-                if ("clusters".equals(name))
+                if ("clusters".equals(name)) {
                     parseClusters();
-                else if ("system-property".equals(name))
+                } else if ("system-property".equals(name)) {
                     parseSystemProperty(SysPropsHandler.Type.DOMAIN);
-                else if ("property".equals(name))
+                } else if ("property".equals(name)) {
                     parseDomainProperty(); // property found -- maybe it is the domain name?
-                else if("secure-admin".equals(name))
+                } else if("secure-admin".equals(name)) {
                     parseSecureAdmin();
+                }
             }
             if (domainName == null) {
                 Logger.getLogger(MiniXmlParser.class.getName()).log(
@@ -709,7 +730,7 @@ public class MiniXmlParser {
             if ("auth-realm".equals(name)) {
                 attributes = parseAttributes();
                 if (attributes.get("name").equals(adminRealm)) {
-                    adminRealmProperties = new HashMap<String, String>();
+                    adminRealmProperties = new HashMap<>();
                     adminRealmProperties.put("classname", attributes.get("classname"));
                     while (true) {
                         skipToButNotPast("auth-realm", "property");
@@ -825,11 +846,12 @@ public class MiniXmlParser {
                             int port = getPort(atts.get("port"));
                             if (port >= 0) {
                                 String addr = atts.get("address");
-                                if (!GFLauncherUtils.ok(addr))
+                                if (!GFLauncherUtils.ok(addr)) {
                                     addr = "localhost";
-                                if (StringUtils.isToken(addr))
-                                    addr = sysProps.get(
-                                            StringUtils.stripToken(addr));
+                                }
+                                if (StringUtils.isToken(addr)) {
+                                    addr = sysProps.get(StringUtils.stripToken(addr));
+                                }
                                 boolean secure = false;
                                 String protocol = atts.get("protocol");
                                 atts = getProtocolByName(protocol);
@@ -838,10 +860,11 @@ public class MiniXmlParser {
                                     secure = sec != null
                                             && "true".equalsIgnoreCase(sec);
                                 }
-                                if (GFLauncherUtils.ok(addr))
+                                if (GFLauncherUtils.ok(addr)) {
                                     adminAddresses.add(
                                             new HostAndPort(addr, port, secure));
                                 // ed: seven end-braces is six too many for my code!
+                                }
                             }
                             break;
                         }
@@ -855,19 +878,16 @@ public class MiniXmlParser {
         int port = -1;
         try {
             port = Integer.parseInt(portString);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // HEY!  Why are you not checking BEFORE the Exception?
             // Well, it might be slower to call isToken() on strings that consist
             // of just numbers.  We just do this stuff if necessary...
             try {
                 portString = sysProps.get(StringUtils.stripToken(portString));
-
                 if (portString != null && portString.length() > 0) {
                     port = Integer.parseInt(portString);
                 }
-            }
-            catch (Exception e2) {
+            } catch (Exception e2) {
                 // GI but not GO !
             }
         }
@@ -880,15 +900,16 @@ public class MiniXmlParser {
             if (id == null) {
                 id = atts.get("id");
             }
-            if (id != null && id.equals(name))
+            if (id != null && id.equals(name)) {
                 return atts;
+            }
         }
         return null;
     }
 
     private Map<String, String> parseAttributes() {
         int num = parser.getAttributeCount();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for (int i = 0; i < num; i++) {
             map.put(parser.getAttributeName(i).getLocalPart(), parser.getAttributeValue(i));
         }
@@ -900,8 +921,7 @@ public class MiniXmlParser {
     private void parseClusters() throws XMLStreamException, EndDocumentException {
         // cursor ==> clusters
         // if there is more than one clusters element (!weird!) only use the last one
-        clusters = new ArrayList<ParsedCluster>();
-
+        clusters = new ArrayList<>();
         while (skipToButNotPast("clusters", "cluster")) {
             // cursor ==> "cluster"
             ParsedCluster pc = new ParsedCluster(parseAttributes().get("name"));
@@ -928,25 +948,25 @@ public class MiniXmlParser {
                 // NOT parseSystemProperty() because this might not be "our" cluster
                 // finalTouches() will add the correct system-property's
                 parseProperty(pc.sysProps);
-            }
-            else if ("server-ref".equals(name)) {
+            } else if ("server-ref".equals(name)) {
                 Map<String, String> atts = parseAttributes();
                 // atts is guaranteed to be non-null
                 String sname = atts.get("ref");
-                if (GFLauncherUtils.ok(sname))
+                if (GFLauncherUtils.ok(sname)) {
                     pc.serverNames.add(sname);
+                }
             }
         }
     }
 
     // add any cluster system props to the data structure...
     private void finalTouches() {
-        if (clusters == null)
+        if (clusters == null) {
             return;
+        }
 
         for (ParsedCluster pc : clusters) {
             Map<String, String> props = pc.getMySysProps(serverName);
-
             if (props != null) {
                 sysProps.add(SysPropsHandler.Type.CLUSTER, props);
                 break;  // done!!
@@ -960,36 +980,4 @@ public class MiniXmlParser {
         EndDocumentException() {
         }
     }
-
-    private static final String DEFAULT_ADMIN_VS_ID = "__asadmin";
-    private static final String DEFAULT_VS_ID = "server";
-    private LoggingConfigImpl loggingConfig = new LoggingConfigImpl();
-    private File domainXml;
-    private XMLStreamReader parser;
-    private InputStreamReader reader;
-    private String serverName;
-    private String configRef;
-    private List<String> jvmOptions = new ArrayList<String>();
-    private List<String> profilerJvmOptions = new ArrayList<String>();
-    private Map<String, String> javaConfig;
-    private Map<String, String> profilerConfig = Collections.emptyMap();
-    private Map<String, String> profilerSysProps = new HashMap<String, String>();
-    private boolean valid = false;
-    private List<HostAndPort> adminAddresses = new ArrayList<HostAndPort>();
-    private String domainName;
-    private static final LocalStringsImpl strings = new LocalStringsImpl(MiniXmlParser.class);
-    private boolean monitoringEnabled = true; // Issue 12762 Absent <monitoring-service /> element means monitoring-enabled=true by default
-    private String adminRealm = null;
-    private Map<String,String> adminRealmProperties = null;
-    private List<Map<String, String>> vsAttributes = new ArrayList<Map<String, String>>();
-    private List<Map<String, String>> listenerAttributes = new ArrayList<Map<String, String>>();
-    private List<Map<String, String>> protocolAttributes = new ArrayList<Map<String, String>>();
-    private boolean sawNetworkConfig;
-    private boolean sawDefaultConfig;
-    private boolean sawConfig;
-    private SysPropsHandler sysProps = new SysPropsHandler();
-    private List<ParsedCluster> clusters = null;
-    private boolean secureAdminEnabled = false;
-
-
 }

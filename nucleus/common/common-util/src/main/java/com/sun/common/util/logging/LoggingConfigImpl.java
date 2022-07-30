@@ -85,22 +85,16 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
     @Inject
     FileMonitoring fileMonitoring;
 
-    Properties props = new Properties();
+    LoggingProperties props = new LoggingProperties();
     String loggingPropertiesName;
     File loggingConfigDir = null;
-
-    /**
-     * Constructor
-     */
 
     @Override
     public void postConstruct() {
         // set logging.properties filename
         setupConfigDir(env.getConfigDirPath(), env.getLibPath());
-
     }
 
-    // this is so the launcher can pass in where the dir is since
 
     public void setupConfigDir(File file, File installDir) {
         loggingConfigDir = file;
@@ -112,7 +106,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
      * Load the properties for DAS
      */
     private void loadLoggingProperties() throws IOException {
-        props = new Properties();
+        props = new LoggingProperties();
         File file = getLoggingPropertiesFile();
         try (InputStream fis = openPropertyFile(file)) {
             props.load(fis);
@@ -124,7 +118,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
      * Load the properties for given target.
      */
     private void loadLoggingProperties(String target) throws IOException {
-        props = new Properties();
+        props = new LoggingProperties();
         File file = getLoggingPropertiesFile(target);
         try (InputStream fis = openPropertyFile(file)) {
             props.load(fis);
@@ -296,7 +290,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
                 setWebLoggers(e.getValue());
             }
 
-            //build Map of entries to return
+            // build Map of entries to return
             m.put(key, property);
 
         }
@@ -674,7 +668,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         try {
             File loggingTemplateFile = new File(env.getConfigDirPath(),
                 ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
-            fisForLoggingTemplate = new java.io.FileInputStream(loggingTemplateFile);
+            fisForLoggingTemplate = new FileInputStream(loggingTemplateFile);
             propsLoggingTempleate.load(fisForLoggingTemplate);
         } finally {
             safeCloseStream(fisForLoggingTemplate);

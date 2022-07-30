@@ -18,7 +18,6 @@ package com.sun.enterprise.deployment.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +52,7 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
+import static com.sun.enterprise.deployment.util.DOLUtils.INVALID_NAMESPACE;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
@@ -104,7 +103,7 @@ public class ApplicationValidator extends ComponentValidator
             accept(application);
 
             if (!validateResourceDescriptor(application)) {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.fail",
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.APPLICATION_VALIDATION_FAILS,
                         new Object[] { application.getAppName() });
                 throw new IllegalStateException(
                     localStrings.getLocalString("enterprise.deployment.util.application.fail",
@@ -560,7 +559,7 @@ public class ApplicationValidator extends ComponentValidator
                         allUniqueResource = false;
                         return true;
                     } else {
-                        DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.descriptor.duplicate",
+                        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR,
                                 new Object[] { descriptor.getName() });
 
                     }
@@ -569,7 +568,7 @@ public class ApplicationValidator extends ComponentValidator
                         allUniqueResource = false;
                         return true;
                     } else {
-                        DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.descriptor.duplicate",
+                        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR,
                                 new Object[] { descriptor.getName() });
 
                     }
@@ -578,7 +577,7 @@ public class ApplicationValidator extends ComponentValidator
                         allUniqueResource = false;
                         return true;
                     } else {
-                        DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.descriptor.duplicate",
+                        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR,
                                 new Object[] { descriptor.getName() });
 
                     }
@@ -587,7 +586,7 @@ public class ApplicationValidator extends ComponentValidator
                         allUniqueResource = false;
                         return true;
                     } else {
-                        DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.descriptor.duplicate",
+                        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR,
                                 new Object[] { descriptor.getName() });
 
                     }
@@ -616,9 +615,9 @@ public class ApplicationValidator extends ComponentValidator
 
         Vector appVectorName = validNameSpaceDetails.get(APP_KEYS);
         Vector ebdVectorName = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
-        Iterator<Map.Entry<String, CommonResourceValidator>> entires = allResourceDescriptors.entrySet().iterator();
-        while(entires.hasNext()) {
-            Map.Entry<String, CommonResourceValidator> entry = entires.next();
+        Iterator<Map.Entry<String, CommonResourceValidator>> entries = allResourceDescriptors.entrySet().iterator();
+        while(entries.hasNext()) {
+            Map.Entry<String, CommonResourceValidator> entry = entries.next();
             CommonResourceValidator commonResourceValidator = entry.getValue();
             Vector scopeVector = commonResourceValidator.getScope();
             String jndiName = commonResourceValidator.getJndiName();
@@ -629,7 +628,7 @@ public class ApplicationValidator extends ComponentValidator
                     for (int j = 0; j < appVectorName.size(); j++) {
                         if (scope.equals(appVectorName.get(j))) {
                             inValidJndiName = jndiName;
-                            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.jndiname.scope",
+                            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_JNDI_SCOPE,
                                     new Object[] { jndiName });
                             return false;
                         }
@@ -637,7 +636,7 @@ public class ApplicationValidator extends ComponentValidator
                     for (int j = 0; j < ebdVectorName.size(); j++) {
                         if (scope.equals(ebdVectorName.get(j))) {
                             inValidJndiName = jndiName;
-                            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.jndiname.scope",
+                            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_JNDI_SCOPE,
                                     new Object[] { jndiName });
                             return false;
                         }
@@ -651,7 +650,7 @@ public class ApplicationValidator extends ComponentValidator
                     for (int j = 0; j < appVectorName.size(); j++) {
                         if (scope.equals(appVectorName.get(j))) {
                             inValidJndiName = jndiName;
-                            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.jndiname.scope",
+                            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_JNDI_SCOPE,
                                     new Object[] { jndiName });
                             return false;
                         }
@@ -678,12 +677,17 @@ public class ApplicationValidator extends ComponentValidator
                         InitialContext ic = new InitialContext();
                         Object lookup = ic.lookup(jndiName);
                         if (lookup != null) {
+                            inValidJndiName = jndiName;
+                            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.JNDI_LOOKUP_FAILED,
+                                new Object[] { jndiName });
+
                             return false;
                         }
                     } catch (NamingException e) {
-                        inValidJndiName = jndiName;
-                        DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.lookup",
-                                new Object[] { jndiName });
+                        /* 
+                         Do nothing, this is expected.
+                         A failed lookup means there's no conflict with a resource defined on the server.
+                        */ 
                     }
 
                 }
@@ -712,7 +716,7 @@ public class ApplicationValidator extends ComponentValidator
                 }
                 if (firstElement.equals(otherElements)) {
                     inValidJndiName = jndiName;
-                    DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.namespace",
+                    DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_NAMESPACE,
                         new Object[] { jndiName, application.getAppName() });
                 }
             }
@@ -749,7 +753,7 @@ public class ApplicationValidator extends ComponentValidator
                 }
                 if (firstElement.equals(otherElements)) {
                     inValidJndiName = jndiName;
-                    DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.namespace",
+                    DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALID_NAMESPACE,
                         new Object[] { jndiName, application.getAppName() });
                 }
             }
@@ -786,7 +790,7 @@ public class ApplicationValidator extends ComponentValidator
                 }
                 if (firstElement.equals(otherElements)) {
                     inValidJndiName = jndiName;
-                    DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.util.application.invalid.namespace",
+                    DOLUtils.getDefaultLogger().log(Level.SEVERE, INVALID_NAMESPACE,
                         new Object[] { jndiName, application.getAppName() });
                     return false;
                 }

@@ -684,10 +684,10 @@ public class ApplicationValidator extends ComponentValidator
                             return false;
                         }
                     } catch (NamingException e) {
-                        /* 
+                        /*
                          Do nothing, this is expected.
                          A failed lookup means there's no conflict with a resource defined on the server.
-                        */ 
+                        */
                     }
 
                 }

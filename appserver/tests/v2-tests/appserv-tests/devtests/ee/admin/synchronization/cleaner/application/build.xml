@@ -171,7 +171,6 @@
                 <path refid="test.classpath"/>
             </classpath>
             -->
-        <jvmarg value="-Djava.util.logging.manager=com.sun.enterprise.server.logging.ServerLogManager"/>
         <jvmarg value="-Dcom.sun.aas.instanceRoot=${env.S1AS_HOME}/nodeagents/${nodeagent.name}/${clustered.server.name}"/>
         <jvmarg value="-Dappname=${appname}App"/>
        </java>

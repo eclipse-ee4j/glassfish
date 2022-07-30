@@ -133,10 +133,7 @@ public class AsadminLoggingITest {
             getterMatches(File::lastModified, lessThan(System.currentTimeMillis() - 100L)));
 
         File loggingProperties = new File(getDomain1Directory().resolve("config").toFile(), "logging.properties");
-        assertAll(
-            () -> assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L))),
-            () -> assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L)))
-        );
+        assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L)));
 
         List<String> lines = Files.lines(loggingProperties.toPath()).collect(Collectors.toList());
         List<String> keys = lines.stream().filter(line -> !line.startsWith("#"))

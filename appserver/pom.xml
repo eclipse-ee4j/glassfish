@@ -157,7 +157,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.1</microprofile.config-api.version>
-        <helidon-config.version>3.0.0-M2</helidon-config.version>
+        <helidon-config.version>3.0.0</helidon-config.version>
 
         <!-- Admin console components -->
 

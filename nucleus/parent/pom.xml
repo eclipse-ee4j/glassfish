@@ -153,7 +153,7 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.8.2</junit.version>
+        <junit.version>5.9.0</junit.version>
         <jmh.version>1.35</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -482,7 +482,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.eventadmin</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.4</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -761,7 +761,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.6</version>
+                    <version>5.1.8</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -908,7 +908,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.3.1</version>
+                            <version>10.3.2</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -941,7 +941,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>4.0.0-M2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>

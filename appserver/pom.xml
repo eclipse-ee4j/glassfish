@@ -85,7 +85,7 @@
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.1.0</jakarta.websocket-api.version>
-        <tyrus.version>2.1.0-M4</tyrus.version>
+        <tyrus.version>2.1.0</tyrus.version>
 
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.1</jakarta.concurrent-api.version>
@@ -127,11 +127,11 @@
         <jakarta.ejb-api.version>4.0.1</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jakarta.jsonp-api.version>2.1.0</jakarta.jsonp-api.version>
-        <parsson.version>1.1.0</parsson.version>
-        <parsson-media.version>1.1.0</parsson-media.version>
+        <jakarta.jsonp-api.version>2.1.1</jakarta.jsonp-api.version>
+        <parsson.version>1.1.1</parsson.version>
+        <parsson-media.version>1.1.1</parsson-media.version>
         <jakarta.json.bind-api.version>3.0.0</jakarta.json.bind-api.version>
-        <yasson.version>3.0.0</yasson.version>
+        <yasson.version>3.0.1</yasson.version>
 
         <!-- Jakarta Pages -->
         <jakarta.pages-api.version>3.1.0</jakarta.pages-api.version>
@@ -157,7 +157,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.1</microprofile.config-api.version>
-        <helidon-config.version>3.0.0-M2</helidon-config.version>
+        <helidon-config.version>3.0.0</helidon-config.version>
 
         <!-- Admin console components -->
 

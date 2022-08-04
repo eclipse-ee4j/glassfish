@@ -59,7 +59,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
     private static final String LABEL_RECORDNUMBER = "RECORDNUMBER";
 
     private final ExcludeFieldsSupport excludeFieldsSupport = new ExcludeFieldsSupport();
-    private String recordFieldSeparator = DEFAULT_FIELD_SEPARATOR;
+    private String fieldSeparator = DEFAULT_FIELD_SEPARATOR;
     private boolean multiline = true;
 
     public ODLLogFormatter(final HandlerId handlerId) {
@@ -80,7 +80,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
     private static void configure(final ODLLogFormatter formatter, final FormatterConfigurationHelper helper) {
         formatter.setExcludeFields(helper.getString(EXCLUDED_FIELDS, formatter.excludeFieldsSupport.toString()));
         formatter.multiline = helper.getBoolean(MULTILINE, formatter.multiline);
-        formatter.recordFieldSeparator = helper.getString(FIELD_SEPARATOR, formatter.recordFieldSeparator);
+        formatter.fieldSeparator = helper.getString(FIELD_SEPARATOR, formatter.fieldSeparator);
     }
 
 
@@ -148,7 +148,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
     private void appendTimestamp(final StringBuilder output, final OffsetDateTime timestamp) {
         output.append(FIELD_BEGIN_MARKER);
         output.append(getTimestampFormatter().format(timestamp));
-        output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+        output.append(FIELD_END_MARKER).append(fieldSeparator);
     }
 
     private void appendProductId(final StringBuilder output) {
@@ -157,13 +157,13 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (productId != null) {
             output.append(productId);
         }
-        output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+        output.append(FIELD_END_MARKER).append(fieldSeparator);
     }
 
     private void appendLogLevel(final StringBuilder output, final Level logLevel) {
         output.append(FIELD_BEGIN_MARKER);
         output.append(logLevel.getName());
-        output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+        output.append(FIELD_END_MARKER).append(fieldSeparator);
     }
 
     private void appendMessageKey(final StringBuilder output, final String msgId) {
@@ -171,7 +171,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (msgId != null) {
             output.append(msgId);
         }
-        output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+        output.append(FIELD_END_MARKER).append(fieldSeparator);
     }
 
     private void appendLoggerName(final StringBuilder output, final String loggerName) {
@@ -179,14 +179,14 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (loggerName != null) {
             output.append(loggerName);
         }
-        output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+        output.append(FIELD_END_MARKER).append(fieldSeparator);
     }
 
     private void appendThread(final StringBuilder output, final int threadId, final String threadName) {
         if (!excludeFieldsSupport.isSet(SupplementalAttribute.TID)) {
             output.append(FIELD_BEGIN_MARKER);
             output.append("tid: ").append("_ThreadID=").append(threadId).append(" _ThreadName=").append(threadName);
-            output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+            output.append(FIELD_END_MARKER).append(fieldSeparator);
         }
     }
 
@@ -194,7 +194,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (!excludeFieldsSupport.isSet(SupplementalAttribute.LEVEL_VALUE)) {
             output.append(FIELD_BEGIN_MARKER);
             output.append("levelValue: ").append(logLevel.intValue());
-            output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+            output.append(FIELD_END_MARKER).append(fieldSeparator);
         }
     }
 
@@ -202,7 +202,7 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (isPrintSequenceNumber()) {
             output.append(FIELD_BEGIN_MARKER);
             output.append(LABEL_RECORDNUMBER).append(": ").append(sequenceNumber);
-            output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+            output.append(FIELD_END_MARKER).append(fieldSeparator);
         }
     }
 
@@ -213,12 +213,12 @@ public class ODLLogFormatter extends GlassFishLogFormatter {
         if (className != null) {
             output.append(FIELD_BEGIN_MARKER);
             output.append(LABEL_CLASSNAME).append(": ").append(className);
-            output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+            output.append(FIELD_END_MARKER).append(fieldSeparator);
         }
         if (methodName != null) {
             output.append(FIELD_BEGIN_MARKER);
             output.append(LABEL_METHODNAME).append(": ").append(methodName);
-            output.append(FIELD_END_MARKER).append(recordFieldSeparator);
+            output.append(FIELD_END_MARKER).append(fieldSeparator);
         }
     }
 

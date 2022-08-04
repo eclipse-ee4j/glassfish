@@ -58,8 +58,8 @@ public class LogFileManager {
 
     private final File logFile;
     private final long maxFileSize;
-    private final boolean compressOldLogs;
-    private final int maxCountOfOldLogs;
+    private final boolean compressOldLogFiles;
+    private final int maxCountOfOldLogFiles;
     private final HandlerSetStreamMethod streamSetter;
     private final HandlerCloseStreamMethod streamCloser;
 
@@ -73,9 +73,9 @@ public class LogFileManager {
      * @param logFile - output logging file path
      * @param maxFileSize - if the size of the file crosses this value, the file is renamed to the
      *            logFile name with added suffix ie. <code>server.log_2020-05-01T16-28-27</code>
-     * @param compressOldLogs - if true, rolled file is packed to GZIP (so the file will have a name
+     * @param compressOldLogFiles - if true, rolled file is packed to GZIP (so the file will have a name
      *            ie. <code>server.log_2020-05-01T21-50-09.gz</code>)
-     * @param maxCountOfOldLogs - if the count of rolled files with logFile's file name prefix
+     * @param maxCountOfOldLogFiles - if the count of rolled files with logFile's file name prefix
      *            crosses this value, old files will be permanently deleted.
      * @param streamSetter - this should be a {@link StreamHandler#setOutputStream} method. This
      *            method will be called when we enable ouput.
@@ -83,13 +83,13 @@ public class LogFileManager {
      *            be called when we disable output.
      */
     public LogFileManager(final File logFile, //
-        final long maxFileSize, final boolean compressOldLogs, final int maxCountOfOldLogs, //
+        final long maxFileSize, final boolean compressOldLogFiles, final int maxCountOfOldLogFiles, //
         final HandlerSetStreamMethod streamSetter, final HandlerCloseStreamMethod streamCloser //
     ) {
         this.logFile = logFile;
         this.maxFileSize = maxFileSize;
-        this.compressOldLogs = compressOldLogs;
-        this.maxCountOfOldLogs = maxCountOfOldLogs;
+        this.compressOldLogFiles = compressOldLogFiles;
+        this.maxCountOfOldLogFiles = maxCountOfOldLogFiles;
         this.streamSetter = streamSetter;
         this.streamCloser = streamCloser;
     }
@@ -273,7 +273,7 @@ public class LogFileManager {
 
     // synchronized - it is executed in separate thread!
     private synchronized void cleanUpHistoryLogFiles(final File rotatedFile) {
-        if (this.compressOldLogs) {
+        if (this.compressOldLogFiles) {
             compressFile(rotatedFile);
         }
         deleteOldLogFiles();
@@ -304,7 +304,7 @@ public class LogFileManager {
 
 
     private void deleteOldLogFiles() {
-        if (this.maxCountOfOldLogs == 0) {
+        if (this.maxCountOfOldLogFiles == 0) {
             return;
         }
 
@@ -316,7 +316,7 @@ public class LogFileManager {
         final FileFilter filter = f -> f.isFile() && !f.getName().equals(logFileName)
             && f.getName().startsWith(logFileName);
         Arrays.stream(dir.listFiles(filter)).sorted(Comparator.comparing(File::getName).reversed())
-            .skip(this.maxCountOfOldLogs).forEach(this::deleteFile);
+            .skip(this.maxCountOfOldLogFiles).forEach(this::deleteFile);
     }
 
 

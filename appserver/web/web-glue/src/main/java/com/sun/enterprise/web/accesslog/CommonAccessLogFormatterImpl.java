@@ -127,7 +127,7 @@ public class CommonAccessLogFormatterImpl extends AccessLogFormatter {
      */
     private void appendCurrentDate(CharBuffer cb) {
         cb.put("[");
-
+        cb.put(getPattern().getDateTimeFormatter().format(getTimestamp()));
         cb.put("]");
     }
 

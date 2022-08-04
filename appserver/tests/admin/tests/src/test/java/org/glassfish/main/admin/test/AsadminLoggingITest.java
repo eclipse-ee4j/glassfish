@@ -140,7 +140,7 @@ public class AsadminLoggingITest {
             .map(line -> line.replaceFirst("=.*", "")).collect(Collectors.toList());
         assertAll(
             () -> assertThat(keys.get(0), equalTo(".level")),
-            () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLoggerLevel")),
+            () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLogger.level")),
             () -> {
                 String previousKey = "";
                 for (String key : keys) {

@@ -32,14 +32,14 @@
     <properties>
         <maven.site.skip>true</maven.site.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <asciidoctor.maven.plugin.version>2.2.1</asciidoctor.maven.plugin.version>
-        <asciidoctorj.version>2.5.2</asciidoctorj.version>
-        <asciidoctorj.pdf.version>1.6.0</asciidoctorj.pdf.version>
+        <asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
+        <asciidoctorj.version>2.5.3</asciidoctorj.version>
+        <asciidoctorj.pdf.version>2.1.6</asciidoctorj.pdf.version>
         <jruby.version>9.3.2.0</jruby.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
-        <pdf.toclevels>2</pdf.toclevels>
+        <pdf.toclevels>3</pdf.toclevels>
         <productName>Eclipse GlassFish</productName>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
     </properties>
@@ -71,7 +71,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>org.jruby</groupId>
-                        <artifactId>jruby-complete</artifactId>
+                        <artifactId>jruby</artifactId>
                         <version>${jruby.version}</version>
                     </dependency>
                     <dependency>
@@ -116,7 +116,7 @@
                             <attributes>
                                 <linkcss>true</linkcss>
                                 <toc>left</toc>
-                                <toclevels>1</toclevels>
+                                <toclevels>3</toclevels>
                                 <embedAssets>false</embedAssets>
                             </attributes>
                         </configuration>

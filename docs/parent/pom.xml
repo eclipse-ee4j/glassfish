@@ -35,7 +35,7 @@
         <asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>2.5.3</asciidoctorj.version>
         <asciidoctorj.pdf.version>2.1.6</asciidoctorj.pdf.version>
-        <jruby.version>9.2.20.1</jruby.version>
+        <jruby.version>9.3.2.0</jruby.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>

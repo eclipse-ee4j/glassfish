@@ -28,7 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
-import org.glassfish.tests.utils.junit.matcher.TextFileMatchers;
 import org.hamcrest.io.FileMatchers;
 import org.junit.jupiter.api.Test;
 
@@ -37,10 +36,13 @@ import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
 import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.getterMatches;
+import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.hasLineCount;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.matchesPattern;
@@ -64,7 +66,7 @@ public class AsadminLoggingITest {
         assertNotNull(path, () -> "zip file path parsed from " + result.getStdOut());
         File zipFile = new File(path);
         assertAll(
-            () -> assertThat(new File(path).length(), greaterThan(2_000L)),
+            () -> assertThat(zipFile.length(), greaterThan(2_000L)),
             () -> assertThat(zipFile.getName(), endsWith(".zip"))
         );
     }
@@ -120,7 +122,6 @@ public class AsadminLoggingITest {
                 equalTo("<org.glassfish.main.jul.handler.GlassFishLogHandler,"
                 + "org.glassfish.main.jul.handler.SimpleLogHandler,"
                 + "org.glassfish.main.jul.handler.SyslogHandler>")),
-            () -> assertThat(map.get("java.util.logging.FileHandler.pattern"), equalTo("<%h/java%u.log>")),
             () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
                 equalTo("<${com.sun.aas.instanceRoot}/logs/server.log>"))
         );
@@ -133,12 +134,9 @@ public class AsadminLoggingITest {
             "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=100"
                 + ":org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes=240");
         assertThat(result, asadminOK());
-        File serverLogFile = new File(getDomain1Directory().resolve("logs").toFile(), "server.log");
-        assertThat("lastModified", serverLogFile,
-            getterMatches(File::lastModified, lessThan(System.currentTimeMillis() - 100L)));
 
         File loggingProperties = new File(getDomain1Directory().resolve("config").toFile(), "logging.properties");
-        assertThat(loggingProperties, TextFileMatchers.hasLineCount(greaterThan(50L)));
+        assertThat(loggingProperties, hasLineCount(greaterThan(50L)));
 
         List<String> lines = Files.lines(loggingProperties.toPath()).collect(Collectors.toList());
         List<String> keys = lines.stream().filter(line -> !line.startsWith("#"))
@@ -146,6 +144,10 @@ public class AsadminLoggingITest {
         assertAll(
             () -> assertThat(keys.get(0), equalTo(".level")),
             () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLogger.level")),
+            () -> assertThat(lines,
+                containsInRelativeOrder(
+                    "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes=240",
+                    "org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=100")),
             () -> {
                 String previousKey = "";
                 for (String key : keys) {
@@ -160,12 +162,12 @@ public class AsadminLoggingITest {
     @Test
     public void rotateLog() {
         File serverLogFile = new File(getDomain1Directory().resolve("logs").toFile(), "server.log");
-        assertThat(serverLogFile, TextFileMatchers.hasLineCount(greaterThan(50L)));
+        assertThat(serverLogFile, hasLineCount(greaterThan(50L)));
         AsadminResult result = ASADMIN.exec("rotate-log");
         assertThat(result, asadminOK());
         assertAll(
             () -> assertThat(serverLogFile, FileMatchers.anExistingFile()),
-            () -> assertThat(serverLogFile, TextFileMatchers.hasLineCount(0L))
+            () -> assertThat(serverLogFile, hasLineCount(0L))
         );
     }
 

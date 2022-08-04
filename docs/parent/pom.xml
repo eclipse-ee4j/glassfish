@@ -39,7 +39,7 @@
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
-        <pdf.toclevels>2</pdf.toclevels>
+        <pdf.toclevels>3</pdf.toclevels>
         <productName>Eclipse GlassFish</productName>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
     </properties>
@@ -116,7 +116,7 @@
                             <attributes>
                                 <linkcss>true</linkcss>
                                 <toc>left</toc>
-                                <toclevels>1</toclevels>
+                                <toclevels>3</toclevels>
                                 <embedAssets>false</embedAssets>
                             </attributes>
                         </configuration>

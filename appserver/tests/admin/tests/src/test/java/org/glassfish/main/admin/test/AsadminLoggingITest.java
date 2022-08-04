@@ -17,14 +17,12 @@
 package org.glassfish.main.admin.test;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
@@ -39,6 +37,7 @@ import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
 import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.getterMatches;
+import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
@@ -63,7 +62,11 @@ public class AsadminLoggingITest {
         assertThat(result, asadminOK());
         String path = StringUtils.substringBetween(result.getStdOut(), "Created Zip file under ", ".\n");
         assertNotNull(path, () -> "zip file path parsed from " + result.getStdOut());
-        assertThat(new File(path).length(), greaterThan(2_000L));
+        File zipFile = new File(path);
+        assertAll(
+            () -> assertThat(new File(path).length(), greaterThan(2_000L)),
+            () -> assertThat(zipFile.getName(), endsWith(".zip"))
+        );
     }
 
 
@@ -113,11 +116,13 @@ public class AsadminLoggingITest {
         Map<String, String> map = Arrays.stream(lines).map(line -> line.split("\\s+"))
             .collect(Collectors.toMap(pair -> pair[0], pair -> pair[1]));
         assertAll(
-            () -> assertEquals(map.get("handlers"), "<org.glassfish.main.jul.handler.SimpleLogHandler,"
-                + "org.glassfish.main.jul.handler.GlassFishLogHandler>"),
-            () -> assertEquals(map.get("java.util.logging.FileHandler.pattern"), "<%h/java%u.log>"),
-            () -> assertEquals(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
-                "<${com.sun.aas.instanceRoot}/logs/server.log>")
+            () -> assertThat(map.get("handlers"),
+                equalTo("<org.glassfish.main.jul.handler.GlassFishLogHandler,"
+                + "org.glassfish.main.jul.handler.SimpleLogHandler,"
+                + "org.glassfish.main.jul.handler.SyslogHandler>")),
+            () -> assertThat(map.get("java.util.logging.FileHandler.pattern"), equalTo("<%h/java%u.log>")),
+            () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
+                equalTo("<${com.sun.aas.instanceRoot}/logs/server.log>"))
         );
     }
 

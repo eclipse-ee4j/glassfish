@@ -43,7 +43,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -872,7 +871,7 @@ public final class PEAccessLogValve
      * file, and false if we have rotated
      */
     private synchronized void open(String dateStamp, boolean firstAccessLogFile) throws IOException {
-        _logger.log(Level.WARNING, "open(dateStamp={0}, firstAccessLogFile={1}",
+        _logger.log(Level.CONFIG, "open(dateStamp={0}, firstAccessLogFile={1}",
             new Object[] {dateStamp, firstAccessLogFile});
         // Create the directory if necessary
         File dir = new File(directory);
@@ -999,7 +998,7 @@ public final class PEAccessLogValve
         if (fileDateFormat == null) {
             fileDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         }
-        _logger.log(Level.SEVERE, "Using fileDateFormat: {0}", fileDateFormat);
+        _logger.log(Level.CONFIG, "Using fileDateFormat: {0}", fileDateFormat);
 
         final long systime = System.currentTimeMillis();
         try {

@@ -33,7 +33,7 @@ public enum GlassFishLogManagerProperty implements LogProperty {
      * Property key for a level of system root logger. System root loggers children are not
      * configurable.
      */
-    KEY_SYS_ROOT_LOGGER_LEVEL("systemRootLoggerLevel"),
+    KEY_SYS_ROOT_LOGGER_LEVEL("systemRootLogger.level"),
     /**
      * Property key for a boolean value enabling forgetting log record parameters right after
      * the message is resolved. If false, parameters are set in the log record until the record

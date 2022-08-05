@@ -24,12 +24,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.glassfish.embeddable.BootstrapProperties;
@@ -120,7 +117,7 @@ public class GlassFishMain {
         if ("true".equals(System.getenv(ENV_AS_TRACE_LOGGING))) {
             cfg.setProperty(KEY_TRACING_ENABLED, "true");
         }
-        cfg.setProperty("systemRootLoggerLevel", Level.INFO.getName());
+        cfg.setProperty("systemRootLogger.level", Level.INFO.getName());
         cfg.setProperty(".level", Level.INFO.getName());
         // better startup performance vs. losing log records.
         if ("true".equals(System.getenv(ENV_AS_TRACE_BOOTSTRAP))) {

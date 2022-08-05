@@ -33,7 +33,7 @@ import org.glassfish.main.jul.formatter.OneLineFormatter;
  * <p>
  * Similar to {@link java.util.logging.ConsoleHandler} except
  * <ul>
- * <li>it uses STDOUT instead of STDERR by default, but you can use also different {@link PrintStream}.
+ * <li>can be configured to use STDOUT instead of STDERR
  * <li>uses {@link OneLineFormatter} by default
  * </ul>
  *
@@ -46,7 +46,7 @@ public class SimpleLogHandler extends StreamHandler {
      */
     public SimpleLogHandler() {
         final HandlerConfigurationHelper helper = HandlerConfigurationHelper.forHandlerClass(getClass());
-        if (helper.getBoolean(SimpleLogHandlerProperty.USE_ERROR_STREAM, false)) {
+        if (helper.getBoolean(SimpleLogHandlerProperty.USE_ERROR_STREAM, true)) {
             setOutputStream(new UncloseablePrintStream(LoggingSystemEnvironment.getOriginalStdErr()));
         } else {
             setOutputStream(new UncloseablePrintStream(LoggingSystemEnvironment.getOriginalStdOut()));
@@ -106,7 +106,7 @@ public class SimpleLogHandler extends StreamHandler {
      */
     public enum SimpleLogHandlerProperty implements LogProperty {
 
-        /** Use STDERR instead of STDOUT */
+        /** Use STDERR or STDOUT? Default is true (STDERR). */
         USE_ERROR_STREAM("useErrorStream"),
         /** Class of the {@link Formatter} used with this handler */
         FORMATTER(HandlerConfigurationHelper.FORMATTER.getPropertyName()),

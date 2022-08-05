@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Performance Tuning Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,12 +18,206 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#overview-of-glassfish-server-performance-tuning">1 Overview of Eclipse GlassFish Performance Tuning</a></li>
-<li><a href="#tuning-your-application">2 Tuning Your Application</a></li>
-<li><a href="#tuning-the-glassfish-server">3 Tuning the Eclipse GlassFish</a></li>
-<li><a href="#tuning-the-java-runtime-system">4 Tuning the Java Runtime System</a></li>
-<li><a href="#tuning-the-operating-system-and-platform">5 Tuning the Operating System and Platform</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#oracle-glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#overview-of-glassfish-server-performance-tuning">1 Overview of Eclipse GlassFish Performance Tuning</a>
+<ul class="sectlevel2">
+<li><a href="#process-overview-2">Process Overview</a>
+<ul class="sectlevel3">
+<li><a href="#performance-tuning-sequence-2">Performance Tuning Sequence</a></li>
+</ul>
+</li>
+<li><a href="#understanding-operational-requirements-2">Understanding Operational Requirements</a>
+<ul class="sectlevel3">
+<li><a href="#application-architecture-2">Application Architecture</a></li>
+<li><a href="#security-requirements-2">Security Requirements</a></li>
+<li><a href="#high-availability-clustering-load-balancing-and-failover-2">High Availability Clustering, Load Balancing, and Failover</a></li>
+<li><a href="#hardware-resources-2">Hardware Resources</a></li>
+<li><a href="#administration-2">Administration</a></li>
+</ul>
+</li>
+<li><a href="#general-tuning-concepts-2">General Tuning Concepts</a>
+<ul class="sectlevel3">
+<li><a href="#capacity-planning-2">Capacity Planning</a></li>
+<li><a href="#user-expectations-2">User Expectations</a></li>
+</ul>
+</li>
+<li><a href="#further-information-2">Further Information</a></li>
+</ul>
+</li>
+<li><a href="#tuning-your-application">2 Tuning Your Application</a>
+<ul class="sectlevel2">
+<li><a href="#java-programming-guidelines-2">Java Programming Guidelines</a>
+<ul class="sectlevel3">
+<li><a href="#avoid-serialization-and-deserialization-2">Avoid Serialization and Deserialization</a></li>
+<li><a href="#use-stringbuilder-to-concatenate-strings-2">Use <code>StringBuilder</code> to Concatenate Strings</a></li>
+<li><a href="#assign-null-to-variables-that-are-no-longer-needed-2">Assign null to Variables That Are No Longer Needed</a></li>
+<li><a href="#declare-methods-as-final-only-if-necessary-2">Declare Methods as final Only If Necessary</a></li>
+<li><a href="#declare-constants-as-static-final-2">Declare Constants as static final</a></li>
+<li><a href="#avoid-finalizers-2">Avoid Finalizers</a></li>
+<li><a href="#declare-method-arguments-final-2">Declare Method Arguments final</a></li>
+<li><a href="#synchronize-only-when-necessary-2">Synchronize Only When Necessary</a></li>
+<li><a href="#use-datahandlers-for-soap-attachments-2">Use DataHandlers for SOAP Attachments</a></li>
+</ul>
+</li>
+<li><a href="#java-server-page-and-servlet-tuning-2">Java Server Page and Servlet Tuning</a>
+<ul class="sectlevel3">
+<li><a href="#suggested-coding-practices-2">Suggested Coding Practices</a></li>
+</ul>
+</li>
+<li><a href="#ejb-performance-tuning-2">EJB Performance Tuning</a>
+<ul class="sectlevel3">
+<li><a href="#goals-2">Goals</a></li>
+<li><a href="#monitoring-ejb-components-2">Monitoring EJB Components</a></li>
+<li><a href="#general-guidelines-3">General Guidelines</a></li>
+<li><a href="#using-local-and-remote-interfaces-2">Using Local and Remote Interfaces</a></li>
+<li><a href="#improving-performance-of-ejb-transactions-2">Improving Performance of EJB Transactions</a></li>
+<li><a href="#using-special-techniques-2">Using Special Techniques</a></li>
+<li><a href="#tuning-tips-for-specific-types-of-ejb-components-2">Tuning Tips for Specific Types of EJB Components</a></li>
+<li><a href="#jdbc-and-database-access-2">JDBC and Database Access</a></li>
+<li><a href="#tuning-message-driven-beans-2">Tuning Message-Driven Beans</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#tuning-the-glassfish-server">3 Tuning the Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#using-the-eclipse-glassfish-performance-tuner">Using the Eclipse GlassFish Performance Tuner</a></li>
+<li><a href="#deployment-settings-2">Deployment Settings</a>
+<ul class="sectlevel3">
+<li><a href="#disable-auto-deployment-2">Disable Auto-Deployment</a></li>
+<li><a href="#use-pre-compiled-javaserver-pages-2">Use Pre-compiled JavaServer Pages</a></li>
+<li><a href="#disable-dynamic-application-reloading-2">Disable Dynamic Application Reloading</a></li>
+</ul>
+</li>
+<li><a href="#logger-settings-2">Logger Settings</a>
+<ul class="sectlevel3">
+<li><a href="#general-settings-2">General Settings</a></li>
+<li><a href="#log-levels-2">Log Levels</a></li>
+</ul>
+</li>
+<li><a href="#web-container-settings-2">Web Container Settings</a>
+<ul class="sectlevel3">
+<li><a href="#session-properties-session-timeout-2">Session Properties: Session Timeout</a></li>
+<li><a href="#manager-properties-reap-interval-2">Manager Properties: Reap Interval</a></li>
+<li><a href="#disable-dynamic-jsp-reloading-2">Disable Dynamic JSP Reloading</a></li>
+</ul>
+</li>
+<li><a href="#ejb-container-settings-2">EJB Container Settings</a>
+<ul class="sectlevel3">
+<li><a href="#monitoring-the-ejb-container-2">Monitoring the EJB Container</a></li>
+<li><a href="#tuning-the-ejb-container-2">Tuning the EJB Container</a></li>
+</ul>
+</li>
+<li><a href="#java-message-service-settings-2">Java Message Service Settings</a></li>
+<li><a href="#transaction-service-settings-2">Transaction Service Settings</a>
+<ul class="sectlevel3">
+<li><a href="#monitoring-the-transaction-service-2">Monitoring the Transaction Service</a></li>
+<li><a href="#tuning-the-transaction-service-2">Tuning the Transaction Service</a></li>
+</ul>
+</li>
+<li><a href="#http-service-settings-2">HTTP Service Settings</a>
+<ul class="sectlevel3">
+<li><a href="#monitoring-the-http-service-2">Monitoring the HTTP Service</a></li>
+<li><a href="#http-service-access-logging-2">HTTP Service Access Logging</a></li>
+</ul>
+</li>
+<li><a href="#network-listener-settings-2">Network Listener Settings</a>
+<ul class="sectlevel3">
+<li><a href="#general-settings-3">General Settings</a></li>
+<li><a href="#http-settings-2">HTTP Settings</a></li>
+<li><a href="#file-cache-settings-2">File Cache Settings</a></li>
+</ul>
+</li>
+<li><a href="#transport-settings-2">Transport Settings</a></li>
+<li><a href="#thread-pool-settings-2">Thread Pool Settings</a>
+<ul class="sectlevel3">
+<li><a href="#max-thread-pool-size-2">Max Thread Pool Size</a></li>
+<li><a href="#min-thread-pool-size-2">Min Thread Pool Size</a></li>
+</ul>
+</li>
+<li><a href="#orb-settings-2">ORB Settings</a>
+<ul class="sectlevel3">
+<li><a href="#overview-2">Overview</a></li>
+<li><a href="#how-a-client-connects-to-the-orb-2">How a Client Connects to the ORB</a></li>
+<li><a href="#monitoring-the-orb-2">Monitoring the ORB</a></li>
+<li><a href="#tuning-the-orb-2">Tuning the ORB</a></li>
+</ul>
+</li>
+<li><a href="#resource-settings-2">Resource Settings</a>
+<ul class="sectlevel3">
+<li><a href="#jdbc-connection-pool-settings-2">JDBC Connection Pool Settings</a></li>
+<li><a href="#connector-connection-pool-settings-2">Connector Connection Pool Settings</a></li>
+</ul>
+</li>
+<li><a href="#load-balancer-settings-2">Load Balancer Settings</a></li>
+</ul>
+</li>
+<li><a href="#tuning-the-java-runtime-system">4 Tuning the Java Runtime System</a>
+<ul class="sectlevel2">
+<li><a href="#java-virtual-machine-settings-2">Java Virtual Machine Settings</a></li>
+<li><a href="#tuning-high-availability-persistence-2">Tuning High Availability Persistence</a></li>
+<li><a href="#managing-memory-and-garbage-collection-2">Managing Memory and Garbage Collection</a>
+<ul class="sectlevel3">
+<li><a href="#tuning-the-garbage-collector-2">Tuning the Garbage Collector</a></li>
+<li><a href="#tracing-garbage-collection-2">Tracing Garbage Collection</a></li>
+<li><a href="#other-garbage-collector-settings-2">Other Garbage Collector Settings</a></li>
+<li><a href="#tuning-the-java-heap-2">Tuning the Java Heap</a></li>
+<li><a href="#rebasing-dlls-on-windows-2">Rebasing DLLs on Windows</a></li>
+</ul>
+</li>
+<li><a href="#further-information-3">Further Information</a></li>
+</ul>
+</li>
+<li><a href="#tuning-the-operating-system-and-platform">5 Tuning the Operating System and Platform</a>
+<ul class="sectlevel2">
+<li><a href="#server-scaling-2">Server Scaling</a>
+<ul class="sectlevel3">
+<li><a href="#processors-2">Processors</a></li>
+<li><a href="#memory-2">Memory</a></li>
+<li><a href="#disk-space-2">Disk Space</a></li>
+<li><a href="#networking-2">Networking</a></li>
+<li><a href="#udp-buffer-sizes-2">UDP Buffer Sizes</a></li>
+</ul>
+</li>
+<li><a href="#solaris-10-platform-specific-tuning-information-2">Solaris 10 Platform-Specific Tuning Information</a></li>
+<li><a href="#tuning-for-the-solaris-os-2">Tuning for the Solaris OS</a>
+<ul class="sectlevel3">
+<li><a href="#tuning-parameters-2">Tuning Parameters</a></li>
+<li><a href="#file-descriptor-setting-2">File Descriptor Setting</a></li>
+</ul>
+</li>
+<li><a href="#tuning-for-solaris-on-x86-2">Tuning for Solaris on x86</a>
+<ul class="sectlevel3">
+<li><a href="#file-descriptors-2">File Descriptors</a></li>
+<li><a href="#ip-stack-settings-2">IP Stack Settings</a></li>
+</ul>
+</li>
+<li><a href="#tuning-for-linux-platforms-2">Tuning for Linux platforms</a>
+<ul class="sectlevel3">
+<li><a href="#startup-files-2">Startup Files</a></li>
+<li><a href="#file-descriptors-3">File Descriptors</a></li>
+<li><a href="#virtual-memory-2">Virtual Memory</a></li>
+<li><a href="#network-interface-2">Network Interface</a></li>
+<li><a href="#disk-io-settings-2">Disk I/O Settings</a></li>
+<li><a href="#tcpip-settings-2">TCP/IP Settings</a></li>
+</ul>
+</li>
+<li><a href="#tuning-ultrasparc-cmt-based-systems-2">Tuning UltraSPARC CMT-Based Systems</a>
+<ul class="sectlevel3">
+<li><a href="#tuning-operating-system-and-tcp-settings-2">Tuning Operating System and TCP Settings</a></li>
+<li><a href="#disk-configuration-2">Disk Configuration</a></li>
+<li><a href="#network-configuration-2">Network Configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -8310,7 +8504,7 @@ $ifconfig ipge1 group webserver</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:47:46 UTC
+Last updated 2022-08-05 23:16:03 UTC
 </div>
 </div>
 </body>

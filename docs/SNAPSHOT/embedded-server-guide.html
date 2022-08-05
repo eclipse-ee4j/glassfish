@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Embedded Server Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,8 +18,54 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#glassfish-server-open-source-edition-embedded-server-guide">1 Eclipse GlassFish 7 Embedded Server Guide</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-server-open-source-edition-embedded-server-guide">1 Eclipse GlassFish 7 Embedded Server Guide</a>
+<ul class="sectlevel2">
+<li><a href="#introduction-to-embedded-eclipse-glassfish">Introduction to Embedded Eclipse GlassFish</a></li>
+<li><a href="#embedded-eclipse-glassfish-file-system">Embedded Eclipse GlassFish File System</a>
+<ul class="sectlevel3">
+<li><a href="#installation-root-directory-2">Installation Root Directory</a></li>
+<li><a href="#instance-root-directory-2">Instance Root Directory</a></li>
+<li><a href="#the-domain-xml-file">The <code>domain.xml</code> File</a></li>
+</ul>
+</li>
+<li><a href="#including-the-eclipse-glassfish-embedded-server-api-in-applications">Including the Eclipse GlassFish Embedded Server API in Applications</a>
+<ul class="sectlevel3">
+<li><a href="#setting-the-class-path-2">Setting the Class Path</a></li>
+<li><a href="#creating-starting-and-stopping-embedded-eclipse-glassfish">Creating, Starting, and Stopping Embedded Eclipse GlassFish</a></li>
+<li><a href="#deploying-and-undeploying-an-application-in-an-embedded-eclipse-glassfish">Deploying and Undeploying an Application in an Embedded Eclipse GlassFish</a></li>
+<li><a href="#sample-applications-2">Sample Applications</a></li>
+</ul>
+</li>
+<li><a href="#testing-applications-with-the-maven-plug-in-for-embedded-eclipse-glassfish">Testing Applications with the Maven Plug-in for Embedded Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#to-set-up-your-maven-environment-2">To Set Up Your Maven Environment</a></li>
+<li><a href="#to-build-and-start-an-application-from-maven-2">To Build and Start an Application From Maven</a></li>
+<li><a href="#to-stop-embedded-eclipse-glassfish">To Stop Embedded Eclipse GlassFish</a></li>
+<li><a href="#to-redeploy-an-application-that-was-built-and-started-from-maven-2">To Redeploy an Application That Was Built and Started From Maven</a></li>
+<li><a href="#maven-goals-for-embedded-eclipse-glassfish">Maven Goals for Embedded Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#using-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">Using the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#to-use-the-ejb-3-1-embeddable-api-with-embedded-eclipse-glassfish">To Use the EJB 3.1 Embeddable API with Embedded Eclipse GlassFish</a></li>
+<li><a href="#ejb-3-1-embeddable-api-properties">EJB 3.1 Embeddable API Properties</a></li>
+<li><a href="#using-maven-with-the-ejb-3-1-embeddable-api-and-embedded-eclipse-glassfish">Using Maven with the EJB 3.1 Embeddable API and Embedded Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#changing-log-levels-in-embedded-eclipse-glassfish">Changing Log Levels in Embedded Eclipse GlassFish</a></li>
+<li><a href="#default-java-persistence-data-source-for-embedded-eclipse-glassfish">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
+<li><a href="#restrictions-for-embedded-eclipse-glassfish">Restrictions for Embedded Eclipse GlassFish</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -3528,7 +3574,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:44:10 UTC
+Last updated 2022-08-05 23:14:22 UTC
 </div>
 </div>
 </body>

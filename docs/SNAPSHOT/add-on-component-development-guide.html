@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Add-On Component Development Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,17 +18,253 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components">Introduction to the Development Environment for Eclipse GlassFish Add-On Components</a></li>
-<li><a href="#writing-hk2-components">Writing HK2 Components</a></li>
-<li><a href="#extending-the-administration-console">Extending the Administration Console</a></li>
-<li><a href="#extending-the-asadmin-utility">Extending the <code>asadmin</code> Utility</a></li>
-<li><a href="#adding-monitoring-capabilities">Adding Monitoring Capabilities</a></li>
-<li><a href="#adding-configuration-data-for-a-component">Adding Configuration Data for a Component</a></li>
-<li><a href="#adding-container-capabilities">Adding Container Capabilities</a></li>
-<li><a href="#creating-a-session-persistence-module">Creating a Session Persistence Module</a></li>
-<li><a href="#packaging-integrating-and-delivering-an-add-on-component">Packaging, Integrating, and Delivering an Add-On Component</a></li>
-<li><a href="#a-integration-point-reference">Integration Point Reference</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components">Introduction to the Development Environment for Eclipse GlassFish Add-On Components</a>
+<ul class="sectlevel2">
+<li><a href="#eclipse-glassfish-modular-architecture-and-add-on-components">Eclipse GlassFish Modular Architecture and Add-On Components</a></li>
+<li><a href="#osgi-alliance-module-management-subsystem-2">OSGi Alliance Module Management Subsystem</a></li>
+<li><a href="#hundred-kilobyte-kernel-2">Hundred-Kilobyte Kernel</a></li>
+<li><a href="#overview-of-the-development-process-for-an-add-on-component-2">Overview of the Development Process for an Add-On Component</a>
+<ul class="sectlevel3">
+<li><a href="#writing-hk2-components-2">Writing HK2 Components</a></li>
+<li><a href="#extending-the-administration-console-2">Extending the Administration Console</a></li>
+<li><a href="#extending-the-asadmin-utility-2">Extending the <code>asadmin</code> Utility</a></li>
+<li><a href="#adding-monitoring-capabilities-2">Adding Monitoring Capabilities</a></li>
+<li><a href="#adding-configuration-data-for-a-component-2">Adding Configuration Data for a Component</a></li>
+<li><a href="#adding-container-capabilities-2">Adding Container Capabilities</a></li>
+<li><a href="#creating-a-session-persistence-module-2">Creating a Session Persistence Module</a></li>
+<li><a href="#packaging-and-delivering-an-add-on-component-2">Packaging and Delivering an Add-On Component</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#writing-hk2-components">Writing HK2 Components</a>
+<ul class="sectlevel2">
+<li><a href="#hk2-component-model-2">HK2 Component Model</a></li>
+<li><a href="#services-in-the-hk2-component-model-2">Services in the HK2 Component Model</a></li>
+<li><a href="#hk2-runtime-2">HK2 Runtime</a>
+<ul class="sectlevel3">
+<li><a href="#scopes-of-services-2">Scopes of Services</a></li>
+<li><a href="#instantiation-of-components-in-hk2-2">Instantiation of Components in HK2</a></li>
+<li><a href="#hk2-lifecycle-interfaces-2">HK2 Lifecycle Interfaces</a></li>
+</ul>
+</li>
+<li><a href="#inversion-of-control-2">Inversion of Control</a>
+<ul class="sectlevel3">
+<li><a href="#injecting-hk2-components-2">Injecting HK2 Components</a></li>
+<li><a href="#instantiation-cascading-in-hk2-2">Instantiation Cascading in HK2</a></li>
+</ul>
+</li>
+<li><a href="#identifying-a-class-as-an-add-on-component-2">Identifying a Class as an Add-On Component</a></li>
+<li><a href="#using-the-apache-maven-build-system-to-develop-hk2-components-2">Using the Apache Maven Build System to Develop HK2 Components</a></li>
+</ul>
+</li>
+<li><a href="#extending-the-administration-console">Extending the Administration Console</a>
+<ul class="sectlevel2">
+<li><a href="#administration-console-architecture-2">Administration Console Architecture</a>
+<ul class="sectlevel3">
+<li><a href="#implementing-a-console-provider-2">Implementing a Console Provider</a></li>
+</ul>
+</li>
+<li><a href="#about-administration-console-templates-2">About Administration Console Templates</a></li>
+<li><a href="#about-integration-points-2">About Integration Points</a></li>
+<li><a href="#specifying-the-id-of-an-add-on-component-2">Specifying the ID of an Add-On Component</a></li>
+<li><a href="#adding-functionality-to-the-administration-console-2">Adding Functionality to the Administration Console</a>
+<ul class="sectlevel3">
+<li><a href="#adding-a-node-to-the-navigation-tree-2">Adding a Node to the Navigation Tree</a></li>
+<li><a href="#adding-tabs-to-a-page-2">Adding Tabs to a Page</a></li>
+<li><a href="#adding-a-task-to-the-common-tasks-page-2">Adding a Task to the Common Tasks Page</a></li>
+<li><a href="#adding-a-task-group-to-the-common-tasks-page-2">Adding a Task Group to the Common Tasks Page</a></li>
+<li><a href="#adding-content-to-a-page-2">Adding Content to a Page</a></li>
+<li><a href="#adding-a-page-to-the-administration-console-2">Adding a Page to the Administration Console</a></li>
+</ul>
+</li>
+<li><a href="#adding-internationalization-support-2">Adding Internationalization Support</a></li>
+<li><a href="#changing-the-theme-or-brand-of-the-administration-console-2">Changing the Theme or Brand of the Administration Console</a></li>
+<li><a href="#creating-an-integration-point-type-2">Creating an Integration Point Type</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-integration-point-type">To Create an Integration Point Type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#extending-the-asadmin-utility">Extending the <code>asadmin</code> Utility</a>
+<ul class="sectlevel2">
+<li><a href="#about-the-administrative-command-infrastructure-of-eclipse-glassfish">About the Administrative Command Infrastructure of Eclipse GlassFish</a></li>
+<li><a href="#adding-an-asadmin-subcommand-2">Adding an <code>asadmin</code> Subcommand</a>
+<ul class="sectlevel3">
+<li><a href="#representing-an-asadmin-subcommand-as-a-java-class-2">Representing an <code>asadmin</code> Subcommand as a Java Class</a></li>
+<li><a href="#specifying-the-name-of-an-asadmin-subcommand-2">Specifying the Name of an <code>asadmin</code> Subcommand</a></li>
+<li><a href="#ensuring-that-an-admincommand-implementation-is-stateless-2">Ensuring That an <code>AdminCommand</code> Implementation Is Stateless</a></li>
+<li><a href="#example-of-adding-an-asadmin-subcommand-2">Example of Adding an <code>asadmin</code> Subcommand</a></li>
+</ul>
+</li>
+<li><a href="#adding-parameters-to-an-asadmin-subcommand-2">Adding Parameters to an <code>asadmin</code> Subcommand</a>
+<ul class="sectlevel3">
+<li><a href="#representing-a-parameter-of-an-asadmin-subcommand-2">Representing a Parameter of an <code>asadmin</code> Subcommand</a></li>
+<li><a href="#identifying-a-parameter-of-an-asadmin-subcommand-2">Identifying a Parameter of an <code>asadmin</code> Subcommand</a></li>
+<li><a href="#specifying-whether-a-parameter-is-an-option-or-an-operand-2">Specifying Whether a Parameter Is an Option or an Operand</a></li>
+<li><a href="#specifying-the-name-of-an-option-2">Specifying the Name of an Option</a></li>
+<li><a href="#specifying-the-acceptable-values-of-a-parameter-2">Specifying the Acceptable Values of a Parameter</a></li>
+<li><a href="#specifying-the-default-value-of-a-parameter-2">Specifying the Default Value of a Parameter</a></li>
+<li><a href="#specifying-whether-a-parameter-is-required-or-optional-2">Specifying Whether a Parameter Is Required or Optional</a></li>
+<li><a href="#example-of-adding-parameters-to-an-asadmin-subcommand-2">Example of Adding Parameters to an <code>asadmin</code> Subcommand</a></li>
+</ul>
+</li>
+<li><a href="#making-asadmin-subcommands-cluster-aware-2">Making <code>asadmin</code> Subcommands Cluster-Aware</a>
+<ul class="sectlevel3">
+<li><a href="#specifying-allowed-targets-2">Specifying Allowed Targets</a></li>
+<li><a href="#the-target-utility-2">The <code>Target</code> Utility</a></li>
+<li><a href="#specifying-asadmin-subcommand-execution-2">Specifying <code>asadmin</code> Subcommand Execution</a></li>
+<li><a href="#subcommand-preprocessing-and-postprocessing-2">Subcommand Preprocessing and Postprocessing</a></li>
+<li><a href="#running-a-command-from-another-command-2">Running a Command from Another Command</a></li>
+</ul>
+</li>
+<li><a href="#adding-message-text-strings-to-an-asadmin-subcommand-2">Adding Message Text Strings to an <code>asadmin</code> Subcommand</a></li>
+<li><a href="#enabling-an-asadmin-subcommand-to-run-2">Enabling an <code>asadmin</code> Subcommand to Run</a></li>
+<li><a href="#setting-the-context-of-an-asadmin-subcommand-2">Setting the Context of an <code>asadmin</code> Subcommand</a></li>
+<li><a href="#changing-the-brand-in-the-eclipse-glassfish-cli">Changing the Brand in the Eclipse GlassFish CLI</a></li>
+<li><a href="#examples-of-extending-the-asadmin-utility-2">Examples of Extending the <code>asadmin</code> Utility</a></li>
+<li><a href="#implementing-create-delete-and-list-commands-using-annotations-2">Implementing Create, Delete, and List Commands Using Annotations</a>
+<ul class="sectlevel3">
+<li><a href="#command-patterns-2">Command Patterns</a></li>
+<li><a href="#resolvers-2">Resolvers</a></li>
+<li><a href="#the-create-annotation-2">The <code>@Create</code> Annotation</a></li>
+<li><a href="#the-delete-annotation-2">The <code>@Delete</code> Annotation</a></li>
+<li><a href="#the-listing-annotation-2">The <code>@Listing</code> Annotation</a></li>
+<li><a href="#create-command-decorators-2">Create Command Decorators</a></li>
+<li><a href="#delete-command-decorators-2">Delete Command Decorators</a></li>
+<li><a href="#specifying-command-execution-2">Specifying Command Execution</a></li>
+<li><a href="#using-multiple-command-annotations-2">Using Multiple Command Annotations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#adding-monitoring-capabilities">Adding Monitoring Capabilities</a>
+<ul class="sectlevel2">
+<li><a href="#defining-statistics-that-are-to-be-monitored-2">Defining Statistics That Are to Be Monitored</a>
+<ul class="sectlevel3">
+<li><a href="#defining-an-event-provider-2">Defining an Event Provider</a></li>
+<li><a href="#sending-an-event-2">Sending an Event</a></li>
+</ul>
+</li>
+<li><a href="#updating-the-monitorable-object-tree-2">Updating the Monitorable Object Tree</a>
+<ul class="sectlevel3">
+<li><a href="#creating-event-listeners-2">Creating Event Listeners</a></li>
+<li><a href="#representing-a-components-statistics-in-an-event-listener-class-2">Representing a Component&#8217;s Statistics in an Event Listener Class</a></li>
+<li><a href="#subscribing-to-events-from-event-provider-classes-2">Subscribing to Events From Event Provider Classes</a></li>
+<li><a href="#listening-for-events-from-classes-that-are-not-event-providers-2">Listening for Events From Classes That Are Not Event Providers</a></li>
+<li><a href="#registering-an-event-listener-2">Registering an Event Listener</a></li>
+</ul>
+</li>
+<li><a href="#dotted-names-and-rest-urls-for-an-add-on-components-statistics-2">Dotted Names and REST URLs for an Add-On Component&#8217;s Statistics</a></li>
+<li><a href="#adding-a-type-to-the-monitor-command-2">Adding a Type to the <code>monitor</code> Command</a></li>
+<li><a href="#example-of-adding-monitoring-capabilities-2">Example of Adding Monitoring Capabilities</a></li>
+</ul>
+</li>
+<li><a href="#adding-configuration-data-for-a-component">Adding Configuration Data for a Component</a>
+<ul class="sectlevel2">
+<li><a href="#how-eclipse-glassfish-stores-configuration-data">How Eclipse GlassFish Stores Configuration Data</a></li>
+<li><a href="#defining-an-element-2">Defining an Element</a>
+<ul class="sectlevel3">
+<li><a href="#to-define-an-element-2">To Define an Element</a></li>
+</ul>
+</li>
+<li><a href="#defining-an-attribute-of-an-element-2">Defining an Attribute of an Element</a>
+<ul class="sectlevel3">
+<li><a href="#representing-an-attribute-of-an-element-2">Representing an Attribute of an Element</a></li>
+<li><a href="#specifying-the-data-type-of-an-attribute-2">Specifying the Data Type of an Attribute</a></li>
+<li><a href="#identifying-an-attribute-of-an-element-2">Identifying an Attribute of an Element</a></li>
+<li><a href="#specifying-the-name-of-an-attribute-2">Specifying the Name of an Attribute</a></li>
+<li><a href="#specifying-the-default-value-of-an-attribute-2">Specifying the Default Value of an Attribute</a></li>
+<li><a href="#specifying-whether-an-attribute-is-required-or-optional-2">Specifying Whether an Attribute Is Required or Optional</a></li>
+<li><a href="#example-of-defining-an-attribute-of-an-element-2">Example of Defining an Attribute of an Element</a></li>
+</ul>
+</li>
+<li><a href="#defining-a-subelement-2">Defining a Subelement</a>
+<ul class="sectlevel3">
+<li><a href="#to-define-a-subelement-2">To Define a Subelement</a></li>
+</ul>
+</li>
+<li><a href="#validating-configuration-data-2">Validating Configuration Data</a></li>
+<li><a href="#initializing-a-components-configuration-data-2">Initializing a Component&#8217;s Configuration Data</a>
+<ul class="sectlevel3">
+<li><a href="#to-define-a-components-initial-configuration-data-2">To Define a Component&#8217;s Initial Configuration Data</a></li>
+<li><a href="#to-write-a-components-initial-configuration-data-to-the-domain-xml-file">To Write a Component&#8217;s Initial Configuration Data to the <code>domain.xml</code> File</a></li>
+</ul>
+</li>
+<li><a href="#creating-a-transaction-to-update-configuration-data-2">Creating a Transaction to Update Configuration Data</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-transaction-to-update-configuration-data-2">To Create a Transaction to Update Configuration Data</a></li>
+</ul>
+</li>
+<li><a href="#dotted-names-and-rest-urls-of-configuration-attributes-2">Dotted Names and REST URLs of Configuration Attributes</a></li>
+<li><a href="#examples-of-adding-configuration-data-for-a-component-2">Examples of Adding Configuration Data for a Component</a></li>
+</ul>
+</li>
+<li><a href="#adding-container-capabilities">Adding Container Capabilities</a>
+<ul class="sectlevel2">
+<li><a href="#creating-a-container-implementation-2">Creating a <code>Container</code> Implementation</a>
+<ul class="sectlevel3">
+<li><a href="#marking-the-class-with-the-service-annotation-2">Marking the Class With the <code>@Service</code> Annotation</a></li>
+<li><a href="#implementing-the-container-interface-2">Implementing the <code>Container</code> Interface</a></li>
+</ul>
+</li>
+<li><a href="#adding-an-archive-type-2">Adding an Archive Type</a>
+<ul class="sectlevel3">
+<li><a href="#implementing-the-archivehandler-interface-2">Implementing the <code>ArchiveHandler</code> Interface</a></li>
+</ul>
+</li>
+<li><a href="#creating-connector-modules-2">Creating Connector Modules</a>
+<ul class="sectlevel3">
+<li><a href="#associating-file-types-with-containers-by-using-the-sniffer-interface-2">Associating File Types With Containers by Using the <code>Sniffer</code> Interface</a></li>
+</ul>
+</li>
+<li><a href="#example-of-adding-container-capabilities-2">Example of Adding Container Capabilities</a>
+<ul class="sectlevel3">
+<li><a href="#container-component-code-2">Container Component Code</a></li>
+<li><a href="#web-client-code-2">Web Client Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#creating-a-session-persistence-module">Creating a Session Persistence Module</a>
+<ul class="sectlevel2">
+<li><a href="#implementing-the-persistencestrategybuilder-interface-2">Implementing the <code>PersistenceStrategyBuilder</code> Interface</a></li>
+</ul>
+</li>
+<li><a href="#packaging-integrating-and-delivering-an-add-on-component">Packaging, Integrating, and Delivering an Add-On Component</a>
+<ul class="sectlevel2">
+<li><a href="#packaging-an-add-on-component-2">Packaging an Add-On Component</a></li>
+<li><a href="#integrating-an-add-on-component-with-eclipse-glassfish">Integrating an Add-On Component With Eclipse GlassFish</a></li>
+<li><a href="#delivering-an-add-on-component-through-update-tool-2">Delivering an Add-On Component Through Update Tool</a></li>
+</ul>
+</li>
+<li><a href="#a-integration-point-reference">Integration Point Reference</a>
+<ul class="sectlevel2">
+<li><a href="#integration-point-attributes-2">Integration Point Attributes</a></li>
+<li><a href="#org-glassfish-adminguinavnode-integration-point"><code>org.glassfish.admingui:navNode</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguirightpanel-integration-point"><code>org.glassfish.admingui:rightPanel</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguirightpaneltitle-integration-point"><code>org.glassfish.admingui:rightPanelTitle</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiserverinsttab-integration-point"><code>org.glassfish.admingui:serverInstTab</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguicommontask-integration-point"><code>org.glassfish.admingui:commonTask</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiconfiguration-integration-point"><code>org.glassfish.admingui:configuration</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiresources-integration-point"><code>org.glassfish.admingui:resources</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguicustomtheme-integration-point"><code>org.glassfish.admingui:customtheme</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguimasthead-integration-point"><code>org.glassfish.admingui:masthead</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiloginimage-integration-point"><code>org.glassfish.admingui:loginimage</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiloginform-integration-point"><code>org.glassfish.admingui:loginform</code> Integration Point</a></li>
+<li><a href="#org-glassfish-adminguiversioninfo-integration-point"><code>org.glassfish.admingui:versioninfo</code> Integration Point</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -9967,7 +10203,7 @@ a Jakarta Server Faces page.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:36:16 UTC
+Last updated 2022-08-05 23:11:32 UTC
 </div>
 </div>
 </body>

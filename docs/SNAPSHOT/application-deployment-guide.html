@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Application Deployment Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,12 +18,1518 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#overview-of-glassfish-server-open-source-edition-5.0-application-deployment">1 Overview of Eclipse GlassFish 7 Application Deployment</a></li>
-<li><a href="#deploying-applications">2 Deploying Applications</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#overview-of-glassfish-server-open-source-edition-5.0-application-deployment">1 Overview of Eclipse GlassFish 7 Application Deployment</a>
+<ul class="sectlevel2">
+<li><a href="#about-application-deployment-2">About Application Deployment</a>
+<ul class="sectlevel3">
+<li><a href="#general-deployment-functionality-2">General Deployment Functionality</a></li>
+<li><a href="#deployment-descriptors-and-annotations-2">Deployment Descriptors and Annotations</a></li>
+<li><a href="#modules-and-applications-2">Modules and Applications</a></li>
+<li><a href="#access-to-shared-framework-classes-2">Access to Shared Framework Classes</a></li>
+<li><a href="#naming-standards-2">Naming Standards</a></li>
+<li><a href="#module-and-application-versions-2">Module and Application Versions</a></li>
+</ul>
+</li>
+<li><a href="#about-assembly-and-deployment-events-2">About Assembly and Deployment Events</a></li>
+<li><a href="#about-deployment-tools-2">About Deployment Tools</a>
+<ul class="sectlevel3">
+<li><a href="#administration-console-2">Administration Console</a></li>
+<li><a href="#the-asadmin-utility-2">The <code>asadmin</code> Utility</a></li>
+<li><a href="#netbeans-ide-2">NetBeans IDE</a></li>
+<li><a href="#eclipse-ide-2">Eclipse IDE</a></li>
+<li><a href="#jsr-88-client-2">JSR 88 Client</a></li>
+</ul>
+</li>
+<li><a href="#additional-information-on-application-deployment-2">Additional Information on Application Deployment</a></li>
+</ul>
+</li>
+<li><a href="#deploying-applications">2 Deploying Applications</a>
+<ul class="sectlevel2">
+<li><a href="#deploying-applications-and-modules-2">Deploying Applications and Modules</a>
+<ul class="sectlevel3">
+<li><a href="#to-deploy-an-application-or-module-2">To Deploy an Application or Module</a></li>
+<li><a href="#to-change-targets-for-a-deployed-application-or-module-2">To Change Targets for a Deployed Application or Module</a></li>
+<li><a href="#to-list-deployed-applications-or-modules-2">To List Deployed Applications or Modules</a></li>
+<li><a href="#to-redeploy-an-application-or-module-2">To Redeploy an Application or Module</a></li>
+<li><a href="#to-disable-an-application-or-module-2">To Disable an Application or Module</a></li>
+<li><a href="#to-enable-an-application-or-module-2">To Enable an Application or Module</a></li>
+<li><a href="#to-undeploy-an-application-or-module-2">To Undeploy an Application or Module</a></li>
+<li><a href="#to-reload-changes-to-applications-or-modules-dynamically-2">To Reload Changes to Applications or Modules Dynamically</a></li>
+<li><a href="#to-deploy-an-application-or-module-automatically-2">To Deploy an Application or Module Automatically</a></li>
+<li><a href="#to-deploy-an-application-or-module-by-using-a-deployment-plan-2">To Deploy an Application or Module by Using a Deployment Plan</a></li>
+<li><a href="#to-deploy-an-application-or-module-in-a-directory-format-2">To Deploy an Application or Module in a Directory Format</a></li>
+</ul>
+</li>
+<li><a href="#modifying-the-configuration-of-a-web-application-or-module-2">Modifying the Configuration of a Web Application or Module</a>
+<ul class="sectlevel3">
+<li><a href="#to-set-a-web-context-parameter-2">To Set a Web Context Parameter</a></li>
+<li><a href="#to-unset-a-web-context-parameter-2">To Unset a Web Context Parameter</a></li>
+<li><a href="#to-list-web-context-parameters-2">To List Web Context Parameters</a></li>
+<li><a href="#to-set-a-web-environment-entry-2">To Set a Web Environment Entry</a></li>
+<li><a href="#to-unset-a-web-environment-entry-2">To Unset a Web Environment Entry</a></li>
+<li><a href="#to-list-web-environment-entries-2">To List Web Environment Entries</a></li>
+</ul>
+</li>
+<li><a href="#web-module-deployment-guidelines-2">Web Module Deployment Guidelines</a></li>
+<li><a href="#ejb-module-deployment-guidelines-2">EJB Module Deployment Guidelines</a></li>
+<li><a href="#deploying-a-connector-module-2">Deploying a Connector Module</a>
+<ul class="sectlevel3">
+<li><a href="#to-deploy-and-configure-a-stand-alone-connector-module-2">To Deploy and Configure a Stand-Alone Connector Module</a></li>
+<li><a href="#redeploying-a-stand-alone-connector-module-2">Redeploying a Stand-Alone Connector Module</a></li>
+<li><a href="#deploying-and-configuring-an-embedded-resource-adapter-2">Deploying and Configuring an Embedded Resource Adapter</a></li>
+</ul>
+</li>
+<li><a href="#assembling-and-deploying-an-application-client-module-2">Assembling and Deploying an Application Client Module</a>
+<ul class="sectlevel3">
+<li><a href="#to-assemble-and-deploy-an-application-client-2">To Assemble and Deploy an Application Client</a></li>
+<li><a href="#to-prepare-another-machine-for-running-an-application-client-2">To Prepare Another Machine for Running an Application Client</a></li>
+<li><a href="#to-undeploy-an-application-client-2">To Undeploy an Application Client</a></li>
+</ul>
+</li>
+<li><a href="#lifecycle-module-deployment-guidelines-2">Lifecycle Module Deployment Guidelines</a></li>
+<li><a href="#web-service-deployment-guidelines-2">Web Service Deployment Guidelines</a></li>
+<li><a href="#osgi-bundle-deployment-guidelines-2">OSGi Bundle Deployment Guidelines</a></li>
+<li><a href="#transparent-jdbc-connection-pool-reconfiguration-2">Transparent JDBC Connection Pool Reconfiguration</a></li>
+<li><a href="#application-scoped-resources-2">Application-Scoped Resources</a></li>
+</ul>
+</li>
 <li><a href="#a-the-asadmin-deployment-subcommands">A The <code>asadmin</code> Deployment Subcommands</a></li>
-<li><a href="#b-glassfish-server-deployment-descriptor-files">B Eclipse GlassFish Deployment Descriptor Files</a></li>
-<li><a href="#c-elements-of-the-glassfish-server-deployment-descriptors">C Elements of the Eclipse GlassFish Deployment Descriptors</a></li>
+<li><a href="#b-glassfish-server-deployment-descriptor-files">B Eclipse GlassFish Deployment Descriptor Files</a>
+<ul class="sectlevel2">
+<li><a href="#about-the-eclipse-glassfish-deployment-descriptors">About the Eclipse GlassFish Deployment Descriptors</a></li>
+<li><a href="#the-glassfish-application-xml-file">The glassfish-application.xml File</a></li>
+<li><a href="#the-glassfish-web-xml-file">The glassfish-web.xml File</a></li>
+<li><a href="#the-glassfish-ejb-jar-xml-file">The glassfish-ejb-jar.xml File</a></li>
+<li><a href="#the-sun-cmp-mappings-xml-file">The sun-cmp-mappings.xml File</a></li>
+<li><a href="#the-glassfish-application-client-xml-file">The glassfish-application-client.xml file</a></li>
+<li><a href="#the-sun-acc-xml-file">The sun-acc.xml File</a></li>
+<li><a href="#the-glassfish-resources-xml-file">The glassfish-resources.xml File</a></li>
+<li><a href="#weblogic-server-deployment-descriptor-support-in-eclipse-glassfish">WebLogic Server Deployment Descriptor Support in Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#c-elements-of-the-glassfish-server-deployment-descriptors">C Elements of the Eclipse GlassFish Deployment Descriptors</a>
+<ul class="sectlevel2">
+<li><a href="#activation-config-2"><code>activation-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-2">Superelements</a></li>
+<li><a href="#subelements-2">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#activation-config-property-2"><code>activation-config-property</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-3">Superelements</a></li>
+<li><a href="#subelements-3">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#activation-config-property-name-2"><code>activation-config-property-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-4">Superelements</a></li>
+<li><a href="#subelements-4">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#activation-config-property-value-2"><code>activation-config-property-value</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-5">Superelements</a></li>
+<li><a href="#subelements-5">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#admin-object-resource-2"><code>admin-object-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-4">Superelements</a></li>
+<li><a href="#subelements-4">Subelements</a></li>
+<li><a href="#attributes">Attributes</a></li>
+<li><a href="#properties">Properties</a></li>
+</ul>
+</li>
+<li><a href="#as-context-2"><code>as-context</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-6">Superelements</a></li>
+<li><a href="#subelements-6">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#archive-name-2"><code>archive-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-7">Superelements</a></li>
+<li><a href="#subelements-7">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#auth-method-2"><code>auth-method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-8">Superelements</a></li>
+<li><a href="#subelements-8">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#auth-realm-2"><code>auth-realm</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-9">Superelements</a></li>
+<li><a href="#subelements-9">Subelements</a></li>
+<li><a href="#attributes-2"><code>Attributes</code></a></li>
+<li><a href="#example-2">Example</a></li>
+</ul>
+</li>
+<li><a href="#backend-principal-2"><code>backend-principal</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-9">Superelements</a></li>
+<li><a href="#subelements-9">Subelements</a></li>
+<li><a href="#attributes-2">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#bean-cache-2"><code>bean-cache</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-11">Superelements</a></li>
+<li><a href="#subelements-11">Subelements</a></li>
+<li><a href="#example-3">Example</a></li>
+</ul>
+</li>
+<li><a href="#bean-pool-2"><code>bean-pool</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-12">Superelements</a></li>
+<li><a href="#subelements-12">Subelements</a></li>
+<li><a href="#example-4">Example</a></li>
+</ul>
+</li>
+<li><a href="#cache-2"><code>cache</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-13">Superelements</a></li>
+<li><a href="#subelements-13">Subelements</a></li>
+<li><a href="#attributes-4">Attributes</a></li>
+<li><a href="#properties-2">Properties</a></li>
+<li><a href="#cache-class-names-2">Cache Class Names</a></li>
+</ul>
+</li>
+<li><a href="#cache-helper-2"><code>cache-helper</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-14">Superelements</a></li>
+<li><a href="#subelements-14">Subelements</a></li>
+<li><a href="#attributes-5">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#cache-helper-ref-2"><code>cache-helper-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-15">Superelements</a></li>
+<li><a href="#subelements-15">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cache-idle-timeout-in-seconds-2"><code>cache-idle-timeout-in-seconds</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-16">Superelements</a></li>
+<li><a href="#subelements-16">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cache-mapping-2"><code>cache-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-17">Superelements</a></li>
+<li><a href="#subelements-17">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#call-property-2"><code>call-property</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-18">Superelements</a></li>
+<li><a href="#subelements-18">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#caller-propagation-2"><code>caller-propagation</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-19">Superelements</a></li>
+<li><a href="#subelements-19">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cert-db-2"><code>cert-db</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-20">Superelements</a></li>
+<li><a href="#subelements-20">Subelements</a></li>
+<li><a href="#attributes-6">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#check-all-at-commit-2"><code>check-all-at-commit</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-21">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#check-modified-at-commit-2"><code>check-modified-at-commit</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-22">Superelements</a></li>
+<li><a href="#subelements-21">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#check-version-of-accessed-instances-2"><code>check-version-of-accessed-instances</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-23">Superelements</a></li>
+<li><a href="#subelements-22">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#checkpoint-at-end-of-method-2"><code>checkpoint-at-end-of-method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-24">Superelements</a></li>
+<li><a href="#subelements-23">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#checkpointed-methods-2"><code>checkpointed-methods</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-25">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#class-loader-2"><code>class-loader</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-26">Superelements</a></li>
+<li><a href="#subelements-24">Subelements</a></li>
+<li><a href="#attributes-7">Attributes</a></li>
+<li><a href="#properties-3">Properties</a></li>
+</ul>
+</li>
+<li><a href="#client-container-2"><code>client-container</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-27">Superelements</a></li>
+<li><a href="#subelements-25">Subelements</a></li>
+<li><a href="#attributes-8">Attributes</a></li>
+<li><a href="#properties-4">Properties</a></li>
+</ul>
+</li>
+<li><a href="#client-credential-2"><code>client-credential</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-28">Superelements</a></li>
+<li><a href="#subelements-26">Subelements</a></li>
+<li><a href="#attributes-9">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#cmp-2"><code>cmp</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-29">Superelements</a></li>
+<li><a href="#subelements-27">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cmp-field-mapping-2"><code>cmp-field-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-30">Superelements</a></li>
+<li><a href="#subelements-28">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cmp-resource-2"><code>cmp-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-31">Superelements</a></li>
+<li><a href="#subelements-29">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cmr-field-mapping-2"><code>cmr-field-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-32">Superelements</a></li>
+<li><a href="#subelements-30">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cmr-field-name-2"><code>cmr-field-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-33">Superelements</a></li>
+<li><a href="#subelements-31">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cmt-timeout-in-seconds-2"><code>cmt-timeout-in-seconds</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-34">Superelements</a></li>
+<li><a href="#subelements-32">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#column-name-2"><code>column-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-35">Superelements</a></li>
+<li><a href="#subelements-33">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#column-pair-2"><code>column-pair</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-36">Superelements</a></li>
+<li><a href="#subelements-34">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#commit-option-2"><code>commit-option</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-37">Superelements</a></li>
+<li><a href="#subelements-35">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#compatibility-2"><code>compatibility</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-38">Superelements</a></li>
+<li><a href="#subelements-36">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#confidentiality-2"><code>confidentiality</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-39">Superelements</a></li>
+<li><a href="#subelements-37">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#connector-connection-pool-2"><code>connector-connection-pool</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-39">Superelements</a></li>
+<li><a href="#subelements-37">Subelements</a></li>
+<li><a href="#attributes-9">Attributes</a></li>
+<li><a href="#properties-4">Properties</a></li>
+</ul>
+</li>
+<li><a href="#connector-resource-2"><code>connector-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-40">Superelements</a></li>
+<li><a href="#subelements-38">Subelements</a></li>
+<li><a href="#attributes-10">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#consistency-2"><code>consistency</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-42">Superelements</a></li>
+<li><a href="#subelements-40">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#constraint-field-2"><code>constraint-field</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-43">Superelements</a></li>
+<li><a href="#subelements-41">Subelements</a></li>
+<li><a href="#attributes-12">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#constraint-field-value-2"><code>constraint-field-value</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-44">Superelements</a></li>
+<li><a href="#subelements-42">Subelements</a></li>
+<li><a href="#attributes-13">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#context-root-2"><code>context-root</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-45">Superelements</a></li>
+<li><a href="#subelements-43">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#cookie-properties-2"><code>cookie-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-46">Superelements</a></li>
+<li><a href="#subelements-44">Subelements</a></li>
+<li><a href="#properties-6">Properties</a></li>
+</ul>
+</li>
+<li><a href="#create-tables-at-deploy-2"><code>create-tables-at-deploy</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-47">Superelements</a></li>
+<li><a href="#subelements-45">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#custom-resource-2"><code>custom-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-47">Superelements</a></li>
+<li><a href="#subelements-45">Subelements</a></li>
+<li><a href="#attributes-13">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#database-vendor-name-2"><code>database-vendor-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-49">Superelements</a></li>
+<li><a href="#subelements-47">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#debugging-enabled-2"><code>debugging-enabled</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-50">Superelements</a></li>
+<li><a href="#subelements-48">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#default-2"><code>default</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-51">Superelements</a></li>
+<li><a href="#subelements-49">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#default-helper-2"><code>default-helper</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-52">Superelements</a></li>
+<li><a href="#subelements-50">Subelements</a></li>
+<li><a href="#properties-7">Properties</a></li>
+</ul>
+</li>
+<li><a href="#default-resource-principal-2"><code>default-resource-principal</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-53">Superelements</a></li>
+<li><a href="#subelements-51">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#description-2"><code>description</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-54">Superelements</a></li>
+<li><a href="#subelements-52">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#disable-nonportable-jndi-names-2"><code>disable-nonportable-jndi-names</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-55">Superelements</a></li>
+<li><a href="#subelements-53">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#dispatcher-2"><code>dispatcher</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-56">Superelements</a></li>
+<li><a href="#subelements-54">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#drop-tables-at-undeploy-2"><code>drop-tables-at-undeploy</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-57">Superelements</a></li>
+<li><a href="#subelements-55">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#ejb-2"><code>ejb</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-58">Superelements</a></li>
+<li><a href="#subelements-56">Subelements</a></li>
+<li><a href="#attributes-15">Attributes</a></li>
+<li><a href="#example-5">Example</a></li>
+</ul>
+</li>
+<li><a href="#ejb-name-2"><code>ejb-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-59">Superelements</a></li>
+<li><a href="#subelements-57">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#ejb-ref-2"><code>ejb-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-60">Superelements</a></li>
+<li><a href="#subelements-58">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#ejb-ref-name-2"><code>ejb-ref-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-61">Superelements</a></li>
+<li><a href="#subelements-59">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#eligible-2"><code>eligible</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-62">Superelements</a></li>
+<li><a href="#subelements-60">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#endpoint-address-uri-2"><code>endpoint-address-uri</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-63">Superelements</a></li>
+<li><a href="#subelements-61">Subelements</a></li>
+<li><a href="#example-6">Example</a></li>
+</ul>
+</li>
+<li><a href="#enterprise-beans-2"><code>enterprise-beans</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-64">Superelements</a></li>
+<li><a href="#subelements-62">Subelements</a></li>
+<li><a href="#example-7">Example</a></li>
+</ul>
+</li>
+<li><a href="#entity-mapping-2"><code>entity-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-65">Superelements</a></li>
+<li><a href="#subelements-63">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#establish-trust-in-client-2"><code>establish-trust-in-client</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-66">Superelements</a></li>
+<li><a href="#subelements-64">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#establish-trust-in-target-2"><code>establish-trust-in-target</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-67">Superelements</a></li>
+<li><a href="#subelements-65">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#external-jndi-resource-2"><code>external-jndi-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-67">Superelements</a></li>
+<li><a href="#subelements-65">Subelements</a></li>
+<li><a href="#attributes-15">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#fetched-with-2"><code>fetched-with</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-69">Superelements</a></li>
+<li><a href="#subelements-67">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#field-name-2"><code>field-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-70">Superelements</a></li>
+<li><a href="#subelements-68">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#finder-2"><code>finder</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-71">Superelements</a></li>
+<li><a href="#subelements-69">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#flush-at-end-of-method-2"><code>flush-at-end-of-method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-72">Superelements</a></li>
+<li><a href="#subelements-70">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#gen-classes-2"><code>gen-classes</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-73">Superelements</a></li>
+<li><a href="#subelements-71">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-application-2"><code>glassfish-application</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-74">Superelements</a></li>
+<li><a href="#subelements-72">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-application-client-2"><code>glassfish-application-client</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-75">Superelements</a></li>
+<li><a href="#subelements-73">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-ejb-jar-2"><code>glassfish-ejb-jar</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-76">Superelements</a></li>
+<li><a href="#subelements-74">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-web-app-2"><code>glassfish-web-app</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-77">Superelements</a></li>
+<li><a href="#subelements-75">Subelements</a></li>
+<li><a href="#attributes-17">Attributes</a></li>
+<li><a href="#properties-8">Properties</a></li>
+</ul>
+</li>
+<li><a href="#group-map-2"><code>group-map</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-77">Superelements</a></li>
+<li><a href="#subelements-76">Subelements</a></li>
+<li><a href="#attributes-17">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#group-name-2"><code>group-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-79">Superelements</a></li>
+<li><a href="#subelements-77">Subelements</a></li>
+<li><a href="#http-method-2"><code>http-method</code></a></li>
+</ul>
+</li>
+<li><a href="#idempotent-url-pattern-2"><code>idempotent-url-pattern</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-81">Superelements</a></li>
+<li><a href="#subelements-79">Subelements</a></li>
+<li><a href="#attributes-19">Attributes</a></li>
+<li><a href="#example-8">Example</a></li>
+</ul>
+</li>
+<li><a href="#integrity-2"><code>integrity</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-82">Superelements</a></li>
+<li><a href="#subelements-80">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#ior-security-config-2"><code>ior-security-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-83">Superelements</a></li>
+<li><a href="#subelements-81">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#is-cache-overflow-allowed-2"><code>is-cache-overflow-allowed</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-84">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#is-one-one-cmp-2"><code>is-one-one-cmp</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-85">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#is-read-only-bean-2"><code>is-read-only-bean</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-86">Superelements</a></li>
+<li><a href="#subelements-82">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#java-method-2"><code>java-method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-87">Superelements</a></li>
+<li><a href="#subelements-83">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#java-web-start-access-2"><code>java-web-start-access</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-88">Superelements</a></li>
+<li><a href="#subelements-84">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#jdbc-connection-pool-2"><code>jdbc-connection-pool</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-88">Superelements</a></li>
+<li><a href="#subelements-84">Subelements</a></li>
+<li><a href="#attributes-19">Attributes</a></li>
+<li><a href="#glassfish-server-properties">Eclipse GlassFish Properties</a></li>
+<li><a href="#database-properties">Database Properties</a></li>
+</ul>
+</li>
+<li><a href="#jdbc-resource-2"><code>jdbc-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-89">Superelements</a></li>
+<li><a href="#subelements-85">Subelements</a></li>
+<li><a href="#attributes-20">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#jms-durable-subscription-name-2"><code>jms-durable-subscription-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-91">Superelements</a></li>
+<li><a href="#subelements-87">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#jms-max-messages-load-2"><code>jms-max-messages-load</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-92">Superelements</a></li>
+<li><a href="#subelements-88">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#jndi-name-2"><code>jndi-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-93">Superelements</a></li>
+<li><a href="#subelements-89">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#jnlp-doc-2"><code>jnlp-doc</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-94">Superelements</a></li>
+<li><a href="#subelements-90">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#jsp-config-2"><code>jsp-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-95">Superelements</a></li>
+<li><a href="#subelements-91">Subelements</a></li>
+<li><a href="#properties-9">Properties</a></li>
+</ul>
+</li>
+<li><a href="#keep-state-2"><code>keep-state</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-96">Superelements</a></li>
+<li><a href="#subelements-92">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#key-field-2"><code>key-field</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-97">Superelements</a></li>
+<li><a href="#subelements-93">Subelements</a></li>
+<li><a href="#attributes-22">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#level-2"><code>level</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-98">Superelements</a></li>
+<li><a href="#subelements-94">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#local-home-impl-2"><code>local-home-impl</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-99">Superelements</a></li>
+<li><a href="#subelements-95">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#local-impl-2"><code>local-impl</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-100">Superelements</a></li>
+<li><a href="#subelements-96">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#locale-charset-info-2"><code>locale-charset-info</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-101">Superelements</a></li>
+<li><a href="#subelements-97">Subelements</a></li>
+<li><a href="#attributes-23">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#locale-charset-map-2"><code>locale-charset-map</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-102">Superelements</a></li>
+<li><a href="#subelements-98">Subelements</a></li>
+<li><a href="#attributes-24">Attributes</a></li>
+<li><a href="#example-agents-2">Example Agents</a></li>
+</ul>
+</li>
+<li><a href="#localpart-2"><code>localpart</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-103">Superelements</a></li>
+<li><a href="#subelements-99">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#lock-when-loaded-2"><code>lock-when-loaded</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-104">Superelements</a></li>
+<li><a href="#subelements-100">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#lock-when-modified-2"><code>lock-when-modified</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-105">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#log-service-2"><code>log-service</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-106">Superelements</a></li>
+<li><a href="#subelements-101">Subelements</a></li>
+<li><a href="#attributes-25">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#login-config-2"><code>login-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-107">Superelements</a></li>
+<li><a href="#subelements-102">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#mail-resource-2"><code>mail-resource</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-107">Superelements</a></li>
+<li><a href="#subelements-102">Subelements</a></li>
+<li><a href="#attributes-25">Attributes</a></li>
+<li><a href="#properties-9">Properties</a></li>
+</ul>
+</li>
+<li><a href="#manager-properties-2"><code>manager-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-109">Superelements</a></li>
+<li><a href="#subelements-104">Subelements</a></li>
+<li><a href="#properties-11">Properties</a></li>
+</ul>
+</li>
+<li><a href="#mapping-properties-2"><code>mapping-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-110">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#max-cache-size-2"><code>max-cache-size</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-111">Superelements</a></li>
+<li><a href="#subelements-105">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#max-pool-size-2"><code>max-pool-size</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-112">Superelements</a></li>
+<li><a href="#subelements-106">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#max-wait-time-in-millis-2"><code>max-wait-time-in-millis</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-113">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#mdb-connection-factory-2"><code>mdb-connection-factory</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-114">Superelements</a></li>
+<li><a href="#subelements-107">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#mdb-resource-adapter-2"><code>mdb-resource-adapter</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-115">Superelements</a></li>
+<li><a href="#subelements-108">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-2"><code>message</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-116">Superelements</a></li>
+<li><a href="#subelements-109">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-destination-2"><code>message-destination</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-117">Superelements</a></li>
+<li><a href="#subelements-110">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-destination-name-2"><code>message-destination-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-118">Superelements</a></li>
+<li><a href="#subelements-111">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-destination-ref-2"><code>message-destination-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-119">Superelements</a></li>
+<li><a href="#subelements-112">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-destination-ref-name-2"><code>message-destination-ref-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-120">Superelements</a></li>
+<li><a href="#subelements-113">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-security-2"><code>message-security</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-121">Superelements</a></li>
+<li><a href="#subelements-114">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#message-security-binding-2"><code>message-security-binding</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-122">Superelements</a></li>
+<li><a href="#subelements-115">Subelements</a></li>
+<li><a href="#attributes-27">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#message-security-config-2"><code>message-security-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-123">Superelements</a></li>
+<li><a href="#subelements-116">Subelements</a></li>
+<li><a href="#attributes-28">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#method-2"><code>method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-124">Superelements</a></li>
+<li><a href="#subelements-117">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#method-intf-2"><code>method-intf</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-125">Superelements</a></li>
+<li><a href="#subelements-118">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#method-name-2"><code>method-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-126">Superelements</a></li>
+<li><a href="#subelements-119">Subelements</a></li>
+<li><a href="#examples-2">Examples</a></li>
+</ul>
+</li>
+<li><a href="#method-param-2"><code>method-param</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-127">Superelements</a></li>
+<li><a href="#subelements-120">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#method-params-2"><code>method-params</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-128">Superelements</a></li>
+<li><a href="#subelements-121">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#name-2"><code>name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-129">Superelements</a></li>
+<li><a href="#subelements-122">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#named-group-2"><code>named-group</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-130">Superelements</a></li>
+<li><a href="#subelements-123">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#namespaceuri-2"><code>namespaceURI</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-131">Superelements</a></li>
+<li><a href="#subelements-124">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#none-2"><code>none</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-132">Superelements</a></li>
+<li><a href="#subelements-125">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#one-one-finders-2"><code>one-one-finders</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-133">Superelements</a></li>
+<li><a href="#subelements-126">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#operation-name-2"><code>operation-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-134">Superelements</a></li>
+<li><a href="#subelements-127">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#parameter-encoding-2"><code>parameter-encoding</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-135">Superelements</a></li>
+<li><a href="#subelements-128">Subelements</a></li>
+<li><a href="#attributes-29">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#pass-by-reference-2"><code>pass-by-reference</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-136">Superelements</a></li>
+<li><a href="#subelements-129">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#password-2"><code>password</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-137">Superelements</a></li>
+<li><a href="#subelements-130">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#per-request-load-balancing-2"><code>per-request-load-balancing</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-138">Superelements</a></li>
+<li><a href="#subelements-131">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#pm-descriptors-2"><code>pm-descriptors</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-139">Superelements</a></li>
+</ul>
+</li>
+<li><a href="#pool-idle-timeout-in-seconds-2"><code>pool-idle-timeout-in-seconds</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-140">Superelements</a></li>
+<li><a href="#subelements-132">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#port-component-name-2"><code>port-component-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-141">Superelements</a></li>
+<li><a href="#subelements-133">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#port-info-2"><code>port-info</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-142">Superelements</a></li>
+<li><a href="#subelements-134">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#prefetch-disabled-2"><code>prefetch-disabled</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-143">Superelements</a></li>
+<li><a href="#subelements-135">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#principal-2"><code>principal</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-144">Superelements</a></li>
+<li><a href="#subelements-136">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#principal-map-2"><code>principal-map</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-144">Superelements</a></li>
+<li><a href="#subelements-137">Subelements</a></li>
+<li><a href="#attributes-29">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#principal-name-2"><code>principal-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-146">Superelements</a></li>
+<li><a href="#subelements-138">Subelements</a></li>
+<li><a href="#attributes-31">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#property-with-attributes-2"><code>property</code> (with attributes)</a>
+<ul class="sectlevel3">
+<li><a href="#superelements-147">Superelements</a></li>
+<li><a href="#subelements-139">Subelements</a></li>
+<li><a href="#attributes-32">Attributes</a></li>
+<li><a href="#example-9">Example</a></li>
+</ul>
+</li>
+<li><a href="#property-with-subelements-2"><code>property</code> (with subelements)</a>
+<ul class="sectlevel3">
+<li><a href="#superelements-148">Superelements</a></li>
+<li><a href="#subelements-140">Subelements</a></li>
+<li><a href="#example-10">Example</a></li>
+</ul>
+</li>
+<li><a href="#provider-config-2"><code>provider-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-149">Superelements</a></li>
+<li><a href="#subelements-141">Subelements</a></li>
+<li><a href="#attributes-33">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#query-filter-2"><code>query-filter</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-150">Superelements</a></li>
+<li><a href="#subelements-142">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#query-method-2"><code>query-method</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-151">Superelements</a></li>
+<li><a href="#subelements-143">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#query-ordering-2"><code>query-ordering</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-152">Superelements</a></li>
+<li><a href="#subelements-144">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#query-params-2"><code>query-params</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-153">Superelements</a></li>
+<li><a href="#subelements-145">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#query-variables-2"><code>query-variables</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-154">Superelements</a></li>
+<li><a href="#subelements-146">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#read-only-2"><code>read-only</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-155">Superelements</a></li>
+<li><a href="#subelements-147">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#realm-2"><code>realm</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-156">Superelements</a></li>
+<li><a href="#subelements-148">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#refresh-field-2"><code>refresh-field</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-157">Superelements</a></li>
+<li><a href="#subelements-149">Subelements</a></li>
+<li><a href="#attributes-34">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#refresh-period-in-seconds-2"><code>refresh-period-in-seconds</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-158">Superelements</a></li>
+<li><a href="#subelements-150">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#removal-timeout-in-seconds-2"><code>removal-timeout-in-seconds</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-159">Superelements</a></li>
+<li><a href="#subelements-151">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#remote-home-impl-2"><code>remote-home-impl</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-160">Superelements</a></li>
+<li><a href="#subelements-152">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#remote-impl-2"><code>remote-impl</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-161">Superelements</a></li>
+<li><a href="#subelements-153">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#request-policy-2"><code>request-policy</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-162">Superelements</a></li>
+<li><a href="#subelements-154">Subelements</a></li>
+<li><a href="#attributes-35">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#request-protection-2"><code>request-protection</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-163">Superelements</a></li>
+<li><a href="#subelements-155">Subelements</a></li>
+<li><a href="#attributes-36">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#required-2"><code>required</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-164">Superelements</a></li>
+<li><a href="#subelements-156">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#res-ref-name-2"><code>res-ref-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-165">Superelements</a></li>
+<li><a href="#subelements-157">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#resize-quantity-2"><code>resize-quantity</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-166">Superelements</a></li>
+<li><a href="#subelements-158">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#resource-adapter-config-2"><code>resource-adapter-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-166">Superelements</a></li>
+<li><a href="#subelements-158">Subelements</a></li>
+<li><a href="#attributes-36">Attributes</a></li>
+<li><a href="#properties-11">Properties</a></li>
+</ul>
+</li>
+<li><a href="#resource-adapter-mid-2"><code>resource-adapter-mid</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-168">Superelements</a></li>
+<li><a href="#subelements-160">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#resource-env-ref-2"><code>resource-env-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-169">Superelements</a></li>
+<li><a href="#subelements-161">Subelements</a></li>
+<li><a href="#example-11">Example</a></li>
+</ul>
+</li>
+<li><a href="#resource-env-ref-name-2"><code>resource-env-ref-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-170">Superelements</a></li>
+<li><a href="#subelements-162">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#resource-ref-2"><code>resource-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-171">Superelements</a></li>
+<li><a href="#subelements-163">Subelements</a></li>
+<li><a href="#example-12">Example</a></li>
+</ul>
+</li>
+<li><a href="#resources-2"><code>resources</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-171">Superelements</a></li>
+<li><a href="#subelements-163">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#response-policy-2"><code>response-policy</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-173">Superelements</a></li>
+<li><a href="#subelements-165">Subelements</a></li>
+<li><a href="#attributes-38">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#response-protection-2"><code>response-protection</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-174">Superelements</a></li>
+<li><a href="#subelements-166">Subelements</a></li>
+<li><a href="#attributes-39">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#role-name-2"><code>role-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-175">Superelements</a></li>
+<li><a href="#subelements-167">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#sas-context-2"><code>sas-context</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-176">Superelements</a></li>
+<li><a href="#subelements-168">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#schema-2"><code>schema</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-177">Superelements</a></li>
+<li><a href="#subelements-169">Subelements</a></li>
+<li><a href="#examples-3">Examples</a></li>
+</ul>
+</li>
+<li><a href="#schema-generator-properties-2"><code>schema-generator-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-178">Superelements</a></li>
+<li><a href="#subelements-170">Subelements</a></li>
+<li><a href="#properties-13">Properties</a></li>
+<li><a href="#example-13">Example</a></li>
+</ul>
+</li>
+<li><a href="#secondary-table-2"><code>secondary-table</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-179">Superelements</a></li>
+<li><a href="#subelements-171">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#security-2"><code>security</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-180">Superelements</a></li>
+<li><a href="#subelements-172">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#security-map-2"><code>security-map</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-180">Superelements</a></li>
+<li><a href="#subelements-172">Subelements</a></li>
+<li><a href="#attributes-39">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#security-role-mapping-2"><code>security-role-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-182">Superelements</a></li>
+<li><a href="#subelements-174">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#service-endpoint-interface-2"><code>service-endpoint-interface</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-183">Superelements</a></li>
+<li><a href="#subelements-175">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#service-impl-class-2"><code>service-impl-class</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-184">Superelements</a></li>
+<li><a href="#subelements-176">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#service-qname-2"><code>service-qname</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-185">Superelements</a></li>
+<li><a href="#subelements-177">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#service-ref-2"><code>service-ref</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-186">Superelements</a></li>
+<li><a href="#subelements-178">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#service-ref-name-2"><code>service-ref-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-187">Superelements</a></li>
+<li><a href="#subelements-179">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#servlet-2"><code>servlet</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-188">Superelements</a></li>
+<li><a href="#subelements-180">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#servlet-impl-class-2"><code>servlet-impl-class</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-189">Superelements</a></li>
+<li><a href="#subelements-181">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#servlet-name-2"><code>servlet-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-190">Superelements</a></li>
+<li><a href="#subelements-182">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#session-config-2"><code>session-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-191">Superelements</a></li>
+<li><a href="#subelements-183">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#session-manager-2"><code>session-manager</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-192">Superelements</a></li>
+<li><a href="#subelements-184">Subelements</a></li>
+<li><a href="#attributes-41">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#session-properties-2"><code>session-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-193">Superelements</a></li>
+<li><a href="#subelements-185">Subelements</a></li>
+<li><a href="#properties-14">Properties</a></li>
+</ul>
+</li>
+<li><a href="#ssl-2"><code>ssl</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-194">Superelements</a></li>
+<li><a href="#subelements-186">Subelements</a></li>
+<li><a href="#attributes-42">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#steady-pool-size-2"><code>steady-pool-size</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-195">Superelements</a></li>
+<li><a href="#subelements-187">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#store-properties-2"><code>store-properties</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-196">Superelements</a></li>
+<li><a href="#subelements-188">Subelements</a></li>
+<li><a href="#properties-15">Properties</a></li>
+</ul>
+</li>
+<li><a href="#stub-property-2"><code>stub-property</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-197">Superelements</a></li>
+<li><a href="#subelements-189">Subelements</a></li>
+<li><a href="#properties-16">Properties</a></li>
+<li><a href="#example-14">Example</a></li>
+</ul>
+</li>
+<li><a href="#sun-cmp-mapping-2"><code>sun-cmp-mapping</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-198">Superelements</a></li>
+<li><a href="#subelements-190">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#sun-cmp-mappings-2"><code>sun-cmp-mappings</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-199">Superelements</a></li>
+<li><a href="#subelements-191">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#table-name-2"><code>table-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-200">Superelements</a></li>
+<li><a href="#subelements-192">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#target-server-2"><code>target-server</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-201">Superelements</a></li>
+<li><a href="#subelements-193">Subelements</a></li>
+<li><a href="#attributes-43">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#tie-class-2"><code>tie-class</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-202">Superelements</a></li>
+<li><a href="#subelements-194">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#timeout-2"><code>timeout</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-203">Superelements</a></li>
+<li><a href="#subelements-195">Subelements</a></li>
+<li><a href="#attributes-44">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#transport-config-2"><code>transport-config</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-204">Superelements</a></li>
+<li><a href="#subelements-196">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#transport-guarantee-2"><code>transport-guarantee</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-205">Superelements</a></li>
+<li><a href="#subelements-197">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#unique-id-2"><code>unique-id</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-206">Superelements</a></li>
+<li><a href="#subelements-198">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#url-pattern-2"><code>url-pattern</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-207">Superelements</a></li>
+<li><a href="#subelements-199">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#user-group-2"><code>user-group</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-207">Superelements</a></li>
+<li><a href="#subelements-199">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#use-thread-pool-id-2"><code>use-thread-pool-id</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-209">Superelements</a></li>
+<li><a href="#subelements-201">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#value-2"><code>value</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-210">Superelements</a></li>
+<li><a href="#subelements-202">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#valve-2"><code>valve</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-211">Superelements</a></li>
+<li><a href="#subelements-203">Subelements</a></li>
+<li><a href="#attributes-45">Attributes</a></li>
+<li><a href="#example-15">Example</a></li>
+</ul>
+</li>
+<li><a href="#vendor-2"><code>vendor</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-212">Superelements</a></li>
+<li><a href="#subelements-204">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#version-identifier-2"><code>version-identifier</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-212">Superelements</a></li>
+<li><a href="#subelements-204">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#victim-selection-policy-2"><code>victim-selection-policy</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-214">Superelements</a></li>
+<li><a href="#subelements-206">Subelements</a></li>
+<li><a href="#example-16">Example</a></li>
+</ul>
+</li>
+<li><a href="#web-2"><code>web</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-215">Superelements</a></li>
+<li><a href="#subelements-207">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#web-uri-2"><code>web-uri</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-216">Superelements</a></li>
+<li><a href="#subelements-208">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#webservice-description-2"><code>webservice-description</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-217">Superelements</a></li>
+<li><a href="#subelements-209">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#webservice-description-name-2"><code>webservice-description-name</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-218">Superelements</a></li>
+<li><a href="#subelements-210">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#webservice-endpoint-2"><code>webservice-endpoint</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-219">Superelements</a></li>
+<li><a href="#subelements-211">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#work-security-map-2"><code>work-security-map</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-219">Superelements</a></li>
+<li><a href="#subelements-212">Subelements</a></li>
+<li><a href="#attributes-45">Attributes</a></li>
+</ul>
+</li>
+<li><a href="#wsdl-override-2"><code>wsdl-override</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-221">Superelements</a></li>
+<li><a href="#subelements-213">Subelements</a></li>
+<li><a href="#example-17">Example</a></li>
+</ul>
+</li>
+<li><a href="#wsdl-port-2"><code>wsdl-port</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-222">Superelements</a></li>
+<li><a href="#subelements-214">Subelements</a></li>
+</ul>
+</li>
+<li><a href="#wsdl-publish-location-2"><code>wsdl-publish-location</code></a>
+<ul class="sectlevel3">
+<li><a href="#superelements-223">Superelements</a></li>
+<li><a href="#subelements-215">Subelements</a></li>
+<li><a href="#example-18">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -23042,7 +24548,7 @@ WSDL directory (<code>META-INF/wsdl</code> or <code>WEB-INF/wsdl</code>).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:39:53 UTC
+Last updated 2022-08-05 23:12:49 UTC
 </div>
 </div>
 </body>

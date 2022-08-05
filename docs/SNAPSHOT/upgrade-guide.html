@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Upgrade Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,9 +18,93 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#glassfish-server-upgrade-compatibility-issues">1 Eclipse GlassFish Upgrade Compatibility Issues</a></li>
-<li><a href="#upgrading-an-installation-of-application-server-or-glassfish-server">2 Upgrading an Installation of Application Server or Eclipse GlassFish</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#glassfish-server-upgrade-compatibility-issues">1 Eclipse GlassFish Upgrade Compatibility Issues</a>
+<ul class="sectlevel2">
+<li><a href="#binary-compatible-releases-for-eclipse-glassfish-7">Binary-Compatible Releases For Eclipse GlassFish 7</a></li>
+<li><a href="#new-default-installation-directory-2">New Default Installation Directory</a></li>
+<li><a href="#changes-to-group-management-service-settings-2">Changes to Group Management Service Settings</a></li>
+<li><a href="#application-client-interoperability-2">Application Client Interoperability</a></li>
+<li><a href="#node-agent-support-2">Node Agent Support</a></li>
+<li><a href="#hadb-and-hadbm-command-support-2">HADB and <code>hadbm</code> Command Support</a></li>
+<li><a href="#command-line-interface-the-asadmin-command-2">Command Line Interface: The <code>asadmin</code> Command</a>
+<ul class="sectlevel3">
+<li><a href="#deprecated-asadmin-subcommands-2">Deprecated <code>asadmin</code> Subcommands</a></li>
+<li><a href="#deprecated-unsupported-and-obsolete-options-2">Deprecated, Unsupported, and Obsolete Options</a></li>
+</ul>
+</li>
+<li><a href="#applications-that-use-java-db-2">Applications That Use Java DB</a></li>
+<li><a href="#applications-that-use-persistence-2">Applications That Use Persistence</a></li>
+<li><a href="#http-service-to-network-service-changes-2">HTTP Service to Network Service Changes</a>
+<ul class="sectlevel3">
+<li><a href="#changes-to-dotted-names-2">Changes to Dotted Names</a></li>
+<li><a href="#changes-to-asadmin-subcommands-2">Changes to <code>asadmin</code> Subcommands</a></li>
+<li><a href="#remapping-of-http-service-attributes-and-properties-2">Remapping of HTTP Service Attributes and Properties</a></li>
+<li><a href="#new-network-service-elements-and-attributes-2">New Network Service Elements and Attributes</a></li>
+</ul>
+</li>
+<li><a href="#nss-cryptographic-token-support-2">NSS Cryptographic Token Support</a></li>
+</ul>
+</li>
+<li><a href="#upgrading-an-installation-of-application-server-or-glassfish-server">2 Upgrading an Installation of Application Server or Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#upgrade-overview-2">Upgrade Overview</a>
+<ul class="sectlevel3">
+<li><a href="#upgrade-paths-2">Upgrade Paths</a></li>
+<li><a href="#upgrade-terminology-2">Upgrade Terminology</a></li>
+<li><a href="#summary-of-upgrade-tools-and-procedures-2">Summary of Upgrade Tools and Procedures</a></li>
+<li><a href="#supported-releases-for-upgrade-to-eclipse-glassfish-7">Supported Releases for Upgrade to Eclipse GlassFish 7</a></li>
+<li><a href="#upgrading-from-version-8-x-or-older-product-releases">Upgrading From Version 8.x or Older Product Releases</a></li>
+<li><a href="#upgrading-eclipse-glassfish-inside-a-closed-network">Upgrading Eclipse GlassFish Inside a Closed Network</a></li>
+</ul>
+</li>
+<li><a href="#performing-a-side-by-side-upgrade-with-upgrade-tool-2">Performing a Side-By-Side Upgrade With Upgrade Tool</a>
+<ul class="sectlevel3">
+<li><a href="#upgrade-tool-summary-2">Upgrade Tool Summary</a></li>
+<li><a href="#upgrade-tool-functionality-2">Upgrade Tool Functionality</a></li>
+<li><a href="#to-upgrade-from-the-command-line-using-upgrade-tool-2">To Upgrade From the Command Line Using Upgrade Tool</a></li>
+<li><a href="#to-upgrade-using-the-upgrade-tool-wizard-2">To Upgrade Using the Upgrade Tool Wizard</a></li>
+</ul>
+</li>
+<li><a href="#performing-an-in-place-upgrade-with-the-update-center-tools-2">Performing an In-Place Upgrade With the Update Center Tools</a>
+<ul class="sectlevel3">
+<li><a href="#update-center-tool-procedures-2">Update Center Tool Procedures</a></li>
+<li><a href="#to-upgrade-using-the-update-tool-gui-2">To Upgrade Using the Update Tool GUI</a></li>
+<li><a href="#to-upgrade-using-the-software-update-notifier-2">To Upgrade Using the Software Update Notifier</a></li>
+<li><a href="#to-upgrade-from-the-command-line-using-the-pkg-utility-2">To Upgrade From the Command Line Using the <code>pkg</code> Utility</a></li>
+</ul>
+</li>
+<li><a href="#upgrading-installations-that-use-nss-cryptographic-tokens-2">Upgrading Installations That Use NSS Cryptographic Tokens</a>
+<ul class="sectlevel3">
+<li><a href="#to-prepare-for-the-upgrade-2">To Prepare for the Upgrade</a></li>
+<li><a href="#to-perform-post-upgrade-configuration-2">To Perform Post-Upgrade Configuration</a></li>
+<li><a href="#to-upgrade-pkcs11-hardware-tokens-2">To Upgrade PKCS#11 Hardware Tokens</a></li>
+</ul>
+</li>
+<li><a href="#upgrading-clusters-and-node-agent-configurations-2">Upgrading Clusters and Node Agent Configurations</a>
+<ul class="sectlevel3">
+<li><a href="#overview-of-cluster-and-node-agent-upgrade-procedures-2">Overview of Cluster and Node Agent Upgrade Procedures</a></li>
+<li><a href="#to-correct-the-configuration-of-a-node-after-an-upgrade-2">To Correct the Configuration of a Node After an Upgrade</a></li>
+<li><a href="#to-re-create-a-cluster-2">To Re-Create a Cluster</a></li>
+</ul>
+</li>
+<li><a href="#correcting-potential-upgrade-problems-2">Correcting Potential Upgrade Problems</a>
+<ul class="sectlevel3">
+<li><a href="#cluster-profile-security-setting-2">Cluster Profile Security Setting</a></li>
+<li><a href="#cluster-profile-upgrade-on-windows-2">Cluster Profile Upgrade on Windows</a></li>
+<li><a href="#asupgrade-fails-without-internet-connection-2"><code>asupgrade</code> Fails Without Internet Connection</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -5224,7 +5308,7 @@ Rename the target <code>domain1</code> directory, if one exists, before proceedi
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:53:27 UTC
+Last updated 2022-08-05 23:18:47 UTC
 </div>
 </div>
 </body>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Administration Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,33 +18,618 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#overview-of-glassfish-server-administration">1 Overview of Eclipse GlassFish Administration</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#overview-of-glassfish-server-administration">1 Overview of Eclipse GlassFish Administration</a>
+<ul class="sectlevel2">
+<li><a href="#default-settings-and-locations-2">Default Settings and Locations</a></li>
+<li><a href="#configuration-tasks-2">Configuration Tasks</a>
+<ul class="sectlevel3">
+<li><a href="#initial-configuration-tasks-2">Initial Configuration Tasks</a></li>
+<li><a href="#how-dotted-names-work-for-configuration-2">How Dotted Names Work for Configuration</a></li>
+<li><a href="#configuration-files-2">Configuration Files</a></li>
+<li><a href="#impact-of-configuration-changes-2">Impact of Configuration Changes</a></li>
+</ul>
+</li>
+<li><a href="#administration-tools-2">Administration Tools</a>
+<ul class="sectlevel3">
+<li><a href="#administration-console-2">Administration Console</a></li>
+<li><a href="#asadmin-utility-2"><code>asadmin</code> Utility</a></li>
+<li><a href="#rest-interfaces-2">REST Interfaces</a></li>
+<li><a href="#osgi-module-management-subsystem-2">OSGi Module Management Subsystem</a></li>
+<li><a href="#keytool-utility-2"><code>keytool</code> Utility</a></li>
+<li><a href="#java-monitoring-and-management-console-jconsole-2">Java Monitoring and Management Console (JConsole)</a></li>
+</ul>
+</li>
+<li><a href="#instructions-for-administering-eclipse-glassfish">Instructions for Administering Eclipse GlassFish</a></li>
+</ul>
+</li>
 <li><a href="#part-i-2">Part I</a></li>
 <li><a href="#runtime-administration">Runtime Administration</a></li>
-<li><a href="#general-administration">2 General Administration</a></li>
-<li><a href="#administering-domains">3 Administering Domains</a></li>
-<li><a href="#administering-the-virtual-machine-for-the-java-platform">4 Administering the Virtual Machine for the Java Platform</a></li>
-<li><a href="#administering-thread-pools">5 Administering Thread Pools</a></li>
-<li><a href="#administering-web-applications">6 Administering Web Applications</a></li>
-<li><a href="#administering-the-logging-service">7 Administering the Logging Service</a></li>
-<li><a href="#administering-the-monitoring-service">8 Administering the Monitoring Service</a></li>
-<li><a href="#administering-life-cycle-modules">9 Administering Life Cycle Modules</a></li>
-<li><a href="#administering-batch-jobs">10 Administering Batch Jobs</a></li>
+<li><a href="#general-administration">2 General Administration</a>
+<ul class="sectlevel2">
+<li><a href="#using-the-asadmin-utility-2">Using the <code>asadmin</code> Utility</a>
+<ul class="sectlevel3">
+<li><a href="#path-to-the-asadmin-utility-2">Path to the <code>asadmin</code> Utility</a></li>
+<li><a href="#asadmin-utility-syntax-2"><code>asadmin</code> Utility Syntax</a></li>
+<li><a href="#to-run-an-asadmin-utility-subcommand-in-single-mode-2">To Run an <code>asadmin</code> Utility Subcommand in Single Mode</a></li>
+<li><a href="#to-display-help-information-for-the-asadmin-utility-or-a-subcommand-2">To Display Help Information for the <code>asadmin</code> Utility or a Subcommand</a></li>
+<li><a href="#to-start-a-multimode-session-2">To Start a Multimode Session</a></li>
+<li><a href="#to-end-a-multimode-session-2">To End a Multimode Session</a></li>
+<li><a href="#to-run-a-set-of-asadmin-subcommands-from-a-file-2">To Run a Set of <code>asadmin</code> Subcommands From a File</a></li>
+<li><a href="#to-run-asadmin-subcommands-in-detach-mode">To Run <code>asadmin</code> Subcommands in <code>--detach</code> Mode</a></li>
+</ul>
+</li>
+<li><a href="#administering-system-properties-2">Administering System Properties</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-system-properties-2">To Create System Properties</a></li>
+<li><a href="#to-list-system-properties-2">To List System Properties</a></li>
+<li><a href="#to-delete-a-system-property-2">To Delete a System Property</a></li>
+</ul>
+</li>
+<li><a href="#using-configuration-modularity-2">Using Configuration Modularity</a>
+<ul class="sectlevel3">
+<li><a href="#to-add-the-default-configuration-of-a-module-to-domain-xml">To Add the Default Configuration of a Module to <code>domain.xml</code></a></li>
+<li><a href="#to-remove-the-configuration-of-a-module-from-domain-xml">To Remove the Configuration of a Module From <code>domain.xml</code></a></li>
+<li><a href="#to-display-the-current-active-configuration-of-a-module-2">To Display the Current Active Configuration of a Module</a></li>
+</ul>
+</li>
+<li><a href="#administering-resources-2">Administering Resources</a>
+<ul class="sectlevel3">
+<li><a href="#to-add-resources-from-an-xml-file-2">To Add Resources From an XML File</a></li>
+</ul>
+</li>
+<li><a href="#listing-various-system-elements-2">Listing Various System Elements</a>
+<ul class="sectlevel3">
+<li><a href="#to-display-the-eclipse-glassfish-version">To Display the Eclipse GlassFish Version</a></li>
+<li><a href="#to-list-applications-2">To List Applications</a></li>
+<li><a href="#to-list-containers-2">To List Containers</a></li>
+<li><a href="#to-list-modules-2">To List Modules</a></li>
+<li><a href="#to-list-subcommands-2">To List Subcommands</a></li>
+<li><a href="#to-list-timers-2">To List Timers</a></li>
+<li><a href="#to-show-component-status-2">To Show Component Status</a></li>
+</ul>
+</li>
+<li><a href="#using-rest-interfaces-to-administer-eclipse-glassfish">Using REST Interfaces to Administer Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#using-rest-urls-to-administer-eclipse-glassfish">Using REST URLs to Administer Eclipse GlassFish</a></li>
+<li><a href="#using-rest-resource-methods-to-administer-eclipse-glassfish">Using REST Resource Methods to Administer Eclipse GlassFish</a></li>
+<li><a href="#resources-for-asadmin-subcommands-that-perform-non-crud-operations-2">Resources for <code>asadmin</code> Subcommands That Perform Non-CRUD Operations</a></li>
+<li><a href="#securing-eclipse-glassfish-rest-interfaces">Securing Eclipse GlassFish REST Interfaces</a></li>
+<li><a href="#formats-for-resource-representation-of-configuration-objects-2">Formats for Resource Representation of Configuration Objects</a></li>
+<li><a href="#formats-for-resource-representation-of-monitoring-objects-2">Formats for Resource Representation of Monitoring Objects</a></li>
+<li><a href="#formats-for-resource-representation-of-log-file-details-2">Formats for Resource Representation of Log File Details</a></li>
+<li><a href="#supported-content-types-in-requests-to-rest-resources-2">Supported Content Types in Requests to REST Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-domains">3 Administering Domains</a>
+<ul class="sectlevel2">
+<li><a href="#about-administering-domains-2">About Administering Domains</a>
+<ul class="sectlevel3">
+<li><a href="#eclipse-glassfish-instances">Eclipse GlassFish Instances</a></li>
+<li><a href="#domains-for-administering-eclipse-glassfish">Domains for Administering Eclipse GlassFish</a></li>
+<li><a href="#domain-administration-server-das-2">Domain Administration Server (DAS)</a></li>
+</ul>
+</li>
+<li><a href="#creating-logging-in-to-and-deleting-a-domain-2">Creating, Logging In To, and Deleting a Domain</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-domain-2">To Create a Domain</a></li>
+<li><a href="#to-create-a-domain-from-a-custom-template-2">To Create a Domain From a Custom Template</a></li>
+<li><a href="#to-list-domains-2">To List Domains</a></li>
+<li><a href="#to-log-in-to-a-domain-2">To Log In to a Domain</a></li>
+<li><a href="#to-delete-a-domain-2">To Delete a Domain</a></li>
+</ul>
+</li>
+<li><a href="#starting-and-stopping-a-domain-2">Starting and Stopping a Domain</a>
+<ul class="sectlevel3">
+<li><a href="#to-start-a-domain-2">To Start a Domain</a></li>
+<li><a href="#to-stop-a-domain-2">To Stop a Domain</a></li>
+<li><a href="#to-restart-a-domain-2">To Restart a Domain</a></li>
+</ul>
+</li>
+<li><a href="#configuring-a-das-or-a-eclipse-glassfish-instance-for-automatic-restart">Configuring a DAS or a Eclipse GlassFish Instance for Automatic Restart</a>
+<ul class="sectlevel3">
+<li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-windows-2">To Configure a DAS or an Instance for Automatic Restart on Windows</a></li>
+<li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-linux-2">To Configure a DAS or an Instance for Automatic Restart on Linux</a></li>
+<li><a href="#to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris-2">To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris</a></li>
+<li><a href="#to-prevent-service-shutdown-when-a-user-logs-out-on-windows-2">To Prevent Service Shutdown When a User Logs Out on Windows</a></li>
+</ul>
+</li>
+<li><a href="#backing-up-and-restoring-a-domain-2">Backing Up and Restoring a Domain</a>
+<ul class="sectlevel3">
+<li><a href="#to-back-up-a-domain-2">To Back Up a Domain</a></li>
+<li><a href="#to-restore-a-domain-2">To Restore a Domain</a></li>
+<li><a href="#to-list-domain-backups-2">To List Domain Backups</a></li>
+</ul>
+</li>
+<li><a href="#re-creating-the-domain-administration-server-das-2">Re-Creating the Domain Administration Server (DAS)</a>
+<ul class="sectlevel3">
+<li><a href="#to-migrate-the-das-2">To Migrate the DAS</a></li>
+</ul>
+</li>
+<li><a href="#additional-domain-tasks-2">Additional Domain Tasks</a>
+<ul class="sectlevel3">
+<li><a href="#to-display-domain-uptime-2">To Display Domain Uptime</a></li>
+<li><a href="#to-switch-a-domain-to-another-supported-java-version-2">To Switch a Domain to Another Supported Java Version</a></li>
+<li><a href="#to-change-the-administration-port-of-a-domain-2">To Change the Administration Port of a Domain</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-virtual-machine-for-the-java-platform">4 Administering the Virtual Machine for the Java Platform</a>
+<ul class="sectlevel2">
+<li><a href="#administering-jvm-options-2">Administering JVM Options</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-jvm-options-2">To Create JVM Options</a></li>
+<li><a href="#to-list-jvm-options-2">To List JVM Options</a></li>
+<li><a href="#to-delete-jvm-options-2">To Delete JVM Options</a></li>
+<li><a href="#to-generate-a-jvm-report-2">To Generate a JVM Report</a></li>
+</ul>
+</li>
+<li><a href="#administering-the-profiler-2">Administering the Profiler</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-profiler-2">To Create a Profiler</a></li>
+<li><a href="#to-delete-a-profiler-2">To Delete a Profiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-thread-pools">5 Administering Thread Pools</a>
+<ul class="sectlevel2">
+<li><a href="#about-thread-pools-2">About Thread Pools</a></li>
+<li><a href="#configuring-thread-pools-2">Configuring Thread Pools</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-thread-pool-2">To Create a Thread Pool</a></li>
+<li><a href="#to-list-thread-pools-2">To List Thread Pools</a></li>
+<li><a href="#to-update-a-thread-pool-2">To Update a Thread Pool</a></li>
+<li><a href="#to-delete-a-thread-pool-2">To Delete a Thread Pool</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-web-applications">6 Administering Web Applications</a>
+<ul class="sectlevel2">
+<li><a href="#invoking-a-servlet-by-alternate-means-2">Invoking a Servlet by Alternate Means</a></li>
+<li><a href="#changing-log-output-for-a-servlet-2">Changing Log Output for a Servlet</a></li>
+<li><a href="#defining-global-features-for-web-applications-2">Defining Global Features for Web Applications</a>
+<ul class="sectlevel3">
+<li><a href="#to-use-the-default-web-xml-file">To Use the <code>default-web.xml</code> File</a></li>
+</ul>
+</li>
+<li><a href="#redirecting-a-url-2">Redirecting a URL</a></li>
+<li><a href="#administering-mod_jk-2">Administering <code>mod_jk</code></a>
+<ul class="sectlevel3">
+<li><a href="#to-enable-mod_jk-2">To Enable <code>mod_jk</code></a></li>
+<li><a href="#to-load-balance-using-mod_jk-and-eclipse-glassfish">To Load Balance Using <code>mod_jk</code> and Eclipse GlassFish</a></li>
+<li><a href="#to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser-2">To Enable SSL Between the <code>mod_jk</code> Load Balancer and the Browser</a></li>
+<li><a href="#to-enable-ssl-between-the-mod_jk-load-balancer-and-eclipse-glassfish">To Enable SSL Between the <code>mod_jk</code> Load Balancer and Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#administering-mod_proxy_ajp-2">Administering <code>mod_proxy_ajp</code></a>
+<ul class="sectlevel3">
+<li><a href="#to-enable-mod_proxy_ajp">To Enable <code>mod_proxy_ajp</code></a></li>
+<li><a href="#to-load-balance-using-mod_proxy_ajp-and-glassfish-server">To Load Balance Using <code>mod_proxy_ajp</code> and Eclipse GlassFish</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-logging-service">7 Administering the Logging Service</a>
+<ul class="sectlevel2">
+<li><a href="#about-logging-2">About Logging</a>
+<ul class="sectlevel3">
+<li><a href="#log-files-2">Log Files</a></li>
+<li><a href="#logger-namespaces-2">Logger Namespaces</a></li>
+<li><a href="#logging-targets-2">Logging Targets</a></li>
+<li><a href="#logging-properties-2">Logging Properties</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-logging-service-2">Configuring the Logging Service</a>
+<ul class="sectlevel3">
+<li><a href="#changing-the-name-and-location-of-logging-service-files-2">Changing the Name and Location of Logging Service Files</a></li>
+<li><a href="#setting-log-levels-2">Setting Log Levels</a></li>
+<li><a href="#setting-the-log-file-format-2">Setting the Log File Format</a></li>
+<li><a href="#setting-log-file-rotation-2">Setting Log File Rotation</a></li>
+<li><a href="#adding-a-custom-logging-handler-2">Adding a Custom Logging Handler</a></li>
+</ul>
+</li>
+<li><a href="#viewing-log-records-2">Viewing Log Records</a>
+<ul class="sectlevel3">
+<li><a href="#to-collect-log-files-into-a-zip-archive-2">To Collect Log Files into a ZIP Archive</a></li>
+</ul>
+</li>
+<li><a href="#listing-loggers-2">Listing Loggers</a>
+<ul class="sectlevel3">
+<li><a href="#to-list-loggers-2">To List Loggers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-monitoring-service">8 Administering the Monitoring Service</a>
+<ul class="sectlevel2">
+<li><a href="#about-monitoring-2">About Monitoring</a>
+<ul class="sectlevel3">
+<li><a href="#how-the-monitoring-tree-structure-works-2">How the Monitoring Tree Structure Works</a></li>
+<li><a href="#about-monitoring-for-add-on-components-2">About Monitoring for Add-on Components</a></li>
+<li><a href="#tools-for-monitoring-eclipse-glassfish">Tools for Monitoring Eclipse GlassFish</a></li>
+</ul>
+</li>
+<li><a href="#configuring-monitoring-2">Configuring Monitoring</a>
+<ul class="sectlevel3">
+<li><a href="#to-enable-monitoring-2">To Enable Monitoring</a></li>
+<li><a href="#to-disable-monitoring-2">To Disable Monitoring</a></li>
+</ul>
+</li>
+<li><a href="#viewing-common-monitoring-data-2">Viewing Common Monitoring Data</a>
+<ul class="sectlevel3">
+<li><a href="#to-view-common-monitoring-data-2">To View Common Monitoring Data</a></li>
+<li><a href="#common-monitoring-statistics-2">Common Monitoring Statistics</a></li>
+</ul>
+</li>
+<li><a href="#viewing-comprehensive-monitoring-data-2">Viewing Comprehensive Monitoring Data</a>
+<ul class="sectlevel3">
+<li><a href="#guidelines-for-using-the-list-and-get-subcommands-for-monitoring-2">Guidelines for Using the <code>list</code> and <code>get</code> Subcommands for Monitoring</a></li>
+<li><a href="#to-view-comprehensive-monitoring-data-2">To View Comprehensive Monitoring Data</a></li>
+<li><a href="#comprehensive-monitoring-statistics-2">Comprehensive Monitoring Statistics</a></li>
+</ul>
+</li>
+<li><a href="#configuring-jconsole-to-view-eclipse-glassfish-monitoring-data">Configuring JConsole to View Eclipse GlassFish Monitoring Data</a>
+<ul class="sectlevel3">
+<li><a href="#to-connect-jconsole-to-eclipse-glassfish">To Connect JConsole to Eclipse GlassFish</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-life-cycle-modules">9 Administering Life Cycle Modules</a>
+<ul class="sectlevel2">
+<li><a href="#about-life-cycle-modules-2">About Life Cycle Modules</a></li>
+<li><a href="#configuring-life-cycle-modules-2">Configuring Life Cycle Modules</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-life-cycle-module-2">To Create a Life Cycle Module</a></li>
+<li><a href="#to-list-life-cycle-modules-2">To List Life Cycle Modules</a></li>
+<li><a href="#to-update-a-life-cycle-module-2">To Update a Life Cycle Module</a></li>
+<li><a href="#to-delete-a-life-cycle-module-2">To Delete a Life Cycle Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-batch-jobs">10 Administering Batch Jobs</a>
+<ul class="sectlevel2">
+<li><a href="#about-batch-jobs-2">About Batch Jobs</a></li>
+<li><a href="#viewing-batch-jobs-2">Viewing Batch Jobs</a>
+<ul class="sectlevel3">
+<li><a href="#to-list-batch-jobs-2">To List Batch Jobs</a></li>
+<li><a href="#to-list-batch-job-executions-2">To List Batch Job Executions</a></li>
+<li><a href="#to-list-batch-job-steps-2">To List Batch Job Steps</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-batch-runtime-2">Configuring the Batch Runtime</a>
+<ul class="sectlevel3">
+<li><a href="#to-list-the-batch-runtime-configuration-2">To List the Batch Runtime Configuration</a></li>
+<li><a href="#to-configure-the-batch-runtime-2">To Configure the Batch Runtime</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#part-ii-2">Part II</a></li>
 <li><a href="#resources-and-services-administration">Resources and Services Administration</a></li>
-<li><a href="#administering-database-connectivity">11 Administering Database Connectivity</a></li>
-<li><a href="#administering-eis-connectivity">12 Administering EIS Connectivity</a></li>
-<li><a href="#administering-internet-connectivity">13 Administering Internet Connectivity</a></li>
-<li><a href="#administering-concurrent-resources">14 Administering Concurrent Resources</a></li>
-<li><a href="#administering-the-object-request-broker-orb">15 Administering the Object Request Broker (ORB)</a></li>
-<li><a href="#administering-the-javamail-service">16 Administering the JavaMail Service</a></li>
-<li><a href="#administering-the-java-message-service-jms">17 Administering the Java Message Service (JMS)</a></li>
-<li><a href="#administering-the-java-naming-and-directory-interface-jndi-service">18 Administering the Java Naming and Directory Interface (JNDI) Service</a></li>
-<li><a href="#administering-transactions">19 Administering Transactions</a></li>
+<li><a href="#administering-database-connectivity">11 Administering Database Connectivity</a>
+<ul class="sectlevel2">
+<li><a href="#about-database-connectivity-2">About Database Connectivity</a></li>
+<li><a href="#setting-up-the-database-2">Setting Up the Database</a>
+<ul class="sectlevel3">
+<li><a href="#to-install-the-database-and-database-driver-2">To Install the Database and Database Driver</a></li>
+<li><a href="#to-start-the-database-2">To Start the Database</a></li>
+<li><a href="#to-stop-the-database-2">To Stop the Database</a></li>
+<li><a href="#apache-derby-database-utility-scripts-2">Apache Derby Database Utility Scripts</a></li>
+</ul>
+</li>
+<li><a href="#configuring-access-to-the-database-2">Configuring Access to the Database</a>
+<ul class="sectlevel3">
+<li><a href="#administering-jdbc-connection-pools-2">Administering JDBC Connection Pools</a></li>
+<li><a href="#administering-jdbc-resources-2">Administering JDBC Resources</a></li>
+<li><a href="#enabling-the-jdbc__default-resource-in-a-clustered-environment-2">Enabling the <code>jdbc/__default</code> Resource in a Clustered Environment</a></li>
+<li><a href="#integrating-the-jdbc-driver-2">Integrating the JDBC Driver</a></li>
+</ul>
+</li>
+<li><a href="#configuration-specifics-for-jdbc-drivers-2">Configuration Specifics for JDBC Drivers</a>
+<ul class="sectlevel3">
+<li><a href="#ibm-db2-database-type-2-driver-2">IBM DB2 Database Type 2 Driver</a></li>
+<li><a href="#ibm-db2-database-type-4-driver-2">IBM DB2 Database Type 4 Driver</a></li>
+<li><a href="#apache-derby-dbderby-type-4-driver-2">Apache Derby DB/Derby Type 4 Driver</a></li>
+<li><a href="#mysql-server-database-type-4-driver-2">MySQL Server Database Type 4 Driver</a></li>
+<li><a href="#oracle-10-database-driver-2">Oracle 10 Database Driver</a></li>
+<li><a href="#oracle-11-database-driver-2">Oracle 11 Database Driver</a></li>
+<li><a href="#postgresql-type-4-driver-2">PostgreSQL Type 4 Driver</a></li>
+<li><a href="#datadirect-type-4-driver-for-ibm-db2-database-2">DataDirect Type 4 Driver for IBM DB2 Database</a></li>
+<li><a href="#datadirect-type-4-driver-for-ibm-informix-2">DataDirect Type 4 Driver for IBM Informix</a></li>
+<li><a href="#datadirect-type-4-driver-for-microsoft-sql-server-database-2">DataDirect Type 4 Driver for Microsoft SQL Server Database</a></li>
+<li><a href="#datadirect-type-4-driver-for-mysql-server-database-2">DataDirect Type 4 Driver for MySQL Server Database</a></li>
+<li><a href="#datadirect-type-4-driver-for-oracle-11-database-2">DataDirect Type 4 Driver for Oracle 11 Database</a></li>
+<li><a href="#datadirect-type-4-driver-for-sybase-database-2">DataDirect Type 4 Driver for Sybase Database</a></li>
+<li><a href="#inet-oraxo-driver-for-oracle-database-2">Inet Oraxo Driver for Oracle Database</a></li>
+<li><a href="#inet-merlia-driver-for-microsoft-sql-server-database-2">Inet Merlia Driver for Microsoft SQL Server Database</a></li>
+<li><a href="#inet-sybelux-driver-for-sybase-database-2">Inet Sybelux Driver for Sybase Database</a></li>
+<li><a href="#jconnect-type-4-driver-for-sybase-ase-12-5-database">JConnect Type 4 Driver for Sybase ASE 12.5 Database</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-eis-connectivity">12 Administering EIS Connectivity</a>
+<ul class="sectlevel2">
+<li><a href="#about-eis-connectivity-2">About EIS Connectivity</a></li>
+<li><a href="#administering-connector-connection-pools-2">Administering Connector Connection Pools</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-connector-connection-pool-2">To Create a Connector Connection Pool</a></li>
+<li><a href="#to-list-connector-connection-pools-2">To List Connector Connection Pools</a></li>
+<li><a href="#to-connect-to-ping-or-reset-flush-a-connector-connection-pool-2">To Connect to (Ping) or Reset (Flush) a Connector Connection Pool</a></li>
+<li><a href="#to-update-a-connector-connection-pool-2">To Update a Connector Connection Pool</a></li>
+<li><a href="#to-delete-a-connector-connection-pool-2">To Delete a Connector Connection Pool</a></li>
+</ul>
+</li>
+<li><a href="#administering-connector-resources-2">Administering Connector Resources</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-connector-resource-2">To Create a Connector Resource</a></li>
+<li><a href="#to-list-connector-resources-2">To List Connector Resources</a></li>
+<li><a href="#to-update-a-connector-resource-2">To Update a Connector Resource</a></li>
+<li><a href="#to-delete-a-connector-resource-2">To Delete a Connector Resource</a></li>
+</ul>
+</li>
+<li><a href="#administering-the-resource-adapter-configuration-2">Administering the Resource Adapter Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-configuration-information-for-a-resource-adapter-2">To Create Configuration Information for a Resource Adapter</a></li>
+<li><a href="#to-list-resource-adapter-configurations-2">To List Resource Adapter Configurations</a></li>
+<li><a href="#to-update-a-resource-adapter-configuration-2">To Update a Resource Adapter Configuration</a></li>
+<li><a href="#to-delete-a-resource-adapter-configuration-2">To Delete a Resource Adapter Configuration</a></li>
+</ul>
+</li>
+<li><a href="#administering-connector-security-maps-2">Administering Connector Security Maps</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-connector-security-map-2">To Create a Connector Security Map</a></li>
+<li><a href="#to-list-connector-security-maps-2">To List Connector Security Maps</a></li>
+<li><a href="#to-update-a-connector-security-map-2">To Update a Connector Security Map</a></li>
+<li><a href="#to-delete-a-connector-security-map-2">To Delete a Connector Security Map</a></li>
+</ul>
+</li>
+<li><a href="#administering-connector-work-security-maps-2">Administering Connector Work Security Maps</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-connector-work-security-map-2">To Create a Connector Work Security Map</a></li>
+<li><a href="#to-list-connector-work-security-maps-2">To List Connector Work Security Maps</a></li>
+<li><a href="#to-update-a-connector-work-security-map-2">To Update a Connector Work Security Map</a></li>
+<li><a href="#to-delete-a-connector-work-security-map-2">To Delete a Connector Work Security Map</a></li>
+</ul>
+</li>
+<li><a href="#administering-administered-objects-2">Administering Administered Objects</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-administered-object-2">To Create an Administered Object</a></li>
+<li><a href="#to-list-administered-objects-2">To List Administered Objects</a></li>
+<li><a href="#to-update-an-administered-object-2">To Update an Administered Object</a></li>
+<li><a href="#to-delete-an-administered-object-2">To Delete an Administered Object</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-internet-connectivity">13 Administering Internet Connectivity</a>
+<ul class="sectlevel2">
+<li><a href="#about-internet-connectivity-2">About Internet Connectivity</a>
+<ul class="sectlevel3">
+<li><a href="#about-http-network-listeners-2">About HTTP Network Listeners</a></li>
+<li><a href="#about-virtual-servers-2">About Virtual Servers</a></li>
+</ul>
+</li>
+<li><a href="#administering-http-network-listeners-2">Administering HTTP Network Listeners</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-internet-connection-2">To Create an Internet Connection</a></li>
+<li><a href="#administering-http-protocols-2">Administering HTTP Protocols</a></li>
+<li><a href="#administering-http-configurations-2">Administering HTTP Configurations</a></li>
+<li><a href="#administering-http-transports-2">Administering HTTP Transports</a></li>
+<li><a href="#administering-http-network-listeners-3">Administering HTTP Network Listeners</a></li>
+</ul>
+</li>
+<li><a href="#administering-virtual-servers-2">Administering Virtual Servers</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-virtual-server-2">To Create a Virtual Server</a></li>
+<li><a href="#to-list-virtual-servers-2">To List Virtual Servers</a></li>
+<li><a href="#to-update-a-virtual-server-2">To Update a Virtual Server</a></li>
+<li><a href="#to-delete-a-virtual-server-2">To Delete a Virtual Server</a></li>
+<li><a href="#to-assign-a-default-web-module-to-a-virtual-server-2">To Assign a Default Web Module to a Virtual Server</a></li>
+<li><a href="#to-assign-a-virtual-server-to-an-application-or-module-2">To Assign a Virtual Server to an Application or Module</a></li>
+<li><a href="#to-set-jsessionidsso-cookie-attributes-2">To Set <code>JSESSIONIDSSO</code> Cookie Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-concurrent-resources">14 Administering Concurrent Resources</a>
+<ul class="sectlevel2">
+<li><a href="#about-concurrent-resources-2">About Concurrent Resources</a></li>
+<li><a href="#default-concurrent-resources-2">Default Concurrent Resources</a></li>
+<li><a href="#configuring-context-services-2">Configuring Context Services</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-context-service-2">To Create a Context Service</a></li>
+<li><a href="#to-list-context-services-2">To List Context Services</a></li>
+<li><a href="#to-update-a-context-service-2">To Update a Context Service</a></li>
+<li><a href="#to-delete-a-context-service-2">To Delete a Context Service</a></li>
+</ul>
+</li>
+<li><a href="#configuring-managed-thread-factories-2">Configuring Managed Thread Factories</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-managed-thread-factory-2">To Create a Managed Thread Factory</a></li>
+<li><a href="#to-list-managed-thread-factories-2">To List Managed Thread Factories</a></li>
+<li><a href="#to-update-a-managed-thread-factory-2">To Update a Managed Thread Factory</a></li>
+<li><a href="#to-delete-a-managed-thread-factory-2">To Delete a Managed Thread Factory</a></li>
+</ul>
+</li>
+<li><a href="#configuring-managed-executor-services-2">Configuring Managed Executor Services</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-managed-executor-service-2">To Create a Managed Executor Service</a></li>
+<li><a href="#to-list-managed-executor-services-2">To List Managed Executor Services</a></li>
+<li><a href="#to-update-a-managed-executor-service-2">To Update a Managed Executor Service</a></li>
+<li><a href="#to-delete-a-managed-executor-service-2">To Delete a Managed Executor Service</a></li>
+</ul>
+</li>
+<li><a href="#configuring-managed-scheduled-executor-services-2">Configuring Managed Scheduled Executor Services</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-managed-scheduled-executor-service-2">To Create a Managed Scheduled Executor Service</a></li>
+<li><a href="#to-list-managed-scheduled-executor-services-2">To List Managed Scheduled Executor Services</a></li>
+<li><a href="#to-update-a-managed-scheduled-executor-service-2">To Update a Managed Scheduled Executor Service</a></li>
+<li><a href="#to-delete-a-managed-scheduled-executor-service-2">To Delete a Managed Scheduled Executor Service</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-object-request-broker-orb">15 Administering the Object Request Broker (ORB)</a>
+<ul class="sectlevel2">
+<li><a href="#about-the-orb-2">About the ORB</a></li>
+<li><a href="#configuring-the-orb-2">Configuring the ORB</a></li>
+<li><a href="#administering-iiop-listeners-2">Administering IIOP Listeners</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-iiop-listener-2">To Create an IIOP Listener</a></li>
+<li><a href="#to-list-iiop-listeners-2">To List IIOP Listeners</a></li>
+<li><a href="#to-update-an-iiop-listener-2">To Update an IIOP Listener</a></li>
+<li><a href="#to-delete-an-iiop-listener-2">To Delete an IIOP Listener</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-javamail-service">16 Administering the JavaMail Service</a>
+<ul class="sectlevel2">
+<li><a href="#about-javamail-2">About JavaMail</a></li>
+<li><a href="#administering-javamail-resources-2">Administering JavaMail Resources</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-javamail-resource-2">To Create a JavaMail Resource</a></li>
+<li><a href="#to-list-javamail-resources-2">To List JavaMail Resources</a></li>
+<li><a href="#to-update-a-javamail-resource-2">To Update a JavaMail Resource</a></li>
+<li><a href="#to-delete-a-javamail-resource-2">To Delete a JavaMail Resource</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-java-message-service-jms">17 Administering the Java Message Service (JMS)</a>
+<ul class="sectlevel2">
+<li><a href="#about-the-jms-service-2">About the JMS Service</a>
+<ul class="sectlevel3">
+<li><a href="#jms-service-high-availability-2">JMS Service High Availability</a></li>
+</ul>
+</li>
+<li><a href="#updating-the-jms-service-configuration-2">Updating the JMS Service Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#setting-message-queue-broker-properties-in-the-jms-service-configuration-2">Setting Message Queue Broker Properties in the JMS Service Configuration</a></li>
+</ul>
+</li>
+<li><a href="#administering-jms-hosts-2">Administering JMS Hosts</a>
+<ul class="sectlevel3">
+<li><a href="#about-jms-host-types-2">About JMS Host Types</a></li>
+<li><a href="#configuring-embedded-and-local-jms-hosts-2">Configuring Embedded and Local JMS Hosts</a></li>
+<li><a href="#to-create-a-jms-host-2">To Create a JMS Host</a></li>
+<li><a href="#to-list-jms-hosts-2">To List JMS Hosts</a></li>
+<li><a href="#to-update-a-jms-host-2">To Update a JMS Host</a></li>
+<li><a href="#to-delete-a-jms-host-2">To Delete a JMS Host</a></li>
+</ul>
+</li>
+<li><a href="#administering-jms-connection-factories-and-destinations-2">Administering JMS Connection Factories and Destinations</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-connection-factory-or-destination-resource-2">To Create a Connection Factory or Destination Resource</a></li>
+<li><a href="#to-list-jms-resources-2">To List JMS Resources</a></li>
+<li><a href="#to-delete-a-connection-factory-or-destination-resource-2">To Delete a Connection Factory or Destination Resource</a></li>
+</ul>
+</li>
+<li><a href="#administering-jms-physical-destinations-2">Administering JMS Physical Destinations</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-jms-physical-destination-2">To Create a JMS Physical Destination</a></li>
+<li><a href="#to-list-jms-physical-destinations-2">To List JMS Physical Destinations</a></li>
+<li><a href="#to-purge-messages-from-a-physical-destination-2">To Purge Messages From a Physical Destination</a></li>
+<li><a href="#to-delete-a-jms-physical-destination-2">To Delete a JMS Physical Destination</a></li>
+</ul>
+</li>
+<li><a href="#special-situations-when-using-the-jms-service-2">Special Situations When Using the JMS Service</a></li>
+<li><a href="#troubleshooting-the-jms-service-2">Troubleshooting the JMS Service</a></li>
+<li><a href="#using-the-generic-resource-adapter-for-jms-to-integrate-supported-external-jms-providers-2">Using the Generic Resource Adapter for JMS to Integrate Supported External JMS Providers</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-genericjmsra-for-supported-external-jms-providers-2">Configuring GenericJMSRA for Supported External JMS Providers</a></li>
+<li><a href="#using-genericjmsra-with-weblogic-jms-2">Using GenericJMSRA with WebLogic JMS</a></li>
+<li><a href="#using-genericjmsra-with-ibm-websphere-mq-2">Using GenericJMSRA with IBM WebSphere MQ</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-the-java-naming-and-directory-interface-jndi-service">18 Administering the Java Naming and Directory Interface (JNDI) Service</a>
+<ul class="sectlevel2">
+<li><a href="#about-jndi-2">About JNDI</a>
+<ul class="sectlevel3">
+<li><a href="#jakarta-ee-naming-environment">Jakarta EE Naming Environment</a></li>
+<li><a href="#how-the-naming-environment-and-the-container-work-together-2">How the Naming Environment and the Container Work Together</a></li>
+<li><a href="#naming-references-and-binding-information-2">Naming References and Binding Information</a></li>
+</ul>
+</li>
+<li><a href="#administering-jndi-resources-2">Administering JNDI Resources</a>
+<ul class="sectlevel3">
+<li><a href="#administering-custom-jndi-resources-2">Administering Custom JNDI Resources</a></li>
+<li><a href="#administering-external-jndi-resources-2">Administering External JNDI Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-transactions">19 Administering Transactions</a>
+<ul class="sectlevel2">
+<li><a href="#about-transactions-2">About Transactions</a>
+<ul class="sectlevel3">
+<li><a href="#transaction-resource-managers-2">Transaction Resource Managers</a></li>
+<li><a href="#transaction-scope-2">Transaction Scope</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-transaction-service-2">Configuring the Transaction Service</a></li>
+<li><a href="#managing-the-transaction-service-for-rollbacks-2">Managing the Transaction Service for Rollbacks</a>
+<ul class="sectlevel3">
+<li><a href="#to-stop-the-transaction-service-2">To Stop the Transaction Service</a></li>
+<li><a href="#to-roll-back-a-transaction-2">To Roll Back a Transaction</a></li>
+<li><a href="#to-restart-the-transaction-service-2">To Restart the Transaction Service</a></li>
+<li><a href="#determining-local-transaction-completion-at-shutdown-2">Determining Local Transaction Completion at Shutdown</a></li>
+</ul>
+</li>
+<li><a href="#recovering-transactions-2">Recovering Transactions</a>
+<ul class="sectlevel3">
+<li><a href="#automatic-transaction-recovery-2">Automatic Transaction Recovery</a></li>
+<li><a href="#to-manually-recover-transactions-2">To Manually Recover Transactions</a></li>
+<li><a href="#distributed-transaction-recovery-2">Distributed Transaction Recovery</a></li>
+<li><a href="#recovery-workarounds-and-limitations-2">Recovery Workarounds and Limitations</a></li>
+</ul>
+</li>
+<li><a href="#transaction-logging-2">Transaction Logging</a>
+<ul class="sectlevel3">
+<li><a href="#to-store-transaction-logs-in-a-database-2">To Store Transaction Logs in a Database</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#part-iii-2">Part III</a></li>
 <li><a href="#appendixes">Appendixes</a></li>
-<li><a href="#a-subcommands-for-the-asadmin-utility">A Subcommands for the <code>asadmin</code> Utility</a></li>
+<li><a href="#a-subcommands-for-the-asadmin-utility">A Subcommands for the <code>asadmin</code> Utility</a>
+<ul class="sectlevel2">
+<li><a href="#general-administration-subcommands-2">General Administration Subcommands</a></li>
+<li><a href="#batch-jobs-subcommands-2">Batch Jobs Subcommands</a></li>
+<li><a href="#concurrent-resources-subcommands-2">Concurrent Resources Subcommands</a></li>
+<li><a href="#connectivity-subcommands-2">Connectivity Subcommands</a></li>
+<li><a href="#domain-subcommands-2">Domain Subcommands</a></li>
+<li><a href="#internet-connectivity-subcommands-2">Internet Connectivity Subcommands</a></li>
+<li><a href="#javamail-subcommands-2">JavaMail Subcommands</a></li>
+<li><a href="#jms-subcommands-2">JMS Subcommands</a></li>
+<li><a href="#jndi-subcommands-2">JNDI Subcommands</a></li>
+<li><a href="#jvm-subcommands-2">JVM Subcommands</a></li>
+<li><a href="#life-cycle-module-subcommands-2">Life Cycle Module Subcommands</a></li>
+<li><a href="#logging-and-monitoring-subcommands-2">Logging and Monitoring Subcommands</a></li>
+<li><a href="#orb-subcommands-2">ORB Subcommands</a></li>
+<li><a href="#thread-pool-subcommands-2">Thread Pool Subcommands</a></li>
+<li><a href="#transaction-service-subcommands-2">Transaction Service Subcommands</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -32863,7 +33448,7 @@ Restart the Transaction Service</a>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:37:35 UTC
+Last updated 2022-08-05 23:12:01 UTC
 </div>
 </div>
 </body>

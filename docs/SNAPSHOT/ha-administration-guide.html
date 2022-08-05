@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish High Availability Administration Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,18 +18,334 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#high-availability-in-glassfish-server">1 High Availability in Eclipse GlassFish</a></li>
-<li><a href="#enabling-centralized-administration-of-glassfish-server-instances">2 Enabling Centralized Administration of Eclipse GlassFish Instances</a></li>
-<li><a href="#administering-glassfish-server-nodes">3 Administering Eclipse GlassFish Nodes</a></li>
-<li><a href="#administering-glassfish-server-clusters">4 Administering Eclipse GlassFish Clusters</a></li>
-<li><a href="#administering-glassfish-server-instances">5 Administering Eclipse GlassFish Instances</a></li>
-<li><a href="#administering-named-configurations">6 Administering Named Configurations</a></li>
-<li><a href="#configuring-http-load-balancing">7 Configuring HTTP Load Balancing</a></li>
-<li><a href="#upgrading-applications-without-loss-of-availability">8 Upgrading Applications Without Loss of Availability</a></li>
-<li><a href="#configuring-high-availability-session-persistence-and-failover">9 Configuring High Availability Session Persistence and Failover</a></li>
-<li><a href="#configuring-java-message-service-high-availability">10 Configuring Java Message Service High Availability</a></li>
-<li><a href="#rmi-iiop-load-balancing-and-failover">11 RMI-IIOP Load Balancing and Failover</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#oracle-glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#high-availability-in-glassfish-server">1 High Availability in Eclipse GlassFish</a>
+<ul class="sectlevel2">
+<li><a href="#overview-of-high-availability-2">Overview of High Availability</a>
+<ul class="sectlevel3">
+<li><a href="#load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module-2">Load Balancing With the Apache <code>mod_jk</code> or <code>mod_proxy_ajp</code> Module</a></li>
+<li><a href="#high-availability-session-persistence-2">High Availability Session Persistence</a></li>
+<li><a href="#high-availability-java-message-service-2">High Availability Java Message Service</a></li>
+<li><a href="#rmi-iiop-load-balancing-and-failover-2">RMI-IIOP Load Balancing and Failover</a></li>
+</ul>
+</li>
+<li><a href="#how-eclipse-glassfish-provides-high-availability">How Eclipse GlassFish Provides High Availability</a>
+<ul class="sectlevel3">
+<li><a href="#storage-for-session-state-data-2">Storage for Session State Data</a></li>
+<li><a href="#highly-available-clusters-2">Highly Available Clusters</a></li>
+</ul>
+</li>
+<li><a href="#recovering-from-failures-2">Recovering from Failures</a>
+<ul class="sectlevel3">
+<li><a href="#recovering-the-domain-administration-server-2">Recovering the Domain Administration Server</a></li>
+<li><a href="#recovering-eclipse-glassfish-instances">Recovering Eclipse GlassFish Instances</a></li>
+<li><a href="#recovering-the-http-load-balancer-and-web-server-2">Recovering the HTTP Load Balancer and Web Server</a></li>
+<li><a href="#recovering-message-queue-2">Recovering Message Queue</a></li>
+</ul>
+</li>
+<li><a href="#more-information-2">More Information</a></li>
+</ul>
+</li>
+<li><a href="#enabling-centralized-administration-of-glassfish-server-instances">2 Enabling Centralized Administration of Eclipse GlassFish Instances</a>
+<ul class="sectlevel2">
+<li><a href="#about-centralized-administration-of-eclipse-glassfish-instances">About Centralized Administration of Eclipse GlassFish Instances</a>
+<ul class="sectlevel3">
+<li><a href="#determining-whether-to-enable-centralized-administration">Determining Whether to Enable Centralized Administration</a></li>
+<li><a href="#considerations-for-using-dcom-for-centralized-administration">Considerations for Using DCOM for Centralized Administration</a></li>
+<li><a href="#considerations-for-using-ssh-for-centralized-administration">Considerations for Using SSH for Centralized Administration</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-dcom-and-testing-the-dcom-set-up-2">Setting Up DCOM and Testing the DCOM Set Up</a>
+<ul class="sectlevel3">
+<li><a href="#windows-operating-system-settings-2">Windows Operating System Settings</a></li>
+<li><a href="#to-enable-the-windows-user-to-run-scripts-on-a-remote-host-2">To Enable the Windows User to Run Scripts on a Remote Host</a></li>
+<li><a href="#to-set-up-password-authentication-for-the-windows-user-2">To Set Up Password Authentication for the Windows User</a></li>
+<li><a href="#to-test-the-connection-over-dcom-to-a-remote-host-2">To Test the Connection Over DCOM to a Remote Host</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-cygwin-ssh-on-windows-2">Setting Up Cygwin SSH on Windows</a>
+<ul class="sectlevel3">
+<li><a href="#to-download-and-install-cygwin-2">To Download and Install Cygwin</a></li>
+<li><a href="#to-set-the-path-for-windows-and-for-the-cygwin-shell-2">To Set the Path for Windows and for the Cygwin Shell</a></li>
+<li><a href="#to-set-the-home-directory-for-the-cygwin-ssh-user-2">To Set the Home Directory for the Cygwin SSH User</a></li>
+<li><a href="#to-configure-and-start-the-cygwin-ssh-server-daemon-sshd-2">To Configure and Start the Cygwin SSH Server Daemon <code>sshd</code></a></li>
+</ul>
+</li>
+<li><a href="#setting-up-the-mks-toolkit-on-windows-2">Setting Up the MKS Toolkit on Windows</a>
+<ul class="sectlevel3">
+<li><a href="#to-install-the-mks-toolkit-2">To Install the MKS Toolkit</a></li>
+<li><a href="#to-set-the-path-for-windows-and-for-the-mks-toolkit-shell-2">To Set the Path for Windows and for the MKS Toolkit Shell</a></li>
+<li><a href="#to-set-the-home-directory-for-the-mks-toolkit-ssh-user-2">To Set the Home Directory for the MKS Toolkit SSH User</a></li>
+<li><a href="#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd-2">To Configure and Start the MKS Toolkit SSH Server Daemon <code>sshd</code></a></li>
+</ul>
+</li>
+<li><a href="#setting-up-ssh-on-unix-and-linux-systems-2">Setting Up SSH on UNIX and Linux Systems</a>
+<ul class="sectlevel3">
+<li><a href="#to-set-up-ssh-on-oracle-solaris-systems-2">To Set Up SSH on Oracle Solaris Systems</a></li>
+<li><a href="#to-set-up-ssh-on-macos-systems-2">To Set Up SSH on MacOS Systems</a></li>
+<li><a href="#to-set-up-ssh-on-linux-systems-2">To Set Up SSH on Linux systems</a></li>
+</ul>
+</li>
+<li><a href="#testing-the-ssh-setup-on-a-host-2">Testing the SSH Setup on a Host</a>
+<ul class="sectlevel3">
+<li><a href="#to-test-the-ssh-setup-on-a-host-2">To Test the SSH Setup on a Host</a></li>
+</ul>
+</li>
+<li><a href="#setting-up-ssh-user-authentication-2">Setting Up SSH User Authentication</a>
+<ul class="sectlevel3">
+<li><a href="#to-set-up-public-key-authentication-without-encryption-2">To Set Up Public Key Authentication Without Encryption</a></li>
+<li><a href="#to-set-up-encrypted-public-key-authentication-2">To Set Up Encrypted Public Key Authentication</a></li>
+<li><a href="#to-set-up-password-authentication-2">To Set Up Password Authentication</a></li>
+</ul>
+</li>
+<li><a href="#installing-and-removing-eclipse-glassfish-software-on-multiple-hosts">Installing and Removing Eclipse GlassFish Software on Multiple Hosts</a>
+<ul class="sectlevel3">
+<li><a href="#to-copy-a-eclipse-glassfish-installation-to-multiple-hosts">To Copy a Eclipse GlassFish Installation to Multiple Hosts</a></li>
+<li><a href="#to-remove-eclipse-glassfish-software-from-multiple-hosts">To Remove Eclipse GlassFish Software From Multiple Hosts</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-glassfish-server-nodes">3 Administering Eclipse GlassFish Nodes</a>
+<ul class="sectlevel2">
+<li><a href="#types-of-eclipse-glassfish-nodes">Types of Eclipse GlassFish Nodes</a></li>
+<li><a href="#creating-listing-testing-and-deleting-dcom-nodes-2">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-dcom-node-2">To Create a <code>DCOM</code> Node</a></li>
+<li><a href="#to-list-dcom-nodes-in-a-domain-2">To List <code>DCOM</code> Nodes in a Domain</a></li>
+<li><a href="#to-test-if-a-dcom-node-is-reachable-2">To Test if a <code>DCOM</code> Node is Reachable</a></li>
+<li><a href="#to-delete-a-dcom-node-2">To Delete a <code>DCOM</code> Node</a></li>
+</ul>
+</li>
+<li><a href="#creating-listing-testing-and-deleting-ssh-nodes-2">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-ssh-node-2">To Create an <code>SSH</code> Node</a></li>
+<li><a href="#to-list-ssh-nodes-in-a-domain-2">To List <code>SSH</code> Nodes in a Domain</a></li>
+<li><a href="#to-test-if-an-ssh-node-is-reachable-2">To Test if an <code>SSH</code> Node is Reachable</a></li>
+<li><a href="#to-delete-an-ssh-node-2">To Delete an <code>SSH</code> Node</a></li>
+</ul>
+</li>
+<li><a href="#creating-listing-and-deleting-config-nodes-2">Creating, Listing, and Deleting <code>CONFIG</code> Nodes</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-config-node-2">To Create a <code>CONFIG</code> Node</a></li>
+<li><a href="#to-list-config-nodes-in-a-domain-2">To List <code>CONFIG</code> Nodes in a Domain</a></li>
+<li><a href="#to-delete-a-config-node-2">To Delete a <code>CONFIG</code> Node</a></li>
+</ul>
+</li>
+<li><a href="#updating-and-changing-the-type-of-a-node-2">Updating and Changing the Type of a Node</a>
+<ul class="sectlevel3">
+<li><a href="#to-update-a-dcom-node-2">To Update a <code>DCOM</code> Node</a></li>
+<li><a href="#to-update-an-ssh-node-2">To Update an <code>SSH</code> Node</a></li>
+<li><a href="#to-update-a-config-node-2">To Update a <code>CONFIG</code> Node</a></li>
+<li><a href="#to-change-the-type-of-a-node-2">To Change the Type of a Node</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-glassfish-server-clusters">4 Administering Eclipse GlassFish Clusters</a>
+<ul class="sectlevel2">
+<li><a href="#about-eclipse-glassfish-clusters">About Eclipse GlassFish Clusters</a></li>
+<li><a href="#group-management-service-2">Group Management Service</a>
+<ul class="sectlevel3">
+<li><a href="#protocols-and-transports-for-gms-2">Protocols and Transports for GMS</a></li>
+<li><a href="#gms-configuration-settings-2">GMS Configuration Settings</a></li>
+<li><a href="#dotted-names-for-gms-settings-2">Dotted Names for GMS Settings</a></li>
+<li><a href="#to-preconfigure-nondefault-gms-configuration-settings-2">To Preconfigure Nondefault GMS Configuration Settings</a></li>
+<li><a href="#to-change-gms-settings-after-cluster-creation-2">To Change GMS Settings After Cluster Creation</a></li>
+<li><a href="#to-check-the-health-of-instances-in-a-cluster-2">To Check the Health of Instances in a Cluster</a></li>
+<li><a href="#to-validate-that-multicast-transport-is-available-for-a-cluster-2">To Validate That Multicast Transport Is Available for a Cluster</a></li>
+<li><a href="#discovering-a-cluster-when-multicast-transport-is-unavailable-2">Discovering a Cluster When Multicast Transport Is Unavailable</a></li>
+<li><a href="#using-the-multi-homing-feature-with-gms-2">Using the Multi-Homing Feature With GMS</a></li>
+</ul>
+</li>
+<li><a href="#creating-listing-and-deleting-clusters-2">Creating, Listing, and Deleting Clusters</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-cluster-2">To Create a Cluster</a></li>
+<li><a href="#to-list-all-clusters-in-a-domain-2">To List All Clusters in a Domain</a></li>
+<li><a href="#to-delete-a-cluster-2">To Delete a Cluster</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-glassfish-server-instances">5 Administering Eclipse GlassFish Instances</a>
+<ul class="sectlevel2">
+<li><a href="#types-of-eclipse-glassfish-instances">Types of Eclipse GlassFish Instances</a></li>
+<li><a href="#administering-eclipse-glassfish-instances-centrally">Administering Eclipse GlassFish Instances Centrally</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-instance-centrally-2">To Create an Instance Centrally</a></li>
+<li><a href="#to-list-all-instances-in-a-domain-2">To List All Instances in a Domain</a></li>
+<li><a href="#to-delete-an-instance-centrally-2">To Delete an Instance Centrally</a></li>
+<li><a href="#to-start-a-cluster-2">To Start a Cluster</a></li>
+<li><a href="#to-stop-a-cluster-2">To Stop a Cluster</a></li>
+<li><a href="#to-start-an-individual-instance-centrally-2">To Start an Individual Instance Centrally</a></li>
+<li><a href="#to-stop-an-individual-instance-centrally-2">To Stop an Individual Instance Centrally</a></li>
+<li><a href="#to-restart-an-individual-instance-centrally-2">To Restart an Individual Instance Centrally</a></li>
+</ul>
+</li>
+<li><a href="#administering-eclipse-glassfish-instances-locally">Administering Eclipse GlassFish Instances Locally</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-an-instance-locally-2">To Create an Instance Locally</a></li>
+<li><a href="#to-delete-an-instance-locally-2">To Delete an Instance Locally</a></li>
+<li><a href="#to-start-an-individual-instance-locally-2">To Start an Individual Instance Locally</a></li>
+<li><a href="#to-stop-an-individual-instance-locally-2">To Stop an Individual Instance Locally</a></li>
+<li><a href="#to-restart-an-individual-instance-locally-2">To Restart an Individual Instance Locally</a></li>
+</ul>
+</li>
+<li><a href="#resynchronizing-eclipse-glassfish-instances-and-the-das">Resynchronizing Eclipse GlassFish Instances and the DAS</a>
+<ul class="sectlevel3">
+<li><a href="#default-synchronization-for-files-and-directories-2">Default Synchronization for Files and Directories</a></li>
+<li><a href="#to-resynchronize-an-instance-and-the-das-online-2">To Resynchronize an Instance and the DAS Online</a></li>
+<li><a href="#to-resynchronize-library-files-2">To Resynchronize Library Files</a></li>
+<li><a href="#to-resynchronize-custom-configuration-files-for-an-instance-2">To Resynchronize Custom Configuration Files for an Instance</a></li>
+<li><a href="#to-resynchronize-users-changes-to-files-2">To Resynchronize Users' Changes to Files</a></li>
+<li><a href="#to-resynchronize-additional-configuration-files-2">To Resynchronize Additional Configuration Files</a></li>
+<li><a href="#to-prevent-deletion-of-application-generated-files-2">To Prevent Deletion of Application-Generated Files</a></li>
+<li><a href="#to-resynchronize-an-instance-and-the-das-offline-2">To Resynchronize an Instance and the DAS Offline</a></li>
+</ul>
+</li>
+<li><a href="#migrating-ejb-timers-2">Migrating EJB Timers</a>
+<ul class="sectlevel3">
+<li><a href="#to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances-2">To Enable Automatic EJB Timer Migration for Failed Clustered Instances</a></li>
+<li><a href="#to-migrate-ejb-timers-manually-2">To Migrate EJB Timers Manually</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#administering-named-configurations">6 Administering Named Configurations</a>
+<ul class="sectlevel2">
+<li><a href="#about-named-configurations-2">About Named Configurations</a>
+<ul class="sectlevel3">
+<li><a href="#types-of-named-configurations-2">Types of Named Configurations</a></li>
+<li><a href="#the-default-config-configuration-2">The <code>default-config</code> Configuration</a></li>
+<li><a href="#automatically-created-configurations-2">Automatically Created Configurations</a></li>
+<li><a href="#directory-for-configuration-synchronization-2">Directory for Configuration Synchronization</a></li>
+</ul>
+</li>
+<li><a href="#creating-listing-and-deleting-named-configurations-2">Creating, Listing, and Deleting Named Configurations</a>
+<ul class="sectlevel3">
+<li><a href="#to-create-a-named-configuration-2">To Create a Named Configuration</a></li>
+<li><a href="#to-list-the-named-configurations-in-a-domain-2">To List the Named Configurations in a Domain</a></li>
+<li><a href="#to-list-the-targets-of-a-named-configuration-2">To List the Targets of a Named Configuration</a></li>
+<li><a href="#to-delete-a-named-configuration-2">To Delete a Named Configuration</a></li>
+</ul>
+</li>
+<li><a href="#modifying-properties-for-named-configurations-and-instances-2">Modifying Properties for Named Configurations and Instances</a>
+<ul class="sectlevel3">
+<li><a href="#properties-for-port-numbers-in-a-named-configuration-2">Properties for Port Numbers in a Named Configuration</a></li>
+<li><a href="#to-modify-a-named-configurations-properties-2">To Modify a Named Configuration&#8217;s Properties</a></li>
+<li><a href="#to-modify-port-numbers-of-an-instance-2">To Modify Port Numbers of an Instance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuring-http-load-balancing">7 Configuring HTTP Load Balancing</a>
+<ul class="sectlevel2">
+<li><a href="#setting-up-http-load-balancing-2">Setting Up HTTP Load Balancing</a>
+<ul class="sectlevel3">
+<li><a href="#prerequisites-for-setting-up-http-load-balancing-2">Prerequisites for Setting Up HTTP Load Balancing</a></li>
+<li><a href="#configuring-eclipse-glassfish-with-apache-http-server-and-mod_jk">Configuring Eclipse GlassFish with Apache HTTP Server and <code>mod_jk</code></a></li>
+<li><a href="#configuring-eclipse-glassfish-with-apache-http-server-and-mod_proxy_ajp">Configuring Eclipse GlassFish with Apache HTTP Server and <code>mod_proxy_ajp</code></a></li>
+<li><a href="#http-load-balancer-deployments-2">HTTP Load Balancer Deployments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#upgrading-applications-without-loss-of-availability">8 Upgrading Applications Without Loss of Availability</a>
+<ul class="sectlevel2">
+<li><a href="#application-compatibility-2">Application Compatibility</a></li>
+<li><a href="#upgrading-in-a-single-cluster-2">Upgrading In a Single Cluster</a>
+<ul class="sectlevel3">
+<li><a href="#to-upgrade-an-application-in-a-single-cluster-2">To Upgrade an Application in a Single Cluster</a></li>
+</ul>
+</li>
+<li><a href="#upgrading-in-multiple-clusters-2">Upgrading in Multiple Clusters</a>
+<ul class="sectlevel3">
+<li><a href="#to-upgrade-a-compatible-application-in-two-or-more-clusters-2">To Upgrade a Compatible Application in Two or More Clusters</a></li>
+</ul>
+</li>
+<li><a href="#upgrading-incompatible-applications-2">Upgrading Incompatible Applications</a>
+<ul class="sectlevel3">
+<li><a href="#to-upgrade-an-incompatible-application-by-creating-a-second-cluster-2">To Upgrade an Incompatible Application by Creating a Second Cluster</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuring-high-availability-session-persistence-and-failover">9 Configuring High Availability Session Persistence and Failover</a>
+<ul class="sectlevel2">
+<li><a href="#overview-of-session-persistence-and-failover-2">Overview of Session Persistence and Failover</a>
+<ul class="sectlevel3">
+<li><a href="#requirements-2">Requirements</a></li>
+<li><a href="#restrictions-2">Restrictions</a></li>
+<li><a href="#scope-2">Scope</a></li>
+</ul>
+</li>
+<li><a href="#enabling-the-high-availability-session-persistence-service-2">Enabling the High Availability Session Persistence Service</a>
+<ul class="sectlevel3">
+<li><a href="#to-enable-availability-for-a-cluster-standalone-instance-or-container-2">To Enable Availability for a Cluster, Standalone Instance or Container</a></li>
+<li><a href="#configuring-availability-for-individual-web-applications-2">Configuring Availability for Individual Web Applications</a></li>
+<li><a href="#configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions-2">Configuring Replication and Multi-Threaded Concurrent Access to <code>HttpSessions</code></a></li>
+<li><a href="#using-single-sign-on-with-session-failover-2">Using Single Sign-on with Session Failover</a></li>
+<li><a href="#using-coherenceweb-for-http-session-persistence-2">Using Coherence*Web for HTTP Session Persistence</a></li>
+</ul>
+</li>
+<li><a href="#stateful-session-bean-failover-2">Stateful Session Bean Failover</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-availability-for-the-ejb-container-2">Configuring Availability for the EJB Container</a></li>
+<li><a href="#configuring-availability-for-an-individual-application-or-ejb-module-2">Configuring Availability for an Individual Application or EJB Module</a></li>
+<li><a href="#configuring-availability-for-an-individual-bean-2">Configuring Availability for an Individual Bean</a></li>
+<li><a href="#specifying-methods-to-be-checkpointed-2">Specifying Methods to Be Checkpointed</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuring-java-message-service-high-availability">10 Configuring Java Message Service High Availability</a>
+<ul class="sectlevel2">
+<li><a href="#using-message-queue-broker-clusters-with-eclipse-glassfish">Using Message Queue Broker Clusters With Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#about-message-queue-broker-clusters-2">About Message Queue Broker Clusters</a></li>
+<li><a href="#configuring-glassfish-clusters-to-use-message-queue-broker-clusters-2">Configuring GlassFish Clusters to Use Message Queue Broker Clusters</a></li>
+<li><a href="#to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker-2">To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster With Master Broker</a></li>
+<li><a href="#to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers-2">To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster of Peer Brokers</a></li>
+<li><a href="#to-change-the-master-broker-in-an-embedded-or-local-broker-cluster-2">To Change the Master Broker in an Embedded or Local Broker Cluster</a></li>
+<li><a href="#to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters-2">To Migrate Between Types of Embedded or Local Conventional Broker Clusters</a></li>
+<li><a href="#to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster-2">To Configure a GlassFish Cluster to Use a Local Enhanced Broker Cluster</a></li>
+<li><a href="#to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster-2">To Configure a GlassFish Cluster to Use a Remote Broker Cluster</a></li>
+</ul>
+</li>
+<li><a href="#connection-failover-2">Connection Failover</a></li>
+<li><a href="#load-balanced-delivery-to-mdbs-2">Load-Balanced Delivery to MDBs</a></li>
+</ul>
+</li>
+<li><a href="#rmi-iiop-load-balancing-and-failover">11 RMI-IIOP Load Balancing and Failover</a>
+<ul class="sectlevel2">
+<li><a href="#overview-2">Overview</a>
+<ul class="sectlevel3">
+<li><a href="#general-requirements-for-configuring-load-balancing-2">General Requirements for Configuring Load Balancing</a></li>
+<li><a href="#load-balancing-models-2">Load Balancing Models</a></li>
+</ul>
+</li>
+<li><a href="#initialcontext-load-balancing-2"><code>InitialContext</code> Load Balancing</a>
+<ul class="sectlevel3">
+<li><a href="#initialcontext-summary-2"><code>InitialContext</code> Summary</a></li>
+<li><a href="#initialcontext-algorithm-2"><code>InitialContext</code> Algorithm</a></li>
+<li><a href="#enabling-rmi-iiop-hardware-load-balancing-and-failover-2">Enabling RMI-IIOP Hardware Load Balancing and Failover</a></li>
+</ul>
+</li>
+<li><a href="#per-request-load-balancing-prlb-2">Per-Request Load Balancing (PRLB)</a>
+<ul class="sectlevel3">
+<li><a href="#prlb-summary-2">PRLB Summary</a></li>
+<li><a href="#enabling-per-request-load-balancing-2">Enabling Per-Request Load Balancing</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -15762,7 +16078,7 @@ container running in a cluster.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:46:10 UTC
+Last updated 2022-08-05 23:15:15 UTC
 </div>
 </div>
 </body>

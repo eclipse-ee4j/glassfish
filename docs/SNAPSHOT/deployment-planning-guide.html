@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Deployment Planning Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,10 +18,91 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
-<li><a href="#product-concepts">1 Product Concepts</a></li>
-<li><a href="#planning-your-deployment">2 Planning your Deployment</a></li>
-<li><a href="#checklist-for-deployment">3 Checklist for Deployment</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#eclipse-glassfish-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
+<li><a href="#product-concepts">1 Product Concepts</a>
+<ul class="sectlevel2">
+<li><a href="#jakarta-ee-platform-overview">Jakarta EE Platform Overview</a>
+<ul class="sectlevel3">
+<li><a href="#jakarta-ee-applications">Jakarta EE Applications</a></li>
+<li><a href="#containers-2">Containers</a></li>
+<li><a href="#jakarta-ee-services">Jakarta EE Services</a></li>
+<li><a href="#web-services-2">Web Services</a></li>
+<li><a href="#client-access-2">Client Access</a></li>
+<li><a href="#external-systems-and-resources-2">External Systems and Resources</a></li>
+</ul>
+</li>
+<li><a href="#eclipse-glassfish-components">Eclipse GlassFish Components</a>
+<ul class="sectlevel3">
+<li><a href="#server-instances-2">Server Instances</a></li>
+<li><a href="#administrative-domains-2">Administrative Domains</a></li>
+<li><a href="#clusters-2">Clusters</a></li>
+<li><a href="#named-configurations-2">Named Configurations</a></li>
+<li><a href="#http-load-balancer-plug-in-2">HTTP Load Balancer Plug-in</a></li>
+<li><a href="#session-persistence-2">Session Persistence</a></li>
+<li><a href="#iiop-load-balancing-in-a-cluster-2">IIOP Load Balancing in a Cluster</a></li>
+<li><a href="#message-queue-and-jms-resources-2">Message Queue and JMS Resources</a></li>
+</ul>
+</li>
+<li><a href="#configuration-roadmap-for-high-availability-of-eclipse-glassfish">Configuration Roadmap for High Availability of Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#to-configure-eclipse-glassfish-for-high-availability">To Configure Eclipse GlassFish for High Availability</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#planning-your-deployment">2 Planning your Deployment</a>
+<ul class="sectlevel2">
+<li><a href="#establishing-performance-goals-2">Establishing Performance Goals</a>
+<ul class="sectlevel3">
+<li><a href="#estimating-throughput-2">Estimating Throughput</a></li>
+<li><a href="#estimating-load-on-eclipse-glassfish-instances">Estimating Load on Eclipse GlassFish Instances</a></li>
+</ul>
+</li>
+<li><a href="#planning-the-network-configuration-2">Planning the Network Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#setting-up-traffic-separation-2">Setting Up Traffic Separation</a></li>
+<li><a href="#estimating-bandwidth-requirements-2">Estimating Bandwidth Requirements</a></li>
+<li><a href="#calculating-bandwidth-required-2">Calculating Bandwidth Required</a></li>
+<li><a href="#estimating-peak-load-2">Estimating Peak Load</a></li>
+<li><a href="#choosing-network-cards-2">Choosing Network Cards</a></li>
+</ul>
+</li>
+<li><a href="#planning-for-availability-2">Planning for Availability</a>
+<ul class="sectlevel3">
+<li><a href="#rightsizing-availability-2">Rightsizing Availability</a></li>
+<li><a href="#using-clusters-to-improve-availability-2">Using Clusters to Improve Availability</a></li>
+<li><a href="#adding-redundancy-to-the-system-2">Adding Redundancy to the System</a></li>
+</ul>
+</li>
+<li><a href="#design-decisions-2">Design Decisions</a>
+<ul class="sectlevel3">
+<li><a href="#designing-for-peak-or-steady-state-load-2">Designing for Peak or Steady State Load</a></li>
+<li><a href="#system-sizing-2">System Sizing</a></li>
+<li><a href="#sizing-the-administration-thread-pool-2">Sizing the Administration Thread Pool</a></li>
+</ul>
+</li>
+<li><a href="#planning-message-queue-broker-deployment-2">Planning Message Queue Broker Deployment</a>
+<ul class="sectlevel3">
+<li><a href="#multi-broker-clusters-2">Multi-Broker Clusters</a></li>
+<li><a href="#configuring-eclipse-glassfish-to-use-message-queue-brokers">Configuring Eclipse GlassFish to Use Message Queue Brokers</a></li>
+<li><a href="#example-deployment-scenarios-2">Example Deployment Scenarios</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#checklist-for-deployment">3 Checklist for Deployment</a>
+<ul class="sectlevel2">
+<li><a href="#checklist">Checklist</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -2923,7 +3004,7 @@ collector or the throughput collector.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:43:44 UTC
+Last updated 2022-08-05 23:14:09 UTC
 </div>
 </div>
 </body>

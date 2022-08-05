@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.16">
+<meta name="generator" content="Asciidoctor 2.0.17">
 <title>Eclipse GlassFish Application Development Guide, Release 7</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <link rel="stylesheet" href="./asciidoctor.css">
@@ -18,31 +18,531 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#eclipse-glassfish-server">Eclipse GlassFish</a></li>
-<li><a href="#preface">Preface</a></li>
+<li><a href="#preface">Preface</a>
+<ul class="sectlevel2">
+<li><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></li>
+<li><a href="#related-documentation">Related Documentation</a></li>
+<li><a href="#typographic-conventions">Typographic Conventions</a></li>
+<li><a href="#symbol-conventions">Symbol Conventions</a></li>
+<li><a href="#default-paths-and-file-names">Default Paths and File Names</a></li>
+</ul>
+</li>
 <li><a href="#part-i-2">Part I</a></li>
 <li><a href="#development-tasks-and-tools">Development Tasks and Tools</a></li>
-<li><a href="#setting-up-a-development-environment">1 Setting Up a Development Environment</a></li>
-<li><a href="#class-loaders">2 Class Loaders</a></li>
-<li><a href="#debugging-applications">3 Debugging Applications</a></li>
+<li><a href="#setting-up-a-development-environment">1 Setting Up a Development Environment</a>
+<ul class="sectlevel2">
+<li><a href="#installing-and-preparing-the-server-for-development-2">Installing and Preparing the Server for Development</a></li>
+<li><a href="#high-availability-features-2">High Availability Features</a></li>
+<li><a href="#development-tools-2">Development Tools</a>
+<ul class="sectlevel3">
+<li><a href="#the-asadmin-command-2">The <code>asadmin</code> Command</a></li>
+<li><a href="#the-administration-console-2">The Administration Console</a></li>
+<li><a href="#the-migration-tool-2">The Migration Tool</a></li>
+<li><a href="#the-netbeans-ide-2">The NetBeans IDE</a></li>
+<li><a href="#debugging-tools-2">Debugging Tools</a></li>
+<li><a href="#profiling-tools-2">Profiling Tools</a></li>
+</ul>
+</li>
+<li><a href="#sample-applications-2">Sample Applications</a></li>
+</ul>
+</li>
+<li><a href="#class-loaders">2 Class Loaders</a>
+<ul class="sectlevel2">
+<li><a href="#the-class-loader-hierarchy-2">The Class Loader Hierarchy</a></li>
+<li><a href="#delegation-2">Delegation</a></li>
+<li><a href="#using-the-java-optional-package-mechanism-2">Using the Java Optional Package Mechanism</a></li>
+<li><a href="#using-the-endorsed-standards-override-mechanism-2">Using the Endorsed Standards Override Mechanism</a></li>
+<li><a href="#class-loader-universes-2">Class Loader Universes</a></li>
+<li><a href="#application-specific-class-loading-2">Application-Specific Class Loading</a></li>
+<li><a href="#circumventing-class-loader-isolation-2">Circumventing Class Loader Isolation</a>
+<ul class="sectlevel3">
+<li><a href="#using-the-common-class-loader-2">Using the Common Class Loader</a></li>
+<li><a href="#sharing-libraries-across-a-cluster-2">Sharing Libraries Across a Cluster</a></li>
+<li><a href="#packaging-the-client-jar-for-one-application-in-another-application-2">Packaging the Client JAR for One Application in Another Application</a></li>
+<li><a href="#to-package-the-client-jar-for-one-application-in-another-application-2">To Package the Client JAR for One Application in Another Application</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#debugging-applications">3 Debugging Applications</a>
+<ul class="sectlevel2">
+<li><a href="#enabling-debugging-2">Enabling Debugging</a>
+<ul class="sectlevel3">
+<li><a href="#to-set-the-server-to-automatically-start-up-in-debug-mode-2">To Set the Server to Automatically Start Up in Debug Mode</a></li>
+</ul>
+</li>
+<li><a href="#jpda-options-2">JPDA Options</a></li>
+<li><a href="#generating-a-stack-trace-for-debugging-2">Generating a Stack Trace for Debugging</a></li>
+<li><a href="#application-client-debugging-2">Application Client Debugging</a></li>
+<li><a href="#open-message-queue-debugging-2">Open Message Queue Debugging</a></li>
+<li><a href="#enabling-verbose-mode-2">Enabling Verbose Mode</a></li>
+<li><a href="#class-loader-debugging-2">Class Loader Debugging</a></li>
+<li><a href="#eclipse-glassfish-logging">Eclipse GlassFish Logging</a></li>
+<li><a href="#profiling-tools-3">Profiling Tools</a>
+<ul class="sectlevel3">
+<li><a href="#the-netbeans-profiler-2">The NetBeans Profiler</a></li>
+<li><a href="#the-hprof-profiler-2">The HPROF Profiler</a></li>
+<li><a href="#the-jprobe-profiler-2">The JProbe Profiler</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#part-ii-2">Part II</a></li>
 <li><a href="#developing-applications-and-application-components">Developing Applications and Application Components</a></li>
-<li><a href="#securing-applications">4 Securing Applications</a></li>
-<li><a href="#developing-web-services">5 Developing Web Services</a></li>
-<li><a href="#configuring-the-java-persistence-provider">6 Configuring the Java Persistence Provider</a></li>
-<li><a href="#developing-web-applications">7 Developing Web Applications</a></li>
-<li><a href="#using-enterprise-javabeans-technology">8 Using Enterprise JavaBeans Technology</a></li>
-<li><a href="#using-container-managed-persistence">9 Using Container-Managed Persistence</a></li>
-<li><a href="#developing-java-clients">10 Developing Java Clients</a></li>
-<li><a href="#developing-connectors">11 Developing Connectors</a></li>
-<li><a href="#developing-lifecycle-listeners">12 Developing Lifecycle Listeners</a></li>
-<li><a href="#developing-osgi-enabled-java-ee-applications">13 Developing OSGi-enabled Jakarta EE Applications</a></li>
+<li><a href="#securing-applications">4 Securing Applications</a>
+<ul class="sectlevel2">
+<li><a href="#security-goals-2">Security Goals</a></li>
+<li><a href="#eclipse-glassfish-specific-security-features">Eclipse GlassFish Specific Security Features</a></li>
+<li><a href="#container-security-2">Container Security</a>
+<ul class="sectlevel3">
+<li><a href="#declarative-security-2">Declarative Security</a></li>
+<li><a href="#programmatic-security-2">Programmatic Security</a></li>
+</ul>
+</li>
+<li><a href="#roles-principals-and-principal-to-role-mapping-2">Roles, Principals, and Principal to Role Mapping</a></li>
+<li><a href="#realm-configuration-2">Realm Configuration</a>
+<ul class="sectlevel3">
+<li><a href="#supported-realms-2">Supported Realms</a></li>
+<li><a href="#how-to-configure-a-realm-2">How to Configure a Realm</a></li>
+<li><a href="#how-to-set-a-realm-for-an-application-or-module-2">How to Set a Realm for an Application or Module</a></li>
+<li><a href="#creating-a-custom-realm-2">Creating a Custom Realm</a></li>
+</ul>
+</li>
+<li><a href="#jakarta-ee-security-api-support">Jakarta EE Security API Support</a></li>
+<li><a href="#jacc-support-2">JACC Support</a></li>
+<li><a href="#pluggable-audit-module-support-2">Pluggable Audit Module Support</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-an-audit-module-2">Configuring an Audit Module</a></li>
+<li><a href="#the-auditmodule-class-2">The <code>AuditModule</code> Class</a></li>
+</ul>
+</li>
+<li><a href="#the-server-policy-file">The <code>server.policy</code> File</a>
+<ul class="sectlevel3">
+<li><a href="#default-permissions-2">Default Permissions</a></li>
+<li><a href="#system-properties-2">System Properties</a></li>
+<li><a href="#changing-permissions-for-an-application-2">Changing Permissions for an Application</a></li>
+<li><a href="#enabling-and-disabling-the-security-manager-2">Enabling and Disabling the Security Manager</a></li>
+</ul>
+</li>
+<li><a href="#configuring-message-security-for-web-services-2">Configuring Message Security for Web Services</a>
+<ul class="sectlevel3">
+<li><a href="#message-security-providers-2">Message Security Providers</a></li>
+<li><a href="#message-security-responsibilities-2">Message Security Responsibilities</a></li>
+<li><a href="#application-specific-message-protection-2">Application-Specific Message Protection</a></li>
+<li><a href="#understanding-and-running-the-sample-application-2">Understanding and Running the Sample Application</a></li>
+</ul>
+</li>
+<li><a href="#programmatic-login-using-the-programmaticlogin-class-2">Programmatic Login Using the ProgrammaticLogin Class</a>
+<ul class="sectlevel3">
+<li><a href="#programmatic-login-precautions-2">Programmatic Login Precautions</a></li>
+<li><a href="#granting-programmatic-login-permission-2">Granting Programmatic Login Permission</a></li>
+<li><a href="#the-programmaticlogin-class-2">The <code>ProgrammaticLogin</code> Class</a></li>
+</ul>
+</li>
+<li><a href="#user-authentication-for-single-sign-on-2">User Authentication for Single Sign-on</a></li>
+<li><a href="#adding-authentication-mechanisms-to-the-servlet-container-2">Adding Authentication Mechanisms to the Servlet Container</a>
+<ul class="sectlevel3">
+<li><a href="#the-eclipse-glassfish-and-jsr-375">The Eclipse GlassFish and JSR-375</a></li>
+<li><a href="#the-eclipse-glassfish-and-jsr-196">The Eclipse GlassFish and JSR 196</a></li>
+<li><a href="#writing-a-server-authentication-module-2">Writing a Server Authentication Module</a></li>
+<li><a href="#sample-server-authentication-module-2">Sample Server Authentication Module</a></li>
+<li><a href="#compiling-and-installing-a-server-authentication-module-2">Compiling and Installing a Server Authentication Module</a></li>
+<li><a href="#configuring-a-server-authentication-module-2">Configuring a Server Authentication Module</a></li>
+<li><a href="#binding-a-server-authentication-module-to-your-application-2">Binding a Server Authentication Module to Your Application</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#developing-web-services">5 Developing Web Services</a>
+<ul class="sectlevel2">
+<li><a href="#creating-portable-web-service-artifacts-2">Creating Portable Web Service Artifacts</a></li>
+<li><a href="#deploying-a-web-service-2">Deploying a Web Service</a></li>
+<li><a href="#the-web-service-uri-wsdl-file-and-test-page-2">The Web Service URI, WSDL File, and Test Page</a></li>
+<li><a href="#the-databinding-provider-2">The Databinding Provider</a></li>
+<li><a href="#glassfish-jakarta-ee-service-engine">GlassFish Jakarta EE Service Engine</a>
+<ul class="sectlevel3">
+<li><a href="#using-the-jbi-xml-file">Using the <code>jbi.xml</code> File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuring-the-java-persistence-provider">6 Configuring the Java Persistence Provider</a>
+<ul class="sectlevel2">
+<li><a href="#overview-of-oracle-toplink-2">Overview of Oracle TopLink</a></li>
+<li><a href="#using-oracle-toplink-in-eclipse-glassfish">Using Oracle TopLink in Eclipse GlassFish</a></li>
+<li><a href="#specifying-the-database-for-an-application-2">Specifying the Database for an Application</a></li>
+<li><a href="#specifying-the-persistence-provider-for-an-application-2">Specifying the Persistence Provider for an Application</a></li>
+<li><a href="#primary-key-generation-defaults-2">Primary Key Generation Defaults</a></li>
+<li><a href="#automatic-schema-generation-2">Automatic Schema Generation</a>
+<ul class="sectlevel3">
+<li><a href="#annotations-2">Annotations</a></li>
+<li><a href="#generation-options-2">Generation Options</a></li>
+</ul>
+</li>
+<li><a href="#restrictions-and-optimizations-2">Restrictions and Optimizations</a>
+<ul class="sectlevel3">
+<li><a href="#oracle-database-enhancements-2">Oracle Database Enhancements</a></li>
+<li><a href="#extended-persistence-context-2">Extended Persistence Context</a></li>
+<li><a href="#using-orderby-with-a-shared-session-cache-2">Using @OrderBy with a Shared Session Cache</a></li>
+<li><a href="#using-blob-or-clob-types-with-the-inet-oraxo-jdbc-driver-2">Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</a></li>
+<li><a href="#database-case-sensitivity-2">Database Case Sensitivity</a></li>
+<li><a href="#sybase-finder-limitation-2">Sybase Finder Limitation</a></li>
+<li><a href="#mysql-database-restrictions-2">MySQL Database Restrictions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#developing-web-applications">7 Developing Web Applications</a>
+<ul class="sectlevel2">
+<li><a href="#using-servlets-2">Using Servlets</a>
+<ul class="sectlevel3">
+<li><a href="#caching-servlet-results-2">Caching Servlet Results</a></li>
+<li><a href="#about-the-servlet-engine-2">About the Servlet Engine</a></li>
+</ul>
+</li>
+<li><a href="#using-javaserver-pages-2">Using JavaServer Pages</a>
+<ul class="sectlevel3">
+<li><a href="#jsp-tag-libraries-and-standard-portable-tags-2">JSP Tag Libraries and Standard Portable Tags</a></li>
+<li><a href="#jsp-caching-2">JSP Caching</a></li>
+<li><a href="#options-for-compiling-jsp-files-2">Options for Compiling JSP Files</a></li>
+</ul>
+</li>
+<li><a href="#creating-and-managing-sessions-2">Creating and Managing Sessions</a>
+<ul class="sectlevel3">
+<li><a href="#configuring-sessions-2">Configuring Sessions</a></li>
+<li><a href="#session-managers-2">Session Managers</a></li>
+</ul>
+</li>
+<li><a href="#using-comet-2">Using Comet</a>
+<ul class="sectlevel3">
+<li><a href="#introduction-to-comet-2">Introduction to Comet</a></li>
+<li><a href="#grizzly-comet-2">Grizzly Comet</a></li>
+<li><a href="#bayeux-protocol-2">Bayeux Protocol</a></li>
+</ul>
+</li>
+<li><a href="#advanced-web-application-features-2">Advanced Web Application Features</a>
+<ul class="sectlevel3">
+<li><a href="#internationalization-issues-2">Internationalization Issues</a></li>
+<li><a href="#virtual-server-properties-2">Virtual Server Properties</a></li>
+<li><a href="#class-loader-delegation-2">Class Loader Delegation</a></li>
+<li><a href="#using-the-default-web-xml-file">Using the <code>default-web.xml</code> File</a></li>
+<li><a href="#configuring-logging-and-monitoring-in-the-web-container-2">Configuring Logging and Monitoring in the Web Container</a></li>
+<li><a href="#configuring-idempotent-url-requests-2">Configuring Idempotent URL Requests</a></li>
+<li><a href="#header-management-2">Header Management</a></li>
+<li><a href="#configuring-valves-and-catalina-listeners-2">Configuring Valves and Catalina Listeners</a></li>
+<li><a href="#alternate-document-roots-2">Alternate Document Roots</a></li>
+<li><a href="#using-a-context-xml-file">Using a context.xml File</a></li>
+<li><a href="#enabling-webdav-2">Enabling WebDav</a></li>
+<li><a href="#using-ssi-2">Using SSI</a></li>
+<li><a href="#using-cgi-2">Using CGI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#using-enterprise-javabeans-technology">8 Using Enterprise JavaBeans Technology</a>
+<ul class="sectlevel2">
+<li><a href="#value-added-features-2">Value Added Features</a>
+<ul class="sectlevel3">
+<li><a href="#read-only-beans-2">Read-Only Beans</a></li>
+<li><a href="#the-pass-by-reference-element-2">The <code>pass-by-reference</code> Element</a></li>
+<li><a href="#pooling-and-caching-2">Pooling and Caching</a></li>
+<li><a href="#priority-based-scheduling-of-remote-bean-invocations-2">Priority Based Scheduling of Remote Bean Invocations</a></li>
+<li><a href="#immediate-flushing-2">Immediate Flushing</a></li>
+</ul>
+</li>
+<li><a href="#ejb-timer-service-2">EJB Timer Service</a>
+<ul class="sectlevel3">
+<li><a href="#to-deploy-an-ejb-timer-to-a-cluster-2">To Deploy an EJB Timer to a Cluster</a></li>
+</ul>
+</li>
+<li><a href="#using-session-beans-2">Using Session Beans</a>
+<ul class="sectlevel3">
+<li><a href="#about-the-session-bean-containers-2">About the Session Bean Containers</a></li>
+<li><a href="#stateful-session-bean-failover-2">Stateful Session Bean Failover</a></li>
+<li><a href="#session-bean-restrictions-and-optimizations-2">Session Bean Restrictions and Optimizations</a></li>
+</ul>
+</li>
+<li><a href="#using-read-only-beans-2">Using Read-Only Beans</a>
+<ul class="sectlevel3">
+<li><a href="#read-only-bean-characteristics-and-life-cycle-2">Read-Only Bean Characteristics and Life Cycle</a></li>
+<li><a href="#read-only-bean-good-practices-2">Read-Only Bean Good Practices</a></li>
+<li><a href="#refreshing-read-only-beans-2">Refreshing Read-Only Beans</a></li>
+<li><a href="#deploying-read-only-beans-2">Deploying Read-Only Beans</a></li>
+</ul>
+</li>
+<li><a href="#using-message-driven-beans-2">Using Message-Driven Beans</a>
+<ul class="sectlevel3">
+<li><a href="#message-driven-bean-configuration-2">Message-Driven Bean Configuration</a></li>
+<li><a href="#message-driven-bean-restrictions-and-optimizations-2">Message-Driven Bean Restrictions and Optimizations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#using-container-managed-persistence">9 Using Container-Managed Persistence</a>
+<ul class="sectlevel2">
+<li><a href="#eclipse-glassfish-support-for-cmp">Eclipse GlassFish Support for CMP</a></li>
+<li><a href="#cmp-mapping-2">CMP Mapping</a>
+<ul class="sectlevel3">
+<li><a href="#mapping-capabilities-2">Mapping Capabilities</a></li>
+<li><a href="#the-mapping-deployment-descriptor-file-2">The Mapping Deployment Descriptor File</a></li>
+<li><a href="#mapping-considerations-2">Mapping Considerations</a></li>
+</ul>
+</li>
+<li><a href="#automatic-schema-generation-for-cmp-2">Automatic Schema Generation for CMP</a>
+<ul class="sectlevel3">
+<li><a href="#supported-data-types-for-cmp-2">Supported Data Types for CMP</a></li>
+<li><a href="#generation-options-for-cmp-2">Generation Options for CMP</a></li>
+</ul>
+</li>
+<li><a href="#schema-capture-2">Schema Capture</a>
+<ul class="sectlevel3">
+<li><a href="#automatic-database-schema-capture-2">Automatic Database Schema Capture</a></li>
+<li><a href="#using-the-capture-schema-utility-2">Using the <code>capture-schema</code> Utility</a></li>
+</ul>
+</li>
+<li><a href="#configuring-the-cmp-resource-2">Configuring the CMP Resource</a></li>
+<li><a href="#performance-related-features-2">Performance-Related Features</a>
+<ul class="sectlevel3">
+<li><a href="#version-column-consistency-checking-2">Version Column Consistency Checking</a></li>
+<li><a href="#relationship-prefetching-2">Relationship Prefetching</a></li>
+<li><a href="#read-only-beans-3">Read-Only Beans</a></li>
+</ul>
+</li>
+<li><a href="#default-fetch-group-flags-2">Default Fetch Group Flags</a></li>
+<li><a href="#configuring-queries-for-1-1-finders">Configuring Queries for 1.1 Finders</a>
+<ul class="sectlevel3">
+<li><a href="#about-jdoql-queries-2">About JDOQL Queries</a></li>
+<li><a href="#query-filter-expression-2">Query Filter Expression</a></li>
+<li><a href="#query-parameters-2">Query Parameters</a></li>
+<li><a href="#query-variables-2">Query Variables</a></li>
+<li><a href="#jdoql-examples-2">JDOQL Examples</a></li>
+</ul>
+</li>
+<li><a href="#cmp-restrictions-and-optimizations-2">CMP Restrictions and Optimizations</a>
+<ul class="sectlevel3">
+<li><a href="#disabling-order-by-validation-2">Disabling ORDER BY Validation</a></li>
+<li><a href="#setting-the-heap-size-on-db2-2">Setting the Heap Size on DB2</a></li>
+<li><a href="#eager-loading-of-field-state-2">Eager Loading of Field State</a></li>
+<li><a href="#restrictions-on-remote-interfaces-2">Restrictions on Remote Interfaces</a></li>
+<li><a href="#postgresql-case-insensitivity-2">PostgreSQL Case Insensitivity</a></li>
+<li><a href="#no-support-for-lock-when-loaded-on-sybase-2">No Support for <code>lock-when-loaded</code> on Sybase</a></li>
+<li><a href="#sybase-finder-limitation-3">Sybase Finder Limitation</a></li>
+<li><a href="#date-and-time-fields-2">Date and Time Fields</a></li>
+<li><a href="#set-recursive_triggers-to-false-on-mssql-2">Set <code>RECURSIVE_TRIGGERS</code> to <code>false</code> on MSSQL</a></li>
+<li><a href="#mysql-database-restrictions-3">MySQL Database Restrictions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#developing-java-clients">10 Developing Java Clients</a>
+<ul class="sectlevel2">
+<li><a href="#introducing-the-application-client-container-2">Introducing the Application Client Container</a>
+<ul class="sectlevel3">
+<li><a href="#acc-security-2">ACC Security</a></li>
+<li><a href="#acc-naming-2">ACC Naming</a></li>
+<li><a href="#application-client-annotation-2">Application Client Annotation</a></li>
+<li><a href="#java-web-start-2">Java Web Start</a></li>
+<li><a href="#application-client-jar-file-2">Application Client JAR File</a></li>
+</ul>
+</li>
+<li><a href="#developing-clients-using-the-acc-2">Developing Clients Using the ACC</a>
+<ul class="sectlevel3">
+<li><a href="#to-access-an-ejb-component-from-an-application-client-2">To Access an EJB Component From an Application Client</a></li>
+<li><a href="#to-access-a-jms-resource-from-an-application-client-2">To Access a JMS Resource From an Application Client</a></li>
+<li><a href="#using-java-web-start-2">Using Java Web Start</a></li>
+<li><a href="#using-the-embeddable-acc-2">Using the Embeddable ACC</a></li>
+<li><a href="#running-an-application-client-using-the-appclient-script-2">Running an Application Client Using the <code>appclient</code> Script</a></li>
+<li><a href="#using-the-package-appclient-script-2">Using the <code>package-appclient</code> Script</a></li>
+<li><a href="#the-client-policy-file">The <code>client.policy</code> File</a></li>
+<li><a href="#using-rmiiiop-over-ssl-2">Using RMI/IIOP Over SSL</a></li>
+<li><a href="#connecting-to-a-remote-ejb-module-through-a-firewall-2">Connecting to a Remote EJB Module Through a Firewall</a></li>
+<li><a href="#specifying-a-splash-screen-2">Specifying a Splash Screen</a></li>
+<li><a href="#setting-login-retries-2">Setting Login Retries</a></li>
+<li><a href="#using-libraries-with-application-clients-2">Using Libraries with Application Clients</a></li>
+</ul>
+</li>
+<li><a href="#developing-clients-without-the-acc-2">Developing Clients Without the ACC</a>
+<ul class="sectlevel3">
+<li><a href="#to-access-an-ejb-component-from-a-stand-alone-client-2">To access an EJB component from a stand-alone client</a></li>
+<li><a href="#to-access-an-ejb-component-from-a-server-side-module-2">To access an EJB component from a server-side module</a></li>
+<li><a href="#to-access-a-jms-resource-from-a-stand-alone-client-2">To access a JMS resource from a stand-alone client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#developing-connectors">11 Developing Connectors</a>
+<ul class="sectlevel2">
+<li><a href="#connector-support-in-the-eclipse-glassfish">Connector Support in the Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#connector-architecture-for-jms-and-jdbc-2">Connector Architecture for JMS and JDBC</a></li>
+<li><a href="#connector-configuration-2">Connector Configuration</a></li>
+</ul>
+</li>
+<li><a href="#advanced-connector-configuration-options-2">Advanced Connector Configuration Options</a>
+<ul class="sectlevel3">
+<li><a href="#thread-associations-2">Thread Associations</a></li>
+<li><a href="#security-maps-2">Security Maps</a></li>
+<li><a href="#work-security-maps-2">Work Security Maps</a></li>
+<li><a href="#overriding-configuration-properties-2">Overriding Configuration Properties</a></li>
+<li><a href="#testing-a-connector-connection-pool-2">Testing a Connector Connection Pool</a></li>
+<li><a href="#flushing-a-connector-connection-pool-2">Flushing a Connector Connection Pool</a></li>
+<li><a href="#handling-invalid-connections-2">Handling Invalid Connections</a></li>
+<li><a href="#setting-the-shutdown-timeout-2">Setting the Shutdown Timeout</a></li>
+<li><a href="#specifying-the-class-loading-policy-2">Specifying the Class Loading Policy</a></li>
+<li><a href="#using-last-agent-optimization-of-transactions-2">Using Last Agent Optimization of Transactions</a></li>
+<li><a href="#disabling-pooling-for-a-connection-2">Disabling Pooling for a Connection</a></li>
+<li><a href="#using-application-scoped-connectors-2">Using Application-Scoped Connectors</a></li>
+</ul>
+</li>
+<li><a href="#inbound-communication-support-2">Inbound Communication Support</a></li>
+<li><a href="#outbound-communication-support-2">Outbound Communication Support</a></li>
+<li><a href="#configuring-a-message-driven-bean-to-use-a-resource-adapter-2">Configuring a Message Driven Bean to Use a Resource Adapter</a></li>
+</ul>
+</li>
+<li><a href="#developing-lifecycle-listeners">12 Developing Lifecycle Listeners</a>
+<ul class="sectlevel2">
+<li><a href="#server-life-cycle-events-2">Server Life Cycle Events</a></li>
+<li><a href="#the-lifecyclelistener-interface-2">The LifecycleListener Interface</a></li>
+<li><a href="#the-lifecycleevent-class-2">The <code>LifecycleEvent</code> Class</a></li>
+<li><a href="#the-server-lifecycle-event-context-2">The Server Lifecycle Event Context</a></li>
+<li><a href="#deploying-a-lifecycle-module-2">Deploying a Lifecycle Module</a></li>
+<li><a href="#considerations-for-lifecycle-modules-2">Considerations for Lifecycle Modules</a></li>
+</ul>
+</li>
+<li><a href="#developing-osgi-enabled-java-ee-applications">13 Developing OSGi-enabled Jakarta EE Applications</a>
+<ul class="sectlevel2">
+<li><a href="#overview-of-osgi-application-and-eclipse-glassfish">Overview of OSGi Application and Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#benefits-of-using-osgi-in-enterprise-java-applications-2">Benefits of Using OSGi in Enterprise Java Applications</a></li>
+</ul>
+</li>
+<li><a href="#developing-osgi-application-bundles-for-eclipse-glassfish">Developing OSGi Application Bundles for Eclipse GlassFish</a>
+<ul class="sectlevel3">
+<li><a href="#developing-plain-osgi-bundles-2">Developing Plain OSGi Bundles</a></li>
+<li><a href="#developing-web-application-bundles-2">Developing Web Application Bundles</a></li>
+<li><a href="#developing-ejb-application-bundles-2">Developing EJB Application Bundles</a></li>
+</ul>
+</li>
+<li><a href="#deploying-osgi-bundles-in-eclipse-glassfish">Deploying OSGi Bundles in Eclipse GlassFish</a></li>
+</ul>
+</li>
 <li><a href="#part-iii-2">Part III</a></li>
 <li><a href="#using-services-and-apis">Using Services and APIs</a></li>
-<li><a href="#using-the-jdbc-api-for-database-access">14 Using the JDBC API for Database Access</a></li>
-<li><a href="#using-the-transaction-service">15 Using the Transaction Service</a></li>
-<li><a href="#using-the-java-naming-and-directory-interface">16 Using the Java Naming and Directory Interface</a></li>
-<li><a href="#using-the-java-message-service">17 Using the Java Message Service</a></li>
-<li><a href="#using-the-jakarta-mail-api">18 Using the Jakarta Mail API</a></li>
+<li><a href="#using-the-jdbc-api-for-database-access">14 Using the JDBC API for Database Access</a>
+<ul class="sectlevel2">
+<li><a href="#statements-2">Statements</a>
+<ul class="sectlevel3">
+<li><a href="#using-an-initialization-statement-2">Using an Initialization Statement</a></li>
+<li><a href="#setting-a-statement-timeout-2">Setting a Statement Timeout</a></li>
+<li><a href="#statement-leak-detection-and-leaked-statement-reclamation-2">Statement Leak Detection and Leaked Statement Reclamation</a></li>
+<li><a href="#statement-caching-2">Statement Caching</a></li>
+<li><a href="#statement-tracing-2">Statement Tracing</a></li>
+</ul>
+</li>
+<li><a href="#connections-2">Connections</a>
+<ul class="sectlevel3">
+<li><a href="#transparent-pool-reconfiguration-2">Transparent Pool Reconfiguration</a></li>
+<li><a href="#disabling-pooling-2">Disabling Pooling</a></li>
+<li><a href="#associating-connections-with-threads-2">Associating Connections with Threads</a></li>
+<li><a href="#custom-connection-validation-2">Custom Connection Validation</a></li>
+<li><a href="#sharing-connections-2">Sharing Connections</a></li>
+<li><a href="#marking-bad-connections-2">Marking Bad Connections</a></li>
+<li><a href="#handling-invalid-connections-3">Handling Invalid Connections</a></li>
+</ul>
+</li>
+<li><a href="#connection-wrapping-2">Connection Wrapping</a>
+<ul class="sectlevel3">
+<li><a href="#wrapping-connections-2">Wrapping Connections</a></li>
+<li><a href="#obtaining-a-physical-connection-from-a-wrapped-connection-2">Obtaining a Physical Connection From a Wrapped Connection</a></li>
+<li><a href="#using-the-connection-unwrap-method">Using the <code>Connection.unwrap()</code> Method</a></li>
+</ul>
+</li>
+<li><a href="#allowing-non-component-callers-2">Allowing Non-Component Callers</a></li>
+<li><a href="#using-application-scoped-resources-2">Using Application-Scoped Resources</a></li>
+<li><a href="#restrictions-and-optimizations-3">Restrictions and Optimizations</a>
+<ul class="sectlevel3">
+<li><a href="#disabling-stored-procedure-creation-on-sybase-2">Disabling Stored Procedure Creation on Sybase</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#using-the-transaction-service">15 Using the Transaction Service</a>
+<ul class="sectlevel2">
+<li><a href="#handling-transactions-with-databases-2">Handling Transactions with Databases</a>
+<ul class="sectlevel3">
+<li><a href="#using-jdbc-transaction-isolation-levels-2">Using JDBC Transaction Isolation Levels</a></li>
+<li><a href="#using-non-transactional-connections-2">Using Non-Transactional Connections</a></li>
+</ul>
+</li>
+<li><a href="#handling-transactions-with-enterprise-beans-2">Handling Transactions with Enterprise Beans</a>
+<ul class="sectlevel3">
+<li><a href="#flat-transactions-2">Flat Transactions</a></li>
+<li><a href="#global-and-local-transactions-2">Global and Local Transactions</a></li>
+<li><a href="#commit-options-2">Commit Options</a></li>
+<li><a href="#bean-level-container-managed-transaction-timeouts-2">Bean-Level Container-Managed Transaction Timeouts</a></li>
+</ul>
+</li>
+<li><a href="#handling-transactions-with-the-java-message-service-2">Handling Transactions with the Java Message Service</a>
+<ul class="sectlevel3">
+<li><a href="#transactions-and-non-persistent-messages-2">Transactions and Non-Persistent Messages</a></li>
+<li><a href="#using-the-configurabletransactionsupport-interface-2">Using the ConfigurableTransactionSupport Interface</a></li>
+</ul>
+</li>
+<li><a href="#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction-2">The Transaction Manager, the Transaction Synchronization Registry, and <code>UserTransaction</code></a></li>
+</ul>
+</li>
+<li><a href="#using-the-java-naming-and-directory-interface">16 Using the Java Naming and Directory Interface</a>
+<ul class="sectlevel2">
+<li><a href="#accessing-the-naming-context-2">Accessing the Naming Context</a>
+<ul class="sectlevel3">
+<li><a href="#portable-global-jndi-names-2">Portable Global JNDI Names</a></li>
+<li><a href="#eclipse-glassfish-v2-vendor-specific-global-jndi-names">Eclipse GlassFish V2 Vendor-Specific Global JNDI Names</a></li>
+<li><a href="#disabling-eclipse-glassfish-v2-jndi-names">Disabling Eclipse GlassFish V2 JNDI Names</a></li>
+<li><a href="#accessing-ejb-components-using-the-cosnaming-naming-context-2">Accessing EJB Components Using the <code>CosNaming</code> Naming Context</a></li>
+<li><a href="#accessing-ejb-components-in-a-remote-eclipse-glassfish">Accessing EJB Components in a Remote Eclipse GlassFish</a></li>
+<li><a href="#naming-environment-for-lifecycle-modules-2">Naming Environment for Lifecycle Modules</a></li>
+</ul>
+</li>
+<li><a href="#configuring-resources-2">Configuring Resources</a>
+<ul class="sectlevel3">
+<li><a href="#external-jndi-resources-2">External JNDI Resources</a></li>
+<li><a href="#custom-resources-2">Custom Resources</a></li>
+<li><a href="#built-in-factories-for-custom-resources-2">Built-in Factories for Custom Resources</a></li>
+<li><a href="#using-application-scoped-resources-3">Using Application-Scoped Resources</a></li>
+</ul>
+</li>
+<li><a href="#using-a-custom-jndi-properties-file">Using a Custom <code>jndi.properties</code> File</a></li>
+<li><a href="#mapping-references-2">Mapping References</a></li>
+</ul>
+</li>
+<li><a href="#using-the-java-message-service">17 Using the Java Message Service</a>
+<ul class="sectlevel2">
+<li><a href="#using-application-scoped-jms-resources-2">Using Application-Scoped JMS Resources</a></li>
+<li><a href="#load-balanced-message-inflow-2">Load-Balanced Message Inflow</a></li>
+<li><a href="#authentication-with-connectionfactory-2">Authentication With <code>ConnectionFactory</code></a></li>
+<li><a href="#delivering-soap-messages-using-the-jms-api-2">Delivering SOAP Messages Using the JMS API</a>
+<ul class="sectlevel3">
+<li><a href="#to-send-soap-messages-using-the-jms-api-2">To Send SOAP Messages Using the JMS API</a></li>
+<li><a href="#to-receive-soap-messages-using-the-jms-api-2">To Receive SOAP Messages Using the JMS API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#using-the-jakarta-mail-api">18 Using the Jakarta Mail API</a>
+<ul class="sectlevel2">
+<li><a href="#introducing-jakarta-mail-2">Introducing Jakarta Mail</a></li>
+<li><a href="#creating-a-jakarta-mail-session-2">Creating a Jakarta Mail Session</a></li>
+<li><a href="#jakarta-mail-session-properties-2">Jakarta Mail Session Properties</a></li>
+<li><a href="#looking-up-a-jakarta-mail-session-2">Looking Up a Jakarta Mail Session</a></li>
+<li><a href="#sending-and-reading-messages-using-jakarta-mail-2">Sending and Reading Messages Using Jakarta Mail</a>
+<ul class="sectlevel3">
+<li><a href="#to-send-a-message-using-jakarta-mail-2">To Send a Message Using Jakarta Mail</a></li>
+<li><a href="#to-read-a-message-using-jakarta-mail-2">To Read a Message Using Jakarta Mail</a></li>
+</ul>
+</li>
+<li><a href="#using-application-scoped-jakarta-mail-resources-2">Using Application-Scoped Jakarta Mail Resources</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -21615,7 +22115,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-04 13:41:44 UTC
+Last updated 2022-08-05 23:13:31 UTC
 </div>
 </div>
 </body>

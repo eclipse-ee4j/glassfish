@@ -31,15 +31,11 @@ asadmin [asadmin-options] set-log-file-format [--help]
 The `set-log-file-format` subcommand sets the formatter to be used for
 the server log file for the specified target.
 
-{productName} provides the ULF (UniformLogFormatter) and ODL (Oracle
-Diagnostics Logging) formatters. A custom formatter can also be used by
-specifying the fully qualified name of a class that extends the
+{productName} provides the ULF (UniformLogFormatter), ODL (Oracle
+Diagnostics Logging) and OneLine (OneLineFormatter) formatters.
+A custom formatter can also be used by specifying the fully
+qualified name of a class that extends the
 `java.util.logging.Formatter` class.
-
-The custom formatter class can be packaged in a JAR file and placed in
-domain``/lib/ext``, or implemented as an HK2 service and the JAR
-containing the formatter implementation installed in
-`glassfish/modules`.
 
 This subcommand is supported in remote mode only.
 
@@ -64,7 +60,7 @@ asadmin-options::
 
 formatter::
   Specifies the fomatter to be used for the server log file.
-  Valid values are ULF, ODL, or the fully qualified name of the custom
+  Valid values are ULF, ODL, OneLine or the fully qualified name of the custom
   formatter class to be used to render the log files.
   The default value is ODL.
 
@@ -101,6 +97,6 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
 link:list-loggers.html#list-loggers-1[`list-loggers`(1)]
 
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

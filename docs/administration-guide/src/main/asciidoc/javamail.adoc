@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering the JavaMail Service
-next=jms.html
-prev=orb.html
+next=jms.adoc
+prev=orb.adoc
 ~~~~~~
 
 = Administering the JavaMail Service

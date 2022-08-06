@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Domains
-next=jvm.html
-prev=general-administration.html
+next=jvm.adoc
+prev=general-administration.adoc
 ~~~~~~
 
 = Administering Domains

@@ -673,7 +673,7 @@ directory. For example:
 asadmin> create-system-properties --target server TX-LOG-DIR=/inst1/logs
 ----
 For information about setting `log-root` and other general logging
-settings, see link:logging.html#abluj[Administering the Logging Service].
+settings, see link:logging.html#administering-the-logging-service[Administering the Logging Service].
 * Turn off transaction logging by setting the
 `disable-distributed-transaction-logging` property to `true` and the
 `automatic-recovery` attribute to `false`. Do this only if performance

@@ -39,7 +39,7 @@ The following components are included in the full installation.
 * JDK
 * {productName} core
 
-** Java Platform, Standard Edition (Java SE) 11
+** Java Platform, Standard Edition (Java SE) 11 or newer
 ** Jakarta EE 10 compliant application server
 ** Administration Console
 ** `asadmin` utility
@@ -70,7 +70,8 @@ in {productName} Administration Guide.
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide]. This book describes the
+are discussed in detail in the link:ha-administration-guide.html#GSHAG[{productName}
+High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
@@ -145,17 +146,16 @@ to download the Migration Tool, see
 
 [[beaaw]][[GSDVG00338]][[the-netbeans-ide]]
 
-==== The NetBeans IDE
+==== Code Editors
 
-The NetBeans IDE allows you to create, assemble, and debug code from a
-single, easy-to-use interface. The GlassFish edition of the {productName} is bundled with the NetBeans 6.1 IDE. To download the NetBeans
-IDE, see `http://www.netbeans.org`. This site also provides
-documentation on how to use the NetBeans IDE with the bundled GlassFish
-edition of the {productName}.
+There is several advanced editors with an integration with GlassFish or
+generic Jakarta EE servers. Sometimes you have to install additional
+extensions, sometimes all you need is just some configuration.
 
-You can also use the {productName} with the Java Studio Enterprise
-software, which is built on the NetBeans IDE. For more information, see
-`http://developers.sun.com/jsenterprise/`.
+* `https://www.jetbrains.com/idea/[IntelliJ IDEA]`
+* `https://www.eclipse.org/downloads/packages/[Eclipse IDE]`
+* `https://netbeans.apache.org[Apache NetBeans]`
+* `https://code.visualstudio.com[Microsoft Visual Studio Code]`
 
 [[beabb]][[GSDVG00340]][[debugging-tools]]
 

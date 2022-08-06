@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Batch Jobs
-next=part-res-and-svcs-admin.html
-prev=lifecycle-modules.html
+next=part-res-and-svcs-admin.adoc
+prev=lifecycle-modules.adoc
 ~~~~~~
 
 = Administering Batch Jobs

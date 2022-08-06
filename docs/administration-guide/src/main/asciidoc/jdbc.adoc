@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Database Connectivity
-next=connectors.html
-prev=part-res-and-svcs-admin.html
+next=connectors.adoc
+prev=part-res-and-svcs-admin.adoc
 ~~~~~~
 
 = Administering Database Connectivity

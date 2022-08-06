@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering the Java Naming and Directory Interface (JNDI) Service
-next=transactions.html
-prev=jms.html
+next=transactions.adoc
+prev=jms.adoc
 ~~~~~~
 
 = Administering the Java Naming and Directory Interface (JNDI) Service

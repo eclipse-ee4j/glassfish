@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Appendixes
-next=asadmin-subcommands.html
-prev=transactions.html
+next=asadmin-subcommands.adoc
+prev=transactions.adoc
 ~~~~~~
 
 = Appendixes

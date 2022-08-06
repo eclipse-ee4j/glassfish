@@ -38,9 +38,9 @@
         <jruby.version>9.3.2.0</jruby.version>
         <!-- status: DRAFT, BETA, etc., or blank for final -->
         <status>DRAFT</status>
+        <productName>Eclipse GlassFish</productName>
         <pdf.fileName>${project.artifactId}.pdf</pdf.fileName>
         <pdf.toclevels>3</pdf.toclevels>
-        <productName>Eclipse GlassFish</productName>
         <bookDirectory>${project.build.directory}/book</bookDirectory>
     </properties>
 

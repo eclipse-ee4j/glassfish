@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering the Java Message Service (JMS)
-next=jndi.html
-prev=javamail.html
+next=jndi.adoc
+prev=javamail.adoc
 ~~~~~~
 
 = Administering the Java Message Service (JMS)

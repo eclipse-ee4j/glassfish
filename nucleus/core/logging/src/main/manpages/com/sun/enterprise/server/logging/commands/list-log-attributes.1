@@ -36,30 +36,29 @@ EXAMPLES
        Example 1, Listing the Logger Attributes for a Domain
            This example lists all loggers attributes for the default domain.
 
-               asadmin> list-log-attributes
-               com.sun.enterprise.server.logging.GFFileHandler.alarms <false>
-               com.sun.enterprise.server.logging.GFFileHandler.file \
-               <${com.sun.aas.instanceRoot}/logs/server.log>
-               com.sun.enterprise.server.logging.GFFileHandler.flushFrequency <1>
-               com.sun.enterprise.server.logging.GFFileHandler.formatter \
-               <com.sun.enterprise.server.logging.UniformLogFormatter>
-               com.sun.enterprise.server.logging.GFFileHandler.logtoConsole <false>
-               com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles <0>
-               com.sun.enterprise.server.logging.GFFileHandler.retainErrorsStasticsForHours <0>
-               com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes <2000000>
-               com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes <0>
-               com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging <false>
-               handlers <java.util.logging.ConsoleHandler>
-               java.util.logging.ConsoleHandler.formatter \
-               <com.sun.enterprise.server.logging.UniformLogFormatter>
-               java.util.logging.FileHandler.count <1>
-               java.util.logging.FileHandler.formatter <java.util.logging.XMLFormatter>
-               java.util.logging.FileHandler.limit <50000>
-               java.util.logging.FileHandler.pattern <%h/java%u.log>
-               log4j.logger.org.hibernate.validator.util.Version <warn>
-
-               Command list-log-attributes executed successfully.
-
+           asadmin> list-log-attributes
+            handlers        <org.glassfish.main.jul.handler.SimpleLogHandler,org.glassfish.main.jul.handler.GlassFishLogHandler>
+            java.util.logging.FileHandler.count     <1>
+            java.util.logging.FileHandler.formatter <java.util.logging.XMLFormatter>
+            java.util.logging.FileHandler.limit     <50000>
+            java.util.logging.FileHandler.pattern   <%h/java%u.log>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.enabled      <true>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.file <${com.sun.aas.instanceRoot}/logs/server.log>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency       <1>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.formatter    <org.glassfish.main.jul.formatter.ODLLogFormatter>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields     <>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.multiline  <true>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.redirectStandardStreams      <true>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress    <false>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes     <100>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes       <0>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles     <0>
+            org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.rollOnDateChange    <false>
+            org.glassfish.main.jul.handler.SimpleLogHandler.formatter       <org.glassfish.main.jul.formatter.UniformLogFormatter>
+            org.glassfish.main.jul.handler.SimpleLogHandler.formatter.ansiColor.enabled     <true>
+            org.glassfish.main.jul.handler.SimpleLogHandler.formatter.printSource   <false>
+            org.glassfish.main.jul.handler.SimpleLogHandler.useErrorStream  <false>
+            Command list-log-attributes executed successfully.
 EXIT STATUS
        0
            subcommand executed successfully
@@ -75,4 +74,4 @@ SEE ALSO
 
        "Administering the Logging Service" in Eclipse GlassFish Administration Guide
 
-Jakarta EE 10                         21 Jun 2011           list-log-attributes(1)
+Jakarta EE 10                         29 Jul 2022           list-log-attributes(1)

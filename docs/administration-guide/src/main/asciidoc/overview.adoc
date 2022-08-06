@@ -145,7 +145,7 @@ Logging::
   By default, logging is enabled, so basic logging works without
   additional configuration. However, you might want to change log
   levels, property values, or the location of log files. See
-  link:logging.html#abluj[Administering the Logging Service].
+  xref:logging.adoc#administering-the-logging-service[Administering the Logging Service].
 Monitoring::
   By default, the monitoring service is enabled. However, monitoring for
   the individual modules is not enabled, so your first monitoring task
@@ -319,11 +319,10 @@ read.
 Do not modify or delete the `domain.xml.bak` file and do not use this file for any other purpose.
 ====
 
-The `logging.properties` file is used to configure logging levels for
-individual modules. The default `logging.properties` file is located in
-the same directory as the `domain.xml` file. For further information on
-the `logging.properties` file, see link:logging.html#gkkit[Logging
-Properties].
+The `logging.properties` file is used to configure the Java Util Logging system.
+The default `logging.properties` file is located in the same directory as the `domain.xml` file.
+For further information on the `logging.properties` file,
+see xref:logging.adoc#logging-properties[Logging Properties].
 
 The `asenv.conf` file is located in the as-install``/config`` directory.
 Its purpose is to store the {productName} environment variables, such

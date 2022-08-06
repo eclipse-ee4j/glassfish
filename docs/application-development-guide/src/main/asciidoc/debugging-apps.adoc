@@ -58,21 +58,20 @@ jdb -connect com.sun.jdi.SocketAttach:port=9009
 For more information about the `jdb` debugger, see the following links:
 
 * Java Platform Debugger Architecture - The Java Debugger:
-`http://java.sun.com/javase/technologies/core/toolsapis/jpda/`
+`https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/architecture.html`
+`https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html`
 * Java Platform Debugger Architecture - Connecting with JDB:
-`http://java.sun.com/javase/technologies/core/toolsapis/jpda/`
+`https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html`
 
 {productName} debugging is based on the JPDA. For more information,
 see link:#beafe[JPDA Options].
 
-You can attach to the {productName} using any JPDA compliant
-debugger, including that of http://www.netbeans.org[NetBeans]
-(`http://www.netbeans.org`), Java Studio Enterprise, JBuilder, Eclipse,
-and so on.
+You can attach to the {productName} using any JPDA compliant debugger.
 
 You can enable debugging even when the {productName} is started
-without the `--debug` option. This is useful if you start the {productName} from the Windows Start Menu, or if you want to make sure that
-debugging is always turned on.
+without the `--debug` option.
+This is useful if you start the {productName} from the Windows Start Menu,
+or if you want to make sure that debugging is always turned on.
 
 [[fvyit]][[GSDVG00049]][[to-set-the-server-to-automatically-start-up-in-debug-mode]]
 

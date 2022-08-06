@@ -20,7 +20,7 @@ and troubleshooting information.
 
 Error messages can also be viewed in the Administration Console Log
 Viewer. For more information about logging, see
-”link:administration-guide/logging.html#GSADG00010[Administering the Logging Service”] in {productName} Administration Guide.
+”link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service”] in {productName} Administration Guide.
 
 For additional troubleshooting information, see the
 link:troubleshooting-guide.html#GSTSG[{productName} Troubleshooting Guide].

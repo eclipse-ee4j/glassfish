@@ -1,8 +1,5 @@
-type=page
-status=published
 title=List of Tables
-next=title.html
-prev=lof.html
+prev=lof.adoc
 ~~~~~~
 
 = List of Tables

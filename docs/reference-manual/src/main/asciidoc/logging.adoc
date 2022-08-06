@@ -54,6 +54,6 @@ link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
 
 link:asadmin.html#asadmin-1m[`asadmin`(1M)]
 
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

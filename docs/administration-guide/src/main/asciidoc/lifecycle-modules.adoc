@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Life Cycle Modules
-next=batch.html
-prev=monitoring.html
+next=batch.adoc
+prev=monitoring.adoc
 ~~~~~~
 
 = Administering Life Cycle Modules

@@ -1,8 +1,6 @@
-type=page
-status=published
 title=List of Figures
-next=lot.html
-prev=loe.html
+next=lot.adoc
+prev=loe.adoc
 ~~~~~~
 
 = List of Figures

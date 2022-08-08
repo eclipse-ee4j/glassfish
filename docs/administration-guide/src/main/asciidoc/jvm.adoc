@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering the Virtual Machine for the Java Platform
-next=threadpools.html
-prev=domains.html
+next=threadpools.adoc
+prev=domains.adoc
 ~~~~~~
 
 = Administering the Virtual Machine for the Java Platform

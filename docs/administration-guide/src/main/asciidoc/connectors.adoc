@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering EIS Connectivity
-next=http_https.html
-prev=jdbc.html
+next=http_https.adoc
+prev=jdbc.adoc
 ~~~~~~
 
 = Administering EIS Connectivity

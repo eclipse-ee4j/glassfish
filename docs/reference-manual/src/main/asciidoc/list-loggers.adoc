@@ -57,13 +57,16 @@ logger. Some lines of output are omitted from this example for readability.
 [source]
 ----
 asadmin> list-loggers
-Logger Name                            Subsystem         Logger Description
+Logger Name                                                   Subsystem              Logger Description
+jakarta.enterprise.admin.rest                                 REST                   Main REST Logger
+jakarta.enterprise.admin.rest.client                          REST                   REST Client Logger
+jakarta.enterprise.admin.rest.connector                       RSTCN                  REST Connector Logger
+jakarta.enterprise.bootstrap                                  BOOTSTRAP              Main bootstrap logger.
+jakarta.enterprise.cluster.gms                                CLSTR                  Group Management Service Adapter Logger
 ...
-jakarta.enterprise.monitoring            Monitoring        Monitoring Logger
-jakarta.enterprise.system.core.ee        AS-CORE           Jakarta EE Core Kernel
-jakarta.enterprise.system.jmx            JMX               JMX System Logger
-jakarta.enterprise.system.tools.admin    ADMIN             Administration Services
-...
+jakarta.mail                                                  MAIL                   Jakarta Mail Logger
+org.glassfish.naming                                          glassfish-naming       logger for GlassFish appserver naming
+
 Command list-loggers executed successfully.
 ----
 

@@ -1854,7 +1854,7 @@ directory before running the `mvn clean verify` command.
 To change log levels in Embedded {productName}, you can follow the
 steps in this section or you can use the Embedded Server API as shown in
 link:#gjlfm[Example 1-11]. For more information about {productName}
-logging, see "link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
+logging, see "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in
 {productName} Administration Guide.
 
 You can change log levels in Embedded {productName} in either of the
@@ -1943,9 +1943,9 @@ supports only these features of nonembedded {productName}:
 
 ** Java Servlet API
 
-** JavaServer Pages (JSP) technology
+** Java Server Pages (JSP) technology
 
-** JavaServer Faces technology
+** Java Server Faces technology
 * JDBC-technology connection pooling
 * Java Persistence API
 * Java Transaction API

@@ -1,7 +1,6 @@
-type=page
-status=published
 title=Subcommands for the asadmin Utility
-prev=part-appendixes.html
+next=loe.adoc
+prev=part-appendixes.adoc
 ~~~~~~
 
 = Subcommands for the asadmin Utility
@@ -667,7 +666,7 @@ link:reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-
 link:reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`]::
   Collects all available log files and creates a ZIP archive. Supported
   in remote mode only. For procedural information in this guide, see
-  link:logging.html#gklbi[To Collect Log Files into a ZIP Archive].
+  xref:logging.adoc#to-collect-log-files-into-a-zip-archive[To Collect Log Files into a ZIP Archive].
 link:reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`]::
   Disables the monitoring service. Supported in remote mode only. For
   procedural information in this guide, see link:monitoring.html#gglcu[To
@@ -679,15 +678,14 @@ link:reference-manual/enable-monitoring.html#GSRFM00128[`enable-monitoring`]::
 link:reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]::
   Lists log file attributes. Supported in remote mode only. For
   procedural information in this guide, see
-  link:logging.html#gklmn[Configuring the Logging Service].
+  xref:logging.adoc#configuring[Configuring the Logging Service].
 link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`]::
-  Lists the existing loggers. Supported in remote mode only. For
-  procedural information in this guide, see link:logging.html#gjirr[To
-  List Log Levels].
+  Lists the existing loggers. Supported in remote mode only.
+  For procedural information in this guide,
+  see xref:logging.adoc#to-list-log-levels[To List Log Levels].
 link:reference-manual/list-loggers.html#GSRFM869[`list-loggers`]::
   Lists all public loggers in your distribution of {productName}. Internal loggers are not listed. For procedural
-  information in this guide, see link:logging.html#CEGGICGF[To List
-  Loggers].
+  information in this guide, see xref:logging.adoc#to-list-loggers[To List Loggers].
 link:reference-manual/monitor.html#GSRFM00212[`monitor`]::
   Displays monitoring information for the common {productName}
   resources. Supported in remote mode only. For procedural information
@@ -696,20 +694,19 @@ link:reference-manual/monitor.html#GSRFM00212[`monitor`]::
 link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]::
   Rotates the `server.log` file and stores the old data in a
   time-stamped file. Supported in remote mode only. For procedural
-  information in this guide, see link:logging.html#gkmau[To Rotate Log
-  Files Manually].
+  information in this guide, see xref:logging.adoc#to-rotate-log-files-manually[To Rotate Log Files Manually].
 link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]::
   Sets log file attributes. Supported in remote mode only. For
   procedural information in this guide, see
-  link:logging.html#gklmn[Configuring the Logging Service].
+  xref:logging.adoc#configuring[Configuring the Logging Service].
 link:reference-manual/set-log-file-format.html#GSRFM879[`set-log-file-format`]::
   Sets the formatter used to format log records in log files. For
   procedural information in this guide, see
-  link:logging.html#CEGDJEBG[Setting the Log File Format].
+  xref:logging.adoc#setting-the-log-file-format[Setting the Log File Format].
 link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`]::
   Sets the log level for a module. Supported in remote mode only. For
   procedural information in this guide, see
-  link:logging.html#gklml[Setting Log Levels].
+  xref:logging.adoc#gklml[Setting Log Levels].
 
 [[giusq]][[GSADG00620]][[orb-subcommands]]
 

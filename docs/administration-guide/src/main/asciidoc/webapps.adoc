@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Web Applications
-next=logging.html
-prev=threadpools.html
+next=logging.adoc
+prev=threadpools.adoc
 ~~~~~~
 
 = Administering Web Applications

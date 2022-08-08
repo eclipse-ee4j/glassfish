@@ -781,8 +781,8 @@ public class HelloWorld extends HttpServlet {
                 pw.println("SimpleService says " + greeter.saySomething());
                 pw.println("<br>");
             }
-                } catch(Exception e) {
-                e.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }

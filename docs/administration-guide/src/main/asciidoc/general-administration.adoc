@@ -1,8 +1,6 @@
-type=page
-status=published
 title=General Administration
-next=domains.html
-prev=part-runtime-admin.html
+next=domains.adoc
+prev=part-runtime-admin.adoc
 ~~~~~~
 
 = General Administration
@@ -3003,7 +3001,7 @@ The JSON representation of a log record in a record list is as follows:
   "loggedDateTimeInMS":logged-date,
   "loggedLevel":"log-level",
   "productName":"product-name",
-  "loggerName":"logger-class-name",
+  "loggerName":"logger-name",
   "nameValuePairs":"_ThreadID=thread-id;_ThreadName=thread-name;",
   "messageID":"message-id",
   "Message":"message-text"
@@ -3016,18 +3014,18 @@ record-number::
   A serial number in the form of a decimal integer that uniquely
   identifies the log record.
 logged-date::
-  The date and time in UNIX time that the record was created.
+  time when the record was created - a number of milliseconds from the epoch
+  of `1970-01-01T00:00:00Z`.
 log-level::
   The severity level of the message in the log record. For more
-  information, see link:logging.html#gklml[Setting Log Levels].
+  information, see xref:logging.adoc#setting-log-levels[Setting Log Levels].
 product-name::
-  The application that created the log message, for example, `glassfish7`.
-logger-class-name::
-  The fully qualified name of the Java class of the logger class that
-  created the log message. Each component of {productName} provides
-  its own logger class. For detailed information about the names of
-  logger classes in {productName}, see link:logging.html#gkres[Logger
-  Namespaces].
+  The application that created the log message, for example, `GlassFish 7.0`.
+logger-name::
+  The logger name, which is usually a fully qualified name of the Java class
+  owning the logger class that created the log record. For detailed information
+  how to get names of logger classes used in {productName},
+  see xref:logging.adoc#listing-loggers[Listing Loggers].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::
@@ -3127,16 +3125,16 @@ The XML representation of a log record is as follows:
 The replaceable items in this format are as follows:
 
 logged-date::
-  The date and time in UNIX time that the record was created.
+  time when the record was created - a number of milliseconds from the epoch
+  of `1970-01-01T00:00:00Z`.
 log-level::
   The severity level of the message in the log record. For more
-  information, see link:logging.html#gklml[Setting Log Levels].
+  information, see xref:logging.adoc#setting-log-levels[Setting Log Levels].
 logger-class-name::
   The fully qualified name of the Java class of the logger class that
   created the log message. Each component of {productName} provides
   its own logger class. For detailed information about the names of
-  logger classes in {productName}, see link:logging.html#gkres[Logger
-  Namespaces].
+  logger classes in {productName}, see xref:logging.adoc#listing-loggers[Listing Loggers].
 message-id::
   A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
@@ -3147,8 +3145,7 @@ thread-id::
 thread-name::
   The name of the thread that created the message.
 product-name::
-  The application that created the log message, for example,
-  `glassfish7`.
+  The application that created the log message, for example, `GlassFish 7.0`.
 record-number::
   A serial number in the form of a decimal integer that uniquely
   identifies the log record.
@@ -3190,9 +3187,8 @@ The {productName} REST interfaces support the following types in the
 content-type header of a client request:
 
 * http://www.json.org/[JSON]
-* XML
-* http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1[Form URL
-encoded]
+* https://www.w3.org/XML/[XML]
+* http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1[Form URL encoded]
 
 How to specify the type in the content-type header depends on how you
 are sending the request. For example, if you are using the cURL utility,
@@ -3200,7 +3196,5 @@ specify the type through the `-H` option as follows:
 
 * For JSON, specify `-H "Content-type: application/json"`.
 * For XML, specify `-H "Content-type: application/xml"`.
-* For form URL encoded, specify
-`-H "Content-type: application/x-www-form-urlencoded"`.
-
+* For form URL encoded, specify `-H "Content-type: application/x-www-form-urlencoded"`.
 

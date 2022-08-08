@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Preface
-next=overview.html
-prev=title.html
+next=overview.adoc
+prev=title.adoc
 ~~~~~~
 
 = Preface

@@ -1,8 +1,5 @@
-type=page
-status=published
 title={productName} Administration Guide, Release 7
-next=preface.html
-prev=lot.html
+next=preface.adoc
 ~~~~~~
 
 
@@ -14,7 +11,7 @@ prev=lot.html
 
 Administration Guide
 
-Release 7
+Release 7, {status}
 
 Contributed 2018 - 2022
 

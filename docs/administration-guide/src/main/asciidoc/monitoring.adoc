@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering the Monitoring Service
-next=lifecycle-modules.html
-prev=logging.html
+next=lifecycle-modules.adoc
+prev=logging.adoc
 ~~~~~~
 
 = Administering the Monitoring Service

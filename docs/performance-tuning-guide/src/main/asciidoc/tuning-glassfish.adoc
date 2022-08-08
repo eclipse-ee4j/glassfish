@@ -164,9 +164,9 @@ performance.
 Set the log level for the server and its subsystems in the {productName} Administration Console. Navigate to the
 Configurations>configuration-name>Logger Settings page, and follow the
 instructions in the online help. Alternatively, you can configure
-logging by following the instructions in "link:administration-guide/logging.html#GSADG00010[Administering
-the Logging Service]" in {productName}
-Administration Guide.
+logging by following the instructions in
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]"
+in {productName} Administration Guide.
 
 [[abedw]][[GSPTG00058]][[web-container-settings]]
 

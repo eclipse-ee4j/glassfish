@@ -74,50 +74,58 @@ levels are set.
 [source]
 ----
 asadmin> list-log-levels
-java.util.logging.ConsoleHandler        <FINEST>
-jakarta.enterprise.resource.corba <INFO>
-jakarta.enterprise.resource.javamail      <INFO>
-jakarta.enterprise.resource.jdo   <INFO>
-jakarta.enterprise.resource.jms   <INFO>
-jakarta.enterprise.resource.jta   <INFO>
-jakarta.enterprise.resource.resourceadapter       <INFO>
-jakarta.enterprise.resource.sqltrace      <FINE>
-jakarta.enterprise.resource.webcontainer.jsf.application  <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.config       <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.context      <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.facelets     <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.lifecycle    <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.managedbean  <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.renderkit    <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.resource     <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.taglib       <INFO>
-jakarta.enterprise.resource.webcontainer.jsf.timing       <INFO>
-jakarta.enterprise.system.container.cmp   <INFO>
-jakarta.enterprise.system.container.ejb   <INFO>
-jakarta.enterprise.system.container.ejb.mdb       <INFO>
-jakarta.enterprise.system.container.web   <INFO>
-jakarta.enterprise.system.core.classloading       <INFO>
-jakarta.enterprise.system.core.config     <INFO>
-jakarta.enterprise.system.core    <INFO>
-jakarta.enterprise.system.core.naming     <INFO>
-jakarta.enterprise.system.core.security   <INFO>
-jakarta.enterprise.system.core.selfmanagement     <INFO>
-jakarta.enterprise.system.core.transaction        <INFO>
-jakarta.enterprise.system <INFO>
-jakarta.enterprise.system.tools.admin     <INFO>
-jakarta.enterprise.system.tools.backup    <INFO>
-jakarta.enterprise.system.tools.deployment        <INFO>
-jakarta.enterprise.system.util    <INFO>
-jakarta.enterprise.system.webservices.registry    <INFO>
-jakarta.enterprise.system.webservices.rpc <INFO>
-jakarta.enterprise.system.webservices.saaj        <INFO>
-javax   <INFO>
-javax.org.glassfish.persistence <INFO>
+MBeans  <INFO>
+com.sun.enterprise.glassfish.bootstrap  <INFO>
+com.sun.enterprise.glassfish    <INFO>
+com.sun.enterprise.security     <INFO>
+com.sun.webui   <INFO>
+jakarta.enterprise.admin.rest.client    <INFO>
+jakarta.enterprise.admin.rest.connector <INFO>
+jakarta.enterprise.admin.rest   <INFO>
+jakarta.enterprise.bootstrap    <INFO>
+jakarta.enterprise.cluster.gms.admin    <INFO>
+jakarta.enterprise.cluster.gms.bootstrap        <INFO>
+jakarta.enterprise.cluster.gms  <INFO>
+jakarta.enterprise.concurrent   <INFO>
+jakarta.enterprise.config.api   <INFO>
+jakarta.enterprise.connector.work       <INFO>
+jakarta.enterprise.ejb.container        <INFO>
+jakarta.enterprise.inject       <INFO>
+jakarta.enterprise.inject.spi   <INFO>
+jakarta.enterprise.launcher     <INFO>
+jakarta.enterprise.logging      <INFO>
+jakarta.enterprise.monitoring   <INFO>
+jakarta.enterprise.osgi.container       <INFO>
+jakarta.enterprise.resource.corba       <INFO>
+jakarta.enterprise.resource.javamail    <INFO>
+jakarta.enterprise.resource.jdo <INFO>
+jakarta.enterprise.resource.jms.injection       <INFO>
+jakarta.enterprise.resource.jms <INFO>
+jakarta.enterprise.resource.jta <INFO>
+jakarta.enterprise.resource.resourceadapter     <INFO>
+...
+jakarta.ws.rs.client    <INFO>
 org.apache.catalina     <INFO>
 org.apache.coyote       <INFO>
-org.glassfish.wasp       <INFO>
+org.apache.jasper       <INFO>
+org.eclipse.krazo       <INFO>
+org.eclipse.persistence.session <INFO>
 org.glassfish.admingui  <INFO>
-org.jvnet.hk2.osgiadapter       <INFO>
+org.glassfish.grizzly.http2     <INFO>
+org.glassfish.grizzly   <INFO>
+org.glassfish.jersey    <INFO>
+org.glassfish.jersey.message.internal.TracingLogger     <INFO>
+org.glassfish   <INFO>
+org.glassfish.main.jul.handler.GlassFishLogHandler      <ALL>
+org.glassfish.main.jul.handler.SimpleLogHandler <INFO>
+org.glassfish.main      <INFO>
+org.glassfish.naming    <INFO>
+org.glassfish.persistence       <INFO>
+org.glassfish.security  <INFO>
+org.hibernate.validator.internal.util.Version   <WARNING>
+org.jvnet.hk2   <INFO>
+org.jvnet.hk2.osgiadapter       <WARNING>
+sun     <INFO>
 Command list-log-levels executed successfully.
 ----
 
@@ -142,6 +150,6 @@ link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
 link:set-log-attributes.html#set-log-attributes-1[`set-log-attributes`(1)],
 link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
 
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

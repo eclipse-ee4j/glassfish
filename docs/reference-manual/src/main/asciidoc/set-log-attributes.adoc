@@ -29,9 +29,9 @@ attribute-name=attribute-value[:attribute-name=attribute-value]*
 === Description
 
 The `set-log-attributes` subcommand sets logging attributes for one or
-more loggers. The attributes you can set correspond to the attributes
-that are available in the `logging.properties` file for the domain.
-Depending on the attributes you set, a server restart may be necessary.
+more handlers or formatters. The attributes you can set correspond
+to the attributes that are available in the `logging.properties` file
+for the domain.
 
 This subcommand is supported in remote mode only.
 
@@ -66,49 +66,10 @@ attribute-name::
   currently defined attributes.
 attribute-value::
   The value to apply to the specified attribute. +
-  The attribute values that can be specified include the following.
-  Refer to "link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in
-  {productName} Administration Guide for complete
-  explanations of each of these values.
-
-  `com.sun.enterprise.server.logging.GFFileHandler.alarms`;;
-    Default is `false`.
-  `com.sun.enterprise.server.logging.GFFileHandler.excludeFields`;;
-    Default is an empty string.
-  `com.sun.enterprise.server.logging.GFFileHandler.file`;;
-    Default is `${com.sun.aas.instanceRoot}/logs/server.log`.
-  `com.sun.enterprise.server.logging.GFFileHandler.flushFrequency`;;
-    Default is `1`.
-  `com.sun.enterprise.server.logging.GFFileHandler.formatter`;;
-    Default is `com.sun.enterprise.server.logging.UniformLogFormatter`.
-  `com.sun.enterprise.server.logging.GFFileHandler.logtoConsole`;;
-    Default is `false`.
-  `com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles`;;
-    Default is `0`.
-  `com.sun.enterprise.server.logging.GFFileHandler.multiLineMode`;;
-    Default is `true`.
-  `com.sun.enterprise.server.logging.GFFileHandler.retainErrorsStasticsForHours`;;
-    Default is `0`.
-  `com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes`;;
-    Default is `2000000`.
-  `com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes`;;
-    Default is `0`.
-  `com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging`;;
-    Default is `false`.
-  `handlers`;;
-    Default is `java.util.logging.ConsoleHandler`.
-  `java.util.logging.ConsoleHandler.formatter`;;
-    Default is `com.sun.enterprise.server.logging.UniformLogFormatter`.
-  `java.util.logging.FileHandler.count`;;
-    Default is `1`.
-  `java.util.logging.FileHandler.formatter`;;
-    Default is `java.util.logging.XMLFormatter`.
-  `java.util.logging.FileHandler.limit`;;
-    Default is `50000`.
-  `java.util.logging.FileHandler.pattern`;;
-    Default is `%h/java%u.log`.
-  `log4j.logger.org.hibernate.validator.util.Version`;;
-    Default is `warn`.
+  Refer to "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in
+  {productName} Administration Guide for complete explanations of supported attribute values.
+  Use link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)] to get
+  current set of attributes.
 
 [[sthref2045]]
 
@@ -118,16 +79,16 @@ attribute-value::
 
 ==== Example 1   Setting the Maximum Number of Log History Files to Maintain
 
-This example sets to 8 the maximum number of log history files for the
-server as a whole.
+This example sets to 8 the maximum number of log history files for the server as a whole.
 
 [source]
 ----
-asadmin> set-log-attributes --target=server \
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=8
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles logging
-attribute set with value 8.
-These logging attributes are set for server.
+asadmin set-log-attributes --target=server \
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=8
+
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles logging attribute value set to 8.
+The logging attributes are saved successfully for server.
+
 Command set-log-attributes executed successfully.
 ----
 
@@ -144,14 +105,14 @@ Command set-log-attributes executed successfully.
 
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin-1m[`asadmin`(1M)]
 
-link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
-link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],
-link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
-link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
-link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
+xref:collect-log-files.adoc#collect-log-files-1[`collect-log-files`(1)],
+xref:list-log-attributes.adoc#list-log-attributes-1[`list-log-attributes`(1)],
+xref:list-log-levels.adoc#list-log-levels-1[`list-log-levels`(1)],
+xref:rotate-log.adoc#rotate-log-1[`rotate-log`(1)],
+xref:set-log-levels.adoc#set-log-levels-1[`set-log-levels`(1)]
 
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/adoc.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

@@ -85,13 +85,11 @@ a|
 
 |{productName} Configuration
 a|
-* Logging: Enable access log rotation.
+* Enable access log rotation.
 * Choose the right logging level. WARNING is usually appropriate.
 * Configure Jakarta EE containers using the Administration Console.
 * Configure HTTP listeners using the Administration Console.
 * Configure ORB threadpool using the Administration Console.
-* If using Type2 drivers or calls involving native code, ensure that
-  mtmalloc.so is specified in the LD_LIBRARY_PATH.
 * Ensure that the appropriate persistence scope and frequency are used
   and they are not overridden underneath in the individual Web/EJB modules.
 * Ensure that only critical methods in the SFSB are checkpointed.
@@ -102,36 +100,24 @@ For more information on configuration, see the link:administration-guide.html#GS
 
 |Load balancer Configuration
 a|
-* Make sure the Web Server is installed.
-* Make sure the load balancer plug-in into the Web Server is installed.
-* Make sure patch checks is disabled.
-* Lower the value of the `KeepAliveQuery` parameter. The lower the
-  value, the lower the latency is on lightly loaded systems. The higher
-  the value, the higher the throughput is on highly loaded systems.
+* Make sure the load balancer have network access to the Server.
+* See documentation of your load balancer and verify that the configuration
+  of the load balancer is correct.
 
-|Java Virtual Machine Configuration
+|Configuring usual attributes of load balancing algorithm
 a|
-* Initially set the minimum and maximum heap sizes to be the same, and
-  at least one GB for each instance.
-* See http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[
-  Java Hotspot VM Options]
-(`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`)
-  for more information.
-* When running multiple instances of {productName}, consider creating
-  a processor set and bind {productName} to it. This helps in cases
-  where the CMS collector is used to sweep the old generation.
-
-|Configuring time-outs in the load balancer
-a|
+* Endpoint - Address or host and port used for checks generating minimal
+  possible load.
 * Response-time-out-in-seconds - How long the load balancer waits before
   declaring a {productName} instance unhealthy. Set this value based on
   the response time of the application. If set too high, the Web Server
-  and load balancer plug-in wait a long time before marking a {productName} instance as unhealthy. If set too low and {productName}'s
+  and load balancer plug-in wait a long time before marking a {productName}
+  instance as unhealthy. If set too low and {productName}'s
   response time crosses this threshold, the instance will be incorrectly
   marked as unhealthy.
 * Interval-in-seconds - Time in seconds after which unhealthy instances
-  are checked to find out if they have returned to a healthy state. Too
-  low a value generates extra traffic from the load balancer plug-in to
+  are checked to find out if they have returned to a healthy state.
+  Too low a value generates extra traffic from the load balancer plug-in to
   {productName} instances and too high a value delays the routing of
   requests to the instance that has turned healthy.
 * Timeout-in-seconds - Duration for a response to be obtained for a
@@ -151,15 +137,13 @@ a|
   in the backup store). Default value is 60 minutes. Adjust this value
   based on the need for SFSB failover.
 
-|Tune VM Garbage Collection (GC)
-a| Garbage collection pauses of four seconds or more can cause intermittent
-problems in persisting session state. To avoid this problem, tune the VM
-heap. In cases where even a single failure to persist data is
-unacceptable or when the system is not fully loaded, use the CMS
-collector or the throughput collector.
-
-These can be enabled by adding: +
-`<jvm-options>-XX:+UseConcMarkSweepGC</jvm-options>`
-
-This option may decrease throughput.
+|Java Virtual Machine Configuration
+a|
+* Initially set the minimum and maximum heap sizes to be the same, and
+  at least one GB for each instance.
+* See http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[
+  Java Hotspot VM Options] for more information.
+* When running multiple instances of {productName}, consider creating
+  a processor set and bind {productName} to it. This helps in cases
+  where the CMS collector is used to sweep the old generation.
 |===

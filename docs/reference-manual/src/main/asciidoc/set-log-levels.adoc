@@ -29,8 +29,7 @@ logger-name=logger-level[:logger-name=logger-level]*
 === Description
 
 The `set-log-levels` subcommand sets the log level for one or more
-loggers. Changes take effect dynamically. Depending on the log levels
-you set, a server restart may be necessary.
+loggers. Changes take effect with some latency for the reconfiguration.
 
 This subcommand is supported in remote mode only.
 
@@ -116,6 +115,6 @@ link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
 link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
 link:set-log-attributes.html#set-log-attributes-1[`set-log-attributes`(1)]
 
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 
 

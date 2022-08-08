@@ -1,8 +1,6 @@
-type=page
-status=published
 title=Administering Concurrent Resources
-next=orb.html
-prev=http_https.html
+next=orb.adoc
+prev=http_https.adoc
 ~~~~~~
 
 = Administering Concurrent Resources

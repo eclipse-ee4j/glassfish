@@ -57,12 +57,7 @@ is not supported or on a system that in some other way does not meet release req
 Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]"
 in {productName} Release Notes for known issues related to installation.
 
-{productName} requires JDK release 6. The minimum
-(and certified) version of the JDK that is required for {productName} depends on the operating system:
-
-* For supported operating systems except Mac OS, the minimum required version is 1.6.0_17.
-* For the Mac OS X operating system, the minimum required version is 1.6.0_15.
-
+{productName} requires JDK release 11 or newer.
 If necessary, download and install the required JDK software.
 
 On Solaris, Linux, and Windows systems, JDK software is available from the
@@ -263,7 +258,7 @@ module-specific loggers.
 For information about using the Administration Console log viewer and
 logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
-"link:administration-guide/logging.html#GSADG00010[Administering the Logging Service]" in {productName} Administration Guide.
+"link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
 
 [[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
 

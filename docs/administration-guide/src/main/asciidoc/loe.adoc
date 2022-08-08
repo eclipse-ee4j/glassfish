@@ -1,8 +1,6 @@
-type=page
-status=published
 title=List of Examples
-next=lof.html
-prev=toc.html
+next=lof.adoc
+prev=toc.adoc
 ~~~~~~
 
 = List of Examples
@@ -117,30 +115,23 @@ Domain]
 * link:webapps.html#gjjzu[6-6 httpd.conf File for Load Balancing]
 * link:webapps.html#gjjzf[6-7 workers.properties File for Load Balancing]
 * link:webapps.html#gjpnc[6-8 http-ssl.conf File for mod_jk Security]
-* link:logging.html#gkmal[7-1 Changing the Name and Location of a
-Cluster's Log File]
-* link:logging.html#gkmgz[7-2 Setting the java.util.logging.config.file
-System Property]
-* link:logging.html#gjiti[7-3 Listing Logger Levels for Modules]
-* link:logging.html#gkkot[7-4 Listing Log Levels for an Instance]
-* link:logging.html#ghmfi[7-5 Changing the Global Log Level for All
-Module Loggers]
-* link:logging.html#ghmev[7-6 Setting the Log Level for a Module Logger]
-* link:logging.html#gjkat[7-7 Setting Log Levels for Multiple Loggers]
-* link:logging.html#sthref23[7-8 Setting the Log File Format using
-set-log-file-format]
-* link:logging.html#sthref24[7-9 Setting the Log File Format using
-set-log-attributes]
-* link:logging.html#sthref25[7-10 Excluding Fields in Log Records]
-* link:logging.html#sthref26[7-11 Setting Multiline Mode]
-* link:logging.html#gkmay[7-12 Changing the Rotation Size]
-* link:logging.html#gkmbc[7-13 Changing the Rotation Interval]
-* link:logging.html#gkmaq[7-14 Changing the Limit Number of Retained
-Files]
-* link:logging.html#gkmav[7-15 Rotating Log Files Manually]
-* link:logging.html#ghphb[7-16 Adding a New Log Handler]
-* link:logging.html#gklap[7-17 Creating a ZIP Archive]
-* link:logging.html#sthref27[7-18 Listing Loggers]
+* xref:logging.adoc#example-7-1[7-1 Changing the Name and Location of a Cluster's Log File]
+* xref:logging.adoc#example-7-2[7-2 Listing Logger Levels for DAS]
+* xref:logging.adoc#example-7-3[7-3 Listing Logger Levels for an Instance]
+* xref:logging.adoc#example-7-4[7-4 Changing the Logger Log Level for a Cluster]
+* xref:logging.adoc#example-7-5[7-5 Setting Log Levels for Multiple Loggers]
+* xref:logging.adoc#example-7-6[7-6 Changing the Handler Log Level]
+* xref:logging.adoc#example-7-7[7-7 Setting the Log File Format using set-log-file-format]
+* xref:logging.adoc#example-7-8[7-8 Setting the Log File Format using set-log-attributes]
+* xref:logging.adoc#example-7-9[7-9 Excluding Fields in the ODLLogFormatter]
+* xref:logging.adoc#example-7-10[7-10 Excluding Fields in the GlassFishLogHandler]
+* xref:logging.adoc#example-7-11[7-11 Disabling the Multiline Mode in the Log File]
+* xref:logging.adoc#example-7-12[7-12 Changing the Rotation Size]
+* xref:logging.adoc#example-7-13[7-13 Changing the Rotation Interval]
+* xref:logging.adoc#example-7-14[7-14 Changing the Limit Number of Archived Log Files]
+* xref:logging.adoc#example-7-15[7-15 Rotating Log Files Manually]
+* xref:logging.adoc#example-7-16[7-16 Collecting and Downloading Log Files as a ZIP File]
+* xref:logging.adoc#example-7-17[7-17 Listing Loggers]
 * link:monitoring.html#gixri[8-1 Enabling the Monitoring Service
 Dynamically]
 * link:monitoring.html#gixre[8-2 Enabling Monitoring for Modules

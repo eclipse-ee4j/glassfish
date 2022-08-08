@@ -11,8 +11,8 @@ prev=dotted-names.html
 
 == instance
 
-An instance in {productName} has its own Jakarta EE configuration, Java
-EE resources, application deployment areas, and server configuration
+An instance in {productName} has its own Jakarta EE configuration,
+Jakarta EE resources, application deployment areas, and server configuration
 settings
 
 [[sthref2403]]
@@ -20,8 +20,8 @@ settings
 === Description
 
 {productName} creates one server instance, called `server` at the
-time of installation. You can delete the server instance and create a
-new instance with a different name.
+time of installation. You can delete the server instance and create
+a new instance with a different name.
 
 For many users, one server instance meets their needs. However,
 depending upon your environment, you might want to create additional

@@ -38,7 +38,7 @@
 <li><a href="#the-asadmin-command-2">The <code>asadmin</code> Command</a></li>
 <li><a href="#the-administration-console-2">The Administration Console</a></li>
 <li><a href="#the-migration-tool-2">The Migration Tool</a></li>
-<li><a href="#the-netbeans-ide-2">The NetBeans IDE</a></li>
+<li><a href="#code-editors">Code Editors</a></li>
 <li><a href="#debugging-tools-2">Debugging Tools</a></li>
 <li><a href="#profiling-tools-2">Profiling Tools</a></li>
 </ul>
@@ -1150,7 +1150,7 @@ Eclipse GlassFish Installation Guide</a>.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Java Platform, Standard Edition (Java SE) 11</p>
+<p>Java Platform, Standard Edition (Java SE) 11 or newer</p>
 </li>
 <li>
 <p>Jakarta EE 10 compliant application server</p>
@@ -1214,7 +1214,8 @@ in Eclipse GlassFish Administration Guide.</p>
 <h3 id="high-availability-features-2"><a class="anchor" href="#high-availability-features-2"></a>High Availability Features</h3>
 <div class="paragraph">
 <p>High availability features such as load balancing and session failover
-are discussed in detail in the <a href="ha-administration-guide.html#GSHAG">Eclipse GlassFish High Availability Administration Guide</a>. This book describes the
+are discussed in detail in the <a href="ha-administration-guide.html#GSHAG">Eclipse GlassFish
+High Availability Administration Guide</a>. This book describes the
 following features in the following sections:</p>
 </div>
 <div class="ulist">
@@ -1339,18 +1340,27 @@ to download the Migration Tool, see
 </div>
 </div>
 <div class="sect3">
-<h4 id="the-netbeans-ide-2"><a class="anchor" href="#the-netbeans-ide-2"></a>The NetBeans IDE</h4>
+<h4 id="code-editors"><a class="anchor" href="#code-editors"></a>Code Editors</h4>
 <div class="paragraph">
-<p>The NetBeans IDE allows you to create, assemble, and debug code from a
-single, easy-to-use interface. The GlassFish edition of the Eclipse GlassFish is bundled with the NetBeans 6.1 IDE. To download the NetBeans
-IDE, see <code><a href="http://www.netbeans.org" class="bare">http://www.netbeans.org</a></code>. This site also provides
-documentation on how to use the NetBeans IDE with the bundled GlassFish
-edition of the Eclipse GlassFish.</p>
+<p>There is several advanced editors with an integration with GlassFish or
+generic Jakarta EE servers. Sometimes you have to install additional
+extensions, sometimes all you need is just some configuration.</p>
 </div>
-<div class="paragraph">
-<p>You can also use the Eclipse GlassFish with the Java Studio Enterprise
-software, which is built on the NetBeans IDE. For more information, see
-<code><a href="http://developers.sun.com/jsenterprise/" class="bare">http://developers.sun.com/jsenterprise/</a></code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code><a href="https://www.jetbrains.com/idea/">IntelliJ IDEA</a></code></p>
+</li>
+<li>
+<p><code><a href="https://www.eclipse.org/downloads/packages/">Eclipse IDE</a></code></p>
+</li>
+<li>
+<p><code><a href="https://netbeans.apache.org">Apache NetBeans</a></code></p>
+</li>
+<li>
+<p><code><a href="https://code.visualstudio.com">Microsoft Visual Studio Code</a></code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><a id="beabb"></a><a id="GSDVG00340"></a><a id="debugging-tools"></a></p>
@@ -2075,11 +2085,12 @@ For example, for UNIX systems:</p>
 <ul>
 <li>
 <p>Java Platform Debugger Architecture - The Java Debugger:
-<code><a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/" class="bare">http://java.sun.com/javase/technologies/core/toolsapis/jpda/</a></code></p>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/architecture.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/architecture.html</a></code>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/jpda/jpda.html</a></code></p>
 </li>
 <li>
 <p>Java Platform Debugger Architecture - Connecting with JDB:
-<code><a href="http://java.sun.com/javase/technologies/core/toolsapis/jpda/" class="bare">http://java.sun.com/javase/technologies/core/toolsapis/jpda/</a></code></p>
+<code><a href="https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html" class="bare">https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html</a></code></p>
 </li>
 </ul>
 </div>
@@ -2088,15 +2099,13 @@ For example, for UNIX systems:</p>
 see <a href="#beafe">JPDA Options</a>.</p>
 </div>
 <div class="paragraph">
-<p>You can attach to the Eclipse GlassFish using any JPDA compliant
-debugger, including that of <a href="http://www.netbeans.org">NetBeans</a>
-(<code><a href="http://www.netbeans.org" class="bare">http://www.netbeans.org</a></code>), Java Studio Enterprise, JBuilder, Eclipse,
-and so on.</p>
+<p>You can attach to the Eclipse GlassFish using any JPDA compliant debugger.</p>
 </div>
 <div class="paragraph">
 <p>You can enable debugging even when the Eclipse GlassFish is started
-without the <code>--debug</code> option. This is useful if you start the Eclipse GlassFish from the Windows Start Menu, or if you want to make sure that
-debugging is always turned on.</p>
+without the <code>--debug</code> option.
+This is useful if you start the Eclipse GlassFish from the Windows Start Menu,
+or if you want to make sure that debugging is always turned on.</p>
 </div>
 <div class="paragraph">
 <p><a id="fvyit"></a><a id="GSDVG00049"></a><a id="to-set-the-server-to-automatically-start-up-in-debug-mode"></a></p>
@@ -22115,7 +22124,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-05 23:13:31 UTC
+Last updated 2022-08-08 10:43:17 UTC
 </div>
 </div>
 </body>

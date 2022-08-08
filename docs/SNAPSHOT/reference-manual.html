@@ -6179,7 +6179,7 @@ Command collect-log-files executed successfully.</code></pre>
 <a href="set-log-levels.html#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="configure-jms-cluster-1"></a><a id="GSRFM00008"></a><a id="configure-jms-cluster"></a></p>
@@ -41527,27 +41527,34 @@ options, see the <a href="asadmin.html#asadmin-1m"><code>asadmin</code>(1M)</a> 
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin> list-log-attributes
-com.sun.enterprise.server.logging.GFFileHandler.alarms <false>
-com.sun.enterprise.server.logging.GFFileHandler.file \
-<${com.sun.aas.instanceRoot}/logs/server.log>
-com.sun.enterprise.server.logging.GFFileHandler.flushFrequency <1>
-com.sun.enterprise.server.logging.GFFileHandler.formatter \
-<com.sun.enterprise.server.logging.UniformLogFormatter>
-com.sun.enterprise.server.logging.GFFileHandler.logtoConsole <false>
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles <0>
-com.sun.enterprise.server.logging.GFFileHandler.retainErrorsStasticsForHours <0>
-com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes <2000000>
-com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes <0>
-com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging <false>
-handlers <java.util.logging.ConsoleHandler>
-java.util.logging.ConsoleHandler.formatter \
-<com.sun.enterprise.server.logging.UniformLogFormatter>
-java.util.logging.FileHandler.count <1>
-java.util.logging.FileHandler.formatter <java.util.logging.XMLFormatter>
-java.util.logging.FileHandler.limit <50000>
-java.util.logging.FileHandler.pattern <%h/java%u.log>
-log4j.logger.org.hibernate.validator.util.Version <warn>
-
+handlers        <org.glassfish.main.jul.handler.GlassFishLogHandler,org.glassfish.main.jul.handler.SimpleLogHandler,org.glassfish.main.jul.handler.SyslogHandler>
+org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.capacity      <10000>
+org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.timeoutInSeconds      <0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.enabled      <true>
+org.glassfish.main.jul.handler.GlassFishLogHandler.encoding     <UTF-8>
+org.glassfish.main.jul.handler.GlassFishLogHandler.file <${com.sun.aas.instanceRoot}/logs/server.log>
+org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency       <1>
+org.glassfish.main.jul.handler.GlassFishLogHandler.formatter    <org.glassfish.main.jul.formatter.ODLLogFormatter>
+org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields     <>
+org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.multiline  <true>
+org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.printSource        <false>
+org.glassfish.main.jul.handler.GlassFishLogHandler.redirectStandardStreams      <true>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress    <false>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes     <100>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes       <0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles     <0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.rollOnDateChange    <false>
+org.glassfish.main.jul.handler.SimpleLogHandler.formatter       <org.glassfish.main.jul.formatter.UniformLogFormatter>
+org.glassfish.main.jul.handler.SimpleLogHandler.formatter.excludedFields        <>
+org.glassfish.main.jul.handler.SimpleLogHandler.formatter.printSource   <false>
+org.glassfish.main.jul.handler.SimpleLogHandler.useErrorStream  <true>
+org.glassfish.main.jul.handler.SyslogHandler.buffer.capacity    <5000>
+org.glassfish.main.jul.handler.SyslogHandler.buffer.timeoutInSeconds    <300>
+org.glassfish.main.jul.handler.SyslogHandler.enabled    <false>
+org.glassfish.main.jul.handler.SyslogHandler.encoding   <UTF-8>
+org.glassfish.main.jul.handler.SyslogHandler.formatter  <java.util.logging.SimpleFormatter>
+org.glassfish.main.jul.handler.SyslogHandler.host       <>
+org.glassfish.main.jul.handler.SyslogHandler.port       <514>
 Command list-log-attributes executed successfully.</code></pre>
 </div>
 </div>
@@ -41581,7 +41588,7 @@ Command list-log-attributes executed successfully.</code></pre>
 <a href="set-log-levels.html#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="list-loggers-1"></a><a id="GSRFM869"></a><a id="list-loggers"></a></p>
@@ -41645,13 +41652,16 @@ logger. Some lines of output are omitted from this example for readability.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-loggers
-Logger Name                            Subsystem         Logger Description
+Logger Name                                                   Subsystem              Logger Description
+jakarta.enterprise.admin.rest                                 REST                   Main REST Logger
+jakarta.enterprise.admin.rest.client                          REST                   REST Client Logger
+jakarta.enterprise.admin.rest.connector                       RSTCN                  REST Connector Logger
+jakarta.enterprise.bootstrap                                  BOOTSTRAP              Main bootstrap logger.
+jakarta.enterprise.cluster.gms                                CLSTR                  Group Management Service Adapter Logger
 ...
-jakarta.enterprise.monitoring            Monitoring        Monitoring Logger
-jakarta.enterprise.system.core.ee        AS-CORE           Jakarta EE Core Kernel
-jakarta.enterprise.system.jmx            JMX               JMX System Logger
-jakarta.enterprise.system.tools.admin    ADMIN             Administration Services
-...
+jakarta.mail                                                  MAIL                   Jakarta Mail Logger
+org.glassfish.naming                                          glassfish-naming       logger for GlassFish appserver naming
+
 Command list-loggers executed successfully.</code></pre>
 </div>
 </div>
@@ -41775,50 +41785,58 @@ levels are set.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>asadmin&gt; list-log-levels
-java.util.logging.ConsoleHandler        &lt;FINEST&gt;
-jakarta.enterprise.resource.corba &lt;INFO&gt;
-jakarta.enterprise.resource.javamail      &lt;INFO&gt;
-jakarta.enterprise.resource.jdo   &lt;INFO&gt;
-jakarta.enterprise.resource.jms   &lt;INFO&gt;
-jakarta.enterprise.resource.jta   &lt;INFO&gt;
-jakarta.enterprise.resource.resourceadapter       &lt;INFO&gt;
-jakarta.enterprise.resource.sqltrace      &lt;FINE&gt;
-jakarta.enterprise.resource.webcontainer.jsf.application  &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.config       &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.context      &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.facelets     &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.lifecycle    &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.managedbean  &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.renderkit    &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.resource     &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.taglib       &lt;INFO&gt;
-jakarta.enterprise.resource.webcontainer.jsf.timing       &lt;INFO&gt;
-jakarta.enterprise.system.container.cmp   &lt;INFO&gt;
-jakarta.enterprise.system.container.ejb   &lt;INFO&gt;
-jakarta.enterprise.system.container.ejb.mdb       &lt;INFO&gt;
-jakarta.enterprise.system.container.web   &lt;INFO&gt;
-jakarta.enterprise.system.core.classloading       &lt;INFO&gt;
-jakarta.enterprise.system.core.config     &lt;INFO&gt;
-jakarta.enterprise.system.core    &lt;INFO&gt;
-jakarta.enterprise.system.core.naming     &lt;INFO&gt;
-jakarta.enterprise.system.core.security   &lt;INFO&gt;
-jakarta.enterprise.system.core.selfmanagement     &lt;INFO&gt;
-jakarta.enterprise.system.core.transaction        &lt;INFO&gt;
-jakarta.enterprise.system &lt;INFO&gt;
-jakarta.enterprise.system.tools.admin     &lt;INFO&gt;
-jakarta.enterprise.system.tools.backup    &lt;INFO&gt;
-jakarta.enterprise.system.tools.deployment        &lt;INFO&gt;
-jakarta.enterprise.system.util    &lt;INFO&gt;
-jakarta.enterprise.system.webservices.registry    &lt;INFO&gt;
-jakarta.enterprise.system.webservices.rpc &lt;INFO&gt;
-jakarta.enterprise.system.webservices.saaj        &lt;INFO&gt;
-javax   &lt;INFO&gt;
-javax.org.glassfish.persistence &lt;INFO&gt;
+MBeans  &lt;INFO&gt;
+com.sun.enterprise.glassfish.bootstrap  &lt;INFO&gt;
+com.sun.enterprise.glassfish    &lt;INFO&gt;
+com.sun.enterprise.security     &lt;INFO&gt;
+com.sun.webui   &lt;INFO&gt;
+jakarta.enterprise.admin.rest.client    &lt;INFO&gt;
+jakarta.enterprise.admin.rest.connector &lt;INFO&gt;
+jakarta.enterprise.admin.rest   &lt;INFO&gt;
+jakarta.enterprise.bootstrap    &lt;INFO&gt;
+jakarta.enterprise.cluster.gms.admin    &lt;INFO&gt;
+jakarta.enterprise.cluster.gms.bootstrap        &lt;INFO&gt;
+jakarta.enterprise.cluster.gms  &lt;INFO&gt;
+jakarta.enterprise.concurrent   &lt;INFO&gt;
+jakarta.enterprise.config.api   &lt;INFO&gt;
+jakarta.enterprise.connector.work       &lt;INFO&gt;
+jakarta.enterprise.ejb.container        &lt;INFO&gt;
+jakarta.enterprise.inject       &lt;INFO&gt;
+jakarta.enterprise.inject.spi   &lt;INFO&gt;
+jakarta.enterprise.launcher     &lt;INFO&gt;
+jakarta.enterprise.logging      &lt;INFO&gt;
+jakarta.enterprise.monitoring   &lt;INFO&gt;
+jakarta.enterprise.osgi.container       &lt;INFO&gt;
+jakarta.enterprise.resource.corba       &lt;INFO&gt;
+jakarta.enterprise.resource.javamail    &lt;INFO&gt;
+jakarta.enterprise.resource.jdo &lt;INFO&gt;
+jakarta.enterprise.resource.jms.injection       &lt;INFO&gt;
+jakarta.enterprise.resource.jms &lt;INFO&gt;
+jakarta.enterprise.resource.jta &lt;INFO&gt;
+jakarta.enterprise.resource.resourceadapter     &lt;INFO&gt;
+...
+jakarta.ws.rs.client    &lt;INFO&gt;
 org.apache.catalina     &lt;INFO&gt;
 org.apache.coyote       &lt;INFO&gt;
-org.glassfish.wasp       &lt;INFO&gt;
+org.apache.jasper       &lt;INFO&gt;
+org.eclipse.krazo       &lt;INFO&gt;
+org.eclipse.persistence.session &lt;INFO&gt;
 org.glassfish.admingui  &lt;INFO&gt;
-org.jvnet.hk2.osgiadapter       &lt;INFO&gt;
+org.glassfish.grizzly.http2     &lt;INFO&gt;
+org.glassfish.grizzly   &lt;INFO&gt;
+org.glassfish.jersey    &lt;INFO&gt;
+org.glassfish.jersey.message.internal.TracingLogger     &lt;INFO&gt;
+org.glassfish   &lt;INFO&gt;
+org.glassfish.main.jul.handler.GlassFishLogHandler      &lt;ALL&gt;
+org.glassfish.main.jul.handler.SimpleLogHandler &lt;INFO&gt;
+org.glassfish.main      &lt;INFO&gt;
+org.glassfish.naming    &lt;INFO&gt;
+org.glassfish.persistence       &lt;INFO&gt;
+org.glassfish.security  &lt;INFO&gt;
+org.hibernate.validator.internal.util.Version   &lt;WARNING&gt;
+org.jvnet.hk2   &lt;INFO&gt;
+org.jvnet.hk2.osgiadapter       &lt;WARNING&gt;
+sun     &lt;INFO&gt;
 Command list-log-levels executed successfully.</code></pre>
 </div>
 </div>
@@ -41852,7 +41870,7 @@ Command list-log-levels executed successfully.</code></pre>
 <a href="set-log-levels.html#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="list-managed-executor-services-1"></a><a id="GSRFM871"></a><a id="list-managed-executor-services"></a></p>
@@ -49591,7 +49609,7 @@ Command rotate-log executed successfully.</code></pre>
 <a href="set-log-levels.html#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="set-1"></a><a id="GSRFM00226"></a><a id="set"></a></p>
@@ -49935,9 +49953,9 @@ attribute-name=attribute-value[:attribute-name=attribute-value]*</code></pre>
 <h3 id="sthref2042"><a class="anchor" href="#sthref2042"></a>Description</h3>
 <div class="paragraph">
 <p>The <code>set-log-attributes</code> subcommand sets logging attributes for one or
-more loggers. The attributes you can set correspond to the attributes
-that are available in the <code>logging.properties</code> file for the domain.
-Depending on the attributes you set, a server restart may be necessary.</p>
+more handlers or formatters. The attributes you can set correspond
+to the attributes that are available in the <code>logging.properties</code> file
+for the domain.</p>
 </div>
 <div class="paragraph">
 <p>This subcommand is supported in remote mode only.</p>
@@ -49997,90 +50015,10 @@ currently defined attributes.</p>
 <dt class="hdlist1">attribute-value</dt>
 <dd>
 <p>The value to apply to the specified attribute.<br>
-The attribute values that can be specified include the following.
-Refer to "<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in
-Eclipse GlassFish Administration Guide for complete
-explanations of each of these values.</p>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.alarms</code></dt>
-<dd>
-<p>Default is <code>false</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.excludeFields</code></dt>
-<dd>
-<p>Default is an empty string.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.file</code></dt>
-<dd>
-<p>Default is <code>${com.sun.aas.instanceRoot}/logs/server.log</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.flushFrequency</code></dt>
-<dd>
-<p>Default is <code>1</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.formatter</code></dt>
-<dd>
-<p>Default is <code>com.sun.enterprise.server.logging.UniformLogFormatter</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.logtoConsole</code></dt>
-<dd>
-<p>Default is <code>false</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles</code></dt>
-<dd>
-<p>Default is <code>0</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.multiLineMode</code></dt>
-<dd>
-<p>Default is <code>true</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.retainErrorsStasticsForHours</code></dt>
-<dd>
-<p>Default is <code>0</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes</code></dt>
-<dd>
-<p>Default is <code>2000000</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes</code></dt>
-<dd>
-<p>Default is <code>0</code>.</p>
-</dd>
-<dt class="hdlist1"><code>com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging</code></dt>
-<dd>
-<p>Default is <code>false</code>.</p>
-</dd>
-<dt class="hdlist1"><code>handlers</code></dt>
-<dd>
-<p>Default is <code>java.util.logging.ConsoleHandler</code>.</p>
-</dd>
-<dt class="hdlist1"><code>java.util.logging.ConsoleHandler.formatter</code></dt>
-<dd>
-<p>Default is <code>com.sun.enterprise.server.logging.UniformLogFormatter</code>.</p>
-</dd>
-<dt class="hdlist1"><code>java.util.logging.FileHandler.count</code></dt>
-<dd>
-<p>Default is <code>1</code>.</p>
-</dd>
-<dt class="hdlist1"><code>java.util.logging.FileHandler.formatter</code></dt>
-<dd>
-<p>Default is <code>java.util.logging.XMLFormatter</code>.</p>
-</dd>
-<dt class="hdlist1"><code>java.util.logging.FileHandler.limit</code></dt>
-<dd>
-<p>Default is <code>50000</code>.</p>
-</dd>
-<dt class="hdlist1"><code>java.util.logging.FileHandler.pattern</code></dt>
-<dd>
-<p>Default is <code>%h/java%u.log</code>.</p>
-</dd>
-<dt class="hdlist1"><code>log4j.logger.org.hibernate.validator.util.Version</code></dt>
-<dd>
-<p>Default is <code>warn</code>.</p>
-</dd>
-</dl>
-</div>
+Refer to "<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in
+Eclipse GlassFish Administration Guide for complete explanations of supported attribute values.
+Use <a href="list-log-attributes.html#list-log-attributes-1"><code>list-log-attributes</code>(1)</a> to get
+current set of attributes.</p>
 </dd>
 </dl>
 </div>
@@ -50093,16 +50031,16 @@ explanations of each of these values.</p>
 <div class="sect3">
 <h4 id="example-1setting-the-maximum-number-of-log-history-files-to-maintain"><a class="anchor" href="#example-1setting-the-maximum-number-of-log-history-files-to-maintain"></a>Example 1   Setting the Maximum Number of Log History Files to Maintain</h4>
 <div class="paragraph">
-<p>This example sets to 8 the maximum number of log history files for the
-server as a whole.</p>
+<p>This example sets to 8 the maximum number of log history files for the server as a whole.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin&gt; set-log-attributes --target=server \
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=8
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles logging
-attribute set with value 8.
-These logging attributes are set for server.
+<pre class="CodeRay highlight"><code>asadmin set-log-attributes --target=server \
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles=8
+
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles logging attribute value set to 8.
+The logging attributes are saved successfully for server.
+
 Command set-log-attributes executed successfully.</code></pre>
 </div>
 </div>
@@ -50126,17 +50064,17 @@ Command set-log-attributes executed successfully.</code></pre>
 <div class="sect2">
 <h3 id="sthref2048"><a class="anchor" href="#sthref2048"></a>See Also</h3>
 <div class="paragraph">
-<p><a href="asadmin.html#asadmin-1m"><code>asadmin</code>(1M)</a></p>
+<p><a href="#asadmin-1m"><code>asadmin</code>(1M)</a></p>
 </div>
 <div class="paragraph">
-<p><a href="collect-log-files.html#collect-log-files-1"><code>collect-log-files</code>(1)</a>,
-<a href="list-log-attributes.html#list-log-attributes-1"><code>list-log-attributes</code>(1)</a>,
-<a href="list-log-levels.html#list-log-levels-1"><code>list-log-levels</code>(1)</a>,
-<a href="rotate-log.html#rotate-log-1"><code>rotate-log</code>(1)</a>,
-<a href="set-log-levels.html#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
+<p><a href="#collect-log-files-1"><code>collect-log-files</code>(1)</a>,
+<a href="#list-log-attributes-1"><code>list-log-attributes</code>(1)</a>,
+<a href="#list-log-levels-1"><code>list-log-levels</code>(1)</a>,
+<a href="#rotate-log-1"><code>rotate-log</code>(1)</a>,
+<a href="#set-log-levels-1"><code>set-log-levels</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/adoc.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="set-log-file-format-1"></a><a id="GSRFM879"></a><a id="set-log-file-format"></a></p>
@@ -50167,16 +50105,11 @@ Command set-log-attributes executed successfully.</code></pre>
 the server log file for the specified target.</p>
 </div>
 <div class="paragraph">
-<p>Eclipse GlassFish provides the ULF (UniformLogFormatter) and ODL (Oracle
-Diagnostics Logging) formatters. A custom formatter can also be used by
-specifying the fully qualified name of a class that extends the
+<p>Eclipse GlassFish provides the ULF (UniformLogFormatter), ODL (Oracle
+Diagnostics Logging) and OneLine (OneLineFormatter) formatters.
+A custom formatter can also be used by specifying the fully
+qualified name of a class that extends the
 <code>java.util.logging.Formatter</code> class.</p>
-</div>
-<div class="paragraph">
-<p>The custom formatter class can be packaged in a JAR file and placed in
-domain<code>/lib/ext</code>, or implemented as an HK2 service and the JAR
-containing the formatter implementation installed in
-<code>glassfish/modules</code>.</p>
 </div>
 <div class="paragraph">
 <p>This subcommand is supported in remote mode only.</p>
@@ -50212,7 +50145,7 @@ omitted, logger attributes are set for the default server.</p>
 <dt class="hdlist1">formatter</dt>
 <dd>
 <p>Specifies the fomatter to be used for the server log file.
-Valid values are ULF, ODL, or the fully qualified name of the custom
+Valid values are ULF, ODL, OneLine or the fully qualified name of the custom
 formatter class to be used to render the log files.
 The default value is ODL.</p>
 </dd>
@@ -50261,7 +50194,7 @@ Command set-log-file-format executed successfully.</code></pre>
 <p><a href="list-loggers.html#list-loggers-1"><code>list-loggers</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="set-log-levels-1"></a><a id="GSRFM00228"></a><a id="set-log-levels"></a></p>
@@ -50289,8 +50222,7 @@ logger-name=logger-level[:logger-name=logger-level]*</code></pre>
 <h3 id="sthref2058"><a class="anchor" href="#sthref2058"></a>Description</h3>
 <div class="paragraph">
 <p>The <code>set-log-levels</code> subcommand sets the log level for one or more
-loggers. Changes take effect dynamically. Depending on the log levels
-you set, a server restart may be necessary.</p>
+loggers. Changes take effect with some latency for the reconfiguration.</p>
 </div>
 <div class="paragraph">
 <p>This subcommand is supported in remote mode only.</p>
@@ -50414,7 +50346,7 @@ Command set-log-level executed successfully.</code></pre>
 <a href="set-log-attributes.html#set-log-attributes-1"><code>set-log-attributes</code>(1)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="setup-local-dcom-1"></a><a id="GSRFM893"></a><a id="setup-local-dcom"></a></p>
@@ -59508,16 +59440,16 @@ Command list executed successfully.</code></pre>
 <h2 id="instance-2"><a class="anchor" href="#instance-2"></a>instance</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>An instance in Eclipse GlassFish has its own Jakarta EE configuration, Java
-EE resources, application deployment areas, and server configuration
+<p>An instance in Eclipse GlassFish has its own Jakarta EE configuration,
+Jakarta EE resources, application deployment areas, and server configuration
 settings</p>
 </div>
 <div class="sect2">
 <h3 id="sthref2403"><a class="anchor" href="#sthref2403"></a>Description</h3>
 <div class="paragraph">
 <p>Eclipse GlassFish creates one server instance, called <code>server</code> at the
-time of installation. You can delete the server instance and create a
-new instance with a different name.</p>
+time of installation. You can delete the server instance and create
+a new instance with a different name.</p>
 </div>
 <div class="paragraph">
 <p>For many users, one server instance meets their needs. However,
@@ -59594,7 +59526,7 @@ recommended for better log configuration.</p>
 <p><a href="asadmin.html#asadmin-1m"><code>asadmin</code>(1M)</a></p>
 </div>
 <div class="paragraph">
-<p>"<a href="administration-guide/logging.html#GSADG00010">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
+<p>"<a href="administration-guide/logging.html#administering-the-logging-service">Administering the Logging Service</a>" in Eclipse GlassFish Administration Guide</p>
 </div>
 <div class="paragraph">
 <p><a id="monitoring-5asc"></a><a id="GSRFM00271"></a><a id="monitoring"></a></p>
@@ -59788,7 +59720,7 @@ run safely, without potential risk to systems or users.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-05 23:16:44 UTC
+Last updated 2022-08-08 10:52:32 UTC
 </div>
 </div>
 </body>

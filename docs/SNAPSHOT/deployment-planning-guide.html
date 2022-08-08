@@ -2852,7 +2852,7 @@ Resolve any flags that show up.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Logging: Enable access log rotation.</p>
+<p>Enable access log rotation.</p>
 </li>
 <li>
 <p>Choose the right logging level. WARNING is usually appropriate.</p>
@@ -2865,10 +2865,6 @@ Resolve any flags that show up.</p>
 </li>
 <li>
 <p>Configure ORB threadpool using the Administration Console.</p>
-</li>
-<li>
-<p>If using Type2 drivers or calls involving native code, ensure that
-mtmalloc.so is specified in the LD_LIBRARY_PATH.</p>
 </li>
 <li>
 <p>Ensure that the appropriate persistence scope and frequency are used
@@ -2891,60 +2887,36 @@ and they are not overridden underneath in the individual Web/EJB modules.</p>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Make sure the Web Server is installed.</p>
+<p>Make sure the load balancer have network access to the Server.</p>
 </li>
 <li>
-<p>Make sure the load balancer plug-in into the Web Server is installed.</p>
-</li>
-<li>
-<p>Make sure patch checks is disabled.</p>
-</li>
-<li>
-<p>Lower the value of the <code>KeepAliveQuery</code> parameter. The lower the
-value, the lower the latency is on lightly loaded systems. The higher
-the value, the higher the throughput is on highly loaded systems.</p>
+<p>See documentation of your load balancer and verify that the configuration
+of the load balancer is correct.</p>
 </li>
 </ul>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java Virtual Machine Configuration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configuring usual attributes of load balancing algorithm</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Initially set the minimum and maximum heap sizes to be the same, and
-at least one GB for each instance.</p>
+<p>Endpoint - Address or host and port used for checks generating minimal
+possible load.</p>
 </li>
-<li>
-<p>See <a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">
-  Java Hotspot VM Options</a>
-(<code><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html" class="bare">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</a></code>)
-  for more information.</p>
-</li>
-<li>
-<p>When running multiple instances of Eclipse GlassFish, consider creating
-a processor set and bind Eclipse GlassFish to it. This helps in cases
-where the CMS collector is used to sweep the old generation.</p>
-</li>
-</ul>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Configuring time-outs in the load balancer</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
 <li>
 <p>Response-time-out-in-seconds - How long the load balancer waits before
 declaring a Eclipse GlassFish instance unhealthy. Set this value based on
 the response time of the application. If set too high, the Web Server
-and load balancer plug-in wait a long time before marking a Eclipse GlassFish instance as unhealthy. If set too low and Eclipse GlassFish&#8217;s
+and load balancer plug-in wait a long time before marking a Eclipse GlassFish
+instance as unhealthy. If set too low and Eclipse GlassFish&#8217;s
 response time crosses this threshold, the instance will be incorrectly
 marked as unhealthy.</p>
 </li>
 <li>
 <p>Interval-in-seconds - Time in seconds after which unhealthy instances
-are checked to find out if they have returned to a healthy state. Too
-low a value generates extra traffic from the load balancer plug-in to
+are checked to find out if they have returned to a healthy state.
+Too low a value generates extra traffic from the load balancer plug-in to
 Eclipse GlassFish instances and too high a value delays the routing of
 requests to the instance that has turned healthy.</p>
 </li>
@@ -2980,20 +2952,23 @@ based on the need for SFSB failover.</p>
 </div></div></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tune VM Garbage Collection (GC)</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Garbage collection pauses of four seconds or more can cause intermittent
-problems in persisting session state. To avoid this problem, tune the VM
-heap. In cases where even a single failure to persist data is
-unacceptable or when the system is not fully loaded, use the CMS
-collector or the throughput collector.</p>
-</div>
-<div class="paragraph">
-<p>These can be enabled by adding:<br>
-<code>&lt;jvm-options&gt;-XX:+UseConcMarkSweepGC&lt;/jvm-options&gt;</code></p>
-</div>
-<div class="paragraph">
-<p>This option may decrease throughput.</p>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Virtual Machine Configuration</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Initially set the minimum and maximum heap sizes to be the same, and
+at least one GB for each instance.</p>
+</li>
+<li>
+<p>See <a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">
+Java Hotspot VM Options</a> for more information.</p>
+</li>
+<li>
+<p>When running multiple instances of Eclipse GlassFish, consider creating
+a processor set and bind Eclipse GlassFish to it. This helps in cases
+where the CMS collector is used to sweep the old generation.</p>
+</li>
+</ul>
 </div></div></td>
 </tr>
 </tbody>
@@ -3004,7 +2979,7 @@ collector or the throughput collector.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-05 23:14:09 UTC
+Last updated 2022-08-08 10:45:34 UTC
 </div>
 </div>
 </body>
